@@ -1,0 +1,42 @@
+@import '~material-icons/iconfont/material-icons.css';
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import '~flag-icons/css/flag-icons.min.css';
+@import 'themes.scss';
+@import 'typography.scss';
+@import 'panes.scss';
+@import 'buttons.scss';
+@import 'inputs.scss';
+@import 'alerts.scss';
+@import 'spinners.scss';
+@import 'tab-bar.scss';
+
+html,
+body {
+  margin: 0;
+  height: 0;
+  background-color: var(--color-surface-0);
+  color: var(--color-text-0);
+  font-size: 12px;
+  min-height: 100vh;
+  max-width: 100vw;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+a,
+a:visited,
+a:hover,
+a:focus,
+a:active {
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+i.material-icons {
+  font-size: 1.5em;
+}

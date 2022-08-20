@@ -1,0 +1,113 @@
+@import 'node_modules/sass-material-colors/sass/sass-material-colors';
+@import 'shadows.scss';
+
+@mixin baseTheme() {
+  --color-primary: #3aa8b5;
+  --color-primary-hover: #51b7c3;
+  --color-primary-active: #297780;
+  --color-secondary: var(--color-surface-0);
+  --color-secondary-hover: var(--color-surface-1);
+  --color-secondary-active: var(--color-surface-0);
+  --color-surface-0: #15161b;
+  --color-surface-1: #1c1c24;
+  --color-surface-2: #232429;
+  --color-surface-3: #2b2f3b;
+  --color-surface-4: #383e4e;
+  --color-surface-5: #939bb0;
+  --color-surface-6: #ffffff;
+  --color-text-0: #e7eaf1;
+  --color-text-1: #bac1d4;
+  --color-text-2: #88909b;
+  --color-text-3: #727584;
+  --color-text-4: #010e16;
+
+  --color-alert-info: var(--color-info);
+  --color-on-alert-info: var(--color-on-info);
+  --color-alert-success: var(--color-success);
+  --color-on-alert-success: var(--color-on-success);
+  --color-alert-warning: var(--color-warning);
+  --color-on-alert-warning: var(--color-on-warning);
+  --color-alert-error: var(--color-caution);
+  --color-on-alert-error: var(--color-on-caution);
+
+  --surface-border-radius: 1em;
+}
+
+@mixin lightTheme() {
+  --theme-name: 'light';
+
+  @for $i from 1 through 5 {
+    --shadow-#{$i}: #{build-shadow($i, true, false)};
+    --shadow-inset-#{$i}: #{build-shadow($i, true, true)};
+  }
+
+  --color-info: #{material-color('blue', '500')};
+  --color-info-hover: #{material-color('blue', '400')};
+  --color-on-info: white;
+
+  --color-caution: #{material-color('red', '600')};
+  --color-caution-hover: #{material-color('red', '500')};
+  --color-on-caution: white;
+
+  --color-warning: #{material-color('amber', '600')};
+  --color-warning-hover: #{material-color('amber', '500')};
+  --color-on-warning: #{material-color('grey', '900')};
+
+  --color-success: #{material-color('light-green', '500')};
+  --color-success-hover: #{material-color('light-green', '400')};
+  --color-on-success: white;
+}
+
+@mixin darkTheme() {
+  --theme-name: 'dark';
+
+  --color-primary: #3aa8b5;
+  --color-primary-hover: #51b7c3;
+  --color-primary-active: #297780;
+  --color-surface-0: #15161b;
+  --color-surface-1: #1c1c24;
+  --color-surface-2: #232429;
+  --color-surface-3: #2b2f3b;
+  --color-surface-4: #383e4e;
+  --color-surface-5: #939bb0;
+  --color-surface-6: #ffffff;
+  --color-text-1: #e7eaf1;
+  --color-text-2: #bac1d4;
+  --color-text-3: #88909b;
+  --color-text-4: #727584;
+  --color-text-5: #010e16;
+
+  @for $i from 1 through 5 {
+    --shadow-#{$i}: #{build-shadow($i, true, false)};
+    --shadow-inset-#{$i}: #{build-shadow($i, true, true)};
+  }
+
+  --color-info: #{material-color('blue', '900')};
+  --color-info-hover: #{material-color('blue', '800')};
+  --color-on-info: white;
+
+  --color-caution: #{material-color('red', '900')};
+  --color-caution-hover: #{material-color('red', '800')};
+  --color-on-caution: white;
+
+  --color-warning: #{material-color('amber', '900')};
+  --color-warning-hover: #{material-color('amber', '800')};
+  --color-on-warning: white;
+
+  --color-success: #{material-color('light-green', '900')};
+  --color-success-hover: #{material-color('light-green', '800')};
+  --color-on-success: white;
+}
+
+// Selectors
+body {
+  @include baseTheme();
+}
+
+body.dark {
+  @include darkTheme();
+}
+
+body:not(.dark) {
+  @include lightTheme();
+}

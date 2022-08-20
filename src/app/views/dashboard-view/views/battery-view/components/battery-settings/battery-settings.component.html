@@ -1,0 +1,314 @@
+<div class="pane">
+  <div class="pane-title" translate>battery-settings.title</div>
+  <div class="pane-content">
+    <div class="automation-category">
+      <span translate>battery-settings.turningOffDevices</span>
+    </div>
+
+    <!-- SLEEP BASED AUTOMATION-->
+    <!--    <div class="automation">-->
+    <!--      <div class="automation-header">-->
+    <!--        <div class="automation-header-description">When you fall asleep</div>-->
+    <!--        <div class="automation-header-toggle">-->
+    <!--          <label class="switch-toggle">-->
+    <!--            <input type="checkbox" />-->
+    <!--            <span class="switch-toggle-slider"></span>-->
+    <!--          </label>-->
+    <!--        </div>-->
+    <!--      </div>-->
+    <!--    </div>-->
+
+    <!--  BATTERY PERCENTAGE AUTOMATION-->
+    <div class="automation">
+      <div class="automation-header">
+        <div
+          class="automation-header-description"
+          [innerHTML]="
+            'battery-settings.automation.BATTERY_PERCENTAGE.description'
+              | translate: { value: configs.BATTERY_PERCENTAGE.threshold }
+          "
+        ></div>
+        <div class="automation-header-toggle">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="configs.BATTERY_PERCENTAGE.enabled"
+              (change)="toggleAutomation('BATTERY_PERCENTAGE')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="automation-settings" [@vshrink] *ngIf="configs.BATTERY_PERCENTAGE.enabled">
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>
+            battery-settings.automation.BATTERY_PERCENTAGE.when
+          </div>
+          <div class="automation-settings-row-controls">
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.controller</span>
+              <input
+                type="checkbox"
+                [checked]="configs.BATTERY_PERCENTAGE.triggerClasses.includes('Controller')"
+                (change)="
+                  batteryPercentageAutomationToggleClass(
+                    'TRIGGER',
+                    'Controller',
+                    batteryPercentageTriggerClassControllerCheckbox.checked
+                  )
+                "
+                #batteryPercentageTriggerClassControllerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.tracker</span>
+              <input
+                type="checkbox"
+                [checked]="configs.BATTERY_PERCENTAGE.triggerClasses.includes('GenericTracker')"
+                (change)="
+                  batteryPercentageAutomationToggleClass(
+                    'TRIGGER',
+                    'GenericTracker',
+                    batteryPercentageTriggerClassTrackerCheckbox.checked
+                  )
+                "
+                #batteryPercentageTriggerClassTrackerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>
+            battery-settings.automation.BATTERY_PERCENTAGE.fallsBelow
+          </div>
+          <div class="automation-settings-row-controls">
+            <div
+              class="input-wrapper percentage"
+              [class.invalid]="batteryPercentageThresholdInput.validationMessage"
+            >
+              <input
+                type="number"
+                min="0"
+                max="100"
+                [value]="configs.BATTERY_PERCENTAGE.threshold"
+                (change)="
+                  batteryPercentageAutomationUpdateThreshold(batteryPercentageThresholdInput)
+                "
+                #batteryPercentageThresholdInput
+              />
+              <span>%</span>
+            </div>
+          </div>
+        </div>
+        <span
+          class="input-error"
+          *ngIf="batteryPercentageThresholdInput.validationMessage"
+          [@vshrink]
+        >
+          {{ batteryPercentageThresholdInput.validationMessage }}
+        </span>
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>battery-settings.turnOff</div>
+          <div class="automation-settings-row-controls">
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.allControllers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.BATTERY_PERCENTAGE.powerOffClasses.includes('Controller')"
+                (change)="
+                  batteryPercentageAutomationToggleClass(
+                    'POWER_OFF',
+                    'Controller',
+                    batteryPercentagePowerOffClassControllerCheckbox.checked
+                  )
+                "
+                #batteryPercentagePowerOffClassControllerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.allTrackers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.BATTERY_PERCENTAGE.powerOffClasses.includes('GenericTracker')"
+                (change)="
+                  batteryPercentageAutomationToggleClass(
+                    'POWER_OFF',
+                    'GenericTracker',
+                    batteryPercentagePowerOffClassTrackerCheckbox.checked
+                  )
+                "
+                #batteryPercentagePowerOffClassTrackerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--  TIME BASED AUTOMATION-->
+    <div class="automation">
+      <div class="automation-header">
+        <div class="automation-header-description">
+          <span translate>battery-settings.automation.TIME_EVENT.description</span>
+          &nbsp;
+          <strong *ngIf="configs.TIME_EVENT.time" [@fade]>{{ configs.TIME_EVENT.time }}</strong>
+        </div>
+        <div class="automation-header-toggle">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="configs.TIME_EVENT.enabled"
+              (change)="toggleAutomation('TIME_EVENT')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="automation-settings" [@vshrink] *ngIf="configs.TIME_EVENT.enabled">
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>
+            battery-settings.automation.TIME_EVENT.atTime
+          </div>
+          <div class="automation-settings-row-controls">
+            <div class="input-wrapper">
+              <input
+                type="time"
+                [value]="configs.TIME_EVENT.time"
+                (change)="timeEventAutomationUpdateTime(timeEventTimeInput)"
+                #timeEventTimeInput
+              />
+            </div>
+          </div>
+        </div>
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>battery-settings.turnOff</div>
+          <div class="automation-settings-row-controls">
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.allControllers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.TIME_EVENT.powerOffClasses.includes('Controller')"
+                (change)="
+                  timeEventAutomationToggleClass(
+                    'Controller',
+                    timeEventPowerOffClassControllerCheckbox.checked
+                  )
+                "
+                #timeEventPowerOffClassControllerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.allTrackers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.TIME_EVENT.powerOffClasses.includes('GenericTracker')"
+                (change)="
+                  timeEventAutomationToggleClass(
+                    'GenericTracker',
+                    timeEventPowerOffClassTrackerCheckbox.checked
+                  )
+                "
+                #timeEventPowerOffClassTrackerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--    CONTROLLER POWER BASED AUTOMATION-->
+    <div class="automation">
+      <div class="automation-header">
+        <div class="automation-header-description" translate>
+          battery-settings.automation.CONTROLLER_POWER_OFF.description
+        </div>
+        <div class="automation-header-toggle">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="configs.CONTROLLER_POWER_OFF.enabled"
+              (change)="toggleAutomation('CONTROLLER_POWER_OFF')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="automation-settings" [@vshrink] *ngIf="configs.CONTROLLER_POWER_OFF.enabled">
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>battery-settings.turnOff</div>
+          <div class="automation-settings-row-controls">
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.allTrackers</span>
+              <input type="checkbox" checked disabled />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHARGING BASED AUTOMATION-->
+    <div class="automation">
+      <div class="automation-header">
+        <div class="automation-header-description" translate>
+          battery-settings.automation.CHARGING_EVENT.description
+        </div>
+        <div class="automation-header-toggle">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="configs.CHARGING_EVENT.enabled"
+              (change)="toggleAutomation('CHARGING_EVENT')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="automation-settings" [@vshrink] *ngIf="configs.CHARGING_EVENT.enabled">
+        <div class="automation-settings-row">
+          <div class="automation-settings-row-label" translate>
+            battery-settings.automation.CHARGING_EVENT.enableFor
+          </div>
+          <div class="automation-settings-row-controls">
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.controllers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.CHARGING_EVENT.powerOffClasses.includes('Controller')"
+                (change)="
+                  chargingEventAutomationToggleClass(
+                    'Controller',
+                    chargingEventPowerOffClassControllerCheckbox.checked
+                  )
+                "
+                #chargingEventPowerOffClassControllerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+            <label class="check-toggle">
+              <span class="check-toggle-label" translate>battery-settings.trackers</span>
+              <input
+                type="checkbox"
+                [checked]="configs.CHARGING_EVENT.powerOffClasses.includes('GenericTracker')"
+                (change)="
+                  chargingEventAutomationToggleClass(
+                    'GenericTracker',
+                    chargingEventPowerOffClassTrackerCheckbox.checked
+                  )
+                "
+                #chargingEventPowerOffClassTrackerCheckbox
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

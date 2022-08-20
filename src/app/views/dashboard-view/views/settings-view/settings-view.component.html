@@ -1,0 +1,98 @@
+<div class="pane" [@noop]>
+  <div class="pane-title" translate>settings.title</div>
+  <div class="tab-bar">
+    <div class="tab" [class.active]="activeTab === 'GENERAL'" (click)="activeTab = 'GENERAL'">
+      <div class="tab-label" translate>settings.tab.general</div>
+    </div>
+    <div class="tab" [class.active]="activeTab === 'DEBUG'" (click)="activeTab = 'DEBUG'">
+      <div class="tab-label" translate>settings.tab.debug</div>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="activeTab === 'GENERAL'" [@noop]>
+    <div class="setting-category">
+      <div class="setting-category-title" translate>settings.general.language.title</div>
+      <div class="setting-category-description" translate>settings.general.language.description</div>
+      <div class="settings-language">
+        <label class="radio-button" *ngFor="let language of languages">
+          <input
+            type="radio"
+            name="radio-language"
+            [value]="language.code"
+            [checked]="appSettings.userLanguage === language.code"
+            (change)="setUserLanguage(language.code)"
+          />
+          <span class="radio-button-dot"></span>
+          <span class="radio-button-label">
+            <span class="fi fi-{{ language.flag || language.code }}"></span>
+            <span>{{ language.label }}</span>
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-category">
+      <div class="setting-category-title" translate>settings.general.lighthouseConsole.title</div>
+      <div
+        class="setting-category-description"
+        [innerHTML]="'settings.general.lighthouseConsole.description' | translate"
+      ></div>
+      <div class="settings-lighthouse-console">
+        <div class="file-path-bar">
+          <div class="file-path-bar-path">
+            <input
+              type="text"
+              [value]="appSettings.lighthouseConsolePath"
+              (keyup)="lighthouseConsolePathInputChange.next(lighthouseConsolePathInput.value)"
+              #lighthouseConsolePathInput
+            />
+          </div>
+          <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
+            <i class="material-icons">folder</i>
+          </button>
+        </div>
+        <div
+          class="alert"
+          [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
+          [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
+          *ngIf="lighthouseConsolePathAlert"
+          [@vshrink]
+        >
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
+              check_circle_outline
+            </i>
+            <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
+          </div>
+          <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="activeTab === 'DEBUG'" [@noop]>
+    <div class="setting-category">
+      <div class="setting-category-description" translate>settings.debug.description</div>
+    </div>
+    <div class="setting-category">
+      <div class="setting-category-title" translate>settings.debug.persistentStorage.title</div>
+      <div class="debug-persistent-storage-actions">
+        <button class="btn btn-secondary" (click)="clearStore()" translate>
+          settings.debug.persistentStorage.clearAll
+        </button>
+        <button
+          class="btn btn-secondary"
+          (click)="clearStore(storeKey.SETTINGS_KEY_AUTOMATION_CONFIGS)"
+          translate
+        >
+          settings.debug.persistentStorage.clearAutomationSettings
+        </button>
+        <button
+          class="btn btn-secondary"
+          (click)="clearStore(storeKey.SETTINGS_KEY_APP_SETTINGS)"
+          translate
+        >
+          settings.debug.persistentStorage.clearAppSettings
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

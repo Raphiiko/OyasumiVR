@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+  user-select: none;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.025em;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  margin: 0;
+  font-weight: 200;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.splashscreen {
+  border-radius: 0.5em;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(55deg, #1a2980, #26d0ce); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  color: white;
+
+}

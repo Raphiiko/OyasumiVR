@@ -1,0 +1,94 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "VR Sleeping Utilities"
+    }
+  },
+  "dashboard-navbar": {
+    "batteryManagement": "Battery Management",
+    "settings": "Settings",
+    "about": "About Oyasumi"
+  },
+  "device-list": {
+    "title": "Devices",
+    "turnOffAll": "ALL",
+    "noDevices": "No controllers or trackers detected.",
+    "category": {
+      "Controller": "Controllers",
+      "GenericTracker": "Trackers",
+      "other": "Others"
+    }
+  },
+  "battery-settings": {
+    "title": "Battery Automations",
+    "controller": "Controller",
+    "controllers": "Controllers",
+    "tracker": "Tracker",
+    "trackers": "Trackers",
+    "allControllers": "All Controllers",
+    "allTrackers": "All Trackers",
+    "turningOffDevices": "Turning off devices",
+    "turnOff": "Turn off",
+    "automation": {
+      "BATTERY_PERCENTAGE": {
+        "description": "When a battery level falls below <strong>{{value}}%</strong>",
+        "when": "When a",
+        "fallsBelow": "Falls below"
+      },
+      "TIME_EVENT": {
+        "description": "At a specific time",
+        "atTime": "At time"
+      },
+      "CONTROLLER_POWER_OFF": {
+        "description": "When both controllers are turned off"
+      },
+      "CHARGING_EVENT": {
+        "description": "When they are charging",
+        "enableFor": "Enable for"
+      }
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "tab": {
+      "general": "General",
+      "debug": "Debug"
+    },
+    "general": {
+      "language": {
+        "title": "Language",
+        "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!"
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouse Console",
+        "description": "Oyasumi needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.<br />If Oyasumi cannot find it in the default location, you need to set where it can be found.",
+        "status": {
+          "NOT_FOUND": "The <strong>lighthouse_console.exe</strong> could not be found at this location.",
+          "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
+          "PERMISSION_DENIED": "Oyasumi does not have permission to run the <strong>lighthouse_console.exe</strong> at this location. Try running Oyasumi as administrator.",
+          "INVALID_FILENAME": "The set location is not a valid file path.",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>lighthouse_console.exe</strong> at this location.",
+          "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> has been found and is working correctly!"
+        }
+      }
+    },
+    "debug": {
+      "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
+      "persistentStorage": {
+        "title": "Persistent Storage",
+        "clearAll": "Clear All Storage",
+        "clearAutomationSettings": "Clear Automation Settings",
+        "clearAppSettings": "Clear App Settings"
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "Developer"
+    },
+    "translations": "Translations",
+    "projectLinks": "Project Links",
+    "sourceLink": "Source Code @ GitHub"
+  }
+}

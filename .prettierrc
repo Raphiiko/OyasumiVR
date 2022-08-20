@@ -1,0 +1,17 @@
+{
+    "bracketSpacing": true,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "htmlWhitespaceSensitivity": "ignore",
+    "endOfLine": "lf",
+    "importOrder": ["^[./]"],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderParserPlugins": [
+        "typescript",
+        "classProperties",
+        "[\"decorators-legacy\", { \"decoratorsBeforeExport\": true }]"
+    ]
+}

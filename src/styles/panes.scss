@@ -1,0 +1,38 @@
+.pane {
+  border-radius: var(--surface-border-radius);
+  background-color: var(--color-surface-2);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  overflow: hidden;
+  &-title {
+    min-height: 3.25em;
+    padding: 0.75em 1.25em;
+    border-bottom: 1px solid var(--color-surface-3);
+    font-size: 1.5em;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    & > span {
+      flex: 1;
+    }
+    & > button {
+      flex-shrink: 0;
+    }
+  }
+  *::-webkit-scrollbar {
+    width: 4px;
+    height: 8px;
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-surface-4);
+    border-radius: 2px;
+  }
+  *::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+}

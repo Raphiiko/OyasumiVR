@@ -1,0 +1,104 @@
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+
+  &-content {
+    padding: 2em;
+  }
+}
+
+.setting-category {
+  &-title {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    &:not(:first-child) {
+      margin-top: 1em;
+    }
+  }
+
+  &-description {
+    color: var(--color-text-2);
+    margin-bottom: 1em;
+
+    ::ng-deep strong {
+      background: var(--color-surface-1);
+      border-radius: 0.25em;
+      padding: 0.125em 0.25em;
+      font-weight: 500;
+    }
+  }
+}
+
+.settings-language {
+  width: 100%;
+  display: grid;
+  padding-bottom: 2em;
+  grid-auto-flow: column;
+  grid-gap: 1em;
+  grid-auto-columns: min-content;
+
+  .radio-button-label {
+    white-space: nowrap;
+    .fi {
+      margin-right: 0.25em;
+    }
+  }
+}
+
+.settings-lighthouse-console {
+  .file-path-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    min-width: 30em;
+    margin: 1em 0;
+    &-path {
+      flex: 1;
+      background: var(--color-surface-1);
+      padding: 1em 1.5em;
+      border-radius: 0.5em 0 0 0.5em;
+      input {
+        width: 100%;
+        border: none;
+        background: none;
+        color: var(--color-text-1);
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+    &-btn-browse {
+      flex-shrink: 0;
+      padding: 0 1em;
+      border: none;
+      border-radius: 0 0.5em 0.5em 0;
+      background: var(--color-primary);
+      color: var(--color-on-primary);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s ease;
+      cursor: pointer;
+      &:hover {
+        background: var(--color-primary-hover);
+      }
+      &:active {
+        background: var(--color-primary-active);
+      }
+    }
+  }
+}
+
+.debug-persistent-storage-actions {
+  display: flex;
+  flex-direction: row;
+  button:not(:last-child) {
+    margin-right: 1em;
+  }
+}

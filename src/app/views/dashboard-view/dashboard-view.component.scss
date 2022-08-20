@@ -1,0 +1,16 @@
+:host {
+  display: grid;
+  grid-template-columns: 225px 1fr;
+  grid-template-rows: minmax(0, 1fr);
+  grid-gap: 1em;
+  padding: 1em;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.route-container {
+  position: relative;
+  display: block;
+  width: 100%;
+}
