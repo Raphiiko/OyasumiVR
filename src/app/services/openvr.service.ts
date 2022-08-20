@@ -4,7 +4,16 @@ import { exit } from '@tauri-apps/api/process';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice } from '../models/ovr-device';
-import { BehaviorSubject, firstValueFrom, interval, Observable, pairwise, startWith } from 'rxjs';
+import {
+  BehaviorSubject,
+  firstValueFrom,
+  interval,
+  Observable,
+  pairwise,
+  startWith,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 import { orderBy } from 'lodash';
 import { message } from '@tauri-apps/api/dialog';
 import { AppSettingsService } from './app-settings.service';
@@ -23,9 +32,11 @@ export type LighthouseConsoleStatus =
   providedIn: 'root',
 })
 export class OpenVRService {
+  private onInitialize$: Subject<void> = new Subject();
+  private readonly initStart: number;
+
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
-  private initStart: number;
   private _lighthouseConsoleStatus: BehaviorSubject<LighthouseConsoleStatus> =
     new BehaviorSubject<LighthouseConsoleStatus>('UNKNOWN');
   public lighthouseConsoleStatus: Observable<LighthouseConsoleStatus> =
@@ -37,19 +48,23 @@ export class OpenVRService {
   }
 
   async init() {
-    const ovrStatus = await invoke('openvr_status');
-    switch (ovrStatus) {
-      case 'INIT_COMPLETE':
-        await this.onOpenVRInit(true);
-        break;
-      case 'INIT_FAILED':
-        await this.onOpenVRInit(false);
-        return;
-      case 'QUIT':
-        await this.onQuitEvent();
-        return;
-      case 'INITIALIZING':
-    }
+    interval(2000)
+      .pipe(startWith(null), takeUntil(this.onInitialize$))
+      .subscribe(async () => {
+        const ovrStatus = await invoke('openvr_status');
+        switch (ovrStatus) {
+          case 'INIT_COMPLETE':
+            await this.onOpenVRInit(true);
+            break;
+          case 'INIT_FAILED':
+            await this.onOpenVRInit(false);
+            return;
+          case 'QUIT':
+            await this.onQuitEvent();
+            return;
+          case 'INITIALIZING':
+        }
+      });
     await Promise.all([
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
@@ -76,6 +91,7 @@ export class OpenVRService {
 
   async onOpenVRInit(success: boolean) {
     if (success) {
+      this.onInitialize$.next();
       const minSplashDuration = 2000;
       const currentSplashDuration = Date.now() - this.initStart;
       const remainingSplashDuration = Math.max(0, minSplashDuration - currentSplashDuration);

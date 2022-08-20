@@ -122,10 +122,10 @@ async fn run_command(command: String, args: Vec<String>) -> Result<models::Outpu
         Err(error) => match error {
             tauri::api::Error::Io(io_err) => match io_err.kind() {
                 std::io::ErrorKind::NotFound => return Err(String::from("NOT_FOUND")),
-                std::io::ErrorKind::PermissionDenied => 
-                    return Err(String::from("PERMISSION_DENIED")),           
-                std::io::ErrorKind::InvalidFilename => 
-                    return Err(String::from("INVALID_FILENAME")),           
+                std::io::ErrorKind::PermissionDenied =>
+                    return Err(String::from("PERMISSION_DENIED")),
+                std::io::ErrorKind::InvalidFilename =>
+                    return Err(String::from("INVALID_FILENAME")),
                 other => {
                     eprintln!("Unknown IO Error occurred: {}", other);
                     return Err(String::from("UNKNOWN_ERROR"));
@@ -166,6 +166,7 @@ fn main() {
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
+            // window.open_devtools();
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             // Initialize OpenVR
             std::thread::spawn(|| -> () {

@@ -1,5 +1,6 @@
 {
   "name": "oyasumi",
+  "version": "0.1.0",
   "author": "Raphiiko",
   "license": "MIT",
   "scripts": {
@@ -8,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "set-version": "node scripts/set-version.js"
   },
   "private": true,
   "dependencies": {
@@ -40,6 +42,7 @@
     "@tauri-apps/cli": "^1.0.5",
     "@types/jasmine": "~4.0.0",
     "@types/lodash": "^4.14.183",
+    "check-more-types": "^2.24.0",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

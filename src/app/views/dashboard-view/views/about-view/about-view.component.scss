@@ -123,6 +123,10 @@
       color: var(--color-text-3);
     }
 
+    .discord span {
+      user-select: text;
+    }
+
     .twitter,
     .discord,
     .github {
