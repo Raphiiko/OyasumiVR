@@ -8,7 +8,7 @@
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "oyasumi",
+    "productName": "Oyasumi",
     "version": "0.1.0"
   },
   "tauri": {
