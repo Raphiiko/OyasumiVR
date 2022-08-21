@@ -53,15 +53,3 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           prerelease: true
-      - name: Create tag
-        uses: actions/github-script@v5
-        env:
-          OYASUMI_VERSION: ${{ steps.get-package-version.outputs.version }}
-        with:
-          script: |
-            github.rest.git.createRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: 'refs/tags/oyasumi-v' + process.env.OYASUMI_VERSION,
-              sha: context.sha
-            })
