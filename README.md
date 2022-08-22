@@ -27,7 +27,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 
 ## Features
 
-- :battery: Turning off all trackers and/or controllers with a single click.
+- :wrench: Turning off all trackers and/or controllers with a single click.
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
     - When their battery percentage falls below a threshold.
