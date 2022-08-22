@@ -43,6 +43,22 @@ More sleeping related functionality is still planned.
 
 Oyasumi has been built with [Angular](https://angular.io/) and [Tauri](https://tauri.app/).
 
+## Supported Devices
+
+Currently Oyasumi supports battery automations for all SteamVR devices that:
+1. Support reporting for battery levels and charging status
+2. Support being turned off via SteamVR. 
+
+This includes, but is not limited to the following devices:
+- HTC Vive Controllers/Wands
+- Index Controllers/Knuckles
+- Vive Trackers (1.0/2.0/3.0)
+- Tundra Trackers\*
+
+This means that any Oculus controller is unlikely to work, and SlimeVR trackers are unsupported unless they implement this functionality in their [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
+
+*(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware. (https://forum.tundra-labs.com/t/firmware-issues/746)*
+
 ## Development
 
 To start development on Oyasumi, start by following Tauri's [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites) (Installing Rust).
