@@ -5,12 +5,14 @@ import { AppSettingsService } from '../../../../services/app-settings.service';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
 import { LighthouseConsoleStatus, OpenVRService } from '../../../../services/openvr.service';
 import { noop, vshrink } from '../../../../utils/animations';
-import { open as openFile } from '@tauri-apps/api/dialog';
+import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { SETTINGS_KEY_APP_SETTINGS } from '../../../../services/app-settings.service';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../services/automation-config.service';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../../../../globals';
 import { Router } from '@angular/router';
+import { readBinaryFile, readTextFile } from '@tauri-apps/api/fs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-settings-view',
@@ -47,7 +49,8 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
   constructor(
     private settingsService: AppSettingsService,
     public openvr: OpenVRService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +95,6 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   async browseForLighthouseConsole() {
     const path = await openFile({
-      title: 'Find lighthouse_console.exe',
       defaultPath:
         'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64',
       directory: false,
@@ -120,5 +122,34 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   setUserLanguage(languageCode: string) {
     this.settingsService.updateSettings({ userLanguage: languageCode });
+  }
+
+  async loadLanguageFile() {
+    const path = await openFile({
+      directory: false,
+      multiple: false,
+      filters: [
+        {
+          name: 'Translation File',
+          extensions: ['json'],
+        },
+      ],
+    });
+    if (typeof path !== 'string') return;
+    let translations;
+    try {
+      const fileData = await readTextFile(path);
+      translations = JSON.parse(fileData);
+    } catch (e) {
+      console.error(e);
+      await message('Translations could not be loaded:\n' + e, {
+        title: 'Error loading translations',
+        type: 'error',
+      });
+      return;
+    }
+    this.translate.setTranslation('DEBUG', translations);
+    this.setUserLanguage('DEBUG');
+    await message('Translations have been loaded from ' + path, 'Translations loaded');
   }
 }

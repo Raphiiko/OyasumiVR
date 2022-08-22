@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "0.1.1"
+    "version": "0.2.0"
   },
   "tauri": {
     "allowlist": {
@@ -21,7 +21,8 @@
         "open": true
       },
       "dialog": {
-        "open": true
+        "open": true,
+        "message": true
       }
     },
     "bundle": {

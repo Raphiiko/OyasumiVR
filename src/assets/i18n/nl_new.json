@@ -1,0 +1,100 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "VR Slaap Tools"
+    }
+  },
+  "dashboard-navbar": {
+    "batteryManagement": "Batterij Management",
+    "settings": "Instellingen",
+    "about": "Over Oyasumi"
+  },
+  "device-list": {
+    "title": "Apparaten",
+    "turnOffAll": "ALLE",
+    "noDevices": "Geen controllers of trackers gevonden.",
+    "category": {
+      "Controller": "Controllers",
+      "GenericTracker": "Trackers",
+      "other": "Overige"
+    }
+  },
+  "battery-settings": {
+    "title": "Batterij Automatiseringen",
+    "controller": "Controller",
+    "controllers": "Controllers",
+    "tracker": "Tracker",
+    "trackers": "Trackers",
+    "allControllers": "Alle Controllers",
+    "allTrackers": "Alle Trackers",
+    "turningOffDevices": "Apparaten uitzetten",
+    "turnOff": "Uitzetten",
+    "automation": {
+      "BATTERY_PERCENTAGE": {
+        "description": "Wanneer een batterij niveau onder <strong>{{value}}%</strong> valt",
+        "when": "Wanneer een",
+        "fallsBelow": "Valt onder"
+      },
+      "TIME_EVENT": {
+        "description": "Om een specifieke tijd",
+        "atTime": "Hoe laat"
+      },
+      "CONTROLLER_POWER_OFF": {
+        "description": "Wanneer beide controllers worden uitgezet"
+      },
+      "CHARGING_EVENT": {
+        "description": "Wanneer ze worden opgeladen",
+        "enableFor": "Aanzetten voor"
+      }
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "tab": {
+      "general": "Algemeen",
+      "debug": "Debug"
+    },
+    "general": {
+      "language": {
+        "title": "Taal",
+        "description": "Je kan hier je voorkeurstaal selecteren. Als er vertalingen missen, neem a.u.b. contact op!"
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouse Console",
+        "description": "Oyasumi heeft de locatie van de <strong>lighthouse_console.exe</strong> van je SteamVR installatie nodig.<br />Als Oyasumi deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
+        "status": {
+          "NOT_FOUND": "De <strong>lighthouse_console.exe</strong> kon niet worden gevonden op deze locatie.",
+          "INVALID_EXECUTABLE": "De <strong>lighthouse_console.exe</strong> op deze locatie werkt niet zoals verwacht.",
+          "PERMISSION_DENIED": "Oyasumi heeft niet de rechten om de <strong>lighthouse_console.exe</strong> op deze locatie aan te roepen. Probeer Oyasumi als beheerder te starten.",
+          "INVALID_FILENAME": "De gegeven locatie is geen correct bestands pad.",
+          "UNKNOWN_ERROR": "Een onbekende fout is opgetreden bij het zoeken van <strong>lighthouse_console.exe</strong> op deze locatie.",
+          "CHECKING": "Aan het checken voor een geldige <strong>lighthouse_console.exe</strong>",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> is gevonden en werkt naar behoren!"
+        }
+      }
+    },
+    "debug": {
+      "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
+      "persistentStorage": {
+        "title": "Permanente opslag",
+        "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
+        "clearAll": "Verwijder alles",
+        "clearAutomationSettings": "Verwijder automatiserings instellingen",
+        "clearAppSettings": "Verwijder programma instellingen"
+      },
+      "language": {
+        "title": "Taal",
+        "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
+        "loadFile": "Vertalings Bestand Laden"
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "Ontwikkelaar"
+    },
+    "translations": "Vertalingen",
+    "projectLinks": "Project Links",
+    "sourceLink": "Broncode @ GitHub"
+  }
+}

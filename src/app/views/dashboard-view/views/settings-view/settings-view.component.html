@@ -11,7 +11,9 @@
   <div class="pane-content" *ngIf="activeTab === 'GENERAL'" [@noop]>
     <div class="setting-category">
       <div class="setting-category-title" translate>settings.general.language.title</div>
-      <div class="setting-category-description" translate>settings.general.language.description</div>
+      <div class="setting-category-description" translate>
+        settings.general.language.description
+      </div>
       <div class="settings-language">
         <label class="radio-button" *ngFor="let language of languages">
           <input
@@ -63,7 +65,10 @@
             </i>
             <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
           </div>
-          <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
+          <div
+            class="alert-content"
+            [innerHTML]="lighthouseConsolePathAlert.text | translate"
+          ></div>
         </div>
       </div>
     </div>
@@ -74,6 +79,9 @@
     </div>
     <div class="setting-category">
       <div class="setting-category-title" translate>settings.debug.persistentStorage.title</div>
+      <div class="setting-category-description" translate>
+        settings.debug.persistentStorage.description
+      </div>
       <div class="debug-persistent-storage-actions">
         <button class="btn btn-secondary" (click)="clearStore()" translate>
           settings.debug.persistentStorage.clearAll
@@ -93,6 +101,17 @@
           settings.debug.persistentStorage.clearAppSettings
         </button>
       </div>
+    </div>
+    <div class="setting-category">
+      <div class="setting-category-title" translate>settings.debug.language.title</div>
+    </div>
+    <div class="setting-category-description" translate>
+      settings.debug.language.description
+    </div>
+    <div class="debug-persistent-storage-actions">
+      <button class="btn btn-secondary" (click)="loadLanguageFile()" translate>
+        settings.debug.language.loadFile
+      </button>
     </div>
   </div>
 </div>

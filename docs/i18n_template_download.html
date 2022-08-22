@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Oyasumi Language Template Downloader</title>
+  </head>
+  <body>
+    <h1>Oyasumi Language Template Downloader</h1>
+
+    <h3>Option A: Add missing translations for an already supported language</h3>
+    <p>
+      This downloads the existing language file and includes all the missing keys for you to fill
+      in.
+    </p>
+
+    <label for="languages">Choose an existing language:</label>
+    <select name="Languages" id="languages"></select>
+    <div id="existing-language-error" style="color: red"></div>
+    <button onclick="downloadExpansion()">Download template</button>
+
+    <h3>Option B: Add translations for a new language</h3>
+    <p>This gives you a fresh template with all the keys to fill in.</p>
+    <button onclick="downloadFreshTemplate()">Download fresh template</button>
+    <p>You can download the English example here:</p>
+    <button onclick="downloadEN()">Download English example</button>
+
+    <script>
+      fetch('https://api.github.com/repos/Raphiiko/Oyasumi/git/trees/develop?recursive=1')
+        .then((res) => res.json())
+        .then((data) => {
+          data.tree
+            .map((file) => file.path)
+            .filter((path) => path.match(/i18n\/[a-zA-Z]+\.json/g))
+            .map((path) => path.split('/'))
+            .map((split) => split[split.length - 1].split('.')[0])
+            .filter((locale) => locale !== 'en')
+            .forEach((locale) => {
+              document.getElementById(
+                'languages'
+              ).innerHTML += `<option value="${locale}">${locale}</option>`;
+            });
+        })
+        .catch((err) => {
+          console.error(err);
+          document.getElementById('existing-language-error').innerHTML = `
+<span>Existing languages could not be loaded: </span>
+<pre>${JSON.stringify(err, null, 2)}</pre>
+`;
+        });
+
+      function downloadExpansion() {
+        let lang = document.getElementById('languages').value;
+        fetch('https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json')
+          .then((res) => res.json())
+          .then((template) => stripObject(template))
+          .then((enTemplate) => {
+            return fetch(
+              `https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/${lang}.json`
+            )
+              .then((res) => res.json())
+              .then((langTemplate) => mergeDeep(enTemplate, langTemplate));
+          })
+          .then((template) => downloadText(lang + '.json', JSON.stringify(template, null, 2)));
+      }
+
+      function downloadEN() {
+        fetch('https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json')
+          .then((res) => res.json())
+          .then((template) => downloadText('en.json', JSON.stringify(template, null, 2)));
+      }
+
+      function downloadFreshTemplate() {
+        fetch('https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json')
+          .then((res) => res.json())
+          .then((template) => stripObject(template))
+          .then((template) =>
+            downloadText('OYASUMI_TEMPLATE.json', JSON.stringify(template, null, 2))
+          );
+      }
+
+      function stripObject(obj) {
+        if (typeof obj === 'object') {
+          for (var keys in obj) {
+            if (typeof obj[keys] === 'object') {
+              stripObject(obj[keys]);
+            } else {
+              obj[keys] = '{PLACEHOLDER}';
+            }
+          }
+        }
+        return obj;
+      }
+
+      function downloadText(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
+      function isObject(item) {
+        return item && typeof item === 'object' && !Array.isArray(item);
+      }
+
+      function mergeDeep(target, ...sources) {
+        if (!sources.length) return target;
+        const source = sources.shift();
+
+        if (isObject(target) && isObject(source)) {
+          for (const key in source) {
+            if (isObject(source[key])) {
+              if (!target[key]) Object.assign(target, { [key]: {} });
+              mergeDeep(target[key], source[key]);
+            } else {
+              Object.assign(target, { [key]: source[key] });
+            }
+          }
+        }
+
+        return mergeDeep(target, ...sources);
+      }
+    </script>
+  </body>
+</html>

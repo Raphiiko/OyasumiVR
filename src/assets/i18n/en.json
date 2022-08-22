@@ -77,9 +77,15 @@
       "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
       "persistentStorage": {
         "title": "Persistent Storage",
+        "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
         "clearAll": "Clear All Storage",
         "clearAutomationSettings": "Clear Automation Settings",
         "clearAppSettings": "Clear App Settings"
+      },
+      "language": {
+        "title": "Language",
+        "description": "This option allows you to manually load a language file. This can be useful for testing new translations.",
+        "loadFile": "Load Language File"
       }
     }
   },
