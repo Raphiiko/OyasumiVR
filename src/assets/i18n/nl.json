@@ -77,9 +77,15 @@
       "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
       "persistentStorage": {
         "title": "Permanente opslag",
+        "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
         "clearAll": "Verwijder alles",
         "clearAutomationSettings": "Verwijder automatiserings instellingen",
         "clearAppSettings": "Verwijder programma instellingen"
+      },
+      "language": {
+        "title": "Taal",
+        "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
+        "loadFile": "Vertalings Bestand Laden"
       }
     }
   },
