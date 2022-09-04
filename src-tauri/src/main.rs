@@ -243,7 +243,9 @@ fn windows_relaunch_with_elevation() {
     let ovr_context = context_guard.as_ref();
     if let Some(ctx) = ovr_context {
         ctx.system().unwrap().acknowledge_quit_exiting();
-        unsafe { ctx.shutdown(); }
+        unsafe {
+            ctx.shutdown();
+        }
     }
     // Launch as administrator
     let exe_path = std::env::current_exe().unwrap();

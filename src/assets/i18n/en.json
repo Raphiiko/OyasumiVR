@@ -85,7 +85,7 @@
         "description": "Turn off devices when sleep mode is enabled.",
         "optionControllers": "Turn off all controllers",
         "optionTrackers": "Turn off all trackers",
-        "hint": "You can configure when sleep mode is enabled in <a routerLink=\"/dashboard/sleepDetection\">Sleep Detection</a>."
+        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>."
       },
       "onCharge": {
         "title": "When charging them",
@@ -94,6 +94,20 @@
         "optionTrackers": "Turn off trackers"
       }
     }
+  },
+  "gpu-automations": {
+    "title": "GPU Automations",
+    "disabled": {
+      "initializing": "GPU Automations are currently still initializing...",
+      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br /><br />This way you can save on your electricity usage while you're asleep, when you do not need as much performance as if you would when you are awake.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
+      "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to restart Oyasumi with the required permissions.",
+      "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "unknown": "An unknown error occurred trying to enable the GPU automations feature."
+    },
+    "restartAsAdmin": "Restart As Administrator",
+    "disable": "Disable GPU Automations",
+    "enable": "Enable GPU Automations",
+    "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use it if you know what you are doing."
   },
   "settings": {
     "title": "Settings",

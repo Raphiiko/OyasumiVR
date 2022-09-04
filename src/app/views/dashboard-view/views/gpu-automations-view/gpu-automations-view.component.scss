@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.pane {
+  height: 100%;
+}
+
+.pane-disabled {
+
+  .pane-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    > * {
+      max-width: 40em;
+    }
+  }
+
+  .icon {
+    font-size: 5em;
+    color: var(--color-text-3);
+  }
+
+  .alert {
+    text-align: left;
+    margin-top: 2em;
+    .alert-content button {
+      margin-left: 2em;
+    }
+  }
+
+  .action {
+    margin-top: 2em;
+    padding: 1em 1.5em;
+  }
+}

@@ -41,6 +41,9 @@ import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/aut
 import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
+import { WindowsService } from './services/windows.service';
+import { SleepModeService } from './services/sleep-mode.service';
+import { GpuAutomationService } from './services/gpu-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -102,6 +105,10 @@ export class AppModule {
   constructor(
     openvr: OpenVRService,
     nvml: NVMLService,
+    windows: WindowsService,
+    sleepModeService: SleepModeService,
+    // GPU automations
+    gpuAutomations: GpuAutomationService,
     // Sleep mode automations
     sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
@@ -115,6 +122,10 @@ export class AppModule {
     Promise.all([
       openvr.init(),
       nvml.init(),
+      windows.init(),
+      sleepModeService.init(),
+      // GPU automations
+      gpuAutomations.init(),
       // Sleep mode automations
       sleepModeEnableOnControllersPoweredOffAutomation.init(),
       sleepModeEnableAtBatteryPercentageAutomation.init(),

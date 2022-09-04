@@ -1,15 +1,42 @@
-<pre>{{ nvml.status | async }}</pre>
-<pre>{{ nvml.devices | async | json }}</pre>
-<pre>ELEVATED: {{ elevated }}</pre>
-<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 80)">
-  SET 80%
-</button>
-<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 90)">
-  SET 90%
-</button>
-<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 100)">
-  SET 100%
-</button>
-<button class="btn btn-primary" (click)="windows.relaunchWithElevation()">
-  ELEVATE
-</button>
+<div class="pane pane-disabled" *ngIf="panel !== 'ENABLED'">
+  <div class="pane-title" translate>gpu-automations.title</div>
+  <div class="pane-content">
+    <div class="icon">
+      <i class="material-icons" *ngIf="['DISABLED', 'INITIALIZING'].includes(panel)">info</i>
+      <i class="material-icons" *ngIf="['NO_ELEVATION', 'ERROR'].includes(panel)">warning</i>
+    </div>
+    <div class="description" [innerHTML]="disabledMessage | translate"></div>
+    <button
+      class="btn btn-primary action"
+      *ngIf="panel === 'NO_ELEVATION'"
+      (click)="windows.relaunchWithElevation()"
+      translate
+    >
+      gpu-automations.restartAsAdmin
+    </button>
+    <button
+      class="btn btn-secondary action"
+      *ngIf="!['DISABLED', 'NO_ELEVATION', 'INITIALIZING'].includes(panel)"
+      (click)="gpuAutomations.disable()"
+      translate
+    >
+      gpu-automations.disable
+    </button>
+    <div class="alert" *ngIf="panel === 'DISABLED'">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons">warning</i>
+      </div>
+      <div class="alert-content flex-row">
+        <span [innerHTML]="'gpu-automations.enableWarning' | translate"></span>
+        <button class="btn btn-primary" (click)="gpuAutomations.enable()" translate>
+          gpu-automations.enable
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pane" *ngIf="panel === 'ENABLED'">
+  <div class="pane-title" translate>gpu-automations.title</div>
+</div>

@@ -5,7 +5,7 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-type NVMLStatus =
+export type NVMLStatus =
   | 'INITIALIZING'
   | 'INIT_COMPLETE'
   | 'DRIVER_NOT_LOADED'
