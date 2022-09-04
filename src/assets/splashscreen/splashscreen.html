@@ -34,6 +34,7 @@
     </div>
     <script>
       window.__TAURI__.app.getVersion().then(function (version) {
+        if (version === '0.0.0') version = 'DEV';
         document.getElementById('version').innerHTML = 'v' + version;
       });
     </script>

@@ -4,7 +4,6 @@ on:
     branches:
       - develop
 
-
 jobs:
   build-test:
     concurrency:
@@ -25,7 +24,7 @@ jobs:
       - name: install app dependencies
         run: yarn
       - name: Set to DEV version
-        run: yarn set-version DEV --no-semver
+        run: yarn set-version DEV
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
