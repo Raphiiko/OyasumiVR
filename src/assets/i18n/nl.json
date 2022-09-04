@@ -19,35 +19,6 @@
       "other": "Overige"
     }
   },
-  "battery-settings": {
-    "title": "Batterij Automatiseringen",
-    "controller": "Controller",
-    "controllers": "Controllers",
-    "tracker": "Tracker",
-    "trackers": "Trackers",
-    "allControllers": "Alle Controllers",
-    "allTrackers": "Alle Trackers",
-    "turningOffDevices": "Apparaten uitzetten",
-    "turnOff": "Uitzetten",
-    "automation": {
-      "BATTERY_PERCENTAGE": {
-        "description": "Wanneer een batterij niveau onder <strong>{{value}}%</strong> valt",
-        "when": "Wanneer een",
-        "fallsBelow": "Valt onder"
-      },
-      "TIME_EVENT": {
-        "description": "Om een specifieke tijd",
-        "atTime": "Hoe laat"
-      },
-      "CONTROLLER_POWER_OFF": {
-        "description": "Wanneer beide controllers worden uitgezet"
-      },
-      "CHARGING_EVENT": {
-        "description": "Wanneer ze worden opgeladen",
-        "enableFor": "Aanzetten voor"
-      }
-    }
-  },
   "settings": {
     "title": "Instellingen",
     "tab": {

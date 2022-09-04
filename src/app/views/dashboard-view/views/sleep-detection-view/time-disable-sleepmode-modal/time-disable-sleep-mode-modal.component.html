@@ -1,0 +1,22 @@
+<div class="pane modal-md" [@fadeUp]>
+  <div class="pane-title" translate>sleep-detection.modals.disableAtTime.title</div>
+  <div class="pane-content">
+    <p translate>sleep-detection.modals.disableAtTime.description</p>
+    <div class="automation-settings">
+      <div class="automation-settings-row">
+        <div class="automation-settings-row-label" translate>
+          sleep-detection.modals.disableAtTime.time
+        </div>
+        <div class="automation-settings-row-controls">
+          <div class="input-wrapper">
+            <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='pane-actions spread'>
+    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+  </div>
+</div>

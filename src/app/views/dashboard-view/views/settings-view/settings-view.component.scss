@@ -13,24 +13,11 @@
 }
 
 .setting-category {
-  &-title {
-    font-size: 1.5em;
-    margin-bottom: 0.5em;
-    &:not(:first-child) {
-      margin-top: 1em;
-    }
-  }
-
-  &-description {
-    color: var(--color-text-2);
-    margin-bottom: 1em;
-
-    ::ng-deep strong {
-      background: var(--color-surface-1);
-      border-radius: 0.25em;
-      padding: 0.125em 0.25em;
-      font-weight: 500;
-    }
+  p::ng-deep strong {
+    background: var(--color-surface-1);
+    border-radius: 0.25em;
+    padding: 0.125em 0.25em;
+    font-weight: 500;
   }
 }
 
@@ -98,8 +85,12 @@
 .debug-persistent-storage-actions {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   button:not(:last-child) {
     margin-right: 1em;
   }
-  padding-bottom: 2em;
+  button {
+    margin-bottom: 1em;
+  }
+  padding-bottom: 1em;
 }

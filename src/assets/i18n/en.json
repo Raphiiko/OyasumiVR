@@ -2,10 +2,16 @@
   "shared": {
     "logo": {
       "tagline": "VR Sleeping Utilities"
+    },
+    "modals": {
+      "cancel": "Cancel",
+      "save": "Save"
     }
   },
   "dashboard-navbar": {
-    "batteryManagement": "Battery Management",
+    "overview": "Overview",
+    "sleepDetection": "Sleep Detection",
+    "batteryAutomations": "Battery Automations",
     "settings": "Settings",
     "about": "About Oyasumi"
   },
@@ -19,32 +25,72 @@
       "other": "Others"
     }
   },
-  "battery-settings": {
-    "title": "Battery Automations",
-    "controller": "Controller",
-    "controllers": "Controllers",
-    "tracker": "Tracker",
-    "trackers": "Trackers",
-    "allControllers": "All Controllers",
-    "allTrackers": "All Trackers",
-    "turningOffDevices": "Turning off devices",
-    "turnOff": "Turn off",
-    "automation": {
-      "BATTERY_PERCENTAGE": {
-        "description": "When a battery level falls below <strong>{{value}}%</strong>",
-        "when": "When a",
+  "overview": {
+    "sleep-mode": {
+      "label": "Sleep Mode",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "deactivate": "Deactivate"
+    }
+  },
+  "sleep-detection": {
+    "title": "Sleep Detection",
+    "description": "Here you can set up automations for enabling or disabling sleep mode automatically based on various triggers.",
+    "enableAutomations": {
+      "title": "Enabling sleep mode",
+      "atTime": "At a specific time",
+      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
+      "onControllersPoweredOff": "When all controllers are turned off"
+    },
+    "disableAutomations": {
+      "title": "Disabling sleep mode",
+      "atTime": "At a specific time",
+      "onDevicePowerOn": "When a device is turned on"
+    },
+    "modals": {
+      "enableAtTime": {
+        "title": "Enable sleep mode",
+        "description": "Enable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableAtTime": {
+        "title": "Disable sleep mode",
+        "description": "Disable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Disable sleep mode",
+        "whenTurningOn": "When turning on a",
+        "optionController": "Controller",
+        "optionTracker": "Tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Enable sleep mode",
+        "whenA": "When a",
+        "optionController": "Controller",
+        "optionTracker": "Tracker",
         "fallsBelow": "Falls below"
+      }
+    }
+  },
+  "battery-automations": {
+    "title": "Battery Automations",
+    "devicePowerOff": {
+      "title": "Turning off devices",
+      "description": "Various automations for turning off your SteamVR devices.",
+      "onSleepModeEnable": {
+        "title": "When I go to sleep",
+        "description": "Turn off devices when sleep mode is enabled.",
+        "optionControllers": "Turn off all controllers",
+        "optionTrackers": "Turn off all trackers",
+        "hint": "You can configure when sleep mode is enabled in <a routerLink=\"/dashboard/sleepDetection\">Sleep Detection</a>."
       },
-      "TIME_EVENT": {
-        "description": "At a specific time",
-        "atTime": "At time"
-      },
-      "CONTROLLER_POWER_OFF": {
-        "description": "When both controllers are turned off"
-      },
-      "CHARGING_EVENT": {
-        "description": "When they are charging",
-        "enableFor": "Enable for"
+      "onCharge": {
+        "title": "When charging them",
+        "description": "Have devices turn off automatically when you put them on the charger.",
+        "optionControllers": "Turn off controllers",
+        "optionTrackers": "Turn off trackers"
       }
     }
   },
@@ -80,7 +126,8 @@
         "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
         "clearAll": "Clear All Storage",
         "clearAutomationSettings": "Clear Automation Settings",
-        "clearAppSettings": "Clear App Settings"
+        "clearAppSettings": "Clear App Settings",
+        "printSettings": "Print Settings"
       },
       "language": {
         "title": "Language",

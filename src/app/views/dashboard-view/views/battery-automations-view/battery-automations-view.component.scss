@@ -1,0 +1,23 @@
+:host {
+  display: block;
+  height: 100%;
+  >.pane {
+    height: 100%;
+  }
+}
+
+label + p {
+  margin-top: 1em;
+}
+
+.automation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  >.pane {
+    background-color: var(--color-surface-3);
+    >.pane-content {
+      padding: 1.5em;
+    }
+  }
+}

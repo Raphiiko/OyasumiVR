@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "0.2.1"
+    "version": "0.3.0"
   },
   "tauri": {
     "allowlist": {
@@ -84,8 +84,8 @@
         "transparent": true
       },
       {
-        "width": 400,
-        "height": 200,
+        "width": 500,
+        "height": 275,
         "decorations": false,
         "url": "assets/splashscreen/splashscreen.html",
         "label": "splashscreen",

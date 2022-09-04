@@ -15,10 +15,26 @@ h3,
 h4,
 h5 {
   margin: 0;
-  font-weight: 200;
+  font-weight: 400;
 }
 
 .nowrap {
   word-break: keep-all;
   white-space: nowrap;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2 {
+  font-size: 1.5em;
+}
+
+h3 {
+  font-size: 1.25em;
+}
+
+p {
+  color: var(--color-text-2);
 }

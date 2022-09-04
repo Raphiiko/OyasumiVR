@@ -1,0 +1,70 @@
+<div class="pane">
+  <div class="pane-title" translate>battery-automations.title</div>
+  <div class="pane-content">
+    <h2 translate>battery-automations.devicePowerOff.title</h2>
+    <p translate>battery-automations.devicePowerOff.description</p>
+    <div class="automation-grid">
+      <div class="pane">
+        <div class="pane-content">
+          <h3 translate>battery-automations.devicePowerOff.onSleepModeEnable.title</h3>
+          <p translate>battery-automations.devicePowerOff.onSleepModeEnable.description</p>
+          <label class="check-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeConfig.deviceClasses.includes('Controller')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'Controller')"
+            />
+            <span class="check-toggle-checkmark"></span>
+            <span class="check-toggle-label" translate>
+              battery-automations.devicePowerOff.onSleepModeEnable.optionControllers
+            </span>
+          </label>
+          <label class="check-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeConfig.deviceClasses.includes('GenericTracker')"
+              (change)="
+                toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'GenericTracker')
+              "
+            />
+            <span class="check-toggle-checkmark"></span>
+            <span class="check-toggle-label" translate>
+              battery-automations.devicePowerOff.onSleepModeEnable.optionTrackers
+            </span>
+          </label>
+          <p
+            [innerHTML]="'battery-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
+          ></p>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-content">
+          <h2 translate>battery-automations.devicePowerOff.onCharge.title</h2>
+          <p translate>battery-automations.devicePowerOff.onCharge.description</p>
+          <label class="check-toggle">
+            <input
+              type="checkbox"
+              [checked]="onChargeConfig.deviceClasses.includes('Controller')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_WHEN_CHARGING', 'Controller')"
+            />
+            <span class="check-toggle-checkmark"></span>
+            <span class="check-toggle-label" translate>
+              battery-automations.devicePowerOff.onCharge.optionControllers
+            </span>
+          </label>
+          <label class="check-toggle">
+            <input
+              type="checkbox"
+              [checked]="onChargeConfig.deviceClasses.includes('GenericTracker')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_WHEN_CHARGING', 'GenericTracker')"
+            />
+            <span class="check-toggle-checkmark"></span>
+            <span class="check-toggle-label" translate>
+              battery-automations.devicePowerOff.onCharge.optionTrackers
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

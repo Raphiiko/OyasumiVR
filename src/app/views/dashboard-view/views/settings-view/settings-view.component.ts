@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { cloneDeep } from 'lodash';
 import { AppSettingsService } from '../../../../services/app-settings.service';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, Subject, takeUntil, tap } from 'rxjs';
 import { LighthouseConsoleStatus, OpenVRService } from '../../../../services/openvr.service';
 import { noop, vshrink } from '../../../../utils/animations';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
@@ -13,6 +13,7 @@ import { SETTINGS_FILE } from '../../../../globals';
 import { Router } from '@angular/router';
 import { readBinaryFile, readTextFile } from '@tauri-apps/api/fs';
 import { TranslateService } from '@ngx-translate/core';
+import { LighthouseService } from '../../../../services/lighthouse.service';
 
 @Component({
   selector: 'app-settings-view',
@@ -50,17 +51,18 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     private settingsService: AppSettingsService,
     public openvr: OpenVRService,
     private router: Router,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private lighthouse: LighthouseService
   ) {}
 
   ngOnInit(): void {
-    this.openvr.lighthouseConsoleStatus
+    this.lighthouse.consoleStatus
       .pipe(takeUntil(this.destroy$))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
     this.lighthouseConsolePathInputChange
       .pipe(takeUntil(this.destroy$), distinctUntilChanged(), debounceTime(500))
       .subscribe(async (path) => {
-        await this.openvr.setLighthouseConsolePath(path);
+        await this.lighthouse.setConsolePath(path);
       });
     this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((appSettings) => {
       this.appSettings = appSettings;
@@ -106,7 +108,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
         },
       ],
     });
-    if (path && typeof path === 'string') await this.openvr.setLighthouseConsolePath(path);
+    if (path && typeof path === 'string') await this.lighthouse.setConsolePath(path);
   }
 
   async clearStore(key?: string) {
@@ -151,5 +153,16 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     this.translate.setTranslation('DEBUG', translations);
     this.setUserLanguage('DEBUG');
     await message('Translations have been loaded from ' + path, 'Translations loaded');
+  }
+
+  async printSettings() {
+    console.log(
+      'SETTINGS',
+      await this.store.entries().then((entries) =>
+        entries.reduce((acc, kv) => {
+          return (acc[kv[0]] = kv[1]), acc;
+        }, {} as { [s: string]: any })
+      )
+    );
   }
 }

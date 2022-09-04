@@ -3,6 +3,7 @@ import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { fade } from '../../../../utils/animations';
+import { LighthouseService } from '../../../../services/lighthouse.service';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -12,9 +13,9 @@ import { fade } from '../../../../utils/animations';
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
-  constructor(private settingsService: AppSettingsService, private openvr: OpenVRService) {
+  constructor(private settingsService: AppSettingsService, private lighthouse: LighthouseService) {
     this.settingErrors = combineLatest([
-      this.openvr.lighthouseConsoleStatus.pipe(
+      this.lighthouse.consoleStatus.pipe(
         map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
         startWith(false)
       ),

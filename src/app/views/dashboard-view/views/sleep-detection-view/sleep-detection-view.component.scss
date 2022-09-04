@@ -1,0 +1,73 @@
+.pane {
+  height: 100%;
+
+  &-content {
+    padding: 2em;
+  }
+}
+
+.automation-panes {
+  padding-top: 2em;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1em;
+  max-width: 75em;
+
+  .automation-pane {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    overflow: hidden;
+    &:not(:last-child) {
+      padding-right: 1em;
+    }
+
+    &-title {
+      font-size: 1.5em;
+      text-align: center;
+      padding-bottom: 0.5em;
+    }
+  }
+}
+
+.automation {
+  background: var(--color-surface-3);
+  border-radius: var(--surface-border-radius);
+  overflow: hidden;
+  max-width: 40em;
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 1em 0;
+    &-description {
+      flex: 1;
+      padding: 0 1em;
+      ::ng-deep strong {
+        background: var(--color-surface-2);
+        border-radius: 0.25em;
+        padding: 0.125em 0.25em;
+        border: 1px solid var(--color-surface-4);
+      }
+    }
+    &-toggle {
+      margin: 0 0 0 2em;
+      padding: 0 1em;
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+
+.input-error {
+  color: var(--color-alert-error);
+  margin-bottom: 0.5em;
+  text-align: center;
+}

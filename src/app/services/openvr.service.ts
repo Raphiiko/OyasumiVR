@@ -37,10 +37,6 @@ export class OpenVRService {
 
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
-  private _lighthouseConsoleStatus: BehaviorSubject<LighthouseConsoleStatus> =
-    new BehaviorSubject<LighthouseConsoleStatus>('UNKNOWN');
-  public lighthouseConsoleStatus: Observable<LighthouseConsoleStatus> =
-    this._lighthouseConsoleStatus.asObservable();
 
   constructor(private appRef: ApplicationRef, private settingsService: AppSettingsService) {
     this.initStart = Date.now();
@@ -77,16 +73,6 @@ export class OpenVRService {
         this.onOpenVRInit(false);
       }),
     ]);
-    this.settingsService.settings
-      .pipe(startWith(await firstValueFrom(this.settingsService.settings)), pairwise())
-      .subscribe(([previousSettings, currentSettings]) => {
-        if (
-          this._lighthouseConsoleStatus.value === 'UNKNOWN' ||
-          previousSettings.lighthouseConsolePath !== currentSettings.lighthouseConsolePath
-        ) {
-          this.setLighthouseConsolePath(currentSettings.lighthouseConsolePath, false);
-        }
-      });
   }
 
   async onOpenVRInit(success: boolean) {
@@ -128,62 +114,5 @@ export class OpenVRService {
 
   private getDevices(): Promise<Array<OVRDevice>> {
     return invoke<OVRDevice[]>('openvr_get_devices');
-  }
-
-  async setLighthouseConsolePath(path: string, save: boolean = true) {
-    if (save) this.settingsService.updateSettings({ lighthouseConsolePath: path });
-    this._lighthouseConsoleStatus.next('CHECKING');
-    if (!path.endsWith('lighthouse_console.exe')) {
-      this._lighthouseConsoleStatus.next('NOT_FOUND');
-      return;
-    }
-    // Get output
-    let stdout;
-    try {
-      stdout = (
-        await invoke<{ stdout: string; stderr: string; status: number }>('run_command', {
-          command: path,
-          args: ['bogus_command'],
-        })
-      ).stdout;
-    } catch (e) {
-      if (
-        typeof e === 'string' &&
-        ['NOT_FOUND', 'PERMISSION_DENIED', 'INVALID_FILENAME'].includes(e)
-      ) {
-        this._lighthouseConsoleStatus.next(e as LighthouseConsoleStatus);
-        return;
-      }
-      this._lighthouseConsoleStatus.next('UNKNOWN_ERROR');
-      return;
-    }
-    // Check output
-    const stdoutLines = stdout.split('\n');
-    if (
-      !stdoutLines.length ||
-      !stdoutLines[0].trim().startsWith('Version:  lighthouse_console.exe')
-    ) {
-      this._lighthouseConsoleStatus.next('INVALID_EXECUTABLE');
-    }
-    this._lighthouseConsoleStatus.next('SUCCESS');
-  }
-
-  async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const lighthouseConsolePath = await firstValueFrom(this.settingsService.settings).then(
-      (settings) => settings.lighthouseConsolePath
-    );
-    if (this._lighthouseConsoleStatus.value !== 'SUCCESS') return;
-    ovrDevices = ovrDevices.filter(
-      (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
-    );
-    await Promise.all(
-      ovrDevices.map(async (device) => {
-        this.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-        await invoke('run_command', {
-          command: lighthouseConsolePath,
-          args: ['/serial', device.dongleId, 'poweroff'],
-        });
-      })
-    );
   }
 }
