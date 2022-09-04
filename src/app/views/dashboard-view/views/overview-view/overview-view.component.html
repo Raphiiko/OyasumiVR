@@ -2,9 +2,12 @@
   <div class="sleep-mode" [class.active]="sleepModeActive">
     <div class="sleep-mode-info">
       <div class="label" translate>overview.sleep-mode.label</div>
-      <div class="status" translate>
-        overview.sleep-mode.{{ sleepModeActive ? 'active' : 'inactive' }}
-      </div>
+      <div
+        class="status"
+        [translate]="
+          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'
+        "
+      ></div>
     </div>
     <div class="sleep-mode-actions">
       <button
