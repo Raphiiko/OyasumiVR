@@ -18,20 +18,19 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - name: Get Package Version
-        id: get-package-version
-        uses: stevenbenitez/get-package-version-action@v1
+      - name: setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Set to DEV version
+        run: yarn set-version DEV --no-semver
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
           validation_level: warn
-          version: ${{ steps.get-package-version.outputs.version }}
+          version: Unreleased
           path: ./CHANGELOG.md
-      - name: setup node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 16
       - name: install Rust nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -50,3 +49,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tagName: oyasumi-vDEV
+          releaseName: Oyasumi Development Build
+          releaseBody: ${{ steps.changelog_reader.outputs.changes }}
+          releaseDraft: false
+          prerelease: true

@@ -7,7 +7,8 @@ if (process.argv.length <= 2) {
   return;
 }
 const version = process.argv[2];
-if (!semver(version)) {
+const noSemver = process.argv[3];
+if (noSemver !== '--no-semver' && !semver(version)) {
   console.error('Provided version is not valid semver format');
   process.exit(1);
   return;
@@ -23,7 +24,7 @@ writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2
 
 let cargoToml = readFileSync('src-tauri/Cargo.toml').toString();
 cargoToml = cargoToml.replaceAll(
-  /\[package\]\r?\nname = "oyasumi"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
+  /\[package\]\r?\nname = "oyasumi"\r?\nversion = "(DEV|[0-9]+\.[0-9]+\.[0-9]+)"/g,
   `[package]\r\nname = "oyasumi"\r\nversion = "${version}"`
 );
 writeFileSync('src-tauri/Cargo.toml', cargoToml);
