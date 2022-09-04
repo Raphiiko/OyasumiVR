@@ -9,6 +9,9 @@ import { OverviewViewComponent } from './views/dashboard-view/views/overview-vie
 import {
   SleepDetectionViewComponent
 } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
+import {
+  GpuAutomationsViewComponent
+} from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 
 const routes: Routes = [
   {
@@ -27,6 +30,10 @@ const routes: Routes = [
       {
         path: 'batteryAutomations',
         component: BatteryAutomationsViewComponent,
+      },
+      {
+        path: 'gpuAutomations',
+        component: GpuAutomationsViewComponent,
       },
       {
         path: 'settings',

@@ -1,0 +1,15 @@
+<pre>{{ nvml.status | async }}</pre>
+<pre>{{ nvml.devices | async | json }}</pre>
+<pre>ELEVATED: {{ elevated }}</pre>
+<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 80)">
+  SET 80%
+</button>
+<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 90)">
+  SET 90%
+</button>
+<button class="btn btn-primary" (click)="nvml.setPowerLimit(0, (370000 / 100) * 100)">
+  SET 100%
+</button>
+<button class="btn btn-primary" (click)="windows.relaunchWithElevation()">
+  ELEVATE
+</button>

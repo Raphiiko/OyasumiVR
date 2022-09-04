@@ -40,7 +40,6 @@ export class OpenVRService {
 
   constructor(private appRef: ApplicationRef, private settingsService: AppSettingsService) {
     this.initStart = Date.now();
-    this.init();
   }
 
   async init() {

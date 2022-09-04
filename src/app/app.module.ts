@@ -38,6 +38,9 @@ import { SleepModeDisableAtTimeAutomationService } from './services/sleep-detect
 import { SleepModeDisableOnDevicePowerOnAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-device-power-on-automation.service';
 import { TurnOffDevicesWhenChargingAutomationService } from './services/automations/turn-off-devices-when-charging-automation.service';
 import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/automations/turn-off-devices-on-sleep-mode-enable-automation.service';
+import { NVMLService } from './services/nvml.service';
+import { OpenVRService } from './services/openvr.service';
+import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -60,6 +63,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
+    GpuAutomationsViewComponent,
   ],
   imports: [
     CommonModule,
@@ -96,6 +100,8 @@ export function createTranslateLoader(http: HttpClient) {
 })
 export class AppModule {
   constructor(
+    openvr: OpenVRService,
+    nvml: NVMLService,
     // Sleep mode automations
     sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
@@ -107,6 +113,8 @@ export class AppModule {
     turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService
   ) {
     Promise.all([
+      openvr.init(),
+      nvml.init(),
       // Sleep mode automations
       sleepModeEnableOnControllersPoweredOffAutomation.init(),
       sleepModeEnableAtBatteryPercentageAutomation.init(),

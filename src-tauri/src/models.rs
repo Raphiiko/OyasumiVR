@@ -30,6 +30,17 @@ pub struct OVRDevice {
 }
 
 #[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct NVMLDevice {
+    pub index: u32,
+    pub name: String,
+    pub power_limit: Option<u32>,
+    pub min_power_limit: Option<u32>,
+    pub max_power_limit: Option<u32>,
+    pub default_power_limit: Option<u32>,
+}
+
+#[derive(Clone, serde::Serialize)]
 pub struct DeviceUpdateEvent {
     pub device: OVRDevice,
 }
