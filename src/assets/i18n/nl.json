@@ -2,12 +2,19 @@
   "shared": {
     "logo": {
       "tagline": "VR Slaap Tools"
+    },
+    "modals": {
+      "cancel": "Annuleren",
+      "save": "Opslaan"
     }
   },
   "dashboard-navbar": {
-    "batteryManagement": "Batterij Management",
+    "overview": "Overzicht",
+    "sleepDetection": "Slaap Detectie",
+    "batteryAutomations": "Batterij Automatiseringen",
     "settings": "Instellingen",
-    "about": "Over Oyasumi"
+    "about": "Over Oyasumi",
+    "batteryManagement": "Batterij Management"
   },
   "device-list": {
     "title": "Apparaten",
@@ -17,6 +24,75 @@
       "Controller": "Controllers",
       "GenericTracker": "Trackers",
       "other": "Overige"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "Slaap modus",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "activate": "Activeer",
+      "deactivate": "Deactiveer"
+    }
+  },
+  "sleep-detection": {
+    "title": "Slaap Detectie",
+    "description": "Hier kan je automatiseringen instellen om op basis van verschillende triggers de slaap modus automatisch in of uit te schakelen.",
+    "enableAutomations": {
+      "title": "Slaap modus inschakelen",
+      "atTime": "Om een specifieke tijd",
+      "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
+      "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet"
+    },
+    "disableAutomations": {
+      "title": "Slaap modus uitschakelen",
+      "atTime": "Om een specifieke tijd",
+      "onDevicePowerOn": "Wanneer een apparaat wordt aangezet"
+    },
+    "modals": {
+      "enableAtTime": {
+        "title": "Slaap modus inschakelen",
+        "description": "Om een specifieke tijd op de dag",
+        "time": "Tijd"
+      },
+      "disableAtTime": {
+        "title": "Slaap modus uitschakelen",
+        "description": "Om een specifieke tijd op de dag",
+        "time": "Tijd"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Slaap modus uitschakelen",
+        "whenTurningOn": "Bij het aanzetten van",
+        "optionController": "Een controller",
+        "optionTracker": "Een tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Slaap modus inschakelen",
+        "whenA": "Wanneer een",
+        "optionController": "Controller",
+        "optionTracker": "Tracker",
+        "fallsBelow": "Valt onder de"
+      }
+    }
+  },
+  "battery-automations": {
+    "title": "Batterij Automatiseringen",
+    "devicePowerOff": {
+      "title": "Apparaten uitzetten",
+      "description": "Verschillende automatiseringen voor het uitzetten van je SteamVR apparaten.",
+      "onSleepModeEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Zet apparaten uit wanneer slaap modus wordt ingeschakeld.",
+        "optionControllers": "Alle controllers uitzetten",
+        "optionTrackers": "Alle trackers uitzetten",
+        "hint": "Je kan configureren wanneer slaap modus wordt ingeschakeld in <a routerLink=\"/dashboard/sleepDetection\">Slaap Detectie</a>."
+      },
+      "onCharge": {
+        "title": "Wanneer ik ze oplaad",
+        "description": "Zorg dat apparaten worden uitgezet wanneer je ze aan de lader legt.",
+        "optionControllers": "Controllers uitzetten",
+        "optionTrackers": "Trackers uitzetten"
+      }
     }
   },
   "settings": {
@@ -51,7 +127,8 @@
         "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
         "clearAll": "Verwijder alles",
         "clearAutomationSettings": "Verwijder automatiserings instellingen",
-        "clearAppSettings": "Verwijder programma instellingen"
+        "clearAppSettings": "Verwijder programma instellingen",
+        "printSettings": "{PLACEHOLDER}"
       },
       "language": {
         "title": "Taal",
