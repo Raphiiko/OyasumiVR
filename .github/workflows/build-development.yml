@@ -82,7 +82,6 @@ jobs:
               repo: context.repo.repo,
               tag: "oyasumi-vDEV"
             })
-            console.log('WEWLAD', release.data.id);
             return release.data.id
       - name: Get new development release ID
         uses: actions/github-script@v6
