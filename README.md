@@ -27,12 +27,12 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 ## Features
 
 - :wrench: Turning off all trackers and/or controllers with a single click.
-- :zzz: Manage your sleep state in various ways with automations:
-  - Fall asleep:
+- :zzz: Manage automations with a sleep mode in various ways:
+  - Detect falling asleep:
     - When a controller or tracker battery percentage falls below a threshold
     - When turning off your controllers
     - On a time schedule
-  - Wake up:
+  - Detect waking up:
     - When turning on a controller or tracker
     - On a time schedule
 - :battery: Battery automations:
