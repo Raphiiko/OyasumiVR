@@ -72,12 +72,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 570,
+        "height": 600,
         "resizable": true,
         "title": "Oyasumi",
         "width": 960,
         "minWidth": 960,
-        "minHeight": 570,
+        "minHeight": 600,
         "visible": false,
         "center": true,
         "theme": "Dark",
