@@ -12,6 +12,7 @@ on:
       - tsconfig.json
       - tsconfig.app.json
       - package.json
+      - CHANGELOG.md
 
 jobs:
   build-dev-release:
