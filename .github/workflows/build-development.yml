@@ -3,6 +3,15 @@ on:
   push:
     branches:
       - develop
+    paths:
+      - scripts/**
+      - src/**
+      - src-tauri/**
+      - .github/workflows/**
+      - angular.json
+      - tsconfig.json
+      - tsconfig.app.json
+      - package.json
 
 jobs:
   build-dev-release:
@@ -62,7 +71,6 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           prerelease: true
-          includeDebug: true
       - name: Get current development release ID if it exists
         uses: actions/github-script@v6
         continue-on-error: true
