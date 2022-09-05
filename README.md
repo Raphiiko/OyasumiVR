@@ -18,8 +18,7 @@
 
 This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality.
 
-**Note:** Currently, Oyasumi is in its very early stages. The current functionality is very likely to still contain bugs which I am trying to iron out.
-
+**Note:** Currently, Oyasumi is in its very early stages. The current functionality is likely to still contain several bugs and issues.
 
 ## Getting started
 
@@ -28,16 +27,27 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 ## Features
 
 - :wrench: Turning off all trackers and/or controllers with a single click.
+- :zzz: Manage your sleep state in various way with automations:
+  - Fall asleep:
+    - When a controller or tracker battery percentage falls below a threshold
+    - When turning off your controllers
+    - On a time schedule
+  - Wake up:
+    - When turning on a controller or tracker
+    - On a time schedule
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
-    - When their battery percentage falls below a threshold.
-    - At a specific time during the night.
-    - When both controllers are turned off.
-    - When they are put on the charger.
+    - When you go to sleep
+    - When putting them on the charger
+- :electric_plug: GPU Automations:
+  - Automatically tweak your power limits when you go to sleep and when you wake up.
 - 🗺️ Multi language support
-  - If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
+  - English
+  - Dutch
 
-More sleeping related functionality is still planned.
+If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
+
+More sleeping related functionality is planned.
 
 ### Built With
 
@@ -45,6 +55,7 @@ Oyasumi has been built with [Angular](https://angular.io/) and [Tauri](https://t
 
 ## Supported Devices
 
+### Battery Automations
 Currently Oyasumi supports battery automations for all SteamVR devices that:
 1. Support reporting for battery levels and charging status
 2. Support being turned off via SteamVR. 
@@ -58,6 +69,10 @@ This includes, but is not limited to the following devices:
 This means that any Oculus controller is unlikely to work, and SlimeVR trackers are unsupported unless they implement this functionality in their [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
 
 *(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware. (https://forum.tundra-labs.com/t/firmware-issues/746)*
+
+### GPU Automations
+
+Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported. 
 
 ## Development
 
