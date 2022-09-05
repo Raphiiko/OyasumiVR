@@ -8,7 +8,7 @@
   .tab {
     padding: 1em 2em;
     position: relative;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     &-label {
       font-weight: 500;
       font-size: 1.125em;
@@ -25,7 +25,7 @@
       left: 50%;
       transform: translateX(-1em);
       height: 0;
-      transition: all .15s ease;
+      transition: all 0.15s ease;
     }
     &.active {
       &:after {

@@ -1,6 +1,8 @@
 import { OVRDeviceClass } from './ovr-device';
 
 export type AutomationType =
+  // GPU AUTOMATIONS
+  | 'GPU_POWER_LIMITS' // Global enable flag
   // SLEEP MODE AUTOMATIONS
   | 'SLEEP_MODE_ENABLE_AT_TIME'
   | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
@@ -13,12 +15,14 @@ export type AutomationType =
 
 export interface AutomationConfigs {
   version: 2;
+  GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
   SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: SleepModeEnableAtControllersPoweredOffAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
+  // BATTERY AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
 }
@@ -30,6 +34,21 @@ export interface AutomationConfig {
 //
 // Automation configs
 //
+
+// GPU AUTOMATIONS
+export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
+  selectedDeviceId: string | null;
+  onSleepEnable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+  onSleepDisable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+}
 
 // SLEEP MODE AUTOMATIONS
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -66,6 +85,19 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   version: 2,
+  // GPU AUTOMATIONS
+  GPU_POWER_LIMITS: {
+    enabled: false,
+    selectedDeviceId: null,
+    onSleepEnable: {
+      enabled: false,
+      resetToDefault: false,
+    },
+    onSleepDisable: {
+      enabled: false,
+      resetToDefault: true,
+    },
+  },
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,

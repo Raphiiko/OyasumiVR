@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { noop } from '../../../../utils/animations';
 import { Subject, takeUntil } from 'rxjs';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
@@ -10,6 +10,7 @@ import {
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { OVRDeviceClass } from '../../../../models/ovr-device';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-battery-automations-view',
@@ -25,7 +26,14 @@ export class BatteryAutomationsViewComponent implements OnInit, OnDestroy {
   protected onChargeConfig: TurnOffDevicesWhenChargingAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
-  constructor(private automationConfigService: AutomationConfigService) {}
+  constructor(private router: Router, private automationConfigService: AutomationConfigService) {}
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent) {
+    if ((event.target as HTMLElement).className !== 'sleepDetectionLink') return;
+    event.preventDefault();
+    this.router.navigate(['/dashboard/sleepDetection']);
+  }
 
   ngOnInit(): void {
     this.automationConfigService.configs.pipe(takeUntil(this.destroy$)).subscribe((configs) => {

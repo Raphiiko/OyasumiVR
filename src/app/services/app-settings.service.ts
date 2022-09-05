@@ -3,7 +3,6 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
-import { AutomationConfig, AutomationConfigs, AutomationType } from '../models/automations';
 import { cloneDeep } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
 
@@ -35,9 +34,7 @@ export class AppSettingsService {
   }
 
   async loadSettings() {
-    let settings: AppSettings | null = await this.store.get<AppSettings>(
-      SETTINGS_KEY_APP_SETTINGS
-    );
+    let settings: AppSettings | null = await this.store.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     settings = settings ? migrateAppSettings(settings) : this._settings.value;
     this._settings.next(settings);
     await this.saveSettings();

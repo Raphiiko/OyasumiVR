@@ -85,7 +85,7 @@
         "description": "Zet apparaten uit wanneer slaap modus wordt ingeschakeld.",
         "optionControllers": "Alle controllers uitzetten",
         "optionTrackers": "Alle trackers uitzetten",
-        "hint": "Je kan configureren wanneer slaap modus wordt ingeschakeld in <a routerLink=\"/dashboard/sleepDetection\">Slaap Detectie</a>."
+        "hint": "Je kan configureren wanneer slaap modus wordt ingeschakeld in <a class=\"sleepDetectionLink\">Slaap Detectie</a>."
       },
       "onCharge": {
         "title": "Wanneer ik ze oplaad",

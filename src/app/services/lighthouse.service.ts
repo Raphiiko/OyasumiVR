@@ -11,8 +11,7 @@ import { OVRDevice } from '../models/ovr-device';
 export class LighthouseService {
   private _consoleStatus: BehaviorSubject<LighthouseConsoleStatus> =
     new BehaviorSubject<LighthouseConsoleStatus>('UNKNOWN');
-  public consoleStatus: Observable<LighthouseConsoleStatus> =
-    this._consoleStatus.asObservable();
+  public consoleStatus: Observable<LighthouseConsoleStatus> = this._consoleStatus.asObservable();
 
   constructor(private appSettings: AppSettingsService, private openvr: OpenVRService) {
     this.init();

@@ -7,22 +7,26 @@
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
-use std::sync::Mutex;
-use tauri_plugin_store::PluginBuilder;
-extern crate cronjob;
 use cronjob::CronJob;
-
-use models::OVRDevice;
+use models::{NVMLDevice, OVRDevice};
+use nvml_wrapper::Nvml;
 use openvr::{TrackedDeviceIndex, MAX_TRACKED_DEVICE_COUNT};
+use std::sync::Mutex;
+use std::{ffi::OsStr, os::windows::ffi::OsStrExt, ptr};
 use tauri::Manager;
+use tauri_plugin_store::PluginBuilder;
+use windows_sys::Win32::UI::Shell::ShellExecuteW;
 
 mod background;
 mod models;
+mod windows_oyasumi;
 
 lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<openvr::Context>> = Default::default();
     static ref TAURI_WINDOW: Mutex<Option<tauri::Window>> = Default::default();
     static ref OVR_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
+    static ref NVML_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
+    static ref NVML_HANDLE: Mutex<Option<Nvml>> = Default::default();
 }
 
 #[tauri::command]
@@ -122,10 +126,12 @@ async fn run_command(command: String, args: Vec<String>) -> Result<models::Outpu
         Err(error) => match error {
             tauri::api::Error::Io(io_err) => match io_err.kind() {
                 std::io::ErrorKind::NotFound => return Err(String::from("NOT_FOUND")),
-                std::io::ErrorKind::PermissionDenied =>
-                    return Err(String::from("PERMISSION_DENIED")),
-                std::io::ErrorKind::InvalidFilename =>
-                    return Err(String::from("INVALID_FILENAME")),
+                std::io::ErrorKind::PermissionDenied => {
+                    return Err(String::from("PERMISSION_DENIED"))
+                }
+                std::io::ErrorKind::InvalidFilename => {
+                    return Err(String::from("INVALID_FILENAME"))
+                }
                 other => {
                     eprintln!("Unknown IO Error occurred: {}", other);
                     return Err(String::from("UNKNOWN_ERROR"));
@@ -160,15 +166,118 @@ async fn openvr_status() -> String {
     OVR_STATUS.lock().unwrap().clone()
 }
 
+#[tauri::command]
+async fn nvml_status() -> String {
+    NVML_STATUS.lock().unwrap().clone()
+}
+
+#[tauri::command]
+async fn nvml_get_devices() -> Vec<NVMLDevice> {
+    let nvml_guard = NVML_HANDLE.lock().unwrap();
+    let nvml = nvml_guard.as_ref().unwrap();
+    let count = nvml.device_count().unwrap();
+    let mut gpus: Vec<NVMLDevice> = Vec::new();
+    for n in 0..count {
+        let device = match nvml.device_by_index(n) {
+            Ok(device) => device,
+            Err(err) => {
+                println!(
+                    "Could not access GPU at index {} due to an error: {:#?}",
+                    n, err
+                );
+                continue;
+            }
+        };
+        let constraints = device.power_management_limit_constraints().ok();
+        gpus.push(NVMLDevice {
+            uuid: device.uuid().unwrap(),
+            name: device.name().unwrap(),
+            power_limit: device.power_management_limit().ok(),
+            min_power_limit: constraints.as_ref().and_then(|c| Some(c.min_limit)),
+            max_power_limit: constraints.as_ref().and_then(|c| Some(c.max_limit)),
+            default_power_limit: device.power_management_limit_default().ok(),
+        });
+    }
+    gpus
+}
+
+#[tauri::command]
+async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result<bool, String> {
+    let nvml_guard = NVML_HANDLE.lock().unwrap();
+    let nvml = nvml_guard.as_ref().unwrap();
+
+    let mut device = match nvml.device_by_uuid(uuid.clone()) {
+        Ok(device) => device,
+        Err(err) => {
+            println!(
+                "Could not access GPU (uuid:{:#?}) due to an error: {:#?}",
+                uuid, err
+            );
+            return Err(String::from("DEVICE_ACCESS_ERROR"));
+        }
+    };
+
+    match device.set_power_management_limit(limit) {
+        Err(err) => {
+            println!(
+                "Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
+                uuid.clone(), err
+            );
+            return Err(String::from("DEVICE_SET_POWER_LIMIT_ERROR"));
+        }
+        _ => (),
+    }
+
+    Ok(true)
+}
+
+#[tauri::command]
+fn windows_is_elevated() -> bool {
+    windows_oyasumi::is_app_elevated()
+}
+
+#[tauri::command]
+fn windows_relaunch_with_elevation() {
+    // Disconnect from SteamVR
+    let context_guard = OVR_CONTEXT.lock().unwrap();
+    let ovr_context = context_guard.as_ref();
+    if let Some(ctx) = ovr_context {
+        ctx.system().unwrap().acknowledge_quit_exiting();
+        unsafe {
+            ctx.shutdown();
+        }
+    }
+    // Launch as administrator
+    let exe_path = std::env::current_exe().unwrap();
+    let path = exe_path.as_os_str();
+    let mut maybe_result: Vec<_> = path.encode_wide().collect();
+    maybe_result.push(0);
+    let path = maybe_result;
+    let operation: Vec<u16> = OsStr::new("runas\0").encode_wide().collect();
+    let r = unsafe {
+        ShellExecuteW(
+            0,
+            operation.as_ptr(),
+            path.as_ptr(),
+            ptr::null(),
+            ptr::null(),
+            0,
+        )
+    };
+    // Quit non-admin process if successful (self)
+    if r > 32 {
+        std::process::exit(0);
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
-            // window.open_devtools();
+            window.open_devtools();
             *TAURI_WINDOW.lock().unwrap() = Some(window);
-            // Initialize OpenVR
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
                 let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
@@ -194,6 +303,33 @@ fn main() {
                 let window_guard = TAURI_WINDOW.lock().unwrap();
                 let window = window_guard.as_ref().unwrap();
                 let _ = window.emit_all("OVR_INIT_COMPLETE", ());
+                // Initialize NVML
+                match Nvml::init() {
+                    Ok(nvml) => {
+                        *NVML_HANDLE.lock().unwrap() = Some(nvml);
+                        *NVML_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
+                        let _ = window.emit_all("NVML_INIT_COMPLETE", ());
+                        ()
+                    }
+                    Err(err) => {
+                        *NVML_HANDLE.lock().unwrap() = None;
+                        match err {
+                            nvml_wrapper::error::NvmlError::DriverNotLoaded => {
+                                *NVML_STATUS.lock().unwrap() = String::from("DRIVER_NOT_LOADED");
+                            }
+                            nvml_wrapper::error::NvmlError::NoPermission => {
+                                *NVML_STATUS.lock().unwrap() = String::from("NO_PERMISSION");
+                            }
+                            nvml_wrapper::error::NvmlError::Unknown => {
+                                *NVML_STATUS.lock().unwrap() = String::from("NVML_UNKNOWN_ERROR");
+                            }
+                            _ => {
+                                *NVML_STATUS.lock().unwrap() = String::from("UNKNOWN_ERROR");
+                            }
+                        };
+                        let _ = window.emit_all("NVML_INIT_ERROR", ());
+                    }
+                };
             });
             // Setup start of minute cronjob
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
@@ -205,7 +341,12 @@ fn main() {
             openvr_get_devices,
             run_command,
             close_splashscreen,
-            openvr_status
+            openvr_status,
+            nvml_status,
+            nvml_get_devices,
+            nvml_set_power_management_limit,
+            windows_is_elevated,
+            windows_relaunch_with_elevation,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

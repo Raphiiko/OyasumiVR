@@ -1,7 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { vshrink } from 'src/app/utils/animations';
-import { fade } from 'src/app/utils/animations';
-import { OpenVRService } from '../../../../services/openvr.service';
+import { fade, vshrink } from 'src/app/utils/animations';
 import { OVRDevice } from '../../../../models/ovr-device';
 import { LighthouseService } from '../../../../services/lighthouse.service';
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { AppSettingsService } from '../../../../services/app-settings.service';
-import { OpenVRService } from '../../../../services/openvr.service';
 import { fade } from '../../../../utils/animations';
 import { LighthouseService } from '../../../../services/lighthouse.service';
 
@@ -9,7 +8,7 @@ import { LighthouseService } from '../../../../services/lighthouse.service';
   selector: 'app-dashboard-navbar',
   templateUrl: './dashboard-navbar.component.html',
   styleUrls: ['./dashboard-navbar.component.scss'],
-  animations: [fade()]
+  animations: [fade()],
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;

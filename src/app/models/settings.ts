@@ -1,5 +1,3 @@
-import { AppSettingsService } from '../services/app-settings.service';
-
 export interface AppSettings {
   version: 1;
   userLanguage: string;

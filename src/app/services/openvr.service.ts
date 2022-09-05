@@ -4,16 +4,7 @@ import { exit } from '@tauri-apps/api/process';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice } from '../models/ovr-device';
-import {
-  BehaviorSubject,
-  firstValueFrom,
-  interval,
-  Observable,
-  pairwise,
-  startWith,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { BehaviorSubject, interval, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { orderBy } from 'lodash';
 import { message } from '@tauri-apps/api/dialog';
 import { AppSettingsService } from './app-settings.service';
@@ -40,7 +31,6 @@ export class OpenVRService {
 
   constructor(private appRef: ApplicationRef, private settingsService: AppSettingsService) {
     this.initStart = Date.now();
-    this.init();
   }
 
   async init() {

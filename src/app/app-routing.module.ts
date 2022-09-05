@@ -6,9 +6,8 @@ import { BatteryAutomationsViewComponent } from './views/dashboard-view/views/ba
 import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
-import {
-  SleepDetectionViewComponent
-} from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
+import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
+import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 
 const routes: Routes = [
   {
@@ -27,6 +26,10 @@ const routes: Routes = [
       {
         path: 'batteryAutomations',
         component: BatteryAutomationsViewComponent,
+      },
+      {
+        path: 'gpuAutomations',
+        component: GpuAutomationsViewComponent,
       },
       {
         path: 'settings',

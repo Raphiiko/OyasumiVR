@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { cloneDeep } from 'lodash';
-import { AppSettingsService } from '../../../../services/app-settings.service';
-import { debounceTime, distinctUntilChanged, firstValueFrom, Subject, takeUntil, tap } from 'rxjs';
+import {
+  AppSettingsService,
+  SETTINGS_KEY_APP_SETTINGS,
+} from '../../../../services/app-settings.service';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { LighthouseConsoleStatus, OpenVRService } from '../../../../services/openvr.service';
 import { noop, vshrink } from '../../../../utils/animations';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
-import { SETTINGS_KEY_APP_SETTINGS } from '../../../../services/app-settings.service';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../services/automation-config.service';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../../../../globals';
 import { Router } from '@angular/router';
-import { readBinaryFile, readTextFile } from '@tauri-apps/api/fs';
+import { readTextFile } from '@tauri-apps/api/fs';
 import { TranslateService } from '@ngx-translate/core';
 import { LighthouseService } from '../../../../services/lighthouse.service';
 

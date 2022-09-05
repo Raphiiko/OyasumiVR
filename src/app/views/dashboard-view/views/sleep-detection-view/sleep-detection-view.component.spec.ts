@@ -8,9 +8,8 @@ describe('SleepDetectionViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SleepDetectionViewComponent ]
-    })
-    .compileComponents();
+      declarations: [SleepDetectionViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SleepDetectionViewComponent);
     component = fixture.componentInstance;
