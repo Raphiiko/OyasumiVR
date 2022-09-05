@@ -6,6 +6,7 @@
   align-items: stretch;
   justify-content: flex-start;
   overflow: hidden;
+
   &-title {
     min-height: 3.25em;
     padding: 0.75em 1.25em;
@@ -22,16 +23,55 @@
       flex-shrink: 0;
     }
   }
+  &-content {
+    &:not(.no-padding) {
+      padding: 2em;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      margin-bottom: 0.5em;
+    }
+    p {
+      margin-bottom: 1em;
+    }
+  }
+  &-actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1em 1em;
+    border-top: 1px solid var(--color-surface-3);
+
+    &.spread {
+      > * {
+        flex: 1;
+      }
+    }
+
+    > button {
+      &:not(:first-child) {
+        margin-left: 1em;
+      }
+    }
+  }
+
+  &::-webkit-scrollbar,
   *::-webkit-scrollbar {
     width: 4px;
     height: 8px;
     background: transparent;
   }
 
+  &::-webkit-scrollbar-thumb,
   *::-webkit-scrollbar-thumb {
     background: var(--color-surface-4);
     border-radius: 2px;
   }
+  &::-webkit-scrollbar-track-piece,
   *::-webkit-scrollbar-track-piece {
     display: none;
   }

@@ -1,0 +1,38 @@
+<ng-container *ngIf="device">
+  <div class="header-bar">
+    <div class="header-bar-info">
+      <div class="device-name">{{ device.modelNumber }}</div>
+      <div class="device-serial">{{ device.serialNumber }}</div>
+    </div>
+    <div class="header-bar-action">
+      <button
+        class="btn-power-off"
+        *ngIf="device.canPowerOff && device.dongleId"
+        [disabled]="device.isTurningOff"
+        [@fade]
+        (click)="turnOffDevice(device)"
+      >
+        <i class="material-icons" *ngIf="!device.isTurningOff">power_settings_new</i>
+        <div class="small-spinner" *ngIf="device.isTurningOff"></div>
+      </button>
+    </div>
+  </div>
+  <div class="battery-info" [@vshrink] *ngIf="device.providesBatteryStatus || device.isCharging">
+    <div class="battery-info-bar">
+      <div
+        class="battery-info-bar-fill"
+        [@fade]
+        *ngIf="device.providesBatteryStatus"
+        [style.width]="device.battery * 100 + '%'"
+      ></div>
+    </div>
+    <div class="battery-info-label">
+      <span *ngIf="device.providesBatteryStatus" [@fade]>
+        {{ formatBatteryPercentage(device.battery) }}
+      </span>
+      <i class="material-icons">
+        {{ device.isCharging ? 'battery_charging_full' : 'battery_std' }}
+      </i>
+    </div>
+  </div>
+</ng-container>

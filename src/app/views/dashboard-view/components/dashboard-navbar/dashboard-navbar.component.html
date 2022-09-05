@@ -3,11 +3,32 @@
   <span class="logo-tagline" translate>shared.logo.tagline</span>
 </div>
 <div class="menu">
-  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'battery'">
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">apps</i>
+    </div>
+    <div class="menu-item-label" translate>dashboard-navbar.overview</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepDetection'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">bedtime</i>
+    </div>
+    <div class="menu-item-label" translate>dashboard-navbar.sleepDetection</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'batteryAutomations'">
     <div class="menu-item-icon-prefix">
       <i class="material-icons">battery_charging_full</i>
     </div>
-    <div class="menu-item-label" translate>dashboard-navbar.batteryManagement</div>
+    <div class="menu-item-label" translate>dashboard-navbar.batteryAutomations</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">energy_savings_leaf</i>
+    </div>
+    <div class="menu-item-label" translate>dashboard-navbar.gpuAutomations</div>
   </div>
 
   <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">

@@ -2,10 +2,17 @@
   "shared": {
     "logo": {
       "tagline": "VR Sleeping Utilities"
+    },
+    "modals": {
+      "cancel": "Cancel",
+      "save": "Save"
     }
   },
   "dashboard-navbar": {
-    "batteryManagement": "Battery Management",
+    "overview": "Overview",
+    "sleepDetection": "Sleep Detection",
+    "batteryAutomations": "Battery Automations",
+    "gpuAutomations": "GPU Automations",
     "settings": "Settings",
     "about": "About Oyasumi"
   },
@@ -19,34 +26,104 @@
       "other": "Others"
     }
   },
-  "battery-settings": {
-    "title": "Battery Automations",
-    "controller": "Controller",
-    "controllers": "Controllers",
-    "tracker": "Tracker",
-    "trackers": "Trackers",
-    "allControllers": "All Controllers",
-    "allTrackers": "All Trackers",
-    "turningOffDevices": "Turning off devices",
-    "turnOff": "Turn off",
-    "automation": {
-      "BATTERY_PERCENTAGE": {
-        "description": "When a battery level falls below <strong>{{value}}%</strong>",
-        "when": "When a",
+  "overview": {
+    "sleep-mode": {
+      "label": "Sleep Mode",
+      "active": "Active",
+      "inactive": "Inactive",
+      "activate": "Activate",
+      "deactivate": "Deactivate"
+    }
+  },
+  "sleep-detection": {
+    "title": "Sleep Detection",
+    "description": "Here you can set up automations for enabling or disabling sleep mode automatically based on various triggers.",
+    "enableAutomations": {
+      "title": "Enabling sleep mode",
+      "atTime": "At a specific time",
+      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
+      "onControllersPoweredOff": "When all controllers are turned off"
+    },
+    "disableAutomations": {
+      "title": "Disabling sleep mode",
+      "atTime": "At a specific time",
+      "onDevicePowerOn": "When a device is turned on"
+    },
+    "modals": {
+      "enableAtTime": {
+        "title": "Enable sleep mode",
+        "description": "Enable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableAtTime": {
+        "title": "Disable sleep mode",
+        "description": "Disable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Disable sleep mode",
+        "whenTurningOn": "When turning on a",
+        "optionController": "Controller",
+        "optionTracker": "Tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Enable sleep mode",
+        "whenA": "When a",
+        "optionController": "Controller",
+        "optionTracker": "Tracker",
         "fallsBelow": "Falls below"
-      },
-      "TIME_EVENT": {
-        "description": "At a specific time",
-        "atTime": "At time"
-      },
-      "CONTROLLER_POWER_OFF": {
-        "description": "When both controllers are turned off"
-      },
-      "CHARGING_EVENT": {
-        "description": "When they are charging",
-        "enableFor": "Enable for"
       }
     }
+  },
+  "battery-automations": {
+    "title": "Battery Automations",
+    "devicePowerOff": {
+      "title": "Turning off devices",
+      "description": "Various automations for turning off your SteamVR devices.",
+      "onSleepModeEnable": {
+        "title": "When I go to sleep",
+        "description": "Turn off devices when sleep mode is enabled.",
+        "optionControllers": "Turn off all controllers",
+        "optionTrackers": "Turn off all trackers",
+        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>."
+      },
+      "onCharge": {
+        "title": "When charging them",
+        "description": "Have devices turn off automatically when you put them on the charger.",
+        "optionControllers": "Turn off controllers",
+        "optionTrackers": "Turn off trackers"
+      }
+    }
+  },
+  "gpu-automations": {
+    "title": "GPU Automations",
+    "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep.",
+    "disabled": {
+      "initializing": "GPU Automations are currently still initializing...",
+      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br />This way you can save on your electricity usage while you're asleep.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
+      "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to restart Oyasumi with the required permissions.",
+      "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "noDevices": "No graphics cards could be found in your system.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "unknown": "An unknown error occurred trying to enable the GPU automations feature."
+    },
+    "restartAsAdmin": "Restart As Administrator",
+    "disable": "Disable GPU Automations",
+    "enable": "Enable GPU Automations",
+    "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use this if you know what you are doing.",
+    "selectGPU": "Select the GPU you wish to set the power limit for:",
+    "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
+    "currentPowerLimit": "Current Power Limit",
+    "automations": "Sleep Automations",
+    "activatingSleepMode": {
+      "title": "When I go to sleep",
+      "description": "Specify the power limit to set when sleep mode activates:"
+    },
+    "deactivatingSleepMode": {
+      "title": "When I wake up",
+      "description": "Specify the power limit to set when sleep mode deactivates:"
+    },
+    "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+    "inputDefault": "Reset to the GPU's default limit."
   },
   "settings": {
     "title": "Settings",
@@ -80,7 +157,8 @@
         "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
         "clearAll": "Clear All Storage",
         "clearAutomationSettings": "Clear Automation Settings",
-        "clearAppSettings": "Clear App Settings"
+        "clearAppSettings": "Clear App Settings",
+        "printSettings": "Log Settings"
       },
       "language": {
         "title": "Language",

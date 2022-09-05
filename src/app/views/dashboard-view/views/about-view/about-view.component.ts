@@ -13,5 +13,6 @@ export class AboutViewComponent implements OnInit {
 
   async ngOnInit() {
     this.version = await getVersion();
+    if (this.version === '0.0.0') this.version = 'DEV';
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-  AUTOMATION_DEFAULT_CONFIG,
+  AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfig,
   AutomationConfigs,
   AutomationType,
@@ -9,6 +9,7 @@ import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleT
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 import { cloneDeep } from 'lodash';
+import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
 
 export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
 
@@ -18,7 +19,7 @@ export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
 export class AutomationConfigService {
   private store = new Store(SETTINGS_FILE);
   private _configs: BehaviorSubject<AutomationConfigs> = new BehaviorSubject<AutomationConfigs>(
-    AUTOMATION_DEFAULT_CONFIG
+    AUTOMATION_CONFIGS_DEFAULT
   );
   configs: Observable<AutomationConfigs> = this._configs.asObservable();
 
@@ -37,9 +38,12 @@ export class AutomationConfigService {
       .subscribe();
   }
 
-  async updateAutomationConfig<T extends AutomationConfig>(automation: AutomationType, config: T) {
-    const configs = Object.assign({}, this._configs.value);
-    configs[automation] = config as any;
+  async updateAutomationConfig<T extends AutomationConfig>(
+    automation: AutomationType,
+    config: Partial<T>
+  ) {
+    const configs: AutomationConfigs = cloneDeep(this._configs.value);
+    configs[automation] = Object.assign({}, configs[automation], config) as any;
     this._configs.next(configs);
   }
 
@@ -47,13 +51,9 @@ export class AutomationConfigService {
     let configs: AutomationConfigs | null = await this.store.get<AutomationConfigs>(
       SETTINGS_KEY_AUTOMATION_CONFIGS
     );
-    if (!configs) {
-      await this.saveConfigs();
-      this._configs.next(this._configs.value);
-    } else {
-      configs = Object.assign({}, cloneDeep(this._configs.value), configs);
-      this._configs.next(configs);
-    }
+    configs = configs ? migrateAutomationConfigs(configs) : this._configs.value;
+    this._configs.next(configs);
+    await this.saveConfigs();
   }
 
   async saveConfigs() {

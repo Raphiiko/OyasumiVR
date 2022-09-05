@@ -2,9 +2,12 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { trigger } from '@angular/animations';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
-import { BatteryViewComponent } from './views/dashboard-view/views/battery-view/battery-view.component';
+import { BatteryAutomationsViewComponent } from './views/dashboard-view/views/battery-automations-view/battery-automations-view.component';
 import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
+import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
+import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
+import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 
 const routes: Routes = [
   {
@@ -13,8 +16,20 @@ const routes: Routes = [
     data: { animation: 'batteryManagement' },
     children: [
       {
-        path: 'battery',
-        component: BatteryViewComponent,
+        path: 'overview',
+        component: OverviewViewComponent,
+      },
+      {
+        path: 'sleepDetection',
+        component: SleepDetectionViewComponent,
+      },
+      {
+        path: 'batteryAutomations',
+        component: BatteryAutomationsViewComponent,
+      },
+      {
+        path: 'gpuAutomations',
+        component: GpuAutomationsViewComponent,
       },
       {
         path: 'settings',
@@ -26,7 +41,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: 'battery',
+        redirectTo: 'overview',
       },
     ],
   },

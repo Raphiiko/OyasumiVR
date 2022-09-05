@@ -1,47 +1,130 @@
 import { OVRDeviceClass } from './ovr-device';
 
 export type AutomationType =
-  | 'BATTERY_PERCENTAGE'
-  | 'CONTROLLER_POWER_OFF'
-  | 'TIME_EVENT'
-  | 'CHARGING_EVENT';
+  // GPU AUTOMATIONS
+  | 'GPU_POWER_LIMITS' // Global enable flag
+  // SLEEP MODE AUTOMATIONS
+  | 'SLEEP_MODE_ENABLE_AT_TIME'
+  | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
+  | 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF'
+  | 'SLEEP_MODE_DISABLE_AT_TIME'
+  | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
+  // BATTERY AUTOMATIONS
+  | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
+  | 'TURN_OFF_DEVICES_WHEN_CHARGING';
 
 export interface AutomationConfigs {
-  version: 1;
-  BATTERY_PERCENTAGE: BatteryPercentageAutomationConfig;
-  CONTROLLER_POWER_OFF: ControllerPoweroffAutomationConfig;
-  TIME_EVENT: TimeEventAutomationConfig;
-  CHARGING_EVENT: ChargingEventAutomationConfig;
+  version: 2;
+  GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
+  // SLEEP MODE AUTOMATIONS
+  SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
+  SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
+  SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: SleepModeEnableAtControllersPoweredOffAutomationConfig;
+  SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
+  // BATTERY AUTOMATIONS
+  TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
+  TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
 }
 
 export interface AutomationConfig {
   enabled: boolean;
 }
 
-export interface BatteryPercentageAutomationConfig extends AutomationConfig {
+//
+// Automation configs
+//
+
+// GPU AUTOMATIONS
+export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
+  selectedDeviceId: string | null;
+  onSleepEnable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+  onSleepDisable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+}
+
+// SLEEP MODE AUTOMATIONS
+export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
+  time: string | null;
+}
+
+export interface SleepModeEnableAtBatteryPercentageAutomationConfig extends AutomationConfig {
   triggerClasses: OVRDeviceClass[];
   threshold: number;
-  powerOffClasses: OVRDeviceClass[];
 }
 
-export interface ControllerPoweroffAutomationConfig extends AutomationConfig {}
-export interface TimeEventAutomationConfig extends AutomationConfig {
+export interface SleepModeEnableAtControllersPoweredOffAutomationConfig extends AutomationConfig {}
+
+export interface SleepModeDisableAtTimeAutomationConfig extends AutomationConfig {
   time: string | null;
-  powerOffClasses: OVRDeviceClass[];
-}
-export interface ChargingEventAutomationConfig extends AutomationConfig {
-  powerOffClasses: OVRDeviceClass[];
 }
 
-export const AUTOMATION_DEFAULT_CONFIG: AutomationConfigs = {
-  version: 1,
-  BATTERY_PERCENTAGE: {
+export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends AutomationConfig {
+  triggerClasses: OVRDeviceClass[];
+}
+
+// DEVICE BATTERY AUTOMATIONS
+export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends AutomationConfig {
+  deviceClasses: OVRDeviceClass[];
+}
+
+export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationConfig {
+  deviceClasses: OVRDeviceClass[];
+}
+
+//
+// DEFAULT
+//
+
+export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
+  version: 2,
+  // GPU AUTOMATIONS
+  GPU_POWER_LIMITS: {
     enabled: false,
-    triggerClasses: ['GenericTracker'],
-    threshold: 50,
-    powerOffClasses: ['GenericTracker'],
+    selectedDeviceId: null,
+    onSleepEnable: {
+      enabled: false,
+      resetToDefault: false,
+    },
+    onSleepDisable: {
+      enabled: false,
+      resetToDefault: true,
+    },
   },
-  CONTROLLER_POWER_OFF: { enabled: false },
-  TIME_EVENT: { enabled: false, time: null, powerOffClasses: ['GenericTracker'] },
-  CHARGING_EVENT: { enabled: false, powerOffClasses: ['Controller', 'GenericTracker'] },
+  // SLEEP MODE AUTOMATIONS
+  SLEEP_MODE_ENABLE_AT_TIME: {
+    enabled: false,
+    time: null,
+  },
+  SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: {
+    enabled: false,
+    triggerClasses: ['GenericTracker', 'Controller'],
+    threshold: 50,
+  },
+  SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: {
+    enabled: false,
+  },
+  SLEEP_MODE_DISABLE_AT_TIME: {
+    enabled: false,
+    time: null,
+  },
+  SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
+    enabled: false,
+    triggerClasses: ['GenericTracker', 'Controller'],
+  },
+  TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {
+    enabled: true,
+    deviceClasses: [],
+  },
+  TURN_OFF_DEVICES_WHEN_CHARGING: {
+    enabled: true,
+    deviceClasses: [],
+  },
 };

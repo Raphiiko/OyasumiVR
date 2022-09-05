@@ -10,10 +10,8 @@
   </div>
   <div class="pane-content" *ngIf="activeTab === 'GENERAL'" [@noop]>
     <div class="setting-category">
-      <div class="setting-category-title" translate>settings.general.language.title</div>
-      <div class="setting-category-description" translate>
-        settings.general.language.description
-      </div>
+      <h2 translate>settings.general.language.title</h2>
+      <p translate>settings.general.language.description</p>
       <div class="settings-language">
         <label class="radio-button" *ngFor="let language of languages">
           <input
@@ -32,11 +30,8 @@
       </div>
     </div>
     <div class="setting-category">
-      <div class="setting-category-title" translate>settings.general.lighthouseConsole.title</div>
-      <div
-        class="setting-category-description"
-        [innerHTML]="'settings.general.lighthouseConsole.description' | translate"
-      ></div>
+      <h2 translate>settings.general.lighthouseConsole.title</h2>
+      <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
       <div class="settings-lighthouse-console">
         <div class="file-path-bar">
           <div class="file-path-bar-path">
@@ -75,13 +70,11 @@
   </div>
   <div class="pane-content" *ngIf="activeTab === 'DEBUG'" [@noop]>
     <div class="setting-category">
-      <div class="setting-category-description" translate>settings.debug.description</div>
+      <p translate>settings.debug.description</p>
     </div>
     <div class="setting-category">
-      <div class="setting-category-title" translate>settings.debug.persistentStorage.title</div>
-      <div class="setting-category-description" translate>
-        settings.debug.persistentStorage.description
-      </div>
+      <h2 translate>settings.debug.persistentStorage.title</h2>
+      <p translate>settings.debug.persistentStorage.description</p>
       <div class="debug-persistent-storage-actions">
         <button class="btn btn-secondary" (click)="clearStore()" translate>
           settings.debug.persistentStorage.clearAll
@@ -100,14 +93,15 @@
         >
           settings.debug.persistentStorage.clearAppSettings
         </button>
+        <button class="btn btn-secondary" (click)="printSettings()" translate>
+          settings.debug.persistentStorage.printSettings
+        </button>
       </div>
     </div>
     <div class="setting-category">
-      <div class="setting-category-title" translate>settings.debug.language.title</div>
+      <h2 translate>settings.debug.language.title</h2>
     </div>
-    <div class="setting-category-description" translate>
-      settings.debug.language.description
-    </div>
+    <p translate>settings.debug.language.description</p>
     <div class="debug-persistent-storage-actions">
       <button class="btn btn-secondary" (click)="loadLanguageFile()" translate>
         settings.debug.language.loadFile

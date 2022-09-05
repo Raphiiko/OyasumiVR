@@ -1,6 +1,6 @@
 {
   "name": "oyasumi",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "author": "Raphiiko",
   "license": "MIT",
   "scripts": {
@@ -29,6 +29,8 @@
     "flag-icons": "^6.6.4",
     "lodash": "^4.17.21",
     "material-icons": "^1.11.10",
+    "ngx-pipes": "^3.1.0",
+    "ngx-simple-modal": "^1.4.17",
     "rxjs": "~7.5.0",
     "sass-material-colors": "^0.0.5",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#dev",

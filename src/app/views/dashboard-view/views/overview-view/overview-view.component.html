@@ -1,0 +1,34 @@
+<div class="overview">
+  <div class="sleep-mode" [class.active]="sleepModeActive">
+    <div class="sleep-mode-info">
+      <div class="label" translate>overview.sleep-mode.label</div>
+      <div
+        class="status"
+        [translate]="
+          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'
+        "
+      ></div>
+    </div>
+    <div class="sleep-mode-actions">
+      <button
+        class="btn btn-primary"
+        [class.btn-primary]="!sleepModeActive"
+        [class.btn-secondary]="sleepModeActive"
+        [disabled]="sleepModeActive"
+        (click)="setSleepMode(true)"
+        translate
+      >
+        overview.sleep-mode.activate
+      </button>
+      <button
+        class="btn btn-secondary"
+        [disabled]="!sleepModeActive"
+        (click)="setSleepMode(false)"
+        translate
+      >
+        overview.sleep-mode.deactivate
+      </button>
+    </div>
+  </div>
+</div>
+<app-device-list [@noop]></app-device-list>

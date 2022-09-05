@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi"
-version = "0.2.1"
+version = "0.3.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -20,6 +20,12 @@ serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "1.0.5", features = ["dialog-message", "dialog-open", "fs-read-file", "shell-execute", "shell-open", "updater"] }
 lazy_static = "1.4.0"
 cronjob = "0.4.17"
+nvml-wrapper = "0.8.0"
+windows-sys = "0.36.1"
+
+[dependencies.winapi]
+version = "0.3.9"
+features = ["handleapi", "processthreadsapi", "winnt", "securitybaseapi", "impl-default"]
 
 [dependencies.tauri-plugin-store]
 git = "https://github.com/tauri-apps/tauri-plugin-store"

@@ -1,0 +1,74 @@
+<div class="pane modal-md" [@fadeUp]>
+  <div class="pane-title" translate>sleep-detection.modals.enableAtBatteryPercentage.title</div>
+  <div class="pane-content">
+    <div class="automation-settings">
+      <div class="automation-settings-row">
+        <div class="automation-settings-row-label" translate>
+          sleep-detection.modals.enableAtBatteryPercentage.whenA
+        </div>
+        <div class="automation-settings-row-controls">
+          <label class="check-toggle">
+            <span class="check-toggle-label" translate>
+              sleep-detection.modals.enableAtBatteryPercentage.optionController
+            </span>
+            <input
+              type="checkbox"
+              [checked]="triggerClasses.includes('Controller')"
+              (change)="toggleClass('Controller')"
+            />
+            <span class="check-toggle-checkmark"></span>
+          </label>
+          <label class="check-toggle">
+            <span class="check-toggle-label" translate>
+              sleep-detection.modals.enableAtBatteryPercentage.optionTracker
+            </span>
+            <input
+              type="checkbox"
+              [checked]="triggerClasses.includes('GenericTracker')"
+              (change)="toggleClass('GenericTracker')"
+            />
+            <span class="check-toggle-checkmark"></span>
+          </label>
+        </div>
+      </div>
+      <div class="automation-settings-row">
+        <div class="automation-settings-row-label" translate>
+          sleep-detection.modals.enableAtBatteryPercentage.fallsBelow
+        </div>
+        <div class="automation-settings-row-controls">
+          <div
+            class="input-wrapper percentage"
+            [class.invalid]="batteryPercentageThresholdInput.validationMessage"
+          >
+            <input
+              type="number"
+              min="0"
+              max="100"
+              step="any"
+              [value]="threshold"
+              (change)="
+                updateThreshold(
+                  batteryPercentageThresholdInput.value,
+                  batteryPercentageThresholdInput
+                )
+              "
+              #batteryPercentageThresholdInput
+            />
+            <span>%</span>
+          </div>
+        </div>
+      </div>
+      <span
+        class="input-error"
+        *ngIf="batteryPercentageThresholdInput.validationMessage"
+        [@vshrink]
+      >
+        {{ batteryPercentageThresholdInput.validationMessage }}
+      </span>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+  </div>
+</div>

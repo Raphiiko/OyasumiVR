@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "0.2.1"
+    "version": "0.3.0"
   },
   "tauri": {
     "allowlist": {
@@ -72,20 +72,20 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 540,
+        "height": 600,
         "resizable": true,
         "title": "Oyasumi",
         "width": 960,
         "minWidth": 960,
-        "minHeight": 540,
+        "minHeight": 600,
         "visible": false,
         "center": true,
         "theme": "Dark",
         "transparent": true
       },
       {
-        "width": 400,
-        "height": 200,
+        "width": 500,
+        "height": 275,
         "decorations": false,
         "url": "assets/splashscreen/splashscreen.html",
         "label": "splashscreen",

@@ -55,6 +55,10 @@ button.btn {
   color: var(--scoped-color);
   border-radius: 0.5em;
 
+  &:disabled {
+    opacity: 0.5;
+  }
+
   &:not(:disabled) {
     cursor: pointer;
 
