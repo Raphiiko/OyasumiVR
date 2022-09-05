@@ -37,8 +37,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - On a time schedule
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
-    - When you go to sleep
-    - When putting them on the charger
+    - When you go to sleep (so you still have some juice left in the morning!)
+    - When putting them on a charger
 - :electric_plug: GPU Automations:
   - Automatically tweak your power limits when you go to sleep and when you wake up.
 - 🗺️ Multi language support
