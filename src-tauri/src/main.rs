@@ -276,7 +276,7 @@ fn main() {
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
-            window.open_devtools();
+            // window.open_devtools();
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
