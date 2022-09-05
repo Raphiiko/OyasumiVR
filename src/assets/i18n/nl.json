@@ -12,6 +12,7 @@
     "overview": "Overzicht",
     "sleepDetection": "Slaap Detectie",
     "batteryAutomations": "Batterij Automatiseringen",
+    "gpuAutomations": "GPU Automatiseringen",
     "settings": "Instellingen",
     "about": "Over Oyasumi",
     "batteryManagement": "Batterij Management"
@@ -95,6 +96,36 @@
       }
     }
   },
+  "gpu-automations": {
+    "title": "GPU Automatiseringen",
+    "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
+    "disabled": {
+      "initializing": "GPU Automatiseringen worden nog geinitialiseerd.,,",
+      "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.<br />Hier door kun je terwijl je slaapt energie besparen.<br /><br />GPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.<br />AMD en Intel GPUs worden nog niet ondersteund.",
+      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi opnieuw te starten met beheerders rechten.",
+      "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
+      "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
+      "unknown": "Er is een onbekende fout opgetreden bij het aanzetten van de GPU automations functionaliteit."
+    },
+    "restartAsAdmin": "Herstart Als Beheerder",
+    "disable": "Deactiveer GPU Automatiseringen",
+    "enable": "Activeer GPU Automatiseringen",
+    "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!<br />Het incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.<br />Houd dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
+    "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
+    "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
+    "currentPowerLimit": "Huidig stroom limiet",
+    "automations": "Slaap Automatiseringen",
+    "activatingSleepMode": {
+      "title": "Wanneer ik ga slapen",
+      "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert:"
+    },
+    "deactivatingSleepMode": {
+      "title": "Wanneer ik wakker word",
+      "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert:"
+    },
+    "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+    "inputDefault": "Herstel naar de GPU's standaard limiet."
+  },
   "settings": {
     "title": "Instellingen",
     "tab": {
@@ -128,7 +159,7 @@
         "clearAll": "Verwijder alles",
         "clearAutomationSettings": "Verwijder automatiserings instellingen",
         "clearAppSettings": "Verwijder programma instellingen",
-        "printSettings": "{PLACEHOLDER}"
+        "printSettings": "Instellingen loggen"
       },
       "language": {
         "title": "Taal",

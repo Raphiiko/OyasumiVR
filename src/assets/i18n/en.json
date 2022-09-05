@@ -113,13 +113,13 @@
     "selectGPU": "Select the GPU you wish to set the power limit for:",
     "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
     "currentPowerLimit": "Current Power Limit",
-    "automations": "Automations",
+    "automations": "Sleep Automations",
     "activatingSleepMode": {
-      "title": "When activating sleep mode",
+      "title": "When I go to sleep",
       "description": "Specify the power limit to set when sleep mode activates:"
     },
     "deactivatingSleepMode": {
-      "title": "When deactivating sleep mode",
+      "title": "When I wake up",
       "description": "Specify the power limit to set when sleep mode deactivates:"
     },
     "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
@@ -158,7 +158,7 @@
         "clearAll": "Clear All Storage",
         "clearAutomationSettings": "Clear Automation Settings",
         "clearAppSettings": "Clear App Settings",
-        "printSettings": "Print Settings"
+        "printSettings": "Log Settings"
       },
       "language": {
         "title": "Language",
