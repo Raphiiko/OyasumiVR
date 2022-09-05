@@ -27,7 +27,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 ## Features
 
 - :wrench: Turning off all trackers and/or controllers with a single click.
-- :zzz: Manage your sleep state in various way with automations:
+- :zzz: Manage your sleep state in various ways with automations:
   - Fall asleep:
     - When a controller or tracker battery percentage falls below a threshold
     - When turning off your controllers
@@ -47,7 +47,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 
-More sleeping related functionality is planned.
+Here is an example use case of these features combined:
+> I go to sleep in full body tracking. When one of my trackers reaches 50% battery, Oyasumi enables sleep mode. Because sleep mode is enabled, all my controllers and trackers are turned off and power limits are set for my graphics card to reduce the power usage. When I wake up, I turn on my controllers, so Oyasumi disables sleep mode. This restores the default power limits for my video card, giving me full performance again. My trackers and controllers still have plenty of the battery left to continue playing!
 
 ### Built With
 
@@ -72,7 +73,9 @@ This means that any Oculus controller is unlikely to work, and SlimeVR trackers 
 
 ### GPU Automations
 
-Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported. 
+Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported.
+
+For AMD support, please see the following [issue](https://github.com/Raphiiko/Oyasumi/issues/7).
 
 ## Development
 
