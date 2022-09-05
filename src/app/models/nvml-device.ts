@@ -1,8 +1,8 @@
 export interface NVMLDevice {
-  index: number;
+  uuid: string;
   name: string;
-  powerLimit: number;
-  minPowerLimit: number;
-  maxPowerLimit: number;
-  defaultPowerLimit: number;
+  powerLimit?: number;
+  minPowerLimit?: number;
+  maxPowerLimit?: number;
+  defaultPowerLimit?: number;
 }

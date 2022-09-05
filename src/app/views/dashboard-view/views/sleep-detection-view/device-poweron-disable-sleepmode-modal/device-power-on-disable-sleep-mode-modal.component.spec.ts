@@ -8,9 +8,8 @@ describe('TimeEnableSleepmodeModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DevicePowerOnDisableSleepModeModalComponent ]
-    })
-    .compileComponents();
+      declarations: [DevicePowerOnDisableSleepModeModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DevicePowerOnDisableSleepModeModalComponent);
     component = fixture.componentInstance;

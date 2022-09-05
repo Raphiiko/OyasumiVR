@@ -2,8 +2,6 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
-import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
-import { cloneDeep } from 'lodash';
 
 export interface DevicePowerOnDisableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];
@@ -48,10 +46,8 @@ export class DevicePowerOnDisableSleepModeModalComponent
   toggleClass(deviceClass: OVRDeviceClass) {
     if (this.triggerClasses.includes(deviceClass)) {
       this.triggerClasses = this.triggerClasses.filter((c) => c !== deviceClass);
-      console.log(this.triggerClasses);
     } else {
       this.triggerClasses.push(deviceClass);
-      console.log(this.triggerClasses);
     }
   }
 }

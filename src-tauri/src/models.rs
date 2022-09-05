@@ -32,7 +32,7 @@ pub struct OVRDevice {
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct NVMLDevice {
-    pub index: u32,
+    pub uuid: String,
     pub name: String,
     pub power_limit: Option<u32>,
     pub min_power_limit: Option<u32>,

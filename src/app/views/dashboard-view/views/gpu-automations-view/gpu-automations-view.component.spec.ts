@@ -8,9 +8,8 @@ describe('GpuAutomationsViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GpuAutomationsViewComponent ]
-    })
-    .compileComponents();
+      declarations: [GpuAutomationsViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GpuAutomationsViewComponent);
     component = fixture.componentInstance;

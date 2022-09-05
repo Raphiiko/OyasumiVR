@@ -97,17 +97,33 @@
   },
   "gpu-automations": {
     "title": "GPU Automations",
+    "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep.",
     "disabled": {
       "initializing": "GPU Automations are currently still initializing...",
-      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br /><br />This way you can save on your electricity usage while you're asleep, when you do not need as much performance as if you would when you are awake.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
+      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br />This way you can save on your electricity usage while you're asleep.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
       "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to restart Oyasumi with the required permissions.",
       "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "noDevices": "No graphics cards could be found in your system.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
       "unknown": "An unknown error occurred trying to enable the GPU automations feature."
     },
     "restartAsAdmin": "Restart As Administrator",
     "disable": "Disable GPU Automations",
     "enable": "Enable GPU Automations",
-    "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use it if you know what you are doing."
+    "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use this if you know what you are doing.",
+    "selectGPU": "Select the GPU you wish to set the power limit for:",
+    "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
+    "currentPowerLimit": "Current Power Limit",
+    "automations": "Automations",
+    "activatingSleepMode": {
+      "title": "When activating sleep mode",
+      "description": "Specify the power limit to set when sleep mode activates:"
+    },
+    "deactivatingSleepMode": {
+      "title": "When deactivating sleep mode",
+      "description": "Specify the power limit to set when sleep mode deactivates:"
+    },
+    "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+    "inputDefault": "Reset to the GPU's default limit."
   },
   "settings": {
     "title": "Settings",

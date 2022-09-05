@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { NVMLDevice } from '../models/nvml-device';
 import { listen } from '@tauri-apps/api/event';
-import { DeviceUpdateEvent } from '../models/events';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export type NVMLStatus =
@@ -45,11 +44,14 @@ export class NVMLService {
     return invoke<NVMLDevice[]>('nvml_get_devices');
   }
 
-  public async setPowerLimit(index: number, limit: number): Promise<boolean> {
+  public async setPowerLimit(uuid: string, limit: number): Promise<boolean> {
     limit = Math.floor(limit);
-    const success = await invoke<boolean>('nvml_set_power_management_limit', { index, limit });
+    const success = await invoke<boolean>('nvml_set_power_management_limit', { uuid, limit });
     if (success) {
       this._devices.next(await this.getDevices());
+      console.log('Set gpu power limit', { gpuUuid: uuid, powerLimit: limit });
+    } else {
+      console.error('Could not set gpu power limit', { gpuUuid: uuid, powerLimit: limit });
     }
     return success;
   }

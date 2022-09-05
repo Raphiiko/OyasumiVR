@@ -1,13 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  AsyncSubject,
-  BehaviorSubject,
-  filter,
-  map,
-  Observable,
-  ReplaySubject,
-  Subject,
-} from 'rxjs';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
 import { SETTINGS_FILE } from '../globals';
 import { Store } from 'tauri-plugin-store-api';

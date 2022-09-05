@@ -36,7 +36,19 @@ export interface AutomationConfig {
 //
 
 // GPU AUTOMATIONS
-export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {}
+export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
+  selectedDeviceId: string | null;
+  onSleepEnable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+  onSleepDisable: {
+    enabled: boolean;
+    powerLimit?: number;
+    resetToDefault: boolean;
+  };
+}
 
 // SLEEP MODE AUTOMATIONS
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -76,6 +88,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
+    selectedDeviceId: null,
+    onSleepEnable: {
+      enabled: false,
+      resetToDefault: false,
+    },
+    onSleepDisable: {
+      enabled: false,
+      resetToDefault: true,
+    },
   },
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: {

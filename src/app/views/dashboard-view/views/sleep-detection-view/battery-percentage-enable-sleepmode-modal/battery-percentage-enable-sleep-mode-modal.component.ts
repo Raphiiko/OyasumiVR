@@ -2,8 +2,7 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
-import { AUTOMATION_CONFIGS_DEFAULT } from '../../../../../models/automations';
-import { cloneDeep, isInteger } from 'lodash';
+import { isInteger } from 'lodash';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];
@@ -52,10 +51,8 @@ export class BatteryPercentageEnableSleepModeModalComponent
   toggleClass(deviceClass: OVRDeviceClass) {
     if (this.triggerClasses.includes(deviceClass)) {
       this.triggerClasses = this.triggerClasses.filter((c) => c !== deviceClass);
-      console.log(this.triggerClasses);
     } else {
       this.triggerClasses.push(deviceClass);
-      console.log(this.triggerClasses);
     }
   }
 

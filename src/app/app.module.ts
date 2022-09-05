@@ -28,22 +28,20 @@ import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views
 import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
 import { DevicePowerOnDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
-import {
-  SleepModeEnableAtBatteryPercentageAutomationConfig,
-  TurnOffDevicesOnSleepModeEnableAutomationConfig,
-} from './models/automations';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
 import { SleepModeEnableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-time-automation.service';
 import { SleepModeDisableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-at-time-automation.service';
 import { SleepModeDisableOnDevicePowerOnAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-device-power-on-automation.service';
-import { TurnOffDevicesWhenChargingAutomationService } from './services/automations/turn-off-devices-when-charging-automation.service';
-import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/automations/turn-off-devices-on-sleep-mode-enable-automation.service';
+import { TurnOffDevicesWhenChargingAutomationService } from './services/battery-automations/turn-off-devices-when-charging-automation.service';
+import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/battery-automations/turn-off-devices-on-sleep-mode-enable-automation.service';
 import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { WindowsService } from './services/windows.service';
 import { SleepModeService } from './services/sleep-mode.service';
 import { GpuAutomationService } from './services/gpu-automation.service';
+import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
+import { NgPipesModule } from 'ngx-pipes';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -67,6 +65,7 @@ export function createTranslateLoader(http: HttpClient) {
     BatteryPercentageEnableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
+    PowerLimitInputComponent,
   ],
   imports: [
     CommonModule,
@@ -82,6 +81,7 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    NgPipesModule,
     SimpleModalModule,
   ],
   providers: [
@@ -103,38 +103,43 @@ export function createTranslateLoader(http: HttpClient) {
 })
 export class AppModule {
   constructor(
-    openvr: OpenVRService,
-    nvml: NVMLService,
-    windows: WindowsService,
-    sleepModeService: SleepModeService,
+    private openvr: OpenVRService,
+    private nvml: NVMLService,
+    private windows: WindowsService,
+    private sleepModeService: SleepModeService,
     // GPU automations
-    gpuAutomations: GpuAutomationService,
+    private gpuAutomations: GpuAutomationService,
     // Sleep mode automations
-    sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
-    sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
-    sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
-    sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
-    sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
+    private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
+    private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
+    private sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
+    private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
+    private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Battery automations
-    turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
-    turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService
+    private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
+    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService
   ) {
-    Promise.all([
-      openvr.init(),
-      nvml.init(),
-      windows.init(),
-      sleepModeService.init(),
-      // GPU automations
-      gpuAutomations.init(),
-      // Sleep mode automations
-      sleepModeEnableOnControllersPoweredOffAutomation.init(),
-      sleepModeEnableAtBatteryPercentageAutomation.init(),
-      sleepModeEnableAtTimeAutomationService.init(),
-      sleepModeDisableAtTimeAutomationService.init(),
-      sleepModeDisableOnDevicePowerOnAutomationService.init(),
-      // Battery automations
-      turnOffDevicesOnSleepModeEnableAutomationService.init(),
-      turnOffDevicesWhenChargingAutomationService.init(),
+    this.init();
+  }
+
+  async init() {
+    await Promise.all([await this.openvr.init(), await this.windows.init()]);
+    await this.nvml.init();
+    await this.sleepModeService.init();
+    // GPU automations
+    await this.gpuAutomations.init();
+    // Sleep mode automations
+    await Promise.all([
+      this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
+      this.sleepModeEnableAtBatteryPercentageAutomation.init(),
+      this.sleepModeEnableAtTimeAutomationService.init(),
+      this.sleepModeDisableAtTimeAutomationService.init(),
+      this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
+    ]);
+    // Battery automations
+    await Promise.all([
+      this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
+      this.turnOffDevicesWhenChargingAutomationService.init(),
     ]);
   }
 }

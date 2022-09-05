@@ -5,7 +5,6 @@ import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableAtTimeAutomationConfig,
-  SleepModeEnableAtTimeAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
 import { map } from 'rxjs';

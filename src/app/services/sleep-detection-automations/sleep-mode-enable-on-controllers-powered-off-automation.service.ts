@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
-import { firstValueFrom, map } from 'rxjs';
+import { map } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableAtControllersPoweredOffAutomationConfig,

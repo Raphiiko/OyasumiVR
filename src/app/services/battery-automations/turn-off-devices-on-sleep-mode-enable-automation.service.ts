@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
-import { distinctUntilChanged, filter, firstValueFrom, map } from 'rxjs';
+import { filter, firstValueFrom, map, skip } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
-  TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
 import { SleepModeService } from '../sleep-mode.service';
@@ -32,7 +31,8 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
 
     this.sleepMode.sleepMode
       .pipe(
-        filter((sleepMode) => sleepMode),
+        skip(1), // Skip first value from initial load
+        filter((sleepMode) => sleepMode)
       )
       .subscribe(async () => {
         const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>

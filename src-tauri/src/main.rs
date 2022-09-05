@@ -190,7 +190,7 @@ async fn nvml_get_devices() -> Vec<NVMLDevice> {
         };
         let constraints = device.power_management_limit_constraints().ok();
         gpus.push(NVMLDevice {
-            index: n,
+            uuid: device.uuid().unwrap(),
             name: device.name().unwrap(),
             power_limit: device.power_management_limit().ok(),
             min_power_limit: constraints.as_ref().and_then(|c| Some(c.min_limit)),
@@ -202,16 +202,16 @@ async fn nvml_get_devices() -> Vec<NVMLDevice> {
 }
 
 #[tauri::command]
-async fn nvml_set_power_management_limit(index: u32, limit: u32) -> Result<bool, String> {
+async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result<bool, String> {
     let nvml_guard = NVML_HANDLE.lock().unwrap();
     let nvml = nvml_guard.as_ref().unwrap();
 
-    let mut device = match nvml.device_by_index(index) {
+    let mut device = match nvml.device_by_uuid(uuid.clone()) {
         Ok(device) => device,
         Err(err) => {
             println!(
-                "Could not access GPU at index {} due to an error: {:#?}",
-                index, err
+                "Could not access GPU (uuid:{:#?}) due to an error: {:#?}",
+                uuid, err
             );
             return Err(String::from("DEVICE_ACCESS_ERROR"));
         }
@@ -220,8 +220,8 @@ async fn nvml_set_power_management_limit(index: u32, limit: u32) -> Result<bool,
     match device.set_power_management_limit(limit) {
         Err(err) => {
             println!(
-                "Could not set power limit for GPU at index {} due to an error: {:#?}",
-                index, err
+                "Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
+                uuid.clone(), err
             );
             return Err(String::from("DEVICE_SET_POWER_LIMIT_ERROR"));
         }
@@ -276,7 +276,7 @@ fn main() {
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
-            // window.open_devtools();
+            window.open_devtools();
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
