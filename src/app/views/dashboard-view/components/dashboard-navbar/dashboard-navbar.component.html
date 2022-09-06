@@ -29,6 +29,9 @@
       <i class="material-icons">energy_savings_leaf</i>
     </div>
     <div class="menu-item-label" translate>dashboard-navbar.gpuAutomations</div>
+    <div class="menu-item-icon-suffix" [@fade] *ngIf="gpuAutomationsErrors | async">
+      <i class="material-icons">error_outline</i>
+    </div>
   </div>
 
   <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">

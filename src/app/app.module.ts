@@ -39,7 +39,7 @@ import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { WindowsService } from './services/windows.service';
 import { SleepModeService } from './services/sleep-mode.service';
-import { GpuAutomationService } from './services/gpu-automation.service';
+import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
 import { NgPipesModule } from 'ngx-pipes';
 
@@ -108,7 +108,7 @@ export class AppModule {
     private windows: WindowsService,
     private sleepModeService: SleepModeService,
     // GPU automations
-    private gpuAutomations: GpuAutomationService,
+    private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
     private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,

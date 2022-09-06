@@ -135,22 +135,24 @@
       </i>
     </div>
     <div class="description" [innerHTML]="disabledMessage | translate"></div>
-    <button
-      class="btn btn-primary action"
-      *ngIf="panel === 'NO_ELEVATION'"
-      (click)="windows.relaunchWithElevation()"
-      translate
-    >
-      gpu-automations.restartAsAdmin
-    </button>
-    <button
-      class="btn btn-secondary action"
-      *ngIf="!['DISABLED', 'NO_ELEVATION', 'INITIALIZING'].includes(panel)"
-      (click)="gpuAutomations.disable()"
-      translate
-    >
-      gpu-automations.disable
-    </button>
+    <div class="btn-row">
+      <button
+        class="btn btn-primary action"
+        *ngIf="panel === 'NO_ELEVATION'"
+        (click)="windows.relaunchWithElevation()"
+        translate
+      >
+        gpu-automations.restartAsAdmin
+      </button>
+      <button
+        class="btn btn-secondary action"
+        *ngIf="!['DISABLED', 'INITIALIZING'].includes(panel)"
+        (click)="gpuAutomations.disable()"
+        translate
+      >
+        gpu-automations.disable
+      </button>
+    </div>
     <div class="alert" *ngIf="panel === 'DISABLED'">
       <div class="alert-bg"></div>
       <div class="alert-icon">

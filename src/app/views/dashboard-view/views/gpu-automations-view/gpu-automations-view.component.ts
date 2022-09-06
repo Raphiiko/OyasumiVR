@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NVMLService, NVMLStatus } from '../../../../services/nvml.service';
 import { WindowsService } from '../../../../services/windows.service';
 import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
-import { GpuAutomationService } from '../../../../services/gpu-automation.service';
+import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { GPUDevice, GPUPowerLimit } from '../../../../models/gpu-device';
 import { fade, noop, vshrink } from 'src/app/utils/animations';
 
@@ -27,7 +27,7 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   constructor(
     private nvml: NVMLService,
     public windows: WindowsService,
-    public gpuAutomations: GpuAutomationService
+    public gpuAutomations: GpuAutomationsService
   ) {
     this.gpuAutomations.devices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
       this.gpuDevices = devices;

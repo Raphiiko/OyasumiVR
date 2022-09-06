@@ -21,7 +21,7 @@ import { SleepModeService } from './sleep-mode.service';
 @Injectable({
   providedIn: 'root',
 })
-export class GpuAutomationService {
+export class GpuAutomationsService {
   private currentConfig: GPUPowerLimitsAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS
   );
@@ -62,8 +62,8 @@ export class GpuAutomationService {
         this.selectDevice(devices[0]);
       }
     });
-    this.setupOnSleepEnableAutomation();
-    this.setupOnSleepDisableAutomation();
+    // Setup sleep based GPU automations
+    this.setupOnSleepAutomations();
   }
 
   isEnabled(): Observable<boolean> {
@@ -150,61 +150,58 @@ export class GpuAutomationService {
     );
   }
 
-  private setupOnSleepEnableAutomation() {
-    this.sleepMode.sleepMode
-      .pipe(
-        skip(1), // Skip first value from initial load
-        filter((sleepMode) => sleepMode),
-        switchMap((_) => this.isEnabled().pipe(take(1))),
-        filter((gpuAutomationsEnabled) => gpuAutomationsEnabled),
-        filter((_) => this.currentConfig.onSleepEnable.enabled),
-        switchMap((_) =>
-          this.devices.pipe(
-            take(1),
-            map((devices) => devices.find((d) => d.id === this.currentConfig.selectedDeviceId))
+  private setupOnSleepAutomations() {
+    const setupOnSleepAutomation = (on: 'ENABLE' | 'DISABLE') => {
+      const getAutomationConfig = () => {
+        switch (on) {
+          case 'ENABLE':
+            return this.currentConfig.onSleepEnable;
+          case 'DISABLE':
+            return this.currentConfig.onSleepDisable;
+        }
+      };
+      this.sleepMode.sleepMode
+        .pipe(
+          // Skip first value from initial load
+          skip(1),
+          // Trigger only on enable or disable
+          filter((sleepMode) => {
+            switch (on) {
+              case 'ENABLE':
+                return sleepMode;
+              case 'DISABLE':
+                return !sleepMode;
+            }
+          }),
+          // Check if GPU automations are enabled
+          switchMap((_) => this.isEnabled().pipe(take(1))),
+          filter((gpuAutomationsEnabled) => gpuAutomationsEnabled),
+          // Check if on sleep disable automation is enabled
+          filter((_) => getAutomationConfig().enabled),
+          // Fetch selected device
+          switchMap((_) =>
+            this.devices.pipe(
+              take(1),
+              map((devices) => devices.find((d) => d.id === this.currentConfig.selectedDeviceId))
+            )
+          ),
+          // Check if selected device is available and supports power limiting
+          filter((selectedDevice) => !!selectedDevice && !!selectedDevice.supportsPowerLimiting),
+          switchMap((selectedDevice) =>
+            this.nvml.setPowerLimit(
+              selectedDevice!.id,
+              (getAutomationConfig().resetToDefault
+                ? selectedDevice!.defaultPowerLimit!
+                : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!) * 1000
+            )
           )
-        ),
-        filter((selectedDevice) => !!selectedDevice)
-      )
-      .subscribe(async (selectedDevice) => {
-        if (!selectedDevice || !selectedDevice.defaultPowerLimit) return;
-        await this.nvml.setPowerLimit(
-          selectedDevice.id,
-          (this.currentConfig.onSleepEnable.resetToDefault
-            ? selectedDevice.defaultPowerLimit
-            : this.currentConfig.onSleepEnable.powerLimit || selectedDevice.defaultPowerLimit) *
-            1000
-        );
-      });
+        )
+        .subscribe();
+    };
+    setupOnSleepAutomation('ENABLE');
+    setupOnSleepAutomation('DISABLE');
   }
 
-  private setupOnSleepDisableAutomation() {
-    this.sleepMode.sleepMode
-      .pipe(
-        skip(1), // Skip first value from initial load
-        filter((sleepMode) => !sleepMode),
-        switchMap((_) => this.isEnabled().pipe(take(1))),
-        filter((gpuAutomationsEnabled) => gpuAutomationsEnabled),
-        filter((_) => this.currentConfig.onSleepDisable.enabled),
-        switchMap((_) =>
-          this.devices.pipe(
-            take(1),
-            map((devices) => devices.find((d) => d.id === this.currentConfig.selectedDeviceId))
-          )
-        ),
-        filter((selectedDevice) => !!selectedDevice)
-      )
-      .subscribe((selectedDevice) => {
-        if (!selectedDevice || !selectedDevice.defaultPowerLimit) return;
-        this.nvml.setPowerLimit(
-          selectedDevice.id,
-          (this.currentConfig.onSleepDisable.resetToDefault
-            ? selectedDevice.defaultPowerLimit
-            : this.currentConfig.onSleepDisable.powerLimit || selectedDevice.defaultPowerLimit) *
-            1000
-        );
-      });
-  }
   private mapNVMLDeviceToGPUDevice(nvmlDevice: NVMLDevice): GPUDevice {
     return {
       id: nvmlDevice.uuid,
