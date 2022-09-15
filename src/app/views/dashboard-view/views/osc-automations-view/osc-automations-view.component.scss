@@ -1,0 +1,91 @@
+:host > .pane {
+  height: 100%;
+  >.pane-content {
+    overflow-y: overlay;
+  }
+}
+
+.option-pane {
+  background: var(--color-surface-3);
+  overflow: visible;
+  &:not(:first-of-type) {
+    margin-top: 1em;
+  }
+  .title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5em 0.5em 0.5em 1em;
+    h3 {
+      margin: 0;
+      flex: 1;
+    }
+    label {
+      margin-right: 1em;
+    }
+    &-actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+
+      .collapse-toggle {
+        margin: -0.5em 0 -0.5em 0.5em;
+        width: 3em;
+        height: 3em;
+        border-radius: 3em;
+        &:hover {
+          background: var(--color-surface-4);
+        }
+      }
+    }
+  }
+
+  &-options {
+    border-top: 1px solid var(--color-surface-4);
+    padding: 1.5em;
+
+    .osc-options-error {
+      color: var(--color-caution);
+    }
+  }
+  .option {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &:not(:first-child) {
+      margin-top: 1em;
+    }
+
+    &.suboption {
+      padding-left: 3em;
+    }
+
+    &-label {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      > *:first-child {
+      }
+      > *:last-child {
+        margin-top: 0.5em;
+        color: var(--color-text-3);
+      }
+    }
+    &-actions {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      flex-shrink: 0;
+      > *:not(:first-child) {
+        margin-left: 0.5em;
+      }
+      input[type='number'] {
+        background: var(--color-surface-2);
+      }
+    }
+  }
+}

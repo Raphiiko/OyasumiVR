@@ -1,0 +1,104 @@
+<div class="pane" [@noop]>
+  <div class="pane-title" translate>oscAutomations.title</div>
+  <div class="tab-bar">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'SLEEPING_ANIMATIONS'"
+      (click)="activeTab = 'SLEEPING_ANIMATIONS'"
+    >
+      <div class="tab-label" translate>oscAutomations.tab.sleepingAnimations</div>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'" [@noop]>
+    <p translate>
+      Oyasumi can automatically change your avatar animations when you change sleeping position.
+      This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn
+      off your trackers during the night. See an example of what this could look like
+      <a href="https://youtu.be/3T54bTAzT7o" target="_blank">here.</a>
+      <br />
+      <br />
+      Presets are available for several pre-made avatar locomotion prefabs, but you can specify your
+      own animations as well.
+    </p>
+    <!-- ENABLE/OSC PANE-->
+    <div class="pane option-pane">
+      <div class="pane-content no-padding">
+        <div class="title">
+          <label class="switch-toggle">
+            <input type="checkbox" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+          <h3 translate>Enable automatic sleeping animations</h3>
+          <div class="title-actions">
+            <app-select-box [items]="oscPresetOptions"></app-select-box>
+            <button class="btn collapse-toggle" (click)="oscOptionsExpanded = !oscOptionsExpanded">
+              <i class="material-icons">{{ oscOptionsExpanded ? 'expand_less' : 'expand_more' }}</i>
+            </button>
+          </div>
+        </div>
+        <div class="option-pane-options" *ngIf="oscOptionsExpanded" [@vshrink]>
+          <p class="osc-options-error">These options are not customizable for presets.</p>
+          <div class="option">
+            <div class="option-label">
+              <span>Sleeping Positions</span>
+              <span>Set the OSC commands to activate each sleeping position.</span>
+            </div>
+            <div class="option-actions">
+              <app-osc-script-button [label]="'Upright'"></app-osc-script-button>
+              <app-osc-script-button [label]="'Back Side'"></app-osc-script-button>
+              <app-osc-script-button [label]="'Left Side'"></app-osc-script-button>
+              <app-osc-script-button [label]="'Right Side'"></app-osc-script-button>
+            </div>
+          </div>
+          <div class="option">
+            <div class="option-label">
+              <span>Foot Lock</span>
+              <span>Set the OSC commands to enable and disable the foot lock.</span>
+            </div>
+            <div class="option-actions">
+              <app-osc-script-button [label]="'Enable Foot Lock'"></app-osc-script-button>
+              <app-osc-script-button [label]="'Disable Foot Lock'"></app-osc-script-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- EXTRA OPTIONS PANE-->
+    <div class="pane option-pane">
+      <div class="pane-content">
+        <h3>Options</h3>
+        <label class="check-toggle">
+          <input type="checkbox" />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>
+            Only switch animations when sleep mode is enabled
+          </span>
+        </label>
+        <h3 style="margin-top: 1em">Foot lock</h3>
+        <label class="check-toggle">
+          <input type="checkbox" />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>
+            Lock feet when sleep mode is enabled
+          </span>
+        </label>
+        <label class="check-toggle">
+          <input type="checkbox" />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>
+            Momentarily release foot lock when switching sleeping positions
+          </span>
+        </label>
+        <div class="option suboption">
+          <div class="option-label">Foot lock release duration</div>
+          <div class="option-actions">
+            <div class="input-wrapper percentage" [class.invalid]="false">
+              <input type="number" min="0" max="100" step="any" style="width: 5em" />
+              <span>s</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

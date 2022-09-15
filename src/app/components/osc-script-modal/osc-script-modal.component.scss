@@ -1,0 +1,21 @@
+@import "@fontsource/fira-code/index.css";
+
+.tab {
+  flex: 1;
+}
+
+
+.script-tab {
+  .code-editor {
+    font-family: 'Fira Code', monospace;
+    width: 100%;
+    background: var(--color-surface-0);
+    color: var(--color-text-2);
+    border: none;
+    padding: 0.75em;
+    border-radius: 0.5em;
+    outline: none !important;
+    resize: none;
+  }
+}
+

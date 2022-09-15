@@ -11,6 +11,7 @@
   "dashboard-navbar": {
     "overview": "Overview",
     "sleepDetection": "Sleep Detection",
+    "oscAutomations": "OSC Automations",
     "batteryAutomations": "Battery Automations",
     "gpuAutomations": "GPU Automations",
     "settings": "Settings",
@@ -73,6 +74,15 @@
         "optionTracker": "Tracker",
         "fallsBelow": "Falls below"
       }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC Automations",
+    "tab": {
+      "sleepingAnimations": "Sleeping Animations"
+    },
+    "sleepingAnimations": {
+      "presetAuthor": "by {{author}}"
     }
   },
   "battery-automations": {
@@ -164,6 +174,9 @@
         "title": "Language",
         "description": "This option allows you to manually load a language file. This can be useful for testing new translations.",
         "loadFile": "Load Language File"
+      },
+      "sleepingPose": {
+        "title": "Sleeping Pose"
       }
     }
   },
@@ -174,5 +187,10 @@
     "translations": "Translations",
     "projectLinks": "Project Links",
     "sourceLink": "Source Code @ GitHub"
+  },
+  "comp": {
+    "select-box": {
+      "defaultPlaceholder": "Select..."
+    }
   }
 }

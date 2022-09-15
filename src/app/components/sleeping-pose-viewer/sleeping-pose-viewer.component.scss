@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--surface-border-radius);
+  flex: 1;
+  width: 100%;
+  border: 2px solid var(--color-surface-0);
+}
+
+.overlay {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.25);
+  padding: 1em;
+  margin: 0;
+  * {
+    margin: 0;
+  }
+}

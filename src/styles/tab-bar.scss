@@ -10,8 +10,16 @@
     position: relative;
     transition: all 0.15s ease;
     &-label {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       font-weight: 500;
       font-size: 1.125em;
+      line-height: 1em;
+      i.material-icons {
+        margin-right: 0.25em;
+      }
     }
     &:hover {
       background: var(--color-surface-2);

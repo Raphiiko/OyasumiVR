@@ -38,10 +38,17 @@ import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { WindowsService } from './services/windows.service';
-import { SleepModeService } from './services/sleep-mode.service';
+import { SleepService } from './services/sleep.service';
 import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
 import { NgPipesModule } from 'ngx-pipes';
+import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/sleeping-pose-viewer.component';
+import { OscService } from './services/osc.service';
+import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
+import { SelectBoxComponent } from './components/select-box/select-box.component';
+import { TStringTranslatePipePipe } from './pipes/tstring-translate.pipe';
+import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
+import { OscScriptModalComponent } from './components/osc-script-modal/osc-script-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -66,6 +73,12 @@ export function createTranslateLoader(http: HttpClient) {
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
+    SleepingPoseViewerComponent,
+    OscAutomationsViewComponent,
+    SelectBoxComponent,
+    TStringTranslatePipePipe,
+    OscScriptButtonComponent,
+    OscScriptModalComponent,
   ],
   imports: [
     CommonModule,
@@ -106,7 +119,8 @@ export class AppModule {
     private openvr: OpenVRService,
     private nvml: NVMLService,
     private windows: WindowsService,
-    private sleepModeService: SleepModeService,
+    private sleep: SleepService,
+    private osc: OscService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -123,9 +137,9 @@ export class AppModule {
   }
 
   async init() {
-    await Promise.all([await this.openvr.init(), await this.windows.init()]);
+    await Promise.all([await this.openvr.init(), await this.windows.init(), await this.osc.init()]);
     await this.nvml.init();
-    await this.sleepModeService.init();
+    await this.sleep.init();
     // GPU automations
     await this.gpuAutomations.init();
     // Sleep mode automations

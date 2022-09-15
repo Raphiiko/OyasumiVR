@@ -1,0 +1,4 @@
+<button class="btn btn-secondary" [class.unset]='!isSet()' [class.set]='isSet()' (click)='editScript()'>
+  <i class='material-icons'>code</i>
+  <span>{{ label | translate }}</span>
+</button>
