@@ -1,7 +1,7 @@
 @import 'shadows';
 
 :host {
-  min-width: 15em;
+  //min-width: 15em;
 }
 
 .select-box {
@@ -13,6 +13,13 @@
   border: 1px solid var(--color-surface-1);
   transition: all 0.15s ease;
   min-height: 4.5em;
+
+  &.small {
+    min-height: 2.5em;
+    .select-box-arrow {
+      padding: 0.25em;
+    }
+  }
 
   &:not(.disabled) {
     cursor: pointer;
@@ -84,7 +91,10 @@
   align-items: center;
   padding: 1em 1em;
   transition: background 0.15s ease;
-  &.has-subtitle {
+  &.small {
+    padding: 0.25em 1em;
+  }
+  &.has-subtitle:not(.small) {
     padding: 0.5em 1em;
   }
   &:not(.selected):not(.placeholder) {
@@ -102,7 +112,7 @@
     }
   }
   &-content {
-    flex:1;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -112,7 +122,7 @@
     flex-shrink: 0;
     padding: 1em;
     color: var(--color-primary);
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     margin-left: -1.5em;
     margin-right: -1em;
     i.material-icons-round {

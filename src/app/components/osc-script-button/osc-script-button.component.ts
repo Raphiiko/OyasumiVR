@@ -16,10 +16,7 @@ export class OscScriptButtonComponent implements OnInit {
 
   constructor(private modalService: SimpleModalService) {}
 
-  ngOnInit(): void {
-    // TODO: REMOVE, ONLY FOR DEBUGGING
-    if (this.label === 'Upright') this.editScript();
-  }
+  ngOnInit(): void {}
 
   isSet() {
     return !!this.script;

@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { fadeDown } from '../../utils/animations';
 
-export interface SelectBoxItem {
+export interface DropdownItem {
   id: string;
   label: TString;
   subLabel?: TString;
@@ -10,19 +10,15 @@ export interface SelectBoxItem {
 }
 
 @Component({
-  selector: 'app-select-box',
-  templateUrl: './select-box.component.html',
-  styleUrls: ['./select-box.component.scss'],
+  selector: 'app-dropdown-button',
+  templateUrl: './dropdown-button.component.html',
+  styleUrls: ['./dropdown-button.component.scss'],
   animations: [fadeDown()],
 })
-export class SelectBoxComponent implements OnInit {
-  @Input() type: 'SMALL' | 'NORMAL' = 'NORMAL';
+export class DropdownButtonComponent implements OnInit {
   @Input() disabled = false;
-  @Input() placeholder?: string;
-  @Input() items: SelectBoxItem[] = [];
-  @Input() showPlaceholderInDropdown = true;
-  @Input() selected?: SelectBoxItem;
-  @Output() selectedChange: EventEmitter<SelectBoxItem | undefined> = new EventEmitter();
+  @Input() items: DropdownItem[] = [];
+  @Output() onSelect: EventEmitter<DropdownItem> = new EventEmitter();
   collapsed = true;
 
   constructor() {}
@@ -35,11 +31,10 @@ export class SelectBoxComponent implements OnInit {
     }
   }
 
-  select(item: SelectBoxItem, event: MouseEvent) {
+  select(item: DropdownItem, event: MouseEvent) {
     if (event.target instanceof HTMLElement && event.target.classList.contains('noselect')) return;
     if (!this.disabled) {
-      this.selected = item;
-      this.selectedChange.emit(item);
+      this.onSelect.emit(item);
       this.collapsed = true;
     }
   }

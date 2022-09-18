@@ -1,21 +1,27 @@
-@import "@fontsource/fira-code/index.css";
+@import '@fontsource/fira-code/index.css';
+
+:host {
+  height: calc(100% - 4em);
+  width: calc(100% - 4em);
+  max-width: 1280px;
+  max-height: 720px;
+  margin: 2em;
+}
+.modal {
+  height: 100%;
+  width: 100%;
+}
 
 .tab {
   flex: 1;
 }
 
-
 .script-tab {
-  .code-editor {
-    font-family: 'Fira Code', monospace;
-    width: 100%;
-    background: var(--color-surface-0);
-    color: var(--color-text-2);
-    border: none;
-    padding: 0.75em;
-    border-radius: 0.5em;
-    outline: none !important;
-    resize: none;
-  }
+  padding: 1em 1.5em;
+  overflow: hidden;
 }
 
+.simple-tab {
+  padding: 1em 1.5em;
+  overflow: hidden;
+}

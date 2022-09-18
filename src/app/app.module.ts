@@ -49,6 +49,9 @@ import { SelectBoxComponent } from './components/select-box/select-box.component
 import { TStringTranslatePipePipe } from './pipes/tstring-translate.pipe';
 import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
 import { OscScriptModalComponent } from './components/osc-script-modal/osc-script-modal.component';
+import { OscScriptCodeEditorComponent } from './components/osc-script-code-editor/osc-script-code-editor.component';
+import { DropdownButtonComponent } from './components/dropdown-button/dropdown-button.component';
+import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -79,6 +82,9 @@ export function createTranslateLoader(http: HttpClient) {
     TStringTranslatePipePipe,
     OscScriptButtonComponent,
     OscScriptModalComponent,
+    OscScriptCodeEditorComponent,
+    DropdownButtonComponent,
+    OscScriptSimpleEditorComponent,
   ],
   imports: [
     CommonModule,

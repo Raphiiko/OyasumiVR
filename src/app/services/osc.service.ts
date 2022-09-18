@@ -5,6 +5,7 @@ import { exit } from '@tauri-apps/api/process';
 import { OpenVRService } from './openvr.service';
 import { pairwise } from 'rxjs';
 import { SleepService } from './sleep.service';
+import { OscScript, OscScriptSleepAction } from '../models/osc-script';
 
 @Injectable({
   providedIn: 'root',
@@ -44,5 +45,34 @@ export class OscService {
 
   async send_bool(address: string, value: boolean) {
     await invoke('osc_send_bool', { addr: this.address, oscAddr: address, data: value });
+  }
+
+  async runScript(script: OscScript) {
+    const run = async (script: OscScript) => {
+      for (let command of script.commands) {
+        switch (command.type) {
+          case 'SLEEP':
+            await new Promise((resolve) =>
+              setTimeout(() => resolve(void 0), (command as OscScriptSleepAction).duration)
+            );
+            break;
+          case 'COMMAND':
+            switch (command.parameterType) {
+              case 'INT':
+                await this.send_int(command.address, parseInt(command.value));
+                break;
+              case 'FLOAT':
+                await this.send_float(command.address, parseFloat(command.value));
+                break;
+              case 'BOOLEAN':
+                await this.send_bool(command.address, command.value === 'true');
+                break;
+            }
+            break;
+        }
+      }
+    };
+
+    await run(script);
   }
 }

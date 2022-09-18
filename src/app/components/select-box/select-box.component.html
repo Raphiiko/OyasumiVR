@@ -1,20 +1,26 @@
 <div
   class="select-box"
+  [class.small]="type === 'SMALL'"
   (click)="clickBox()"
   [class.disabled]="disabled"
   [class.active]="!collapsed"
 >
-  <div class="select-item selected" *ngIf="selected" [class.has-subtitle]="selected.subLabel">
+  <div
+    class="select-item selected"
+    *ngIf="selected"
+    [class.has-subtitle]="selected.subLabel"
+    [class.small]="type === 'SMALL'"
+  >
     <div class="select-item-content">
       <div class="select-item-title">
         {{ selected.label | tsTranslate }}
       </div>
-      <div class="select-item-subtitle">
+      <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
         {{ selected.subLabel | tsTranslate }}
       </div>
     </div>
   </div>
-  <div class="select-item placeholder" *ngIf="!selected">
+  <div class="select-item placeholder" *ngIf="!selected" [class.small]="type === 'SMALL'">
     <div class="select-item-title">
       {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
     </div>
@@ -35,12 +41,13 @@
       *ngFor="let item of items"
       (click)="select(item, $event)"
       [class.has-subtitle]="item.subLabel"
+      [class.small]="type === 'SMALL'"
     >
       <div class="select-item-content">
         <div class="select-item-title">
           {{ item.label | tsTranslate }}
         </div>
-        <div class="select-item-subtitle">
+        <div class="select-item-subtitle" *ngIf="item.subLabel && type !== 'SMALL'">
           {{ item.subLabel | tsTranslate }}
         </div>
       </div>

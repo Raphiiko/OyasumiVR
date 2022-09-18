@@ -1,0 +1,70 @@
+<div class="header-bar" @noop>
+  <span>
+    <span>OSC Script Editor [</span>
+    <a href="#" target="_blank">Syntax Guide</a>
+    <span>]</span>
+  </span>
+  <div class="editor-actions">
+    <button class="btn btn-secondary" (click)="formatCode()" [disabled]="errors.length">
+      Format
+    </button>
+    <button class="btn btn-secondary" (click)="testCode()" [disabled]="errors.length || testing">
+      <div
+        class="small-spinner"
+        *ngIf="testing"
+        @hshrink
+      ></div>
+      <i
+        class="material-icons"
+        *ngIf="!testing"
+        @hshrink
+      >
+        play_arrow
+      </i>
+      <span *ngIf="!testing" [@hshrink]>Test</span>
+    </button>
+  </div>
+</div>
+<div class="code-editor-wrapper">
+  <div
+    class="code-editor"
+    [style.min-height]="minHeight * 1.25 + 1.5 + 'em'"
+  >
+    <div class="code-editor-line-numbers" #lineCounter>
+      <div
+        class="line-number"
+        [class.has-error]="getErrorsForLine(i).length"
+        *ngFor="let counter of lineCounters | async; let i = index"
+        (mouseenter)="hoverOnLine(i, $event)"
+      >
+        <i class="material-icons-round" *ngIf="getErrorsForLine(i).length">error</i>
+        <span>{{ counter }}</span>
+      </div>
+    </div>
+    <div
+      class="code-editor-input"
+      contenteditable="plaintext-only"
+      ondragover="return false"
+      ondrop="return false"
+      spellcheck="false"
+      (input)="onEditorContentChange(editor.innerHTML)"
+      #editor
+    ></div>
+  </div>
+  <div
+    class="error-tooltip"
+    [style.top]="tooltipPosition.y + 'px'"
+    [style.left]="tooltipPosition.x + 'px'"
+    *ngIf="tooltipErrors.length"
+    @fade
+    (mouseleave)="hoverOnLine(-1, undefined)"
+  >
+    <div class="error-tooltip-bg"></div>
+    <div class="error-tooltip-content">
+      <div class="error-tooltip-error" *ngFor="let error of tooltipErrors">
+        <strong>L{{ error.line + 1 }}</strong>
+        : {{ error.message }}
+      </div>
+    </div>
+  </div>
+</div>

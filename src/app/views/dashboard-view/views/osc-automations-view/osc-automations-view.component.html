@@ -30,7 +30,7 @@
           </label>
           <h3 translate>Enable automatic sleeping animations</h3>
           <div class="title-actions">
-            <app-select-box [items]="oscPresetOptions"></app-select-box>
+            <app-select-box [items]="oscPresetOptions" style="min-width: 15em"></app-select-box>
             <button class="btn collapse-toggle" (click)="oscOptionsExpanded = !oscOptionsExpanded">
               <i class="material-icons">{{ oscOptionsExpanded ? 'expand_less' : 'expand_more' }}</i>
             </button>
@@ -78,9 +78,7 @@
         <label class="check-toggle">
           <input type="checkbox" />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>
-            Lock feet when sleep mode is enabled
-          </span>
+          <span class="check-toggle-label" translate>Lock feet when sleep mode is enabled</span>
         </label>
         <label class="check-toggle">
           <input type="checkbox" />
@@ -92,7 +90,7 @@
         <div class="option suboption">
           <div class="option-label">Foot lock release duration</div>
           <div class="option-actions">
-            <div class="input-wrapper percentage" [class.invalid]="false">
+            <div class="input-wrapper with-unit" [class.invalid]="false">
               <input type="number" min="0" max="100" step="any" style="width: 5em" />
               <span>s</span>
             </div>

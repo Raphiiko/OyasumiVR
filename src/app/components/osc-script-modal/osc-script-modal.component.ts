@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { OscScript } from '../../models/osc-script';
 import { fadeUp } from '../../utils/animations';
+import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 
 interface OscScriptModalInputModel {
   script?: OscScript;
@@ -22,9 +23,11 @@ export class OscScriptModalComponent
   extends SimpleModalComponent<OscScriptModalInputModel, OscScriptModalOutputModel>
   implements OnInit, OscScriptModalInputModel
 {
-  script?: OscScript;
+  script?: OscScript = { commands: [] };
   scriptName?: string;
-  activeTab: 'SIMPLE' | 'SCRIPT' = 'SCRIPT';
+  activeTab: 'SIMPLE' | 'SCRIPT' = 'SIMPLE';
+  errorCount = 0;
+  validated = true;
 
   constructor() {
     super();
@@ -38,7 +41,10 @@ export class OscScriptModalComponent
     }
   }
 
-  save() {
-
+  async save() {
+    this.result = {
+      script: this.script,
+    };
+    await this.close();
   }
 }

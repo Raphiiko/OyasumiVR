@@ -5,12 +5,12 @@ export interface OscScript {
 export type OscScriptAction = OscScriptSleepAction | OscScriptCommandAction;
 
 export type OscScriptSleepAction = {
-  type: 'sleep';
+  type: 'SLEEP';
   duration: number;
 };
 
 export type OscScriptCommandAction = {
-  type: 'command';
+  type: 'COMMAND';
   address: string;
   parameterType: OscParameterType;
   value: string;
