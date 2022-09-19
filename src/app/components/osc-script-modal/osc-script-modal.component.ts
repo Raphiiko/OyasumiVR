@@ -23,7 +23,7 @@ export class OscScriptModalComponent
   extends SimpleModalComponent<OscScriptModalInputModel, OscScriptModalOutputModel>
   implements OnInit, OscScriptModalInputModel
 {
-  script?: OscScript = { commands: [] };
+  script?: OscScript;
   scriptName?: string;
   activeTab: 'SIMPLE' | 'SCRIPT' = 'SIMPLE';
   errorCount = 0;
@@ -36,6 +36,7 @@ export class OscScriptModalComponent
   ngOnInit(): void {
     if (!this.script) {
       this.script = {
+        version: 1,
         commands: [],
       };
     }
@@ -46,5 +47,13 @@ export class OscScriptModalComponent
       script: this.script,
     };
     await this.close();
+  }
+
+  setErrorCount(errorCount: number) {
+    setTimeout(() => (this.errorCount = errorCount));
+  }
+
+  setValidated(validated: boolean) {
+    setTimeout(() => (this.validated = validated));
   }
 }

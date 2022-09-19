@@ -1,6 +1,7 @@
+@import 'panes';
 :host > .pane {
   height: 100%;
-  >.pane-content {
+  > .pane-content {
     overflow-y: overlay;
   }
 }
@@ -49,6 +50,18 @@
       color: var(--color-caution);
     }
   }
+  .suboptions {
+    @extend .pane;
+    margin-left: 2em;
+    padding: 0.5em 1em;
+    margin-top: 0.5em;
+    .suboption input[type='number'] {
+      background: var(--color-surface-0);
+      padding-top: 0.25em;
+      padding-bottom: 0.25em;
+      padding-left: 0.5em;
+    }
+  }
   .option {
     display: flex;
     flex-direction: row;
@@ -59,7 +72,6 @@
     }
 
     &.suboption {
-      padding-left: 3em;
     }
 
     &-label {

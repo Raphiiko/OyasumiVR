@@ -16,20 +16,12 @@ import {
   OscScript,
   OscScriptCommandAction,
   OscScriptSleepAction,
+  OscScriptCodeValidationError,
+  parseOscScriptFromCode,
 } from '../../models/osc-script';
 import { fade, hshrink, noop } from '../../utils/animations';
 import { cloneDeep, isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
-
-interface ValidationError {
-  line: number;
-  message: TString;
-}
-
-const MAX_SCRIPT_LINES = 100;
-const SLEEP_ACTION_REGEX = /^\s*sleep\s+(?<VALUE>[0-9]+([.][0-9]+)?)(?<UNIT>ms|s)?\s*$/i;
-const COMMAND_ACTION_REGEX =
-  /^\s*((?<FLOAT_TYPE>f)\s+(?<FLOAT_VALUE>[0-9]+([.][0-9]+)?)|(?<INT_TYPE>i)\s+(?<INT_VALUE>[0-9]+)|(?<BOOL_TYPE>b)\s+(?<BOOL_VALUE>true|false|1|0|yes|no))\s+(?<ADDRESS>[\x00-\x7F]+)\s*$/i;
 
 @Component({
   selector: 'app-osc-script-code-editor',
@@ -42,19 +34,15 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
   @ViewChild('lineCounter') lineCounterRef!: ElementRef;
   @Input() minHeight = 10;
   @Input() set script(script: OscScript) {
-    const { script: currentScript } = this.parseScript(this._code.value);
-    if (isEqual(script, currentScript)) return;
-    const code = this.scriptToCode(script);
-    this._code.next(code);
-    if (this.editorRef) this.editorRef.nativeElement.innerText = code;
+    this.setScript(script, false);
   }
   @Output() scriptChange = new EventEmitter<OscScript>();
   @Output() errorCount = new EventEmitter<number>();
   @Output() validatedChange = new EventEmitter<boolean>();
   private destroy$: Subject<void> = new Subject<void>();
   private _code: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  errors: ValidationError[] = [];
-  tooltipErrors: ValidationError[] = [];
+  errors: OscScriptCodeValidationError[] = [];
+  tooltipErrors: OscScriptCodeValidationError[] = [];
   tooltipPosition: { x: number; y: number } = { x: 0, y: 0 };
   testing = false;
   _validated = false;
@@ -80,6 +68,14 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
 
   constructor(private osc: OscService) {}
 
+  protected setScript(script: OscScript, force = false) {
+    const { script: currentScript } = parseOscScriptFromCode(this._code.value);
+    if (!force && isEqual(script, currentScript)) return;
+    const code = this.scriptToCode(script);
+    this._code.next(code);
+    if (this.editorRef) this.editorRef.nativeElement.innerText = code;
+  }
+
   ngOnInit(): void {
     this._code
       .pipe(
@@ -89,7 +85,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
       )
       .subscribe((code) => {
         this.tooltipErrors = [];
-        const { script, errors } = this.parseScript(code);
+        const { script, errors } = parseOscScriptFromCode(code);
         this.validated = true;
         this.errors = errors;
         this.errorCount.emit(errors.length);
@@ -117,10 +113,6 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
         .join('');
     }
     const split = content.split('\n');
-    if (split.length > MAX_SCRIPT_LINES) {
-      content = split.slice(0, MAX_SCRIPT_LINES).join('\n') + '\n';
-      if (this.editorRef) this.editorRef.nativeElement.innerText = content;
-    }
     this._code.next(content);
   }
 
@@ -145,106 +137,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
       .join('\n');
   }
 
-  parseScript(rawScript: string): { script: OscScript; errors: ValidationError[] } {
-    const script: OscScript = {
-      commands: [],
-    };
-    const errors: ValidationError[] = [];
-    let totalSleepDuration = 0;
-    let lines = rawScript.split('\n').map((l, index) => ({ text: l.trim(), index }));
-    if (lines.length > MAX_SCRIPT_LINES) {
-      errors.push({
-        line: 0,
-        message: `An OSC script cannot have more than ${MAX_SCRIPT_LINES} lines.`,
-      });
-    }
-    lines = lines.filter((l) => !!l.text);
-    for (let line of lines) {
-      if (!line.text.trim()) {
-        continue;
-      }
-      let match;
-      if ((match = line.text.match(SLEEP_ACTION_REGEX))) {
-        let duration = parseFloat(match.groups!['VALUE']);
-        const unit: 's' | 'ms' = (match.groups!['UNIT'] as 's' | 'ms') || 'ms';
-        if (unit === 'ms' && duration % 1 != 0) {
-          errors.push({
-            line: line.index,
-            message: 'Millisecond values have to be defined as a whole number.',
-          });
-        }
-        if (unit === 's') duration *= 1000;
-        if (duration > 5000) {
-          errors.push({
-            line: line.index,
-            message: 'Sleep duration cannot exceed 5 seconds.',
-          });
-        }
-        totalSleepDuration += duration;
-        if (totalSleepDuration > 10000) {
-          errors.push({
-            line: line.index,
-            message: 'The total script duration cannot exceed 10 seconds.',
-          });
-        }
-        script.commands.push({
-          type: 'SLEEP',
-          duration,
-        } as OscScriptSleepAction);
-      } else if ((match = line.text.match(COMMAND_ACTION_REGEX))) {
-        let parameterType: OscParameterType = (
-          { f: 'FLOAT', i: 'INT', b: 'BOOLEAN' } as { [s: string]: OscParameterType }
-        )[match.groups!['FLOAT_TYPE'] || match.groups!['INT_TYPE'] || match.groups!['BOOL_TYPE']];
-        let value: number | boolean;
-        switch (parameterType) {
-          case 'FLOAT':
-            value = parseFloat(match.groups!['FLOAT_VALUE']);
-            if (isNaN(value) || value < -1.0 || value > 1.0) {
-              errors.push({
-                line: line.index,
-                message: `The value must be a valid float value between -1.0 and 1.0.`,
-              });
-            }
-            break;
-          case 'INT':
-            value = parseInt(match.groups!['INT_VALUE']);
-            if (isNaN(value) || value < 0 || value > 255) {
-              errors.push({
-                line: line.index,
-                message: `The value must be a valid integer between 0 and 255.`,
-              });
-            }
-            break;
-          case 'BOOLEAN': {
-            value = ['1', 'true', 'yes'].includes(match.groups!['BOOL_VALUE'].toLowerCase());
-            break;
-          }
-        }
-        const address = match.groups!['ADDRESS'];
-        if (!address.startsWith('/')) {
-          errors.push({
-            line: line.index,
-            message: `A valid OSC address must always start with a '/' symbol.`,
-          });
-        }
-        script.commands.push({
-          type: 'COMMAND',
-          parameterType,
-          value: value + '',
-          address,
-        } as OscScriptCommandAction);
-      } else {
-        errors.push({
-          line: line.index,
-          message: 'Invalid syntax.',
-        });
-      }
-    }
-
-    return { script, errors };
-  }
-
-  getErrorsForLine(lineNumber: number): ValidationError[] {
+  getErrorsForLine(lineNumber: number): OscScriptCodeValidationError[] {
     return this.errors.filter((error) => error.line === lineNumber);
   }
 
@@ -258,14 +151,14 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
   }
 
   formatCode() {
-    const { script, errors } = this.parseScript(this._code.value);
+    const { script, errors } = parseOscScriptFromCode(this._code.value);
     if (errors.length) return;
-    this.script = script;
+    this.setScript(script, true);
   }
 
   async testCode() {
     if (this.testing) return;
-    const { script, errors } = this.parseScript(this._code.value);
+    const { script, errors } = parseOscScriptFromCode(this._code.value);
     if (errors.length) return;
     this.testing = true;
     await Promise.all([

@@ -28,7 +28,7 @@ interface ValidationError {
 export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
   private validationTrigger: Subject<void> = new Subject<void>();
   private destroy$: Subject<void> = new Subject<void>();
-  protected _script: OscScript = { commands: [] };
+  protected _script: OscScript = { version: 1, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
     this._script = cloneDeep(script);

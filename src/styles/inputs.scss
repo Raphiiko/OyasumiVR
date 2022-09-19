@@ -230,6 +230,8 @@ input[type='time'] {
   padding: 0.5em;
   background: var(--color-surface-3);
   color: var(--color-text-1);
+
+
 }
 
 input[type='number'] {
@@ -259,6 +261,10 @@ input[type='time']::-webkit-calendar-picker-indicator {
     pointer-events: none;
     box-sizing: border-box;
     border: 2px solid transparent;
+  }
+
+  &.disabled {
+    opacity: 0.5;
   }
 
   &.invalid:after {

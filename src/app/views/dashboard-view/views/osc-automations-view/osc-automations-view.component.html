@@ -25,29 +25,53 @@
       <div class="pane-content no-padding">
         <div class="title">
           <label class="switch-toggle">
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              [checked]="config.enabled"
+              (change)="updateConfig({ enabled: !config.enabled })"
+            />
             <span class="switch-toggle-slider"></span>
           </label>
           <h3 translate>Enable automatic sleeping animations</h3>
           <div class="title-actions">
-            <app-select-box [items]="oscPresetOptions" style="min-width: 15em"></app-select-box>
+            <app-select-box
+              [items]="oscPresetOptions"
+              [selected]="getPresetOptionForId(config.preset!)"
+              (selectedChange)="selectPreset($event!.id!)"
+              style="min-width: 15em"
+            ></app-select-box>
             <button class="btn collapse-toggle" (click)="oscOptionsExpanded = !oscOptionsExpanded">
               <i class="material-icons">{{ oscOptionsExpanded ? 'expand_less' : 'expand_more' }}</i>
             </button>
           </div>
         </div>
-        <div class="option-pane-options" *ngIf="oscOptionsExpanded" [@vshrink]>
-          <p class="osc-options-error">These options are not customizable for presets.</p>
+        <div class="option-pane-options" *ngIf="oscOptionsExpanded" @vshrink>
           <div class="option">
             <div class="option-label">
               <span>Sleeping Positions</span>
               <span>Set the OSC commands to activate each sleeping position.</span>
             </div>
             <div class="option-actions">
-              <app-osc-script-button [label]="'Upright'"></app-osc-script-button>
-              <app-osc-script-button [label]="'Back Side'"></app-osc-script-button>
-              <app-osc-script-button [label]="'Left Side'"></app-osc-script-button>
-              <app-osc-script-button [label]="'Right Side'"></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Upright'"
+                [script]="config.oscScripts.SIDE_FRONT"
+                (scriptChange)="updateOSCScript('SIDE_FRONT', $event)"
+              ></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Back Side'"
+                [script]="config.oscScripts.SIDE_BACK"
+                (scriptChange)="updateOSCScript('SIDE_BACK', $event)"
+              ></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Left Side'"
+                [script]="config.oscScripts.SIDE_LEFT"
+                (scriptChange)="updateOSCScript('SIDE_LEFT', $event)"
+              ></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Right Side'"
+                [script]="config.oscScripts.SIDE_RIGHT"
+                (scriptChange)="updateOSCScript('SIDE_RIGHT', $event)"
+              ></app-osc-script-button>
             </div>
           </div>
           <div class="option">
@@ -56,8 +80,16 @@
               <span>Set the OSC commands to enable and disable the foot lock.</span>
             </div>
             <div class="option-actions">
-              <app-osc-script-button [label]="'Enable Foot Lock'"></app-osc-script-button>
-              <app-osc-script-button [label]="'Disable Foot Lock'"></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Enable Foot Lock'"
+                [script]="config.oscScripts.FOOT_LOCK"
+                (scriptChange)="updateOSCScript('FOOT_LOCK', $event)"
+              ></app-osc-script-button>
+              <app-osc-script-button
+                [label]="'Disable Foot Lock'"
+                [script]="config.oscScripts.FOOT_UNLOCK"
+                (scriptChange)="updateOSCScript('FOOT_UNLOCK', $event)"
+              ></app-osc-script-button>
             </div>
           </div>
         </div>
@@ -66,35 +98,78 @@
     <!-- EXTRA OPTIONS PANE-->
     <div class="pane option-pane">
       <div class="pane-content">
-        <h3>Options</h3>
+        <h3>General Options</h3>
+        <p>Only switch animations</p>
         <label class="check-toggle">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [checked]="config.onlyIfSleepModeEnabled"
+            (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+          />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>
-            Only switch animations when sleep mode is enabled
-          </span>
+          <span class="check-toggle-label" translate>If sleep mode is enabled</span>
+        </label>
+        <label class="check-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.onlyIfAllTrackersTurnedOff"
+            (change)="
+              updateConfig({ onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff })
+            "
+          />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>If all trackers are turned off</span>
         </label>
         <h3 style="margin-top: 1em">Foot lock</h3>
         <label class="check-toggle">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [checked]="config.lockFeetOnSleepModeEnable"
+            (change)="
+              updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
+            "
+          />
           <span class="check-toggle-checkmark"></span>
           <span class="check-toggle-label" translate>Lock feet when sleep mode is enabled</span>
         </label>
         <label class="check-toggle">
-          <input type="checkbox" />
+          <input
+            type="checkbox"
+            [checked]="config.releaseFootLockOnPoseChange"
+            (change)="
+              updateConfig({ releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange })
+            "
+          />
           <span class="check-toggle-checkmark"></span>
           <span class="check-toggle-label" translate>
             Momentarily release foot lock when switching sleeping positions
           </span>
         </label>
-        <div class="option suboption">
-          <div class="option-label">Foot lock release duration</div>
-          <div class="option-actions">
-            <div class="input-wrapper with-unit" [class.invalid]="false">
-              <input type="number" min="0" max="100" step="any" style="width: 5em" />
-              <span>s</span>
+        <div class="suboptions">
+          <div class="option suboption">
+            <div class="option-label">Foot lock release duration</div>
+            <div class="option-actions">
+              <div
+                class="input-wrapper with-unit"
+                [class.invalid]="footLockReleaseWindowError"
+                [class.disabled]="!config.releaseFootLockOnPoseChange"
+              >
+                <input
+                  type="number"
+                  step="1"
+                  style="width: 5em"
+                  [value]="config.footLockReleaseWindow"
+                  (change)="updateFootLockReleaseWindow(footLockReleaseWindowInput.value)"
+                  #footLockReleaseWindowInput
+                  [disabled]="!config.releaseFootLockOnPoseChange"
+                />
+                <span>ms</span>
+              </div>
             </div>
           </div>
+          <span *ngIf="footLockReleaseWindowError" style="color: var(--color-caution)" @vshrink>
+            {{ footLockReleaseWindowError | translate }}
+          </span>
         </div>
       </div>
     </div>

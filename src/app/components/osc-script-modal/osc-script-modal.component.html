@@ -18,16 +18,16 @@
   <div class="pane-content simple-tab" *ngIf="activeTab === 'SIMPLE' && script">
     <app-osc-script-simple-editor
       [(script)]="script"
-      (errorCount)="errorCount = $event"
-      (validatedChange)="validated = $event"
+      (errorCount)="setErrorCount($event)"
+      (validatedChange)="setValidated($event)"
     ></app-osc-script-simple-editor>
   </div>
   <div class="pane-content script-tab" *ngIf="activeTab === 'SCRIPT' && script">
     <app-osc-script-code-editor
       [minHeight]="21"
       [(script)]="script"
-      (errorCount)="errorCount = $event"
-      (validatedChange)="validated = $event"
+      (errorCount)="setErrorCount($event)"
+      (validatedChange)="setValidated($event)"
     ></app-osc-script-code-editor>
   </div>
   <div class="pane-actions">
