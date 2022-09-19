@@ -1,17 +1,18 @@
 <div class="pane modal modal-lg" [@fadeUp]>
-  <div class="pane-title" translate *ngIf="scriptName">OSC Script: {{ scriptName }}</div>
-  <div class="pane-title" translate *ngIf="!scriptName">OSC Script</div>
+  <div class="pane-title" *ngIf="scriptName">
+    {{ 'comp.osc-script-modal.title' | translate }}: {{ scriptName | translate }}
+  </div>
   <div class="tab-bar">
     <div class="tab" [class.active]="activeTab === 'SIMPLE'" (click)="activeTab = 'SIMPLE'">
       <div class="tab-label" translate>
         <i class="material-icons">auto_awesome</i>
-        <span translate>Simple</span>
+        <span translate>comp.osc-script-modal.simple</span>
       </div>
     </div>
     <div class="tab" [class.active]="activeTab === 'SCRIPT'" (click)="activeTab = 'SCRIPT'">
       <div class="tab-label">
         <i class="material-icons">code</i>
-        <span translate>Script</span>
+        <span translate>comp.osc-script-modal.script</span>
       </div>
     </div>
   </div>

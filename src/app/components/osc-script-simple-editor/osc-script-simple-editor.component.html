@@ -1,18 +1,30 @@
 <div class="header-row" @noop>
-  <span>{{ _script.commands.length }} Commands</span>
+  <span
+    [translate]="
+      'comp.osc-script-simple-editor.commandCounter.' +
+      (_script.commands.length === 1 ? 'singular' : 'plural')
+    "
+    [translateParams]="{ value: _script.commands.length }"
+  ></span>
   <span>&nbsp;|&nbsp;</span>
   <div class="small-spinner" *ngIf="!validated" @hshrink style="margin-right: 0.5em"></div>
-  <span>{{ errors.length }} Validation errors</span>
+  <span
+    [translate]="
+      'comp.osc-script-simple-editor.errorCounter.' +
+      (errors.length === 1 ? 'singular' : 'plural')
+    "
+    [translateParams]="{ value: errors.length }"
+  ></span>
   <span style="flex: 1"></span>
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (onSelect)="onAdd($event)">
       <i class="material-icons">add</i>
-      <span>Add</span>
+      <span translate>comp.osc-script-simple-editor.addCommand</span>
     </app-dropdown-button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="testing || !validated">
       <div class="small-spinner" *ngIf="testing" @hshrink></div>
       <i class="material-icons" *ngIf="!testing" @hshrink>play_arrow</i>
-      <span *ngIf="!testing" [@hshrink]>Test</span>
+      <span *ngIf="!testing" @hshrink translate>comp.osc-script-simple-editor.test</span>
     </button>
   </div>
 </div>
@@ -28,7 +40,7 @@
         <i class="material-icons-round">error</i>
       </div>
       <div class="simple-command-index">{{ i + 1 }}.</div>
-      <div class="simple-command-action">OSC</div>
+      <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
       <app-select-box
         [type]="'SMALL'"
         [selected]="getSelectedParameterTypeForCommand(command)"
@@ -95,7 +107,7 @@
         <i class="material-icons-round">error</i>
       </div>
       <div class="simple-command-index">{{ i + 1 }}.</div>
-      <div class="simple-command-action">Sleep</div>
+      <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
       <div style="flex: 1"></div>
       <div class="input-wrapper with-unit simple-command-duration-input">
         <input
@@ -113,7 +125,7 @@
   </div>
   <div class="no-commands" *ngIf="!_script.commands.length" @vshrink>
     <i class="material-icons-round">add_circle_outline</i>
-    <span>No commands added yet!</span>
+    <span translate>comp.osc-script-simple-editor.action.none</span>
   </div>
   <div
     class="error-tooltip"
@@ -126,7 +138,7 @@
     <div class="error-tooltip-bg"></div>
     <div class="error-tooltip-content">
       <div class="error-tooltip-error" *ngFor="let error of tooltipErrors">
-        {{ error.message }}
+        {{ error.message | tsTranslate }}
       </div>
     </div>
   </div>

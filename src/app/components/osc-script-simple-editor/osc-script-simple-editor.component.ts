@@ -52,13 +52,13 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
   addCommandItems: DropdownItem[] = [
     {
       id: 'COMMAND',
-      label: 'OSC Command',
-      subLabel: 'Execute an OSC command',
+      label: 'comp.osc-script-simple-editor.commands.COMMAND.title',
+      subLabel: 'comp.osc-script-simple-editor.commands.COMMAND.description',
     },
     {
       id: 'SLEEP',
-      label: 'Sleep',
-      subLabel: 'Wait for a specified amount of time',
+      label: 'comp.osc-script-simple-editor.commands.SLEEP.title',
+      subLabel: 'comp.osc-script-simple-editor.commands.SLEEP.description',
     },
   ];
   parameterTypeSelectItems: SelectBoxItem[] = [
@@ -184,19 +184,19 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
           if (!command.address) {
             this.errors.push({
               actionIndex,
-              message: 'An OSC address is required.',
+              message: 'comp.osc-script-simple-editor.errors.addressRequired',
             });
           } else {
             if (!command.address.startsWith('/')) {
               this.errors.push({
                 actionIndex,
-                message: `A valid OSC address must always start with a '/' symbol.`,
+                message: 'comp.osc-script-simple-editor.errors.addressNoSlash',
               });
             }
             if (!command.address.substring(1, command.address.length).match(`[\x00-\x7F]+`)) {
               this.errors.push({
                 actionIndex,
-                message: `A valid OSC address must only contain ASCII characters.`,
+                message: 'comp.osc-script-simple-editor.errors.addressNotASCII',
               });
             }
           }
@@ -206,7 +206,7 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
               if (isNaN(intValue) || intValue < 0 || intValue > 255) {
                 this.errors.push({
                   actionIndex,
-                  message: `The value must be a valid integer between 0 and 255.`,
+                  message: 'comp.osc-script-simple-editor.errors.intOutOfBounds',
                 });
               }
               break;
@@ -215,12 +215,12 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
               if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
                 this.errors.push({
                   actionIndex,
-                  message: `The value must be a valid float value between -1.0 and 1.0.`,
+                  message: 'comp.osc-script-simple-editor.errors.floatOutOfBounds',
                 });
               } else if (floatPrecision(floatValue) > 3) {
                 this.errors.push({
                   actionIndex,
-                  message: `The value can only have a precision of 3 decimals maximum.`,
+                  message: 'comp.osc-script-simple-editor.errors.floatTooPrecise',
                 });
               }
               break;
@@ -230,26 +230,26 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
           if (command.duration === null || command.duration === undefined) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'Sleep duration is required.',
+              message: 'comp.osc-script-simple-editor.errors.durationRequired',
             });
           }
           if (command.duration < 1) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'Sleep duration must be at least 1ms.',
+              message: 'comp.osc-script-simple-editor.errors.durationTooShort',
             });
           }
           if (command.duration > 5000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'Sleep duration cannot exceed 5 seconds.',
+              message: 'comp.osc-script-simple-editor.errors.durationTooHigh',
             });
           }
           totalSleepDuration += command.duration;
           if (totalSleepDuration > 10000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'The total script duration cannot exceed 10 seconds.',
+              message: 'comp.osc-script-simple-editor.errors.totalDurationTooLong',
             });
           }
           break;

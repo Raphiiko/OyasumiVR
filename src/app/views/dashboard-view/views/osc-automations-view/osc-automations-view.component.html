@@ -10,16 +10,7 @@
     </div>
   </div>
   <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'" [@noop]>
-    <p translate>
-      Oyasumi can automatically change your avatar animations when you change sleeping position.
-      This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn
-      off your trackers during the night. See an example of what this could look like
-      <a href="https://youtu.be/3T54bTAzT7o" target="_blank">here.</a>
-      <br />
-      <br />
-      Presets are available for several pre-made avatar locomotion prefabs, but you can specify your
-      own animations as well.
-    </p>
+    <p [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"></p>
     <!-- ENABLE/OSC PANE-->
     <div class="pane option-pane">
       <div class="pane-content no-padding">
@@ -32,7 +23,7 @@
             />
             <span class="switch-toggle-slider"></span>
           </label>
-          <h3 translate>Enable automatic sleeping animations</h3>
+          <h3 translate>oscAutomations.sleepingAnimations.enable</h3>
           <div class="title-actions">
             <app-select-box
               [items]="oscPresetOptions"
@@ -48,27 +39,27 @@
         <div class="option-pane-options" *ngIf="oscOptionsExpanded" @vshrink>
           <div class="option">
             <div class="option-label">
-              <span>Sleeping Positions</span>
-              <span>Set the OSC commands to activate each sleeping position.</span>
+              <span translate>oscAutomations.sleepingAnimations.options.positions.title</span>
+              <span translate>oscAutomations.sleepingAnimations.options.positions.description</span>
             </div>
             <div class="option-actions">
               <app-osc-script-button
-                [label]="'Upright'"
+                [label]="'oscAutomations.sleepingAnimations.options.positions.SIDE_FRONT'"
                 [script]="config.oscScripts.SIDE_FRONT"
                 (scriptChange)="updateOSCScript('SIDE_FRONT', $event)"
               ></app-osc-script-button>
               <app-osc-script-button
-                [label]="'Back Side'"
+                [label]="'oscAutomations.sleepingAnimations.options.positions.SIDE_BACK'"
                 [script]="config.oscScripts.SIDE_BACK"
                 (scriptChange)="updateOSCScript('SIDE_BACK', $event)"
               ></app-osc-script-button>
               <app-osc-script-button
-                [label]="'Left Side'"
+                [label]="'oscAutomations.sleepingAnimations.options.positions.SIDE_LEFT'"
                 [script]="config.oscScripts.SIDE_LEFT"
                 (scriptChange)="updateOSCScript('SIDE_LEFT', $event)"
               ></app-osc-script-button>
               <app-osc-script-button
-                [label]="'Right Side'"
+                [label]="'oscAutomations.sleepingAnimations.options.positions.SIDE_RIGHT'"
                 [script]="config.oscScripts.SIDE_RIGHT"
                 (scriptChange)="updateOSCScript('SIDE_RIGHT', $event)"
               ></app-osc-script-button>
@@ -76,17 +67,17 @@
           </div>
           <div class="option">
             <div class="option-label">
-              <span>Foot Lock</span>
-              <span>Set the OSC commands to enable and disable the foot lock.</span>
+              <span translate>oscAutomations.sleepingAnimations.options.footLock.title</span>
+              <span translate>oscAutomations.sleepingAnimations.options.footLock.description</span>
             </div>
             <div class="option-actions">
               <app-osc-script-button
-                [label]="'Enable Foot Lock'"
+                [label]="'oscAutomations.sleepingAnimations.options.footLock.FOOT_LOCK'"
                 [script]="config.oscScripts.FOOT_LOCK"
                 (scriptChange)="updateOSCScript('FOOT_LOCK', $event)"
               ></app-osc-script-button>
               <app-osc-script-button
-                [label]="'Disable Foot Lock'"
+                [label]="'oscAutomations.sleepingAnimations.options.footLock.FOOT_UNLOCK'"
                 [script]="config.oscScripts.FOOT_UNLOCK"
                 (scriptChange)="updateOSCScript('FOOT_UNLOCK', $event)"
               ></app-osc-script-button>
@@ -98,8 +89,8 @@
     <!-- EXTRA OPTIONS PANE-->
     <div class="pane option-pane">
       <div class="pane-content">
-        <h3>General Options</h3>
-        <p>Only switch animations</p>
+        <h3 translate>oscAutomations.sleepingAnimations.options.general.title</h3>
+        <p translate>oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</p>
         <label class="check-toggle">
           <input
             type="checkbox"
@@ -107,7 +98,7 @@
             (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>If sleep mode is enabled</span>
+          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span>
         </label>
         <label class="check-toggle">
           <input
@@ -118,9 +109,9 @@
             "
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>If all trackers are turned off</span>
+          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span>
         </label>
-        <h3 style="margin-top: 1em">Foot lock</h3>
+        <h3 style="margin-top: 1em" translate>oscAutomations.sleepingAnimations.options.general.footLock</h3>
         <label class="check-toggle">
           <input
             type="checkbox"
@@ -130,7 +121,7 @@
             "
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>Lock feet when sleep mode is enabled</span>
+          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span>
         </label>
         <label class="check-toggle">
           <input
@@ -142,12 +133,14 @@
           />
           <span class="check-toggle-checkmark"></span>
           <span class="check-toggle-label" translate>
-            Momentarily release foot lock when switching sleeping positions
+            oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange
           </span>
         </label>
         <div class="suboptions">
           <div class="option suboption">
-            <div class="option-label">Foot lock release duration</div>
+            <div class="option-label" translate>
+              oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow
+            </div>
             <div class="option-actions">
               <div
                 class="input-wrapper with-unit"

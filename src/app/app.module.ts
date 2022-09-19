@@ -15,9 +15,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import { DashboardNavbarComponent } from './views/dashboard-view/components/dashboard-navbar/dashboard-navbar.component';
-import { DeviceListComponent } from './views/dashboard-view/components/device-list/device-list.component';
-import { DeviceListItemComponent } from './views/dashboard-view/components/device-list-item/device-list-item.component';
 import {
   DefaultSimpleModalOptionConfig,
   defaultSimpleModalOptions,
@@ -52,6 +49,9 @@ import { OscScriptModalComponent } from './components/osc-script-modal/osc-scrip
 import { OscScriptCodeEditorComponent } from './components/osc-script-code-editor/osc-script-code-editor.component';
 import { DropdownButtonComponent } from './components/dropdown-button/dropdown-button.component';
 import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
+import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
+import { DeviceListComponent } from './components/device-list/device-list.component';
+import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

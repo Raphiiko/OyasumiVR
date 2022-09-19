@@ -6,7 +6,7 @@ import {
   SleepingAnimationsAutomationConfig,
 } from '../../../../models/automations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { Subject, takeUntil } from 'rxjs';
+import { skip, Subject, takeUntil } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { SleepingPose } from '../../../../models/sleeping-pose';
 import { OscScript, SLEEPING_ANIMATION_OSC_SCRIPTS } from '../../../../models/osc-script';
@@ -23,13 +23,8 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   oscOptionsExpanded = false;
   oscPresetOptions: SelectBoxItem[] = [
     {
-      id: 'GOGO_LOCO_1.7.0',
-      label: 'GoGo Loco 1.7.0',
-      subLabel: {
-        string: 'oscAutomations.sleepingAnimations.presetAuthor',
-        values: { author: 'franada' },
-      },
-      infoLink: 'https://booth.pm/en/items/3290806',
+      id: 'CUSTOM',
+      label: 'oscAutomations.sleepingAnimations.customPreset',
     },
     {
       id: 'MMM_SLEEP_SYSTEM_2.2',
@@ -41,8 +36,13 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
       infoLink: 'https://booth.pm/ko/items/2886739',
     },
     {
-      id: 'CUSTOM',
-      label: 'Custom Animations',
+      id: 'GOGO_LOCO_1.7.0',
+      label: 'GoGo Loco 1.7.0',
+      subLabel: {
+        string: 'oscAutomations.sleepingAnimations.presetAuthor',
+        values: { author: 'franada' },
+      },
+      infoLink: 'https://booth.pm/en/items/3290806',
     },
   ];
   config: SleepingAnimationsAutomationConfig = cloneDeep(
@@ -50,13 +50,12 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   );
   footLockReleaseWindowError?: string;
 
-  constructor(private automationConfig: AutomationConfigService) {
-  }
+  constructor(private automationConfig: AutomationConfigService) {}
 
   ngOnInit(): void {
-    this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe((configs) => {
+    this.automationConfig.configs.pipe(skip(1), takeUntil(this.destroy$)).subscribe((configs) => {
       this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
-      if (this.config.preset === 'CUSTOM') this.oscOptionsExpanded = true;
+      this.oscOptionsExpanded = this.config.preset === 'CUSTOM';
     });
   }
 
@@ -91,11 +90,11 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   async updateFootLockReleaseWindow(value: string) {
     const intValue = parseInt(value);
     if (intValue <= 100) {
-      this.footLockReleaseWindowError = 'The release duration has to be at least 100ms.';
+      this.footLockReleaseWindowError = 'oscAutomations.sleepingAnimations.errors.releaseDurationTooShort';
       return;
     }
     if (intValue > 5000) {
-      this.footLockReleaseWindowError = 'The release duration cannot be more than 5000ms.';
+      this.footLockReleaseWindowError = 'oscAutomations.sleepingAnimations.errors.releaseDurationTooLong';
       return;
     }
     this.footLockReleaseWindowError = undefined;

@@ -55,21 +55,21 @@ export function parseOscScriptFromCode(code: string): {
       if (unit === 'ms' && duration % 1 != 0) {
         errors.push({
           line: line.index,
-          message: 'Millisecond values have to be defined as a whole number.',
+          message: 'comp.osc-script-code-editor.errors.noFloatMilliseconds',
         });
       }
       if (unit === 's') duration *= 1000;
       if (duration > 5000) {
         errors.push({
           line: line.index,
-          message: 'Sleep duration cannot exceed 5 seconds.',
+          message: 'comp.osc-script-code-editor.errors.durationTooLong',
         });
       }
       totalSleepDuration += duration;
       if (totalSleepDuration > 10000) {
         errors.push({
           line: line.index,
-          message: 'The total script duration cannot exceed 10 seconds.',
+          message: 'comp.osc-script-code-editor.errors.totalDurationTooLong',
         });
       }
       script.commands.push({
@@ -87,7 +87,7 @@ export function parseOscScriptFromCode(code: string): {
           if (isNaN(value) || value < -1.0 || value > 1.0) {
             errors.push({
               line: line.index,
-              message: `The value must be a valid float value between -1.0 and 1.0.`,
+              message: 'comp.osc-script-code-editor.errors.floatOutOfBounds',
             });
           }
           break;
@@ -96,7 +96,7 @@ export function parseOscScriptFromCode(code: string): {
           if (isNaN(value) || value < 0 || value > 255) {
             errors.push({
               line: line.index,
-              message: `The value must be a valid integer between 0 and 255.`,
+              message: 'comp.osc-script-code-editor.errors.indexOutOfBounds',
             });
           }
           break;
@@ -109,7 +109,7 @@ export function parseOscScriptFromCode(code: string): {
       if (!address.startsWith('/')) {
         errors.push({
           line: line.index,
-          message: `A valid OSC address must always start with a '/' symbol.`,
+          message: 'comp.osc-script-code-editor.errors.addressNoSlash',
         });
       }
       script.commands.push({
@@ -121,14 +121,17 @@ export function parseOscScriptFromCode(code: string): {
     } else {
       errors.push({
         line: line.index,
-        message: 'Invalid syntax.',
+        message: 'comp.osc-script-code-editor.errors.invalidSyntax',
       });
     }
   }
   if (script.commands.length > MAX_OSC_SCRIPT_COMMANDS) {
     errors.push({
       line: 0,
-      message: `An OSC script cannot have more than ${MAX_OSC_SCRIPT_COMMANDS} commands.`,
+      message: {
+        string: 'comp.osc-script-code-editor.errors.tooManyCommands',
+        values: { value: MAX_OSC_SCRIPT_COMMANDS.toString() },
+      },
     });
   }
 

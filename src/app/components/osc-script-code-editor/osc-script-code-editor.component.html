@@ -1,35 +1,24 @@
 <div class="header-bar" @noop>
   <span>
-    <span>OSC Script Editor [</span>
-    <a href="#" target="_blank">Syntax Guide</a>
+    <span translate>comp.osc-script-code-editor.title</span>
+    &nbsp;
+    <span>[</span>
+    <a href="#" target="_blank" translate>comp.osc-script-code-editor.syntaxGuide</a>
     <span>]</span>
   </span>
   <div class="editor-actions">
-    <button class="btn btn-secondary" (click)="formatCode()" [disabled]="errors.length">
-      Format
+    <button class="btn btn-secondary" (click)="formatCode()" [disabled]="errors.length" translate>
+      comp.osc-script-code-editor.format
     </button>
     <button class="btn btn-secondary" (click)="testCode()" [disabled]="errors.length || testing">
-      <div
-        class="small-spinner"
-        *ngIf="testing"
-        @hshrink
-      ></div>
-      <i
-        class="material-icons"
-        *ngIf="!testing"
-        @hshrink
-      >
-        play_arrow
-      </i>
-      <span *ngIf="!testing" [@hshrink]>Test</span>
+      <div class="small-spinner" *ngIf="testing" @hshrink></div>
+      <i class="material-icons" *ngIf="!testing" @hshrink>play_arrow</i>
+      <span *ngIf="!testing" [@hshrink] translate>comp.osc-script-code-editor.test</span>
     </button>
   </div>
 </div>
 <div class="code-editor-wrapper">
-  <div
-    class="code-editor"
-    [style.min-height]="minHeight * 1.25 + 1.5 + 'em'"
-  >
+  <div class="code-editor" [style.min-height]="minHeight * 1.25 + 1.5 + 'em'">
     <div class="code-editor-line-numbers" #lineCounter>
       <div
         class="line-number"
@@ -63,7 +52,7 @@
     <div class="error-tooltip-content">
       <div class="error-tooltip-error" *ngFor="let error of tooltipErrors">
         <strong>L{{ error.line + 1 }}</strong>
-        : {{ error.message }}
+        : {{ error.message | tsTranslate }}
       </div>
     </div>
   </div>

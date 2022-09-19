@@ -8,25 +8,6 @@
       "save": "Opslaan"
     }
   },
-  "dashboard-navbar": {
-    "overview": "Overzicht",
-    "sleepDetection": "Slaap Detectie",
-    "batteryAutomations": "Batterij Automatiseringen",
-    "gpuAutomations": "GPU Automatiseringen",
-    "settings": "Instellingen",
-    "about": "Over Oyasumi",
-    "batteryManagement": "Batterij Management"
-  },
-  "device-list": {
-    "title": "Apparaten",
-    "turnOffAll": "ALLE",
-    "noDevices": "Geen controllers of trackers gevonden.",
-    "category": {
-      "Controller": "Controllers",
-      "GenericTracker": "Trackers",
-      "other": "Overige"
-    }
-  },
   "overview": {
     "sleep-mode": {
       "label": "Slaap modus",
@@ -175,5 +156,26 @@
     "translations": "Vertalingen",
     "projectLinks": "Project Links",
     "sourceLink": "Broncode @ GitHub"
+  },
+  "comp": {
+    "dashboard-navbar": {
+      "overview": "Overzicht",
+      "sleepDetection": "Slaap Detectie",
+      "batteryAutomations": "Batterij Automatiseringen",
+      "gpuAutomations": "GPU Automatiseringen",
+      "settings": "Instellingen",
+      "about": "Over Oyasumi",
+      "batteryManagement": "Batterij Management"
+    },
+    "device-list": {
+      "title": "Apparaten",
+      "turnOffAll": "ALLE",
+      "noDevices": "Geen controllers of trackers gevonden.",
+      "category": {
+        "Controller": "Controllers",
+        "GenericTracker": "Trackers",
+        "other": "Overige"
+      }
+    }
   }
 }
