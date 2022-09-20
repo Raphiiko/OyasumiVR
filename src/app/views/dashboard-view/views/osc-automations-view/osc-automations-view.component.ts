@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { noop, vshrink } from '../../../../utils/animations';
+import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -18,7 +18,7 @@ import { SleepService } from '../../../../services/sleep.service';
   selector: 'app-osc-automations-view',
   templateUrl: './osc-automations-view.component.html',
   styleUrls: ['./osc-automations-view.component.scss'],
-  animations: [noop(), vshrink()],
+  animations: [noop(), vshrink(), hshrink()],
 })
 export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
@@ -53,6 +53,8 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   );
   footLockReleaseWindowError?: string;
   currentPose: SleepingPose = 'UNKNOWN';
+  sleepingPoses: SleepingPose[] = ['SIDE_FRONT', 'SIDE_BACK', 'SIDE_LEFT', 'SIDE_RIGHT'];
+  footLockActions: Array<'FOOT_LOCK' | 'FOOT_UNLOCK'> = ['FOOT_LOCK', 'FOOT_UNLOCK'];
   get showManualControl(): boolean {
     return !!Object.values(this.config.oscScripts).find((s) => !!s);
   }
@@ -119,11 +121,11 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async setSleepingPosition(position: SleepingPose) {
-    this.sleepingAnimationsAutomation.forcePose(position);
+    await this.sleepingAnimationsAutomation.forcePose(position);
   }
 
   async setFootLock(enabled: boolean) {
-    this.osc.queueScript(
+    await this.osc.runScript(
       enabled ? this.config.oscScripts.FOOT_LOCK! : this.config.oscScripts.FOOT_UNLOCK!
     );
   }

@@ -3,6 +3,9 @@
   height: 100%;
   > .pane-content {
     overflow-y: overlay;
+    > .pane-width-constraint {
+      max-width: 75em;
+    }
   }
 }
 
@@ -40,6 +43,7 @@
       margin-top: 0.5em;
     }
     button {
+      white-space: nowrap;
       flex: 1;
       &:not(:last-child) {
         margin-right: 0.5em;
