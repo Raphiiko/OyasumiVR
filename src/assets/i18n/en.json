@@ -67,7 +67,7 @@
       "currentPose": "Current Position",
       "manualControl": "Manual Control",
       "presetAuthor": "by {{author}}",
-      "description": "Oyasumi can automatically change your avatar animations when you change sleeping position.This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here.</a><br><br>Presets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.<br><br>Presets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
       "customPreset": "Custom Animations",
       "errors": {
@@ -77,7 +77,7 @@
       "options": {
         "positions": {
           "title": "Sleeping Positions",
-          "description": "Set the OSC commands to activate each sleeping position.",
+          "description": "Set the OSC commands to activate the animation for each sleeping position.",
           "SIDE_FRONT": "Upright",
           "SIDE_BACK": "Back Side",
           "SIDE_LEFT": "Left Side",
@@ -249,7 +249,7 @@
         "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
         "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
         "invalidSyntax": "Invalid syntax.",
-        "tooManyCommands": "An OSC script cannot have more than {{value}} commands."
+        "tooManyCommands": "An OSC script cannot have more than {{value}} actions."
       }
     },
     "osc-script-simple-editor": {

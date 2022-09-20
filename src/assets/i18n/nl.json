@@ -57,6 +57,53 @@
       }
     }
   },
+  "oscAutomations": {
+    "title": "OSC Automatiseringen",
+    "tab": {
+      "sleepingAnimations": "Slaap Animaties"
+    },
+    "sleepingAnimations": {
+      "currentPose": "Huidige Houding",
+      "manualControl": "Handmatige Bediening",
+      "presetAuthor": "van {{author}}",
+      "description": "Oyasumi kan automatisch de animaties van je avatar veranderen wanneer je je slaap houding wijzigd. Dit kan handig zijn als je geen full body tracking hebt, of als je je trackers s'nachts uitzet (of door Oyasumi laat uitzetten). Een voorbeeld hoe dit er uit ziet kan je <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">hier</a> vinden.<br><br>Er zijn presets beschikbaar voor verschillende bestaande locomotion prefabs, maar je kan ook je eigen animaties specificeren.",
+      "enable": "Automatische slaap animaties inschakelen",
+      "customPreset": "Eigen Animaties",
+      "errors": {
+        "releaseDurationTooShort": "De duur moet minimaal 0.1 seconden zijn.",
+        "releaseDurationTooLong": "De duur mag maximaal 10 seconden zijn."
+      },
+      "options": {
+        "positions": {
+          "title": "Slaap Houdingen",
+          "description": "Stel de OSC commandos in om de animatie voor elke slaap houding te activeren.",
+          "SIDE_FRONT": "Rechtop",
+          "SIDE_BACK": "Op je rug",
+          "SIDE_LEFT": "Op je linkerzij",
+          "SIDE_RIGHT": "Op je rechterzij",
+          "UNKNOWN": "Onbekend"
+        },
+        "footLock": {
+          "title": "Voeten vastzetten",
+          "description": "Stel de OSC commandos in om de voeten van je avatar vast te zetten.",
+          "FOOT_LOCK": "Voeten vastzetten",
+          "FOOT_UNLOCK": "Voeten losmaken"
+        },
+        "general": {
+          "title": "Algemene Opties",
+          "onlySwitchAnimations": "Alleen animaties wisselen",
+          "onlyIfSleepModeEnabled": "Wanneer slaap modus actief is",
+          "onlyIfAllTrackersTurnedOff": "Wanneer alle trackers uit staan",
+          "footLock": "Voeten vastzetten",
+          "lockFeetOnSleepModeEnable": "Voeten vastzetten wanneer slaap modus wordt ingeschakeld",
+          "unlockFeetOnSleepModeDisable": "Voeten losmaken wanneer slaap modus wordt uitgeschakeld",
+          "unlockFeetOnAutomationDisable": "Voeten losmaken wanneer de automatische slaap animaties worden uitgeschakeld",
+          "releaseFootLockOnPoseChange": "Voeten tijdelijk losmaken wanneer je van slaap houding veranderd",
+          "footLockReleaseWindow": "Duur van het tijdelijk losmaken van de voeten"
+        }
+      }
+    }
+  },
   "battery-automations": {
     "title": "Batterij Automatiseringen",
     "devicePowerOff": {
@@ -146,6 +193,9 @@
         "title": "Taal",
         "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
         "loadFile": "Vertalings Bestand Laden"
+      },
+      "sleepingPose": {
+        "title": "Slaap Houding"
       }
     }
   },
@@ -158,9 +208,13 @@
     "sourceLink": "Broncode @ GitHub"
   },
   "comp": {
+    "select-box": {
+      "defaultPlaceholder": "Selecteer..."
+    },
     "dashboard-navbar": {
       "overview": "Overzicht",
       "sleepDetection": "Slaap Detectie",
+      "oscAutomations": "OSC Automatiseringen",
       "batteryAutomations": "Batterij Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "settings": "Instellingen",
@@ -175,6 +229,66 @@
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
         "other": "Overige"
+      }
+    },
+    "osc-script-modal": {
+      "title": "OSC Script",
+      "simple": "Simpel",
+      "script": "Script"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC Script Bewerker",
+      "syntaxGuide": "Syntax Handleiding",
+      "format": "Formatteren",
+      "test": "Test",
+      "errors": {
+        "noFloatMilliseconds": "Milliseconden mogen geen decimalen hebben.",
+        "durationTooLong": "Een wacht tijd mag niet langer zijn dan 5 seconden.",
+        "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden.",
+        "intOutOfBounds": "Een integer moet een waarde hebben tussen 0 en 255.",
+        "floatOutOfBounds": "Een float moet een waarde hebben tussen -1.0 en 1.0.",
+        "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
+        "invalidSyntax": "Incorrecte syntax.",
+        "tooManyCommands": "Een OSC script mag niet meer dan {{value}} acties bevatten."
+      }
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} Commando",
+        "plural": "{{value}} Commandos"
+      },
+      "errorCounter": {
+        "singular": "{{value}} Validatie fout",
+        "plural": "{{value}} Validatie fouten"
+      },
+      "addCommand": "Voeg Toe",
+      "test": "Test",
+      "action": {
+        "osc": "OSC",
+        "sleep": "Wacht",
+        "none": "Er zijn nog geen acties toegevoegd"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC Commando",
+          "description": "Voer een OSC commando uit"
+        },
+        "SLEEP": {
+          "title": "Wacht",
+          "description": "Wacht voor een bepaalde tijd"
+        }
+      },
+      "errors": {
+        "addressRequired": "Een OSC adres is vereist.",
+        "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
+        "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten.",
+        "intOutOfBounds": "Een integer moet een waarde hebben tussen 0 en 255.",
+        "floatOutOfBounds": "Een float moet een waarde hebben tussen -1.0 en 1.0.",
+        "floatTooPrecise": "Een float mag niet meer dan 3 decimalen hebben.",
+        "durationRequired": "Een wacht tijd is vereist.",
+        "durationTooShort": "Een wacht tijd moet minimaal 0.1 seconden zijn.",
+        "durationTooLong": "Een wacht tijd mag niet langer zijn dan 5 seconden.",
+        "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden."
       }
     }
   }
