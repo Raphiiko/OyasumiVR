@@ -8,9 +8,8 @@ describe('OscScriptSimpleEditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OscScriptSimpleEditorComponent ]
-    })
-    .compileComponents();
+      declarations: [OscScriptSimpleEditorComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OscScriptSimpleEditorComponent);
     component = fixture.componentInstance;

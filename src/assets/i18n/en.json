@@ -64,6 +64,8 @@
       "sleepingAnimations": "Sleeping Animations"
     },
     "sleepingAnimations": {
+      "currentPose": "Current Position",
+      "manualControl": "Manual Control",
       "presetAuthor": "by {{author}}",
       "description": "Oyasumi can automatically change your avatar animations when you change sleeping position.This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here.</a><br><br>Presets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
@@ -79,7 +81,8 @@
           "SIDE_FRONT": "Upright",
           "SIDE_BACK": "Back Side",
           "SIDE_LEFT": "Left Side",
-          "SIDE_RIGHT": "Right Side"
+          "SIDE_RIGHT": "Right Side",
+          "UNKNOWN": "Unknown"
         },
         "footLock": {
           "title": "Foot Lock",
@@ -94,6 +97,8 @@
           "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
           "footLock": "Foot Lock",
           "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
+          "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled",
+          "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
           "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
           "footLockReleaseWindow": "Foot lock release duration"
         }
@@ -264,11 +269,11 @@
         "none": "No actions have been added yet!"
       },
       "commands": {
-        "COMMAND":{
+        "COMMAND": {
           "title": "OSC Command",
           "description": "Execute an OSC command"
         },
-        "SLEEP":{
+        "SLEEP": {
           "title": "Sleep",
           "description": "Wait for a specified amount of time"
         }

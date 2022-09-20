@@ -10,8 +10,7 @@
   <div class="small-spinner" *ngIf="!validated" @hshrink style="margin-right: 0.5em"></div>
   <span
     [translate]="
-      'comp.osc-script-simple-editor.errorCounter.' +
-      (errors.length === 1 ? 'singular' : 'plural')
+      'comp.osc-script-simple-editor.errorCounter.' + (errors.length === 1 ? 'singular' : 'plural')
     "
     [translateParams]="{ value: errors.length }"
   ></span>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { noop, vshrink } from '../../../../utils/animations';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
@@ -6,10 +6,13 @@ import {
   SleepingAnimationsAutomationConfig,
 } from '../../../../models/automations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { skip, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { SleepingPose } from '../../../../models/sleeping-pose';
 import { OscScript, SLEEPING_ANIMATION_OSC_SCRIPTS } from '../../../../models/osc-script';
+import { OscService } from '../../../../services/osc.service';
+import { SleepingAnimationsAutomationService } from '../../../../services/osc-automations/sleeping-animations-automation.service';
+import { SleepService } from '../../../../services/sleep.service';
 
 @Component({
   selector: 'app-osc-automations-view',
@@ -49,13 +52,25 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
   footLockReleaseWindowError?: string;
+  currentPose: SleepingPose = 'UNKNOWN';
+  get showManualControl(): boolean {
+    return !!Object.values(this.config.oscScripts).find((s) => !!s);
+  }
 
-  constructor(private automationConfig: AutomationConfigService) {}
+  constructor(
+    private automationConfig: AutomationConfigService,
+    private osc: OscService,
+    private sleepingAnimationsAutomation: SleepingAnimationsAutomationService,
+    private sleep: SleepService
+  ) {}
 
   ngOnInit(): void {
-    this.automationConfig.configs.pipe(skip(1), takeUntil(this.destroy$)).subscribe((configs) => {
+    this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe(async (configs) => {
       this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
-      this.oscOptionsExpanded = this.config.preset === 'CUSTOM';
+      this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
+    });
+    this.sleep.pose.pipe(takeUntil(this.destroy$)).subscribe((pose) => {
+      this.currentPose = pose;
     });
   }
 
@@ -90,14 +105,26 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   async updateFootLockReleaseWindow(value: string) {
     const intValue = parseInt(value);
     if (intValue <= 100) {
-      this.footLockReleaseWindowError = 'oscAutomations.sleepingAnimations.errors.releaseDurationTooShort';
+      this.footLockReleaseWindowError =
+        'oscAutomations.sleepingAnimations.errors.releaseDurationTooShort';
       return;
     }
     if (intValue > 5000) {
-      this.footLockReleaseWindowError = 'oscAutomations.sleepingAnimations.errors.releaseDurationTooLong';
+      this.footLockReleaseWindowError =
+        'oscAutomations.sleepingAnimations.errors.releaseDurationTooLong';
       return;
     }
     this.footLockReleaseWindowError = undefined;
     await this.updateConfig({ footLockReleaseWindow: intValue });
+  }
+
+  async setSleepingPosition(position: SleepingPose) {
+    this.sleepingAnimationsAutomation.forcePose(position);
+  }
+
+  async setFootLock(enabled: boolean) {
+    this.osc.queueScript(
+      enabled ? this.config.oscScripts.FOOT_LOCK! : this.config.oscScripts.FOOT_UNLOCK!
+    );
   }
 }

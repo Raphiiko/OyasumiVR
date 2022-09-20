@@ -10,18 +10,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import { BehaviorSubject, debounceTime, map, Observable, Subject, takeUntil, tap } from 'rxjs';
-import { TString } from '../../models/translatable-string';
-import {
-  OscParameterType,
-  OscScript,
-  OscScriptCommandAction,
-  OscScriptSleepAction,
-  OscScriptCodeValidationError,
-  parseOscScriptFromCode,
-} from '../../models/osc-script';
+import { OscParameterType, OscScript, OscScriptCodeValidationError } from '../../models/osc-script';
 import { fade, hshrink, noop } from '../../utils/animations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
+import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
 
 @Component({
   selector: 'app-osc-script-code-editor',

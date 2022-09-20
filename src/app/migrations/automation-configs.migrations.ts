@@ -23,7 +23,7 @@ function toLatest(data: any): any {
   return data;
 }
 
-function from2to3(data: any):any {
+function from2to3(data: any): any {
   data.version = 3;
   data.SLEEPING_ANIMATIONS = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS);
   return data;

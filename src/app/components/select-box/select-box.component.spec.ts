@@ -8,9 +8,8 @@ describe('SelectBoxComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectBoxComponent ]
-    })
-    .compileComponents();
+      declarations: [SelectBoxComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SelectBoxComponent);
     component = fixture.componentInstance;

@@ -93,12 +93,7 @@ export class SleepingPoseViewerComponent implements OnDestroy, AfterViewInit {
         (9 / 16) * this.elementRef.nativeElement.clientWidth
       );
       // Camera
-      this.camera = new THREE.PerspectiveCamera(
-        45,
-        16/9,
-        0.1,
-        100
-      );
+      this.camera = new THREE.PerspectiveCamera(45, 16 / 9, 0.1, 100);
       this.camera.up = new THREE.Vector3(0, 1, 0);
       const controls = new OrbitControls(this.camera, this.renderer.domElement);
       controls.enableDamping = true;

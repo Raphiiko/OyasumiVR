@@ -2,27 +2,19 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { message } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
-import { OpenVRService } from './openvr.service';
-import { pairwise } from 'rxjs';
 import { SleepService } from './sleep.service';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
+import { cloneDeep } from 'lodash';
+import { TaskQueue } from '../utils/task-queue';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OscService {
   address = '127.0.0.1:9000';
+  private scriptQueue: TaskQueue = new TaskQueue(true);
 
   constructor(private sleep: SleepService) {}
-
-  async footLockUnlock() {
-    const sleep = (duration: number) =>
-      new Promise((res, rej) => setTimeout(() => res(void 0), duration));
-    await sleep(10);
-    await this.send_bool('/avatar/parameters/VRCFootAnchor', false);
-    await sleep(600);
-    await this.send_bool('/avatar/parameters/VRCFootAnchor', true);
-  }
 
   async init() {
     const result = await invoke<boolean>('osc_init');
@@ -45,6 +37,17 @@ export class OscService {
 
   async send_bool(address: string, value: boolean) {
     await invoke('osc_send_bool', { addr: this.address, oscAddr: address, data: value });
+  }
+
+  queueScript(script: OscScript, replaceId?: string) {
+    script = cloneDeep(script);
+    this.scriptQueue.queueTask(
+      {
+        runnable: () => this.runScript(script),
+        typeId: replaceId,
+      },
+      true
+    );
   }
 
   async runScript(script: OscScript) {

@@ -1,5 +1,6 @@
 import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
+import { SleepingPose } from './sleeping-pose';
 
 export type AutomationType =
   // GPU AUTOMATIONS
@@ -88,16 +89,13 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   preset: string | null;
   oscScripts: {
-    SIDE_BACK?: OscScript;
-    SIDE_FRONT?: OscScript;
-    SIDE_LEFT?: OscScript;
-    SIDE_RIGHT?: OscScript;
-    FOOT_LOCK?: OscScript;
-    FOOT_UNLOCK?: OscScript;
+    [key in SleepingPose | 'FOOT_LOCK' | 'FOOT_UNLOCK']?: OscScript;
   };
   onlyIfSleepModeEnabled: boolean;
   onlyIfAllTrackersTurnedOff: boolean;
   lockFeetOnSleepModeEnable: boolean;
+  unlockFeetOnSleepModeDisable: boolean;
+  unlockFeetOnAutomationDisable: boolean;
   releaseFootLockOnPoseChange: boolean;
   footLockReleaseWindow: number;
 }
@@ -157,6 +155,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onlyIfSleepModeEnabled: true,
     onlyIfAllTrackersTurnedOff: true,
     lockFeetOnSleepModeEnable: true,
+    unlockFeetOnSleepModeDisable: true,
+    unlockFeetOnAutomationDisable: true,
     releaseFootLockOnPoseChange: true,
     footLockReleaseWindow: 600,
     oscScripts: {},

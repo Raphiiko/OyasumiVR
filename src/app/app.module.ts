@@ -52,6 +52,8 @@ import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-e
 import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
 import { DeviceListComponent } from './components/device-list/device-list.component';
 import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
+import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -137,7 +139,9 @@ export class AppModule {
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Battery automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
-    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService
+    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    // OSC automations
+    private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService
   ) {
     this.init();
   }
@@ -161,5 +165,7 @@ export class AppModule {
       this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
       this.turnOffDevicesWhenChargingAutomationService.init(),
     ]);
+    // OSC automations
+    await Promise.all([this.sleepingAnimationsAutomationService.init()]);
   }
 }

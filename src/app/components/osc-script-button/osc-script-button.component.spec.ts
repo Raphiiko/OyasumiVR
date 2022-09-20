@@ -8,9 +8,8 @@ describe('OscScriptButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OscScriptButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [OscScriptButtonComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OscScriptButtonComponent);
     component = fixture.componentInstance;

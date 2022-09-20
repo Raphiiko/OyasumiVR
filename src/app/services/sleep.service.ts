@@ -1,4 +1,4 @@
-import { ApplicationRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   bufferTime,
@@ -6,9 +6,10 @@ import {
   distinctUntilChanged,
   filter,
   map,
+  merge,
   Observable,
   startWith,
-  tap,
+  Subject,
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
 import { SETTINGS_FILE } from '../globals';
@@ -33,29 +34,32 @@ export class SleepService {
     map((v) => v as boolean)
   );
   private poseDetector: SleepingPoseDetector = new SleepingPoseDetector();
+  private forcePose$: Subject<SleepingPose> = new Subject<SleepingPose>();
 
-  public pose: Observable<SleepingPose> = combineLatest([
-    this.openvr.devices,
-    this.openvr.devicePoses,
-  ]).pipe(
-    map(([devices, poses]) => {
-      const hmdDevice = devices.find((d) => d.class === 'HMD');
-      if (!hmdDevice) return null;
-      return poses[hmdDevice.index] || null;
-    }),
-    filter((hmdPose) => hmdPose !== null),
-    map((hmdPose) => this.getSleepingPoseForDevicePose(hmdPose!)),
-    bufferTime(1000),
-    filter((buffer) => buffer.length >= 2 && uniq(buffer).length === 1),
-    map((buffer) => buffer[0]),
-    startWith('UNKNOWN' as SleepingPose),
-    distinctUntilChanged(),
-  ) as Observable<SleepingPose>;
+  public pose: Observable<SleepingPose> = merge(
+    combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
+      map(([devices, poses]) => {
+        const hmdDevice = devices.find((d) => d.class === 'HMD');
+        if (!hmdDevice) return null;
+        return poses[hmdDevice.index] || null;
+      }),
+      filter((hmdPose) => hmdPose !== null),
+      map((hmdPose) => this.getSleepingPoseForDevicePose(hmdPose!)),
+      bufferTime(1000),
+      filter((buffer) => buffer.length >= 2 && uniq(buffer).length === 1),
+      map((buffer) => buffer[0] as SleepingPose)
+    ),
+    this.forcePose$
+  ).pipe(startWith('UNKNOWN' as SleepingPose), distinctUntilChanged()) as Observable<SleepingPose>;
 
   constructor(private openvr: OpenVRService) {}
 
   async init() {
     this._mode.next((await this.store.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false);
+  }
+
+  forcePose(pose: SleepingPose) {
+    this.forcePose$.next(pose);
   }
 
   getPoseDetectorScene(): THREE.Scene {

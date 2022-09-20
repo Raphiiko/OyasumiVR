@@ -37,7 +37,7 @@
         </div>
         <div class="automation-settings-row-controls">
           <div
-            class='input-wrapper with-unit'
+            class="input-wrapper with-unit"
             [class.invalid]="batteryPercentageThresholdInput.validationMessage"
           >
             <input
@@ -45,7 +45,7 @@
               min="0"
               max="100"
               step="any"
-              style='width: 5em'
+              style="width: 5em"
               [value]="threshold"
               (change)="
                 updateThreshold(

@@ -8,9 +8,8 @@ describe('OscAutomationsViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OscAutomationsViewComponent ]
-    })
-    .compileComponents();
+      declarations: [OscAutomationsViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OscAutomationsViewComponent);
     component = fixture.componentInstance;

@@ -8,9 +8,7 @@ import { AboutViewComponent } from './views/dashboard-view/views/about-view/abou
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
-import {
-  OscAutomationsViewComponent
-} from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
+import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 
 const routes: Routes = [
   {

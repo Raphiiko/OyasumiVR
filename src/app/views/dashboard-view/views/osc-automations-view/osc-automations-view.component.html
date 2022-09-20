@@ -10,6 +10,70 @@
     </div>
   </div>
   <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'" [@noop]>
+    <!-- MANUAL CONTROL PANE-->
+    <div class="pane manual-control-pane" @vshrink *ngIf="showManualControl">
+      <div class="pane-content">
+        <div class="manual-control-pane-title">
+          <h3 translate>oscAutomations.sleepingAnimations.manualControl</h3>
+          <p class="current-pose">
+            {{ 'oscAutomations.sleepingAnimations.currentPose' | translate }}:&nbsp;
+            {{ 'oscAutomations.sleepingAnimations.options.positions.' + currentPose | translate }}
+          </p>
+        </div>
+        <div class="manual-control-row">
+          <button
+            class="btn btn-secondary"
+            (click)="setSleepingPosition('SIDE_FRONT')"
+            [disabled]="!config.oscScripts.SIDE_FRONT"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.positions.SIDE_FRONT</span>
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="setSleepingPosition('SIDE_BACK')"
+            [disabled]="!config.oscScripts.SIDE_BACK"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.positions.SIDE_BACK</span>
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="setSleepingPosition('SIDE_LEFT')"
+            [disabled]="!config.oscScripts.SIDE_LEFT"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.positions.SIDE_LEFT</span>
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="setSleepingPosition('SIDE_RIGHT')"
+            [disabled]="!config.oscScripts.SIDE_RIGHT"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.positions.SIDE_RIGHT</span>
+          </button>
+        </div>
+        <div class="manual-control-row">
+          <button
+            class="btn btn-secondary"
+            (click)="setFootLock(true)"
+            [disabled]="!config.oscScripts.FOOT_LOCK"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.footLock.FOOT_LOCK</span>
+          </button>
+          <button
+            class="btn btn-secondary"
+            (click)="setFootLock(false)"
+            [disabled]="!config.oscScripts.FOOT_UNLOCK"
+          >
+            <i class="material-icons">play_arrow</i>
+            <span translate>oscAutomations.sleepingAnimations.options.footLock.FOOT_UNLOCK</span>
+          </button>
+        </div>
+      </div>
+    </div>
     <p [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"></p>
     <!-- ENABLE/OSC PANE-->
     <div class="pane option-pane">
@@ -98,7 +162,9 @@
             (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span>
+          <span class="check-toggle-label" translate>
+            oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled
+          </span>
         </label>
         <label class="check-toggle">
           <input
@@ -109,9 +175,13 @@
             "
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span>
+          <span class="check-toggle-label" translate>
+            oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff
+          </span>
         </label>
-        <h3 style="margin-top: 1em" translate>oscAutomations.sleepingAnimations.options.general.footLock</h3>
+        <h3 style="margin-top: 1em" translate>
+          oscAutomations.sleepingAnimations.options.general.footLock
+        </h3>
         <label class="check-toggle">
           <input
             type="checkbox"
@@ -121,7 +191,35 @@
             "
           />
           <span class="check-toggle-checkmark"></span>
-          <span class="check-toggle-label" translate>oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span>
+          <span class="check-toggle-label" translate>
+            oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable
+          </span>
+        </label>
+        <label class="check-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.unlockFeetOnSleepModeDisable"
+            (change)="
+              updateConfig({ unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable })
+            "
+          />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>
+            oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable
+          </span>
+        </label>
+        <label class="check-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.unlockFeetOnAutomationDisable"
+            (change)="
+              updateConfig({ unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable })
+            "
+          />
+          <span class="check-toggle-checkmark"></span>
+          <span class="check-toggle-label" translate>
+            oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable
+          </span>
         </label>
         <label class="check-toggle">
           <input
