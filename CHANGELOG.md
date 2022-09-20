@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+- Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping position.
+  - Preset for [ごろ寝システム (Sleep System) v2.2 by んみんみーん](https://booth.pm/ko/items/2886739).
+  - Preset for [GoGo Loco v1.7.0 by franada](https://booth.pm/en/items/3290806).
 - Navigation item for GPU Automations shows an error icon when the feature is enabled, but no elevated permissions were detected.
 - Prepackaged Japanese font
 
