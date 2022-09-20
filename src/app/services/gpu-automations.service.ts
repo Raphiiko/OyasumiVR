@@ -16,7 +16,7 @@ import { cloneDeep } from 'lodash';
 import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NVMLService } from './nvml.service';
 import { NVMLDevice } from '../models/nvml-device';
-import { SleepModeService } from './sleep-mode.service';
+import { SleepService } from './sleep.service';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +34,7 @@ export class GpuAutomationsService {
   constructor(
     private automationConfig: AutomationConfigService,
     private nvml: NVMLService,
-    private sleepMode: SleepModeService
+    private sleep: SleepService
   ) {
     this.config.subscribe((config) => (this.currentConfig = config));
     this.devices = combineLatest([
@@ -160,7 +160,7 @@ export class GpuAutomationsService {
             return this.currentConfig.onSleepDisable;
         }
       };
-      this.sleepMode.sleepMode
+      this.sleep.mode
         .pipe(
           // Skip first value from initial load
           skip(1),

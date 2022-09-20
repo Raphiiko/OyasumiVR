@@ -19,6 +19,12 @@ export interface OVRDevice {
   modelNumber: string;
   providesBatteryStatus: boolean;
   serialNumber: string;
+  pose: any;
   // Status properties
   isTurningOff: boolean;
+}
+
+export interface OVRDevicePose {
+  quaternion: [number, number, number, number];
+  position: [number, number, number];
 }

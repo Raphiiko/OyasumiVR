@@ -1,10 +1,11 @@
 use std::{thread, time::Duration};
 
 use crate::{
-    models::{DeviceUpdateEvent, OVRDevice},
-    TAURI_WINDOW, OVR_STATUS,
+    models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose},
+    OVR_STATUS, TAURI_WINDOW,
 };
 use openvr::{system as ovrsys, TrackedDeviceIndex};
+use openvr_sys::{HmdQuaternion_t, HmdVector3_t};
 use tauri::Manager;
 
 use crate::OVR_CONTEXT;
@@ -12,23 +13,65 @@ use crate::OVR_CONTEXT;
 pub fn spawn_openvr_background_thread() {
     thread::spawn(move || 'bgLoop: loop {
         loop {
+            thread::sleep(Duration::from_millis(50));
             let context_guard = OVR_CONTEXT.lock().unwrap();
             let context = context_guard.as_ref().unwrap();
+            let window_guard = TAURI_WINDOW.lock().unwrap();
+            let window = window_guard.as_ref().unwrap();
+
             let system = context.system().unwrap();
+
+            // Poll for device poses
+            let poses = system
+                .device_to_absolute_tracking_pose(openvr::TrackingUniverseOrigin::Standing, 0.0);
+            for n in 0..poses.len() {
+                let pose = poses[n];
+                if pose.device_is_connected() && pose.pose_is_valid() {
+                    let matrix = pose.device_to_absolute_tracking().clone();
+                    // Extract quaternion
+                    let q = HmdQuaternion_t {
+                        w: 0.0f64
+                            .max((1.0 + matrix[0][0] + matrix[1][1] + matrix[2][2]).into())
+                            .sqrt()
+                            / 2.0,
+                        x: (0.0f64
+                            .max((1.0 + matrix[0][0] - matrix[1][1] - matrix[2][2]).into())
+                            .sqrt()
+                            / 2.0)
+                            .copysign((matrix[2][1] - matrix[1][2]).into()),
+                        y: (0.0f64
+                            .max((1.0 - matrix[0][0] + matrix[1][1] - matrix[2][2]).into())
+                            .sqrt()
+                            / 2.0)
+                            .copysign((matrix[0][2] - matrix[2][0]).into()),
+                        z: (0.0f64
+                            .max((1.0 - matrix[0][0] - matrix[1][1] + matrix[2][2]).into())
+                            .sqrt()
+                            / 2.0)
+                            .copysign((matrix[1][0] - matrix[0][1]).into()),
+                    };
+                    // Extract position
+                    let pos: HmdVector3_t = HmdVector3_t {
+                        v: [matrix[0][3], matrix[1][3], matrix[2][3]],
+                    };
+                    // Emit event
+                    window
+                        .emit_all(
+                            "OVR_POSE_UPDATE",
+                            OVRDevicePose {
+                                index: n as u32,
+                                quaternion: [q.x, q.y, q.z, q.w],
+                                position: pos.v,
+                            },
+                        )
+                        .ok();
+                }
+            }
+            
+            // Poll for property updates
             if let Some((event_info, _)) =
-                system.poll_next_event_with_pose(openvr::TrackingUniverseOrigin::RawAndUncalibrated)
+                system.poll_next_event_with_pose(openvr::TrackingUniverseOrigin::Standing)
             {
-                // if event_info.tracked_device_index > 0
-                //     && event_info.tracked_device_index
-                //         < openvr::MAX_TRACKED_DEVICE_COUNT.try_into().unwrap()
-                // {
-                //     println!(
-                //         "[device_id:{}] {:?} {:?}",
-                //         event_info.tracked_device_index,
-                //         system.tracked_device_class(event_info.tracked_device_index),
-                //         event_info.event
-                //     );
-                // }
                 let send_device_update = |device_index: TrackedDeviceIndex| {
                     let event = DeviceUpdateEvent {
                         device: OVRDevice {
@@ -110,8 +153,6 @@ pub fn spawn_openvr_background_thread() {
                             },
                         },
                     };
-                    let window_guard = TAURI_WINDOW.lock().unwrap();
-                    let window = window_guard.as_ref().unwrap();
                     window.emit_all("OVR_DEVICE_UPDATE", event).unwrap();
                 };
                 if match event_info.event {
@@ -150,12 +191,9 @@ pub fn spawn_openvr_background_thread() {
                 } {
                     break 'bgLoop;
                 }
-                drop(context);
-            } else {
-                drop(context);
-                break;
             }
-            thread::sleep(Duration::from_millis(16));
+            drop(context);
+            drop(window);
         }
     });
 }

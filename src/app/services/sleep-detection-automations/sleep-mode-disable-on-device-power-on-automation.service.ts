@@ -7,7 +7,7 @@ import {
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
 import { map } from 'rxjs';
-import { SleepModeService } from '../sleep-mode.service';
+import { SleepService } from '../sleep.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private sleepModeService: SleepModeService
+    private sleep: SleepService
   ) {}
 
   async init() {
@@ -55,7 +55,7 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
       if (!newPoweredOnDevices.find((d) => this.config.triggerClasses.includes(d.class))) return;
       // Disable sleep mode if automation is enabled
       if (this.config.enabled) {
-        this.sleepModeService.disableSleepMode({
+        this.sleep.disableSleepMode({
           type: 'AUTOMATION',
           automation: 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON',
         });

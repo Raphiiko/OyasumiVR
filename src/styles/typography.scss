@@ -3,9 +3,14 @@
 @import '~@fontsource/poppins/400.css';
 @import '~@fontsource/poppins/500.css';
 @import '~@fontsource/poppins/600.css';
+@import '@fontsource/noto-sans-jp/index.css';
+@import '@fontsource/noto-sans-jp/300.css';
+@import '@fontsource/noto-sans-jp/400.css';
+@import '@fontsource/noto-sans-jp/500.css';
+@import '@fontsource/noto-sans-jp/700.css';
 
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', 'Noto Sans JP', sans-serif;
   letter-spacing: 0.025em;
 }
 

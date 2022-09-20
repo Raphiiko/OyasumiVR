@@ -27,6 +27,15 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
+    // pub axis: Option<[i32; 5]>,
+}
+
+#[derive(Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OVRDevicePose {
+    pub index: u32,
+    pub quaternion: [f64; 4],
+    pub position: [f32; 3],
 }
 
 #[derive(Clone, serde::Serialize)]

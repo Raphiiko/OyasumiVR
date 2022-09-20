@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 ### Added
 - Navigation item for GPU Automations shows an error icon when the feature is enabled, but no elevated permissions were detected.
+- Prepackaged Japanese font
 
 ### Changed
 - Switched to Fontsource for the application font, to remove the dependency on Google for providing fonts at runtime.

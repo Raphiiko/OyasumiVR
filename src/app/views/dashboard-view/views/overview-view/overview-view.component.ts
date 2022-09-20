@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { noop } from '../../../../utils/animations';
-import { SleepModeService } from '../../../../services/sleep-mode.service';
-import { Subject, takeUntil } from 'rxjs';
+import { SleepService } from '../../../../services/sleep.service';
+import { filter, map, Subject, takeUntil, tap } from 'rxjs';
+import { OpenVRService } from '../../../../services/openvr.service';
+import { OscService } from '../../../../services/osc.service';
 
 @Component({
   selector: 'app-overview-view',
@@ -12,19 +14,30 @@ import { Subject, takeUntil } from 'rxjs';
 export class OverviewViewComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject<void>();
   sleepModeActive = false;
-  constructor(private sleepModeService: SleepModeService) {}
+  wew = false;
+  quaternion: [number, number, number, number] = [0, 0, 0, 0];
+
+  constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
 
   ngOnInit(): void {
-    this.sleepModeService.sleepMode
+    this.sleep.mode
       .pipe(takeUntil(this.destroy$))
       .subscribe((sleepModeActive) => (this.sleepModeActive = sleepModeActive));
+    this.openvr.devicePoses
+      .pipe(
+        takeUntil(this.destroy$),
+        map((poses) => poses[0]),
+        filter((p) => !!p),
+        tap((pose) => (this.quaternion = pose.quaternion))
+      )
+      .subscribe();
   }
 
-  setSleepMode(enabled: boolean) {
+  async setSleepMode(enabled: boolean) {
     if (enabled) {
-      this.sleepModeService.enableSleepMode({ type: 'MANUAL' });
+      await this.sleep.enableSleepMode({ type: 'MANUAL' });
     } else {
-      this.sleepModeService.disableSleepMode({ type: 'MANUAL' });
+      await this.sleep.disableSleepMode({ type: 'MANUAL' });
     }
   }
 

@@ -15,9 +15,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import { DashboardNavbarComponent } from './views/dashboard-view/components/dashboard-navbar/dashboard-navbar.component';
-import { DeviceListComponent } from './views/dashboard-view/components/device-list/device-list.component';
-import { DeviceListItemComponent } from './views/dashboard-view/components/device-list-item/device-list-item.component';
 import {
   DefaultSimpleModalOptionConfig,
   defaultSimpleModalOptions,
@@ -38,10 +35,25 @@ import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { WindowsService } from './services/windows.service';
-import { SleepModeService } from './services/sleep-mode.service';
+import { SleepService } from './services/sleep.service';
 import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
 import { NgPipesModule } from 'ngx-pipes';
+import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/sleeping-pose-viewer.component';
+import { OscService } from './services/osc.service';
+import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
+import { SelectBoxComponent } from './components/select-box/select-box.component';
+import { TStringTranslatePipePipe } from './pipes/tstring-translate.pipe';
+import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
+import { OscScriptModalComponent } from './components/osc-script-modal/osc-script-modal.component';
+import { OscScriptCodeEditorComponent } from './components/osc-script-code-editor/osc-script-code-editor.component';
+import { DropdownButtonComponent } from './components/dropdown-button/dropdown-button.component';
+import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
+import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
+import { DeviceListComponent } from './components/device-list/device-list.component';
+import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
+import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -66,6 +78,15 @@ export function createTranslateLoader(http: HttpClient) {
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
+    SleepingPoseViewerComponent,
+    OscAutomationsViewComponent,
+    SelectBoxComponent,
+    TStringTranslatePipePipe,
+    OscScriptButtonComponent,
+    OscScriptModalComponent,
+    OscScriptCodeEditorComponent,
+    DropdownButtonComponent,
+    OscScriptSimpleEditorComponent,
   ],
   imports: [
     CommonModule,
@@ -106,7 +127,8 @@ export class AppModule {
     private openvr: OpenVRService,
     private nvml: NVMLService,
     private windows: WindowsService,
-    private sleepModeService: SleepModeService,
+    private sleep: SleepService,
+    private osc: OscService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -117,15 +139,17 @@ export class AppModule {
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Battery automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
-    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService
+    private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    // OSC automations
+    private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService
   ) {
     this.init();
   }
 
   async init() {
-    await Promise.all([await this.openvr.init(), await this.windows.init()]);
+    await Promise.all([await this.openvr.init(), await this.windows.init(), await this.osc.init()]);
     await this.nvml.init();
-    await this.sleepModeService.init();
+    await this.sleep.init();
     // GPU automations
     await this.gpuAutomations.init();
     // Sleep mode automations
@@ -141,5 +165,7 @@ export class AppModule {
       this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
       this.turnOffDevicesWhenChargingAutomationService.init(),
     ]);
+    // OSC automations
+    await Promise.all([this.sleepingAnimationsAutomationService.init()]);
   }
 }

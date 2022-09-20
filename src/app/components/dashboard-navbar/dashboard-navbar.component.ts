@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
-import { AppSettingsService } from '../../../../services/app-settings.service';
-import { fade } from '../../../../utils/animations';
-import { LighthouseService } from '../../../../services/lighthouse.service';
-import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
-import { WindowsService } from '../../../../services/windows.service';
+import { LighthouseService } from 'src/app/services/lighthouse.service';
+import { AppSettingsService } from 'src/app/services/app-settings.service';
+import { WindowsService } from '../../services/windows.service';
+import { GpuAutomationsService } from '../../services/gpu-automations.service';
+import { fade } from '../../utils/animations';
 
 @Component({
   selector: 'app-dashboard-navbar',

@@ -1,4 +1,6 @@
 import { OVRDeviceClass } from './ovr-device';
+import { OscScript } from './osc-script';
+import { SleepingPose } from './sleeping-pose';
 
 export type AutomationType =
   // GPU AUTOMATIONS
@@ -11,10 +13,12 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   // BATTERY AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
-  | 'TURN_OFF_DEVICES_WHEN_CHARGING';
+  | 'TURN_OFF_DEVICES_WHEN_CHARGING'
+  // OSC AUTOMATIONS
+  | 'SLEEPING_ANIMATIONS';
 
 export interface AutomationConfigs {
-  version: 2;
+  version: 3;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -25,6 +29,8 @@ export interface AutomationConfigs {
   // BATTERY AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
+  // OSC AUTOMATIONS
+  SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -79,12 +85,27 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
   deviceClasses: OVRDeviceClass[];
 }
 
+// OSC AUTOMATIONS
+export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
+  preset: string | null;
+  oscScripts: {
+    [key in SleepingPose | 'FOOT_LOCK' | 'FOOT_UNLOCK']?: OscScript;
+  };
+  onlyIfSleepModeEnabled: boolean;
+  onlyIfAllTrackersTurnedOff: boolean;
+  lockFeetOnSleepModeEnable: boolean;
+  unlockFeetOnSleepModeDisable: boolean;
+  unlockFeetOnAutomationDisable: boolean;
+  releaseFootLockOnPoseChange: boolean;
+  footLockReleaseWindow: number;
+}
+
 //
 // DEFAULT
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 2,
+  version: 3,
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -126,5 +147,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   TURN_OFF_DEVICES_WHEN_CHARGING: {
     enabled: true,
     deviceClasses: [],
+  },
+  // OSC AUTOMATIONS
+  SLEEPING_ANIMATIONS: {
+    enabled: false,
+    preset: null,
+    onlyIfSleepModeEnabled: true,
+    onlyIfAllTrackersTurnedOff: true,
+    lockFeetOnSleepModeEnable: true,
+    unlockFeetOnSleepModeDisable: true,
+    unlockFeetOnAutomationDisable: true,
+    releaseFootLockOnPoseChange: true,
+    footLockReleaseWindow: 600,
+    oscScripts: {},
   },
 };

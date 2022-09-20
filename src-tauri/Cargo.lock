@@ -1870,6 +1870,8 @@ dependencies = [
  "lazy_static",
  "nvml-wrapper",
  "openvr",
+ "openvr_sys",
+ "rosc",
  "serde",
  "serde_json",
  "tauri",
@@ -2354,6 +2356,16 @@ dependencies = [
  "wasm-bindgen-futures",
  "web-sys",
  "windows 0.37.0",
+]
+
+[[package]]
+name = "rosc"
+version = "0.9.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3ffa5031906aec9fbbe2fd49094692297cd5b62e518c09e01a419194dc1a211"
+dependencies = [
+ "byteorder",
+ "nom",
 ]
 
 [[package]]

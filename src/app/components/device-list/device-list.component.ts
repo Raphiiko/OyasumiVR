@@ -2,9 +2,9 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { map, Subject, takeUntil, tap } from 'rxjs';
 import { flatten, groupBy, orderBy } from 'lodash';
 import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
-import { OVRDevice, OVRDeviceClass } from '../../../../models/ovr-device';
-import { OpenVRService } from '../../../../services/openvr.service';
-import { LighthouseService } from '../../../../services/lighthouse.service';
+import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
+import { LighthouseService } from '../../services/lighthouse.service';
+import { OpenVRService } from '../../services/openvr.service';
 
 interface DisplayCategory {
   label: string;
@@ -67,11 +67,11 @@ export class DeviceListComponent implements OnInit, OnDestroy {
   getCategoryLabelForDeviceClass(deviceClass: OVRDeviceClass): string {
     switch (deviceClass) {
       case 'Controller':
-        return 'device-list.category.Controller';
+        return 'comp.device-list.category.Controller';
       case 'GenericTracker':
-        return 'device-list.category.GenericTracker';
+        return 'comp.device-list.category.GenericTracker';
       default:
-        return 'device-list.category.other';
+        return 'comp.device-list.category.other';
     }
   }
 

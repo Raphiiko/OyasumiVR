@@ -8,24 +8,7 @@
       "save": "Save"
     }
   },
-  "dashboard-navbar": {
-    "overview": "Overview",
-    "sleepDetection": "Sleep Detection",
-    "batteryAutomations": "Battery Automations",
-    "gpuAutomations": "GPU Automations",
-    "settings": "Settings",
-    "about": "About Oyasumi"
-  },
-  "device-list": {
-    "title": "Devices",
-    "turnOffAll": "ALL",
-    "noDevices": "No controllers or trackers detected.",
-    "category": {
-      "Controller": "Controllers",
-      "GenericTracker": "Trackers",
-      "other": "Others"
-    }
-  },
+
   "overview": {
     "sleep-mode": {
       "label": "Sleep Mode",
@@ -72,6 +55,53 @@
         "optionController": "Controller",
         "optionTracker": "Tracker",
         "fallsBelow": "Falls below"
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC Automations",
+    "tab": {
+      "sleepingAnimations": "Sleeping Animations"
+    },
+    "sleepingAnimations": {
+      "currentPose": "Current Position",
+      "manualControl": "Manual Control",
+      "presetAuthor": "by {{author}}",
+      "description": "Oyasumi can automatically change your avatar animations when you change sleeping position.This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here.</a><br><br>Presets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "enable": "Enable automatic sleeping animations",
+      "customPreset": "Custom Animations",
+      "errors": {
+        "releaseDurationTooShort": "The release duration has to be at least 100ms.",
+        "releaseDurationTooLong": "The release duration cannot exceed 5000ms."
+      },
+      "options": {
+        "positions": {
+          "title": "Sleeping Positions",
+          "description": "Set the OSC commands to activate each sleeping position.",
+          "SIDE_FRONT": "Upright",
+          "SIDE_BACK": "Back Side",
+          "SIDE_LEFT": "Left Side",
+          "SIDE_RIGHT": "Right Side",
+          "UNKNOWN": "Unknown"
+        },
+        "footLock": {
+          "title": "Foot Lock",
+          "description": "Set the OSC commands to enable and disable the foot lock.",
+          "FOOT_LOCK": "Enable Foot Lock",
+          "FOOT_UNLOCK": "Disable Foot Lock"
+        },
+        "general": {
+          "title": "General Options",
+          "onlySwitchAnimations": "Only switch animations",
+          "onlyIfSleepModeEnabled": "If sleep mode is enabled",
+          "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
+          "footLock": "Foot Lock",
+          "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
+          "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled",
+          "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
+          "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
+          "footLockReleaseWindow": "Foot lock release duration"
+        }
       }
     }
   },
@@ -164,6 +194,9 @@
         "title": "Language",
         "description": "This option allows you to manually load a language file. This can be useful for testing new translations.",
         "loadFile": "Load Language File"
+      },
+      "sleepingPose": {
+        "title": "Sleeping Pose"
       }
     }
   },
@@ -174,5 +207,89 @@
     "translations": "Translations",
     "projectLinks": "Project Links",
     "sourceLink": "Source Code @ GitHub"
+  },
+  "comp": {
+    "select-box": {
+      "defaultPlaceholder": "Select..."
+    },
+    "dashboard-navbar": {
+      "overview": "Overview",
+      "sleepDetection": "Sleep Detection",
+      "oscAutomations": "OSC Automations",
+      "batteryAutomations": "Battery Automations",
+      "gpuAutomations": "GPU Automations",
+      "settings": "Settings",
+      "about": "About Oyasumi"
+    },
+    "device-list": {
+      "title": "Devices",
+      "turnOffAll": "ALL",
+      "noDevices": "No controllers or trackers detected.",
+      "category": {
+        "Controller": "Controllers",
+        "GenericTracker": "Trackers",
+        "other": "Others"
+      }
+    },
+    "osc-script-modal": {
+      "title": "OSC Script",
+      "simple": "Simple",
+      "script": "Script"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC Script Editor",
+      "syntaxGuide": "Syntax Guide",
+      "format": "Format",
+      "test": "Test",
+      "errors": {
+        "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
+        "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
+        "totalDurationTooLong": "The total script duration cannot exceed 10 seconds.",
+        "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
+        "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
+        "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
+        "invalidSyntax": "Invalid syntax.",
+        "tooManyCommands": "An OSC script cannot have more than {{value}} commands."
+      }
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} Command",
+        "plural": "{{value}} Commands"
+      },
+      "errorCounter": {
+        "singular": "{{value}} Validation Error",
+        "plural": "{{value}} Validation Errors"
+      },
+      "addCommand": "Add",
+      "test": "Test",
+      "action": {
+        "osc": "OSC",
+        "sleep": "Sleep",
+        "none": "No actions have been added yet!"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC Command",
+          "description": "Execute an OSC command"
+        },
+        "SLEEP": {
+          "title": "Sleep",
+          "description": "Wait for a specified amount of time"
+        }
+      },
+      "errors": {
+        "addressRequired": "An OSC address is required.",
+        "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
+        "addressNotASCII": "A valid OSC address must only contain ASCII characters.",
+        "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
+        "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
+        "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
+        "durationRequired": "Sleep duration is required.",
+        "durationTooShort": "Sleep duration must be at least 1ms.",
+        "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
+        "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
+      }
+    }
   }
 }

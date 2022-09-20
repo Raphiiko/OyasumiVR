@@ -8,7 +8,7 @@ import {
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
-import { SleepModeService } from '../sleep-mode.service';
+import { SleepService } from '../sleep.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
     private lighthouse: LighthouseService,
-    private sleepMode: SleepModeService
+    private sleepMode: SleepService
   ) {}
 
   async init() {
@@ -29,7 +29,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
       .pipe(map((configs) => configs.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE))
       .subscribe((config) => (this.config = config));
 
-    this.sleepMode.sleepMode
+    this.sleepMode.mode
       .pipe(
         skip(1), // Skip first value from initial load
         filter((sleepMode) => sleepMode)

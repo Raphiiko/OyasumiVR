@@ -8,7 +8,7 @@ import {
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
 import { map } from 'rxjs';
-import { SleepModeService } from '../sleep-mode.service';
+import { SleepService } from '../sleep.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class SleepModeEnableAtTimeAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private sleepModeService: SleepModeService
+    private sleep: SleepService
   ) {}
 
   async init() {
@@ -40,7 +40,7 @@ export class SleepModeEnableAtTimeAutomationService {
       .split(':')
       .map((component) => parseInt(component));
     if (currentHour === scheduledHour && currentMinute === scheduledMinute) {
-      this.sleepModeService.enableSleepMode({
+      this.sleep.enableSleepMode({
         type: 'AUTOMATION',
         automation: 'SLEEP_MODE_ENABLE_AT_TIME',
       });
