@@ -342,7 +342,10 @@ fn main() {
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
+            #[cfg(debug_assertions)] // only include this code on debug builds
+            {
             window.open_devtools();
+            }
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
