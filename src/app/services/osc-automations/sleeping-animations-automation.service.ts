@@ -66,8 +66,8 @@ export class SleepingAnimationsAutomationService {
     if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
     if (this.config.onlyIfAllTrackersTurnedOff) {
       const devices = await firstValueFrom(this.openvr.devices);
-      const allTrackersTurnedOff = !devices.find((d) => d.class === 'GenericTracker');
-      if (allTrackersTurnedOff) return;
+      const trackersFound = !!devices.find((d) => d.class === 'GenericTracker' && d.canPowerOff);
+      if (trackersFound) return;
     }
     // Combine OSC scripts
     const script: OscScript = { version: 1, commands: [] };
