@@ -75,6 +75,11 @@
       flex-direction: row;
       align-items: center;
       justify-content: flex-end;
+      margin-right: 1em;
+
+      app-select-box {
+        max-width: 18em;
+      }
 
       .collapse-toggle {
         margin: -0.5em 0 -0.5em 0.5em;

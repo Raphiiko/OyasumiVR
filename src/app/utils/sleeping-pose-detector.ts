@@ -61,6 +61,7 @@ export class SleepingPoseDetector {
       this.createContactReceiver(3, [0, 3.5, 10], receiverOrientation, 0xffff00),
     ];
     this.receivers['SIDE_BACK'] = [
+      this.createContactReceiver(3, [0, -8, 5.5], receiverOrientation, 0xffff00),
       this.createContactReceiver(3, [0, -8, 7], receiverOrientation, 0xffff00),
     ];
     this.receivers['SIDE_RIGHT'] = [
@@ -74,26 +75,22 @@ export class SleepingPoseDetector {
       this.createContactReceiver(4, [0, -10, -4], receiverOrientation, 0xffff00),
     ];
     // Determine collisions
-    const newlyActiveReceivers: SleepingPose[] = [];
+
     (Object.entries(this.receivers) as [SleepingPose, ContactReceiver[]][]).forEach(
       ([pose, receivers]: [SleepingPose, ContactReceiver[]]) => {
         const sender = ['SIDE_FRONT', 'SIDE_BACK'].includes(pose)
           ? this.mainAxisSender
           : this.crossAxisSender;
         const active = this.collides(sender, receivers);
-        if (active) {
-          receivers.forEach((r) => (r.active = true));
-          if (!this.receiversActive[pose]) newlyActiveReceivers.push(pose);
-        }
+        if (active) receivers.forEach((r) => (r.active = true));
         this.receiversActive[pose] = active;
       }
     );
     // Determine sleeping pose
-    const sortedNewlyActiveReceivers = (
+    const activePose = (
       ['SIDE_RIGHT', 'SIDE_LEFT', 'SIDE_BACK', 'SIDE_FRONT'] as SleepingPose[]
-    ).filter((pose) => newlyActiveReceivers.includes(pose));
-    if (!sortedNewlyActiveReceivers.length) return;
-    this.sleepingPose = sortedNewlyActiveReceivers[0];
+    ).find((pose) => this.receiversActive[pose]);
+    this.sleepingPose = activePose || this.sleepingPose;
   }
 
   getScene(): THREE.Scene {

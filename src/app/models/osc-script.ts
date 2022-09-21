@@ -89,6 +89,26 @@ b true /avatar/parameters/Go/Stationary
 b false /avatar/parameters/Go/Stationary
     `).script,
   },
+  'GOGO_LOCO_1.7.0_FIXED': {
+    SIDE_BACK: parseOscScriptFromCode(`
+f 0.29 /avatar/parameters/Go/Float
+    `).script,
+    SIDE_FRONT: parseOscScriptFromCode(`
+f 0.3 /avatar/parameters/Go/Float
+    `).script,
+    SIDE_LEFT: parseOscScriptFromCode(`
+f 0.27 /avatar/parameters/Go/Float
+    `).script,
+    SIDE_RIGHT: parseOscScriptFromCode(`
+f 0.28 /avatar/parameters/Go/Float
+    `).script,
+    FOOT_LOCK: parseOscScriptFromCode(`
+b true /avatar/parameters/Go/Stationary
+    `).script,
+    FOOT_UNLOCK: parseOscScriptFromCode(`
+b false /avatar/parameters/Go/Stationary
+    `).script,
+  },
   'MMM_SLEEP_SYSTEM_2.2': {
     SIDE_BACK: parseOscScriptFromCode(`
 i 1 /avatar/parameters/VRCSupine

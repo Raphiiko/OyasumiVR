@@ -34,13 +34,23 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
       label: 'ごろ寝システム v2.2',
       subLabel: {
         string: 'oscAutomations.sleepingAnimations.presetAuthor',
-        values: { author: 'んみんみーん' },
+        values: { author: 'みんみんみーん' },
       },
       infoLink: 'https://booth.pm/ko/items/2886739',
     },
     {
       id: 'GOGO_LOCO_1.7.0',
       label: 'GoGo Loco 1.7.0',
+      subLabel: {
+        string: 'oscAutomations.sleepingAnimations.presetAuthor',
+        values: { author: 'franada' },
+      },
+      infoLink: 'https://booth.pm/en/items/3290806',
+    },
+
+    {
+      id: 'GOGO_LOCO_1.7.0_FIXED',
+      label: 'GoGo Loco 1.7.0 + Oyasumi Fix',
       subLabel: {
         string: 'oscAutomations.sleepingAnimations.presetAuthor',
         values: { author: 'franada' },
@@ -121,7 +131,11 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async setSleepingPosition(position: SleepingPose) {
-    await this.sleepingAnimationsAutomation.forcePose(position);
+    if (this.config.enabled) {
+      await this.sleepingAnimationsAutomation.forcePose(position);
+    } else {
+      await this.osc.runScript(this.config.oscScripts[position]!);
+    }
   }
 
   async setFootLock(enabled: boolean) {
