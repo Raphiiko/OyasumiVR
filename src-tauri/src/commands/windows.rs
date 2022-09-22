@@ -1,22 +1,56 @@
-// Use std::io::Error::last_os_error for errors.
-// NOTE: For this example I'm simple passing on the OS error.
-// However, customising the error could provide more context 
 use std::io::Error;
-use std::ptr;
+use std::{ffi::OsStr, os::windows::prelude::OsStrExt, ptr};
 
 use winapi::um::handleapi::CloseHandle;
-use winapi::um::processthreadsapi::{ GetCurrentProcess, OpenProcessToken };
+use winapi::um::processthreadsapi::{GetCurrentProcess, OpenProcessToken};
 use winapi::um::securitybaseapi::GetTokenInformation;
-use winapi::um::winnt::{HANDLE, TOKEN_ELEVATION, TOKEN_QUERY, TokenElevation};
+use winapi::um::winnt::{TokenElevation, HANDLE, TOKEN_ELEVATION, TOKEN_QUERY};
+use windows_sys::Win32::UI::Shell::ShellExecuteW;
 
-/// Returns true if the current process has admin rights, otherwise false.
-pub fn is_app_elevated() -> bool {
+use crate::OVR_CONTEXT;
+
+#[tauri::command]
+pub fn windows_is_elevated() -> bool {
     _is_app_elevated().unwrap_or(false)
+}
+
+#[tauri::command]
+pub fn windows_relaunch_with_elevation() {
+    // Disconnect from SteamVR
+    let context_guard = OVR_CONTEXT.lock().unwrap();
+    let ovr_context = context_guard.as_ref();
+    if let Some(ctx) = ovr_context {
+        ctx.system().unwrap().acknowledge_quit_exiting();
+        unsafe {
+            ctx.shutdown();
+        }
+    }
+    // Launch as administrator
+    let exe_path = std::env::current_exe().unwrap();
+    let path = exe_path.as_os_str();
+    let mut maybe_result: Vec<_> = path.encode_wide().collect();
+    maybe_result.push(0);
+    let path = maybe_result;
+    let operation: Vec<u16> = OsStr::new("runas\0").encode_wide().collect();
+    let r = unsafe {
+        ShellExecuteW(
+            0,
+            operation.as_ptr(),
+            path.as_ptr(),
+            ptr::null(),
+            ptr::null(),
+            0,
+        )
+    };
+    // Quit non-admin process if successful (self)
+    if r > 32 {
+        std::process::exit(0);
+    }
 }
 
 /// On success returns a bool indicating if the current process has admin rights.
 /// Otherwise returns an OS error.
-/// 
+///
 /// This is unlikely to fail but if it does it's even more unlikely that you have admin permissions anyway.
 /// Therefore the public function above simply eats the error and returns a bool.
 fn _is_app_elevated() -> Result<bool, Error> {
@@ -31,13 +65,13 @@ impl QueryAccessToken {
         unsafe {
             let mut handle: HANDLE = ptr::null_mut();
             if OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &mut handle) != 0 {
-                Ok ( Self(handle) )
+                Ok(Self(handle))
             } else {
                 Err(Error::last_os_error())
             }
         }
     }
-    
+
     /// On success returns a bool indicating if the access token has elevated privilidges.
     /// Otherwise returns an OS error.
     pub fn is_elevated(&self) -> Result<bool, Error> {
@@ -46,7 +80,14 @@ impl QueryAccessToken {
             let size = std::mem::size_of::<TOKEN_ELEVATION>() as u32;
             let mut ret_size = size;
             // The weird looking repetition of `as *mut _` is casting the reference to a c_void pointer.
-            if GetTokenInformation(self.0, TokenElevation, &mut elevation as *mut _ as *mut _, size, &mut ret_size ) != 0 {
+            if GetTokenInformation(
+                self.0,
+                TokenElevation,
+                &mut elevation as *mut _ as *mut _,
+                size,
+                &mut ret_size,
+            ) != 0
+            {
                 Ok(elevation.TokenIsElevated != 0)
             } else {
                 Err(Error::last_os_error())
