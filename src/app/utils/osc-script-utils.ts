@@ -9,7 +9,7 @@ import {
 const MAX_OSC_SCRIPT_COMMANDS = 100;
 const SLEEP_ACTION_REGEX = /^\s*sleep\s+(?<VALUE>[0-9]+([.][0-9]+)?)(?<UNIT>ms|s)?\s*$/i;
 const COMMAND_ACTION_REGEX =
-  /^\s*((?<FLOAT_TYPE>f)\s+(?<FLOAT_VALUE>[0-9]+([.][0-9]+)?)|(?<INT_TYPE>i)\s+(?<INT_VALUE>[0-9]+)|(?<BOOL_TYPE>b)\s+(?<BOOL_VALUE>true|false|1|0|yes|no))\s+(?<ADDRESS>[\x00-\x7F]+)\s*$/i;
+  /^\s*((?<FLOAT_TYPE>f)\s+(?<FLOAT_VALUE>-?[0-9]+([.][0-9]+)?)|(?<INT_TYPE>i)\s+(?<INT_VALUE>[0-9]+)|(?<BOOL_TYPE>b)\s+(?<BOOL_VALUE>true|false|1|0|yes|no))\s+(?<ADDRESS>[\x00-\x7F]+)\s*$/i;
 
 export function getOscScriptDuration(script: OscScript): number {
   let duration = 0;
