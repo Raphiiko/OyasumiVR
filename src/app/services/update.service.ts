@@ -44,11 +44,12 @@ export class UpdateService {
 
   async checkForUpdate(showDialog = false) {
     // Don't ever update the dev version
-    // if ((await getVersion()) === '0.0.0') {
-    //   this._updateAvailable.next({
-    //     checked: true,
-    //   });
-    // }
+    if ((await getVersion()) === '0.0.0') {
+      this._updateAvailable.next({
+        checked: true,
+      });
+      return;
+    }
     // Check for updates
     const { shouldUpdate, manifest } = await checkUpdate();
     this._updateAvailable.next({
