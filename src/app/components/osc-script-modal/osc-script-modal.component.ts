@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { OscScript } from '../../models/osc-script';
 import { fadeUp } from '../../utils/animations';
-import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 
 interface OscScriptModalInputModel {
   script?: OscScript;

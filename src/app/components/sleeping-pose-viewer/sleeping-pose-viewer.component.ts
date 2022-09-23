@@ -5,7 +5,6 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
   OnDestroy,
   ViewChild,
 } from '@angular/core';
@@ -13,8 +12,6 @@ import * as THREE from 'three';
 import { Object3D, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { SleepingPoseDetector } from '../../utils/sleeping-pose-detector';
-import { OscService } from '../../services/osc.service';
 import { OpenVRService } from '../../services/openvr.service';
 import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
 import { SleepService } from '../../services/sleep.service';

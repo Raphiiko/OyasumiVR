@@ -51,7 +51,6 @@ import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-e
 import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
 import { DeviceListComponent } from './components/device-list/device-list.component';
 import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
-import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';

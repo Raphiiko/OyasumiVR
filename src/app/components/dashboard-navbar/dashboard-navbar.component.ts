@@ -21,7 +21,7 @@ export class DashboardNavbarComponent implements OnInit {
     private lighthouse: LighthouseService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NVMLService,
-    private sidecar: ElevatedSidecarService,
+    private sidecar: ElevatedSidecarService
   ) {
     this.settingErrors = combineLatest([
       this.lighthouse.consoleStatus.pipe(
@@ -32,10 +32,12 @@ export class DashboardNavbarComponent implements OnInit {
     this.gpuAutomationsErrors = combineLatest([
       this.gpuAutomations.isEnabled(),
       this.nvml.status,
-      this.sidecar.sidecarRunning
+      this.sidecar.sidecarRunning,
     ]).pipe(
       map(([gpuAutomationsEnabled, nvmlStatus, sidecarRunning]) => {
-        return gpuAutomationsEnabled && (nvmlStatus === 'ELEVATION_SIDECAR_INACTIVE' || !sidecarRunning);
+        return (
+          gpuAutomationsEnabled && (nvmlStatus === 'ELEVATION_SIDECAR_INACTIVE' || !sidecarRunning)
+        );
       })
     );
   }

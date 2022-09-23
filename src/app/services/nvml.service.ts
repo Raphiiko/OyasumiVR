@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { NVMLDevice } from '../models/nvml-device';
-import { listen } from '@tauri-apps/api/event';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 

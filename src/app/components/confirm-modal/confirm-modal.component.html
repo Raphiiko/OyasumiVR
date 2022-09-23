@@ -3,7 +3,7 @@
     {{ title || 'comp.confirm-modal.defaultTitle' | translate }}
   </div>
   <div class="pane-content">
-    <p [innerHtml]="(message || '') | translate"></p>
+    <p [innerHtml]="message || '' | translate"></p>
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="cancel()" *ngIf="showCancel">

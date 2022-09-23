@@ -76,9 +76,11 @@
         </div>
         <div class="setting-row-action">
           <label class="switch-toggle">
-            <input type="checkbox"
-                          [checked]="appSettings.askForAdminOnStart"
-                          (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)" />
+            <input
+              type="checkbox"
+              [checked]="appSettings.askForAdminOnStart"
+              (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+            />
             <span class="switch-toggle-slider"></span>
           </label>
         </div>

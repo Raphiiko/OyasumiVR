@@ -1,15 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NVMLService, NVMLStatus } from '../../../../services/nvml.service';
-import { combineLatest, filter, firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { GPUDevice, GPUPowerLimit } from '../../../../models/gpu-device';
 import { fade, noop, vshrink } from 'src/app/utils/animations';
-import { ElevatedSidecarService } from 'src/app/services/elevated-sidecar.service';
-import { TimeEnableSleepModeModalComponent } from '../sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
-import { SleepModeEnableAtTimeAutomationConfig } from '../../../../models/automations';
 import { SimpleModalService } from 'ngx-simple-modal';
-import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { AppSettingsService } from '../../../../services/app-settings.service';
+import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-gpu-automations-view',

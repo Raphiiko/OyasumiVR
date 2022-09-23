@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
-import { DeviceUpdateEvent } from '../models/events';
 import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
