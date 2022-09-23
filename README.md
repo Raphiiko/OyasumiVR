@@ -30,7 +30,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Trigger your own animations! A full OSC script editor is included. 
   - Presets for popular locomotion assets, including:
     - [ごろ寝システム v2.2](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean) (Sleep System v2.2 by minminmiin)
-    - [GoGo Loco v1.8.0](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
+    - ~~[GoGo Loco v1.8.0](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)~~ (Support Pending)
 - :electric_plug: GPU Automations:
   - Automatically tweak your power limits when you go to sleep and when you wake up.
 - :battery: Battery automations:
