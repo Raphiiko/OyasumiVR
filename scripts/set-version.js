@@ -1,16 +1,14 @@
-const { readFileSync, writeFileSync } = require('fs');
-let { semver } = require('check-more-types');
+import { readFileSync, writeFileSync } from 'fs';
+import { semver } from 'check-more-types';
 
 if (process.argv.length <= 2) {
   console.error('Please provide a version');
   process.exit(1);
-  return;
 }
 let version = process.argv[2];
 if (version !== 'DEV' && !semver(version)) {
-  console.error('Provided version is not valid semver format');
+  console.error('Provided versionfrom id semver format');
   process.exit(1);
-  return;
 }
 
 const packageJson = JSON.parse(readFileSync('package.json').toString());
