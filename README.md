@@ -3,7 +3,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="350">
     <br/>
     <br/>
-    A collection of utilities to assist with sleeping in virtual reality
+    A collection of utilities to assist with sleeping in virtual reality.
 </p>
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
@@ -16,7 +16,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/screenshot1.png?raw=true" width="600">
 </p>
 
-This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality.
+This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality (VRChat).
 
 ## Getting started
 
