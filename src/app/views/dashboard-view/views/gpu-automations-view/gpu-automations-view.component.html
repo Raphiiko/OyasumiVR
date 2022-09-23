@@ -139,10 +139,10 @@
       <button
         class="btn btn-primary action"
         *ngIf="panel === 'NO_ELEVATION'"
-        (click)="windows.relaunchWithElevation()"
+        (click)="startSidecar()"
         translate
       >
-        gpu-automations.restartAsAdmin
+        gpu-automations.requestAdministrator
       </button>
       <button
         class="btn btn-secondary action"

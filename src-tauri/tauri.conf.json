@@ -23,6 +23,9 @@
       "dialog": {
         "open": true,
         "message": true
+      },
+      "process": {
+        "exit": true
       }
     },
     "bundle": {
@@ -32,7 +35,9 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [],
+      "externalBin": [
+      "../src-elevated-sidecar/target/release/oyasumi-elevated-sidecar"
+      ],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",

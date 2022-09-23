@@ -1,10 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NVMLService, NVMLStatus } from '../../../../services/nvml.service';
-import { WindowsService } from '../../../../services/windows.service';
-import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { combineLatest, filter, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { GPUDevice, GPUPowerLimit } from '../../../../models/gpu-device';
 import { fade, noop, vshrink } from 'src/app/utils/animations';
+import { ElevatedSidecarService } from 'src/app/services/elevated-sidecar.service';
+import { TimeEnableSleepModeModalComponent } from '../sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
+import { SleepModeEnableAtTimeAutomationConfig } from '../../../../models/automations';
+import { SimpleModalService } from 'ngx-simple-modal';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
+import { AppSettingsService } from '../../../../services/app-settings.service';
 
 @Component({
   selector: 'app-gpu-automations-view',
@@ -26,8 +31,10 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private nvml: NVMLService,
-    public windows: WindowsService,
-    public gpuAutomations: GpuAutomationsService
+    protected gpuAutomations: GpuAutomationsService,
+    private sidecar: ElevatedSidecarService,
+    private modalService: SimpleModalService,
+    private settingsService: AppSettingsService
   ) {
     this.gpuAutomations.devices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
       this.gpuDevices = devices;
@@ -47,14 +54,14 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
       }
     });
     combineLatest([
-      windows.isElevated,
+      sidecar.sidecarRunning,
       nvml.status,
       this.gpuAutomations.isEnabled(),
       this.gpuAutomations.devices,
     ])
       .pipe(takeUntil(this.destroy$))
       .subscribe(
-        ([isElevated, nvmlStatus, isEnabled, devices]: [
+        ([sidecarRunning, nvmlStatus, isEnabled, devices]: [
           boolean,
           NVMLStatus,
           boolean,
@@ -64,7 +71,7 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
             this.disabledMessage = 'gpu-automations.disabled.disabled';
             return (this.panel = 'DISABLED');
           }
-          if (!isElevated) {
+          if (!sidecarRunning) {
             this.disabledMessage = 'gpu-automations.disabled.noElevation';
             return (this.panel = 'NO_ELEVATION');
           }
@@ -72,6 +79,7 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
             case 'INITIALIZING':
               this.disabledMessage = 'gpu-automations.disabled.initializing';
               return (this.panel = 'INITIALIZING');
+            case 'ELEVATION_SIDECAR_INACTIVE':
             case 'NO_PERMISSION':
               this.disabledMessage = 'gpu-automations.disabled.noElevation';
               return (this.panel = 'NO_ELEVATION');
@@ -98,6 +106,26 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
 
   async ngOnDestroy() {
     this.destroy$.next();
+  }
+
+  async startSidecar() {
+    if (!(await firstValueFrom(this.settingsService.settings)).askForAdminOnStart) {
+      this.modalService
+        .addModal(ConfirmModalComponent, {
+          title: 'gpu-automations.elevationSidecarModal.title',
+          message: 'gpu-automations.elevationSidecarModal.message',
+          confirmButtonText: 'gpu-automations.elevationSidecarModal.confirm',
+          cancelButtonText: 'gpu-automations.elevationSidecarModal.cancel',
+        })
+        .subscribe((data) => {
+          if (data.confirmed) {
+            this.settingsService.updateSettings({ askForAdminOnStart: true });
+          }
+          this.sidecar.start();
+        });
+    } else {
+      this.sidecar.start();
+    }
   }
 
   async onPowerLimitChange(automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE', limit: GPUPowerLimit) {

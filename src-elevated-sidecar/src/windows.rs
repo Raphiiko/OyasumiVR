@@ -7,43 +7,35 @@ use winapi::um::securitybaseapi::GetTokenInformation;
 use winapi::um::winnt::{TokenElevation, HANDLE, TOKEN_ELEVATION, TOKEN_QUERY};
 use windows_sys::Win32::UI::Shell::ShellExecuteW;
 
-use crate::OVR_CONTEXT;
-
-#[tauri::command]
-pub fn windows_is_elevated() -> bool {
+pub fn is_elevated() -> bool {
     _is_app_elevated().unwrap_or(false)
 }
 
-#[tauri::command]
-pub fn windows_relaunch_with_elevation() {
-    // Disconnect from SteamVR
-    let context_guard = OVR_CONTEXT.lock().unwrap();
-    let ovr_context = context_guard.as_ref();
-    if let Some(ctx) = ovr_context {
-        ctx.system().unwrap().acknowledge_quit_exiting();
-        unsafe {
-            ctx.shutdown();
-        }
-    }
-    // Launch as administrator
+pub fn relaunch_with_elevation(main_port: u16, main_pid: u32, force_exit: bool) {
+    // Get executable path
     let exe_path = std::env::current_exe().unwrap();
     let path = exe_path.as_os_str();
-    let mut maybe_result: Vec<_> = path.encode_wide().collect();
-    maybe_result.push(0);
-    let path = maybe_result;
+    let mut path_result: Vec<_> = path.encode_wide().collect();
+    path_result.push(0);
+    let path = path_result;
+    // Get port parameter
+    let mut port_result: Vec<_> = OsStr::new(format!("{} {}", main_port, main_pid).as_str()).encode_wide().collect();
+    port_result.push(0);
+    let port = port_result;
+    // Run as administrator
     let operation: Vec<u16> = OsStr::new("runas\0").encode_wide().collect();
     let r = unsafe {
         ShellExecuteW(
             0,
             operation.as_ptr(),
             path.as_ptr(),
-            ptr::null(),
+            port.as_ptr(),
             ptr::null(),
             0,
         )
     };
     // Quit non-admin process if successful (self)
-    if r > 32 {
+    if r > 32 || force_exit {
         std::process::exit(0);
     }
 }

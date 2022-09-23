@@ -4,6 +4,7 @@ import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: from0to1,
+  2: from1to2,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -19,6 +20,12 @@ export function migrateAppSettings(data: any): AppSettings {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from1to2(data: any): any {
+  data.version = 2;
+  data.askForAdminOnStart = false;
   return data;
 }
 

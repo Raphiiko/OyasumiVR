@@ -43,7 +43,6 @@ export class SleepingAnimationsAutomationService {
       )
       .subscribe(() => {
         if (this.config.oscScripts.FOOT_UNLOCK) {
-          console.log('unlocking feet');
           this.osc.queueScript(this.config.oscScripts.FOOT_UNLOCK!);
         }
       });

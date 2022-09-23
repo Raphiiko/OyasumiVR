@@ -1,67 +1,55 @@
-use crate::{NVML_HANDLE, models::NVMLDevice, NVML_STATUS};
+use crate::elevated_sidecar;
+use oyasumi_shared::models::{
+    NVMLDevice, NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
+};
 
 #[tauri::command]
 pub async fn nvml_status() -> String {
-    NVML_STATUS.lock().unwrap().clone()
+    let url = match elevated_sidecar::get_base_url() {
+        Some(base_url) => base_url + "/nvml/status",
+        None => return "ELEVATED_SIDECAR_INACTIVE".into(),
+    };
+    let resp = reqwest::get(url).await;
+    match resp {
+        Ok(resp) => resp.text().await.unwrap(),
+        Err(_) => "ELEVATED_SIDECAR_INACTIVE".into(),
+    }
 }
 
 #[tauri::command]
 pub async fn nvml_get_devices() -> Vec<NVMLDevice> {
-    let nvml_guard = NVML_HANDLE.lock().unwrap();
-    let nvml = nvml_guard.as_ref().unwrap();
-    let count = nvml.device_count().unwrap();
-    let mut gpus: Vec<NVMLDevice> = Vec::new();
-    for n in 0..count {
-        let device = match nvml.device_by_index(n) {
-            Ok(device) => device,
-            Err(err) => {
-                println!(
-                    "Could not access GPU at index {} due to an error: {:#?}",
-                    n, err
-                );
-                continue;
-            }
-        };
-        let constraints = device.power_management_limit_constraints().ok();
-        gpus.push(NVMLDevice {
-            uuid: device.uuid().unwrap(),
-            name: device.name().unwrap(),
-            power_limit: device.power_management_limit().ok(),
-            min_power_limit: constraints.as_ref().and_then(|c| Some(c.min_limit)),
-            max_power_limit: constraints.as_ref().and_then(|c| Some(c.max_limit)),
-            default_power_limit: device.power_management_limit_default().ok(),
-        });
-    }
-    gpus
+    let url = match elevated_sidecar::get_base_url() {
+        Some(base_url) => base_url + "/nvml/get_devices",
+        None => return Vec::new(),
+    };
+    let resp = reqwest::get(url).await;
+    let body = match resp {
+        Ok(resp) => resp.text().await.unwrap(),
+        Err(_) => return Vec::new(),
+    };
+    serde_json::from_str::<Vec<NVMLDevice>>(&body).unwrap()
 }
 
 #[tauri::command]
 pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result<bool, String> {
-    let nvml_guard = NVML_HANDLE.lock().unwrap();
-    let nvml = nvml_guard.as_ref().unwrap();
-
-    let mut device = match nvml.device_by_uuid(uuid.clone()) {
-        Ok(device) => device,
-        Err(err) => {
-            println!(
-                "Could not access GPU (uuid:{:#?}) due to an error: {:#?}",
-                uuid, err
-            );
-            return Err(String::from("DEVICE_ACCESS_ERROR"));
-        }
+    let url = match elevated_sidecar::get_base_url() {
+        Some(base_url) => base_url + "/nvml/set_power_management_limit",
+        None => return Err("ELEVATED_SIDECAR_INACTIVE".into()),
     };
-
-    match device.set_power_management_limit(limit) {
-        Err(err) => {
-            println!(
-                "Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
-                uuid.clone(),
-                err
-            );
-            return Err(String::from("DEVICE_SET_POWER_LIMIT_ERROR"));
-        }
-        _ => (),
+    let client = reqwest::Client::new();
+    let resp = client
+        .post(url)
+        .body(serde_json::to_string(&NVMLSetPowerManagementLimitRequest { uuid, limit }).unwrap())
+        .send()
+        .await;
+    let body = match resp {
+        Ok(resp) => resp.text().await.unwrap(),
+        Err(_) => return Err("UNKNOWN_ERROR".into()),
+    };
+    let response: NVMLSetPowerManagementLimitResponse = serde_json::from_str(&body).unwrap();
+    if response.success {
+        Ok(true)
+    } else {
+        Err(response.error.unwrap())
     }
-
-    Ok(true)
 }

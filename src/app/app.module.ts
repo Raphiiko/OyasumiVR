@@ -34,7 +34,6 @@ import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/bat
 import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
-import { WindowsService } from './services/windows.service';
 import { SleepService } from './services/sleep.service';
 import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
@@ -54,6 +53,8 @@ import { DeviceListComponent } from './components/device-list/device-list.compon
 import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
 import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib';
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
+import { ElevatedSidecarService } from './services/elevated-sidecar.service';
+import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -87,6 +88,7 @@ export function createTranslateLoader(http: HttpClient) {
     OscScriptCodeEditorComponent,
     DropdownButtonComponent,
     OscScriptSimpleEditorComponent,
+    ConfirmModalComponent,
   ],
   imports: [
     CommonModule,
@@ -126,9 +128,9 @@ export class AppModule {
   constructor(
     private openvr: OpenVRService,
     private nvml: NVMLService,
-    private windows: WindowsService,
     private sleep: SleepService,
     private osc: OscService,
+    private sidecar: ElevatedSidecarService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -147,7 +149,7 @@ export class AppModule {
   }
 
   async init() {
-    await Promise.all([await this.openvr.init(), await this.windows.init(), await this.osc.init()]);
+    await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
     await this.sleep.init();
     // GPU automations

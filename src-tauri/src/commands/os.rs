@@ -1,7 +1,7 @@
-use crate::models;
+use serde::{Serialize, Deserialize};
 
 #[tauri::command]
-pub async fn run_command(command: String, args: Vec<String>) -> Result<models::Output, String> {
+pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {
     let output = match tauri::api::process::Command::new(command)
         .args(args)
         .output()
@@ -28,9 +28,16 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<models::O
         },
     };
 
-    Ok(models::Output {
+    Ok(Output {
         stdout: output.stdout,
         stderr: output.stderr,
         status: output.status.code().unwrap_or_default(),
     })
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+pub struct Output {
+    pub stdout: String,
+    pub stderr: String,
+    pub status: i32,
 }

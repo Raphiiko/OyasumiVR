@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/tauri';
 import { NVMLDevice } from '../models/nvml-device';
 import { listen } from '@tauri-apps/api/event';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, filter, Observable } from 'rxjs';
+import { ElevatedSidecarService } from './elevated-sidecar.service';
 
 export type NVMLStatus =
+  | 'ELEVATION_SIDECAR_INACTIVE'
   | 'INITIALIZING'
   | 'INIT_COMPLETE'
   | 'DRIVER_NOT_LOADED'
@@ -21,14 +23,12 @@ export class NVMLService {
   private _status: BehaviorSubject<NVMLStatus> = new BehaviorSubject<NVMLStatus>('INITIALIZING');
   public status: Observable<NVMLStatus> = this._status.asObservable();
 
-  constructor() {}
+  constructor(private sidecar: ElevatedSidecarService) {}
 
   async init() {
-    await Promise.all([
-      listen('NVML_INIT_COMPLETE', (event) => this.handleNVMLStatusUpdate()),
-      listen('NVML_INIT_ERROR', (event) => this.handleNVMLStatusUpdate()),
-      this.handleNVMLStatusUpdate(),
-    ]);
+    this.sidecar.sidecarRunning.pipe(filter((running) => running)).subscribe(() => {
+      this.handleNVMLStatusUpdate();
+    });
   }
 
   private async handleNVMLStatusUpdate() {
