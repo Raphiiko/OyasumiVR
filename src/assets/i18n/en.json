@@ -156,7 +156,7 @@
     "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
     "inputDefault": "Reset to the GPU's default limit.",
     "elevationSidecarModal": {
-      "title": "Always give privileges",
+      "title": "Give administrator privileges",
       "message": "Do you want to always give Oyasumi administrator privileges?<br><br>If you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
       "confirm": "Always",
       "cancel": "Only this once"
@@ -199,7 +199,7 @@
       "install": "Install v{{version}}",
       "noUpdate": "You are currently running Oyasumi v{{version}} which is the latest version!",
       "notChecked": "Oyasumi did not check for updates yet.",
-      "updateAvailable": "A new version of Oyasumi is available! You are currently running v{{currentVersion}}.\nThe new version is v{{latestVersion}}."
+      "updateAvailable": "A new version of Oyasumi is available! You are currently running v{{currentVersion}}.\nThe newest version is v{{latestVersion}}."
     },
     "debug": {
       "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
@@ -245,7 +245,7 @@
       "title": "Update Available",
       "updateNow": "Install v{{version}}",
       "updateLater": "Not now",
-      "message": "A new update for Oyasumi has been found v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
+      "message": "A new update for Oyasumi has been found: v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
     },
     "select-box": {
       "defaultPlaceholder": "Select..."

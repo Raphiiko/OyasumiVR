@@ -5,7 +5,9 @@
     },
     "modals": {
       "cancel": "Annuleren",
-      "save": "Opslaan"
+      "save": "Opslaan",
+      "confirm": "Bevestig",
+      "ok": "Ok"
     }
   },
   "overview": {
@@ -152,12 +154,19 @@
       "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert:"
     },
     "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
-    "inputDefault": "Herstel naar de GPU's standaard limiet."
+    "inputDefault": "Herstel naar de GPU's standaard limiet.",
+    "elevationSidecarModal": {
+      "title": "Beheerders rechten geven",
+      "message": "Wil je Oyasumi altijd beheerders rechten geven?<br><br>Als je dit doet, zal Oyasumi voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
+      "confirm": "Altijd",
+      "cancel": "Alleen deze keer"
+    }
   },
   "settings": {
     "title": "Instellingen",
     "tab": {
       "general": "Algemeen",
+      "updates": "Updates",
       "debug": "Debug"
     },
     "general": {
@@ -177,7 +186,20 @@
           "CHECKING": "Aan het checken voor een geldige <strong>lighthouse_console.exe</strong>",
           "SUCCESS": "<strong>lighthouse_console.exe</strong> is gevonden en werkt naar behoren!"
         }
+      },
+      "adminPrivileges": {
+        "title": "Beheerders Rechten",
+        "label": "Vraag om beheerders rechten bij het opstarten",
+        "description": "Oyasumi heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal Oyasumi bij het opstarten altijd om beheerders rechten vragen."
       }
+    },
+    "updates": {
+      "checkForUpdates": "Updates checken",
+      "changelog": "Changelog",
+      "install": "Installeer v{{version}}",
+      "noUpdate": "Je draait nu Oyasumi v{{version}}, en dat is de laatste versie!",
+      "notChecked": "Oyasumi heeft nog niet gecheckt of er een update beschikbaar is.",
+      "updateAvailable": "Er is een nieuwe update beschikbaar voor Oyasumi! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
     },
     "debug": {
       "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
@@ -207,7 +229,24 @@
     "projectLinks": "Project Links",
     "sourceLink": "Broncode @ GitHub"
   },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "Update Fout",
+        "message": "De update kon niet geinstalleerd worden. Probeer het later nog eens."
+      }
+    }
+  },
   "comp": {
+    "confirm-modal": {
+      "defaultTitle": "Bevestig"
+    },
+    "update-modal": {
+      "title": "Update Beschikbaar",
+      "updateNow": "Installeer v{{version}}",
+      "updateLater": "Niet nu",
+      "message": "Er is een nieuwe update beschikbaar voor Oyasumi: v{{newVersion}}.\n\nJe draait op dit moment nog v{{currentVersion}}.\n\n.Wil je de update nu installeren?"
+    },
     "select-box": {
       "defaultPlaceholder": "Selecteer..."
     },
