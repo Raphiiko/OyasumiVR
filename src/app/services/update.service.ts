@@ -56,7 +56,7 @@ export class UpdateService {
       checked: true,
       manifest: (shouldUpdate && manifest) || undefined,
     });
-    if (showDialog) {
+    if (shouldUpdate && showDialog) {
       this.modalService
         .addModal(
           UpdateModalComponent,
