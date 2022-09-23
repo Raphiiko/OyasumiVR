@@ -3,7 +3,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="350">
     <br/>
     <br/>
-    A collection of utilities to assist with sleeping in virtual reality
+    A collection of utilities to assist with sleeping in virtual reality.
 </p>
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
@@ -16,9 +16,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/screenshot1.png?raw=true" width="600">
 </p>
 
-This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality.
-
-**Note:** Currently, Oyasumi is in its very early stages. The current functionality is likely to still contain several bugs and issues.
+This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality (VRChat).
 
 ## Getting started
 
@@ -27,28 +25,31 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 ## Features
 
 - :wrench: Turning off all trackers and/or controllers with a single click.
-- :zzz: Manage your sleep state in various ways with automations:
-  - Fall asleep:
+- :dizzy: Automatic sleep animations with pose detection
+  - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
+  - Trigger your own animations! A full OSC script editor is included. 
+  - Presets for popular locomotion assets, including:
+    - [ごろ寝システム v2.2](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean) (Sleep System v2.2 by minminmiin)
+    - ~~[GoGo Loco v1.8.0](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)~~ (Support Pending)
+- :electric_plug: GPU Automations:
+  - Automatically tweak your power limits when you go to sleep and when you wake up.
+- :battery: Battery automations:
+  - Automatically turn off trackers and/or controllers:
+    - When you go to sleep (so you still have some juice left in the morning!)
+    - When putting them on a charger
+- :zzz: Manage automations with a sleep mode in various ways:
+  - Detect falling asleep:
     - When a controller or tracker battery percentage falls below a threshold
     - When turning off your controllers
     - On a time schedule
-  - Wake up:
+  - Detect waking up:
     - When turning on a controller or tracker
     - On a time schedule
-- :battery: Battery automations:
-  - Automatically turn off trackers and/or controllers:
-    - When you go to sleep
-    - When putting them on the charger
-- :electric_plug: GPU Automations:
-  - Automatically tweak your power limits when you go to sleep and when you wake up.
 - 🗺️ Multi language support
   - English
   - Dutch
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
-
-Here is an example use case of these features combined:
-> I go to sleep in full body tracking. When one of my trackers reaches 50% battery, Oyasumi enables sleep mode. Because sleep mode is enabled, all my controllers and trackers are turned off and power limits are set for my graphics card to reduce the power usage. When I wake up, I turn on my controllers, so Oyasumi disables sleep mode. This restores the default power limits for my video card, giving me full performance again. My trackers and controllers still have plenty of the battery left to continue playing!
 
 ### Built With
 
@@ -74,8 +75,6 @@ This means that any Oculus controller is unlikely to work, and SlimeVR trackers 
 ### GPU Automations
 
 Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported.
-
-For AMD support, please see the following [issue](https://github.com/Raphiiko/Oyasumi/issues/7).
 
 ## Development
 
