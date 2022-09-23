@@ -67,6 +67,10 @@
         font-size: 2em;
         margin: -0.25em 0;
       }
+
+      &.update {
+        color: var(--color-alert-warning);
+      }
     }
     &-icon-prefix {
       color: var(--color-text-1);

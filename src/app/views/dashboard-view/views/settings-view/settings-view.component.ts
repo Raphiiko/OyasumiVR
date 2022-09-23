@@ -5,9 +5,9 @@ import {
   AppSettingsService,
   SETTINGS_KEY_APP_SETTINGS,
 } from '../../../../services/app-settings.service';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { LighthouseConsoleStatus, OpenVRService } from '../../../../services/openvr.service';
-import { noop, vshrink } from '../../../../utils/animations';
+import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../services/automation-config.service';
 import { Store } from 'tauri-plugin-store-api';
@@ -16,12 +16,17 @@ import { Router } from '@angular/router';
 import { readTextFile } from '@tauri-apps/api/fs';
 import { TranslateService } from '@ngx-translate/core';
 import { LighthouseService } from '../../../../services/lighthouse.service';
+import { getVersion } from '@tauri-apps/api/app';
+import { UpdateService } from '../../../../services/update.service';
+import { UpdateManifest } from '@tauri-apps/api/updater';
+import { HttpClient } from '@angular/common/http';
+import { marked } from 'marked';
 
 @Component({
   selector: 'app-settings-view',
   templateUrl: './settings-view.component.html',
   styleUrls: ['./settings-view.component.scss'],
-  animations: [vshrink(), noop()],
+  animations: [vshrink(), noop(), hshrink()],
 })
 export class SettingsViewComponent implements OnInit, OnDestroy {
   storeKey = { SETTINGS_KEY_APP_SETTINGS, SETTINGS_KEY_AUTOMATION_CONFIGS };
@@ -36,7 +41,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     loadingIndicator?: boolean;
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
-  activeTab: 'GENERAL' | 'DEBUG' = 'GENERAL';
+  activeTab: 'GENERAL' | 'UPDATES' | 'DEBUG' = 'UPDATES';
   languages: Array<{ code: string; label: string; flag?: string }> = [
     {
       code: 'en',
@@ -48,16 +53,22 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
       label: 'Nederlands',
     },
   ];
+  updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
+  version: string = '';
+  changelog: string = '';
+  updateOrCheckInProgress = false;
 
   constructor(
     protected settingsService: AppSettingsService,
     public openvr: OpenVRService,
     private router: Router,
     private translate: TranslateService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private update: UpdateService,
+    private http: HttpClient
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.lighthouse.consoleStatus
       .pipe(takeUntil(this.destroy$))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
@@ -69,6 +80,34 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((appSettings) => {
       this.appSettings = appSettings;
     });
+    this.version = await getVersion();
+    if (this.version === '0.0.0') this.version = 'DEV';
+    this.update.updateAvailable.pipe(takeUntil(this.destroy$)).subscribe((available) => {
+      this.updateAvailable = available;
+    });
+    this.changelog = await this.getChangeLog();
+  }
+
+  async getChangeLog(): Promise<string> {
+    let changelog = '';
+    try {
+      changelog = await firstValueFrom(
+        this.http.get('https://raw.githubusercontent.com/Raphiiko/Oyasumi/main/CHANGELOG.md', {
+          responseType: 'text',
+        })
+      );
+    } catch (e) {
+      changelog = await firstValueFrom(
+        this.http.get('/assets/CHANGELOG.md', {
+          responseType: 'text',
+        })
+      );
+    }
+    let firstIndex = changelog.indexOf('##');
+    changelog = changelog.slice(firstIndex, changelog.length);
+    changelog = marked.parse(changelog);
+    changelog = changelog.replace(/<a /g, '<a target="_blank" ');
+    return changelog;
   }
 
   processLighthouseConsoleStatus(status: LighthouseConsoleStatus) {
@@ -170,5 +209,19 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
+  }
+
+  checkForUpdates() {}
+
+  async updateOrCheck() {
+    if (this.updateOrCheckInProgress) return;
+    this.updateOrCheckInProgress = true;
+    await Promise.allSettled([
+      this.updateAvailable.manifest
+        ? this.update.installUpdate()
+        : this.update.checkForUpdate(false),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]);
+    this.updateOrCheckInProgress = false;
   }
 }

@@ -54,6 +54,8 @@ import { DeviceListItemComponent } from './components/device-list-item/device-li
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
+import { UpdateService } from './services/update.service';
+import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -88,6 +90,7 @@ export function createTranslateLoader(http: HttpClient) {
     DropdownButtonComponent,
     OscScriptSimpleEditorComponent,
     ConfirmModalComponent,
+    UpdateModalComponent,
   ],
   imports: [
     CommonModule,
@@ -104,7 +107,7 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
     NgPipesModule,
-    SimpleModalModule,
+    SimpleModalModule
   ],
   providers: [
     ThemeService,
@@ -130,6 +133,7 @@ export class AppModule {
     private sleep: SleepService,
     private osc: OscService,
     private sidecar: ElevatedSidecarService,
+    private update: UpdateService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -148,6 +152,7 @@ export class AppModule {
   }
 
   async init() {
+    await Promise.all([await this.update.init()]);
     await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
     await this.sleep.init();

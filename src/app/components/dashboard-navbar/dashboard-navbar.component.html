@@ -49,6 +49,9 @@
     <div class="menu-item-icon-suffix" [@fade] *ngIf="settingErrors | async">
       <i class="material-icons">error_outline</i>
     </div>
+    <div class="menu-item-icon-suffix update" [@fade] *ngIf="updateAvailable | async">
+      <i class="material-icons">notification_important</i>
+    </div>
   </div>
 
   <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'about'">

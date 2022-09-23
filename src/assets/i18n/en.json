@@ -6,7 +6,8 @@
     "modals": {
       "cancel": "Cancel",
       "save": "Save",
-      "confirm": "Confirm"
+      "confirm": "Confirm",
+      "ok": "Ok"
     }
   },
   "overview": {
@@ -165,6 +166,7 @@
     "title": "Settings",
     "tab": {
       "general": "General",
+      "updates": "Updates",
       "debug": "Debug"
     },
     "general": {
@@ -190,6 +192,14 @@
         "label": "Ask for administrator privileges on startup",
         "description": "Oyasumi needs administrator privileges to be able to control your GPU's power limits. If you enable this, Oyasumi will ask for administrator privileges when it starts up."
       }
+    },
+    "updates": {
+      "checkForUpdates": "Check for updates",
+      "changelog": "Changelog",
+      "install": "Install v{{version}}",
+      "noUpdate": "You are currently running Oyasumi v{{version}} which is the latest version!",
+      "notChecked": "Oyasumi did not check for updates yet.",
+      "updateAvailable": "A new version of Oyasumi is available! You are currently running v{{currentVersion}}.\nThe new version is v{{latestVersion}}."
     },
     "debug": {
       "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
@@ -219,9 +229,23 @@
     "projectLinks": "Project Links",
     "sourceLink": "Source Code @ GitHub"
   },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "Update Failed",
+        "message": "The update failed to install. Please try again later."
+      }
+    }
+  },
   "comp": {
     "confirm-modal": {
       "defaultTitle": "Confirm"
+    },
+    "update-modal": {
+      "title": "Update Available",
+      "updateNow": "Install v{{version}}",
+      "updateLater": "Not now",
+      "message": "A new update for Oyasumi has been found v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
     },
     "select-box": {
       "defaultPlaceholder": "Select..."

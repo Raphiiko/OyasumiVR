@@ -1,3 +1,5 @@
+@import 'panes';
+
 :host {
   height: 100%;
   display: flex;
@@ -129,4 +131,30 @@
     flex-direction: column;
     justify-content: center;
   }
+}
+
+.update-checker {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+  p {
+    margin-bottom: 0;
+    white-space: pre;
+  }
+  button {
+    margin-right: 1em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+.pane-changelog {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  overflow-y: overlay;
 }

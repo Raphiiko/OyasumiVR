@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Navigation item for GPU Automations to show an error icon when the feature is enabled, but no administrator privileges were detected.
 - Switched to Fontsource for the application font, to remove the dependency on Google for providing fonts at runtime.
+- Added own updater ui to replace the default Tauri update dialog. 
 
 ### Fixed
 

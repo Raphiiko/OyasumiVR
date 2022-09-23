@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "0.3.0"
+    "version": "0.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -77,7 +77,7 @@
       "endpoints": [
         "https://gist.githubusercontent.com/Raphiiko/16ed38d8ccd9282675d04478f887f76f/raw"
       ],
-      "dialog": true,
+      "dialog": false,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVGOEI4QTQ2Rjk1NEMwNTUKUldSVndGVDVSb3FMN3hIanNsbVVDdVk1MkE2MVpVWERJeTdUVVRzZ1JpanVQTmNXYWJGVHhUSVIK"
     },
     "windows": [

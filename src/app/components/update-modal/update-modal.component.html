@@ -1,0 +1,32 @@
+<div class="pane modal modal-md" [@fadeUp]>
+  <div class="pane-title">
+    {{ 'comp.update-modal.title' | translate }}
+  </div>
+  <div class="pane-content">
+    <p
+      translate="comp.update-modal.message"
+      [translateParams]="{ newVersion: manifest?.version, currentVersion: currentVersion }"
+    ></p>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="updateLater()" [disabled]="installing">
+      {{ 'comp.update-modal.updateLater' | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      style="white-space: nowrap"
+      (click)="install()"
+      [disabled]="installing"
+    >
+      <div class="small-spinner" *ngIf="installing" @hshrink></div>
+      <span
+        *ngIf="!installing"
+        @hshrink
+        translate
+        [translateParams]="{ version: manifest?.version }"
+      >
+        comp.update-modal.updateNow
+      </span>
+    </button>
+  </div>
+</div>
