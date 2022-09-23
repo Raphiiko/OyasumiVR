@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
-import { WindowsService } from '../../services/windows.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
+import { NVMLService } from '../../services/nvml.service';
+import { ElevatedSidecarService } from '../../services/elevated-sidecar.service';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -18,8 +19,9 @@ export class DashboardNavbarComponent implements OnInit {
   constructor(
     private settingsService: AppSettingsService,
     private lighthouse: LighthouseService,
-    private windows: WindowsService,
-    private gpuAutomations: GpuAutomationsService
+    private gpuAutomations: GpuAutomationsService,
+    private nvml: NVMLService,
+    private sidecar: ElevatedSidecarService,
   ) {
     this.settingErrors = combineLatest([
       this.lighthouse.consoleStatus.pipe(
@@ -29,10 +31,11 @@ export class DashboardNavbarComponent implements OnInit {
     ]).pipe(map((errorAreas: boolean[]) => !!errorAreas.find((a) => a)));
     this.gpuAutomationsErrors = combineLatest([
       this.gpuAutomations.isEnabled(),
-      this.windows.isElevated,
+      this.nvml.status,
+      this.sidecar.sidecarRunning
     ]).pipe(
-      map(([gpuAutomationsEnabled, runningAsAdmin]) => {
-        return gpuAutomationsEnabled && !runningAsAdmin;
+      map(([gpuAutomationsEnabled, nvmlStatus, sidecarRunning]) => {
+        return gpuAutomationsEnabled && (nvmlStatus === 'ELEVATION_SIDECAR_INACTIVE' || !sidecarRunning);
       })
     );
   }

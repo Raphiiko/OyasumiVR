@@ -1,11 +1,9 @@
 use std::{thread, time::Duration};
 
-use crate::{
-    models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose},
-    OVR_STATUS, TAURI_WINDOW,
-};
+use crate::{OVR_STATUS, TAURI_WINDOW};
 use openvr::{system as ovrsys, TrackedDeviceIndex};
 use openvr_sys::{HmdQuaternion_t, HmdVector3_t};
+use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 use tauri::Manager;
 
 use crate::OVR_CONTEXT;
@@ -67,7 +65,7 @@ pub fn spawn_openvr_background_thread() {
                         .ok();
                 }
             }
-            
+
             // Poll for property updates
             if let Some((event_info, _)) =
                 system.poll_next_event_with_pose(openvr::TrackingUniverseOrigin::Standing)

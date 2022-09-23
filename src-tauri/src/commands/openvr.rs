@@ -1,6 +1,7 @@
 use openvr::{TrackedDeviceIndex, MAX_TRACKED_DEVICE_COUNT};
+use oyasumi_shared::models::OVRDevice;
 
-use crate::{OVR_CONTEXT, models::OVRDevice, OVR_STATUS};
+use crate::{OVR_CONTEXT, OVR_STATUS};
 
 #[tauri::command]
 pub fn openvr_get_devices() -> Result<Vec<OVRDevice>, String> {

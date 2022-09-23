@@ -5,10 +5,10 @@
     },
     "modals": {
       "cancel": "Cancel",
-      "save": "Save"
+      "save": "Save",
+      "confirm": "Confirm"
     }
   },
-
   "overview": {
     "sleep-mode": {
       "label": "Sleep Mode",
@@ -131,12 +131,12 @@
     "disabled": {
       "initializing": "GPU Automations are currently still initializing...",
       "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br />This way you can save on your electricity usage while you're asleep.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
-      "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to restart Oyasumi with the required permissions.",
+      "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges.",
       "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
       "noDevices": "No graphics cards could be found in your system.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
       "unknown": "An unknown error occurred trying to enable the GPU automations feature."
     },
-    "restartAsAdmin": "Restart As Administrator",
+    "requestAdministrator": "Give Administrator Privileges",
     "disable": "Disable GPU Automations",
     "enable": "Enable GPU Automations",
     "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use this if you know what you are doing.",
@@ -153,7 +153,13 @@
       "description": "Specify the power limit to set when sleep mode deactivates:"
     },
     "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
-    "inputDefault": "Reset to the GPU's default limit."
+    "inputDefault": "Reset to the GPU's default limit.",
+    "elevationSidecarModal": {
+      "title": "Always give privileges",
+      "message": "Do you want to always give Oyasumi administrator privileges?<br><br>If you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
+      "confirm": "Always",
+      "cancel": "Only this once"
+    }
   },
   "settings": {
     "title": "Settings",
@@ -178,6 +184,11 @@
           "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
           "SUCCESS": "<strong>lighthouse_console.exe</strong> has been found and is working correctly!"
         }
+      },
+      "adminPrivileges": {
+        "title": "Administrator Privileges",
+        "label": "Ask for administrator privileges on startup",
+        "description": "Oyasumi needs administrator privileges to be able to control your GPU's power limits. If you enable this, Oyasumi will ask for administrator privileges when it starts up."
       }
     },
     "debug": {
@@ -209,6 +220,9 @@
     "sourceLink": "Source Code @ GitHub"
   },
   "comp": {
+    "confirm-modal": {
+      "defaultTitle": "Confirm"
+    },
     "select-box": {
       "defaultPlaceholder": "Select..."
     },

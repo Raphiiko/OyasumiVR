@@ -50,7 +50,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
   ];
 
   constructor(
-    private settingsService: AppSettingsService,
+    protected settingsService: AppSettingsService,
     public openvr: OpenVRService,
     private router: Router,
     private translate: TranslateService,
@@ -166,5 +166,9 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
         }, {} as { [s: string]: any })
       )
     );
+  }
+
+  setAskForAdminOnStart(enabled: boolean) {
+    this.settingsService.updateSettings({ askForAdminOnStart: enabled });
   }
 }

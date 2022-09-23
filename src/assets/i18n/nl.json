@@ -130,12 +130,12 @@
     "disabled": {
       "initializing": "GPU Automatiseringen worden nog geinitialiseerd.,,",
       "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.<br />Hier door kun je terwijl je slaapt energie besparen.<br /><br />GPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.<br />AMD en Intel GPUs worden nog niet ondersteund.",
-      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi opnieuw te starten met beheerders rechten.",
+      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi beheerders rechten te geven.",
       "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
       "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
       "unknown": "Er is een onbekende fout opgetreden bij het aanzetten van de GPU automations functionaliteit."
     },
-    "restartAsAdmin": "Herstart Als Beheerder",
+    "requestAdministrator": "Geef Beheerders Rechten",
     "disable": "Deactiveer GPU Automatiseringen",
     "enable": "Activeer GPU Automatiseringen",
     "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!<br />Het incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.<br />Houd dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",

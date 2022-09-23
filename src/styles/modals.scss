@@ -25,12 +25,12 @@
 .modal {
   @extend .pane;
   &-sm {
-    min-width: 25em;
+    width: 25em;
   }
   &-md {
-    min-width: 30em;
+    width: 30em;
   }
   &-lg {
-    min-width: 45em;
+    width: 45em;
   }
 }

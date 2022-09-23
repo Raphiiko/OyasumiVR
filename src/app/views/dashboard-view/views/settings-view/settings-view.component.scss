@@ -82,6 +82,9 @@
       }
     }
   }
+  .alert {
+    margin-bottom: 1em;
+  }
 }
 
 .debug-persistent-storage-actions {
@@ -95,4 +98,35 @@
     margin-bottom: 1em;
   }
   padding-bottom: 1em;
+}
+
+.setting-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--color-surface-1);
+  padding: 1em;
+  border-radius: 0.5em;
+  .setting-row-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    > span:first-child {
+      color: var(--color-text-1);
+      margin-bottom: 0.25em;
+    }
+    > span:last-child {
+      color: var(--color-text-3);
+    }
+  }
+  .setting-row-action {
+    flex-shrink: 0;
+    margin-left: 1em;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
