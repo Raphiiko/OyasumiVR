@@ -1,4 +1,4 @@
-import { OscScript } from '../models/osc-script';
+import { OscScript } from './osc-script';
 import { parseOscScriptFromCode } from '../utils/osc-script-utils';
 
 export interface SleepingAnimationPreset {

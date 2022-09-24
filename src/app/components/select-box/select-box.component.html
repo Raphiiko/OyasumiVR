@@ -44,10 +44,14 @@
       [class.small]="type === 'SMALL'"
     >
       <div class="select-item-content">
-        <div class="select-item-title" [innerHtml]='item.label | tsTranslate'>
+        <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
           {{ item.label | tsTranslate }}
         </div>
-        <div class="select-item-subtitle" *ngIf="item.subLabel && type !== 'SMALL'" [innerHtml]='item.subLabel | tsTranslate'>
+        <div
+          class="select-item-subtitle"
+          *ngIf="item.subLabel && type !== 'SMALL'"
+          [innerHtml]="item.subLabel | tsTranslate"
+        >
           {{ item.subLabel | tsTranslate }}
         </div>
       </div>

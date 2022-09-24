@@ -1,5 +1,4 @@
 import { TString } from './translatable-string';
-import { parseOscScriptFromCode } from '../utils/osc-script-utils';
 
 export interface OscScript {
   version: 1;
