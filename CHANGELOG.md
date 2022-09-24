@@ -13,7 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Preset for [ごろ寝システム (Sleep System) v2.2 by んみんみーん](https://booth.pm/ko/items/2886739).
   - Preset for [GoGo Loco v1.8.0 by franada](https://booth.pm/en/items/3290806).
 - Setting to start Oyasumi with administrator privileges by default
+- Editor for writing OSC scripts
 - Prepackaged Japanese font
+- App icon
 
 ### Changed
 

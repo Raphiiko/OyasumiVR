@@ -40,8 +40,9 @@ export function parseOscScriptFromCode(code: string): {
     }
     let match;
     if ((match = line.text.match(SLEEP_ACTION_REGEX))) {
+      const isFloat = match.groups!['VALUE'].includes('.');
       let duration = parseFloat(match.groups!['VALUE']);
-      const unit: 's' | 'ms' = (match.groups!['UNIT'] as 's' | 'ms') || 'ms';
+      const unit: 's' | 'ms' = (match.groups!['UNIT'] as 's' | 'ms') || (isFloat ? 's' : 'ms');
       if (unit === 'ms' && duration % 1 != 0) {
         errors.push({
           line: line.index,
