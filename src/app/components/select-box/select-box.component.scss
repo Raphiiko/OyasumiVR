@@ -117,16 +117,20 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    overflow: hidden;
   }
   .select-item-info {
     flex-shrink: 0;
     padding: 1em;
     color: var(--color-primary);
     transition: all 0.15s ease;
-    margin-left: -1.5em;
     margin-right: -1em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     i.material-icons-round {
-      line-height: 1em;
       font-size: 1.5em;
     }
     &:hover {

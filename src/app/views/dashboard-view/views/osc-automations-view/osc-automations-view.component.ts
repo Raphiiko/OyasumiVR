@@ -9,10 +9,11 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import { Subject, takeUntil } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { SleepingPose } from '../../../../models/sleeping-pose';
-import { OscScript, SLEEPING_ANIMATION_OSC_SCRIPTS } from '../../../../models/osc-script';
+import { OscScript } from '../../../../models/osc-script';
 import { OscService } from '../../../../services/osc.service';
 import { SleepingAnimationsAutomationService } from '../../../../services/osc-automations/sleeping-animations-automation.service';
 import { SleepService } from '../../../../services/sleep.service';
+import { SLEEPING_ANIMATION_PRESETS } from '../../../../models/sleeping-animation-presets';
 
 @Component({
   selector: 'app-osc-automations-view',
@@ -29,34 +30,15 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
       id: 'CUSTOM',
       label: 'oscAutomations.sleepingAnimations.customPreset',
     },
-    {
-      id: 'MMM_SLEEP_SYSTEM_2.2',
-      label: 'ごろ寝システム v2.2',
+    ...SLEEPING_ANIMATION_PRESETS.map((preset) => ({
+      id: preset.id,
+      label: preset.name,
       subLabel: {
         string: 'oscAutomations.sleepingAnimations.presetAuthor',
-        values: { author: 'みんみんみーん' },
+        values: { author: preset.author },
       },
-      infoLink: 'https://booth.pm/ko/items/2886739',
-    },
-    {
-      id: 'GOGO_LOCO_1.7.0',
-      label: 'GoGo Loco 1.7.0',
-      subLabel: {
-        string: 'oscAutomations.sleepingAnimations.presetAuthor',
-        values: { author: 'franada' },
-      },
-      infoLink: 'https://booth.pm/en/items/3290806',
-    },
-
-    {
-      id: 'GOGO_LOCO_1.7.0_FIXED',
-      label: 'GoGo Loco 1.7.0 + Oyasumi Fix',
-      subLabel: {
-        string: 'oscAutomations.sleepingAnimations.presetAuthor',
-        values: { author: 'franada' },
-      },
-      infoLink: 'https://booth.pm/en/items/3290806',
-    },
+      infoLink: preset.infoLink,
+    })),
   ];
   config: SleepingAnimationsAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
@@ -99,7 +81,9 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async selectPreset(presetId: string) {
-    const oscScripts = SLEEPING_ANIMATION_OSC_SCRIPTS[presetId];
+    const oscScripts = SLEEPING_ANIMATION_PRESETS.find(
+      (preset) => preset.id === presetId
+    )!.oscScripts;
     await this.updateConfig({ preset: presetId, oscScripts });
     this.oscOptionsExpanded = presetId === 'CUSTOM';
   }
