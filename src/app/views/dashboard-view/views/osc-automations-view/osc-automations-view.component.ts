@@ -13,7 +13,10 @@ import { OscScript } from '../../../../models/osc-script';
 import { OscService } from '../../../../services/osc.service';
 import { SleepingAnimationsAutomationService } from '../../../../services/osc-automations/sleeping-animations-automation.service';
 import { SleepService } from '../../../../services/sleep.service';
-import { SLEEPING_ANIMATION_PRESETS } from '../../../../models/sleeping-animation-presets';
+import {
+  SLEEPING_ANIMATION_PRESETS,
+  SleepingAnimationPresetNote,
+} from '../../../../models/sleeping-animation-presets';
 
 @Component({
   selector: 'app-osc-automations-view',
@@ -47,6 +50,7 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   currentPose: SleepingPose = 'UNKNOWN';
   sleepingPoses: SleepingPose[] = ['SIDE_FRONT', 'SIDE_BACK', 'SIDE_LEFT', 'SIDE_RIGHT'];
   footLockActions: Array<'FOOT_LOCK' | 'FOOT_UNLOCK'> = ['FOOT_LOCK', 'FOOT_UNLOCK'];
+  presetNotes: SleepingAnimationPresetNote[] = [];
   get showManualControl(): boolean {
     return !!Object.values(this.config.oscScripts).find((s) => !!s);
   }
@@ -62,6 +66,9 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe(async (configs) => {
       this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
       this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
+      if (this.config.preset && this.config.preset !== 'CUSTOM') {
+        this.presetNotes = SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === this.config.preset)!.notes || [];
+      }
     });
     this.sleep.pose.pipe(takeUntil(this.destroy$)).subscribe((pose) => {
       this.currentPose = pose;
@@ -81,12 +88,13 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async selectPreset(presetId: string) {
-    const oscScripts =
+    const preset =
       presetId === 'CUSTOM'
-        ? {}
-        : SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === presetId)!.oscScripts;
-    await this.updateConfig({ preset: presetId, oscScripts });
+        ? { oscScripts: {}, notes: [] }
+        : SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === presetId)!;
+    await this.updateConfig({ preset: presetId, oscScripts: preset.oscScripts });
     this.oscOptionsExpanded = presetId === 'CUSTOM';
+    this.presetNotes = preset.notes || [];
   }
 
   async updateOSCScript(scriptId: SleepingPose | 'FOOT_LOCK' | 'FOOT_UNLOCK', script?: OscScript) {

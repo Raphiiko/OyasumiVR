@@ -237,6 +237,9 @@
       }
     }
   },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco."
+  },
   "comp": {
     "confirm-modal": {
       "defaultTitle": "Bevestig"

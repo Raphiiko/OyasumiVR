@@ -80,6 +80,27 @@
               </button>
             </div>
           </div>
+          <div class="option-pane-alert" @vshrink *ngIf="presetNotes.length">
+            <div
+              *ngFor="let note of presetNotes"
+              class="alert"
+              [class.success]="note.type === 'SUCCESS'"
+              [class.error]="note.type === 'CAUTION'"
+              [class.warning]="note.type === 'WARNING'"
+              @vshrink
+            >
+              <div class="alert-bg"></div>
+              <div class="alert-icon">
+                <i class="material-icons-round" *ngIf="note.type === 'CAUTION'">error_outline</i>
+                <i class="material-icons-outlined" *ngIf="note.type === 'INFO'">info</i>
+                <i class="material-icons-round" *ngIf="note.type === 'SUCCESS'">
+                  check_circle_outline
+                </i>
+                <i class="material-icons-round" *ngIf="note.type === 'WARNING'">warning_amber</i>
+              </div>
+              <div class="alert-content">{{ note.text | tsTranslate }}</div>
+            </div>
+          </div>
           <div class="option-pane-options" *ngIf="oscOptionsExpanded" @vshrink>
             <div class="option">
               <div class="option-label">

@@ -41,7 +41,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     loadingIndicator?: boolean;
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
-  activeTab: 'GENERAL' | 'UPDATES' | 'DEBUG' = 'UPDATES';
+  activeTab: 'GENERAL' | 'UPDATES' | 'DEBUG' = 'GENERAL';
   languages: Array<{ code: string; label: string; flag?: string }> = [
     {
       code: 'en',
