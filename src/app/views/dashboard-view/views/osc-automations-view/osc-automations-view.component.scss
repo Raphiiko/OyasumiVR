@@ -86,9 +86,22 @@
         width: 3em;
         height: 3em;
         border-radius: 3em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
         &:hover {
           background: var(--color-surface-4);
         }
+      }
+    }
+  }
+
+  &-alert {
+    padding: 0.5em 1em 1em 1em;
+    .alert {
+      &:not(:first-child) {
+        margin-top: 0.5em;
       }
     }
   }

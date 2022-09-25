@@ -237,6 +237,9 @@
       }
     }
   },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version."
+  },
   "comp": {
     "confirm-modal": {
       "defaultTitle": "Confirm"

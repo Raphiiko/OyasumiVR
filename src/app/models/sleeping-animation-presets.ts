@@ -1,5 +1,12 @@
 import { OscScript } from './osc-script';
 import { parseOscScriptFromCode } from '../utils/osc-script-utils';
+import { TString } from './translatable-string';
+
+
+export interface SleepingAnimationPresetNote {
+  type: 'CAUTION' | 'WARNING' | 'INFO' | 'SUCCESS';
+  text: TString;
+}
 
 export interface SleepingAnimationPreset {
   id: string;
@@ -14,6 +21,7 @@ export interface SleepingAnimationPreset {
     FOOT_LOCK?: OscScript;
     FOOT_UNLOCK?: OscScript;
   };
+  notes?: SleepingAnimationPresetNote[];
 }
 
 const MMM_SLEEP_SYSTEM_2_2_PRESET: SleepingAnimationPreset = {
@@ -81,6 +89,12 @@ const GOGO_LOCO_LEGACY_PRESET: SleepingAnimationPreset = {
   name: 'GoGo Loco 1.6.2 - 1.7.0',
   author: 'franada',
   infoLink: 'https://booth.pm/en/items/3290806',
+  notes: [
+    {
+      type: 'WARNING',
+      text: 'misc.GOGO_LOCO_LEGACY_PRESET_WARNING',
+    },
+  ],
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
 i 242 /avatar/parameters/VRCEmote
