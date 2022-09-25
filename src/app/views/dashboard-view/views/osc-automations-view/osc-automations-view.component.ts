@@ -81,9 +81,10 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async selectPreset(presetId: string) {
-    const oscScripts = SLEEPING_ANIMATION_PRESETS.find(
-      (preset) => preset.id === presetId
-    )!.oscScripts;
+    const oscScripts =
+      presetId === 'CUSTOM'
+        ? {}
+        : SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === presetId)!.oscScripts;
     await this.updateConfig({ preset: presetId, oscScripts });
     this.oscOptionsExpanded = presetId === 'CUSTOM';
   }
