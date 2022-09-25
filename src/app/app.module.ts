@@ -107,7 +107,7 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
     NgPipesModule,
-    SimpleModalModule
+    SimpleModalModule,
   ],
   providers: [
     ThemeService,

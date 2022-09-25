@@ -47,7 +47,7 @@ export class SleepingAnimationsAutomationService {
         startWith(false),
         pairwise(),
         filter(([oldSleepMode, newSleepMode]) => !oldSleepMode && newSleepMode),
-        startWith(false),
+        startWith(false)
       ),
       // Retrigger when all trackers are turned off
       this.openvr.devices.pipe(
@@ -62,7 +62,7 @@ export class SleepingAnimationsAutomationService {
           );
           return trackersInOldDevices && !trackersInNewDevices;
         }),
-        startWith([]),
+        startWith([])
       ),
     ]).subscribe(async ([pose]) => {
       if (!this.config.enabled) return;
