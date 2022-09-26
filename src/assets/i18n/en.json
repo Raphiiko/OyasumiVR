@@ -68,7 +68,7 @@
       "currentPose": "Current Position",
       "manualControl": "Manual Control",
       "presetAuthor": "by {{author}}",
-      "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.<br><br>Presets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
       "customPreset": "Custom Animations",
       "errors": {
@@ -96,7 +96,10 @@
           "onlySwitchAnimations": "Only switch animations",
           "onlyIfSleepModeEnabled": "If sleep mode is enabled",
           "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
-          "footLock": "Foot Lock",
+          "footLock": {
+            "title": "Foot Lock",
+            "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled."
+          },
           "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
           "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled",
           "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
@@ -121,7 +124,7 @@
       "onCharge": {
         "title": "When charging them",
         "description": "Have devices turn off automatically when you put them on the charger.",
-        "optionControllers": "Turn off controllers",
+      "optionControllers": "Turn off controllers",
         "optionTrackers": "Turn off trackers"
       }
     }
@@ -131,16 +134,16 @@
     "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep.",
     "disabled": {
       "initializing": "GPU Automations are currently still initializing...",
-      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.<br />This way you can save on your electricity usage while you're asleep.<br /><br />GPU Automations are currently only available for NVIDIA GPUs.<br />AMD and Intel GPUs are still unsupported.",
+      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.\nThis way you can save on your electricity usage while you're asleep.\n\nGPU Automations are currently only available for NVIDIA GPUs.\nAMD and Intel GPUs are still unsupported.",
       "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges.",
-      "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
-      "noDevices": "No graphics cards could be found in your system.<br /><br />Please ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.\n\nPlease ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
+      "noDevices": "No graphics cards could be found in your system.\n\nPlease ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
       "unknown": "An unknown error occurred trying to enable the GPU automations feature."
     },
     "requestAdministrator": "Give Administrator Privileges",
     "disable": "Disable GPU Automations",
     "enable": "Enable GPU Automations",
-    "enableWarning": "This is a feature for advanced users!<br />Incorrectly configuring your power limits could lead to your system becoming unstable.<br />Please keep this in mind and ideally only use this if you know what you are doing.",
+    "enableWarning": "This is a feature for advanced users!\nIncorrectly configuring your power limits could lead to your system becoming unstable.\nPlease keep this in mind and ideally only use this if you know what you are doing.",
     "selectGPU": "Select the GPU you wish to set the power limit for:",
     "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
     "currentPowerLimit": "Current Power Limit",
@@ -157,7 +160,7 @@
     "inputDefault": "Reset to the GPU's default limit.",
     "elevationSidecarModal": {
       "title": "Give administrator privileges",
-      "message": "Do you want to always give Oyasumi administrator privileges?<br><br>If you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
+      "message": "Do you want to always give Oyasumi administrator privileges?\n\nIf you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
       "confirm": "Always",
       "cancel": "Only this once"
     }
@@ -176,7 +179,7 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouse Console",
-        "description": "Oyasumi needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.<br />If Oyasumi cannot find it in the default location, you need to set where it can be found.",
+        "description": "Oyasumi needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf Oyasumi cannot find it in the default location, you need to set where it can be found.",
         "status": {
           "NOT_FOUND": "The <strong>lighthouse_console.exe</strong> could not be found at this location.",
           "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
@@ -227,7 +230,8 @@
     },
     "translations": "Translations",
     "projectLinks": "Project Links",
-    "sourceLink": "Source Code @ GitHub"
+    "sourceLink": "Source Code @ GitHub",
+    "discordInvite": "Discord Server"
   },
   "updater": {
     "modals": {
@@ -238,7 +242,22 @@
     }
   },
   "misc": {
-    "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version."
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
+      "durationTooShort": "Sleep duration must be at least 1ms.",
+      "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
+      "durationRequired": "Sleep duration is required.",
+      "totalDurationTooLong": "The total script duration cannot exceed 10 seconds.",
+      "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
+      "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
+      "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
+      "invalidSyntax": "Invalid syntax.",
+      "tooManyCommands": "An OSC script cannot have more than {{value}} actions.",
+      "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
+      "addressRequired": "An OSC address is required.",
+      "addressNotASCII": "A valid OSC address must only contain ASCII characters."
+    }
   },
   "comp": {
     "confirm-modal": {
@@ -281,17 +300,7 @@
       "title": "OSC Script Editor",
       "syntaxGuide": "Syntax Guide",
       "format": "Format",
-      "test": "Test",
-      "errors": {
-        "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
-        "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
-        "totalDurationTooLong": "The total script duration cannot exceed 10 seconds.",
-        "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
-        "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
-        "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
-        "invalidSyntax": "Invalid syntax.",
-        "tooManyCommands": "An OSC script cannot have more than {{value}} actions."
-      }
+      "test": "Test"
     },
     "osc-script-simple-editor": {
       "commandCounter": {
@@ -318,18 +327,6 @@
           "title": "Sleep",
           "description": "Wait for a specified amount of time"
         }
-      },
-      "errors": {
-        "addressRequired": "An OSC address is required.",
-        "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
-        "addressNotASCII": "A valid OSC address must only contain ASCII characters.",
-        "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
-        "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
-        "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
-        "durationRequired": "Sleep duration is required.",
-        "durationTooShort": "Sleep duration must be at least 1ms.",
-        "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
-        "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
       }
     }
   }

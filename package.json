@@ -11,7 +11,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "tauri": "tauri",
-    "set-version": "node scripts/set-version.js"
+    "set-version": "node scripts/set-version.js",
+    "translation-converter": "node scripts/translation-converter.js"
   },
   "private": true,
   "dependencies": {
@@ -53,6 +54,7 @@
     "@types/marked": "^4.0.7",
     "@types/three": "^0.144.0",
     "check-more-types": "^2.24.0",
+    "exceljs": "^4.3.0",
     "execa": "^6.1.0",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.0",
