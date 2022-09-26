@@ -29,7 +29,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|
 
 ## Features
-<img align="right" src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/sleeping_pose.gif" height="444">
+<img align="right" src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/sleeping_pose.gif" height="333">
 
 - :dizzy: Automatic sleep animations with pose detection
   - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
