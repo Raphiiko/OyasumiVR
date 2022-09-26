@@ -69,11 +69,11 @@ f -0.75 /avatar/parameters/Go/Float
     `).script,
     SIDE_LEFT: parseOscScriptFromCode(`
 i 204 /avatar/parameters/VRCEmote
-f -0.4 /avatar/parameters/Go/Float
+f -0.6 /avatar/parameters/Go/Float
     `).script,
     SIDE_RIGHT: parseOscScriptFromCode(`
 i 204 /avatar/parameters/VRCEmote
-f -0.6 /avatar/parameters/Go/Float
+f -0.4 /avatar/parameters/Go/Float
     `).script,
     FOOT_LOCK: parseOscScriptFromCode(`
 b true /avatar/parameters/Go/Stationary

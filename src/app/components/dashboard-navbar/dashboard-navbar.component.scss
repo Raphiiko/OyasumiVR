@@ -9,18 +9,37 @@
 
 .logo-container {
   display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
-  padding: 2em;
+  flex-direction: row;
+  align-items: center;
+  padding: 2em 1em;
   flex-shrink: 0;
   .logo-text {
-    font-size: 2em;
-    font-weight: 300;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex: 1;
+    .logo-title {
+      font-size: 2em;
+      font-weight: 300;
+    }
+    .logo-tagline {
+      color: var(--color-text-4);
+    }
   }
-  .logo-tagline {
-    color: var(--color-text-4);
+  .logo-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 1em;
+    img {
+      width: 3.5em;
+      height: 3.5em;
+    }
   }
+
 }
 
 .menu {
