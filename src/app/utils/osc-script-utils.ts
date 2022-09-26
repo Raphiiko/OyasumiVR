@@ -46,21 +46,21 @@ export function parseOscScriptFromCode(code: string): {
       if (unit === 'ms' && duration % 1 != 0) {
         errors.push({
           line: line.index,
-          message: 'comp.osc-script-code-editor.errors.noFloatMilliseconds',
+          message: 'misc.oscScriptEditorErrors.noFloatMilliseconds',
         });
       }
       if (unit === 's') duration *= 1000;
       if (duration > 5000) {
         errors.push({
           line: line.index,
-          message: 'comp.osc-script-code-editor.errors.durationTooLong',
+          message: 'misc.oscScriptEditorErrors.durationTooLong',
         });
       }
       totalSleepDuration += duration;
       if (totalSleepDuration > 10000) {
         errors.push({
           line: line.index,
-          message: 'comp.osc-script-code-editor.errors.totalDurationTooLong',
+          message: 'misc.oscScriptEditorErrors.totalDurationTooLong',
         });
       }
       script.commands.push({
@@ -78,7 +78,7 @@ export function parseOscScriptFromCode(code: string): {
           if (isNaN(value) || value < -1.0 || value > 1.0) {
             errors.push({
               line: line.index,
-              message: 'comp.osc-script-code-editor.errors.floatOutOfBounds',
+              message: 'misc.oscScriptEditorErrors.floatOutOfBounds',
             });
           }
           break;
@@ -87,7 +87,7 @@ export function parseOscScriptFromCode(code: string): {
           if (isNaN(value) || value < 0 || value > 255) {
             errors.push({
               line: line.index,
-              message: 'comp.osc-script-code-editor.errors.indexOutOfBounds',
+              message: 'misc.oscScriptEditorErrors.indexOutOfBounds',
             });
           }
           break;
@@ -100,7 +100,7 @@ export function parseOscScriptFromCode(code: string): {
       if (!address.startsWith('/')) {
         errors.push({
           line: line.index,
-          message: 'comp.osc-script-code-editor.errors.addressNoSlash',
+          message: 'misc.oscScriptEditorErrors.addressNoSlash',
         });
       }
       script.commands.push({
@@ -112,7 +112,7 @@ export function parseOscScriptFromCode(code: string): {
     } else {
       errors.push({
         line: line.index,
-        message: 'comp.osc-script-code-editor.errors.invalidSyntax',
+        message: 'misc.oscScriptEditorErrors.invalidSyntax',
       });
     }
   }
@@ -120,7 +120,7 @@ export function parseOscScriptFromCode(code: string): {
     errors.push({
       line: 0,
       message: {
-        string: 'comp.osc-script-code-editor.errors.tooManyCommands',
+        string: 'misc.oscScriptEditorErrors.tooManyCommands',
         values: { value: MAX_OSC_SCRIPT_COMMANDS.toString() },
       },
     });

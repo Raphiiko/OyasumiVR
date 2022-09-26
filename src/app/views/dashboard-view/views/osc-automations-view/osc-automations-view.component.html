@@ -49,7 +49,7 @@
           </div>
         </div>
       </div>
-      <p [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"></p>
+      <p style='white-space: pre-wrap' [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"></p>
       <!-- ENABLE/OSC PANE-->
       <div class="pane option-pane">
         <div class="pane-content no-padding">
@@ -185,8 +185,11 @@
             </span>
           </label>
           <h3 style="margin-top: 1em" translate>
-            oscAutomations.sleepingAnimations.options.general.footLock
+            oscAutomations.sleepingAnimations.options.general.footLock.title
           </h3>
+          <p translate>
+            oscAutomations.sleepingAnimations.options.general.footLock.description
+          </p>
           <label class="check-toggle">
             <input
               type="checkbox"

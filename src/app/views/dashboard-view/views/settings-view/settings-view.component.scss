@@ -17,6 +17,9 @@
 }
 
 .setting-category {
+  p {
+    white-space: pre-wrap;
+  }
   p::ng-deep strong {
     background: var(--color-surface-1);
     border-radius: 0.25em;

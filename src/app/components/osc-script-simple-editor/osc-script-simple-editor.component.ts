@@ -184,19 +184,19 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
           if (!command.address) {
             this.errors.push({
               actionIndex,
-              message: 'comp.osc-script-simple-editor.errors.addressRequired',
+              message: 'misc.oscScriptEditorErrors.addressRequired',
             });
           } else {
             if (!command.address.startsWith('/')) {
               this.errors.push({
                 actionIndex,
-                message: 'comp.osc-script-simple-editor.errors.addressNoSlash',
+                message: 'misc.oscScriptEditorErrors.addressNoSlash',
               });
             }
             if (!command.address.substring(1, command.address.length).match(`[\x00-\x7F]+`)) {
               this.errors.push({
                 actionIndex,
-                message: 'comp.osc-script-simple-editor.errors.addressNotASCII',
+                message: 'misc.oscScriptEditorErrors.addressNotASCII',
               });
             }
           }
@@ -206,7 +206,7 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
               if (isNaN(intValue) || intValue < 0 || intValue > 255) {
                 this.errors.push({
                   actionIndex,
-                  message: 'comp.osc-script-simple-editor.errors.intOutOfBounds',
+                  message: 'misc.oscScriptEditorErrors.intOutOfBounds',
                 });
               }
               break;
@@ -215,12 +215,12 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
               if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
                 this.errors.push({
                   actionIndex,
-                  message: 'comp.osc-script-simple-editor.errors.floatOutOfBounds',
+                  message: 'misc.oscScriptEditorErrors.floatOutOfBounds',
                 });
               } else if (floatPrecision(floatValue) > 3) {
                 this.errors.push({
                   actionIndex,
-                  message: 'comp.osc-script-simple-editor.errors.floatTooPrecise',
+                  message: 'misc.oscScriptEditorErrors.floatTooPrecise',
                 });
               }
               break;
@@ -230,26 +230,26 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
           if (command.duration === null || command.duration === undefined) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'comp.osc-script-simple-editor.errors.durationRequired',
+              message: 'misc.oscScriptEditorErrors.durationRequired',
             });
           }
           if (command.duration < 1) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'comp.osc-script-simple-editor.errors.durationTooShort',
+              message: 'misc.oscScriptEditorErrors.durationTooShort',
             });
           }
           if (command.duration > 5000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'comp.osc-script-simple-editor.errors.durationTooHigh',
+              message: 'misc.oscScriptEditorErrors.durationTooHigh',
             });
           }
           totalSleepDuration += command.duration;
           if (totalSleepDuration > 10000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'comp.osc-script-simple-editor.errors.totalDurationTooLong',
+              message: 'misc.oscScriptEditorErrors.totalDurationTooLong',
             });
           }
           break;
