@@ -1,9 +1,9 @@
 <p align="center">
-    <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_light.png?raw=true#gh-light-mode-only" width="350">
-    <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="350">
+    <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_light.png?raw=true#gh-light-mode-only" width="450">
+    <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="450">
     <br/>
     <br/>
-    A collection of utilities to assist with sleeping in virtual reality.
+    :zzz: A collection of utilities to assist with sleeping in virtual reality.
 </p>
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
@@ -13,21 +13,27 @@
 </p>
 
 <p align="center">
-    <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/screenshot1.png?raw=true" width="600">
+  This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality (VRChat).
 </p>
 
-This is the main repository for Oyasumi. It is an open source tool to assist with sleeping in virtual reality (VRChat).
+<p align="center">
+  If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>!
+</p>
 
 ## Getting started
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
 
-## Features
+| Sleeping Animations | GPU Power Limiting | Sleep Detection | Battery Automations | Device Overview |
+|---------------------|--------------------|-----------------|---------------------|-----------------|
+|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|
 
-- :wrench: Turning off all trackers and/or controllers with a single click.
+## Features
+<img align="right" src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/sleeping_pose.gif" height="444">
+
 - :dizzy: Automatic sleep animations with pose detection
   - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
-  - Trigger your own animations! A full OSC script editor is included. 
+  - Trigger your own animations with the included OSC script editors.
   - Presets for popular locomotion assets, including:
     - [ごろ寝システム v2.2](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean) (Sleep System v2.2 by minminmiin)
     - ~~[GoGo Loco v1.8.0](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)~~ (Support Pending)
@@ -37,6 +43,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
     - When putting them on a charger
+- :wrench: Turning off all trackers and/or controllers with a single click.
 - :zzz: Manage automations with a sleep mode in various ways:
   - Detect falling asleep:
     - When a controller or tracker battery percentage falls below a threshold
@@ -48,6 +55,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 - 🗺️ Multi language support
   - English
   - Dutch
+
+
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 
