@@ -56,6 +56,7 @@ import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
 import { UpdateService } from './services/update.service';
 import { UpdateModalComponent } from './components/update-modal/update-modal.component';
+import { TelemetryService } from './services/telemetry.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -134,6 +135,7 @@ export class AppModule {
     private osc: OscService,
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
+    private telemetry: TelemetryService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -152,7 +154,7 @@ export class AppModule {
   }
 
   async init() {
-    await Promise.all([await this.update.init()]);
+    await Promise.all([await this.update.init(), await this.telemetry.init()]);
     await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
     await this.sleep.init();

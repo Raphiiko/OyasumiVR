@@ -17,6 +17,9 @@
 }
 
 .setting-category {
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
   p {
     white-space: pre-wrap;
   }

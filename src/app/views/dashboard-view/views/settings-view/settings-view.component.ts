@@ -21,6 +21,8 @@ import { UpdateService } from '../../../../services/update.service';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { HttpClient } from '@angular/common/http';
 import { marked } from 'marked';
+import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from 'src/app/models/telemetry-settings';
+import { TelemetryService } from '../../../../services/telemetry.service';
 
 @Component({
   selector: 'app-settings-view',
@@ -34,6 +36,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<void> = new Subject<void>();
   appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  telemetrySettings: TelemetrySettings = cloneDeep(TELEMETRY_SETTINGS_DEFAULT);
   lighthouseConsoleStatus: LighthouseConsoleStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
     text: string;
@@ -65,7 +68,8 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private lighthouse: LighthouseService,
     private update: UpdateService,
-    private http: HttpClient
+    private http: HttpClient,
+    private telemetry: TelemetryService
   ) {}
 
   async ngOnInit() {
@@ -79,6 +83,9 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
       });
     this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((appSettings) => {
       this.appSettings = appSettings;
+    });
+    this.telemetry.settings.pipe(takeUntil(this.destroy$)).subscribe((telemetrySettings) => {
+      this.telemetrySettings = telemetrySettings;
     });
     this.version = await getVersion();
     if (this.version === '0.0.0') this.version = 'DEV';
@@ -209,6 +216,10 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   setAskForAdminOnStart(enabled: boolean) {
     this.settingsService.updateSettings({ askForAdminOnStart: enabled });
+  }
+
+  setTelemetryEnabled(enabled: boolean) {
+    this.telemetry.updateSettings({ enabled });
   }
 
   checkForUpdates() {}
