@@ -68,6 +68,8 @@ export class TelemetryService {
         await this.fetchManifest();
         if (!this.manifest) return false;
       }
+      // Stop if telemetry is not enabled
+      if (!this._settings.value.enabled) return false;
       // Stop if last heartbeat was sent less than 24 hours ago
       if (Date.now() - this._settings.value.lastHeartbeat < 1000 * 60 * 60 * 24) return false;
       // Send heartbeat
