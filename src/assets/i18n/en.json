@@ -124,7 +124,7 @@
       "onCharge": {
         "title": "When charging them",
         "description": "Have devices turn off automatically when you put them on the charger.",
-      "optionControllers": "Turn off controllers",
+        "optionControllers": "Turn off controllers",
         "optionTrackers": "Turn off trackers"
       }
     }
@@ -194,6 +194,11 @@
         "title": "Administrator Privileges",
         "label": "Ask for administrator privileges on startup",
         "description": "Oyasumi needs administrator privileges to be able to control your GPU's power limits. If you enable this, Oyasumi will ask for administrator privileges when it starts up."
+      },
+      "telemetry": {
+        "title": "Telemetry",
+        "label": "Send anonymous usage data",
+        "description": "The data that will be sent is limited to the version of Oyasumi that you are using. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
       }
     },
     "updates": {
