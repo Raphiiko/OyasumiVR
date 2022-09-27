@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Preset for [GoGo Loco v1.7.1 by franada](https://booth.pm/en/items/3290806).
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
+- In-app updater & changelog
 - Prepackaged Japanese font
 - App icon
 
