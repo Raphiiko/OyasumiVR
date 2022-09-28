@@ -55,6 +55,10 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
       code: 'nl',
       label: 'Nederlands',
     },
+    {
+      code: 'jp',
+      label: '日本語',
+    },
   ];
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
   version: string = '';

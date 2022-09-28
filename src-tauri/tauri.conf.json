@@ -64,7 +64,8 @@
         "wix": {
           "language": [
             "en-US",
-            "nl-NL"
+            "nl-NL",
+            "jp-JP"
           ]
         }
       }
