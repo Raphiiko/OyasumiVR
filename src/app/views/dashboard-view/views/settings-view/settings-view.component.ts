@@ -11,18 +11,18 @@ import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../services/automation-config.service';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../../../../globals';
+import { LANGUAGES, SETTINGS_FILE } from '../../../../globals';
 import { Router } from '@angular/router';
 import { readTextFile } from '@tauri-apps/api/fs';
 import { TranslateService } from '@ngx-translate/core';
 import { LighthouseService } from '../../../../services/lighthouse.service';
-import { getVersion } from '@tauri-apps/api/app';
 import { UpdateService } from '../../../../services/update.service';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { HttpClient } from '@angular/common/http';
 import { marked } from 'marked';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from 'src/app/models/telemetry-settings';
 import { TelemetryService } from '../../../../services/telemetry.service';
+import { getVersion } from '../../../../utils/app-utils';
 
 @Component({
   selector: 'app-settings-view',
@@ -45,21 +45,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
   activeTab: 'GENERAL' | 'UPDATES' | 'DEBUG' = 'GENERAL';
-  languages: Array<{ code: string; label: string; flag?: string }> = [
-    {
-      code: 'en',
-      label: 'English',
-      flag: 'gb',
-    },
-    {
-      code: 'nl',
-      label: 'Nederlands',
-    },
-    {
-      code: 'jp',
-      label: '日本語',
-    },
-  ];
+  languages = LANGUAGES;
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
   version: string = '';
   changelog: string = '';
@@ -92,7 +78,6 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
       this.telemetrySettings = telemetrySettings;
     });
     this.version = await getVersion();
-    if (this.version === '0.0.0') this.version = 'DEV';
     this.update.updateAvailable.pipe(takeUntil(this.destroy$)).subscribe((available) => {
       this.updateAvailable = available;
     });

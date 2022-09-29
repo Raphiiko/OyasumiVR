@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '../../../../utils/app-utils';
 
 @Component({
   selector: 'app-about-view',
@@ -13,6 +13,5 @@ export class AboutViewComponent implements OnInit {
 
   async ngOnInit() {
     this.version = await getVersion();
-    if (this.version === '0.0.0') this.version = 'DEV';
   }
 }

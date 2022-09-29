@@ -19,6 +19,7 @@ import {
   DefaultSimpleModalOptionConfig,
   defaultSimpleModalOptions,
   SimpleModalModule,
+  SimpleModalService,
 } from 'ngx-simple-modal';
 import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
@@ -57,6 +58,9 @@ import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.
 import { UpdateService } from './services/update.service';
 import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 import { TelemetryService } from './services/telemetry.service';
+import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
+import { AppSettingsService } from './services/app-settings.service';
+import { filter } from 'rxjs';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -92,6 +96,7 @@ export function createTranslateLoader(http: HttpClient) {
     OscScriptSimpleEditorComponent,
     ConfirmModalComponent,
     UpdateModalComponent,
+    LanguageSelectModalComponent,
   ],
   imports: [
     CommonModule,
@@ -136,6 +141,8 @@ export class AppModule {
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
     private telemetry: TelemetryService,
+    private appSettings: AppSettingsService,
+    private modalService: SimpleModalService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -154,6 +161,7 @@ export class AppModule {
   }
 
   async init() {
+    await this.appSettings.init();
     await Promise.all([await this.update.init(), await this.telemetry.init()]);
     await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
@@ -175,5 +183,16 @@ export class AppModule {
     ]);
     // OSC automations
     await Promise.all([this.sleepingAnimationsAutomationService.init()]);
+    // Language selection modal
+    this.appSettings.loadedDefaults
+      .pipe(filter((loadedDefaults) => loadedDefaults))
+      .subscribe(() => {
+        this.modalService
+          .addModal(LanguageSelectModalComponent, void 0, {
+            closeOnEscape: false,
+            closeOnClickOutside: false,
+          })
+          .subscribe();
+      });
   }
 }

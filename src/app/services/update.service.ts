@@ -6,7 +6,7 @@ import { listen } from '@tauri-apps/api/event';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '../utils/app-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +44,7 @@ export class UpdateService {
 
   async checkForUpdate(showDialog = false) {
     // Don't ever update the dev version
-    if ((await getVersion()) === '0.0.0') {
+    if ((await getVersion()) === 'DEV') {
       this._updateAvailable.next({
         checked: true,
       });

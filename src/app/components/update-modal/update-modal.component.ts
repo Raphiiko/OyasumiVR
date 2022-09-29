@@ -3,7 +3,7 @@ import { UpdateManifest } from '@tauri-apps/api/updater';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { UpdateService } from '../../services/update.service';
 import { fadeUp, hshrink } from '../../utils/animations';
-import { getVersion } from '@tauri-apps/api/app';
+import { getVersion } from '../../utils/app-utils';
 
 interface UpdateModalInputModel {
   manifest?: UpdateManifest;
@@ -31,7 +31,6 @@ export class UpdateModalComponent
 
   async ngOnInit() {
     this.currentVersion = await getVersion();
-    if (this.currentVersion === '0.0.0') this.currentVersion = 'DEV';
   }
 
   async updateLater() {
