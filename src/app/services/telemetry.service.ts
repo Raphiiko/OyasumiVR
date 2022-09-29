@@ -7,8 +7,8 @@ import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemet
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { getVersion } from '@tauri-apps/api/app';
-import { AppSettings } from '../models/settings';
 import { cloneDeep } from 'lodash';
+import { AppSettingsService } from './app-settings.service';
 
 export const SETTINGS_KEY_TELEMETRY_SETTINGS = 'TELEMETRY_SETTINGS';
 
@@ -23,12 +23,12 @@ export class TelemetryService {
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
   private manifest?: TelemetryManifest;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private appSettings: AppSettingsService) {}
 
   async init() {
     await this.loadSettings();
     if (!isDevMode()) {
-      await this.scheduleTelemetry();
+      setTimeout(() => this.scheduleTelemetry(), 10000);
     }
   }
 
@@ -83,6 +83,9 @@ export class TelemetryService {
           {
             telemetryId: this._settings.value.telemetryId,
             version: await getVersion(),
+            lang: await firstValueFrom(this.appSettings.settings).then(
+              (settings) => settings.userLanguage
+            ),
           },
           { headers, observe: 'response' }
         )
