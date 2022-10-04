@@ -28,7 +28,7 @@ export class TelemetryService {
   async init() {
     await this.loadSettings();
     if (!isDevMode()) {
-      await this.scheduleTelemetry();
+      setTimeout(() => this.scheduleTelemetry(), 10000);
     }
   }
 
