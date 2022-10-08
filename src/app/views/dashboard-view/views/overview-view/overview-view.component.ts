@@ -17,6 +17,7 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
   sleepModeActive = false;
   wew = false;
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
+  credentials: any = {};
 
   constructor(
     private sleep: SleepService,
@@ -52,5 +53,12 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
   }
 
   async login() {
+    try {
+      await this.vrchat.login(this.credentials.username, this.credentials.password);
+    } catch (e) {
+      if (e === '2FA_REQUIRED') {
+        await this.vrchat.verify2FA(this.credentials.code);
+      }
+    }
   }
 }

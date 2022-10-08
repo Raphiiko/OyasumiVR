@@ -30,7 +30,10 @@
       </button>
     </div>
   </div>
+  <input type='text' placeholder='username' (change)='credentials.username = username.value' #username/>
+  <input type='text' placeholder='password' (change)='credentials.password = password.value' #password/>
+  <input type='text' placeholder='code' (change)='credentials.code = code.value' #code/>
   <button (click)='login()'>LOGIN</button>
-  <pre style='overflow: auto'>{{vrchat | json}}</pre>
+  <pre style='overflow: auto'>{{vrchat.status | async | json}}</pre>
 </div>
 <app-device-list [@noop]></app-device-list>

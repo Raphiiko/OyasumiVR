@@ -6,7 +6,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, interval, Observable } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
@@ -24,9 +24,13 @@ export class VRChatService {
   private settings: BehaviorSubject<VRChatApiSettings> = new BehaviorSubject<VRChatApiSettings>(
     VRCHAT_API_SETTINGS_DEFAULT
   );
-  private status: VRChatServiceStatus = 'PRE_INIT';
+  private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(
+    'PRE_INIT'
+  );
   private user?: CurrentUser;
   private userAgent!: string;
+  private socket?: WebSocket;
+  public status: Observable<VRChatServiceStatus> = this._status.asObservable();
 
   constructor() {}
 
@@ -36,10 +40,12 @@ export class VRChatService {
     this.http = await getClient();
     // Construct user agent
     this.userAgent = `Oyasumi/${await getVersion()} (https://github.com/Raphiiko/Oyasumi)`;
+    // Setup socket connection management
+    await this.manageSocketConnection();
     // Fetch the api config if needed
     if (!this.settings.value.apiKey) await this.fetchApiConfig();
     // If we could not, error out (reinit required)
-    if (this.status === 'ERROR') return;
+    if (this._status.value === 'ERROR') return;
     // If we already have an auth cookie, get the current user for it
     if (this.settings.value.authCookie) {
       try {
@@ -64,7 +70,18 @@ export class VRChatService {
       }
     }
     // Depending on if we have a user, set the status
-    this.status = this.user ? 'LOGGED_IN' : 'LOGGED_OUT';
+    const newStatus = this.user ? 'LOGGED_IN' : 'LOGGED_OUT';
+    if (newStatus !== this._status.value) this._status.next(newStatus);
+  }
+
+  public async logout() {
+    await this.updateSettings({
+      authCookie: undefined,
+      authCookieExpiry: undefined,
+      twoFactorCookie: undefined,
+      twoFactorCookieExpiry: undefined,
+    });
+    this._status.next('LOGGED_OUT');
   }
 
   // Will throw in the case of:
@@ -73,16 +90,16 @@ export class VRChatService {
   // - CHECK_EMAIL
   // - UNEXPECTED_RESPONSE
   public async login(username: string, password: string): Promise<void> {
-    if (this.status !== 'LOGGED_OUT')
+    if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
     let user: CurrentUser;
     this.user = await this.getCurrentUser({ username, password });
     // If we got here, we have a user, so we are logged in (and have cookies)
-    this.status = 'LOGGED_IN';
+    this._status.next('LOGGED_IN');
   }
 
   public async verify2FA(code: string) {
-    if (this.status !== 'LOGGED_OUT')
+    if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling verify2FA() while already logged in');
     const { authCookie, authCookieExpiry } = this.settings.value;
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
@@ -110,7 +127,52 @@ export class VRChatService {
     // Try getting the current user again
     this.user = await this.getCurrentUser();
     // If we got here, we are logged in (and have cookies)
-    this.status = 'LOGGED_IN';
+    this._status.next('LOGGED_IN');
+  }
+
+  private async manageSocketConnection() {
+    const buildSocket = () => {
+      this.socket = new WebSocket(
+        'wss://pipeline.vrchat.cloud/?authToken=' + this.settings.value.authCookie
+      );
+      this.socket.onopen = () => this.onSocketEvent('OPEN');
+      this.socket.onerror = () => this.onSocketEvent('ERROR');
+      this.socket.onclose = () => this.onSocketEvent('CLOSE');
+      this.socket.onmessage = (message) => this.onSocketEvent('MESSAGE', message);
+    };
+    // Connect and disconnect based on login status
+    this._status.pipe(distinctUntilChanged()).subscribe((status) => {
+      switch (status) {
+        case 'LOGGED_OUT':
+          if (this.socket) {
+            try {
+              this.socket.close();
+            } catch (e) {
+              // Ignore any error, we just want to disconnect
+            }
+            this.socket = undefined;
+          }
+          break;
+        case 'LOGGED_IN':
+          buildSocket();
+          break;
+      }
+    });
+    // Check connection intermittently in case of dropouts
+    interval(10000).subscribe(() => {
+      if (this.socket && this.socket.readyState !== WebSocket.OPEN) {
+        this.socket.close();
+        this.socket = undefined;
+        buildSocket();
+      }
+    });
+  }
+
+  private async onSocketEvent(
+    event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
+    message?: MessageEvent
+  ) {
+    console.log(event, message);
   }
 
   private async getCurrentUser(credentials?: {
@@ -173,7 +235,7 @@ export class VRChatService {
       // this.apiConfig = response.data;
       await this.parseCookies(response);
     } else {
-      this.status = 'ERROR';
+      this._status.next('ERROR');
     }
   }
 
