@@ -61,6 +61,7 @@ import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
 import { filter } from 'rxjs';
+import { VRChatService } from './services/vrchat.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -143,6 +144,7 @@ export class AppModule {
     private telemetry: TelemetryService,
     private appSettings: AppSettingsService,
     private modalService: SimpleModalService,
+    private vrchat: VRChatService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -162,10 +164,14 @@ export class AppModule {
 
   async init() {
     await this.appSettings.init();
-    await Promise.all([await this.update.init(), await this.telemetry.init()]);
+    await Promise.all([
+      await this.update.init(),
+      await this.telemetry.init(),
+    ]);
     await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
     await this.sleep.init();
+    await this.vrchat.init();
     // GPU automations
     await this.gpuAutomations.init();
     // Sleep mode automations

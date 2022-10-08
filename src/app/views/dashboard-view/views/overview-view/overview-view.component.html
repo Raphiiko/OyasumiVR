@@ -1,4 +1,4 @@
-<div class="overview">
+<div class="overview" style='overflow: hidden;'>
   <div class="sleep-mode" [class.active]="sleepModeActive">
     <div class="sleep-mode-info">
       <div class="label" translate>overview.sleep-mode.label</div>
@@ -30,5 +30,7 @@
       </button>
     </div>
   </div>
+  <button (click)='login()'>LOGIN</button>
+  <pre style='overflow: auto'>{{vrchat | json}}</pre>
 </div>
 <app-device-list [@noop]></app-device-list>

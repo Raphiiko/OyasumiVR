@@ -4,6 +4,7 @@ import { SleepService } from '../../../../services/sleep.service';
 import { filter, map, Subject, takeUntil, tap } from 'rxjs';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
+import { VRChatService } from '../../../../services/vrchat.service';
 
 @Component({
   selector: 'app-overview-view',
@@ -17,7 +18,12 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
   wew = false;
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
 
-  constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
+  constructor(
+    private sleep: SleepService,
+    public openvr: OpenVRService,
+    public osc: OscService,
+    public vrchat: VRChatService
+  ) {}
 
   ngOnInit(): void {
     this.sleep.mode
@@ -43,5 +49,8 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
+  }
+
+  async login() {
   }
 }

@@ -26,6 +26,10 @@
       },
       "process": {
         "exit": true
+      },
+      "http": {
+        "request": true,
+        "scope": ["https://api.vrchat.cloud/api/1/*"]
       }
     },
     "bundle": {

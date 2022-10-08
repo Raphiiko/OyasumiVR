@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 
 const migrations: { [v: number]: (data: any) => any } = {
-  1: from0to1,
+  1: toLatest,
   2: toLatest,
   3: from2to3,
 };
