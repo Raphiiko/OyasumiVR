@@ -160,8 +160,6 @@ pub fn spawn_openvr_background_thread() {
                             context.shutdown();
                         }
                         *OVR_STATUS.lock().unwrap() = String::from("QUIT");
-                        let window_guard = TAURI_WINDOW.lock().unwrap();
-                        let window = window_guard.as_ref().unwrap();
                         window.emit_all("OVR_QUIT", ()).unwrap();
                         true
                     }
