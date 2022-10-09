@@ -19,12 +19,7 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
   credentials: any = {};
 
-  constructor(
-    private sleep: SleepService,
-    public openvr: OpenVRService,
-    public osc: OscService,
-    public vrchat: VRChatService
-  ) {}
+  constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
 
   ngOnInit(): void {
     this.sleep.mode
@@ -50,15 +45,5 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.destroy$.next();
-  }
-
-  async login() {
-    try {
-      await this.vrchat.login(this.credentials.username, this.credentials.password);
-    } catch (e) {
-      if (e === '2FA_REQUIRED') {
-        await this.vrchat.verify2FA(this.credentials.code);
-      }
-    }
   }
 }

@@ -1,0 +1,37 @@
+<div class="pane modal" @fadeUp>
+  <div class="pane-title" translate>comp.vrchat-login-modal.title</div>
+  <div class="pane-content">
+    <p class="label" translate>comp.vrchat-login-modal.username</p>
+    <input type="text" (input)="username = usernameInput.value" maxlength="1024" #usernameInput />
+    <p class="label" translate>comp.vrchat-login-modal.password</p>
+    <input
+      type="password"
+      (input)="password = passwordInput.value"
+      maxlength="1024"
+      #passwordInput
+    />
+    <div class="alert error" @vshrink *ngIf="error">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> error </i>
+      </div>
+      <div class="alert-content">{{ error | translate }}</div>
+    </div>
+    <p translate>settings.vrchat.logIn.disclaimers.use</p>
+    <p translate>settings.vrchat.logIn.disclaimers.brand</p>
+    <p translate>settings.vrchat.logIn.disclaimers.liability</p>
+  </div>
+  <div class="pane-actions stretch">
+    <button class="btn btn-secondary" (click)="close()" [disabled]="loggingIn" translate
+      >shared.modals.cancel</button
+    >
+    <button
+      class="btn btn-primary"
+      [disabled]="loggingIn || !username.trim() || !password.trim()"
+      (click)="login()"
+    >
+      <div class="small-spinner" *ngIf="loggingIn" @hshrink></div>
+      <span *ngIf="!loggingIn" @hshrink translate>shared.modals.login</span>
+    </button>
+  </div>
+</div>

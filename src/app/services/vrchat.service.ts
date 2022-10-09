@@ -14,7 +14,7 @@ import { handleVRChatEvent } from './vrchat-events/vrchat-event-handler';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
-type VRChatServiceStatus = 'PRE_INIT' | 'ERROR' | 'LOGGED_OUT' | 'LOGGED_IN';
+export type VRChatServiceStatus = 'PRE_INIT' | 'ERROR' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +28,10 @@ export class VRChatService {
   private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(
     'PRE_INIT'
   );
-  private user?: CurrentUser;
+  private _user: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(
+    null
+  );
+  public user: Observable<CurrentUser | null> = this._user.asObservable();
   private userAgent!: string;
   private socket?: WebSocket;
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
@@ -50,7 +53,7 @@ export class VRChatService {
     // If we already have an auth cookie, get the current user for it
     if (this.settings.value.authCookie) {
       try {
-        this.user = await this.getCurrentUser();
+        this._user.next(await this.getCurrentUser());
       } catch (e) {
         switch (e) {
           case 'INVALID_CREDENTIALS':
@@ -71,9 +74,9 @@ export class VRChatService {
       }
     }
     // Depending on if we have a user, set the status
-    const newStatus = this.user ? 'LOGGED_IN' : 'LOGGED_OUT';
+    const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
-    console.log(this.user);
+    console.log(this._user.value);
   }
 
   //
@@ -98,12 +101,14 @@ export class VRChatService {
   public async login(username: string, password: string): Promise<void> {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
-    let user: CurrentUser;
-    this.user = await this.getCurrentUser({ username, password });
+    this._user.next(await this.getCurrentUser({ username, password }));
     // If we got here, we have a user, so we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
   }
 
+  // Will throw in the case of:
+  // - INVALID_CODE
+  // - UNEXPECTED_RESPONSE
   public async verify2FA(code: string) {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling verify2FA() while already logged in');
@@ -131,7 +136,7 @@ export class VRChatService {
     // Process any auth cookie if we get any
     await this.parseCookies(response);
     // Try getting the current user again
-    this.user = await this.getCurrentUser();
+    this._user.next(await this.getCurrentUser());
     // If we got here, we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
   }

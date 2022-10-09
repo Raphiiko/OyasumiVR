@@ -1,4 +1,4 @@
-<div class="overview" style='overflow: hidden;'>
+<div class="overview" style="overflow: hidden">
   <div class="sleep-mode" [class.active]="sleepModeActive">
     <div class="sleep-mode-info">
       <div class="label" translate>overview.sleep-mode.label</div>
@@ -30,10 +30,5 @@
       </button>
     </div>
   </div>
-  <input type='text' placeholder='username' (change)='credentials.username = username.value' #username/>
-  <input type='text' placeholder='password' (change)='credentials.password = password.value' #password/>
-  <input type='text' placeholder='code' (change)='credentials.code = code.value' #code/>
-  <button (click)='login()'>LOGIN</button>
-  <pre style='overflow: auto'>{{vrchat.status | async | json}}</pre>
 </div>
-<app-device-list [@noop]></app-device-list>
+<app-device-list @noop></app-device-list>

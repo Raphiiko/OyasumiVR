@@ -1,20 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { noop } from '../../../../../utils/animations';
+import { noop, vshrink } from '../../../../../utils/animations';
+import { VRChatService, VRChatServiceStatus } from '../../../../../services/vrchat.service';
+import { filter, takeUntil } from 'rxjs';
+import { CurrentUser as VRChatUser } from 'vrchat';
+import { SimpleModalService } from 'ngx-simple-modal';
+import { VRChatLoginModalComponent } from '../../../../../components/vrchat-login-modal/vrchat-login-modal.component';
 
 @Component({
   selector: 'app-settings-vrchat-tab',
   templateUrl: './settings-vrchat-tab.component.html',
   styleUrls: ['./settings-vrchat-tab.component.scss'],
-  animations: [],
+  animations: [vshrink()],
 })
 export class SettingsVRChatTabComponent extends SettingsTabComponent {
-  constructor(settingsService: AppSettingsService) {
+  vrchatStatus: VRChatServiceStatus = 'PRE_INIT';
+  currentUser: VRChatUser | null = null;
+
+  constructor(
+    settingsService: AppSettingsService,
+    private vrchat: VRChatService,
+    private modalService: SimpleModalService
+  ) {
     super(settingsService);
   }
 
   override async ngOnInit() {
     super.ngOnInit();
+    this.vrchat.status.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+      this.vrchatStatus = status;
+    });
+    this.vrchat.user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.currentUser = user;
+    });
+  }
+
+  login() {
+    this.modalService
+      .addModal(
+        VRChatLoginModalComponent,
+        {},
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      )
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {});
+  }
+
+  async logout() {
+    await this.vrchat.logout();
   }
 }

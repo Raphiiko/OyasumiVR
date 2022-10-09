@@ -1,1 +1,40 @@
-<p>settings-vrchat-tab works!</p>
+<div class="setting-category">
+  <h2 translate>settings.vrchat.logIn.title</h2>
+  <p translate>settings.vrchat.logIn.description</p>
+  <div class="alert error" *ngIf="vrchatStatus === 'ERROR'" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> error </i>
+    </div>
+    <div class="alert-content" translate>settings.vrchat.logIn.errors.initError</div>
+  </div>
+  <div
+    class="pane login-container"
+    *ngIf="['LOGGED_IN', 'LOGGED_OUT'].includes(vrchatStatus)"
+    @vshrink
+  >
+    <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_IN'">
+      <p
+        ><span
+          translate="settings.vrchat.logIn.loggedIn.title"
+          [translateParams]="{ name: currentUser?.displayName }"
+        ></span
+        ><br /><span translate>settings.vrchat.logIn.loggedIn.subtext</span></p
+      >
+      <button class="btn btn-secondary" (click)="logout()" translate
+        >settings.vrchat.logIn.loggedIn.logOut</button
+      >
+    </div>
+    <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_OUT'">
+      <p
+        ><span translate>settings.vrchat.logIn.loggedOut.title</span><br /><span translate
+          >settings.vrchat.logIn.loggedOut.subtext</span
+        ></p
+      >
+      <button class="btn btn-primary" (click)="login()" translate>shared.modals.login</button>
+    </div>
+  </div>
+  <p translate>settings.vrchat.logIn.disclaimers.use</p>
+  <p translate>settings.vrchat.logIn.disclaimers.brand</p>
+  <p translate>settings.vrchat.logIn.disclaimers.liability</p>
+</div>

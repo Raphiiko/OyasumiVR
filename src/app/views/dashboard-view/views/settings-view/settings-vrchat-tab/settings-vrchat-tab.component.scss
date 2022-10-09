@@ -1,1 +1,25 @@
 @import '../settings-tab/settings-tab.component.scss';
+
+.alert {
+  margin-bottom: 1em;
+}
+
+.login-container {
+  background: var(--color-surface-1);
+  margin-bottom: 1em;
+  .pane-content {
+    padding: 1em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      margin: 0;
+      white-space: pre-wrap;
+      span:first-child {
+        font-size: 1.5em;
+        color: var(--color-text-0);
+      }
+    }
+  }
+}

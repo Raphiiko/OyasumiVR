@@ -4,7 +4,7 @@
     "singleQuote": true,
     "trailingComma": "es5",
     "printWidth": 100,
-    "htmlWhitespaceSensitivity": "ignore",
+    "htmlWhitespaceSensitivity": "strict",
     "endOfLine": "lf",
     "importOrder": ["^[./]"],
     "importOrderSeparation": true,

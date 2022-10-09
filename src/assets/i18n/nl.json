@@ -169,6 +169,7 @@
     "title": "Instellingen",
     "tab": {
       "general": "Algemeen",
+      "vrchat": "VRChat",
       "updates": "Updates",
       "debug": "Debug"
     },
