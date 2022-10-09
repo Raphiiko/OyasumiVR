@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, getClient, ResponseType, Response, Body } from '@tauri-apps/api/http';
-import type { APIConfig, CurrentUser } from 'vrchat';
+import type { APIConfig, CurrentUser, Notification } from 'vrchat';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
@@ -10,6 +10,7 @@ import { BehaviorSubject, distinctUntilChanged, interval, Observable } from 'rxj
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
+import { handleVRChatEvent } from './vrchat-events/vrchat-event-handler';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -72,7 +73,12 @@ export class VRChatService {
     // Depending on if we have a user, set the status
     const newStatus = this.user ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
+    console.log(this.user);
   }
+
+  //
+  // PUBLIC API
+  //
 
   public async logout() {
     await this.updateSettings({
@@ -130,6 +136,10 @@ export class VRChatService {
     this._status.next('LOGGED_IN');
   }
 
+  //
+  // INTERNALS
+  //
+
   private async manageSocketConnection() {
     const buildSocket = () => {
       this.socket = new WebSocket(
@@ -172,7 +182,9 @@ export class VRChatService {
     event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
     message?: MessageEvent
   ) {
-    console.log(event, message);
+    if (event !== 'MESSAGE') return;
+    const data = JSON.parse(message?.data as string);
+    handleVRChatEvent(data.type, data.content);
   }
 
   private async getCurrentUser(credentials?: {

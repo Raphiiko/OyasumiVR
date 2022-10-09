@@ -62,6 +62,10 @@ import { LanguageSelectModalComponent } from './components/language-select-modal
 import { AppSettingsService } from './services/app-settings.service';
 import { filter } from 'rxjs';
 import { VRChatService } from './services/vrchat.service';
+import { SettingsGeneralTabComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/settings-general-tab.component';
+import { SettingsUpdatesTabComponent } from './views/dashboard-view/views/settings-view/settings-updates-tab/settings-updates-tab.component';
+import { SettingsDebugTabComponent } from './views/dashboard-view/views/settings-view/settings-debug-tab/settings-debug-tab.component';
+import { SettingsVRChatTabComponent } from './views/dashboard-view/views/settings-view/settings-vrchat-tab/settings-vrchat-tab.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -98,6 +102,10 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmModalComponent,
     UpdateModalComponent,
     LanguageSelectModalComponent,
+    SettingsGeneralTabComponent,
+    SettingsUpdatesTabComponent,
+    SettingsDebugTabComponent,
+    SettingsVRChatTabComponent,
   ],
   imports: [
     CommonModule,
@@ -164,10 +172,7 @@ export class AppModule {
 
   async init() {
     await this.appSettings.init();
-    await Promise.all([
-      await this.update.init(),
-      await this.telemetry.init(),
-    ]);
+    await Promise.all([await this.update.init(), await this.telemetry.init()]);
     await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
     await this.nvml.init();
     await this.sleep.init();
