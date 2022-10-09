@@ -46,7 +46,6 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
           closeOnClickOutside: false,
         }
       )
-      .pipe(filter((data) => !!data))
       .subscribe((data) => {});
   }
 

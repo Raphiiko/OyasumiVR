@@ -11,6 +11,8 @@ import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { handleVRChatEvent } from './vrchat-events/vrchat-event-handler';
+import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
+import { SimpleModalService } from 'ngx-simple-modal';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -35,13 +37,14 @@ export class VRChatService {
   private userAgent!: string;
   private socket?: WebSocket;
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
+  private loggedOutDueToExpiry = false;
 
-  constructor() {}
+  constructor(private modalService: SimpleModalService) {}
 
   async init() {
+    this.http = await getClient();
     // Load settings from disk
     await this.loadSettings();
-    this.http = await getClient();
     // Construct user agent
     this.userAgent = `Oyasumi/${await getVersion()} (https://github.com/Raphiiko/Oyasumi)`;
     // Setup socket connection management
@@ -77,6 +80,20 @@ export class VRChatService {
     const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
     console.log(this._user.value);
+    // Show the login modal if we were just logged out due to token expiry
+    if (this.loggedOutDueToExpiry) {
+      await this.logout();
+      this.modalService
+        .addModal(
+          VRChatLoginModalComponent,
+          {},
+          {
+            closeOnEscape: false,
+            closeOnClickOutside: false,
+          }
+        )
+        .subscribe(() => {});
+    }
   }
 
   //
@@ -300,17 +317,21 @@ export class VRChatService {
     );
     settings = settings ? migrateVRChatApiSettings(settings) : this.settings.value;
     // Handle cookie expiry
+    this.loggedOutDueToExpiry = false;
     if (settings.apiKeyExpiry && settings.apiKeyExpiry < Date.now() / 1000) {
       settings.apiKey = undefined;
       settings.apiKeyExpiry = undefined;
+      this.loggedOutDueToExpiry = true;
     }
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
       settings.authCookie = undefined;
       settings.authCookieExpiry = undefined;
+      this.loggedOutDueToExpiry = true;
     }
     if (settings.twoFactorCookieExpiry && settings.twoFactorCookieExpiry < Date.now() / 1000) {
       settings.twoFactorCookie = undefined;
       settings.twoFactorCookieExpiry = undefined;
+      this.loggedOutDueToExpiry = true;
     }
     // Finish loading settings & write changes to disk
     this.settings.next(settings);
