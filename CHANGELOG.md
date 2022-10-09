@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - The main window can now be interacted with through the SteamVR overlay or other overlays like XSOverlay, when given administrator privileges.
+- Fixed turning off devices sometimes triggering the "disabling sleep mode when a device is turned on" automation.
 
 ## [0.3.0]
 
