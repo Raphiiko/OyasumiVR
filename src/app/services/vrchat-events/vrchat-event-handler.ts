@@ -5,9 +5,7 @@ export interface VRChatEventHandler {
   handle: (content: string) => void;
 }
 
-const handlers: VRChatEventHandler[] = [
-  new NotificationHandler(),
-];
+const handlers: VRChatEventHandler[] = [new NotificationHandler()];
 
 export const handleVRChatEvent = (type: string, content: string) => {
   const handler = handlers.find((handler) => handler.type === type);

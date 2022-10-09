@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { LighthouseConsoleStatus } from '../../../../../services/openvr.service';
@@ -12,7 +12,7 @@ import {
 } from '../../../../../models/telemetry-settings';
 import { cloneDeep } from 'lodash';
 import { LANGUAGES } from '../../../../../globals';
-import { noop, vshrink } from '../../../../../utils/animations';
+import { vshrink } from '../../../../../utils/animations';
 
 @Component({
   selector: 'app-settings-general-tab',

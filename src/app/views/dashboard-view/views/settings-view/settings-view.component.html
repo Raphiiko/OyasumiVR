@@ -24,8 +24,24 @@
       <div class="tab-label" translate>settings.tab.debug</div>
     </div>
   </div>
-  <app-settings-general-tab class="pane-content" *ngIf="activeTab === 'GENERAL'" @noop></app-settings-general-tab>
-  <app-settings-vrchat-tab class="pane-content" *ngIf="activeTab === 'VRCHAT'" @noop></app-settings-vrchat-tab>
-  <app-settings-updates-tab class="pane-content" *ngIf="activeTab === 'UPDATES'" @noop></app-settings-updates-tab>
-  <app-settings-debug-tab class="pane-content" *ngIf="activeTab === 'DEBUG'" @noop></app-settings-debug-tab>
+  <app-settings-general-tab
+    class="pane-content"
+    *ngIf="activeTab === 'GENERAL'"
+    @noop
+  ></app-settings-general-tab>
+  <app-settings-vrchat-tab
+    class="pane-content"
+    *ngIf="activeTab === 'VRCHAT'"
+    @noop
+  ></app-settings-vrchat-tab>
+  <app-settings-updates-tab
+    class="pane-content"
+    *ngIf="activeTab === 'UPDATES'"
+    @noop
+  ></app-settings-updates-tab>
+  <app-settings-debug-tab
+    class="pane-content"
+    *ngIf="activeTab === 'DEBUG'"
+    @noop
+  ></app-settings-debug-tab>
 </div>

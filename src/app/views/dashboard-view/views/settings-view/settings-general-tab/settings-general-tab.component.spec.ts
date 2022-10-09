@@ -8,9 +8,8 @@ describe('SettingsGeneralTabComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SettingsGeneralTabComponent ]
-    })
-    .compileComponents();
+      declarations: [SettingsGeneralTabComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsGeneralTabComponent);
     component = fixture.componentInstance;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { fadeUp } from '../../utils/animations';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { LANGUAGES } from 'src/app/globals';

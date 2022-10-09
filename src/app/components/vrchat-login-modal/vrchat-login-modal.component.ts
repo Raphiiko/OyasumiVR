@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SimpleModalComponent, SimpleModalService } from 'ngx-simple-modal';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { VRChatService } from '../../services/vrchat.service';
-import { filter, firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map } from 'rxjs';
 import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 
 interface VRChatLoginModalInputModel {}

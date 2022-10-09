@@ -20,8 +20,7 @@ export class AppSettingsService {
   private _loadedDefaults: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   loadedDefaults: Observable<boolean> = this._loadedDefaults.asObservable();
 
-  constructor() {
-  }
+  constructor() {}
 
   async init() {
     await this.loadSettings();

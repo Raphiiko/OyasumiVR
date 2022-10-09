@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Client, getClient, ResponseType, Response, Body } from '@tauri-apps/api/http';
-import type { APIConfig, CurrentUser, Notification } from 'vrchat';
+import { Body, Client, getClient, Response, ResponseType } from '@tauri-apps/api/http';
+import type { APIConfig, CurrentUser } from 'vrchat';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';

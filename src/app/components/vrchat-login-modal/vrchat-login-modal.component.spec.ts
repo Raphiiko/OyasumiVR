@@ -8,9 +8,8 @@ describe('VrchatLoginModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VRChatLoginModalComponent ]
-    })
-    .compileComponents();
+      declarations: [VRChatLoginModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(VRChatLoginModalComponent);
     component = fixture.componentInstance;

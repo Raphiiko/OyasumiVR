@@ -1,5 +1,4 @@
 import { cloneDeep } from 'lodash';
-import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 
 const migrations: { [v: number]: (data: any) => any } = {

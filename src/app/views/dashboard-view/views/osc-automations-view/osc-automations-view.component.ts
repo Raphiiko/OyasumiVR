@@ -67,7 +67,9 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
       this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
       this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
       if (this.config.preset && this.config.preset !== 'CUSTOM') {
-        this.presetNotes = SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === this.config.preset)!.notes || [];
+        this.presetNotes =
+          SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === this.config.preset)!.notes ||
+          [];
       }
     });
     this.sleep.pose.pipe(takeUntil(this.destroy$)).subscribe((pose) => {

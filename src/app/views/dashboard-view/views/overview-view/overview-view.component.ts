@@ -4,7 +4,6 @@ import { SleepService } from '../../../../services/sleep.service';
 import { filter, map, Subject, takeUntil, tap } from 'rxjs';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
-import { VRChatService } from '../../../../services/vrchat.service';
 
 @Component({
   selector: 'app-overview-view',

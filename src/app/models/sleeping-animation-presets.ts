@@ -2,7 +2,6 @@ import { OscScript } from './osc-script';
 import { parseOscScriptFromCode } from '../utils/osc-script-utils';
 import { TString } from './translatable-string';
 
-
 export interface SleepingAnimationPresetNote {
   type: 'CAUTION' | 'WARNING' | 'INFO' | 'SUCCESS';
   text: TString;

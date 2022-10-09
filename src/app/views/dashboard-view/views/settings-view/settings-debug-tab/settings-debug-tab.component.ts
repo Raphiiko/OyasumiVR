@@ -1,12 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   AppSettingsService,
   SETTINGS_KEY_APP_SETTINGS,
 } from '../../../../../services/app-settings.service';
-import { UpdateService } from '../../../../../services/update.service';
-import { HttpClient } from '@angular/common/http';
-import { getVersion } from '../../../../../utils/app-utils';
-import { takeUntil } from 'rxjs';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { readTextFile } from '@tauri-apps/api/fs';
@@ -15,7 +11,6 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../../services/automation-config.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { noop } from '../../../../../utils/animations';
 
 @Component({
   selector: 'app-settings-debug-tab',

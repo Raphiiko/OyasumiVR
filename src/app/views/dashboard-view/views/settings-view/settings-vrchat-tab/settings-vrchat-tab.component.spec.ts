@@ -8,9 +8,8 @@ describe('SettingsVrchatTabComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SettingsVRChatTabComponent ]
-    })
-    .compileComponents();
+      declarations: [SettingsVRChatTabComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsVRChatTabComponent);
     component = fixture.componentInstance;

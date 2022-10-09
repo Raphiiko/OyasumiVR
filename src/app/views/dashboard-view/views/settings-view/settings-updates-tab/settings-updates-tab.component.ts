@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
@@ -7,7 +7,7 @@ import { firstValueFrom, takeUntil } from 'rxjs';
 import { marked } from 'marked';
 import { UpdateService } from '../../../../../services/update.service';
 import { HttpClient } from '@angular/common/http';
-import { hshrink, noop } from '../../../../../utils/animations';
+import { hshrink } from '../../../../../utils/animations';
 
 @Component({
   selector: 'app-settings-updates-tab',

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
-import { hshrink, noop, vshrink } from '../../../../utils/animations';
+import { hshrink, noop } from '../../../../utils/animations';
 import { UpdateService } from '../../../../services/update.service';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 
