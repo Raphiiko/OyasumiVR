@@ -198,7 +198,7 @@
       "telemetry": {
         "title": "Telemetry",
         "label": "Send anonymous usage data",
-        "description": "The data that will be sent is limited to the version of Oyasumi that you are using. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
+        "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
       }
     },
     "updates": {

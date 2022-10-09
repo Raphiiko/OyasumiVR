@@ -198,7 +198,7 @@
       "telemetry": {
         "title": "Telemetrie",
         "label": "Verstuur anonieme telemetrie data",
-        "description": "De enige data die wordt verstuurd, is de versie van Oyasumi die je gebruikt. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor het bijhouden van het aantal gebruikers van Oyasumi."
+        "description": "De enige data die wordt verstuurd, is de versie van Oyasumi die je gebruikt en je ingestelde taal. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor algemene gebruikstatistieken van Oyasumi."
       }
     },
     "updates": {

@@ -8,6 +8,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
+import { OVRDevice } from '../../models/ovr-device';
 
 @Injectable({
   providedIn: 'root',
@@ -40,8 +41,8 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
         return;
       }
       // Get current powered on devices
-      const poweredOnDevices = devices.filter((d) => d.canPowerOff && !d.isTurningOff);
-      // Remove devices that are no longer powered on
+      const poweredOnDevices: OVRDevice[] = devices.filter((d) => d.canPowerOff && !d.isTurningOff);
+      // Remove devices from cache that are no longer powered on
       this.poweredOnDevices = this.poweredOnDevices.filter(
         (dIndex) => !!poweredOnDevices.find((d) => d.index === dIndex)
       );
