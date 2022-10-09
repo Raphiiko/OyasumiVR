@@ -60,19 +60,19 @@ const GOGO_LOCO_LEGACY_1_7_1_PRESET: SleepingAnimationPreset = {
   infoLink: 'https://booth.pm/en/items/3290806',
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
-i 204 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/VRCEmote
 f -1.0 /avatar/parameters/Go/Float
     `).script,
     SIDE_FRONT: parseOscScriptFromCode(`
-i 204 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/VRCEmote
 f -0.75 /avatar/parameters/Go/Float
     `).script,
     SIDE_LEFT: parseOscScriptFromCode(`
-i 204 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/VRCEmote
 f -0.6 /avatar/parameters/Go/Float
     `).script,
     SIDE_RIGHT: parseOscScriptFromCode(`
-i 204 /avatar/parameters/VRCEmote
+i 214 /avatar/parameters/VRCEmote
 f -0.4 /avatar/parameters/Go/Float
     `).script,
     FOOT_LOCK: parseOscScriptFromCode(`
