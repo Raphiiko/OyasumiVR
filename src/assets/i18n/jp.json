@@ -1,0 +1,338 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "VR睡眠ソフトウェア"
+    },
+    "modals": {
+      "cancel": "キャンセル",
+      "save": "保存",
+      "confirm": "確認",
+      "ok": "OK"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "睡眠モード",
+      "active": "アクティブ",
+      "inactive": "非アクティブ",
+      "activate": "有効にする",
+      "deactivate": "無効にする"
+    }
+  },
+  "sleep-detection": {
+    "title": "睡眠検出",
+    "description": "ここでは、様々な誘因に基づき、睡眠モードを自動的に有効または無効にする自動化機能を設定することができます。",
+    "enableAutomations": {
+      "title": "睡眠モードの有効化",
+      "atTime": "指定した時間",
+      "atBatteryPercentage": "端末のバッテリー残量が以下を下回った時<strong>{{value}}%</strong>",
+      "onControllersPoweredOff": "全てのコントローラーの電源が切れた時"
+    },
+    "disableAutomations": {
+      "title": "睡眠モードの無効化",
+      "atTime": "指定した時間",
+      "onDevicePowerOn": "端末の電源が入っている時"
+    },
+    "modals": {
+      "enableAtTime": {
+        "title": "睡眠モードの有効化",
+        "description": "指定した時間に睡眠モードを有効にします。",
+        "time": "時間"
+      },
+      "disableAtTime": {
+        "title": "睡眠モードの無効化",
+        "description": "指定した時間に睡眠モードを無効にします。",
+        "time": "時間"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "睡眠モードの無効化",
+        "whenTurningOn": "電源を入れる時",
+        "optionController": "コントローラー",
+        "optionTracker": "トラッカー"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "睡眠モードの有効化",
+        "whenA": "いつ",
+        "optionController": "コントローラー",
+        "optionTracker": "トラッカー",
+        "fallsBelow": "数値を下回った時"
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC自動化",
+    "tab": {
+      "sleepingAnimations": "睡眠アニメーション"
+    },
+    "sleepingAnimations": {
+      "currentPose": "現在位置",
+      "manualControl": "マニュアル操作",
+      "presetAuthor": "{{author}}による",
+      "description": "Oyasumiは、睡眠中に姿勢が変わることで自動的にアバターのアニメーションを変更することができます。これは、全身トラッキングをしていない場合や、自分（またはOyasumiを使用している場合）が夜間にトラッカーをオフにする場合などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください.\n\nまた、アバターのロコモーションは、いくつかのプリセットが用意されておりますが、自分でアニメーションを指定することも可能です。",
+      "enable": "自動睡眠アニメーションの有効化",
+      "customPreset": "カスタムアニメーション",
+      "errors": {
+        "releaseDurationTooShort": "解除時間は100ms以上である必要があります。",
+        "releaseDurationTooLong": "解除時間は5000msを超えてはいけません。"
+      },
+      "options": {
+        "positions": {
+          "title": "寝姿勢",
+          "description": "寝姿勢ごとにアニメーションを有効化させるOSCコマンドを設定します。",
+          "SIDE_FRONT": "うつぶせ",
+          "SIDE_BACK": "仰向け",
+          "SIDE_LEFT": "左向き",
+          "SIDE_RIGHT": "右向き",
+          "UNKNOWN": "不明"
+        },
+        "footLock": {
+          "title": "フットロック",
+          "description": "フットロックの有効化／無効化を OSC コマンドで設定します。",
+          "FOOT_LOCK": "フットロックの有効化",
+          "FOOT_UNLOCK": "フットロックの無効化"
+        },
+        "general": {
+          "title": "一般オプション",
+          "onlySwitchAnimations": "アニメーションを切り替える",
+          "onlyIfSleepModeEnabled": "睡眠モード有効時",
+          "onlyIfAllTrackersTurnedOff": "すべてのトラッカーがオフの時",
+          "footLock": {
+            "title": "フットロック",
+            "description": "フットロック有効時、プレイヤーの動きや寝返りを防ぎます。"
+          },
+          "lockFeetOnSleepModeEnable": "睡眠モード有効時にフットロック",
+          "unlockFeetOnSleepModeDisable": "睡眠モード無効時にフットロック解除",
+          "unlockFeetOnAutomationDisable": "自動睡眠アニメーション無効時にフットロック解除",
+          "releaseFootLockOnPoseChange": "寝姿勢が変わる際にフットロックを瞬時に解除",
+          "footLockReleaseWindow": "フットロックの解除時間"
+        }
+      }
+    }
+  },
+  "battery-automations": {
+    "title": "バッテリーの自動化",
+    "devicePowerOff": {
+      "title": "端末の電源を切る",
+      "description": "SteamVR端末をオフにするための様々な自動化機能です。",
+      "onSleepModeEnable": {
+        "title": "睡眠につく時",
+        "description": "睡眠モード有効時、端末の電源をオフにする。",
+        "optionControllers": "すべてのコントローラーをオフにする",
+        "optionTrackers": "すべてのトラッカーをオフにする",
+        "hint": "睡眠モードが有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>で設定することができます。"
+      },
+      "onCharge": {
+        "title": "充電する時",
+        "description": "充電器に挿すと自動的に電源が切れます。",
+        "optionControllers": "コントローラーをオフにする",
+        "optionTrackers": "トラッカーをオフにする"
+      }
+    }
+  },
+  "gpu-automations": {
+    "title": "GPU自動化",
+    "description": "ここでは、GPUの電力制限を自動化し、就寝中の電力を節約することができます。",
+    "disabled": {
+      "initializing": "GPU自動化は現在初期化中です...",
+      "disabled": "Oyasumiを使用すれば、GPUの電力制限を自動的に調整することができます。\nそうすることで、睡眠中の電気使用量を節約することができます。\n\nGPU自動化は、現在NVIDIA GPUのみ対応しております。\nAMDとIntelのGPUはまだ未対応です。",
+      "noElevation": "OyasumiがGPUの電力制限を制御するためには、管理者権限が必要です。以下のボタンをクリックして、Oyasumiに管理者権限を付与してください。",
+      "driverNotLoaded": "Oyasumiは、読み込まれたNVIDIAドライバを検出できませんでした。\n\nご使用中のシステムにNVIDIAカードとそれに対応するドライバがインストールされていることを確認してください。",
+      "noDevices": "システムにグラフィックカードが見つかりませんでした。\n\nご使用中のシステムにNVIDIAカードとそれに対応するドライバがインストールされていることを確認してください。",
+      "unknown": "GPU自動化機能を有効化している際に不明なエラーが発生しました。"
+    },
+    "requestAdministrator": "管理者権限を付与する",
+    "disable": "GPU自動化を無効にする",
+    "enable": "GPU自動化を有効にする",
+    "enableWarning": "これは上級者向けの機能です！\n電力制限の設定を誤ると、システムが不安定な状態になる可能性があります。\nこのことを念頭に置き、理想的には自分が何をしているのか理解している場合のみ使用してください。",
+    "selectGPU": "電力制限を設定したいGPUを選択します：",
+    "gpuPowerLimitsUnsupported": "選択されたGPUは、電力制限の設定に対応していません。",
+    "currentPowerLimit": "現在の電力制限",
+    "automations": "睡眠の自動化設定",
+    "activatingSleepMode": {
+      "title": "睡眠につく時",
+      "description": "睡眠モードが有効化された際に設定する電力制限値を指定します。"
+    },
+    "deactivatingSleepMode": {
+      "title": "起床した時",
+      "description": "睡眠モードが無効化された際に設定する電力制限値を指定します。"
+    },
+    "enabledWarning": "電力制限を低く設定しすぎてしまうと、システムが不安定な状態になる可能性がありますので、ご注意ください。よくわからない場合は、この機能を無効にしてください。",
+    "inputDefault": "GPUのデフォルトの制限値にリセットします。",
+    "elevationSidecarModal": {
+      "title": "管理者権限を付与する",
+      "message": "Oyasumi に常に管理者権限を与えますか？\n\nこれを有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
+      "confirm": "常に",
+      "cancel": "一回のみ"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "tab": {
+      "general": "一般",
+      "updates": "アップデート",
+      "debug": "デバッグ"
+    },
+    "general": {
+      "language": {
+        "title": "言語",
+        "description": "ここでは、ご希望の言語を選択することができます。もし、翻訳されていない箇所があったり、母国語を追加したい場合は、ご連絡ください。"
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouseコンソール",
+        "description": "OyasumiはSteamVRインストール<strong>lighthouse_console.exe</strong>の場所を把握する必要があります。\nOyasumiがデフォルトの場所でそれを見つけられない場合、見つけられる場所に設定する必要があります。",
+        "status": {
+          "NOT_FOUND": "<strong>lighthouse_console.exe</strong>はこの場所に見つかりませんでした。",
+          "INVALID_EXECUTABLE": "この場所にある <strong>lighthouse_console.exe</strong> が機能していることを確認できませんでした。",
+          "PERMISSION_DENIED": "Oyasumiは、この場所にある<strong>lighthouse_console.exe</strong>を実行する権限を持っておりません。管理者としてOyasumiを実行してください。",
+          "INVALID_FILENAME": "設定した場所は有効なファイルパスではありません。",
+          "UNKNOWN_ERROR": "この場所で<strong>lighthouse_console.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
+          "CHECKING": "有効な <strong>lighthouse_console.exe</strong> であるかどうか確認中です。",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong>が見つかり、正常に機能しています!"
+        }
+      },
+      "adminPrivileges": {
+        "title": "管理者権限",
+        "label": "起動時に管理者権限を要求する",
+        "description": "OyasumiはGPUの電力制限を制御できるようにするために管理者権限が必要です。これを有効にすることで、Oyasumiは起動時に管理者権限を要求するようになります。"
+      },
+      "telemetry": {
+        "title": "テレメトリー",
+        "label": "匿名の使用データの送信",
+        "description": "送信されるデータは、ご使用中のOyasumiのバージョンと、設定されている言語のみに制限されます。それ以外のデータは送信されず、完全に匿名です。また、このデータは一般的な使用統計のためにのみ使用されます。"
+      }
+    },
+    "updates": {
+      "checkForUpdates": "アップデートを確認する",
+      "changelog": "変更履歴",
+      "install": "v{{version}}をインストール",
+      "noUpdate": "現在、最新版であるOyasumi v{{version}} を利用しています！",
+      "notChecked": "Oyasumiはまだアップデートを確認しておりません。",
+      "updateAvailable": "Oyasumiの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
+    },
+    "debug": {
+      "description": "このページでは、デバッグ用のツールを紹介しております。本来は必要ないものですが、Oyasumiはまだ初期のテスト段階なので、念のためこちらに置いてあります。",
+      "persistentStorage": {
+        "title": "永続ストレージ",
+        "description": "これらボタンを押すと、Oyasumiの永続ストレージの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
+        "clearAll": "すべてのストレージを削除",
+        "clearAutomationSettings": "自動化設定をクリア",
+        "clearAppSettings": "アプリの設定を削除",
+        "printSettings": "ログ設定"
+      },
+      "language": {
+        "title": "言語",
+        "description": "このオプションは、言語ファイルを手動で読み込むことができます。これは新しい翻訳を検証するのに役立ちます。",
+        "loadFile": "言語ファイルを読み込む"
+      },
+      "sleepingPose": {
+        "title": "寝相"
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "開発者"
+    },
+    "translations": "翻訳",
+    "projectLinks": "プロジェクトリンク",
+    "sourceLink": "ソースコード @ GitHub",
+    "discordInvite": "Discordサーバー"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "アップデートに失敗しました",
+        "message": "アップデートのインストールに失敗しました。後ほどもう一度お試しください。"
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは、いくつか問題のあるワークアラウンドを使用しております。新しいGoGo Locoプリセットが使用できない場合のみ、このプリセットを使用するようお願い致します。また、あなたのアバターがまだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoバージョンを使用し、更新することをお勧め致します。",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "ミリ秒値は整数で定義されなければなりません。",
+      "durationTooShort": "睡眠時間は最低1msでなければなりません。",
+      "durationTooLong": "睡眠時間は5秒を超えてはなりません。",
+      "durationRequired": "睡眠時間は必須です。",
+      "totalDurationTooLong": "スクリプトの総時間は10秒を超えてはなりません。",
+      "intOutOfBounds": "値は0から255の間の有効な整数でなければなりません。",
+      "floatOutOfBounds": "値は-1.0から1.0までの有効な浮動小数点値である必要があります。",
+      "floatTooPrecise": "値の精度は最大で小数点以下3桁までです。",
+      "invalidSyntax": "無効な構文です。",
+      "tooManyCommands": "OSCスクリプトは、{{value}}以上のアクションを持つことはできません。",
+      "addressNoSlash": "有効なOSCアドレスは、常に'/'記号で始まる必要があります。",
+      "addressRequired": "OSCアドレスが必要です。",
+      "addressNotASCII": "有効なOSCアドレスは、ASCII文字のみ含みことができます。"
+    }
+  },
+  "comp": {
+    "confirm-modal": {
+      "defaultTitle": "確認"
+    },
+    "update-modal": {
+      "title": "アップデート可能",
+      "updateNow": "v{{version}}をインストール",
+      "updateLater": "後で",
+      "message": "Oyasumiの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用されております。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
+    },
+    "select-box": {
+      "defaultPlaceholder": "選択する..."
+    },
+    "dashboard-navbar": {
+      "overview": "概要",
+      "sleepDetection": "睡眠検出",
+      "oscAutomations": "OSC自動化",
+      "batteryAutomations": "バッテリー自動化",
+      "gpuAutomations": "GPU自動化",
+      "settings": "設定方法",
+      "about": "Oyasumiについて"
+    },
+    "device-list": {
+      "title": "端末",
+      "turnOffAll": "すべて",
+      "noDevices": "コントローラまたはトラッカーが検出されません。",
+      "category": {
+        "Controller": "コントローラー",
+        "GenericTracker": "トラッカー",
+        "other": "その他"
+      }
+    },
+    "osc-script-modal": {
+      "title": "OSCスクリプト",
+      "simple": "シンプル",
+      "script": "スクリプト"
+    },
+    "osc-script-code-editor": {
+      "title": "OSCスクリプトエディタ",
+      "syntaxGuide": "構文ガイド",
+      "format": "フォーマット",
+      "test": "テスト"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} コマンド",
+        "plural": "{{value}} コマンド"
+      },
+      "errorCounter": {
+        "singular": "{{value}} バリデーションエラー",
+        "plural": "{{value}} バリデーションエラー"
+      },
+      "addCommand": "追加",
+      "test": "テスト",
+      "action": {
+        "osc": "OSC",
+        "sleep": "睡眠",
+        "none": "アクションが追加されておりません！"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSCコマンド",
+          "description": "OSCコマンドを実行します"
+        },
+        "SLEEP": {
+          "title": "睡眠",
+          "description": "指定された時間待機する"
+        }
+      }
+    }
+  }
+}

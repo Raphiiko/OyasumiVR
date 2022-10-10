@@ -1,0 +1,16 @@
+<div class="pane modal modal-lg" [@fadeUp]>
+  <div class="pane-content">
+    <h2>Welcome to Oyasumi!</h2>
+    <p>Please select your preferred language:</p>
+    <div class="option-row">
+      <div
+        class="language-option"
+        *ngFor="let language of languages"
+        (click)="selectLanguage(language)"
+      >
+        <span class="fi fi-{{ language.flag || language.code }}"></span>
+        <span class="label">{{ language.label }}</span>
+      </div>
+    </div>
+  </div>
+</div>

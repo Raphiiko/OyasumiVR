@@ -6,9 +6,9 @@ import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { getVersion } from '@tauri-apps/api/app';
 import { cloneDeep } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
+import { getVersion } from '../utils/app-utils';
 
 export const SETTINGS_KEY_TELEMETRY_SETTINGS = 'TELEMETRY_SETTINGS';
 
@@ -82,7 +82,7 @@ export class TelemetryService {
           this.manifest.v1.heartbeatUrl,
           {
             telemetryId: this._settings.value.telemetryId,
-            version: await getVersion(),
+            version: await getVersion(true),
             lang: await firstValueFrom(this.appSettings.settings).then(
               (settings) => settings.userLanguage
             ),
