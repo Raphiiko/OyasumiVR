@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Japanese language support (日本語対応)
 - Language selection modal on first startup
 - Prepackaged Japanese font
-- Anonymous telemetry (Only sends the application version)
+- Anonymous telemetry (Only sends the application version and language)
 - App icon
 
 ### Changed
