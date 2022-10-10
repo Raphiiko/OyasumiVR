@@ -1,0 +1,16 @@
+.alert {
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
+  &-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    span {
+      flex: 1;
+    }
+    button {
+      flex-shrink: 0;
+    }
+  }
+}

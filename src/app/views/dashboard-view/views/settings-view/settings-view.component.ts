@@ -13,7 +13,7 @@ import { UpdateManifest } from '@tauri-apps/api/updater';
 export class SettingsViewComponent implements OnInit, OnDestroy {
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
   destroy$: Subject<void> = new Subject<void>();
-  activeTab: 'GENERAL' | 'VRCHAT' | 'UPDATES' | 'DEBUG' = 'VRCHAT';
+  activeTab: 'GENERAL' | 'VRCHAT' | 'UPDATES' | 'DEBUG' = 'GENERAL';
 
   constructor(private update: UpdateService) {}
 

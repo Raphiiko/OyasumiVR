@@ -83,16 +83,7 @@ export class VRChatService {
     // Show the login modal if we were just logged out due to token expiry
     if (this.loggedOutDueToExpiry) {
       await this.logout();
-      this.modalService
-        .addModal(
-          VRChatLoginModalComponent,
-          {},
-          {
-            closeOnEscape: false,
-            closeOnClickOutside: false,
-          }
-        )
-        .subscribe(() => {});
+      this.showLoginModal();
     }
   }
 
@@ -347,5 +338,18 @@ export class VRChatService {
   async saveSettings() {
     await this.store.set(SETTINGS_KEY_VRCHAT_API, this.settings.value);
     await this.store.save();
+  }
+
+  showLoginModal() {
+    this.modalService
+      .addModal(
+        VRChatLoginModalComponent,
+        {},
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      )
+      .subscribe((data) => {});
   }
 }

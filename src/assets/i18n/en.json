@@ -166,6 +166,9 @@
       "cancel": "Only this once"
     }
   },
+  "status-automations": {
+    "title": "Status Automations"
+  },
   "settings": {
     "title": "Settings",
     "tab": {
@@ -309,6 +312,7 @@
       "oscAutomations": "OSC Automations",
       "batteryAutomations": "Battery Automations",
       "gpuAutomations": "GPU Automations",
+      "statusAutomations": "Status Automations",
       "settings": "Settings",
       "about": "About Oyasumi"
     },

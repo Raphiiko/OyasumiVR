@@ -1,0 +1,34 @@
+<div class="pane" [@noop]>
+  <div class="pane-title" translate>status-automations.title</div>
+  <div class="pane-content">
+    <p
+      >Oyasumi can automatically update your VRChat status based on the number of players in your
+      world.</p
+    >
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content">{{
+        'Example use: When another person joins you, automatically switch your status to orange or\n' +
+          '      red! Then when they leave and you are alone again, switch your status back to blue or green.'
+          | translate
+      }}</div>
+    </div>
+    <div class="alert warning" *ngIf="!loggedIn" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'This feature requires you to be logged in with a VRChat account.' | translate
+        }}</span
+        ><button class="btn btn-secondary" (click)="login()" translate
+          >shared.modals.login</button
+        ></div
+      >
+    </div>
+  </div>
+</div>
