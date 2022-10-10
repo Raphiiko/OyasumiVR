@@ -14,6 +14,7 @@ on:
       - package.json
       - CHANGELOG.md
 
+
 jobs:
   build-dev-release:
     concurrency:
@@ -27,13 +28,13 @@ jobs:
     runs-on: ${{ matrix.platform }}
     steps:
       - uses: actions/checkout@v2
-      - name: setup node
+      - name: Setup NodeJS
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - name: install app dependencies
+      - name: Install NodeJS dependencies
         run: yarn
-      - name: Set to DEV version
+      - name: Set app version to DEV version
         run: yarn set-version DEV
       - name: Get Changelog Entry
         id: changelog_reader
@@ -42,10 +43,10 @@ jobs:
           validation_level: warn
           version: Unreleased
           path: ./CHANGELOG.md
-      - name: install Rust nightly
+      - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           default: true
           override: true
       #      - name: install dependencies (ubuntu only)
@@ -53,6 +54,13 @@ jobs:
       #        run: |
       #          sudo apt-get update
       #          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+      - name: Configure Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-shared
+            src-elevated-sidecar
+            src-tauri
       - name: Delete new development release and tag if they exist
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         continue-on-error: true

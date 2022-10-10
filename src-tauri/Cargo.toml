@@ -7,7 +7,7 @@ license = "MIT"
 repository = ""
 default-run = "oyasumi"
 edition = "2021"
-rust-version = "1.63.0"
+rust-version = "1.64.0"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -35,7 +35,7 @@ features = ["Win32_UI_Shell", "Win32_Foundation"]
 version = "0.3.9"
 features = ["handleapi", "processthreadsapi", "winnt", "securitybaseapi", "impl-default"]
 
-[dependencies.tokio] 
+[dependencies.tokio]
 version = "1.21.1"
 features = ["full"]
 

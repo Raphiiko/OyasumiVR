@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[tauri::command]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {
@@ -13,9 +13,10 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
                 std::io::ErrorKind::PermissionDenied => {
                     return Err(String::from("PERMISSION_DENIED"))
                 }
-                std::io::ErrorKind::InvalidFilename => {
-                    return Err(String::from("INVALID_FILENAME"))
-                }
+                // Re-enable once available on Rust stable: https://github.com/rust-lang/rust/issues/86442
+                // std::io::ErrorKind::InvalidFilename => {
+                //     return Err(String::from("INVALID_FILENAME"))
+                // }
                 other => {
                     eprintln!("Unknown IO Error occurred: {}", other);
                     return Err(String::from("UNKNOWN_ERROR"));

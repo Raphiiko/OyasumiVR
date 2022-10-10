@@ -25,14 +25,16 @@ jobs:
           validation_level: warn
           version: ${{ steps.get-package-version.outputs.version }}
           path: ./CHANGELOG.md
-      - name: setup node
+      - name: Setup NodeJS
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - name: install Rust nightly
+      - name: Install NodeJS dependencies
+        run: yarn
+      - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: nightly
+          toolchain: stable
           default: true
           override: true
       #      - name: install dependencies (ubuntu only)
@@ -40,8 +42,13 @@ jobs:
       #        run: |
       #          sudo apt-get update
       #          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
-      - name: install app dependencies
-        run: yarn
+      - name: Configure Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-shared
+            src-elevated-sidecar
+            src-tauri
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

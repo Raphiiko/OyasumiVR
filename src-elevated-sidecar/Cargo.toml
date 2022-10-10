@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
-rust-version = "1.63.0"
+rust-version = "1.64.0"
 
 [dependencies]
 oyasumi-shared = { path = "../src-shared", version = '*' }

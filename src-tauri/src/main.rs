@@ -2,7 +2,6 @@
     all(not(debug_assertions), target_os = "windows"),
     windows_subsystem = "windows"
 )]
-#![feature(io_error_more)]
 
 #[macro_use(lazy_static)]
 extern crate lazy_static;
