@@ -29,7 +29,9 @@
       },
       "http": {
         "request": true,
-        "scope": ["https://api.vrchat.cloud/api/1/*"]
+        "scope": [
+          "https://api.vrchat.cloud/api/1/*"
+        ]
       }
     },
     "bundle": {
