@@ -30,7 +30,7 @@ export class OscScriptButtonComponent implements OnInit {
       })
       .pipe(filter((data) => !!data))
       .subscribe((data) => {
-        this.script = data.script;
+        this.script = data.script?.commands?.length ? data.script : undefined;
         this.scriptChange.emit(this.script);
       });
   }
