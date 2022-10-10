@@ -43,7 +43,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically tweak your power limits when you go to sleep and when you wake up.
 - 🗺️ Multi language support
   - English
-  - Dutch
+  - Dutch (Nederlands)
+  - Japanese (日本語)
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 
