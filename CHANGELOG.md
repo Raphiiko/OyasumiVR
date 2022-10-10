@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
 - In-app updater & changelog
+- Japanese language support (日本語対応)
+- Language selection modal on first startup
 - Prepackaged Japanese font
 - Anonymous telemetry (Only sends the application version)
 - App icon
