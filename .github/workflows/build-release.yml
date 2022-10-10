@@ -52,4 +52,3 @@ jobs:
           releaseName: Oyasumi v${{ steps.get-package-version.outputs.version }}
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
-          prerelease: true
