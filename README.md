@@ -10,6 +10,9 @@
     <a><img alt="Production Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-release.yml/badge.svg"/></a>
     <a><img alt="Development Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
+    <a href="[https://raphiiko.booth.pm](https://discord.gg/7MqdPJhYxC)"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
+    <a href="https://raphiiko.booth.pm"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-BOOTH.PM-red"/></a>
+    <a href="https://raphiiko.gumroad.com"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
 </p>
 
 <p align="center">
