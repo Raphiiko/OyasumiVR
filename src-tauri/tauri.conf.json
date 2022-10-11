@@ -35,9 +35,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": [
-        "../src-elevated-sidecar/target/release/oyasumi-elevated-sidecar"
-      ],
+      "externalBin": ["../src-elevated-sidecar/target/release/oyasumi-elevated-sidecar"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -62,11 +60,7 @@
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
         "wix": {
-          "language": [
-            "en-US",
-            "nl-NL",
-            "ja-JP"
-          ]
+          "language": ["en-US", "nl-NL"]
         }
       }
     },
