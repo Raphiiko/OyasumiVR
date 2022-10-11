@@ -143,6 +143,6 @@ b false /avatar/parameters/Go/Stationary
 
 export const SLEEPING_ANIMATION_PRESETS: SleepingAnimationPreset[] = [
   MMM_SLEEP_SYSTEM_2_2_PRESET,
-  GOGO_LOCO_LEGACY_1_7_1_PRESET,
-  GOGO_LOCO_LEGACY_PRESET,
+  // GOGO_LOCO_LEGACY_1_7_1_PRESET,
+  // GOGO_LOCO_LEGACY_PRESET,
 ];

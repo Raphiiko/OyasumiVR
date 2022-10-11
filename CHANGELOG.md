@@ -8,10 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Sleeping animation automation preset for [GoGo Loco v1.7.1 by franada](https://booth.pm/en/items/3290806).
+- Sleeping animation automation (workaround) preset for [GoGo Loco v1.6.2 - v1.7.0 by franada](https://booth.pm/en/items/3290806).
+
+## [1.0.0]
+
+### Added
 
 - Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping position.
   - Preset for [ごろ寝システム (Sleep System) v2.2 by んみんみーん](https://booth.pm/ko/items/2886739).
-  - Preset for [GoGo Loco v1.7.1 by franada](https://booth.pm/en/items/3290806).
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
 - In-app updater & changelog
