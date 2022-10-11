@@ -3,9 +3,9 @@ import { listen } from '@tauri-apps/api/event';
 import { exit } from '@tauri-apps/api/process';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
-import { OVRDevice } from '../models/ovr-device';
+import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
 import { BehaviorSubject, interval, Observable, startWith, Subject, takeUntil } from 'rxjs';
-import { orderBy } from 'lodash';
+import { cloneDeep, orderBy } from 'lodash';
 import { message } from '@tauri-apps/api/dialog';
 import { AppSettingsService } from './app-settings.service';
 
@@ -28,6 +28,12 @@ export class OpenVRService {
 
   private _devices: BehaviorSubject<OVRDevice[]> = new BehaviorSubject<OVRDevice[]>([]);
   public devices: Observable<OVRDevice[]> = this._devices.asObservable();
+
+  private _devicePoses: BehaviorSubject<{
+    [trackingIndex: number]: OVRDevicePose;
+  }> = new BehaviorSubject<{ [p: number]: OVRDevicePose }>({});
+  public devicePoses: Observable<{ [trackingIndex: number]: OVRDevicePose }> =
+    this._devicePoses.asObservable();
 
   constructor(private appRef: ApplicationRef, private settingsService: AppSettingsService) {
     this.initStart = Date.now();
@@ -55,6 +61,21 @@ export class OpenVRService {
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
       ),
+      listen<any>('OVR_POSE_UPDATE', (event) => {
+        const poses = cloneDeep(this._devicePoses.value);
+        const {
+          index,
+          quaternion,
+          position,
+        }: {
+          index: number;
+          quaternion: [number, number, number, number];
+          position: [number, number, number];
+        } = event.payload;
+        poses[index] = { quaternion, position };
+        this._devicePoses.next(poses);
+        this.appRef.tick();
+      }),
       listen<void>('OVR_QUIT', () => this.onQuitEvent()),
       listen<void>('OVR_INIT_COMPLETE', () => {
         this.onOpenVRInit(true);
@@ -102,7 +123,16 @@ export class OpenVRService {
     await exit(0);
   }
 
-  private getDevices(): Promise<Array<OVRDevice>> {
-    return invoke<OVRDevice[]>('openvr_get_devices');
+  private async getDevices(): Promise<Array<OVRDevice>> {
+    // Get devices
+    let devices = await invoke<OVRDevice[]>('openvr_get_devices');
+    // Carry over current local state
+    devices = devices.map((device) => {
+      device.isTurningOff =
+        this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
+      return device;
+    });
+    // Return newly fetched devices
+    return devices;
   }
 }

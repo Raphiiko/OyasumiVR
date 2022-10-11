@@ -4,6 +4,7 @@ import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automat
 const migrations: { [v: number]: (data: any) => any } = {
   1: from0to1,
   2: toLatest,
+  3: from2to3,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -19,6 +20,12 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from2to3(data: any): any {
+  data.version = 3;
+  data.SLEEPING_ANIMATIONS = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS);
   return data;
 }
 

@@ -1,3 +1,5 @@
+@import 'panes';
+
 :host {
   height: 100%;
   display: flex;
@@ -9,10 +11,18 @@
 
   &-content {
     padding: 2em;
+    overflow-y: overlay;
+    width: 100%;
   }
 }
 
 .setting-category {
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
+  p {
+    white-space: pre-wrap;
+  }
   p::ng-deep strong {
     background: var(--color-surface-1);
     border-radius: 0.25em;
@@ -80,6 +90,9 @@
       }
     }
   }
+  .alert {
+    margin-bottom: 1em;
+  }
 }
 
 .debug-persistent-storage-actions {
@@ -93,4 +106,61 @@
     margin-bottom: 1em;
   }
   padding-bottom: 1em;
+}
+
+.setting-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--color-surface-1);
+  padding: 1em;
+  border-radius: 0.5em;
+  .setting-row-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    > span:first-child {
+      color: var(--color-text-1);
+      margin-bottom: 0.25em;
+    }
+    > span:last-child {
+      color: var(--color-text-3);
+    }
+  }
+  .setting-row-action {
+    flex-shrink: 0;
+    margin-left: 1em;
+    padding: 0 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
+.update-checker {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+  p {
+    margin-bottom: 0;
+    white-space: pre;
+  }
+  button {
+    margin-right: 1em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+.pane-changelog {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  overflow-y: overlay;
 }

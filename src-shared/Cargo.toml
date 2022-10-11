@@ -1,0 +1,14 @@
+[package]
+name = "oyasumi-shared"
+version = "1.0.0"
+authors = ["Raphiiko"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.64.0"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+
+[dependencies.openvr]
+git = "https://github.com/rust-openvr/rust-openvr"
+rev = "449cb77c1e07a36dd437a364048c1f3f52330f09"

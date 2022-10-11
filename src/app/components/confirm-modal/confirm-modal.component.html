@@ -1,0 +1,16 @@
+<div class="pane modal modal-md" [@fadeUp]>
+  <div class="pane-title">
+    {{ title || 'comp.confirm-modal.defaultTitle' | translate }}
+  </div>
+  <div class="pane-content">
+    <p [innerHtml]="message || '' | translate"></p>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="cancel()" *ngIf="showCancel">
+      {{ cancelButtonText || 'shared.modals.cancel' | translate }}
+    </button>
+    <button class="btn btn-primary" (click)="confirm()">
+      {{ confirmButtonText || 'shared.modals.confirm' | translate }}
+    </button>
+  </div>
+</div>

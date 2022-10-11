@@ -5,23 +5,30 @@ import {
   AppSettingsService,
   SETTINGS_KEY_APP_SETTINGS,
 } from '../../../../services/app-settings.service';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { LighthouseConsoleStatus, OpenVRService } from '../../../../services/openvr.service';
-import { noop, vshrink } from '../../../../utils/animations';
+import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../services/automation-config.service';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../../../../globals';
+import { LANGUAGES, SETTINGS_FILE } from '../../../../globals';
 import { Router } from '@angular/router';
 import { readTextFile } from '@tauri-apps/api/fs';
 import { TranslateService } from '@ngx-translate/core';
 import { LighthouseService } from '../../../../services/lighthouse.service';
+import { UpdateService } from '../../../../services/update.service';
+import { UpdateManifest } from '@tauri-apps/api/updater';
+import { HttpClient } from '@angular/common/http';
+import { marked } from 'marked';
+import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from 'src/app/models/telemetry-settings';
+import { TelemetryService } from '../../../../services/telemetry.service';
+import { getVersion } from '../../../../utils/app-utils';
 
 @Component({
   selector: 'app-settings-view',
   templateUrl: './settings-view.component.html',
   styleUrls: ['./settings-view.component.scss'],
-  animations: [vshrink(), noop()],
+  animations: [vshrink(), noop(), hshrink()],
 })
 export class SettingsViewComponent implements OnInit, OnDestroy {
   storeKey = { SETTINGS_KEY_APP_SETTINGS, SETTINGS_KEY_AUTOMATION_CONFIGS };
@@ -29,6 +36,7 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
 
   destroy$: Subject<void> = new Subject<void>();
   appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  telemetrySettings: TelemetrySettings = cloneDeep(TELEMETRY_SETTINGS_DEFAULT);
   lighthouseConsoleStatus: LighthouseConsoleStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
     text: string;
@@ -36,28 +44,25 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     loadingIndicator?: boolean;
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
-  activeTab: 'GENERAL' | 'DEBUG' = 'GENERAL';
-  languages: Array<{ code: string; label: string; flag?: string }> = [
-    {
-      code: 'en',
-      label: 'English',
-      flag: 'gb',
-    },
-    {
-      code: 'nl',
-      label: 'Nederlands',
-    },
-  ];
+  activeTab: 'GENERAL' | 'UPDATES' | 'DEBUG' = 'GENERAL';
+  languages = LANGUAGES;
+  updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
+  version: string = '';
+  changelog: string = '';
+  updateOrCheckInProgress = false;
 
   constructor(
-    private settingsService: AppSettingsService,
+    protected settingsService: AppSettingsService,
     public openvr: OpenVRService,
     private router: Router,
     private translate: TranslateService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private update: UpdateService,
+    private http: HttpClient,
+    private telemetry: TelemetryService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
     this.lighthouse.consoleStatus
       .pipe(takeUntil(this.destroy$))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
@@ -69,6 +74,36 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
     this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((appSettings) => {
       this.appSettings = appSettings;
     });
+    this.telemetry.settings.pipe(takeUntil(this.destroy$)).subscribe((telemetrySettings) => {
+      this.telemetrySettings = telemetrySettings;
+    });
+    this.version = await getVersion();
+    this.update.updateAvailable.pipe(takeUntil(this.destroy$)).subscribe((available) => {
+      this.updateAvailable = available;
+    });
+    this.changelog = await this.getChangeLog();
+  }
+
+  async getChangeLog(): Promise<string> {
+    let changelog = '';
+    try {
+      changelog = await firstValueFrom(
+        this.http.get('https://raw.githubusercontent.com/Raphiiko/Oyasumi/main/CHANGELOG.md', {
+          responseType: 'text',
+        })
+      );
+    } catch (e) {
+      changelog = await firstValueFrom(
+        this.http.get('/assets/CHANGELOG.md', {
+          responseType: 'text',
+        })
+      );
+    }
+    let firstIndex = changelog.indexOf('##');
+    changelog = changelog.slice(firstIndex, changelog.length);
+    changelog = marked.parse(changelog);
+    changelog = changelog.replace(/<a /g, '<a target="_blank" ');
+    return changelog;
   }
 
   processLighthouseConsoleStatus(status: LighthouseConsoleStatus) {
@@ -166,5 +201,27 @@ export class SettingsViewComponent implements OnInit, OnDestroy {
         }, {} as { [s: string]: any })
       )
     );
+  }
+
+  setAskForAdminOnStart(enabled: boolean) {
+    this.settingsService.updateSettings({ askForAdminOnStart: enabled });
+  }
+
+  setTelemetryEnabled(enabled: boolean) {
+    this.telemetry.updateSettings({ enabled });
+  }
+
+  checkForUpdates() {}
+
+  async updateOrCheck() {
+    if (this.updateOrCheckInProgress) return;
+    this.updateOrCheckInProgress = true;
+    await Promise.allSettled([
+      this.updateAvailable.manifest
+        ? this.update.installUpdate()
+        : this.update.checkForUpdate(false),
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+    ]);
+    this.updateOrCheckInProgress = false;
   }
 }

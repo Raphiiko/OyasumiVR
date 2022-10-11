@@ -34,9 +34,18 @@
     justify-content: center;
     align-items: center;
     height: 100%;
+    white-space: pre-wrap;
     > * {
       max-width: 40em;
     }
+  }
+
+  .btn-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 1em;
   }
 
   .icon {

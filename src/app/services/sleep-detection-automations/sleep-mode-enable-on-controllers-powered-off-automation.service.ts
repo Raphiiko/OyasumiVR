@@ -7,7 +7,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableAtControllersPoweredOffAutomationConfig,
 } from '../../models/automations';
-import { SleepModeService } from '../sleep-mode.service';
+import { SleepService } from '../sleep.service';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class SleepModeEnableOnControllersPoweredOffAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private sleepModeService: SleepModeService
+    private sleep: SleepService
   ) {}
 
   async init() {
@@ -45,7 +45,7 @@ export class SleepModeEnableOnControllersPoweredOffAutomationService {
         (c) => (this.turnedOnControllers = this.turnedOnControllers.filter((_c) => _c !== c.index))
       );
       if (allTurnedOff && this.config.enabled) {
-        this.sleepModeService.enableSleepMode({
+        this.sleep.enableSleepMode({
           type: 'AUTOMATION',
           automation: 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF',
         });

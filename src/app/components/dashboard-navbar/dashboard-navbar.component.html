@@ -1,0 +1,68 @@
+<div class="logo-container">
+  <div class="logo-image">
+    <img src="/assets/img/icon_150x150.png" alt="Oyasumi Icon" />
+  </div>
+  <div class="logo-text">
+    <span class="logo-title">Oyasumi</span>
+    <span class="logo-tagline" translate>shared.logo.tagline</span>
+  </div>
+</div>
+<div class="menu">
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">apps</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.overview</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepDetection'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">bedtime</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.sleepDetection</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">accessibility_new</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.oscAutomations</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'batteryAutomations'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">battery_charging_full</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.batteryAutomations</div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">energy_savings_leaf</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.gpuAutomations</div>
+    <div class="menu-item-icon-suffix" [@fade] *ngIf="gpuAutomationsErrors | async">
+      <i class="material-icons">error_outline</i>
+    </div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">settings</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.settings</div>
+    <div class="menu-item-icon-suffix" [@fade] *ngIf="settingErrors | async">
+      <i class="material-icons">error_outline</i>
+    </div>
+    <div class="menu-item-icon-suffix update" [@fade] *ngIf="updateAvailable | async">
+      <i class="material-icons">notification_important</i>
+    </div>
+  </div>
+
+  <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'about'">
+    <div class="menu-item-icon-prefix">
+      <i class="material-icons">info</i>
+    </div>
+    <div class="menu-item-label" translate>comp.dashboard-navbar.about</div>
+  </div>
+</div>

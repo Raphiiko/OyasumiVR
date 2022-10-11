@@ -17,9 +17,10 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
+  private _loadedDefaults: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loadedDefaults: Observable<boolean> = this._loadedDefaults.asObservable();
 
   constructor() {
-    this.init();
   }
 
   async init() {
@@ -35,9 +36,16 @@ export class AppSettingsService {
 
   async loadSettings() {
     let settings: AppSettings | null = await this.store.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
-    settings = settings ? migrateAppSettings(settings) : this._settings.value;
+    let loadedDefaults = false;
+    if (settings) {
+      settings = migrateAppSettings(settings);
+    } else {
+      settings = this._settings.value;
+      loadedDefaults = true;
+    }
     this._settings.next(settings);
     await this.saveSettings();
+    if (loadedDefaults) this._loadedDefaults.next(true);
   }
 
   async saveSettings() {

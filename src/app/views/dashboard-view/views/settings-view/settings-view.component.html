@@ -4,6 +4,19 @@
     <div class="tab" [class.active]="activeTab === 'GENERAL'" (click)="activeTab = 'GENERAL'">
       <div class="tab-label" translate>settings.tab.general</div>
     </div>
+    <div class="tab" [class.active]="activeTab === 'UPDATES'" (click)="activeTab = 'UPDATES'">
+      <div class="tab-label">
+        <i
+          class="material-icons"
+          style="color: var(--color-warning)"
+          @hshrink
+          *ngIf="updateAvailable.manifest"
+        >
+          notification_important
+        </i>
+        <span translate>settings.tab.updates</span>
+      </div>
+    </div>
     <div class="tab" [class.active]="activeTab === 'DEBUG'" (click)="activeTab = 'DEBUG'">
       <div class="tab-label" translate>settings.tab.debug</div>
     </div>
@@ -67,6 +80,87 @@
         </div>
       </div>
     </div>
+    <div class="setting-category">
+      <h2 translate>settings.general.adminPrivileges.title</h2>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.general.adminPrivileges.label</span>
+          <span translate>settings.general.adminPrivileges.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="appSettings.askForAdminOnStart"
+              (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>settings.general.telemetry.title</h2>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.general.telemetry.label</span>
+          <span translate>settings.general.telemetry.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="telemetrySettings.enabled"
+              (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="activeTab === 'UPDATES'" [@noop]>
+    <div class="setting-category">
+      <div class="update-checker">
+        <button
+          class="btn"
+          [class.btn-secondary]="!updateAvailable.manifest"
+          [class.btn-primary]="updateAvailable.manifest"
+          (click)="updateOrCheck()"
+          [disabled]="updateOrCheckInProgress"
+        >
+          <div class="small-spinner" *ngIf="updateOrCheckInProgress" @hshrink></div>
+          <span
+            *ngIf="!updateOrCheckInProgress"
+            [translate]="
+              updateAvailable.manifest
+                ? 'settings.updates.install'
+                : 'settings.updates.checkForUpdates'
+            "
+            [translateParams]="{ version: updateAvailable.manifest?.version || '' }"
+            @hshrink
+          ></span>
+        </button>
+        <p *ngIf="!updateAvailable.checked" translate="settings.updates.notChecked"></p>
+        <p
+          *ngIf="updateAvailable.checked && updateAvailable.manifest"
+          translate="settings.updates.updateAvailable"
+          [translateParams]="{
+            currentVersion: version,
+            latestVersion: updateAvailable.manifest.version
+          }"
+        ></p>
+        <p
+          *ngIf="updateAvailable.checked && !updateAvailable.manifest"
+          translate="settings.updates.noUpdate"
+          [translateParams]="{ version: version }"
+        ></p>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>settings.updates.changelog</h2>
+      <div class="pane-changelog" [innerHtml]="changelog"></div>
+    </div>
   </div>
   <div class="pane-content" *ngIf="activeTab === 'DEBUG'" [@noop]>
     <div class="setting-category">
@@ -107,5 +201,9 @@
         settings.debug.language.loadFile
       </button>
     </div>
+    <div class="setting-category">
+      <h2 translate>settings.debug.sleepingPose.title</h2>
+    </div>
+    <app-sleeping-pose-viewer></app-sleeping-pose-viewer>
   </div>
 </div>

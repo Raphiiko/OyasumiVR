@@ -55,6 +55,11 @@ button.btn {
   color: var(--scoped-color);
   border-radius: 0.5em;
 
+  i.material-icons:not(:last-child),
+  i.material-icons-round:not(:last-child) {
+    margin: -0.25em 0.25em -0.25em -0.25em;
+  }
+
   &:disabled {
     opacity: 0.5;
   }

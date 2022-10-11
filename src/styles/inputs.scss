@@ -222,6 +222,7 @@ input {
 }
 
 input[type='number'],
+input[type='text'],
 input[type='time'] {
   position: relative;
   border: none;
@@ -260,11 +261,15 @@ input[type='time']::-webkit-calendar-picker-indicator {
     border: 2px solid transparent;
   }
 
+  &.disabled {
+    opacity: 0.5;
+  }
+
   &.invalid:after {
     border-color: var(--color-alert-error);
   }
 
-  &.percentage {
+  &.with-unit {
     input {
       padding-right: 1.75em;
     }

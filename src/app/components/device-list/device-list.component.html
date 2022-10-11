@@ -1,0 +1,42 @@
+<div class="pane">
+  <div class="pane-title">
+    <span translate>comp.device-list.title</span>
+    <button class="btn-power-off" *ngIf="devicesCanPowerOff" [@fade] (click)="turnOffAllDevices()">
+      <span style="font-weight: 600; padding-left: 0.25em" translate>
+        comp.device-list.turnOffAll
+      </span>
+      &nbsp;
+      <i class="material-icons">power_settings_new</i>
+    </button>
+  </div>
+  <div class="bulk-actions"></div>
+  <div class="device-list">
+    <div class="device-list-empty" *ngIf="!deviceCategories.length" [@vshrink]>
+      <i class="material-icons">info</i>
+      <span translate>comp.device-list.noDevices</span>
+    </div>
+    <div
+      class="device-list-category"
+      *ngFor="let category of deviceCategories; trackBy: trackDeviceCategoryBy"
+      [@triggerChildren]
+    >
+      <div class="device-list-category-header" [@vshrink]>
+        <div class="device-list-category-header-label">
+          {{ category.label | translate }}
+        </div>
+        <button
+          class="btn-power-off"
+          *ngIf="category.canPowerOff"
+          [@fade]
+          (click)="turnOffDevices(category.devices)"
+        >
+          <i class="material-icons">power_settings_new</i>
+        </button>
+      </div>
+      <app-device-list-item
+        *ngFor="let device of category.devices"
+        [device]="device"
+      ></app-device-list-item>
+    </div>
+  </div>
+</div>

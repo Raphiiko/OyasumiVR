@@ -5,26 +5,9 @@
     },
     "modals": {
       "cancel": "Annuleren",
-      "save": "Opslaan"
-    }
-  },
-  "dashboard-navbar": {
-    "overview": "Overzicht",
-    "sleepDetection": "Slaap Detectie",
-    "batteryAutomations": "Batterij Automatiseringen",
-    "gpuAutomations": "GPU Automatiseringen",
-    "settings": "Instellingen",
-    "about": "Over Oyasumi",
-    "batteryManagement": "Batterij Management"
-  },
-  "device-list": {
-    "title": "Apparaten",
-    "turnOffAll": "ALLE",
-    "noDevices": "Geen controllers of trackers gevonden.",
-    "category": {
-      "Controller": "Controllers",
-      "GenericTracker": "Trackers",
-      "other": "Overige"
+      "save": "Opslaan",
+      "confirm": "Bevestig",
+      "ok": "Ok"
     }
   },
   "overview": {
@@ -76,6 +59,56 @@
       }
     }
   },
+  "oscAutomations": {
+    "title": "OSC Automatiseringen",
+    "tab": {
+      "sleepingAnimations": "Slaap Animaties"
+    },
+    "sleepingAnimations": {
+      "currentPose": "Huidige Houding",
+      "manualControl": "Handmatige Bediening",
+      "presetAuthor": "van {{author}}",
+      "description": "Oyasumi kan automatisch de animaties van je avatar veranderen wanneer je je slaap houding wijzigd. Dit kan handig zijn als je geen full body tracking hebt, of als je je trackers s'nachts uitzet (of door Oyasumi laat uitzetten). Een voorbeeld hoe dit er uit ziet kan je <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">hier</a> vinden.\n\nEr zijn presets beschikbaar voor verschillende bestaande locomotion prefabs, maar je kan ook je eigen animaties specificeren.",
+      "enable": "Automatische slaap animaties inschakelen",
+      "customPreset": "Eigen Animaties",
+      "errors": {
+        "releaseDurationTooShort": "De duur moet minimaal 0.1 seconden zijn.",
+        "releaseDurationTooLong": "De duur mag maximaal 10 seconden zijn."
+      },
+      "options": {
+        "positions": {
+          "title": "Slaap Houdingen",
+          "description": "Stel de OSC commandos in om de animatie voor elke slaap houding te activeren.",
+          "SIDE_FRONT": "Rechtop",
+          "SIDE_BACK": "Op je rug",
+          "SIDE_LEFT": "Op je linkerzij",
+          "SIDE_RIGHT": "Op je rechterzij",
+          "UNKNOWN": "Onbekend"
+        },
+        "footLock": {
+          "title": "Voeten vastzetten",
+          "description": "Stel de OSC commandos in om de voeten van je avatar vast te zetten.",
+          "FOOT_LOCK": "Voeten vastzetten",
+          "FOOT_UNLOCK": "Voeten losmaken"
+        },
+        "general": {
+          "title": "Algemene Opties",
+          "onlySwitchAnimations": "Alleen animaties wisselen",
+          "onlyIfSleepModeEnabled": "Wanneer slaap modus actief is",
+          "onlyIfAllTrackersTurnedOff": "Wanneer alle trackers uit staan",
+          "footLock": {
+            "title": "Voeten vastzetten",
+            "description": "Het vastzetten van de voeten voorkomt meestal dat de avatar kan bewegen of met de speler mee kan draaien."
+          },
+          "lockFeetOnSleepModeEnable": "Voeten vastzetten wanneer slaap modus wordt ingeschakeld",
+          "unlockFeetOnSleepModeDisable": "Voeten losmaken wanneer slaap modus wordt uitgeschakeld",
+          "unlockFeetOnAutomationDisable": "Voeten losmaken wanneer de automatische slaap animaties worden uitgeschakeld",
+          "releaseFootLockOnPoseChange": "Voeten tijdelijk losmaken wanneer je van slaap houding veranderd",
+          "footLockReleaseWindow": "Duur van het tijdelijk losmaken van de voeten"
+        }
+      }
+    }
+  },
   "battery-automations": {
     "title": "Batterij Automatiseringen",
     "devicePowerOff": {
@@ -101,16 +134,16 @@
     "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
     "disabled": {
       "initializing": "GPU Automatiseringen worden nog geinitialiseerd.,,",
-      "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.<br />Hier door kun je terwijl je slaapt energie besparen.<br /><br />GPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.<br />AMD en Intel GPUs worden nog niet ondersteund.",
-      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi opnieuw te starten met beheerders rechten.",
-      "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
-      "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.<br /><br />Zorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
+      "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.\nHier door kun je terwijl je slaapt energie besparen.\n\nGPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.\nAMD en Intel GPUs worden nog niet ondersteund.",
+      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi beheerders rechten te geven.",
+      "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
+      "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
       "unknown": "Er is een onbekende fout opgetreden bij het aanzetten van de GPU automations functionaliteit."
     },
-    "restartAsAdmin": "Herstart Als Beheerder",
+    "requestAdministrator": "Geef Beheerders Rechten",
     "disable": "Deactiveer GPU Automatiseringen",
     "enable": "Activeer GPU Automatiseringen",
-    "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!<br />Het incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.<br />Houd dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
+    "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!\nHet incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.\nHoud dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
     "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
     "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
     "currentPowerLimit": "Huidig stroom limiet",
@@ -124,12 +157,19 @@
       "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert:"
     },
     "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
-    "inputDefault": "Herstel naar de GPU's standaard limiet."
+    "inputDefault": "Herstel naar de GPU's standaard limiet.",
+    "elevationSidecarModal": {
+      "title": "Beheerders rechten geven",
+      "message": "Wil je Oyasumi altijd beheerders rechten geven?\n\nAls je dit doet, zal Oyasumi voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
+      "confirm": "Altijd",
+      "cancel": "Alleen deze keer"
+    }
   },
   "settings": {
     "title": "Instellingen",
     "tab": {
       "general": "Algemeen",
+      "updates": "Updates",
       "debug": "Debug"
     },
     "general": {
@@ -139,7 +179,7 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouse Console",
-        "description": "Oyasumi heeft de locatie van de <strong>lighthouse_console.exe</strong> van je SteamVR installatie nodig.<br />Als Oyasumi deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
+        "description": "Oyasumi heeft de locatie van de <strong>lighthouse_console.exe</strong> van je SteamVR installatie nodig.\nAls Oyasumi deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
         "status": {
           "NOT_FOUND": "De <strong>lighthouse_console.exe</strong> kon niet worden gevonden op deze locatie.",
           "INVALID_EXECUTABLE": "De <strong>lighthouse_console.exe</strong> op deze locatie werkt niet zoals verwacht.",
@@ -149,7 +189,25 @@
           "CHECKING": "Aan het checken voor een geldige <strong>lighthouse_console.exe</strong>",
           "SUCCESS": "<strong>lighthouse_console.exe</strong> is gevonden en werkt naar behoren!"
         }
+      },
+      "adminPrivileges": {
+        "title": "Beheerders Rechten",
+        "label": "Vraag om beheerders rechten bij het opstarten",
+        "description": "Oyasumi heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal Oyasumi bij het opstarten altijd om beheerders rechten vragen."
+      },
+      "telemetry": {
+        "title": "Telemetrie",
+        "label": "Verstuur anonieme telemetrie data",
+        "description": "De enige data die wordt verstuurd, is de versie van Oyasumi die je gebruikt en je ingestelde taal. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor algemene gebruikstatistieken van Oyasumi."
       }
+    },
+    "updates": {
+      "checkForUpdates": "Updates checken",
+      "changelog": "Changelog",
+      "install": "Installeer v{{version}}",
+      "noUpdate": "Je draait nu Oyasumi v{{version}}, en dat is de laatste versie!",
+      "notChecked": "Oyasumi heeft nog niet gecheckt of er een update beschikbaar is.",
+      "updateAvailable": "Er is een nieuwe update beschikbaar voor Oyasumi! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
     },
     "debug": {
       "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
@@ -165,6 +223,9 @@
         "title": "Taal",
         "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
         "loadFile": "Vertalings Bestand Laden"
+      },
+      "sleepingPose": {
+        "title": "Slaap Houding"
       }
     }
   },
@@ -174,6 +235,105 @@
     },
     "translations": "Vertalingen",
     "projectLinks": "Project Links",
-    "sourceLink": "Broncode @ GitHub"
+    "sourceLink": "Broncode @ GitHub",
+    "discordInvite": "Discord Server"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "Update Fout",
+        "message": "De update kon niet geinstalleerd worden. Probeer het later nog eens."
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "Milliseconden mogen geen decimalen hebben.",
+      "durationTooShort": "Een wacht tijd moet minimaal 0.1 seconden zijn.",
+      "durationTooLong": "Een wacht tijd mag niet langer zijn dan 5 seconden.",
+      "durationRequired": "Een wacht tijd is vereist.",
+      "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden.",
+      "intOutOfBounds": "Een integer moet een waarde hebben tussen 0 en 255.",
+      "floatOutOfBounds": "Een float moet een waarde hebben tussen -1.0 en 1.0.",
+      "floatTooPrecise": "Een float mag niet meer dan 3 decimalen hebben.",
+      "invalidSyntax": "Incorrecte syntax.",
+      "tooManyCommands": "Een OSC script mag niet meer dan {{value}} acties bevatten.",
+      "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
+      "addressRequired": "Een OSC adres is vereist.",
+      "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten."
+    }
+  },
+  "comp": {
+    "confirm-modal": {
+      "defaultTitle": "Bevestig"
+    },
+    "update-modal": {
+      "title": "Update Beschikbaar",
+      "updateNow": "Installeer v{{version}}",
+      "updateLater": "Niet nu",
+      "message": "Er is een nieuwe update beschikbaar voor Oyasumi: v{{newVersion}}.\n\nJe draait op dit moment nog v{{currentVersion}}.\n\n.Wil je de update nu installeren?"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Selecteer..."
+    },
+    "dashboard-navbar": {
+      "overview": "Overzicht",
+      "sleepDetection": "Slaap Detectie",
+      "oscAutomations": "OSC Automatiseringen",
+      "batteryAutomations": "Batterij Automatiseringen",
+      "gpuAutomations": "GPU Automatiseringen",
+      "settings": "Instellingen",
+      "about": "Over Oyasumi",
+      "batteryManagement": "Batterij Management"
+    },
+    "device-list": {
+      "title": "Apparaten",
+      "turnOffAll": "ALLE",
+      "noDevices": "Geen controllers of trackers gevonden.",
+      "category": {
+        "Controller": "Controllers",
+        "GenericTracker": "Trackers",
+        "other": "Overige"
+      }
+    },
+    "osc-script-modal": {
+      "title": "OSC Script",
+      "simple": "Simpel",
+      "script": "Script"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC Script Bewerker",
+      "syntaxGuide": "Syntax Handleiding",
+      "format": "Formatteren",
+      "test": "Test"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} Commando",
+        "plural": "{{value}} Commandos"
+      },
+      "errorCounter": {
+        "singular": "{{value}} Validatie fout",
+        "plural": "{{value}} Validatie fouten"
+      },
+      "addCommand": "Voeg Toe",
+      "test": "Test",
+      "action": {
+        "osc": "OSC",
+        "sleep": "Wacht",
+        "none": "Er zijn nog geen acties toegevoegd"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC Commando",
+          "description": "Voer een OSC commando uit"
+        },
+        "SLEEP": {
+          "title": "Wacht",
+          "description": "Wacht voor een bepaalde tijd"
+        }
+      }
+    }
   }
 }

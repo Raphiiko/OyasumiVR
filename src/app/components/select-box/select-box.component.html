@@ -1,0 +1,68 @@
+<div
+  class="select-box"
+  [class.small]="type === 'SMALL'"
+  (click)="clickBox()"
+  [class.disabled]="disabled"
+  [class.active]="!collapsed"
+>
+  <div
+    class="select-item selected"
+    *ngIf="selected"
+    [class.has-subtitle]="selected.subLabel"
+    [class.small]="type === 'SMALL'"
+  >
+    <div class="select-item-content">
+      <div class="select-item-title">
+        {{ selected.label | tsTranslate }}
+      </div>
+      <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
+        {{ selected.subLabel | tsTranslate }}
+      </div>
+    </div>
+  </div>
+  <div class="select-item placeholder" *ngIf="!selected" [class.small]="type === 'SMALL'">
+    <div class="select-item-title">
+      {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
+    </div>
+  </div>
+  <div class="select-box-arrow">
+    <i class="material-icons">expand_more</i>
+  </div>
+</div>
+<div class="dropdown-container">
+  <div class="select-box-dropdown" *ngIf="!collapsed" [@fadeDown]>
+    <div class="select-item placeholder" *ngIf="showPlaceholderInDropdown">
+      <div class="select-item-title">
+        {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
+      </div>
+    </div>
+    <div
+      class="select-item"
+      *ngFor="let item of items"
+      (click)="select(item, $event)"
+      [class.has-subtitle]="item.subLabel"
+      [class.small]="type === 'SMALL'"
+    >
+      <div class="select-item-content">
+        <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
+          {{ item.label | tsTranslate }}
+        </div>
+        <div
+          class="select-item-subtitle"
+          *ngIf="item.subLabel && type !== 'SMALL'"
+          [innerHtml]="item.subLabel | tsTranslate"
+        >
+          {{ item.subLabel | tsTranslate }}
+        </div>
+      </div>
+      <a
+        class="select-item-info noselect"
+        *ngIf="item.infoLink"
+        [href]="item.infoLink"
+        target="_blank"
+      >
+        <i class="material-icons-round noselect">info</i>
+      </a>
+    </div>
+  </div>
+</div>
