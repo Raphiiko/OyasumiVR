@@ -30,7 +30,7 @@ export interface SleepingAnimationPreset {
 
 const MMM_SLEEP_SYSTEM_2_2_PRESET: SleepingAnimationPreset = {
   id: 'MMM_SLEEP_SYSTEM_2_2',
-  name: 'ごろ寝システム(ex)',
+  name: 'ごろ寝システム(EX)',
   versions: '2.2 - 2.3',
   author: 'みんみんみーん',
   infoLinks: [
