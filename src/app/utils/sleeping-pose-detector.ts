@@ -65,14 +65,14 @@ export class SleepingPoseDetector {
       this.createContactReceiver(3, [0, -8, 7], receiverOrientation, 0xffff00),
     ];
     this.receivers['SIDE_RIGHT'] = [
-      this.createContactReceiver(4, [0, 9, 4], receiverOrientation, 0xffff00),
+      this.createContactReceiver(4, [0, 9, 1], receiverOrientation, 0xffff00),
       this.createContactReceiver(4, [0, 9, 0], receiverOrientation, 0xffff00),
-      this.createContactReceiver(4, [0, 9, -4], receiverOrientation, 0xffff00),
+      this.createContactReceiver(4, [0, 9, -1], receiverOrientation, 0xffff00),
     ];
     this.receivers['SIDE_LEFT'] = [
-      this.createContactReceiver(4, [0, -10, 4], receiverOrientation, 0xffff00),
+      this.createContactReceiver(4, [0, -10, 1], receiverOrientation, 0xffff00),
       this.createContactReceiver(4, [0, -10, 0], receiverOrientation, 0xffff00),
-      this.createContactReceiver(4, [0, -10, -4], receiverOrientation, 0xffff00),
+      this.createContactReceiver(4, [0, -10, -1], receiverOrientation, 0xffff00),
     ];
     // Determine collisions
 
