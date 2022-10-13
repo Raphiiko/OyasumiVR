@@ -1,0 +1,17 @@
+
+
+.link {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+  span {
+    flex: 1;
+  }
+  button {
+    flex-shrink: 0;
+    margin-left: 1em;
+  }
+}

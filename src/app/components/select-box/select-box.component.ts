@@ -6,7 +6,7 @@ export interface SelectBoxItem {
   id: string;
   label: TString;
   subLabel?: TString;
-  infoLink?: string;
+  infoAction?: () => void;
 }
 
 @Component({

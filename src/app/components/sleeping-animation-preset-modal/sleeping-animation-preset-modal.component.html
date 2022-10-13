@@ -1,0 +1,16 @@
+<div class="pane modal" [@fadeUp]>
+  <div class="pane-title">
+    {{ preset?.name }}
+  </div>
+  <div class="pane-content">
+    <div *ngFor='let link of preset?.infoLinks || []' class='link'>
+      <span>{{link.label}}</span>
+      <button class='btn btn-secondary' translate (click)='openUrl(link.url)'>shared.modals.open</button>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()">
+      {{ 'shared.modals.close' | translate }}
+    </button>
+  </div>
+</div>

@@ -7,7 +7,9 @@
       "cancel": "Annuleren",
       "save": "Opslaan",
       "confirm": "Bevestig",
-      "ok": "Ok"
+      "ok": "Ok",
+      "open": "Open",
+      "close": "Sluiten"
     }
   },
   "overview": {
