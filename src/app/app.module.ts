@@ -61,6 +61,7 @@ import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
 import { filter } from 'rxjs';
+import { SleepingAnimationPresetModalComponent } from './components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -97,6 +98,7 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmModalComponent,
     UpdateModalComponent,
     LanguageSelectModalComponent,
+    SleepingAnimationPresetModalComponent,
   ],
   imports: [
     CommonModule,
