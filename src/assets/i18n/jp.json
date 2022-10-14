@@ -7,7 +7,9 @@
       "cancel": "キャンセル",
       "save": "保存",
       "confirm": "確認",
-      "ok": "OK"
+      "ok": "OK",
+      "open": "開く",
+      "close": "閉じる"
     }
   },
   "overview": {

@@ -7,11 +7,16 @@ export interface SleepingAnimationPresetNote {
   text: TString;
 }
 
+export interface SleepingAnimationPresetInfoLink {
+  label: TString;
+  url: string;
+}
 export interface SleepingAnimationPreset {
   id: string;
   name: string;
   author: string;
-  infoLink: string;
+  versions: string;
+  infoLinks: SleepingAnimationPresetInfoLink[];
   oscScripts: {
     SIDE_BACK?: OscScript;
     SIDE_FRONT?: OscScript;
@@ -25,9 +30,13 @@ export interface SleepingAnimationPreset {
 
 const MMM_SLEEP_SYSTEM_2_2_PRESET: SleepingAnimationPreset = {
   id: 'MMM_SLEEP_SYSTEM_2_2',
-  name: 'ごろ寝システム v2.2+',
+  name: 'ごろ寝システム(EX)',
+  versions: '2.2 - 2.3',
   author: 'みんみんみーん',
-  infoLink: 'https://booth.pm/ko/items/2886739',
+  infoLinks: [
+    { label: 'ごろ寝システム (booth.pm)', url: 'https://booth.pm/ko/items/2886739' },
+    { label: 'ごろ寝システムEX (booth.pm)', url: 'https://booth.pm/en/items/4233545' },
+  ],
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
 i 1 /avatar/parameters/VRCSupine
@@ -54,9 +63,10 @@ b false /avatar/parameters/VRCLockPose
 
 const GOGO_LOCO_LEGACY_1_7_1_PRESET: SleepingAnimationPreset = {
   id: 'GOGO_LOCO_1_7_1',
-  name: 'GoGo Loco 1.7.1+',
+  name: 'GoGo Loco',
+  versions: '1.7.1+',
   author: 'franada',
-  infoLink: 'https://booth.pm/en/items/3290806',
+  infoLinks: [{ label: 'GoGo Loco (booth.pm)', url: 'https://booth.pm/en/items/3290806' }],
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
@@ -85,9 +95,10 @@ b false /avatar/parameters/Go/Stationary
 
 const GOGO_LOCO_LEGACY_PRESET: SleepingAnimationPreset = {
   id: 'GOGO_LOCO_LEGACY',
-  name: 'GoGo Loco 1.6.2 - 1.7.0',
+  name: 'GoGo Loco',
+  versions: '1.6.2 - 1.7.0',
   author: 'franada',
-  infoLink: 'https://booth.pm/en/items/3290806',
+  infoLinks: [{ label: 'GoGo Loco (booth.pm)', url: 'https://booth.pm/en/items/3290806' }],
   notes: [
     {
       type: 'WARNING',

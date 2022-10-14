@@ -1,6 +1,6 @@
 {
   "name": "oyasumi",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
@@ -30,7 +30,7 @@
     "@fortawesome/fontawesome-free": "^6.1.2",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
-    "@tauri-apps/api": "^1.0.2",
+    "@tauri-apps/api": "^1.1.0",
     "cookie": "^0.5.0",
     "flag-icons": "^6.6.4",
     "lodash": "^4.17.21",

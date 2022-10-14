@@ -8,6 +8,8 @@
       "save": "Save",
       "confirm": "Confirm",
       "ok": "Ok",
+      "open": "Open",
+      "close": "Close",
       "login": "Log in"
     }
   },

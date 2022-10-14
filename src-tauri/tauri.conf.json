@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -70,8 +70,7 @@
         "wix": {
           "language": [
             "en-US",
-            "nl-NL",
-            "jp-JP"
+            "nl-NL"
           ]
         }
       }

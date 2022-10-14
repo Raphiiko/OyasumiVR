@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi"
-version = "1.0.0"
+version = "1.1.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -18,7 +18,7 @@ tauri-build = { version = "1.0.4", features = [] }
 oyasumi-shared = { path = "../src-shared", version = '*' }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.0.5", features = ["dialog-message", "dialog-open", "fs-read-file", "http-request", "process-exit", "shell-execute", "shell-open", "updater"] }
+tauri = { version = "1.1.1", features = ["dialog-message", "dialog-open", "fs-read-file", "process-exit", "shell-execute", "shell-open", "updater"] }
 lazy_static = "1.4.0"
 cronjob = "0.4.17"
 openvr_sys = "2.0.3"

@@ -15,8 +15,12 @@ import { SleepingAnimationsAutomationService } from '../../../../services/osc-au
 import { SleepService } from '../../../../services/sleep.service';
 import {
   SLEEPING_ANIMATION_PRESETS,
+  SleepingAnimationPreset,
   SleepingAnimationPresetNote,
 } from '../../../../models/sleeping-animation-presets';
+import { SimpleModalService } from 'ngx-simple-modal';
+import { SleepingAnimationPresetModalComponent } from '../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
+import { open } from '@tauri-apps/api/shell';
 
 @Component({
   selector: 'app-osc-automations-view',
@@ -35,12 +39,12 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     },
     ...SLEEPING_ANIMATION_PRESETS.map((preset) => ({
       id: preset.id,
-      label: preset.name,
+      label: preset.name + '\n' + preset.versions,
       subLabel: {
         string: 'oscAutomations.sleepingAnimations.presetAuthor',
         values: { author: preset.author },
       },
-      infoLink: preset.infoLink,
+      infoAction: this.buildPresetInfoAction(preset),
     })),
   ];
   config: SleepingAnimationsAutomationConfig = cloneDeep(
@@ -59,7 +63,8 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     private automationConfig: AutomationConfigService,
     private osc: OscService,
     private sleepingAnimationsAutomation: SleepingAnimationsAutomationService,
-    private sleep: SleepService
+    private sleep: SleepService,
+    private modalService: SimpleModalService
   ) {}
 
   ngOnInit(): void {
@@ -137,5 +142,17 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     await this.osc.runScript(
       enabled ? this.config.oscScripts.FOOT_LOCK! : this.config.oscScripts.FOOT_UNLOCK!
     );
+  }
+
+  buildPresetInfoAction(preset: SleepingAnimationPreset): (() => void) | undefined {
+    if (preset.infoLinks) {
+      if (preset.infoLinks.length === 1) {
+        return () => open(preset.infoLinks[0].url);
+      } else if (preset.infoLinks.length > 1) {
+        return () =>
+          this.modalService.addModal(SleepingAnimationPresetModalComponent, { preset }).subscribe();
+      }
+    }
+    return undefined;
   }
 }

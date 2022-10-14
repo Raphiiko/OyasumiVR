@@ -69,6 +69,7 @@ import { SettingsVRChatTabComponent } from './views/dashboard-view/views/setting
 import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrchat-login-modal.component';
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
+import { SleepingAnimationPresetModalComponent } from './components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -112,6 +113,7 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     StatusAutomationsViewComponent,
+    SleepingAnimationPresetModalComponent,
   ],
   imports: [
     CommonModule,

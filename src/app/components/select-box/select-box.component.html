@@ -12,9 +12,7 @@
     [class.small]="type === 'SMALL'"
   >
     <div class="select-item-content">
-      <div class="select-item-title">
-        {{ selected.label | tsTranslate }}
-      </div>
+      <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
       <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
         {{ selected.subLabel | tsTranslate }}
       </div>
@@ -55,12 +53,7 @@
           {{ item.subLabel | tsTranslate }}
         </div>
       </div>
-      <a
-        class="select-item-info noselect"
-        *ngIf="item.infoLink"
-        [href]="item.infoLink"
-        target="_blank"
-      >
+      <a class="select-item-info noselect" *ngIf="item.infoAction" (click)="item.infoAction()">
         <i class="material-icons-round noselect">info</i>
       </a>
     </div>
