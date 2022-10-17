@@ -8,6 +8,7 @@ import { marked } from 'marked';
 import { UpdateService } from '../../../../../services/update.service';
 import { HttpClient } from '@angular/common/http';
 import { hshrink } from '../../../../../utils/animations';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-settings-updates-tab',
@@ -18,12 +19,13 @@ import { hshrink } from '../../../../../utils/animations';
 export class SettingsUpdatesTabComponent extends SettingsTabComponent {
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
   version: string = '';
-  changelog: string = '';
+  changelog: SafeHtml = '';
   updateOrCheckInProgress = false;
   constructor(
     settingsService: AppSettingsService,
     private update: UpdateService,
-    private http: HttpClient
+    private http: HttpClient,
+    private sanitizer: DomSanitizer,
   ) {
     super(settingsService);
   }
@@ -37,7 +39,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent {
     this.changelog = await this.getChangeLog();
   }
 
-  async getChangeLog(): Promise<string> {
+  async getChangeLog(): Promise<SafeHtml> {
     let changelog = '';
     try {
       changelog = await firstValueFrom(
@@ -56,7 +58,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent {
     changelog = changelog.slice(firstIndex, changelog.length);
     changelog = marked.parse(changelog);
     changelog = changelog.replace(/<a /g, '<a target="_blank" ');
-    return changelog;
+    return this.sanitizer.bypassSecurityTrustHtml(changelog);
   }
 
   async updateOrCheck() {

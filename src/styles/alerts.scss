@@ -36,6 +36,7 @@
     position: relative;
     z-index: 2;
     flex: 1;
+    white-space: pre-wrap;
 
     strong {
       background: var(--color-surface-2);

@@ -1,21 +1,17 @@
 <div class="pane" [@noop]>
   <div class="pane-title" translate>status-automations.title</div>
   <div class="pane-content">
-    <p
-      >Oyasumi can automatically update your VRChat status based on the number of players in your
-      world.</p
-    >
-    <div class="alert">
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> info </i>
-      </div>
-      <div class="alert-content">{{
-        'Example use: When another person joins you, automatically switch your status to orange or\n' +
-          '      red! Then when they leave and you are alone again, switch your status back to blue or green.'
-          | translate
-      }}</div>
+    <div class="automation-toggle">
+      <label class="switch-toggle">
+        <input type="checkbox" />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <h3 translate>Enable Status Automations</h3>
     </div>
+    <p
+      >Oyasumi can limit the amount of people who join you, by automatically setting your status
+      based on how many players there are in your world.</p
+    >
     <div class="alert warning" *ngIf="!loggedIn" @vshrink>
       <div class="alert-bg"></div>
       <div class="alert-icon">
@@ -29,6 +25,112 @@
           >shared.modals.login</button
         ></div
       >
+    </div>
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content">{{
+        'Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.'
+          | translate
+      }}</div>
+    </div>
+
+    <div class="settings">
+      <div class="limit-setting">
+        <h3 translate>Player Limit</h3>
+        <div class="limit-setting-graphic">
+          <div class="bed" [style.--people]="limit > bedLimit ? bedLimit + 1 : bedLimit">
+            <div class="bed-sheets">
+              <div class="under-cover"></div>
+              <div class="cover"></div>
+              <div class="stripe"></div>
+              <div class="stripe"></div>
+            </div>
+            <div class="people">
+              <div
+                class="person"
+                *ngFor="let _ of [].constructor(bedLimit); let i = index"
+                @hshrink
+                [class.yourself]="i === 0"
+              >
+                <img src="/assets/img/sleeping-person.png" alt="sleeping person" />
+              </div>
+              <div class="person-limit-exceeded" *ngIf='limit > bedLimit'> +{{ limit - bedLimit }} </div>
+            </div>
+          </div>
+        </div>
+        <div class="limit-setting-controls">
+          <div class="limit-setting-controls-slider">
+            <input
+              type="range"
+              min="1"
+              max="40"
+              step="1"
+              [value]="limit"
+              (input)="onLimitChange(limitInput.value)"
+              #limitInput
+            />
+          </div>
+          <div class="limit-setting-controls-numeric-input">
+            <input type="number" min="1" max="40" step="1" [value]="limit" />
+          </div>
+        </div>
+        <div class="limit-setting-description"> {{limit}} player{{limit > 1 ? 's' : ''}} (including you!) </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Below the limit</span>
+          <span translate>Set your status to</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>At the limit or above</span>
+          <span translate>Set your status to</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Only when sleeping mode is enabled</span>
+          <span translate></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="alert warning">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'Status changes by Oyasumi are instantly visible to anyone except yourself. It can take a few minutes before your status also updates for you. Rest assured the status change does happen immediately.'
+            | translate
+        }}</span>
+      </div>
     </div>
   </div>
 </div>

@@ -6,13 +6,22 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
-import { BehaviorSubject, distinctUntilChanged, interval, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  interval,
+  Observable,
+} from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { handleVRChatEvent } from './vrchat-events/vrchat-event-handler';
 import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
 import { SimpleModalService } from 'ngx-simple-modal';
+import { VRChatUserStatus } from '../models/vrchat';
+import { TaskQueue } from '../utils/task-queue';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -37,7 +46,15 @@ export class VRChatService {
   private userAgent!: string;
   private socket?: WebSocket;
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
-  private loggedOutDueToExpiry = false;
+  private loginExpired = false;
+  private apiCallQueue: TaskQueue = new TaskQueue({
+    rateLimiter: {
+      totalPerMinute: 15,
+      typePerMinute: {
+        STATUS_CHANGE: 6,
+      },
+    },
+  });
 
   constructor(private modalService: SimpleModalService) {}
 
@@ -81,7 +98,8 @@ export class VRChatService {
     if (newStatus !== this._status.value) this._status.next(newStatus);
     console.log(this._user.value);
     // Show the login modal if we were just logged out due to token expiry
-    if (this.loggedOutDueToExpiry) {
+    if (this.loginExpired) {
+      console.log('Logging out because of login expiry.');
       await this.logout();
       this.showLoginModal();
     }
@@ -149,12 +167,35 @@ export class VRChatService {
     this._status.next('LOGGED_IN');
   }
 
+  async setStatus(status: VRChatUserStatus): Promise<void> {
+    const userId = this._user.value?.id;
+    if (!userId) throw new Error('Tried setting status while not logged in');
+    const response = await this.apiCallQueue.queueTask<Response<unknown>>(
+      {
+        typeId: 'STATUS_CHANGE',
+        runnable: () => this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
+          headers: this.getDefaultHeaders(),
+        }),
+      },
+      true
+    );
+    console.log('RESPONSE', response);
+  }
+
   //
   // INTERNALS
   //
 
   private async manageSocketConnection() {
     const buildSocket = () => {
+      if (this.socket) {
+        try {
+          this.socket.close();
+        } catch (e) {
+          // Ignore any error, we just want to disconnect
+        }
+        this.socket = undefined;
+      }
       this.socket = new WebSocket(
         'wss://pipeline.vrchat.cloud/?authToken=' + this.settings.value.authCookie
       );
@@ -182,13 +223,14 @@ export class VRChatService {
       }
     });
     // Check connection intermittently in case of dropouts
-    interval(10000).subscribe(() => {
-      if (this.socket && this.socket.readyState !== WebSocket.OPEN) {
-        this.socket.close();
-        this.socket = undefined;
+    interval(10000)
+      .pipe(filter(() => this._status.value === 'LOGGED_IN'))
+      .subscribe(() => {
+        // Stop if we have an active connection
+        if (this.socket && this.socket.readyState === WebSocket.OPEN) return;
+        // (Re)build a connection
         buildSocket();
-      }
-    });
+      });
   }
 
   private async onSocketEvent(
@@ -308,21 +350,23 @@ export class VRChatService {
     );
     settings = settings ? migrateVRChatApiSettings(settings) : this.settings.value;
     // Handle cookie expiry
-    this.loggedOutDueToExpiry = false;
+    this.loginExpired = false;
     if (settings.apiKeyExpiry && settings.apiKeyExpiry < Date.now() / 1000) {
+      console.warn('API key expired, throwing it away.');
       settings.apiKey = undefined;
       settings.apiKeyExpiry = undefined;
-      this.loggedOutDueToExpiry = true;
     }
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
+      console.warn('Auth cookie expired, throwing it away.');
       settings.authCookie = undefined;
       settings.authCookieExpiry = undefined;
-      this.loggedOutDueToExpiry = true;
+      this.loginExpired = true;
     }
     if (settings.twoFactorCookieExpiry && settings.twoFactorCookieExpiry < Date.now() / 1000) {
+      console.warn('Two factor cookie expired, throwing it away.');
       settings.twoFactorCookie = undefined;
       settings.twoFactorCookieExpiry = undefined;
-      this.loggedOutDueToExpiry = true;
+      this.loginExpired = true;
     }
     // Finish loading settings & write changes to disk
     this.settings.next(settings);
