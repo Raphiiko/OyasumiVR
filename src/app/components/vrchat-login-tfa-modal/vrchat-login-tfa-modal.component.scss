@@ -1,0 +1,10 @@
+input {
+  width: 100%;
+}
+p,
+.alert {
+  max-width: 30em;
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
+}

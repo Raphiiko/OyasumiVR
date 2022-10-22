@@ -1904,7 +1904,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumi"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "cronjob",
  "futures",
@@ -1920,6 +1920,7 @@ dependencies = [
  "sysinfo",
  "tauri",
  "tauri-build",
+ "tauri-plugin-fs-extra",
  "tauri-plugin-store",
  "tokio",
  "winapi",
@@ -1928,7 +1929,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumi-shared"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "openvr",
  "serde",
@@ -3083,6 +3084,16 @@ dependencies = [
  "syn",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-plugin-fs-extra"
+version = "0.0.0"
+source = "git+https://github.com/tauri-apps/tauri-plugin-fs-extra?branch=dev#0bafb6d596c78e23100c5f97d8b317cb3bcb5c32"
+dependencies = [
+ "serde",
+ "tauri",
+ "thiserror",
 ]
 
 [[package]]

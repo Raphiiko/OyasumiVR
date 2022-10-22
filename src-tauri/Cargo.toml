@@ -18,7 +18,7 @@ tauri-build = { version = "1.0.4", features = [] }
 oyasumi-shared = { path = "../src-shared", version = '*' }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.1.1", features = ["dialog-message", "dialog-open", "fs-read-file", "process-exit", "shell-execute", "shell-open", "updater"] }
+tauri = { version = "1.1.1", features = ["dialog-message", "dialog-open", "fs-exists", "fs-read-dir", "fs-read-file", "http-request", "process-exit", "shell-execute", "shell-open", "updater"] }
 lazy_static = "1.4.0"
 cronjob = "0.4.17"
 openvr_sys = "2.0.3"
@@ -45,6 +45,11 @@ features = ["full"]
 
 [dependencies.tauri-plugin-store]
 git = "https://github.com/tauri-apps/tauri-plugin-store"
+branch = "dev"
+
+[dependencies.tauri-plugin-fs-extra]
+git = "https://github.com/tauri-apps/tauri-plugin-fs-extra"
+#tag = "v0.1.0"
 branch = "dev"
 
 [dependencies.openvr]

@@ -12,5 +12,5 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
   {
     code: 'jp',
     label: '日本語',
-  }
+  },
 ];

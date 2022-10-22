@@ -171,6 +171,7 @@
     "title": "設定",
     "tab": {
       "general": "一般",
+      "vrchat": "VRChat",
       "updates": "アップデート",
       "debug": "デバッグ"
     },

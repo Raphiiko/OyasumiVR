@@ -1,6 +1,7 @@
 import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
+import { UserStatus } from 'vrchat/dist';
 
 export type AutomationType =
   // GPU AUTOMATIONS
@@ -15,10 +16,12 @@ export type AutomationType =
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
   // OSC AUTOMATIONS
-  | 'SLEEPING_ANIMATIONS';
+  | 'SLEEPING_ANIMATIONS'
+  // STATUS AUTOMATIONS
+  | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT';
 
 export interface AutomationConfigs {
-  version: 3;
+  version: 4;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -31,6 +34,8 @@ export interface AutomationConfigs {
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
   // OSC AUTOMATIONS
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
+  // STATUS AUTOMATIONS
+  CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -100,12 +105,20 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   footLockReleaseWindow: number;
 }
 
+// STATUS AUTOMATIONS
+export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends AutomationConfig {
+  limit: number;
+  statusBelowLimit: UserStatus;
+  statusAtLimitOrAbove: UserStatus;
+  onlyIfSleepModeEnabled: boolean;
+}
+
 //
 // DEFAULT
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 3,
+  version: 4,
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -160,5 +173,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     releaseFootLockOnPoseChange: true,
     footLockReleaseWindow: 600,
     oscScripts: {},
+  },
+  // STATUS AUTOMATIONS
+  CHANGE_STATUS_BASED_ON_PLAYER_COUNT: {
+    enabled: false,
+    limit: 2,
+    statusBelowLimit: UserStatus.JoinMe,
+    statusAtLimitOrAbove: UserStatus.Busy,
+    onlyIfSleepModeEnabled: false,
   },
 };

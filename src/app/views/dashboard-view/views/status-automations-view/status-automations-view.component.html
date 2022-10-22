@@ -1,0 +1,168 @@
+<div class="pane" [@noop]>
+  <div class="pane-title" translate>status-automations.title</div>
+  <div class="pane-content">
+    <div class="automation-toggle">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.enabled"
+          (change)="updateConfig({ enabled: !config.enabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <h3 translate>Enable Status Automations</h3>
+    </div>
+    <p
+      >Oyasumi can limit the amount of people who join you, by automatically setting your status
+      based on how many players there are in your world.</p
+    >
+    <div class="alert warning" *ngIf="!loggedIn" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'This feature requires you to be logged in with a VRChat account.' | translate
+        }}</span
+        ><button class="btn btn-secondary" (click)="login()" translate
+          >shared.modals.login</button
+        ></div
+      >
+    </div>
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content">{{
+        'Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.'
+          | translate
+      }}</div>
+    </div>
+    <div class="settings" [class.disabled]="config.enabled">
+      <div class="alert" @vshrink *ngIf="config.enabled">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> info </i>
+        </div>
+        <div class="alert-content">{{
+          'Please disable status automations before you make any changes.' | translate
+        }}</div>
+      </div>
+      <div class="limit-setting">
+        <h3 translate>Player Limit</h3>
+        <div class="limit-setting-graphic">
+          <div class="bed" [style.--people]="limit.value > bedLimit ? bedLimit + 1 : bedLimit">
+            <div class="bed-sheets">
+              <div class="under-cover"></div>
+              <div class="cover"></div>
+              <div class="stripe"></div>
+              <div class="stripe"></div>
+            </div>
+            <div class="people">
+              <div
+                class="person"
+                *ngFor="let _ of [].constructor(bedLimit); let i = index"
+                @hshrink
+                [class.yourself]="i === 0"
+              >
+                <img src="/assets/img/sleeping-person.png" alt="sleeping person" />
+              </div>
+              <div class="person-limit-exceeded" *ngIf="limit.value > bedLimit">
+                +{{ limit.value - bedLimit }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="limit-setting-controls">
+          <div class="limit-setting-controls-slider">
+            <input
+              type="range"
+              min="1"
+              max="40"
+              step="1"
+              [value]="limit.value"
+              (input)="onLimitChange(limitSliderInput.value)"
+              #limitSliderInput
+            />
+          </div>
+          <div class="limit-setting-controls-numeric-input">
+            <input
+              type="number"
+              min="1"
+              max="40"
+              step="1"
+              [value]="limit.value"
+              (input)="onLimitChange(limitNumberInput.value)"
+              (blur)="limitNumberInput.value = limit.value.toString()"
+              #limitNumberInput
+            />
+          </div>
+        </div>
+        <div class="limit-setting-description">
+          {{ limit.value }} player{{ limit.value > 1 ? 's' : '' }} (including you!)
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Below the limit</span>
+          <span translate>Set your status to</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+            [selected]="optionSetStatusBelowLimit"
+            (selectedChange)="setStatusSetOption('belowLimit', $event)"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>At the limit or above</span>
+          <span translate>Set your status to</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+            [selected]="optionSetStatusAtLimitOrAbove"
+            (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Only when sleeping mode is enabled</span>
+          <span translate></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyIfSleepModeEnabled"
+              (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="alert warning">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{
+          'Status changes by Oyasumi are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by Oyasumi.'
+            | translate
+        }}</span
+        ><button class="btn btn-secondary" (click)="showFAQ()" translate style='margin-left: 1em'>More Info</button>
+      </div>
+    </div>
+  </div>
+</div>

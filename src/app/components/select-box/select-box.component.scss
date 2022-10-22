@@ -111,6 +111,11 @@
       color: var(--color-text-3);
     }
   }
+  &-html-prefix {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
   &-content {
     flex: 1;
     display: flex;

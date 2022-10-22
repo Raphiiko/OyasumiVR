@@ -1,0 +1,28 @@
+@import '../settings-tab/settings-tab.component.scss';
+@import 'panes';
+
+.update-checker {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+  p {
+    margin-bottom: 0;
+    white-space: pre;
+  }
+  button {
+    margin-right: 1em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+.pane-changelog {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  overflow-y: overlay;
+}

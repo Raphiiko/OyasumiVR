@@ -10,6 +10,7 @@ use cronjob::CronJob;
 use std::{sync::Mutex, net::UdpSocket};
 use tauri::Manager;
 use tauri_plugin_store::PluginBuilder;
+use tauri_plugin_fs_extra::FsExtra;
 
 mod commands {
     pub mod admin;
@@ -18,6 +19,7 @@ mod commands {
     pub mod os;
     pub mod osc;
     pub mod splash;
+    pub mod fs;
 }
 mod background {
     pub mod http_server;
@@ -38,6 +40,7 @@ lazy_static! {
 fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
+        .plugin(FsExtra::default())
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -97,6 +100,7 @@ fn main() {
             commands::osc::osc_valid_addr,
             commands::admin::elevation_sidecar_running,
             commands::admin::start_elevation_sidecar,
+            commands::fs::read_text_from_file,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

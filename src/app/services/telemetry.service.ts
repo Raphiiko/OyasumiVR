@@ -5,7 +5,7 @@ import { SETTINGS_FILE } from '../globals';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
-import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { cloneDeep } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { getVersion } from '../utils/app-utils';

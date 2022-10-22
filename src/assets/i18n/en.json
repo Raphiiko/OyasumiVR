@@ -9,7 +9,8 @@
       "confirm": "Confirm",
       "ok": "Ok",
       "open": "Open",
-      "close": "Close"
+      "close": "Close",
+      "login": "Log in"
     }
   },
   "overview": {
@@ -167,10 +168,14 @@
       "cancel": "Only this once"
     }
   },
+  "status-automations": {
+    "title": "Status Automations"
+  },
   "settings": {
     "title": "Settings",
     "tab": {
       "general": "General",
+      "vrchat": "VRChat",
       "updates": "Updates",
       "debug": "Debug"
     },
@@ -201,6 +206,30 @@
         "title": "Telemetry",
         "label": "Send anonymous usage data",
         "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "Log in",
+        "description": "Some Oyasumi features require you to log in with your VRChat account for them to work.",
+        "loggedIn": {
+          "title": "Hi {{name}}!",
+          "subtext": "You are currently logged in with your VRChat account.",
+          "logOut": "Log out"
+        },
+        "loggedOut": {
+          "title": "Logged Out",
+          "subtext": "You are currently not logged in with your VRChat account.",
+          "logIn": "Log in"
+        },
+        "errors": {
+          "initError": "The VRChat module could not be initialised. Please ensure you have internet connectivity and restart Oyasumi at a later time to try again."
+        },
+        "disclaimers": {
+          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.",
+          "brand": "Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko is not not responsible for any problems caused by Oyasumi. Use at your own risk!"
+        }
       }
     },
     "updates": {
@@ -285,6 +314,7 @@
       "oscAutomations": "OSC Automations",
       "batteryAutomations": "Battery Automations",
       "gpuAutomations": "GPU Automations",
+      "statusAutomations": "Status Automations",
       "settings": "Settings",
       "about": "About Oyasumi"
     },
@@ -334,6 +364,24 @@
           "title": "Sleep",
           "description": "Wait for a specified amount of time"
         }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "Log in to VRChat",
+      "username": "VRChat Username/E-mail",
+      "password": "Password",
+      "errors": {
+        "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
+        "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
+        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "Two Factor Authentication",
+      "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
+      "errors": {
+        "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect.",
+        "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input."
       }
     }
   }

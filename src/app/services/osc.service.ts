@@ -12,7 +12,7 @@ import { TaskQueue } from '../utils/task-queue';
 })
 export class OscService {
   address = '127.0.0.1:9000';
-  private scriptQueue: TaskQueue = new TaskQueue(true);
+  private scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
 
   constructor(private sleep: SleepService) {}
 

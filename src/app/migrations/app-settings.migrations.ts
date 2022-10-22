@@ -2,7 +2,7 @@ import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 
 const migrations: { [v: number]: (data: any) => any } = {
-  1: from0to1,
+  1: toLatest,
   2: from1to2,
 };
 
@@ -25,10 +25,5 @@ function toLatest(data: any): any {
 function from1to2(data: any): any {
   data.version = 2;
   data.askForAdminOnStart = false;
-  return data;
-}
-
-function from0to1(data: any): any {
-  data.version = 1;
   return data;
 }
