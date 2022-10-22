@@ -253,7 +253,7 @@ export class VRChatService {
   private async handleRequestInviteNotification(notification: Notification) {
     // Automatically accept invite requests when on blue, in case the VRChat client does not.
     const user = this._user.value;
-    // if (!user || user.status !== UserStatus.JoinMe) return;
+    if (!user || user.status !== UserStatus.JoinMe) return;
     await this.deleteNotification(notification.id);
     await this.inviteUser(notification.senderUserId);
   }
@@ -423,7 +423,6 @@ export class VRChatService {
     });
     if (response.ok) {
       // Store config if we end up needing it in the future
-      // this.apiConfig = response.data;
       await this.parseCookies(response);
     } else {
       this._status.next('ERROR');
