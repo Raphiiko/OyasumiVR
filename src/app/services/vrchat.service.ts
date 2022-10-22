@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Body, Client, getClient, Response, ResponseType } from '@tauri-apps/api/http';
-import type { APIConfig, CurrentUser } from 'vrchat';
+import { APIConfig, CurrentUser, UserStatus, Notification, NotificationType } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
@@ -8,20 +8,22 @@ import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
 import {
   BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   filter,
-  firstValueFrom,
   interval,
+  map,
   Observable,
 } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
-import { handleVRChatEvent } from './vrchat-events/vrchat-event-handler';
+import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
 import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
 import { SimpleModalService } from 'ngx-simple-modal';
-import { VRChatUserStatus } from '../models/vrchat';
 import { TaskQueue } from '../utils/task-queue';
+import { WorldContext } from '../models/vrchat';
+import { VRChatLogService } from './vrchat-log.service';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -42,21 +44,34 @@ export class VRChatService {
   private _user: BehaviorSubject<CurrentUser | null> = new BehaviorSubject<CurrentUser | null>(
     null
   );
-  public user: Observable<CurrentUser | null> = this._user.asObservable();
   private userAgent!: string;
   private socket?: WebSocket;
-  public status: Observable<VRChatServiceStatus> = this._status.asObservable();
   private loginExpired = false;
   private apiCallQueue: TaskQueue = new TaskQueue({
     rateLimiter: {
       totalPerMinute: 15,
       typePerMinute: {
         STATUS_CHANGE: 6,
+        DELETE_NOTIFICATION: 3,
+        INVITE: 6,
       },
     },
   });
+  private eventHandler: VRChatEventHandlerManager;
+  private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
+    playerCount: 1,
+  });
 
-  constructor(private modalService: SimpleModalService) {}
+  public user: Observable<CurrentUser | null> = this._user.asObservable();
+  public status: Observable<VRChatServiceStatus> = this._status.asObservable();
+  public world: Observable<WorldContext> = combineLatest([
+    this._world,
+    this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
+  ]).pipe(map(([world]) => world));
+
+  constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
+    this.eventHandler = new VRChatEventHandlerManager(this);
+  }
 
   async init() {
     this.http = await getClient();
@@ -70,39 +85,20 @@ export class VRChatService {
     if (!this.settings.value.apiKey) await this.fetchApiConfig();
     // If we could not, error out (reinit required)
     if (this._status.value === 'ERROR') return;
-    // If we already have an auth cookie, get the current user for it
-    if (this.settings.value.authCookie) {
-      try {
-        this._user.next(await this.getCurrentUser());
-      } catch (e) {
-        switch (e) {
-          case 'INVALID_CREDENTIALS':
-          case 'CHECK_EMAIL':
-          case '2FA_REQUIRED':
-            // With these errors, clear the currently known credentials
-            await this.updateSettings({
-              authCookie: undefined,
-              authCookieExpiry: undefined,
-              twoFactorCookie: undefined,
-              twoFactorCookieExpiry: undefined,
-            });
-            break;
-          default:
-            // Ignore other errors (We might just not have a connection)
-            break;
-        }
-      }
-    }
+    // Load existing session if possible
+    await this.loadSession();
     // Depending on if we have a user, set the status
     const newStatus = this._user.value ? 'LOGGED_IN' : 'LOGGED_OUT';
     if (newStatus !== this._status.value) this._status.next(newStatus);
-    console.log(this._user.value);
     // Show the login modal if we were just logged out due to token expiry
     if (this.loginExpired) {
       console.log('Logging out because of login expiry.');
       await this.logout();
       this.showLoginModal();
     }
+    console.log('USER', this._user.value);
+    // Process VRChat log events
+    await this.subscribeToLogEvents();
   }
 
   //
@@ -167,24 +163,152 @@ export class VRChatService {
     this._status.next('LOGGED_IN');
   }
 
-  async setStatus(status: VRChatUserStatus): Promise<void> {
+  async setStatus(status: UserStatus): Promise<void> {
+    // Throw if we don't have a current user
     const userId = this._user.value?.id;
     if (!userId) throw new Error('Tried setting status while not logged in');
+    // Don't do anything if the status is not changing
+    if (this._user.value?.status === status) return;
+    // Send status change request
     const response = await this.apiCallQueue.queueTask<Response<unknown>>(
       {
         typeId: 'STATUS_CHANGE',
-        runnable: () => this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
-          headers: this.getDefaultHeaders(),
-        }),
+        runnable: () =>
+          this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
+            headers: this.getDefaultHeaders(),
+          }),
       },
       true
     );
-    console.log('RESPONSE', response);
+    if (response.result && response.result.ok) this.patchCurrentUser({ status });
+  }
+
+  public showLoginModal() {
+    this.modalService
+      .addModal(
+        VRChatLoginModalComponent,
+        {},
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      )
+      .subscribe((data) => {});
+  }
+
+  public patchCurrentUser(user: Partial<CurrentUser>) {
+    const currentUser = cloneDeep(this._user.value);
+    if (!currentUser) return;
+    Object.assign(currentUser, user);
+    this._user.next(currentUser);
+  }
+
+  public async handleNotification(notification: Notification) {
+    console.log('Received notification', notification);
+    switch (notification.type) {
+      case NotificationType.RequestInvite:
+        await this.handleRequestInviteNotification(notification);
+        break;
+    }
+  }
+
+  public async deleteNotification(notificationId: string) {
+    // Throw if we don't have a current user
+    const userId = this._user.value?.id;
+    if (!userId) throw new Error('Tried deleting a notification while not logged in');
+    // Send
+    const response = await this.apiCallQueue.queueTask<Response<Notification>>({
+      typeId: 'DELETE_NOTIFICATION',
+      runnable: () =>
+        this.http.put(`${BASE_URL}/auth/user/notifications/${notificationId}/hide`, undefined, {
+          headers: this.getDefaultHeaders(),
+        }),
+    });
+    console.log('DELETE NOTIFICATION', response)
+  }
+
+  public async inviteUser(inviteeId: string, instanceId?: string) {
+    // Throw if we don't have a current user
+    const userId = this._user.value?.id;
+    if (!userId) throw new Error('Tried accepting an invite request while not logged in');
+    // Throw if instance id was not provided and we don't know the current world id.
+    if (!instanceId) instanceId = this._world.value?.instanceId;
+    if (!instanceId)
+      throw new Error('Cannot invite a user when the current world instance is unknown');
+    // Send
+    const response = await this.apiCallQueue.queueTask<Response<Notification>>({
+      typeId: 'INVITE',
+      runnable: () =>
+        this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
+          headers: this.getDefaultHeaders(),
+        }),
+    });
+    console.log('SEND INVITE', response);
   }
 
   //
   // INTERNALS
   //
+
+  private async handleRequestInviteNotification(notification: Notification) {
+    // Automatically accept invite requests when on blue, in case the VRChat client does not.
+    const user = this._user.value;
+    // if (!user || user.status !== UserStatus.JoinMe) return;
+    await this.deleteNotification(notification.id);
+    await this.inviteUser(notification.senderUserId);
+  }
+
+  private async subscribeToLogEvents() {
+    this.logService.logEvents.subscribe((event) => {
+      switch (event.type) {
+        case 'OnPlayerJoined':
+          this._world.next({
+            ...cloneDeep(this._world.value),
+            playerCount: this._world.value.playerCount + 1,
+          });
+          break;
+        case 'OnPlayerLeft':
+          this._world.next({
+            ...cloneDeep(this._world.value),
+            playerCount: Math.max(this._world.value.playerCount - 1, 0),
+          });
+          break;
+        case 'OnLocationChange':
+          this._world.next({
+            ...cloneDeep(this._world.value),
+            playerCount: 0,
+            instanceId: event.instanceId
+          });
+          break;
+      }
+    });
+  }
+
+  private async loadSession() {
+    // If we already have an auth cookie, get the current user for it
+    if (this.settings.value.authCookie) {
+      try {
+        this._user.next(await this.getCurrentUser());
+      } catch (e) {
+        switch (e) {
+          case 'INVALID_CREDENTIALS':
+          case 'CHECK_EMAIL':
+          case '2FA_REQUIRED':
+            // With these errors, clear the currently known credentials
+            await this.updateSettings({
+              authCookie: undefined,
+              authCookieExpiry: undefined,
+              twoFactorCookie: undefined,
+              twoFactorCookieExpiry: undefined,
+            });
+            break;
+          default:
+            // Ignore other errors (We might just not have a connection)
+            break;
+        }
+      }
+    }
+  }
 
   private async manageSocketConnection() {
     const buildSocket = () => {
@@ -239,7 +363,7 @@ export class VRChatService {
   ) {
     if (event !== 'MESSAGE') return;
     const data = JSON.parse(message?.data as string);
-    handleVRChatEvent(data.type, data.content);
+    this.eventHandler.handle(data.type, data.content);
   }
 
   private async getCurrentUser(credentials?: {
@@ -344,7 +468,7 @@ export class VRChatService {
     }
   }
 
-  async loadSettings() {
+  private async loadSettings() {
     let settings: VRChatApiSettings | null = await this.store.get<VRChatApiSettings>(
       SETTINGS_KEY_VRCHAT_API
     );
@@ -379,21 +503,8 @@ export class VRChatService {
     await this.saveSettings();
   }
 
-  async saveSettings() {
+  private async saveSettings() {
     await this.store.set(SETTINGS_KEY_VRCHAT_API, this.settings.value);
     await this.store.save();
-  }
-
-  showLoginModal() {
-    this.modalService
-      .addModal(
-        VRChatLoginModalComponent,
-        {},
-        {
-          closeOnEscape: false,
-          closeOnClickOutside: false,
-        }
-      )
-      .subscribe((data) => {});
   }
 }

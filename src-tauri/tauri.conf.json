@@ -14,7 +14,12 @@
   "tauri": {
     "allowlist": {
       "fs": {
-        "readFile": true
+        "readFile": true,
+        "readDir": true,
+        "exists": true,
+        "scope":[
+          "$HOME/AppData/LocalLow/VRChat/**/*"
+        ]
       },
       "shell": {
         "execute": true,

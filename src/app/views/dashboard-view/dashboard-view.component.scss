@@ -1,4 +1,11 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.main-pane {
   display: grid;
   grid-template-columns: 225px 1fr;
   grid-template-rows: minmax(0, 1fr);

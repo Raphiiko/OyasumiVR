@@ -1,1 +1,4 @@
-export type VRChatUserStatus = 'active' | 'join me' | 'ask me' | 'busy' | 'offline';
+export interface WorldContext {
+  playerCount: number;
+  instanceId?: string;
+}

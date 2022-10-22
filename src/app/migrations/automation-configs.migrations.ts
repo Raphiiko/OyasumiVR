@@ -5,6 +5,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
   2: toLatest,
   3: from2to3,
+  4: from3to4,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -20,6 +21,12 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from3to4(data: any): any {
+  data.version = 4;
+  data.CHANGE_STATUS_BASED_ON_PLAYER_COUNT = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
   return data;
 }
 

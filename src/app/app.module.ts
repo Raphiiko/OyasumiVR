@@ -70,6 +70,9 @@ import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrcha
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { SleepingAnimationPresetModalComponent } from './components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
+import { VRChatLogService } from './services/vrchat-log.service';
+import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
+import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -114,12 +117,14 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatLoginTFAModalComponent,
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
+    MainStatusBarComponent,
   ],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    SimpleModalModule,
     HttpClientModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
@@ -130,7 +135,6 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
     NgPipesModule,
-    SimpleModalModule,
   ],
   providers: [
     ThemeService,
@@ -151,16 +155,17 @@ export function createTranslateLoader(http: HttpClient) {
 })
 export class AppModule {
   constructor(
-    private openvr: OpenVRService,
-    private nvml: NVMLService,
-    private sleep: SleepService,
-    private osc: OscService,
-    private sidecar: ElevatedSidecarService,
-    private update: UpdateService,
-    private telemetry: TelemetryService,
-    private appSettings: AppSettingsService,
+    private openvrService: OpenVRService,
+    private nvmlService: NVMLService,
+    private sleepService: SleepService,
+    private oscService: OscService,
+    private sidecarService: ElevatedSidecarService,
+    private updateService: UpdateService,
+    private telemetryService: TelemetryService,
+    private appSettingsService: AppSettingsService,
     private modalService: SimpleModalService,
-    private vrchat: VRChatService,
+    private vrchatService: VRChatService,
+    private vrchatLogService: VRChatLogService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -173,37 +178,50 @@ export class AppModule {
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
     // OSC automations
-    private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService
+    private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
+    // Status automations
+    private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService
   ) {
     this.init();
   }
 
   async init() {
-    await this.appSettings.init();
-    await Promise.all([await this.update.init(), await this.telemetry.init()]);
-    await Promise.all([await this.openvr.init(), await this.osc.init(), this.sidecar.init()]);
-    await this.nvml.init();
-    await this.sleep.init();
-    await this.vrchat.init();
-    // GPU automations
-    await this.gpuAutomations.init();
-    // Sleep mode automations
+    // Initialize app settings
+    await this.appSettingsService.init();
+    // Initialize telemetry and updates
+    await Promise.all([this.updateService.init(), this.telemetryService.init()]);
+    // Initialize general utility services
     await Promise.all([
+      this.openvrService.init(),
+      this.oscService.init(),
+      this.sleepService.init(),
+      this.vrchatService.init(),
+      this.vrchatLogService.init(),
+    ]);
+    // Initialize GPU services
+    await this.sidecarService.init().then(async () => {
+      await this.nvmlService.init();
+    });
+    // Initialize automations
+    await Promise.all([
+      // GPU automations
+      this.gpuAutomations.init(),
+      // Sleep mode automations
       this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
       this.sleepModeEnableAtBatteryPercentageAutomation.init(),
       this.sleepModeEnableAtTimeAutomationService.init(),
       this.sleepModeDisableAtTimeAutomationService.init(),
       this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
-    ]);
-    // Battery automations
-    await Promise.all([
+      // Battery automations
       this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
       this.turnOffDevicesWhenChargingAutomationService.init(),
+      // OSC automations
+      this.sleepingAnimationsAutomationService.init(),
+      // Status automations
+      this.statusChangeForPlayerCountAutomationService.init(),
     ]);
-    // OSC automations
-    await Promise.all([this.sleepingAnimationsAutomationService.init()]);
     // Language selection modal
-    this.appSettings.loadedDefaults
+    this.appSettingsService.loadedDefaults
       .pipe(filter((loadedDefaults) => loadedDefaults))
       .subscribe(() => {
         this.modalService

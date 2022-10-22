@@ -4,7 +4,7 @@ import { AppSettingsService } from '../../../../../services/app-settings.service
 import { vshrink } from '../../../../../utils/animations';
 import { VRChatService, VRChatServiceStatus } from '../../../../../services/vrchat.service';
 import { filter, takeUntil } from 'rxjs';
-import { CurrentUser as VRChatUser } from 'vrchat';
+import { CurrentUser as VRChatUser } from 'vrchat/dist';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { VRChatLoginModalComponent } from '../../../../../components/vrchat-login-modal/vrchat-login-modal.component';
 

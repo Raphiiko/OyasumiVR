@@ -135,8 +135,8 @@
           flex-direction: row;
           align-items: center;
           justify-content: center;
-          filter: contrast(0) sepia(200%) hue-rotate(190deg) brightness(0.95) brightness(0.2) saturate(12)
-            drop-shadow(0 0 0.5em rgba(0, 0, 0, 70%));
+          filter: contrast(0) sepia(200%) hue-rotate(190deg) brightness(0.95) brightness(0.2)
+            saturate(12) drop-shadow(0 0 0.5em rgba(0, 0, 0, 70%));
           &.yourself {
             filter: brightness(0.8) sepia(100%) hue-rotate(290deg) blur(0.04em)
               drop-shadow(0 0 0.5em rgba(0, 0, 0, 70%));
@@ -156,6 +156,27 @@
       flex: 1;
       input {
         width: 100%;
+        -webkit-appearance: none;
+        appearance: none;
+        background: transparent;
+        cursor: pointer;
+        $track-height: 0.5em;
+        $thumb-size: 1.125em;
+        &::-webkit-slider-runnable-track {
+          background: var(--color-surface-3);
+          height: $track-height;
+          border-radius: 0.25em;
+        }
+        &::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          margin-top: #{($thumb-size / -2 + $track-height / 2)};
+          background-color: var(--color-primary);
+          border-radius: $thumb-size;
+          @include shadow(1, true);
+          height: $thumb-size;
+          width: $thumb-size;
+        }
       }
     }
     &-numeric-input {
@@ -173,9 +194,24 @@
 }
 
 .settings {
+  display: flow-root;
   margin-bottom: 1em;
   background: var(--color-surface-1);
   border-radius: 0.5em;
+  & > * {
+    transition: all 0.15s ease;
+  }
+
+  & > .alert {
+    margin: 1em;
+  }
+
+  &.disabled {
+    pointer-events: none;
+    & > *:not(.alert) {
+      opacity: 0.5;
+    }
+  }
 }
 
 .setting-row {

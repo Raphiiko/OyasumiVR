@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fadeUp } from 'src/app/utils/animations';
 
-interface ConfirmModalInputModel {
+export interface ConfirmModalInputModel {
   title?: string;
   message?: string;
   confirmButtonText?: string;
@@ -10,7 +10,7 @@ interface ConfirmModalInputModel {
   showCancel?: boolean;
 }
 
-interface ConfirmModalOutputModel {
+export interface ConfirmModalOutputModel {
   confirmed: boolean;
 }
 
