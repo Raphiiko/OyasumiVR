@@ -33,9 +33,9 @@ jobs:
         with:
           node-version: 16
       - name: Install NodeJS dependencies
-        run: yarn
+        run: npm install
       - name: Set app version to DEV version
-        run: yarn set-version DEV
+        run: npm run set-version DEV
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
