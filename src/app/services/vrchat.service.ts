@@ -243,7 +243,6 @@ export class VRChatService {
           headers: this.getDefaultHeaders(),
         }),
     });
-    console.log('SEND INVITE', response);
   }
 
   //

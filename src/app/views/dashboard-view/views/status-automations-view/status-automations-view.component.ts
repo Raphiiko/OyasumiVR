@@ -138,13 +138,7 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
     this.modalService
       .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
         title: 'Status Automations FAQ',
-        message: `Here you can find the answers to some questions you might have about the status change behaviour:
-
-Q: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?
-A: If you have Oyasumi set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.
-
-Q: People cannot join me because my status does not update for them.
-A: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu.`,
+        message: 'status-automations.behaviourWarningFAQ',
         confirmButtonText: 'shared.modals.ok',
         showCancel: false,
       })

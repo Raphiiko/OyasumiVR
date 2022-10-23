@@ -10,21 +10,16 @@
         />
         <span class="switch-toggle-slider"></span>
       </label>
-      <h3 translate>Enable Status Automations</h3>
+      <h3 translate>status-automations.enable</h3>
     </div>
-    <p
-      >Oyasumi can limit the amount of people who join you, by automatically setting your status
-      based on how many players there are in your world.</p
-    >
+    <p translate>status-automations.description</p>
     <div class="alert warning" *ngIf="!loggedIn" @vshrink>
       <div class="alert-bg"></div>
       <div class="alert-icon">
         <i class="material-icons"> warning </i>
       </div>
       <div class="alert-content">
-        <span>{{
-          'This feature requires you to be logged in with a VRChat account.' | translate
-        }}</span
+        <span>{{ 'status-automations.loginRequired' | translate }}</span
         ><button class="btn btn-secondary" (click)="login()" translate
           >shared.modals.login</button
         ></div
@@ -35,10 +30,7 @@
       <div class="alert-icon">
         <i class="material-icons"> info </i>
       </div>
-      <div class="alert-content">{{
-        'Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.'
-          | translate
-      }}</div>
+      <div class="alert-content">{{ 'status-automations.exampleUse' | translate }}</div>
     </div>
     <div class="settings" [class.disabled]="config.enabled">
       <div class="alert" @vshrink *ngIf="config.enabled">
@@ -46,12 +38,10 @@
         <div class="alert-icon">
           <i class="material-icons"> info </i>
         </div>
-        <div class="alert-content">{{
-          'Please disable status automations before you make any changes.' | translate
-        }}</div>
+        <div class="alert-content">{{ 'status-automations.disableToEdit' | translate }}</div>
       </div>
       <div class="limit-setting">
-        <h3 translate>Player Limit</h3>
+        <h3 translate>status-automations.playerLimit</h3>
         <div class="limit-setting-graphic">
           <div class="bed" [style.--people]="limit.value > bedLimit ? bedLimit + 1 : bedLimit">
             <div class="bed-sheets">
@@ -100,14 +90,18 @@
             />
           </div>
         </div>
-        <div class="limit-setting-description">
-          {{ limit.value }} player{{ limit.value > 1 ? 's' : '' }} (including you!)
-        </div>
+        <div
+          class="limit-setting-description"
+          [translate]="
+            'status-automations.playerLimitLabel.' + (limit.value === 1 ? 'singular' : 'plural')
+          "
+          [translateParams]="{ count: limit.value }"
+        ></div>
       </div>
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>Below the limit</span>
-          <span translate>Set your status to</span>
+          <span translate>status-automations.belowLimit.title</span>
+          <span translate>status-automations.belowLimit.description</span>
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -121,8 +115,8 @@
       </div>
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>At the limit or above</span>
-          <span translate>Set your status to</span>
+          <span translate>status-automations.atLimitOrAbove.title</span>
+          <span translate>status-automations.atLimitOrAbove.description</span>
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -136,7 +130,7 @@
       </div>
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>Only when sleeping mode is enabled</span>
+          <span translate>status-automations.onlyIfSleepModeEnabled</span>
           <span translate></span>
         </div>
         <div class="setting-row-action">
@@ -157,11 +151,10 @@
         <i class="material-icons"> warning </i>
       </div>
       <div class="alert-content">
-        <span>{{
-          'Status changes by Oyasumi are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by Oyasumi.'
-            | translate
-        }}</span
-        ><button class="btn btn-secondary" (click)="showFAQ()" translate style='margin-left: 1em'>More Info</button>
+        <span>{{ 'status-automations.behaviourWarning' | translate }}</span
+        ><button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em"
+          >status-automations.moreInfo</button
+        >
       </div>
     </div>
   </div>

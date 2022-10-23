@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import 'shadows';
 
 :host {
@@ -170,7 +172,7 @@
         &::-webkit-slider-thumb {
           -webkit-appearance: none;
           appearance: none;
-          margin-top: #{($thumb-size / -2 + $track-height / 2)};
+          margin-top: #{(math.div($thumb-size, -2) + $track-height * 0.5)};
           background-color: var(--color-primary);
           border-radius: $thumb-size;
           @include shadow(1, true);
