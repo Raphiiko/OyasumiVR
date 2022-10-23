@@ -1,23 +1,8 @@
 import { Injectable } from '@angular/core';
-import { readDir, BaseDirectory, readTextFile } from '@tauri-apps/api/fs';
-import { metadata } from 'tauri-plugin-fs-extra-api';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  filter,
-  interval,
-  map,
-  mergeMap,
-  Observable,
-  Subject,
-  switchMap,
-  take,
-} from 'rxjs';
-import { VRChatLogEvent, VRChatLogEventType } from '../models/vrchat-log-event';
+import { Observable, Subject } from 'rxjs';
+import { VRChatLogEvent } from '../models/vrchat-log-event';
 import * as moment from 'moment';
-import { readTextFromFile } from '../utils/fs';
 import { listen } from '@tauri-apps/api/event';
-import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api';
 
 interface RawLogEvent {

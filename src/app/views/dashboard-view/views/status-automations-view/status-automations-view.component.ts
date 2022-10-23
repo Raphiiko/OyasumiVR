@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { fade, hshrink, noop, vshrink } from '../../../../utils/animations';
+import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { VRChatService } from '../../../../services/vrchat.service';
 import { BehaviorSubject, debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';

@@ -8,9 +8,8 @@ describe('MainStatusBarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MainStatusBarComponent ]
-    })
-    .compileComponents();
+      declarations: [MainStatusBarComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MainStatusBarComponent);
     component = fixture.componentInstance;

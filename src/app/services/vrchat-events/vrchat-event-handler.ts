@@ -1,6 +1,5 @@
 import { UserUpdateHandler } from './handlers/user-update-handler';
 import { VRChatService } from '../vrchat.service';
-import { isDevMode } from '@angular/core';
 import { NotificationHandler } from './handlers/notification-handler';
 
 export interface VRChatEventHandler {

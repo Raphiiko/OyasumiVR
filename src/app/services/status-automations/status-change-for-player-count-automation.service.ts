@@ -9,12 +9,10 @@ import {
   pairwise,
   startWith,
   switchMap,
-  takeUntil,
-  tap,
   throttleTime,
 } from 'rxjs';
 import { AutomationConfigService } from '../automation-config.service';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusBasedOnPlayerCountAutomationConfig,

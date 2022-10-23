@@ -3,10 +3,9 @@ import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { vshrink } from '../../../../../utils/animations';
 import { VRChatService, VRChatServiceStatus } from '../../../../../services/vrchat.service';
-import { filter, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 import { CurrentUser as VRChatUser } from 'vrchat/dist';
 import { SimpleModalService } from 'ngx-simple-modal';
-import { VRChatLoginModalComponent } from '../../../../../components/vrchat-login-modal/vrchat-login-modal.component';
 
 @Component({
   selector: 'app-settings-vrchat-tab',
