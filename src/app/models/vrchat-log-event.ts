@@ -8,7 +8,7 @@ export type VRChatLogEvent =
 interface VRChatLogEventBase {
   type: VRChatLogEventType;
   timestamp: Date;
-  fromFirstLoad?: boolean;
+  initialLoad: boolean;
 }
 
 export interface VRChatOnPlayerJoinedEvent extends VRChatLogEventBase {

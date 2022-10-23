@@ -64,13 +64,13 @@ export class VRChatService {
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
-  public world: Observable<WorldContext> = combineLatest([
-    this._world,
-    this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
-  ]).pipe(map(([world]) => world));
+  public world: Observable<WorldContext> = this._world.asObservable();
 
   constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
+    this.world.subscribe((world) => {
+      console.log('WORLD', world);
+    });
   }
 
   async init() {
@@ -224,7 +224,7 @@ export class VRChatService {
           headers: this.getDefaultHeaders(),
         }),
     });
-    console.log('DELETE NOTIFICATION', response)
+    console.log('DELETE NOTIFICATION', response);
   }
 
   public async inviteUser(inviteeId: string, instanceId?: string) {
@@ -276,7 +276,7 @@ export class VRChatService {
           this._world.next({
             ...cloneDeep(this._world.value),
             playerCount: 0,
-            instanceId: event.instanceId
+            instanceId: event.instanceId,
           });
           break;
       }

@@ -26,6 +26,7 @@ rosc = "0.9.0"
 futures = "0.3"
 reqwest = "0.11.12"
 sysinfo = "0.26.2"
+chrono = "0.4.22"
 
 [dependencies.windows-sys]
 version = "0.36.1"

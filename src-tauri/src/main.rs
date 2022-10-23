@@ -7,22 +7,23 @@
 extern crate lazy_static;
 
 use cronjob::CronJob;
-use std::{sync::Mutex, net::UdpSocket};
+use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
-use tauri_plugin_store::PluginBuilder;
 use tauri_plugin_fs_extra::FsExtra;
+use tauri_plugin_store::PluginBuilder;
 
 mod commands {
     pub mod admin;
+    pub mod log_parser;
     pub mod nvml;
     pub mod openvr;
     pub mod os;
     pub mod osc;
     pub mod splash;
-    pub mod fs;
 }
 mod background {
     pub mod http_server;
+    pub mod log_parser;
     pub mod openvr;
 }
 mod elevated_sidecar;
@@ -52,9 +53,7 @@ fn main() {
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
                 let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
-                    Ok(ctx) => {
-                        Some(ctx)
-                    }
+                    Ok(ctx) => Some(ctx),
                     Err(err) => {
                         println!("Failed to initialize openvr: {}", err);
                         *OVR_STATUS.lock().unwrap() = String::from("INIT_FAILED");
@@ -100,7 +99,7 @@ fn main() {
             commands::osc::osc_valid_addr,
             commands::admin::elevation_sidecar_running,
             commands::admin::start_elevation_sidecar,
-            commands::fs::read_text_from_file,
+            commands::log_parser::init_vrc_log_watcher,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

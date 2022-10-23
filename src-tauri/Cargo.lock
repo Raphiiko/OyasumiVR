@@ -1906,6 +1906,7 @@ dependencies = [
 name = "oyasumi"
 version = "1.1.0"
 dependencies = [
+ "chrono",
  "cronjob",
  "futures",
  "hyper",
