@@ -319,6 +319,12 @@
     }
   },
   "comp": {
+    "main-status-bar": {
+      "sleepMode": "Sleep Mode",
+      "active": "Active",
+      "inactive": "Inactive",
+      "loggedOut": "Logged out"
+    },
     "confirm-modal": {
       "defaultTitle": "Confirm"
     },

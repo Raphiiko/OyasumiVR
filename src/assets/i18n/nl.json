@@ -269,6 +269,12 @@
     }
   },
   "comp": {
+    "main-status-bar": {
+      "sleepMode": "Slaap Modus",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "loggedOut": "Uitgelogd"
+    },
     "confirm-modal": {
       "defaultTitle": "Bevestig"
     },

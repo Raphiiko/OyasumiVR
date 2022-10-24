@@ -269,6 +269,12 @@
     }
   },
   "comp": {
+    "main-status-bar": {
+      "sleepMode": "睡眠モード",
+      "active": "アクティブ",
+      "inactive": "非アクティブ",
+      "loggedOut": "ログアウト中"
+    },
     "confirm-modal": {
       "defaultTitle": "確認"
     },

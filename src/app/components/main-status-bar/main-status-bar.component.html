@@ -11,8 +11,11 @@
       <div class="pill-icon">
         <i class="material-icons-round">nights_stay</i>
       </div>
-      <span translate @hshrink *ngIf="state.hover">Sleep Mode:&nbsp;</span>
-      <span [translate]="(sleepMode | async) ? 'Active' : 'Inactive'"></span>
+      <span @hshrink *ngIf="state.hover"
+        >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
+      >
+      <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
+      <span *ngIf="!(sleepMode | async)" @hshrink translate>comp.main-status-bar.inactive</span>
     </div>
   </div>
   <div class="left">
@@ -32,7 +35,7 @@
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>
-        <span [translate]="user ? user.displayName : 'Logged Out'"></span>
+        <span [translate]="user ? user.displayName : 'comp.main-status-bar.loggedOut'"></span>
       </ng-container>
     </div>
   </div>
