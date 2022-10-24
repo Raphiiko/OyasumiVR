@@ -267,9 +267,10 @@
       "persistentStorage": {
         "title": "Persistent Storage",
         "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
-        "clearAll": "Clear All Storage",
+        "clearAllSettings": "Clear All Settings",
         "clearAutomationSettings": "Clear Automation Settings",
         "clearAppSettings": "Clear App Settings",
+        "clearCache": "Clear Cache",
         "printSettings": "Log Settings"
       },
       "language": {

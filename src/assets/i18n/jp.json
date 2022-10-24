@@ -217,9 +217,10 @@
       "persistentStorage": {
         "title": "永続ストレージ",
         "description": "これらボタンを押すと、Oyasumiの永続ストレージの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
-        "clearAll": "すべてのストレージを削除",
+        "clearAllSettings": "すべてのセッティングを削除",
         "clearAutomationSettings": "自動化設定をクリア",
         "clearAppSettings": "アプリの設定を削除",
+        "clearCache": "キャッシュを削除",
         "printSettings": "ログ設定"
       },
       "language": {

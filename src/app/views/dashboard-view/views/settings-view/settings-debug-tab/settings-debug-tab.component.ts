@@ -6,7 +6,7 @@ import {
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { readTextFile } from '@tauri-apps/api/fs';
-import { SETTINGS_FILE } from '../../../../../globals';
+import { CACHE_FILE, SETTINGS_FILE } from '../../../../../globals';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../../services/automation-config.service';
 import { Router } from '@angular/router';
@@ -20,7 +20,8 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class SettingsDebugTabComponent extends SettingsTabComponent {
   storeKey = { SETTINGS_KEY_APP_SETTINGS, SETTINGS_KEY_AUTOMATION_CONFIGS };
-  private store = new Store(SETTINGS_FILE);
+  private settingsStore = new Store(SETTINGS_FILE);
+  private cacheStore = new Store(CACHE_FILE);
 
   constructor(
     settingsService: AppSettingsService,
@@ -34,13 +35,14 @@ export class SettingsDebugTabComponent extends SettingsTabComponent {
     super.ngOnInit();
   }
 
-  async clearStore(key?: string) {
+  async clearStore(storeType: 'SETTINGS' | 'CACHE', key?: string) {
+    const store = storeType === 'SETTINGS' ? this.settingsStore : this.cacheStore;
     if (!key) {
-      await this.store.clear();
+      await store.clear();
     } else {
-      await this.store.delete(key);
+      await store.delete(key);
     }
-    await this.store.save();
+    await store.save();
     await this.router.navigate(['/']);
     window.location.reload();
   }
@@ -81,7 +83,7 @@ export class SettingsDebugTabComponent extends SettingsTabComponent {
   async printSettings() {
     console.log(
       'SETTINGS',
-      await this.store.entries().then((entries) =>
+      await this.settingsStore.entries().then((entries) =>
         entries.reduce((acc, kv) => {
           return (acc[kv[0]] = kv[1]), acc;
         }, {} as { [s: string]: any })

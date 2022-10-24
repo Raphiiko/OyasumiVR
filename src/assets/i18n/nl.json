@@ -217,9 +217,10 @@
       "persistentStorage": {
         "title": "Permanente opslag",
         "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
-        "clearAll": "Verwijder alles",
+        "clearAllSettings": "Verwijder alle instellingen",
         "clearAutomationSettings": "Verwijder automatiserings instellingen",
         "clearAppSettings": "Verwijder programma instellingen",
+        "clearCache": "Verwijder cache",
         "printSettings": "Instellingen loggen"
       },
       "language": {
