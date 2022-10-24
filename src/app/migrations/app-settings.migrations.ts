@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
+import { AppSettingsService } from '../services/app-settings.service';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
@@ -8,6 +9,11 @@ const migrations: { [v: number]: (data: any) => any } = {
 
 export function migrateAppSettings(data: any): AppSettings {
   let currentVersion = data.version || 0;
+  // Reset to latest when the current version is higher than the latest
+  if (currentVersion > APP_SETTINGS_DEFAULT.version) {
+    data = toLatest(data);
+    console.log(`Reset future app settings version back to version ${currentVersion + ''}`);
+  }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
     data = migrations[++currentVersion](data);
     currentVersion = data.version;

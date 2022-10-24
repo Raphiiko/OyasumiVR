@@ -2,9 +2,12 @@ use std::{
     fs::File,
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
-    sync::mpsc::{self, TryRecvError},
+    sync::{
+        mpsc::{self, TryRecvError},
+        Arc,
+    },
     thread,
-    time::{Duration},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 
 use crate::TAURI_WINDOW;
@@ -181,7 +184,23 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
                 }
                 process_log_line(line, first_run);
             }
-            first_run = false;
+            if first_run {
+                let window_guard = TAURI_WINDOW.lock().unwrap();
+                let window = window_guard.as_ref().unwrap();
+                let _ = window.emit_all(
+                    "VRC_LOG_EVENT",
+                    VRCLogEvent {
+                        time: Arc::new(SystemTime::now())
+                            .duration_since(UNIX_EPOCH)
+                            .unwrap()
+                            .as_millis() as u64,
+                        event: String::from("InitialLoadComplete"),
+                        data: String::from(""),
+                        initial_load: true,
+                    },
+                );
+                first_run = false;
+            }
         }
     });
     // Return sender that can be used to terminate reader thread

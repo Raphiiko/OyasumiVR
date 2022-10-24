@@ -6,7 +6,15 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
-import { BehaviorSubject, distinctUntilChanged, filter, interval, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  filter,
+  interval,
+  map,
+  Observable,
+} from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
@@ -16,6 +24,7 @@ import { SimpleModalService } from 'ngx-simple-modal';
 import { TaskQueue } from '../utils/task-queue';
 import { WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
+import { CachedValue } from '../utils/cached-value';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -50,19 +59,24 @@ export class VRChatService {
     },
   });
   private eventHandler: VRChatEventHandlerManager;
+  private _currentUserCache: CachedValue<CurrentUser> = new CachedValue<CurrentUser>(
+    undefined,
+    5 * 60 * 1000, // Cache for 5 minutes
+    'VRCHAT_CURRENT_USER'
+  );
   private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
     playerCount: 1,
   });
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
-  public world: Observable<WorldContext> = this._world.asObservable();
+  public world: Observable<WorldContext> = combineLatest([
+    this._world,
+    this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
+  ]).pipe(map(([world]) => world));
 
   constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
-    this.world.subscribe((world) => {
-      console.log('WORLD', world);
-    });
   }
 
   async init() {
@@ -88,7 +102,6 @@ export class VRChatService {
       await this.logout();
       this.showLoginModal();
     }
-    console.log('USER', this._user.value);
     // Process VRChat log events
     await this.subscribeToLogEvents();
   }
@@ -98,12 +111,14 @@ export class VRChatService {
   //
 
   public async logout() {
+    this._currentUserCache.clear();
     await this.updateSettings({
       authCookie: undefined,
       authCookieExpiry: undefined,
       twoFactorCookie: undefined,
       twoFactorCookieExpiry: undefined,
     });
+    this._user.next(null);
     this._status.next('LOGGED_OUT');
   }
 
@@ -130,6 +145,7 @@ export class VRChatService {
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
+    console.log('VRC API: /auth/twofactorauth/totp/verify');
     const response = await this.http.post(
       `${BASE_URL}/auth/twofactorauth/totp/verify`,
       Body.json({ code }),
@@ -148,9 +164,9 @@ export class VRChatService {
       throw 'UNEXPECTED_RESPONSE';
     }
     // Process any auth cookie if we get any
-    await this.parseCookies(response);
+    await this.parseResponseCookies(response);
     // Try getting the current user again
-    this._user.next(await this.getCurrentUser());
+    this._user.next(await this.getCurrentUser(undefined, true));
     // If we got here, we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
   }
@@ -165,10 +181,12 @@ export class VRChatService {
     const response = await this.apiCallQueue.queueTask<Response<unknown>>(
       {
         typeId: 'STATUS_CHANGE',
-        runnable: () =>
-          this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
+        runnable: () => {
+          console.log(`VRC API: /users/${userId}`);
+          return this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
             headers: this.getDefaultHeaders(),
-          }),
+          });
+        },
       },
       true
     );
@@ -211,10 +229,16 @@ export class VRChatService {
     // Send
     const response = await this.apiCallQueue.queueTask<Response<Notification>>({
       typeId: 'DELETE_NOTIFICATION',
-      runnable: () =>
-        this.http.put(`${BASE_URL}/auth/user/notifications/${notificationId}/hide`, undefined, {
-          headers: this.getDefaultHeaders(),
-        }),
+      runnable: () => {
+        console.log(`VRC API: /auth/user/notifications/${notificationId}/hide`);
+        return this.http.put(
+          `${BASE_URL}/auth/user/notifications/${notificationId}/hide`,
+          undefined,
+          {
+            headers: this.getDefaultHeaders(),
+          }
+        );
+      },
     });
     console.log('DELETE NOTIFICATION', response);
   }
@@ -230,10 +254,12 @@ export class VRChatService {
     // Send
     const response = await this.apiCallQueue.queueTask<Response<Notification>>({
       typeId: 'INVITE',
-      runnable: () =>
-        this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
+      runnable: () => {
+        console.log(`VRC API: /invite/${inviteeId}`);
+        return this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
           headers: this.getDefaultHeaders(),
-        }),
+        });
+      },
     });
   }
 
@@ -357,21 +383,31 @@ export class VRChatService {
     this.eventHandler.handle(data.type, data.content);
   }
 
-  private async getCurrentUser(credentials?: {
-    username: string;
-    password: string;
-  }): Promise<CurrentUser> {
+  private async getCurrentUser(
+    credentials?: {
+      username: string;
+      password: string;
+    },
+    force = false
+  ): Promise<CurrentUser> {
     // Set available headers
     const headers: Record<string, string> = {
       ...this.getDefaultHeaders(!credentials),
     };
     if (credentials) {
+      force = true;
       // Set credentials
       headers['Authorization'] = `Basic ${btoa(
         encodeURIComponent(credentials.username) + ':' + encodeURIComponent(credentials.password)
       )}`;
     }
+    // If we have the user cached, return that.
+    if (!force) {
+      const user = this._currentUserCache.get();
+      if (user) return user;
+    }
     // Request the current user
+    console.log('VRC API: /auth/user');
     const response = await this.http.get<CurrentUser | { requiresTwoFactorAuth: string[] }>(
       `${BASE_URL}/auth/user`,
       {
@@ -400,21 +436,25 @@ export class VRChatService {
       throw 'UNEXPECTED_RESPONSE';
     }
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
-    await this.parseCookies(response);
+    await this.parseResponseCookies(response);
     // If we got a missing 2FA response, throw
     if (response.data.hasOwnProperty('requiresTwoFactorAuth')) throw '2FA_REQUIRED';
+    // Cache the user
+    const user = response.data as CurrentUser;
+    this._currentUserCache.set(user);
     // Otherwise, return the fetched user
-    return response.data as CurrentUser;
+    return user;
   }
 
   private async fetchApiConfig() {
+    console.log('VRC API: /config');
     const response = await this.http.get<APIConfig>(`${BASE_URL}/config`, {
       responseType: ResponseType.JSON,
       headers: this.getDefaultHeaders(),
     });
     if (response.ok) {
       // Store config if we end up needing it in the future
-      await this.parseCookies(response);
+      await this.parseResponseCookies(response);
     } else {
       this._status.next('ERROR');
     }
@@ -430,7 +470,7 @@ export class VRChatService {
     return { Cookie: cookies.join('; '), 'User-Agent': this.userAgent };
   }
 
-  private async parseCookies(response: Response<any>) {
+  private async parseResponseCookies(response: Response<any>) {
     if (!response.headers['set-cookie']) return;
     const cookies = parseSetCookieHeader(response.headers['set-cookie']);
     for (let cookie of cookies) {

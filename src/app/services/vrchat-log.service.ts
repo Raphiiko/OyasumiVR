@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
 import * as moment from 'moment';
 import { listen } from '@tauri-apps/api/event';
@@ -16,6 +16,8 @@ interface RawLogEvent {
   providedIn: 'root',
 })
 export class VRChatLogService {
+  private _initialLoadComplete: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public initialLoadComplete: Observable<boolean> = this._initialLoadComplete.asObservable();
   private _logEvents: Subject<VRChatLogEvent> = new Subject<VRChatLogEvent>();
   public logEvents: Observable<VRChatLogEvent> = this._logEvents.asObservable();
 
@@ -28,6 +30,9 @@ export class VRChatLogService {
 
   private handleLogEvent(event: RawLogEvent) {
     switch (event.event) {
+      case 'InitialLoadComplete':
+        this._initialLoadComplete.next(true);
+        break;
       case 'OnPlayerJoined':
         this._logEvents.next({
           type: 'OnPlayerJoined',

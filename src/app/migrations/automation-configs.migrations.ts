@@ -10,6 +10,11 @@ const migrations: { [v: number]: (data: any) => any } = {
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
   let currentVersion = data.version || 0;
+  // Reset to latest when the current version is higher than the latest
+  if (currentVersion > AUTOMATION_CONFIGS_DEFAULT.version) {
+    data = toLatest(data);
+    console.log(`Reset future automation configs version back to version ${currentVersion + ''}`);
+  }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     data = migrations[++currentVersion](cloneDeep(data));
     currentVersion = data.version;

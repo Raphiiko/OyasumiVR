@@ -38,28 +38,28 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
       id: 'join me',
       label: 'Join Me',
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: #409eff; font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<i class="material-icons-round" style="color: var(--color-vrchat-status-blue); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'active',
       label: 'Online',
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: #67c23a; font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<i class="material-icons-round" style="color: var(--color-vrchat-status-green); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'ask me',
       label: 'Ask Me',
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: #fd9200; font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<i class="material-icons-round" style="color: var(--color-vrchat-status-orange); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'busy',
       label: 'Do Not Disturb',
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
-        '<i class="material-icons-round" style="color: #f56c6c; font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
+        '<i class="material-icons-round" style="color: var(--color-vrchat-status-red); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
   ];

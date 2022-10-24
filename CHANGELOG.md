@@ -8,20 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Status automations for automatically changing your VRChat status based on the amount of players in your world.
 - VRChat login for features that require accessing the VRChat API. (e.g. Status automations)
+- Status bar for showing the current sleep mode and logged-in VRChat account, as well as the status of that account.
+
+### Fixed
+
+- Setting migrators properly resetting to defaults when detecting configs from future versions.
 
 ## [1.1.0]
 
 ### Added
+
 - Sleeping animation automation preset for [GoGo Loco v1.7.1 by franada](https://booth.pm/en/items/3290806).
 - Sleeping animation automation (workaround) preset for [GoGo Loco v1.6.2 - v1.7.0 by franada](https://booth.pm/en/items/3290806).
 
 ### Changed
+
 - Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also support v2.3 and the new EX version.
 - Changed presets to support multiple info links (to show both んみんみーん's EX and non-EX version)
 
 ### Fixed
+
 - Fixed side sleeping poses being detected too early in some positions.
 
 ## [1.0.0]
@@ -43,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Navigation item for GPU Automations to show an error icon when the feature is enabled, but no administrator privileges were detected.
 - Switched to Fontsource for the application font, to remove the dependency on Google for providing fonts at runtime.
-- Added own updater UI to replace the default Tauri update dialog. 
+- Added own updater UI to replace the default Tauri update dialog.
 
 ### Fixed
 
