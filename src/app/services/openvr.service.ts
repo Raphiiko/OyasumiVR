@@ -8,6 +8,7 @@ import { BehaviorSubject, interval, Observable, startWith, Subject, takeUntil } 
 import { cloneDeep, orderBy } from 'lodash';
 import { message } from '@tauri-apps/api/dialog';
 import { AppSettingsService } from './app-settings.service';
+import { error, info } from 'tauri-plugin-log-api';
 
 export type LighthouseConsoleStatus =
   | 'UNKNOWN'
@@ -88,6 +89,7 @@ export class OpenVRService {
 
   async onOpenVRInit(success: boolean) {
     if (success) {
+      info('[OpenVR] OpenVR initialized');
       this.onInitialize$.next();
       const minSplashDuration = 2000;
       const currentSplashDuration = Date.now() - this.initStart;
@@ -98,6 +100,7 @@ export class OpenVRService {
         this._devices.next(await this.getDevices());
       });
     } else {
+      info('[OpenVR] OpenVR failed to initialize');
       await message(
         'Could not connect to SteamVR. Please make sure SteamVR is installed before launching Oyasumi.',
         { type: 'error', title: 'Oyasumi' }
@@ -120,10 +123,12 @@ export class OpenVRService {
   }
 
   async onQuitEvent() {
+    error('[OpenVR] Quit event detected');
     await exit(0);
   }
 
   private async getDevices(): Promise<Array<OVRDevice>> {
+    info('[OpenVR] Fetching devices...');
     // Get devices
     let devices = await invoke<OVRDevice[]>('openvr_get_devices');
     // Carry over current local state
@@ -132,6 +137,7 @@ export class OpenVRService {
         this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
       return device;
     });
+    info(`[OpenVR] Fetched devices (${devices.length})`);
     // Return newly fetched devices
     return devices;
   }

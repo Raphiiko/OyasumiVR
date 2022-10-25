@@ -3,7 +3,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { attachConsole, error } from 'tauri-plugin-log-api';
+import { attachConsole, error, info } from 'tauri-plugin-log-api';
+import { getVersion } from '@tauri-apps/api/app';
 
 if (environment.production) {
   enableProdMode();
@@ -12,6 +13,10 @@ if (environment.production) {
 if (isDevMode()) {
   attachConsole();
 }
+
+getVersion().then((version) => {
+  info('[Oyasumi] Starting Oyasumi v' + version);
+});
 
 platformBrowserDynamic()
   .bootstrapModule(AppModule)

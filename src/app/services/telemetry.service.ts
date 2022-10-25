@@ -9,6 +9,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { cloneDeep } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { getVersion } from '../utils/app-utils';
+import { debug, info } from 'tauri-plugin-log-api';
 
 export const SETTINGS_KEY_TELEMETRY_SETTINGS = 'TELEMETRY_SETTINGS';
 
@@ -29,6 +30,8 @@ export class TelemetryService {
     await this.loadSettings();
     if (!isDevMode()) {
       setTimeout(() => this.scheduleTelemetry(), 10000);
+    } else {
+      debug("[Telemetry] Disabling telemetry in dev mode");
     }
   }
 
@@ -88,6 +91,7 @@ export class TelemetryService {
       Object.entries(this.manifest.v1.heartbeatHeaders).forEach(
         ([key, value]) => (headers = headers.set(key, value))
       );
+      info('[Telemetry] Sending heartbeat (version=' + version + ', lang=' + lang + ')');
       const response = await firstValueFrom(
         this.http.post<{ status: string }>(
           this.manifest.v1.heartbeatUrl,
@@ -115,6 +119,7 @@ export class TelemetryService {
   }
 
   async fetchManifest() {
+    info('[Telemetry] Fetching manifest');
     this.manifest = await firstValueFrom(
       this.http.get<TelemetryManifest>(
         'https://gist.githubusercontent.com/Raphiiko/675fcd03e1e22c2514951ef21c99e4d5/raw/1ba8bc77ab994da8f86f5cf184dd9c79e77f481d/oyasumi_telemetry_manifest.json'

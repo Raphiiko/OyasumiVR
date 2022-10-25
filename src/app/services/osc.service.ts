@@ -6,6 +6,7 @@ import { SleepService } from './sleep.service';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { cloneDeep } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
+import { debug, info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,9 @@ export class OscService {
   async init() {
     const result = await invoke<boolean>('osc_init');
     if (!result) {
+      info(
+        '[OSC] Could not bind a UDP socket to interact with VRChat over OSC (possibly due to incorrectly configured permissions). Quitting...'
+      );
       await message(
         'Could not bind a UDP socket to interact with VRChat over OSC. Please give Oyasumi the correct permissions.',
         { type: 'error', title: 'Oyasumi' }
@@ -28,14 +32,17 @@ export class OscService {
   }
 
   async send_float(address: string, value: number) {
+    debug(`[OSC] Sending float ${value} to ${address}`);
     await invoke('osc_send_float', { addr: this.address, oscAddr: address, data: value });
   }
 
   async send_int(address: string, value: number) {
+    debug(`[OSC] Sending int ${value} to ${address}`);
     await invoke('osc_send_int', { addr: this.address, oscAddr: address, data: value });
   }
 
   async send_bool(address: string, value: boolean) {
+    debug(`[OSC] Sending bool ${value} to ${address}`);
     await invoke('osc_send_bool', { addr: this.address, oscAddr: address, data: value });
   }
 
@@ -51,6 +58,7 @@ export class OscService {
   }
 
   async runScript(script: OscScript) {
+    debug(`[OSC] Running script (actions=${script.commands.length})`);
     const run = async (script: OscScript) => {
       for (let command of script.commands) {
         switch (command.type) {

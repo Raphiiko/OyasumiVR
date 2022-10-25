@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api';
 import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import { AppSettingsService } from './app-settings.service';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +21,12 @@ export class ElevatedSidecarService {
     if (pid) this._sidecarRunning.next(pid);
     await Promise.all([
       listen<number>('ELEVATED_SIDECAR_STARTED', (event) => {
+        info('[Sidecar] Sidecar has started (pid=' + event.payload + ')');
         this._sidecarRunning.next(event.payload);
       }),
       listen<number>('ELEVATED_SIDECAR_STOPPED', (event) => {
         if (this._sidecarRunning.value === event.payload) {
+          info('[Sidecar] Sidecar has stopped');
           this._sidecarRunning.next(-1);
         }
       }),
@@ -38,6 +41,7 @@ export class ElevatedSidecarService {
 
   async start() {
     if (await this.checkIfRunning()) return;
+    info('[Sidecar] Starting elevated sidecar...');
     return await invoke('start_elevation_sidecar');
   }
 
