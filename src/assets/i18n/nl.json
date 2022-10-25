@@ -9,7 +9,8 @@
       "confirm": "Bevestig",
       "ok": "Ok",
       "open": "Open",
-      "close": "Sluiten"
+      "close": "Sluiten",
+      "login": "Log in"
     }
   },
   "overview": {
@@ -167,6 +168,31 @@
       "cancel": "Alleen deze keer"
     }
   },
+  "status-automations": {
+    "title": "Status Automatiseringen",
+    "enable": "Activeer Status Automatiseringen",
+    "description": "Oyasumi kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
+    "loginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account.",
+    "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
+    "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
+    "playerLimit": "Speler limiet",
+    "playerLimitLabel": {
+      "singular": "{{count}} speler (inclusief jezelf)",
+      "plural": "{{count}} spelers (inclusief jezelf)"
+    },
+    "belowLimit": {
+      "title": "Onder het limiet",
+      "description": "Verander je status naar"
+    },
+    "atLimitOrAbove": {
+      "title": "Op het limiet of erboven",
+      "description": "Verander je status naar"
+    },
+    "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
+    "behaviourWarning": "Aanpassingen van de status zijn niet zichtbaar voor jouwzelf. Ook voor andere spelers kan het even duren voordat de statusverandering zichtbaar is. Dit is een limitatie van VRChat zelf en kan niet worden opgelost door Oyasumi.",
+    "moreInfo": "Meer info",
+    "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat Oyasumi je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu."
+  },
   "settings": {
     "title": "Instellingen",
     "tab": {
@@ -202,6 +228,30 @@
         "title": "Telemetrie",
         "label": "Verstuur anonieme telemetrie data",
         "description": "De enige data die wordt verstuurd, is de versie van Oyasumi die je gebruikt en je ingestelde taal. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor algemene gebruikstatistieken van Oyasumi."
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "Log in",
+        "description": "Sommige Oyasumi features vereisen dat je bent ingelogd met je VRChat account om hun ding te kunnen doen.",
+        "loggedIn": {
+          "title": "Hey {{name}}!",
+          "subtext": "Je bent ingelogd met je VRChat account.",
+          "logOut": "Log uit"
+        },
+        "loggedOut": {
+          "title": "Uitgelogd",
+          "subtext": "Je bent niet ingelogd met je VRChat account.",
+          "logIn": "Log in"
+        },
+        "errors": {
+          "initError": "De VRChat module kon niet worden geinitialiseerd. Check of je internet verbinding werkt en herstart Oyasumi op een later moment om het opnieuw te proberen."
+        },
+        "disclaimers": {
+          "use": "Je login gegevens zullen nooit ergens opgeslagen worden en worden alleen direct naar VRChat's servers gestuurd om in te kunnen loggen.",
+          "brand": "Oyasumi wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van Oyasumi. Gebruik is op eigen risico."
+        }
       }
     },
     "updates": {
@@ -293,6 +343,7 @@
       "oscAutomations": "OSC Automatiseringen",
       "batteryAutomations": "Batterij Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
+      "statusAutomations": "Status Automatiseringen",
       "settings": "Instellingen",
       "about": "Over Oyasumi",
       "batteryManagement": "Batterij Management"
@@ -343,6 +394,24 @@
           "title": "Wacht",
           "description": "Wacht voor een bepaalde tijd"
         }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "Log in met VRChat",
+      "username": "VRChat Gebruikersnaam/E-mail",
+      "password": "Wachtwoord",
+      "errors": {
+        "CHECK_EMAIL": "Login mislukt: Voor meer informatie, check de mailbox van het e-mailadres dat gekoppeld is aan je VRChat account.",
+        "INVALID_CREDENTIALS": "De logingegevens zijn onjuist.",
+        "UNEXPECTED_RESPONSE": "Login mislukt: Een onverwachte fout is opgetreden. Check je internetverbinding en probeer het later nog eens."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "Twee-Factor Authenticatie",
+      "description": "Je VRCHat account wordt beschermt met twee-factor authenticatie. Voer een 2FA code in:",
+      "errors": {
+        "LAST_CODE_INVALID": "De 2FA code is onjuist.",
+        "INVALID_FORMAT": "Een 2FA code bestaat altijd uit een reeks van 6 cijfers. Deze code is niet correct."
       }
     }
   }
