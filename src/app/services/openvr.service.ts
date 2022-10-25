@@ -128,7 +128,6 @@ export class OpenVRService {
   }
 
   private async getDevices(): Promise<Array<OVRDevice>> {
-    info('[OpenVR] Fetching devices...');
     // Get devices
     let devices = await invoke<OVRDevice[]>('openvr_get_devices');
     // Carry over current local state
@@ -137,7 +136,6 @@ export class OpenVRService {
         this._devices.value.find((d) => d.index === device.index)?.isTurningOff ?? false;
       return device;
     });
-    info(`[OpenVR] Fetched devices (${devices.length})`);
     // Return newly fetched devices
     return devices;
   }
