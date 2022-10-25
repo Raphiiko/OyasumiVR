@@ -17,8 +17,8 @@ export class VRChatEventHandlerManager {
 
   handle = (type: string, content: string) => {
     const handler = this.handlers.find((handler) => handler.type === type);
-    info(`[VRChat] Received event: ${type}`);
     if (!handler) return;
+    info(`[VRChat] Received event: ${type}`);
     handler.handle(content);
   };
 }
