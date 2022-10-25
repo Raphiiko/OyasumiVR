@@ -7,6 +7,7 @@ import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal
 import { SimpleModalService } from 'ngx-simple-modal';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { getVersion } from '../utils/app-utils';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -22,13 +23,13 @@ export class UpdateService {
   async init() {
     listen('tauri://update-status', (res) => {
       const event: { error?: any; status: 'ERROR' | 'PENDING' | 'DONE' } = res.payload as any;
-      console.log('Update event', event);
       if (event.status === 'DONE') {
+        info(`[Update] Update complete. Relaunching...`);
         relaunch();
         return;
       }
       if (event.status === 'ERROR') {
-        console.error('Updater Error', event.error);
+        info(`[Update] Update error occurred: ${event.error}`);
         this.modalService
           .addModal(ConfirmModalComponent, {
             title: 'updater.modals.error.title',
@@ -51,7 +52,15 @@ export class UpdateService {
       return;
     }
     // Check for updates
+    info(`[Update] Checking for updates...`);
     const { shouldUpdate, manifest } = await checkUpdate();
+    if (shouldUpdate && manifest) {
+      info(
+        `[Update] Update available! New version: ${
+          manifest.version
+        }, Current version: ${await getVersion()}`
+      );
+    }
     this._updateAvailable.next({
       checked: true,
       manifest: (shouldUpdate && manifest) || undefined,
@@ -73,6 +82,7 @@ export class UpdateService {
   }
 
   async installUpdate() {
+    info(`[Update] Installing update...`);
     await installUpdate();
     await relaunch();
   }

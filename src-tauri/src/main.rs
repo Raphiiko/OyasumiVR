@@ -10,6 +10,7 @@ use cronjob::CronJob;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
+use tauri_plugin_log::{LogTarget, LoggerBuilder};
 use tauri_plugin_store::PluginBuilder;
 
 mod commands {
@@ -42,6 +43,11 @@ fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
         .plugin(FsExtra::default())
+        .plugin(
+            LoggerBuilder::default()
+                .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+                .build(),
+        )
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();

@@ -43,6 +43,7 @@
     "sass-material-colors": "^0.0.5",
     "set-cookie-parser": "^2.5.1",
     "tauri-plugin-fs-extra-api": "github:tauri-apps/tauri-plugin-fs-extra",
+    "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#dev",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#dev",
     "three": "^0.144.0",
     "tslib": "^2.3.0",

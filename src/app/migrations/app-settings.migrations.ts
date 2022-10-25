@@ -1,6 +1,7 @@
 import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { AppSettingsService } from '../services/app-settings.service';
+import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
@@ -12,12 +13,16 @@ export function migrateAppSettings(data: any): AppSettings {
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > APP_SETTINGS_DEFAULT.version) {
     data = toLatest(data);
-    console.log(`Reset future app settings version back to version ${currentVersion + ''}`);
+    info(
+      `[app-settings-migrations] Reset future app settings version back to version ${
+        currentVersion + ''
+      }`
+    );
   }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
     data = migrations[++currentVersion](data);
     currentVersion = data.version;
-    console.log(`Migrated app settings to version ${currentVersion + ''}`);
+    info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
   return data as AppSettings;
 }

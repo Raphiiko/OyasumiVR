@@ -4,6 +4,7 @@ import { LighthouseConsoleStatus, OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice } from '../models/ovr-device';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +80,7 @@ export class LighthouseService {
     await Promise.all(
       ovrDevices.map(async (device) => {
         this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-        console.log('Turning off device', device);
+        info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
         await invoke('run_command', {
           command: lighthouseConsolePath,
           args: ['/serial', device.dongleId, 'poweroff'],

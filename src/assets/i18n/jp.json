@@ -9,7 +9,8 @@
       "confirm": "確認",
       "ok": "OK",
       "open": "開く",
-      "close": "閉じる"
+      "close": "閉じる",
+      "login": "{PLACEHOLDER}"
     }
   },
   "overview": {
@@ -167,6 +168,31 @@
       "cancel": "一回のみ"
     }
   },
+  "status-automations": {
+    "title": "{PLACEHOLDER}",
+    "enable": "{PLACEHOLDER}",
+    "description": "{PLACEHOLDER}",
+    "loginRequired": "{PLACEHOLDER}",
+    "exampleUse": "{PLACEHOLDER}",
+    "disableToEdit": "{PLACEHOLDER}",
+    "playerLimit": "{PLACEHOLDER}",
+    "playerLimitLabel": {
+      "singular": "{PLACEHOLDER}",
+      "plural": "{PLACEHOLDER}"
+    },
+    "belowLimit": {
+      "title": "{PLACEHOLDER}",
+      "description": "{PLACEHOLDER}"
+    },
+    "atLimitOrAbove": {
+      "title": "{PLACEHOLDER}",
+      "description": "{PLACEHOLDER}"
+    },
+    "onlyIfSleepModeEnabled": "{PLACEHOLDER}",
+    "behaviourWarning": "{PLACEHOLDER}",
+    "moreInfo": "{PLACEHOLDER}",
+    "behaviourWarningFAQ": "{PLACEHOLDER}"
+  },
   "settings": {
     "title": "設定",
     "tab": {
@@ -202,6 +228,30 @@
         "title": "テレメトリー",
         "label": "匿名の使用データの送信",
         "description": "送信されるデータは、ご使用中のOyasumiのバージョンと、設定されている言語のみに制限されます。それ以外のデータは送信されず、完全に匿名です。また、このデータは一般的な使用統計のためにのみ使用されます。"
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}",
+        "loggedIn": {
+          "title": "{PLACEHOLDER}",
+          "subtext": "{PLACEHOLDER}",
+          "logOut": "{PLACEHOLDER}"
+        },
+        "loggedOut": {
+          "title": "{PLACEHOLDER}",
+          "subtext": "{PLACEHOLDER}",
+          "logIn": "{PLACEHOLDER}"
+        },
+        "errors": {
+          "initError": "{PLACEHOLDER}"
+        },
+        "disclaimers": {
+          "use": "{PLACEHOLDER}",
+          "brand": "{PLACEHOLDER}",
+          "liability": "{PLACEHOLDER}"
+        }
       }
     },
     "updates": {
@@ -293,6 +343,7 @@
       "oscAutomations": "OSC自動化",
       "batteryAutomations": "バッテリー自動化",
       "gpuAutomations": "GPU自動化",
+      "statusAutomations": "{PLACEHOLDER}",
       "settings": "設定方法",
       "about": "Oyasumiについて"
     },
@@ -342,6 +393,24 @@
           "title": "睡眠",
           "description": "指定された時間待機する"
         }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "{PLACEHOLDER}",
+      "username": "{PLACEHOLDER}",
+      "password": "{PLACEHOLDER}",
+      "errors": {
+        "CHECK_EMAIL": "{PLACEHOLDER}",
+        "INVALID_CREDENTIALS": "{PLACEHOLDER}",
+        "UNEXPECTED_RESPONSE": "{PLACEHOLDER}"
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "{PLACEHOLDER}",
+      "description": "{PLACEHOLDER}",
+      "errors": {
+        "LAST_CODE_INVALID": "{PLACEHOLDER}",
+        "INVALID_FORMAT": "{PLACEHOLDER}"
       }
     }
   }

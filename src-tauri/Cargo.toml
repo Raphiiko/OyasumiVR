@@ -27,6 +27,7 @@ futures = "0.3"
 reqwest = "0.11.12"
 sysinfo = "0.26.2"
 chrono = "0.4.22"
+log = "^0.4"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -51,6 +52,10 @@ branch = "dev"
 [dependencies.tauri-plugin-fs-extra]
 git = "https://github.com/tauri-apps/tauri-plugin-fs-extra"
 #tag = "v0.1.0"
+branch = "dev"
+
+[dependencies.tauri-plugin-log]
+git = "https://github.com/tauri-apps/tauri-plugin-log"
 branch = "dev"
 
 [dependencies.openvr]

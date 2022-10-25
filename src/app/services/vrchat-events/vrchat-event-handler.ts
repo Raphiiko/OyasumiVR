@@ -1,6 +1,7 @@
 import { UserUpdateHandler } from './handlers/user-update-handler';
 import { VRChatService } from '../vrchat.service';
 import { NotificationHandler } from './handlers/notification-handler';
+import { info } from 'tauri-plugin-log-api';
 
 export interface VRChatEventHandler {
   type: string;
@@ -16,21 +17,8 @@ export class VRChatEventHandlerManager {
 
   handle = (type: string, content: string) => {
     const handler = this.handlers.find((handler) => handler.type === type);
-    if (!handler) {
-      // if (isDevMode())
-      //   console.log('Unhandled VRChat Event', {
-      //     type,
-      //     content,
-      //     contentParsed: (() => {
-      //       try {
-      //         return JSON.parse(content);
-      //       } catch (e) {
-      //         return null;
-      //       }
-      //     })(),
-      //   });
-      return;
-    }
+    info(`[VRChat] Received event: ${type}`);
+    if (!handler) return;
     handler.handle(content);
   };
 }

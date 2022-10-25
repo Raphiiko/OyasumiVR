@@ -11,6 +11,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../../services/automation-config.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { error, info } from 'tauri-plugin-log-api';
 
 @Component({
   selector: 'app-settings-debug-tab',
@@ -68,7 +69,7 @@ export class SettingsDebugTabComponent extends SettingsTabComponent {
       const fileData = await readTextFile(path);
       translations = JSON.parse(fileData);
     } catch (e) {
-      console.error(e);
+      error(`[DebugSettings] Could not load translations from file: ${JSON.stringify(e)}`);
       await message('Translations could not be loaded:\n' + e, {
         title: 'Error loading translations',
         type: 'error',

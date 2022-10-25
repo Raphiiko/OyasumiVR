@@ -20,6 +20,7 @@ import {
 import { SleepService } from '../sleep.service';
 import { WorldContext } from '../../models/vrchat';
 import { CurrentUser, UserStatus } from 'vrchat/dist';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +77,9 @@ export class StatusChangeForPlayerCountAutomationService {
         throttleTime(500, async, { leading: true, trailing: true }),
         // Set the status
         switchMap(({ newStatus }) => {
-          console.log(`Changing status to ${newStatus} due to change in player count parameters.`);
+          info(
+            `[StatusChangeForPlayerCountAutomation] Detected changed conditions, setting new status...`
+          );
           return this.vrchat.setStatus(newStatus);
         })
       )

@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
+import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
@@ -13,12 +14,20 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > AUTOMATION_CONFIGS_DEFAULT.version) {
     data = toLatest(data);
-    console.log(`Reset future automation configs version back to version ${currentVersion + ''}`);
+    info(
+      `[automation-configs-migrations] Reset future automation configs version back to version ${
+        currentVersion + ''
+      }`
+    );
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     data = migrations[++currentVersion](cloneDeep(data));
     currentVersion = data.version;
-    console.log(`Migrated automation configs to version ${currentVersion + ''}`);
+    info(
+      `[automation-configs-migrations] Migrated automation configs to version ${
+        currentVersion + ''
+      }`
+    );
   }
   return data as AutomationConfigs;
 }
@@ -31,7 +40,9 @@ function toLatest(data: any): any {
 
 function from3to4(data: any): any {
   data.version = 4;
-  data.CHANGE_STATUS_BASED_ON_PLAYER_COUNT = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
+  data.CHANGE_STATUS_BASED_ON_PLAYER_COUNT = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
+  );
   return data;
 }
 

@@ -25,6 +25,7 @@ import { TaskQueue } from '../utils/task-queue';
 import { WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
 import { CachedValue } from '../utils/cached-value';
+import { error, info, warn } from 'tauri-plugin-log-api';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
@@ -98,7 +99,7 @@ export class VRChatService {
     if (newStatus !== this._status.value) this._status.next(newStatus);
     // Show the login modal if we were just logged out due to token expiry
     if (this.loginExpired) {
-      console.log('Logging out because of login expiry.');
+      info(`[VRChat] Login expired. Logging out.`);
       await this.logout();
       this.showLoginModal();
     }
@@ -120,6 +121,7 @@ export class VRChatService {
     });
     this._user.next(null);
     this._status.next('LOGGED_OUT');
+    info(`[VRChat] Logged out`);
   }
 
   // Will throw in the case of:
@@ -133,19 +135,22 @@ export class VRChatService {
     this._user.next(await this.getCurrentUser({ username, password }));
     // If we got here, we have a user, so we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
+    info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
   // Will throw in the case of:
   // - INVALID_CODE
   // - UNEXPECTED_RESPONSE
   public async verify2FA(code: string) {
-    if (this._status.value !== 'LOGGED_OUT')
+    if (this._status.value !== 'LOGGED_OUT') {
+      error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
+    }
     const { authCookie, authCookieExpiry } = this.settings.value;
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
-    console.log('VRC API: /auth/twofactorauth/totp/verify');
+    info(`[VRChat] API Request: /auth/twofactorauth/totp/verify`);
     const response = await this.http.post(
       `${BASE_URL}/auth/twofactorauth/totp/verify`,
       Body.json({ code }),
@@ -156,11 +161,18 @@ export class VRChatService {
     );
     // If we received a 401, the code was likely incorrect
     if (response.status === 400) {
-      if ((response.data as any)?.verified === false) throw 'INVALID_CODE';
+      if ((response.data as any)?.verified === false) {
+        warn(`[VRChat] 2FA Verification failed: Invalid code`);
+        throw 'INVALID_CODE';
+      }
     }
     // If it's not ok, it's unexpected
     if (!response.ok || (response.data as any)?.verified === false) {
-      console.error('Received unexpected response from /auth/twofactorauth/totp/verify', response);
+      error(
+        `[VRChat] Received unexpected response from /auth/twofactorauth/totp/verify: ${JSON.stringify(
+          response
+        )}`
+      );
       throw 'UNEXPECTED_RESPONSE';
     }
     // Process any auth cookie if we get any
@@ -169,28 +181,39 @@ export class VRChatService {
     this._user.next(await this.getCurrentUser(undefined, true));
     // If we got here, we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
+    info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
   async setStatus(status: UserStatus): Promise<void> {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
-    if (!userId) throw new Error('Tried setting status while not logged in');
+    if (!userId) {
+      error(`[VRChat] Tried setting status while not logged in`);
+      throw new Error('Tried setting status while not logged in');
+    }
     // Don't do anything if the status is not changing
     if (this._user.value?.status === status) return;
     // Send status change request
-    const response = await this.apiCallQueue.queueTask<Response<unknown>>(
-      {
-        typeId: 'STATUS_CHANGE',
-        runnable: () => {
-          console.log(`VRC API: /users/${userId}`);
-          return this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
-            headers: this.getDefaultHeaders(),
-          });
+    info(`[VRChat] Setting status to '${status}'`);
+    try {
+      const result = await this.apiCallQueue.queueTask<Response<unknown>>(
+        {
+          typeId: 'STATUS_CHANGE',
+          runnable: () => {
+            info(`[VRChat] API Request: /users/${userId}`);
+            return this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
+              headers: this.getDefaultHeaders(),
+            });
+          },
         },
-      },
-      true
-    );
-    if (response.result && response.result.ok) this.patchCurrentUser({ status });
+        true
+      );
+      if (result.result && result.result.ok) this.patchCurrentUser({ status });
+      if (result.error) throw result.error;
+      if (!result.result?.ok) throw result.result;
+    } catch (e) {
+      error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
+    }
   }
 
   public showLoginModal() {
@@ -214,7 +237,7 @@ export class VRChatService {
   }
 
   public async handleNotification(notification: Notification) {
-    console.log('Received notification', notification);
+    info(`[VRChat] Received notification: ${JSON.stringify(notification)}`);
     switch (notification.type) {
       case NotificationType.RequestInvite:
         await this.handleRequestInviteNotification(notification);
@@ -225,37 +248,51 @@ export class VRChatService {
   public async deleteNotification(notificationId: string) {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
-    if (!userId) throw new Error('Tried deleting a notification while not logged in');
+    if (!userId) {
+      error('[VRChat] Tried deleting a notification while not logged in');
+      throw new Error('Tried deleting a notification while not logged in');
+    }
     // Send
-    const response = await this.apiCallQueue.queueTask<Response<Notification>>({
-      typeId: 'DELETE_NOTIFICATION',
-      runnable: () => {
-        console.log(`VRC API: /auth/user/notifications/${notificationId}/hide`);
-        return this.http.put(
-          `${BASE_URL}/auth/user/notifications/${notificationId}/hide`,
-          undefined,
-          {
-            headers: this.getDefaultHeaders(),
-          }
-        );
-      },
-    });
-    console.log('DELETE NOTIFICATION', response);
+    info(`[VRChat] Deleting notification 'notificationId'`);
+    try {
+      const result = await this.apiCallQueue.queueTask<Response<Notification>>({
+        typeId: 'DELETE_NOTIFICATION',
+        runnable: () => {
+          info(`[VRChat] API Request: /auth/user/notifications/${notificationId}/hide`);
+          return this.http.put(
+            `${BASE_URL}/auth/user/notifications/${notificationId}/hide`,
+            undefined,
+            {
+              headers: this.getDefaultHeaders(),
+            }
+          );
+        },
+      });
+      if (result.error) throw result.error;
+      if (!result.result?.ok) throw result.result;
+    } catch (e) {
+      error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
+    }
   }
 
   public async inviteUser(inviteeId: string, instanceId?: string) {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
-    if (!userId) throw new Error('Tried accepting an invite request while not logged in');
+    if (!userId) {
+      error('[VRChat] Tried inviting a user while not logged in');
+      throw new Error('Tried inviting a user while not logged in');
+    }
     // Throw if instance id was not provided and we don't know the current world id.
     if (!instanceId) instanceId = this._world.value?.instanceId;
-    if (!instanceId)
+    if (!instanceId) {
+      error('[VRChat] Tried inviting a user when the current world instance is unknown');
       throw new Error('Cannot invite a user when the current world instance is unknown');
+    }
     // Send
     const response = await this.apiCallQueue.queueTask<Response<Notification>>({
       typeId: 'INVITE',
       runnable: () => {
-        console.log(`VRC API: /invite/${inviteeId}`);
+        info(`[VRChat] API Request: /invite/${inviteeId}`);
         return this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
           headers: this.getDefaultHeaders(),
         });
@@ -271,6 +308,7 @@ export class VRChatService {
     // Automatically accept invite requests when on blue, in case the VRChat client does not.
     const user = this._user.value;
     if (!user || user.status !== UserStatus.JoinMe) return;
+    info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
     await this.deleteNotification(notification.id);
     await this.inviteUser(notification.senderUserId);
   }
@@ -306,6 +344,7 @@ export class VRChatService {
     if (this.settings.value.authCookie) {
       try {
         this._user.next(await this.getCurrentUser());
+        info(`[VRChat] Restored existing session`);
       } catch (e) {
         switch (e) {
           case 'INVALID_CREDENTIALS':
@@ -378,6 +417,19 @@ export class VRChatService {
     event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
     message?: MessageEvent
   ) {
+    switch (event) {
+      case 'OPEN':
+        info(`[VRChat] Websocket connection opened`);
+        return;
+      case 'CLOSE':
+        info(`[VRChat] Websocket connection closed`);
+        return;
+      case 'ERROR':
+        error(`[VRChat] Websocket connection error: ${JSON.stringify(message)}`);
+        return;
+      case 'MESSAGE':
+        break;
+    }
     if (event !== 'MESSAGE') return;
     const data = JSON.parse(message?.data as string);
     this.eventHandler.handle(data.type, data.content);
@@ -404,10 +456,13 @@ export class VRChatService {
     // If we have the user cached, return that.
     if (!force) {
       const user = this._currentUserCache.get();
-      if (user) return user;
+      if (user) {
+        info(`[VRChat] Loaded user from cache`);
+        return user;
+      }
     }
     // Request the current user
-    console.log('VRC API: /auth/user');
+    info(`[VRChat] API Request: /auth/user`);
     const response = await this.http.get<CurrentUser | { requiresTwoFactorAuth: string[] }>(
       `${BASE_URL}/auth/user`,
       {
@@ -422,17 +477,21 @@ export class VRChatService {
       // Check for known errors
       switch (message) {
         case '\\"It looks like you\'re logging in from somewhere new! Check your email for a message from VRChat.\\"':
+          error(`[VRChat] Login failed: Check email`);
           throw 'CHECK_EMAIL';
         case '"Invalid Username/Email or Password"':
+          error(`[VRChat] Login failed: Invalid credentials`);
           throw 'INVALID_CREDENTIALS';
         default:
-          console.error('Received unexpected response from /auth/user', response.data);
+          error(
+            `[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`
+          );
           throw 'UNEXPECTED_RESPONSE';
       }
     }
     // If it's not ok, it's unexpected
     if (!response.ok) {
-      console.error('Received unexpected response from /auth/user', response);
+      error(`[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`);
       throw 'UNEXPECTED_RESPONSE';
     }
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
@@ -447,7 +506,8 @@ export class VRChatService {
   }
 
   private async fetchApiConfig() {
-    console.log('VRC API: /config');
+    info('[VRChat] Fetching API config');
+    info('[VRChat] API Request: /config');
     const response = await this.http.get<APIConfig>(`${BASE_URL}/config`, {
       responseType: ResponseType.JSON,
       headers: this.getDefaultHeaders(),
@@ -456,6 +516,7 @@ export class VRChatService {
       // Store config if we end up needing it in the future
       await this.parseResponseCookies(response);
     } else {
+      warn('[VRChat] Could not fetch API config. Disabling module.');
       this._status.next('ERROR');
     }
   }
@@ -506,18 +567,18 @@ export class VRChatService {
     // Handle cookie expiry
     this.loginExpired = false;
     if (settings.apiKeyExpiry && settings.apiKeyExpiry < Date.now() / 1000) {
-      console.warn('API key expired, throwing it away.');
+      info('[VRChat] API key expired, throwing it away.');
       settings.apiKey = undefined;
       settings.apiKeyExpiry = undefined;
     }
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
-      console.warn('Auth cookie expired, throwing it away.');
+      info('[VRChat] Auth cookie expired, throwing it away.');
       settings.authCookie = undefined;
       settings.authCookieExpiry = undefined;
       this.loginExpired = true;
     }
     if (settings.twoFactorCookieExpiry && settings.twoFactorCookieExpiry < Date.now() / 1000) {
-      console.warn('Two factor cookie expired, throwing it away.');
+      info('[VRChat] Two factor cookie expired, throwing it away.');
       settings.twoFactorCookie = undefined;
       settings.twoFactorCookieExpiry = undefined;
       this.loginExpired = true;

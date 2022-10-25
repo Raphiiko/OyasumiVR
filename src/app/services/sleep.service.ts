@@ -20,6 +20,7 @@ import { OpenVRService } from './openvr.service';
 import { OVRDevicePose } from '../models/ovr-device';
 import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
 import * as THREE from 'three';
+import { info } from 'tauri-plugin-log-api';
 
 export const SETTINGS_KEY_SLEEP_MODE = 'SLEEP_MODE';
 
@@ -69,7 +70,7 @@ export class SleepService {
   async enableSleepMode(reason: SleepModeStatusChangeReason) {
     if (this._mode.value) return;
     reason.enabled = true;
-    console.log(reason);
+    info(`[Sleep] Sleep mode enabled (reason=${reason.type})`);
     this._mode.next(true);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
     await this.store.save();
@@ -78,7 +79,7 @@ export class SleepService {
   async disableSleepMode(reason: SleepModeStatusChangeReason) {
     if (!this._mode.value) return;
     reason.enabled = false;
-    console.log(reason);
+    info(`[Sleep] Sleep mode disabled (reason=${reason.type})`);
     this._mode.next(false);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
     await this.store.save();
