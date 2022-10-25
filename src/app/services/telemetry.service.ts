@@ -63,15 +63,26 @@ export class TelemetryService {
 
   async sendTelemetry(): Promise<boolean> {
     try {
+      const settings = this._settings.value;
       // Fetch manifest if needed
       if (!this.manifest) {
         await this.fetchManifest();
         if (!this.manifest) return false;
       }
       // Stop if telemetry is not enabled
-      if (!this._settings.value.enabled) return false;
-      // Stop if last heartbeat was sent less than 24 hours ago
-      if (Date.now() - this._settings.value.lastHeartbeat < 1000 * 60 * 60 * 24) return false;
+      if (!settings.enabled) return false;
+      // Determine version and language to send
+      const version = await getVersion(true);
+      const lang = await firstValueFrom(this.appSettings.settings).then(
+        (settings) => settings.userLanguage
+      );
+      // Stop if last heartbeat was sent less than 24 hours ago for the same version and language
+      if (
+        settings.lastVersion === version &&
+        settings.lastLang === lang &&
+        Date.now() - this._settings.value.lastHeartbeat < 1000 * 60 * 60 * 24
+      )
+        return false;
       // Send heartbeat
       let headers = new HttpHeaders();
       Object.entries(this.manifest.v1.heartbeatHeaders).forEach(
@@ -81,18 +92,21 @@ export class TelemetryService {
         this.http.post<{ status: string }>(
           this.manifest.v1.heartbeatUrl,
           {
-            telemetryId: this._settings.value.telemetryId,
-            version: await getVersion(true),
-            lang: await firstValueFrom(this.appSettings.settings).then(
-              (settings) => settings.userLanguage
-            ),
+            telemetryId: settings.telemetryId,
+            version,
+            lang,
           },
           { headers, observe: 'response' }
         )
       );
       if (response.status !== 200 || response.body?.status !== 'ok') return false;
       // Update last heartbeat
-      this._settings.next({ ...this._settings.value, lastHeartbeat: Date.now() });
+      this._settings.next({
+        ...settings,
+        lastHeartbeat: Date.now(),
+        lastVersion: version,
+        lastLang: lang,
+      });
       await this.saveSettings();
       return true;
     } catch (e) {
