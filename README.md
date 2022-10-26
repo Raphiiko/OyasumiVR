@@ -3,7 +3,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="450">
     <br/>
     <br/>
-    :zzz: A collection of utilities to assist with sleeping in virtual reality.
+    :zzz: A collection of utilities to assist with sleeping in virtual reality. :zzz:
 </p>
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
@@ -33,8 +33,10 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin>|
 
 ## Features
-
-<img align="right" src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/sleeping_pose.gif" height="333">
+<table align="right">
+<tr><td><img src="https://user-images.githubusercontent.com/111654848/198073951-85a52109-6fad-4edd-ad53-897a6d8adf12.gif" width="300"></td></tr>
+<tr><td><img src="https://user-images.githubusercontent.com/111654848/198073192-efa203e3-95e5-4961-a210-65e30b33cc68.gif" width="300"></td></tr>
+</table>
 
 - :dizzy: Automatic sleep animations with pose detection
   - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
@@ -51,9 +53,9 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
     - When putting them on a charger
-- :large*blue_circle: VRChat Status Automations
-  <br>Automatically change your status based on the number of players in your world:
-  <br>\_Be on blue when you are alone so your friends can join you, and switch to orange when there's enough people around!*
+- :large_blue_circle: VRChat Status Automations
+  - Automatically change your status based on the number of players in your world:
+    <br>_Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!_
 - :wrench: Turning off all trackers and/or controllers with a single click.
 - :zzz: Manage automations with a sleep mode in various ways:
   - Detect falling asleep:
@@ -118,9 +120,12 @@ From here, you can run `npm run tauri dev` or `yarn tauri dev` to run the applic
 ## VRChat
 
 Some features of Oyasumi require you to log in with your VRChat account for them to work. (E.g. status automations)
+
 This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials. 
 Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes. 
+
 Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRCHat inc. VRChat © VRChat Inc.
+
 The Oyasumi developer and any of this project's contributors are not responsible for any problems caused by Oyasumi (to your VRChat account or otherwise). Use at your own risk.
 
 ## License
