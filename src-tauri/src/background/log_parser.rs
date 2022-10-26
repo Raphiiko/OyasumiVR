@@ -12,10 +12,11 @@ use std::{
 
 use crate::TAURI_WINDOW;
 use chrono::{Local, NaiveDateTime, TimeZone};
+use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
 use tauri::{api::path::home_dir, Manager};
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
 struct VRCLogEvent {
     time: u64,
@@ -23,6 +24,8 @@ struct VRCLogEvent {
     data: String,
     initial_load: bool,
 }
+
+static mut MUTE_LOG_DIR_NO_EXIST_WARNINGS: bool = false;
 
 fn get_latest_log_path() -> Option<String> {
     // Get all files in the log directory
@@ -33,8 +36,15 @@ fn get_latest_log_path() -> Option<String> {
         false,
     );
     // If log directory doesn't exist, return no path
-    if dir.is_err() {
-        return None;
+    unsafe {
+        if dir.is_err() {
+            if !MUTE_LOG_DIR_NO_EXIST_WARNINGS {
+                warn!("[Core] VRChat log directory doesn't exist (yet)");
+                MUTE_LOG_DIR_NO_EXIST_WARNINGS = true;
+            }
+            return None;
+        }
+        MUTE_LOG_DIR_NO_EXIST_WARNINGS = false;
     }
     // Get the latest log file
     dir.unwrap()
@@ -78,17 +88,20 @@ fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             return true;
         }
         let display_name = line[offset..].to_string();
+        let event = VRCLogEvent {
+            time: parse_datetime_from_line(line),
+            event: String::from("OnPlayerJoined"),
+            data: display_name,
+            initial_load,
+        };
         let window_guard = TAURI_WINDOW.lock().unwrap();
         let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all(
-            "VRC_LOG_EVENT",
-            VRCLogEvent {
-                time: parse_datetime_from_line(line),
-                event: String::from("OnPlayerJoined"),
-                data: display_name,
-                initial_load,
-            },
-        );
+        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        if initial_load {
+            trace!("[Core] VRC Log Event: {:#?}", event);
+        } else {
+            debug!("[Core] VRC Log Event: {:#?}", event);
+        }
         return true;
     }
     false
@@ -108,17 +121,20 @@ fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             return true;
         }
         let display_name = line[offset..].to_string();
+        let event = VRCLogEvent {
+            time: parse_datetime_from_line(line),
+            event: String::from("OnPlayerLeft"),
+            data: display_name,
+            initial_load,
+        };
         let window_guard = TAURI_WINDOW.lock().unwrap();
         let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all(
-            "VRC_LOG_EVENT",
-            VRCLogEvent {
-                time: parse_datetime_from_line(line),
-                event: String::from("OnPlayerLeft"),
-                data: display_name,
-                initial_load,
-            },
-        );
+        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        if initial_load {
+            trace!("[Core] VRC Log Event: {:#?}", event);
+        } else {
+            debug!("[Core] VRC Log Event: {:#?}", event);
+        }
         return true;
     }
     false
@@ -138,17 +154,20 @@ fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             return true;
         }
         let instance_id = line[offset..].to_string();
+        let event = VRCLogEvent {
+            time: parse_datetime_from_line(line),
+            event: String::from("OnLocationChange"),
+            data: instance_id,
+            initial_load,
+        };
         let window_guard = TAURI_WINDOW.lock().unwrap();
         let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all(
-            "VRC_LOG_EVENT",
-            VRCLogEvent {
-                time: parse_datetime_from_line(line),
-                event: String::from("OnLocationChange"),
-                data: instance_id,
-                initial_load,
-            },
-        );
+        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        if initial_load {
+            trace!("[Core] VRC Log Event: {:?}", event);
+        } else {
+            debug!("[Core] VRC Log Event: {:?}", event);
+        }
         return true;
     }
     false
@@ -158,7 +177,7 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
     let (reader_thread_termination_tx, reader_thread_termination_rx) = mpsc::channel::<()>();
     thread::spawn(move || {
         // Open file stream
-        let file = File::open(path).unwrap();
+        let file = File::open(path.clone()).unwrap();
         let reader = BufReader::new(file);
         let lines = reader.lines();
         let mut lines_iterator = lines.into_iter();
@@ -172,6 +191,7 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
             let val = reader_thread_termination_rx.try_recv();
             match val {
                 Ok(_) | Err(TryRecvError::Disconnected) => {
+                    info!("[Core] Log reader thread terminated. ({})", path);
                     break;
                 }
                 Err(TryRecvError::Empty) => (),
@@ -185,6 +205,10 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
                 process_log_line(line, first_run);
             }
             if first_run {
+                debug!(
+                    "[Core] Initial read of VRChat log file complete. ({})",
+                    path
+                );
                 let window_guard = TAURI_WINDOW.lock().unwrap();
                 let window = window_guard.as_ref().unwrap();
                 let _ = window.emit_all(
@@ -230,6 +254,7 @@ pub fn spawn_log_parser_thread() -> mpsc::Sender<()> {
                         let _ = ctx.reader_thread_termination_tx.as_ref().unwrap().send(());
                     }
                     // Break to terminate this thread
+                    info!("[Core] Terminated VRChat log watcher");
                     break;
                 }
                 Err(TryRecvError::Empty) => (),
@@ -250,7 +275,7 @@ pub fn spawn_log_parser_thread() -> mpsc::Sender<()> {
                 let _ = ctx.reader_thread_termination_tx.as_ref().unwrap().send(());
             }
             // Start watching the new file
-            println!("Starting to watch log file: {}", log_path.clone());
+            info!("[Core] Starting VRChat log watcher. ({})", log_path.clone());
             *ctx = LoopContext {
                 current_log_path: Some(log_path.clone()),
                 reader_thread_termination_tx: Some(watch_log_file(log_path.clone())),

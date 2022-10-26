@@ -4,6 +4,7 @@ use hyper::{
     service::{make_service_fn, service_fn},
     Body, Method, Request, Response, Server,
 };
+use log::{info, error};
 
 use crate::{elevated_sidecar, MAIN_HTTP_SERVER_PORT};
 
@@ -16,15 +17,20 @@ pub fn spawn_http_server_thread() {
 #[tokio::main]
 async fn start_server() {
     // Start server
+    info!("[Core] Starting HTTP server...");
     let addr = SocketAddr::from(([127, 0, 0, 1], 0));
     let make_svc =
         make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(request_handler)) });
     let server = Server::bind(&addr).serve(make_svc);
     // Get port
     *MAIN_HTTP_SERVER_PORT.lock().unwrap() = Some(server.local_addr().port());
+    info!(
+        "[Core] Started HTTP server on port {}",
+        server.local_addr().port()
+    );
     // Run server forever
     if let Err(e) = server.await {
-        eprintln!("http server error: {}", e);
+        error!("[Core] HTTP server error: {}", e);
     }
 }
 

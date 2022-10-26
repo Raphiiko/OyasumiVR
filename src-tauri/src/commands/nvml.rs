@@ -1,4 +1,5 @@
 use crate::elevated_sidecar;
+use log::error;
 use oyasumi_shared::models::{
     NVMLDevice, NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
 };
@@ -7,12 +8,18 @@ use oyasumi_shared::models::{
 pub async fn nvml_status() -> String {
     let url = match elevated_sidecar::get_base_url() {
         Some(base_url) => base_url + "/nvml/status",
-        None => return "ELEVATED_SIDECAR_INACTIVE".into(),
+        None => {
+            error!("[Core] Tried getting NVML status while sidecar is inactive");
+            return "ELEVATED_SIDECAR_INACTIVE".into();
+        }
     };
     let resp = reqwest::get(url).await;
     match resp {
         Ok(resp) => resp.text().await.unwrap(),
-        Err(_) => "ELEVATED_SIDECAR_INACTIVE".into(),
+        Err(_) => {
+            error!("[Core] Tried getting NVML status while sidecar is inactive");
+            "ELEVATED_SIDECAR_INACTIVE".into()
+        }
     }
 }
 
@@ -50,6 +57,10 @@ pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result
     if response.success {
         Ok(true)
     } else {
+        error!(
+            "[Core] Could not set NVML power management limit: {:?}",
+            response.error
+        );
         Err(response.error.unwrap())
     }
 }

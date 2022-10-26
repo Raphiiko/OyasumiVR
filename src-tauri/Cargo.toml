@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi"
-version = "1.1.0"
+version = "1.2.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -28,6 +28,7 @@ reqwest = "0.11.12"
 sysinfo = "0.26.2"
 chrono = "0.4.22"
 log = "^0.4"
+time = "0.3.16"
 
 [dependencies.windows-sys]
 version = "0.36.1"

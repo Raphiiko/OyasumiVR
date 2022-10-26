@@ -1,5 +1,7 @@
 use std::sync::{mpsc, Mutex};
 
+use log::info;
+
 use crate::background;
 
 lazy_static! {
@@ -8,6 +10,7 @@ lazy_static! {
 
 #[tauri::command]
 pub fn init_vrc_log_watcher() {
+    info!("[Core] Initializing VRChat Log Watcher...");
     // Terminate existing thread if it exists
     let termination_guard = TERMINATION_TX.lock().unwrap();
     let termination = termination_guard.as_ref();

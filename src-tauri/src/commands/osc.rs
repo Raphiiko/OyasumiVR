@@ -3,6 +3,7 @@ use std::{
     str::FromStr,
 };
 
+use log::{debug, error};
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 
 use crate::OSC_SOCKET;
@@ -12,7 +13,7 @@ pub fn osc_init() -> bool {
     *OSC_SOCKET.lock().unwrap() = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
         Ok(s) => Some(s),
         Err(err) => {
-            eprintln!("{err}");
+            error!("[Core] Could not initialize OSC module: {}", err);
             return false;
         }
     };
@@ -21,16 +22,28 @@ pub fn osc_init() -> bool {
 
 #[tauri::command]
 pub fn osc_send_int(addr: String, osc_addr: String, data: i32) -> Result<bool, String> {
+    debug!(
+        "[Core] Sending OSC command (address={}, type={}, value={})",
+        osc_addr, "int", data
+    );
     osc_send(addr, osc_addr, vec![OscType::Int(data)])
 }
 
 #[tauri::command]
 pub fn osc_send_float(addr: String, osc_addr: String, data: f32) -> Result<bool, String> {
+    debug!(
+        "[Core] Sending OSC command (address={}, type={}, value={})",
+        osc_addr, "float", data
+    );
     osc_send(addr, osc_addr, vec![OscType::Float(data)])
 }
 
 #[tauri::command]
 pub fn osc_send_bool(addr: String, osc_addr: String, data: bool) -> Result<bool, String> {
+    debug!(
+        "[Core] Sending OSC command (address={}, type={}, value={})",
+        osc_addr, "bool", data
+    );
     osc_send(addr, osc_addr, vec![OscType::Bool(data)])
 }
 
@@ -56,13 +69,19 @@ fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<bool, 
     };
     // Construct message
     let msg_buf = encoder::encode(&OscPacket::Message(OscMessage {
-        addr: osc_addr,
-        args: data,
+        addr: osc_addr.clone(),
+        args: data.clone(),
     }))
     .unwrap();
     // Send message
     match socket.send_to(&msg_buf, to_addr) {
-        Err(_) => return Err(String::from("SENDING_ERROR")),
+        Err(_) => {
+            error!(
+                "[Core] Failed to send OSC message (addr={}, osc_addr={}, data={:?})",
+                addr, osc_addr, data
+            );
+            return Err(String::from("SENDING_ERROR"));
+        }
         _ => (),
     }
     Ok(true)

@@ -7,10 +7,11 @@
 extern crate lazy_static;
 
 use cronjob::CronJob;
+use log::{error, info, LevelFilter};
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
-use tauri_plugin_log::{LogTarget, LoggerBuilder};
+use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
 use tauri_plugin_store::PluginBuilder;
 
 mod commands {
@@ -45,7 +46,21 @@ fn main() {
         .plugin(FsExtra::default())
         .plugin(
             LoggerBuilder::default()
+                .format(move |out, message, record| {
+                    let format = time::format_description::parse(
+                        "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
+                    )
+                    .unwrap();
+                    out.finish(format_args!(
+                        "{}[{}] {}",
+                        time::OffsetDateTime::now_utc().format(&format).unwrap(),
+                        record.level(),
+                        message
+                    ))
+                })
+                .level(LevelFilter::Info)
                 .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+                .rotation_strategy(RotationStrategy::KeepAll)
                 .build(),
         )
         .setup(|app| {
@@ -58,10 +73,11 @@ fn main() {
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
+                info!("[Core] Initializing OpenVR");
                 let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
                     Ok(ctx) => Some(ctx),
                     Err(err) => {
-                        println!("Failed to initialize openvr: {}", err);
+                        error!("[Core] Failed to initialize OpenVR: {}", err);
                         *OVR_STATUS.lock().unwrap() = String::from("INIT_FAILED");
                         let window_guard = TAURI_WINDOW.lock().unwrap();
                         let window = window_guard.as_ref().unwrap();
@@ -77,6 +93,7 @@ fn main() {
                     background::openvr::spawn_openvr_background_thread();
                 }
                 // Inform frontend of completion
+                info!("[Core] OpenVR initialization complete");
                 *OVR_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
                 let window_guard = TAURI_WINDOW.lock().unwrap();
                 let window = window_guard.as_ref().unwrap();

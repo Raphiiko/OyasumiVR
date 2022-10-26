@@ -1,6 +1,7 @@
 use std::{thread, time::Duration};
 
 use crate::{OVR_STATUS, TAURI_WINDOW};
+use log::info;
 use openvr::{system as ovrsys, TrackedDeviceIndex};
 use openvr_sys::{HmdQuaternion_t, HmdVector3_t};
 use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
@@ -160,6 +161,7 @@ pub fn spawn_openvr_background_thread() {
                             context.shutdown();
                         }
                         *OVR_STATUS.lock().unwrap() = String::from("QUIT");
+                        info!("[Core] Detected OpenVR quit event");
                         window.emit_all("OVR_QUIT", ()).unwrap();
                         true
                     }
