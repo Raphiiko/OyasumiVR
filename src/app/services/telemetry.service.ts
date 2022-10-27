@@ -2,7 +2,15 @@ import { Injectable, isDevMode } from '@angular/core';
 import { TelemetryManifest } from '../models/telemetry-manifest';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  pairwise,
+} from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -23,15 +31,25 @@ export class TelemetryService {
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
   private manifest?: TelemetryManifest;
+  private timeout?: NodeJS.Timeout;
 
   constructor(private http: HttpClient, private appSettings: AppSettingsService) {}
 
   async init() {
     await this.loadSettings();
     if (!isDevMode()) {
-      setTimeout(() => this.scheduleTelemetry(), 10000);
+      this.timeout = setTimeout(() => this.scheduleTelemetry(), 10000);
+      // Send heartbeat when language setting has changed
+      this.appSettings.settings
+        .pipe(
+          map((settings) => settings.userLanguage),
+          pairwise(),
+          filter(([oldLang, newLang]) => oldLang !== newLang),
+          debounceTime(20000)
+        )
+        .subscribe(() => this.scheduleTelemetry());
     } else {
-      debug("[Telemetry] Disabling telemetry in dev mode");
+      debug('[Telemetry] Disabling telemetry in dev mode');
     }
   }
 
@@ -55,12 +73,13 @@ export class TelemetryService {
   }
 
   async scheduleTelemetry() {
+    if (this.timeout) clearTimeout(this.timeout);
     if (await this.sendTelemetry()) {
       // If successful, schedule next heartbeat in 24 hours
-      setInterval(() => this.scheduleTelemetry(), 1000 * 60 * 60 * 24);
+      this.timeout = setTimeout(() => this.scheduleTelemetry(), 1000 * 60 * 60 * 24);
     } else {
       // If unsuccessful, schedule next heartbeat in 30 minutes
-      setInterval(() => this.scheduleTelemetry(), 1000 * 60 * 30);
+      this.timeout = setTimeout(() => this.scheduleTelemetry(), 1000 * 60 * 30);
     }
   }
 
