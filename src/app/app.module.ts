@@ -73,6 +73,7 @@ import { SleepingAnimationPresetModalComponent } from './components/sleeping-ani
 import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
+import { OscControlService } from './services/osc-control.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -159,6 +160,7 @@ export class AppModule {
     private nvmlService: NVMLService,
     private sleepService: SleepService,
     private oscService: OscService,
+    private oscControlService: OscControlService,
     private sidecarService: ElevatedSidecarService,
     private updateService: UpdateService,
     private telemetryService: TelemetryService,
@@ -193,33 +195,35 @@ export class AppModule {
     // Initialize general utility services
     await Promise.all([
       this.openvrService.init(),
-      this.oscService.init(),
+      this.oscService.init().then(async () => {
+        await this.oscControlService.init();
+      }),
       this.sleepService.init(),
       this.vrchatService.init(),
       this.vrchatLogService.init(),
     ]);
-    // Initialize GPU services
+    // Initialize GPU control services
     await this.sidecarService.init().then(async () => {
       await this.nvmlService.init();
-    });
-    // Initialize automations
-    await Promise.all([
-      // GPU automations
-      this.gpuAutomations.init(),
-      // Sleep mode automations
-      this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
-      this.sleepModeEnableAtBatteryPercentageAutomation.init(),
-      this.sleepModeEnableAtTimeAutomationService.init(),
-      this.sleepModeDisableAtTimeAutomationService.init(),
-      this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
-      // Battery automations
-      this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
-      this.turnOffDevicesWhenChargingAutomationService.init(),
-      // OSC automations
-      this.sleepingAnimationsAutomationService.init(),
-      // Status automations
-      this.statusChangeForPlayerCountAutomationService.init(),
-    ]);
+    }),
+      // Initialize automations
+      await Promise.all([
+        // GPU automations
+        this.gpuAutomations.init(),
+        // Sleep mode automations
+        this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
+        this.sleepModeEnableAtBatteryPercentageAutomation.init(),
+        this.sleepModeEnableAtTimeAutomationService.init(),
+        this.sleepModeDisableAtTimeAutomationService.init(),
+        this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
+        // Battery automations
+        this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
+        this.turnOffDevicesWhenChargingAutomationService.init(),
+        // OSC automations
+        this.sleepingAnimationsAutomationService.init(),
+        // Status automations
+        this.statusChangeForPlayerCountAutomationService.init(),
+      ]);
     // Language selection modal
     this.appSettingsService.loadedDefaults
       .pipe(filter((loadedDefaults) => loadedDefaults))

@@ -27,6 +27,7 @@ mod background {
     pub mod http_server;
     pub mod log_parser;
     pub mod openvr;
+    pub mod osc;
 }
 mod elevated_sidecar;
 
@@ -34,7 +35,8 @@ lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<openvr::Context>> = Default::default();
     static ref TAURI_WINDOW: Mutex<Option<tauri::Window>> = Default::default();
     static ref OVR_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
-    static ref OSC_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
     static ref MAIN_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();

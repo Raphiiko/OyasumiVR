@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Status automations for automatically changing your VRChat status based on the amount of players in your world.
 - VRChat login for features that require accessing the VRChat API. (e.g. Status automations)
+- Possibility for specific options to be triggered over OSC (and thus using VRChat avatar parameters):
+  - Sleep Mode
+  - Sleeping Animation Automations
+  - Status Automations
+  - Turning off controllers
+  - Turning off trackers
+  - Turning off trackers & controllers
 - Status bar for showing the current sleep mode and logged-in VRChat account, as well as the status of that account.
 - Better logging
 

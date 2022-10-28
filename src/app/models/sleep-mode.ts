@@ -1,9 +1,10 @@
 import { AutomationType } from './automations';
 
-export type SleepModeStatusChangeReasonType = 'MANUAL' | 'AUTOMATION';
+export type SleepModeStatusChangeReasonType = 'MANUAL' | 'OSC_CONTROL' | 'AUTOMATION';
 
 export type SleepModeStatusChangeReason =
   | ManualSleepModeStatusChangeReason
+  | OSCControlSleepModeStatusChangeReason
   | AutomationSleepModeStatusChangeReason;
 
 export interface SleepModeStatusChangeReasonBase {
@@ -13,6 +14,10 @@ export interface SleepModeStatusChangeReasonBase {
 
 export interface ManualSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
   type: 'MANUAL';
+}
+
+export interface OSCControlSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
+  type: 'OSC_CONTROL';
 }
 
 export interface AutomationSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
