@@ -65,6 +65,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Detect waking up:
     - When turning on a controller or tracker
     - On a time schedule
+- :calling: [Premade expression menu](https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu) for controlling some features right from within VRChat
 - 🗺️ Multi language support
   - English
   - Dutch (Nederlands)
