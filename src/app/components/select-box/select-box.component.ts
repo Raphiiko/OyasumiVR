@@ -1,12 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
 import { fadeDown } from '../../utils/animations';
+import { SafeHtml } from '@angular/platform-browser';
 
 export interface SelectBoxItem {
   id: string;
   label: TString;
   subLabel?: TString;
   infoAction?: () => void;
+  htmlPrefix?: String | SafeHtml;
 }
 
 @Component({

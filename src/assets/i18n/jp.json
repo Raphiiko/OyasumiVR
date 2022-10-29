@@ -9,7 +9,8 @@
       "confirm": "確認",
       "ok": "OK",
       "open": "開く",
-      "close": "閉じる"
+      "close": "閉じる",
+      "login": "ログイン"
     }
   },
   "overview": {
@@ -167,10 +168,36 @@
       "cancel": "一回のみ"
     }
   },
+  "status-automations": {
+    "title": "ステータス自動化",
+    "enable": "ステータス自動化を有効にする",
+    "description": "Oyasumiは、自分のワールドにいるプレイヤーの数に応じてステータスを自動設定し、参加する人数を制限することができます。",
+    "loginRequired": "この機能を使用するには、VRChatアカウントでログインする必要があります。",
+    "exampleUse": "使用例：誰かが参加してきたら、自動的にステータスをオレンジ色や赤色に切り替えます！\n参加者が退出してまた一人になったら、自動的にステータスを青色に戻して、他の人が参加できるようにします。",
+    "disableToEdit": "変更を行う前に、ステータス自動化を無効にしてください。",
+    "playerLimit": "プレイヤー数制限",
+    "playerLimitLabel": {
+      "singular": "{{count}} 人のプレイヤー(自分を含む)",
+      "plural": "{{count}} 人のプレイヤー(自分を含む)"
+    },
+    "belowLimit": {
+      "title": "上限以下",
+      "description": "ステータスの設定"
+    },
+    "atLimitOrAbove": {
+      "title": "上限内またはそれ以上",
+      "description": "ステータスの設定"
+    },
+    "onlyIfSleepModeEnabled": "スリープモード有効時のみ",
+    "behaviourWarning": "Oyasumiによるステータスの変更は、プレイヤーには表示されません。他のプレイヤーから見ても、ステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様上の制限であり、Oyasumiが修正することはできません。",
+    "moreInfo": "詳細",
+    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChatで青色に表示されなくても、自動的に招待を受けることはできますか？\nA: Oyasumiがあなたのステータスを青（join me）に設定した場合、あなたが受け取った招待リクエストを自動承認するようになります。\n\nQ：ステータスが更新されないので、参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加したいのに参加できない場合は、メインメニューからプロフィールを開いて、あなたのステータスを強制的に更新することができます。"
+  },
   "settings": {
     "title": "設定",
     "tab": {
       "general": "一般",
+      "vrchat": "VRChat",
       "updates": "アップデート",
       "debug": "デバッグ"
     },
@@ -203,6 +230,30 @@
         "description": "送信されるデータは、ご使用中のOyasumiのバージョンと、設定されている言語のみに制限されます。それ以外のデータは送信されず、完全に匿名です。また、このデータは一般的な使用統計のためにのみ使用されます。"
       }
     },
+    "vrchat": {
+      "logIn": {
+        "title": "ログイン",
+        "description": "Oyasumi機能の中には、VRChatアカウントでログインしないと使用できないものがあります。",
+        "loggedIn": {
+          "title": "{{name}}さん、こんにちは！",
+          "subtext": "現在、VRChatアカウントでログインしています。",
+          "logOut": "ログアウト"
+        },
+        "loggedOut": {
+          "title": "ログアウトしました",
+          "subtext": "現在、VRChatアカウントでログインしていません。",
+          "logIn": "ログイン"
+        },
+        "errors": {
+          "initError": "VRChatモジュールが初期化されませんでした。インターネットに接続していることを確認し、時間をおいてからOyasumiを再起動し、再度お試しください。"
+        },
+        "disclaimers": {
+          "use": "ログイン情報は保管されることはなく、認証のためにVRChatのサーバーに送信されるだけです。",
+          "brand": "OyasumiはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
+          "liability": "Raphiiko はOyasumiに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
+        }
+      }
+    },
     "updates": {
       "checkForUpdates": "アップデートを確認する",
       "changelog": "変更履歴",
@@ -216,9 +267,10 @@
       "persistentStorage": {
         "title": "永続ストレージ",
         "description": "これらボタンを押すと、Oyasumiの永続ストレージの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
-        "clearAll": "すべてのストレージを削除",
+        "clearAllSettings": "すべてのセッティングを削除",
         "clearAutomationSettings": "自動化設定をクリア",
         "clearAppSettings": "アプリの設定を削除",
+        "clearCache": "キャッシュを削除",
         "printSettings": "ログ設定"
       },
       "language": {
@@ -267,6 +319,12 @@
     }
   },
   "comp": {
+    "main-status-bar": {
+      "sleepMode": "睡眠モード",
+      "active": "アクティブ",
+      "inactive": "非アクティブ",
+      "loggedOut": "ログアウト中"
+    },
     "confirm-modal": {
       "defaultTitle": "確認"
     },
@@ -285,6 +343,7 @@
       "oscAutomations": "OSC自動化",
       "batteryAutomations": "バッテリー自動化",
       "gpuAutomations": "GPU自動化",
+      "statusAutomations": "ステータス自動化",
       "settings": "設定方法",
       "about": "Oyasumiについて"
     },
@@ -334,6 +393,24 @@
           "title": "睡眠",
           "description": "指定された時間待機する"
         }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "VRChatにログイン",
+      "username": "VRChatユーザー名/Eメール",
+      "password": "パスワード",
+      "errors": {
+        "CHECK_EMAIL": "ログインに失敗：詳しくは、VRChatアカウントに紐づくメールアドレスの受信箱をご確認ください。",
+        "INVALID_CREDENTIALS": "入力された認証情報が正しくありません。",
+        "UNEXPECTED_RESPONSE": "ログインに失敗: 不明なエラーが発生しました。接続を確認するか、後でもう一度お試しください。"
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "二要素認証",
+      "description": "お客様のVRChatアカウントは二要素認証で保護されています。\r\n\r\n2FAコードを入力してください:",
+      "errors": {
+        "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。",
+        "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字の羅列です。入力内容をご確認ください。"
       }
     }
   }

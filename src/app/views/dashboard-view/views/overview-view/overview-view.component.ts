@@ -16,6 +16,7 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
   sleepModeActive = false;
   wew = false;
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
+  credentials: any = {};
 
   constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
 

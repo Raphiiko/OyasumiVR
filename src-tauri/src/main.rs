@@ -7,12 +7,16 @@
 extern crate lazy_static;
 
 use cronjob::CronJob;
-use std::{sync::Mutex, net::UdpSocket};
+use log::{error, info, LevelFilter};
+use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
+use tauri_plugin_fs_extra::FsExtra;
+use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
 use tauri_plugin_store::PluginBuilder;
 
 mod commands {
     pub mod admin;
+    pub mod log_parser;
     pub mod nvml;
     pub mod openvr;
     pub mod os;
@@ -21,7 +25,9 @@ mod commands {
 }
 mod background {
     pub mod http_server;
+    pub mod log_parser;
     pub mod openvr;
+    pub mod osc;
 }
 mod elevated_sidecar;
 
@@ -29,7 +35,8 @@ lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<openvr::Context>> = Default::default();
     static ref TAURI_WINDOW: Mutex<Option<tauri::Window>> = Default::default();
     static ref OVR_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
-    static ref OSC_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
     static ref MAIN_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
@@ -38,6 +45,26 @@ lazy_static! {
 fn main() {
     tauri::Builder::default()
         .plugin(PluginBuilder::default().build())
+        .plugin(FsExtra::default())
+        .plugin(
+            LoggerBuilder::default()
+                .format(move |out, message, record| {
+                    let format = time::format_description::parse(
+                        "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
+                    )
+                    .unwrap();
+                    out.finish(format_args!(
+                        "{}[{}] {}",
+                        time::OffsetDateTime::now_utc().format(&format).unwrap(),
+                        record.level(),
+                        message
+                    ))
+                })
+                .level(LevelFilter::Info)
+                .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+                .rotation_strategy(RotationStrategy::KeepAll)
+                .build(),
+        )
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -48,12 +75,11 @@ fn main() {
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             std::thread::spawn(|| -> () {
                 // Initialize OpenVR
+                info!("[Core] Initializing OpenVR");
                 let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
-                    Ok(ctx) => {
-                        Some(ctx)
-                    }
+                    Ok(ctx) => Some(ctx),
                     Err(err) => {
-                        println!("Failed to initialize openvr: {}", err);
+                        error!("[Core] Failed to initialize OpenVR: {}", err);
                         *OVR_STATUS.lock().unwrap() = String::from("INIT_FAILED");
                         let window_guard = TAURI_WINDOW.lock().unwrap();
                         let window = window_guard.as_ref().unwrap();
@@ -69,6 +95,7 @@ fn main() {
                     background::openvr::spawn_openvr_background_thread();
                 }
                 // Inform frontend of completion
+                info!("[Core] OpenVR initialization complete");
                 *OVR_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
                 let window_guard = TAURI_WINDOW.lock().unwrap();
                 let window = window_guard.as_ref().unwrap();
@@ -97,6 +124,7 @@ fn main() {
             commands::osc::osc_valid_addr,
             commands::admin::elevation_sidecar_running,
             commands::admin::start_elevation_sidecar,
+            commands::log_parser::init_vrc_log_watcher,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

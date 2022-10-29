@@ -1,0 +1,45 @@
+<div class="setting-category">
+  <p translate>settings.debug.description</p>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.debug.persistentStorage.title</h2>
+  <p translate>settings.debug.persistentStorage.description</p>
+  <div class="debug-persistent-storage-actions">
+    <button class="btn btn-secondary" (click)="clearStore('SETTINGS')" translate>
+      settings.debug.persistentStorage.clearAllSettings
+    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="clearStore('SETTINGS', storeKey.SETTINGS_KEY_AUTOMATION_CONFIGS)"
+      translate
+    >
+      settings.debug.persistentStorage.clearAutomationSettings
+    </button>
+    <button
+      class="btn btn-secondary"
+      (click)="clearStore('SETTINGS', storeKey.SETTINGS_KEY_APP_SETTINGS)"
+      translate
+    >
+      settings.debug.persistentStorage.clearAppSettings
+    </button>
+    <button class="btn btn-secondary" (click)="clearStore('CACHE')" translate>
+      settings.debug.persistentStorage.clearCache
+    </button>
+    <button class="btn btn-secondary" (click)="printSettings()" translate>
+      settings.debug.persistentStorage.printSettings
+    </button>
+  </div>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.debug.language.title</h2>
+</div>
+<p translate>settings.debug.language.description</p>
+<div class="debug-persistent-storage-actions">
+  <button class="btn btn-secondary" (click)="loadLanguageFile()" translate>
+    settings.debug.language.loadFile
+  </button>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.debug.sleepingPose.title</h2>
+</div>
+<app-sleeping-pose-viewer></app-sleeping-pose-viewer>

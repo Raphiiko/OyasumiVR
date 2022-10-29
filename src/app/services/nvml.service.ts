@@ -3,6 +3,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { NVMLDevice } from '../models/nvml-device';
 import { BehaviorSubject, filter, Observable } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
+import { error, info } from 'tauri-plugin-log-api';
 
 export type NVMLStatus =
   | 'ELEVATION_SIDECAR_INACTIVE'
@@ -48,9 +49,9 @@ export class NVMLService {
     const success = await invoke<boolean>('nvml_set_power_management_limit', { uuid, limit });
     if (success) {
       this._devices.next(await this.getDevices());
-      console.log('Set gpu power limit', { gpuUuid: uuid, powerLimit: limit });
+      info(`[NVML] Set gpu power limit (uuid=${uuid}, powerLimit:${limit})`);
     } else {
-      console.error('Could not set gpu power limit', { gpuUuid: uuid, powerLimit: limit });
+      error(`[NVML] Could not set gpu power limit (uuid=${uuid}, powerLimit:${limit})`);
     }
     return success;
   }

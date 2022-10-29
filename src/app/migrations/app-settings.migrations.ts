@@ -1,17 +1,28 @@
 import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
+import { AppSettingsService } from '../services/app-settings.service';
+import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {
-  1: from0to1,
+  1: toLatest,
   2: from1to2,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
   let currentVersion = data.version || 0;
+  // Reset to latest when the current version is higher than the latest
+  if (currentVersion > APP_SETTINGS_DEFAULT.version) {
+    data = toLatest(data);
+    info(
+      `[app-settings-migrations] Reset future app settings version back to version ${
+        currentVersion + ''
+      }`
+    );
+  }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
     data = migrations[++currentVersion](data);
     currentVersion = data.version;
-    console.log(`Migrated app settings to version ${currentVersion + ''}`);
+    info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
   return data as AppSettings;
 }
@@ -25,10 +36,5 @@ function toLatest(data: any): any {
 function from1to2(data: any): any {
   data.version = 2;
   data.askForAdminOnStart = false;
-  return data;
-}
-
-function from0to1(data: any): any {
-  data.version = 1;
   return data;
 }

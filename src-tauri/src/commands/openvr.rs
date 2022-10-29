@@ -1,3 +1,4 @@
+use log::error;
 use openvr::{TrackedDeviceIndex, MAX_TRACKED_DEVICE_COUNT};
 use oyasumi_shared::models::OVRDevice;
 
@@ -8,7 +9,10 @@ pub fn openvr_get_devices() -> Result<Vec<OVRDevice>, String> {
     let context_guard = OVR_CONTEXT.lock().unwrap();
     let context = match context_guard.as_ref() {
         Some(ctx) => ctx,
-        None => return Err("ERROR_OVR_NOT_INITIALIZED".into()),
+        None => {
+            error!("[Core] Tried getting OpenVR devices while OVR has not yet initialised.");
+            return Err("ERROR_OVR_NOT_INITIALIZED".into());
+        }
     };
     let mut devices: Vec<OVRDevice> = Vec::new();
     let system = context.system().unwrap();

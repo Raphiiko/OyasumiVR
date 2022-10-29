@@ -3,7 +3,7 @@
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="450">
     <br/>
     <br/>
-    :zzz: A collection of utilities to assist with sleeping in virtual reality.
+    :zzz: A collection of utilities to assist with sleeping in virtual reality. :zzz:
 </p>
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
@@ -12,8 +12,8 @@
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="[https://raphiiko.booth.pm](https://discord.gg/7MqdPJhYxC)"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://raphiiko.booth.pm"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-BOOTH.PM-red"/></a>
-    <a href="https://raphiiko.gumroad.com"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-BOOTH.PM-red"/></a>
+    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
 </p>
 
 <p align="center">
@@ -28,12 +28,15 @@
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
 
-| Sleeping Animations | GPU Power Limiting | Sleep Detection | Battery Automations | Device Overview |
-|---------------------|--------------------|-----------------|---------------------|-----------------|
-|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|
+|Sleeping Animations                                                                                                              |GPU Power Limiting                                                                                                           |Sleep Detection                                                                                                             |Battery Automations                                                                                                             |Device Overview                                                                                                      |Status Automations                                                                                                           |
+|-------------------------------------------------------------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------- |----------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin>|
 
 ## Features
-<img align="right" src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/sleeping_pose.gif" height="333">
+<table align="right">
+<tr><td><img src="https://user-images.githubusercontent.com/111654848/198073951-85a52109-6fad-4edd-ad53-897a6d8adf12.gif" width="300"></td></tr>
+<tr><td><img src="https://user-images.githubusercontent.com/111654848/198073192-efa203e3-95e5-4961-a210-65e30b33cc68.gif" width="300"></td></tr>
+</table>
 
 - :dizzy: Automatic sleep animations with pose detection
   - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
@@ -42,7 +45,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - [ごろ寝システム v2.2 - 2.3](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean)
       <br>(Sleep System v2.2 - 2.3 by minminmiin)
       <br>([EX version](https://booth.pm/en/items/4233545) also supported!)
-    - [GoGo Loco v1.7.1](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
+    - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
       <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
   - Automatically tweak your power limits when you go to sleep and when you wake up.
@@ -50,6 +53,9 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
     - When putting them on a charger
+- :large_blue_circle: VRChat Status Automations
+  - Automatically change your status based on the number of players in your world:
+    <br>_Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!_
 - :wrench: Turning off all trackers and/or controllers with a single click.
 - :zzz: Manage automations with a sleep mode in various ways:
   - Detect falling asleep:
@@ -59,6 +65,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Detect waking up:
     - When turning on a controller or tracker
     - On a time schedule
+- :calling: [Premade expression menu](https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu) for controlling some features right from within VRChat
 - 🗺️ Multi language support
   - English
   - Dutch (Nederlands)
@@ -73,11 +80,14 @@ Oyasumi has been built with [Angular](https://angular.io/) and [Tauri](https://t
 ## Supported Devices
 
 ### Battery Automations
+
 Currently Oyasumi supports battery automations for all SteamVR devices that:
+
 1. Support reporting for battery levels and charging status
-2. Support being turned off via SteamVR. 
+2. Support being turned off via SteamVR.
 
 This includes, but is not limited to the following devices:
+
 - HTC Vive Controllers/Wands
 - Index Controllers/Knuckles
 - Vive Trackers (1.0/2.0/3.0)
@@ -85,7 +95,7 @@ This includes, but is not limited to the following devices:
 
 This means that any Oculus controller is unlikely to work, and SlimeVR trackers are unsupported unless they implement this functionality in their [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
 
-*(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware. (https://forum.tundra-labs.com/t/firmware-issues/746)*
+_(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware. (https://forum.tundra-labs.com/t/firmware-issues/746)_
 
 ### GPU Automations
 
@@ -107,6 +117,17 @@ Once you have set up these dependencies, you can continue as follows:
 3. Run `npm run build` or `yarn build` at least once.
 
 From here, you can run `npm run tauri dev` or `yarn tauri dev` to run the application locally.
+
+## VRChat
+
+Some features of Oyasumi require you to log in with your VRChat account for them to work. (E.g. status automations)
+
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials. 
+Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes. 
+
+Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRCHat inc. VRChat © VRChat Inc.
+
+The Oyasumi developer and any of this project's contributors are not responsible for any problems caused by Oyasumi (to your VRChat account or otherwise). Use at your own risk.
 
 ## License
 

@@ -2,6 +2,7 @@ use std::{convert::Infallible, time::Duration};
 
 use futures::executor::block_on;
 use hyper::{body::Buf, Body, Request, Response};
+use log::info;
 use oyasumi_shared::models::ElevatedSidecarInitRequest;
 use sysinfo::{Pid, PidExt, System, SystemExt};
 use tauri::Manager;
@@ -47,6 +48,7 @@ pub async fn start() {
         Some(port) => port.clone(),
         None => return,
     };
+    info!("[Core] Starting sidecar...");
     run_command(
         "oyasumi-elevated-sidecar.exe".into(),
         vec![
@@ -63,6 +65,7 @@ pub async fn request_stop() {
         Some(base_url) => base_url + "/stop",
         None => return,
     };
+    info!("[Core] Stopping current sidecar...");
     let _ = reqwest::get(url).await;
 }
 
@@ -91,6 +94,10 @@ pub async fn handle_elevated_sidecar_init(
     // Watch the new sidecar for it quitting unexpectedly
     watch_process(request_data.sidecar_pid);
     // Inform the front that the sidecar has started
+    info!(
+        "[Core] Detected start of sidecar (pid={}, port={})",
+        request_data.sidecar_pid, request_data.sidecar_port
+    );
     let window_guard = TAURI_WINDOW.lock().unwrap();
     let window = window_guard.as_ref().unwrap();
     let _ = window.emit_all("ELEVATED_SIDECAR_STARTED", request_data.sidecar_pid);
@@ -105,26 +112,20 @@ fn watch_process(sidecar_pid: u32) {
         std::thread::sleep(Duration::from_secs(1));
         s.refresh_processes();
         if s.process(pid).is_none() {
-            println!("Sidecar process has exited.");
             let current_sidecar_pid_guard = SIDECAR_PID.lock().unwrap();
-            println!("Sidecar process has exited. 1");
             let current_sidecar_pid = current_sidecar_pid_guard.as_ref();
-            println!("Sidecar process has exited. 2");
             if match current_sidecar_pid {
                 Some(current_sidecar_pid) => *current_sidecar_pid == sidecar_pid,
                 None => true,
             } {
                 drop(current_sidecar_pid_guard);
-                println!("Sidecar process has exited. 3");
                 *SIDECAR_PID.lock().unwrap() = None;
-                println!("Sidecar process has exited. 4");
                 *SIDECAR_HTTP_SERVER_PORT.lock().unwrap() = None;
-                println!("Sidecar process has exited. 5");
             }
             let window_guard = TAURI_WINDOW.lock().unwrap();
             let window = window_guard.as_ref().unwrap();
             let _ = window.emit_all("ELEVATED_SIDECAR_STOPPED", sidecar_pid);
-            println!("Sidecar process has exited. 6");
+            info!("[Core] Sidecar has stopped (pid={})", sidecar_pid);
             break;
         }
     });

@@ -1,0 +1,14 @@
+@import '../settings-tab/settings-tab.component.scss';
+
+.debug-persistent-storage-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  button:not(:last-child) {
+    margin-right: 1em;
+  }
+  button {
+    margin-bottom: 1em;
+  }
+  padding-bottom: 1em;
+}

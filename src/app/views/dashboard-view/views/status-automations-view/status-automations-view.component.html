@@ -1,0 +1,161 @@
+<div class="pane" [@noop]>
+  <div class="pane-title" translate>status-automations.title</div>
+  <div class="pane-content">
+    <div class="automation-toggle">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.enabled"
+          (change)="updateConfig({ enabled: !config.enabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+      <h3 translate>status-automations.enable</h3>
+    </div>
+    <p translate>status-automations.description</p>
+    <div class="alert warning" *ngIf="!loggedIn" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'status-automations.loginRequired' | translate }}</span
+        ><button class="btn btn-secondary" (click)="login()" translate
+          >shared.modals.login</button
+        ></div
+      >
+    </div>
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content">{{ 'status-automations.exampleUse' | translate }}</div>
+    </div>
+    <div class="settings" [class.disabled]="config.enabled">
+      <div class="alert" @vshrink *ngIf="config.enabled">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> info </i>
+        </div>
+        <div class="alert-content">{{ 'status-automations.disableToEdit' | translate }}</div>
+      </div>
+      <div class="limit-setting">
+        <h3 translate>status-automations.playerLimit</h3>
+        <div class="limit-setting-graphic">
+          <div class="bed" [style.--people]="limit.value > bedLimit ? bedLimit + 1 : bedLimit">
+            <div class="bed-sheets">
+              <div class="under-cover"></div>
+              <div class="cover"></div>
+              <div class="stripe"></div>
+              <div class="stripe"></div>
+            </div>
+            <div class="people">
+              <div
+                class="person"
+                *ngFor="let _ of [].constructor(bedLimit); let i = index"
+                @hshrink
+                [class.yourself]="i === 0"
+              >
+                <img src="/assets/img/sleeping-person.png" alt="sleeping person" />
+              </div>
+              <div class="person-limit-exceeded" *ngIf="limit.value > bedLimit">
+                +{{ limit.value - bedLimit }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="limit-setting-controls">
+          <div class="limit-setting-controls-slider">
+            <input
+              type="range"
+              min="1"
+              max="40"
+              step="1"
+              [value]="limit.value"
+              (input)="onLimitChange(limitSliderInput.value)"
+              #limitSliderInput
+            />
+          </div>
+          <div class="limit-setting-controls-numeric-input">
+            <input
+              type="number"
+              min="1"
+              max="40"
+              step="1"
+              [value]="limit.value"
+              (input)="onLimitChange(limitNumberInput.value)"
+              (blur)="limitNumberInput.value = limit.value.toString()"
+              #limitNumberInput
+            />
+          </div>
+        </div>
+        <div
+          class="limit-setting-description"
+          [translate]="
+            'status-automations.playerLimitLabel.' + (limit.value === 1 ? 'singular' : 'plural')
+          "
+          [translateParams]="{ count: limit.value }"
+        ></div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>status-automations.belowLimit.title</span>
+          <span translate>status-automations.belowLimit.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+            [selected]="optionSetStatusBelowLimit"
+            (selectedChange)="setStatusSetOption('belowLimit', $event)"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>status-automations.atLimitOrAbove.title</span>
+          <span translate>status-automations.atLimitOrAbove.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="status-dropdown"
+            [type]="'SMALL'"
+            [items]="statusOptions"
+            [selected]="optionSetStatusAtLimitOrAbove"
+            (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>status-automations.onlyIfSleepModeEnabled</span>
+          <span translate></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyIfSleepModeEnabled"
+              (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="alert warning">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'status-automations.behaviourWarning' | translate }}</span
+        ><button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em"
+          >status-automations.moreInfo</button
+        >
+      </div>
+    </div>
+  </div>
+</div>

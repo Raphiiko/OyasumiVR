@@ -17,6 +17,7 @@ import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NVMLService } from './nvml.service';
 import { NVMLDevice } from '../models/nvml-device';
 import { SleepService } from './sleep.service';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -187,14 +188,15 @@ export class GpuAutomationsService {
           ),
           // Check if selected device is available and supports power limiting
           filter((selectedDevice) => !!selectedDevice && !!selectedDevice.supportsPowerLimiting),
-          switchMap((selectedDevice) =>
-            this.nvml.setPowerLimit(
+          switchMap((selectedDevice) => {
+            info('[GpuAutomations] Setting power limit');
+            return this.nvml.setPowerLimit(
               selectedDevice!.id,
               (getAutomationConfig().resetToDefault
                 ? selectedDevice!.defaultPowerLimit!
                 : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!) * 1000
             )
-          )
+          })
         )
         .subscribe();
     };

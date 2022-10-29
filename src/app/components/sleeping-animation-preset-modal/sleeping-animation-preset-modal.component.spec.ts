@@ -8,9 +8,8 @@ describe('SleepingAnimationPresetModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SleepingAnimationPresetModalComponent ]
-    })
-    .compileComponents();
+      declarations: [SleepingAnimationPresetModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SleepingAnimationPresetModalComponent);
     component = fixture.componentInstance;

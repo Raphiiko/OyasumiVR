@@ -9,7 +9,8 @@
       "confirm": "Confirm",
       "ok": "Ok",
       "open": "Open",
-      "close": "Close"
+      "close": "Close",
+      "login": "Log in"
     }
   },
   "overview": {
@@ -167,10 +168,36 @@
       "cancel": "Only this once"
     }
   },
+  "status-automations": {
+    "title": "Status Automations",
+    "enable": "Enable Status Automations",
+    "description": "Oyasumi can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
+    "loginRequired": "This feature requires you to be logged in with a VRChat account.",
+    "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
+    "disableToEdit": "Please disable status automations before you make any changes.",
+    "playerLimit": "Player Limit",
+    "playerLimitLabel": {
+      "singular": "{{count}} player (including you)",
+      "plural": "{{count}} players (including you)"
+    },
+    "belowLimit": {
+      "title": "Below the limit",
+      "description": "Set your status to"
+    },
+    "atLimitOrAbove": {
+      "title": "At the limit or above",
+      "description": "Set your status to"
+    },
+    "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
+    "behaviourWarning": "Status changes by Oyasumi are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by Oyasumi.",
+    "moreInfo": "More info",
+    "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have Oyasumi set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu."
+  },
   "settings": {
     "title": "Settings",
     "tab": {
       "general": "General",
+      "vrchat": "VRChat",
       "updates": "Updates",
       "debug": "Debug"
     },
@@ -203,6 +230,30 @@
         "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
       }
     },
+    "vrchat": {
+      "logIn": {
+        "title": "Log in",
+        "description": "Some Oyasumi features require you to log in with your VRChat account for them to work.",
+        "loggedIn": {
+          "title": "Hi {{name}}!",
+          "subtext": "You are currently logged in with your VRChat account.",
+          "logOut": "Log out"
+        },
+        "loggedOut": {
+          "title": "Logged Out",
+          "subtext": "You are currently not logged in with your VRChat account.",
+          "logIn": "Log in"
+        },
+        "errors": {
+          "initError": "The VRChat module could not be initialised. Please ensure you have internet connectivity and restart Oyasumi at a later time to try again."
+        },
+        "disclaimers": {
+          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.",
+          "brand": "Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko is not not responsible for any problems caused by Oyasumi. Use at your own risk!"
+        }
+      }
+    },
     "updates": {
       "checkForUpdates": "Check for updates",
       "changelog": "Changelog",
@@ -216,9 +267,10 @@
       "persistentStorage": {
         "title": "Persistent Storage",
         "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
-        "clearAll": "Clear All Storage",
+        "clearAllSettings": "Clear All Settings",
         "clearAutomationSettings": "Clear Automation Settings",
         "clearAppSettings": "Clear App Settings",
+        "clearCache": "Clear Cache",
         "printSettings": "Log Settings"
       },
       "language": {
@@ -267,6 +319,12 @@
     }
   },
   "comp": {
+    "main-status-bar": {
+      "sleepMode": "Sleep Mode",
+      "active": "Active",
+      "inactive": "Inactive",
+      "loggedOut": "Logged out"
+    },
     "confirm-modal": {
       "defaultTitle": "Confirm"
     },
@@ -285,6 +343,7 @@
       "oscAutomations": "OSC Automations",
       "batteryAutomations": "Battery Automations",
       "gpuAutomations": "GPU Automations",
+      "statusAutomations": "Status Automations",
       "settings": "Settings",
       "about": "About Oyasumi"
     },
@@ -334,6 +393,24 @@
           "title": "Sleep",
           "description": "Wait for a specified amount of time"
         }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "Log in to VRChat",
+      "username": "VRChat Username/E-mail",
+      "password": "Password",
+      "errors": {
+        "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
+        "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
+        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "Two Factor Authentication",
+      "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
+      "errors": {
+        "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect.",
+        "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input."
       }
     }
   }

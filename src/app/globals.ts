@@ -1,4 +1,5 @@
 export const SETTINGS_FILE = 'settings.dat';
+export const CACHE_FILE = 'cache.dat';
 export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = [
   {
     code: 'en',
@@ -12,5 +13,5 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
   {
     code: 'jp',
     label: '日本語',
-  }
+  },
 ];

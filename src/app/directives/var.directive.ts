@@ -6,17 +6,24 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 })
 export class VarDirective {
   @Input()
-  set ngVar(context: any) {
+  set ngVar(context: unknown) {
     this.context.$implicit = this.context.ngVar = context;
-    this.updateView();
+
+    if (!this.hasView) {
+      this.vcRef.createEmbeddedView(this.templateRef, this.context);
+      this.hasView = true;
+    }
   }
 
-  context: any = {};
+  private context: {
+    $implicit: unknown;
+    ngVar: unknown;
+  } = {
+    $implicit: null,
+    ngVar: null,
+  };
 
-  constructor(private vcRef: ViewContainerRef, private templateRef: TemplateRef<any>) {}
+  private hasView: boolean = false;
 
-  updateView() {
-    this.vcRef.clear();
-    this.vcRef.createEmbeddedView(this.templateRef, this.context);
-  }
+  constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) {}
 }

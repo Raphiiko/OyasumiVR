@@ -8,6 +8,7 @@ import {
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
+import { info } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -30,9 +31,12 @@ export class TurnOffDevicesWhenChargingAutomationService {
 
     this.openvr.devices.subscribe((devices) => {
       devices.forEach((device) => {
-        if (device.isCharging && !this.chargingDevices.includes(device.index)) {
+        if (device.isCharging && device.canPowerOff && !this.chargingDevices.includes(device.index)) {
           this.chargingDevices.push(device.index);
           if (this.config.enabled && this.config.deviceClasses.includes(device.class)) {
+            info(
+              `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
+            );
             this.lighthouse.turnOffDevices([device]);
           }
         } else if (!device.isCharging && this.chargingDevices.includes(device.index)) {

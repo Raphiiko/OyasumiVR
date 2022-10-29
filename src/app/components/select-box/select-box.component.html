@@ -11,6 +11,8 @@
     [class.has-subtitle]="selected.subLabel"
     [class.small]="type === 'SMALL'"
   >
+    <div class="select-item-html-prefix" *ngIf="selected.htmlPrefix" [innerHtml]="selected.htmlPrefix">
+    </div>
     <div class="select-item-content">
       <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
       <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
@@ -41,6 +43,8 @@
       [class.has-subtitle]="item.subLabel"
       [class.small]="type === 'SMALL'"
     >
+      <div class="select-item-html-prefix" *ngIf="item.htmlPrefix" [innerHtml]="item.htmlPrefix">
+      </div>
       <div class="select-item-content">
         <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
           {{ item.label | tsTranslate }}
