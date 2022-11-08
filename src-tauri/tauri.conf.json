@@ -75,7 +75,8 @@
         "wix": {
           "language": [
             "en-US",
-            "nl-NL"
+            "nl-NL",
+            "ja-JP"
           ]
         }
       }
