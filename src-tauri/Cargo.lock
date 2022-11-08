@@ -1997,7 +1997,7 @@ checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
 name = "oyasumi"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "chrono",
  "cronjob",
@@ -2026,7 +2026,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumi-shared"
-version = "1.2.0"
+version = "1.2.1"
 dependencies = [
  "openvr",
  "serde",

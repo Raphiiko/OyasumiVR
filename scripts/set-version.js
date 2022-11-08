@@ -17,10 +17,18 @@ writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 
 if (version === 'DEV') version = '0.0.0';
 
+// Tauri config json
 const tauriConfJson = JSON.parse(readFileSync('src-tauri/tauri.conf.json').toString());
 tauriConfJson.package.version = version;
+tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
+  window.userAgent = `Oyasumi/${
+    version === '0.0.0' ? 'DEV' : version
+  } (https://github.com/Raphiiko/Oyasumi)`;
+  return window;
+});
 writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2));
 
+// Tauri cargo toml
 let tauriCargoToml = readFileSync('src-tauri/Cargo.toml').toString();
 tauriCargoToml = tauriCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumi"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
@@ -28,6 +36,7 @@ tauriCargoToml = tauriCargoToml.replaceAll(
 );
 writeFileSync('src-tauri/Cargo.toml', tauriCargoToml);
 
+// Elevated sidecar cargo toml
 let adminCargoToml = readFileSync('src-elevated-sidecar/Cargo.toml').toString();
 adminCargoToml = adminCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumi-elevated-sidecar"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
@@ -35,6 +44,7 @@ adminCargoToml = adminCargoToml.replaceAll(
 );
 writeFileSync('src-elevated-sidecar/Cargo.toml', adminCargoToml);
 
+// Shared cargo toml
 let sharedCargoToml = readFileSync('src-shared/Cargo.toml').toString();
 sharedCargoToml = sharedCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumi-shared"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
