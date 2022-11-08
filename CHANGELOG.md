@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1]
+
+### Fixed
+- Updated Tauri dependencies to new 1.2 release.
+- Properly send user agent to VRChat API when connecting the websocket.
+- Updated various dependencies to their latest version.
+
 ## [1.2.0]
 
 ### Added
