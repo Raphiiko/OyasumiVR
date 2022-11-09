@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "tauri": {
     "allowlist": {
@@ -105,7 +105,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.2.1 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "Oyasumi/1.2.2 (https://github.com/Raphiiko/Oyasumi)"
       },
       {
         "width": 500,
@@ -117,7 +117,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.2.1 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "Oyasumi/1.2.2 (https://github.com/Raphiiko/Oyasumi)"
       }
     ]
   }
