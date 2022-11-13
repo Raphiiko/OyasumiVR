@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Made sleeping position animation automations automatically trigger when the automation is enabled.
+
 ## [1.2.2]
 
 ### Fixed
+
 - Fixed issue where the main window would load before the app was ready, due to a bug in a new version of the `tao` crate.
 
 ## [1.2.1]
