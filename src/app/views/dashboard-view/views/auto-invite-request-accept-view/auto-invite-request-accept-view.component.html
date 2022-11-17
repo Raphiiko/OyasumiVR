@@ -1,0 +1,83 @@
+<div class="pane main">
+  <div class="pane-title"> Auto Accept Invite Requests </div>
+  <div class="pane-content">
+    <p
+      >Oyasumi can automatically accept invite requests you receive. By using the player whitelist
+      or blacklist, you can make sure only the friends you pick will have their invite requests
+      automatically accepted.
+    </p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Enable</span>
+          <span translate>Automatically accept invite requests from friends.</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input type="checkbox" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>Only when sleep mode is enabled</span>
+          <span translate></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input type="checkbox" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>List Mode</span>
+          <span translate>How the player list operates</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box [items]="listModeOptions"></app-select-box>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pane player-list">
+  <div class="pane-title">Player Whitelist</div>
+  <div class="pane-content">
+    <div class="players-list">
+      <div class="player">
+        <div class="player-left">
+          <div class="player-name">Raphiiko</div>
+        </div>
+        <div class="player-right">
+          <button class="btn">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+      </div>
+      <div class="player">
+        <div class="player-left">
+          <div class="player-name">RaphiikoTest</div>
+        </div>
+        <div class="player-right">
+          <button class="btn">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="player-list-actions">
+      <button class="btn btn-secondary" translate>
+        <i class="material-icons">add</i>
+        <span>Add Player</span>
+      </button>
+      <button class="btn btn-secondary" translate>
+        <i class="material-icons">clear</i>
+        <span>Clear Players</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -74,6 +74,7 @@ import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
 import { OscControlService } from './services/osc-control.service';
+import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -119,6 +120,7 @@ export function createTranslateLoader(http: HttpClient) {
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
     MainStatusBarComponent,
+    AutoInviteRequestAcceptViewComponent,
   ],
   imports: [
     CommonModule,

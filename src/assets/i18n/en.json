@@ -344,6 +344,7 @@
       "batteryAutomations": "Battery Automations",
       "gpuAutomations": "GPU Automations",
       "statusAutomations": "Status Automations",
+      "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "settings": "Settings",
       "about": "About Oyasumi"
     },
