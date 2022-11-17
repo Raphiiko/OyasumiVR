@@ -1,0 +1,417 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "VR수면 소프트웨어"
+    },
+    "modals": {
+      "cancel": "취소",
+      "save": "저장",
+      "confirm": "확인",
+      "ok": "OK",
+      "open": "열기",
+      "close": "닫기",
+      "login": "로그인"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "수면 모드",
+      "active": "활성",
+      "inactive": "비활성",
+      "activate": "활성화",
+      "deactivate": "비활성화"
+    }
+  },
+  "sleep-detection": {
+    "title": "수면 감지",
+    "description": "여기서는 다양한 요인을 바탕으로 수면 모드를 자동으로 활성화하거나 비활성화하는 자동화 기능을 설정할 수 있어요.",
+    "enableAutomations": {
+      "title": "수면 모드 활성화",
+      "atTime": "지정된 시간에",
+      "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
+      "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때"
+    },
+    "disableAutomations": {
+      "title": "수면 모드 비활성화",
+      "atTime": "지정된 시간에",
+      "onDevicePowerOn": "기기의 전원이 켜져 있을 때"
+    },
+    "modals": {
+      "enableAtTime": {
+        "title": "수면 모드 활성화",
+        "description": "지정한 시간에 수면 모드를 활성화해요.",
+        "time": "시간"
+      },
+      "disableAtTime": {
+        "title": "수면 모드 비활성화",
+        "description": "지정한 시간에 수면 모드를 비활성화해요.",
+        "time": "시간"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "수면 모드 비활성화",
+        "whenTurningOn": "기준 기기",
+        "optionController": "컨트롤러",
+        "optionTracker": "트래커"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "수면 모드 활성화",
+        "whenA": "기준 기기",
+        "optionController": "컨트롤러",
+        "optionTracker": "트래커",
+        "fallsBelow": "조건 값"
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC 자동화",
+    "tab": {
+      "sleepingAnimations": "수면 애니메이션"
+    },
+    "sleepingAnimations": {
+      "currentPose": "현재 위치",
+      "manualControl": "수동 조작",
+      "presetAuthor": "{{author}}에 의한",
+      "description": "Oyasumi는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
+      "enable": "자동 수면 애니메이션 활성화",
+      "customPreset": "커스텀 애니메이션",
+      "errors": {
+        "releaseDurationTooShort": "해제 시간은 100ms 이상이어야 해요.",
+        "releaseDurationTooLong": "해제 시간은 100ms를 초과할 수 없어요."
+      },
+      "options": {
+        "positions": {
+          "title": "자는 자세",
+          "description": "수면 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
+          "SIDE_FRONT": "엎드리기",
+          "SIDE_BACK": "반듯이 눕기",
+          "SIDE_LEFT": "왼쪽으로 눕기",
+          "SIDE_RIGHT": "오른쪽으로 눕기",
+          "UNKNOWN": "알수없음"
+        },
+        "footLock": {
+          "title": "다리 잠금",
+          "description": "다리 잠금 활성화/비활성화를 OSC 명령으로 설정해요.",
+          "FOOT_LOCK": "다리 잠금 활성화",
+          "FOOT_UNLOCK": "다리 잠금 비활성화"
+        },
+        "general": {
+          "title": "일반 설정",
+          "onlySwitchAnimations": "애니메이션 바꾸기",
+          "onlyIfSleepModeEnabled": "수면 모드 활성화 시",
+          "onlyIfAllTrackersTurnedOff": "모든 트래커가 꺼질 때",
+          "footLock": {
+            "title": "다리 잠금",
+            "description": "다리 잠금을 활성화하면 플레이어의 움직임이나 뒤척임을 방지해요."
+          },
+          "lockFeetOnSleepModeEnable": "수면 모드 활성화 시 다리 잠금 활성화",
+          "unlockFeetOnSleepModeDisable": "수면 모드 비활성화 시 다리 잠금 비활성화",
+          "unlockFeetOnAutomationDisable": "자동 수면 애니메이션 비활성화 시 다리 잠금 비활성화",
+          "releaseFootLockOnPoseChange": "수면 자세가 바뀔 때 다리 잠금을 바로 해제",
+          "footLockReleaseWindow": "다리 잠금 해제 조건"
+        }
+      }
+    }
+  },
+  "battery-automations": {
+    "title": "배터리 자동화",
+    "devicePowerOff": {
+      "title": "기기의 전원 끄기",
+      "description": "Steam VR 기기를 끄기 위한 다양한 자동화 기능이에요.",
+      "onSleepModeEnable": {
+        "title": "잠이 들 때",
+        "description": "수면 모드 활성화 시 기기의 전원을 꺼요.",
+        "optionControllers": "모든 컨트롤러를 끄기",
+        "optionTrackers": "모든 트래커를 끄기",
+        "hint": "수면 모드가 활성화되는 타이밍은 <a class=\"sleepDetectionLink\">수면 감지</a>로 설정할 수 있어요."
+      },
+      "onCharge": {
+        "title": "충전할 때",
+        "description": "충전기에 꽂으면 자동으로 전원이 꺼져요.",
+        "optionControllers": "컨트롤러 끄기",
+        "optionTrackers": "트래커 끄기"
+      }
+    }
+  },
+  "gpu-automations": {
+    "title": "GPU 자동화",
+    "description": "여기서는 GPU의 전력 제한을 자동화하여 취침 중 전력을 절약할 수 있어요.",
+    "disabled": {
+      "initializing": "GPU 자동화는 현재 초기화 중이에요...",
+      "disabled": "Oyasumi를 사용하면 GPU의 전력 제한을 자동으로 조정할 수 있어요.\n그것으로 수면 중 전기 사용량을 절약할 수 있어요.\n\nGPU 자동화는 현재 NVIDIA GPU만 지원하고 있어요.\nAMD와 Intel의 GPU는 아직 지원되지 않아요.",
+      "noElevation": "Oyasumi가 GPU의 전력 제한을 제어하기 위해서는 관리자 권한이 필요해요. 아래 버튼을 클릭하여 Oyasumi에게 관리자 권한을 부여해주세요.",
+      "driverNotLoaded": "Oyasumi는 가져온 NVIDIA 드라이버를 파악할 수 없었어요.\n\n사용중인 시스템에 NVIDIA 카드와 그에 대응하는 드라이버가 설치되어 있는지 확인해주세요.",
+      "noDevices": "시스템에서 그래픽 카드를 찾을 수 없어요.\n\n사용중인 시스템에 NVIDIA 카드와 그에 대응하는 드라이버가 설치되어 있는지 확인해주세요.",
+      "unknown": "GPU 자동화 기능을 활성화하는 동안 알 수 없는 오류가 발생했어요."
+    },
+    "requestAdministrator": "관리자 권한 부여하기",
+    "disable": "GPU 자동화를 비활성화하기",
+    "enable": "GPU 자동화를 활성화하기",
+    "enableWarning": "이것은 고급 사용자를 위한 기능이에요!\n 전력 제한 설정을 잘못하면 시스템이 불안정한 상태가 될 수 있어요.\n 이것을 염두에 두고 자신이 무엇을 하고 있는지 이해하고 있는 경우에만 사용해주세요.",
+    "selectGPU": "전력 제한을 설정하고 싶은 GPU :",
+    "gpuPowerLimitsUnsupported": "선택된 GPU는 전력 제한 설정을 지원하지 않아요.",
+    "currentPowerLimit": "현재의 전력 제한",
+    "automations": "수면 자동화 설정",
+    "activatingSleepMode": {
+      "title": "잠이 들 때",
+      "description": "수면 모드가 활성화되었을 때 설정할 전력 제한치를 지정해요."
+    },
+    "deactivatingSleepMode": {
+      "title": "일어났을 때",
+      "description": "수면 모드가 비활성화되었을 때 설정할 전력 제한치를 지정해요."
+    },
+    "enabledWarning": "전력 제한을 너무 낮게 설정하면 시스템이 불안정한 상태가 될 수 있으므로 주의해주세요. 잘 모르는 경우 이 기능을 비활성화하는 것을 추천해요.",
+    "inputDefault": "GPU의 기본 제한값으로 리셋해요.",
+    "elevationSidecarModal": {
+      "title": "관리자 권한을 부여하기",
+      "message": "Oyasumi에게 항상 관리자 권한을 부여할까요?\n\n 이것을 활성화하면 Oyasumi는 부팅 시 즉시 관리자 권한을 요구해요. 이 설정은 나중에 언제든지 비활성화할 수 있어요.",
+      "confirm": "항상",
+      "cancel": "한번만"
+    }
+  },
+  "status-automations": {
+    "title": "스테이터스 자동화",
+    "enable": "스테이터스 자동화 활성화하기",
+    "description": "Oyasumi는 자신의 월드에 있는 플레이어의 수에 따라 스테이터스를 자동 설정하여 참가 인원을 제한할 수 있어요.",
+    "loginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요.",
+    "exampleUse": "사용 예: 누군가가 참여하면 자동으로 상태를 주황색이나 빨간색으로 전환해요!\n 그리고 누군가 나가서 다시 혼자가 되면 자동으로 상태를 파란색으로 되돌려 다른 사람이 참여할 수 있도록 할 수 있어요.",
+    "disableToEdit": "설정을 변경하기 전에 기능을 비활성화해주세요.",
+    "playerLimit": "플레이어 수 제한",
+    "playerLimitLabel": {
+      "singular": "{{count}}명의 플레이어(자신 포함)",
+      "plural": "{{count}}명의 플레이어(자신 포함)"
+    },
+    "belowLimit": {
+      "title": "상한 이하",
+      "description": "스테이터스 설정"
+    },
+    "atLimitOrAbove": {
+      "title": "상한 내 또는 그 이상",
+      "description": "스테이터스 설정"
+    },
+    "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
+    "behaviourWarning": "Oyasumi에 의한 상태 변경은 플레이어에게 표시되지 않아요. 다른 플레이어가 볼 때 스테이터스 업데이트가 표시되기까지 조금 시간이 걸릴 수 있어요. 이는 VRChat 사양상의 제한으로 Oyasumi가 수정할 수 없어요.",
+    "moreInfo": "자세히",
+    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: Oyasumi가 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 승인하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+  },
+  "settings": {
+    "title": "설정",
+    "tab": {
+      "general": "일반",
+      "vrchat": "VRChat",
+      "updates": "업데이트",
+      "debug": "디버깅"
+    },
+    "general": {
+      "language": {
+        "title": "언어",
+        "description": "여기서는 원하는 언어를 선택할 수 있어요. 혹시 번역되지 않은 부분이 있거나 모국어를 추가하고 싶다면 연락해주세요."
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouse 콘솔",
+        "description": "Oyasumi는 Steam VR의 <strong>lighthouse_console.exe</strong> 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
+        "status": {
+          "NOT_FOUND": "해당 위치에서 <strong>lighthouse_console.exe</strong>를 찾을 수 없어요.",
+          "INVALID_EXECUTABLE": "해당 위치의 <strong>lighthouse_console.exe</strong>가 작동하는지 확인할 수 없어요.",
+          "PERMISSION_DENIED": "Oyasumi는 해당 위치의 <strong>lighthouse_console.exe</strong>를 실행할 권한이 없어요. 관리자 권한으로 Oyasumi를 실행해주세요.",
+          "INVALID_FILENAME": "설정한 위치는 유효한 파일 경로가 아니에요.",
+          "UNKNOWN_ERROR": "해당 위치에서 <strong>lighthouse_console.exe</strong>를 찾는데 오류가 발생했어요.",
+          "CHECKING": "유효한 <strong>lighthouse_console.exe</strong>인지 확인중이에요.",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong>이 발견되어 정상적으로 작동하고 있어요!"
+        }
+      },
+      "adminPrivileges": {
+        "title": "관리자 권한",
+        "label": "부팅 시 관리자 권한을 요구하기",
+        "description": "Oyasumi는 GPU의 전력 제한을 제어할 수 있도록 하기 위해 관리자 권한이 필요해요. 이를 활성화함으로써 Oyasumi는 부팅 시 관리자 권한을 요구하게 되어요."
+      },
+      "telemetry": {
+        "title": "텔레메트리",
+        "label": "익명의 사용 데이터 전송하기",
+        "description": "전송되는 데이터는 사용 중인 Oyasumi 버전과 설정된 언어로만 제한되어요. 이 데이터는 일반적인 사용 통계를 위해서만 사용되어요. 그 이외의 데이터는 전송되지 않고 완전히 익명이에요. "
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "로그인",
+        "description": "Oyasumi 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
+        "loggedIn": {
+          "title": "{{name}}님, 어서오세요!",
+          "subtext": "현재 VRChat 계정으로 로그인 중이에요.",
+          "logOut": "로그아웃"
+        },
+        "loggedOut": {
+          "title": "로그아웃 중",
+          "subtext": "현재 VRChat 계정으로 로그인 되어있지 않아요.",
+          "logIn": "로그인"
+        },
+        "errors": {
+          "initError": "VRChat 모듈이 초기화되지 않았어요. 인터넷 접속을 확인하고 잠시 후에 Oyasumi를 재부팅해 다시 시도해주세요."
+        },
+        "disclaimers": {
+          "use": "로그인 정보는 보관되지 않고 인증을 위해 VRChat 서버로만 전송되어요.",
+          "brand": "Oyasumi는 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
+          "liability": "Raphiiko는 Oyasumi와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
+        }
+      }
+    },
+    "updates": {
+      "checkForUpdates": "업데이트 확인하기",
+      "changelog": "변경 사항",
+      "install": "v{version} 설치",
+      "noUpdate": "현재 최신 버전의 Oyasumi v{{version}}을 이용하고 있어요!",
+      "notChecked": "Oyasumi의 업데이트를 확인하지 못했어요.",
+      "updateAvailable": "Oyasumi의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다."
+    },
+    "debug": {
+      "description": "여기에는 디버깅용 툴이 위치하고 있어요. 원래는 필요하지 않지만 Oyasumi는 아직 초기 테스트 단계라 혹시 모르니 여기에 놓여있습니다.",
+      "persistentStorage": {
+        "title": "내부 저장소",
+        "description": "이 버튼들을 누르면 Oyasumi 내부 저장소의 일부를 삭제할 수 있어요. 오류 발생 시 기본값으로 되돌리는 경우 사용합니다.",
+        "clearAllSettings": "모든 설정 삭제",
+        "clearAutomationSettings": "자동화 설정 초기화",
+        "clearAppSettings": "앱 설정 삭제",
+        "clearCache": "캐시 삭제",
+        "printSettings": "로그 설정"
+      },
+      "language": {
+        "title": "언어",
+        "description": "이 옵션은 언어 파일을 수동으로 가져올 수 있어요. 이것은 새로운 번역을 테스트하는 데 도움이 됩니다.",
+        "loadFile": "언어 파일 불러오기"
+      },
+      "sleepingPose": {
+        "title": "잠자는 포즈"
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "개발자"
+    },
+    "translations": "번역",
+    "projectLinks": "프로젝트 링크",
+    "sourceLink": "소스코드 @ GitHub",
+    "discordInvite": "Discord 서버"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "업데이트 실패",
+        "message": "업데이트 설치에 실패했어요. 잠시 뒤에 다시 시도해주세요."
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "이 프리셋은 몇 가지 문제가 있는 워크어라운드를 사용하고 있어요. 새로은 GoGo Loco 프리셋을 사용할 수 없는 경우에만 이 프리셋을 사용하도록 부닥드립니다. 또한 당신의 아바타가 구버전의 Gogo Loco를 사용하고 있다면 최신 버전의 Gogo Loco 버전으로 업데이트하는 것을 추천해요.",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "밀리초 값은 정수로 정의되어야 해요.",
+      "durationTooShort": "수면 시간은 최소 1ms여야 해요.",
+      "durationTooLong": "수면 시간은 5초를 초과할 수 없어요.",
+      "durationRequired": "수면 시간은 필수에요.",
+      "totalDurationTooLong": "스크립트의 총 시간은 10초를 초과할 수 없어요.",
+      "intOutOfBounds": "값은 0에서 255 사이의 유효한 정수여야 해요.",
+      "floatOutOfBounds": "값은 -1.0에서 1.0까지의 유효한 부동소수점 값이어야 해요.",
+      "floatTooPrecise": "값의 정확도는 최대 소수점 이하 3자리까지에요.",
+      "invalidSyntax": "잘못된 구문이에요.",
+      "tooManyCommands": "OSC 스크립트는 {{value}} 이상의 액션을 가질 수 없어요.",
+      "addressNoSlash": "유효한 OSC 주소는 항상 '/' 기호로 시작해야 해요.",
+      "addressRequired": "OSC 주소가 필요해요.",
+      "addressNotASCII": "유효한 OSC 주소는 ASCII 문자만 포함할 수 있어요."
+    }
+  },
+  "comp": {
+    "main-status-bar": {
+      "sleepMode": "수면 모드",
+      "active": "활성",
+      "inactive": "비활성",
+      "loggedOut": "로그아웃 중"
+    },
+    "confirm-modal": {
+      "defaultTitle": "확인"
+    },
+    "update-modal": {
+      "title": "업데이트 가능",
+      "updateNow": "v{{version}} 설치",
+      "updateLater": "나중에",
+      "message": "Oyasumi의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{currentVersion}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
+    },
+    "select-box": {
+      "defaultPlaceholder": "선택하기..."
+    },
+    "dashboard-navbar": {
+      "overview": "개요",
+      "sleepDetection": "수면 감지",
+      "oscAutomations": "OSC 자동화",
+      "batteryAutomations": "배터리 자동화",
+      "gpuAutomations": "GPU 자동화",
+      "statusAutomations": "스테이터스 자동화",
+      "settings": "설정",
+      "about": "Oyasumi에 대해"
+    },
+    "device-list": {
+      "title": "기기",
+      "turnOffAll": "모두",
+      "noDevices": "컨트롤러 또는 트래커가 발견되지 않았어요.",
+      "category": {
+        "Controller": "컨트롤러",
+        "GenericTracker": "트래커",
+        "other": "기타"
+      }
+    },
+    "osc-script-modal": {
+      "title": "OSC 스크립트",
+      "simple": "심플",
+      "script": "스크립트"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC 스크립트 에디터",
+      "syntaxGuide": "구문 가이드",
+      "format": "포맷",
+      "test": "테스트"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} 커멘드",
+        "plural": "{{value}} 커멘드"
+      },
+      "errorCounter": {
+        "singular": "{{value}} 검증 오류",
+        "plural": "{{value}} 검증 오류"
+      },
+      "addCommand": "추가",
+      "test": "테스트",
+      "action": {
+        "osc": "OSC",
+        "sleep": "수면",
+        "none": "액션이 추가되지 않았습니다!"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC 커멘드",
+          "description": "OSC 커멘드 실행해요."
+        },
+        "SLEEP": {
+          "title": "수면",
+          "description": "지정된 시간 동안 대기해요."
+        }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "VRChat 로그인",
+      "username": "VRChat 사용자명 / 이메일",
+      "password": "비밀번호",
+      "errors": {
+        "CHECK_EMAIL": "로그인 실패: 자세한 내용은 VRChat 계정에 연결된 이메일 주소의 수신함을 확인해주세요.",
+        "INVALID_CREDENTIALS": "입력된 인증 정보가 잘못되었어요.",
+        "UNEXPECTED_RESPONSE": "로그인 실패: 알 수 없는 오류가 발생했어요. 연결을 확인하시거나 나중에 다시 시도해보세요."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "2단계 인증",
+      "description": "당신의 VRChat 계정이 2단계 인증으로 보호받고 있음을 확인했어요.\r\n\r\n2단계 인증 코드를 입력해주세요 :",
+      "errors": {
+        "LAST_CODE_INVALID": "입력된 2단계 인증 코드가 잘못되었어요.",
+        "INVALID_FORMAT": "유효한 2단계 인증 코드는 6자리 숫자에요. 입력 내용을 확인해주세요."
+      }
+    }
+  }
+}
