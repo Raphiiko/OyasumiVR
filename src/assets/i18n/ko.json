@@ -181,11 +181,11 @@
       "plural": "{{count}}명의 플레이어(자신 포함)"
     },
     "belowLimit": {
-      "title": "상한 이하",
+      "title": "상한 미만",
       "description": "스테이터스 설정"
     },
     "atLimitOrAbove": {
-      "title": "상한 내 또는 그 이상",
+      "title": "상한 이상",
       "description": "스테이터스 설정"
     },
     "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
@@ -332,7 +332,7 @@
       "title": "업데이트 가능",
       "updateNow": "v{{version}} 설치",
       "updateLater": "나중에",
-      "message": "Oyasumi의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{currentVersion}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
+      "message": "Oyasumi의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{{currentVersion}}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
     },
     "select-box": {
       "defaultPlaceholder": "선택하기..."
