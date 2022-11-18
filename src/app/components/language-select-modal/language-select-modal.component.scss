@@ -14,7 +14,7 @@ p {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  justify-content: space-around;
+  justify-content: space-between;
   background: var(--color-surface-0);
   border-radius: var(--surface-border-radius);
   margin-top: 2em;
@@ -25,7 +25,7 @@ p {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 2em;
+  padding: 1em;
   cursor: pointer;
   transition: all 0.15s ease;
   &:hover {

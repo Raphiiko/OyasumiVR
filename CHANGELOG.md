@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Korean language support, thanks to [@soumt-r](https://github.com/soumt-r).
+
 ### Changed
 
 - Made sleeping position animation automations automatically trigger when the automation is enabled.

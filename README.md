@@ -70,6 +70,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - English
   - Dutch (Nederlands)
   - Japanese (日本語)
+  - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 
