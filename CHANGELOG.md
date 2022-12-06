@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Made sleeping position animation automations automatically trigger when the automation is enabled.
+- Prevent Oyasumi from being opened twice and instead focus the window for the instance already running.
 
 ## [1.2.2]
 

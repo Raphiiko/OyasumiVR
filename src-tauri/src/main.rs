@@ -65,6 +65,15 @@ fn main() {
                 .rotation_strategy(RotationStrategy::KeepAll)
                 .build(),
         )
+        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+            // Focus main window when user attempts to launch a second instance.
+            let window = app.get_window("main").unwrap();
+            if let Some(is_visible) = window.is_visible().ok() {
+                if is_visible {
+                    window.set_focus().unwrap();
+                }
+            }
+        }))
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -87,19 +96,19 @@ fn main() {
                         None
                     }
                 };
-                // Spawn event handling thread
                 *OVR_CONTEXT.lock().unwrap() = ovr_context;
                 let context_guard = OVR_CONTEXT.lock().unwrap();
                 let ovr_context = context_guard.as_ref();
                 if let Some(_) = ovr_context {
+                    // Spawn event handling thread
                     background::openvr::spawn_openvr_background_thread();
+                    // Inform frontend of completion
+                    info!("[Core] OpenVR initialization complete");
+                    *OVR_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
+                    let window_guard = TAURI_WINDOW.lock().unwrap();
+                    let window = window_guard.as_ref().unwrap();
+                    let _ = window.emit_all("OVR_INIT_COMPLETE", ());
                 }
-                // Inform frontend of completion
-                info!("[Core] OpenVR initialization complete");
-                *OVR_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
-                let window_guard = TAURI_WINDOW.lock().unwrap();
-                let window = window_guard.as_ref().unwrap();
-                let _ = window.emit_all("OVR_INIT_COMPLETE", ());
                 // Spawn HTTP server thread
                 background::http_server::spawn_http_server_thread();
             });
