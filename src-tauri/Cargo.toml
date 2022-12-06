@@ -46,6 +46,10 @@ features = ["full"]
 version = "0.14.20"
 features = ["full"]
 
+[dependencies.tauri-plugin-single-instance]
+git = "https://github.com/tauri-apps/tauri-plugin-single-instance"
+branch = "dev"
+
 [dependencies.tauri-plugin-store]
 git = "https://github.com/tauri-apps/tauri-plugin-store"
 branch = "dev"
