@@ -6,10 +6,11 @@
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
+use crate::image_cache::ImageCache;
 use cronjob::CronJob;
 use log::{error, info, LevelFilter};
 use std::{net::UdpSocket, sync::Mutex};
-use tauri::Manager;
+use tauri::{api::dialog::blocking::MessageDialogBuilder, Manager};
 use tauri_plugin_fs_extra::FsExtra;
 use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
 use tauri_plugin_store::PluginBuilder;
@@ -22,6 +23,7 @@ mod commands {
     pub mod os;
     pub mod osc;
     pub mod splash;
+    pub mod http;
 }
 mod background {
     pub mod http_server;
@@ -30,6 +32,7 @@ mod background {
     pub mod osc;
 }
 mod elevated_sidecar;
+mod image_cache;
 
 lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<openvr::Context>> = Default::default();
@@ -40,6 +43,7 @@ lazy_static! {
     static ref MAIN_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
+    static ref IMAGE_CACHE: Mutex<Option<ImageCache>> = Default::default();
 }
 
 fn main() {
@@ -65,7 +69,7 @@ fn main() {
                 .rotation_strategy(RotationStrategy::KeepAll)
                 .build(),
         )
-        .plugin(tauri_plugin_single_instance::init(|app, argv, cwd| {
+        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
             // Focus main window when user attempts to launch a second instance.
             let window = app.get_window("main").unwrap();
             if let Some(is_visible) = window.is_visible().ok() {
@@ -82,7 +86,15 @@ fn main() {
                 window.open_devtools();
             }
             *TAURI_WINDOW.lock().unwrap() = Some(window);
-            std::thread::spawn(|| -> () {
+            // Get dependencies
+            let cache_dir = app.path_resolver().app_cache_dir().unwrap().clone();
+            let app_handle = app.handle();
+            std::thread::spawn(move || -> () {
+                // Initialize Image Cache
+                let image_cache_dir = cache_dir.join("image_cache");
+                let image_cache = ImageCache::new(image_cache_dir.into_os_string().clone());
+                image_cache.clean(true);
+                *IMAGE_CACHE.lock().unwrap() = Some(image_cache);
                 // Initialize OpenVR
                 info!("[Core] Initializing OpenVR");
                 let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
@@ -93,6 +105,8 @@ fn main() {
                         let window_guard = TAURI_WINDOW.lock().unwrap();
                         let window = window_guard.as_ref().unwrap();
                         let _ = window.emit_all("OVR_INIT_FAILED", ());
+                        MessageDialogBuilder::new("Oyasumi", "Could not connect to SteamVR. Please make sure SteamVR is installed before launching Oyasumi.").show();
+                        app_handle.exit(1);
                         None
                     }
                 };
@@ -134,6 +148,7 @@ fn main() {
             commands::admin::elevation_sidecar_running,
             commands::admin::start_elevation_sidecar,
             commands::log_parser::init_vrc_log_watcher,
+            commands::http::get_http_server_port,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

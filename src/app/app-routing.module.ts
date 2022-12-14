@@ -10,6 +10,9 @@ import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
+import {
+  AutoInviteRequestAcceptViewComponent
+} from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 
 const routes: Routes = [
   {
@@ -40,6 +43,10 @@ const routes: Routes = [
       {
         path: 'statusAutomations',
         component: StatusAutomationsViewComponent,
+      },
+      {
+        path: 'autoInviteRequestAccept',
+        component: AutoInviteRequestAcceptViewComponent,
       },
       {
         path: 'settings',

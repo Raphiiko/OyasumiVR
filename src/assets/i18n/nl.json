@@ -11,6 +11,9 @@
       "open": "Open",
       "close": "Sluiten",
       "login": "Log in"
+    },
+    "misc": {
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     }
   },
   "overview": {
@@ -172,7 +175,6 @@
     "title": "Status Automatiseringen",
     "enable": "Activeer Status Automatiseringen",
     "description": "Oyasumi kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
-    "loginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account.",
     "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
     "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
     "playerLimit": "Speler limiet",

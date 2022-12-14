@@ -99,13 +99,6 @@ export class OpenVRService {
       interval(3000).subscribe(async () => {
         this._devices.next(await this.getDevices());
       });
-    } else {
-      info('[OpenVR] OpenVR failed to initialize');
-      await message(
-        'Could not connect to SteamVR. Please make sure SteamVR is installed before launching Oyasumi.',
-        { type: 'error', title: 'Oyasumi' }
-      );
-      await exit(0);
     }
   }
 

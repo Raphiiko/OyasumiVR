@@ -18,10 +18,12 @@ export type AutomationType =
   // OSC AUTOMATIONS
   | 'SLEEPING_ANIMATIONS'
   // STATUS AUTOMATIONS
-  | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT';
+  | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
+  // INVITE AUTOMATIONS
+  | 'AUTO_ACCEPT_INVITE_REQUESTS';
 
 export interface AutomationConfigs {
-  version: 4;
+  version: 5;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -36,6 +38,8 @@ export interface AutomationConfigs {
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   // STATUS AUTOMATIONS
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
+  // INVITE AUTOMATIONS
+  AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -113,12 +117,19 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
   onlyIfSleepModeEnabled: boolean;
 }
 
+// INVITE AUTOMATIONS
+export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
+  onlyIfSleepModeEnabled: boolean;
+  listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
+  playerIds: string[];
+}
+
 //
 // DEFAULT
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 4,
+  version: 5,
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -181,5 +192,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     statusBelowLimit: UserStatus.JoinMe,
     statusAtLimitOrAbove: UserStatus.Busy,
     onlyIfSleepModeEnabled: false,
+  },
+  // INVITE AUTOMATIONS
+  AUTO_ACCEPT_INVITE_REQUESTS: {
+    enabled: false,
+    onlyIfSleepModeEnabled: false,
+    listMode: 'WHITELIST',
+    playerIds: [],
   },
 };

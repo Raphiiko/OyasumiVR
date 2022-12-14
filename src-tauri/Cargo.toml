@@ -29,6 +29,11 @@ sysinfo = "0.26.2"
 chrono = "0.4.22"
 log = "^0.4"
 time = "0.3.16"
+url = "2.3.1"
+urlencoding = "2.1.2"
+mime = "0.3.16"
+md5 = "0.7.0"
+mime_guess = "2.0.4"
 
 [dependencies.windows-sys]
 version = "0.36.1"

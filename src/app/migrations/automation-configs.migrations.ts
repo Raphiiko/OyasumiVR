@@ -7,6 +7,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   2: toLatest,
   3: from2to3,
   4: from3to4,
+  5: from4to5,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -35,6 +36,14 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from4to5(data: any): any {
+  data.version = 5;
+  data.AUTO_ACCEPT_INVITE_REQUESTS = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
+  );
   return data;
 }
 

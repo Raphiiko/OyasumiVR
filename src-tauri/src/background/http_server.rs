@@ -4,9 +4,9 @@ use hyper::{
     service::{make_service_fn, service_fn},
     Body, Method, Request, Response, Server,
 };
-use log::{info, error};
+use log::{error, info};
 
-use crate::{elevated_sidecar, MAIN_HTTP_SERVER_PORT};
+use crate::{elevated_sidecar, MAIN_HTTP_SERVER_PORT, IMAGE_CACHE};
 
 pub fn spawn_http_server_thread() {
     thread::spawn(move || {
@@ -36,6 +36,14 @@ async fn start_server() {
 
 async fn request_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     match (req.method(), req.uri().path()) {
+        (&Method::GET, "/image_cache/get") => {
+            let image_cache;
+            {
+                let image_cache_guard = IMAGE_CACHE.lock().unwrap();
+                image_cache = image_cache_guard.as_ref().unwrap().clone();
+            }
+            image_cache.clone().handle_request(req).await
+        }
         (&Method::POST, "/elevated_sidecar/init") => {
             elevated_sidecar::handle_elevated_sidecar_init(req).await
         }
