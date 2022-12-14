@@ -121,7 +121,6 @@ export class VRChatService {
     }
     // Process VRChat log events
     await this.subscribeToLogEvents();
-    console.log(this._user.value);
   }
 
   //
