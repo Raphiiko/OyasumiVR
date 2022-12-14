@@ -28,9 +28,39 @@
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
 
-|Sleeping Animations                                                                                                              |GPU Power Limiting                                                                                                           |Sleep Detection                                                                                                             |Battery Automations                                                                                                             |Device Overview                                                                                                      |Status Automations                                                                                                           |
-|-------------------------------------------------------------------------------------------------------------------------------- |---------------------------------------------------------------------------------------------------------------------------- |----------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
-|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin> |<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin>|<img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin>|
+<p align="center">
+<table>
+<tr>
+<td><p align="center"><b>Device Overview</b></p></td>
+<td><p align="center"><b>Sleeping Animations</b></p></td>
+<td><p align="center"><b>GPU Power Limiting</b></p></td>
+<td><p align="center"><b>Sleep Detection</b></p></td>
+<td><p align="center"><b>Battery Automations</b></p></td>
+
+</tr>
+<tr>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin></p></td>
+</tr>
+<tr>
+<td><p align="center"><b></b></p></td>
+<td><p align="center"><b>Status Automations</b></p></td>
+<td><p align="center"><b>General Settings</b></p></td>
+<td><p align="center"><b>Auto Accept Invite Requests</b></p></td>
+<td><p align="center"><b></b></p></td>
+</tr>
+<tr>
+<td><p align="center"></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_settings.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_auto_accept_invite_requests.png" width="100%" crossorigin></p></td>
+<td><p align="center"></p></td>
+</tr>
+</table>
+</p>
 
 ## Features
 <table align="right">
@@ -57,6 +87,9 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically change your status based on the number of players in your world:
     <br>_Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!_
 - :wrench: Turning off all trackers and/or controllers with a single click.
+- :email: Automatically accept invite requests
+  - Automatically let friends in while you are asleep!
+  - Configure whose invite requests are accepted using a black- or whitelist.
 - :zzz: Manage automations with a sleep mode in various ways:
   - Detect falling asleep:
     - When a controller or tracker battery percentage falls below a threshold
