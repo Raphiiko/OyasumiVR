@@ -1,6 +1,5 @@
 import { cloneDeep } from 'lodash';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
-import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {

@@ -21,6 +21,7 @@ import {
   interval,
   map,
   Observable,
+  Subject,
 } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
@@ -81,6 +82,7 @@ export class VRChatService {
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_FRIENDS'
   );
+  private _notifications: Subject<Notification> = new Subject<Notification>();
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
@@ -88,6 +90,7 @@ export class VRChatService {
     this._world,
     this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
   ]).pipe(map(([world]) => world));
+  public notifications = this._notifications.asObservable();
 
   constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
@@ -118,6 +121,15 @@ export class VRChatService {
     }
     // Process VRChat log events
     await this.subscribeToLogEvents();
+    console.log(this._user.value);
+  }
+
+  //
+  // PUBLIC UTILITIES
+  //
+
+  public imageUrlForPlayer(player: LimitedUser) {
+    return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
   }
 
   //
@@ -252,11 +264,7 @@ export class VRChatService {
 
   public async handleNotification(notification: Notification) {
     info(`[VRChat] Received notification: ${JSON.stringify(notification)}`);
-    switch (notification.type) {
-      case NotificationType.RequestInvite:
-        await this.handleRequestInviteNotification(notification);
-        break;
-    }
+    this._notifications.next(notification);
   }
 
   public async deleteNotification(notificationId: string) {
@@ -319,7 +327,6 @@ export class VRChatService {
     if (!force) {
       const cachedFriends = this._friendsCache.get();
       if (cachedFriends) {
-        console.log('RETURNING FRIENDS FROM CACHE', cachedFriends);
         return cachedFriends;
       }
     }
@@ -359,22 +366,12 @@ export class VRChatService {
       }
     }
     this._friendsCache.set(friends);
-    console.log('FETCHED FRIENDS', friends);
     return friends;
   }
 
   //
   // INTERNALS
   //
-
-  private async handleRequestInviteNotification(notification: Notification) {
-    // Automatically accept invite requests when on blue, in case the VRChat client does not.
-    const user = this._user.value;
-    if (!user || user.status !== UserStatus.JoinMe) return;
-    info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
-    await this.deleteNotification(notification.id);
-    await this.inviteUser(notification.senderUserId);
-  }
 
   private async subscribeToLogEvents() {
     this.logService.logEvents.subscribe((event) => {
