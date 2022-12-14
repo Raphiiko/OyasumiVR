@@ -12,6 +12,7 @@ const ADDRESS_CMD = '/avatar/parameters/Oyasumi/Cmd';
 const ADDRESS_SLEEP_MODE = '/avatar/parameters/Oyasumi/SleepMode';
 const ADDRESS_SLEEPING_ANIMATIONS = '/avatar/parameters/Oyasumi/SleepingAnimations';
 const ADDRESS_STATUS_AUTOMATIONS = '/avatar/parameters/Oyasumi/StatusAutomations';
+const ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS = '/avatar/parameters/Oyasumi/AutoAcceptInviteRequests';
 
 @Injectable({
   providedIn: 'root',
@@ -21,6 +22,7 @@ export class OscControlService {
   private sleepingAnimations = false;
   private statusAutomations = false;
   private sleepMode = false;
+  private autoAcceptInviteRequests = false;
 
   constructor(
     private osc: OscService,
@@ -44,20 +46,25 @@ export class OscControlService {
       this.automationConfig.configs.pipe(
         map((configs) => configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled)
       ),
+      this.automationConfig.configs.pipe(
+        map((configs) => configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled)
+      ),
       this.syncParameters.pipe(startWith(undefined)),
     ])
       .pipe(
-        tap(([sleepMode, sleepingAnimations, statusAutomations]) => {
+        tap(([sleepMode, sleepingAnimations, statusAutomations, autoAcceptInviteRequests]) => {
           this.sleepMode = sleepMode;
           this.sleepingAnimations = sleepingAnimations;
           this.statusAutomations = statusAutomations;
+          this.autoAcceptInviteRequests = autoAcceptInviteRequests;
         }),
         debounceTime(0)
       )
-      .subscribe(([sleepMode, sleepingAnimations, statusAutomations]) => {
+      .subscribe(([sleepMode, sleepingAnimations, statusAutomations, autoAcceptInviteRequests]) => {
         this.osc.send_bool(ADDRESS_SLEEP_MODE, sleepMode);
         this.osc.send_bool(ADDRESS_SLEEPING_ANIMATIONS, sleepingAnimations);
         this.osc.send_bool(ADDRESS_STATUS_AUTOMATIONS, statusAutomations);
+        this.osc.send_bool(ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS, autoAcceptInviteRequests);
       });
   }
 
@@ -124,6 +131,16 @@ export class OscControlService {
         if (enable) info('[OSCControl] Enabling status automations');
         else info('[OSCControl] Disabling status automations');
         await this.automationConfig.updateAutomationConfig('CHANGE_STATUS_BASED_ON_PLAYER_COUNT', {
+          enabled: enable,
+        });
+        break;
+      }
+      case ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS: {
+        const { value: enable } = message.values[0] as OSCBoolValue;
+        if (this.autoAcceptInviteRequests === enable) return;
+        if (enable) info('[OSCControl] Enabling automatic invite request acceptance');
+        else info('[OSCControl] Disabling automatic invite request acceptance');
+        await this.automationConfig.updateAutomationConfig('AUTO_ACCEPT_INVITE_REQUESTS', {
           enabled: enable,
         });
         break;
