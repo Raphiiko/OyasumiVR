@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- New feature for automatically accepting invite requests while on orange/green status, optionally based on a white- or blacklist.
 - Korean language support, thanks to [@soumt-r](https://github.com/soumt-r).
 
 ### Changed
