@@ -199,6 +199,7 @@
     "title": "Auto Accept Invite Requests",
     "description": "Oyasumi can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
     "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
+    "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
     "whitelist": "Player Whitelist",
     "blacklist": "Player Blacklist",
     "noPlayersAdded": "No players are currently added to the list.",

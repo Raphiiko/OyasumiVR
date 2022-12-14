@@ -49,6 +49,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
     AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
   );
   isOnBusyStatus: boolean = false;
+  isOnJoinMeStatus: boolean = false;
 
   constructor(
     protected vrchat: VRChatService,
@@ -63,9 +64,10 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
         this.loggedIn = status === 'LOGGED_IN';
         if (this.loggedIn && this.config.playerIds.length) await this.refreshPlayerList();
       });
-    this.vrchat.user
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((user) => (this.isOnBusyStatus = user?.status === 'busy'));
+    this.vrchat.user.pipe(takeUntil(this.destroy$)).subscribe((user) => {
+      this.isOnBusyStatus = user?.status === 'busy';
+      this.isOnJoinMeStatus = user?.status === 'join me';
+    });
     this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe(async (configs) => {
       this.config = cloneDeep(configs.AUTO_ACCEPT_INVITE_REQUESTS);
       this.listModeOption = this.listModeOptions.find((o) => o.id === this.config.listMode)!;
