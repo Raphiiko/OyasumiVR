@@ -94,7 +94,11 @@
         <div class="player" *ngFor="let player of playerList" @vshrink>
           <div class="player-left">
             <div class="player-icon">
-              <img loading="lazy" [src]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6" />
+              <img
+                onerror="this.style.display='none'"
+                loading="lazy"
+                [src]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
+              />
             </div>
             <div class="player-name">{{ player.displayName }}</div>
           </div>

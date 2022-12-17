@@ -24,7 +24,11 @@
     <div class="friend-list" @noop *ngIf="results.length">
       <div class="friend" *ngFor="let result of results">
         <div class="friend-icon">
-          <img loading="lazy" [src]="vrchat.imageUrlForPlayer(result) | imageCache: 3600 * 6" />
+          <img
+            onerror="this.style.display='none'"
+            loading="lazy"
+            [src]="vrchat.imageUrlForPlayer(result) | imageCache: 3600 * 6"
+          />
         </div>
         <div class="friend-label">{{ result.displayName }}</div>
         <button class="btn" *ngIf="!isSelected(result)" (click)="addFriend(result)" @hshrink
