@@ -195,6 +195,44 @@
     "moreInfo": "詳細",
     "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChatで青色に表示されなくても、自動的に招待を受けることはできますか？\nA: Oyasumiがあなたのステータスを青（join me）に設定した場合、あなたが受け取った招待リクエストを自動承認するようになります。\n\nQ：ステータスが更新されないので、参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加したいのに参加できない場合は、メインメニューからプロフィールを開いて、あなたのステータスを強制的に更新することができます。"
   },
+  "auto-invite-request-accept": {
+    "title": "招待リクエストを自動的に受け入れる",
+    "description": "Oyasumiは、自分が受け取った招待リクエストを自動的に受け入れることができます。また、ホワイトリストやブラックリストを利用すると、自分が選んだ友達からの招待リクエストのみを自動的に受け入れられます。",
+    "userOnBusyStatus": "自分のステータスが忙しい（赤）になっている間は、ユーザーからの招待リクエストを受け入れることができません。",
+    "userOnJoinMeStatus": "VRChatは、自分のステータスが参加待ち（青）になっている場合、設定に関わらず、すべての招待リクエストを自動的に受け入れます。",
+    "whitelist": "プレイヤーホワイトリスト",
+    "blacklist": "プレイヤーブラックリスト",
+    "noPlayersAdded": "現在リストに登録されているプレイヤーはいません。",
+    "addFriends": "友達を追加",
+    "clearPlayers": "プレイヤーを消去",
+    "options": {
+      "enable": {
+        "title": "有効にする",
+        "description": "友達からの招待リクエストを自動的に受け入れる。"
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "スリープモード有効時のみ"
+      },
+      "listMode": {
+        "title": "リストモード",
+        "description": "プレイヤーリストの操作方法",
+        "options": {
+          "DISABLED": {
+            "label": "無効にする",
+            "subLabel": "誰でも受け入れる"
+          },
+          "WHITELIST": {
+            "label": "ホワイトリスト",
+            "subLabel": "リストに登録された友達を\n受け入れる"
+          },
+          "BLACKLIST": {
+            "label": "ブラックリスト",
+            "subLabel": "リストに登録されていない友達を\n受け入れる"
+          }
+        }
+      }
+    }
+  },
   "settings": {
     "title": "設定",
     "tab": {
@@ -346,6 +384,7 @@
       "batteryAutomations": "バッテリー自動化",
       "gpuAutomations": "GPU自動化",
       "statusAutomations": "ステータス自動化",
+      "autoInviteRequestAccept": "招待リクエストを\n自動的に受け入れる",
       "settings": "設定方法",
       "about": "Oyasumiについて"
     },
@@ -414,6 +453,13 @@
         "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。",
         "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字の羅列です。入力内容をご確認ください。"
       }
+    },
+    "friend-selection-modal": {
+      "title": "友達を選択する",
+      "searchPlaceholder": "名前から友達を検索する...",
+      "noFriendsSelected": "選択された友達はいません",
+      "noResultsFor": "'{{query}}'の結果が見つかりません",
+      "noFriends": "友達リストが空です"
     }
   }
 }
