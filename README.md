@@ -17,7 +17,11 @@
 </p>
 
 <p align="center">
-  This is the main repository for Oyasumi.<br>It is an open source tool to assist with sleeping in virtual reality (VRChat).
+  Oyasumi is an open source tool to assist with sleeping in virtual reality (VRChat).
+  <br>
+  Oyasumiは、バーチャルリアリティの中で睡眠をアシストするオープンソースソフトウェアです。
+  <br>
+  <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。
 </p>
 
 <p align="center">
