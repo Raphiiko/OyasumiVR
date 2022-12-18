@@ -193,7 +193,45 @@
     "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
     "behaviourWarning": "Oyasumi에 의한 상태 변경은 플레이어에게 표시되지 않아요. 다른 플레이어가 볼 때 스테이터스 업데이트가 표시되기까지 조금 시간이 걸릴 수 있어요. 이는 VRChat 사양상의 제한으로 Oyasumi가 수정할 수 없어요.",
     "moreInfo": "자세히",
-    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: Oyasumi가 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 승인하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: Oyasumi가 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+  },
+  "auto-invite-request-accept": {
+    "title": "인바이트 리퀘스트 자동 수락",
+    "description": "Oyasumi는 여러분이 받는 초대 요청을 자동으로 수락할 수 있어요. 플레이어 화이트리스트 또는 블랙리스트를 사용하면 선택한 친구만 초대 요청을 자동으로 수락하도록 할 수 있습니다.",
+    "userOnBusyStatus": "스테이터스가 busy(빨간색)이므로 다른 친구의 초대 요청을 수락할 수 없어요.",
+    "userOnJoinMeStatus": "스테이터스가 join me(파란색)이므로 VRChat이 설정과 관계없이 모든 초대 요청을 수락해요.",
+    "whitelist": "플레이어 화이트리스트",
+    "blacklist": "플레이어 블랙리스트",
+    "noPlayersAdded": "목록에 아무도 추가되지 않았어요.",
+    "addFriends": "플레이어 추가",
+    "clearPlayers": "목록 비우기",
+    "options": {
+      "enable": {
+        "title": "활성화",
+        "description": "자동으로 친구의 인바이트 리퀘스트(초대 요청)를 수락해요"
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "수면 모드 활성화 시에만"
+      },
+      "listMode": {
+        "title": "리스트 모드",
+        "description": "플레이어 리스트의 작동 방식",
+        "options": {
+          "DISABLED": {
+            "label": "비활성화",
+            "subLabel": "모두의 요청을 수락하기"
+          },
+          "WHITELIST": {
+            "label": "화이트리스트",
+            "subLabel": "리스트의 친구들의 요청만 수락하기"
+          },
+          "BLACKLIST": {
+            "label": "블랙리스트",
+            "subLabel": "리스트에 없는 친구들의 요청만 수락하기"
+          }
+        }
+      }
+    }
   },
   "settings": {
     "title": "설정",
@@ -346,6 +384,7 @@
       "batteryAutomations": "배터리 자동화",
       "gpuAutomations": "GPU 자동화",
       "statusAutomations": "스테이터스 자동화",
+      "autoInviteRequestAccept": "인바이트 리퀘스트 \n자동 수락",
       "settings": "설정",
       "about": "Oyasumi에 대해"
     },
@@ -414,6 +453,13 @@
         "LAST_CODE_INVALID": "입력된 2단계 인증 코드가 잘못되었어요.",
         "INVALID_FORMAT": "유효한 2단계 인증 코드는 6자리 숫자에요. 입력 내용을 확인해주세요."
       }
+    },
+    "friend-selection-modal": {
+      "title": "친구 선택",
+      "searchPlaceholder": "이름로 검색...",
+      "noFriendsSelected": "친구가 선택되지 않았어요",
+      "noResultsFor": "'{{query}}'에 대한 결과가 없어요",
+      "noFriends": "친구 목록이 비어있어요"
     }
   }
 }
