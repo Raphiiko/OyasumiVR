@@ -1,0 +1,128 @@
+<div class="pane main">
+  <div class="pane-title" translate>auto-invite-request-accept.title</div>
+  <div class="pane-content">
+    <p translate>auto-invite-request-accept.description</p>
+    <div class="alert warning" *ngIf="!loggedIn" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span
+        ><button class="btn btn-secondary" (click)="login()" translate
+          >shared.modals.login</button
+        ></div
+      >
+    </div>
+    <div class="alert warning" *ngIf="isOnBusyStatus" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'auto-invite-request-accept.userOnBusyStatus' | translate }}</span></div
+      >
+    </div>
+    <div class="alert warning" *ngIf="isOnJoinMeStatus" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> warning </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'auto-invite-request-accept.userOnJoinMeStatus' | translate }}</span></div
+      >
+    </div>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>auto-invite-request-accept.options.enable.title</span>
+          <span translate>auto-invite-request-accept.options.enable.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.enabled"
+              (change)="updateConfig({ enabled: !config.enabled })"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.onlyIfSleepModeEnabled.title</span>
+          <span translate></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyIfSleepModeEnabled"
+              (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.listMode.title</span>
+          <span translate>auto-invite-request-accept.options.listMode.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            [items]="listModeOptions"
+            [selected]="listModeOption"
+            (selectedChange)="setListMode($event?.id)"
+          ></app-select-box>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>
+  <div class="pane player-list">
+    <div class="pane-title" *ngIf="config.listMode === 'WHITELIST'" translate
+      >auto-invite-request-accept.whitelist</div
+    >
+    <div class="pane-title" *ngIf="config.listMode === 'BLACKLIST'" translate
+      >auto-invite-request-accept.blacklist</div
+    >
+    <div class="pane-content">
+      <div class="players-list" @noop>
+        <div class="player" *ngFor="let player of playerList" @vshrink>
+          <div class="player-left">
+            <div class="player-icon">
+              <img
+                onerror="this.style.display='none'"
+                loading="lazy"
+                [src]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
+              />
+            </div>
+            <div class="player-name">{{ player.displayName }}</div>
+          </div>
+          <div class="player-right">
+            <button class="btn" (click)="removePlayer(player)">
+              <i class="material-icons">clear</i>
+            </button>
+          </div>
+        </div>
+        <div class="no-players" *ngIf="!playerList?.length">
+          <span translate>auto-invite-request-accept.noPlayersAdded</span>
+        </div>
+      </div>
+
+      <div class="player-list-actions">
+        <button class="btn btn-secondary" translate (click)="addPlayer()" [disabled]="!loggedIn">
+          <i class="material-icons">add</i>
+          <span translate>auto-invite-request-accept.addFriends</span>
+        </button>
+        <button class="btn btn-secondary" translate (click)="clearPlayers()" [disabled]="!loggedIn">
+          <i class="material-icons">clear</i>
+          <span translate>auto-invite-request-accept.clearPlayers</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -11,6 +11,9 @@
       "open": "Open",
       "close": "Sluiten",
       "login": "Log in"
+    },
+    "misc": {
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     }
   },
   "overview": {
@@ -172,7 +175,6 @@
     "title": "Status Automatiseringen",
     "enable": "Activeer Status Automatiseringen",
     "description": "Oyasumi kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
-    "loginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account.",
     "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
     "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
     "playerLimit": "Speler limiet",
@@ -192,6 +194,44 @@
     "behaviourWarning": "Aanpassingen van de status zijn niet zichtbaar voor jouwzelf. Ook voor andere spelers kan het even duren voordat de statusverandering zichtbaar is. Dit is een limitatie van VRChat zelf en kan niet worden opgelost door Oyasumi.",
     "moreInfo": "Meer info",
     "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat Oyasumi je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu."
+  },
+  "auto-invite-request-accept": {
+    "title": "Invite Requests Automatisch Accepteren",
+    "description": "Oyasumi kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+    "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
+    "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
+    "whitelist": "Speler Whitelist",
+    "blacklist": "Speler Blacklist",
+    "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
+    "addFriends": "Vrienden toevoegen",
+    "clearPlayers": "Alle spelers verwijderen",
+    "options": {
+      "enable": {
+        "title": "Activeren",
+        "description": "Accepteer automatisch invite requests die je van vrienden ontvangt."
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "Alleen als de slaap modus is geactiveerd"
+      },
+      "listMode": {
+        "title": "Lijst Modus",
+        "description": "Hoe de speler lijst moet worden gebruikt.",
+        "options": {
+          "DISABLED": {
+            "label": "Uitgeschakeld",
+            "subLabel": "Accepteer van iedereen"
+          },
+          "WHITELIST": {
+            "label": "Whitelist",
+            "subLabel": "Accepteer van vrienden op de lijst"
+          },
+          "BLACKLIST": {
+            "label": "Blacklist",
+            "subLabel": "Accepteer van iedereen behalve vrienden op de lijst"
+          }
+        }
+      }
+    }
   },
   "settings": {
     "title": "Instellingen",
@@ -344,6 +384,7 @@
       "batteryAutomations": "Batterij Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "statusAutomations": "Status Automatiseringen",
+      "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
       "settings": "Instellingen",
       "about": "Over Oyasumi",
       "batteryManagement": "Batterij Management"
@@ -413,6 +454,13 @@
         "LAST_CODE_INVALID": "De 2FA code is onjuist.",
         "INVALID_FORMAT": "Een 2FA code bestaat altijd uit een reeks van 6 cijfers. Deze code is niet correct."
       }
+    },
+    "friend-selection-modal": {
+      "title": "Selecteer Vrienden",
+      "searchPlaceholder": "Zoek vrienden op naam...",
+      "noFriendsSelected": "Geen vrienden geselecteerd",
+      "noResultsFor": "Geen resultaten voor '{{query}}'",
+      "noFriends": "Je vriendenlijst is leeg"
     }
   }
 }

@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi"
-version = "1.2.2"
+version = "1.3.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -29,6 +29,11 @@ sysinfo = "0.26.2"
 chrono = "0.4.22"
 log = "^0.4"
 time = "0.3.16"
+url = "2.3.1"
+urlencoding = "2.1.2"
+mime = "0.3.16"
+md5 = "0.7.0"
+mime_guess = "2.0.4"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -45,6 +50,10 @@ features = ["full"]
 [dependencies.hyper]
 version = "0.14.20"
 features = ["full"]
+
+[dependencies.tauri-plugin-single-instance]
+git = "https://github.com/tauri-apps/tauri-plugin-single-instance"
+branch = "dev"
 
 [dependencies.tauri-plugin-store]
 git = "https://github.com/tauri-apps/tauri-plugin-store"

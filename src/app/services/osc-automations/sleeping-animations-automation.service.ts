@@ -6,7 +6,7 @@ import {
   SleepingAnimationsAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { combineLatest, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
+import { combineLatest, debounceTime, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { OscService } from '../osc.service';
@@ -42,6 +42,14 @@ export class SleepingAnimationsAutomationService {
     combineLatest([
       // Pose changes
       this.sleep.pose,
+      // Retrigger when automation is enabled
+      this.automationConfig.configs.pipe(
+        map((configs) => configs.SLEEPING_ANIMATIONS.enabled),
+        startWith(false),
+        pairwise(),
+        filter(([oldIsEnabled, newIsEnabled]) => !oldIsEnabled && newIsEnabled),
+        startWith(false),
+      ),
       // Retrigger when sleep mode is enabled
       this.sleep.mode.pipe(
         startWith(false),
@@ -64,7 +72,7 @@ export class SleepingAnimationsAutomationService {
         }),
         startWith([])
       ),
-    ]).subscribe(async ([pose]) => {
+    ]).pipe(debounceTime(0)).subscribe(async ([pose]) => {
       if (!this.config.enabled) return;
       if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
       if (this.config.onlyIfAllTrackersTurnedOff) {

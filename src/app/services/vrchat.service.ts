@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Body, Client, getClient, Response, ResponseType } from '@tauri-apps/api/http';
-import { APIConfig, CurrentUser, Notification, NotificationType, UserStatus } from 'vrchat/dist';
+import {
+  APIConfig,
+  CurrentUser,
+  Notification,
+  NotificationType,
+  UserStatus,
+  LimitedUser,
+} from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
@@ -14,6 +21,7 @@ import {
   interval,
   map,
   Observable,
+  Subject,
 } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
@@ -56,6 +64,7 @@ export class VRChatService {
         STATUS_CHANGE: 6,
         DELETE_NOTIFICATION: 3,
         INVITE: 6,
+        LIST_FRIENDS: 15,
       },
     },
   });
@@ -68,6 +77,12 @@ export class VRChatService {
   private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
     playerCount: 1,
   });
+  private _friendsCache: CachedValue<LimitedUser[]> = new CachedValue<LimitedUser[]>(
+    undefined,
+    60 * 60 * 1000, // Cache for 1 hour
+    'VRCHAT_FRIENDS'
+  );
+  private _notifications: Subject<Notification> = new Subject<Notification>();
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
@@ -75,6 +90,7 @@ export class VRChatService {
     this._world,
     this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
   ]).pipe(map(([world]) => world));
+  public notifications = this._notifications.asObservable();
 
   constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
@@ -108,11 +124,20 @@ export class VRChatService {
   }
 
   //
+  // PUBLIC UTILITIES
+  //
+
+  public imageUrlForPlayer(player: LimitedUser) {
+    return player.userIcon || player.profilePicOverride || player.currentAvatarThumbnailImageUrl;
+  }
+
+  //
   // PUBLIC API
   //
 
   public async logout() {
     this._currentUserCache.clear();
+    this._friendsCache.clear();
     await this.updateSettings({
       authCookie: undefined,
       authCookieExpiry: undefined,
@@ -238,11 +263,7 @@ export class VRChatService {
 
   public async handleNotification(notification: Notification) {
     info(`[VRChat] Received notification: ${JSON.stringify(notification)}`);
-    switch (notification.type) {
-      case NotificationType.RequestInvite:
-        await this.handleRequestInviteNotification(notification);
-        break;
-    }
+    this._notifications.next(notification);
   }
 
   public async deleteNotification(notificationId: string) {
@@ -300,18 +321,56 @@ export class VRChatService {
     });
   }
 
+  public async listFriends(force = false): Promise<LimitedUser[]> {
+    // If we have a valid cache and aren't forcing the fetch, return the cached value
+    if (!force) {
+      const cachedFriends = this._friendsCache.get();
+      if (cachedFriends) {
+        return cachedFriends;
+      }
+    }
+    // Throw if we don't have a current user
+    const userId = this._user.value?.id;
+    if (!userId) {
+      error('[VRChat] Tried listing friends while not logged in');
+      throw new Error('Tried listing friends while not logged in');
+    }
+    // Fetch friends
+    let friends = [];
+    // Fetch online and active friends
+    for (let offline of ['false', 'true']) {
+      for (let offset = 0; true; offset += 100) {
+        // Send request
+        const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
+          typeId: 'LIST_FRIENDS',
+          runnable: () => {
+            info(`[VRChat] API Request: /auth/user/friends`);
+            return this.http.get(`${BASE_URL}/auth/user/friends`, {
+              headers: this.getDefaultHeaders(),
+              query: {
+                offset: offset.toString(),
+                n: '100',
+                offline,
+              },
+            });
+          },
+        });
+        if (response.result && response.result.ok) {
+          // Add friends to list
+          friends.push(...response.result.data);
+          // If we got 100 friends, try fetching more.
+          if (response.result.data.length >= 100) continue;
+        }
+        break;
+      }
+    }
+    this._friendsCache.set(friends);
+    return friends;
+  }
+
   //
   // INTERNALS
   //
-
-  private async handleRequestInviteNotification(notification: Notification) {
-    // Automatically accept invite requests when on blue, in case the VRChat client does not.
-    const user = this._user.value;
-    if (!user || user.status !== UserStatus.JoinMe) return;
-    info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
-    await this.deleteNotification(notification.id);
-    await this.inviteUser(notification.senderUserId);
-  }
 
   private async subscribeToLogEvents() {
     this.logService.logEvents.subscribe((event) => {

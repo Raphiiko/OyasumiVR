@@ -74,6 +74,12 @@ import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
 import { OscControlService } from './services/osc-control.service';
+import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
+import { FriendSelectionModalComponent } from './components/friend-selection-modal/friend-selection-modal.component';
+import { CachedValue } from './utils/cached-value';
+import { ImageCacheService } from './services/image-cache.service';
+import { ImageCachePipe } from './pipes/image-cache.pipe';
+import { InviteAutomationsService } from './services/invite-automations.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -102,6 +108,7 @@ export function createTranslateLoader(http: HttpClient) {
     OscAutomationsViewComponent,
     SelectBoxComponent,
     TStringTranslatePipePipe,
+    ImageCachePipe,
     OscScriptButtonComponent,
     OscScriptModalComponent,
     OscScriptCodeEditorComponent,
@@ -119,6 +126,8 @@ export function createTranslateLoader(http: HttpClient) {
     StatusAutomationsViewComponent,
     SleepingAnimationPresetModalComponent,
     MainStatusBarComponent,
+    AutoInviteRequestAcceptViewComponent,
+    FriendSelectionModalComponent,
   ],
   imports: [
     CommonModule,
@@ -168,6 +177,7 @@ export class AppModule {
     private modalService: SimpleModalService,
     private vrchatService: VRChatService,
     private vrchatLogService: VRChatLogService,
+    private imageCacheService: ImageCacheService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -182,12 +192,16 @@ export class AppModule {
     // OSC automations
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
     // Status automations
-    private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService
+    private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
+    // Invite automations
+    private inviteAutomationsService: InviteAutomationsService
   ) {
     this.init();
   }
 
   async init() {
+    // Clean cache
+    await CachedValue.cleanCache();
     // Initialize app settings
     await this.appSettingsService.init();
     // Initialize telemetry and updates
@@ -201,6 +215,7 @@ export class AppModule {
       this.sleepService.init(),
       this.vrchatService.init(),
       this.vrchatLogService.init(),
+      this.imageCacheService.init(),
     ]);
     // Initialize GPU control services
     await this.sidecarService.init().then(async () => {
@@ -223,6 +238,8 @@ export class AppModule {
         this.sleepingAnimationsAutomationService.init(),
         // Status automations
         this.statusChangeForPlayerCountAutomationService.init(),
+        // Invite automations
+        this.inviteAutomationsService.init(),
       ]);
     // Language selection modal
     this.appSettingsService.loadedDefaults

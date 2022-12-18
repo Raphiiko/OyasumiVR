@@ -1,0 +1,124 @@
+.pane-content {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  max-height: 400px;
+}
+
+.search {
+  padding: 1em;
+  border-bottom: 1px solid var(--color-surface-3);
+  input {
+    width: 100%;
+  }
+}
+
+.pills {
+  padding: 0.5em 1em 1em 1em;
+  background: var(--color-surface-1);
+  border-bottom: 1px solid var(--color-surface-3);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  overflow: auto;
+  min-height: 7em;
+  position: relative;
+  .none-selected {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--color-text-3);
+    text-align: center;
+    width: 100%;
+    height: 6.5em;
+  }
+  .pill {
+    background: var(--color-surface-4);
+    border-radius: 99999em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    padding: 0.25em 0.5em 0.25em 1em;
+    margin-top: 0.5em;
+    border: 1px solid transparent;
+    transition: all .15s ease;
+    &:not(:last-child) {
+      margin-right: 0.5em;
+    }
+    &-label {
+      flex: 1;
+      white-space: nowrap;
+    }
+    i {
+      flex-shrink: 0;
+      color: var(--color-text-3);
+      font-size: 1.25em;
+      margin-left: 0.25em;
+      transition: all .15s ease;
+    }
+    &:hover {
+      cursor: pointer;
+      border-color: var(--color-surface-5);
+      i {
+        color: var(--color-text-0);
+      }
+    }
+    &:active {
+      opacity: 0.75;
+    }
+  }
+}
+
+.friend-list {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  align-items: stretch;
+  flex: 1;
+  .friend {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    &-icon {
+      margin: 0.25em 0 0.25em 0.5em;
+      border: 2px solid var(--color-text-4);
+      height: 2.5em;
+      width: 2.5em;
+      border-radius: 3em;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      img {
+        height: 100%;
+      }
+    }
+    &-label {
+      padding: 0.5em 1em 0.5em 0.5em;
+      flex: 1;
+      display: flex;
+    }
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.no-results {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-text-3);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5em;
+}

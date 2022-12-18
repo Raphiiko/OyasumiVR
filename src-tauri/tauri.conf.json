@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "Oyasumi",
-    "version": "1.2.2"
+    "version": "1.3.0"
   },
   "tauri": {
     "allowlist": {
@@ -35,7 +35,9 @@
       "http": {
         "request": true,
         "scope": [
-          "https://api.vrchat.cloud/api/1/*"
+          "https://api.vrchat.cloud/api/1/*",
+          "https://assets.vrchat.com/*",
+          "https://files.vrchat.cloud/*"
         ]
       }
     },
@@ -76,7 +78,8 @@
           "language": [
             "en-US",
             "nl-NL",
-            "ja-JP"
+            "ja-JP",
+            "ko-KR"
           ]
         }
       }
@@ -105,7 +108,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.2.2 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "Oyasumi/1.3.0 (https://github.com/Raphiiko/Oyasumi)"
       },
       {
         "width": 500,
@@ -117,7 +120,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.2.2 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "Oyasumi/1.3.0 (https://github.com/Raphiiko/Oyasumi)"
       }
     ]
   }

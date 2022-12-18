@@ -1,0 +1,59 @@
+<div class="pane modal modal-md" @fadeUp>
+  <div class="pane-title">
+    {{ 'comp.friend-selection-modal.title' | translate }}
+  </div>
+  <div class="pane-content">
+    <div class="search">
+      <input
+        type="text"
+        class="input"
+        placeholder="{{ 'comp.friend-selection-modal.searchPlaceholder' | translate }}"
+        (input)="query.next(searchEl.value)"
+        #searchEl
+      />
+    </div>
+    <div class="pills">
+      <span class="none-selected" @fade *ngIf="!selection.length" translate
+        >comp.friend-selection-modal.noFriendsSelected</span
+      >
+      <div class="pill" *ngFor="let item of selection" (click)="removeItem(item)" @hshrink>
+        <div class="pill-label">{{ item.type === 'player' ? item.playerName : 'GROUP' }}</div>
+        <i class="material-icons-round">clear</i>
+      </div>
+    </div>
+    <div class="friend-list" @noop *ngIf="results.length">
+      <div class="friend" *ngFor="let result of results">
+        <div class="friend-icon">
+          <img
+            onerror="this.style.display='none'"
+            loading="lazy"
+            [src]="vrchat.imageUrlForPlayer(result) | imageCache: 3600 * 6"
+          />
+        </div>
+        <div class="friend-label">{{ result.displayName }}</div>
+        <button class="btn" *ngIf="!isSelected(result)" (click)="addFriend(result)" @hshrink
+          ><i class="material-icons-round">add</i></button
+        >
+        <button class="btn" *ngIf="isSelected(result)" disabled @hshrink
+          ><i class="material-icons-round">check</i></button
+        >
+      </div>
+    </div>
+    <div class="no-results" *ngIf="!results.length" @vshrink>
+      <span
+        *ngIf="activeQuery"
+        translate="comp.friend-selection-modal.noResultsFor"
+        [translateParams]="{ query: activeQuery }"
+      ></span>
+      <span *ngIf="!activeQuery" translate>comp.friend-selection-modal.noFriends</span>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="cancel()">
+      {{ 'shared.modals.cancel' | translate }}
+    </button>
+    <button class="btn btn-primary" (click)="confirm()">
+      {{ 'shared.modals.confirm' | translate }}
+    </button>
+  </div>
+</div>

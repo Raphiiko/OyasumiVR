@@ -5,9 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0]
+
+### Added
+
+- New feature for automatically accepting invite requests while on orange/green status, optionally based on a white- or blacklist.
+- Korean language support, thanks to [@soumt-r](https://github.com/soumt-r).
+
+### Changed
+
+- Made sleeping position animation automations automatically trigger when the automation is enabled.
+- Prevent Oyasumi from being opened twice and instead focus the window for the instance already running.
+
 ## [1.2.2]
 
 ### Fixed
+
 - Fixed issue where the main window would load before the app was ready, due to a bug in a new version of the `tao` crate.
 
 ## [1.2.1]
