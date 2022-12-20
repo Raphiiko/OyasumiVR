@@ -53,6 +53,8 @@ export class VRChatLoginModalComponent
     this.error = '';
     try {
       await this.vrchat.login(this.username, this.password);
+      this.loggingIn = false;
+      await this.close();
     } catch (e) {
       switch (e) {
         case '2FA_REQUIRED':

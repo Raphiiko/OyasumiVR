@@ -6,7 +6,6 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
 import { BehaviorSubject, interval, Observable, startWith, Subject, takeUntil } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
-import { message } from '@tauri-apps/api/dialog';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from 'tauri-plugin-log-api';
 

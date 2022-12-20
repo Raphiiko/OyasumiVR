@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, filter, interval, Observable, switchMap, take } from 'rxjs';
 import { checkUpdate, installUpdate, UpdateManifest } from '@tauri-apps/api/updater';
 import { relaunch } from '@tauri-apps/api/process';
 import { listen } from '@tauri-apps/api/event';
@@ -40,7 +40,17 @@ export class UpdateService {
           .subscribe();
       }
     });
+    // Check for updates on start
     await this.checkForUpdate(true);
+    // Check for updates every 7 days in case Oyasumi is left running for a long time.
+    interval(1000 * 3600 * 24 * 7).subscribe(() => this.checkForUpdate());
+    // Check for updates every 10 minutes until at least one update check has been done successfully.
+    interval(1000 * 60 * 10)
+      .pipe(
+        switchMap(() => this._updateAvailable.pipe(take(1))),
+        filter((info) => !info.checked)
+      )
+      .subscribe(() => this.checkForUpdate());
   }
 
   async checkForUpdate(showDialog = false) {

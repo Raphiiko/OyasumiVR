@@ -4,7 +4,6 @@ import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { Notification, NotificationType, UserStatus } from 'vrchat';
 import { info, warn } from 'tauri-plugin-log-api';
-import { notification } from '@tauri-apps/api';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({

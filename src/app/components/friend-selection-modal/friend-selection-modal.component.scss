@@ -48,7 +48,7 @@
     padding: 0.25em 0.5em 0.25em 1em;
     margin-top: 0.5em;
     border: 1px solid transparent;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     &:not(:last-child) {
       margin-right: 0.5em;
     }
@@ -61,7 +61,7 @@
       color: var(--color-text-3);
       font-size: 1.25em;
       margin-left: 0.25em;
-      transition: all .15s ease;
+      transition: all 0.15s ease;
     }
     &:hover {
       cursor: pointer;

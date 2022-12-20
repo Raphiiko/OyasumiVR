@@ -1,6 +1,5 @@
 import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { AppSettingsService } from '../services/app-settings.service';
 import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {

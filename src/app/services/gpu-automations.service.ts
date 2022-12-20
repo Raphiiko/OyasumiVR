@@ -195,7 +195,7 @@ export class GpuAutomationsService {
               (getAutomationConfig().resetToDefault
                 ? selectedDevice!.defaultPowerLimit!
                 : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!) * 1000
-            )
+            );
           })
         )
         .subscribe();

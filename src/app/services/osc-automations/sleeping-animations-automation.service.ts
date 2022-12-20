@@ -6,7 +6,15 @@ import {
   SleepingAnimationsAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { combineLatest, debounceTime, filter, firstValueFrom, map, pairwise, startWith } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  filter,
+  firstValueFrom,
+  map,
+  pairwise,
+  startWith,
+} from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { OscService } from '../osc.service';
@@ -48,7 +56,7 @@ export class SleepingAnimationsAutomationService {
         startWith(false),
         pairwise(),
         filter(([oldIsEnabled, newIsEnabled]) => !oldIsEnabled && newIsEnabled),
-        startWith(false),
+        startWith(false)
       ),
       // Retrigger when sleep mode is enabled
       this.sleep.mode.pipe(
@@ -72,37 +80,41 @@ export class SleepingAnimationsAutomationService {
         }),
         startWith([])
       ),
-    ]).pipe(debounceTime(0)).subscribe(async ([pose]) => {
-      if (!this.config.enabled) return;
-      if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
-      if (this.config.onlyIfAllTrackersTurnedOff) {
-        const devices = await firstValueFrom(this.openvr.devices);
-        const trackersFound = !!devices.find((d) => d.class === 'GenericTracker' && d.canPowerOff);
-        if (trackersFound) return;
-      }
-      // Combine OSC scripts
-      const script: OscScript = { version: 1, commands: [] };
-      const enableFootUnlock = !!(
-        this.config.releaseFootLockOnPoseChange &&
-        this.config.oscScripts.FOOT_UNLOCK &&
-        this.config.oscScripts.FOOT_UNLOCK
-      );
-      if (enableFootUnlock) script.commands.push(...this.config.oscScripts.FOOT_UNLOCK!.commands);
-      let scriptTime = 0;
-      if (this.config.oscScripts[pose]) {
-        scriptTime = getOscScriptDuration(this.config.oscScripts[pose]!);
-        script.commands.push(...this.config.oscScripts[pose]!.commands);
-      }
-      if (enableFootUnlock) {
-        let minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
-        if (minimumDelayRemainder > 0) {
-          script.commands.push({ type: 'SLEEP', duration: minimumDelayRemainder });
+    ])
+      .pipe(debounceTime(0))
+      .subscribe(async ([pose]) => {
+        if (!this.config.enabled) return;
+        if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
+        if (this.config.onlyIfAllTrackersTurnedOff) {
+          const devices = await firstValueFrom(this.openvr.devices);
+          const trackersFound = !!devices.find(
+            (d) => d.class === 'GenericTracker' && d.canPowerOff
+          );
+          if (trackersFound) return;
         }
-        script.commands.push(...this.config.oscScripts.FOOT_LOCK!.commands);
-      }
-      // Queue script
-      this.osc.queueScript(script, 'SLEEPING_ANIMATION_AUTOMATION_POSE_CHANGE');
-    });
+        // Combine OSC scripts
+        const script: OscScript = { version: 1, commands: [] };
+        const enableFootUnlock = !!(
+          this.config.releaseFootLockOnPoseChange &&
+          this.config.oscScripts.FOOT_UNLOCK &&
+          this.config.oscScripts.FOOT_UNLOCK
+        );
+        if (enableFootUnlock) script.commands.push(...this.config.oscScripts.FOOT_UNLOCK!.commands);
+        let scriptTime = 0;
+        if (this.config.oscScripts[pose]) {
+          scriptTime = getOscScriptDuration(this.config.oscScripts[pose]!);
+          script.commands.push(...this.config.oscScripts[pose]!.commands);
+        }
+        if (enableFootUnlock) {
+          let minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
+          if (minimumDelayRemainder > 0) {
+            script.commands.push({ type: 'SLEEP', duration: minimumDelayRemainder });
+          }
+          script.commands.push(...this.config.oscScripts.FOOT_LOCK!.commands);
+        }
+        // Queue script
+        this.osc.queueScript(script, 'SLEEPING_ANIMATION_AUTOMATION_POSE_CHANGE');
+      });
   }
 
   private subscribeToSleepMode() {

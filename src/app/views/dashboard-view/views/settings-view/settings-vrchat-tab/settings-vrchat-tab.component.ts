@@ -36,7 +36,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
   }
 
   login() {
-      this.vrchat.showLoginModal();
+    this.vrchat.showLoginModal();
   }
 
   async logout() {

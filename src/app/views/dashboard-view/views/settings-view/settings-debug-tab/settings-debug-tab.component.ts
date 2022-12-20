@@ -11,7 +11,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../../services/automation-config.service';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { error, info } from 'tauri-plugin-log-api';
+import { error } from 'tauri-plugin-log-api';
 
 @Component({
   selector: 'app-settings-debug-tab',

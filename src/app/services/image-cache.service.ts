@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { error, warn } from 'tauri-plugin-log-api';
-
+import { warn } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',

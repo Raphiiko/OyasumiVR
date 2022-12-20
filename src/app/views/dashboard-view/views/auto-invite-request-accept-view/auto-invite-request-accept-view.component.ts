@@ -13,7 +13,6 @@ import { LimitedUser } from 'vrchat/dist';
 import {
   AutoAcceptInviteRequestsAutomationConfig,
   AUTOMATION_CONFIGS_DEFAULT,
-  ChangeStatusBasedOnPlayerCountAutomationConfig,
 } from '../../../../models/automations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 
