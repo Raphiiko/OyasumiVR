@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - A bug where VRChat accounts without 2FA enabled could not log in properly.
-- A bug where the status bar would still a VRChat user name after logging out.
+- A bug where the status bar would still show a VRChat user name after logging out.
 
 ### Changed
 
