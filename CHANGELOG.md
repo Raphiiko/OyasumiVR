@@ -5,17 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.3.1]
 
 ### Fixed
 
-- Fixed a bug where VRChat accounts without 2FA enabled could not log in properly.
-- Fixed a bug where the status bar would still a VRChat user name after logging out.
+- A bug where VRChat accounts without 2FA enabled could not log in properly.
+- A bug where the status bar would still a VRChat user name after logging out.
 
 ### Changed
 
-- Made the update check run every week after application start, in case Oyasumi is left running for a long time.
-- Made the update check rerun every 10 minutes until at least one update check has succeeded, in case Oyasumi is started while offline.
+- Update check to run every week after application start, in case Oyasumi is left running for a long time.
+- Update check to rerun every 10 minutes until at least one check has succeeded, in case Oyasumi is started while offline.
 
 ## [1.3.0]
 
