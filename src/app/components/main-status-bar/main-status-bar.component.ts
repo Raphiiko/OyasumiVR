@@ -8,7 +8,7 @@ import { hshrink, noop } from '../../utils/animations';
   selector: 'app-main-status-bar',
   templateUrl: './main-status-bar.component.html',
   styleUrls: ['./main-status-bar.component.scss'],
-  animations: [hshrink(), noop()]
+  animations: [hshrink(), noop()],
 })
 export class MainStatusBarComponent implements OnInit {
   sleepMode = this.sleepService.mode;

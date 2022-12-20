@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
-import { initial } from 'lodash';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import { LimitedUser } from 'vrchat/dist';
 import { VRChatService } from '../../services/vrchat.service';

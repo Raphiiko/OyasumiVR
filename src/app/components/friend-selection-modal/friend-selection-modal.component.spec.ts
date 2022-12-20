@@ -8,9 +8,8 @@ describe('FriendSelectionModalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ FriendSelectionModalComponent ]
-    })
-    .compileComponents();
+      declarations: [FriendSelectionModalComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(FriendSelectionModalComponent);
     component = fixture.componentInstance;

@@ -13,5 +13,5 @@ export const TELEMETRY_SETTINGS_DEFAULT: TelemetrySettings = {
   version: 1,
   enabled: true,
   telemetryId: uuidv4(),
-  lastHeartbeat: 0
+  lastHeartbeat: 0,
 };

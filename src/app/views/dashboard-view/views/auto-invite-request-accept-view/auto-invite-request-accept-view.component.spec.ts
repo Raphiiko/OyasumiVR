@@ -8,9 +8,8 @@ describe('AutoInviteRequestAcceptViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AutoInviteRequestAcceptViewComponent ]
-    })
-    .compileComponents();
+      declarations: [AutoInviteRequestAcceptViewComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(AutoInviteRequestAcceptViewComponent);
     component = fixture.componentInstance;

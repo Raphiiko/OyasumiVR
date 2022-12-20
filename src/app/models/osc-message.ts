@@ -52,7 +52,7 @@ export function parseOSCMessage(message: OSCMessageRaw): OSCMessage {
 
 export function parseOSCValue(value: OSCValueRaw): OSCValue {
   let parsedValue: unknown;
-  switch(value.kind) {
+  switch (value.kind) {
     case 'int':
       parsedValue = parseInt(value.value);
       break;

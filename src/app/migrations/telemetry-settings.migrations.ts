@@ -1,6 +1,5 @@
 import { cloneDeep } from 'lodash';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
-import { AUTOMATION_CONFIGS_DEFAULT } from '../models/automations';
 import { info } from 'tauri-plugin-log-api';
 import { v4 as uuidv4 } from 'uuid';
 

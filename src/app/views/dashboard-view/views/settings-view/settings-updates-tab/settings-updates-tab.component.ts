@@ -25,7 +25,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent {
     settingsService: AppSettingsService,
     private update: UpdateService,
     private http: HttpClient,
-    private sanitizer: DomSanitizer,
+    private sanitizer: DomSanitizer
   ) {
     super(settingsService);
   }

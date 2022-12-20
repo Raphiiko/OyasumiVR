@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed a bug where VRChat accounts without 2FA enabled could not log in properly.
+- Fixed a bug where the status bar would still a VRChat user name after logging out.
+
+### Changed
+
+- Made the update check run every week after application start, in case Oyasumi is left running for a long time.
+- Made the update check rerun every 10 minutes until at least one update check has succeeded, in case Oyasumi is started while offline.
+
 ## [1.3.0]
 
 ### Added

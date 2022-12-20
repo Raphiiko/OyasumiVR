@@ -35,7 +35,8 @@
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>
-        <span [translate]="user ? user.displayName : 'comp.main-status-bar.loggedOut'"></span>
+        <span *ngIf="user">{{ user?.displayName }}</span>
+        <span translate *ngIf="!user">comp.main-status-bar.loggedOut</span>
       </ng-container>
     </div>
   </div>

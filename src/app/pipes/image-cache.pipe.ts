@@ -1,6 +1,4 @@
-import { Input, Pipe, PipeTransform } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { TString } from '../models/translatable-string';
+import { Pipe, PipeTransform } from '@angular/core';
 import { ImageCacheService } from '../services/image-cache.service';
 
 @Pipe({

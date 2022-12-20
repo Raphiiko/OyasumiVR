@@ -11,7 +11,11 @@
     [class.has-subtitle]="selected.subLabel"
     [class.small]="type === 'SMALL'"
   >
-    <div class="select-item-html-prefix" *ngIf="selected.htmlPrefix" [innerHtml]="selected.htmlPrefix">
+    <div
+      class="select-item-html-prefix"
+      *ngIf="selected.htmlPrefix"
+      [innerHtml]="selected.htmlPrefix"
+    >
     </div>
     <div class="select-item-content">
       <div class="select-item-title">{{ selected.label | tsTranslate }}</div>

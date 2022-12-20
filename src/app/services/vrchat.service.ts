@@ -1,13 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Body, Client, getClient, Response, ResponseType } from '@tauri-apps/api/http';
-import {
-  APIConfig,
-  CurrentUser,
-  Notification,
-  NotificationType,
-  UserStatus,
-  LimitedUser,
-} from 'vrchat/dist';
+import { APIConfig, CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
@@ -157,7 +150,7 @@ export class VRChatService {
   public async login(username: string, password: string): Promise<void> {
     if (this._status.value !== 'LOGGED_OUT')
       throw new Error('Tried calling login() while already logged in');
-    this._user.next(await this.getCurrentUser({ username, password }));
+    this._user.next(await this.getCurrentUser({ username, password }, true));
     // If we got here, we have a user, so we are logged in (and have cookies)
     this._status.next('LOGGED_IN');
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
@@ -355,6 +348,7 @@ export class VRChatService {
             });
           },
         });
+        console.log('RESPONSE', response);
         if (response.result && response.result.ok) {
           // Add friends to list
           friends.push(...response.result.data);
@@ -529,6 +523,7 @@ export class VRChatService {
         responseType: ResponseType.JSON,
       }
     );
+    console.log('RESPONSE /auth/user', response);
     // If we received a 401, there is probably an error included
     if (response.status === 401) {
       // Try parse the error message
@@ -591,29 +586,33 @@ export class VRChatService {
   }
 
   private async parseResponseCookies(response: Response<any>) {
-    if (!response.headers['set-cookie']) return;
-    const cookies = parseSetCookieHeader(response.headers['set-cookie']);
-    for (let cookie of cookies) {
-      const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
-      switch (cookie.name) {
-        case 'apiKey':
-          await this.updateSettings({
-            apiKey: cookie.value,
-            apiKeyExpiry: Math.floor(Date.now() / 1000) + 3600, // Always shift this one hour into the future
-          });
-          break;
-        case 'auth':
-          await this.updateSettings({
-            authCookie: cookie.value,
-            authCookieExpiry: expiry,
-          });
-          break;
-        case 'twoFactorAuth':
-          await this.updateSettings({
-            twoFactorCookie: cookie.value,
-            twoFactorCookieExpiry: expiry,
-          });
-          break;
+    if (!response.rawHeaders['set-cookie']) return;
+    const cookieHeaders = response.rawHeaders['set-cookie'];
+    for (let cookieHeader of cookieHeaders) {
+      const cookies = parseSetCookieHeader(cookieHeader);
+      for (let cookie of cookies) {
+        console.log('COOKIE', cookie);
+        const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
+        switch (cookie.name) {
+          case 'apiKey':
+            await this.updateSettings({
+              apiKey: cookie.value,
+              apiKeyExpiry: Math.floor(Date.now() / 1000) + 3600, // Always shift this one hour into the future
+            });
+            break;
+          case 'auth':
+            await this.updateSettings({
+              authCookie: cookie.value,
+              authCookieExpiry: expiry,
+            });
+            break;
+          case 'twoFactorAuth':
+            await this.updateSettings({
+              twoFactorCookie: cookie.value,
+              twoFactorCookieExpiry: expiry,
+            });
+            break;
+        }
       }
     }
   }
