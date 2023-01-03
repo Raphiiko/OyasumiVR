@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NVMLService, NVMLStatus } from '../../../../services/nvml.service';
+import { NVMLService } from '../../../../services/nvml.service';
 import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
-import { GPUDevice, GPUPowerLimit } from '../../../../models/gpu-device';
 import { fade, noop, vshrink } from 'src/app/utils/animations';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { AppSettingsService } from '../../../../services/app-settings.service';
@@ -17,15 +16,9 @@ import { ConfirmModalComponent } from '../../../../components/confirm-modal/conf
 })
 export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  panel: 'DISABLED' | 'NO_ELEVATION' | 'INITIALIZING' | 'NO_DEVICES' | 'ERROR' | 'ENABLED' =
-    'DISABLED';
+  activeTab: 'POWER_LIMITS' = 'POWER_LIMITS';
+  panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage: string = '';
-  gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
-  selectedGpu?: GPUDevice;
-  onSleepEnableAutomationEnabled: boolean = false;
-  powerLimitOnSleepEnable?: GPUPowerLimit;
-  onSleepDisableAutomationEnabled: boolean = false;
-  powerLimitOnSleepDisable?: GPUPowerLimit;
 
   constructor(
     private nvml: NVMLService,
@@ -34,70 +27,19 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
     private modalService: SimpleModalService,
     private settingsService: AppSettingsService
   ) {
-    this.gpuAutomations.devices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
-      this.gpuDevices = devices;
-      this.selectedGpu = devices.find((d) => d.selected);
-      if (this.selectedGpu) {
-        const config = await firstValueFrom(this.gpuAutomations.config);
-        this.onSleepEnableAutomationEnabled = config.onSleepEnable.enabled;
-        this.powerLimitOnSleepEnable = {
-          default: config.onSleepEnable.resetToDefault,
-          limit: config.onSleepEnable.powerLimit || this.selectedGpu.defaultPowerLimit || 0,
-        };
-        this.onSleepDisableAutomationEnabled = config.onSleepDisable.enabled;
-        this.powerLimitOnSleepDisable = {
-          default: config.onSleepDisable.resetToDefault,
-          limit: config.onSleepDisable.powerLimit || this.selectedGpu.defaultPowerLimit || 0,
-        };
-      }
-    });
-    combineLatest([
-      sidecar.sidecarRunning,
-      nvml.status,
-      this.gpuAutomations.isEnabled(),
-      this.gpuAutomations.devices,
-    ])
+    combineLatest([sidecar.sidecarRunning, this.gpuAutomations.isEnabled()])
       .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        ([sidecarRunning, nvmlStatus, isEnabled, devices]: [
-          boolean,
-          NVMLStatus,
-          boolean,
-          GPUDevice[]
-        ]) => {
-          if (!isEnabled) {
-            this.disabledMessage = 'gpu-automations.disabled.disabled';
-            return (this.panel = 'DISABLED');
-          }
-          if (!sidecarRunning) {
-            this.disabledMessage = 'gpu-automations.disabled.noElevation';
-            return (this.panel = 'NO_ELEVATION');
-          }
-          switch (nvmlStatus) {
-            case 'INITIALIZING':
-              this.disabledMessage = 'gpu-automations.disabled.initializing';
-              return (this.panel = 'INITIALIZING');
-            case 'ELEVATION_SIDECAR_INACTIVE':
-            case 'NO_PERMISSION':
-              this.disabledMessage = 'gpu-automations.disabled.noElevation';
-              return (this.panel = 'NO_ELEVATION');
-            case 'DRIVER_NOT_LOADED':
-              this.disabledMessage = 'gpu-automations.disabled.driverNotLoaded';
-              return (this.panel = 'ERROR');
-            case 'INIT_COMPLETE':
-              if (!this.gpuDevices.length) {
-                this.disabledMessage = 'gpu-automations.disabled.noDevices';
-                return (this.panel = 'NO_DEVICES');
-              }
-              return (this.panel = 'ENABLED');
-            case 'NVML_UNKNOWN_ERROR':
-            case 'UNKNOWN_ERROR':
-            default:
-              this.disabledMessage = 'gpu-automations.disabled.unknown';
-              return (this.panel = 'ERROR');
-          }
+      .subscribe(([sidecarRunning, isEnabled]: [boolean, boolean]) => {
+        if (!isEnabled) {
+          this.disabledMessage = 'gpu-automations.disabled.disabled';
+          return (this.panel = 'DISABLED');
         }
-      );
+        if (!sidecarRunning) {
+          this.disabledMessage = 'gpu-automations.disabled.noSidecar';
+          return (this.panel = 'NO_SIDECAR');
+        }
+        return (this.panel = 'ENABLED');
+      });
   }
 
   async ngOnInit() {}
@@ -123,17 +65,6 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
         });
     } else {
       this.sidecar.start();
-    }
-  }
-
-  async onPowerLimitChange(automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE', limit: GPUPowerLimit) {
-    switch (automation) {
-      case 'SLEEP_ENABLE':
-        await this.gpuAutomations.setSleepEnablePowerLimit(limit);
-        break;
-      case 'SLEEP_DISABLE':
-        await this.gpuAutomations.setSleepDisablePowerLimit(limit);
-        break;
     }
   }
 }

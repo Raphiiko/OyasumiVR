@@ -1,21 +1,21 @@
-<div *ngIf="powerLimit" [@vshrink]>
+<div *ngIf="isEnabled" @vshrink>
   <div class="default-toggle">
     <label class="check-toggle">
-      <input type="checkbox" [checked]="powerLimit.default" (change)="toggleDefault()" />
+      <input type="checkbox" [checked]="powerLimit?.default" (change)="toggleDefault()" />
       <span class="check-toggle-checkmark"></span>
       <span class="check-toggle-label" translate>
-        <span translate>gpu-automations.inputDefault</span>
+        <span translate>gpu-automations.powerLimiting.inputDefault</span>
         <br />
         ({{ defaultPowerLimit | floor }}W /
         {{ (defaultPowerLimit / maxPowerLimit) * 100 | floor }}%)
       </span>
     </label>
   </div>
-  <div class="input-container" [class.input-disabled]="powerLimit.default">
+  <div class="input-container" [class.input-disabled]="powerLimit?.default">
     <div class="label-container">
-      <div class="label label-value-absolute">{{ powerLimit.limit | floor }}W</div>
+      <div class="label label-value-absolute">{{ powerLimit?.limit ?? 0 | floor }}W</div>
       <div class="label label-value-percentage">
-        {{ (powerLimit.limit / maxPowerLimit) * 100 | floor }}%
+        {{ ((powerLimit?.limit ?? 0) / maxPowerLimit) * 100 | floor }}%
       </div>
     </div>
     <div class="slider-container">
@@ -23,7 +23,7 @@
         type="range"
         [min]="minPowerLimit"
         [max]="maxPowerLimit"
-        [value]="powerLimit.limit"
+        [value]="powerLimit?.limit ?? 0"
         class="slider"
         (input)="onSliderChange(slider.value, false)"
         (change)="onSliderChange(slider.value, true)"

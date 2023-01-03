@@ -5,6 +5,12 @@
 
 .pane {
   height: 100%;
+  .pane-title {
+    padding-right: 0.75em;
+    button {
+      font-size: 0.75em;
+    }
+  }
 }
 
 .alert {
@@ -23,21 +29,20 @@
   }
 }
 
-.pane-disabled {
+.pane-content-disabled {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  white-space: pre-wrap;
+  > * {
+    max-width: 40em;
+  }
+
   .alert {
     margin-top: 2em;
-  }
-  .pane-content {
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    white-space: pre-wrap;
-    > * {
-      max-width: 40em;
-    }
   }
 
   .btn-row {
@@ -56,111 +61,5 @@
   .action {
     margin-top: 2em;
     padding: 1em 1.5em;
-  }
-}
-.pane-enabled {
-  > .pane-content {
-    max-width: 75em;
-    overflow-y: overlay;
-  }
-  .alert {
-    margin-top: 1em;
-    .alert-content button {
-      margin-left: 2em;
-    }
-  }
-  .top-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1em;
-  }
-  .automation-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 1em;
-
-    > .pane {
-      background-color: var(--color-surface-3);
-
-      > .pane-content {
-        padding: 1.5em;
-      }
-
-      .title {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin: -0.25em -0.25em 0 -0.25em;
-        padding-bottom: 1em;
-        h3 {
-          margin: 0;
-        }
-        label {
-          margin-right: 1em;
-        }
-      }
-    }
-  }
-}
-
-.gpu-select {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 1em;
-  label {
-    &:not(:last-of-type) {
-      margin-right: 1em;
-    }
-  }
-}
-
-app-power-limit-input {
-  width: 100%;
-}
-
-.gpu-current-info {
-  background-color: var(--color-surface-3);
-  .pane-content {
-    padding: 1.5em;
-  }
-
-  .power-limit-labels {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 0.5em;
-  }
-
-  .power-limit-bar {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    justify-content: flex-start;
-    height: 1.5em;
-    border-radius: 0.5em;
-    background: var(--color-surface-0);
-    overflow: hidden;
-    &-fill {
-      width: 0;
-      background: var(--color-primary);
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: flex-end;
-      overflow: hidden;
-      text-align: right;
-      padding: 0 0.5em;
-      border-radius: 0.5em;
-      color: var(--color-text-1);
-      white-space: nowrap;
-      font-weight: 600;
-      transition: all 0.25s ease;
-      &.default {
-        background: var(--color-success);
-      }
-    }
   }
 }

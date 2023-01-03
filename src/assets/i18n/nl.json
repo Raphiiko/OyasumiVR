@@ -137,38 +137,31 @@
   },
   "gpu-automations": {
     "title": "GPU Automatiseringen",
-    "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
-    "disabled": {
-      "initializing": "GPU Automatiseringen worden nog geinitialiseerd.,,",
-      "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.\nHier door kun je terwijl je slaapt energie besparen.\n\nGPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.\nAMD en Intel GPUs worden nog niet ondersteund.",
-      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi beheerders rechten te geven.",
-      "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
-      "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
-      "unknown": "Er is een onbekende fout opgetreden bij het aanzetten van de GPU automations functionaliteit."
-    },
     "requestAdministrator": "Geef Beheerders Rechten",
     "disable": "Deactiveer GPU Automatiseringen",
     "enable": "Activeer GPU Automatiseringen",
-    "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!\nHet incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.\nHoud dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
-    "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
-    "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
-    "currentPowerLimit": "Huidig stroom limiet",
     "automations": "Slaap Automatiseringen",
-    "activatingSleepMode": {
-      "title": "Wanneer ik ga slapen",
-      "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert:"
-    },
-    "deactivatingSleepMode": {
-      "title": "Wanneer ik wakker word",
-      "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert:"
-    },
-    "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
-    "inputDefault": "Herstel naar de GPU's standaard limiet.",
     "elevationSidecarModal": {
       "title": "Beheerders rechten geven",
       "message": "Wil je Oyasumi altijd beheerders rechten geven?\n\nAls je dit doet, zal Oyasumi voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
       "confirm": "Altijd",
       "cancel": "Alleen deze keer"
+    },
+    "powerLimiting": {
+      "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
+      "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
+      "currentPowerLimit": "Huidig stroom limiet",
+      "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
+      "activatingSleepMode": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert"
+      },
+      "deactivatingSleepMode": {
+        "title": "Wanneer ik wakker word",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert"
+      },
+      "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+      "inputDefault": "Herstel naar de GPU's standaard limiet."
     }
   },
   "status-automations": {

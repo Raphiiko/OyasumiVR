@@ -59,8 +59,9 @@ export class GpuAutomationsService {
       .subscribe();
     // If no GPU is selected and GPUs are detected, select the first one by default.
     this._devices.subscribe((devices) => {
-      if (this.currentConfig.selectedDeviceId === null && devices.length > 0) {
-        this.selectDevice(devices[0]);
+      if (this.currentConfig.selectedDeviceId === null) {
+        const device = devices.find((d) => d.supportsPowerLimiting);
+        if (device) this.selectDevice(device);
       }
     });
     // Setup sleep based GPU automations
@@ -76,7 +77,10 @@ export class GpuAutomationsService {
       'GPU_POWER_LIMITS',
       { ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS), enabled: true }
     );
-    if (this._devices.value.length) await this.selectDevice(this._devices.value[0]);
+    if (this.currentConfig.selectedDeviceId === null) {
+      const device = (this._devices.value ?? []).find((d) => d.supportsPowerLimiting);
+      if (device) this.selectDevice(device);
+    }
   }
 
   async disable() {
