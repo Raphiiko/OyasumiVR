@@ -137,38 +137,31 @@
   },
   "gpu-automations": {
     "title": "GPU 자동화",
-    "description": "여기서는 GPU의 전력 제한을 자동화하여 취침 중 전력을 절약할 수 있어요.",
-    "disabled": {
-      "initializing": "GPU 자동화는 현재 초기화 중이에요...",
-      "disabled": "Oyasumi를 사용하면 GPU의 전력 제한을 자동으로 조정할 수 있어요.\n그것으로 수면 중 전기 사용량을 절약할 수 있어요.\n\nGPU 자동화는 현재 NVIDIA GPU만 지원하고 있어요.\nAMD와 Intel의 GPU는 아직 지원되지 않아요.",
-      "noElevation": "Oyasumi가 GPU의 전력 제한을 제어하기 위해서는 관리자 권한이 필요해요. 아래 버튼을 클릭하여 Oyasumi에게 관리자 권한을 부여해주세요.",
-      "driverNotLoaded": "Oyasumi는 가져온 NVIDIA 드라이버를 파악할 수 없었어요.\n\n사용중인 시스템에 NVIDIA 카드와 그에 대응하는 드라이버가 설치되어 있는지 확인해주세요.",
-      "noDevices": "시스템에서 그래픽 카드를 찾을 수 없어요.\n\n사용중인 시스템에 NVIDIA 카드와 그에 대응하는 드라이버가 설치되어 있는지 확인해주세요.",
-      "unknown": "GPU 자동화 기능을 활성화하는 동안 알 수 없는 오류가 발생했어요."
-    },
     "requestAdministrator": "관리자 권한 부여하기",
     "disable": "GPU 자동화를 비활성화하기",
     "enable": "GPU 자동화를 활성화하기",
-    "enableWarning": "이것은 고급 사용자를 위한 기능이에요!\n 전력 제한 설정을 잘못하면 시스템이 불안정한 상태가 될 수 있어요.\n 이것을 염두에 두고 자신이 무엇을 하고 있는지 이해하고 있는 경우에만 사용해주세요.",
-    "selectGPU": "전력 제한을 설정하고 싶은 GPU :",
-    "gpuPowerLimitsUnsupported": "선택된 GPU는 전력 제한 설정을 지원하지 않아요.",
-    "currentPowerLimit": "현재의 전력 제한",
     "automations": "수면 자동화 설정",
-    "activatingSleepMode": {
-      "title": "잠이 들 때",
-      "description": "수면 모드가 활성화되었을 때 설정할 전력 제한치를 지정해요."
-    },
-    "deactivatingSleepMode": {
-      "title": "일어났을 때",
-      "description": "수면 모드가 비활성화되었을 때 설정할 전력 제한치를 지정해요."
-    },
-    "enabledWarning": "전력 제한을 너무 낮게 설정하면 시스템이 불안정한 상태가 될 수 있으므로 주의해주세요. 잘 모르는 경우 이 기능을 비활성화하는 것을 추천해요.",
-    "inputDefault": "GPU의 기본 제한값으로 리셋해요.",
     "elevationSidecarModal": {
       "title": "관리자 권한을 부여하기",
       "message": "Oyasumi에게 항상 관리자 권한을 부여할까요?\n\n 이것을 활성화하면 Oyasumi는 부팅 시 즉시 관리자 권한을 요구해요. 이 설정은 나중에 언제든지 비활성화할 수 있어요.",
       "confirm": "항상",
       "cancel": "한번만"
+    },
+    "powerLimiting": {
+      "description": "여기서는 GPU의 전력 제한을 자동화하여 취침 중 전력을 절약할 수 있어요.",
+      "selectGPU": "전력 제한을 설정하고 싶은 GPU :",
+      "gpuPowerLimitsUnsupported": "선택된 GPU는 전력 제한 설정을 지원하지 않아요.",
+      "currentPowerLimit": "현재의 전력 제한",
+      "activatingSleepMode": {
+        "title": "잠이 들 때",
+        "description": "수면 모드가 활성화되었을 때 설정할 전력 제한치를 지정해요."
+      },
+      "deactivatingSleepMode": {
+        "title": "일어났을 때",
+        "description": "수면 모드가 비활성화되었을 때 설정할 전력 제한치를 지정해요."
+      },
+      "enabledWarning": "전력 제한을 너무 낮게 설정하면 시스템이 불안정한 상태가 될 수 있으므로 주의해주세요. 잘 모르는 경우 이 기능을 비활성화하는 것을 추천해요.",
+      "inputDefault": "GPU의 기본 제한값으로 리셋해요."
     }
   },
   "status-automations": {
