@@ -8,9 +8,8 @@ describe('GpuPowerlimitingPaneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GpuPowerlimitingPaneComponent ]
-    })
-    .compileComponents();
+      declarations: [GpuPowerlimitingPaneComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(GpuPowerlimitingPaneComponent);
     component = fixture.componentInstance;

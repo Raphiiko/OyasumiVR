@@ -13,7 +13,7 @@
   </div>
   <div class="input-container" [class.input-disabled]="powerLimit?.default">
     <div class="label-container">
-      <div class="label label-value-absolute">{{ (powerLimit?.limit ?? 0) | floor }}W</div>
+      <div class="label label-value-absolute">{{ powerLimit?.limit ?? 0 | floor }}W</div>
       <div class="label label-value-percentage">
         {{ ((powerLimit?.limit ?? 0) / maxPowerLimit) * 100 | floor }}%
       </div>

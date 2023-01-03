@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
-import { NVMLService, NVMLStatus } from '../../../../../services/nvml.service';
+import { NVMLService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import { ElevatedSidecarService } from '../../../../../services/elevated-sidecar.service';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 
 @Component({

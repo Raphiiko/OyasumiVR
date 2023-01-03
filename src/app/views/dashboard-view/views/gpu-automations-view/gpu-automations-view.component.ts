@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NVMLService, NVMLStatus } from '../../../../services/nvml.service';
+import { NVMLService } from '../../../../services/nvml.service';
 import { combineLatest, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
-import { GPUDevice, GPUPowerLimit } from '../../../../models/gpu-device';
 import { fade, noop, vshrink } from 'src/app/utils/animations';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { AppSettingsService } from '../../../../services/app-settings.service';
@@ -17,7 +16,7 @@ import { ConfirmModalComponent } from '../../../../components/confirm-modal/conf
 })
 export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';
+  activeTab: 'POWER_LIMITS' = 'POWER_LIMITS';
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage: string = '';
 

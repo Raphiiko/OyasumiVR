@@ -141,6 +141,9 @@
       "disabled": "Oyasumi has various ways automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
       "noSidecar": "In order for Oyasumi to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges."
     },
+    "tabs": {
+      "powerLimiting": "Power Limiting"
+    },
     "requestAdministrator": "Give Administrator Privileges",
     "disable": "Disable GPU Automations",
     "enable": "Enable GPU Automations",
@@ -160,6 +163,7 @@
         "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting Oyasumi.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting Oyasumi."
       },
+      "noGPUs": "No NVIDIA GPUs could be found in your system.",
       "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
       "selectGPU": "Select the GPU you wish to set the power limit for:",
       "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
