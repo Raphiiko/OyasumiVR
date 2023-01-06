@@ -8,9 +8,8 @@ describe('MsiAfterburnerPaneComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MsiAfterburnerPaneComponent ]
-    })
-    .compileComponents();
+      declarations: [MsiAfterburnerPaneComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MsiAfterburnerPaneComponent);
     component = fixture.componentInstance;

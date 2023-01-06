@@ -9,8 +9,6 @@ import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from 'tauri-plugin-log-api';
 
-
-
 @Injectable({
   providedIn: 'root',
 })

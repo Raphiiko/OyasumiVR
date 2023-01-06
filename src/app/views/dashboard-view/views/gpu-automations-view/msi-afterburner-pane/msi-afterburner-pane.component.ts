@@ -7,7 +7,6 @@ import {
 } from '../../../../../models/settings';
 import { open as openFile } from '@tauri-apps/api/dialog';
 import { cloneDeep } from 'lodash';
-import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -15,8 +14,6 @@ import {
 } from '../../../../../models/automations';
 import { vshrink } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
-import { TString } from '../../../../../models/translatable-string';
-import { SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-msi-afterburner-pane',
@@ -107,7 +104,7 @@ export class MsiAfterburnerPaneComponent implements OnInit, OnDestroy {
   }
 
   changeProfile(event: 'ON_DISABLE' | 'ON_ENABLE', item: SelectBoxItem) {
-    switch(event) {
+    switch (event) {
       case 'ON_DISABLE':
         this.onDisableProfile = item;
         this.gpuAutomations.setMSIAfterburnerProfileOnSleepDisable(parseInt(item.id));

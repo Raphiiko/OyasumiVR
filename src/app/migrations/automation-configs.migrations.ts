@@ -42,9 +42,7 @@ function toLatest(data: any): any {
 
 function from5to6(data: any): any {
   data.version = 6;
-  data.MSI_AFTERBURNER = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER
-  );
+  data.MSI_AFTERBURNER = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
   data.MSI_AFTERBURNER.enabled = data.GPU_POWER_LIMITS.enabled;
   return data;
 }

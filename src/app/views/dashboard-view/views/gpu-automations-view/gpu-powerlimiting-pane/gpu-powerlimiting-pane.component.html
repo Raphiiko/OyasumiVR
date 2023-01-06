@@ -71,7 +71,9 @@
               }}%
             </span>
             <span *ngIf="!selectedGpu" translate>gpu-automations.powerLimiting.noGPUSelected</span>
-            <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate>gpu-automations.powerLimiting.gpuUnsupported</span>
+            <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate
+              >gpu-automations.powerLimiting.gpuUnsupported</span
+            >
           </div>
         </div>
         <div class="power-limit-labels" *ngIf="selectedGpu" @vshrink>
