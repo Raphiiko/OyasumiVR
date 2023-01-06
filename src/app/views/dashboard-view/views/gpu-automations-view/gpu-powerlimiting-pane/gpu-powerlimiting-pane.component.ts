@@ -32,11 +32,11 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
     private modalService: SimpleModalService,
     private settingsService: AppSettingsService
   ) {
-    this.gpuAutomations.devices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
+    this.gpuAutomations.nvmlDevices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
       this.gpuDevices = devices;
       this.selectedGpu = devices.find((d) => d.selected);
       if (this.selectedGpu) {
-        const config = await firstValueFrom(this.gpuAutomations.config);
+        const config = await firstValueFrom(this.gpuAutomations.powerLimitsConfig);
         this.onSleepEnableAutomationEnabled = config.onSleepEnable.enabled;
         this.powerLimitOnSleepEnable = {
           default: config.onSleepEnable.resetToDefault,

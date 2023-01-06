@@ -21,11 +21,21 @@
     >
       <div class="tab-label" translate>gpu-automations.tabs.powerLimiting</div>
     </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'MSI_AFTERBURNER'"
+      (click)="activeTab = 'MSI_AFTERBURNER'"
+    >
+      <div class="tab-label" translate>gpu-automations.tabs.msiAfterburner</div>
+    </div>
   </div>
   <!-- PANES-->
   <app-gpu-powerlimiting-pane
     *ngIf="panel === 'ENABLED' && activeTab === 'POWER_LIMITS'"
   ></app-gpu-powerlimiting-pane>
+  <app-msi-afterburner-pane
+    *ngIf="panel === 'ENABLED' && activeTab === 'MSI_AFTERBURNER'"
+  ></app-msi-afterburner-pane>
   <!--  DISABLED-->
   <div class="pane-content pane-content-disabled" *ngIf="panel !== 'ENABLED'">
     <div class="icon">

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { LighthouseConsoleStatus } from '../../../../../services/openvr.service';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { LighthouseService } from '../../../../../services/lighthouse.service';
 import { open as openFile } from '@tauri-apps/api/dialog';
@@ -13,6 +12,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { LANGUAGES } from '../../../../../globals';
 import { vshrink } from '../../../../../utils/animations';
+import { ExecutableReferenceStatus } from 'src/app/models/settings';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -22,7 +22,7 @@ import { vshrink } from '../../../../../utils/animations';
 })
 export class SettingsGeneralTabComponent extends SettingsTabComponent {
   languages = LANGUAGES;
-  lighthouseConsoleStatus: LighthouseConsoleStatus = 'UNKNOWN';
+  lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
     text: string;
     type: 'INFO' | 'SUCCESS' | 'ERROR';
@@ -58,7 +58,7 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent {
     this.settingsService.updateSettings({ userLanguage: languageCode });
   }
 
-  processLighthouseConsoleStatus(status: LighthouseConsoleStatus) {
+  processLighthouseConsoleStatus(status: ExecutableReferenceStatus) {
     this.lighthouseConsoleStatus = status;
     const statusToAlertType: {
       [s: string]: 'INFO' | 'SUCCESS' | 'ERROR';

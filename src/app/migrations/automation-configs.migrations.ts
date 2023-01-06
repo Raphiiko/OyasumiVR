@@ -8,6 +8,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   3: from2to3,
   4: from3to4,
   5: from4to5,
+  6: from5to6,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -36,6 +37,13 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from5to6(data: any): any {
+  data.version = 6;
+  data.MSI_AFTERBURNER = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
+  data.MSI_AFTERBURNER.enabled = data.GPU_POWER_LIMITS.enabled;
   return data;
 }
 

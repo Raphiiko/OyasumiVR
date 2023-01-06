@@ -81,6 +81,7 @@ import { ImageCacheService } from './services/image-cache.service';
 import { ImageCachePipe } from './pipes/image-cache.pipe';
 import { InviteAutomationsService } from './services/invite-automations.service';
 import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
+import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -130,6 +131,7 @@ export function createTranslateLoader(http: HttpClient) {
     AutoInviteRequestAcceptViewComponent,
     FriendSelectionModalComponent,
     GpuPowerlimitingPaneComponent,
+    MsiAfterburnerPaneComponent,
   ],
   imports: [
     CommonModule,

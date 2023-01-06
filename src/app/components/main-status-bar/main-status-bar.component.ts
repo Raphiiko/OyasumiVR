@@ -3,6 +3,7 @@ import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat.service';
 import { UserStatus } from 'vrchat/dist';
 import { hshrink, noop } from '../../utils/animations';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -30,6 +31,14 @@ export class MainStatusBarComponent implements OnInit {
         return 'var(--color-vrchat-status-red)';
       case UserStatus.Offline:
         return 'black';
+    }
+  }
+
+  async toggleSleepMode() {
+    if (await firstValueFrom(this.sleepService.mode)) {
+      await this.sleepService.disableSleepMode({ type: 'MANUAL' });
+    } else {
+      await this.sleepService.enableSleepMode({ type: 'MANUAL' });
     }
   }
 }
