@@ -2,11 +2,12 @@
 <div class="main-bar" @noop>
   <div class="right">
     <div
-      class="pill sleep-mode"
+      class="pill sleep-mode clickable"
       [class.active]="sleepMode | async"
       *ngVar="{ hover: false }; let state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
+      (click)="toggleSleepMode()"
     >
       <div class="pill-icon">
         <i class="material-icons-round">nights_stay</i>

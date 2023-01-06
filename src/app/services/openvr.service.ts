@@ -9,15 +9,7 @@ import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from 'tauri-plugin-log-api';
 
-export type LighthouseConsoleStatus =
-  | 'UNKNOWN'
-  | 'CHECKING'
-  | 'NOT_FOUND'
-  | 'INVALID_EXECUTABLE'
-  | 'PERMISSION_DENIED'
-  | 'INVALID_FILENAME'
-  | 'UNKNOWN_ERROR'
-  | 'SUCCESS';
+
 
 @Injectable({
   providedIn: 'root',

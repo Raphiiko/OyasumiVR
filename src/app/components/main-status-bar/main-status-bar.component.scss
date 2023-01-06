@@ -59,6 +59,14 @@ $background-color: var(--color-surface-2);
   font-size: 0.95em;
   height: 2em;
   white-space: nowrap;
+  transition: all .15s ease;
+
+  &.clickable {
+    cursor: pointer;
+    &:active {
+      opacity: 0.6;
+    }
+  }
 
   span {
     display: flex;

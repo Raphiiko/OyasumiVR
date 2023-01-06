@@ -142,7 +142,8 @@
       "noSidecar": "In order for Oyasumi to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges."
     },
     "tabs": {
-      "powerLimiting": "Power Limiting"
+      "powerLimiting": "Power Limiting",
+      "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "Give Administrator Privileges",
     "disable": "Disable GPU Automations",
@@ -163,6 +164,8 @@
         "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting Oyasumi.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting Oyasumi."
       },
+      "noGPUSelected": "No GPU Selected",
+      "gpuUnsupported": "GPU Unsupported",
       "noGPUs": "No NVIDIA GPUs could be found in your system.",
       "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
       "selectGPU": "Select the GPU you wish to set the power limit for:",
@@ -178,6 +181,32 @@
       },
       "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
       "inputDefault": "Reset to the GPU's default limit."
+    },
+    "msiAfterburner": {
+      "description": "Oyasumi can automatically tweak your GPU settings when you go to sleep or wake up, by applying profiles you've created in MSI Afterburner. A use case for this functionality is to save electricity while you are asleep, and regain GPU power when you wake up.<br><br>You have to set up the profiles you want to apply in MSI Afterburner.<br>You can download MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">here</a>.",
+      "sleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Apply the following MSI Afterburner profile"
+      },
+      "sleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Apply the following MSI Afterburner profile"
+      },
+      "profile": "Profile {{index}}",
+      "none": "None",
+      "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+      "executable": {
+        "title": "Configuration",
+        "description": "Oyasumi needs to know about the location of your <strong>MSIAfterburner.exe</strong> executable.\nIf Oyasumi cannot find it in the default location, you need to set where it can be found.",
+        "status": {
+          "CHECKING": "Checking for valid <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "The <strong>MSIAfterburner.exe</strong> could not be found at this location.",
+          "INVALID_EXECUTABLE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified as working.",
+          "INVALID_SIGNATURE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified to come from MSI. For security reasons it cannot be used. Please make sure you are using the latest version of MSI Afterburner. If the problem persists or you are sure this is correct, please contact Oyasumi's developer or submit a bug report.",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>MSIAfterburner.exe</strong> at this location.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> has been found and is working correctly!"
+        }
+      }
     }
   },
   "status-automations": {

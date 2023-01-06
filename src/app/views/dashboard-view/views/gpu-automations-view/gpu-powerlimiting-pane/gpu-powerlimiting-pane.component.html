@@ -28,7 +28,7 @@
             name="sleep-enable-gpu-device"
             [value]="device.id"
             [checked]="device.selected"
-            (click)="gpuAutomations.selectDevice(device)"
+            (click)="gpuAutomations.selectPowerLimitingDevice(device)"
           />
           <span class="radio-button-dot"></span>
           <span class="radio-button-label">
@@ -65,18 +65,18 @@
             [style.justify-content]="selectedGpu ? 'flex-end' : 'center'"
           >
             <span *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting">
-              {{ selectedGpu?.powerLimit }}W &#11825;
+              {{ selectedGpu.powerLimit }}W &#11825;
               {{
-                ((selectedGpu?.powerLimit || 0) / (selectedGpu?.maxPowerLimit || 1)) * 100 | floor
+                ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor
               }}%
             </span>
-            <span *ngIf="!selectedGpu"> No GPU Selected </span>
-            <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting"> GPU Unsupported </span>
+            <span *ngIf="!selectedGpu" translate>gpu-automations.powerLimiting.noGPUSelected</span>
+            <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate>gpu-automations.powerLimiting.gpuUnsupported</span>
           </div>
         </div>
         <div class="power-limit-labels" *ngIf="selectedGpu" @vshrink>
-          <span>{{ selectedGpu?.minPowerLimit ?? '-' }}W</span>
-          <span>{{ selectedGpu?.maxPowerLimit ?? '-' }}W</span>
+          <span>{{ selectedGpu.minPowerLimit ?? '-' }}W</span>
+          <span>{{ selectedGpu.maxPowerLimit ?? '-' }}W</span>
         </div>
       </div>
     </div>
@@ -93,7 +93,7 @@
             <input
               type="checkbox"
               [checked]="onSleepEnableAutomationEnabled"
-              (change)="gpuAutomations.toggleOnSleepEnabledAutomation()"
+              (change)="gpuAutomations.togglePowerLimitOnSleepEnabledAutomation()"
             />
             <span class="switch-toggle-slider"></span>
           </label>
@@ -116,7 +116,7 @@
             <input
               type="checkbox"
               [checked]="onSleepDisableAutomationEnabled"
-              (change)="gpuAutomations.toggleOnSleepDisabledAutomation()"
+              (change)="gpuAutomations.togglePowerLimitOnSleepDisabledAutomation()"
             />
             <span class="switch-toggle-slider"></span>
           </label>

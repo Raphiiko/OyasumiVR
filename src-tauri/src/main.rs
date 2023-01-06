@@ -17,13 +17,14 @@ use tauri_plugin_store::PluginBuilder;
 
 mod commands {
     pub mod admin;
+    pub mod afterburner;
+    pub mod http;
     pub mod log_parser;
     pub mod nvml;
     pub mod openvr;
     pub mod os;
     pub mod osc;
     pub mod splash;
-    pub mod http;
 }
 mod background {
     pub mod http_server;
@@ -149,6 +150,7 @@ fn main() {
             commands::admin::start_elevation_sidecar,
             commands::log_parser::init_vrc_log_watcher,
             commands::http::get_http_server_port,
+            commands::afterburner::msi_afterburner_set_profile,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

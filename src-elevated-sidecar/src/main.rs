@@ -16,6 +16,7 @@ use windows::{is_elevated, relaunch_with_elevation};
 mod http_handler;
 mod nvml;
 mod windows;
+mod afterburner;
 
 #[tokio::main]
 async fn main() {

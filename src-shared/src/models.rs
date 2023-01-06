@@ -24,6 +24,19 @@ pub struct NVMLSetPowerManagementLimitResponse {
     pub error: Option<String>,
 }
 
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct MSIAfterburnerSetProfileRequest {
+    pub executable_path: String,
+    pub profile: i8,
+}
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct MSIAfterburnerSetProfileResponse {
+    pub success: bool,
+    pub error: Option<String>,
+}
+
 // ENTITIES
 
 #[derive(Clone, Serialize, Deserialize)]

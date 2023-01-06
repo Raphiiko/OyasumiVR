@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi-elevated-sidecar"
-version = "1.3.1"
+version = "1.4.0"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
@@ -13,7 +13,8 @@ serde = { version = "1.0", features = ["derive"] }
 nvml-wrapper = "0.8.0"
 lazy_static = "1.4.0"
 reqwest = "0.11.12"
-sysinfo = "0.26.2"
+sysinfo = "0.27.2"
+codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
 
 [dependencies.tokio]
 version = "1.21.1"

@@ -4,8 +4,9 @@ import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 
 export type AutomationType =
-  // GPU AUTOMATIONS
-  | 'GPU_POWER_LIMITS' // Global enable flag
+  // GPU AUTOMATIONS (Global enable flag)
+  | 'GPU_POWER_LIMITS'
+  | 'MSI_AFTERBURNER'
   // SLEEP MODE AUTOMATIONS
   | 'SLEEP_MODE_ENABLE_AT_TIME'
   | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
@@ -23,8 +24,9 @@ export type AutomationType =
   | 'AUTO_ACCEPT_INVITE_REQUESTS';
 
 export interface AutomationConfigs {
-  version: 5;
+  version: 6;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
+  MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
   SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
@@ -63,6 +65,12 @@ export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
     powerLimit?: number;
     resetToDefault: boolean;
   };
+}
+
+export interface MSIAfterburnerAutomationConfig extends AutomationConfig {
+  msiAfterburnerPath: string;
+  onSleepEnableProfile: number;
+  onSleepDisableProfile: number;
 }
 
 // SLEEP MODE AUTOMATIONS
@@ -129,7 +137,7 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 5,
+  version: 6,
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -142,6 +150,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       enabled: false,
       resetToDefault: true,
     },
+  },
+  MSI_AFTERBURNER: {
+    enabled: false,
+    msiAfterburnerPath: 'C:\\Program Files (x86)\\MSI Afterburner\\MSIAfterburner.exe',
+    onSleepEnableProfile: 0,
+    onSleepDisableProfile: 0,
   },
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: {
