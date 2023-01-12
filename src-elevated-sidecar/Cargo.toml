@@ -15,6 +15,9 @@ lazy_static = "1.4.0"
 reqwest = "0.11.12"
 sysinfo = "0.27.2"
 codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
+log = "0.4.17"
+simplelog = "^0.12.0"
+directories = "4.0.1"
 
 [dependencies.tokio]
 version = "1.21.1"

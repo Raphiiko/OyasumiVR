@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add automations for automatically switching MSI Afterburner profiles when the sleep mode changes.
 - Allow sleep mode to be toggled from the pill in the status bar.
 
+### Changed
+- Improved error handling and error messages for non-nvidia users.
+- Improved logging on elevated sidecar module.
+
 ## [1.3.1]
 
 ### Fixed

@@ -4,7 +4,7 @@
     <i class="material-icons" *ngIf="['INITIALIZING'].includes(panel)">info</i>
     <i class="material-icons" *ngIf="['ERROR'].includes(panel)"> warning </i>
   </div>
-  <div class="description" [innerHTML]="disabledMessage | translate"></div>
+  <div class="description" [innerHTML]="disabledMessage | tsTranslate"></div>
 </div>
 <!--ENABLED PANE-->
 <div class="pane-content pane-enabled" *ngIf="panel === 'ENABLED'" @noop>

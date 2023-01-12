@@ -159,7 +159,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Power limiting automations are being initialized...",
-        "driverNotLoaded": "Power limiting automations are unavailable, as Oyasumi could not detect an NVIDIA driver. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.",
+        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({{code}})",
         "noPermission": "Although Oyasumi has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
         "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting Oyasumi.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting Oyasumi."

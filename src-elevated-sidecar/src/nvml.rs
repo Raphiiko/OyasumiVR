@@ -1,5 +1,6 @@
 use std::sync::Mutex;
 
+use log::{error, info};
 use nvml_wrapper::Nvml;
 use oyasumi_shared::models::NVMLDevice;
 
@@ -9,17 +10,23 @@ lazy_static! {
 }
 
 pub fn init() -> bool {
+    info!("[NVML] Initializing NVML");
     match Nvml::init() {
         Ok(nvml) => {
+            info!("[NVML] Successfully initialized NVML");
             *NVML_HANDLE.lock().unwrap() = Some(nvml);
             *NVML_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
             true
         }
         Err(err) => {
             *NVML_HANDLE.lock().unwrap() = None;
+            error!("[NVML] Could not initialize NVML: {}", err);
             match err {
                 nvml_wrapper::error::NvmlError::DriverNotLoaded => {
                     *NVML_STATUS.lock().unwrap() = String::from("DRIVER_NOT_LOADED");
+                }
+                nvml_wrapper::error::NvmlError::LibloadingError(_) => {
+                    *NVML_STATUS.lock().unwrap() = String::from("LIB_LOADING_ERROR");
                 }
                 nvml_wrapper::error::NvmlError::NoPermission => {
                     *NVML_STATUS.lock().unwrap() = String::from("NO_PERMISSION");
@@ -49,8 +56,8 @@ pub fn nvml_get_devices() -> Vec<NVMLDevice> {
         let device = match nvml.device_by_index(n) {
             Ok(device) => device,
             Err(err) => {
-                println!(
-                    "Could not access GPU at index {} due to an error: {:#?}",
+                error!(
+                    "[NVML] Could not access GPU at index {} due to an error: {:#?}",
                     n, err
                 );
                 continue;
@@ -76,8 +83,8 @@ pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result
     let mut device = match nvml.device_by_uuid(uuid.clone()) {
         Ok(device) => device,
         Err(err) => {
-            println!(
-                "Could not access GPU (uuid:{:#?}) due to an error: {:#?}",
+            error!(
+                "[NVML] Could not access GPU (uuid:{:#?}) due to an error: {:#?}",
                 uuid, err
             );
             return Err(String::from("DEVICE_ACCESS_ERROR"));
@@ -86,8 +93,8 @@ pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result
 
     match device.set_power_management_limit(limit) {
         Err(err) => {
-            println!(
-                "Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
+            error!(
+                "[NVML] Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
                 uuid.clone(),
                 err
             );

@@ -16,7 +16,7 @@ import { ConfirmModalComponent } from '../../../../components/confirm-modal/conf
 })
 export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'MSI_AFTERBURNER';
+  activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage: string = '';
 

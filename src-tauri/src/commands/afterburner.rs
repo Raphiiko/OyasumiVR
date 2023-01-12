@@ -1,5 +1,5 @@
 use crate::elevated_sidecar;
-use log::{error, info};
+use log::error;
 use oyasumi_shared::models::{MSIAfterburnerSetProfileRequest, MSIAfterburnerSetProfileResponse};
 
 #[tauri::command]
@@ -33,7 +33,7 @@ pub async fn msi_afterburner_set_profile(
     } else {
         error!(
             "[Core] Could not set MSI Afterburner profile: {:?}",
-            response.error
+            response.error.clone().unwrap()
         );
         let mut error = response.error.unwrap();
         if error.starts_with("EXE_SIGNATURE_DISALLOWED") {

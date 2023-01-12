@@ -1,5 +1,5 @@
+use log::error;
 use serde::{Deserialize, Serialize};
-use log::{error};
 
 #[tauri::command]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {

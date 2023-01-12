@@ -2,15 +2,12 @@ use std::{convert::Infallible, time::Duration};
 
 use futures::executor::block_on;
 use hyper::{body::Buf, Body, Request, Response};
-use log::info;
+use log::{error, info};
 use oyasumi_shared::models::ElevatedSidecarInitRequest;
 use sysinfo::{Pid, PidExt, System, SystemExt};
 use tauri::Manager;
 
-use crate::{
-    commands::os::run_command, MAIN_HTTP_SERVER_PORT, SIDECAR_HTTP_SERVER_PORT, SIDECAR_PID,
-    TAURI_WINDOW,
-};
+use crate::{MAIN_HTTP_SERVER_PORT, SIDECAR_HTTP_SERVER_PORT, SIDECAR_PID, TAURI_WINDOW};
 
 pub fn get_base_url() -> Option<String> {
     let port_guard = SIDECAR_HTTP_SERVER_PORT.lock().unwrap();
@@ -49,15 +46,21 @@ pub async fn start() {
         None => return,
     };
     info!("[Core] Starting sidecar...");
-    run_command(
-        "oyasumi-elevated-sidecar.exe".into(),
-        vec![
-            String::from(format!("{}", port)),
-            String::from(format!("{}", std::process::id())),
-        ],
-    )
-    .await
-    .unwrap();
+    let (mut rx, mut _child) =
+        tauri::api::process::Command::new(String::from("oyasumi-elevated-sidecar.exe"))
+            .args(vec![
+                String::from(format!("{}", port)),
+                String::from(format!("{}", std::process::id())),
+            ])
+            .spawn()
+            .expect("Could not spawn command"); // TODO: Do proper error handling here
+    while let Some(event) = rx.recv().await {
+        if let tauri::api::process::CommandEvent::Stdout(line) = event {
+            info!("[Sidecar] {}", line)
+        } else if let tauri::api::process::CommandEvent::Stderr(line) = event {
+            error!("[Sidecar] {}", line)
+        }
+    }
 }
 
 pub async fn request_stop() {

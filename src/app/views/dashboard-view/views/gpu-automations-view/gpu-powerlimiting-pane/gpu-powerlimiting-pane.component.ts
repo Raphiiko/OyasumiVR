@@ -7,6 +7,7 @@ import { SimpleModalService } from 'ngx-simple-modal';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
+import { TString } from 'src/app/models/translatable-string';
 
 @Component({
   selector: 'app-gpu-powerlimiting-pane',
@@ -17,7 +18,7 @@ import { noop, vshrink } from '../../../../../utils/animations';
 export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
-  disabledMessage: string = '';
+  disabledMessage: TString = '';
   gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
   selectedGpu?: GPUDevice;
   onSleepEnableAutomationEnabled: boolean = false;
@@ -59,7 +60,11 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
           this.panel = 'INITIALIZING';
           break;
         case 'DRIVER_NOT_LOADED':
-          this.disabledMessage = 'gpu-automations.powerLimiting.disabled.driverNotLoaded';
+          this.disabledMessage = { string: 'gpu-automations.powerLimiting.disabled.noNvidia', values: { code: 'DRIVER_NOT_LOADED' } };
+          this.panel = 'ERROR';
+          break;
+        case 'LIB_LOADING_ERROR':
+          this.disabledMessage = { string: 'gpu-automations.powerLimiting.disabled.noNvidia', values: { code: 'LIB_LOADING_ERROR' } };
           this.panel = 'ERROR';
           break;
         case 'NO_PERMISSION':
@@ -79,7 +84,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
     });
   }
 
-  async ngOnInit() {}
+  async ngOnInit() { }
 
   async ngOnDestroy() {
     this.destroy$.next();

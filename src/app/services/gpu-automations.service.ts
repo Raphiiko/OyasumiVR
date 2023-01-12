@@ -351,23 +351,7 @@ export class GpuAutomationsService {
       });
     } catch (e) {
       if (typeof e === 'string') {
-        switch (e) {
-          case 'EXE_CANNOT_EXECUTE':
-          case 'EXE_UNVERIFIABLE':
-            this._msiAfterburnerStatus.next('INVALID_EXECUTABLE');
-            break;
-          case 'EXE_NOT_SIGNED':
-          case 'EXE_SIGNATURE_DISALLOWED':
-            this._msiAfterburnerStatus.next('INVALID_SIGNATURE');
-            break;
-          // Should never happen
-          case 'INVALID_PROFILE_INDEX':
-          case 'ELEVATED_SIDECAR_INACTIVE':
-          case 'UNKNOWN_ERROR':
-          default:
-            this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
-            break;
-        }
+        this.handleMSIAfterburnerError(e);
       } else {
         error('[GpuAutomations] Failed to set MSI Afterburner profile: ' + e);
         this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
@@ -395,23 +379,7 @@ export class GpuAutomationsService {
       });
     } catch (e) {
       if (typeof e === 'string') {
-        switch (e) {
-          case 'EXE_CANNOT_EXECUTE':
-          case 'EXE_UNVERIFIABLE':
-            this._msiAfterburnerStatus.next('INVALID_EXECUTABLE');
-            break;
-          case 'EXE_NOT_SIGNED':
-          case 'EXE_SIGNATURE_DISALLOWED':
-            this._msiAfterburnerStatus.next('INVALID_SIGNATURE');
-            break;
-          // Should never happen
-          case 'INVALID_PROFILE_INDEX':
-          case 'ELEVATED_SIDECAR_INACTIVE':
-          case 'UNKNOWN_ERROR':
-          default:
-            this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
-            break;
-        }
+        this.handleMSIAfterburnerError(e);
       } else {
         error('[GpuAutomations] Failed to set MSI Afterburner path: ' + e);
         this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
@@ -419,6 +387,29 @@ export class GpuAutomationsService {
       return;
     }
     this._msiAfterburnerStatus.next('SUCCESS');
+  }
+
+  async handleMSIAfterburnerError(e: string) {
+    switch (e) {
+      case 'EXE_NOT_FOUND':
+        this._msiAfterburnerStatus.next('NOT_FOUND');
+        break;
+      case 'EXE_CANNOT_EXECUTE':
+      case 'EXE_UNVERIFIABLE':
+        this._msiAfterburnerStatus.next('INVALID_EXECUTABLE');
+        break;
+      case 'EXE_NOT_SIGNED':
+      case 'EXE_SIGNATURE_DISALLOWED':
+        this._msiAfterburnerStatus.next('INVALID_SIGNATURE');
+        break;
+      // Should never happen
+      case 'INVALID_PROFILE_INDEX':
+      case 'ELEVATED_SIDECAR_INACTIVE':
+      case 'UNKNOWN_ERROR':
+      default:
+        this._msiAfterburnerStatus.next('UNKNOWN_ERROR');
+        break;
+    }
   }
 
   async setMSIAfterburnerProfileOnSleepEnable(number: number) {
