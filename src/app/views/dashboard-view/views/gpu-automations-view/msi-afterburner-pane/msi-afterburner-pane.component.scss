@@ -7,9 +7,11 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+
   p {
     flex: 1;
   }
+
   img {
     background: var(--color-surface-1);
     padding: 1em;
@@ -28,23 +30,29 @@
 app-select-box {
   min-width: 8em;
 }
+
 p::ng-deep strong {
   background: var(--color-surface-1);
   border-radius: 0.25em;
   padding: 0.125em 0.25em;
   font-weight: 500;
 }
+
 .alert {
   text-align: left;
+
   .alert-content {
     align-items: center;
+
     div {
       flex: 1;
     }
+
     button {
       margin-left: 2em;
     }
   }
+
   &.error {
     margin-bottom: 1em;
   }

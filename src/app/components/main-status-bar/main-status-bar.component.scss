@@ -33,6 +33,7 @@ $background-color: var(--color-surface-2);
   display: flex;
   flex-direction: row;
   align-items: center;
+
   .left,
   .right {
     display: flex;
@@ -40,9 +41,11 @@ $background-color: var(--color-surface-2);
     align-items: center;
     padding: 0.4em;
   }
+
   .left {
     flex-shrink: 0;
   }
+
   .right {
     flex: 1;
   }
@@ -63,6 +66,7 @@ $background-color: var(--color-surface-2);
 
   &.clickable {
     cursor: pointer;
+
     &:active {
       opacity: 0.6;
     }
@@ -82,11 +86,13 @@ $background-color: var(--color-surface-2);
     align-items: center;
     justify-content: center;
     margin-right: 0.25em;
+
     i {
       font-size: 1.25em;
       transition: all 0.15s ease;
       opacity: 0.5;
     }
+
     img {
       height: 1.5em;
       margin: 0;
@@ -111,6 +117,7 @@ $background-color: var(--color-surface-2);
   border: 0.125em solid transparent;
   padding: 0 0.25em;
   transition: all 0.15s ease;
+
   &.active {
     border-color: var(--color-primary);
   }

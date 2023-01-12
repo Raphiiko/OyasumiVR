@@ -1,6 +1,7 @@
 :host {
   display: block;
   height: 100%;
+
   > .pane {
     height: 100%;
   }
@@ -15,8 +16,10 @@ label + p {
   grid-template-columns: 1fr 1fr;
   grid-gap: 1em;
   max-width: 75em;
+
   > .pane {
     background-color: var(--color-surface-3);
+
     > .pane-content {
       padding: 1.5em;
     }

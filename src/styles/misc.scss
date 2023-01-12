@@ -5,27 +5,33 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
+
   &-row {
     display: flex;
     flex-direction: row;
     align-items: center;
+
     &:not(:last-child) {
       padding-bottom: 1em;
     }
+
     &-label {
       flex: 1;
     }
+
     &-controls {
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
       align-items: flex-end;
+
       input {
         text-align: right;
       }
     }
   }
 }
+
 ///
 /// Settings Layout
 ///

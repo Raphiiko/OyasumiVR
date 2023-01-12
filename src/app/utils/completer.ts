@@ -8,15 +8,18 @@ export class Completer<T = void> {
   private _resolve?: (value: CompletionResult<T> | PromiseLike<CompletionResult<T>>) => void;
   private _complete = false;
   private _completionValue?: CompletionResult<T>;
+
   public get isComplete(): boolean {
     return this._complete;
   }
+
   private set resolve(
     resolver: (value: CompletionResult<T> | PromiseLike<CompletionResult<T>>) => void
   ) {
     this._resolve = resolver;
     if (this._complete) this._resolve(this._completionValue || {});
   }
+
   public get completion(): Promise<CompletionResult<T>> {
     return this.promise;
   }

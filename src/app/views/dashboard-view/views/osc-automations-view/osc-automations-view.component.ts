@@ -55,6 +55,7 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   sleepingPoses: SleepingPose[] = ['SIDE_FRONT', 'SIDE_BACK', 'SIDE_LEFT', 'SIDE_RIGHT'];
   footLockActions: Array<'FOOT_LOCK' | 'FOOT_UNLOCK'> = ['FOOT_LOCK', 'FOOT_UNLOCK'];
   presetNotes: SleepingAnimationPresetNote[] = [];
+
   get showManualControl(): boolean {
     return !!Object.values(this.config.oscScripts).find((s) => !!s);
   }

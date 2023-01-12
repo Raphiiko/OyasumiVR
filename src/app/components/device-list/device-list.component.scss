@@ -48,10 +48,12 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1em;
+
     &-label {
       flex: 1;
       color: var(--color-text-2);
     }
+
     button {
       flex-shrink: 0;
     }

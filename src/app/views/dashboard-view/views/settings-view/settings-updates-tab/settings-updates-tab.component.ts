@@ -21,6 +21,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent {
   version: string = '';
   changelog: SafeHtml = '';
   updateOrCheckInProgress = false;
+
   constructor(
     settingsService: AppSettingsService,
     private update: UpdateService,

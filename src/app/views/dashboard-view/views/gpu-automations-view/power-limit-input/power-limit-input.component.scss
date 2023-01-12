@@ -3,6 +3,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+
   > .label {
     font-size: 1.5em;
     background: var(--color-surface-0);
@@ -13,6 +14,7 @@
 
 .slider-container {
   padding: 0.25em 0 0.25em 0;
+
   input {
     flex: 1;
   }
@@ -23,15 +25,18 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 0.5em;
+
   > label {
     margin-right: 0.5em;
   }
+
   > span {
   }
 }
 
 .input-container {
   transition: all 0.15s ease;
+
   &.input-disabled {
     opacity: 0.5;
     pointer-events: none;

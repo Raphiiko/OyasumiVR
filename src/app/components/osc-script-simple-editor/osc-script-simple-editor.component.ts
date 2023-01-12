@@ -34,6 +34,7 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
     this._script = cloneDeep(script);
     this.validationTrigger.next();
   }
+
   @Output() scriptChange = new EventEmitter<OscScript>();
   @Output() errorCount = new EventEmitter<number>();
   @Output() validatedChange = new EventEmitter<boolean>();
@@ -42,9 +43,11 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
     this._validated = value;
     this.validatedChange.emit(value);
   }
+
   get validated(): boolean {
     return this._validated;
   }
+
   errors: ValidationError[] = [];
   tooltipErrors: ValidationError[] = [];
   tooltipPosition: { x: number; y: number } = { x: 0, y: 0 };

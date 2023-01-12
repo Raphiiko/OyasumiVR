@@ -5,10 +5,12 @@
   justify-content: flex-start;
   background: var(--color-surface-1);
   border-bottom: 1px solid var(--color-surface-3);
+
   .tab {
     padding: 1em 2em;
     position: relative;
     transition: all 0.15s ease;
+
     &-label {
       display: flex;
       flex-direction: row;
@@ -17,15 +19,18 @@
       font-weight: 500;
       font-size: 1.125em;
       line-height: 1em;
+
       i.material-icons {
         margin-right: 0.25em;
         margin-bottom: -1em;
         margin-top: -1em;
       }
     }
+
     &:hover {
       background: var(--color-surface-2);
     }
+
     &:after {
       position: absolute;
       content: '';
@@ -37,6 +42,7 @@
       height: 0;
       transition: all 0.15s ease;
     }
+
     &.active {
       &:after {
         height: 0.25em;

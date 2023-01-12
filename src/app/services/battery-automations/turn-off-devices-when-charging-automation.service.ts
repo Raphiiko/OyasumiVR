@@ -18,6 +18,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
   chargingDevices: number[] = [];
+
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,

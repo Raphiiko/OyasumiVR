@@ -60,11 +60,17 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
           this.panel = 'INITIALIZING';
           break;
         case 'DRIVER_NOT_LOADED':
-          this.disabledMessage = { string: 'gpu-automations.powerLimiting.disabled.noNvidia', values: { code: 'DRIVER_NOT_LOADED' } };
+          this.disabledMessage = {
+            string: 'gpu-automations.powerLimiting.disabled.noNvidia',
+            values: { code: 'DRIVER_NOT_LOADED' },
+          };
           this.panel = 'ERROR';
           break;
         case 'LIB_LOADING_ERROR':
-          this.disabledMessage = { string: 'gpu-automations.powerLimiting.disabled.noNvidia', values: { code: 'LIB_LOADING_ERROR' } };
+          this.disabledMessage = {
+            string: 'gpu-automations.powerLimiting.disabled.noNvidia',
+            values: { code: 'LIB_LOADING_ERROR' },
+          };
           this.panel = 'ERROR';
           break;
         case 'NO_PERMISSION':
@@ -84,7 +90,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
     });
   }
 
-  async ngOnInit() { }
+  async ngOnInit() {}
 
   async ngOnDestroy() {
     this.destroy$.next();

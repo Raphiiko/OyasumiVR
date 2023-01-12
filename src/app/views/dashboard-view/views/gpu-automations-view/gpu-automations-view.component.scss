@@ -5,8 +5,10 @@
 
 .pane {
   height: 100%;
+
   .pane-title {
     padding-right: 0.75em;
+
     button {
       font-size: 0.75em;
     }
@@ -15,15 +17,19 @@
 
 .alert {
   text-align: left;
+
   .alert-content {
     align-items: center;
+
     div {
       flex: 1;
     }
+
     button {
       margin-left: 2em;
     }
   }
+
   &.error {
     margin-bottom: 1em;
   }
@@ -37,6 +43,7 @@
   align-items: center;
   height: 100%;
   white-space: pre-wrap;
+
   > * {
     max-width: 40em;
   }

@@ -14,18 +14,22 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 0.5em;
+
   span {
     flex: 1;
   }
+
   .editor-actions {
     flex-shrink: 0;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+
     button:not(:last-child) {
       margin-right: 0.5em;
     }
+
     button {
       display: flex;
       flex-direction: row;
@@ -60,6 +64,7 @@
     border: none;
     overflow: visible;
     height: 100%;
+
     &,
     ::ng-deep,
     .line-number span {
@@ -69,11 +74,13 @@
       font-family: 'Fira Code', monospace !important;
     }
   }
+
   &-input {
     color: var(--color-text-2);
     padding: 0.75em 0.75em 0.75em 0.5em;
     flex: 1;
   }
+
   &-line-numbers {
     background: var(--color-surface-1);
     flex-shrink: 0;
@@ -83,6 +90,7 @@
     flex-direction: column;
     align-items: stretch;
     padding: 0.75em 0;
+
     .line-number {
       display: flex;
       flex-direction: row;
@@ -92,24 +100,30 @@
       transition: all 0.15s ease;
       position: relative;
       padding: 0 0.5em 0 0.75em;
+
       &:hover {
         color: var(--color-text-2);
+
         i.material-icons-round {
           transform: scale(1.1);
         }
       }
+
       &.has-error {
         color: var(--color-caution);
         cursor: pointer;
+
         &:hover {
           color: var(--color-caution-hover);
         }
       }
+
       i.material-icons-round {
         transition: all 0.15s ease;
         font-size: 1em;
         margin: -1em 0;
       }
+
       span {
         flex: 1;
         text-align: right;
@@ -141,6 +155,7 @@
     background: var(--color-caution);
     opacity: 0.5;
   }
+
   &-content {
     background: var(--color-surface-2);
     padding: 0.5em;
@@ -152,13 +167,16 @@
       background: var(--color-on-caution);
     }
   }
+
   &-error {
     position: relative;
     z-index: 20;
     color: white;
+
     strong {
       font-family: 'Fira Code', monospace !important;
     }
+
     &:not(:first-child) {
       border-top: 1px solid var(--color-on-caution);
       padding-top: 0.5em;

@@ -13,13 +13,16 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+
   span {
   }
+
   &-buttons {
     display: flex;
     flex-direction: row;
     align-items: center;
     flex-shrink: 0;
+
     > * {
       &:not(:last-child) {
         margin-right: 0.5em;
@@ -46,9 +49,11 @@
     justify-content: center;
     color: var(--color-text-3);
     padding: 2em 1em;
+
     i.material-icons-round {
       font-size: 3em;
     }
+
     span {
       font-size: 1.25em;
       margin-top: 0.5em;
@@ -62,9 +67,11 @@
   align-items: center;
   padding: 0.5em 1em;
   background: var(--color-surface-1);
+
   &:not(:first-child) {
     border-top: 1px solid var(--color-surface-3);
   }
+
   &-error-icon {
     color: var(--color-caution);
     margin-right: 0.5em;
@@ -75,46 +82,57 @@
     cursor: pointer;
     transition: all 0.15s ease;
     width: 1.25em;
+
     &:hover {
       transform: scale(1.1);
       color: var(--color-caution-hover);
     }
+
     i.material-icons-round {
       font-size: 1.25em;
     }
   }
+
   &-index {
     font-weight: 600;
     margin-right: 0.5em;
   }
+
   &-action {
     margin-right: 0.5em;
   }
+
   &-type-input,
   &-boolean-input,
   &-integer-input,
   &-float-input {
     margin-right: 0.5em;
     width: 8em;
+
     input {
       padding: 0.25em 1em;
       width: 100%;
     }
   }
+
   &-address-input {
     flex: 1;
+
     input {
       padding: 0.25em 1em;
       width: 100%;
     }
   }
+
   &-remove-button {
     padding: 0;
     margin-left: 1em;
+
     i.material-icons {
       margin: 0;
     }
   }
+
   &-duration-input {
     input {
       width: 5em;
@@ -145,6 +163,7 @@
     background: var(--color-caution);
     opacity: 0.5;
   }
+
   &-content {
     background: var(--color-surface-2);
     padding: 0.5em;
@@ -156,13 +175,16 @@
       background: var(--color-on-caution);
     }
   }
+
   &-error {
     position: relative;
     z-index: 20;
     color: white;
+
     strong {
       font-family: 'Fira Code', monospace !important;
     }
+
     &:not(:first-child) {
       border-top: 1px solid var(--color-on-caution);
       padding-top: 0.5em;

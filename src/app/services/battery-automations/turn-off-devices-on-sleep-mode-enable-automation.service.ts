@@ -17,6 +17,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
   config: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   );
+
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,

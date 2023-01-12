@@ -11,6 +11,7 @@ export interface SleepingAnimationPresetInfoLink {
   label: TString;
   url: string;
 }
+
 export interface SleepingAnimationPreset {
   id: string;
   name: string;

@@ -15,10 +15,12 @@ export interface VRChatOnPlayerJoinedEvent extends VRChatLogEventBase {
   type: 'OnPlayerJoined';
   displayName: string;
 }
+
 export interface VRChatOnPlayerLeftEvent extends VRChatLogEventBase {
   type: 'OnPlayerLeft';
   displayName: string;
 }
+
 export interface VRChatOnLocationChangeEvent extends VRChatLogEventBase {
   type: 'OnLocationChange';
   instanceId: string;

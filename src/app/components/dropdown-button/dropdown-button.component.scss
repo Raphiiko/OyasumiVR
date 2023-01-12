@@ -24,11 +24,13 @@ button.btn {
   @include shadow(2, true);
   max-height: 20em;
   overflow-y: overlay;
+
   &::-webkit-scrollbar {
     width: 4px;
     height: 8px;
     background: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     background: var(--color-surface-4);
     border-radius: 2px;
@@ -51,18 +53,23 @@ button.btn {
   align-items: center;
   padding: 1em 1em;
   transition: background 0.15s ease;
+
   &.has-subtitle {
     padding: 0.5em 1em;
   }
+
   &:not(.selected) {
     cursor: pointer;
+
     &:hover {
       background: var(--color-surface-3);
     }
+
     &:active {
       background: var(--color-surface-4);
     }
   }
+
   &-content {
     flex: 1;
     display: flex;
@@ -70,6 +77,7 @@ button.btn {
     align-items: flex-start;
     justify-content: center;
   }
+
   .dropdown-item-info {
     flex-shrink: 0;
     padding: 1em;
@@ -77,22 +85,27 @@ button.btn {
     transition: all 0.15s ease;
     margin-left: -1.5em;
     margin-right: -1em;
+
     i.material-icons-round {
       line-height: 1em;
       font-size: 1.5em;
     }
+
     &:hover {
       color: var(--color-primary-hover);
       transform: scale(1.1);
     }
+
     &:active {
       color: var(--color-primary-hover);
       transform: scale(0.95);
     }
   }
+
   &-title {
     color: var(--color-text-2);
   }
+
   &-subtitle {
     color: var(--color-text-3);
   }

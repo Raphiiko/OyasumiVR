@@ -3,6 +3,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 
 type ThemingMode = 'SYSTEM' | 'LIGHT' | 'DARK';
+
 interface ThemingSettings {
   mode: ThemingMode;
 }

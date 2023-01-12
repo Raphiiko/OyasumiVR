@@ -19,6 +19,7 @@
     flex-direction: column;
     align-items: stretch;
     overflow: hidden;
+
     &:not(:last-child) {
       padding-right: 1em;
     }
@@ -36,6 +37,7 @@
   border-radius: var(--surface-border-radius);
   overflow: hidden;
   max-width: 40em;
+
   &:not(:last-child) {
     margin-bottom: 1em;
   }
@@ -45,9 +47,11 @@
     flex-direction: row;
     align-items: center;
     padding: 1em 0;
+
     &-description {
       flex: 1;
       padding: 0 1em;
+
       ::ng-deep strong {
         background: var(--color-surface-2);
         border-radius: 0.25em;
@@ -56,6 +60,7 @@
         white-space: nowrap;
       }
     }
+
     &-toggle {
       margin: 0 0 0 2em;
       padding: 0 1em;

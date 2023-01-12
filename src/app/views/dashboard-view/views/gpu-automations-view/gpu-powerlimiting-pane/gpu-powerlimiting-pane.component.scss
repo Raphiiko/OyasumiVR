@@ -1,14 +1,18 @@
 alert {
   text-align: left;
+
   .alert-content {
     align-items: center;
+
     div {
       flex: 1;
     }
+
     button {
       margin-left: 2em;
     }
   }
+
   &.error {
     margin-bottom: 1em;
   }
@@ -27,6 +31,7 @@ alert {
   align-items: center;
   height: 100%;
   white-space: pre-wrap;
+
   > * {
     max-width: 40em;
   }

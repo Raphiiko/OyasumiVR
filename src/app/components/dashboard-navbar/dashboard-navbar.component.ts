@@ -18,6 +18,7 @@ export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
   updateAvailable: Observable<boolean>;
+
   constructor(
     private settingsService: AppSettingsService,
     private lighthouse: LighthouseService,
