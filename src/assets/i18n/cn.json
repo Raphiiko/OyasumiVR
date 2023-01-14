@@ -137,23 +137,86 @@
   },
   "gpu-automations": {
     "title": "GPU 自动化",
-    "description": "在这裡，你可以自动限制 GPU 的功率限制，让在你睡觉时节省电力",
     "disabled": {
-      "initializing": "GPU 自动化目前仍在初始化...",
       "disabled": "Oyasumi 允许你自动调整 GPU 的功率限制。\n这样你就可以在睡觉时节省用电量。\n\nGPU 自动化目前仅适用于 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
+      "noSidecar": "{PLACEHOLDER}",
+      "initializing": "GPU 自动化目前仍在初始化...",
       "noElevation": "为了让 Oyasumi 能够控制 GPU 的功率限制，它需要管理员权限。 请点击下方按钮授予 Oyasumi 管理员权限",
       "driverNotLoaded": "Oyasumi 没有检测到已安装的 NVIDIA 驱动程序。\n\n请确保你的系统使用 NVIDIA GPU 并安装了适当的驱动程序",
       "noDevices": "在你的系统中找不到显卡。\n\n请确保你的系统有 NVIDIA 显卡并安装了适当的驱动程序。",
       "unknown": "尝试开启 GPU 自动化功能时发生未知错误"
     },
+    "tabs": {
+      "powerLimiting": "{PLACEHOLDER}",
+      "msiAfterburner": "MSI Afterburner"
+    },
     "requestAdministrator": "授予管理员权限",
     "disable": "关闭 GPU 自动化",
     "enable": "开启 GPU 自动化",
+    "automations": "睡眠自动化",
     "enableWarning": "这是功能是给一些进阶用户的！\n设定错误的功率限制可能会导致你的系统变得不稳定。\n请牢记这一点，最好只在你知道自己在做什麽时才调整它",
+    "elevationSidecarModal": {
+      "title": "授予管理员权限",
+      "message": "你确定想要授予 Oyasumi 管理员权限吗？\n\n如果你开启此权限，Oyasumi 将在启动时立即请求这些权限。 你可以稍后随时在设定中关闭此功能",
+      "confirm": "总是",
+      "cancel": "只有这次"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "{PLACEHOLDER}",
+        "noNvidia": "{PLACEHOLDER}",
+        "noPermission": "{PLACEHOLDER}",
+        "noSidecar": "{PLACEHOLDER}",
+        "unknown": "{PLACEHOLDER}"
+      },
+      "noGPUSelected": "{PLACEHOLDER}",
+      "gpuUnsupported": "{PLACEHOLDER}",
+      "noGPUs": "{PLACEHOLDER}",
+      "description": "{PLACEHOLDER}",
+      "selectGPU": "{PLACEHOLDER}",
+      "gpuPowerLimitsUnsupported": "{PLACEHOLDER}",
+      "currentPowerLimit": "{PLACEHOLDER}",
+      "activatingSleepMode": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "deactivatingSleepMode": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "enabledWarning": "{PLACEHOLDER}",
+      "inputDefault": "{PLACEHOLDER}"
+    },
+    "msiAfterburner": {
+      "description": "{PLACEHOLDER}",
+      "sleepModeEnable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "sleepModeDisable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "profile": "{PLACEHOLDER}",
+      "none": "{PLACEHOLDER}",
+      "enabledWarning": "{PLACEHOLDER}",
+      "executable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}",
+        "status": {
+          "CHECKING": "{PLACEHOLDER}",
+          "NOT_FOUND": "{PLACEHOLDER}",
+          "INVALID_EXECUTABLE": "{PLACEHOLDER}",
+          "INVALID_SIGNATURE": "{PLACEHOLDER}",
+          "UNKNOWN_ERROR": "{PLACEHOLDER}",
+          "SUCCESS": "{PLACEHOLDER}"
+        }
+      }
+    },
+    "description": "在这裡，你可以自动限制 GPU 的功率限制，让在你睡觉时节省电力",
     "selectGPU": "选择你希望为其设定功率限制的 GPU：",
     "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功率限制。",
     "currentPowerLimit": "当前功率限制",
-    "automations": "睡眠自动化",
     "activatingSleepMode": {
       "title": "当我睡觉时",
       "description": "指定在开启睡眠模式时要设定的功率限制："
@@ -163,13 +226,7 @@
       "description": "指定在关闭睡眠模式时要设定的功率限制："
     },
     "enabledWarning": "请注意，将功率限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
-    "inputDefault": "将 GPU 功耗重置到预设数值",
-    "elevationSidecarModal": {
-      "title": "授予管理员权限",
-      "message": "你确定想要授予 Oyasumi 管理员权限吗？\n\n如果你开启此权限，Oyasumi 将在启动时立即请求这些权限。 你可以稍后随时在设定中关闭此功能",
-      "confirm": "总是",
-      "cancel": "只有这次"
-    }
+    "inputDefault": "将 GPU 功耗重置到预设数值"
   },
   "status-automations": {
     "title": "状态 自动化",
