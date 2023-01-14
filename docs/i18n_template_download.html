@@ -63,7 +63,8 @@
               `https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/${lang}.json`
             )
               .then((res) => res.json())
-              .then((langTemplate) => mergeDeep(enTemplate, langTemplate));
+              .then((langTemplate) => mergeDeep(enTemplate, langTemplate))
+              .then((mergedTemplate) => removeExtraKeys(mergedTemplate, enTemplate));
           })
           .then((template) => downloadText(lang + '.json', JSON.stringify(template, null, 2)));
       }
@@ -127,6 +128,42 @@
 
         return mergeDeep(target, ...sources);
       }
+
+      function removeExtraKeys(value, modelObject) {
+        const flatModelKeys = Object.keys(flattenObj(modelObject));
+        const flatValue = Object.entries(flattenObj(value))
+          .filter(([key, value]) => flatModelKeys.includes(key))
+          .reduce((acc, e) => {
+            acc[e[0]] = e[1];
+            return acc;
+          }, {});
+        return unflattenObj(flatValue);
+      }
+
+      const unflattenObj = (ob) => {
+        const result = {};
+        for (const i in ob) {
+          const keys = i.split('.');
+          keys.reduce((r, e, j) => {
+            return (
+              r[e] ||
+              (r[e] = isNaN(Number(keys[j + 1])) ? (keys.length - 1 === j ? ob[i] : {}) : [])
+            );
+          }, result);
+        }
+        return result;
+      };
+
+      const flattenObj = (ob) => {
+        let result = {};
+        for (const i in ob) {
+          if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
+            const temp = flattenObj(ob[i]);
+            for (const j in temp) result[i + '.' + j] = temp[j];
+          } else result[i] = ob[i];
+        }
+        return result;
+      };
     </script>
   </body>
 </html>
