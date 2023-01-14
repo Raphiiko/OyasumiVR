@@ -28,6 +28,8 @@
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/noto-sans-jp": "^4.5.12",
     "@fontsource/noto-sans-kr": "^4.5.12",
+    "@fontsource/noto-sans-sc": "^4.5.12",
+    "@fontsource/noto-sans-tc": "^4.5.12",
     "@fontsource/poppins": "^4.5.10",
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@ngx-translate/core": "^14.0.0",

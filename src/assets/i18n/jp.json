@@ -137,10 +137,19 @@
   },
   "gpu-automations": {
     "title": "GPU自動化",
+    "disabled": {
+      "disabled": "{PLACEHOLDER}",
+      "noSidecar": "{PLACEHOLDER}"
+    },
+    "tabs": {
+      "powerLimiting": "{PLACEHOLDER}",
+      "msiAfterburner": "MSI Afterburner"
+    },
     "requestAdministrator": "管理者権限を付与する",
     "disable": "GPU自動化を無効にする",
     "enable": "GPU自動化を有効にする",
     "automations": "睡眠の自動化設定",
+    "enableWarning": "{PLACEHOLDER}",
     "elevationSidecarModal": {
       "title": "管理者権限を付与する",
       "message": "Oyasumi に常に管理者権限を与えますか？\n\nこれを有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
@@ -148,6 +157,16 @@
       "cancel": "一回のみ"
     },
     "powerLimiting": {
+      "disabled": {
+        "initializing": "{PLACEHOLDER}",
+        "noNvidia": "{PLACEHOLDER}",
+        "noPermission": "{PLACEHOLDER}",
+        "noSidecar": "{PLACEHOLDER}",
+        "unknown": "{PLACEHOLDER}"
+      },
+      "noGPUSelected": "{PLACEHOLDER}",
+      "gpuUnsupported": "{PLACEHOLDER}",
+      "noGPUs": "{PLACEHOLDER}",
       "description": "ここでは、GPUの電力制限を自動化し、就寝中の電力を節約することができます。",
       "selectGPU": "電力制限を設定したいGPUを選択します：",
       "gpuPowerLimitsUnsupported": "選択されたGPUは、電力制限の設定に対応していません。",
@@ -162,6 +181,32 @@
       },
       "enabledWarning": "電力制限を低く設定しすぎてしまうと、システムが不安定な状態になる可能性がありますので、ご注意ください。よくわからない場合は、この機能を無効にしてください。",
       "inputDefault": "GPUのデフォルトの制限値にリセットします。"
+    },
+    "msiAfterburner": {
+      "description": "{PLACEHOLDER}",
+      "sleepModeEnable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "sleepModeDisable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}"
+      },
+      "profile": "{PLACEHOLDER}",
+      "none": "{PLACEHOLDER}",
+      "enabledWarning": "{PLACEHOLDER}",
+      "executable": {
+        "title": "{PLACEHOLDER}",
+        "description": "{PLACEHOLDER}",
+        "status": {
+          "CHECKING": "{PLACEHOLDER}",
+          "NOT_FOUND": "{PLACEHOLDER}",
+          "INVALID_EXECUTABLE": "{PLACEHOLDER}",
+          "INVALID_SIGNATURE": "{PLACEHOLDER}",
+          "UNKNOWN_ERROR": "{PLACEHOLDER}",
+          "SUCCESS": "{PLACEHOLDER}"
+        }
+      }
     }
   },
   "status-automations": {

@@ -19,4 +19,12 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
     label: '한국어',
     flag: 'kr',
   },
+  {
+    code: 'tw',
+    label: '繁體中文',
+  },
+  {
+    code: 'cn',
+    label: '简体中文',
+  },
 ];

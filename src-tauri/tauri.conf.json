@@ -79,7 +79,9 @@
             "en-US",
             "nl-NL",
             "ja-JP",
-            "ko-KR"
+            "ko-KR",
+            "zh-TW",
+            "zh-CN"
           ]
         }
       }

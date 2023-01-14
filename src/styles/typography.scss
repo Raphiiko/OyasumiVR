@@ -13,9 +13,19 @@
 @import '@fontsource/noto-sans-kr/400.css';
 @import '@fontsource/noto-sans-kr/500.css';
 @import '@fontsource/noto-sans-kr/700.css';
+@import '@fontsource/noto-sans-tc/index.css';
+@import '@fontsource/noto-sans-tc/300.css';
+@import '@fontsource/noto-sans-tc/400.css';
+@import '@fontsource/noto-sans-tc/500.css';
+@import '@fontsource/noto-sans-tc/700.css';
+@import '@fontsource/noto-sans-sc/index.css';
+@import '@fontsource/noto-sans-sc/300.css';
+@import '@fontsource/noto-sans-sc/400.css';
+@import '@fontsource/noto-sans-sc/500.css';
+@import '@fontsource/noto-sans-sc/700.css';
 
 * {
-  font-family: 'Poppins', 'Noto Sans JP', 'Noto Sans KR', sans-serif;
+  font-family: 'Poppins', 'Noto Sans JP', 'Noto Sans KR', 'Noto Sans TC', 'Noto Sans SC', sans-serif;
   letter-spacing: 0.025em;
 }
 

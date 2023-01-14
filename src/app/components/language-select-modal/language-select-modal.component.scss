@@ -10,14 +10,13 @@ p {
   font-size: 1em;
 }
 
-.option-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   background: var(--color-surface-0);
   border-radius: var(--surface-border-radius);
   margin-top: 2em;
+  padding: 1em;
 }
 
 .language-option {

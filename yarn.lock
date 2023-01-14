@@ -1298,6 +1298,16 @@
   resolved "https://registry.npmjs.org/@fontsource/noto-sans-kr/-/noto-sans-kr-4.5.12.tgz"
   integrity sha512-6LBOzXw/V4guB/nATaiUjCcPxwJNGw+ky5DK7/wsgUZvfk8etH9IlKdvjFVidpeCuMVjOdlka2+MEw4hwEHaHA==
 
+"@fontsource/noto-sans-sc@^4.5.12":
+  version "4.5.12"
+  resolved "https://registry.yarnpkg.com/@fontsource/noto-sans-sc/-/noto-sans-sc-4.5.12.tgz#e7e589455250cd63950337dbb7ac047ccb0e5bc0"
+  integrity sha512-KQ8Bn8KCGVS6RKrEw7fp65GJYpKyKEJ/TkePoKGxvNy7smSaHoKV7vrmpIiA46hkqQyYdENix/NKSprxs4Soyw==
+
+"@fontsource/noto-sans-tc@^4.5.12":
+  version "4.5.12"
+  resolved "https://registry.yarnpkg.com/@fontsource/noto-sans-tc/-/noto-sans-tc-4.5.12.tgz#b404d9e4beaff90ed8d46e3eb6b9cef7e799dff0"
+  integrity sha512-c4OUY5Wq03ZLI4Ds9IEHEiPqpjmEXvDpANXufCTlk+bMb8MnweXPVWJSrSHydXnz7r+qstZl3HvWDl2RI5o/1A==
+
 "@fontsource/poppins@^4.5.10":
   version "4.5.10"
   resolved "https://registry.npmjs.org/@fontsource/poppins/-/poppins-4.5.10.tgz"
