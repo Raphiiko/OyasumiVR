@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Add automations for automatically switching MSI Afterburner profiles when the sleep mode changes.
 - Allow sleep mode to be toggled from the pill in the status bar.
-- Language support for Traditional and Simplified Chinese, thanks to  [狐Kon](https://twitter.com/XoF_eLtTiL).
+- Language support for Traditional and Simplified Chinese, thanks to  [狐Kon](https://github.com/XoF-eLtTiL).
 
 ### Changed
 - Improved error handling and error messages for non-nvidia users.
