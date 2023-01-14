@@ -74,7 +74,7 @@
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
       "presetAuthor": "由 {{author}} 製作",
-      "description": "Oyasumi 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 Oyasumi）在夜晚时关闭你的追踪器，这将很有用。 看看这裡的范例影片来看看这功能样子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "description": "Oyasumi 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 Oyasumi）在夜晚时关闭你的追踪器，这将很有用。 看看这裡的范例影片来看看这功能样子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\n预设可用于多个角色动作预製档，但你也可以指定设定自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自定义动画",
       "errors": {
@@ -138,23 +138,23 @@
   "gpu-automations": {
     "title": "GPU 自动化",
     "disabled": {
-      "disabled": "Oyasumi 允许你自动调整 GPU 的功率限制。\n这样你就可以在睡觉时节省用电量。\n\nGPU 自动化目前仅适用于 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
-      "noSidecar": "{PLACEHOLDER}",
+      "disabled": "Oyasumi 允许你自动调整 GPU 的功耗限制。\n这样你就可以在睡觉时节省用电量。\n\nGPU 自动化目前仅适用于 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
+      "noSidecar": "为了让 Oyasumi 能够控制 GPU 设定，它需要管理员权限。 请点击下方按钮授予 Oyasumi 管理员权限",
       "initializing": "GPU 自动化目前仍在初始化...",
-      "noElevation": "为了让 Oyasumi 能够控制 GPU 的功率限制，它需要管理员权限。 请点击下方按钮授予 Oyasumi 管理员权限",
+      "noElevation": "为了让 Oyasumi 能够控制 GPU 的功耗限制，它需要管理员权限。 请点击下方按钮授予 Oyasumi 管理员权限",
       "driverNotLoaded": "Oyasumi 没有检测到已安装的 NVIDIA 驱动程序。\n\n请确保你的系统使用 NVIDIA GPU 并安装了适当的驱动程序",
       "noDevices": "在你的系统中找不到显卡。\n\n请确保你的系统有 NVIDIA 显卡并安装了适当的驱动程序。",
       "unknown": "尝试开启 GPU 自动化功能时发生未知错误"
     },
     "tabs": {
-      "powerLimiting": "{PLACEHOLDER}",
+      "powerLimiting": "GPU 功耗限制",
       "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "授予管理员权限",
     "disable": "关闭 GPU 自动化",
     "enable": "开启 GPU 自动化",
     "automations": "睡眠自动化",
-    "enableWarning": "这是功能是给一些进阶用户的！\n设定错误的功率限制可能会导致你的系统变得不稳定。\n请牢记这一点，最好只在你知道自己在做什麽时才调整它",
+    "enableWarning": "这是功能是给一些进阶用户的！\n设定错误的功耗限制可能会导致你的系统变得不稳定。\n请牢记这一点，最好只在你知道自己在做什麽时才调整它",
     "elevationSidecarModal": {
       "title": "授予管理员权限",
       "message": "你确定想要授予 Oyasumi 管理员权限吗？\n\n如果你开启此权限，Oyasumi 将在启动时立即请求这些权限。 你可以稍后随时在设定中关闭此功能",
@@ -163,69 +163,69 @@
     },
     "powerLimiting": {
       "disabled": {
-        "initializing": "{PLACEHOLDER}",
-        "noNvidia": "{PLACEHOLDER}",
-        "noPermission": "{PLACEHOLDER}",
-        "noSidecar": "{PLACEHOLDER}",
-        "unknown": "{PLACEHOLDER}"
+        "initializing": "功耗限制自动化正在初始化中.....",
+        "noNvidia": "功耗限制自动化不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制自动化仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({{code}})",
+        "noPermission": "儘管 Oyasumi 拥有管理员权限，但它似乎没有权限更改你的 GPU 设定。\n\n请检查你的系统规格，因为这通常不会发生。",
+        "noSidecar": "由于未知原因，无法获得管理员权限。\n这些是控制 GPU 功耗限制所必需的。\n\n请尝试重新启动 Oyasumi。",
+        "unknown": "由于未知原因，功耗限制自动化不可用。\n\n请尝试重新启动 Oyasumi"
       },
-      "noGPUSelected": "{PLACEHOLDER}",
-      "gpuUnsupported": "{PLACEHOLDER}",
-      "noGPUs": "{PLACEHOLDER}",
-      "description": "{PLACEHOLDER}",
-      "selectGPU": "{PLACEHOLDER}",
-      "gpuPowerLimitsUnsupported": "{PLACEHOLDER}",
-      "currentPowerLimit": "{PLACEHOLDER}",
-      "activatingSleepMode": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "deactivatingSleepMode": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "enabledWarning": "{PLACEHOLDER}",
-      "inputDefault": "{PLACEHOLDER}"
-    },
-    "msiAfterburner": {
-      "description": "{PLACEHOLDER}",
-      "sleepModeEnable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "sleepModeDisable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "profile": "{PLACEHOLDER}",
-      "none": "{PLACEHOLDER}",
-      "enabledWarning": "{PLACEHOLDER}",
-      "executable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}",
-        "status": {
-          "CHECKING": "{PLACEHOLDER}",
-          "NOT_FOUND": "{PLACEHOLDER}",
-          "INVALID_EXECUTABLE": "{PLACEHOLDER}",
-          "INVALID_SIGNATURE": "{PLACEHOLDER}",
-          "UNKNOWN_ERROR": "{PLACEHOLDER}",
-          "SUCCESS": "{PLACEHOLDER}"
-        }
-      }
-    },
-    "description": "在这裡，你可以自动限制 GPU 的功率限制，让在你睡觉时节省电力",
-    "selectGPU": "选择你希望为其设定功率限制的 GPU：",
-    "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功率限制。",
-    "currentPowerLimit": "当前功率限制",
-    "activatingSleepMode": {
+      "noGPUSelected": "没有选择 GPU",
+      "gpuUnsupported": "不支援的 GPU",
+      "noGPUs": "在你的系统中找不到任何 Nivida 显卡",
+      "description": "在这裡，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
+      "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
+      "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制",
+      "currentPowerLimit": "当前功耗限制",
+	  "activatingSleepMode": {
       "title": "当我睡觉时",
-      "description": "指定在开启睡眠模式时要设定的功率限制："
+      "description": "指定在开启睡眠模式时要设定的功耗限制："
     },
     "deactivatingSleepMode": {
       "title": "当我醒来时",
-      "description": "指定在关闭睡眠模式时要设定的功率限制："
+      "description": "指定在关闭睡眠模式时要设定的功耗限制："
     },
-    "enabledWarning": "请注意，将功率限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
+    "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
+    "inputDefault": "将 GPU 功耗重置到预设数值"
+    },
+    "msiAfterburner": {
+      "description": "Oyasumi 可以在你入睡或醒来时自动调整您的 GPU 设定，使用你在 MSI Afterburner 中所建立的设定档。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新获得 GPU 功耗。<br><br>你必须在 MSI Afterburner 设定设定档。<br>你可以在这裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下载</a> MSI Afterburner",
+      "sleepModeEnable": {
+        "title": "当睡眠模式启动时",
+        "description": "使用所选的 MSI Afterburner 设定档"
+      },
+      "sleepModeDisable": {
+        "title": "当睡眠模式关闭时",
+        "description": "使用所选的 MSI Afterburner 设定档"
+      },
+      "profile": "设定档 {{index}}",
+      "none": "无",
+      "enabledWarning": "请注意，在 MSI Afterburner 中错误的设定 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
+      "executable": {
+        "title": "设定",
+        "description": "Oyasumi 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行档的位置。\n如果 Oyasumi 在预设位置找不到它，需要你手动设定它的位置。",
+        "status": {
+          "CHECKING": "正在验证 <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "无法在此位置中找到 <strong>MSIAfterburner.exe</strong> ",
+          "INVALID_EXECUTABLE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 正常运作",
+          "INVALID_SIGNATURE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 是否来源 MSI。 出于系统安全考量，这位置的程序将不会被使用。 请确保你使用的是官方最新版本的 MSI Afterburner。 如果问题依然存在或者你确定这是正确的城市，请联繫 Oyasumi 的开发人员或提交错误报告",
+          "UNKNOWN_ERROR": "尝试在此位置寻找 <strong>MSIAfterburner.exe</strong> 时发生未知错误",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到并正常运作！"
+        }
+      }
+    },
+    "description": "在这裡，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
+    "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
+    "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制。",
+    "currentPowerLimit": "当前功耗限制",
+    "activatingSleepMode": {
+      "title": "当我睡觉时",
+      "description": "指定在开启睡眠模式时要设定的功耗限制："
+    },
+    "deactivatingSleepMode": {
+      "title": "当我醒来时",
+      "description": "指定在关闭睡眠模式时要设定的功耗限制："
+    },
+    "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
     "inputDefault": "将 GPU 功耗重置到预设数值"
   },
   "status-automations": {
@@ -319,7 +319,7 @@
       "adminPrivileges": {
         "title": "管理员权限",
         "label": "启动时请求管理员权限",
-        "description": "Oyasumi 需要管理员权限才能控制 GPU 的功率限制。 如果启用此功能，Oyasumi 将在启动时请求管理员权限"
+        "description": "Oyasumi 需要管理员权限才能控制 GPU 的功耗限制。 如果启用此功能，Oyasumi 将在启动时请求管理员权限"
       },
       "telemetry": {
         "title": "匿名数据",
@@ -342,10 +342,10 @@
           "logIn": "登入"
         },
         "errors": {
-          "initError": "无法初始化 VRChat 模块。 请确保你有连上互联网并稍后重新启动 Oyasumi 重试"
+          "initError": "无法初始化 VRChat 模块。 请确保你有连上网际网路并稍后重新启动 Oyasumi 重试"
         },
         "disclaimers": {
-          "use": "你的登入凭证永远不会存储在任何地方，只会发送到 VRChat 的服务器以进行身份验证。",
+          "use": "你的登入凭证永远不会存储在任何地方，只会发送到 VRChat 的伺服器以进行身份验证。",
           "brand": "Oyasumi 没有得到 VRChat 的官方认可，也不表示 VRChat 或任何正式参与製作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标。 VRChat © VRChat Inc.",
           "liability": "Raphiiko 对 Oyasumi 引起的任何问题概不负责。 使用风险请自己承担！"
         }
@@ -387,7 +387,7 @@
     "translations": "翻译人员",
     "projectLinks": "专案连结",
     "sourceLink": "原始码 @ GitHub",
-    "discordInvite": "Discord 服务器"
+    "discordInvite": "Discord 伺服器"
   },
   "updater": {
     "modals": {
@@ -495,7 +495,7 @@
     },
     "vrchat-login-modal": {
       "title": "登入到 VRChat",
-      "username": "VRChat 使用者名称/E-mail",
+      "username": "VRChat 使用者名称/邮箱地址",
       "password": "密码",
       "errors": {
         "CHECK_EMAIL": "登入失败：详情请查看你的 VRChat 帐号绑定的邮箱地址",

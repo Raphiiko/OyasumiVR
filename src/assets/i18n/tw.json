@@ -74,7 +74,7 @@
       "currentPose": "目前姿勢",
       "manualControl": "手動控制",
       "presetAuthor": "由 {{author}} 製作",
-      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用。 看看這裡的範例影片來看看這功能樣子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用。 看看這裡的範例影片來看看這功能樣子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫。",
       "enable": "開啟睡眠動畫自動化",
       "customPreset": "自定義動畫",
       "errors": {
@@ -138,23 +138,23 @@
   "gpu-automations": {
     "title": "GPU 自動化",
     "disabled": {
-      "disabled": "Oyasumi 允許你自動調整 GPU 的功率限制。\n這樣你就可以在睡覺時節省用電量。\n\nGPU 自動化目前僅適用於 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
-      "noSidecar": "{PLACEHOLDER}",
+      "disabled": "Oyasumi 允許你自動調整 GPU 的功耗限制。\n這樣你就可以在睡覺時節省用電量。\n\nGPU 自動化目前僅適用於 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
+      "noSidecar": "為了讓 Oyasumi 能夠控制 GPU 設定，它需要管理員權限。 請點擊下方按鈕授予 Oyasumi 管理員權限",
       "initializing": "GPU 自動化目前仍在初始化...",
-      "noElevation": "為了讓 Oyasumi 能夠控制 GPU 的功率限制，它需要管理員權限。 請點擊下方按鈕授予 Oyasumi 管理員權限",
+      "noElevation": "為了讓 Oyasumi 能夠控制 GPU 的功耗限制，它需要管理員權限。 請點擊下方按鈕授予 Oyasumi 管理員權限",
       "driverNotLoaded": "Oyasumi 沒有檢測到已安裝的 NVIDIA 驅動程序。\n\n請確保你的系統使用 NVIDIA GPU 並安裝了適當的驅動程序",
       "noDevices": "在你的系統中找不到顯卡。\n\n請確保你的系統有 NVIDIA 顯卡並安裝了適當的驅動程序。",
       "unknown": "嘗試開啟 GPU 自動化功能時發生未知錯誤"
     },
     "tabs": {
-      "powerLimiting": "{PLACEHOLDER}",
+      "powerLimiting": "GPU 功耗限制",
       "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "授予管理員權限",
     "disable": "關閉 GPU 自動化",
     "enable": "開啟 GPU 自動化",
     "automations": "睡眠自動化",
-    "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功率限制可能會導致你的系統變得不穩定。\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
+    "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功耗限制可能會導致你的系統變得不穩定。\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
     "elevationSidecarModal": {
       "title": "授予管理員權限",
       "message": "你確定想要授予 Oyasumi 管理員權限嗎？\n\n如果你開啟此權限，Oyasumi 將在啟動時立即請求這些權限。 你可以稍後隨時在設定中關閉此功能",
@@ -163,69 +163,69 @@
     },
     "powerLimiting": {
       "disabled": {
-        "initializing": "{PLACEHOLDER}",
-        "noNvidia": "{PLACEHOLDER}",
-        "noPermission": "{PLACEHOLDER}",
-        "noSidecar": "{PLACEHOLDER}",
-        "unknown": "{PLACEHOLDER}"
+        "initializing": "功耗限制自動化正在初始化中.....",
+        "noNvidia": "功耗限制自動化不可用，因為未檢測到正在運行的 NVIDIA 驅動程序。 功耗限制自動化僅適用於 NVIDIA GPU。\n\n如果你的系統中有 NVIDIA GPU，請確保為其安裝了適合的驅動程序。\n\n({{code}})",
+        "noPermission": "儘管 Oyasumi 擁有管理員權限，但它似乎沒有權限更改你的 GPU 設定。\n\n請檢查你的系統規格，因為這通常不會發生。",
+        "noSidecar": "由於未知原因，無法獲得管理員權限。\n這些是控制 GPU 功耗限制所必需的。\n\n請嘗試重新啟動 Oyasumi。",
+        "unknown": "由於未知原因，功耗限制自動化不可用。\n\n請嘗試重新啟動 Oyasumi"
       },
-      "noGPUSelected": "{PLACEHOLDER}",
-      "gpuUnsupported": "{PLACEHOLDER}",
-      "noGPUs": "{PLACEHOLDER}",
-      "description": "{PLACEHOLDER}",
-      "selectGPU": "{PLACEHOLDER}",
-      "gpuPowerLimitsUnsupported": "{PLACEHOLDER}",
-      "currentPowerLimit": "{PLACEHOLDER}",
-      "activatingSleepMode": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "deactivatingSleepMode": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "enabledWarning": "{PLACEHOLDER}",
-      "inputDefault": "{PLACEHOLDER}"
-    },
-    "msiAfterburner": {
-      "description": "{PLACEHOLDER}",
-      "sleepModeEnable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "sleepModeDisable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
-      },
-      "profile": "{PLACEHOLDER}",
-      "none": "{PLACEHOLDER}",
-      "enabledWarning": "{PLACEHOLDER}",
-      "executable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}",
-        "status": {
-          "CHECKING": "{PLACEHOLDER}",
-          "NOT_FOUND": "{PLACEHOLDER}",
-          "INVALID_EXECUTABLE": "{PLACEHOLDER}",
-          "INVALID_SIGNATURE": "{PLACEHOLDER}",
-          "UNKNOWN_ERROR": "{PLACEHOLDER}",
-          "SUCCESS": "{PLACEHOLDER}"
-        }
-      }
-    },
-    "description": "在這裡，你可以自動限制 GPU 的功率限制，讓在你睡覺時節省電力",
-    "selectGPU": "選擇你希望為其設定功率限制的 GPU：",
-    "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功率限制。",
-    "currentPowerLimit": "當前功率限制",
-    "activatingSleepMode": {
+      "noGPUSelected": "沒有選擇 GPU",
+      "gpuUnsupported": "不支援的 GPU",
+      "noGPUs": "在你的系統中找不到任何 Nivida 顯卡",
+      "description": "在這裡，你可以自動限制 GPU 的功耗限制，讓在你睡覺時節省電力",
+      "selectGPU": "選擇你希望為其設定功耗限制的 GPU：",
+      "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制",
+      "currentPowerLimit": "當前功耗限制",
+	  "activatingSleepMode": {
       "title": "當我睡覺時",
-      "description": "指定在開啟睡眠模式時要設定的功率限制："
+      "description": "指定在開啟睡眠模式時要設定的功耗限制："
     },
     "deactivatingSleepMode": {
       "title": "當我醒來時",
-      "description": "指定在關閉睡眠模式時要設定的功率限制："
+      "description": "指定在關閉睡眠模式時要設定的功耗限制："
     },
-    "enabledWarning": "請注意，將功率限制設定得太低可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
+    "enabledWarning": "請注意，將功耗限制設定得太低可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
+    "inputDefault": "將 GPU 功耗重置到預設數值"
+    },
+    "msiAfterburner": {
+      "description": "Oyasumi 可以在你入睡或醒來時自動調整您的 GPU 設定，使用你在 MSI Afterburner 中所建立的設定檔。 此功能的其中一個用途是在你入睡時節省電力，並在你醒來時重新獲得 GPU 功耗。<br><br>你必須在 MSI Afterburner 設定設定檔。<br>你可以在這裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下載</a> MSI Afterburner",
+      "sleepModeEnable": {
+        "title": "當睡眠模式啟動時",
+        "description": "使用所選的 MSI Afterburner 設定檔"
+      },
+      "sleepModeDisable": {
+        "title": "當睡眠模式關閉時",
+        "description": "使用所選的 MSI Afterburner 設定檔"
+      },
+      "profile": "設定檔 {{index}}",
+      "none": "無",
+      "enabledWarning": "請注意，在 MSI Afterburner 中錯誤的設定 GPU 可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
+      "executable": {
+        "title": "設定",
+        "description": "Oyasumi 需要知道你的 <strong>MSIAfterburner.exe</strong> 可執行檔的位置。\n如果 Oyasumi 在預設位置找不到它，需要你手動設定它的位置。",
+        "status": {
+          "CHECKING": "正在驗證 <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "無法在此位置中找到 <strong>MSIAfterburner.exe</strong> ",
+          "INVALID_EXECUTABLE": "無法驗證此位置中的 <strong>MSIAfterburner.exe</strong> 正常運作",
+          "INVALID_SIGNATURE": "無法驗證此位置中的 <strong>MSIAfterburner.exe</strong> 是否來源 MSI。 出於系統安全考量，這位置的程序將不會被使用。 請確保你使用的是官方最新版本的 MSI Afterburner。 如果問題依然存在或者你確定這是正確的城市，請聯繫 Oyasumi 的開發人員或提交錯誤報告",
+          "UNKNOWN_ERROR": "嘗試在此位置尋找 <strong>MSIAfterburner.exe</strong> 時發生未知錯誤",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到並正常運作！"
+        }
+      }
+    },
+    "description": "在這裡，你可以自動限制 GPU 的功耗限制，讓在你睡覺時節省電力",
+    "selectGPU": "選擇你希望為其設定功耗限制的 GPU：",
+    "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制。",
+    "currentPowerLimit": "當前功耗限制",
+    "activatingSleepMode": {
+      "title": "當我睡覺時",
+      "description": "指定在開啟睡眠模式時要設定的功耗限制："
+    },
+    "deactivatingSleepMode": {
+      "title": "當我醒來時",
+      "description": "指定在關閉睡眠模式時要設定的功耗限制："
+    },
+    "enabledWarning": "請注意，將功耗限制設定得太低可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
     "inputDefault": "將 GPU 功耗重置到預設數值"
   },
   "status-automations": {
@@ -319,7 +319,7 @@
       "adminPrivileges": {
         "title": "管理員權限",
         "label": "啟動時請求管理員權限",
-        "description": "Oyasumi 需要管理員權限才能控制 GPU 的功率限制。 如果啟用此功能，Oyasumi 將在啟動時請求管理員權限"
+        "description": "Oyasumi 需要管理員權限才能控制 GPU 的功耗限制。 如果啟用此功能，Oyasumi 將在啟動時請求管理員權限"
       },
       "telemetry": {
         "title": "匿名數據",
