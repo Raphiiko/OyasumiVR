@@ -2,7 +2,7 @@ use std::{convert::Infallible, time::Duration};
 
 use futures::executor::block_on;
 use hyper::{body::Buf, Body, Request, Response};
-use log::{error, info};
+use log::info;
 use oyasumi_shared::models::ElevatedSidecarInitRequest;
 use sysinfo::{Pid, PidExt, System, SystemExt};
 use tauri::Manager;
@@ -46,7 +46,7 @@ pub async fn start() {
         None => return,
     };
     info!("[Core] Starting sidecar...");
-    let (mut rx, mut _child) =
+    let (mut _rx, mut _child) =
         tauri::api::process::Command::new(String::from("oyasumi-elevated-sidecar.exe"))
             .args(vec![
                 String::from(format!("{}", port)),
@@ -54,13 +54,6 @@ pub async fn start() {
             ])
             .spawn()
             .expect("Could not spawn command"); // TODO: Do proper error handling here
-    while let Some(event) = rx.recv().await {
-        if let tauri::api::process::CommandEvent::Stdout(line) = event {
-            info!("[Sidecar] {}", line)
-        } else if let tauri::api::process::CommandEvent::Stderr(line) = event {
-            error!("[Sidecar] {}", line)
-        }
-    }
 }
 
 pub async fn request_stop() {
