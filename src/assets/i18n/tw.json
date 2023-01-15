@@ -74,7 +74,7 @@
       "currentPose": "目前姿勢",
       "manualControl": "手動控制",
       "presetAuthor": "由 {{author}} 製作",
-      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用。 看看這裡的範例影片來看看這功能樣子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫。",
+      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用。 請查看範例影片來看這功能的運作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">這裡</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫。",
       "enable": "開啟睡眠動畫自動化",
       "customPreset": "自定義動畫",
       "errors": {
@@ -119,7 +119,7 @@
     "title": "電源管理 自動化",
     "devicePowerOff": {
       "title": "關閉所有設備",
-      "description": "用於關閉 SteamVR 設備的各種自動化。",
+      "description": "用於關閉 SteamVR 設備的各種自動化功能",
       "onSleepModeEnable": {
         "title": "當我去睡覺時",
         "description": "開啟睡眠模式時關閉設備",
@@ -231,7 +231,7 @@
   "status-automations": {
     "title": "狀態 自動化",
     "enable": "開啟狀態自動化",
-    "description": "Oyasumi 可以根據你的世界中有多少玩家自動設定你的狀態\n，從而限制加入你房間的人數。",
+    "description": "Oyasumi 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
     "exampleUse": "使用範例：當有人加入你時，自動將你的狀態切換為橙色或紅色！\n當他們離開而你又獨自一人時，自動將你的狀態切換回藍色以便其他人可以加入你",
     "disableToEdit": "請在進行任何變更之前關閉狀態自動化。",
     "playerLimit": "玩家人數限制",

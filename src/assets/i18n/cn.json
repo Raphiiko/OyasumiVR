@@ -74,7 +74,7 @@
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
       "presetAuthor": "由 {{author}} 製作",
-      "description": "Oyasumi 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 Oyasumi）在夜晚时关闭你的追踪器，这将很有用。 看看这裡的范例影片来看看这功能样子 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\n预设可用于多个角色动作预製档，但你也可以指定设定自己的动画。",
+      "description": "Oyasumi 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 Oyasumi）在夜晚时关闭你的追踪器，这将很有用。 请查看范例影片来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这裡</a>.\n\n预设可用于多个角色动作预製档，但你也可以指定设定自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自定义动画",
       "errors": {
@@ -119,7 +119,7 @@
     "title": "电源管理 自动化",
     "devicePowerOff": {
       "title": "关闭所有设备",
-      "description": "用于关闭 SteamVR 设备的各种自动化。",
+      "description": "用于关闭 SteamVR 设备的各种自动化功能",
       "onSleepModeEnable": {
         "title": "当我去睡觉时",
         "description": "开启睡眠模式时关闭设备",
@@ -231,7 +231,7 @@
   "status-automations": {
     "title": "状态 自动化",
     "enable": "开启状态自动化",
-    "description": "Oyasumi 可以根据你的世界中有多少玩家自动设定你的状态\n，从而限制加入你房间的人数。",
+    "description": "Oyasumi 可以根据你的世界中有多少玩家自动设定你的状态\n从而限制你房间的人数",
     "exampleUse": "使用范例：当有人加入你时，自动将你的状态切换为橙色或红色！\n当他们离开而你又独自一人时，自动将你的状态切换回蓝色以便其他人可以加入你",
     "disableToEdit": "请在进行任何变更之前关闭状态自动化。",
     "playerLimit": "玩家人数限制",
@@ -495,7 +495,7 @@
     },
     "vrchat-login-modal": {
       "title": "登入到 VRChat",
-      "username": "VRChat 使用者名称/邮箱地址",
+      "username": "VRChat 使用者名称/E-mail",
       "password": "密码",
       "errors": {
         "CHECK_EMAIL": "登入失败：详情请查看你的 VRChat 帐号绑定的邮箱地址",
