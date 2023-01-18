@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Language support for Traditional and Simplified Chinese, thanks to  [狐Kon](https://github.com/XoF-eLtTiL).
 
 ### Changed
+
+- SteamVR is no longer required for Oyasumi to run. 
 - Improved error handling and error messages for non-nvidia users.
 - Improved logging on elevated sidecar module.
 

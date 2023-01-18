@@ -26,7 +26,7 @@ rosc = "0.9.0"
 futures = "0.3"
 reqwest = "0.11.12"
 sysinfo = "0.26.2"
-chrono = "0.4.22"
+chrono = "0.4.23"
 log = "^0.4"
 time = "0.3.16"
 url = "2.3.1"
@@ -34,6 +34,7 @@ urlencoding = "2.1.2"
 mime = "0.3.16"
 md5 = "0.7.0"
 mime_guess = "2.0.4"
+substring = "1.4.5"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -69,8 +70,8 @@ git = "https://github.com/tauri-apps/tauri-plugin-log"
 branch = "dev"
 
 [dependencies.openvr]
-git = "https://github.com/rust-openvr/rust-openvr"
-rev = "449cb77c1e07a36dd437a364048c1f3f52330f09"
+git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
+rev = "c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 
 [features]
 # by default Tauri runs in production mode

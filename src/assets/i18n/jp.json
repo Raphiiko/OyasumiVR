@@ -401,7 +401,11 @@
       "sleepMode": "睡眠モード",
       "active": "アクティブ",
       "inactive": "非アクティブ",
-      "loggedOut": "ログアウト中"
+      "loggedOut": "ログアウト中",
+      "steamvr": {
+        "INACTIVE": "非アクティブ",
+        "INITIALIZED": "アクティブ"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "確認"

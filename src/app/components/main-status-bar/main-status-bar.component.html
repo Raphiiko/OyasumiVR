@@ -1,6 +1,6 @@
 <div class="top-decoration"></div>
 <div class="main-bar" @noop>
-  <div class="right">
+  <div class="left">
     <div
       class="pill sleep-mode clickable"
       [class.active]="sleepMode | async"
@@ -18,8 +18,53 @@
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="!(sleepMode | async)" @hshrink translate>comp.main-status-bar.inactive</span>
     </div>
+    <div
+      class="pill steamvr-status"
+      *ngVar="{ hover: false }; let state"
+      (mouseenter)="state.hover = true"
+      (mouseleave)="state.hover = false"
+    >
+      <div
+        class="pill-icon"
+        @hshrink
+        *ngIf="['INACTIVE', 'INITIALIZED'].includes((openvr.status | async) ?? '')"
+      >
+        <img src="/assets/img/steamvr_icon.png" />
+      </div>
+      <div
+        class="pill-icon"
+        @hshrink
+        *ngIf="['INITIALIZING'].includes((openvr.status | async) ?? '')"
+      >
+        <div class="small-spinner"></div>
+      </div>
+      <span @hshrink *ngIf="state.hover">{{ 'SteamVR' }}:&nbsp;</span>
+      <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
+    </div>
   </div>
-  <div class="left">
+  <div class="right">
+    <div
+      class="pill vrc-status"
+      *ngVar="{ hover: false } as state"
+      (mouseenter)="state.hover = true"
+      (mouseleave)="state.hover = false"
+    >
+      <ng-container *ngVar="user | async as user">
+        <div class="pill-icon" *ngIf="!user || user.status === 'offline'" @hshrink>
+          <img src="/assets/img/vrc_icon.png" />
+        </div>
+        <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
+          <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
+            >brightness_1</i
+          >
+        </div>
+        <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>
+        <span *ngIf="user">{{ user?.displayName }}</span>
+        <span translate *ngIf="!user">comp.main-status-bar.loggedOut</span>
+      </ng-container>
+    </div>
+  </div>
+  <div class="right">
     <div
       class="pill vrc-status"
       *ngVar="{ hover: false } as state"

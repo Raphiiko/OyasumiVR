@@ -43,11 +43,21 @@ $background-color: var(--color-surface-2);
   }
 
   .left {
-    flex-shrink: 0;
+    flex: 1;
+    .pill {
+      &:not(:first-child) {
+        margin-left: 0.5em;
+      }
+    }
   }
 
   .right {
-    flex: 1;
+    flex-shrink: 0;
+    .pill {
+      &:not(:last-child) {
+        margin-right: 0.5em;
+      }
+    }
   }
 }
 
@@ -86,6 +96,7 @@ $background-color: var(--color-surface-2);
     align-items: center;
     justify-content: center;
     margin-right: 0.25em;
+    overflow: hidden;
 
     i {
       font-size: 1.25em;
@@ -97,11 +108,24 @@ $background-color: var(--color-surface-2);
       height: 1.5em;
       margin: 0;
     }
+
+    .small-spinner {
+      //margin-left: -0.25em;
+      //margin-right: 0.25em;
+      width: 1.5em;
+      height: 1.5em;
+      &:after {
+        width: 0.75em;
+        height: 0.75em;
+        margin: 0.15em;
+      }
+    }
   }
 }
 
 .sleep-mode,
-.vrc-status {
+.vrc-status,
+.steamvr-status {
   span:not(:last-child) {
     opacity: 0.5;
   }

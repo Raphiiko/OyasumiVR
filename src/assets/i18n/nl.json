@@ -401,7 +401,12 @@
       "sleepMode": "Slaap Modus",
       "active": "Actief",
       "inactive": "Inactief",
-      "loggedOut": "Uitgelogd"
+      "loggedOut": "Uitgelogd",
+      "steamvr": {
+        "INACTIVE": "Inactief",
+        "INITIALIZING": "Wachten",
+        "INITIALIZED": "Actief"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "Bevestig"

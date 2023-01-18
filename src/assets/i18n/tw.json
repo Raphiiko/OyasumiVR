@@ -420,7 +420,11 @@
       "sleepMode": "睡眠模式",
       "active": "啟動",
       "inactive": "未啟動",
-      "loggedOut": "已登出"
+      "loggedOut": "已登出",
+      "steamvr": {
+        "INACTIVE": "未啟動",
+        "INITIALIZED": "啟動"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "確認"

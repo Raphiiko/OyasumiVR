@@ -356,7 +356,11 @@
       "sleepMode": "수면 모드",
       "active": "활성",
       "inactive": "비활성",
-      "loggedOut": "로그아웃 중"
+      "loggedOut": "로그아웃 중",
+      "steamvr": {
+        "INACTIVE": "비활성",
+        "INITIALIZED": "활성"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "확인"

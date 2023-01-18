@@ -661,7 +661,7 @@ dependencies = [
 [[package]]
 name = "openvr"
 version = "0.6.0"
-source = "git+https://github.com/rust-openvr/rust-openvr?rev=449cb77c1e07a36dd437a364048c1f3f52330f09#449cb77c1e07a36dd437a364048c1f3f52330f09"
+source = "git+https://github.com/Raphiiko/oyasumi-rust-openvr?rev=c2f95d27a6f911cf360420b2279f0d1c9f2af52e#c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 dependencies = [
  "lazy_static",
  "openvr_sys",

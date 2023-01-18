@@ -401,7 +401,12 @@
       "sleepMode": "Sleep Mode",
       "active": "Active",
       "inactive": "Inactive",
-      "loggedOut": "Logged out"
+      "loggedOut": "Logged out",
+      "steamvr": {
+        "INACTIVE": "Inactive",
+        "INITIALIZING": "Waiting",
+        "INITIALIZED": "Active"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "Confirm"

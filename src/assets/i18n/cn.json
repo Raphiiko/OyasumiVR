@@ -176,16 +176,16 @@
       "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
       "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制",
       "currentPowerLimit": "当前功耗限制",
-	  "activatingSleepMode": {
-      "title": "当我睡觉时",
-      "description": "指定在开启睡眠模式时要设定的功耗限制："
-    },
-    "deactivatingSleepMode": {
-      "title": "当我醒来时",
-      "description": "指定在关闭睡眠模式时要设定的功耗限制："
-    },
-    "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
-    "inputDefault": "将 GPU 功耗重置到预设数值"
+      "activatingSleepMode": {
+        "title": "当我睡觉时",
+        "description": "指定在开启睡眠模式时要设定的功耗限制："
+      },
+      "deactivatingSleepMode": {
+        "title": "当我醒来时",
+        "description": "指定在关闭睡眠模式时要设定的功耗限制："
+      },
+      "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什麽，请关闭此功能",
+      "inputDefault": "将 GPU 功耗重置到预设数值"
     },
     "msiAfterburner": {
       "description": "Oyasumi 可以在你入睡或醒来时自动调整您的 GPU 设定，使用你在 MSI Afterburner 中所建立的设定档。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新获得 GPU 功耗。<br><br>你必须在 MSI Afterburner 设定设定档。<br>你可以在这裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下载</a> MSI Afterburner",
@@ -420,7 +420,11 @@
       "sleepMode": "睡眠模式",
       "active": "启动",
       "inactive": "未启动",
-      "loggedOut": "已登出"
+      "loggedOut": "已登出",
+      "steamvr": {
+        "INACTIVE": "未启动",
+        "INITIALIZED": "启动"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "确认"
