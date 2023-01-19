@@ -138,7 +138,7 @@
   "gpu-automations": {
     "title": "GPU Automations",
     "disabled": {
-      "disabled": "Oyasumi has various ways automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
+      "disabled": "Oyasumi has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
       "noSidecar": "In order for Oyasumi to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges."
     },
     "tabs": {

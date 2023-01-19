@@ -13,7 +13,8 @@
     "test": "ng test",
     "tauri": "tauri",
     "set-version": "node scripts/set-version.js",
-    "translation-converter": "node scripts/translation-converter.js"
+    "translation-converter": "node scripts/translation-converter.js",
+    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders"
   },
   "private": true,
   "dependencies": {

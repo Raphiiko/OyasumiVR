@@ -199,12 +199,12 @@
         "title": "{PLACEHOLDER}",
         "description": "{PLACEHOLDER}",
         "status": {
-          "CHECKING": "{PLACEHOLDER}",
-          "NOT_FOUND": "{PLACEHOLDER}",
-          "INVALID_EXECUTABLE": "{PLACEHOLDER}",
+          "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> であるかどうか確認中です。",
+          "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>はこの場所に見つかりませんでした。",
+          "INVALID_EXECUTABLE": "この場所にある <strong>MSIAfterburner.exe</strong> が機能していることを確認できませんでした。",
           "INVALID_SIGNATURE": "{PLACEHOLDER}",
-          "UNKNOWN_ERROR": "{PLACEHOLDER}",
-          "SUCCESS": "{PLACEHOLDER}"
+          "UNKNOWN_ERROR": "この場所で<strong>MSIAfterburner.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています!"
         }
       }
     }
@@ -404,6 +404,7 @@
       "loggedOut": "ログアウト中",
       "steamvr": {
         "INACTIVE": "非アクティブ",
+        "INITIALIZING": "{PLACEHOLDER}",
         "INITIALIZED": "アクティブ"
       }
     },
