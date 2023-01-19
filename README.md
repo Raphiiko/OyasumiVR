@@ -28,6 +28,10 @@
   If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>!
 </p>
 
+<p align="center">
+  :exclamation:<a href="https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations#looking-for-a-japanese-translator">Looking for Japanese translators / 日本語翻訳者募集中</a>:exclamation:
+</p>
+
 ## Getting started
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
