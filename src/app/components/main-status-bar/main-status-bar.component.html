@@ -18,6 +18,8 @@
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="!(sleepMode | async)" @hshrink translate>comp.main-status-bar.inactive</span>
     </div>
+  </div>
+  <div class="right">
     <div
       class="pill steamvr-status"
       *ngVar="{ hover: false }; let state"
@@ -41,8 +43,6 @@
       <span @hshrink *ngIf="state.hover">{{ 'SteamVR' }}:&nbsp;</span>
       <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
     </div>
-  </div>
-  <div class="right">
     <div
       class="pill vrc-status"
       *ngVar="{ hover: false } as state"

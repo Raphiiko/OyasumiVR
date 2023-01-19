@@ -10,6 +10,7 @@ use openvr::TrackedDeviceIndex;
 use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 use serde::Serialize;
 use substring::Substring;
+use sysinfo::SystemExt;
 use tauri::Manager;
 
 use crate::TAURI_WINDOW;
@@ -77,6 +78,9 @@ impl OpenVRManagerCore {
     }
 
     fn openvr_loop(&self) {
+        // Thread dependencies
+        let mut sysinfo = sysinfo::System::new_all();
+
         // Thread State
         let mut ovr_active = false;
         let mut ovr_next_init = NaiveDateTime::from_timestamp_millis(0).unwrap();
@@ -97,10 +101,17 @@ impl OpenVRManagerCore {
                     if (Utc::now().naive_utc() - ovr_next_init).num_milliseconds() <= 0 {
                         continue;
                     }
-                    // Update the status
-                    self.update_status(OpenVRStatus::INITIALIZING);
                     // If we need to reinitialize OpenVR after this, wait at least 3 seconds
                     ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(3);
+                    // Check if SteamVR is running, snd stop initializing if it's not.
+                    sysinfo.refresh_processes();
+                    let processes = sysinfo.processes_by_exact_name("vrmonitor.exe");
+                    if processes.count() == 0 {
+                        self.update_status(OpenVRStatus::INACTIVE);
+                        continue;
+                    }
+                    // Update the status
+                    self.update_status(OpenVRStatus::INITIALIZING);
                     // Try to initialize OpenVR
                     unsafe {
                         ovr_context = match openvr::init(openvr::ApplicationType::Background) {
@@ -112,7 +123,6 @@ impl OpenVRManagerCore {
                     if ovr_context.is_none() {
                         continue;
                     }
-                    info!("[Core] OpenVR Initialized");
                     // Obtain the system context
                     ovr_system = match ovr_context.as_mut().unwrap().system() {
                         Ok(sys) => Some(sys),
@@ -127,6 +137,7 @@ impl OpenVRManagerCore {
                         continue;
                     }
                     // We've successfully initialized OpenVR
+                    info!("[Core] OpenVR Initialized");
                     ovr_active = true;
                     self.update_status(OpenVRStatus::INITIALIZED);
                 }
