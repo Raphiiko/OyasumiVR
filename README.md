@@ -86,7 +86,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
       <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
-  - Automatically tweak your power limits when you go to sleep and when you wake up.
+  - Tweak your power limits when you go to sleep and when you wake up. (NVIDIA)
+  - Set MSI Afterburner profiles when you go to sleep and when you wake up. (NVIDIA/AMD)
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
@@ -143,7 +144,8 @@ _(\*) Tundra trackers have very delayed reporting of battery levels and charging
 
 ### GPU Automations
 
-Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported.
+Power Limits can only be automated for NVIDIA cards.
+If you have an AMD card, you can use the MSI Afterburner automations to automate your profiles and tweak your power limits instead.
 
 ## Development
 
