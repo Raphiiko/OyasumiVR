@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-  :exclamation:<a href="https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations#looking-for-a-japanese-translator">Looking for Japanese translators / 日本語翻訳者募集中</a>:exclamation:
+  :exclamation:<a href="https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations#%E6%97%A5%E6%9C%AC%E8%AA%9E%E8%A8%B3%E6%8F%90%E4%BE%9Bdeepl">Looking for Japanese translators / 日本語翻訳者募集中</a>:exclamation:
 </p>
 
 ## Getting started
