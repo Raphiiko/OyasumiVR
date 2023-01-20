@@ -73,7 +73,7 @@
     "sleepingAnimations": {
       "currentPose": "현재 위치",
       "manualControl": "수동 조작",
-      "presetAuthor": "{{author}}에 의한",
+      "presetAuthor": "{{author}} 제작",
       "description": "Oyasumi는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
       "enable": "자동 수면 애니메이션 활성화",
       "customPreset": "커스텀 애니메이션",
@@ -83,8 +83,8 @@
       },
       "options": {
         "positions": {
-          "title": "자는 자세",
-          "description": "수면 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
+          "title": "수면 자세",
+          "description": "자는 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
           "SIDE_FRONT": "엎드리기",
           "SIDE_BACK": "반듯이 눕기",
           "SIDE_LEFT": "왼쪽으로 눕기",
@@ -93,7 +93,7 @@
         },
         "footLock": {
           "title": "다리 잠금",
-          "description": "다리 잠금 활성화/비활성화를 OSC 명령으로 설정해요.",
+          "description": "다리 잠금을 OSC 명령으로 설정해요.",
           "FOOT_LOCK": "다리 잠금 활성화",
           "FOOT_UNLOCK": "다리 잠금 비활성화"
         },
@@ -121,7 +121,7 @@
       "title": "기기의 전원 끄기",
       "description": "Steam VR 기기를 끄기 위한 다양한 자동화 기능이에요.",
       "onSleepModeEnable": {
-        "title": "잠이 들 때",
+        "title": "수면 모드 활성화 시",
         "description": "수면 모드 활성화 시 기기의 전원을 꺼요.",
         "optionControllers": "모든 컨트롤러를 끄기",
         "optionTrackers": "모든 트래커를 끄기",
@@ -137,13 +137,19 @@
   },
   "gpu-automations": {
     "title": "GPU 자동화",
+    "disabled": {
+      "disabled": "Oyasumi는 GPU 설정을 자동으로 조정하는 다양한 방법을 가지고 있어요. \n잠자는 동안 전력을 절약할 수 있어요.\n\n고급 사용자를 위한 기능이므로 기본적으로 비활성화되어 있어요.\n아래 버튼을 클릭하여 활성화할 수 있어요.",
+      "noSidecar": "Oyasumi가 GPU 설정을 변경할 수 있도록 하려면 관리자 권한이 필요해요. Oyasumi에게 관리자 권한을 부여하려면 아래 버튼을 클릭해주세요."
+    },
     "tabs": {
+      "powerLimiting": "전력 제한",
       "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "관리자 권한 부여하기",
     "disable": "GPU 자동화를 비활성화하기",
     "enable": "GPU 자동화를 활성화하기",
     "automations": "수면 자동화 설정",
+    "enableWarning": "GPU 매개 변수를 잘못 조정하면 시스템이 불안정해질 수 있어요. 이 점에 유의하고 이 작업을 알고 있는 경우에만 이 기능을 사용하도록 설정해주세요.",
     "elevationSidecarModal": {
       "title": "관리자 권한을 부여하기",
       "message": "Oyasumi에게 항상 관리자 권한을 부여할까요?\n\n 이것을 활성화하면 Oyasumi는 부팅 시 즉시 관리자 권한을 요구해요. 이 설정은 나중에 언제든지 비활성화할 수 있어요.",
@@ -151,27 +157,52 @@
       "cancel": "한번만"
     },
     "powerLimiting": {
-      "description": "여기서는 GPU의 전력 제한을 자동화하여 취침 중 전력을 절약할 수 있어요.",
+      "disabled": {
+        "initializing": "전력 제한 자동화가 초기화되고 있어요...",
+        "noNvidia": "실행 중인 NVIDIA 드라이버가 없기 때문에 전력 제한 자동화를 사용할 수 없어요. 전력 제한 자동화는 NVIDIA GPU에만 사용할 수 있어요. \n\n시스템에 NVIDIA GPU가 있는 경우 해당 GPU에 적합한 드라이버가 설치되어 있는지 확인해주세요. \n\n({{code}})",
+        "noPermission": "Oyasumi는 관리자 권한이 있지만 GPU 설정을 변경할 수 있는 권한이 없는 것 같아요. \n\n일반적으로 이런 일이 발생해서는 안 되므로 시스템 설정을 확인해주세요.",
+        "noSidecar": "알 수 없는 이유로 인해 관리자 권한을 얻을 수 없어요. \n관리자 권한은 GPU의 전력 제한을 제어하는 데 필요해요. \n\nOyasumi를 다시 시작해주세요.",
+        "unknown": "알 수 없는 이유로 전력 제한 자동화를 사용할 수 없어요. \n\nOyasumi를 다시 시작해주세요."
+      },
+      "noGPUSelected": "GPU가 선택되지 않음",
+      "gpuUnsupported": "GPU 미지원",
+      "noGPUs": "NVIDIA GPU가 시스템에서 발견되지 않았어요.",
+      "description": "여기서는 GPU의 전력 제한을 자동화하여 수면 중 전력을 절약할 수 있어요.",
       "selectGPU": "전력 제한을 설정하고 싶은 GPU :",
       "gpuPowerLimitsUnsupported": "선택된 GPU는 전력 제한 설정을 지원하지 않아요.",
       "currentPowerLimit": "현재의 전력 제한",
       "activatingSleepMode": {
-        "title": "잠이 들 때",
+        "title": "수면 모드 활성화 시",
         "description": "수면 모드가 활성화되었을 때 설정할 전력 제한치를 지정해요."
       },
       "deactivatingSleepMode": {
-        "title": "일어났을 때",
+        "title": "수면 모드 비활성화 시",
         "description": "수면 모드가 비활성화되었을 때 설정할 전력 제한치를 지정해요."
       },
       "enabledWarning": "전력 제한을 너무 낮게 설정하면 시스템이 불안정한 상태가 될 수 있으므로 주의해주세요. 잘 모르는 경우 이 기능을 비활성화하는 것을 추천해요.",
       "inputDefault": "GPU의 기본 제한값으로 리셋해요."
     },
     "msiAfterburner": {
+      "description": "Oyasumi는 MSI Afterburner에서 만든 프로파일을 적용하여 잠들거나 일어날 때 GPU 설정을 자동으로 조정할 수 있어요. 이 기능의 목적은 자는 동안 전기를 절약하고 깨어났을 때 GPU 전원을 다시 사용하도록 하는 것이에요. <br><br>MSI 애프터버너에서 적용할 프로파일을 설정해야 해요.<br><a href='https://www.msi.com/Landing/afterburner/graphics-cards' target='_blank'>여기에서</a> MSI Afterburner를 다운로드 할 수 있어요.",
+      "sleepModeEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "다음 MSI Afterburner 프로파일을 적용해요"
+      },
+      "sleepModeDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "다음 MSI Afterburner 프로파일을 적용해요"
+      },
+      "profile": "{{index}}번 프로파일",
+      "none": "없음",
+      "enabledWarning": "MSI Afterburner에서 GPU를 잘못 구성하면 시스템이 불안정해질 수 있어요. 작업 내용을 모르는 경우 이 기능을 비활성화해주세요.",
       "executable": {
+        "title": "설정",
+        "description": "Oyasumi는 <strong>MSIAfterburner.exe</strong>의 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
         "status": {
           "CHECKING": "유효한 <strong>MSIAfterburner.exe</strong>인지 확인중이에요.",
           "NOT_FOUND": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾을 수 없어요.",
           "INVALID_EXECUTABLE": "해당 위치의 <strong>MSIAfterburner.exe</strong>가 작동하는지 확인할 수 없어요.",
+          "INVALID_SIGNATURE": "이 위치의 <strong>MSIAfterburner.exe</strong>가 MSI에서 가져온 것인지 확인할 수 없기 때문에 보안상의 이유로 사용할 수 없어요. 최신 버전의 MSI Afterburner를 사용하고 있는지 확인해주세요. 문제가 지속되거나 이것이 맞다고 확신할 경우, Oyasumi의 개발자에게 문의하거나 버그 보고서를 제출해주세요.",
           "UNKNOWN_ERROR": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾는데 오류가 발생했어요.",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong>이 발견되어 정상적으로 작동하고 있어요!"
         }
@@ -255,7 +286,7 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouse 콘솔",
-        "description": "Oyasumi는 Steam VR의 <strong>lighthouse_console.exe</strong> 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
+        "description": "Oyasumi는 Steam VR의 <strong>lighthouse_console.exe</strong>의 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
         "status": {
           "NOT_FOUND": "해당 위치에서 <strong>lighthouse_console.exe</strong>를 찾을 수 없어요.",
           "INVALID_EXECUTABLE": "해당 위치의 <strong>lighthouse_console.exe</strong>가 작동하는지 확인할 수 없어요.",
@@ -373,6 +404,7 @@
       "loggedOut": "로그아웃 중",
       "steamvr": {
         "INACTIVE": "비활성",
+        "INITIALIZING": "대기중",
         "INITIALIZED": "활성"
       }
     },
