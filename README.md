@@ -86,8 +86,9 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
       <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
-  - Tweak your power limits when you go to sleep and when you wake up. (NVIDIA)
-  - Set MSI Afterburner profiles when you go to sleep and when you wake up. (NVIDIA/AMD)
+  - When you go to sleep, or when you wake up:
+    - Activate your MSI Afterburner profiles. (NVIDIA/AMD)
+    - Tweak your power limits. (NVIDIA)
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
@@ -112,11 +113,13 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - English
   - Dutch (Nederlands)
   - Japanese (日本語)
-  - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
-  - Traditional Chinese (繁體中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
-  - Simplified Chinese (简体中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
+  - Korean* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+  - Traditional Chinese* (繁體中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
+  - Simplified Chinese* (简体中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
+
+_(*) Support for this language is a community contribution and as such the translations might not have 100% coverage with each and every update._
 
 ### Built With
 

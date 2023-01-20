@@ -137,6 +137,9 @@
   },
   "gpu-automations": {
     "title": "GPU 자동화",
+    "tabs": {
+      "msiAfterburner": "MSI Afterburner"
+    },
     "requestAdministrator": "관리자 권한 부여하기",
     "disable": "GPU 자동화를 비활성화하기",
     "enable": "GPU 자동화를 활성화하기",
@@ -162,6 +165,17 @@
       },
       "enabledWarning": "전력 제한을 너무 낮게 설정하면 시스템이 불안정한 상태가 될 수 있으므로 주의해주세요. 잘 모르는 경우 이 기능을 비활성화하는 것을 추천해요.",
       "inputDefault": "GPU의 기본 제한값으로 리셋해요."
+    },
+    "msiAfterburner": {
+      "executable": {
+        "status": {
+          "CHECKING": "유효한 <strong>MSIAfterburner.exe</strong>인지 확인중이에요.",
+          "NOT_FOUND": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾을 수 없어요.",
+          "INVALID_EXECUTABLE": "해당 위치의 <strong>MSIAfterburner.exe</strong>가 작동하는지 확인할 수 없어요.",
+          "UNKNOWN_ERROR": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾는데 오류가 발생했어요.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong>이 발견되어 정상적으로 작동하고 있어요!"
+        }
+      }
     }
   },
   "status-automations": {
