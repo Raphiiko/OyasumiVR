@@ -72,6 +72,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 
 
 ## Features
+
 <table align="right">
 <tr><td><img src="https://user-images.githubusercontent.com/111654848/198073951-85a52109-6fad-4edd-ad53-897a6d8adf12.gif" width="300"></td></tr>
 <tr><td><img src="https://user-images.githubusercontent.com/111654848/198073192-efa203e3-95e5-4961-a210-65e30b33cc68.gif" width="300"></td></tr>
@@ -114,13 +115,13 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - English
   - Dutch (Nederlands)
   - Japanese (日本語)
-  - Korean* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
-  - Traditional Chinese* (繁體中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
-  - Simplified Chinese* (简体中文) (Community contribution by [狐Kon](https://github.com/XoF-eLtTiL))
+  - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+  - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+  - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 
-_(*) Support for this language is a community contribution and as such the translations might not have 100% coverage with each and every update._
+_(\*) Support for this language is a community contribution and as such the translations might not have 100% coverage with each and every update._
 
 ### Built With
 
@@ -148,8 +149,9 @@ _(\*) Tundra trackers have very delayed reporting of battery levels and charging
 
 ### GPU Automations
 
-Power Limits can only be automated for NVIDIA cards.
-If you have an AMD card, you can use the MSI Afterburner automations to automate your profiles and tweak your power limits instead.
+Any NVIDIA or AMD graphics card that is supported by MSI Afterburner can be automated by having Oyasumi activate the profiles you've set up within MSI Afterburner.
+
+Directly controlling the power limits of your graphics card with Oyasumi is only supported with NVIDIA cards. AMD users will have to use the MSI Afterburner profile automations to be able to control their power limits with Oyasumi.
 
 ## Development
 
@@ -172,8 +174,8 @@ From here, you can run `npm run tauri dev` or `yarn tauri dev` to run the applic
 
 Some features of Oyasumi require you to log in with your VRChat account for them to work. (E.g. status automations)
 
-This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials. 
-Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes. 
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.
 
 Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRCHat inc. VRChat © VRChat Inc.
 
