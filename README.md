@@ -39,36 +39,37 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <p align="center">
 <table>
 <tr>
-<td><p align="center"><b>Device Overview</b></p></td>
 <td><p align="center"><b>Sleeping Animations</b></p></td>
 <td><p align="center"><b>GPU Power Limiting</b></p></td>
+<td><p align="center"><b>MSI Afterburner Automations</b></p></td>
 <td><p align="center"><b>Sleep Detection</b></p></td>
-<td><p align="center"><b>Battery Automations</b></p></td>
-
+<td><p align="center"><b>Device Overview</b></p></td>
 </tr>
 <tr>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735301-27261123-cd07-48ce-b54a-1851bd346be6.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735445-f2487aaf-5e09-4add-87d7-ea5564077330.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736607-e954b974-4bfa-4d9a-9576-a960513cc709.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735136-61043a03-8bc3-4c3a-a2fc-7fc8a5e46483.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735354-51b8c1fb-e39c-44e0-8317-de0c91063d1a.png" width="100%" crossorigin></p></td>
 </tr>
 <tr>
-<td><p align="center"><b></b></p></td>
 <td><p align="center"><b>Status Automations</b></p></td>
 <td><p align="center"><b>General Settings</b></p></td>
 <td><p align="center"><b>Auto Accept Invite Requests</b></p></td>
-<td><p align="center"><b></b></p></td>
+<td><p align="center"><b>Battery Automations</b></p></td>
+<td><p align="center"><b>About</b></p></td>
+
 </tr>
 <tr>
-<td><p align="center"></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_settings.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_auto_accept_invite_requests.png" width="100%" crossorigin></p></td>
-<td><p align="center"></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735647-78c138f5-ceb6-40e3-a0ce-5900dec3d826.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735688-01e76bfd-33ea-429f-a0a4-b2c301f4cc21.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736192-94f7ed10-04b3-47c0-8a58-5620aecac34d.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735510-946bd5a2-74cc-41f2-98c4-af43c4063bd7.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213737349-7fef79d1-4afd-481a-95dc-e94ee1d1312c.png" width="100%" crossorigin></p></td>
 </tr>
 </table>
 </p>
+
 
 ## Features
 <table align="right">
