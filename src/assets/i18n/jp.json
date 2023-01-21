@@ -138,18 +138,18 @@
   "gpu-automations": {
     "title": "GPU自動化",
     "disabled": {
-      "disabled": "{PLACEHOLDER}",
-      "noSidecar": "{PLACEHOLDER}"
+      "disabled": "Oyasumiには、GPU設定を自動的に微調整するさまざまな方法があります。\nこれは眠っている間力を節約することを可能にする。\n\nこれは上級ユーザー向けの機能であるため、デフォルトでは無効になっています。\n下のボタンをクリックして有効にすることができます。",
+      "noSidecar": "OyasumiにGPUの設定変更を許可するためには、管理者権限が必要です。以下のボタンをクリックし、Oyasumiに管理者権限を与えてください。"
     },
     "tabs": {
-      "powerLimiting": "{PLACEHOLDER}",
+      "powerLimiting": "パワーリミッター",
       "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "管理者権限を付与する",
     "disable": "GPU自動化を無効にする",
     "enable": "GPU自動化を有効にする",
     "automations": "睡眠の自動化設定",
-    "enableWarning": "{PLACEHOLDER}",
+    "enableWarning": "GPUパラメータを誤って微調整すると、システムが不安定になる可能性があります。これを念頭に置いて、あなたが何をしているか知っている場合にのみ、この機能を有効にしてください。",
     "elevationSidecarModal": {
       "title": "管理者権限を付与する",
       "message": "Oyasumi に常に管理者権限を与えますか？\n\nこれを有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
@@ -158,15 +158,15 @@
     },
     "powerLimiting": {
       "disabled": {
-        "initializing": "{PLACEHOLDER}",
-        "noNvidia": "{PLACEHOLDER}",
-        "noPermission": "{PLACEHOLDER}",
-        "noSidecar": "{PLACEHOLDER}",
-        "unknown": "{PLACEHOLDER}"
+        "initializing": "電力制限の自動化が初期化されています...",
+        "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、電力制限の自動化は利用できません。電力制限の自動化は、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({{code}})",
+        "noPermission": "Oyasumiは管理者権限を持っていますが、GPUの設定を変更する権限を持っていません。\n\n通常は発生しないはずですので、システム設定をご確認ください。",
+        "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\nこれらは、GPUの電力制限を制御するために必要です。\n\nOyasumiを再起動してみてください。",
+        "unknown": "電源制限の自動化は、未知の理由で利用できません。\n\nOyasumiを再起動してみてください。"
       },
-      "noGPUSelected": "{PLACEHOLDER}",
-      "gpuUnsupported": "{PLACEHOLDER}",
-      "noGPUs": "{PLACEHOLDER}",
+      "noGPUSelected": "GPUが選択されていない",
+      "gpuUnsupported": "GPUサポートされていない",
+      "noGPUs": "お使いのシステムにNVIDIA GPUが見つかりませんでした。",
       "description": "ここでは、GPUの電力制限を自動化し、就寝中の電力を節約することができます。",
       "selectGPU": "電力制限を設定したいGPUを選択します：",
       "gpuPowerLimitsUnsupported": "選択されたGPUは、電力制限の設定に対応していません。",
@@ -183,26 +183,26 @@
       "inputDefault": "GPUのデフォルトの制限値にリセットします。"
     },
     "msiAfterburner": {
-      "description": "{PLACEHOLDER}",
+      "description": "Oyasumiは、MSIアフターバーナーで作成したプロファイルを適用することで、スリープ状態または起床時にGPU設定を自動的に微調整できます。この機能のユースケースは、眠っている間に電力を節約し、目を覚ましたときにGPUの電力を取り戻すことです。<br><br>MSIアフターバーナーで適用するプロファイルを設定する必要があります。",
       "sleepModeEnable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "スリープモードが有効になっている場合",
+        "description": "次のMSIアフターバーナープロファイルを適用します"
       },
       "sleepModeDisable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "スリープモードが無効になっている場合",
+        "description": "次のMSIアフターバーナープロファイルを適用します"
       },
-      "profile": "{PLACEHOLDER}",
-      "none": "{PLACEHOLDER}",
-      "enabledWarning": "{PLACEHOLDER}",
+      "profile": "プロフィール {{index}}",
+      "none": "なし",
+      "enabledWarning": "MSIアフターバーナーでGPUを誤って構成すると、システムが不安定になる可能性があることに注意してください。何をしているのかわからない場合は、この機能を無効にします。",
       "executable": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}",
+        "title": "構成",
+        "description": "\"Oyasumiはあなたの場所について知っておく必要があります<strong>MSIAfterburner.exe</strong>実行可能。 Oyasumiがデフォルトの場所に見つからない場合は、どこに見つけることができるかを設定する必要があります。",
         "status": {
           "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> であるかどうか確認中です。",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>はこの場所に見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>MSIAfterburner.exe</strong> が機能していることを確認できませんでした。",
-          "INVALID_SIGNATURE": "{PLACEHOLDER}",
+          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであることを確認できませんでした。セキュリティ上の理由から、それは使用できません。MSIアフターバーナーの最新バージョンを使用していることを確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、Oyasumi開発者に連絡するか、バグレポートを提出してください。",
           "UNKNOWN_ERROR": "この場所で<strong>MSIAfterburner.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています!"
         }
@@ -404,7 +404,7 @@
       "loggedOut": "ログアウト中",
       "steamvr": {
         "INACTIVE": "非アクティブ",
-        "INITIALIZING": "{PLACEHOLDER}",
+        "INITIALIZING": "待受画像",
         "INITIALIZED": "アクティブ"
       }
     },

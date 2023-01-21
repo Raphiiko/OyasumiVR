@@ -423,6 +423,7 @@
       "loggedOut": "已登出",
       "steamvr": {
         "INACTIVE": "未啟動",
+        "INITIALIZING": "等待啟動",
         "INITIALIZED": "啟動"
       }
     },
