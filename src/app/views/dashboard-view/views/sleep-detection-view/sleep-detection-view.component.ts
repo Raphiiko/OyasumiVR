@@ -27,6 +27,7 @@ import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-di
 export class SleepDetectionViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+
   constructor(
     private modalService: SimpleModalService,
     private automationConfigService: AutomationConfigService

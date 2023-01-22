@@ -137,38 +137,76 @@
   },
   "gpu-automations": {
     "title": "GPU Automatiseringen",
-    "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
     "disabled": {
-      "initializing": "GPU Automatiseringen worden nog geinitialiseerd.,,",
-      "disabled": "Met Oyasumi kun je automatisch de stroom limieten van je videokaart tweaken.\nHier door kun je terwijl je slaapt energie besparen.\n\nGPU Automatiseringen zijn op dit moment alleen beschikbaar voor NVIDIA GPUs.\nAMD en Intel GPUs worden nog niet ondersteund.",
-      "noElevation": "Om de stroom limieten van je videokaart te kunnen beheren, heeft Oyasumi beheerders rechten nodig. Klik a.u.b. op de knop hier onder om Oyasumi beheerders rechten te geven.",
-      "driverNotLoaded": "Oyasumi kon geen ingelade NVIDIA driver vinden.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correcte drivers er voor geinstalleerd zijn.",
-      "noDevices": "Oyasumi kon geen videokaarten vinden in je systeem.\n\nZorg er voor dat je zeker weet dat je computer een NVIDIA videokaart heeft, en de correct drivers er voor geinstalleerd zijn.",
-      "unknown": "Er is een onbekende fout opgetreden bij het aanzetten van de GPU automations functionaliteit."
+      "disabled": "Oyasumi kan op verschillende manieren je GPU instellingen automatisch aanpassen.\nDit stelt je bijvoorbeeld in staat om stroom te besparen wanneer je slaapt.\n\nDeze functie is standaard uitgeschakeld, omdat dit functionaliteit is voor geavanceerde gebruikers.\nAls je deze functionaliteit wilt gebruiken kun je deze inschakelen met de knop hier onder.",
+      "noSidecar": "Oyasumi heeft beheerders rechten nodig om de GPU instellingen aan te kunnen passen. Klik a.u.b. op de knop hier onder om Oyasumi beheerders rechten te geven."
+    },
+    "tabs": {
+      "powerLimiting": "Power Limiting",
+      "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "Geef Beheerders Rechten",
     "disable": "Deactiveer GPU Automatiseringen",
     "enable": "Activeer GPU Automatiseringen",
-    "enableWarning": "Dit is functionaliteit voor geavanceerde gebruikers!\nHet incorrect configureren van je stroom limieten, kan leiden tot een onstabiel systeem.\nHoud dit a.u.b. in gedachte en gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
-    "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
-    "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
-    "currentPowerLimit": "Huidig stroom limiet",
     "automations": "Slaap Automatiseringen",
-    "activatingSleepMode": {
-      "title": "Wanneer ik ga slapen",
-      "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert:"
-    },
-    "deactivatingSleepMode": {
-      "title": "Wanneer ik wakker word",
-      "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert:"
-    },
-    "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
-    "inputDefault": "Herstel naar de GPU's standaard limiet.",
+    "enableWarning": "Het verkeerd aanpassen van je GPU instellingen kan resulteren in een onstabiel systeem. Gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
     "elevationSidecarModal": {
       "title": "Beheerders rechten geven",
       "message": "Wil je Oyasumi altijd beheerders rechten geven?\n\nAls je dit doet, zal Oyasumi voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
       "confirm": "Altijd",
       "cancel": "Alleen deze keer"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "Power limiting automatiseringen zijn nog aan het starten...",
+        "noNvidia": "Power limiting automatiseringen zijn niet beschikbaar omdat er geen draaiende NVIDIA driver kon worden gedetecteerd. Power Limiting automatiseringen zijn alleen beschikbaar op NVIDIA GPUs.\n\nAls je wel een NVIDIA GPU in je systeem hebt, check dan of de correcte driver hier voor is geïnstalleerd.\n\n({{code}})",
+        "noPermission": "Oyasumi heeft geen toestemming om je GPU instellingen aan te passen, ondanks dat Oyasumi wel beheerders rechten heeft.\n\nCheck je systeem instellingen aangezien dit zou normaal nooit moeten gebeuren.",
+        "noSidecar": "Beheerders rechten konden niet worden verkregen om onbekende redenen.\nDeze rechten zijn nodig om je GPU instellingen aan te kunnen passen.\n\nProbeer Oyasumi te herstarten.",
+        "unknown": "Power limiting automatiseringen zijn niet beschikbaar om een onbekende reden.\n\nProbeer Oyasumi opnieuw te starten."
+      },
+      "noGPUSelected": "Geen GPU Geselecteerd",
+      "gpuUnsupported": "GPU wordt niet ondersteund",
+      "noGPUs": "Er konden geen NVIDIA GPUs gevonden worden.",
+      "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
+      "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
+      "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
+      "currentPowerLimit": "Huidig stroom limiet",
+      "activatingSleepMode": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert"
+      },
+      "deactivatingSleepMode": {
+        "title": "Wanneer ik wakker word",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert"
+      },
+      "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+      "inputDefault": "Herstel naar de GPU's standaard limiet."
+    },
+    "msiAfterburner": {
+      "description": "Oyasumi kan automatisch je GPU instellingen aanpassen wanneer je gaat slapen of wakker word, door jouw zelfgemaakte profielen in MSI Afterburner te activeren. Dit kan je bijvoorbeeld helpen om stroom te besparen wanneer je slaapt, en weer grafische kracht terug te krijgen wanneer je wakker wordt.<br><br>Je moet zelf de profielen die je wilt activeren instellen in MSI Afterburner.<br>Je kunt MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">hier</a> downloaden.",
+      "sleepModeEnable": {
+        "title": "Wanneer slaap modus activeert",
+        "description": "Activeer het volgende MSI Afterburner profiel"
+      },
+      "sleepModeDisable": {
+        "title": "Wanneer slaap modus deactiveert",
+        "description": "Activeer het volgende MSI Afterburner profiel"
+      },
+      "profile": "Profiel {{index}}",
+      "none": "Geen",
+      "enabledWarning": "Wees er van bewust dat het verkeerd instellen van je GPU in MSI Afterburner kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+      "executable": {
+        "title": "Configuratie",
+        "description": "Oyasumi heeft de locatie van je <strong>MSIAfterburner.exe</strong> bestand nodig.\nAls Oyasumi deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
+        "status": {
+          "CHECKING": "Aan het checken voor een geldige <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "De <strong>MSIAfterburner.exe</strong> kon niet worden gevonden op deze locatie.",
+          "INVALID_EXECUTABLE": "De <strong>MSIAfterburner.exe</strong> op deze locatie werkt niet zoals verwacht.",
+          "INVALID_SIGNATURE": "Het kon niet geverifieerd worden dat de <strong>MSIAfterburner.exe</strong> op deze locatie van MSI afkomt. Om veiligheidsredenen kan deze niet worden gebruikt. Als dit probleem daarna aanhoud en je zeker weet dat je installatie klopt, neem dan contact op met Oyasumi's ontwikkelaar of stuur een bug report.",
+          "UNKNOWN_ERROR": "Een onbekende fout is opgetreden bij het zoeken van <strong>MSIAfterburner.exe</strong> op deze locatie.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> is gevonden en werkt naar behoren!"
+        }
+      }
     }
   },
   "status-automations": {
@@ -363,7 +401,12 @@
       "sleepMode": "Slaap Modus",
       "active": "Actief",
       "inactive": "Inactief",
-      "loggedOut": "Uitgelogd"
+      "loggedOut": "Uitgelogd",
+      "steamvr": {
+        "INACTIVE": "Inactief",
+        "INITIALIZING": "Wachten",
+        "INITIALIZED": "Actief"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "Bevestig"

@@ -4,9 +4,11 @@ i.material-icons {
 
 button {
   border-bottom: 0.25em solid transparent;
+
   &.unset {
     border-color: var(--color-caution);
   }
+
   &.set {
     border-color: var(--color-success);
   }

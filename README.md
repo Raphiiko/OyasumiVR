@@ -28,6 +28,10 @@
   If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>!
 </p>
 
+<p align="center">
+  :exclamation:<a href="https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations#%E6%97%A5%E6%9C%AC%E8%AA%9E%E8%A8%B3%E6%8F%90%E4%BE%9Bdeepl">Looking for Japanese translators / 日本語翻訳者募集中</a>:exclamation:
+</p>
+
 ## Getting started
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
@@ -35,38 +39,40 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <p align="center">
 <table>
 <tr>
-<td><p align="center"><b>Device Overview</b></p></td>
 <td><p align="center"><b>Sleeping Animations</b></p></td>
 <td><p align="center"><b>GPU Power Limiting</b></p></td>
+<td><p align="center"><b>MSI Afterburner Automations</b></p></td>
 <td><p align="center"><b>Sleep Detection</b></p></td>
-<td><p align="center"><b>Battery Automations</b></p></td>
-
+<td><p align="center"><b>Device Overview</b></p></td>
 </tr>
 <tr>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_overview.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleeping_animations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_gpu_automations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_sleep_detection.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_battery_automations.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735301-27261123-cd07-48ce-b54a-1851bd346be6.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735445-f2487aaf-5e09-4add-87d7-ea5564077330.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736607-e954b974-4bfa-4d9a-9576-a960513cc709.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735136-61043a03-8bc3-4c3a-a2fc-7fc8a5e46483.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735354-51b8c1fb-e39c-44e0-8317-de0c91063d1a.png" width="100%" crossorigin></p></td>
 </tr>
 <tr>
-<td><p align="center"><b></b></p></td>
 <td><p align="center"><b>Status Automations</b></p></td>
 <td><p align="center"><b>General Settings</b></p></td>
 <td><p align="center"><b>Auto Accept Invite Requests</b></p></td>
-<td><p align="center"><b></b></p></td>
+<td><p align="center"><b>Battery Automations</b></p></td>
+<td><p align="center"><b>About</b></p></td>
+
 </tr>
 <tr>
-<td><p align="center"></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_status_automations.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_settings.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://github.com/Raphiiko/Oyasumi/raw/develop/docs/img/screenshot_auto_accept_invite_requests.png" width="100%" crossorigin></p></td>
-<td><p align="center"></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735647-78c138f5-ceb6-40e3-a0ce-5900dec3d826.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735688-01e76bfd-33ea-429f-a0a4-b2c301f4cc21.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736192-94f7ed10-04b3-47c0-8a58-5620aecac34d.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735510-946bd5a2-74cc-41f2-98c4-af43c4063bd7.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213737349-7fef79d1-4afd-481a-95dc-e94ee1d1312c.png" width="100%" crossorigin></p></td>
 </tr>
 </table>
 </p>
 
+
 ## Features
+
 <table align="right">
 <tr><td><img src="https://user-images.githubusercontent.com/111654848/198073951-85a52109-6fad-4edd-ad53-897a6d8adf12.gif" width="300"></td></tr>
 <tr><td><img src="https://user-images.githubusercontent.com/111654848/198073192-efa203e3-95e5-4961-a210-65e30b33cc68.gif" width="300"></td></tr>
@@ -82,7 +88,9 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
       <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
-  - Automatically tweak your power limits when you go to sleep and when you wake up.
+  - When you go to sleep, or when you wake up:
+    - Activate your MSI Afterburner profiles. (NVIDIA/AMD)
+    - Tweak your power limits. (NVIDIA)
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
     - When you go to sleep (so you still have some juice left in the morning!)
@@ -107,9 +115,13 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - English
   - Dutch (Nederlands)
   - Japanese (日本語)
-  - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+  - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+  - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+  - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
+
+_(\*) Support for this language is a community contribution and as such the translations might not have 100% coverage with each and every update._
 
 ### Built With
 
@@ -137,7 +149,9 @@ _(\*) Tundra trackers have very delayed reporting of battery levels and charging
 
 ### GPU Automations
 
-Currently, only NVIDIA cards are supported for setting power limits. AMD and Intel cards are not yet supported.
+Any NVIDIA or AMD graphics card that is supported by MSI Afterburner can be automated by having Oyasumi activate the profiles you've set up within MSI Afterburner.
+
+Directly controlling the power limits of your graphics card with Oyasumi is only supported with NVIDIA cards. AMD users will have to use the MSI Afterburner profile automations to be able to control their power limits with Oyasumi.
 
 ## Development
 
@@ -160,8 +174,8 @@ From here, you can run `npm run tauri dev` or `yarn tauri dev` to run the applic
 
 Some features of Oyasumi require you to log in with your VRChat account for them to work. (E.g. status automations)
 
-This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials. 
-Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes. 
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.
 
 Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRCHat inc. VRChat © VRChat Inc.
 

@@ -16,17 +16,21 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+
     & > span {
       flex: 1;
     }
+
     & > button {
       flex-shrink: 0;
     }
   }
+
   &-content {
     &:not(.no-padding) {
       padding: 2em;
     }
+
     h1,
     h2,
     h3,
@@ -34,11 +38,15 @@
     h5 {
       margin-bottom: 0.5em;
     }
+
     p {
       margin-bottom: 1em;
+      white-space: pre-line;
     }
+
     flex: 1;
   }
+
   &-actions {
     display: flex;
     flex-direction: row;
@@ -72,6 +80,7 @@
     background: var(--color-surface-4);
     border-radius: 2px;
   }
+
   &::-webkit-scrollbar-track-piece,
   *::-webkit-scrollbar-track-piece {
     display: none;

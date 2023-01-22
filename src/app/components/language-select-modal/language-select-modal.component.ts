@@ -12,6 +12,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
 })
 export class LanguageSelectModalComponent extends SimpleModalComponent<void, void> {
   languages = LANGUAGES;
+
   constructor(private settingsService: AppSettingsService) {
     super();
   }

@@ -137,38 +137,76 @@
   },
   "gpu-automations": {
     "title": "GPU Automations",
-    "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep.",
     "disabled": {
-      "initializing": "GPU Automations are currently still initializing...",
-      "disabled": "Oyasumi allows you to automatically tweak the power limits of your GPU.\nThis way you can save on your electricity usage while you're asleep.\n\nGPU Automations are currently only available for NVIDIA GPUs.\nAMD and Intel GPUs are still unsupported.",
-      "noElevation": "For Oyasumi to be able to control the power limits of your GPU, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges.",
-      "driverNotLoaded": "Oyasumi did not detect a loaded NVIDIA driver.\n\nPlease ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
-      "noDevices": "No graphics cards could be found in your system.\n\nPlease ensure your system has a NVIDIA card and the appropriate drivers for it installed.",
-      "unknown": "An unknown error occurred trying to enable the GPU automations feature."
+      "disabled": "Oyasumi has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
+      "noSidecar": "In order for Oyasumi to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges."
+    },
+    "tabs": {
+      "powerLimiting": "Power Limiting",
+      "msiAfterburner": "MSI Afterburner"
     },
     "requestAdministrator": "Give Administrator Privileges",
     "disable": "Disable GPU Automations",
     "enable": "Enable GPU Automations",
-    "enableWarning": "This is a feature for advanced users!\nIncorrectly configuring your power limits could lead to your system becoming unstable.\nPlease keep this in mind and ideally only use this if you know what you are doing.",
-    "selectGPU": "Select the GPU you wish to set the power limit for:",
-    "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
-    "currentPowerLimit": "Current Power Limit",
     "automations": "Sleep Automations",
-    "activatingSleepMode": {
-      "title": "When I go to sleep",
-      "description": "Specify the power limit to set when sleep mode activates:"
-    },
-    "deactivatingSleepMode": {
-      "title": "When I wake up",
-      "description": "Specify the power limit to set when sleep mode deactivates:"
-    },
-    "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
-    "inputDefault": "Reset to the GPU's default limit.",
+    "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
     "elevationSidecarModal": {
       "title": "Give administrator privileges",
       "message": "Do you want to always give Oyasumi administrator privileges?\n\nIf you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
       "confirm": "Always",
       "cancel": "Only this once"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "Power limiting automations are being initialized...",
+        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({{code}})",
+        "noPermission": "Although Oyasumi has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
+        "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting Oyasumi.",
+        "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting Oyasumi."
+      },
+      "noGPUSelected": "No GPU Selected",
+      "gpuUnsupported": "GPU Unsupported",
+      "noGPUs": "No NVIDIA GPUs could be found in your system.",
+      "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
+      "selectGPU": "Select the GPU you wish to set the power limit for:",
+      "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
+      "currentPowerLimit": "Current Power Limit",
+      "activatingSleepMode": {
+        "title": "When I go to sleep",
+        "description": "Specify the power limit to set when sleep mode activates"
+      },
+      "deactivatingSleepMode": {
+        "title": "When I wake up",
+        "description": "Specify the power limit to set when sleep mode deactivates"
+      },
+      "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+      "inputDefault": "Reset to the GPU's default limit."
+    },
+    "msiAfterburner": {
+      "description": "Oyasumi can automatically tweak your GPU settings when you go to sleep or wake up, by applying profiles you've created in MSI Afterburner. A use case for this functionality is to save electricity while you are asleep, and regain GPU power when you wake up.<br><br>You have to set up the profiles you want to apply in MSI Afterburner.<br>You can download MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">here</a>.",
+      "sleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Apply the following MSI Afterburner profile"
+      },
+      "sleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Apply the following MSI Afterburner profile"
+      },
+      "profile": "Profile {{index}}",
+      "none": "None",
+      "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+      "executable": {
+        "title": "Configuration",
+        "description": "Oyasumi needs to know about the location of your <strong>MSIAfterburner.exe</strong> executable.\nIf Oyasumi cannot find it in the default location, you need to set where it can be found.",
+        "status": {
+          "CHECKING": "Checking for valid <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "The <strong>MSIAfterburner.exe</strong> could not be found at this location.",
+          "INVALID_EXECUTABLE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified as working.",
+          "INVALID_SIGNATURE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified to come from MSI. For security reasons it cannot be used. Please make sure you are using the latest version of MSI Afterburner. If the problem persists or you are sure this is correct, please contact Oyasumi's developer or submit a bug report.",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>MSIAfterburner.exe</strong> at this location.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> has been found and is working correctly!"
+        }
+      }
     }
   },
   "status-automations": {
@@ -363,7 +401,12 @@
       "sleepMode": "Sleep Mode",
       "active": "Active",
       "inactive": "Inactive",
-      "loggedOut": "Logged out"
+      "loggedOut": "Logged out",
+      "steamvr": {
+        "INACTIVE": "Inactive",
+        "INITIALIZING": "Waiting",
+        "INITIALIZED": "Active"
+      }
     },
     "confirm-modal": {
       "defaultTitle": "Confirm"

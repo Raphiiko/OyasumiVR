@@ -48,6 +48,7 @@
 
   &.success {
     border-color: var(--color-alert-success);
+
     .alert-bg {
       background: var(--color-alert-success);
       color: var(--color-on-alert-success);
@@ -56,6 +57,7 @@
 
   &.error {
     border-color: var(--color-alert-error);
+
     .alert-bg {
       background: var(--color-alert-error);
       color: var(--color-on-alert-error);
@@ -64,6 +66,7 @@
 
   &.warning {
     border-color: var(--color-alert-warning);
+
     .alert-bg {
       background: var(--color-alert-warning);
       color: var(--color-on-alert-warning);

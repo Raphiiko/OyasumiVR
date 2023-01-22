@@ -1,144 +1,58 @@
-<div class="pane pane-enabled" *ngIf="panel === 'ENABLED'" [@noop]>
-  <div class="pane-title" translate>gpu-automations.title</div>
-  <div class="pane-content">
-    <div class="top-row">
-      <div>
-        <p translate>gpu-automations.description</p>
-        <p translate>gpu-automations.selectGPU</p>
-        <div class="gpu-select">
-          <label class="radio-button" *ngFor="let device of gpuDevices">
-            <input
-              type="radio"
-              name="sleep-enable-gpu-device"
-              [value]="device.id"
-              [checked]="device.selected"
-              (click)="gpuAutomations.selectDevice(device)"
-            />
-            <span class="radio-button-dot"></span>
-            <span class="radio-button-label">
-              <span>{{ device.name }}</span>
-            </span>
-          </label>
-        </div>
-        <div class="alert error" *ngIf="selectedGpu?.supportsPowerLimiting === false" [@vshrink]>
-          <div class="alert-bg"></div>
-          <div class="alert-icon">
-            <i class="material-icons">error</i>
-          </div>
-          <div class="alert-content flex-row">
-            <span translate>gpu-automations.gpuPowerLimitsUnsupported</span>
-          </div>
-        </div>
-      </div>
-      <div
-        class="pane gpu-current-info"
-        [@vshrink]
-        *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting"
-      >
-        <div class="pane-content">
-          <h3 translate>gpu-automations.currentPowerLimit</h3>
-          <div class="power-limit-bar">
-            <div
-              class="power-limit-bar-fill"
-              [class.default]="selectedGpu.powerLimit === selectedGpu.defaultPowerLimit"
-              [style.width]="
-                (((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor) +
-                '%'
-              "
-            >
-              {{ selectedGpu.powerLimit }}W &#11825;
-              {{
-                ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor
-              }}%
-            </div>
-          </div>
-          <div class="power-limit-labels">
-            <span>{{ selectedGpu.minPowerLimit }}W</span>
-            <span>{{ selectedGpu.maxPowerLimit }}W</span>
-          </div>
-        </div>
+<div class="pane" [@noop]>
+  <!-- TITLE-->
+  <div class="pane-title" translate
+    ><span translate>gpu-automations.title</span>
+    <button
+      class="btn btn-secondary"
+      *ngIf="!['DISABLED'].includes(panel)"
+      (click)="gpuAutomations.disable()"
+      translate
+      @fade
+    >
+      gpu-automations.disable
+    </button>
+  </div>
+  <!-- TAB BAR-->
+  <div class="tab-bar" *ngIf="panel === 'ENABLED'" @vshrink>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'POWER_LIMITS'"
+      (click)="activeTab = 'POWER_LIMITS'"
+    >
+      <div class="tab-label">
+        <i class="material-icons" style="color: var(--color-warning)" @hshrink *ngIf='nvmlErrors | async'> error_outline </i>
+        <span translate>gpu-automations.tabs.powerLimiting</span>
       </div>
     </div>
-    <h2 [@fade] *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting" translate>
-      gpu-automations.automations
-    </h2>
-    <div class="automation-grid" [@fade] *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting">
-      <div class="pane">
-        <div class="pane-content">
-          <div class="title">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="onSleepEnableAutomationEnabled"
-                (change)="gpuAutomations.toggleOnSleepEnabledAutomation()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-            <h3 translate>gpu-automations.activatingSleepMode.title</h3>
-          </div>
-          <p translate>gpu-automations.activatingSleepMode.description</p>
-          <app-power-limit-input
-            [minPowerLimit]="selectedGpu.minPowerLimit ?? -1"
-            [maxPowerLimit]="selectedGpu.maxPowerLimit ?? 1"
-            [defaultPowerLimit]="selectedGpu.defaultPowerLimit ?? -1"
-            [powerLimit]="powerLimitOnSleepEnable"
-            (powerLimitChange)="onPowerLimitChange('SLEEP_ENABLE', $event)"
-          ></app-power-limit-input>
-        </div>
-      </div>
-      <div class="pane">
-        <div class="pane-content">
-          <div class="title">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="onSleepDisableAutomationEnabled"
-                (change)="gpuAutomations.toggleOnSleepDisabledAutomation()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-            <h3 translate>gpu-automations.deactivatingSleepMode.title</h3>
-          </div>
-          <p translate>gpu-automations.deactivatingSleepMode.description</p>
-          <app-power-limit-input
-            [minPowerLimit]="selectedGpu.minPowerLimit ?? -1"
-            [maxPowerLimit]="selectedGpu.maxPowerLimit ?? 1"
-            [defaultPowerLimit]="selectedGpu.defaultPowerLimit ?? -1"
-            [powerLimit]="powerLimitOnSleepDisable"
-            (powerLimitChange)="onPowerLimitChange('SLEEP_DISABLE', $event)"
-          ></app-power-limit-input>
-        </div>
-      </div>
-    </div>
-    <div class="alert">
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons">warning</i>
-      </div>
-      <div class="alert-content flex-row">
-        <div translate>gpu-automations.enabledWarning</div>
-        <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
-          gpu-automations.disable
-        </button>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'MSI_AFTERBURNER'"
+      (click)="activeTab = 'MSI_AFTERBURNER'"
+    >
+      <div class="tab-label">
+        <i class="material-icons" style="color: var(--color-warning)" @hshrink *ngIf='msiAfterburnerErrors | async'> error_outline </i>
+        <span translate>gpu-automations.tabs.msiAfterburner</span>
       </div>
     </div>
   </div>
-</div>
-
-<div class="pane pane-disabled" *ngIf="panel !== 'ENABLED'">
-  <div class="pane-title" translate>gpu-automations.title</div>
-  <div class="pane-content">
+  <!-- PANES-->
+  <app-gpu-powerlimiting-pane
+    *ngIf="panel === 'ENABLED' && activeTab === 'POWER_LIMITS'"
+  ></app-gpu-powerlimiting-pane>
+  <app-msi-afterburner-pane
+    *ngIf="panel === 'ENABLED' && activeTab === 'MSI_AFTERBURNER'"
+  ></app-msi-afterburner-pane>
+  <!--  DISABLED-->
+  <div class="pane-content pane-content-disabled" *ngIf="panel !== 'ENABLED'">
     <div class="icon">
-      <i class="material-icons" *ngIf="['DISABLED', 'INITIALIZING'].includes(panel)">info</i>
-      <i class="material-icons" *ngIf="['NO_ELEVATION', 'ERROR', 'NO_DEVICES'].includes(panel)">
-        warning
-      </i>
+      <i class="material-icons" *ngIf="['DISABLED'].includes(panel)">info</i>
+      <i class="material-icons" *ngIf="['NO_SIDECAR'].includes(panel)"> warning </i>
     </div>
     <div class="description" [innerHTML]="disabledMessage | translate"></div>
     <div class="btn-row">
       <button
         class="btn btn-primary action"
-        *ngIf="panel === 'NO_ELEVATION'"
+        *ngIf="panel === 'NO_SIDECAR'"
         (click)="startSidecar()"
         translate
       >
@@ -146,7 +60,7 @@
       </button>
       <button
         class="btn btn-secondary action"
-        *ngIf="!['DISABLED', 'INITIALIZING'].includes(panel)"
+        *ngIf="!['DISABLED'].includes(panel)"
         (click)="gpuAutomations.disable()"
         translate
       >

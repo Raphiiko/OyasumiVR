@@ -348,7 +348,6 @@ export class VRChatService {
             });
           },
         });
-        console.log('RESPONSE', response);
         if (response.result && response.result.ok) {
           // Add friends to list
           friends.push(...response.result.data);
@@ -523,7 +522,6 @@ export class VRChatService {
         responseType: ResponseType.JSON,
       }
     );
-    console.log('RESPONSE /auth/user', response);
     // If we received a 401, there is probably an error included
     if (response.status === 401) {
       // Try parse the error message
@@ -591,7 +589,6 @@ export class VRChatService {
     for (let cookieHeader of cookieHeaders) {
       const cookies = parseSetCookieHeader(cookieHeader);
       for (let cookie of cookies) {
-        console.log('COOKIE', cookie);
         const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
         switch (cookie.name) {
           case 'apiKey':

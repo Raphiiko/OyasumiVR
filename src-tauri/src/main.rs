@@ -7,23 +7,25 @@
 extern crate lazy_static;
 
 use crate::image_cache::ImageCache;
+use background::openvr::OpenVRManager;
 use cronjob::CronJob;
-use log::{error, info, LevelFilter};
+use log::LevelFilter;
 use std::{net::UdpSocket, sync::Mutex};
-use tauri::{api::dialog::blocking::MessageDialogBuilder, Manager};
+use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
 use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
 use tauri_plugin_store::PluginBuilder;
 
 mod commands {
     pub mod admin;
+    pub mod afterburner;
+    pub mod http;
     pub mod log_parser;
     pub mod nvml;
     pub mod openvr;
     pub mod os;
     pub mod osc;
     pub mod splash;
-    pub mod http;
 }
 mod background {
     pub mod http_server;
@@ -35,9 +37,8 @@ mod elevated_sidecar;
 mod image_cache;
 
 lazy_static! {
-    static ref OVR_CONTEXT: Mutex<Option<openvr::Context>> = Default::default();
+    static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
     static ref TAURI_WINDOW: Mutex<Option<tauri::Window>> = Default::default();
-    static ref OVR_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
     static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
     static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
     static ref MAIN_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
@@ -88,41 +89,16 @@ fn main() {
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             // Get dependencies
             let cache_dir = app.path_resolver().app_cache_dir().unwrap().clone();
-            let app_handle = app.handle();
             std::thread::spawn(move || -> () {
                 // Initialize Image Cache
                 let image_cache_dir = cache_dir.join("image_cache");
                 let image_cache = ImageCache::new(image_cache_dir.into_os_string().clone());
                 image_cache.clean(true);
                 *IMAGE_CACHE.lock().unwrap() = Some(image_cache);
-                // Initialize OpenVR
-                info!("[Core] Initializing OpenVR");
-                let ovr_context = match unsafe { openvr::init(openvr::ApplicationType::Overlay) } {
-                    Ok(ctx) => Some(ctx),
-                    Err(err) => {
-                        error!("[Core] Failed to initialize OpenVR: {}", err);
-                        *OVR_STATUS.lock().unwrap() = String::from("INIT_FAILED");
-                        let window_guard = TAURI_WINDOW.lock().unwrap();
-                        let window = window_guard.as_ref().unwrap();
-                        let _ = window.emit_all("OVR_INIT_FAILED", ());
-                        MessageDialogBuilder::new("Oyasumi", "Could not connect to SteamVR. Please make sure SteamVR is installed before launching Oyasumi.").show();
-                        app_handle.exit(1);
-                        None
-                    }
-                };
-                *OVR_CONTEXT.lock().unwrap() = ovr_context;
-                let context_guard = OVR_CONTEXT.lock().unwrap();
-                let ovr_context = context_guard.as_ref();
-                if let Some(_) = ovr_context {
-                    // Spawn event handling thread
-                    background::openvr::spawn_openvr_background_thread();
-                    // Inform frontend of completion
-                    info!("[Core] OpenVR initialization complete");
-                    *OVR_STATUS.lock().unwrap() = String::from("INIT_COMPLETE");
-                    let window_guard = TAURI_WINDOW.lock().unwrap();
-                    let window = window_guard.as_ref().unwrap();
-                    let _ = window.emit_all("OVR_INIT_COMPLETE", ());
-                }
+                // Initialize OpenVR Manager
+                let openvr_manager = OpenVRManager::new();
+                openvr_manager.set_active(true);
+                *OPENVR_MANAGER.lock().unwrap() = Some(openvr_manager);
                 // Spawn HTTP server thread
                 background::http_server::spawn_http_server_thread();
             });
@@ -149,6 +125,7 @@ fn main() {
             commands::admin::start_elevation_sidecar,
             commands::log_parser::init_vrc_log_watcher,
             commands::http::get_http_server_port,
+            commands::afterburner::msi_afterburner_set_profile,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

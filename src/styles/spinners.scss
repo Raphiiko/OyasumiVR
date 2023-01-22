@@ -3,6 +3,7 @@
   width: 1.5em;
   height: 1.5em;
 }
+
 .small-spinner:after {
   content: ' ';
   display: block;
@@ -14,6 +15,7 @@
   border-color: var(--color-text-2) transparent var(--color-text-2) transparent;
   animation: small-spinner 0.75s linear infinite;
 }
+
 @keyframes small-spinner {
   0% {
     transform: rotate(0deg);

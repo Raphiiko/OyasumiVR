@@ -10,8 +10,10 @@
 
 .main {
   flex: 1;
+
   .pane-content {
     overflow: auto;
+
     app-select-box {
       width: 18em;
     }
@@ -22,13 +24,16 @@
   &:not(:last-child) {
     margin-bottom: 1em;
   }
+
   &-content {
     display: flex;
     flex-direction: row;
     align-items: center;
+
     span {
       flex: 1;
     }
+
     button {
       flex-shrink: 0;
     }
@@ -41,6 +46,7 @@
   height: 100%;
   overflow: visible;
   padding-left: 1em;
+
   .player-list {
     flex: 1;
     overflow: auto;
@@ -50,18 +56,21 @@
 .player-list {
   width: 225px;
   min-width: 225px;
+
   .pane-content {
     overflow: hidden;
     padding: 0;
     display: flex;
     flex-direction: column;
     align-items: stretch;
+
     .players-list {
       flex: 1;
       overflow: auto;
       display: flex;
       flex-direction: column;
       align-items: stretch;
+
       .no-players {
         display: flex;
         justify-content: center;
@@ -72,14 +81,17 @@
         height: 100%;
         padding: 1.5em;
       }
+
       .player {
         display: flex;
         flex-direction: row;
         align-items: center;
         background: var(--color-surface-1);
+
         &:not(:last-child) {
           border-bottom: 1px solid var(--color-surface-3);
         }
+
         &-left {
           display: flex;
           flex-direction: row;
@@ -88,15 +100,19 @@
           flex: 1;
           padding: 0.5em 1em;
         }
+
         &-right {
           flex-shrink: 0;
           margin-left: 0.5em;
         }
+
         &-name {
           flex: 1;
         }
+
         .btn {
         }
+
         &-icon {
           flex-shrink: 0;
           margin-right: 0.5em;
@@ -109,12 +125,14 @@
           flex-direction: column;
           align-items: center;
           justify-content: center;
+
           img {
             height: 100%;
           }
         }
       }
     }
+
     .player-list-actions {
       flex-shrink: 0;
       display: flex;
@@ -122,68 +140,13 @@
       align-items: stretch;
       padding: 1em;
       border-top: 1px solid var(--color-surface-3);
+
       & > * {
         flex: 1;
 
         &:not(:last-child) {
           margin-bottom: 0.5em;
         }
-      }
-    }
-  }
-}
-
-.settings {
-  display: flow-root;
-  margin-bottom: 1em;
-  background: var(--color-surface-1);
-  border-radius: 0.5em;
-  & > * {
-    transition: all 0.15s ease;
-  }
-
-  & > .alert {
-    margin: 1em;
-  }
-
-  &.disabled {
-    pointer-events: none;
-    & > *:not(.alert) {
-      opacity: 0.5;
-    }
-  }
-}
-
-.setting-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 1em;
-
-  .setting-row-label {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    flex: 1;
-    > span:first-child {
-      color: var(--color-text-1);
-      margin-bottom: 0.25em;
-    }
-    > span:last-child {
-      color: var(--color-text-3);
-    }
-  }
-  .setting-row-action {
-    flex-shrink: 0;
-    margin-left: 1em;
-    padding: 0 1em;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    & > * {
-      &:not(:last-child) {
-        margin-right: 0.5em;
       }
     }
   }

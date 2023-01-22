@@ -1,7 +1,7 @@
 import fs from 'fs';
 import ExcelJS from 'exceljs';
 
-async function jsonToXLS(fileName) {
+async function jsonToXLS(fileName, onlyPlaceholders) {
   if (!fileName.endsWith('.json')) fileName += '.json';
   const workbook = new ExcelJS.Workbook();
   const worksheet = workbook.addWorksheet('Translations');
@@ -11,13 +11,15 @@ async function jsonToXLS(fileName) {
     fileName.slice(0, fileName.length - 5).toUpperCase(),
   ]);
   headerRow.font = { bold: true };
-
   const langMap = flattenObj(
     JSON.parse(fs.readFileSync('./src/assets/i18n/' + fileName).toString())
   );
   const enMap = flattenObj(JSON.parse(fs.readFileSync('./src/assets/i18n/en.json').toString()));
   Object.entries(enMap).forEach(([key, value]) => {
-    worksheet.addRow([key, value, langMap[key] || '{PLACEHOLDER}']);
+    const targetValue = langMap[key] || '{PLACEHOLDER}';
+    if (!onlyPlaceholders || targetValue === '{PLACEHOLDER}') {
+      worksheet.addRow([key, value, targetValue]);
+    }
   });
   const outputFile = './' + fileName.slice(0, fileName.length - 5) + '.xlsx';
   await workbook.xlsx.writeFile(outputFile);
@@ -46,7 +48,9 @@ const unflattenObj = (ob) => {
   for (const i in ob) {
     const keys = i.split('.');
     keys.reduce((r, e, j) => {
-      return r[e] || (r[e] = isNaN(Number(keys[j + 1])) ? (keys.length - 1 === j ? ob[i] : {}) : []);
+      return (
+        r[e] || (r[e] = isNaN(Number(keys[j + 1])) ? (keys.length - 1 === j ? ob[i] : {}) : [])
+      );
     }, result);
   }
   return result;
@@ -67,7 +71,8 @@ async function main() {
   const args = process.argv.slice(2);
   switch (args[0]) {
     case 'jsonToXLS':
-      await jsonToXLS(args[1]);
+      const onlyPlaceholders = args[1] === '--placeholders';
+      await jsonToXLS(args[onlyPlaceholders ? 2 : 1], onlyPlaceholders);
       break;
     case 'xlsToJson':
       await xlsToJson(args[1]);

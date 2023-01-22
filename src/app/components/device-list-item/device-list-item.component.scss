@@ -13,18 +13,22 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+
   &-info {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     flex: 1;
+
     .device-name {
     }
+
     .device-serial {
       color: var(--color-text-4);
     }
   }
+
   &-action {
     flex-shrink: 0;
   }
@@ -32,6 +36,7 @@
 
 .battery-info {
   background: var(--color-surface-4);
+
   &-label {
     display: flex;
     flex-direction: row;
@@ -40,12 +45,14 @@
     color: var(--color-text-2);
     justify-content: flex-end;
   }
+
   &-bar {
     height: 0.25em;
     background: var(--color-surface-1);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
+
     &-fill {
       width: 0%;
       transition: width 0.15s ease;

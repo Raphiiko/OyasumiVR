@@ -1,8 +1,11 @@
 @import 'panes';
+
 :host > .pane {
   height: 100%;
+
   > .pane-content {
     overflow-y: overlay;
+
     > .pane-width-constraint {
       max-width: 75em;
     }
@@ -23,28 +26,34 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 0.5em;
+
     h3 {
       flex-shrink: 0;
       flex-grow: 1;
       flex-basis: 1;
       margin: 0;
     }
+
     .current-pose {
       margin: 0;
       text-align: right;
     }
   }
+
   .manual-control-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
+
     &:not(:first-of-type) {
       margin-top: 0.5em;
     }
+
     button {
       white-space: nowrap;
       flex: 1;
+
       &:not(:last-child) {
         margin-right: 0.5em;
       }
@@ -55,21 +64,26 @@
 .option-pane {
   background: var(--color-surface-3);
   overflow: visible;
+
   &:not(:first-of-type) {
     margin-top: 1em;
   }
+
   .title {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 0.5em 0.5em 0.5em 1em;
+
     h3 {
       margin: 0;
       flex: 1;
     }
+
     label {
       margin-right: 1em;
     }
+
     &-actions {
       display: flex;
       flex-direction: row;
@@ -90,6 +104,7 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
+
         &:hover {
           background: var(--color-surface-4);
         }
@@ -99,6 +114,7 @@
 
   &-alert {
     padding: 0.5em 1em 1em 1em;
+
     .alert {
       &:not(:first-child) {
         margin-top: 0.5em;
@@ -114,11 +130,13 @@
       color: var(--color-caution);
     }
   }
+
   .suboptions {
     @extend .pane;
     margin-left: 2em;
     padding: 0.5em 1em;
     margin-top: 0.5em;
+
     .suboption input[type='number'] {
       background: var(--color-surface-0);
       padding-top: 0.25em;
@@ -126,6 +144,7 @@
       padding-left: 0.5em;
     }
   }
+
   .option {
     display: flex;
     flex-direction: row;
@@ -144,21 +163,26 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
+
       > *:first-child {
       }
+
       > *:last-child {
         margin-top: 0.5em;
         color: var(--color-text-3);
       }
     }
+
     &-actions {
       display: flex;
       flex-direction: row;
       align-items: center;
       flex-shrink: 0;
+
       > *:not(:first-child) {
         margin-left: 0.5em;
       }
+
       input[type='number'] {
         background: var(--color-surface-2);
       }

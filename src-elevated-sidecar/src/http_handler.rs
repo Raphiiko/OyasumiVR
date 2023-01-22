@@ -2,10 +2,11 @@ use std::convert::Infallible;
 
 use hyper::{body::Buf, Body, Method, Request, Response};
 use oyasumi_shared::models::{
+    MSIAfterburnerSetProfileRequest, MSIAfterburnerSetProfileResponse,
     NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
 };
 
-use crate::nvml;
+use crate::{afterburner, nvml};
 
 pub async fn handle_http(req: Request<Body>) -> Result<Response<Body>, Infallible> {
     match (req.method(), req.uri().path()) {
@@ -13,17 +14,20 @@ pub async fn handle_http(req: Request<Body>) -> Result<Response<Body>, Infallibl
         (&Method::GET, "/nvml/get_devices") => handle_nvml_get_devices(req).await,
         (&Method::POST, "/nvml/set_power_management_limit") => {
             handle_nvml_set_power_management_limit(req).await
-        }
+        },
+        (&Method::POST, "/msi_afterburner/set_profile") => {
+            handle_msi_afterburner_set_profile(req).await
+        },
         _ => response_404(),
     }
 }
 
-pub async fn handle_nvml_status(_: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn handle_nvml_status(_: Request<Body>) -> Result<Response<Body>, Infallible> {
     let status = nvml::nvml_status().await;
     Ok(Response::builder().status(200).body(status.into()).unwrap())
 }
 
-pub async fn handle_nvml_get_devices(_: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn handle_nvml_get_devices(_: Request<Body>) -> Result<Response<Body>, Infallible> {
     let devices = nvml::nvml_get_devices();
     Ok(Response::builder()
         .status(200)
@@ -31,7 +35,7 @@ pub async fn handle_nvml_get_devices(_: Request<Body>) -> Result<Response<Body>,
         .unwrap())
 }
 
-pub async fn handle_nvml_set_power_management_limit(
+async fn handle_nvml_set_power_management_limit(
     req: Request<Body>,
 ) -> Result<Response<Body>, Infallible> {
     let request_data: NVMLSetPowerManagementLimitRequest = serde_json::from_reader(
@@ -54,6 +58,36 @@ pub async fn handle_nvml_set_power_management_limit(
         .status(200)
         .body(
             serde_json::to_string(&NVMLSetPowerManagementLimitResponse { success, error })
+                .unwrap()
+                .into(),
+        )
+        .unwrap())
+}
+
+async fn handle_msi_afterburner_set_profile(
+    req: Request<Body>,
+) -> Result<Response<Body>, Infallible> {
+    let request_data: MSIAfterburnerSetProfileRequest = serde_json::from_reader(
+        hyper::body::to_bytes(req.into_body())
+            .await
+            .unwrap()
+            .reader(),
+    )
+    .unwrap();
+    let result =
+        afterburner::set_afterburner_profile(request_data.executable_path, request_data.profile);
+    let success = match result {
+        Ok(_) => true,
+        Err(_) => false,
+    };
+    let error = match result {
+        Ok(_) => None,
+        Err(e) => Some(e),
+    };
+    Ok(Response::builder()
+        .status(200)
+        .body(
+            serde_json::to_string(&MSIAfterburnerSetProfileResponse { success, error })
                 .unwrap()
                 .into(),
         )

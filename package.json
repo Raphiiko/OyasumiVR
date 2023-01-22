@@ -1,18 +1,20 @@
 {
   "name": "oyasumi",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && cd src-elevated-sidecar && cargo build -r && cd .. && node scripts/move-sidecar-build.js && node scripts/copy-dependencies.js",
+    "build": "ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "build:sidecar": "cd src-elevated-sidecar && cargo build -r && cd .. && node scripts/move-sidecar-build.js && node scripts/copy-dependencies.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "tauri": "tauri",
     "set-version": "node scripts/set-version.js",
-    "translation-converter": "node scripts/translation-converter.js"
+    "translation-converter": "node scripts/translation-converter.js",
+    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders"
   },
   "private": true,
   "dependencies": {
@@ -27,6 +29,8 @@
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/noto-sans-jp": "^4.5.12",
     "@fontsource/noto-sans-kr": "^4.5.12",
+    "@fontsource/noto-sans-sc": "^4.5.12",
+    "@fontsource/noto-sans-tc": "^4.5.12",
     "@fontsource/poppins": "^4.5.10",
     "@fortawesome/fontawesome-free": "^6.2.0",
     "@ngx-translate/core": "^14.0.0",
@@ -50,7 +54,7 @@
     "three": "^0.146.0",
     "tslib": "^2.4.1",
     "uuid": "^9.0.0",
-    "vrchat": "Raphiiko/vrchatapi-javascript#oyasumi-patch",
+    "vrchat": "github:Raphiiko/vrchatapi-javascript#oyasumi-patch",
     "zone.js": "^0.11.4"
   },
   "devDependencies": {
@@ -74,6 +78,6 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.7.0"
   }
 }

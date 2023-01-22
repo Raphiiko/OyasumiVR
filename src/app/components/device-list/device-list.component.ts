@@ -36,9 +36,13 @@ export class DeviceListComponent implements OnInit, OnDestroy {
         map((devices) => devices.filter((d) => ['GenericTracker', 'Controller'].includes(d.class))),
         map(
           (devices) =>
-            Object.entries(groupBy(devices, 'class')) as Array<[OVRDeviceClass, OVRDevice[]]>
+            [devices, Object.entries(groupBy(devices, 'class'))] as [
+              OVRDevice[],
+              Array<[OVRDeviceClass, OVRDevice[]]>
+            ]
         ),
-        tap((groupedDevices) => {
+        tap(([devices, groupedDevices]) => {
+          // Group devices into categories and add categories if necessary
           groupedDevices.forEach((deviceGroup) => {
             const categoryLabel = this.getCategoryLabelForDeviceClass(deviceGroup[0]);
             let category = this.deviceCategories.find((c) => c.label === categoryLabel);
@@ -57,7 +61,23 @@ export class DeviceListComponent implements OnInit, OnDestroy {
               (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
             );
           });
+          // Remove devices that have gone
+          this.deviceCategories.forEach((category) => {
+            category.devices
+              .filter((d) => !devices.find((_d) => _d.index === d.index))
+              .forEach((removedDevice) => {
+                category.devices.splice(category.devices.indexOf(removedDevice), 1);
+              });
+          });
+          // Remove empty categories
+          this.deviceCategories
+            .filter((category) => !category.devices.length)
+            .forEach((emptyCategory) => {
+              this.deviceCategories.splice(this.deviceCategories.indexOf(emptyCategory), 1);
+            });
+          // Order categories
           this.deviceCategories = orderBy(this.deviceCategories, ['label'], ['asc']);
+          // Flag if group poweroff is possible
           this.devicesCanPowerOff = !!this.deviceCategories.find((c) => c.canPowerOff);
         })
       )

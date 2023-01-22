@@ -26,9 +26,11 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
   @ViewChild('editor') editorRef!: ElementRef;
   @ViewChild('lineCounter') lineCounterRef!: ElementRef;
   @Input() minHeight = 10;
+
   @Input() set script(script: OscScript) {
     this.setScript(script, false);
   }
+
   @Output() scriptChange = new EventEmitter<OscScript>();
   @Output() errorCount = new EventEmitter<number>();
   @Output() validatedChange = new EventEmitter<boolean>();
@@ -43,6 +45,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
     this._validated = value;
     this.validatedChange.emit(value);
   }
+
   get validated(): boolean {
     return this._validated;
   }

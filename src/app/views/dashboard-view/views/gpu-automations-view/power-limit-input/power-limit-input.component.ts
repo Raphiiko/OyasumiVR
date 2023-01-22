@@ -17,9 +17,9 @@ import { vshrink } from '../../../../../utils/animations';
   animations: [vshrink()],
 })
 export class PowerLimitInputComponent implements OnInit, OnChanges {
-  @Input() minPowerLimit: number = 0;
-  @Input() maxPowerLimit: number = 1;
-  @Input() defaultPowerLimit: number = 0;
+  @Input() minPowerLimit: number = -1;
+  @Input() maxPowerLimit: number = -1;
+  @Input() defaultPowerLimit: number = -1;
 
   @Input() powerLimit?: GPUPowerLimit;
   @Output() powerLimitChange: EventEmitter<GPUPowerLimit> = new EventEmitter<GPUPowerLimit>();
@@ -42,5 +42,14 @@ export class PowerLimitInputComponent implements OnInit, OnChanges {
     this.powerLimit.default = false;
     this.powerLimit.limit = parseInt(value);
     if (emit) this.powerLimitChange.emit(this.powerLimit);
+  }
+
+  get isEnabled() {
+    return (
+      this.powerLimit &&
+      this.minPowerLimit >= 0 &&
+      this.maxPowerLimit > 0 &&
+      this.defaultPowerLimit >= 0
+    );
   }
 }

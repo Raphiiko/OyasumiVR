@@ -26,6 +26,7 @@ export class BatteryAutomationsViewComponent implements OnInit, OnDestroy {
   protected onChargeConfig: TurnOffDevicesWhenChargingAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
+
   constructor(private router: Router, private automationConfigService: AutomationConfigService) {}
 
   @HostListener('click', ['$event'])

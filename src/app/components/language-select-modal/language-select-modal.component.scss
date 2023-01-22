@@ -10,14 +10,13 @@ p {
   font-size: 1em;
 }
 
-.option-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  justify-content: space-between;
+.options {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   background: var(--color-surface-0);
   border-radius: var(--surface-border-radius);
   margin-top: 2em;
+  padding: 1em;
 }
 
 .language-option {
@@ -28,18 +27,22 @@ p {
   padding: 1em;
   cursor: pointer;
   transition: all 0.15s ease;
+
   &:hover {
     transform: translateY(-1px);
   }
+
   &:active {
     transform: scale(0.95);
   }
+
   .fi {
     font-size: 5em;
     border-radius: 0.125em;
     //border: 0.125em solid var(--color-text-0);
     overflow: hidden;
     position: relative;
+
     &:after {
       content: '';
       position: absolute;
@@ -51,6 +54,7 @@ p {
       transition: all 0.15s ease;
     }
   }
+
   .label {
     margin-top: 1em;
   }

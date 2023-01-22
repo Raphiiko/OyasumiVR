@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
+import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
@@ -18,6 +18,7 @@ export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
   updateAvailable: Observable<boolean>;
+
   constructor(
     private settingsService: AppSettingsService,
     private lighthouse: LighthouseService,
@@ -37,12 +38,49 @@ export class DashboardNavbarComponent implements OnInit {
       this.gpuAutomations.isEnabled(),
       this.nvml.status,
       this.sidecar.sidecarRunning,
+      this.gpuAutomations.msiAfterburnerStatus,
+      this.gpuAutomations.msiAfterburnerConfig,
     ]).pipe(
-      map(([gpuAutomationsEnabled, nvmlStatus, sidecarRunning]) => {
-        return (
-          gpuAutomationsEnabled && (nvmlStatus === 'ELEVATION_SIDECAR_INACTIVE' || !sidecarRunning)
-        );
-      })
+      throttleTime(300, asyncScheduler, { trailing: true, leading: true }),
+      map(
+        ([
+          gpuAutomationsEnabled,
+          nvmlStatus,
+          sidecarRunning,
+          msiAfterburnerStatus,
+          msiAfterburnerConfig,
+        ]) => {
+          // Global
+          if (!gpuAutomationsEnabled) return false;
+          if (!sidecarRunning) return true;
+          // NVML
+          if (
+            [
+              'ELEVATION_SIDECAR_INACTIVE',
+              'NO_PERMISSION',
+              'NVML_UNKNOWN_ERROR',
+              'UNKNOWN_ERROR',
+            ].includes(nvmlStatus)
+          )
+            return true;
+          // Afterburner
+          if (
+            (msiAfterburnerConfig.onSleepDisableProfile > 0 ||
+              msiAfterburnerConfig.onSleepEnableProfile > 0) &&
+            [
+              'NOT_FOUND',
+              'INVALID_EXECUTABLE',
+              'PERMISSION_DENIED',
+              'INVALID_FILENAME',
+              'INVALID_SIGNATURE',
+              'UNKNOWN_ERROR',
+            ].includes(msiAfterburnerStatus)
+          )
+            return true;
+          // No errors found
+          return false;
+        }
+      )
     );
   }
 

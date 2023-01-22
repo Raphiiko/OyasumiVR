@@ -100,6 +100,7 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+
   ngOnDestroy() {
     this.destroy$.next();
   }

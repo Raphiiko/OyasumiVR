@@ -80,6 +80,9 @@ import { CachedValue } from './utils/cached-value';
 import { ImageCacheService } from './services/image-cache.service';
 import { ImageCachePipe } from './pipes/image-cache.pipe';
 import { InviteAutomationsService } from './services/invite-automations.service';
+import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
+import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
+import { invoke } from '@tauri-apps/api';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -128,6 +131,8 @@ export function createTranslateLoader(http: HttpClient) {
     MainStatusBarComponent,
     AutoInviteRequestAcceptViewComponent,
     FriendSelectionModalComponent,
+    GpuPowerlimitingPaneComponent,
+    MsiAfterburnerPaneComponent,
   ],
   imports: [
     CommonModule,
@@ -220,27 +225,28 @@ export class AppModule {
     // Initialize GPU control services
     await this.sidecarService.init().then(async () => {
       await this.nvmlService.init();
-    }),
-      // Initialize automations
-      await Promise.all([
-        // GPU automations
-        this.gpuAutomations.init(),
-        // Sleep mode automations
-        this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
-        this.sleepModeEnableAtBatteryPercentageAutomation.init(),
-        this.sleepModeEnableAtTimeAutomationService.init(),
-        this.sleepModeDisableAtTimeAutomationService.init(),
-        this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
-        // Battery automations
-        this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
-        this.turnOffDevicesWhenChargingAutomationService.init(),
-        // OSC automations
-        this.sleepingAnimationsAutomationService.init(),
-        // Status automations
-        this.statusChangeForPlayerCountAutomationService.init(),
-        // Invite automations
-        this.inviteAutomationsService.init(),
-      ]);
+    });
+    // Initialize automations
+    await Promise.all([
+      // GPU automations
+      this.gpuAutomations.init(),
+      // Sleep mode automations
+      this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
+      this.sleepModeEnableAtBatteryPercentageAutomation.init(),
+      this.sleepModeEnableAtTimeAutomationService.init(),
+      this.sleepModeDisableAtTimeAutomationService.init(),
+      this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
+      // Battery automations
+      this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
+      this.turnOffDevicesWhenChargingAutomationService.init(),
+      // OSC automations
+      this.sleepingAnimationsAutomationService.init(),
+      // Status automations
+      this.statusChangeForPlayerCountAutomationService.init(),
+      // Invite automations
+      this.inviteAutomationsService.init(),
+    ]);
+    await invoke('close_splashscreen');
     // Language selection modal
     this.appSettingsService.loadedDefaults
       .pipe(filter((loadedDefaults) => loadedDefaults))
