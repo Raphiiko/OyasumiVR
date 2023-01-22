@@ -183,7 +183,7 @@
       "inputDefault": "GPUのデフォルトの制限値にリセットします。"
     },
     "msiAfterburner": {
-      "description": "Oyasumiは、MSIアフターバーナーで作成したプロファイルを適用することで、スリープ状態または起床時にGPU設定を自動的に微調整できます。この機能のユースケースは、眠っている間に電力を節約し、目を覚ましたときにGPUの電力を取り戻すことです。<br><br>MSIアフターバーナーで適用するプロファイルを設定する必要があります。",
+      "description": "Oyasumiは、MSIアフターバーナーで作成したプロファイルを適用することで、スリープ状態または起床時にGPU設定を自動的に微調整できます。この機能のユースケースは、眠っている間に電力を節約し、目を覚ましたときにGPUの電力を取り戻すことです。<br><br>MSIアフターバーナーで適用するプロファイルを設定する必要があります。<br>MSI Afterburnerは<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ここ</a>からダウンロードできます。",
       "sleepModeEnable": {
         "title": "スリープモードが有効になっている場合",
         "description": "次のMSIアフターバーナープロファイルを適用します"
