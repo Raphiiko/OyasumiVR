@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.4.0]
 
 ### Added
 
@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - SteamVR is no longer required for Oyasumi to run. 
+- SteamVR does no longer automatically start when Oyasumi is started.
 - Improved error handling and error messages for non-nvidia users.
 - Improved logging on elevated sidecar module.
 
