@@ -89,7 +89,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
       <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
   - When you go to sleep, or when you wake up:
-    - Activate your MSI Afterburner profiles. (NVIDIA/AMD)
+    - Activate your [MSI Afterburner](https://www.msi.com/Landing/afterburner/graphics-cards) profiles. (NVIDIA/AMD)
     - Tweak your power limits. (NVIDIA)
 - :battery: Battery automations:
   - Automatically turn off trackers and/or controllers:
