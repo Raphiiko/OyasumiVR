@@ -5,17 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1]
+
+### Added
+- Added support for logins where VRChat sends an OTP via email for accounts without 2FA enabled.
+
+### Fixed
+- Error handling when VRChat wants users to confirm their new location via email.
+
 ## [1.4.0]
 
 ### Added
 
 - Add automations for automatically switching MSI Afterburner profiles when the sleep mode changes.
 - Allow sleep mode to be toggled from the pill in the status bar.
-- Language support for Traditional and Simplified Chinese, thanks to  [狐Kon](https://github.com/XoF-eLtTiL).
+- Language support for Traditional and Simplified Chinese, thanks to [狐 Kon](https://github.com/XoF-eLtTiL).
 
 ### Changed
 
-- SteamVR is no longer required for Oyasumi to run. 
+- SteamVR is no longer required for Oyasumi to run.
 - SteamVR does no longer automatically start when Oyasumi is started.
 - Improved error handling and error messages for non-nvidia users.
 - Improved logging on elevated sidecar module.

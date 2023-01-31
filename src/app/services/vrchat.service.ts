@@ -143,7 +143,9 @@ export class VRChatService {
   }
 
   // Will throw in the case of:
-  // - 2FA_REQUIRED
+  // - 2FA_TOTP_REQUIRED
+  // - 2FA_EMAILOTP_REQUIRED
+  // - 2FA_OTP_REQUIRED
   // - INVALID_CREDENTIALS
   // - CHECK_EMAIL
   // - UNEXPECTED_RESPONSE
@@ -159,7 +161,7 @@ export class VRChatService {
   // Will throw in the case of:
   // - INVALID_CODE
   // - UNEXPECTED_RESPONSE
-  public async verify2FA(code: string) {
+  public async verify2FA(code: string, method: 'totp' | 'otp' | 'emailotp') {
     if (this._status.value !== 'LOGGED_OUT') {
       error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
@@ -168,9 +170,9 @@ export class VRChatService {
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
-    info(`[VRChat] API Request: /auth/twofactorauth/totp/verify`);
+    info(`[VRChat] API Request: /auth/twofactorauth/${method}/verify`);
     const response = await this.http.post(
-      `${BASE_URL}/auth/twofactorauth/totp/verify`,
+      `${BASE_URL}/auth/twofactorauth/${method}/verify`,
       Body.json({ code }),
       {
         headers,
@@ -187,7 +189,7 @@ export class VRChatService {
     // If it's not ok, it's unexpected
     if (!response.ok || (response.data as any)?.verified === false) {
       error(
-        `[VRChat] Received unexpected response from /auth/twofactorauth/totp/verify: ${JSON.stringify(
+        `[VRChat] Received unexpected response from /auth/twofactorauth/${method}/verify: ${JSON.stringify(
           response
         )}`
       );
@@ -401,7 +403,9 @@ export class VRChatService {
         switch (e) {
           case 'INVALID_CREDENTIALS':
           case 'CHECK_EMAIL':
-          case '2FA_REQUIRED':
+          case '2FA_TOTP_REQUIRED':
+          case '2FA_EMAILOTP_REQUIRED':
+          case '2FA_OTP_REQUIRED':
             // With these errors, clear the currently known credentials
             await this.updateSettings({
               authCookie: undefined,
@@ -528,7 +532,7 @@ export class VRChatService {
       const message: string = (response.data as any)?.error?.message;
       // Check for known errors
       switch (message) {
-        case '\\"It looks like you\'re logging in from somewhere new! Check your email for a message from VRChat.\\"':
+        case '"It looks like you\'re logging in from somewhere new! Check your email for a message from VRChat."':
           error(`[VRChat] Login failed: Check email`);
           throw 'CHECK_EMAIL';
         case '"Invalid Username/Email or Password"':
@@ -549,7 +553,21 @@ export class VRChatService {
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
     await this.parseResponseCookies(response);
     // If we got a missing 2FA response, throw
-    if (response.data.hasOwnProperty('requiresTwoFactorAuth')) throw '2FA_REQUIRED';
+    if (response.data.hasOwnProperty('requiresTwoFactorAuth')) {
+      const data = response.data as { requiresTwoFactorAuth: string[] };
+      const methods = data.requiresTwoFactorAuth.map((method) => method.toLowerCase());
+      info(
+        `[VRChat] 2FA Required for login. (methods=${JSON.stringify(data.requiresTwoFactorAuth)})`
+      );
+      if (methods.includes('totp')) throw '2FA_TOTP_REQUIRED';
+      if (methods.includes('emailotp')) throw '2FA_EMAILOTP_REQUIRED';
+      if (methods.includes('otp')) throw '2FA_OTP_REQUIRED';
+      error(
+        '[VRChat] 2FA Required for login, but no supported method found. Available methods: ' +
+          JSON.stringify(data.requiresTwoFactorAuth)
+      );
+      throw '2FA_TOTP_REQUIRED'; // Should never happen but let's use it as a fallback.
+    }
     // Cache the user
     const user = response.data as CurrentUser;
     this._currentUserCache.set(user);
