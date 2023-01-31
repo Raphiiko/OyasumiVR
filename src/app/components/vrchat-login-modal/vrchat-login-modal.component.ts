@@ -57,7 +57,9 @@ export class VRChatLoginModalComponent
       await this.close();
     } catch (e) {
       switch (e) {
-        case '2FA_REQUIRED':
+        case '2FA_TOTP_REQUIRED':
+        case '2FA_EMAILOTP_REQUIRED':
+        case '2FA_OTP_REQUIRED':
           let lastCodeInvalid = false;
           while (true) {
             this.error = '';
@@ -66,8 +68,13 @@ export class VRChatLoginModalComponent
               await this.close();
               return;
             }
+            const method: 'totp' | 'otp' | 'emailotp' = {
+              '2FA_TOTP_REQUIRED': 'totp',
+              '2FA_EMAILOTP_REQUIRED': 'emailotp',
+              '2FA_OTP_REQUIRED': 'otp',
+            }[e] as 'totp' | 'otp' | 'emailotp';
             try {
-              await this.vrchat.verify2FA(code);
+              await this.vrchat.verify2FA(code, method);
               this.loggingIn = false;
               await this.close();
             } catch (e) {

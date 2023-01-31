@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added support for logins where VRChat sends an OTP via email for accounts without 2FA enabled.
+
+### Fixed
+- Error handling when VRChat wants users to confirm their new location via email.
+
 ## [1.4.0]
 
 ### Added
