@@ -339,7 +339,9 @@ export class VRChatService {
         const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
           typeId: 'LIST_FRIENDS',
           runnable: () => {
-            info(`[VRChat] API Request: /auth/user/friends`);
+            info(
+              `[VRChat] API Request: /auth/user/friends [offline=${offline}, offset=${offset.toString()}]`
+            );
             return this.http.get(`${BASE_URL}/auth/user/friends`, {
               headers: this.getDefaultHeaders(),
               query: {
