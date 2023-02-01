@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Body, Client, getClient, Response, ResponseType } from '@tauri-apps/api/http';
+import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@tauri-apps/api/http';
 import { APIConfig, CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
@@ -90,7 +90,7 @@ export class VRChatService {
   }
 
   async init() {
-    this.http = await getClient();
+    this.http = await this.patchHttpClient(await getClient());
     // Load settings from disk
     await this.loadSettings();
     // Construct user agent
@@ -170,7 +170,6 @@ export class VRChatService {
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
-    info(`[VRChat] API Request: /auth/twofactorauth/${method}/verify`);
     const response = await this.http.post(
       `${BASE_URL}/auth/twofactorauth/${method}/verify`,
       Body.json({ code }),
@@ -220,7 +219,6 @@ export class VRChatService {
         {
           typeId: 'STATUS_CHANGE',
           runnable: () => {
-            info(`[VRChat] API Request: /users/${userId}`);
             return this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
               headers: this.getDefaultHeaders(),
             });
@@ -274,7 +272,6 @@ export class VRChatService {
       const result = await this.apiCallQueue.queueTask<Response<Notification>>({
         typeId: 'DELETE_NOTIFICATION',
         runnable: () => {
-          info(`[VRChat] API Request: /auth/user/notifications/${notificationId}/hide`);
           return this.http.put(
             `${BASE_URL}/auth/user/notifications/${notificationId}/hide`,
             undefined,
@@ -308,7 +305,6 @@ export class VRChatService {
     const response = await this.apiCallQueue.queueTask<Response<Notification>>({
       typeId: 'INVITE',
       runnable: () => {
-        info(`[VRChat] API Request: /invite/${inviteeId}`);
         return this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
           headers: this.getDefaultHeaders(),
         });
@@ -339,9 +335,6 @@ export class VRChatService {
         const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
           typeId: 'LIST_FRIENDS',
           runnable: () => {
-            info(
-              `[VRChat] API Request: /auth/user/friends [offline=${offline}, offset=${offset.toString()}]`
-            );
             return this.http.get(`${BASE_URL}/auth/user/friends`, {
               headers: this.getDefaultHeaders(),
               query: {
@@ -520,7 +513,6 @@ export class VRChatService {
       }
     }
     // Request the current user
-    info(`[VRChat] API Request: /auth/user`);
     const response = await this.http.get<CurrentUser | { requiresTwoFactorAuth: string[] }>(
       `${BASE_URL}/auth/user`,
       {
@@ -578,8 +570,6 @@ export class VRChatService {
   }
 
   private async fetchApiConfig() {
-    info('[VRChat] Fetching API config');
-    info('[VRChat] API Request: /config');
     const response = await this.http.get<APIConfig>(`${BASE_URL}/config`, {
       responseType: ResponseType.JSON,
       headers: this.getDefaultHeaders(),
@@ -672,5 +662,29 @@ export class VRChatService {
   private async saveSettings() {
     await this.store.set(SETTINGS_KEY_VRCHAT_API, this.settings.value);
     await this.store.save();
+  }
+
+  private async patchHttpClient(client: Client): Promise<Client> {
+    const isDev = (await getVersion()) === 'DEV';
+    const next = client.request.bind(client);
+    async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {
+      info(`[VRChat] API Request: ${options.url}`);
+      if (isDev)
+        console.log(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`, options);
+      try {
+        const response = await next<T>(options);
+        if (isDev)
+          console.log(
+            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}`,
+            response
+          );
+        return response;
+      } catch (e) {
+        error(`[VRChat] HTTP Request Error: ${e}`);
+        throw e;
+      }
+    }
+    client.request = requestWrapper.bind(client);
+    return client;
   }
 }
