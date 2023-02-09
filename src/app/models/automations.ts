@@ -11,6 +11,7 @@ export type AutomationType =
   | 'SLEEP_MODE_ENABLE_AT_TIME'
   | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
   | 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF'
+  | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   // BATTERY AUTOMATIONS
@@ -24,13 +25,14 @@ export type AutomationType =
   | 'AUTO_ACCEPT_INVITE_REQUESTS';
 
 export interface AutomationConfigs {
-  version: 6;
+  version: 7;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
   SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: SleepModeEnableAtControllersPoweredOffAutomationConfig;
+  SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
   // BATTERY AUTOMATIONS
@@ -85,6 +87,10 @@ export interface SleepModeEnableAtBatteryPercentageAutomationConfig extends Auto
 
 export interface SleepModeEnableAtControllersPoweredOffAutomationConfig extends AutomationConfig {}
 
+export interface SleepModeChangeOnSteamVRStatusAutomationConfig extends AutomationConfig {
+  disableOnSteamVRStop: boolean;
+}
+
 export interface SleepModeDisableAtTimeAutomationConfig extends AutomationConfig {
   time: string | null;
 }
@@ -137,7 +143,7 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 6,
+  version: 7,
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -169,6 +175,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   },
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: {
     enabled: false,
+  },
+  SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: {
+    enabled: true,
+    disableOnSteamVRStop: false,
   },
   SLEEP_MODE_DISABLE_AT_TIME: {
     enabled: false,

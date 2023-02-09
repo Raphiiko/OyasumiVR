@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Automation for disabling sleep mode when SteamVR has been stopped.
+
 ## [1.4.1]
 
 ### Added

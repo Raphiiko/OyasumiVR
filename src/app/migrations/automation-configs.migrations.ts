@@ -9,6 +9,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   4: from3to4,
   5: from4to5,
   6: from5to6,
+  7: from6to7,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -37,6 +38,14 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from6to7(data: any): any {
+  data.version = 7;
+  data.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS
+  );
   return data;
 }
 

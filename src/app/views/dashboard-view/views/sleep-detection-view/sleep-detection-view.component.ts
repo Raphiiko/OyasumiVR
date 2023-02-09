@@ -110,9 +110,9 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  toggleAutomation(automation: AutomationType) {
+  toggleAutomation(automation: AutomationType, field = 'enabled') {
     this.automationConfigService.updateAutomationConfig(automation, {
-      enabled: !this.automationConfigs[automation].enabled,
-    });
+      [field]: !((this.automationConfigs[automation] as any)[field] as any),
+    } as any);
   }
 }

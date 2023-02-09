@@ -37,7 +37,8 @@
     "disableAutomations": {
       "title": "Disabling sleep mode",
       "atTime": "At a specific time",
-      "onDevicePowerOn": "When a device is turned on"
+      "onDevicePowerOn": "When a device is turned on",
+      "onSteamVRStop": "When SteamVR is stopped"
     },
     "modals": {
       "enableAtTime": {

@@ -142,6 +142,28 @@
             </div>
           </div>
         </div>
+
+        <div class="automation">
+          <div class="automation-header">
+            <div class="automation-header-description" translate>
+              sleep-detection.disableAutomations.onSteamVRStop
+            </div>
+            <div class="automation-header-toggle">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="
+                    automationConfigs.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop
+                  "
+                  (change)="
+                    toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

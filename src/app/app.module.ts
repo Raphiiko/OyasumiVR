@@ -83,6 +83,7 @@ import { InviteAutomationsService } from './services/invite-automations.service'
 import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
 import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
 import { invoke } from '@tauri-apps/api';
+import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -189,6 +190,7 @@ export class AppModule {
     private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
     private sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
+    private sleepModeChangeOnSteamVRStatusAutomationService: SleepModeChangeOnSteamVRStatusAutomationService,
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Battery automations
@@ -234,6 +236,7 @@ export class AppModule {
       this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
       this.sleepModeEnableAtBatteryPercentageAutomation.init(),
       this.sleepModeEnableAtTimeAutomationService.init(),
+      this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
       this.sleepModeDisableAtTimeAutomationService.init(),
       this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
       // Battery automations
