@@ -84,6 +84,7 @@ import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-
 import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
 import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
+import { ImageFallbackDirective } from './directives/image-fallback.directive';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -99,6 +100,7 @@ export function createTranslateLoader(http: HttpClient) {
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
+    ImageFallbackDirective,
     AboutViewComponent,
     OverviewViewComponent,
     SleepDetectionViewComponent,
