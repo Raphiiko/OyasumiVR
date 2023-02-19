@@ -334,7 +334,7 @@
       },
       "OSC": {
         "title": "OSC Settings",
-        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.\n\nNote that only one application can listen for OSC messages on a single port. If you have other applications running that listen to OSC messages on the selected port, you either have to close them, or start using an OSC router.",
+        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.",
         "reset": "Reset to defaults",
         "receivingHost": {
           "title": "Receiving Host",
