@@ -6,10 +6,12 @@
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
+use crate::commands::admin::start_elevation_sidecar;
 use crate::image_cache::ImageCache;
 use background::openvr::OpenVRManager;
 use cronjob::CronJob;
-use log::LevelFilter;
+use log::{info, LevelFilter};
+use oyasumi_shared::windows::is_elevated;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
@@ -27,12 +29,14 @@ mod commands {
     pub mod osc;
     pub mod splash;
 }
+
 mod background {
     pub mod http_server;
     pub mod log_parser;
     pub mod openvr;
     pub mod osc;
 }
+
 mod elevated_sidecar;
 mod image_cache;
 
@@ -106,6 +110,21 @@ fn main() {
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
             cron.seconds("0");
             CronJob::start_job_threaded(cron);
+            // If we have admin privileges, prelaunch the elevation sidecar
+            if is_elevated() {
+                info!("[Core] Main process is running with elevation. Pre-launching sidecar...");
+                loop {
+                    {
+                        let main_http_port = MAIN_HTTP_SERVER_PORT.lock().unwrap();
+                        if main_http_port.is_some() {
+                            start_elevation_sidecar();
+                            break;
+                        }
+                    }
+                }
+            } else {
+                info!("[Core] Main process is running without elevation. Sidecar will be launched on demand.");
+            }
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

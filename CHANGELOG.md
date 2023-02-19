@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for disabling sleep mode when SteamVR has been stopped.
 - Configuration options for setting the OSC hosts and ports Oyasumi interacts with.
 
+### Changed
+
+- The elevated sidecar will be launched on start if the main application is launched with administrator privileges.
+
 ## [1.4.1]
 
 ### Added

@@ -678,7 +678,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumi-elevated-sidecar"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "codesigned",
  "directories",
@@ -693,16 +693,16 @@ dependencies = [
  "simplelog",
  "sysinfo",
  "tokio",
- "winapi",
- "windows-sys 0.36.1",
 ]
 
 [[package]]
 name = "oyasumi-shared"
-version = "1.4.0"
+version = "1.4.1"
 dependencies = [
  "openvr",
  "serde",
+ "winapi",
+ "windows-sys 0.36.1",
 ]
 
 [[package]]

@@ -2259,6 +2259,8 @@ version = "1.4.1"
 dependencies = [
  "openvr",
  "serde",
+ "winapi",
+ "windows-sys 0.36.1",
 ]
 
 [[package]]
