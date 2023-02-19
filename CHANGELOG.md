@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Automation for disabling sleep mode when SteamVR has been stopped.
+- Configuration options for setting the OSC hosts and ports Oyasumi interacts with.
 
 ## [1.4.1]
 
@@ -46,13 +47,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update check to run every week after application start, in case Oyasumi is left running for a long time.
-- Update check to rerun every 10 minutes until at least one check has succeeded, in case Oyasumi is started while offline.
+- Update check to rerun every 10 minutes until at least one check has succeeded, in case Oyasumi is started while
+  offline.
 
 ## [1.3.0]
 
 ### Added
 
-- New feature for automatically accepting invite requests while on orange/green status, optionally based on a white- or blacklist.
+- New feature for automatically accepting invite requests while on orange/green status, optionally based on a white- or
+  blacklist.
 - Korean language support, thanks to [@soumt-r](https://github.com/soumt-r).
 
 ### Changed
@@ -64,7 +67,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed issue where the main window would load before the app was ready, due to a bug in a new version of the `tao` crate.
+- Fixed issue where the main window would load before the app was ready, due to a bug in a new version of the `tao`
+  crate.
 
 ## [1.2.1]
 
@@ -99,11 +103,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Sleeping animation automation preset for [GoGo Loco v1.7.1 by franada](https://booth.pm/en/items/3290806).
-- Sleeping animation automation (workaround) preset for [GoGo Loco v1.6.2 - v1.7.0 by franada](https://booth.pm/en/items/3290806).
+- Sleeping animation automation (workaround) preset
+  for [GoGo Loco v1.6.2 - v1.7.0 by franada](https://booth.pm/en/items/3290806).
 
 ### Changed
 
-- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also support v2.3 and the new EX version.
+- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also support v2.3 and
+  the new EX version.
 - Changed presets to support multiple info links (to show both んみんみーん's EX and non-EX version)
 
 ### Fixed
@@ -114,7 +120,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping position.
+- Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping
+  position.
   - Preset for [ごろ寝システム (Sleep System) v2.2 by みんみんみーん](https://booth.pm/ko/items/2886739).
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
@@ -127,13 +134,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Navigation item for GPU Automations to show an error icon when the feature is enabled, but no administrator privileges were detected.
+- Navigation item for GPU Automations to show an error icon when the feature is enabled, but no administrator privileges
+  were detected.
 - Switched to Fontsource for the application font, to remove the dependency on Google for providing fonts at runtime.
 - Added own updater UI to replace the default Tauri update dialog.
 
 ### Fixed
 
-- The main window can now be interacted with through the SteamVR overlay or other overlays like XSOverlay, when given administrator privileges.
+- The main window can now be interacted with through the SteamVR overlay or other overlays like XSOverlay, when given
+  administrator privileges.
 - Fixed turning off devices sometimes triggering the "disabling sleep mode when a device is turned on" automation.
 - Fixed Oyasumi freezing when SteamVR is stopped while it is still running.
 
@@ -142,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Global sleep mode to more clearly separate triggers and actions for easier future expansion.
-- Version migrations for app settings and automation configurations, to aid preservation of configuration during future updates.
+- Version migrations for app settings and automation configurations, to aid preservation of configuration during future
+  updates.
 - GPU Automations for automatically adjusting the power limits of NVIDIA GPUs
 
 ### Changed

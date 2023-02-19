@@ -331,6 +331,33 @@
           "brand": "Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
           "liability": "Raphiiko is not not responsible for any problems caused by Oyasumi. Use at your own risk!"
         }
+      },
+      "OSC": {
+        "title": "OSC Settings",
+        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.\n\nNote that only one application can listen for OSC messages on a single port. If you have other applications running that listen to OSC messages on the selected port, you either have to close them, or start using an OSC router.",
+        "reset": "Reset to defaults",
+        "receivingHost": {
+          "title": "Receiving Host",
+          "description": "The host Oyasumi will listen OSC messages on.\n(VRChat sends to 127.0.0.1 by default)"
+        },
+        "receivingPort": {
+          "title": "Receiving Port",
+          "description": "The port number Oyasumi will listen for OSC messages on.\n(VRChat sends to port 9001 by default)"
+        },
+        "sendingHost": {
+          "title": "Sending Host",
+          "description": "The host Oyasumi will send OSC messages to.\n(If VRChat runs on the same machine, this is 127.0.0.1)"
+        },
+        "sendingPort": {
+          "title": "Sending Port",
+          "description": "The port number Oyasumi will send OSC messages to.\n(VRChat listens on port 9000 by default)"
+        },
+        "errors": {
+          "bindFailed": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
+          "invalidPort": "A port has to be a valid number between 1 and 65535.",
+          "samePort": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same.",
+          "invalidHost": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+        }
       }
     },
     "updates": {

@@ -15,21 +15,21 @@
   >
     <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_IN'">
       <p
-        ><span
-          translate="settings.vrchat.logIn.loggedIn.title"
-          [translateParams]="{ name: currentUser?.displayName }"
-        ></span
-        ><br /><span translate>settings.vrchat.logIn.loggedIn.subtext</span></p
+      ><span
+        translate="settings.vrchat.logIn.loggedIn.title"
+        [translateParams]="{ name: currentUser?.displayName }"
+      ></span
+      ><br /><span translate>settings.vrchat.logIn.loggedIn.subtext</span></p
       >
       <button class="btn btn-secondary" (click)="logout()" translate
-        >settings.vrchat.logIn.loggedIn.logOut
+      >settings.vrchat.logIn.loggedIn.logOut
       </button>
     </div>
     <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_OUT'">
       <p
-        ><span translate>settings.vrchat.logIn.loggedOut.title</span><br /><span translate
-          >settings.vrchat.logIn.loggedOut.subtext</span
-        ></p
+      ><span translate>settings.vrchat.logIn.loggedOut.title</span><br /><span translate
+      >settings.vrchat.logIn.loggedOut.subtext</span
+      ></p
       >
       <button class="btn btn-primary" (click)="login()" translate>shared.modals.login</button>
     </div>
@@ -37,4 +37,109 @@
   <p translate>settings.vrchat.logIn.disclaimers.use</p>
   <p translate>settings.vrchat.logIn.disclaimers.brand</p>
   <p translate>settings.vrchat.logIn.disclaimers.liability</p>
+</div>
+<div class="setting-category">
+  <h2>
+    <span translate>settings.vrchat.OSC.title</span>
+    <button class="btn btn-secondary" translate (click)="resetOSCAddresses()">settings.vrchat.OSC.reset</button>
+  </h2>
+  <p translate>settings.vrchat.OSC.description</p>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.vrchat.OSC.receivingHost.title</span>
+        <span translate>settings.vrchat.OSC.receivingHost.description</span>
+      </div>
+      <div class="setting-row-action">
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-green)"
+           *ngIf="oscReceivingHostStatus === 'OK'">check</i>
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-red)"
+           *ngIf="oscReceivingHostStatus === 'ERROR'">error</i>
+        <div @hshrink class="small-spinner" *ngIf="oscReceivingHostStatus === 'CHECKING'"></div>
+        <input class="port-input" type="text" [maxLength]="253" [value]="oscReceivingHost"
+               (input)="oscReceivingHostChange.next(oscReceivingHostInput.value)" #oscReceivingHostInput>
+      </div>
+    </div>
+    <div class="setting-alert-row" @vshrink *ngIf="oscReceivingHostStatus === 'ERROR' && oscReceivingHostError">
+      <div class="alert error">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> error </i>
+        </div>
+        <div class="alert-content">{{'settings.vrchat.OSC.errors.' + oscReceivingHostError | translate}}</div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.vrchat.OSC.receivingPort.title</span>
+        <span translate>settings.vrchat.OSC.receivingPort.description</span>
+      </div>
+      <div class="setting-row-action">
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-green)"
+           *ngIf="oscReceivingPortStatus === 'OK'">check</i>
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-red)"
+           *ngIf="oscReceivingPortStatus === 'ERROR'">error</i>
+        <div @hshrink class="small-spinner" *ngIf="oscReceivingPortStatus === 'CHECKING'"></div>
+        <input class="port-input" type="number" min="1" max="65535" [maxLength]="5" [value]="oscReceivingPort"
+               (input)="oscReceivingPortChange.next(oscReceivingPortInput.value)" #oscReceivingPortInput>
+      </div>
+    </div>
+    <div class="setting-alert-row" @vshrink *ngIf="oscReceivingPortStatus === 'ERROR' && oscReceivingPortError">
+      <div class="alert error">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> error </i>
+        </div>
+        <div class="alert-content">{{'settings.vrchat.OSC.errors.' + oscReceivingPortError | translate}}</div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.vrchat.OSC.sendingHost.title</span>
+        <span translate>settings.vrchat.OSC.sendingHost.description</span>
+      </div>
+      <div class="setting-row-action">
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-green)"
+           *ngIf="oscSendingHostStatus === 'OK'">check</i>
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-red)"
+           *ngIf="oscSendingHostStatus === 'ERROR'">error</i>
+        <div @hshrink class="small-spinner" *ngIf="oscSendingHostStatus === 'CHECKING'"></div>
+        <input class="port-input" type="text" [maxLength]="253" [value]="oscSendingHost"
+               (input)="oscSendingHostChange.next(oscSendingHostInput.value)" #oscSendingHostInput>
+      </div>
+    </div>
+    <div class="setting-alert-row" @vshrink *ngIf="oscSendingHostStatus === 'ERROR' && oscSendingHostError">
+      <div class="alert error">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> error </i>
+        </div>
+        <div class="alert-content">{{'settings.vrchat.OSC.errors.' + oscSendingHostError | translate}}</div>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.vrchat.OSC.sendingPort.title</span>
+        <span translate>settings.vrchat.OSC.sendingPort.description</span>
+      </div>
+      <div class="setting-row-action">
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-green)"
+           *ngIf="oscSendingPortStatus === 'OK'">check</i>
+        <i @hshrink class="material-icons-round" style="color: var(--color-vrchat-status-red)"
+           *ngIf="oscSendingPortStatus === 'ERROR'">error</i>
+        <div @hshrink class="small-spinner" *ngIf="oscSendingPortStatus === 'CHECKING'"></div>
+        <input class="port-input" type="number" min="1" max="65535" [maxLength]="5" [value]="oscSendingPort"
+               (input)="oscSendingPortChange.next(oscSendingPortInput.value)" #oscSendingPortInput>
+      </div>
+    </div>
+    <div class="setting-alert-row" @vshrink *ngIf="oscSendingPortStatus === 'ERROR' && oscSendingPortError">
+      <div class="alert error">
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> error </i>
+        </div>
+        <div class="alert-content">{{'settings.vrchat.OSC.errors.' + oscSendingPortError | translate}}</div>
+      </div>
+    </div>
+  </div>
 </div>
