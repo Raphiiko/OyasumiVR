@@ -37,7 +37,8 @@
     "disableAutomations": {
       "title": "Slaap modus uitschakelen",
       "atTime": "Om een specifieke tijd",
-      "onDevicePowerOn": "Wanneer een apparaat wordt aangezet"
+      "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
+      "onSteamVRStop": "{PLACEHOLDER}"
     },
     "modals": {
       "enableAtTime": {
@@ -329,6 +330,33 @@
           "use": "Je login gegevens zullen nooit ergens opgeslagen worden en worden alleen direct naar VRChat's servers gestuurd om in te kunnen loggen.",
           "brand": "Oyasumi wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
           "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van Oyasumi. Gebruik is op eigen risico."
+        }
+      },
+      "OSC": {
+        "title": "OSC Configuratie",
+        "description": "Sommige functies van Oyasumi moeten communiceren met VRChat via OSC. Tenzij je een reden hebt om deze instellingen aan te passen, kan je ze het beste op de standaard waarden laten staan.",
+        "reset": "Reset naar standaard waarden",
+        "receivingHost": {
+          "title": "Host voor ontvangst",
+          "description": "De host waarop Oyasumi naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar 127.0.0.1)"
+        },
+        "receivingPort": {
+          "title": "Poort voor ontvangst",
+          "description": "De poort waarop Oyasumi naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar poort 9001)"
+        },
+        "sendingHost": {
+          "title": "Host voor verzending",
+          "description": "De host waar naar Oyasumi OSC berichten verstuurt.\n(Als VRChat op dezelfde computer draait, is dit 127.0.0.1)"
+        },
+        "sendingPort": {
+          "title": "Poort voor verzending",
+          "description": "De poort waar naar Oyasumi OSC berichten verstuurt.\n(VRChat luistert standaard naar poort 9000)"
+        },
+        "errors": {
+          "bindFailed": "Het adres kon niet worden gebonden. Dit kan komen doordat er al een andere applicatie luistert naar dezelfde adres en poort combinatie. Je kan proberen die andere applicatie te sluiten en het opnieuw te proberen, of een een andere poort of host te kiezen.",
+          "invalidPort": "Deze poort is niet geldig. Poorten moeten tussen 1 en 65535 liggen.",
+          "samePort": "Je kan niet dezelfde poort gebruiken voor zowel ontvangst als verzending, als de host voor beide hetzelfde is.",
+          "invalidHost": "Deze host is niet geldig. Hosts moeten een geldig IPv4 adres, IPv6 adres, of een geldige hostnaam zijn."
         }
       }
     },
