@@ -37,7 +37,8 @@
     "disableAutomations": {
       "title": "睡眠モードの無効化",
       "atTime": "指定した時間",
-      "onDevicePowerOn": "端末の電源が入っている時"
+      "onDevicePowerOn": "端末の電源が入っている時",
+      "onSteamVRStop": "SteamVRを停止している時"
     },
     "modals": {
       "enableAtTime": {
@@ -329,6 +330,33 @@
           "use": "ログイン情報は保管されることはなく、認証のためにVRChatのサーバーに送信されるだけです。",
           "brand": "OyasumiはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
           "liability": "Raphiiko はOyasumiに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
+        }
+      },
+      "OSC": {
+        "title": "OSC設定",
+        "description": "一部の機能ではOSCを経由してVRChatに接続する必要があります。特別な理由がない限り、デフォルトのままにすることをお勧めします。",
+        "reset": "デフォルトにリセットする",
+        "receivingHost": {
+          "title": "受信ホスト",
+          "description": "OyasumiがOSCメッセージを受信するホストです。\n(VRChatはデフォルトで127.0.0.1に送信します)"
+        },
+        "receivingPort": {
+          "title": "受信ポート",
+          "description": "OyasumiがOSCメッセージを受信するために使用するポート番号です。\n(VRChatはデフォルトでポート9001に送信します)"
+        },
+        "sendingHost": {
+          "title": "送信ホスト",
+          "description": "OyasumiがOSCメッセージを送信するホストです。\n(VRChatが同じマシン上で実行されている場合、127.0.0.1です)"
+        },
+        "sendingPort": {
+          "title": "送信ポート",
+          "description": "OyasumiがOSCメッセージを送信するために使用するポート番号です。\n(VRChatはデフォルトでポート9000で受信します)"
+        },
+        "errors": {
+          "bindFailed": "このアドレスをバインドできませんでした。他のアプリケーションが既に使用している可能性があります。そのアプリケーションを終了し、再度実行するか、異なる受信ポートまたはホストを選択してください。",
+          "invalidPort": "ポートは、1から65535の有効な数値である必要があります。",
+          "samePort": "送信先と受信先のホストが同じ場合、同じポート番号を送信と受信のポート番号として使用することはできません。",
+          "invalidHost": "ホスト名、IPv4アドレス, IPv6アドレスが有効な形式であるか確認してください。"
         }
       }
     },
