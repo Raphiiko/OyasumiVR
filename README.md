@@ -28,10 +28,6 @@
   If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>!
 </p>
 
-<p align="center">
-  :exclamation:<a href="https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations#%E6%97%A5%E6%9C%AC%E8%AA%9E%E8%A8%B3%E6%8F%90%E4%BE%9Bdeepl">Looking for Japanese translators / 日本語翻訳者募集中</a>:exclamation:
-</p>
-
 ## Getting started
 
 Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oyasumi/releases) page.
@@ -115,7 +111,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 - 🗺️ Multi language support
   - English
   - Dutch (Nederlands)
-  - Japanese (日本語)
+  - Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
   - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
   - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
   - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))

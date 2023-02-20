@@ -38,7 +38,7 @@
       "title": "Slaap modus uitschakelen",
       "atTime": "Om een specifieke tijd",
       "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
-      "onSteamVRStop": "{PLACEHOLDER}"
+      "onSteamVRStop": "Wanneer SteamVR stopt"
     },
     "modals": {
       "enableAtTime": {
