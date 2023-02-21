@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Automation for disabling sleep mode when SteamVR has been stopped.
+- [EXPERIMENTAL] Sleep detection based on the movement of the user's VR headset.
 - Configuration options for setting the OSC hosts and ports Oyasumi interacts with.
 
 ### Changed

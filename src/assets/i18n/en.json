@@ -32,7 +32,11 @@
       "description": "Automatically enable sleep mode based on various triggers",
       "atTime": "At a specific time",
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
-      "onControllersPoweredOff": "When all controllers are turned off"
+      "onControllersPoweredOff": "When all controllers are turned off",
+      "onMotionDetection": {
+        "title": "When Oyasumi guesses you are asleep based on your motion data",
+        "subtitle": "<b>NOTE:</b> This is an <b>experimental feature</b>! It may not work correctly."
+      }
     },
     "disableAutomations": {
       "title": "Disabling sleep mode",
@@ -43,7 +47,38 @@
     },
     "modals": {
       "enableForSleepDetector": {
-        "title": "Calibrate Sleep Detection"
+        "title": "Calibrate Sleep Detection",
+        "currentCalibration": "Your Current Calibration Value:",
+        "noSteamVR": "You can only start calibration once SteamVR is running with your VR Headset plugged in.",
+        "startCalibration": "Start Calibration",
+        "restartCalibration": "Restart Calibration",
+        "info": {
+          "intro": "For Oyasumi to properly detect if you've fallen asleep based on the movement of your VR headset, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
+          "stepPrefix": "Calibration works as follows:",
+          "step": {
+            "1": "You put on your headset and lie down.",
+            "2": "You start the calibration in Oyasumi from your overlay.",
+            "3": "You lay still for 10 seconds."
+          },
+          "stepSuffix": "That's it! After calibration. Oyasumi should be able to detect if you've fallen asleep based on the movement of your VR headset."
+        },
+        "prepare": {
+          "instruction": "Put on your VR headset and lie down.",
+          "note": "Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started."
+        },
+        "countdown": {
+          "instruction": "Starting in {{counter}}",
+          "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working."
+        },
+        "calibrating": {
+          "instruction": "Calibrating",
+          "note": "Keep still.",
+          "countdown": "{{counter}} seconds remaining..."
+        },
+        "done": {
+          "instruction": "Calibration complete!",
+          "note": "You can now start using this feature."
+        }
       },
       "enableAtTime": {
         "title": "Enable sleep mode",
