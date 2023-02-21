@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { message } from '@tauri-apps/api/dialog';
-import { exit } from '@tauri-apps/api/process';
 import { SleepService } from './sleep.service';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { cloneDeep } from 'lodash';
@@ -9,17 +7,7 @@ import { TaskQueue } from '../utils/task-queue';
 import { debug, info } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  filter,
-  firstValueFrom,
-  map,
-  Observable,
-  Subject,
-  take,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable, Subject, take, tap } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 
 @Injectable({

@@ -12,9 +12,7 @@ import { SETTINGS_KEY_AUTOMATION_CONFIGS } from '../../../../../services/automat
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error } from 'tauri-plugin-log-api';
-import {
-  SleepModeForSleepDetectorAutomationService
-} from "../../../../../services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service";
+import { SleepModeForSleepDetectorAutomationService } from '../../../../../services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 
 @Component({
   selector: 'app-settings-debug-tab',

@@ -21,7 +21,6 @@ import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-di
 import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
 import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
-import { SleepModeForSleepDetectorAutomationService } from '../../../../services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 
 @Component({
   selector: 'app-sleep-detection-view',

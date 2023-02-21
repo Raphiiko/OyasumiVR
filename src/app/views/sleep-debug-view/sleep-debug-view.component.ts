@@ -5,16 +5,14 @@ import {
   ElementRef,
   HostListener,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
-import { Object3D, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
+import * as THREE from 'three';
+import { PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { filter, map, Subject, takeUntil } from 'rxjs';
 import { SleepingPose } from '../../models/sleeping-pose';
 import { OpenVRService } from '../../services/openvr.service';
 import { SleepService } from '../../services/sleep.service';
-import * as THREE from 'three';
-import { flatten } from 'lodash';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 @Component({

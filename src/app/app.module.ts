@@ -86,12 +86,8 @@ import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
-import {
-  SleepModeForSleepDetectorAutomationService
-} from "./services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service";
-import {
-  SleepDetectorEnableSleepModeModalComponent
-} from "./views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component";
+import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
+import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

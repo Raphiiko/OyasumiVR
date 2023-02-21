@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
-  AutomationType,
   SleepModeChangeOnSteamVRStatusAutomationConfig,
-  SleepModeDisableAtTimeAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { debounceTime, filter, map, pairwise, tap } from 'rxjs';
+import { debounceTime, map, pairwise, tap } from 'rxjs';
 import { SleepService } from '../sleep.service';
-import { SleepModeStatusChangeReasonBase } from '../../models/sleep-mode';
 
 @Injectable({
   providedIn: 'root',

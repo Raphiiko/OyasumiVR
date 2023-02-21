@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OpenVRService } from '../../../../../services/openvr.service';

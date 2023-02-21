@@ -45,15 +45,17 @@
 <app-sleeping-pose-viewer></app-sleeping-pose-viewer>
 <div class="setting-category">
   <h2 translate>settings.debug.sleepingDetection.title</h2>
-  <table class="sleeping-detection-table"
-         *ngVar="sleepModeForSleepDetectorAutomationService.lastStateReport | async as report">
+  <table
+    class="sleeping-detection-table"
+    *ngVar="sleepModeForSleepDetectorAutomationService.lastStateReport | async as report"
+  >
     <ng-container *ngIf="!report"><h3>Loading Report...</h3></ng-container>
     <ng-container *ngIf="report">
       <tr>
         <td>Start Time</td>
-        <td>{{report.startTime}}</td>
+        <td>{{ report.startTime }}</td>
         <td>Last Log</td>
-        <td>{{report.lastLog}}</td>
+        <td>{{ report.lastLog }}</td>
       </tr>
       <tr>
         <td>Distance</td>
@@ -63,33 +65,33 @@
       </tr>
       <tr>
         <td>Last 10s</td>
-        <td>{{report.distanceInLast10Seconds}}m</td>
+        <td>{{ report.distanceInLast10Seconds }}m</td>
         <td>Last 10s</td>
-        <td>{{report.rotationInLast10Seconds}}°</td>
+        <td>{{ report.rotationInLast10Seconds }}°</td>
       </tr>
       <tr>
         <td>Last 1m</td>
-        <td>{{report.distanceInLast1Minute}}m</td>
+        <td>{{ report.distanceInLast1Minute }}m</td>
         <td>Last 1m</td>
-        <td>{{report.rotationInLast1Minute}}°</td>
+        <td>{{ report.rotationInLast1Minute }}°</td>
       </tr>
       <tr>
         <td>Last 5m</td>
-        <td>{{report.distanceInLast5Minutes}}m</td>
+        <td>{{ report.distanceInLast5Minutes }}m</td>
         <td>Last 5m</td>
-        <td>{{report.rotationInLast5Minutes}}°</td>
+        <td>{{ report.rotationInLast5Minutes }}°</td>
       </tr>
       <tr>
         <td>Last 10m</td>
-        <td>{{report.distanceInLast10Minutes}}m</td>
+        <td>{{ report.distanceInLast10Minutes }}m</td>
         <td>Last 10m</td>
-        <td>{{report.rotationInLast10Minutes}}°</td>
+        <td>{{ report.rotationInLast10Minutes }}°</td>
       </tr>
       <tr>
         <td>Last 15m</td>
-        <td>{{report.distanceInLast15Minutes}}m</td>
+        <td>{{ report.distanceInLast15Minutes }}m</td>
         <td>Last 15m</td>
-        <td>{{report.rotationInLast15Minutes}}°</td>
+        <td>{{ report.rotationInLast15Minutes }}°</td>
       </tr>
     </ng-container>
   </table>

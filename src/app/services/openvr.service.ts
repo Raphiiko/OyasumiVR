@@ -1,9 +1,9 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
-import { DeviceUpdateEvent, SleepDetectorStateReport } from '../models/events';
+import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import { BehaviorSubject, interval, Observable, startWith, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 

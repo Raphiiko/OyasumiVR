@@ -1,28 +1,16 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { listen } from '@tauri-apps/api/event';
-import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
-  AutomationType,
-  SleepModeChangeOnSteamVRStatusAutomationConfig,
-  SleepModeDisableAtTimeAutomationConfig,
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import {
-  BehaviorSubject,
-  debounceTime,
-  filter,
-  firstValueFrom,
-  map,
-  Observable,
-  pairwise,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { SleepService } from '../sleep.service';
-import { SleepModeStatusChangeReasonBase } from '../../models/sleep-mode';
 import { SleepDetectorStateReport } from '../../models/events';
+
+const CALIBRATION_FACTOR = 150;
 
 @Injectable({
   providedIn: 'root',
@@ -60,7 +48,8 @@ export class SleepModeForSleepDetectorAutomationService {
     // Stop here if the sleep detection has been running for less than 15 minutes
     if (Date.now() - report.startTime < 1000 * 60 * 15) return;
     // Stop here if the positional movement was too high in the past 15 minutes
-    if (report.distanceInLast15Minutes > this.enableConfig.calibrationValue * 150) return;
+    if (report.distanceInLast15Minutes > this.enableConfig.calibrationValue * CALIBRATION_FACTOR)
+      return;
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     await this.sleep.enableSleepMode({

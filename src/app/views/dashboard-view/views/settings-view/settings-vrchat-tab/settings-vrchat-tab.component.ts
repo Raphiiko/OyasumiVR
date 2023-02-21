@@ -6,7 +6,6 @@ import { VRChatService, VRChatServiceStatus } from '../../../../../services/vrch
 import {
   combineLatest,
   debounceTime,
-  delay,
   distinctUntilChanged,
   map,
   of,

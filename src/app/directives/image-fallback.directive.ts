@@ -1,4 +1,4 @@
-import { Directive, Input, ElementRef, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
   selector: 'img[appImgFallback]',
