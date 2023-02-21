@@ -10,7 +10,16 @@ import {
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { debounceTime, filter, firstValueFrom, map, pairwise, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  pairwise,
+  tap,
+} from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepModeStatusChangeReasonBase } from '../../models/sleep-mode';
 import { SleepDetectorStateReport } from '../../models/events';
@@ -23,7 +32,11 @@ export class SleepModeForSleepDetectorAutomationService {
   private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
   );
-  private distanceInLast10Seconds: number = -1;
+  private _lastStateReport: BehaviorSubject<SleepDetectorStateReport | null> =
+    new BehaviorSubject<SleepDetectorStateReport | null>(null);
+
+  public lastStateReport: Observable<SleepDetectorStateReport | null> =
+    this._lastStateReport.asObservable();
 
   constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
 
@@ -37,9 +50,7 @@ export class SleepModeForSleepDetectorAutomationService {
   }
 
   async handleStateReportForEnable(report: SleepDetectorStateReport) {
-    // Store the distance from the last 10 seconds for calibration purposes
-    if (Date.now() - report.startTime > 1000 * 10)
-      this.distanceInLast10Seconds = report.distanceInLast10Seconds;
+    this._lastStateReport.next(report);
     // Stop here if the automation is disabled
     if (!this.enableConfig.enabled) return;
     // Stop here if the sleep mode is already enabled
@@ -59,14 +70,20 @@ export class SleepModeForSleepDetectorAutomationService {
   }
 
   async calibrate(): Promise<number> {
-    if (this.distanceInLast10Seconds > 0) {
+    let distanceInLast10Seconds = -1;
+    if (this._lastStateReport.value) {
+      if (Date.now() - this._lastStateReport.value.startTime > 1000 * 10) {
+        distanceInLast10Seconds = this._lastStateReport.value.distanceInLast10Seconds;
+      }
+    }
+    if (distanceInLast10Seconds > 0) {
       await this.automationConfig.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
         'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
         {
-          calibrationValue: this.distanceInLast10Seconds,
+          calibrationValue: distanceInLast10Seconds,
         }
       );
     }
-    return this.distanceInLast10Seconds;
+    return distanceInLast10Seconds;
   }
 }

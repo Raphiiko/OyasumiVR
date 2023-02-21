@@ -77,7 +77,7 @@
         },
         "done": {
           "instruction": "Calibration complete!",
-          "note": "You can now start using this feature."
+          "note": "You can now use this automation."
         }
       },
       "enableAtTime": {
@@ -425,6 +425,9 @@
       },
       "sleepingPose": {
         "title": "Sleeping Pose"
+      },
+      "sleepingDetection": {
+        "title": "Sleeping Detector Reports"
       }
     }
   },
