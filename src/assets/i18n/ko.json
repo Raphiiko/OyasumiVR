@@ -53,14 +53,14 @@
       "disableOnDevicePowerOn": {
         "title": "수면 모드 비활성화",
         "whenTurningOn": "기준 기기",
-        "optionController": "컨트롤러",
-        "optionTracker": "트래커"
+        "Controller": "컨트롤러",
+        "GenericTracker": "트래커"
       },
       "enableAtBatteryPercentage": {
         "title": "수면 모드 활성화",
         "whenA": "기준 기기",
-        "optionController": "컨트롤러",
-        "optionTracker": "트래커",
+        "Controller": "컨트롤러",
+        "GenericTracker": "트래커",
         "fallsBelow": "조건 값"
       }
     }

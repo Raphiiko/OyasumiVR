@@ -17,6 +17,8 @@ import { cloneDeep } from 'lodash';
 import { TimeDisableSleepModeModalComponent } from './time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
 import { BatteryPercentageEnableSleepModeModalComponent } from './battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
 import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
+import { OVRDeviceClass } from '../../../../models/ovr-device';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -30,7 +32,8 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: SimpleModalService,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -114,5 +117,9 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
     this.automationConfigService.updateAutomationConfig(automation, {
       [field]: !((this.automationConfigs[automation] as any)[field] as any),
     } as any);
+  }
+
+  deviceClassesToString(classes: OVRDeviceClass[], tlkey_prefix: string): string {
+    return classes.map((c) => this.translate.instant(tlkey_prefix + c)).join(', ');
   }
 }

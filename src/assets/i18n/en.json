@@ -27,15 +27,16 @@
   },
   "sleep-detection": {
     "title": "Sleep Detection",
-    "description": "Here you can set up automations for enabling or disabling sleep mode automatically based on various triggers.",
     "enableAutomations": {
       "title": "Enabling sleep mode",
+      "description": "Automatically enable sleep mode based on various triggers",
       "atTime": "At a specific time",
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "When all controllers are turned off"
     },
     "disableAutomations": {
       "title": "Disabling sleep mode",
+      "description": "Automatically disable sleep mode based on various triggers",
       "atTime": "At a specific time",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped"
@@ -54,14 +55,14 @@
       "disableOnDevicePowerOn": {
         "title": "Disable sleep mode",
         "whenTurningOn": "When turning on a",
-        "optionController": "Controller",
-        "optionTracker": "Tracker"
+        "Controller": "Controller",
+        "GenericTracker": "Tracker"
       },
       "enableAtBatteryPercentage": {
         "title": "Enable sleep mode",
         "whenA": "When a",
-        "optionController": "Controller",
-        "optionTracker": "Tracker",
+        "Controller": "Controller",
+        "GenericTracker": "Tracker",
         "fallsBelow": "Falls below"
       }
     }

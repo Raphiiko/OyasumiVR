@@ -1,169 +1,163 @@
 <div class="pane">
   <div class="pane-title" translate>sleep-detection.title</div>
   <div class="pane-content">
-    <p translate>sleep-detection.description</p>
+    <div class="setting-category">
+      <h2 translate>sleep-detection.enableAutomations.title</h2>
+      <p translate>sleep-detection.enableAutomations.description</p>
+      <div class="settings">
 
-    <div class="automation-panes">
-      <div class="automation-pane">
-        <div class="automation-pane-title" translate>sleep-detection.enableAutomations.title</div>
-
-        <div class="automation">
-          <div class="automation-header">
-            <div class="automation-header-description">
-              <span translate>sleep-detection.enableAutomations.atTime</span>
-              <span>&nbsp;</span>
-              <wbr />
-              <strong *ngIf="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time" [@fade]>
-                {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
-              </strong>
-            </div>
-            <div class="automation-header-toggle">
-              <button
-                class="btn btn-automation-settings"
-                (click)="openModal_EnableSleepModeAtTime()"
-                [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
-              >
-                <i class="material-icons">settings</i>
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
-                  (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_TIME')"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.enableAutomations.atTime</span>
+            <span>
+            <span *ngIf="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time" [@fade]>
+              {{ automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time }}
+            </span>
+            </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_EnableSleepModeAtTime()"
+              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_TIME')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
 
-        <div class="automation">
-          <div class="automation-header">
-            <div
-              class="automation-header-description"
-              [innerHTML]="
-                'sleep-detection.enableAutomations.atBatteryPercentage'
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span [innerHtml]=" 'sleep-detection.enableAutomations.atBatteryPercentage'
                   | translate
-                    : { value: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold }
-              "
-            ></div>
-            <div class="automation-header-toggle">
-              <button
-                class="btn btn-automation-settings"
-                (click)="openModal_EnableSleepModeAtBatteryPercentage()"
-                [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
-              >
-                <i class="material-icons">settings</i>
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
-                  (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+                    : { value: automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold }"></span>
+            <span>{{ deviceClassesToString(automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses, 'sleep-detection.modals.enableAtBatteryPercentage.') }}</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_EnableSleepModeAtBatteryPercentage()"
+              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
 
-        <div class="automation">
-          <div class="automation-header">
-            <div class="automation-header-description" translate>
-              sleep-detection.enableAutomations.onControllersPoweredOff
-            </div>
-            <div class="automation-header-toggle">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled"
-                  (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF')"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.enableAutomations.onControllersPoweredOff</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
+
       </div>
-      <div class="automation-pane">
-        <div class="automation-pane-title" translate>sleep-detection.disableAutomations.title</div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>sleep-detection.disableAutomations.title</h2>
+      <p translate>sleep-detection.disableAutomations.description</p>
+      <div class="settings">
 
-        <div class="automation">
-          <div class="automation-header">
-            <div class="automation-header-description">
-              <span translate>sleep-detection.disableAutomations.atTime</span>
-              <span>&nbsp;</span>
-              <wbr />
-              <strong *ngIf="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time" [@fade]>
-                {{ automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time }}
-              </strong>
-            </div>
-            <div class="automation-header-toggle">
-              <button
-                class="btn btn-automation-settings"
-                (click)="openModal_DisableSleepModeAtTime()"
-                [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
-              >
-                <i class="material-icons">settings</i>
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
-                  (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.atTime</span>
+            <span>
+            <span *ngIf="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time" [@fade]>
+              {{ automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.time }}
+            </span>
+            </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeAtTime()"
+              [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
 
-        <div class="automation">
-          <div class="automation-header">
-            <div class="automation-header-description" translate>
-              sleep-detection.disableAutomations.onDevicePowerOn
-            </div>
-            <div class="automation-header-toggle">
-              <button
-                class="btn btn-automation-settings"
-                (click)="openModal_DisableSleepModeOnDevicePowerOn()"
-                [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
-              >
-                <i class="material-icons">settings</i>
-              </button>
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
-                  (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.onDevicePowerOn</span>
+            <span>{{ deviceClassesToString(automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.triggerClasses, 'sleep-detection.modals.disableOnDevicePowerOn.') }}</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeOnDevicePowerOn()"
+              [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
 
-        <div class="automation">
-          <div class="automation-header">
-            <div class="automation-header-description" translate>
-              sleep-detection.disableAutomations.onSteamVRStop
-            </div>
-            <div class="automation-header-toggle">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.onSteamVRStop</span>
+            <span>
+            </span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="
                     automationConfigs.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS.disableOnSteamVRStop
                   "
-                  (change)="
+                (change)="
                     toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')
                   "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
+
       </div>
     </div>
   </div>

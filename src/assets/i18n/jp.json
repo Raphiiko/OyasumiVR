@@ -27,7 +27,6 @@
   },
   "sleep-detection": {
     "title": "睡眠検出",
-    "description": "ここでは、様々な誘因に基づき、睡眠モードを自動的に有効または無効にする自動化機能を設定することができます。",
     "enableAutomations": {
       "title": "睡眠モードの有効化",
       "atTime": "指定した時間",
@@ -54,14 +53,14 @@
       "disableOnDevicePowerOn": {
         "title": "睡眠モードの無効化",
         "whenTurningOn": "電源を入れる時",
-        "optionController": "コントローラー",
-        "optionTracker": "トラッカー"
+        "Controller": "コントローラー",
+        "GenericTracker": "トラッカー"
       },
       "enableAtBatteryPercentage": {
         "title": "睡眠モードの有効化",
         "whenA": "いつ",
-        "optionController": "コントローラー",
-        "optionTracker": "トラッカー",
+        "Controller": "コントローラー",
+        "GenericTracker": "トラッカー",
         "fallsBelow": "数値を下回った時"
       }
     }

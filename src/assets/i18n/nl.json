@@ -27,7 +27,6 @@
   },
   "sleep-detection": {
     "title": "Slaap Detectie",
-    "description": "Hier kan je automatiseringen instellen om op basis van verschillende triggers de slaap modus automatisch in of uit te schakelen.",
     "enableAutomations": {
       "title": "Slaap modus inschakelen",
       "atTime": "Om een specifieke tijd",
@@ -54,14 +53,14 @@
       "disableOnDevicePowerOn": {
         "title": "Slaap modus uitschakelen",
         "whenTurningOn": "Bij het aanzetten van",
-        "optionController": "Een controller",
-        "optionTracker": "Een tracker"
+        "Controller": "Een controller",
+        "GenericTracker": "Een tracker"
       },
       "enableAtBatteryPercentage": {
         "title": "Slaap modus inschakelen",
         "whenA": "Wanneer een",
-        "optionController": "Controller",
-        "optionTracker": "Tracker",
+        "Controller": "Controller",
+        "GenericTracker": "Tracker",
         "fallsBelow": "Valt onder de"
       }
     }
