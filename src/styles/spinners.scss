@@ -24,3 +24,30 @@
     transform: rotate(360deg);
   }
 }
+
+.large-spinner {
+  display: inline-block;
+  width: 3em;
+  height: 3em;
+}
+
+.large-spinner:after {
+  content: ' ';
+  display: block;
+  margin: 0.1em;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  border: 2px solid var(--color-text-2);
+  border-color: var(--color-text-2) transparent var(--color-text-2) transparent;
+  animation: large-spinner 0.75s linear infinite;
+}
+
+@keyframes large-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

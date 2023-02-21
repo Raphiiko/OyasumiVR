@@ -9,11 +9,12 @@ use log::info;
 use openvr::TrackedDeviceIndex;
 use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 use serde::Serialize;
+use sleep_detector::SleepDetector;
 use substring::Substring;
 use sysinfo::SystemExt;
 use tauri::Manager;
 
-use crate::TAURI_WINDOW;
+use crate::{sleep_detector, TAURI_WINDOW};
 
 #[derive(Serialize, Clone)]
 pub enum OpenVRStatus {
@@ -34,7 +35,7 @@ pub struct OpenVRManager {
 
 impl OpenVRManager {
     pub fn new() -> OpenVRManager {
-        let manager = OpenVRManager {
+        let mut manager = OpenVRManager {
             state: Arc::new(OpenVRManagerState {
                 active: Mutex::new(false),
                 status: Mutex::new(OpenVRStatus::INACTIVE),
@@ -60,8 +61,8 @@ impl OpenVRManager {
         *_active = active;
     }
 
-    fn openvr_loop(&self) {
-        let core: OpenVRManagerCore = OpenVRManagerCore::new(self.state.clone());
+    fn openvr_loop(&mut self) {
+        let mut core: OpenVRManagerCore = OpenVRManagerCore::new(self.state.clone());
         thread::spawn(move || {
             core.openvr_loop();
         });
@@ -70,14 +71,18 @@ impl OpenVRManager {
 
 struct OpenVRManagerCore {
     state: Arc<OpenVRManagerState>,
+    sleep_detector: SleepDetector,
 }
 
 impl OpenVRManagerCore {
     pub fn new(state: Arc<OpenVRManagerState>) -> OpenVRManagerCore {
-        OpenVRManagerCore { state }
+        OpenVRManagerCore {
+            state,
+            sleep_detector: SleepDetector::new(),
+        }
     }
 
-    fn openvr_loop(&self) {
+    fn openvr_loop(&mut self) {
         // Thread dependencies
         let mut sysinfo = sysinfo::System::new_all();
 
@@ -89,12 +94,13 @@ impl OpenVRManagerCore {
         let mut ovr_system: Option<openvr::System> = None;
 
         // Manager State
-        let state_active = self.state.active.lock().unwrap();
 
         // Main Loop
         'ovr_loop: loop {
             thread::sleep(Duration::from_millis(32));
+            let state_active = self.state.active.lock().unwrap();
             if *state_active {
+                drop(state_active);
                 // If we're not active, try to initialize OpenVR
                 if let None = ovr_context {
                     // Stop if we cannot yet (re)initialize OpenVR
@@ -211,7 +217,7 @@ impl OpenVRManagerCore {
         }
     }
 
-    fn refresh_device_poses(&self, system: &openvr::System) {
+    fn refresh_device_poses(&mut self, system: &openvr::System) {
         let poses =
             system.device_to_absolute_tracking_pose(openvr::TrackingUniverseOrigin::Standing, 0.0);
         for n in 0..poses.len() {
@@ -244,6 +250,10 @@ impl OpenVRManagerCore {
                 let pos = openvr_sys::HmdVector3_t {
                     v: [matrix[0][3], matrix[1][3], matrix[2][3]],
                 };
+                // Update sleep detector (0 == HMD)
+                if n == 0 {
+                    self.sleep_detector.log_pose(pos.v, [q.x, q.y, q.z, q.w]);
+                }
                 // Emit event
                 {
                     let window_guard = TAURI_WINDOW.lock().unwrap();

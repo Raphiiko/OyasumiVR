@@ -1,0 +1,40 @@
+@import 'panes';
+
+.current-calibration {
+  @extend .pane;
+  background-color: var(--color-surface-1);
+  padding: 0.5em;
+  align-items: center;
+  width: 100%;
+
+  span {
+    &:first-child {
+      color: var(--color-text-3);
+    }
+
+    &:last-child {
+      font-weight: bold;
+    }
+  }
+}
+
+.center-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4em 2em !important;
+
+  .large-spinner {
+    margin-bottom: 2em;
+  }
+}
+
+.pane-content {
+  overflow: hidden;
+  min-height: 25em;
+}
+
+.alert {
+  margin-top: 1em;
+}

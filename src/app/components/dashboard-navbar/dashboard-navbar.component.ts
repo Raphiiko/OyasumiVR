@@ -7,6 +7,7 @@ import { fade } from '../../utils/animations';
 import { NVMLService } from '../../services/nvml.service';
 import { ElevatedSidecarService } from '../../services/elevated-sidecar.service';
 import { UpdateService } from '../../services/update.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -25,7 +26,8 @@ export class DashboardNavbarComponent implements OnInit {
     private gpuAutomations: GpuAutomationsService,
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,
-    private update: UpdateService
+    private update: UpdateService,
+    private router: Router
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
     this.settingErrors = combineLatest([
@@ -85,4 +87,12 @@ export class DashboardNavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  logoClicked = 0;
+
+  onLogoClick() {
+    if (this.logoClicked++ > 5) {
+      this.router.navigate(['/sleepDebug']);
+    }
+  }
 }

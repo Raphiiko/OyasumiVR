@@ -12,6 +12,7 @@ import {
   SleepModeDisableOnDevicePowerOnAutomationConfig,
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
+  SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { TimeDisableSleepModeModalComponent } from './time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
@@ -19,6 +20,8 @@ import { BatteryPercentageEnableSleepModeModalComponent } from './battery-percen
 import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
 import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
+import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
+import { SleepModeForSleepDetectorAutomationService } from '../../../../services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -108,6 +111,31 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
           'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON',
           {
             triggerClasses: data.triggerClasses,
+          }
+        );
+      });
+  }
+
+  openModal_EnableSleepModeForSleepDetector() {
+    this.modalService
+      .addModal(
+        SleepDetectorEnableSleepModeModalComponent,
+        {
+          calibrationValue:
+            this.automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue ??
+            AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue,
+        },
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      )
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {
+        this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+          'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+          {
+            calibrationValue: data.calibrationValue,
           }
         );
       });

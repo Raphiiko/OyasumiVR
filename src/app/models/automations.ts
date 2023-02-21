@@ -8,6 +8,7 @@ export type AutomationType =
   | 'GPU_POWER_LIMITS'
   | 'MSI_AFTERBURNER'
   // SLEEP MODE AUTOMATIONS
+  | 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
   | 'SLEEP_MODE_ENABLE_AT_TIME'
   | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
   | 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF'
@@ -29,6 +30,7 @@ export interface AutomationConfigs {
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
+  SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
   SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: SleepModeEnableAtControllersPoweredOffAutomationConfig;
@@ -76,6 +78,10 @@ export interface MSIAfterburnerAutomationConfig extends AutomationConfig {
 }
 
 // SLEEP MODE AUTOMATIONS
+export interface SleepModeEnableForSleepDetectorAutomationConfig extends AutomationConfig {
+  calibrationValue: number;
+}
+
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
   time: string | null;
 }
@@ -164,6 +170,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepDisableProfile: 0,
   },
   // SLEEP MODE AUTOMATIONS
+  SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
+    enabled: false,
+    calibrationValue: 10,
+  },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,
     time: null,

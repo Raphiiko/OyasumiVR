@@ -35,6 +35,7 @@ mime = "0.3.16"
 md5 = "0.7.0"
 mime_guess = "2.0.4"
 substring = "1.4.5"
+bytes = "1.4.0"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -49,7 +50,7 @@ version = "1.21.1"
 features = ["full"]
 
 [dependencies.hyper]
-version = "0.14.20"
+version = "0.14.24"
 features = ["full"]
 
 [dependencies.tauri-plugin-single-instance]

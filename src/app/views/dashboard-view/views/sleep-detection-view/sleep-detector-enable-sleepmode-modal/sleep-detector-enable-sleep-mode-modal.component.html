@@ -1,0 +1,104 @@
+<div class="pane modal-lg" [@fadeUp]>
+  <div class="pane-title" translate>sleep-detection.modals.enableForSleepDetector.title</div>
+
+  <div class="pane-content" *ngIf="mode === 'INFO'">
+    <p translate>
+      For Oyasumi to properly detect if you've fallen asleep based on the movement of your VR headset, it has to be
+      calibrated to your VR setup.
+      You need to calibrate at least once before you should try to use this feature.
+    </p>
+    <p translate>
+      Calibration works as follows:
+    </p>
+    <ol>
+      <li>You put on your headset and lie down.</li>
+      <li>You start the calibration in Oyasumi from your overlay.</li>
+      <li>You lay still for 10 seconds.</li>
+    </ol>
+    <p translate>After completing calibration, you can start using this feature.</p>
+
+    <div class="current-calibration">
+      <span>Your current calibration value:</span>
+      <span>{{calibrationValue}}</span>
+    </div>
+
+    <div class="alert error" *ngIf="(openvr.status | async) !== 'INITIALIZED'" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> error </i>
+      </div>
+      <div class="alert-content" translate>
+        You can only start calibration once SteamVR is running with your VR Headset
+        plugged in.
+      </div>
+    </div>
+  </div>
+
+  <div class="pane-content center-pane" *ngIf="mode === 'PREPARE'">
+    <h2 translate style="text-align: center">
+      Put on your VR headset and lie down.
+    </h2>
+    <br>
+    <p translate style="text-align: center">
+      Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started.
+    </p>
+    <div class="alert error" *ngIf="(openvr.status | async) !== 'INITIALIZED'" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> error </i>
+      </div>
+      <div class="alert-content" translate>
+        You can only start calibration once SteamVR is running with your VR Headset
+        plugged in.
+      </div>
+    </div>
+  </div>
+
+  <div class="pane-content center-pane" *ngIf="mode === 'COUNTDOWN'">
+    <div class="large-spinner"></div>
+    <h1 style="text-align: center">
+      Starting in {{countdownValue}}
+    </h1>
+    <p translate style="text-align: center; margin-top: 1em">
+      Keep still while calibrating! Pretend you are asleep.<br>Moving while calibrating will prevent this feature from
+      working.
+    </p>
+  </div>
+
+  <div class="pane-content center-pane" *ngIf="mode === 'CALIBRATING'">
+    <div class="large-spinner"></div>
+    <h1 translate style="text-align: center">
+      Calibrating
+    </h1>
+    <p translate style="text-align: center; margin-top: 1em">
+      Keep still.
+    </p>
+    <p style="text-align: center; margin-top: 1em">
+      {{countdownValue}} seconds remaining...
+    </p>
+  </div>
+
+  <div class="pane-content center-pane" *ngIf="mode === 'DONE'">
+    <h1 style="text-align: center">
+      Calibration complete!
+    </h1>
+    <p translate style="text-align: center; margin-top: 1em">
+      You can now start using this feature.
+    </p>
+    <div class="current-calibration">
+      <span>Your current calibration value:</span>
+      <span>{{calibrationValue}}</span>
+    </div>
+  </div>
+
+  <div class="pane-actions spread" *ngIf="mode === 'INFO' || mode === 'PREPARE'" @vshrink>
+    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    <button class="btn btn-primary" (click)="startCalibration()" translate
+            [disabled]="(openvr.status | async) !== 'INITIALIZED'">Start Calibration
+    </button>
+  </div>
+  <div class="pane-actions spread" *ngIf="mode === 'DONE'" @vshrink>
+    <button class="btn btn-secondary" (click)="startCalibration()" translate>Restart Calibration</button>
+    <button class="btn btn-primary" (click)="close()" translate>shared.modals.close</button>
+  </div>
+</div>

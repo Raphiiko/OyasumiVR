@@ -42,6 +42,9 @@
       "onSteamVRStop": "When SteamVR is stopped"
     },
     "modals": {
+      "enableForSleepDetector": {
+        "title": "Calibrate Sleep Detection"
+      },
       "enableAtTime": {
         "title": "Enable sleep mode",
         "description": "Enable sleep mode at a specific time of day.",

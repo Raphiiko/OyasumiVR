@@ -39,6 +39,7 @@ mod background {
 
 mod elevated_sidecar;
 mod image_cache;
+mod sleep_detector;
 
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();

@@ -8,6 +8,35 @@
 
         <div class="setting-row">
           <div class="setting-row-label" translate>
+            <!--            <span translate>sleep-detection.enableAutomations.onMotionDetection</span>-->
+            <span style="display: flex; flex-direction: row; align-items: center;">
+              <span translate>When Oyasumi guesses you are asleep based on your motion data</span>
+              <i class="material-icons-round"
+                 style="color: var(--color-alert-warning); line-height: 0; margin-left: 0.25em; font-size: 1.3em;">warning_amber</i>
+            </span>
+            <span><b>NOTE:</b> This is an <b>experimental feature</b>! It may not work correctly.</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_EnableSleepModeForSleepDetector()"
+              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
             <span translate>sleep-detection.enableAutomations.atTime</span>
             <span>
             <span *ngIf="automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time" [@fade]>
@@ -76,6 +105,7 @@
             </label>
           </div>
         </div>
+
 
       </div>
     </div>

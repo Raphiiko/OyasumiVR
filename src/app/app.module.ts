@@ -85,6 +85,13 @@ import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-au
 import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
+import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
+import {
+  SleepModeForSleepDetectorAutomationService
+} from "./services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service";
+import {
+  SleepDetectorEnableSleepModeModalComponent
+} from "./views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component";
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -104,6 +111,7 @@ export function createTranslateLoader(http: HttpClient) {
     AboutViewComponent,
     OverviewViewComponent,
     SleepDetectionViewComponent,
+    SleepDetectorEnableSleepModeModalComponent,
     TimeEnableSleepModeModalComponent,
     TimeDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
@@ -136,6 +144,7 @@ export function createTranslateLoader(http: HttpClient) {
     FriendSelectionModalComponent,
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
+    SleepDebugViewComponent,
   ],
   imports: [
     CommonModule,
@@ -189,6 +198,7 @@ export class AppModule {
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
+    private sleepModeForSleepDetectorAutomationService: SleepModeForSleepDetectorAutomationService,
     private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
     private sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
@@ -235,6 +245,7 @@ export class AppModule {
       // GPU automations
       this.gpuAutomations.init(),
       // Sleep mode automations
+      this.sleepModeForSleepDetectorAutomationService.init(),
       this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
       this.sleepModeEnableAtBatteryPercentageAutomation.init(),
       this.sleepModeEnableAtTimeAutomationService.init(),
