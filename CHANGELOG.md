@@ -18,6 +18,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The elevated sidecar will be launched on start if the main application is launched with administrator privileges.
 - Layout of Sleep Detection pane has been updated to match recent views. 
 
+### Fixed
+
+- Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
+
+
 ## [1.4.1]
 
 ### Added
