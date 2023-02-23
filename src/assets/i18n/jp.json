@@ -195,7 +195,7 @@
       },
       "profile": "プロフィール {{index}}",
       "none": "なし",
-      "enabledWarning": "MSI 誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
+      "enabledWarning": "誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "executable": {
         "title": "構成",
         "description": "\"実行可能な<strong>MSIAfterburner.exe</strong>のフォルダを把握する必要があります。 デフォルトのフォルダにない場合は、格納先を手動で設定する必要があります。",
@@ -257,7 +257,7 @@
         "description": "プレイヤーリストの設定",
         "options": {
           "DISABLED": {
-            "label": "無効",
+            "label": "オフ",
             "subLabel": "全て承認する"
           },
           "WHITELIST": {
