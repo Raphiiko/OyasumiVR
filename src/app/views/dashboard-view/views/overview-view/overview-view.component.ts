@@ -14,9 +14,7 @@ import { OscService } from '../../../../services/osc.service';
 export class OverviewViewComponent implements OnInit, OnDestroy {
   destroy$: Subject<void> = new Subject<void>();
   sleepModeActive = false;
-  wew = false;
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
-  credentials: any = {};
 
   constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
 

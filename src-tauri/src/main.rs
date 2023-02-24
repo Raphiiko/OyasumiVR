@@ -28,6 +28,7 @@ mod commands {
     pub mod os;
     pub mod osc;
     pub mod splash;
+    pub mod notifications;
 }
 
 mod background {
@@ -37,9 +38,11 @@ mod background {
     pub mod osc;
 }
 
+mod utils;
 mod elevated_sidecar;
 mod image_cache;
 mod sleep_detector;
+mod gesture_detector;
 
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
@@ -146,6 +149,7 @@ fn main() {
             commands::log_parser::init_vrc_log_watcher,
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
+            commands::notifications::xsoverlay_send_message,
         ])
         .run(tauri::generate_context!())
         .expect("An error occurred while running the application");

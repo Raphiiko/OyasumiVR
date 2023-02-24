@@ -30,7 +30,6 @@
             <button
               class="btn btn-automation-settings"
               (click)="openModal_EnableSleepModeForSleepDetector()"
-              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled"
             >
               <i class="material-icons">settings</i>
             </button>
@@ -58,7 +57,6 @@
             <button
               class="btn btn-automation-settings"
               (click)="openModal_EnableSleepModeAtTime()"
-              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.enabled"
             >
               <i class="material-icons">settings</i>
             </button>
@@ -93,7 +91,6 @@
             <button
               class="btn btn-automation-settings"
               (click)="openModal_EnableSleepModeAtBatteryPercentage()"
-              [disabled]="!automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.enabled"
             >
               <i class="material-icons">settings</i>
             </button>
@@ -143,7 +140,6 @@
             <button
               class="btn btn-automation-settings"
               (click)="openModal_DisableSleepModeAtTime()"
-              [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
             >
               <i class="material-icons">settings</i>
             </button>
@@ -172,7 +168,6 @@
             <button
               class="btn btn-automation-settings"
               (click)="openModal_DisableSleepModeOnDevicePowerOn()"
-              [disabled]="!automationConfigs.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON.enabled"
             >
               <i class="material-icons">settings</i>
             </button>

@@ -46,21 +46,21 @@
       "onSteamVRStop": "When SteamVR is stopped"
     },
     "modals": {
-      "enableForSleepDetector": {
+      "sleepDetectorCalibration": {
         "title": "Calibrate Sleep Detection",
         "currentCalibration": "Your Current Calibration Value:",
         "noSteamVR": "You can only start calibration once SteamVR is running with your VR Headset plugged in.",
         "startCalibration": "Start Calibration",
         "restartCalibration": "Restart Calibration",
         "info": {
-          "intro": "For Oyasumi to properly detect if you've fallen asleep based on the movement of your VR headset, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
+          "intro": "Oyasumi can detect if you've fallen asleep based on the movement of your VR headset. For it to be able to do this, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
           "stepPrefix": "Calibration works as follows:",
           "step": {
             "1": "You put on your headset and lie down.",
             "2": "You start the calibration in Oyasumi from your overlay.",
             "3": "You lay still for 10 seconds."
           },
-          "stepSuffix": "That's it! After calibration. Oyasumi should be able to detect if you've fallen asleep based on the movement of your VR headset."
+          "stepSuffix": "That's it! After calibration, Oyasumi should be able to detect if you've fallen asleep based on the movement of your VR headset."
         },
         "prepare": {
           "instruction": "Put on your VR headset and lie down.",
@@ -68,7 +68,7 @@
         },
         "countdown": {
           "instruction": "Starting in {{counter}}",
-          "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working."
+          "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working correctly."
         },
         "calibrating": {
           "instruction": "Calibrating",
@@ -78,31 +78,59 @@
         "done": {
           "instruction": "Calibration complete!",
           "note": "You can now use this automation."
+        },
+        "failed": {
+          "instruction": "Calibration failed",
+          "note": "Calibration could not complete successfully, likely due to your headset not reporting any data. Please make sure your headset is tracking and try again."
         }
       },
-      "enableAtTime": {
+      "enableForSleepDetector": {
         "title": "Enable sleep mode",
-        "description": "Enable sleep mode at a specific time of day.",
-        "time": "Time"
-      },
-      "disableAtTime": {
-        "title": "Disable sleep mode",
-        "description": "Disable sleep mode at a specific time of day.",
-        "time": "Time"
-      },
-      "disableOnDevicePowerOn": {
-        "title": "Disable sleep mode",
-        "whenTurningOn": "When turning on a",
-        "Controller": "Controller",
-        "GenericTracker": "Tracker"
-      },
-      "enableAtBatteryPercentage": {
-        "title": "Enable sleep mode",
-        "whenA": "When a",
-        "Controller": "Controller",
-        "GenericTracker": "Tracker",
-        "fallsBelow": "Falls below"
+        "description": "With this feature enabled, Oyasumi will automatically enable sleep mode when you've been laying still over 15 minutes.\n\nThis is still an experimental feature and may not yet work correctly.",
+        "calibration": {
+          "title": "Calibration",
+          "description": "You need to calibrate at least once before you should try to use this feature.",
+          "action": "Calibrate"
+        },
+        "sensitivity": {
+          "title": "Sensitivity",
+          "description": "How sensitive Oyasumi should be to your movement.",
+          "presets": {
+            "LOWEST": "Lowest",
+            "LOW": "Low",
+            "MEDIUM": "Medium",
+            "HIGH": "High",
+            "HIGHEST": "Highest"
+          }
+        },
+        "sleepCheck": {
+          "title": "Before enabling, silently ask if I am still awake",
+          "description": "Requires <a class=\"notificationSettingsLink\">notifications</a> to be enabled"
+        }
       }
+    },
+    "enableAtTime": {
+      "title": "Enable sleep mode",
+      "description": "Enable sleep mode at a specific time of day.",
+      "time": "Time"
+    },
+    "disableAtTime": {
+      "title": "Disable sleep mode",
+      "description": "Disable sleep mode at a specific time of day.",
+      "time": "Time"
+    },
+    "disableOnDevicePowerOn": {
+      "title": "Disable sleep mode",
+      "whenTurningOn": "When turning on a",
+      "Controller": "Controller",
+      "GenericTracker": "Tracker"
+    },
+    "enableAtBatteryPercentage": {
+      "title": "Enable sleep mode",
+      "whenA": "When a",
+      "Controller": "Controller",
+      "GenericTracker": "Tracker",
+      "fallsBelow": "Falls below"
     }
   },
   "oscAutomations": {
@@ -316,6 +344,7 @@
     "tab": {
       "general": "General",
       "vrchat": "VRChat",
+      "notifications": "Notifications",
       "updates": "Updates",
       "debug": "Debug"
     },
@@ -399,6 +428,20 @@
         }
       }
     },
+    "notifications": {
+      "providers": {
+        "title": "Notification Providers",
+        "description": "Some features are able or require to be able to send you notifications. Please select your preferred notification provider here.",
+        "xsoverlay": {
+          "title": "XSOverlay Notifications",
+          "description": "Use XSOverlay to bring Oyasumi notifications into VR."
+        },
+        "desktop": {
+          "title": "Desktop Notifications",
+          "description": "Use the default Windows desktop notifications. You can bring these into VR using an overlay like OVR Toolkit."
+        }
+      }
+    },
     "updates": {
       "checkForUpdates": "Check for updates",
       "changelog": "Changelog",
@@ -464,6 +507,24 @@
       "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
       "addressRequired": "An OSC address is required.",
       "addressNotASCII": "A valid OSC address must only contain ASCII characters."
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "title": "Oyasumi",
+      "content": "Sleep mode will be enabled in 20 seconds. Are you asleep?\n\n(Shake your head to cancel)"
+    },
+    "sleepCheckCancel": {
+      "title": "Oyasumi",
+      "content": "Automatic enabling of sleep mode has been cancelled."
+    },
+    "sleepModeEnabled": {
+      "title": "Oyasumi",
+      "content": "Sleep mode has been enabled."
+    },
+    "sleepModeDisabled": {
+      "title": "Oyasumi",
+      "content": "Sleep mode has been disabled."
     }
   },
   "comp": {

@@ -39,6 +39,8 @@ function from2to3(data: any): any {
   data.oscSendingPort = APP_SETTINGS_DEFAULT.oscSendingPort;
   data.oscReceivingHost = APP_SETTINGS_DEFAULT.oscReceivingHost;
   data.oscReceivingPort = APP_SETTINGS_DEFAULT.oscReceivingPort;
+  data.enableXSOverlayNotifications = APP_SETTINGS_DEFAULT.enableXSOverlayNotifications;
+  data.enableDesktopNotifications = APP_SETTINGS_DEFAULT.enableDesktopNotifications;
   return data;
 }
 

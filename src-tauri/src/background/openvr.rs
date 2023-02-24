@@ -14,7 +14,7 @@ use substring::Substring;
 use sysinfo::SystemExt;
 use tauri::Manager;
 
-use crate::{sleep_detector, TAURI_WINDOW};
+use crate::{gesture_detector::GestureDetector, sleep_detector, TAURI_WINDOW};
 
 #[derive(Serialize, Clone)]
 pub enum OpenVRStatus {
@@ -72,6 +72,7 @@ impl OpenVRManager {
 struct OpenVRManagerCore {
     state: Arc<OpenVRManagerState>,
     sleep_detector: SleepDetector,
+    gesture_detector: GestureDetector,
 }
 
 impl OpenVRManagerCore {
@@ -79,6 +80,7 @@ impl OpenVRManagerCore {
         OpenVRManagerCore {
             state,
             sleep_detector: SleepDetector::new(),
+            gesture_detector: GestureDetector::new(),
         }
     }
 
@@ -250,9 +252,10 @@ impl OpenVRManagerCore {
                 let pos = openvr_sys::HmdVector3_t {
                     v: [matrix[0][3], matrix[1][3], matrix[2][3]],
                 };
-                // Update sleep detector (0 == HMD)
+                // Update sleep and gesture detectors (0 == HMD)
                 if n == 0 {
                     self.sleep_detector.log_pose(pos.v, [q.x, q.y, q.z, q.w]);
+                    self.gesture_detector.log_pose(pos.v, [q.x, q.y, q.z, q.w]);
                 }
                 // Emit event
                 {

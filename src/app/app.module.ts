@@ -87,13 +87,18 @@ import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/slee
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
-import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
+import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import {
+  SleepDetectorEnableSleepModeModalComponent
+} from "./views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component";
+import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
 @NgModule({
+  bootstrap: [AppComponent],
   declarations: [
     AppComponent,
     DashboardViewComponent,
@@ -107,6 +112,7 @@ export function createTranslateLoader(http: HttpClient) {
     AboutViewComponent,
     OverviewViewComponent,
     SleepDetectionViewComponent,
+    SleepDetectorCalibrationModalComponent,
     SleepDetectorEnableSleepModeModalComponent,
     TimeEnableSleepModeModalComponent,
     TimeDisableSleepModeModalComponent,
@@ -128,6 +134,7 @@ export function createTranslateLoader(http: HttpClient) {
     UpdateModalComponent,
     LanguageSelectModalComponent,
     SettingsGeneralTabComponent,
+    SettingsNotificationsTabComponent,
     SettingsUpdatesTabComponent,
     SettingsDebugTabComponent,
     SettingsVRChatTabComponent,
@@ -174,7 +181,6 @@ export function createTranslateLoader(http: HttpClient) {
       },
     },
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {
   constructor(

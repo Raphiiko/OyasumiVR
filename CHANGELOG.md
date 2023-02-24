@@ -12,16 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for disabling sleep mode when SteamVR has been stopped.
 - [EXPERIMENTAL] Sleep detection based on the movement of the user's VR headset.
 - Configuration options for setting the OSC hosts and ports Oyasumi interacts with.
+- Support for XSOverlay and Desktop notifications.
+- Notifications for when sleep mode is enabled and disabled.
 
 ### Changed
 
 - The elevated sidecar will be launched on start if the main application is launched with administrator privileges.
-- Layout of Sleep Detection pane has been updated to match recent views. 
+- Layout of Sleep Detection pane has been updated to match recent views.
+- Configuration options for sleep detection automations can now be edited while the automations are inactive.
 
 ### Fixed
 
 - Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
-
 
 ## [1.4.1]
 

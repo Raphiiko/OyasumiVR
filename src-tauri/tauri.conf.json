@@ -39,6 +39,9 @@
           "https://assets.vrchat.com/*",
           "https://files.vrchat.cloud/*"
         ]
+      },
+      "notification": {
+        "all": true
       }
     },
     "bundle": {

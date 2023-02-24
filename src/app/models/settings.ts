@@ -7,6 +7,8 @@ export interface AppSettings {
   oscSendingPort: number;
   oscReceivingHost: string;
   oscReceivingPort: number;
+  enableDesktopNotifications: boolean;
+  enableXSOverlayNotifications: boolean;
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
@@ -19,6 +21,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   oscSendingPort: 9000,
   oscReceivingHost: '127.0.0.1',
   oscReceivingPort: 9001,
+  enableXSOverlayNotifications: false,
+  enableDesktopNotifications: false,
 };
 
 export type ExecutableReferenceStatus =

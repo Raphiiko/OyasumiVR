@@ -7,6 +7,9 @@
     <div class="tab" [class.active]="activeTab === 'VRCHAT'" (click)="activeTab = 'VRCHAT'">
       <div class="tab-label" translate>settings.tab.vrchat</div>
     </div>
+    <div class="tab" [class.active]="activeTab === 'NOTIFICATIONS'" (click)="activeTab = 'NOTIFICATIONS'">
+      <div class="tab-label" translate>settings.tab.notifications</div>
+    </div>
     <div class="tab" [class.active]="activeTab === 'UPDATES'" (click)="activeTab = 'UPDATES'">
       <div class="tab-label">
         <i
@@ -34,6 +37,11 @@
     *ngIf="activeTab === 'VRCHAT'"
     @noop
   ></app-settings-vrchat-tab>
+  <app-settings-notifications-tab
+    class="pane-content"
+    *ngIf="activeTab === 'NOTIFICATIONS'"
+    @noop
+  ></app-settings-notifications-tab>
   <app-settings-updates-tab
     class="pane-content"
     *ngIf="activeTab === 'UPDATES'"

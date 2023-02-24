@@ -1,9 +1,7 @@
-use std::time::{SystemTime, UNIX_EPOCH};
-
 use oyasumi_shared::models::SleepDetectorStateReport;
 use tauri::Manager;
 
-use crate::TAURI_WINDOW;
+use crate::{utils::get_time, TAURI_WINDOW};
 
 const MAX_EVENT_AGE_MS: u128 = 900000; // 15 minutes
 
@@ -72,8 +70,7 @@ impl SleepDetector {
         }
     }
 
-    #[tokio::main]
-    pub async fn log_pose(&mut self, position: [f32; 3], quaternion: [f64; 4]) {
+    pub fn log_pose(&mut self, position: [f32; 3], quaternion: [f64; 4]) {
         // Add the event
         let event = PoseEvent {
             x: position[0],
@@ -113,31 +110,6 @@ impl SleepDetector {
             self.next_state_report = get_time() + 1000;
             self.send_state_report();
         }
-        // Save to influxDB
-        // {
-        //     let f = self.reqwest_client
-        //         .post("http://localhost:8086/api/v2/write?org=org&bucket=bucket&precision=ms")
-        //         .header("Authorization", "Token yXuwflYgacQn8GQp7VmXV23jdC5mG3k5XVBHiA7_Ojv7xCLZyB-FttolJcCRop4knUvN-vi_uMxbZjaBa5SfbQ==") // Yes this is a token I checked in. It's for a local test database, for debugging. Don't worry about it.
-        //         .header("Content-Type", "text/plain; charset=utf-8")
-        //         .header("Accept", "application/json")
-        //         .body(format!(
-        //             "sleep_detector distance_in_last_15_minutes={},distance_in_last_10_minutes={},distance_in_last_5_minutes={},distance_in_last_1_minute={},distance_in_last_10_seconds={},rotation_in_last_15_minutes={},rotation_in_last_10_minutes={},rotation_in_last_5_minutes={},rotation_in_last_1_minute={},rotation_in_last_10_seconds={} {}",
-        //             self.distance_in_last_15_minutes,
-        //             self.distance_in_last_10_minutes,
-        //             self.distance_in_last_5_minutes,
-        //             self.distance_in_last_1_minute,
-        //             self.distance_in_last_10_seconds,
-        //             self.rotation_in_last_15_minutes,
-        //             self.rotation_in_last_10_minutes,
-        //             self.rotation_in_last_5_minutes,
-        //             self.rotation_in_last_1_minute,
-        //             self.rotation_in_last_10_seconds,
-        //             event.timestamp
-        //         ))
-        //         .send();
-        //     // Block until the request is sent
-        //     let _ = futures::executor::block_on(f);
-        // }
     }
 
     fn distance_in_window(&mut self, window_ms: u128) -> f64 {
@@ -203,12 +175,33 @@ impl SleepDetector {
                     },
                 )
                 .ok();
+            // self.send_influxdb_report();
         }
     }
-}
 
-fn get_time() -> u128 {
-    let now = SystemTime::now();
-    let since_the_epoch = now.duration_since(UNIX_EPOCH).expect("Time went backwards");
-    since_the_epoch.as_millis()
+    // #[tokio::main]
+    // async fn send_influxdb_report(&self) {
+    //     let f = self.reqwest_client
+    //     .post("http://localhost:8086/api/v2/write?org=org&bucket=bucket&precision=ms")
+    //     .header("Authorization", "Token yXuwflYgacQn8GQp7VmXV23jdC5mG3k5XVBHiA7_Ojv7xCLZyB-FttolJcCRop4knUvN-vi_uMxbZjaBa5SfbQ==") // Yes this is a token I checked in. It's for a local test database, for debugging. Don't worry about it.
+    //     .header("Content-Type", "text/plain; charset=utf-8")
+    //     .header("Accept", "application/json")
+    //     .body(format!(
+    //         "sleep_detector distance_in_last_15_minutes={},distance_in_last_10_minutes={},distance_in_last_5_minutes={},distance_in_last_1_minute={},distance_in_last_10_seconds={},rotation_in_last_15_minutes={},rotation_in_last_10_minutes={},rotation_in_last_5_minutes={},rotation_in_last_1_minute={},rotation_in_last_10_seconds={} {}",
+    //         self.distance_in_last_15_minutes,
+    //         self.distance_in_last_10_minutes,
+    //         self.distance_in_last_5_minutes,
+    //         self.distance_in_last_1_minute,
+    //         self.distance_in_last_10_seconds,
+    //         self.rotation_in_last_15_minutes,
+    //         self.rotation_in_last_10_minutes,
+    //         self.rotation_in_last_5_minutes,
+    //         self.rotation_in_last_1_minute,
+    //         self.rotation_in_last_10_seconds,
+    //         self.last_log
+    //     ))
+    //     .send();
+    //     // Block until the request is sent
+    //     let _ = futures::executor::block_on(f);
+    // }
 }

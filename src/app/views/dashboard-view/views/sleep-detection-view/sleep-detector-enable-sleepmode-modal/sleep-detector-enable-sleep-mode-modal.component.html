@@ -1,107 +1,57 @@
 <div class="pane modal-lg" [@fadeUp]>
   <div class="pane-title" translate>sleep-detection.modals.enableForSleepDetector.title</div>
+  <div class="pane-content">
+    <p translate>sleep-detection.modals.enableForSleepDetector.description</p>
+    <div class="settings">
 
-  <div class="pane-content" *ngIf="mode === 'INFO'">
-    <p translate>sleep-detection.modals.enableForSleepDetector.info.intro</p>
-    <p translate>sleep-detection.modals.enableForSleepDetector.info.stepPrefix</p>
-    <ol>
-      <li translate>sleep-detection.modals.enableForSleepDetector.info.step.1</li>
-      <li translate>sleep-detection.modals.enableForSleepDetector.info.step.2</li>
-      <li translate>sleep-detection.modals.enableForSleepDetector.info.step.3</li>
-    </ol>
-    <p translate>sleep-detection.modals.enableForSleepDetector.info.stepSuffix</p>
-
-    <div class="current-calibration">
-      <span translate>sleep-detection.modals.enableForSleepDetector.currentCalibration</span>
-      <span>{{ calibrationValue }}</span>
-    </div>
-
-    <div class="alert error" *ngIf="(openvr.status | async) !== 'INITIALIZED'" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> error </i>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.enableForSleepDetector.calibration.title</span>
+          <span translate>sleep-detection.modals.enableForSleepDetector.calibration.description</span>
+        </div>
+        <div class="setting-row-action">
+          <button class="btn btn-primary" (click)="calibrate()" translate>
+            sleep-detection.modals.enableForSleepDetector.calibration.action
+          </button>
+        </div>
       </div>
-      <div class="alert-content" translate
-        >sleep-detection.modals.enableForSleepDetector.noSteamVR</div
-      >
-    </div>
-  </div>
 
-  <div class="pane-content center-pane" *ngIf="mode === 'PREPARE'">
-    <h1 translate style="text-align: center"
-      >sleep-detection.modals.enableForSleepDetector.prepare.instruction</h1
-    >
-    <br />
-    <p translate style="text-align: center"
-      >sleep-detection.modals.enableForSleepDetector.prepare.note</p
-    >
-    <div class="alert error" *ngIf="(openvr.status | async) !== 'INITIALIZED'" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> error </i>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.title</span>
+          <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            type="SMALL"
+            [items]="sensitivityOptions"
+            [selected]="sensitivityOption"
+            (selectedChange)="setSensitivityOption($event?.id)"
+          ></app-select-box>
+        </div>
       </div>
-      <div class="alert-content" translate
-        >sleep-detection.modals.enableForSleepDetector.noSteamVR</div
-      >
+
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.enableForSleepDetector.sleepCheck.title</span>
+          <span [innerHtml]="'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | translate"></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle" [class.disabled]="!notificationsEnabled">
+            <input
+              [checked]="automationConfigs?.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR?.sleepCheck && notificationsEnabled"
+              (change)="toggleSleepCheck()"
+              [disabled]="!notificationsEnabled"
+              type="checkbox"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <div class="pane-content center-pane" *ngIf="mode === 'COUNTDOWN'">
-    <div class="large-spinner"></div>
-    <h1
-      style="text-align: center"
-      [translate]="'sleep-detection.modals.enableForSleepDetector.countdown.instruction'"
-      [translateParams]="{ counter: countdownValue }"
-    ></h1>
-    <p translate style="text-align: center; margin-top: 1em; white-space: pre-line">
-      sleep-detection.modals.enableForSleepDetector.countdown.note</p
-    >
-  </div>
-
-  <div class="pane-content center-pane" *ngIf="mode === 'CALIBRATING'">
-    <div class="large-spinner"></div>
-    <h1 translate style="text-align: center"
-      >sleep-detection.modals.enableForSleepDetector.calibrating.instruction</h1
-    >
-    <p translate style="text-align: center; margin-top: 1em">
-      sleep-detection.modals.enableForSleepDetector.calibrating.note</p
-    >
-    <p
-      style="text-align: center; margin-top: 1em"
-      [translate]="'sleep-detection.modals.enableForSleepDetector.calibrating.countdown'"
-      [translateParams]="{ counter: countdownValue }"
-    >
-    </p>
-  </div>
-
-  <div class="pane-content center-pane" *ngIf="mode === 'DONE'">
-    <h1 translate style="text-align: center"
-      >sleep-detection.modals.enableForSleepDetector.done.instruction</h1
-    >
-    <p translate style="text-align: center; margin-top: 1em"
-      >sleep-detection.modals.enableForSleepDetector.done.note</p
-    >
-    <div class="current-calibration">
-      <span translate>sleep-detection.modals.enableForSleepDetector.currentCalibration</span>
-      <span>{{ calibrationValue }}</span>
-    </div>
-  </div>
-
-  <div class="pane-actions spread" *ngIf="mode === 'INFO' || mode === 'PREPARE'" @vshrink>
-    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
-    <button
-      class="btn btn-primary"
-      (click)="startCalibration()"
-      translate
-      [disabled]="(openvr.status | async) !== 'INITIALIZED'"
-    >
-      sleep-detection.modals.enableForSleepDetector.startCalibration
-    </button>
-  </div>
-  <div class="pane-actions spread" *ngIf="mode === 'DONE'" @vshrink>
-    <button class="btn btn-secondary" (click)="startCalibration()" translate>
-      sleep-detection.modals.enableForSleepDetector.restartCalibration
-    </button>
+  <div class="pane-actions spread">
     <button class="btn btn-primary" (click)="close()" translate>shared.modals.close</button>
   </div>
 </div>

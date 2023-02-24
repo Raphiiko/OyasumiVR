@@ -80,6 +80,8 @@ export interface MSIAfterburnerAutomationConfig extends AutomationConfig {
 // SLEEP MODE AUTOMATIONS
 export interface SleepModeEnableForSleepDetectorAutomationConfig extends AutomationConfig {
   calibrationValue: number;
+  sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
+  sleepCheck: boolean;
 }
 
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -172,7 +174,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   // SLEEP MODE AUTOMATIONS
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,
-    calibrationValue: 10,
+    calibrationValue: 0.01,
+    sensitivity: 'MEDIUM',
+    sleepCheck: false,
   },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,
