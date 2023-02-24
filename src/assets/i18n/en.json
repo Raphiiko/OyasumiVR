@@ -56,9 +56,9 @@
           "intro": "Oyasumi can detect if you've fallen asleep based on the movement of your VR headset. For it to be able to do this, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
           "stepPrefix": "Calibration works as follows:",
           "step": {
-            "1": "You put on your headset and lie down.",
-            "2": "You start the calibration in Oyasumi from your overlay.",
-            "3": "You lay still for 10 seconds."
+            "one": "You put on your headset and lie down.",
+            "two": "You start the calibration in Oyasumi from your overlay.",
+            "three": "You lay still for 10 seconds."
           },
           "stepSuffix": "That's it! After calibration, Oyasumi should be able to detect if you've fallen asleep based on the movement of your VR headset."
         },
