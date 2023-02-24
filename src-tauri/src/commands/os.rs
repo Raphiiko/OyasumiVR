@@ -1,12 +1,12 @@
 use std::{collections::HashMap, sync::Mutex};
 
-use crate::SOLOUD;
 use log::error;
 use serde::{Deserialize, Serialize};
 use soloud::*;
 
 lazy_static! {
     static ref SOUNDS: Mutex<HashMap<String, Vec<u8>>> = Mutex::new(HashMap::new());
+    static ref SOLOUD: Mutex<Soloud> = Mutex::new(Soloud::default().unwrap());
 }
 
 pub fn load_sounds() {
@@ -31,14 +31,12 @@ pub fn play_sound(name: String) {
             wav.load_mem(sound_data).unwrap();
         }
         {
-            let guard = SOLOUD.lock().unwrap();
-            let sl = guard.as_ref().unwrap();
+            let sl = SOLOUD.lock().unwrap();
             sl.play(&wav);
         }
         loop {
             std::thread::sleep(std::time::Duration::from_millis(100));
-            let guard = SOLOUD.lock().unwrap();
-            let sl = guard.as_ref().unwrap();
+            let sl = SOLOUD.lock().unwrap();
             if sl.active_voice_count() == 0 {
                 break;
             }

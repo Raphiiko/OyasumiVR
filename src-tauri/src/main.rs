@@ -12,7 +12,6 @@ use background::openvr::OpenVRManager;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
-use soloud::Soloud;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
@@ -54,7 +53,6 @@ lazy_static! {
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
     static ref IMAGE_CACHE: Mutex<Option<ImageCache>> = Default::default();
-    static ref SOLOUD: Mutex<Option<Soloud>> = Mutex::new(Some(Soloud::default().unwrap()));
 }
 
 fn main() {
