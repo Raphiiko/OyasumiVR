@@ -37,7 +37,6 @@ mime_guess = "2.0.4"
 substring = "1.4.5"
 bytes = "1.4.0"
 nalgebra = "0.32.1"
-rustfft = "6.1.0"
 
 [dependencies.windows-sys]
 version = "0.36.1"
