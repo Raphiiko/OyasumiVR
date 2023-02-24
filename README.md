@@ -5,6 +5,7 @@
     <br/>
     :zzz: A collection of utilities to assist with sleeping in virtual reality. :zzz:
 </p>
+
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
     <a><img alt="Production Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-release.yml/badge.svg"/></a>
@@ -38,14 +39,14 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <td><p align="center"><b>Sleeping Animations</b></p></td>
 <td><p align="center"><b>GPU Power Limiting</b></p></td>
 <td><p align="center"><b>MSI Afterburner Automations</b></p></td>
-<td><p align="center"><b>Sleep Detection</b></p></td>
+<td><p align="center"><b>Sleep Automations</b></p></td>
 <td><p align="center"><b>Device Overview</b></p></td>
 </tr>
 <tr>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735301-27261123-cd07-48ce-b54a-1851bd346be6.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735445-f2487aaf-5e09-4add-87d7-ea5564077330.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736607-e954b974-4bfa-4d9a-9576-a960513cc709.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735136-61043a03-8bc3-4c3a-a2fc-7fc8a5e46483.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258665-6e31caf3-b037-477f-9245-75af27f4b4ec.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258580-a9cf380c-6e64-4ef9-aa8b-97bdb473bbfa.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258490-7baa4575-c479-4ca6-a4ab-f99ac976fcd1.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258355-8ddde3a4-eb4a-4dff-904e-158337223955.png" width="100%" crossorigin></p></td>
 <td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735354-51b8c1fb-e39c-44e0-8317-de0c91063d1a.png" width="100%" crossorigin></p></td>
 </tr>
 <tr>
@@ -53,19 +54,18 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <td><p align="center"><b>General Settings</b></p></td>
 <td><p align="center"><b>Auto Accept Invite Requests</b></p></td>
 <td><p align="center"><b>Battery Automations</b></p></td>
-<td><p align="center"><b>About</b></p></td>
+<td><p align="center"><b>Sleep Detection</b></p></td>
 
 </tr>
 <tr>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735647-78c138f5-ceb6-40e3-a0ce-5900dec3d826.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735688-01e76bfd-33ea-429f-a0a4-b2c301f4cc21.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213736192-94f7ed10-04b3-47c0-8a58-5620aecac34d.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735510-946bd5a2-74cc-41f2-98c4-af43c4063bd7.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213737349-7fef79d1-4afd-481a-95dc-e94ee1d1312c.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258922-ebf8fcbd-9223-42da-b54b-584e7ec3b1fe.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259843-694a9449-82b9-4c34-8fdf-8ddd18c1bff0.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259235-ded642d2-9614-45d7-9477-d33ab7e467f7.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259448-e7d5d869-fba6-414c-b167-b06cfb6b1fa4.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259916-cdd66e56-f489-4db7-8759-fab60994735c.png" width="100%" crossorigin></p></td>
 </tr>
 </table>
 </p>
-
 
 ## Features
 
@@ -98,7 +98,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 - :email: Automatically accept invite requests
   - Automatically let friends in while you are asleep!
   - Configure whose invite requests are accepted using a black- or whitelist.
-- :zzz: Manage automations with a sleep mode in various ways:
+- :zzz: Automatically enable and disable sleep mode for triggering automations
   - Detect falling asleep:
     - When Oyasumi guesses you are asleep based on your movement
     - When a controller or tracker battery percentage falls below a threshold
