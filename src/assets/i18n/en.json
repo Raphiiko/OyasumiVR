@@ -34,7 +34,7 @@
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "When all controllers are turned off",
       "onMotionDetection": {
-        "title": "When Oyasumi guesses you are asleep based on your motion data",
+        "title": "When Oyasumi guesses you are asleep based on your movement",
         "subtitle": "<b>NOTE:</b> This is an <b>experimental feature</b>! It may not work correctly."
       }
     },
@@ -86,7 +86,7 @@
       },
       "enableForSleepDetector": {
         "title": "Enable sleep mode",
-        "description": "With this feature enabled, Oyasumi will automatically enable sleep mode when you've been laying still over 15 minutes.\n\nThis is still an experimental feature and may not yet work correctly.",
+        "description": "With this feature enabled, Oyasumi will automatically enable sleep mode when it guesses you're asleep based on your movement.\n\nThis is still an experimental feature and may not yet work correctly.",
         "calibration": {
           "title": "Calibration",
           "description": "You need to calibrate at least once before you should try to use this feature.",
@@ -104,7 +104,7 @@
           }
         },
         "sleepCheck": {
-          "title": "Before enabling, silently ask if I am still awake",
+          "title": "Before enabling sleep mode, ask if I am still awake",
           "description": "Requires <a class=\"notificationSettingsLink\">notifications</a> to be enabled"
         }
       },

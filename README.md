@@ -100,6 +100,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Configure whose invite requests are accepted using a black- or whitelist.
 - :zzz: Manage automations with a sleep mode in various ways:
   - Detect falling asleep:
+    - When Oyasumi guesses you are asleep based on your movement
     - When a controller or tracker battery percentage falls below a threshold
     - When turning off your controllers
     - On a time schedule
