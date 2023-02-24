@@ -107,30 +107,30 @@
           "title": "Before enabling, silently ask if I am still awake",
           "description": "Requires <a class=\"notificationSettingsLink\">notifications</a> to be enabled"
         }
+      },
+      "enableAtTime": {
+        "title": "Enable sleep mode",
+        "description": "Enable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableAtTime": {
+        "title": "Disable sleep mode",
+        "description": "Disable sleep mode at a specific time of day.",
+        "time": "Time"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Disable sleep mode",
+        "whenTurningOn": "When turning on a",
+        "Controller": "Controller",
+        "GenericTracker": "Tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Enable sleep mode",
+        "whenA": "When a",
+        "Controller": "Controller",
+        "GenericTracker": "Tracker",
+        "fallsBelow": "Falls below"
       }
-    },
-    "enableAtTime": {
-      "title": "Enable sleep mode",
-      "description": "Enable sleep mode at a specific time of day.",
-      "time": "Time"
-    },
-    "disableAtTime": {
-      "title": "Disable sleep mode",
-      "description": "Disable sleep mode at a specific time of day.",
-      "time": "Time"
-    },
-    "disableOnDevicePowerOn": {
-      "title": "Disable sleep mode",
-      "whenTurningOn": "When turning on a",
-      "Controller": "Controller",
-      "GenericTracker": "Tracker"
-    },
-    "enableAtBatteryPercentage": {
-      "title": "Enable sleep mode",
-      "whenA": "When a",
-      "Controller": "Controller",
-      "GenericTracker": "Tracker",
-      "fallsBelow": "Falls below"
     }
   },
   "oscAutomations": {
