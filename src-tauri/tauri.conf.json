@@ -18,7 +18,8 @@
         "readDir": true,
         "exists": true,
         "scope": [
-          "$HOME/AppData/LocalLow/VRChat/**/*"
+          "$HOME/AppData/LocalLow/VRChat/**/*",
+          "$RESOURCE/*"
         ]
       },
       "shell": {
@@ -70,7 +71,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "sounds/*.ogg"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {

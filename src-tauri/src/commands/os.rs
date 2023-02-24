@@ -1,5 +1,50 @@
+use std::{collections::HashMap, sync::Mutex};
+
+use crate::SOLOUD;
 use log::error;
 use serde::{Deserialize, Serialize};
+use soloud::*;
+
+lazy_static! {
+    static ref SOUNDS: Mutex<HashMap<String, Vec<u8>>> = Mutex::new(HashMap::new());
+}
+
+pub fn load_sounds() {
+    let mut sounds = SOUNDS.lock().unwrap();
+    sounds.insert(
+        String::from("notification_bell"),
+        std::fs::read("sounds/notification_bell.ogg").unwrap(),
+    );
+    sounds.insert(
+        String::from("notification_block"),
+        std::fs::read("sounds/notification_block.ogg").unwrap(),
+    );
+}
+
+#[tauri::command]
+pub fn play_sound(name: String) {
+    std::thread::spawn(move || {
+        let mut wav = audio::Wav::default();
+        {
+            let sound_data_guard = SOUNDS.lock().unwrap();
+            let sound_data = sound_data_guard.get(&name).unwrap();
+            wav.load_mem(sound_data).unwrap();
+        }
+        {
+            let guard = SOLOUD.lock().unwrap();
+            let sl = guard.as_ref().unwrap();
+            sl.play(&wav);
+        }
+        loop {
+            std::thread::sleep(std::time::Duration::from_millis(100));
+            let guard = SOLOUD.lock().unwrap();
+            let sl = guard.as_ref().unwrap();
+            if sl.active_voice_count() == 0 {
+                break;
+            }
+        }
+    });
+}
 
 #[tauri::command]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {

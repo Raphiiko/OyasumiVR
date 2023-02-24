@@ -37,6 +37,7 @@ mime_guess = "2.0.4"
 substring = "1.4.5"
 bytes = "1.4.0"
 nalgebra = "0.32.1"
+soloud = "1.0.2"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -78,7 +79,7 @@ rev = "c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = [ "custom-protocol" ]
+default = ["custom-protocol"]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
-custom-protocol = [ "tauri/custom-protocol" ]
+custom-protocol = ["tauri/custom-protocol"]

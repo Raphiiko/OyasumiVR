@@ -12,6 +12,7 @@ use background::openvr::OpenVRManager;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
+use soloud::Soloud;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
 use tauri_plugin_fs_extra::FsExtra;
@@ -23,12 +24,12 @@ mod commands {
     pub mod afterburner;
     pub mod http;
     pub mod log_parser;
+    pub mod notifications;
     pub mod nvml;
     pub mod openvr;
     pub mod os;
     pub mod osc;
     pub mod splash;
-    pub mod notifications;
 }
 
 mod background {
@@ -38,11 +39,11 @@ mod background {
     pub mod osc;
 }
 
-mod utils;
 mod elevated_sidecar;
+mod gesture_detector;
 mod image_cache;
 mod sleep_detector;
-mod gesture_detector;
+mod utils;
 
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
@@ -53,6 +54,7 @@ lazy_static! {
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
     static ref IMAGE_CACHE: Mutex<Option<ImageCache>> = Default::default();
+    static ref SOLOUD: Mutex<Option<Soloud>> = Mutex::new(Some(Soloud::default().unwrap()));
 }
 
 fn main() {
@@ -109,6 +111,8 @@ fn main() {
                 *OPENVR_MANAGER.lock().unwrap() = Some(openvr_manager);
                 // Spawn HTTP server thread
                 background::http_server::spawn_http_server_thread();
+                // Load sounds
+                commands::os::load_sounds();
             });
             // Setup start of minute cronjob
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
@@ -135,6 +139,7 @@ fn main() {
             commands::openvr::openvr_get_devices,
             commands::openvr::openvr_status,
             commands::os::run_command,
+            commands::os::play_sound,
             commands::splash::close_splashscreen,
             commands::nvml::nvml_status,
             commands::nvml::nvml_get_devices,

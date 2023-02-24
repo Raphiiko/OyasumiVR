@@ -50,23 +50,17 @@ export class SleepModeForSleepDetectorAutomationService {
       this.handleStateReportForEnable(event.payload)
     );
     await listen<{ gesture: string }>('GESTURE_DETECTED', async (event) => {
-      console.log(event);
       if (event.payload.gesture !== 'head_shake') return;
       if (this.sleepEnableTimeoutId) {
         clearTimeout(this.sleepEnableTimeoutId);
         this.sleepEnableTimeoutId = null;
+        await this.notifications.play_sound('bell');
         await this.notifications.send(
           this.translate.instant('notifications.sleepCheckCancel.title'),
           this.translate.instant('notifications.sleepCheckCancel.content')
         );
       }
     });
-    setTimeout(() => {
-      this.handleStateReportForEnable({
-        startTime: Date.now() - 1000 * 60 * 15 - 1000,
-        distanceInLast15Minutes: 0,
-      } as any);
-    }, 15000);
   }
 
   async handleStateReportForEnable(report: SleepDetectorStateReport) {

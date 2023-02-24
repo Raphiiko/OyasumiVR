@@ -32,6 +32,12 @@ interface XSOMessage {
 export class NotificationService {
   constructor(private appSettingsService: AppSettingsService) {}
 
+  public async play_sound(sound: 'bell' | 'block') {
+    await invoke('play_sound', {
+      name: 'notification_' + sound,
+    });
+  }
+
   public async send(title: string, content: string) {
     const settings = await firstValueFrom(this.appSettingsService.settings);
     if (settings.enableDesktopNotifications) {
