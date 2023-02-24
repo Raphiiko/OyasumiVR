@@ -29,17 +29,85 @@
     "title": "Slaap Detectie",
     "enableAutomations": {
       "title": "Slaap modus inschakelen",
+      "description": "Automatisch de slaap modus inschakelen",
       "atTime": "Om een specifieke tijd",
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
-      "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet"
+      "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
+      "onMotionDetection": {
+        "title": "Wanneer Oyasumi detecteert dat je slaapt gebaseerd op je bewegingen",
+        "subtitle": "<b>Let op:</b> Dit is een <b>experimentele feature</b>! Het kan zijn dat het nog niet helemaal goed werkt."
+      }
     },
     "disableAutomations": {
       "title": "Slaap modus uitschakelen",
+      "description": "Automatisch de slaap modus uitschakelen",
       "atTime": "Om een specifieke tijd",
       "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
       "onSteamVRStop": "Wanneer SteamVR stopt"
     },
     "modals": {
+      "sleepDetectorCalibration": {
+        "title": "Kalibratie van slaap detectie",
+        "currentCalibration": "Je huidige kalibratie nummer:",
+        "noSteamVR": "Om de kalibratie te kunnen beginnen moet SteamVR gestart zijn en je VR headset verbonden zijn.",
+        "startCalibration": "Begin Kalibratie",
+        "restartCalibration": "Herstart Kalibratie",
+        "info": {
+          "intro": "Oyasumi kan detecteren of je in slaap bent gevallen, gebaseerd op de beweging van je VR bril. Om dit te kunnen doen, moet Oyasumi eerst gekalibreerd worden met jouw VR setup. Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
+          "stepPrefix": "Het kalibratieproces werkt als volgt:",
+          "step": {
+            "one": "Je zet je VR bril op en gaat liggen.",
+            "two": "Je start de kalibratie in Oyasumi vanuit je overlay.",
+            "three": "Je blijft voor 10 seconden stil liggen."
+          },
+          "stepSuffix": "Dat is alles! Na kalibratie zou Oyasumi moeten kunnen detecteren of je in slaap bent gevallen, gebaseerd op de beweging van je VR bril."
+        },
+        "prepare": {
+          "instruction": "Zet je VR bril op en ga liggen.",
+          "note": "Als je er klaar voor bent, en je dit venster kunt zien vanuit je overlay, druk je op 'Begin Kalibratie' om te beginnen."
+        },
+        "countdown": {
+          "instruction": "We beginnen in {{counter}}",
+          "note": "Blijf stil liggen tijdens het kalibreren! Doe net alsof je slaapt.\nBewegen tijdens het kalibreren kan er voor zorgen dat deze feature niet goed werkt."
+        },
+        "calibrating": {
+          "instruction": "Aan het kalibreren...",
+          "note": "Blijf even stil liggen.",
+          "countdown": "Nog {{counter}} seconde(n)..."
+        },
+        "done": {
+          "instruction": "Kalibratie voltooid!",
+          "note": "Je kunt nu deze feature gebruiken."
+        },
+        "failed": {
+          "instruction": "Kalibratie mislukt",
+          "note": "Er is iets misgegaan tijdens het kalibreren, waarschijnlijk omdat je VR bril geen bewegingsdata doorgeeft. Check of je VR bril trackt en probeer het opnieuw."
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "Slaap modus inschakelen",
+        "description": "Met deze feature, zal Oyasumi automatisch de slaap modus inschakelen wanneer het op basis van je beweging detecteert dat je in slaap bent gevallen.\n\nDit is nog een experimentele feature, dus het kan zijn dat het nog niet helemaal goed werkt.",
+        "calibration": {
+          "title": "Kalibratie",
+          "description": "Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
+          "action": "Kalibreer"
+        },
+        "sensitivity": {
+          "title": "Gevoeligheid",
+          "description": "Hoe gevoelig Oyasumi moet zijn voor je bewegingen.",
+          "presets": {
+            "LOWEST": "Laagst",
+            "LOW": "Laag",
+            "MEDIUM": "Gemiddeld",
+            "HIGH": "Hoog",
+            "HIGHEST": "Hoogst"
+          }
+        },
+        "sleepCheck": {
+          "title": "Vraag of ik nog wakker ben voordat de slaap modus wordt ingeschakeld",
+          "description": "Vereist dat <a class=\"notificationSettingsLink\">notificaties</a> zijn ingeschakeld"
+        }
+      },
       "enableAtTime": {
         "title": "Slaap modus inschakelen",
         "description": "Om een specifieke tijd op de dag",
@@ -276,6 +344,7 @@
     "tab": {
       "general": "Algemeen",
       "vrchat": "VRChat",
+      "notifications": "Notificaties",
       "updates": "Updates",
       "debug": "Debug"
     },
@@ -359,6 +428,20 @@
         }
       }
     },
+    "notifications": {
+      "providers": {
+        "title": "Notificatie Providers",
+        "description": "Sommige features kunnen of moeten notificaties sturen. Selecteer hier welke notificatie providers je wilt gebruiken.",
+        "xsoverlay": {
+          "title": "XSOverlay Notificaties",
+          "description": "Gebruik XSOverlay om Oyasumi's notificaties in VR te zien."
+        },
+        "desktop": {
+          "title": "Desktop Notificaties",
+          "description": "Gebruik standaard Windows desktop notificaties. Je kunt deze in VR zien via een overlay zoals OVR Toolkit."
+        }
+      }
+    },
     "updates": {
       "checkForUpdates": "Updates checken",
       "changelog": "Changelog",
@@ -385,6 +468,9 @@
       },
       "sleepingPose": {
         "title": "Slaap Houding"
+      },
+      "sleepingDetection": {
+        "title": "Slaap Detectie Rapportage"
       }
     }
   },
@@ -421,6 +507,24 @@
       "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
       "addressRequired": "Een OSC adres is vereist.",
       "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten."
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "title": "Oyasumi",
+      "content": "De slaap modus wordt over 20 seconden ingeschakeld. Slaap je al?\n\n(Schud nee om dit te annuleren)"
+    },
+    "sleepCheckCancel": {
+      "title": "Oyasumi",
+      "content": "Automatische activering van de slaap modus is geannuleerd."
+    },
+    "sleepModeEnabled": {
+      "title": "Oyasumi",
+      "content": "De slaap modus is geactiveerd."
+    },
+    "sleepModeDisabled": {
+      "title": "Oyasumi",
+      "content": "De slaap modus is gedeactiveerd."
     }
   },
   "comp": {

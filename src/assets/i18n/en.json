@@ -34,7 +34,7 @@
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "When all controllers are turned off",
       "onMotionDetection": {
-        "title": "When Oyasumi guesses you are asleep based on your movement",
+        "title": "When Oyasumi detects you are asleep based on your movement",
         "subtitle": "<b>NOTE:</b> This is an <b>experimental feature</b>! It may not work correctly."
       }
     },
@@ -73,7 +73,7 @@
         "calibrating": {
           "instruction": "Calibrating",
           "note": "Keep still.",
-          "countdown": "{{counter}} seconds remaining..."
+          "countdown": "{{counter}} second(s) remaining..."
         },
         "done": {
           "instruction": "Calibration complete!",
