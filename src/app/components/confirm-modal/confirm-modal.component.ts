@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fadeUp } from 'src/app/utils/animations';
+import { TString } from "../../models/translatable-string";
 
 export interface ConfirmModalInputModel {
-  title?: string;
-  message?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
+  title?: TString;
+  message?: TString;
+  confirmButtonText?: TString;
+  cancelButtonText?: TString;
   showCancel?: boolean;
 }
 
@@ -24,10 +25,10 @@ export class ConfirmModalComponent
   extends SimpleModalComponent<ConfirmModalInputModel, ConfirmModalOutputModel>
   implements OnInit, ConfirmModalInputModel
 {
-  title?: string;
-  message?: string;
-  confirmButtonText?: string;
-  cancelButtonText?: string;
+  title?: TString;
+  message?: TString;
+  confirmButtonText?: TString;
+  cancelButtonText?: TString;
   showCancel?: boolean;
 
   constructor() {

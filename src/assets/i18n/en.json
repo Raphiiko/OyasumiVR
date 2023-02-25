@@ -311,6 +311,10 @@
     "noPlayersAdded": "No players are currently added to the list.",
     "addFriends": "Add Friends",
     "clearPlayers": "Clear Players",
+    "removeModal": {
+      "title": "Confirm Removal",
+      "message": "Are you sure you want to remove '{{name}}' from your list?"
+    },
     "options": {
       "enable": {
         "title": "Enable",

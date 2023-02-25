@@ -15,6 +15,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
 } from '../../../../models/automations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
+import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-auto-invite-request-accept-view',
@@ -53,7 +54,8 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
   constructor(
     protected vrchat: VRChatService,
     private modal: SimpleModalService,
-    private automationConfig: AutomationConfigService
+    private automationConfig: AutomationConfigService,
+    private modalService: SimpleModalService
   ) {}
 
   ngOnInit(): void {
@@ -121,8 +123,20 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
   }
 
   async removePlayer(player: LimitedUser) {
-    this.playerList = this.playerList.filter((p) => p.id !== player.id);
-    await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
+    this.modalService
+      .addModal(ConfirmModalComponent, {
+        title: 'auto-invite-request-accept.removeModal.title',
+        message: {
+          string: 'auto-invite-request-accept.removeModal.message',
+          values: { name: player.displayName },
+        },
+      })
+      .subscribe(async (data) => {
+        if (data.confirmed) {
+          this.playerList = this.playerList.filter((p) => p.id !== player.id);
+          await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
+        }
+      });
   }
 
   async clearPlayers() {
