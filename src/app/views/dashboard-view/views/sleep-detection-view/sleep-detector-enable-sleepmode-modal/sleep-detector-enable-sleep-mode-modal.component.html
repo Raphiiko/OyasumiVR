@@ -3,11 +3,12 @@
   <div class="pane-content">
     <p translate>sleep-detection.modals.enableForSleepDetector.description</p>
     <div class="settings">
-
       <div class="setting-row">
         <div class="setting-row-label" translate>
           <span translate>sleep-detection.modals.enableForSleepDetector.calibration.title</span>
-          <span translate>sleep-detection.modals.enableForSleepDetector.calibration.description</span>
+          <span translate
+            >sleep-detection.modals.enableForSleepDetector.calibration.description</span
+          >
         </div>
         <div class="setting-row-action">
           <button class="btn btn-primary" (click)="calibrate()" translate>
@@ -19,7 +20,9 @@
       <div class="setting-row">
         <div class="setting-row-label" translate>
           <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.title</span>
-          <span translate>sleep-detection.modals.enableForSleepDetector.sensitivity.description</span>
+          <span translate
+            >sleep-detection.modals.enableForSleepDetector.sensitivity.description</span
+          >
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -34,12 +37,19 @@
       <div class="setting-row">
         <div class="setting-row-label" translate>
           <span translate>sleep-detection.modals.enableForSleepDetector.sleepCheck.title</span>
-          <span [innerHtml]="'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | translate"></span>
+          <span
+            [innerHtml]="
+              'sleep-detection.modals.enableForSleepDetector.sleepCheck.description' | translate
+            "
+          ></span>
         </div>
         <div class="setting-row-action">
           <label class="switch-toggle" [class.disabled]="!notificationsEnabled">
             <input
-              [checked]="automationConfigs?.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR?.sleepCheck && notificationsEnabled"
+              [checked]="
+                automationConfigs?.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR?.sleepCheck &&
+                notificationsEnabled
+              "
               (change)="toggleSleepCheck()"
               [disabled]="!notificationsEnabled"
               type="checkbox"
@@ -48,7 +58,6 @@
           </label>
         </div>
       </div>
-
     </div>
   </div>
   <div class="pane-actions spread">
