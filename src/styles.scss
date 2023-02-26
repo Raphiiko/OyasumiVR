@@ -43,3 +43,11 @@ a:active {
 i.material-icons {
   font-size: 1.5em;
 }
+
+img {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}

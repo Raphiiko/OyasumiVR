@@ -31,7 +31,7 @@
         @hshrink
         *ngIf="['INACTIVE', 'INITIALIZED'].includes((openvr.status | async) ?? '')"
       >
-        <img src="/assets/img/steamvr_icon.png" />
+        <img draggable="false" src="/assets/img/steamvr_icon.png" />
       </div>
       <div
         class="pill-icon"
@@ -51,7 +51,7 @@
     >
       <ng-container *ngVar="user | async as user">
         <div class="pill-icon" *ngIf="!user || user.status === 'offline'" @hshrink>
-          <img src="/assets/img/vrc_icon.png" />
+          <img draggable="false" src="/assets/img/vrc_icon.png" />
         </div>
         <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
           <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
