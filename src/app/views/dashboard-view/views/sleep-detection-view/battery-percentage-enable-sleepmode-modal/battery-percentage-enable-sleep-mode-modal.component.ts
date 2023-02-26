@@ -3,6 +3,7 @@ import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 import { isInteger } from 'lodash';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];
@@ -34,7 +35,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
     return;
   }
 
-  constructor() {
+  constructor(private translate: TranslateService) {
     super();
   }
 
@@ -60,10 +61,18 @@ export class BatteryPercentageEnableSleepModeModalComponent
     const threshold = parseFloat(value);
 
     if (threshold < 0 || threshold > 100) {
-      el.setCustomValidity('The percentage has to be between 0% and 100%.');
+      el.setCustomValidity(
+        this.translate.instant(
+          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdOutOfRange'
+        )
+      );
       return;
     } else if (!isInteger(threshold)) {
-      el.setCustomValidity('The percentage value has to be a whole number.');
+      el.setCustomValidity(
+        this.translate.instant(
+          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdNotInteger'
+        )
+      );
       return;
     } else {
       el.setCustomValidity('');

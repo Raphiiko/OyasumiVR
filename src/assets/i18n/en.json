@@ -129,7 +129,11 @@
         "whenA": "When a",
         "Controller": "Controller",
         "GenericTracker": "Tracker",
-        "fallsBelow": "Falls below"
+        "fallsBelow": "Falls below",
+        "errors": {
+          "thresholdOutOfRange": "The percentage has to be between 0% and 100%.",
+          "thresholdNotInteger": "The percentage value has to be a whole number."
+        }
       }
     }
   },
