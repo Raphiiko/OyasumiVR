@@ -15,3 +15,19 @@
 
   padding-bottom: 1em;
 }
+
+.sleeping-detection-table {
+  width: 100%;
+  border: 1px solid var(--color-surface-5);
+  border-radius: var(--surface-border-radius);
+
+  td {
+    padding: 0.5em;
+    border: 1px solid var(--color-surface-5);
+    border-radius: var(--surface-border-radius);
+  }
+  &,
+  * {
+    user-select: all !important;
+  }
+}

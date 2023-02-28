@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use openvr::TrackedDeviceClass;
+use serde::{Deserialize, Serialize};
 
 // SIDECAR COMMUNICATION
 
@@ -92,4 +92,28 @@ pub struct OVRDevicePose {
 #[derive(Clone, Serialize, Deserialize)]
 pub struct DeviceUpdateEvent {
     pub device: OVRDevice,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SleepDetectorStateReport {
+    pub distance_in_last_15_minutes: f64,
+    pub distance_in_last_10_minutes: f64,
+    pub distance_in_last_5_minutes: f64,
+    pub distance_in_last_1_minute: f64,
+    pub distance_in_last_10_seconds: f64,
+    pub rotation_in_last_15_minutes: f64,
+    pub rotation_in_last_10_minutes: f64,
+    pub rotation_in_last_5_minutes: f64,
+    pub rotation_in_last_1_minute: f64,
+    pub rotation_in_last_10_seconds: f64,
+    pub start_time: u128,
+    pub last_log: u128,
+}
+
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct GestureDetected {
+    pub gesture: String,
 }

@@ -21,6 +21,8 @@ import { OVRDevicePose } from '../models/ovr-device';
 import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
 import * as THREE from 'three';
 import { info } from 'tauri-plugin-log-api';
+import { NotificationService } from './notification.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export const SETTINGS_KEY_SLEEP_MODE = 'SLEEP_MODE';
 
@@ -53,7 +55,11 @@ export class SleepService {
     this.forcePose$
   ).pipe(startWith('UNKNOWN' as SleepingPose), distinctUntilChanged()) as Observable<SleepingPose>;
 
-  constructor(private openvr: OpenVRService) {}
+  constructor(
+    private openvr: OpenVRService,
+    private notifications: NotificationService,
+    private translate: TranslateService
+  ) {}
 
   async init() {
     this._mode.next((await this.store.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false);
@@ -74,6 +80,10 @@ export class SleepService {
     this._mode.next(true);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
     await this.store.save();
+    await this.notifications.send(
+      this.translate.instant('notifications.sleepModeEnabled.title'),
+      this.translate.instant('notifications.sleepModeEnabled.content')
+    );
   }
 
   async disableSleepMode(reason: SleepModeStatusChangeReason) {
@@ -83,6 +93,10 @@ export class SleepService {
     this._mode.next(false);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
     await this.store.save();
+    await this.notifications.send(
+      this.translate.instant('notifications.sleepModeDisabled.title'),
+      this.translate.instant('notifications.sleepModeDisabled.content')
+    );
   }
 
   private getSleepingPoseForDevicePose(pose: OVRDevicePose): SleepingPose {

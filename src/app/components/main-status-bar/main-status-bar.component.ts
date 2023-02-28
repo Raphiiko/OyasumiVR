@@ -3,8 +3,8 @@ import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat.service';
 import { UserStatus } from 'vrchat/dist';
 import { hshrink, noop } from '../../utils/animations';
-import { firstValueFrom, Observable } from 'rxjs';
-import { OpenVRService, OpenVRStatus } from '../../services/openvr.service';
+import { firstValueFrom } from 'rxjs';
+import { OpenVRService } from '../../services/openvr.service';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -16,7 +16,11 @@ export class MainStatusBarComponent implements OnInit {
   sleepMode = this.sleepService.mode;
   user = this.vrchat.user;
 
-  constructor(private sleepService: SleepService, private vrchat: VRChatService, protected openvr: OpenVRService) {}
+  constructor(
+    private sleepService: SleepService,
+    private vrchat: VRChatService,
+    protected openvr: OpenVRService
+  ) {}
 
   ngOnInit(): void {}
 

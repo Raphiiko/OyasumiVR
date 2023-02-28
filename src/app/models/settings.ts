@@ -1,16 +1,28 @@
 export interface AppSettings {
-  version: 2;
+  version: 3;
   userLanguage: string;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
+  oscSendingHost: string;
+  oscSendingPort: number;
+  oscReceivingHost: string;
+  oscReceivingPort: number;
+  enableDesktopNotifications: boolean;
+  enableXSOverlayNotifications: boolean;
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 2,
+  version: 3,
   userLanguage: 'en',
   askForAdminOnStart: false,
   lighthouseConsolePath:
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
+  oscSendingHost: '127.0.0.1',
+  oscSendingPort: 9000,
+  oscReceivingHost: '127.0.0.1',
+  oscReceivingPort: 9001,
+  enableXSOverlayNotifications: false,
+  enableDesktopNotifications: false,
 };
 
 export type ExecutableReferenceStatus =

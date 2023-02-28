@@ -93,6 +93,7 @@
           <div class="player-left">
             <div class="player-icon">
               <img
+                draggable="false"
                 onerror="this.style.display='none'"
                 loading="lazy"
                 [src]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"

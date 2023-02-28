@@ -5,6 +5,7 @@ import { info } from 'tauri-plugin-log-api';
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
   2: from1to2,
+  3: from2to3,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -29,6 +30,17 @@ export function migrateAppSettings(data: any): AppSettings {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from2to3(data: any): any {
+  data.version = 3;
+  data.oscSendingHost = APP_SETTINGS_DEFAULT.oscSendingHost;
+  data.oscSendingPort = APP_SETTINGS_DEFAULT.oscSendingPort;
+  data.oscReceivingHost = APP_SETTINGS_DEFAULT.oscReceivingHost;
+  data.oscReceivingPort = APP_SETTINGS_DEFAULT.oscReceivingPort;
+  data.enableXSOverlayNotifications = APP_SETTINGS_DEFAULT.enableXSOverlayNotifications;
+  data.enableDesktopNotifications = APP_SETTINGS_DEFAULT.enableDesktopNotifications;
   return data;
 }
 

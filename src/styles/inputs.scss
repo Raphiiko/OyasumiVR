@@ -15,6 +15,11 @@
     width: 0;
     height: 0;
   }
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 .switch-toggle-slider {

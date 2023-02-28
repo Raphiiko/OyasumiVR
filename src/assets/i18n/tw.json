@@ -27,7 +27,6 @@
   },
   "sleep-detection": {
     "title": "睡眠偵測",
-    "description": "在這裡，你可以設定自動化睡眠模式，根據各種觸發器自動啟用或關閉睡眠模式",
     "enableAutomations": {
       "title": "啟動睡眠模式",
       "atTime": "在特定時間",
@@ -53,14 +52,14 @@
       "disableOnDevicePowerOn": {
         "title": "關閉睡眠模式",
         "whenTurningOn": "當啟動其中一個",
-        "optionController": "控制器",
-        "optionTracker": "追蹤器"
+        "Controller": "控制器",
+        "GenericTracker": "追蹤器"
       },
       "enableAtBatteryPercentage": {
         "title": "開啟睡眠模式",
         "whenA": "當其中一個",
-        "optionController": "控制器",
-        "optionTracker": "追蹤器",
+        "Controller": "控制器",
+        "GenericTracker": "追蹤器",
         "fallsBelow": "電量降低到"
       }
     }
@@ -176,16 +175,16 @@
       "selectGPU": "選擇你希望為其設定功耗限制的 GPU：",
       "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制",
       "currentPowerLimit": "當前功耗限制",
-	  "activatingSleepMode": {
-      "title": "當我睡覺時",
-      "description": "指定在開啟睡眠模式時要設定的功耗限制："
-    },
-    "deactivatingSleepMode": {
-      "title": "當我醒來時",
-      "description": "指定在關閉睡眠模式時要設定的功耗限制："
-    },
-    "enabledWarning": "請注意，將功耗限制設定得太低可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
-    "inputDefault": "將 GPU 功耗重置到預設數值"
+      "activatingSleepMode": {
+        "title": "當我睡覺時",
+        "description": "指定在開啟睡眠模式時要設定的功耗限制："
+      },
+      "deactivatingSleepMode": {
+        "title": "當我醒來時",
+        "description": "指定在關閉睡眠模式時要設定的功耗限制："
+      },
+      "enabledWarning": "請注意，將功耗限制設定得太低可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
+      "inputDefault": "將 GPU 功耗重置到預設數值"
     },
     "msiAfterburner": {
       "description": "Oyasumi 可以在你入睡或醒來時自動調整您的 GPU 設定，使用你在 MSI Afterburner 中所建立的設定檔。 此功能的其中一個用途是在你入睡時節省電力，並在你醒來時重新獲得 GPU 功耗。<br><br>你必須在 MSI Afterburner 設定設定檔。<br>你可以在這裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下載</a> MSI Afterburner",

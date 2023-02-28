@@ -27,19 +27,87 @@
   },
   "sleep-detection": {
     "title": "수면 감지",
-    "description": "여기서는 다양한 요인을 바탕으로 수면 모드를 자동으로 활성화하거나 비활성화하는 자동화 기능을 설정할 수 있어요.",
     "enableAutomations": {
       "title": "수면 모드 활성화",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요",
       "atTime": "지정된 시간에",
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
-      "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때"
+      "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
+      "onMotionDetection": {
+        "title": "Oyasumi가 당신의 움직임을 보고 당신이 자고 있다고 추측할 때",
+        "subtitle": "<b>참고:</b> 이것은 <b>실험적인</b> 기능이에요! 제대로 작동하지 않을 수 있어요."
+      }
     },
     "disableAutomations": {
       "title": "수면 모드 비활성화",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요",
       "atTime": "지정된 시간에",
-      "onDevicePowerOn": "기기의 전원이 켜져 있을 때"
+      "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
+      "onSteamVRStop": "SteamVR이 멈췄을 때"
     },
     "modals": {
+      "sleepDetectorCalibration": {
+        "title": "수면 감지 보정",
+        "currentCalibration": "현재 보정 값:",
+        "noSteamVR": "VR 헤드셋을 연결한 상태에서 SteamVR이 실행 중일 때만 보정을 시작할 수 있어요.",
+        "startCalibration": "보정 시작",
+        "restartCalibration": "보정 재시작",
+        "info": {
+          "intro": "Oyasumi는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있어요. 이 기능을 사용하려면 여러분의 VR 설정에 맞게 보정해야 해요. 이 기능을 사용하려면 적어도 한 번은 보정이 필요해요.",
+          "stepPrefix": "보정은 다음과 같이 진행됩니다:",
+          "step": {
+            "one": "VR 헤드셋을 착용하고 눕습니다.",
+            "two": "오버레이로 오야스미에서 보정을 시작합니다.",
+            "three": "10초 동안 가만히 누워 있습니다."
+          },
+          "stepSuffix": "이제 끝이에요! 보정이 끝나면 Oyasumi는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있을 거에요."
+        },
+        "prepare": {
+          "instruction": "VR 헤드셋을 착용하고 누워주세요.",
+          "note": "준비가 완료되고 오버레이에서 이 창이 보이면 '보정 시작'을 눌러 시작해주세요."
+        },
+        "countdown": {
+          "instruction": "시작까지 {{counter}}..",
+          "note": "보정하는 동안 가만히 있어주세요! 보정하는 동안 움직이면 이 기능이 제대로 작동하지 않아요."
+        },
+        "calibrating": {
+          "instruction": "보정중",
+          "note": "가만히 있어주세요.",
+          "countdown": "{{counter}}초 남았습니다..."
+        },
+        "done": {
+          "instruction": "보정 완료!",
+          "note": "이제 이 자동화 기능을 사용할 수 있어요."
+        },
+        "failed": {
+          "instruction": "보정 실패",
+          "note": "헤드셋이 응답하지 않아 보정을 완료할 수 없어요. 헤드셋이 추적 중인지 확인한 후 다시 시도하세요."
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "수면 모드 활성화",
+        "description": "이 기능을 활성화하면 Oyasumi가 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 절전 모드를 활성화해요.\n\n이 기능은 아직 실험적인 기능이며 아직 제대로 작동하지 않을 수 있어요.",
+        "calibration": {
+          "title": "보정",
+          "description": "이 기능을 사용하려면 적어도 한 번은 보정이 필요해요.",
+          "action": "보정하기"
+        },
+        "sensitivity": {
+          "title": "민감도",
+          "description": "Oyasumi가 당신의 움직임에 얼마나 민감해야 할까요?",
+          "presets": {
+            "LOWEST": "가장 낮음",
+            "LOW": "낮음",
+            "MEDIUM": "중간",
+            "HIGH": "높음",
+            "HIGHEST": "가장 높음"
+          }
+        },
+        "sleepCheck": {
+          "title": "절전 모드를 활성화하기 전에 아직 깨어 있는지 확인해요.",
+          "description": "<a class=\"notificationSettingsLink\">알림</a>이 활성화되어 있어야 합니다."
+        }
+      },
       "enableAtTime": {
         "title": "수면 모드 활성화",
         "description": "지정한 시간에 수면 모드를 활성화해요.",
@@ -53,17 +121,18 @@
       "disableOnDevicePowerOn": {
         "title": "수면 모드 비활성화",
         "whenTurningOn": "기준 기기",
-        "optionController": "컨트롤러",
-        "optionTracker": "트래커"
+        "Controller": "컨트롤러",
+        "GenericTracker": "트래커"
       },
       "enableAtBatteryPercentage": {
         "title": "수면 모드 활성화",
         "whenA": "기준 기기",
-        "optionController": "컨트롤러",
-        "optionTracker": "트래커",
+        "Controller": "컨트롤러",
+        "GenericTracker": "트래커",
         "fallsBelow": "조건 값"
       }
-    }
+    },
+    "description": "여기서는 다양한 요인을 바탕으로 수면 모드를 자동으로 활성화하거나 비활성화하는 자동화 기능을 설정할 수 있어요."
   },
   "oscAutomations": {
     "title": "OSC 자동화",
@@ -276,6 +345,7 @@
     "tab": {
       "general": "일반",
       "vrchat": "VRChat",
+      "notifications": "알림",
       "updates": "업데이트",
       "debug": "디버깅"
     },
@@ -330,6 +400,47 @@
           "brand": "Oyasumi는 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
           "liability": "Raphiiko는 Oyasumi와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
         }
+      },
+      "OSC": {
+        "title": "OSC 설정",
+        "description": "일부 기능을 사용하려면 OSC를 통해 VRChat에 연결해야 해요. 특별히 변경해야 할 이유가 없다면 기본값으로 두는 것이 좋아요.",
+        "reset": "기본 설정으로 초기화",
+        "receivingHost": {
+          "title": "수신 호스트",
+          "description": "Oyasumi가 OSC 메시지를 받을 호스트에요.\n(VRChat은 기본적으로 127.0.0.1로 전송해요)"
+        },
+        "receivingPort": {
+          "title": "수신 포트",
+          "description": "오야스미가 OSC 메시지를 받을 포트 번호에요.\n(VRChat은 기본적으로 포트 9001로 전송해요)"
+        },
+        "sendingHost": {
+          "title": "VRChat 호스트",
+          "description": "Oyasumi가 OSC 메시지를 수신할 호스트에요.\n(같은 컴퓨터에서 VRChat이 실행되는 경우 127.0.0.1 이에요)"
+        },
+        "sendingPort": {
+          "title": "VRChat 포트",
+          "description": "오야스미가 OSC 메시지를 보낼 포트 번호에요.\n(VRChat은 기본적으로 포트 9000에서 수신을 대기해요)"
+        },
+        "errors": {
+          "bindFailed": "이 주소는 바인딩할 수 없어요. 다른 애플리케이션에서 이미 사용 중일 수 있어요. 해당 애플리케이션을 닫고 다시 시도하거나 다른 수신 포트 또는 호스트를 선택할 수 있어요.",
+          "invalidPort": "포트 번호는 1에서 65535 사이의 유효한 숫자여야 해요.",
+          "samePort": "송신(VRChat) 및 수신 호스트가 동일한 경우 송신 및 수신 포트에 동일한 포트를 사용할 수 없어요.",
+          "invalidHost": "호스트는 유효한 호스트 이름, IPv4 주소 또는 IPv6 주소여야 해요."
+        }
+      }
+    },
+    "notifications": {
+      "providers": {
+        "title": "알림 방식",
+        "description": "일부 기능은 알림을 보낼 수 있거나 보내야 해요. 여기에서 선호하는 알림 방식을 선택하세요.",
+        "xsoverlay": {
+          "title": "XSOverlay 알림",
+          "description": "XSOverlay를 사용하여 오야스미 알림을 VR로 가져와요."
+        },
+        "desktop": {
+          "title": "데스크톱 알림",
+          "description": "기본 Windows 데스크톱 알림을 사용해요. OVR 툴킷과 같은 오버레이를 사용하여 이를 VR로 가져올 수 있어요."
+        }
       }
     },
     "updates": {
@@ -358,6 +469,9 @@
       },
       "sleepingPose": {
         "title": "잠자는 포즈"
+      },
+      "sleepingDetection": {
+        "title": "수면 감지 리포트"
       }
     }
   },
@@ -394,6 +508,24 @@
       "addressNoSlash": "유효한 OSC 주소는 항상 '/' 기호로 시작해야 해요.",
       "addressRequired": "OSC 주소가 필요해요.",
       "addressNotASCII": "유효한 OSC 주소는 ASCII 문자만 포함할 수 있어요."
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "title": "Oyasumi",
+      "content": "20초 후에 수면 모드가 활성화되어요. 잠들었나요? \n\n(취소하려면 고개를 흔들어 주세요)"
+    },
+    "sleepCheckCancel": {
+      "title": "Oyasumi",
+      "content": "수면 모드 자동 활성화가 취소되었어요."
+    },
+    "sleepModeEnabled": {
+      "title": "Oyasumi",
+      "content": "수면 모드가 활성화되었어요."
+    },
+    "sleepModeDisabled": {
+      "title": "Oyasumi",
+      "content": "수면 모드가 비활성화되었어요."
     }
   },
   "comp": {

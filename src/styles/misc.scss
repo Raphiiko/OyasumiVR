@@ -40,7 +40,7 @@
   display: flow-root;
   margin-bottom: 1em;
   background: var(--color-surface-1);
-  border-radius: 0.5em;
+  border-radius: var(--surface-border-radius);
 
   & > * {
     transition: all 0.15s ease;
@@ -58,11 +58,22 @@
     }
   }
 
-  .setting-row {
+  .setting-row,
+  .setting-alert-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 1em;
+
+    &.setting-alert-row {
+      padding: 0em 1em 1em 1em;
+      flex-direction: column;
+
+      .alert {
+        width: 100%;
+        margin: 0;
+      }
+    }
 
     .setting-row-label {
       display: flex;
@@ -70,6 +81,7 @@
       align-items: flex-start;
       justify-content: center;
       flex: 1;
+      white-space: pre-line;
 
       > span:first-child {
         color: var(--color-text-1);

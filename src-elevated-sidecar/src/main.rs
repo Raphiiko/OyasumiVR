@@ -1,9 +1,10 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 #[macro_use(lazy_static)]
 extern crate lazy_static;
+
 use hyper::service::{make_service_fn, service_fn};
 use hyper::Server;
 use log::{error, info};
@@ -11,22 +12,22 @@ use oyasumi_shared::models::ElevatedSidecarInitRequest;
 use std::convert::Infallible;
 use std::env;
 use std::fs::{
-    // OpenOptions, 
+    // OpenOptions,
     File
 };
 use std::net::SocketAddr;
 use std::path::Path;
 use std::time::Duration;
 use sysinfo::{Pid, PidExt, System, SystemExt};
-use windows::{is_elevated, relaunch_with_elevation};
-mod afterburner;
-mod http_handler;
-mod nvml;
-mod windows;
 use directories::BaseDirs;
+use oyasumi_shared::windows::{is_elevated, relaunch_with_elevation};
 use simplelog::{
     ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
 };
+
+mod afterburner;
+mod http_handler;
+mod nvml;
 
 #[tokio::main]
 async fn main() {
@@ -56,7 +57,7 @@ async fn main() {
             //     .unwrap(),
         ),
     ])
-    .unwrap();
+        .unwrap();
     // Get port of host http server from 1st argument
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
@@ -98,7 +99,7 @@ async fn main() {
                 sidecar_port: server.local_addr().port(),
                 sidecar_pid: std::process::id(),
             })
-            .unwrap(),
+                .unwrap(),
         )
         .send()
         .await;

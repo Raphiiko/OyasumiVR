@@ -27,19 +27,87 @@
   },
   "sleep-detection": {
     "title": "睡眠検出",
-    "description": "ここでは、様々な誘因に基づき、睡眠モードを自動的に有効または無効にする自動化機能を設定することができます。",
     "enableAutomations": {
       "title": "睡眠モードの有効化",
+      "description": "任意の設定に基づいて自動的に睡眠モードを有効にします。",
       "atTime": "指定した時間",
-      "atBatteryPercentage": "端末のバッテリー残量が以下を下回った時<strong>{{value}}%</strong>",
-      "onControllersPoweredOff": "全てのコントローラーの電源が切れた時"
+      "atBatteryPercentage": "機器のバッテリー残量が<strong>{{value}}%</strong>を下回ったとき",
+      "onControllersPoweredOff": "全てのコントローラーの電源が切れたとき",
+      "onMotionDetection": {
+        "title": "HMDの動きから入眠を検知したとき",
+        "subtitle": "<b>注意:</b> これは<b>実験的な機能</b>です！ 正しく動作しない場合があります。"
+      }
     },
     "disableAutomations": {
       "title": "睡眠モードの無効化",
+      "description": "任意の設定に基づいて自動的に睡眠モードを無効にします。",
       "atTime": "指定した時間",
-      "onDevicePowerOn": "端末の電源が入っている時"
+      "onDevicePowerOn": "機器の電源が入ったとき",
+      "onSteamVRStop": "SteamVRを停止したとき"
     },
     "modals": {
+      "sleepDetectorCalibration": {
+        "title": "睡眠検知のキャリブレーション",
+        "currentCalibration": "現在の校正値",
+        "noSteamVR": "キャリブレーションを開始するには、HMDをつけた状態でSteamVRを起動している必要があります。",
+        "startCalibration": "キャリブレーションを開始する",
+        "restartCalibration": "キャリブレーションを再開する",
+        "info": {
+          "intro": "VRヘッドセットの動きから、眠ったかどうかを検知することができます。この機能を有効にするには、キャリブレーションを行う必要があります。最低でも一度はキャリブレーションを行ってください。",
+          "stepPrefix": "キャリブレーションの動作は次のとおりです。",
+          "step": {
+            "one": "HMDを装着し、横になる",
+            "two": "オーバーレイでキャリブレーションを開始します。",
+            "three": "10秒間、静止してください。"
+          },
+          "stepSuffix": "以上です！キャリブレーションが完了すると、HMDの動きから寝落ちを検知できるようになるはずです。"
+        },
+        "prepare": {
+          "instruction": "HMDを装着して、横になってください。",
+          "note": "準備が整い、オーバーレイからこのウィンドウが見えたら、「キャリブレーションを開始する」を押して開始します。"
+        },
+        "countdown": {
+          "instruction": "Starting in {{counter}}",
+          "note": "キャリブレーション中は動かないでください キャリブレーション中に動くと、正しく動作しなくなります。"
+        },
+        "calibrating": {
+          "instruction": "キャリブレーション",
+          "note": "じっとしていてください。",
+          "countdown": "残り{{counter}}秒…"
+        },
+        "done": {
+          "instruction": "キャリブレーション完了",
+          "note": "この機能を利用できるようになりました。"
+        },
+        "failed": {
+          "instruction": "キャリブレーションに失敗",
+          "note": "キャリブレーションが正常に完了しませんでした。HMDのデータを取得できていない可能性があります。HMDがトラッキングされていることを確認し、もう一度やり直してください。"
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "スリープモードを有効にする",
+        "description": "この機能を有効にすると、HMDの動きから入眠を検知して自動的に睡眠モードに移行します。",
+        "calibration": {
+          "title": "キャリブレーション",
+          "description": "この機能を使うには、少なくとも一度はキャリブレーションを行う必要があります。",
+          "action": "設定"
+        },
+        "sensitivity": {
+          "title": "感度",
+          "description": "入眠を検知するまでの入力感度を設定します。",
+          "presets": {
+            "LOWEST": "最低",
+            "LOW": "低",
+            "MEDIUM": "普通",
+            "HIGH": "高",
+            "HIGHEST": "最高"
+          }
+        },
+        "sleepCheck": {
+          "title": "睡眠モードが自動で有効になる前に、通知で最終確認する",
+          "description": "<a class=\"notificationSettingsLink\">通知</a>を有効にする必要があります"
+        }
+      },
       "enableAtTime": {
         "title": "睡眠モードの有効化",
         "description": "指定した時間に睡眠モードを有効にします。",
@@ -52,16 +120,20 @@
       },
       "disableOnDevicePowerOn": {
         "title": "睡眠モードの無効化",
-        "whenTurningOn": "電源を入れる時",
-        "optionController": "コントローラー",
-        "optionTracker": "トラッカー"
+        "whenTurningOn": "対象",
+        "Controller": "コントローラー",
+        "GenericTracker": "トラッカー"
       },
       "enableAtBatteryPercentage": {
         "title": "睡眠モードの有効化",
-        "whenA": "いつ",
-        "optionController": "コントローラー",
-        "optionTracker": "トラッカー",
-        "fallsBelow": "数値を下回った時"
+        "whenA": "対象",
+        "fallsBelow": "バッテリー残量",
+        "errors": {
+          "thresholdOutOfRange": "0以上100以下の範囲で指定してください。",
+          "thresholdNotInteger": "数字で指定してください。"
+        },
+        "Controller": "コントローラー",
+        "GenericTracker": "トラッカー"
       }
     }
   },
@@ -74,7 +146,7 @@
       "currentPose": "現在位置",
       "manualControl": "マニュアル操作",
       "presetAuthor": "{{author}}による",
-      "description": "Oyasumiは、睡眠中に姿勢が変わることで自動的にアバターのアニメーションを変更することができます。これは、全身トラッキングをしていない場合や、自分（またはOyasumiを使用している場合）が夜間にトラッカーをオフにする場合などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください.\n\nまた、アバターのロコモーションは、いくつかのプリセットが用意されておりますが、自分でアニメーションを指定することも可能です。",
+      "description": "睡眠中に姿勢が変わることで自動的にアバターのアニメーションを変更することができます。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合（またはOyasumiを使用している場合）などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nまた、アバターのロコモーションはいくつかのプリセットを用意していますが、自分でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
       "errors": {
@@ -101,7 +173,7 @@
           "title": "一般オプション",
           "onlySwitchAnimations": "アニメーションを切り替える",
           "onlyIfSleepModeEnabled": "睡眠モード有効時",
-          "onlyIfAllTrackersTurnedOff": "すべてのトラッカーがオフの時",
+          "onlyIfAllTrackersTurnedOff": "すべてのトラッカーがオフのとき",
           "footLock": {
             "title": "フットロック",
             "description": "フットロック有効時、プレイヤーの動きや寝返りを防ぎます。"
@@ -118,17 +190,17 @@
   "battery-automations": {
     "title": "バッテリーの自動化",
     "devicePowerOff": {
-      "title": "端末の電源を切る",
-      "description": "SteamVR端末をオフにするための様々な自動化機能です。",
+      "title": "機器の電源を切る",
+      "description": "SteamVR機器をオフにするための様々な自動化機能です。",
       "onSleepModeEnable": {
-        "title": "睡眠につく時",
-        "description": "睡眠モード有効時、端末の電源をオフにする。",
+        "title": "睡眠時",
+        "description": "睡眠モード有効時、機器の電源をオフにする。",
         "optionControllers": "すべてのコントローラーをオフにする",
         "optionTrackers": "すべてのトラッカーをオフにする",
         "hint": "睡眠モードが有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>で設定することができます。"
       },
       "onCharge": {
-        "title": "充電する時",
+        "title": "充電時",
         "description": "充電器に挿すと自動的に電源が切れます。",
         "optionControllers": "コントローラーをオフにする",
         "optionTrackers": "トラッカーをオフにする"
@@ -138,8 +210,8 @@
   "gpu-automations": {
     "title": "GPU自動化",
     "disabled": {
-      "disabled": "Oyasumiには、GPU設定を自動的に微調整するさまざまな方法があります。\nこれは眠っている間力を節約することを可能にする。\n\nこれは上級ユーザー向けの機能であるため、デフォルトでは無効になっています。\n下のボタンをクリックして有効にすることができます。",
-      "noSidecar": "OyasumiにGPUの設定変更を許可するためには、管理者権限が必要です。以下のボタンをクリックし、Oyasumiに管理者権限を与えてください。"
+      "disabled": "GPU設定を自動的に調整します。\nパーフォマンスを抑制し使用電力を制限することが可能です。\n\nこれは上級者向けの機能であるため、デフォルトでは無効になっています。\n下のボタンをクリックして有効にすることができます。",
+      "noSidecar": "OyasumiにGPUの設定変更を許可するためには、管理者権限が必要です。以下のボタンをクリックし、Oyasumiに管理者権限を付与してください。"
     },
     "tabs": {
       "powerLimiting": "パワーリミッター",
@@ -149,62 +221,62 @@
     "disable": "GPU自動化を無効にする",
     "enable": "GPU自動化を有効にする",
     "automations": "睡眠の自動化設定",
-    "enableWarning": "GPUパラメータを誤って微調整すると、システムが不安定になる可能性があります。これを念頭に置いて、あなたが何をしているか知っている場合にのみ、この機能を有効にしてください。",
+    "enableWarning": "GPUパラメータを誤って調整すると、システムが不安定になる可能性があります。内容を理解できる場合に限り、この機能を有効にしてください。",
     "elevationSidecarModal": {
       "title": "管理者権限を付与する",
-      "message": "Oyasumi に常に管理者権限を与えますか？\n\nこれを有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
+      "message": "Oyasumi に常に管理者権限を与えますか？\n\n有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
       "confirm": "常に",
       "cancel": "一回のみ"
     },
     "powerLimiting": {
       "disabled": {
-        "initializing": "電力制限の自動化が初期化されています...",
-        "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、電力制限の自動化は利用できません。電力制限の自動化は、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({{code}})",
-        "noPermission": "Oyasumiは管理者権限を持っていますが、GPUの設定を変更する権限を持っていません。\n\n通常は発生しないはずですので、システム設定をご確認ください。",
-        "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\nこれらは、GPUの電力制限を制御するために必要です。\n\nOyasumiを再起動してみてください。",
-        "unknown": "電源制限の自動化は、未知の理由で利用できません。\n\nOyasumiを再起動してみてください。"
+        "initializing": "パワーリミッターを初期化しています...",
+        "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、パワーリミッターは利用できません。パワーリミッターは、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({{code}})",
+        "noPermission": "管理者権限を取得していますが、GPUの設定を変更する権限がありません。\n\n通常は発生しないはずですので、システム設定をご確認ください。",
+        "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\n\nOyasumiを再起動してみてください。",
+        "unknown": "パワーリミッターは、未知の理由で利用できません。\n\nOyasumiを再起動してみてください。"
       },
-      "noGPUSelected": "GPUが選択されていない",
-      "gpuUnsupported": "GPUサポートされていない",
-      "noGPUs": "お使いのシステムにNVIDIA GPUが見つかりませんでした。",
-      "description": "ここでは、GPUの電力制限を自動化し、就寝中の電力を節約することができます。",
+      "noGPUSelected": "GPUが選択されていません",
+      "gpuUnsupported": "選択されたGPUは対応していません",
+      "noGPUs": "NVIDIA GPUが見つかりませんでした。",
+      "description": "GPUの電力制限を自動化し、就寝中の電力を節約します。",
       "selectGPU": "電力制限を設定したいGPUを選択します：",
       "gpuPowerLimitsUnsupported": "選択されたGPUは、電力制限の設定に対応していません。",
       "currentPowerLimit": "現在の電力制限",
       "activatingSleepMode": {
-        "title": "睡眠につく時",
+        "title": "睡眠時",
         "description": "睡眠モードが有効化された際に設定する電力制限値を指定します。"
       },
       "deactivatingSleepMode": {
-        "title": "起床した時",
+        "title": "起床時",
         "description": "睡眠モードが無効化された際に設定する電力制限値を指定します。"
       },
-      "enabledWarning": "電力制限を低く設定しすぎてしまうと、システムが不安定な状態になる可能性がありますので、ご注意ください。よくわからない場合は、この機能を無効にしてください。",
+      "enabledWarning": "電力制限を低く設定しすぎてしまうと、システムが不安定な状態になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "inputDefault": "GPUのデフォルトの制限値にリセットします。"
     },
     "msiAfterburner": {
-      "description": "Oyasumiは、MSIアフターバーナーで作成したプロファイルを適用することで、スリープ状態または起床時にGPU設定を自動的に微調整できます。この機能のユースケースは、眠っている間に電力を節約し、目を覚ましたときにGPUの電力を取り戻すことです。<br><br>MSIアフターバーナーで適用するプロファイルを設定する必要があります。<br>MSI Afterburnerは<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ここ</a>からダウンロードできます。",
+      "description": "MSI Afterburnerで作成したプロファイルを適用することで、スリープ状態または起床時にGPU設定を自動的に微調整できます。この機能の使用例としては、睡眠中に電力を節約し、起きたときにGPUの電力を回復することが挙げられます。<br><br>適用するプロファイルをMSI Afterburnerで事前に設定する必要があります。<br>MSI Afterburnerは<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ここ</a>からダウンロードできます。",
       "sleepModeEnable": {
-        "title": "スリープモードが有効になっている場合",
-        "description": "次のMSIアフターバーナープロファイルを適用します"
+        "title": "睡眠モードが有効になっている場合",
+        "description": "次のMSI Afterburnerプロファイルを適用します"
       },
       "sleepModeDisable": {
-        "title": "スリープモードが無効になっている場合",
-        "description": "次のMSIアフターバーナープロファイルを適用します"
+        "title": "睡眠モードが無効になっている場合",
+        "description": "次のMSI Afterburnerプロファイルを適用します"
       },
       "profile": "プロフィール {{index}}",
       "none": "なし",
-      "enabledWarning": "MSIアフターバーナーでGPUを誤って構成すると、システムが不安定になる可能性があることに注意してください。何をしているのかわからない場合は、この機能を無効にします。",
+      "enabledWarning": "誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "executable": {
         "title": "構成",
-        "description": "\"Oyasumiはあなたの場所について知っておく必要があります<strong>MSIAfterburner.exe</strong>実行可能。 Oyasumiがデフォルトの場所に見つからない場合は、どこに見つけることができるかを設定する必要があります。",
+        "description": "\"実行可能な<strong>MSIAfterburner.exe</strong>のフォルダを把握する必要があります。 デフォルトのフォルダにない場合は、格納先を手動で設定する必要があります。",
         "status": {
-          "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> であるかどうか確認中です。",
-          "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>はこの場所に見つかりませんでした。",
+          "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> か確認中です。",
+          "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>MSIAfterburner.exe</strong> が機能していることを確認できませんでした。",
-          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであることを確認できませんでした。セキュリティ上の理由から、それは使用できません。MSIアフターバーナーの最新バージョンを使用していることを確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、Oyasumi開発者に連絡するか、バグレポートを提出してください。",
+          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであると確認できませんでした。セキュリティ上の理由から、これは使用できません。MSI Afterburnerが最新バージョンか確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、Oyasumi開発者に連絡するか、バグレポートを提出してください。",
           "UNKNOWN_ERROR": "この場所で<strong>MSIAfterburner.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
-          "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています!"
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています！"
         }
       }
     }
@@ -212,9 +284,9 @@
   "status-automations": {
     "title": "ステータス自動化",
     "enable": "ステータス自動化を有効にする",
-    "description": "Oyasumiは、自分のワールドにいるプレイヤーの数に応じてステータスを自動設定し、参加する人数を制限することができます。",
+    "description": "自分のワールドにいるプレイヤーの数に応じてステータスを自動設定し、参加する人数を制限することができます。",
     "exampleUse": "使用例：誰かが参加してきたら、自動的にステータスをオレンジ色や赤色に切り替えます！\n参加者が退出してまた一人になったら、自動的にステータスを青色に戻して、他の人が参加できるようにします。",
-    "disableToEdit": "変更を行う前に、ステータス自動化を無効にしてください。",
+    "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
     "playerLimit": "プレイヤー数制限",
     "playerLimitLabel": {
       "singular": "{{count}} 人のプレイヤー(自分を含む)",
@@ -228,44 +300,48 @@
       "title": "上限内またはそれ以上",
       "description": "ステータスの設定"
     },
-    "onlyIfSleepModeEnabled": "スリープモード有効時のみ",
-    "behaviourWarning": "Oyasumiによるステータスの変更は、プレイヤーには表示されません。他のプレイヤーから見ても、ステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様上の制限であり、Oyasumiが修正することはできません。",
+    "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
+    "behaviourWarning": "Oyasumiによるステータスの変更は、自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、Oyasumiが修正することはできません。",
     "moreInfo": "詳細",
-    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChatで青色に表示されなくても、自動的に招待を受けることはできますか？\nA: Oyasumiがあなたのステータスを青（join me）に設定した場合、あなたが受け取った招待リクエストを自動承認するようになります。\n\nQ：ステータスが更新されないので、参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加したいのに参加できない場合は、メインメニューからプロフィールを開いて、あなたのステータスを強制的に更新することができます。"
+    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: Oyasumiがステータスを青（Join Me）に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないので参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加したいのに参加できない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
   },
   "auto-invite-request-accept": {
-    "title": "招待リクエストを自動的に受け入れる",
-    "description": "Oyasumiは、自分が受け取った招待リクエストを自動的に受け入れることができます。また、ホワイトリストやブラックリストを利用すると、自分が選んだ友達からの招待リクエストのみを自動的に受け入れられます。",
-    "userOnBusyStatus": "自分のステータスが忙しい（赤）になっている間は、ユーザーからの招待リクエストを受け入れることができません。",
-    "userOnJoinMeStatus": "VRChatは、自分のステータスが参加待ち（青）になっている場合、設定に関わらず、すべての招待リクエストを自動的に受け入れます。",
-    "whitelist": "プレイヤーホワイトリスト",
-    "blacklist": "プレイヤーブラックリスト",
-    "noPlayersAdded": "現在リストに登録されているプレイヤーはいません。",
-    "addFriends": "友達を追加",
-    "clearPlayers": "プレイヤーを消去",
+    "title": "Req Inviteの自動承認",
+    "description": "自分が受け取ったReq Inviteを自動的に受け入れることができます。また、ホワイトリストやブラックリストを利用すると、自分が選んだフレンドからのReq Inviteのみを自動的に受け入れられます。",
+    "userOnBusyStatus": "自分のステータスが赤（Do Not Disturb）になっている間は、ユーザーからのReq Inviteを受け入れることができません。",
+    "userOnJoinMeStatus": "VRChatは、自分のステータスが青（Join Me）になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
+    "whitelist": "ホワイトリスト",
+    "blacklist": "ブラックリスト",
+    "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません。",
+    "addFriends": "フレンドを追加",
+    "clearPlayers": "リスト消去",
+    "removeModal": {
+      "title": "確認",
+      "message": "'{{name}}'を削除しますか？"
+    },
     "options": {
       "enable": {
-        "title": "有効にする",
-        "description": "友達からの招待リクエストを自動的に受け入れる。"
+        "title": "自動承認を有効にする",
+        "description": "フレンドからのReq Inviteを自動承認する。"
       },
       "onlyIfSleepModeEnabled": {
-        "title": "スリープモード有効時のみ"
+        "title": "睡眠モード有効時のみ"
       },
       "listMode": {
         "title": "リストモード",
-        "description": "プレイヤーリストの操作方法",
+        "description": "プレイヤーリストの設定",
         "options": {
           "DISABLED": {
-            "label": "無効にする",
-            "subLabel": "誰でも受け入れる"
+            "label": "オフ",
+            "subLabel": "全て承認する"
           },
           "WHITELIST": {
             "label": "ホワイトリスト",
-            "subLabel": "リストに登録された友達を\n受け入れる"
+            "subLabel": "リストに登録されたフレンドを承認する"
           },
           "BLACKLIST": {
             "label": "ブラックリスト",
-            "subLabel": "リストに登録されていない友達を\n受け入れる"
+            "subLabel": "リストに登録されたフレンドは承認しない"
           }
         }
       }
@@ -276,25 +352,26 @@
     "tab": {
       "general": "一般",
       "vrchat": "VRChat",
+      "notifications": "通知",
       "updates": "アップデート",
       "debug": "デバッグ"
     },
     "general": {
       "language": {
         "title": "言語",
-        "description": "ここでは、ご希望の言語を選択することができます。もし、翻訳されていない箇所があったり、母国語を追加したい場合は、ご連絡ください。"
+        "description": "希望の言語を選択することができます。翻訳されていない箇所がある場合や、母国語を追加したい場合は、ご連絡ください。"
       },
       "lighthouseConsole": {
         "title": "Lighthouseコンソール",
-        "description": "OyasumiはSteamVRインストール<strong>lighthouse_console.exe</strong>の場所を把握する必要があります。\nOyasumiがデフォルトの場所でそれを見つけられない場合、見つけられる場所に設定する必要があります。",
+        "description": "SteamVRの<strong>lighthouse_console.exe</strong>のフォルダを把握する必要があります。\nデフォルトのフォルダにない場合は、格納先を手動で設定する必要があります。",
         "status": {
-          "NOT_FOUND": "<strong>lighthouse_console.exe</strong>はこの場所に見つかりませんでした。",
+          "NOT_FOUND": "<strong>lighthouse_console.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>lighthouse_console.exe</strong> が機能していることを確認できませんでした。",
-          "PERMISSION_DENIED": "Oyasumiは、この場所にある<strong>lighthouse_console.exe</strong>を実行する権限を持っておりません。管理者としてOyasumiを実行してください。",
+          "PERMISSION_DENIED": "この場所の<strong>lighthouse_console.exe</strong>を実行する権限を持っていません。管理者としてOyasumiを実行してください。",
           "INVALID_FILENAME": "設定した場所は有効なファイルパスではありません。",
           "UNKNOWN_ERROR": "この場所で<strong>lighthouse_console.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "CHECKING": "有効な <strong>lighthouse_console.exe</strong> であるかどうか確認中です。",
-          "SUCCESS": "<strong>lighthouse_console.exe</strong>が見つかり、正常に機能しています!"
+          "SUCCESS": "<strong>lighthouse_console.exe</strong>が見つかり、正常に機能しています！"
         }
       },
       "adminPrivileges": {
@@ -303,9 +380,9 @@
         "description": "OyasumiはGPUの電力制限を制御できるようにするために管理者権限が必要です。これを有効にすることで、Oyasumiは起動時に管理者権限を要求するようになります。"
       },
       "telemetry": {
-        "title": "テレメトリー",
-        "label": "匿名の使用データの送信",
-        "description": "送信されるデータは、ご使用中のOyasumiのバージョンと、設定されている言語のみに制限されます。それ以外のデータは送信されず、完全に匿名です。また、このデータは一般的な使用統計のためにのみ使用されます。"
+        "title": "データの送信",
+        "label": "利用データの送信（匿名）",
+        "description": "送信されるデータは、使用中のOyasumiのバージョンと設定されている言語に限定されており、他のデータは送信されません。このデータは完全に匿名で、一般的な使用統計の提供にのみ使用されます。"
       }
     },
     "vrchat": {
@@ -326,9 +403,50 @@
           "initError": "VRChatモジュールが初期化されませんでした。インターネットに接続していることを確認し、時間をおいてからOyasumiを再起動し、再度お試しください。"
         },
         "disclaimers": {
-          "use": "ログイン情報は保管されることはなく、認証のためにVRChatのサーバーに送信されるだけです。",
+          "use": "ログイン情報は保管されず、認証のためにVRChatのサーバーに送信されます。",
           "brand": "OyasumiはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
           "liability": "Raphiiko はOyasumiに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
+        }
+      },
+      "OSC": {
+        "title": "OSC設定",
+        "description": "一部の機能ではOSCを経由してVRChatに接続する必要があります。特別な理由がない限り、デフォルトのままにすることをお勧めします。",
+        "reset": "デフォルトにリセットする",
+        "receivingHost": {
+          "title": "受信ホスト",
+          "description": "OyasumiがOSCメッセージを受信するホストです。\n(VRChatはデフォルトで127.0.0.1に送信します)"
+        },
+        "receivingPort": {
+          "title": "受信ポート",
+          "description": "OyasumiがOSCメッセージを受信するために使用するポート番号です。\n(VRChatはデフォルトでポート9001に送信します)"
+        },
+        "sendingHost": {
+          "title": "送信ホスト",
+          "description": "OyasumiがOSCメッセージを送信するホストです。\n(VRChatが同じマシン上で実行されている場合は127.0.0.1です。)"
+        },
+        "sendingPort": {
+          "title": "送信ポート",
+          "description": "OyasumiがOSCメッセージを送信するために使用するポート番号です。\n(VRChatはデフォルトでポート9000で受信します)"
+        },
+        "errors": {
+          "bindFailed": "このアドレスをバインドできませんでした。他のアプリケーションが既に使用している可能性があります。そのアプリケーションを終了し、再度実行するか、異なる受信ポートまたはホストを選択してください。",
+          "invalidPort": "ポートは、1から65535の有効な数値である必要があります。",
+          "samePort": "送信先と受信先のホストが同じ場合、同じポート番号を送信と受信のポート番号として使用することはできません。",
+          "invalidHost": "ホスト名、IPv4アドレス, IPv6アドレスが有効な形式であるか確認してください。"
+        }
+      }
+    },
+    "notifications": {
+      "providers": {
+        "title": "通知先",
+        "description": "一部の機能では、通知を使用します。希望の通知先を選択してください。",
+        "xsoverlay": {
+          "title": "XSOverlay",
+          "description": "XSOverlayを使って、VRでOyasumiの通知を表示します。"
+        },
+        "desktop": {
+          "title": "デスクトップ通知",
+          "description": "Windowsのデフォルトのデスクトップ通知を使用します。OVR Toolkitのようなオーバーレイを使用することで、VRで表示することができます。"
         }
       }
     },
@@ -341,10 +459,10 @@
       "updateAvailable": "Oyasumiの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
     },
     "debug": {
-      "description": "このページでは、デバッグ用のツールを紹介しております。本来は必要ないものですが、Oyasumiはまだ初期のテスト段階なので、念のためこちらに置いてあります。",
+      "description": "このページでは、デバッグ用のツールを用意しています。本来は必要ないものですが、Oyasumiはまだ初期のテスト段階のため、念のためここに実装しています。",
       "persistentStorage": {
-        "title": "永続ストレージ",
-        "description": "これらボタンを押すと、Oyasumiの永続ストレージの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
+        "title": "設定データ",
+        "description": "これらボタンを押すと、Oyasumiの設定データの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
         "clearAllSettings": "すべてのセッティングを削除",
         "clearAutomationSettings": "自動化設定をクリア",
         "clearAppSettings": "アプリの設定を削除",
@@ -353,11 +471,14 @@
       },
       "language": {
         "title": "言語",
-        "description": "このオプションは、言語ファイルを手動で読み込むことができます。これは新しい翻訳を検証するのに役立ちます。",
+        "description": "言語ファイルを手動で読み込むことができます。これは新しい翻訳を検証するのに役立ちます。",
         "loadFile": "言語ファイルを読み込む"
       },
       "sleepingPose": {
         "title": "寝相"
+      },
+      "sleepingDetection": {
+        "title": "睡眠検知のレポート"
       }
     }
   },
@@ -379,7 +500,7 @@
     }
   },
   "misc": {
-    "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは、いくつか問題のあるワークアラウンドを使用しております。新しいGoGo Locoプリセットが使用できない場合のみ、このプリセットを使用するようお願い致します。また、あなたのアバターがまだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoバージョンを使用し、更新することをお勧め致します。",
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、いくつかの問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用するようお願いいたします。また、あなたのアバターがまだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoバージョンを使用し、更新することをお勧めいたします。",
     "oscScriptEditorErrors": {
       "noFloatMilliseconds": "ミリ秒値は整数で定義されなければなりません。",
       "durationTooShort": "睡眠時間は最低1msでなければなりません。",
@@ -396,6 +517,24 @@
       "addressNotASCII": "有効なOSCアドレスは、ASCII文字のみ含みことができます。"
     }
   },
+  "notifications": {
+    "sleepCheck": {
+      "title": "Oyasumi",
+      "content": "眠りましたか？20秒後にスリープモードに切り替わります。/n/n（頭を揺らすことでキャンセルできます。）"
+    },
+    "sleepCheckCancel": {
+      "title": "Oyasumi",
+      "content": "スリープモードの自動有効化が解除されました。"
+    },
+    "sleepModeEnabled": {
+      "title": "Oyasumi",
+      "content": "スリープモードが有効化されました。"
+    },
+    "sleepModeDisabled": {
+      "title": "Oyasumi",
+      "content": "スリープモードが無効化されました。"
+    }
+  },
   "comp": {
     "main-status-bar": {
       "sleepMode": "睡眠モード",
@@ -404,7 +543,7 @@
       "loggedOut": "ログアウト中",
       "steamvr": {
         "INACTIVE": "非アクティブ",
-        "INITIALIZING": "待受画像",
+        "INITIALIZING": "待機画面",
         "INITIALIZED": "アクティブ"
       }
     },
@@ -415,7 +554,7 @@
       "title": "アップデート可能",
       "updateNow": "v{{version}}をインストール",
       "updateLater": "後で",
-      "message": "Oyasumiの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用されております。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
+      "message": "Oyasumiの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
     },
     "select-box": {
       "defaultPlaceholder": "選択する..."
@@ -427,12 +566,12 @@
       "batteryAutomations": "バッテリー自動化",
       "gpuAutomations": "GPU自動化",
       "statusAutomations": "ステータス自動化",
-      "autoInviteRequestAccept": "招待リクエストを\n自動的に受け入れる",
-      "settings": "設定方法",
+      "autoInviteRequestAccept": "Req Inviteの自動承認",
+      "settings": "設定",
       "about": "Oyasumiについて"
     },
     "device-list": {
-      "title": "端末",
+      "title": "機器",
       "turnOffAll": "すべて",
       "noDevices": "コントローラまたはトラッカーが検出されません。",
       "category": {
@@ -466,7 +605,7 @@
       "action": {
         "osc": "OSC",
         "sleep": "睡眠",
-        "none": "アクションが追加されておりません！"
+        "none": "アクションが追加されていません！"
       },
       "commands": {
         "COMMAND": {
@@ -491,18 +630,18 @@
     },
     "vrchat-login-tfa-modal": {
       "title": "二要素認証",
-      "description": "お客様のVRChatアカウントは二要素認証で保護されています。\r\n\r\n2FAコードを入力してください:",
+      "description": "VRChatアカウントは二要素認証で保護されています。\r\n\r\n2FAコードを入力してください:",
       "errors": {
         "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。",
-        "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字の羅列です。入力内容をご確認ください。"
+        "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字です。入力内容をご確認ください。"
       }
     },
     "friend-selection-modal": {
-      "title": "友達を選択する",
-      "searchPlaceholder": "名前から友達を検索する...",
-      "noFriendsSelected": "選択された友達はいません",
+      "title": "フレンドを選択する",
+      "searchPlaceholder": "名前からフレンドを検索する...",
+      "noFriendsSelected": "選択されたフレンドはいません",
       "noResultsFor": "'{{query}}'の結果が見つかりません",
-      "noFriends": "友達リストが空です"
+      "noFriends": "フレンドリストが空です"
     }
   }
 }

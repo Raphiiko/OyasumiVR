@@ -20,7 +20,14 @@
       (click)="activeTab = 'POWER_LIMITS'"
     >
       <div class="tab-label">
-        <i class="material-icons" style="color: var(--color-warning)" @hshrink *ngIf='nvmlErrors | async'> error_outline </i>
+        <i
+          class="material-icons"
+          style="color: var(--color-warning)"
+          @hshrink
+          *ngIf="nvmlErrors | async"
+        >
+          error_outline
+        </i>
         <span translate>gpu-automations.tabs.powerLimiting</span>
       </div>
     </div>
@@ -30,7 +37,14 @@
       (click)="activeTab = 'MSI_AFTERBURNER'"
     >
       <div class="tab-label">
-        <i class="material-icons" style="color: var(--color-warning)" @hshrink *ngIf='msiAfterburnerErrors | async'> error_outline </i>
+        <i
+          class="material-icons"
+          style="color: var(--color-warning)"
+          @hshrink
+          *ngIf="msiAfterburnerErrors | async"
+        >
+          error_outline
+        </i>
         <span translate>gpu-automations.tabs.msiAfterburner</span>
       </div>
     </div>

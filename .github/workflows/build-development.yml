@@ -69,7 +69,7 @@ jobs:
           tag_name: oyasumi-vDEV-new
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: tauri-apps/tauri-action@v0
+      - uses: Raphiiko/tauri-action@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
@@ -80,6 +80,8 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           prerelease: true
+          includeDebug: true
+          includeRelease: false
       - name: Get current development release ID if it exists
         uses: actions/github-script@v6
         continue-on-error: true

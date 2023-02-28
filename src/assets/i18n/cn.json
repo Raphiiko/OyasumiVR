@@ -27,7 +27,6 @@
   },
   "sleep-detection": {
     "title": "睡眠侦测",
-    "description": "在这裡，你可以设定自动化睡眠模式，根据各种触发器自动启用或关闭睡眠模式",
     "enableAutomations": {
       "title": "启动睡眠模式",
       "atTime": "在特定时间",
@@ -53,14 +52,14 @@
       "disableOnDevicePowerOn": {
         "title": "关闭睡眠模式",
         "whenTurningOn": "当启动其中一个",
-        "optionController": "控制器",
-        "optionTracker": "追踪器"
+        "Controller": "控制器",
+        "GenericTracker": "追踪器"
       },
       "enableAtBatteryPercentage": {
         "title": "开启睡眠模式",
         "whenA": "当其中一个",
-        "optionController": "控制器",
-        "optionTracker": "追踪器",
+        "Controller": "控制器",
+        "GenericTracker": "追踪器",
         "fallsBelow": "电量降低到"
       }
     }

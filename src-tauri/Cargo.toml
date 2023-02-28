@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi"
-version = "1.4.1"
+version = "1.5.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -18,7 +18,7 @@ tauri-build = { version = "1.0.4", features = [] }
 oyasumi-shared = { path = "../src-shared", version = '*' }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.1.1", features = ["dialog-message", "dialog-open", "fs-exists", "fs-read-dir", "fs-read-file", "http-request", "process-exit", "shell-execute", "shell-open", "updater"] }
+tauri = { version = "1.1.1", features = ["dialog-message", "dialog-open", "fs-exists", "fs-read-dir", "fs-read-file", "http-request", "notification-all", "process-exit", "shell-execute", "shell-open", "updater"] }
 lazy_static = "1.4.0"
 cronjob = "0.4.17"
 openvr_sys = "2.0.3"
@@ -35,6 +35,9 @@ mime = "0.3.16"
 md5 = "0.7.0"
 mime_guess = "2.0.4"
 substring = "1.4.5"
+bytes = "1.4.0"
+nalgebra = "0.32.1"
+soloud = "1.0.2"
 
 [dependencies.windows-sys]
 version = "0.36.1"
@@ -49,7 +52,7 @@ version = "1.21.1"
 features = ["full"]
 
 [dependencies.hyper]
-version = "0.14.20"
+version = "0.14.24"
 features = ["full"]
 
 [dependencies.tauri-plugin-single-instance]
@@ -76,7 +79,7 @@ rev = "c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
-default = [ "custom-protocol" ]
+default = ["custom-protocol"]
 # this feature is used used for production builds where `devPath` points to the filesystem
 # DO NOT remove this
-custom-protocol = [ "tauri/custom-protocol" ]
+custom-protocol = ["tauri/custom-protocol"]

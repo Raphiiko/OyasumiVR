@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { message } from '@tauri-apps/api/dialog';
-import { exit } from '@tauri-apps/api/process';
 import { SleepService } from './sleep.service';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { cloneDeep } from 'lodash';
@@ -9,50 +7,74 @@ import { TaskQueue } from '../utils/task-queue';
 import { debug, info } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, filter, firstValueFrom, map, Observable, Subject, take, tap } from 'rxjs';
+import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OscService {
-  address = '127.0.0.1:9000';
   private scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
   private _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
   public messages: Observable<OSCMessage> = this._messages.asObservable();
 
-  constructor(private sleep: SleepService) {}
+  private _initializedOnAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+
+  constructor(private sleep: SleepService, private appSettings: AppSettingsService) {}
 
   async init() {
-    const result = await invoke<boolean>('osc_init', { receiveAddr: '127.0.0.1:9001' });
-    if (!result) {
-      info(
-        '[OSC] Could not bind a UDP socket to interact with VRChat over OSC (possibly due to incorrectly configured permissions). Quitting...'
-      );
-      await message(
-        'Could not bind a UDP socket to interact with VRChat over OSC. Please give Oyasumi the correct permissions.',
-        { type: 'error', title: 'Oyasumi' }
-      );
-      await exit(0);
-      return;
-    }
     listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
       this._messages.next(parseOSCMessage(data.payload));
     });
+    this.appSettings.settings
+      .pipe(
+        map(
+          (settings) => [settings.oscReceivingHost, settings.oscReceivingPort] as [string, number]
+        ),
+        take(1),
+        filter(([host, port]) => port > 0 && port <= 65535),
+        tap(([host, port]) => this.init_receiver(host, port))
+      )
+      .subscribe();
+  }
+
+  async init_receiver(host: string, port: number): Promise<boolean> {
+    const receiveAddr = `${host}:${port}`;
+    if (this._initializedOnAddress.value === receiveAddr) return true;
+    const result = await invoke<boolean>('osc_init', { receiveAddr });
+    if (!result) {
+      info(`[OSC] Could not bind a UDP socket on ${receiveAddr}.`);
+      this._initializedOnAddress.next(null);
+    } else {
+      this._initializedOnAddress.next(receiveAddr);
+    }
+    return result;
   }
 
   async send_float(address: string, value: number) {
     debug(`[OSC] Sending float ${value} to ${address}`);
-    await invoke('osc_send_float', { addr: this.address, oscAddr: address, data: value });
+    const addr = await firstValueFrom(this.appSettings.settings).then(
+      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
+    );
+    await invoke('osc_send_float', { addr, oscAddr: address, data: value });
   }
 
   async send_int(address: string, value: number) {
     debug(`[OSC] Sending int ${value} to ${address}`);
-    await invoke('osc_send_int', { addr: this.address, oscAddr: address, data: value });
+    const addr = await firstValueFrom(this.appSettings.settings).then(
+      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
+    );
+    await invoke('osc_send_int', { addr, oscAddr: address, data: value });
   }
 
   async send_bool(address: string, value: boolean) {
     debug(`[OSC] Sending bool ${value} to ${address}`);
-    await invoke('osc_send_bool', { addr: this.address, oscAddr: address, data: value });
+    const addr = await firstValueFrom(this.appSettings.settings).then(
+      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
+    );
+    await invoke('osc_send_bool', { addr, oscAddr: address, data: value });
   }
 
   queueScript(script: OscScript, replaceId?: string) {

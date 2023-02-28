@@ -1,0 +1,2 @@
+Notification sounds by Aarni Koskela (akx).
+https://github.com/akx/Notifications

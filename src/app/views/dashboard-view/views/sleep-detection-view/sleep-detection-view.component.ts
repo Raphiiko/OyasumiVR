@@ -17,6 +17,10 @@ import { cloneDeep } from 'lodash';
 import { TimeDisableSleepModeModalComponent } from './time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
 import { BatteryPercentageEnableSleepModeModalComponent } from './battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
 import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
+import { OVRDeviceClass } from '../../../../models/ovr-device';
+import { TranslateService } from '@ngx-translate/core';
+import { SleepDetectorCalibrationModalComponent } from './sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -30,7 +34,8 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private modalService: SimpleModalService,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -110,9 +115,20 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  toggleAutomation(automation: AutomationType) {
+  openModal_EnableSleepModeForSleepDetector() {
+    this.modalService
+      .addModal(SleepDetectorEnableSleepModeModalComponent, {})
+      .pipe(filter((data) => !!data))
+      .subscribe((_) => {});
+  }
+
+  toggleAutomation(automation: AutomationType, field = 'enabled') {
     this.automationConfigService.updateAutomationConfig(automation, {
-      enabled: !this.automationConfigs[automation].enabled,
-    });
+      [field]: !((this.automationConfigs[automation] as any)[field] as any),
+    } as any);
+  }
+
+  deviceClassesToString(classes: OVRDeviceClass[], tlkey_prefix: string): string {
+    return classes.map((c) => this.translate.instant(tlkey_prefix + c)).join(', ');
   }
 }

@@ -1,0 +1,43 @@
+<div class="setting-category">
+  <h2 translate>settings.notifications.providers.title</h2>
+  <p translate>settings.notifications.providers.description</p>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.notifications.providers.xsoverlay.title</span>
+        <span translate>settings.notifications.providers.xsoverlay.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            [checked]="appSettings.enableXSOverlayNotifications"
+            (change)="
+              notifications.enableXSOverlayNotifications(!appSettings.enableXSOverlayNotifications)
+            "
+            type="checkbox"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.notifications.providers.desktop.title</span>
+        <span translate>settings.notifications.providers.desktop.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            [checked]="appSettings.enableDesktopNotifications"
+            (change)="
+              notifications.enableDesktopNotifications(!appSettings.enableDesktopNotifications)
+            "
+            type="checkbox"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
