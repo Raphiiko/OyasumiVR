@@ -29,16 +29,85 @@
     "title": "睡眠偵測",
     "enableAutomations": {
       "title": "啟動睡眠模式",
+      "description": "根據各種觸發器自動啟用睡眠模式",
       "atTime": "在特定時間",
       "atBatteryPercentage": "當設備的電池百分比低於 <strong>{{value}}%</strong>",
-      "onControllersPoweredOff": "當所有控制器都關閉時"
+      "onControllersPoweredOff": "當所有控制器都關閉時",
+      "onMotionDetection": {
+        "title": "Oyasumi 根據你的睡眠動作檢測你是否睡眠",
+        "subtitle": "<b>注意：</b>這是<b>實驗性功能</b>！ 它可能無法正常運做"
+      }
     },
     "disableAutomations": {
       "title": "關閉睡眠模式",
+      "description": "根據各種觸發器自動禁用睡眠模式",
       "atTime": "在特定時間",
-      "onDevicePowerOn": "當設備啟動時候"
+      "onDevicePowerOn": "當設備啟動時候",
+      "onSteamVRStop": "當 SteamVR 停止時"
     },
     "modals": {
+      "sleepDetectorCalibration": {
+        "title": "校準睡眠檢測",
+        "currentCalibration": "你當前的校準值：",
+        "noSteamVR": "你只能在 SteamVR 在插入 VR 頭的情況下才能開始校準",
+        "startCalibration": "開始校準",
+        "restartCalibration": "重新開始校準",
+        "info": {
+          "intro": "重新校準",
+          "stepPrefix": "校準步驟如下：",
+          "step": {
+            "one": "戴上頭盔並躺下",
+            "two": "從疊層上開啟 Oyasumi 進行校準",
+            "three": "躺著持續 10 秒"
+          },
+          "stepSuffix": "就是這樣！ 校準後，Oyasumi 應該能夠根據 VR 頭盔的移動來檢測你是否進入睡眠"
+        },
+        "prepare": {
+          "instruction": "戴上你的 VR 頭盔並躺下",
+          "note": "當你準備好後你會再疊層看到這視窗，點擊「開始校準」來進行校準"
+        },
+        "countdown": {
+          "instruction": "{{counter}} 秒後開始",
+          "note": "校準時保持靜止！ 假裝你睡著了\n校準時移動會阻止此功能運做"
+        },
+        "calibrating": {
+          "instruction": "校準中",
+          "note": "繼續保持",
+          "countdown": "還剩 {{counter}} 秒"
+        },
+        "done": {
+          "instruction": "ˋ校準完成！",
+          "note": "現在你可以用此自動化了"
+        },
+        "failed": {
+          "instruction": "校準失敗",
+          "note": "校準無法成功完成，可能是因為你的頭盔未回報任何數據。請確保你的頭盔正在追蹤狀態，然後重新嘗試"
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "開啟睡眠模式",
+        "description": "啟用此功能後，Oyasumi 會根據你的動作猜測你睡著時自動啟用睡眠模式\n\n這仍是一項實驗性功能，可能還無法正常運作",
+        "calibration": {
+          "title": "校準",
+          "description": "在嘗試使用此功能之前，你需要至少校準一次",
+          "action": "校準"
+        },
+        "sensitivity": {
+          "title": "靈敏度",
+          "description": "Oyasumi 對動作偵測靈敏度",
+          "presets": {
+            "LOWEST": "最低",
+            "LOW": "低",
+            "MEDIUM": "中",
+            "HIGH": "高",
+            "HIGHEST": "最高"
+          }
+        },
+        "sleepCheck": {
+          "title": "在啟用睡眠模式之前，詢問我是否還醒著",
+          "description": "需要啟用<a class=\"notificationSettingsLink\">通知</a>"
+        }
+      },
       "enableAtTime": {
         "title": "開啟睡眠模式",
         "description": "在特定時間開啟睡眠模式",
@@ -60,7 +129,11 @@
         "whenA": "當其中一個",
         "Controller": "控制器",
         "GenericTracker": "追蹤器",
-        "fallsBelow": "電量降低到"
+        "fallsBelow": "電量降低到",
+        "errors": {
+          "thresholdOutOfRange": "百分比必須介於 0% 和 100% 之間",
+          "thresholdNotInteger": "百分比值必須是整數"
+        }
       }
     }
   },
@@ -73,7 +146,7 @@
       "currentPose": "目前姿勢",
       "manualControl": "手動控制",
       "presetAuthor": "由 {{author}} 製作",
-      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用。 請查看範例影片來看這功能的運作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">這裡</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫。",
+      "description": "Oyasumi 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 Oyasumi）在夜晚時關閉你的追蹤器，這將很有用 請查看範例影片來看這功能的運作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">這裡</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫。",
       "enable": "開啟睡眠動畫自動化",
       "customPreset": "自定義動畫",
       "errors": {
@@ -103,7 +176,7 @@
           "onlyIfAllTrackersTurnedOff": "當所有追蹤器關閉時",
           "footLock": {
             "title": "腳部(移動)鎖定",
-            "description": "腳部鎖定在開啟時通常會阻止玩家移動或旋轉。"
+            "description": "腳部鎖定在開啟時通常會阻止玩家移動或旋轉"
           },
           "lockFeetOnSleepModeEnable": "當睡眠模式啟動時開啟腳部鎖定",
           "unlockFeetOnSleepModeDisable": "當睡眠模式關閉時關閉腳部鎖定",
@@ -128,7 +201,7 @@
       },
       "onCharge": {
         "title": "當為設備充電時",
-        "description": "當你將設備進行充電時，讓設備自動關閉。",
+        "description": "當你將設備進行充電時，讓設備自動關閉",
         "optionControllers": "關閉控制器",
         "optionTrackers": "關閉追蹤器"
       }
@@ -137,12 +210,12 @@
   "gpu-automations": {
     "title": "GPU 自動化",
     "disabled": {
-      "disabled": "Oyasumi 允許你自動調整 GPU 的功耗限制。\n這樣你就可以在睡覺時節省用電量。\n\nGPU 自動化目前僅適用於 NVIDIA GPU。\nAMD 和 Intel GPU 仍然不支持",
-      "noSidecar": "為了讓 Oyasumi 能夠控制 GPU 設定，它需要管理員權限。 請點擊下方按鈕授予 Oyasumi 管理員權限",
+      "disabled": "Oyasumi 允許你自動調整 GPU 的功耗限制\n這樣你就可以在睡覺時節省用電量\n\nGPU 自動化目前僅適用於 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
+      "noSidecar": "為了讓 Oyasumi 能夠控制 GPU 設定，它需要管理員權限。請點擊下方按鈕授予 Oyasumi 管理員權限",
       "initializing": "GPU 自動化目前仍在初始化...",
       "noElevation": "為了讓 Oyasumi 能夠控制 GPU 的功耗限制，它需要管理員權限。 請點擊下方按鈕授予 Oyasumi 管理員權限",
-      "driverNotLoaded": "Oyasumi 沒有檢測到已安裝的 NVIDIA 驅動程序。\n\n請確保你的系統使用 NVIDIA GPU 並安裝了適當的驅動程序",
-      "noDevices": "在你的系統中找不到顯卡。\n\n請確保你的系統有 NVIDIA 顯卡並安裝了適當的驅動程序。",
+      "driverNotLoaded": "Oyasumi 沒有檢測到已安裝的 NVIDIA 驅動程序\n\n請確保你的系統使用 NVIDIA GPU 並安裝了適當的驅動程序",
+      "noDevices": "在你的系統中找不到顯卡\n\n請確保你的系統有 NVIDIA 顯卡並安裝了適當的驅動程序",
       "unknown": "嘗試開啟 GPU 自動化功能時發生未知錯誤"
     },
     "tabs": {
@@ -153,7 +226,7 @@
     "disable": "關閉 GPU 自動化",
     "enable": "開啟 GPU 自動化",
     "automations": "睡眠自動化",
-    "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功耗限制可能會導致你的系統變得不穩定。\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
+    "enableWarning": "這是功能是給一些進階用戶的！\n設定錯誤的功耗限制可能會導致你的系統變得不穩定\n請牢記這一點，最好只在你知道自己在做什麼時才調整它",
     "elevationSidecarModal": {
       "title": "授予管理員權限",
       "message": "你確定想要授予 Oyasumi 管理員權限嗎？\n\n如果你開啟此權限，Oyasumi 將在啟動時立即請求這些權限。 你可以稍後隨時在設定中關閉此功能",
@@ -164,8 +237,8 @@
       "disabled": {
         "initializing": "功耗限制自動化正在初始化中.....",
         "noNvidia": "功耗限制自動化不可用，因為未檢測到正在運行的 NVIDIA 驅動程序。 功耗限制自動化僅適用於 NVIDIA GPU。\n\n如果你的系統中有 NVIDIA GPU，請確保為其安裝了適合的驅動程序。\n\n({{code}})",
-        "noPermission": "儘管 Oyasumi 擁有管理員權限，但它似乎沒有權限更改你的 GPU 設定。\n\n請檢查你的系統規格，因為這通常不會發生。",
-        "noSidecar": "由於未知原因，無法獲得管理員權限。\n這些是控制 GPU 功耗限制所必需的。\n\n請嘗試重新啟動 Oyasumi。",
+        "noPermission": "儘管 Oyasumi 擁有管理員權限，但它似乎沒有權限更改你的 GPU 設定\n\n請檢查你的系統規格，因為這通常不會發生",
+        "noSidecar": "由於未知原因，無法獲得管理員權限\n這些是控制 GPU 功耗限制所必需的\n\n請嘗試重新啟動 Oyasumi",
         "unknown": "由於未知原因，功耗限制自動化不可用。\n\n請嘗試重新啟動 Oyasumi"
       },
       "noGPUSelected": "沒有選擇 GPU",
@@ -187,7 +260,7 @@
       "inputDefault": "將 GPU 功耗重置到預設數值"
     },
     "msiAfterburner": {
-      "description": "Oyasumi 可以在你入睡或醒來時自動調整您的 GPU 設定，使用你在 MSI Afterburner 中所建立的設定檔。 此功能的其中一個用途是在你入睡時節省電力，並在你醒來時重新獲得 GPU 功耗。<br><br>你必須在 MSI Afterburner 設定設定檔。<br>你可以在這裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下載</a> MSI Afterburner",
+      "description": "Oyasumi 可以在你入睡或醒來時自動調整你的 GPU 設定，使用你在 MSI Afterburner 中所建立的設定檔。 此功能的其中一個用途是在你入睡時節省電力，並在你醒來時重新獲得 GPU 功耗。<br><br>你必須在 MSI Afterburner 設定設定檔。<br>你可以在這裡<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下載</a> MSI Afterburner",
       "sleepModeEnable": {
         "title": "當睡眠模式啟動時",
         "description": "使用所選的 MSI Afterburner 設定檔"
@@ -201,7 +274,7 @@
       "enabledWarning": "請注意，在 MSI Afterburner 中錯誤的設定 GPU 可能會導致系統變得不穩定。如果你不知道自己在做什麼，請關閉此功能",
       "executable": {
         "title": "設定",
-        "description": "Oyasumi 需要知道你的 <strong>MSIAfterburner.exe</strong> 可執行檔的位置。\n如果 Oyasumi 在預設位置找不到它，需要你手動設定它的位置。",
+        "description": "Oyasumi 需要知道你的 <strong>MSIAfterburner.exe</strong> 可執行檔的位置\n如果 Oyasumi 在預設位置找不到它，需要你手動設定它的位置",
         "status": {
           "CHECKING": "正在驗證 <strong>MSIAfterburner.exe</strong>",
           "NOT_FOUND": "無法在此位置中找到 <strong>MSIAfterburner.exe</strong> ",
@@ -214,7 +287,7 @@
     },
     "description": "在這裡，你可以自動限制 GPU 的功耗限制，讓在你睡覺時節省電力",
     "selectGPU": "選擇你希望為其設定功耗限制的 GPU：",
-    "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制。",
+    "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制",
     "currentPowerLimit": "當前功耗限制",
     "activatingSleepMode": {
       "title": "當我睡覺時",
@@ -232,7 +305,7 @@
     "enable": "開啟狀態自動化",
     "description": "Oyasumi 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
     "exampleUse": "使用範例：當有人加入你時，自動將你的狀態切換為橙色或紅色！\n當他們離開而你又獨自一人時，自動將你的狀態切換回藍色以便其他人可以加入你",
-    "disableToEdit": "請在進行任何變更之前關閉狀態自動化。",
+    "disableToEdit": "請在進行任何變更之前關閉狀態自動化",
     "playerLimit": "玩家人數限制",
     "playerLimitLabel": {
       "singular": "{{count}} 位玩家（包括你）",
@@ -254,13 +327,17 @@
   "auto-invite-request-accept": {
     "title": "自動接受加入請求",
     "description": "Oyasumi 可以自動接受你收到的加入請求。 通過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
-    "userOnBusyStatus": "當你的狀態為忙碌（紅色）時，你不能接受玩家的加入請求。",
-    "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）。",
+    "userOnBusyStatus": "當你的狀態為忙碌（紅色）時，你不能接受玩家的加入請求",
+    "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）",
     "whitelist": "玩家白名單",
     "blacklist": "玩家黑名單",
     "noPlayersAdded": "目前沒有任何玩家在此列表中",
     "addFriends": "新增朋友",
     "clearPlayers": "清除玩家",
+    "removeModal": {
+      "title": "確認刪除",
+      "message": "你確定要從列表中刪除「{{name}}」嗎？"
+    },
     "options": {
       "enable": {
         "title": "開啟",
@@ -294,6 +371,7 @@
     "tab": {
       "general": "一般",
       "vrchat": "VRChat",
+      "notifications": "通知",
       "updates": "更新",
       "debug": "除錯"
     },
@@ -304,11 +382,11 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouse 控制台",
-        "description": "Oyasumi 需要知道你的 SteamVR 安裝的 <strong>lighthouse_console.exe</strong> 的位置。\n如果 Oyasumi 在默認位置找不到它，你需要自行設定它的位置。",
+        "description": "Oyasumi 需要知道你的 SteamVR 安裝的 <strong>lighthouse_console.exe</strong> 的位置\n如果 Oyasumi 在默認位置找不到它，你需要自行設定它的位置",
         "status": {
           "NOT_FOUND": "在此位置下找不到 <strong>lighthouse_console.exe</strong>",
           "INVALID_EXECUTABLE": "無法驗證此位置的 <strong>lighthouse_console.exe</strong> 是否正常運作",
-          "PERMISSION_DENIED": "Oyasumi 沒有在此位置運行 <strong>lighthouse_console.exe</strong> 的權限。 嘗試以管理員身份運行 Oyasumi。",
+          "PERMISSION_DENIED": "Oyasumi 沒有在此位置運行 <strong>lighthouse_console.exe</strong> 的權限。 嘗試以管理員身份運行 Oyasumi",
           "INVALID_FILENAME": "所設定的位置不是有效的文件路徑",
           "UNKNOWN_ERROR": "嘗試在此位置查找 <strong>lighthouse_console.exe</strong> 時發生未知錯誤",
           "CHECKING": "正在驗證 <strong>lighthouse_console.exe</strong>",
@@ -332,7 +410,7 @@
         "description": "Oyasumi 的某些功能需要你使用 VRChat 帳戶登入才能使用",
         "loggedIn": {
           "title": "你好 {{name}}!",
-          "subtext": "你當前已使用 VRChat 帳戶登入。",
+          "subtext": "你當前已使用 VRChat 帳戶登入",
           "logOut": "登出"
         },
         "loggedOut": {
@@ -344,9 +422,50 @@
           "initError": "無法初始化 VRChat 模塊。 請確保你有連上網際網路並稍後重新啟動 Oyasumi 重試"
         },
         "disclaimers": {
-          "use": "你的登入憑證永遠不會存儲在任何地方，只會發送到 VRChat 的伺服器以進行身份驗證。",
-          "brand": "Oyasumi 沒有得到 VRChat 的官方認可，也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 VRChat 是 VRChat Inc. 的商標。 VRChat © VRChat Inc.",
+          "use": "你的登入憑證永遠不會存儲在任何地方，只會發送到 VRChat 的伺服器以進行身份驗證",
+          "brand": "Oyasumi 沒有得到 VRChat 的官方認可，也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 VRChat 是 VRChat Inc. 的商標 VRChat © VRChat Inc.",
           "liability": "Raphiiko 對 Oyasumi 引起的任何問題概不負責。 使用風險請自己承擔！"
+        }
+      },
+      "OSC": {
+        "title": "OSC 設定",
+        "description": "某些功能需要通過 OSC 連接到 VRChat。 除非你有特殊原因要更改這些，否則你應該將它們保留為默認值。",
+        "reset": "重置為默認值",
+        "receivingHost": {
+          "title": "接收 IP",
+          "description": "Oyasumi 將監聽此 IP 的 OSC 資訊\n（VRChat 默認發送到 127.0.0.1）"
+        },
+        "receivingPort": {
+          "title": "接收端口",
+          "description": "Oyasumi 將監聽 OSC 資訊的端口\n（VRChat 默認發送到端口 9001）"
+        },
+        "sendingHost": {
+          "title": "發送 IP",
+          "description": "Oyasumi 將向此 IP 發送 OSC 資訊。\n（如果 VRChat 在同一台計算機上運行，則為 127.0.0.1）"
+        },
+        "sendingPort": {
+          "title": "發送端口",
+          "description": "Oyasumi 將向其發送 OSC 資訊的端口。\n（VRChat 默認偵聽端口 9000）"
+        },
+        "errors": {
+          "bindFailed": "無法綁定此地址。 可能是另一個應用程序已經在使用它。 你可以嘗試關閉該應用程序並重試，或者選擇不同的接收端口或主機。",
+          "invalidPort": "端口必須是 1 到 65535 之間的有效數字。",
+          "samePort": "當發送主機和接收主機相同時，發送端口和接收端口不能使用相同的端口",
+          "invalidHost": "主機必須是有效的主機名、IPv4 地址或 IPv6 地址。"
+        }
+      }
+    },
+    "notifications": {
+      "providers": {
+        "title": "通知管道",
+        "description": "某些功能能夠或需要能夠向你發送通知。 請在此處選擇你首選的通知管道",
+        "xsoverlay": {
+          "title": "XSOverlay 通知",
+          "description": "使用 XSOverlay 將 Oyasumi 通知帶入 VR"
+        },
+        "desktop": {
+          "title": "桌面通知",
+          "description": "使用默認的 Windows 桌面通知。 你可以使用 OVR Toolkit 等疊層工具將通知帶入 VR"
         }
       }
     },
@@ -376,6 +495,9 @@
       },
       "sleepingPose": {
         "title": "睡眠姿勢"
+      },
+      "sleepingDetection": {
+        "title": "睡眠檢測器報告"
       }
     }
   },
@@ -414,6 +536,24 @@
       "addressNotASCII": "有效的 OSC 數值只能包含 ASCII 字符。"
     }
   },
+  "notifications": {
+    "sleepCheck": {
+      "title": "Oyasumi",
+      "content": "睡眠模式將在 20 秒後啟用。 你睡著了嗎？\n\n（搖頭取消）"
+    },
+    "sleepCheckCancel": {
+      "title": "Oyasumi",
+      "content": "自動啟用睡眠模式已被取消。"
+    },
+    "sleepModeEnabled": {
+      "title": "Oyasumi",
+      "content": "睡眠模式已啟用。"
+    },
+    "sleepModeDisabled": {
+      "title": "Oyasumi",
+      "content": "睡眠模式已被關閉。"
+    }
+  },
   "comp": {
     "main-status-bar": {
       "sleepMode": "睡眠模式",
@@ -433,7 +573,7 @@
       "title": "有新的更新",
       "updateNow": "安裝版本 {{version}}",
       "updateLater": "稍後",
-      "message": "已找到 Oyasumi 的新更新：版本 {{newVersion}}。\n\n你當前仍在運行版本 {{currentVersion}}。\n\n你要立即更新還是稍後更新？"
+      "message": "已找到 Oyasumi 的新更新：版本 {{newVersion}}\n\n你當前仍在運行版本 {{currentVersion}}\n\n你要立即更新還是稍後更新？"
     },
     "select-box": {
       "defaultPlaceholder": "選擇..."
@@ -509,10 +649,10 @@
     },
     "vrchat-login-tfa-modal": {
       "title": "雙重認證",
-      "description": "你的 VRChat 帳戶受雙重驗證保護。\n\n請輸入 2FA 代碼：",
+      "description": "你的 VRChat 帳戶受雙重驗證保護\n\n請輸入 2FA 代碼：",
       "errors": {
-        "LAST_CODE_INVALID": "你提供的 2FA 代碼不正確。",
-        "INVALID_FORMAT": "有效的 2FA 代碼是 6 個數字的序列。 請確認你的輸入。"
+        "LAST_CODE_INVALID": "你提供的 2FA 代碼不正確",
+        "INVALID_FORMAT": "有效的 2FA 代碼是 6 個數字的序列，請確認你的輸入"
       }
     },
     "friend-selection-modal": {
