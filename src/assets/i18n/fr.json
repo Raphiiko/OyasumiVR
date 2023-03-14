@@ -18,121 +18,121 @@
     },
     "overview": {
       "sleep-mode": {
-        "label": "Sleep Mode",
-        "active": "Active",
-        "inactive": "Inactive",
-        "activate": "Activate",
-        "deactivate": "Deactivate"
+        "label": "Mode sommeil",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "activate": "Activer",
+        "deactivate": "Désactiver"
       }
     },
     "sleep-detection": {
-      "title": "Sleep Detection",
+      "title": "Détection de sommeil",
       "enableAutomations": {
-        "title": "Enabling sleep mode",
-        "description": "Automatically enable sleep mode based on various triggers",
-        "atTime": "At a specific time",
-        "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
-        "onControllersPoweredOff": "When all controllers are turned off",
+        "title": "Activation du mode sommeil",
+        "description": "Active automatiquement le mode sommeil selon plusieurs critères",
+        "atTime": "À une heure prédéfinie",
+        "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{{value}}%</strong>",
+        "onControllersPoweredOff": "Lorsque l'un des contrôleurs est éteint",
         "onMotionDetection": {
-          "title": "When Oyasumi detects you are asleep based on your movement",
-          "subtitle": "<b>NOTE:</b> This is an <b>experimental feature</b>! It may not work correctly."
+          "title": "Quand Oyasumi détecte votre sommeil selon vos mouvements",
+          "subtitle": "<b>NOTE:</b> Ceci est une <b>fonctionnalité expérimentale</b>! Peut ne pas fonctionner correctement."
         }
       },
       "disableAutomations": {
-        "title": "Disabling sleep mode",
-        "description": "Automatically disable sleep mode based on various triggers",
-        "atTime": "At a specific time",
-        "onDevicePowerOn": "When a device is turned on",
-        "onSteamVRStop": "When SteamVR is stopped"
+        "title": "Désactivation du mode sommeil",
+        "description": "Désactive automatiquement le mode sommeil selon plusieurs critères",
+        "atTime": "À une heure prédéfinie",
+        "onDevicePowerOn": "Lorsqu'un appareil est allumé",
+        "onSteamVRStop": "Lorsque SteamVR est stoppé"
       },
       "modals": {
         "sleepDetectorCalibration": {
-          "title": "Calibrate Sleep Detection",
-          "currentCalibration": "Your Current Calibration Value:",
-          "noSteamVR": "You can only start calibration once SteamVR is running with your VR Headset plugged in.",
-          "startCalibration": "Start Calibration",
-          "restartCalibration": "Restart Calibration",
+          "title": "Calibrer la détection de sommeil",
+          "currentCalibration": "Valeur de calibration actuelle :",
+          "noSteamVR": "SteamVR doit être démarré et un casque connecté pour débuter la calibration.",
+          "startCalibration": "Débuter la calibration",
+          "restartCalibration": "Recommencer la calibration",
           "info": {
-            "intro": "Oyasumi can detect if you've fallen asleep based on the movement of your VR headset. For it to be able to do this, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
-            "stepPrefix": "Calibration works as follows:",
+            "intro": "Oyasumi peut détecter si vous êtes en train de dormir grâce au mouvement de votre casque VR. Cela nécessite une calibration de votre setup VR. La calibration doit être faite une fois avant de pouvoir détecter votre sommeil.",
+            "stepPrefix": "La calibration consiste en:",
             "step": {
-              "one": "You put on your headset and lie down.",
-              "two": "You start the calibration in Oyasumi from your overlay.",
-              "three": "You lay still for 10 seconds."
+              "one": "Mettre son casque et s'allonger.",
+              "two": "Débuter la calibration d'Oyasumi depuis l'overlay.",
+              "three": "Attendre 10 secondes sans bouger."
             },
-            "stepSuffix": "That's it! After calibration, Oyasumi should be able to detect if you've fallen asleep based on the movement of your VR headset."
+            "stepSuffix": "Et voilà! Après calibration, Oyasumi devrait détecter si vous vous êtes endormi grâce aux mouvement du casque VR."
           },
           "prepare": {
-            "instruction": "Put on your VR headset and lie down.",
-            "note": "Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started."
+            "instruction": "Mettez votre casque VR et allongez-vous.",
+            "note": "Lorsque vous êtes prêt(e) et que cette fenêtre est visible depuis votre overlay, appuyez sur 'Débuter la calibration' pour commencer."
           },
           "countdown": {
-            "instruction": "Starting in {{counter}}",
-            "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working correctly."
+            "instruction": "Début dans {{counter}}",
+            "note": "Ne bougez pas pendant la calibration ! Agissez comme si vous dormiez.\nBouger lors de la calibration peut empêcher le bon fonctionnement de la détection."
           },
           "calibrating": {
-            "instruction": "Calibrating",
-            "note": "Keep still.",
-            "countdown": "{{counter}} second(s) remaining..."
+            "instruction": "Calibration",
+            "note": "Restez statique.",
+            "countdown": "Il reste {{counter}} seconde(s)..."
           },
           "done": {
-            "instruction": "Calibration complete!",
-            "note": "You can now use this automation."
+            "instruction": "Calibration terminée!",
+            "note": "Vous pouvez maintenant profiter de la détection de sommeil."
           },
           "failed": {
-            "instruction": "Calibration failed",
-            "note": "Calibration could not complete successfully, likely due to your headset not reporting any data. Please make sure your headset is tracking and try again."
+            "instruction": "Calibration échouée",
+            "note": "La calibration ne s'est pas terminée correctement. Cela peut être dû à un mauvais transfert de données depuis le casque VR. Vérifiez que votre casque est bien détécté et réessayez"
           }
         },
         "enableForSleepDetector": {
-          "title": "Enable sleep mode",
-          "description": "With this feature enabled, Oyasumi will automatically enable sleep mode when it guesses you're asleep based on your movement.\n\nThis is still an experimental feature and may not yet work correctly.",
+          "title": "Activer le mode sommeil",
+          "description": "Avec cette fonctionnalité activée, Oyasumi activera automatiquement le mode sommeil lorsqu'il pense que vous dormez, en se basant sur vos mouvements.\n\nCeci est une fonctionnalité expérimentale et peut ne pas fonctionner correctement.",
           "calibration": {
             "title": "Calibration",
-            "description": "You need to calibrate at least once before you should try to use this feature.",
-            "action": "Calibrate"
+            "description": "Oyasumi doit être calibré avant de pouvoir utiliser cette fonctionnalité.",
+            "action": "Calibrer"
           },
           "sensitivity": {
-            "title": "Sensitivity",
-            "description": "How sensitive Oyasumi should be to your movement.",
+            "title": "Sebsibilité",
+            "description": "Sensibilité de détection de vous mouvements par Oyasumi.",
             "presets": {
-              "LOWEST": "Lowest",
-              "LOW": "Low",
-              "MEDIUM": "Medium",
-              "HIGH": "High",
-              "HIGHEST": "Highest"
+              "LOWEST": "Minimale",
+              "LOW": "Basse",
+              "MEDIUM": "Moyenne",
+              "HIGH": "Haute",
+              "HIGHEST": "Maximale"
             }
           },
           "sleepCheck": {
-            "title": "Before enabling sleep mode, ask if I am still awake",
-            "description": "Requires <a class=\"notificationSettingsLink\">notifications</a> to be enabled"
+            "title": "Me demander si je suis eveillé(e) avant d'activer le mode sommeil",
+            "description": "Nécessite d'activer les <a class=\"notificationSettingsLink\">notifications</a>"
           }
         },
         "enableAtTime": {
-          "title": "Enable sleep mode",
-          "description": "Enable sleep mode at a specific time of day.",
-          "time": "Time"
+          "title": "Activer le mode sommeil",
+          "description": "Activer le mode sommeil à une heure spécifique.",
+          "time": "Heure"
         },
         "disableAtTime": {
-          "title": "Disable sleep mode",
-          "description": "Disable sleep mode at a specific time of day.",
-          "time": "Time"
+          "title": "Désactiver le mode sommeil",
+          "description": "Désactiver le mode sommeil à une heure spécifique.",
+          "time": "Heure"
         },
         "disableOnDevicePowerOn": {
-          "title": "Disable sleep mode",
-          "whenTurningOn": "When turning on a",
-          "Controller": "Controller",
+          "title": "Désactiver le mode sommeil",
+          "whenTurningOn": "Lorsque j'allume un",
+          "Controller": "Contrôleur",
           "GenericTracker": "Tracker"
         },
         "enableAtBatteryPercentage": {
-          "title": "Enable sleep mode",
-          "whenA": "When a",
-          "Controller": "Controller",
+          "title": "Activer le mode sommeil",
+          "whenA": "Quand un",
+          "Controller": "Contrôleur",
           "GenericTracker": "Tracker",
-          "fallsBelow": "Falls below",
+          "fallsBelow": "Se décharge sous",
           "errors": {
-            "thresholdOutOfRange": "The percentage has to be between 0% and 100%.",
-            "thresholdNotInteger": "The percentage value has to be a whole number."
+            "thresholdOutOfRange": "Le pourcentage doit être entre 0% et 100%.",
+            "thresholdNotInteger": "Le pourcentage doit être un nombre entier."
           }
         }
       }
