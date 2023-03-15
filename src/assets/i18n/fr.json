@@ -188,22 +188,22 @@
       }
     },
     "battery-automations": {
-      "title": "Battery Automations",
+      "title": "Automatisations de batterie",
       "devicePowerOff": {
-        "title": "Turning off devices",
-        "description": "Various automations for turning off your SteamVR devices.",
+        "title": "Éteindre tous mes appareils",
+        "description": "Diverses automatisations pour éteindre tous les appareils SteamVR.",
         "onSleepModeEnable": {
-          "title": "When I go to sleep",
-          "description": "Turn off devices when sleep mode is enabled.",
-          "optionControllers": "Turn off all controllers",
-          "optionTrackers": "Turn off all trackers",
-          "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>."
+          "title": "Quand je vais dormir",
+          "description": "Éteindre tous mes appareils lorsque le mode sommeil est activé.",
+          "optionControllers": "Éteindre tous les contrôleurs",
+          "optionTrackers": "Éteindre tous les trackers",
+          "hint": "Vous pouvez configurer l'activation du mode sommeil avec la <a class=\"sleepDetectionLink\">détection de sommeil</a>."
         },
         "onCharge": {
-          "title": "When charging them",
-          "description": "Have devices turn off automatically when you put them on the charger.",
-          "optionControllers": "Turn off controllers",
-          "optionTrackers": "Turn off trackers"
+          "title": "Lors de la recharge",
+          "description": "Éteindre les appareils lorsqu'ils sont en charge.",
+          "optionControllers": "Éteindre les contrôleurs",
+          "optionTrackers": "Éteindre les contrôleurs"
         }
       }
     },
