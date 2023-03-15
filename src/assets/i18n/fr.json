@@ -138,51 +138,51 @@
       }
     },
     "oscAutomations": {
-      "title": "OSC Automations",
+      "title": "Automatisations OSC",
       "tab": {
-        "sleepingAnimations": "Sleeping Animations"
+        "sleepingAnimations": "Animations de sommeil"
       },
       "sleepingAnimations": {
-        "currentPose": "Current Position",
-        "manualControl": "Manual Control",
-        "presetAuthor": "by {{author}}",
-        "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
-        "enable": "Enable automatic sleeping animations",
-        "customPreset": "Custom Animations",
+        "currentPose": "Position actuelle",
+        "manualControl": "Contrôle manuel",
+        "presetAuthor": "par {{author}}",
+        "description": "Oyasumi peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour plusieurs prefabs de locomotion pour votre avatar, mais vous pouvez également spéficier vos propres animations.",
+        "enable": "Activer automatiquement les animations de sommeil",
+        "customPreset": "Animations custom",
         "errors": {
-          "releaseDurationTooShort": "The release duration has to be at least 100ms.",
-          "releaseDurationTooLong": "The release duration cannot exceed 5000ms."
+          "releaseDurationTooShort": "La durée de dévérouillage doit être d'au moins 100ms.",
+          "releaseDurationTooLong": "La durée de dévérouillage ne peut être supérieure à 5000ms."
         },
         "options": {
           "positions": {
-            "title": "Sleeping Positions",
-            "description": "Set the OSC commands to activate the animation for each sleeping position.",
-            "SIDE_FRONT": "Upright",
-            "SIDE_BACK": "Back Side",
-            "SIDE_LEFT": "Left Side",
-            "SIDE_RIGHT": "Right Side",
-            "UNKNOWN": "Unknown"
+            "title": "Positions de sommeil",
+            "description": "Assigne les commandes OSC activant l'animation pour chaque position de sommeil.",
+            "SIDE_FRONT": "Droit",
+            "SIDE_BACK": "Sur le dos",
+            "SIDE_LEFT": "Sur le côté gauche",
+            "SIDE_RIGHT": "Sur le côté droit",
+            "UNKNOWN": "Inconnu"
           },
           "footLock": {
-            "title": "Foot Lock",
-            "description": "Set the OSC commands to enable and disable the foot lock.",
-            "FOOT_LOCK": "Enable Foot Lock",
-            "FOOT_UNLOCK": "Disable Foot Lock"
+            "title": "Verrouillage du pied",
+            "description": "Assigne les commandes OSC pour activer ou désactiver le verrouillage du pied.",
+            "FOOT_LOCK": "Activer le verrouillage du pied",
+            "FOOT_UNLOCK": "Désactiver le verrouillage du pied"
           },
           "general": {
-            "title": "General Options",
-            "onlySwitchAnimations": "Only switch animations",
-            "onlyIfSleepModeEnabled": "If sleep mode is enabled",
-            "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
+            "title": "Options générales",
+            "onlySwitchAnimations": "Ne changer les animations seulement",
+            "onlyIfSleepModeEnabled": "Si le mode sommeil est activé",
+            "onlyIfAllTrackersTurnedOff": "Si tous les trackers sont hors tension",
             "footLock": {
-              "title": "Foot Lock",
-              "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled."
+              "title": "Verrouillage du pied",
+              "description": "Un verrouillage du pied peut prévenir les mouvements ou rotations du joueur lorsque activé."
             },
-            "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
-            "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled",
-            "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
-            "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
-            "footLockReleaseWindow": "Foot lock release duration"
+            "lockFeetOnSleepModeEnable": "Verrouiller les pieds lorsque le mode sommeil est activé",
+            "unlockFeetOnSleepModeDisable": "Dévérrouiller les pieds lorsque le mode sommeil est désactivé",
+            "unlockFeetOnAutomationDisable": "Dévérrouiller les pieds lorsque les animations de sommeil automatiques sont désactivées.",
+            "releaseFootLockOnPoseChange": "Dévérrouiller temporairement le pied lors du changement de l'animation de sommeil",
+            "footLockReleaseWindow": "Durée de dévérouillage"
           }
         }
       }
