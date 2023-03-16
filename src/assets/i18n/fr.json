@@ -282,28 +282,28 @@
       }
     },
     "status-automations": {
-      "title": "Status Automations",
-      "enable": "Enable Status Automations",
-      "description": "Oyasumi can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
-      "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
-      "disableToEdit": "Please disable status automations before you make any changes.",
-      "playerLimit": "Player Limit",
+      "title": "Automatisations de statut",
+      "enable": "Activer les automatisations de statut",
+      "description": "Oyasumi peut limiter le nombre de personnes vous rejoignant en changeant votre statut\n      basé sur le nombre de joueurs dans votre instance.",
+      "exampleUse": "Exemple: Lorsque quelqu'un vous rejoint, votre statut sera changé d'orange à rouge.\n Lorsqu'une personne quitte votre instance et vous vous retrouvez seul(e), votre statut sera automatiquement changé en bleu pour que quelqu'un d'autre puisse vous rejoindre.",
+      "disableToEdit": "Merci de désactiver les automatisations de statut avant tout changement.",
+      "playerLimit": "Limite de joueurs",
       "playerLimitLabel": {
-        "singular": "{{count}} player (including you)",
-        "plural": "{{count}} players (including you)"
+        "singular": "{{count}} joueur (vous inclus)",
+        "plural": "{{count}} joueurs (vous inclus)"
       },
       "belowLimit": {
-        "title": "Below the limit",
-        "description": "Set your status to"
+        "title": "Sous la limite",
+        "description": "Changer votre statut pour"
       },
       "atLimitOrAbove": {
-        "title": "At the limit or above",
-        "description": "Set your status to"
+        "title": "A la limite ou au delà",
+        "description": "Changer votre statut pour"
       },
-      "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
-      "behaviourWarning": "Status changes by Oyasumi are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by Oyasumi.",
-      "moreInfo": "More info",
-      "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have Oyasumi set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu."
+      "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
+      "behaviourWarning": "Les changement de statut par Oyasumi ne sont pas visibles par le joueur. Même pour les autres joueurs, il peut y avoir un délai avant la mise à jour du statu. Cela est dû à une limitation de VRChat et ne peut pas être corrigé par Oyasumi.",
+      "moreInfo": "Plus d'informations",
+      "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les requêtes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si Oyasumi change votre statut à 'bleu' (join me), le programme prendra la responsabilité et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
     },
     "auto-invite-request-accept": {
       "title": "Auto Accept Invite Requests",
