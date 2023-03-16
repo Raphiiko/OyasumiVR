@@ -208,75 +208,75 @@
       }
     },
     "gpu-automations": {
-      "title": "GPU Automations",
+      "title": "Automatisations du GPU",
       "disabled": {
-        "disabled": "Oyasumi has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
-        "noSidecar": "In order for Oyasumi to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give Oyasumi administrator privileges."
+        "disabled": "Oyasumi peut automatiser votre carte graphique de nombreuses façons.\nCela permet d'économiser de l'énergie pendant votre sommeil.\n\nCette fonctionnalité est avancée, et donc désactivée par défaut.\nVous pouvez l'activer en cliquant sur le bouton ci-dessous",
+        "noSidecar": "Pour permettre le changement des paramètres de votre GPU, Oyasumi requiert les droits administrateurs. Vous pouvez donner les privilèges administrateur à Oyasumi en cliquant sur le bouton ci-dessous."
       },
       "tabs": {
-        "powerLimiting": "Power Limiting",
+        "powerLimiting": "Economie d'énergie",
         "msiAfterburner": "MSI Afterburner"
       },
-      "requestAdministrator": "Give Administrator Privileges",
-      "disable": "Disable GPU Automations",
-      "enable": "Enable GPU Automations",
-      "automations": "Sleep Automations",
-      "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
+      "requestAdministrator": "Donner les droits administrateur",
+      "disable": "Désactiver les automatisations GPU",
+      "enable": "Activer les automatisations GPU",
+      "automations": "Automatisations de sommeil",
+      "enableWarning": "Un mauvais paramétrage du GPU peut entrainer une instabilité de votre système. Merci d'agir en connaissance de cause.",
       "elevationSidecarModal": {
-        "title": "Give administrator privileges",
-        "message": "Do you want to always give Oyasumi administrator privileges?\n\nIf you enable this, Oyasumi will immediately ask for them when starting. You can disable this later at any time in the settings.",
-        "confirm": "Always",
-        "cancel": "Only this once"
+        "title": "Donner les droits administrateur",
+        "message": "Voulez-vous donner les privilèges administrateur à Oyasumi de manière permanente ?\n\n Si vous activez ceci, Oyasumi les demandera lors du démarrage. Vous pouvez désactiver ceci plus tard dans les paramètres.",
+        "confirm": "Toujours",
+        "cancel": "Seulement cette fois"
       },
       "powerLimiting": {
         "disabled": {
-          "initializing": "Power limiting automations are being initialized...",
-          "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({{code}})",
-          "noPermission": "Although Oyasumi has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
-          "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting Oyasumi.",
-          "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting Oyasumi."
+          "initializing": "Initialisation de l'économie d'énergie...",
+          "noNvidia": "L'économie d'énergie est indisponible car nous ne détéctons pas de pilote NVIDIA. L'économie d'énergie n'est disponible que sur les cartes NVIDIA.\n\nSi vous avez un GPU NVIDIA, vérifiez l'installation des derniers pilotes graphiques.\n\n({{code}})",
+          "noPermission": "Oyasumi a les droits administrateurs mais ne semble pas avoir la permission de changer vos paramètres GPU.\n\nCeci ne devrait pas arriver, merci de vérifier votre configuration système.",
+          "noSidecar": "Pour une raison inconnue, les droits administrateur n'ont pas pu être transférés.\n Ils sont nécéssaires pour contrôler la consommation de votre GPU.\n\nMerci de redémarrer Oyasumi et réessayer.",
+          "unknown": "L'économie d'énergie est indisponible pour une raison inconnue.\n\nMerci de redémarrer Oyasumi et réessayer."
         },
-        "noGPUSelected": "No GPU Selected",
-        "gpuUnsupported": "GPU Unsupported",
-        "noGPUs": "No NVIDIA GPUs could be found in your system.",
-        "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
-        "selectGPU": "Select the GPU you wish to set the power limit for:",
-        "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
-        "currentPowerLimit": "Current Power Limit",
+        "noGPUSelected": "Aucun GPU sélectionné",
+        "gpuUnsupported": "GPU non pris en charge",
+        "noGPUs": "Aucun GPU NVIDIA n'a pu être trouvé dans votre système",
+        "description": "Vous pouvez gérer la consommation de votre GPU afin d'économiser de l'énergie pendant votre sommeil. Cette fonctionnaltié n'est disponible que sur les cartes NVIDIA.",
+        "selectGPU": "Choisissez le GPU sur lequel appliquer l'économie d'énergie:",
+        "gpuPowerLimitsUnsupported": "Le GPU sélectionné ne supporte pas la limitation de consommation.",
+        "currentPowerLimit": "Limite de consommation actuelle",
         "activatingSleepMode": {
-          "title": "When I go to sleep",
-          "description": "Specify the power limit to set when sleep mode activates"
+          "title": "Quand je vais dormir",
+          "description": "Spécifiez la limite de consommation lorsque le mode sommeil est activé"
         },
         "deactivatingSleepMode": {
-          "title": "When I wake up",
-          "description": "Specify the power limit to set when sleep mode deactivates"
+          "title": "Quand je me réveille",
+          "description": "Spécifiez la limite de consommation lors du réveil"
         },
-        "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
-        "inputDefault": "Reset to the GPU's default limit."
+        "enabledWarning": "Attention, trop limiter la consommation peut rendre votre système instable. Désactivez cette fonctionnalité si vous n'êtes pas sûr(e) de ce que vous faites.",
+        "inputDefault": "Restaurer la limite de consommation par défaut."
       },
       "msiAfterburner": {
-        "description": "Oyasumi can automatically tweak your GPU settings when you go to sleep or wake up, by applying profiles you've created in MSI Afterburner. A use case for this functionality is to save electricity while you are asleep, and regain GPU power when you wake up.<br><br>You have to set up the profiles you want to apply in MSI Afterburner.<br>You can download MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">here</a>.",
+        "description": "Oyasumi peut automatiquement appliquer des profils MSI Afterburner lorsque vous aller dormir ou lors du réveil. Un cas d'utilisation de cette fonctionnalité est d'économiser de l'énergie pendant votre sommeil, et regagner de la puissance GPU lors du réveil.<br><br>Vous devez paramétrer les profils que vous voulez appliquer dans MSI Afterburner.<br>Vous pouvez télécharger MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ici</a>.",
         "sleepModeEnable": {
-          "title": "When sleep mode is enabled",
-          "description": "Apply the following MSI Afterburner profile"
+          "title": "Lors de l'activation du mode sommeil",
+          "description": "Appliquer le profil MSI Afterburner suivant"
         },
         "sleepModeDisable": {
-          "title": "When sleep mode is disabled",
-          "description": "Apply the following MSI Afterburner profile"
+          "title": "Lorsque de la désactivation du mode sommeil",
+          "description": "Appliquer le profil MSI Afterburner suivant"
         },
-        "profile": "Profile {{index}}",
-        "none": "None",
-        "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+        "profile": "Profil {{index}}",
+        "none": "Aucun",
+        "enabledWarning": "Attention, une mauvaise configuration du GPU peut rendre votre système instable. Désactivez cette fonctionnalité si vous n'êtes pas sûr(e) de ce que vous faites.",
         "executable": {
           "title": "Configuration",
-          "description": "Oyasumi needs to know about the location of your <strong>MSIAfterburner.exe</strong> executable.\nIf Oyasumi cannot find it in the default location, you need to set where it can be found.",
+          "description": "Oyasumi doit connaître l'emplacement de l'exécutable <strong>MSIAfterburner.exe</strong>.\nSi Oyasumi ne peut pas trouver l'emplacement par défaut, merci de le spécifier.",
           "status": {
-            "CHECKING": "Checking for valid <strong>MSIAfterburner.exe</strong>",
-            "NOT_FOUND": "The <strong>MSIAfterburner.exe</strong> could not be found at this location.",
-            "INVALID_EXECUTABLE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified as working.",
-            "INVALID_SIGNATURE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified to come from MSI. For security reasons it cannot be used. Please make sure you are using the latest version of MSI Afterburner. If the problem persists or you are sure this is correct, please contact Oyasumi's developer or submit a bug report.",
-            "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>MSIAfterburner.exe</strong> at this location.",
-            "SUCCESS": "<strong>MSIAfterburner.exe</strong> has been found and is working correctly!"
+            "CHECKING": "Validation de l'exécutable <strong>MSIAfterburner.exe</strong>",
+            "NOT_FOUND": "<strong>MSIAfterburner.exe</strong> n'a pas pu être trouvé à cet emplacement.",
+            "INVALID_EXECUTABLE": "L'exécutable <strong>MSIAfterburner.exe</strong> de cet emplacement n'a pas pu être vérifié.",
+            "INVALID_SIGNATURE": "L'authenticité du fichier <strong>MSIAfterburner.exe</strong> n'a pas pu être validé. Pour des raisons de sécurité, nous ne pouvons pas l'utiliser. Merci de vérifier que vous utilisez la dernière version de MSI Afterburner. Si le problème persiste, merci de contacter le développeur d'Oyasumi ou de soumettre un ticket de bug report.",
+            "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>MSIAfterburner.exe</strong> à cet emplacement.",
+            "SUCCESS": "<strong>MSIAfterburner.exe</strong> a été trouvé et fonctionne correctement !"
           }
         }
       }
