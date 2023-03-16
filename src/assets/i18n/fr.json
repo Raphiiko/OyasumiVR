@@ -303,45 +303,45 @@
       "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
       "behaviourWarning": "Les changement de statut par Oyasumi ne sont pas visibles par le joueur. Même pour les autres joueurs, il peut y avoir un délai avant la mise à jour du statu. Cela est dû à une limitation de VRChat et ne peut pas être corrigé par Oyasumi.",
       "moreInfo": "Plus d'informations",
-      "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les requêtes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si Oyasumi change votre statut à 'bleu' (join me), le programme prendra la responsabilité et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
+      "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si Oyasumi change votre statut à 'bleu' (join me), le programme prendra la responsabilité et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
     },
     "auto-invite-request-accept": {
-      "title": "Auto Accept Invite Requests",
-      "description": "Oyasumi can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
-      "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
-      "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-      "whitelist": "Player Whitelist",
-      "blacklist": "Player Blacklist",
-      "noPlayersAdded": "No players are currently added to the list.",
-      "addFriends": "Add Friends",
-      "clearPlayers": "Clear Players",
+      "title": "Accepter les demandes d'invitation automatiquement",
+      "description": "Oyasumi peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
+      "userOnBusyStatus": "Vous ne pouvez pas accepter que les demandes d'invitation quand votre statut est busy (rouge).",
+      "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres Oyasumi, car votre statut est 'join me' (bleu).",
+      "whitelist": "Liste blanche",
+      "blacklist": "Liste noire",
+      "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
+      "addFriends": "Ajouter des amis",
+      "clearPlayers": "Vider la liste",
       "removeModal": {
-        "title": "Confirm Removal",
-        "message": "Are you sure you want to remove '{{name}}' from your list?"
+        "title": "Confirmer la suppression",
+        "message": "Voulez vous supprimer '{{name}}' de votre liste?"
       },
       "options": {
         "enable": {
-          "title": "Enable",
-          "description": "Automatically accept invite requests from friends."
+          "title": "Activer",
+          "description": "Accepter automatiquement les demandes de vos amis."
         },
         "onlyIfSleepModeEnabled": {
-          "title": "Only when sleep mode is enabled"
+          "title": "Seulement quand le mode sommeil est actif."
         },
         "listMode": {
-          "title": "List Mode",
-          "description": "How the player list operates",
+          "title": "Mode liste",
+          "description": "Comment la liste de joueurs fonctionne",
           "options": {
             "DISABLED": {
-              "label": "Disabled",
-              "subLabel": "Accept from everyone"
+              "label": "Désactivé",
+              "subLabel": "Accepter les requêtes de tout le monde"
             },
             "WHITELIST": {
-              "label": "Whitelist",
-              "subLabel": "Accept from friends on the list"
+              "label": "Liste blanche",
+              "subLabel": "Accepter les requêtes des amis de cette liste"
             },
             "BLACKLIST": {
-              "label": "Blacklist",
-              "subLabel": "Accept from friends not on the list"
+              "label": "Liste noire",
+              "subLabel": "Accepter les requêtes des amis qui ne sont pas membres de cette liste."
             }
           }
         }
