@@ -348,154 +348,154 @@
       }
     },
     "settings": {
-      "title": "Settings",
+      "title": "Paramètres",
       "tab": {
-        "general": "General",
+        "general": "Général",
         "vrchat": "VRChat",
         "notifications": "Notifications",
-        "updates": "Updates",
-        "debug": "Debug"
+        "updates": "Mises à jour",
+        "debug": "Débogage"
       },
       "general": {
         "language": {
-          "title": "Language",
-          "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!"
+          "title": "Langue",
+          "description": "Vous pouvez choisir la langue de l'interface ci-dessous. S'il manque des traductions ou si vous voulez traduire Oyasumi dans votre propre langue, n'hésitez pas à nous contacter."
         },
         "lighthouseConsole": {
           "title": "Lighthouse Console",
-          "description": "Oyasumi needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf Oyasumi cannot find it in the default location, you need to set where it can be found.",
+          "description": "Oyasumi a besoin de l'emplacement de <strong>lighthouse_console.exe</strong>, dans le dossier d'installation de SteamVR.\nSi Oyasumi ne peut pas trouver l'emplacement par défaut, vous devrez le spécifier manuellement.",
           "status": {
-            "NOT_FOUND": "The <strong>lighthouse_console.exe</strong> could not be found at this location.",
-            "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
-            "PERMISSION_DENIED": "Oyasumi does not have permission to run the <strong>lighthouse_console.exe</strong> at this location. Try running Oyasumi as administrator.",
-            "INVALID_FILENAME": "The set location is not a valid file path.",
-            "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>lighthouse_console.exe</strong> at this location.",
-            "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
-            "SUCCESS": "<strong>lighthouse_console.exe</strong> has been found and is working correctly!"
+            "NOT_FOUND": "<strong>lighthouse_console.exe</strong> n'a pas pu être trouvé à cet emplacement.",
+            "INVALID_EXECUTABLE": "Le fonctionnement du fichier <strong>lighthouse_console.exe</strong> de cet emplacement n'a pas pu être vérifié.",
+            "PERMISSION_DENIED": "Oyasumi n'a pas la permission d'exécuter le fichier <strong>lighthouse_console.exe</strong> à cet emplacement. Merci d'exécuter Oyasumi en mode administrateur.",
+            "INVALID_FILENAME": "Le chemin d'accès est invalide.",
+            "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>lighthouse_console.exe</strong> à cet emplacement",
+            "CHECKING": "Vérification de <strong>lighthouse_console.exe</strong>",
+            "SUCCESS": "Un fichier <strong>lighthouse_console.exe</strong> valide a été trouvé!"
           }
         },
         "adminPrivileges": {
-          "title": "Administrator Privileges",
-          "label": "Ask for administrator privileges on startup",
-          "description": "Oyasumi needs administrator privileges to be able to control your GPU's power limits. If you enable this, Oyasumi will ask for administrator privileges when it starts up."
+          "title": "Droits administrateur",
+          "label": "Demander les droits administrateurs au démarrage",
+          "description": "Oyasumi a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme."
         },
         "telemetry": {
-          "title": "Telemetry",
-          "label": "Send anonymous usage data",
-          "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
+          "title": "Télémétrie",
+          "label": "Envoyer des données d'utilisation anonymes",
+          "description": "Les données envoyées seront limitées à la version d'Oyasumi que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques."
         }
       },
       "vrchat": {
         "logIn": {
-          "title": "Log in",
-          "description": "Some Oyasumi features require you to log in with your VRChat account for them to work.",
+          "title": "Connexion",
+          "description": "Certaines fonctionnalités d'Oyasumi nécessitent d'être connecté à votre compte VRChat.",
           "loggedIn": {
-            "title": "Hi {{name}}!",
-            "subtext": "You are currently logged in with your VRChat account.",
-            "logOut": "Log out"
+            "title": "Bonjour {{name}}!",
+            "subtext": "Vous êtes actuellement connecté(e) à votre compte VRChat.",
+            "logOut": "Se déconnecter"
           },
           "loggedOut": {
-            "title": "Logged Out",
-            "subtext": "You are currently not logged in with your VRChat account.",
-            "logIn": "Log in"
+            "title": "Déconnecté(e)",
+            "subtext": "Vous êtes actuellement déconnecté(e) de votre compte VRChat.",
+            "logIn": "Se connecter"
           },
           "errors": {
-            "initError": "The VRChat module could not be initialised. Please ensure you have internet connectivity and restart Oyasumi at a later time to try again."
+            "initError": "Le module VRChat n'a pas pu être initialisé. Veuillez vérifier votre connexion internet ou réessayer ultérieurement."
           },
           "disclaimers": {
-            "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.",
-            "brand": "Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
-            "liability": "Raphiiko is not not responsible for any problems caused by Oyasumi. Use at your own risk!"
+            "use": "Vos informations de connexion ne sont pas stockées et sont uniquement envoyées à VRChat pour vous identifier.",
+            "brand": "Oyasumi n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
+            "liability": "Raphiiko n'est pas responsable des problèmes causés par Oyasumi. Utilisez ce programme à vos risques et périls!"
           }
         },
         "OSC": {
-          "title": "OSC Settings",
-          "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.",
-          "reset": "Reset to defaults",
+          "title": "Paramètres OSC",
+          "description": "Certaines fonctionnalités requièrent une connexion à VRChat via OSC. A moins d'avoir une raison spécifique, il est recommandé de ne pas modifier ces paramètres.",
+          "reset": "Réinitialiser les paramètres",
           "receivingHost": {
-            "title": "Receiving Host",
-            "description": "The host Oyasumi will listen OSC messages on.\n(VRChat sends to 127.0.0.1 by default)"
+            "title": "Hôte de réception",
+            "description": "L'adresse sur laquelle Oyasumi reçoit les messages OSC.\n(VRCHat envoie sur 127.0.0.1 par défaut)"
           },
           "receivingPort": {
-            "title": "Receiving Port",
-            "description": "The port number Oyasumi will listen for OSC messages on.\n(VRChat sends to port 9001 by default)"
+            "title": "Port de réception",
+            "description": "Le port sur lequel Oyasumi reçoit les messages OSC.\n(VRCHat envoie le port 9001 par défaut)"
           },
           "sendingHost": {
-            "title": "Sending Host",
-            "description": "The host Oyasumi will send OSC messages to.\n(If VRChat runs on the same machine, this is 127.0.0.1)"
+            "title": "Hôte d'envoi",
+            "description": "L'adresse sur laquelle Oyasumi envoie des messages OSC.\n(Si VRChat tourne sur la même machine, l'adresse sera 127.0.0.1)"
           },
           "sendingPort": {
-            "title": "Sending Port",
-            "description": "The port number Oyasumi will send OSC messages to.\n(VRChat listens on port 9000 by default)"
+            "title": "Port d'envoi",
+            "description": "Le port sur lequel Oyasumi envoie des messages OSC.\n(VRChat reçoit les messages par défaut sur le port 9000)"
           },
           "errors": {
-            "bindFailed": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
-            "invalidPort": "A port has to be a valid number between 1 and 65535.",
-            "samePort": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same.",
-            "invalidHost": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+            "bindFailed": "Cette adresse n'a pas pu être affectée. Il se peut qu'une autre application l'utilise déjà. Merci de fermer cette application et réessayer, ou choisir un autre hôte ou port de réception.",
+            "invalidPort": "Un port valide se situe entre 1 et 65535.",
+            "samePort": "Vous ne pouvez pas utiliser le même port pour l'envoi et la réception.",
+            "invalidHost": "L'hôte doit être un nom d'hôte, une adresse IPv4 ou IPv6 valide."
           }
         }
       },
       "notifications": {
         "providers": {
-          "title": "Notification Providers",
-          "description": "Some features are able or require to be able to send you notifications. Please select your preferred notification provider here.",
+          "title": "Fournisseurs de notifications",
+          "description": "Certaines fonctionnalités nécessitent de vous envoyer des notifications. Veuillez choisir votre fournisseur de notifications dans cette rubrique.",
           "xsoverlay": {
-            "title": "XSOverlay Notifications",
-            "description": "Use XSOverlay to bring Oyasumi notifications into VR."
+            "title": "Notifications XSOverlay",
+            "description": "Utiliser XSOverlay pour qu'Oyasumi vous envoie des notifications en VR."
           },
           "desktop": {
-            "title": "Desktop Notifications",
-            "description": "Use the default Windows desktop notifications. You can bring these into VR using an overlay like OVR Toolkit."
+            "title": "Notifications de bureau",
+            "description": "Utiliser les notifications de bureau Windows par défaut. Vous pouvez les transférer à la VR en utilisant des outils tels que OVR Toolkit."
           }
         }
       },
       "updates": {
-        "checkForUpdates": "Check for updates",
+        "checkForUpdates": "Rechercher des mises à jour",
         "changelog": "Changelog",
-        "install": "Install v{{version}}",
-        "noUpdate": "You are currently running Oyasumi v{{version}} which is the latest version!",
-        "notChecked": "Oyasumi did not check for updates yet.",
-        "updateAvailable": "A new version of Oyasumi is available! You are currently running v{{currentVersion}}.\nThe newest version is v{{latestVersion}}."
+        "install": "Installer v{{version}}",
+        "noUpdate": "Vous utilisez actuellement la dernière version d'Oyasumi (v{{version}}) !",
+        "notChecked": "Oyasumi n'a pas encore recherché de mises à jour.",
+        "updateAvailable": "Une nouvelle version d'Oyasumi est disponible! Vous utilisez actuellement la v{{currentVersion}}.\nLa nouvelle version est la v{{latestVersion}}."
       },
       "debug": {
-        "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
+        "description": "Cette page répertorie les outils de débogage. Vous ne devriez pas en avoir besoin, mais Oyasumi étant encore en version de test, vous pourrez les trouver dans cette rubrique.",
         "persistentStorage": {
-          "title": "Persistent Storage",
-          "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
-          "clearAllSettings": "Clear All Settings",
-          "clearAutomationSettings": "Clear Automation Settings",
-          "clearAppSettings": "Clear App Settings",
-          "clearCache": "Clear Cache",
-          "printSettings": "Log Settings"
+          "title": "Stockage des données",
+          "description": "Ces boutons permettent de nettoyer les données stockées par Oyasumi en cas de besoin.",
+          "clearAllSettings": "Supprimer tous les paramètres",
+          "clearAutomationSettings": "Supprimer les paramètres d'automatisation",
+          "clearAppSettings": "Supprimer les paramètres de l'application",
+          "clearCache": "Supprimer le cache",
+          "printSettings": "Supprimer les journaux"
         },
         "language": {
-          "title": "Language",
-          "description": "This option allows you to manually load a language file. This can be useful for testing new translations.",
-          "loadFile": "Load Language File"
+          "title": "Langue",
+          "description": "Cette option permet de manuellement choisir le fichier de langues. Cela est utile lors de l'implémentation de nouvelles langues.",
+          "loadFile": "Charger le fichier de langues"
         },
         "sleepingPose": {
-          "title": "Sleeping Pose"
+          "title": "Position de sommeil"
         },
         "sleepingDetection": {
-          "title": "Sleeping Detector Reports"
+          "title": "Rapports du détecteur de sommeil"
         }
       }
     },
     "about": {
       "author": {
-        "role": "Developer"
+        "role": "Développeur"
       },
-      "translations": "Translations",
-      "projectLinks": "Project Links",
-      "sourceLink": "Source Code @ GitHub",
-      "discordInvite": "Discord Server"
+      "translations": "Traductions",
+      "projectLinks": "Liens",
+      "sourceLink": "Code source @ GitHub",
+      "discordInvite": "Serveur discord"
     },
     "updater": {
       "modals": {
         "error": {
-          "title": "Update Failed",
-          "message": "The update failed to install. Please try again later."
+          "title": "Mise à jour échouée",
+          "message": "L'installation de la mise à jour a échouée. Veuillez réessayer ultérieurement."
         }
       }
     },
