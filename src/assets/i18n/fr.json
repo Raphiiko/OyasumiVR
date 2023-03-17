@@ -500,148 +500,148 @@
       }
     },
     "misc": {
-      "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
+      "GOGO_LOCO_LEGACY_PRESET_WARNING": "Ce preset peut mal fonctionner. Merci de l'utiliser si vous ne pouvez pas utiliser le nouveau preset de GoGo Loco. Si votre avatar utilise une ancienne version de GoGo Loco, il est recommandé de mettre à jour votre avatar pour utiliser la dernière version.",
       "oscScriptEditorErrors": {
-        "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
-        "durationTooShort": "Sleep duration must be at least 1ms.",
-        "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
-        "durationRequired": "Sleep duration is required.",
-        "totalDurationTooLong": "The total script duration cannot exceed 10 seconds.",
-        "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
-        "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
-        "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
-        "invalidSyntax": "Invalid syntax.",
-        "tooManyCommands": "An OSC script cannot have more than {{value}} actions.",
-        "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
-        "addressRequired": "An OSC address is required.",
-        "addressNotASCII": "A valid OSC address must only contain ASCII characters."
+        "noFloatMilliseconds": "Les valeurs en milisecondes doivent être un nombre entier.",
+        "durationTooShort": "La durée de sommeil doit être d'au moins 1ms.",
+        "durationTooLong": "La durée de sommeil ne peut être supérieure à 5 secondes.",
+        "durationRequired": "Merci de saisir une durée de sommeil.",
+        "totalDurationTooLong": "La durée totale du script ne peut dépasser 10 secondes.",
+        "intOutOfBounds": "La valeur doit être un entier valide entre 0 et 255.",
+        "floatOutOfBounds": "La valeur doit être un nombre réel valide entre -1 et 1.",
+        "floatTooPrecise": "La précision doit être d'au maximum 3 décimales.",
+        "invalidSyntax": "Syntaxe invalide",
+        "tooManyCommands": "Un script OSC ne peut avoir plus de {{value}} actions.",
+        "addressNoSlash": "Une adresse OSC valide doit commencer par un '/'.",
+        "addressRequired": "Une adresse OSC est requise.",
+        "addressNotASCII": "Une adresse OSC valide n'est composée que de symboles ASCII."
       }
     },
     "notifications": {
       "sleepCheck": {
         "title": "Oyasumi",
-        "content": "Sleep mode will be enabled in 20 seconds. Are you asleep?\n\n(Shake your head to cancel)"
+        "content": "Le mode sommeil s'activera dans 20 secondes. Dormez-vous ?\n\n(Hochez la tête pour annuler)"
       },
       "sleepCheckCancel": {
         "title": "Oyasumi",
-        "content": "Automatic enabling of sleep mode has been cancelled."
+        "content": "L'activation automatique du mode sommeil a été désactivée."
       },
       "sleepModeEnabled": {
         "title": "Oyasumi",
-        "content": "Sleep mode has been enabled."
+        "content": "Mode sommeil est activé."
       },
       "sleepModeDisabled": {
         "title": "Oyasumi",
-        "content": "Sleep mode has been disabled."
+        "content": "Mode sommeil désactivé."
       }
     },
     "comp": {
       "main-status-bar": {
-        "sleepMode": "Sleep Mode",
-        "active": "Active",
-        "inactive": "Inactive",
-        "loggedOut": "Logged out",
+        "sleepMode": "Mode sommeil",
+        "active": "Actif",
+        "inactive": "Inactif",
+        "loggedOut": "Décionnecté",
         "steamvr": {
-          "INACTIVE": "Inactive",
-          "INITIALIZING": "Waiting",
-          "INITIALIZED": "Active"
+          "INACTIVE": "Inactif",
+          "INITIALIZING": "En attente",
+          "INITIALIZED": "Actif"
         }
       },
       "confirm-modal": {
-        "defaultTitle": "Confirm"
+        "defaultTitle": "Confirmer"
       },
       "update-modal": {
-        "title": "Update Available",
-        "updateNow": "Install v{{version}}",
-        "updateLater": "Not now",
-        "message": "A new update for Oyasumi has been found: v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
+        "title": "Mise à jour disponible",
+        "updateNow": "Installer la v{{version}}",
+        "updateLater": "Plus tard",
+        "message": "Une nouvelle mise à jour d'Oyasumi est disponible : v{{newVersion}}.\n\nVous utilisez actuellement la v{{currentVersion}}.\n\nVoulez-vous effectuer la mise à jour maintenant ou plus tard ?"
       },
       "select-box": {
-        "defaultPlaceholder": "Select..."
+        "defaultPlaceholder": "Sélectionner..."
       },
       "dashboard-navbar": {
-        "overview": "Overview",
-        "sleepDetection": "Sleep Detection",
-        "oscAutomations": "OSC Automations",
-        "batteryAutomations": "Battery Automations",
-        "gpuAutomations": "GPU Automations",
-        "statusAutomations": "Status Automations",
-        "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
-        "settings": "Settings",
-        "about": "About Oyasumi"
+        "overview": "Résumé",
+        "sleepDetection": "Détection de sommeil",
+        "oscAutomations": "Automatisations OSC",
+        "batteryAutomations": "Automatisations de la batterie",
+        "gpuAutomations": "Automatisations GPU",
+        "statusAutomations": "Automatisations de statut",
+        "autoInviteRequestAccept": "Acceptation automatique\nde demande",
+        "settings": "Paramètres",
+        "about": "A propos"
       },
       "device-list": {
-        "title": "Devices",
-        "turnOffAll": "ALL",
-        "noDevices": "No controllers or trackers detected.",
+        "title": "Appareils",
+        "turnOffAll": "TOUT",
+        "noDevices": "Aucun contrôleur ou tracker détecté.",
         "category": {
-          "Controller": "Controllers",
+          "Controller": "Contrôleurs",
           "GenericTracker": "Trackers",
-          "other": "Others"
+          "other": "Autres"
         }
       },
       "osc-script-modal": {
-        "title": "OSC Script",
+        "title": "Script OSC",
         "simple": "Simple",
         "script": "Script"
       },
       "osc-script-code-editor": {
-        "title": "OSC Script Editor",
-        "syntaxGuide": "Syntax Guide",
+        "title": "Editeur de script OSC",
+        "syntaxGuide": "Guide de syntaxe",
         "format": "Format",
         "test": "Test"
       },
       "osc-script-simple-editor": {
         "commandCounter": {
-          "singular": "{{value}} Command",
-          "plural": "{{value}} Commands"
+          "singular": "{{value}} commande",
+          "plural": "{{value}} commandes"
         },
         "errorCounter": {
-          "singular": "{{value}} Validation Error",
-          "plural": "{{value}} Validation Errors"
+          "singular": "{{value}} Erreur de validation",
+          "plural": "{{value}} Erreurs de validation"
         },
-        "addCommand": "Add",
+        "addCommand": "Ajouter",
         "test": "Test",
         "action": {
           "osc": "OSC",
-          "sleep": "Sleep",
-          "none": "No actions have been added yet!"
+          "sleep": "Sommeil",
+          "none": "Aucune action n'a encore été ajoutée!"
         },
         "commands": {
           "COMMAND": {
-            "title": "OSC Command",
-            "description": "Execute an OSC command"
+            "title": "Commande OSC",
+            "description": "Exécuter une commande OSC"
           },
           "SLEEP": {
-            "title": "Sleep",
-            "description": "Wait for a specified amount of time"
+            "title": "Sommeil",
+            "description": "Attendre pendant une période définie."
           }
         }
       },
       "vrchat-login-modal": {
-        "title": "Log in to VRChat",
-        "username": "VRChat Username/E-mail",
-        "password": "Password",
+        "title": "Connexion à VRChat",
+        "username": "Nom d'utilisateur/E-mail VRChat",
+        "password": "Mot de passe",
         "errors": {
-          "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
-          "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
-          "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+          "CHECK_EMAIL": "Connexion échouée : Pour plus de détails, veuillez de consulter vos emails en lien avec VRChat.",
+          "INVALID_CREDENTIALS": "Les identifiants de connexion sont incorrects.",
+          "UNEXPECTED_RESPONSE": "Connexion échouée : une erreur inconnue est survenue. Veuillez vérifier votre connexion ou réessayer ultérieurement.."
         }
       },
       "vrchat-login-tfa-modal": {
-        "title": "Two Factor Authentication",
-        "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
+        "title": "Autentification à deux facteurs",
+        "description": "Votre compte VRChat est protégé par une authentification à deux facteurs.\n\nVeuillez saisir le code :",
         "errors": {
-          "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect.",
-          "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input."
+          "LAST_CODE_INVALID": "Le code d'identification est invalide.",
+          "INVALID_FORMAT": "Le code d'identification doit être une séquence de 6 chiffres. Veuillez réessayer."
         }
       },
       "friend-selection-modal": {
-        "title": "Select Friends",
-        "searchPlaceholder": "Search friend by name...",
-        "noFriendsSelected": "No friends selected",
-        "noResultsFor": "No results for '{{query}}'",
-        "noFriends": "Your friends list is empty"
+        "title": "Sélectionner des amis",
+        "searchPlaceholder": "Sélectionner un ami par nom...",
+        "noFriendsSelected": "Aucun ami sélectionné",
+        "noResultsFor": "Aucun résultat pour '{{query}}'",
+        "noFriends": "Votre liste d'amis est vide"
       }
     }
   }
