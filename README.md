@@ -175,7 +175,7 @@ Some features of Oyasumi require you to log in with your VRChat account for them
 This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
 Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.
 
-Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRCHat inc. VRChat © VRChat Inc.
+Oyasumi isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRChat inc. VRChat © VRChat Inc.
 
 The Oyasumi developer and any of this project's contributors are not responsible for any problems caused by Oyasumi (to your VRChat account or otherwise). Use at your own risk.
 
