@@ -62,7 +62,7 @@ jobs:
             src-elevated-sidecar
             src-tauri
       - name: Delete new development release and tag if they exist
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         continue-on-error: true
         with:
           delete_release: true
