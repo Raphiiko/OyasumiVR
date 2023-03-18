@@ -106,7 +106,7 @@ jobs:
             })
             return release.data.id
       - name: Delete current development release and tag if they exist
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         continue-on-error: true
         with:
           delete_release: true # default: false
@@ -130,7 +130,7 @@ jobs:
               tag_name: "oyasumi-vDEV"
             })
       - name: Delete temporary development tag
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        uses: dev-drprasad/delete-tag-and-release@v0.2.1
         with:
           tag_name: oyasumi-vDEV-new
         env:
