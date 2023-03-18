@@ -20,3 +20,10 @@ features = ["Win32_UI_Shell", "Win32_Foundation"]
 [dependencies.winapi]
 version = "0.3.9"
 features = ["handleapi", "processthreadsapi", "winnt", "securitybaseapi", "impl-default"]
+
+[profile.release]
+panic = "abort" # Strip expensive panic clean-up logic
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true # Enables link to optimizations
+opt-level = "s" # Optimize for binary size
+strip = true # Remove debug symbols

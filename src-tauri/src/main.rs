@@ -13,10 +13,8 @@ use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
 use std::{net::UdpSocket, sync::Mutex};
-use tauri::Manager;
-use tauri_plugin_fs_extra::FsExtra;
-use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
-use tauri_plugin_store::PluginBuilder;
+use tauri::{Manager, SystemTray, SystemTrayEvent};
+use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 mod commands {
     pub mod admin;
@@ -56,11 +54,11 @@ lazy_static! {
 }
 
 fn main() {
-    tauri::Builder::default()
-        .plugin(PluginBuilder::default().build())
-        .plugin(FsExtra::default())
+    let app = tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::default().build())
+        .plugin(tauri_plugin_fs_extra::init())
         .plugin(
-            LoggerBuilder::default()
+            tauri_plugin_log::Builder::default()
                 .format(move |out, message, record| {
                     let format = time::format_description::parse(
                         "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -87,6 +85,28 @@ fn main() {
                 }
             }
         }))
+        .on_window_event(|event| match event.event() {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                event.window().hide().unwrap();
+                api.prevent_close();
+            }
+            _ => {}
+        })
+        .system_tray(
+            SystemTray::new()
+        )
+        .on_system_tray_event(|app, event| match event {
+            SystemTrayEvent::LeftClick {
+              position: _,
+              size: _,
+              ..
+            } => {
+              let window = app.get_window("main").unwrap();
+              window.show().unwrap();
+              window.set_focus().unwrap();
+            }
+            _ => (),
+        })
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -153,8 +173,9 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
-        ])
-        .run(tauri::generate_context!())
+        ]);
+
+    app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
 }
 
