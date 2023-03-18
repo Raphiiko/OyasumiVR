@@ -27,4 +27,8 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
     code: 'cn',
     label: '简体中文',
   },
+  {
+    code: 'fr',
+    label: 'Français',
+  },
 ];

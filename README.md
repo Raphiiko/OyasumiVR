@@ -116,6 +116,7 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
   - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
   - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+  - French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack))
 
 If you would like to help out with adding more languages and/or missing translations, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started!
 

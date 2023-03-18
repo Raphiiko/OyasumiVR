@@ -27,6 +27,8 @@ p {
   padding: 1em;
   cursor: pointer;
   transition: all 0.15s ease;
+  text-decoration: none;
+  color: var(--color-text-1);
 
   &:hover {
     transform: translateY(-1px);
@@ -52,6 +54,23 @@ p {
       height: 100%;
       background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0));
       transition: all 0.15s ease;
+    }
+  }
+
+  .flag-add {
+    font-size: 5em;
+    width: 80px;
+    height: 60px;
+    border: 0.05em solid var(--color-text-3);
+    color: var(--color-text-3);
+    border-radius: 0.125em;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    i.material-icons {
+      font-size: 0.75em;
     }
   }
 
