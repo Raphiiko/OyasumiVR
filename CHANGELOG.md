@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
+
 ## [1.5.1]
 
 ### Fixed
