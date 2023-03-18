@@ -414,7 +414,7 @@
         "reset": "Reset to defaults",
         "receivingHost": {
           "title": "Receiving Host",
-          "description": "The host Oyasumi will listen OSC messages on.\n(VRChat sends to 127.0.0.1 by default)"
+          "description": "The host Oyasumi will listen for OSC messages on.\n(VRChat sends to 127.0.0.1 by default)"
         },
         "receivingPort": {
           "title": "Receiving Port",
