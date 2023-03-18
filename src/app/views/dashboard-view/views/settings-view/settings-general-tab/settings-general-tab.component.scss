@@ -1,12 +1,13 @@
 @import '../settings-tab/settings-tab.component.scss';
 
 .settings-language {
-  width: 100%;
+  max-width: 100%;
   padding-bottom: 2em;
-  display: flex;
-  gap: 1em;
-  flex-wrap: wrap;
-  
+  display: inline-grid;
+  grid-gap: 0.5em 1em;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, 1fr);
+
   .radio-button-label {
     white-space: nowrap;
 
