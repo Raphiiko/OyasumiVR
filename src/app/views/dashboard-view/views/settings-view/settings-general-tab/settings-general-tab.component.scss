@@ -2,12 +2,11 @@
 
 .settings-language {
   width: 100%;
-  display: grid;
   padding-bottom: 2em;
-  grid-auto-flow: column;
-  grid-gap: 1em;
-  grid-auto-columns: min-content;
-
+  display: flex;
+  gap: 1em;
+  flex-wrap: wrap;
+  
   .radio-button-label {
     white-space: nowrap;
 
