@@ -264,15 +264,15 @@ export class AppModule {
     ]);
     await invoke('close_splashscreen');
     // Language selection modal
-    // this.appSettingsService.loadedDefaults
-    //   .pipe(filter((loadedDefaults) => loadedDefaults))
-    //   .subscribe(() => {
-    this.modalService
-      .addModal(LanguageSelectModalComponent, void 0, {
-        closeOnEscape: false,
-        closeOnClickOutside: false,
-      })
-      .subscribe();
-    // });
+    this.appSettingsService.loadedDefaults
+      .pipe(filter((loadedDefaults) => loadedDefaults))
+      .subscribe(() => {
+        this.modalService
+          .addModal(LanguageSelectModalComponent, void 0, {
+            closeOnEscape: false,
+            closeOnClickOutside: false,
+          })
+          .subscribe();
+      });
   }
 }
