@@ -156,6 +156,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::openvr::openvr_get_devices,
             commands::openvr::openvr_status,
+            commands::openvr::openvr_get_analog_gain,
+            commands::openvr::openvr_set_analog_gain,
             commands::os::run_command,
             commands::os::play_sound,
             commands::splash::close_splashscreen,

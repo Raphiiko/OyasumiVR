@@ -90,6 +90,7 @@ import { SleepModeForSleepDetectorAutomationService } from './services/sleep-det
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
+import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -213,7 +214,8 @@ export class AppModule {
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService
+    private inviteAutomationsService: InviteAutomationsService,
+    private brightnessControlService: BrightnessControlService
   ) {
     this.init();
   }
@@ -240,6 +242,8 @@ export class AppModule {
     await this.sidecarService.init().then(async () => {
       await this.nvmlService.init();
     });
+    // Initialize Brightness Control
+    await this.brightnessControlService.init();
     // Initialize automations
     await Promise.all([
       // GPU automations
