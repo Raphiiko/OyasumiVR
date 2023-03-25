@@ -8,17 +8,127 @@ import { NVMLService } from '../../services/nvml.service';
 import { ElevatedSidecarService } from '../../services/elevated-sidecar.service';
 import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+
+function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
+  return trigger(name, [
+    transition(':enter', [
+      style({
+        transform: root ? 'translateX(-100%)' : 'translateX(100%)',
+        opacity: 0,
+      }),
+      animate(
+        length,
+        style({
+          transform: 'translateX(0)',
+          opacity: 1,
+        })
+      ),
+    ]),
+    transition(':leave', [
+      style({
+        transform: 'translateX(0)',
+        opacity: 1,
+        position: 'absolute',
+        width: '100%',
+        top: 0,
+        left: 0,
+      }),
+      animate(
+        length,
+        style({
+          transform: root ? 'translateX(-100%)' : 'translateX(100%)',
+          opacity: 0,
+          width: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+        })
+      ),
+    ]),
+  ]);
+}
+
+function blurMenu(name = 'blurMenu', length = '.2s ease') {
+  return trigger(name, [
+    state(
+      'active',
+      style({
+        transform: 'translateX(0)',
+        filter: 'blur(0)',
+        width: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      })
+    ),
+    state(
+      'inactive',
+      style({
+        'pointer-events': 'none',
+        transform: 'translateX(-2.5em)',
+        width: '100%',
+        filter: 'blur(1em)',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+      })
+    ),
+    transition('inactive => active', [
+      style({
+        transform: 'translateX(-2.5em)',
+        filter: 'blur(1em)',
+      }),
+      animate(
+        length,
+        style({
+          transform: 'translateX(0)',
+          filter: 'blur(0)',
+        })
+      ),
+    ]),
+    transition('active => inactive', [
+      style({
+        transform: 'translateX(0)',
+        position: 'absolute',
+        width: '100%',
+        top: 0,
+        left: 0,
+        filter: 'blur(0)',
+      }),
+      animate(
+        length,
+        style({
+          transform: 'translateX(-2.5em)',
+          width: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          filter: 'blur(1em)',
+        })
+      ),
+    ]),
+  ]);
+}
+
+type SubMenu = 'GENERAL' | 'VRCHAT';
 
 @Component({
   selector: 'app-dashboard-navbar',
   templateUrl: './dashboard-navbar.component.html',
   styleUrls: ['./dashboard-navbar.component.scss'],
-  animations: [fade()],
+  animations: [
+    fade(),
+    // slideMenu('rootMenu', '.2s ease', true),
+    blurMenu('rootMenu', '.2s ease'),
+    slideMenu('subMenu', '.2s ease', false),
+  ],
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
   updateAvailable: Observable<boolean>;
+  subMenu: SubMenu = 'GENERAL';
 
   constructor(
     private settingsService: AppSettingsService,
@@ -27,7 +137,7 @@ export class DashboardNavbarComponent implements OnInit {
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
-    private router: Router
+    protected router: Router
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
     this.settingErrors = combineLatest([
@@ -94,5 +204,20 @@ export class DashboardNavbarComponent implements OnInit {
     if (this.logoClicked++ > 5) {
       this.router.navigate(['/sleepDebug']);
     }
+  }
+
+  openSubMenu(subMenu: SubMenu) {
+    this.subMenu = subMenu;
+  }
+
+  pathIsActive(strings: string[]): boolean {
+    return strings.some((s) =>
+      this.router.isActive('/dashboard/' + s, {
+        matrixParams: 'ignored',
+        queryParams: 'ignored',
+        paths: 'subset',
+        fragment: 'ignored',
+      })
+    );
   }
 }

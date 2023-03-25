@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated layout of battery automations pane to match recent views.
+- Reorganized navigation bar to reduce clutter.
 
 ## [1.5.1]
 

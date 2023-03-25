@@ -49,26 +49,15 @@
 .menu {
   background-color: var(--color-surface-1);
   border-radius: var(--surface-border-radius);
-  padding: 1em 1em;
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
+  overflow: hidden;
+  position: relative;
+}
 
-  &-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding: 0.75em 0.5em;
-    border-radius: 99999px;
-    transition: background 0.15s ease;
-    color: var(--color-text-2);
+.rootmenu {
+  z-index: 5;
 
-    &:not(:last-child) {
-      margin-bottom: 0.5em;
-    }
-
+  .menu-item {
     &:hover {
       background: var(--color-surface-2);
     }
@@ -76,6 +65,84 @@
     &.active {
       background: var(--color-surface-3);
     }
+  }
+}
+
+.submenu {
+  z-index: 10;
+
+  .menu-item {
+    &:hover {
+      background: rgba(white, 0.1);
+      //border-color: var(--color-text-3);
+    }
+
+    &.active {
+      background: rgba(white, 0.1);
+      //border-color: var(--color-text-1);
+    }
+  }
+}
+
+.rootmenu,
+.submenu {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 1em;
+  position: relative;
+
+  .menu-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--color-text-2);
+    margin: -1em -1em 1em -1em;
+    background: var(--color-surface-0);
+    border-radius: var(--surface-border-radius);
+    border: 0.25em solid var(--color-surface-1);
+
+    button.btn {
+      padding: 1em;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      i.material-icons-round {
+        font-size: 1.25em;
+        flex-shrink: 0;
+        margin: 0 0.5em 0 0.5em;
+      }
+
+    }
+
+    &-label {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
+
+  .menu-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.75em 0.5em;
+    border-radius: 99999px;
+    transition: all 0.15s ease;
+    color: var(--color-text-2);
+    cursor: pointer;
+
+    &:not(:last-child) {
+      margin-bottom: 0.5em;
+    }
+
 
     &-icon-prefix,
     &-icon-suffix {
@@ -106,6 +173,15 @@
 
     &-icon-prefix {
       color: var(--color-text-1);
+
+      img {
+        width: 1.5em;
+        height: 1.5em;
+
+        &.vrchat {
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
+        }
+      }
     }
 
     &-label {
@@ -113,5 +189,18 @@
       font-weight: 500;
       white-space: pre-wrap;
     }
+
+    &-submenu-icon {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 0 0.5em 0 0.25em;
+
+      i.material-icons-round {
+        font-size: 0.8em;
+        color: var(--color-text-4);
+      }
+    }
   }
 }
+
