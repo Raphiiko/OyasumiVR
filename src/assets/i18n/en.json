@@ -190,8 +190,6 @@
   "battery-automations": {
     "title": "Battery Automations",
     "devicePowerOff": {
-      "title": "Turning off devices",
-      "description": "Various automations for turning off your SteamVR devices.",
       "onSleepModeEnable": {
         "title": "When I go to sleep",
         "description": "Turn off devices when sleep mode is enabled.",
@@ -568,6 +566,7 @@
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "settings": "Settings",
+      "vrcAutomations": "VRChat Automations",
       "about": "About Oyasumi"
     },
     "device-list": {
