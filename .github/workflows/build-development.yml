@@ -1,4 +1,4 @@
-name: 'Development Check & Build'
+name: 'Development Build'
 on:
   push:
     branches:
