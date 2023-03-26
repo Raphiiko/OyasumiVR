@@ -27,24 +27,12 @@ jobs:
         run: npm run set-version DEV
       - name: Lint Angular project
         run: npm run lint
-      - name: Get Changelog Entry
-        id: changelog_reader
-        uses: mindsers/changelog-reader-action@v2
-        with:
-          validation_level: warn
-          version: Unreleased
-          path: ./CHANGELOG.md
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           default: true
           override: true
-      #      - name: install dependencies (ubuntu only)
-      #        if: matrix.platform == 'ubuntu-20.04'
-      #        run: |
-      #          sudo apt-get update
-      #          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
       - name: Configure Rust cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -68,6 +56,13 @@ jobs:
           tag_name: oyasumi-vDEV-new
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get Changelog Entry
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: warn
+          version: Unreleased
+          path: ./CHANGELOG.md
       - name: Build and release Oyasumi development build
         uses: Raphiiko/tauri-action@dev
         env:
