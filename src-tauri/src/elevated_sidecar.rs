@@ -12,10 +12,10 @@ use crate::{MAIN_HTTP_SERVER_PORT, SIDECAR_HTTP_SERVER_PORT, SIDECAR_PID, TAURI_
 pub fn get_base_url() -> Option<String> {
     let port_guard = SIDECAR_HTTP_SERVER_PORT.lock().unwrap();
     let port = match port_guard.as_ref() {
-        Some(port) => port.clone(),
+        Some(port) => *port,
         None => return None,
     };
-    Some(format!("http://127.0.0.1:{}", port))
+    Some(format!("http://127.0.0.1:{port}"))
 }
 
 pub async fn active() -> Option<u32> {
@@ -27,10 +27,7 @@ pub async fn active() -> Option<u32> {
     match resp {
         Ok(_) => {
             let pid_guard = SIDECAR_PID.lock().unwrap();
-            match pid_guard.as_ref() {
-                Some(pid) => Some(*pid),
-                None => None,
-            }
+            pid_guard.as_ref().copied()
         }
         Err(_) => None,
     }
@@ -42,16 +39,13 @@ pub async fn start() {
     }
     let port_guard = MAIN_HTTP_SERVER_PORT.lock().unwrap();
     let port = match port_guard.as_ref() {
-        Some(port) => port.clone(),
+        Some(port) => *port,
         None => return,
     };
     info!("[Core] Starting sidecar...");
     let (mut _rx, mut _child) =
         tauri::api::process::Command::new(String::from("oyasumi-elevated-sidecar.exe"))
-            .args(vec![
-                String::from(format!("{}", port)),
-                String::from(format!("{}", std::process::id())),
-            ])
+            .args(vec![format!("{port}"), format!("{}", std::process::id())])
             .spawn()
             .expect("Could not spawn command"); // TODO: Do proper error handling here
 }

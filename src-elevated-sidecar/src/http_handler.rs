@@ -14,10 +14,10 @@ pub async fn handle_http(req: Request<Body>) -> Result<Response<Body>, Infallibl
         (&Method::GET, "/nvml/get_devices") => handle_nvml_get_devices(req).await,
         (&Method::POST, "/nvml/set_power_management_limit") => {
             handle_nvml_set_power_management_limit(req).await
-        },
+        }
         (&Method::POST, "/msi_afterburner/set_profile") => {
             handle_msi_afterburner_set_profile(req).await
-        },
+        }
         _ => response_404(),
     }
 }
@@ -46,10 +46,7 @@ async fn handle_nvml_set_power_management_limit(
     )
     .unwrap();
     let result = nvml::nvml_set_power_management_limit(request_data.uuid, request_data.limit).await;
-    let success = match result {
-        Ok(_) => true,
-        Err(_) => false,
-    };
+    let success = result.is_ok();
     let error = match result {
         Ok(_) => None,
         Err(e) => Some(e),
@@ -76,10 +73,7 @@ async fn handle_msi_afterburner_set_profile(
     .unwrap();
     let result =
         afterburner::set_afterburner_profile(request_data.executable_path, request_data.profile);
-    let success = match result {
-        Ok(_) => true,
-        Err(_) => false,
-    };
+    let success = result.is_ok();
     let error = match result {
         Ok(_) => None,
         Err(e) => Some(e),

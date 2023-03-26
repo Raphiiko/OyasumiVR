@@ -48,8 +48,8 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
   config: AutoAcceptInviteRequestsAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
   );
-  isOnBusyStatus: boolean = false;
-  isOnJoinMeStatus: boolean = false;
+  isOnBusyStatus = false;
+  isOnJoinMeStatus = false;
 
   constructor(
     protected vrchat: VRChatService,

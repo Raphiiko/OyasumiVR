@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {
   AppSettingsService,
   SETTINGS_KEY_APP_SETTINGS,
@@ -20,7 +20,7 @@ import { SleepModeForSleepDetectorAutomationService } from '../../../../../servi
   styleUrls: ['./settings-debug-tab.component.scss'],
   animations: [],
 })
-export class SettingsDebugTabComponent extends SettingsTabComponent {
+export class SettingsDebugTabComponent extends SettingsTabComponent implements OnInit {
   storeKey = { SETTINGS_KEY_APP_SETTINGS, SETTINGS_KEY_AUTOMATION_CONFIGS };
   private settingsStore = new Store(SETTINGS_FILE);
   private cacheStore = new Store(CACHE_FILE);

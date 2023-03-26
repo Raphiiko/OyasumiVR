@@ -14,8 +14,8 @@ pub fn init_vrc_log_watcher() {
     // Terminate existing thread if it exists
     let termination_guard = TERMINATION_TX.lock().unwrap();
     let termination = termination_guard.as_ref();
-    if termination.is_some() {
-        termination.unwrap().send(()).unwrap();
+    if let Some(t) = termination {
+        t.send(()).unwrap();
     }
     drop(termination_guard);
     // Start new parser thread

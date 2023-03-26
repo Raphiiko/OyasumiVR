@@ -55,7 +55,7 @@ export class ThemeService {
   }
 
   private async loadSettings() {
-    let settings: ThemingSettings | null = await this.store.get<ThemingSettings>(
+    const settings: ThemingSettings | null = await this.store.get<ThemingSettings>(
       SETTINGS_KEY_THEMING_SETTINGS
     );
     if (settings) {

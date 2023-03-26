@@ -99,10 +99,11 @@ export class OscControlService {
       case '/avatar/change':
         this.syncParameters.next();
         break;
-      case ADDRESS_CMD:
+      case ADDRESS_CMD: {
         const { value } = message.values[0] as OSCIntValue;
         await this.handleCommand(value);
         break;
+      }
       case ADDRESS_SLEEP_MODE: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.sleepMode === enable) return;

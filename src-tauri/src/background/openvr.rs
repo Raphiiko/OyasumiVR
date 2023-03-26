@@ -18,10 +18,11 @@ use tauri::Manager;
 use crate::{gesture_detector::GestureDetector, sleep_detector, TAURI_WINDOW};
 
 #[derive(Serialize, Clone)]
+#[serde(rename_all = "UPPERCASE")]
 pub enum OpenVRStatus {
-    INACTIVE,
-    INITIALIZING,
-    INITIALIZED,
+    Inactive,
+    Initializing,
+    Initialized,
 }
 
 struct OpenVRManagerState {
@@ -39,7 +40,7 @@ impl OpenVRManager {
     pub fn new() -> OpenVRManager {
         let state = Arc::new(OpenVRManagerState {
                 active: Mutex::new(false),
-                status: Mutex::new(OpenVRStatus::INACTIVE),
+                status: Mutex::new(OpenVRStatus::Inactive),
                 devices: Mutex::new(vec![]),
                 settings: Mutex::new(None),
         });
@@ -150,7 +151,7 @@ impl OpenVRManagerTask {
             if *state_active {
                 drop(state_active);
                 // If we're not active, try to initialize OpenVR
-                if let None = ovr_context {
+                if ovr_context.is_none() {
                     // Stop if we cannot yet (re)initialize OpenVR
                     if (Utc::now().naive_utc() - ovr_next_init).num_milliseconds() <= 0 {
                         continue;
@@ -161,11 +162,11 @@ impl OpenVRManagerTask {
                     sysinfo.refresh_processes();
                     let processes = sysinfo.processes_by_exact_name("vrmonitor.exe");
                     if processes.count() == 0 {
-                        self.update_status(OpenVRStatus::INACTIVE);
+                        self.update_status(OpenVRStatus::Inactive);
                         continue;
                     }
                     // Update the status
-                    self.update_status(OpenVRStatus::INITIALIZING);
+                    self.update_status(OpenVRStatus::Initializing);
                     // Try to initialize OpenVR
                     unsafe {
                         ovr_context = match openvr::init(openvr::ApplicationType::Background) {
@@ -210,7 +211,7 @@ impl OpenVRManagerTask {
                     // We've successfully initialized OpenVR
                     info!("[Core] OpenVR Initialized");
                     ovr_active = true;
-                    self.update_status(OpenVRStatus::INITIALIZED);
+                    self.update_status(OpenVRStatus::Initialized);
                 }
                 if let Some(system) = ovr_system.as_mut() {
                     // Refresh all devices when needed
@@ -231,7 +232,7 @@ impl OpenVRManagerTask {
                                 // Shutdown OpenVR
                                 info!("[Core] OpenVR is Quitting. Shutting down OpenVR module");
                                 ovr_active = false;
-                                self.update_status(OpenVRStatus::INACTIVE);
+                                self.update_status(OpenVRStatus::Inactive);
                                 unsafe {
                                     ovr_context.unwrap().shutdown();
                                     ovr_context = None;
@@ -247,18 +248,18 @@ impl OpenVRManagerTask {
                                 self.update_device(e.tracked_device_index, true, system);
                             }
                             openvr::system::event::Event::PropertyChanged(prop) => {
-                                if match prop.property {
+                                if matches!(
+                                    prop.property,
                                     openvr::property::DeviceBatteryPercentage_Float
-                                    | openvr::property::DeviceProvidesBatteryStatus_Bool
-                                    | openvr::property::DeviceCanPowerOff_Bool
-                                    | openvr::property::DeviceIsCharging_Bool
-                                    | openvr::property::ConnectedWirelessDongle_String
-                                    | openvr::property::SerialNumber_String
-                                    | openvr::property::HardwareRevision_String
-                                    | openvr::property::ManufacturerName_String
-                                    | openvr::property::ModelNumber_String => true,
-                                    _ => false,
-                                } {
+                                        | openvr::property::DeviceProvidesBatteryStatus_Bool
+                                        | openvr::property::DeviceCanPowerOff_Bool
+                                        | openvr::property::DeviceIsCharging_Bool
+                                        | openvr::property::ConnectedWirelessDongle_String
+                                        | openvr::property::SerialNumber_String
+                                        | openvr::property::HardwareRevision_String
+                                        | openvr::property::ManufacturerName_String
+                                        | openvr::property::ModelNumber_String
+                                ) {
                                     self.update_device(e.tracked_device_index, true, system);
                                 }
                             }
@@ -269,7 +270,7 @@ impl OpenVRManagerTask {
             } else if ovr_active {
                 ovr_active = false;
                 info!("[Core] Shutting down OpenVR module");
-                self.update_status(OpenVRStatus::INACTIVE);
+                self.update_status(OpenVRStatus::Inactive);
                 // Shutdown OpenVR
                 if let Some(ctx) = ovr_context {
                     ovr_system = None;
@@ -285,10 +286,9 @@ impl OpenVRManagerTask {
     fn refresh_device_poses(&mut self, system: &openvr::System) {
         let poses =
             system.device_to_absolute_tracking_pose(openvr::TrackingUniverseOrigin::Standing, 0.0);
-        for n in 0..poses.len() {
-            let pose = poses[n];
+        for (n, pose) in poses.iter().enumerate() {
             if pose.device_is_connected() && pose.pose_is_valid() {
-                let matrix = pose.device_to_absolute_tracking().clone();
+                let matrix = *pose.device_to_absolute_tracking();
                 // Extract quaternion
                 let q = openvr_sys::HmdQuaternion_t {
                     w: 0.0f64
@@ -386,50 +386,35 @@ impl OpenVRManagerTask {
             is_charging: system
                 .bool_tracked_device_property(device_index, openvr::property::DeviceIsCharging_Bool)
                 .ok(),
-            dongle_id: match system
+            dongle_id: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::ConnectedWirelessDongle_String,
                 )
                 .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            serial_number: match system
+                .map(|value| value.into_string().unwrap()),
+            serial_number: system
                 .string_tracked_device_property(device_index, openvr::property::SerialNumber_String)
                 .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            hardware_revision: match system
+                .map(|value| value.into_string().unwrap()),
+            hardware_revision: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::HardwareRevision_String,
                 )
                 .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            manufacturer_name: match system
+                .map(|value| value.into_string().unwrap()),
+            manufacturer_name: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::ManufacturerName_String,
                 )
                 .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            model_number: match system
+                .map(|value| value.into_string().unwrap()),
+            model_number: system
                 .string_tracked_device_property(device_index, openvr::property::ModelNumber_String)
                 .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
+                .map(|value| value.into_string().unwrap()),
         };
 
         // Add or update device in list

@@ -21,7 +21,7 @@ interface DisplayCategory {
 export class DeviceListComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   deviceCategories: Array<DisplayCategory> = [];
-  devicesCanPowerOff: boolean = false;
+  devicesCanPowerOff = false;
 
   constructor(
     protected openvr: OpenVRService,

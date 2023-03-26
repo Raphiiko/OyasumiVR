@@ -79,18 +79,15 @@ fn main() {
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
             // Focus main window when user attempts to launch a second instance.
             let window = app.get_window("main").unwrap();
-            if let Some(is_visible) = window.is_visible().ok() {
+            if let Ok(is_visible) = window.is_visible() {
                 if is_visible {
                     window.set_focus().unwrap();
                 }
             }
         }))
-        .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } => {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
-            _ => {}
+        .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+            event.window().hide().unwrap();
+            api.prevent_close();
         })
         .system_tray(
             SystemTray::new()
@@ -105,6 +102,13 @@ fn main() {
               window.show().unwrap();
               window.set_focus().unwrap();
             }
+            SystemTrayEvent::RightClick {
+              position: _,
+              size: _,
+              ..
+            } => {
+              // TODO: Implement context menu
+            }
             _ => (),
         })
         .setup(|app| {
@@ -116,11 +120,11 @@ fn main() {
             }
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             // Get dependencies
-            let cache_dir = app.path_resolver().app_cache_dir().unwrap().clone();
-            std::thread::spawn(move || -> () {
+            let cache_dir = app.path_resolver().app_cache_dir().unwrap();
+            std::thread::spawn(move || {
                 // Initialize Image Cache
                 let image_cache_dir = cache_dir.join("image_cache");
-                let image_cache = ImageCache::new(image_cache_dir.into_os_string().clone());
+                let image_cache = ImageCache::new(image_cache_dir.into_os_string());
                 image_cache.clean(true);
                 *IMAGE_CACHE.lock().unwrap() = Some(image_cache);
                 // Initialize OpenVR Manager

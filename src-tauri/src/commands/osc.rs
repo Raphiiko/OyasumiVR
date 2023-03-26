@@ -32,8 +32,8 @@ pub fn osc_init(receive_addr: String) -> bool {
     // Terminate existing thread if it exists
     let termination_guard = TERMINATION_TX.lock().unwrap();
     let termination = termination_guard.as_ref();
-    if termination.is_some() {
-        termination.unwrap().send(()).unwrap();
+    if let Some(t) = termination {
+        t.send(()).unwrap();
     }
     drop(termination_guard);
     // Setup sending socket
@@ -109,10 +109,7 @@ pub fn osc_send_bool(addr: String, osc_addr: String, data: bool) -> Result<bool,
 
 #[tauri::command]
 pub fn osc_valid_addr(addr: String) -> bool {
-    match SocketAddrV4::from_str(addr.as_str()) {
-        Ok(_) => true,
-        Err(_) => false,
-    }
+    SocketAddrV4::from_str(addr.as_str()).is_ok()
 }
 
 fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<bool, String> {
@@ -134,15 +131,12 @@ fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<bool, 
     }))
     .unwrap();
     // Send message
-    match socket.send_to(&msg_buf, to_addr) {
-        Err(_) => {
-            error!(
-                "[Core] Failed to send OSC message (addr={}, osc_addr={}, data={:?})",
-                addr, osc_addr, data
-            );
-            return Err(String::from("SENDING_ERROR"));
-        }
-        _ => (),
+    if socket.send_to(&msg_buf, to_addr).is_err() {
+        error!(
+            "[Core] Failed to send OSC message (addr={}, osc_addr={}, data={:?})",
+            addr, osc_addr, data
+        );
+        return Err(String::from("SENDING_ERROR"));
     }
     Ok(true)
 }

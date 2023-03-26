@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { hshrink, vshrink } from '../../../../../utils/animations';
@@ -27,7 +27,7 @@ import { APP_SETTINGS_DEFAULT } from '../../../../../models/settings';
   styleUrls: ['./settings-vrchat-tab.component.scss'],
   animations: [vshrink(), hshrink()],
 })
-export class SettingsVRChatTabComponent extends SettingsTabComponent {
+export class SettingsVRChatTabComponent extends SettingsTabComponent implements OnInit {
   // VRChat Account
   protected vrchatStatus: VRChatServiceStatus = 'PRE_INIT';
   protected currentUser: VRChatUser | null = null;
@@ -172,7 +172,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
               distinctUntilChanged()
             ),
             of(value),
-          ]).pipe(map(([_, value]) => value))
+          ]).pipe(map(([, value]) => value))
         ),
         tap(() => {
           this.oscReceivingPortStatus = 'CHECKING';
@@ -182,7 +182,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
       )
       .subscribe(async (value) => {
         // Parse port
-        let port = parseInt(value);
+        const port = parseInt(value);
         if (isNaN(port) || port > 65535 || port <= 0) {
           this.oscReceivingPortStatus = 'ERROR';
           this.oscReceivingPortError = 'invalidPort';
@@ -222,7 +222,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
               distinctUntilChanged()
             ),
             of(value),
-          ]).pipe(map(([_, value]) => value))
+          ]).pipe(map(([, value]) => value))
         ),
         tap(() => {
           this.oscSendingPortStatus = 'CHECKING';
@@ -232,7 +232,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent {
       )
       .subscribe((value) => {
         // Parse port
-        let port = parseInt(value);
+        const port = parseInt(value);
         if (isNaN(port) || port > 65535 || port <= 0) {
           this.oscSendingPortStatus = 'ERROR';
           this.oscSendingPortError = 'invalidPort';

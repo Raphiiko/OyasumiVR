@@ -138,7 +138,6 @@ export class SleepDebugViewComponent implements OnDestroy, AfterViewInit {
       const sphere = new THREE.Mesh(mesh, material);
       sphere.matrixAutoUpdate = false;
       sphere.position.set(...position);
-      const object = new THREE.Object3D().add(sphere);
       sphere.updateMatrix();
       sphere.updateMatrixWorld(true);
       scene.add(sphere);

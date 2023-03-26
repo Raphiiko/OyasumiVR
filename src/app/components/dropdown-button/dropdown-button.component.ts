@@ -18,7 +18,7 @@ export interface DropdownItem {
 export class DropdownButtonComponent implements OnInit {
   @Input() disabled = false;
   @Input() items: DropdownItem[] = [];
-  @Output() onSelect: EventEmitter<DropdownItem> = new EventEmitter();
+  @Output() itemSelect: EventEmitter<DropdownItem> = new EventEmitter();
   collapsed = true;
 
   constructor() {}
@@ -31,10 +31,10 @@ export class DropdownButtonComponent implements OnInit {
     }
   }
 
-  select(item: DropdownItem, event: MouseEvent) {
+  selectItem(item: DropdownItem, event: MouseEvent) {
     if (event.target instanceof HTMLElement && event.target.classList.contains('noselect')) return;
     if (!this.disabled) {
-      this.onSelect.emit(item);
+      this.itemSelect.emit(item);
       this.collapsed = true;
     }
   }

@@ -9,6 +9,7 @@ import {
 const MAX_OSC_SCRIPT_COMMANDS = 100;
 const SLEEP_ACTION_REGEX = /^\s*sleep\s+(?<VALUE>[0-9]+([.][0-9]+)?)(?<UNIT>ms|s)?\s*$/i;
 const COMMAND_ACTION_REGEX =
+  // eslint-disable-next-line no-control-regex
   /^\s*((?<FLOAT_TYPE>f)\s+(?<FLOAT_VALUE>-?[0-9]+([.][0-9]+)?)|(?<INT_TYPE>i)\s+(?<INT_VALUE>[0-9]+)|(?<BOOL_TYPE>b)\s+(?<BOOL_VALUE>true|false|1|0|yes|no))\s+(?<ADDRESS>[\x00-\x7F]+)\s*$/i;
 
 export function getOscScriptDuration(script: OscScript): number {
@@ -34,7 +35,7 @@ export function parseOscScriptFromCode(code: string): {
   let lines = code.split('\n').map((l, index) => ({ text: l.trim(), index }));
 
   lines = lines.filter((l) => !!l.text);
-  for (let line of lines) {
+  for (const line of lines) {
     if (!line.text.trim()) {
       continue;
     }
@@ -68,7 +69,7 @@ export function parseOscScriptFromCode(code: string): {
         duration,
       } as OscScriptSleepAction);
     } else if ((match = line.text.match(COMMAND_ACTION_REGEX))) {
-      let parameterType: OscParameterType = (
+      const parameterType: OscParameterType = (
         { f: 'FLOAT', i: 'INT', b: 'BOOLEAN' } as { [s: string]: OscParameterType }
       )[match.groups!['FLOAT_TYPE'] || match.groups!['INT_TYPE'] || match.groups!['BOOL_TYPE']];
       let value: number | boolean;

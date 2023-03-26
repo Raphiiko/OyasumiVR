@@ -1,12 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { GPUPowerLimit } from '../../../../../models/gpu-device';
 import { vshrink } from '../../../../../utils/animations';
 
@@ -16,10 +8,10 @@ import { vshrink } from '../../../../../utils/animations';
   styleUrls: ['./power-limit-input.component.scss'],
   animations: [vshrink()],
 })
-export class PowerLimitInputComponent implements OnInit, OnChanges {
-  @Input() minPowerLimit: number = -1;
-  @Input() maxPowerLimit: number = -1;
-  @Input() defaultPowerLimit: number = -1;
+export class PowerLimitInputComponent implements OnInit {
+  @Input() minPowerLimit = -1;
+  @Input() maxPowerLimit = -1;
+  @Input() defaultPowerLimit = -1;
 
   @Input() powerLimit?: GPUPowerLimit;
   @Output() powerLimitChange: EventEmitter<GPUPowerLimit> = new EventEmitter<GPUPowerLimit>();
@@ -27,8 +19,6 @@ export class PowerLimitInputComponent implements OnInit, OnChanges {
   constructor() {}
 
   ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges) {}
 
   toggleDefault() {
     if (!this.powerLimit) return;

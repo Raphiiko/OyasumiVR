@@ -3,7 +3,7 @@ import { SimpleModalComponent, SimpleModalService } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import { filter, map, Subject, takeUntil } from 'rxjs';
+import { filter, Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,

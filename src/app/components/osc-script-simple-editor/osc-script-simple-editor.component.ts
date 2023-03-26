@@ -204,7 +204,7 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
             }
           }
           switch (command.parameterType) {
-            case 'INT':
+            case 'INT': {
               const intValue = parseInt(command.value);
               if (isNaN(intValue) || intValue < 0 || intValue > 255) {
                 this.errors.push({
@@ -213,7 +213,8 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
                 });
               }
               break;
-            case 'FLOAT':
+            }
+            case 'FLOAT': {
               const floatValue = parseFloat(command.value);
               if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
                 this.errors.push({
@@ -227,6 +228,7 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
                 });
               }
               break;
+            }
           }
           break;
         case 'SLEEP':
