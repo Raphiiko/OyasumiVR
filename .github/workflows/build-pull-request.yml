@@ -1,6 +1,9 @@
 name: 'Pull Request Lint & Build'
 on:
   pull_request:
+  push:
+    branches:
+      - feature/*
 
 jobs:
   build-dev-release:
@@ -47,9 +50,12 @@ jobs:
         run: cd src-shared && cargo clippy --all-features --no-deps
       - name: Check Rust code in elevated sidecar module
         run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
+      - name: Build elevated sidecar module
+        run: npm run build:sidecar
       - name: Check Rust code in core module
         run: cd src-tauri && cargo clippy --all-features --no-deps
-      - uses: Raphiiko/tauri-action@dev
+      - name: Test if Oyasumi compiles
+        uses: Raphiiko/tauri-action@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

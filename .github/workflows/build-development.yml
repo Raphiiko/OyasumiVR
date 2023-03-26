@@ -3,17 +3,6 @@ on:
   push:
     branches:
       - develop
-    paths:
-      - scripts/**
-      - src/**
-      - src-tauri/**
-      - .github/workflows/**
-      - angular.json
-      - tsconfig.json
-      - tsconfig.app.json
-      - package.json
-      - CHANGELOG.md
-
 
 jobs:
   build-dev-release:
@@ -23,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest]
+        platform: [ windows-latest ]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -67,6 +56,8 @@ jobs:
         run: cd src-shared && cargo clippy --all-features --no-deps
       - name: Check Rust code in elevated sidecar module
         run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
+      - name: Build elevated sidecar module
+        run: npm run build:sidecar
       - name: Check Rust code in core module
         run: cd src-tauri && cargo clippy --all-features --no-deps
       - name: Delete new development release and tag if they exist
@@ -77,7 +68,8 @@ jobs:
           tag_name: oyasumi-vDEV-new
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - uses: Raphiiko/tauri-action@dev
+      - name: Build and release Oyasumi development build
+        uses: Raphiiko/tauri-action@dev
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}

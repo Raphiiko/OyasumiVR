@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "build": "ng build && node scripts/copy-dependencies.js",
     "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && node scripts/move-sidecar-build.js && node scripts/copy-dependencies.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest]
+        platform: [ windows-latest ]
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -49,7 +49,10 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
-      - uses: tauri-apps/tauri-action@v0
+      - name: Build elevated sidecar module
+        run: npm run build:sidecar
+      - name: Build and release Oyasumi
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
