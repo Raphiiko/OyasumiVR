@@ -26,6 +26,7 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 [[package]]
 name = "openvr"
 version = "0.6.0"
+source = "git+https://github.com/Raphiiko/oyasumi-rust-openvr?rev=c2f95d27a6f911cf360420b2279f0d1c9f2af52e#c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 dependencies = [
  "lazy_static",
  "openvr_sys",

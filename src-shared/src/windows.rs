@@ -19,7 +19,7 @@ pub fn relaunch_with_elevation(main_port: u16, main_pid: u32, force_exit: bool) 
     path_result.push(0);
     let path = path_result;
     // Get port parameter
-    let mut port_result: Vec<_> = OsStr::new(format!("{} {}", main_port, main_pid).as_str()).encode_wide().collect();
+    let mut port_result: Vec<_> = OsStr::new(format!("{main_port} {main_pid}").as_str()).encode_wide().collect();
     port_result.push(0);
     let port = port_result;
     // Run as administrator
