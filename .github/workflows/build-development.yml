@@ -1,4 +1,4 @@
-name: 'Development Lint & Build'
+name: 'Development Check & Build'
 on:
   push:
     branches:

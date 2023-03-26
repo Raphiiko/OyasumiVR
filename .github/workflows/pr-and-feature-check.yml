@@ -6,7 +6,7 @@ on:
       - feature/*
 
 jobs:
-  build-dev-release:
+  check-pr-or-feature:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
