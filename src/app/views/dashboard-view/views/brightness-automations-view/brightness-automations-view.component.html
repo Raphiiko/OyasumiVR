@@ -1,0 +1,135 @@
+<div class="pane">
+  <div class="pane-title" translate>Brightness Automations</div>
+  <div class="pane-content">
+    <div class="setting-category">
+      <p>Oyasumi can automatically adjust the brightness of your headset when sleep mode is enabled or disabled.</p>
+      <div class="alert warning" @vshrink>
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> warning </i>
+        </div>
+        <div class="alert-content">
+          <span>{{ 'Display brightness adjustment is currently only available on the Valve Index.' | translate }}</span></div
+        >
+      </div>
+      <div class="settings">
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span>When I go to sleep</span>
+            <span>Adjust my display brightness</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row-group">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Change the brightness to</span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <input type="number" style="width: 3em; text-align: right" class="small"><span>%</span>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Adjust brightness gradually</span>
+              <span>Smoothly transition to your desired brightness value</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Transition time</span>
+              <span>How long it should take to transition to the new brightness setting</span>
+            </div>
+            <div class="setting-row-action">
+              <input type="number" style="width: 3em; text-align: right" class="small">
+              <app-select-box
+                class="status-dropdown"
+                [type]="'SMALL'"
+                [items]="transitionUnitOptions"
+                [selected]="transitionUnitOptionOnEnable"
+                (selectedChange)="transitionUnitOptionOnEnable = $event"
+              ></app-select-box>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span>When I wake up</span>
+            <span>Adjust my display brightness</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row-group">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Change the brightness to</span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <input type="number" style="width: 3em; text-align: right" class="small"><span>%</span>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Adjust brightness gradually</span>
+              <span>Smoothly transition to your desired brightness value</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Transition time</span>
+              <span>How long it should take to transition to the new brightness setting</span>
+            </div>
+            <div class="setting-row-action">
+              <input type="number" style="width: 3em; text-align: right" class="small">
+              <app-select-box
+                class="status-dropdown"
+                [type]="'SMALL'"
+                [items]="transitionUnitOptions"
+                [selected]="transitionUnitOptionOnDisable"
+                (selectedChange)="transitionUnitOptionOnDisable = $event"
+              ></app-select-box>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

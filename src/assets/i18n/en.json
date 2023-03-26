@@ -567,6 +567,7 @@
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "settings": "Settings",
       "vrcAutomations": "VRChat Automations",
+      "brightnessAutomations": "Brightness Automations",
       "about": "About Oyasumi"
     },
     "device-list": {

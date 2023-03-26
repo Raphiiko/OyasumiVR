@@ -91,6 +91,7 @@ import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/v
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
 import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
+import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -147,6 +148,7 @@ export function createTranslateLoader(http: HttpClient) {
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
     SleepDebugViewComponent,
+    BrightnessAutomationsViewComponent,
   ],
   imports: [
     CommonModule,
