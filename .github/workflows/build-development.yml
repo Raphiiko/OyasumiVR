@@ -63,6 +63,12 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
+      - name: Check Rust code in shared module
+        run: cd src-shared && cargo clippy --all-features --no-deps
+      - name: Check Rust code in elevated sidecar module
+        run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
+      - name: Check Rust code in core module
+        run: cd src-tauri && cargo clippy --all-features --no-deps
       - name: Delete new development release and tag if they exist
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         continue-on-error: true

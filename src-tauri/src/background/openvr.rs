@@ -43,7 +43,7 @@ impl OpenVRManager {
             }),
         };
         manager.openvr_loop();
-        return manager;
+        manager
     }
 
     pub fn get_devices(&self) -> Vec<OVRDevice> {
@@ -104,7 +104,7 @@ impl OpenVRManagerCore {
             if *state_active {
                 drop(state_active);
                 // If we're not active, try to initialize OpenVR
-                if let None = ovr_context {
+                if ovr_context.is_none() {
                     // Stop if we cannot yet (re)initialize OpenVR
                     if (Utc::now().naive_utc() - ovr_next_init).num_milliseconds() <= 0 {
                         continue;
@@ -225,7 +225,7 @@ impl OpenVRManagerCore {
         for n in 0..poses.len() {
             let pose = poses[n];
             if pose.device_is_connected() && pose.pose_is_valid() {
-                let matrix = pose.device_to_absolute_tracking().clone();
+                let matrix = *pose.device_to_absolute_tracking();
                 // Extract quaternion
                 let q = openvr_sys::HmdQuaternion_t {
                     w: 0.0f64
@@ -323,50 +323,30 @@ impl OpenVRManagerCore {
             is_charging: system
                 .bool_tracked_device_property(device_index, openvr::property::DeviceIsCharging_Bool)
                 .ok(),
-            dongle_id: match system
+            dongle_id: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::ConnectedWirelessDongle_String,
                 )
-                .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            serial_number: match system
+                .ok().map(|value| value.into_string().unwrap()),
+            serial_number: system
                 .string_tracked_device_property(device_index, openvr::property::SerialNumber_String)
-                .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            hardware_revision: match system
+                .ok().map(|value| value.into_string().unwrap()),
+            hardware_revision: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::HardwareRevision_String,
                 )
-                .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            manufacturer_name: match system
+                .ok().map(|value| value.into_string().unwrap()),
+            manufacturer_name: system
                 .string_tracked_device_property(
                     device_index,
                     openvr::property::ManufacturerName_String,
                 )
-                .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
-            model_number: match system
+                .ok().map(|value| value.into_string().unwrap()),
+            model_number: system
                 .string_tracked_device_property(device_index, openvr::property::ModelNumber_String)
-                .ok()
-            {
-                Some(value) => Some(value.into_string().unwrap()),
-                None => None,
-            },
+                .ok().map(|value| value.into_string().unwrap()),
         };
 
         // Add or update device in list

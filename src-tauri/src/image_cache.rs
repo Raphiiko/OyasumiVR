@@ -4,7 +4,7 @@ use hyper::{
 };
 use log::{error, info};
 use mime::Mime;
-use mime_guess;
+
 use serde_json::json;
 use std::{collections::HashMap, convert::Infallible, ffi::OsString, path::Path, str::FromStr};
 use urlencoding::decode;
@@ -126,7 +126,7 @@ impl ImageCache {
         let storage_path = Path::new(&self.cache_path_str).join(&url_hash);
         let manifest_path = storage_path.join("manifest.json");
         let file_ext = self.get_ext_for_mime(mime.clone());
-        let file_name = format!("image.{}", file_ext);
+        let file_name = format!("image.{file_ext}");
         let image_path = storage_path.join(&file_name);
         // Delete current storage directory if it exists
         if storage_path.exists() {
@@ -135,29 +135,29 @@ impl ImageCache {
         // Create storage directory
         std::fs::create_dir_all(&storage_path).unwrap();
         // Store image
-        std::fs::write(&image_path, image_data).unwrap();
+        std::fs::write(image_path, image_data).unwrap();
         // Store manifest
         let manifest = json!({
             "url": url,
-            "hash": url_hash.clone(),
+            "hash": url_hash,
             "ttl": ttl,
             "mime": mime.to_string(),
             "created": chrono::Utc::now().timestamp(),
-            "filename": file_name.clone(),
+            "filename": file_name,
         });
-        std::fs::write(&manifest_path, manifest.to_string()).unwrap();
+        std::fs::write(manifest_path, manifest.to_string()).unwrap();
     }
 
     pub fn clean(&self, only_expired: bool) {
         // Create directory at cache_path if it doesn't exist
         let cache_path = Path::new(&self.cache_path_str);
         if !cache_path.exists() {
-            std::fs::create_dir_all(&cache_path).unwrap();
+            std::fs::create_dir_all(cache_path).unwrap();
             return;
         }
         let mut deleted = 0;
         // Iterate over all directories in cache_path
-        for entry in std::fs::read_dir(&cache_path).unwrap() {
+        for entry in std::fs::read_dir(cache_path).unwrap() {
             let entry = entry.unwrap();
             let path = entry.path();
             // Skip if path is not a directory
