@@ -1,0 +1,52 @@
+name: 'Pull Request Lint & Build'
+on:
+  pull_request:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build-dev-release:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ windows-latest ]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Install NodeJS dependencies
+        run: npm install
+      - name: Lint Angular project
+        run: npm run lint
+      - name: Set app version to DEV version
+        run: npm run set-version DEV
+      - name: Install Rust stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          default: true
+          override: true
+      #      - name: install dependencies (ubuntu only)
+      #        if: matrix.platform == 'ubuntu-20.04'
+      #        run: |
+      #          sudo apt-get update
+      #          sudo apt-get install -y libgtk-3-dev webkit2gtk-4.0 libappindicator3-dev librsvg2-dev patchelf
+      - name: Configure Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-shared
+            src-elevated-sidecar
+            src-tauri
+      - uses: Raphiiko/tauri-action@dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

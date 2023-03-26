@@ -1,4 +1,4 @@
-name: 'Development Build'
+name: 'Development Lint & Build'
 on:
   push:
     branches:
@@ -36,6 +36,8 @@ jobs:
         run: npm install
       - name: Set app version to DEV version
         run: npm run set-version DEV
+      - name: Lint Angular project
+        run: npm run lint
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
