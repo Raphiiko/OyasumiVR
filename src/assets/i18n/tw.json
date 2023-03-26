@@ -190,8 +190,6 @@
   "battery-automations": {
     "title": "電源管理 自動化",
     "devicePowerOff": {
-      "title": "關閉所有設備",
-      "description": "用於關閉 SteamVR 設備的各種自動化功能",
       "onSleepModeEnable": {
         "title": "當我去睡覺時",
         "description": "開啟睡眠模式時關閉設備",
@@ -204,7 +202,9 @@
         "description": "當你將設備進行充電時，讓設備自動關閉",
         "optionControllers": "關閉控制器",
         "optionTrackers": "關閉追蹤器"
-      }
+      },
+      "title": "關閉所有設備",
+      "description": "用於關閉 SteamVR 設備的各種自動化功能"
     }
   },
   "gpu-automations": {
@@ -587,6 +587,7 @@
       "statusAutomations": "狀態 自動化",
       "autoInviteRequestAccept": "自動接受 \n加入請求",
       "settings": "設定",
+      "vrcAutomations": "VRChat 功能自動化",
       "about": "關於 Oyasumi"
     },
     "device-list": {
