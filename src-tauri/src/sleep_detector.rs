@@ -26,7 +26,7 @@ impl PoseEvent {
         let q2 = other.quaternion;
         let dot_product = q1[0] * q2[0] + q1[1] * q2[1] + q1[2] * q2[2] + q1[3] * q2[3];
         let angle = 2.0 * dot_product.abs().clamp(-1.0, 1.0).acos();
-        
+
         angle * 180.0 / std::f64::consts::PI
     }
 }

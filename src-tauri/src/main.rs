@@ -85,12 +85,9 @@ fn main() {
                 }
             }
         }))
-        .on_window_event(|event| match event.event() {
-            tauri::WindowEvent::CloseRequested { api, .. } => {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
-            _ => {}
+        .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+            event.window().hide().unwrap();
+            api.prevent_close();
         })
         .system_tray(
             SystemTray::new()
@@ -104,6 +101,13 @@ fn main() {
               let window = app.get_window("main").unwrap();
               window.show().unwrap();
               window.set_focus().unwrap();
+            }
+            SystemTrayEvent::RightClick {
+              position: _,
+              size: _,
+              ..
+            } => {
+              // TODO: Implement context menu
             }
             _ => (),
         })

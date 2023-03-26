@@ -118,8 +118,8 @@ impl GestureDetector {
             offset *= -1.0;
         }
         // Loop over all data points
-        for i in 0..data.len() {
-            delta += data[i];
+        for (i, item) in data.iter().enumerate() {
+            delta += item;
             // if delta is negative, reset to 0
             if delta < 0.0 {
                 delta = 0.0;

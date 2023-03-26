@@ -45,10 +45,7 @@ pub async fn start() {
     info!("[Core] Starting sidecar...");
     let (mut _rx, mut _child) =
         tauri::api::process::Command::new(String::from("oyasumi-elevated-sidecar.exe"))
-            .args(vec![
-                format!("{port}"),
-                format!("{}", std::process::id()),
-            ])
+            .args(vec![format!("{port}"), format!("{}", std::process::id())])
             .spawn()
             .expect("Could not spawn command"); // TODO: Do proper error handling here
 }
