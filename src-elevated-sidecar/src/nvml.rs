@@ -68,8 +68,8 @@ pub fn nvml_get_devices() -> Vec<NVMLDevice> {
             uuid: device.uuid().unwrap(),
             name: device.name().unwrap(),
             power_limit: device.power_management_limit().ok(),
-            min_power_limit: constraints.as_ref().and_then(|c| Some(c.min_limit)),
-            max_power_limit: constraints.as_ref().and_then(|c| Some(c.max_limit)),
+            min_power_limit: constraints.as_ref().map(|c| c.min_limit),
+            max_power_limit: constraints.as_ref().map(|c| c.max_limit),
             default_power_limit: device.power_management_limit_default().ok(),
         });
     }
@@ -91,16 +91,12 @@ pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result
         }
     };
 
-    match device.set_power_management_limit(limit) {
-        Err(err) => {
-            error!(
-                "[NVML] Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
-                uuid.clone(),
-                err
-            );
-            return Err(String::from("DEVICE_SET_POWER_LIMIT_ERROR"));
-        }
-        _ => (),
+    if let Err(err) = device.set_power_management_limit(limit) {
+        error!(
+            "[NVML] Could not set power limit for GPU (uuid:{:#?}) due to an error: {:#?}",
+            uuid, err
+        );
+        return Err(String::from("DEVICE_SET_POWER_LIMIT_ERROR"));
     }
 
     Ok(true)
