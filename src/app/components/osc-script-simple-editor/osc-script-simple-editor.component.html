@@ -16,7 +16,7 @@
   ></span>
   <span style="flex: 1"></span>
   <div class="header-row-buttons">
-    <app-dropdown-button [items]="addCommandItems" (onSelect)="onAdd($event)">
+    <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
       <i class="material-icons">add</i>
       <span translate>comp.osc-script-simple-editor.addCommand</span>
     </app-dropdown-button>

@@ -93,7 +93,7 @@ export interface SleepModeEnableAtBatteryPercentageAutomationConfig extends Auto
   threshold: number;
 }
 
-export interface SleepModeEnableAtControllersPoweredOffAutomationConfig extends AutomationConfig {}
+export type SleepModeEnableAtControllersPoweredOffAutomationConfig = AutomationConfig;
 
 export interface SleepModeChangeOnSteamVRStatusAutomationConfig extends AutomationConfig {
   disableOnSteamVRStop: boolean;

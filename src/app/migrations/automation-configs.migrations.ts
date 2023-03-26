@@ -80,8 +80,3 @@ function from2to3(data: any): any {
   data.SLEEPING_ANIMATIONS = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS);
   return data;
 }
-
-function from0to1(data: any): any {
-  data.version = 1;
-  return data;
-}

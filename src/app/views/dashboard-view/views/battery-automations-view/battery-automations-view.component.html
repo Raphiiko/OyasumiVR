@@ -4,14 +4,17 @@
     <div class="setting-category">
       <h2 translate>battery-automations.devicePowerOff.onSleepModeEnable.title</h2>
       <p>
-        <span translate> battery-automations.devicePowerOff.onSleepModeEnable.description</span><br><span
-        [innerHTML]="'battery-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
-      ></span>
+        <span translate> battery-automations.devicePowerOff.onSleepModeEnable.description</span
+        ><br /><span
+          [innerHTML]="'battery-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
+        ></span>
       </p>
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>battery-automations.devicePowerOff.onSleepModeEnable.optionControllers</span>
+            <span translate
+              >battery-automations.devicePowerOff.onSleepModeEnable.optionControllers</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -27,7 +30,9 @@
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>battery-automations.devicePowerOff.onSleepModeEnable.optionTrackers</span>
+            <span translate
+              >battery-automations.devicePowerOff.onSleepModeEnable.optionTrackers</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -35,7 +40,9 @@
               <input
                 type="checkbox"
                 [checked]="onSleepModeConfig.deviceClasses.includes('GenericTracker')"
-                (change)="toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'GenericTracker')"
+                (change)="
+                  toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'GenericTracker')
+                "
               />
               <span class="switch-toggle-slider"></span>
             </label>
@@ -47,7 +54,6 @@
       <h2 translate>battery-automations.devicePowerOff.onCharge.title</h2>
       <p translate>battery-automations.devicePowerOff.onCharge.description</p>
       <div class="settings">
-
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>battery-automations.devicePowerOff.onCharge.optionControllers</span>

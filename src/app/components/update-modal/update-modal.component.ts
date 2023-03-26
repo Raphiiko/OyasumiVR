@@ -22,8 +22,8 @@ export class UpdateModalComponent
   implements OnInit, UpdateModalInputModel
 {
   manifest?: UpdateManifest;
-  currentVersion: string = '';
-  installing: boolean = false;
+  currentVersion = '';
+  installing = false;
 
   constructor(private update: UpdateService) {
     super();

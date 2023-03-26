@@ -117,7 +117,6 @@
         flex-shrink: 0;
         margin: 0 0.5em 0 0.5em;
       }
-
     }
 
     &-label {
@@ -142,7 +141,6 @@
     &:not(:last-child) {
       margin-bottom: 0.5em;
     }
-
 
     &-icon-prefix,
     &-icon-suffix {
@@ -179,7 +177,8 @@
         height: 1.5em;
 
         &.vrchat {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
+            contrast(89%);
         }
       }
     }
@@ -203,4 +202,3 @@
     }
   }
 }
-

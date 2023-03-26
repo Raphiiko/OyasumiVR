@@ -108,7 +108,6 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
         .fill('\n')
         .join('');
     }
-    const split = content.split('\n');
     this._code.next(content);
   }
 
@@ -118,7 +117,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
         switch (command.type) {
           case 'SLEEP':
             return `sleep ${command.duration}ms`;
-          case 'COMMAND':
+          case 'COMMAND': {
             const type = { FLOAT: 'f', INT: 'i', BOOLEAN: 'b' }[
               command.parameterType
             ] as OscParameterType;
@@ -128,6 +127,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
               BOOLEAN: (v: string) => (v === 'true' ? 'true' : 'false'),
             }[command.parameterType](command.value);
             return `${type} ${value} ${command.address}`;
+          }
         }
       })
       .join('\n');

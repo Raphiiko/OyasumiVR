@@ -36,7 +36,7 @@ export class SleepModeEnableAtBatteryPercentageAutomationService {
       .subscribe((config) => (this.config = config));
 
     this.openvr.devices.subscribe((devices) => {
-      for (let device of devices) {
+      for (const device of devices) {
         const previousLevel = this.batteryLevelCache[device.index]?.level || null;
         const currentLevel = device.battery;
         if (!currentLevel || currentLevel === previousLevel || device.isCharging) return;

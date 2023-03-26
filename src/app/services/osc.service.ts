@@ -34,7 +34,7 @@ export class OscService {
           (settings) => [settings.oscReceivingHost, settings.oscReceivingPort] as [string, number]
         ),
         take(1),
-        filter(([host, port]) => port > 0 && port <= 65535),
+        filter(([, port]) => port > 0 && port <= 65535),
         tap(([host, port]) => this.init_receiver(host, port))
       )
       .subscribe();
@@ -91,7 +91,7 @@ export class OscService {
   async runScript(script: OscScript) {
     debug(`[OSC] Running script (actions=${script.commands.length})`);
     const run = async (script: OscScript) => {
-      for (let command of script.commands) {
+      for (const command of script.commands) {
         switch (command.type) {
           case 'SLEEP':
             await new Promise((resolve) =>

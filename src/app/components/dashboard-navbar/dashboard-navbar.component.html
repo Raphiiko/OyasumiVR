@@ -46,13 +46,20 @@
       </div>
     </div>
 
-    <div class="menu-item" (click)="openSubMenu('VRCHAT')"
-         [class.active]="pathIsActive(['oscAutomations', 'statusAutomations', 'autoInviteRequestAccept'])">
+    <div
+      class="menu-item"
+      (click)="openSubMenu('VRCHAT')"
+      [class.active]="
+        pathIsActive(['oscAutomations', 'statusAutomations', 'autoInviteRequestAccept'])
+      "
+    >
       <div class="menu-item-icon-prefix">
         <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat" />
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
-      <div class="menu-item-submenu-icon"><i class="material-icons-round">arrow_forward_ios</i></div>
+      <div class="menu-item-submenu-icon"
+        ><i class="material-icons-round">arrow_forward_ios</i></div
+      >
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">

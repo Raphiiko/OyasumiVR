@@ -29,7 +29,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
   implements OnInit, BatteryPercentageEnableSleepModeModalInputModel
 {
   triggerClasses: OVRDeviceClass[] = [];
-  threshold: number = 0;
+  threshold = 0;
 
   @HostBinding('[@fadeUp]') get fadeUp() {
     return;

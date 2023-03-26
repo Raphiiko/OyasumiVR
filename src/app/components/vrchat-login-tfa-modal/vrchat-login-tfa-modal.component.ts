@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fadeUp, hshrink, vshrink } from 'src/app/utils/animations';
 import {
@@ -26,7 +26,7 @@ interface VRChatLoginTFAModalOutputModel {
 })
 export class VRChatLoginTFAModalComponent
   extends SimpleModalComponent<VRChatLoginTFAModalInputModel, VRChatLoginTFAModalOutputModel>
-  implements OnInit, VRChatLoginTFAModalInputModel
+  implements OnInit, VRChatLoginTFAModalInputModel, OnDestroy
 {
   lastCodeInvalid = false;
   private destroy$: Subject<void> = new Subject<void>();

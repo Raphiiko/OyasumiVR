@@ -106,7 +106,7 @@ export class SleepingAnimationsAutomationService {
           script.commands.push(...this.config.oscScripts[pose]!.commands);
         }
         if (enableFootUnlock) {
-          let minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
+          const minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
           if (minimumDelayRemainder > 0) {
             script.commands.push({ type: 'SLEEP', duration: minimumDelayRemainder });
           }

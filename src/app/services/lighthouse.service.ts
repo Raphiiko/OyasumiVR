@@ -32,7 +32,7 @@ export class LighthouseService {
       });
   }
 
-  async setConsolePath(path: string, save: boolean = true) {
+  async setConsolePath(path: string, save = true) {
     if (save) this.appSettings.updateSettings({ lighthouseConsolePath: path });
     this._consoleStatus.next('CHECKING');
     if (!path.endsWith('lighthouse_console.exe')) {

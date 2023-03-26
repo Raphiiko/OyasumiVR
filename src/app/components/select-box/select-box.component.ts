@@ -8,7 +8,7 @@ export interface SelectBoxItem {
   label: TString;
   subLabel?: TString;
   infoAction?: () => void;
-  htmlPrefix?: String | SafeHtml;
+  htmlPrefix?: string | SafeHtml;
 }
 
 @Component({

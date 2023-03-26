@@ -6,7 +6,7 @@
     <div
       class="dropdown-item"
       *ngFor="let item of items"
-      (click)="select(item, $event)"
+      (click)="selectItem(item, $event)"
       [class.has-subtitle]="item.subLabel"
     >
       <div class="dropdown-item-content">

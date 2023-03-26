@@ -35,7 +35,7 @@ export class TaskQueue {
       this.queue = this.queue.filter((t) => t.typeId !== task.typeId);
     }
     const completer = new Completer<T>();
-    let oldRunnable = task.runnable;
+    const oldRunnable = task.runnable;
     task.runnable = async () => {
       let returnValue: T;
       try {

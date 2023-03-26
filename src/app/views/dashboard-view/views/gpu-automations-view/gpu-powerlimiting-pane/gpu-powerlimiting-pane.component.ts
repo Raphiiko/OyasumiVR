@@ -21,9 +21,9 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
   disabledMessage: TString = '';
   gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
   selectedGpu?: GPUDevice;
-  onSleepEnableAutomationEnabled: boolean = false;
+  onSleepEnableAutomationEnabled = false;
   powerLimitOnSleepEnable?: GPUPowerLimit;
-  onSleepDisableAutomationEnabled: boolean = false;
+  onSleepDisableAutomationEnabled = false;
   powerLimitOnSleepDisable?: GPUPowerLimit;
 
   constructor(

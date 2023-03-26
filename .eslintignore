@@ -1,0 +1,5 @@
+src-tauri/
+src-shared/
+src-elevated-sidecar/
+node_modules/
+dist/

@@ -14,7 +14,8 @@
     "tauri": "tauri",
     "set-version": "node scripts/set-version.js",
     "translation-converter": "node scripts/translation-converter.js",
-    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders"
+    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders",
+    "lint": "ng lint"
   },
   "private": true,
   "dependencies": {
@@ -37,6 +38,7 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@tauri-apps/api": "^1.2.0",
     "cookie": "^0.5.0",
+    "eslint-plugin-json": "^3.1.0",
     "flag-icons": "^6.6.6",
     "fuse.js": "^6.6.2",
     "lodash": "^4.17.21",
@@ -59,6 +61,11 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.4",
+    "@angular-eslint/builder": "15.2.1",
+    "@angular-eslint/eslint-plugin": "15.2.1",
+    "@angular-eslint/eslint-plugin-template": "15.2.1",
+    "@angular-eslint/schematics": "15.2.1",
+    "@angular-eslint/template-parser": "15.2.1",
     "@angular/cli": "^15.2.4",
     "@angular/compiler-cli": "^15.2.4",
     "@tauri-apps/cli": "^1.2.0",
@@ -68,7 +75,11 @@
     "@types/set-cookie-parser": "^2.4.2",
     "@types/three": "^0.146.0",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
     "check-more-types": "^2.24.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.8.0",
     "exceljs": "^4.3.0",
     "execa": "^6.1.0",
     "jasmine-core": "^4.5.0",

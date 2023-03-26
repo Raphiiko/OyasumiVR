@@ -10,7 +10,7 @@ import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.co
   styleUrls: ['./osc-script-button.component.scss'],
 })
 export class OscScriptButtonComponent implements OnInit {
-  @Input() label: string = '';
+  @Input() label = '';
   @Input() script?: OscScript;
   @Output() scriptChange = new EventEmitter<OscScript>();
 

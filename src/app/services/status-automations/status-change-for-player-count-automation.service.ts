@@ -42,20 +42,19 @@ export class StatusChangeForPlayerCountAutomationService {
         startWith(AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT),
         pairwise(),
         filter(([prev, next]) => !isEqual(prev, next)),
-        map(([prev, next]) => next)
+        map(([, next]) => next)
       ),
     ])
       .pipe(
         // Stop if automation is disabled
-        filter(([worldContext, sleepModeEnabled, user, config]) => config.enabled),
+        filter(([, , , config]) => config.enabled),
         // Stop if sleep mode is disabled and it's required to be enabled
         filter(
-          ([worldContext, sleepModeEnabled, user, config]) =>
-            !config.onlyIfSleepModeEnabled || sleepModeEnabled
+          ([, sleepModeEnabled, , config]) => !config.onlyIfSleepModeEnabled || sleepModeEnabled
         ),
         // Determine new status to be set
         map(
-          ([worldContext, _, user, config]: [
+          ([worldContext, , user, config]: [
             WorldContext,
             boolean,
             CurrentUser | null,

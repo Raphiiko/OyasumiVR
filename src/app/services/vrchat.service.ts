@@ -244,7 +244,7 @@ export class VRChatService {
           closeOnClickOutside: false,
         }
       )
-      .subscribe((data) => {});
+      .subscribe(() => {});
   }
 
   public patchCurrentUser(user: Partial<CurrentUser>) {
@@ -302,7 +302,7 @@ export class VRChatService {
       throw new Error('Cannot invite a user when the current world instance is unknown');
     }
     // Send
-    const response = await this.apiCallQueue.queueTask<Response<Notification>>({
+    await this.apiCallQueue.queueTask<Response<Notification>>({
       typeId: 'INVITE',
       runnable: () => {
         return this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
@@ -327,9 +327,9 @@ export class VRChatService {
       throw new Error('Tried listing friends while not logged in');
     }
     // Fetch friends
-    let friends = [];
+    const friends = [];
     // Fetch online and active friends
-    for (let offline of ['false', 'true']) {
+    for (const offline of ['false', 'true']) {
       for (let offset = 0; true; offset += 100) {
         // Send request
         const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
@@ -596,9 +596,9 @@ export class VRChatService {
   private async parseResponseCookies(response: Response<any>) {
     if (!response.rawHeaders['set-cookie']) return;
     const cookieHeaders = response.rawHeaders['set-cookie'];
-    for (let cookieHeader of cookieHeaders) {
+    for (const cookieHeader of cookieHeaders) {
       const cookies = parseSetCookieHeader(cookieHeader);
-      for (let cookie of cookies) {
+      for (const cookie of cookies) {
         const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
         switch (cookie.name) {
           case 'apiKey':

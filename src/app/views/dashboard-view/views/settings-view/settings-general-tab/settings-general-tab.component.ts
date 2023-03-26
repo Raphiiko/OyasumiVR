@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
@@ -20,7 +20,7 @@ import { ExecutableReferenceStatus } from 'src/app/models/settings';
   styleUrls: ['./settings-general-tab.component.scss'],
   animations: [vshrink()],
 })
-export class SettingsGeneralTabComponent extends SettingsTabComponent {
+export class SettingsGeneralTabComponent extends SettingsTabComponent implements OnInit {
   languages = LANGUAGES;
   lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {

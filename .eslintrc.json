@@ -1,0 +1,72 @@
+{
+  "root": true,
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2020
+  },
+  "ignorePatterns": [
+    "projects/**/*"
+  ],
+  "plugins": [
+    "json"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "*.json"
+      ],
+      "extends": [
+        "plugin:json/recommended",
+        "prettier"
+      ]
+    },
+    {
+      "files": [
+        "*.ts"
+      ],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "prettier"
+      ],
+      "rules": {
+        "@angular-eslint/directive-selector": [
+          "error",
+          {
+            "type": "attribute",
+            "prefix": "app",
+            "style": "camelCase"
+          }
+        ],
+        "@angular-eslint/component-selector": [
+          "error",
+          {
+            "type": "element",
+            "prefix": "app",
+            "style": "kebab-case"
+          }
+        ],
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@angular-eslint/no-empty-lifecycle-method": "off",
+        "@typescript-eslint/prefer-as-const": "off",
+        "no-constant-condition": "off",
+        "no-prototype-builtins": "off",
+        "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    },
+    {
+      "files": [
+        "*.html"
+      ],
+      "extends": [
+        "plugin:@angular-eslint/template/recommended",
+        "prettier"
+      ],
+      "rules": {}
+    }
+  ]
+}
