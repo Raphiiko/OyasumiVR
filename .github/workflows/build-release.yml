@@ -38,8 +38,6 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
-      - name: Build elevated sidecar module
-        run: npm run build:sidecar
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2

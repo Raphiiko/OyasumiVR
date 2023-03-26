@@ -44,10 +44,15 @@ jobs:
         run: cd src-shared && cargo clippy --all-features --no-deps
       - name: Check Rust code in elevated sidecar module
         run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
-      - name: Build elevated sidecar module
-        run: npm run build:sidecar
       - name: Check Rust code in core module
-        run: cd src-tauri && cargo clippy --all-features --no-deps
+        run: >
+          mkdir -p dist/oyasumi/ # Create empty dist folder
+          mkdir -p src-elevated-sidecar/target/release/ # Create empty target folder for sidecar executable
+          touch src-elevated-sidecar/target/release/oyasumi-elevated-sidecar.exe  # Create dummy sidecar executable
+          node scripts/move-sidecar-build.js # Rename dummy sidecar executable to the correct name
+          cd src-tauri
+          cargo clippy --all-features --no-deps # Check Rust code in core module
+          rm src-elevated-sidecar/target/release/oyasumi-elevated-sidecar*.exe # Clean up dummy sidecar executable(s)
       - name: Delete new development release and tag if they exist
         uses: dev-drprasad/delete-tag-and-release@v0.2.1
         continue-on-error: true
