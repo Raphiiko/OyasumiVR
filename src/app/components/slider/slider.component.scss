@@ -1,0 +1,96 @@
+@import 'shadows';
+
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  min-height: 2em;
+  width: 100%;
+  cursor: pointer;
+}
+
+$thumb-size: 1.25em;
+
+.track-container {
+  height: $thumb-size;
+  width: 100%;
+}
+
+.track {
+  height: 0.25em;
+  border-radius: 0.125em;
+  background: rgba(black, 0.75);
+  overflow: hidden;
+  width: calc(100% - $thumb-size);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate($thumb-size / 2, -0.125em);
+
+  &-fill {
+    height: 100%;
+    width: 0;
+    background: var(--color-primary);
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  &-stop {
+    height: 100%;
+    width: 0.15em;
+    background: var(--color-surface-4);
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    &.surpassed {
+      background: rgba(white, 0.75);
+    }
+  }
+}
+
+.thumb {
+  width: $thumb-size;
+  height: $thumb-size;
+  background-color: var(--color-surface-2);
+  border: 0.125em solid var(--color-surface-4);
+  border-radius: $thumb-size / 2;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate($thumb-size/-2, $thumb-size/-2);
+  @include shadow(1, true);
+  transition: box-shadow 0.1s ease, opacity 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
+
+  &:not(.disabled) {
+    cursor: pointer;
+  }
+
+  &:hover, &.dragging {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-hover);
+  }
+}
+
+.snap-indicator-container {
+  width: calc(100% - $thumb-size);
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateX($thumb-size / 2);
+}
+
+.snap-indicator {
+  position: absolute;
+  top: 0.75em;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-4);
+}

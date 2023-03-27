@@ -202,7 +202,7 @@ export class DashboardNavbarComponent implements OnInit {
 
   onLogoClick() {
     if (this.logoClicked++ > 5) {
-      this.router.navigate(['/sleepDebug']);
+      // mmmmm
     }
   }
 

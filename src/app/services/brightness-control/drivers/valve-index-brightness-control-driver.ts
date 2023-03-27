@@ -1,6 +1,6 @@
 import { BrightnessControlDriver } from './brightness-control-driver';
 import { invoke } from '@tauri-apps/api';
-import { clamp, ensureDecimals, lerp } from '../../../utils/number-utils';
+import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
 import { combineLatest, map, Observable } from 'rxjs';
 
@@ -15,7 +15,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
 
   async getBrightnessPercentage(): Promise<number> {
     let analogGain = await invoke<number>('openvr_get_analog_gain');
-    analogGain = ensureDecimals(analogGain, 3);
+    analogGain = ensurePrecision(analogGain, 3);
     return this.analogGainToPercentage(analogGain);
   }
 
@@ -41,7 +41,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
   }
 
   private analogGainToPercentage(analogGain: number): number {
-    analogGain = ensureDecimals(analogGain, 3);
+    analogGain = ensurePrecision(analogGain, 3);
     // 1 and above is linear
     if (analogGain >= 1) return Math.round(clamp(analogGain * 100, 10, 160));
     // Why Volvo?
@@ -63,7 +63,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
         ? 1
         : parseFloat(sampleKeys[sampleKeys.indexOf(lowerBound.toString()) + 1]);
     // Linearly interpolate between the two samples
-    return ensureDecimals(
+    return ensurePrecision(
       lerp(
         VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP.get(lowerBound.toString())!,
         VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP.get(upperBound.toString())!,
@@ -76,7 +76,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
   private percentageToAnalogGain(percentage: number): number {
     // 100 and above are linear
     if (percentage >= 100)
-      return ensureDecimals(clamp(percentage / 100, 1, 1.6), 2);
+      return ensurePrecision(clamp(percentage / 100, 1, 1.6), 2);
     // Valve whyyyyyyyyyyyyyyYYYYYYYY
     const sampleMap = new Map(
       [...VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP].map(([key, value]) => [
@@ -93,7 +93,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
         ? 100
         : parseFloat(sampleKeys[sampleKeys.indexOf(lowerBound.toString()) + 1]);
     // Linearly interpolate between the two samples
-    return ensureDecimals(
+    return ensurePrecision(
       lerp(
         sampleMap.get(lowerBound.toString())!,
         sampleMap.get(upperBound.toString())!,

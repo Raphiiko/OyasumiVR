@@ -36,34 +36,9 @@
           sleep-detection.modals.enableAtBatteryPercentage.fallsBelow
         </div>
         <div class="automation-settings-row-controls">
-          <div
-            class="input-wrapper with-unit"
-            [class.invalid]="batteryPercentageThresholdInput.validationMessage"
-          >
-            <input
-              type="number"
-              step="any"
-              style="width: 5em"
-              [value]="threshold"
-              (change)="
-                updateThreshold(
-                  batteryPercentageThresholdInput.value,
-                  batteryPercentageThresholdInput
-                )
-              "
-              #batteryPercentageThresholdInput
-            />
-            <span>%</span>
-          </div>
+          <app-slider-setting [(value)]="threshold"></app-slider-setting>
         </div>
       </div>
-      <span
-        class="input-error"
-        *ngIf="batteryPercentageThresholdInput.validationMessage"
-        [@vshrink]
-      >
-        {{ batteryPercentageThresholdInput.validationMessage }}
-      </span>
     </div>
   </div>
   <div class="pane-actions spread">
