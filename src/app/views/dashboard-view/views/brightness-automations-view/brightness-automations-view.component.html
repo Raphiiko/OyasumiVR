@@ -26,13 +26,22 @@
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                [checked]="onSleepModeEnableConfig.enabled"
+                (change)="
+                  setAutomationEnabled(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    !onSleepModeEnableConfig.enabled
+                  )
+                "
+              />
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
         </div>
 
-        <div class="setting-row-group">
+        <div class="setting-row-group" [class.disabled]="!onSleepModeEnableConfig.enabled">
           <div class="setting-row">
             <div class="setting-row-label" translate>
               <span>Change the brightness to</span>
@@ -43,7 +52,8 @@
                 unit="%"
                 [min]="20"
                 [max]="160"
-                [value]="100"
+                [value]="onSleepModeEnableConfig.brightness"
+                (valueChange)="updateBrightness('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', $event)"
                 [step]="1"
                 [snapValues]="[100]"
                 [snapDistance]="8"
@@ -58,7 +68,102 @@
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
-                <input type="checkbox" />
+                <input type="checkbox"
+                       [checked]="onSleepModeEnableConfig.transition"
+                       (change)="
+                  toggleTransitioning(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    !onSleepModeEnableConfig.transition
+                  )
+                "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Transition time</span>
+              <span>How long it should take to transition to the new brightness setting</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="1"
+                [value]="transitionValueOnEnable"
+                (valueChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', $event, transitionUnitOptionOnEnable)"
+                [snapValues]="[15, 30, 45]"
+                [snapDistance]="5"
+                [max]="59"
+                [step]="1"
+              ></app-slider-setting>
+              <app-select-box
+                class="status-dropdown"
+                [type]="'SMALL'"
+                [items]="transitionUnitOptions"
+                [selected]="transitionUnitOptionOnEnable"
+                (selectedChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', transitionValueOnEnable, $event)"
+                #transitionUnitOnEnable
+              ></app-select-box>
+            </div>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span>When I wake up</span>
+            <span>Adjust my display brightness</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeDisableConfig.enabled"
+                (change)="
+                  setAutomationEnabled(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    !onSleepModeDisableConfig.enabled
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row-group" [class.disabled]="!onSleepModeDisableConfig.enabled">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Change the brightness to</span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                unit="%"
+                [min]="20"
+                [max]="160"
+                [value]="onSleepModeDisableConfig.brightness"
+                (valueChange)="updateBrightness('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', $event)"
+                [step]="1"
+                [snapValues]="[100]"
+                [snapDistance]="8"
+              ></app-slider-setting>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span>Adjust brightness gradually</span>
+              <span>Smoothly transition to your desired brightness value</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input type="checkbox"
+                       [checked]="onSleepModeDisableConfig.transition"
+                       (change)="
+                  toggleTransitioning(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    !onSleepModeDisableConfig.transition
+                  )
+                " />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
@@ -72,6 +177,8 @@
               <app-slider-setting
                 [min]="1"
                 [snapValues]="[15, 30, 45]"
+                [value]="transitionValueOnDisable"
+                (valueChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', $event, transitionUnitOptionOnDisable)"
                 [snapDistance]="5"
                 [max]="59"
                 [step]="1"
@@ -80,69 +187,8 @@
                 class="status-dropdown"
                 [type]="'SMALL'"
                 [items]="transitionUnitOptions"
-                [selected]="transitionUnitOptionOnEnable"
-                (selectedChange)="transitionUnitOptionOnEnable = $event"
-              ></app-select-box>
-            </div>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span>When I wake up</span>
-            <span>Adjust my display brightness</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input type="checkbox" />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="setting-row-group">
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span>Change the brightness to</span>
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                unit="%"
-                [min]="20"
-                [max]="160"
-                [value]="100"
-                [step]="1"
-                [snapValues]="[100]"
-                [snapDistance]="8"
-              ></app-slider-setting>
-            </div>
-          </div>
-
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span>Adjust brightness gradually</span>
-              <span>Smoothly transition to your desired brightness value</span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input type="checkbox" />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span>Transition time</span>
-              <span>How long it should take to transition to the new brightness setting</span>
-            </div>
-            <div class="setting-row-action">
-              <input type="number" style="width: 3em; text-align: right" class="small" />
-              <app-select-box
-                class="status-dropdown"
-                [type]="'SMALL'"
-                [items]="transitionUnitOptions"
                 [selected]="transitionUnitOptionOnDisable"
-                (selectedChange)="transitionUnitOptionOnDisable = $event"
+                (selectedChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', transitionValueOnDisable, $event)"
               ></app-select-box>
             </div>
           </div>
