@@ -1,0 +1,15 @@
+.pane {
+  height: 100%;
+
+  &-content {
+    padding: 2em;
+    overflow-y: overlay;
+  }
+}
+
+
+.alert {
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+}

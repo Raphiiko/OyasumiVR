@@ -56,27 +56,4 @@ export class BatteryPercentageEnableSleepModeModalComponent
       this.triggerClasses.push(deviceClass);
     }
   }
-
-  updateThreshold(value: string, el: HTMLInputElement) {
-    const threshold = parseFloat(value);
-
-    if (threshold < 0 || threshold > 100) {
-      el.setCustomValidity(
-        this.translate.instant(
-          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdOutOfRange'
-        )
-      );
-      return;
-    } else if (!isInteger(threshold)) {
-      el.setCustomValidity(
-        this.translate.instant(
-          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdNotInteger'
-        )
-      );
-      return;
-    } else {
-      el.setCustomValidity('');
-    }
-    this.threshold = threshold;
-  }
 }

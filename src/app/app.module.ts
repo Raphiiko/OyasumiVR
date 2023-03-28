@@ -85,11 +85,15 @@ import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-au
 import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
-import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
+import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
+import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
+import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
+import { SliderComponent } from './components/slider/slider.component';
+import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -145,7 +149,9 @@ export function createTranslateLoader(http: HttpClient) {
     FriendSelectionModalComponent,
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
-    SleepDebugViewComponent,
+    BrightnessAutomationsViewComponent,
+    SliderSettingComponent,
+    SliderComponent,
   ],
   imports: [
     CommonModule,
@@ -213,7 +219,9 @@ export class AppModule {
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService
+    private inviteAutomationsService: InviteAutomationsService,
+    private brightnessControlService: BrightnessControlService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService
   ) {
     this.init();
   }
@@ -240,6 +248,11 @@ export class AppModule {
     await this.sidecarService.init().then(async () => {
       await this.nvmlService.init();
     });
+    // Initialize Brightness Control
+    await Promise.all([
+      this.brightnessControlService.init(),
+      this.brightnessControlAutomationService.init(),
+    ]);
     // Initialize automations
     await Promise.all([
       // GPU automations

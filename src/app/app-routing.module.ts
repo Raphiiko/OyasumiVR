@@ -11,13 +11,9 @@ import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-au
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
-import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
+import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 
 const routes: Routes = [
-  {
-    path: 'sleepDebug',
-    component: SleepDebugViewComponent,
-  },
   {
     path: 'dashboard',
     component: DashboardViewComponent,
@@ -46,6 +42,10 @@ const routes: Routes = [
       {
         path: 'statusAutomations',
         component: StatusAutomationsViewComponent,
+      },
+      {
+        path: 'brightnessAutomations',
+        component: BrightnessAutomationsViewComponent,
       },
       {
         path: 'autoInviteRequestAccept',

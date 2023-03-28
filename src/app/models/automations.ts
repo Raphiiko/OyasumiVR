@@ -23,10 +23,13 @@ export type AutomationType =
   // STATUS AUTOMATIONS
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
   // INVITE AUTOMATIONS
-  | 'AUTO_ACCEPT_INVITE_REQUESTS';
+  | 'AUTO_ACCEPT_INVITE_REQUESTS'
+  // BRIGHTNESS AUTOMATIONS
+  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
+  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 7;
+  version: 8;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -46,6 +49,9 @@ export interface AutomationConfigs {
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   // INVITE AUTOMATIONS
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
+  // BRIGHTNESS AUTOMATIONS
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: DisplayBrightnessOnSleepModeAutomationConfig;
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: DisplayBrightnessOnSleepModeAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -55,6 +61,14 @@ export interface AutomationConfig {
 //
 // Automation configs
 //
+
+// BRIGHTNESS AUTOMATIONS
+
+export interface DisplayBrightnessOnSleepModeAutomationConfig extends AutomationConfig {
+  brightness: number;
+  transition: boolean;
+  transitionTime: number;
+}
 
 // GPU AUTOMATIONS
 export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
@@ -151,7 +165,20 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 7,
+  version: 8,
+  // BRIGHTNESS AUTOMATIONS
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+    brightness: 20,
+    transition: true,
+    transitionTime: 1000 * 60 * 5,
+  },
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
+    brightness: 100,
+    transition: true,
+    transitionTime: 10000,
+  },
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,

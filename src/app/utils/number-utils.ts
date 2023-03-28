@@ -17,6 +17,6 @@ export function clamp(val: number, min: number, max: number) {
   return Math.min(Math.max(val, min), max);
 }
 
-export function ensureDecimals(num: number, decimals: number) {
+export function ensurePrecision(num: number, decimals: number) {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }

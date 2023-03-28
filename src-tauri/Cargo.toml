@@ -66,7 +66,6 @@ features = [
 
 [dependencies.openvr]
 git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
-rev = "c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 
 [features]
 # by default Tauri runs in production mode
