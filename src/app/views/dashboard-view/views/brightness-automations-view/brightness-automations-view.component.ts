@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { vshrink } from '../../../../utils/animations';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
@@ -12,6 +12,7 @@ import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { clamp } from '../../../../utils/number-utils';
 import { error } from 'tauri-plugin-log-api';
+import { BrightnessControlService } from '../../../../services/brightness-control/brightness-control.service';
 
 @Component({
   selector: 'app-brightness-automations-view',
@@ -20,7 +21,8 @@ import { error } from 'tauri-plugin-log-api';
   animations: [vshrink()],
 })
 export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
-  transitionUnitOptions: SelectBoxItem[] = [
+  private destroy$: Subject<void> = new Subject();
+  protected transitionUnitOptions: SelectBoxItem[] = [
     {
       id: 'SECONDS',
       label: 'Seconds',
@@ -30,21 +32,27 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
       label: 'Minutes',
     },
   ];
-  transitionUnitOptionOnEnable?: SelectBoxItem = this.transitionUnitOptions[0];
-  transitionUnitOptionOnDisable?: SelectBoxItem = this.transitionUnitOptions[0];
+  protected transitionUnitOptionOnEnable?: SelectBoxItem = this.transitionUnitOptions[0];
+  protected transitionUnitOptionOnDisable?: SelectBoxItem = this.transitionUnitOptions[0];
 
-  transitionValueOnEnable = 0;
-  transitionValueOnDisable = 0;
+  protected transitionValueOnEnable = 0;
+  protected transitionValueOnDisable = 0;
 
-  private destroy$: Subject<void> = new Subject();
   protected onSleepModeEnableConfig: DisplayBrightnessOnSleepModeAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
   protected onSleepModeDisableConfig: DisplayBrightnessOnSleepModeAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
   );
+  protected brightnessControlAvailable = false;
+  protected brightnessBounds = { min: 0, max: 100 };
+  protected brightnessSnapValues: number[] = [];
+  protected brightnessSnapDistance = 8;
 
-  constructor(private automationConfigService: AutomationConfigService) {}
+  constructor(
+    private automationConfigService: AutomationConfigService,
+    protected brightnessControl: BrightnessControlService
+  ) {}
 
   ngOnInit(): void {
     this.automationConfigService.configs
@@ -67,6 +75,22 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
           );
           this.transitionValueOnDisable = transitionValue;
           this.transitionUnitOptionOnDisable = transitionUnit;
+        }
+      });
+    this.brightnessControl
+      .driverIsAvailable()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(async (available) => {
+        this.brightnessControlAvailable = available;
+        if (available) {
+          const [min, max] = await this.brightnessControl.getBrightnessBounds();
+          this.brightnessBounds = { min, max };
+          this.brightnessSnapValues = [];
+          this.brightnessSnapDistance = 1;
+          if (min < 100 && max > 100) {
+            this.brightnessSnapValues = [100];
+          }
+          this.brightnessSnapDistance = Math.round((max - min) / 20);
         }
       });
   }

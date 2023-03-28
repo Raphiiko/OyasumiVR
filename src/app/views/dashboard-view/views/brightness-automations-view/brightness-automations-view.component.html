@@ -6,20 +6,20 @@
       >Oyasumi can automatically adjust the brightness of your headset when sleep mode is enabled
         or disabled.</p
       >
-      <div class="alert warning" @vshrink>
+      <div class="alert warning" @vshrink *ngIf="!brightnessControlAvailable">
         <div class="alert-bg"></div>
         <div class="alert-icon">
           <i class="material-icons"> warning </i>
         </div>
         <div class="alert-content">
           <span>{{
-            'Display brightness adjustment is currently only available on the Valve Index.'
+            'Display brightness control is currently only available on Valve Index. Please make sure SteamVR is running and your headset is connected.'
               | translate
             }}</span>
         </div>
       </div>
       <div class="settings">
-        <div class="setting-row">
+        <div class="setting-row" [class.disabled]="!brightnessControlAvailable">
           <div class="setting-row-label" translate>
             <span>When I go to sleep</span>
             <span>Adjust my display brightness</span>
@@ -41,8 +41,8 @@
           </div>
         </div>
 
-        <div class="setting-row-group" [class.disabled]="!onSleepModeEnableConfig.enabled">
-          <div class="setting-row">
+        <div class="setting-row-group">
+          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
             <div class="setting-row-label" translate>
               <span>Change the brightness to</span>
               <span></span>
@@ -50,18 +50,18 @@
             <div class="setting-row-action">
               <app-slider-setting
                 unit="%"
-                [min]="20"
-                [max]="160"
+                [min]="brightnessBounds.min"
+                [max]="brightnessBounds.max"
                 [value]="onSleepModeEnableConfig.brightness"
                 (valueChange)="updateBrightness('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', $event)"
                 [step]="1"
-                [snapValues]="[100]"
-                [snapDistance]="8"
+                [snapValues]="brightnessSnapValues"
+                [snapDistance]="brightnessSnapDistance"
               ></app-slider-setting>
             </div>
           </div>
 
-          <div class="setting-row">
+          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
             <div class="setting-row-label" translate>
               <span>Adjust brightness gradually</span>
               <span>Smoothly transition to your desired brightness value</span>
@@ -81,7 +81,8 @@
               </label>
             </div>
           </div>
-          <div class="setting-row">
+          <div class="setting-row"
+               [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled || !onSleepModeEnableConfig.transition">
             <div class="setting-row-label" translate>
               <span>Transition time</span>
               <span>How long it should take to transition to the new brightness setting</span>
@@ -107,7 +108,7 @@
             </div>
           </div>
         </div>
-        <div class="setting-row">
+        <div class="setting-row" [class.disabled]="!brightnessControlAvailable">
           <div class="setting-row-label" translate>
             <span>When I wake up</span>
             <span>Adjust my display brightness</span>
@@ -129,8 +130,8 @@
           </div>
         </div>
 
-        <div class="setting-row-group" [class.disabled]="!onSleepModeDisableConfig.enabled">
-          <div class="setting-row">
+        <div class="setting-row-group">
+          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
             <div class="setting-row-label" translate>
               <span>Change the brightness to</span>
               <span></span>
@@ -138,18 +139,18 @@
             <div class="setting-row-action">
               <app-slider-setting
                 unit="%"
-                [min]="20"
-                [max]="160"
+                [min]="brightnessBounds.min"
+                [max]="brightnessBounds.max"
                 [value]="onSleepModeDisableConfig.brightness"
                 (valueChange)="updateBrightness('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', $event)"
                 [step]="1"
-                [snapValues]="[100]"
-                [snapDistance]="8"
+                [snapValues]="brightnessSnapValues"
+                [snapDistance]="brightnessSnapDistance"
               ></app-slider-setting>
             </div>
           </div>
 
-          <div class="setting-row">
+          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
             <div class="setting-row-label" translate>
               <span>Adjust brightness gradually</span>
               <span>Smoothly transition to your desired brightness value</span>
@@ -168,7 +169,8 @@
               </label>
             </div>
           </div>
-          <div class="setting-row">
+          <div class="setting-row"
+               [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled || !onSleepModeDisableConfig.transition">
             <div class="setting-row-label" translate>
               <span>Transition time</span>
               <span>How long it should take to transition to the new brightness setting</span>

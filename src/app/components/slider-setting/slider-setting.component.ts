@@ -48,7 +48,6 @@ export class SliderSettingComponent implements OnInit, OnDestroy {
   }
 
   onInputBlur() {
-    console.log('blur', this.value.toString());
     this.inputEl!.nativeElement.value = this.value.toString();
   }
 

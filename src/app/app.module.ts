@@ -93,6 +93,7 @@ import { BrightnessControlService } from './services/brightness-control/brightne
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
+import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -219,7 +220,8 @@ export class AppModule {
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
     private inviteAutomationsService: InviteAutomationsService,
-    private brightnessControlService: BrightnessControlService
+    private brightnessControlService: BrightnessControlService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService
   ) {
     this.init();
   }
@@ -247,7 +249,10 @@ export class AppModule {
       await this.nvmlService.init();
     });
     // Initialize Brightness Control
-    await this.brightnessControlService.init();
+    await Promise.all([
+      this.brightnessControlService.init(),
+      this.brightnessControlAutomationService.init(),
+    ]);
     // Initialize automations
     await Promise.all([
       // GPU automations
