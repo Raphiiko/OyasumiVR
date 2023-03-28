@@ -16,6 +16,31 @@
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     }
   },
+  "brightness-automations": {
+    "title": "Brightness Automations",
+    "description": "Oyasumi can automatically adjust the brightness of your headset when sleep mode is enabled or disabled.",
+    "indexWarning": "Display brightness control is currently only available on Valve Index. Please make sure SteamVR is running and your headset is connected.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Adjust my display brightness"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Adjust my display brightness"
+    },
+    "brightness": {
+      "title": "Change the brightness to",
+      "description": ""
+    },
+    "transition": {
+      "title": "Adjust brightness gradually",
+      "description": "Smoothly transition to your desired brightness value"
+    },
+    "transitionTime": {
+      "title": "Transition time",
+      "description": "How long it should take to transition to the new brightness setting"
+    }
+  },
   "overview": {
     "sleep-mode": {
       "label": "Sleep Mode",

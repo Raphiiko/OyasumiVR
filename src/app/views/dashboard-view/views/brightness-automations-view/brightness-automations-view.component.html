@@ -1,10 +1,9 @@
 <div class="pane">
-  <div class="pane-title" translate>Brightness Automations</div>
+  <div class="pane-title" translate>brightness-automations.title</div>
   <div class="pane-content">
     <div class="setting-category">
       <p
-      >Oyasumi can automatically adjust the brightness of your headset when sleep mode is enabled
-        or disabled.</p
+        translate>brightness-automations.description</p
       >
       <div class="alert warning" @vshrink *ngIf="!brightnessControlAvailable">
         <div class="alert-bg"></div>
@@ -13,7 +12,7 @@
         </div>
         <div class="alert-content">
           <span>{{
-            'Display brightness control is currently only available on Valve Index. Please make sure SteamVR is running and your headset is connected.'
+            'brightness-automations.indexWarning'
               | translate
             }}</span>
         </div>
@@ -21,8 +20,8 @@
       <div class="settings">
         <div class="setting-row" [class.disabled]="!brightnessControlAvailable">
           <div class="setting-row-label" translate>
-            <span>When I go to sleep</span>
-            <span>Adjust my display brightness</span>
+            <span translate>brightness-automations.onSleepEnable.title</span>
+            <span translate>brightness-automations.onSleepEnable.description</span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -44,8 +43,8 @@
         <div class="setting-row-group">
           <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
             <div class="setting-row-label" translate>
-              <span>Change the brightness to</span>
-              <span></span>
+              <span translate>brightness-automations.brightness.title</span>
+              <span translate>brightness-automations.brightness.description</span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
@@ -63,8 +62,8 @@
 
           <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
             <div class="setting-row-label" translate>
-              <span>Adjust brightness gradually</span>
-              <span>Smoothly transition to your desired brightness value</span>
+              <span translate>brightness-automations.transition.title</span>
+              <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -84,8 +83,8 @@
           <div class="setting-row"
                [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled || !onSleepModeEnableConfig.transition">
             <div class="setting-row-label" translate>
-              <span>Transition time</span>
-              <span>How long it should take to transition to the new brightness setting</span>
+              <span translate>brightness-automations.transition.title</span>
+              <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
@@ -110,8 +109,8 @@
         </div>
         <div class="setting-row" [class.disabled]="!brightnessControlAvailable">
           <div class="setting-row-label" translate>
-            <span>When I wake up</span>
-            <span>Adjust my display brightness</span>
+            <span translate>brightness-automations.onSleepDisable.title</span>
+            <span translate>brightness-automations.onSleepDisable.description</span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
@@ -133,8 +132,8 @@
         <div class="setting-row-group">
           <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
             <div class="setting-row-label" translate>
-              <span>Change the brightness to</span>
-              <span></span>
+              <span translate>brightness-automations.brightness.title</span>
+              <span translate>brightness-automations.brightness.description</span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
@@ -152,8 +151,8 @@
 
           <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
             <div class="setting-row-label" translate>
-              <span>Adjust brightness gradually</span>
-              <span>Smoothly transition to your desired brightness value</span>
+              <span translate>brightness-automations.transition.title</span>
+              <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
@@ -172,8 +171,8 @@
           <div class="setting-row"
                [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled || !onSleepModeDisableConfig.transition">
             <div class="setting-row-label" translate>
-              <span>Transition time</span>
-              <span>How long it should take to transition to the new brightness setting</span>
+              <span translate>brightness-automations.transition.title</span>
+              <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <app-slider-setting
