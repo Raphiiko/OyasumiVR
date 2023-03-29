@@ -74,15 +74,6 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <tr><td><img src="https://user-images.githubusercontent.com/111654848/198073192-efa203e3-95e5-4961-a210-65e30b33cc68.gif" width="300"></td></tr>
 </table>
 
-- :dizzy: Automatic sleep animations with pose detection
-  - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
-  - Trigger your own animations with the included OSC script editors.
-  - Presets for popular locomotion assets, including:
-    - [ごろ寝システム v2.2 - 2.3](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean)
-      <br>(Sleep System v2.2 - 2.3 by minminmiin)
-      <br>([EX version](https://booth.pm/en/items/4233545) also supported!)
-    - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
-      <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :electric_plug: GPU Automations:
   - When you go to sleep, or when you wake up:
     - Activate your [MSI Afterburner](https://www.msi.com/Landing/afterburner/graphics-cards) profiles. (NVIDIA/AMD)
@@ -95,9 +86,21 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Automatically change your status based on the number of players in your world:
     <br>_Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!_
 - :wrench: Turning off all trackers and/or controllers with a single click.
-- :email: Automatically accept invite requests
+- :email: Automatically accept invite requests on VRChat
   - Automatically let friends in while you are asleep!
   - Configure whose invite requests are accepted using a black- or whitelist.
+- :low_brightness: Automatic smooth adjustment of display brightness (Valve Index)
+  - Allows you to gradually lower your headset's brightness when you fall asleep
+- :calling: [Premade expression menu](https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu) for controlling some features right from within VRChat
+- :dizzy: Automatic sleep animations with pose detection
+  - Detects your sleeping position to switch between your avatar's sleeping animations automatically.
+  - Trigger your own animations with the included OSC script editors.
+  - Presets for popular locomotion assets, including:
+    - [ごろ寝システム v2.2 - 2.3](https://minminmart.booth.pm/items/2886739) by [みんみんみーん](https://twitter.com/minminmeeean)
+      <br>(Sleep System v2.2 - 2.3 by minminmiin)
+      <br>([EX version](https://booth.pm/en/items/4233545) also supported!)
+    - [GoGo Loco v1.7.1+](https://booth.pm/en/items/3290806) by [franada](https://twitter.com/franada)
+      <br>(Semi-functional workaround available for 1.6.2 - 1.7.0)
 - :zzz: Automatically enable and disable sleep mode for triggering automations
   - Detect falling asleep:
     - When Oyasumi guesses you are asleep based on your movement
@@ -108,7 +111,6 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
     - When turning on a controller or tracker
     - On a time schedule
     - When SteamVR is stopped
-- :calling: [Premade expression menu](https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu) for controlling some features right from within VRChat
 - 🗺️ Multi language support
   - English
   - Dutch (Nederlands)
@@ -151,6 +153,12 @@ _(\*) Tundra trackers have very delayed reporting of battery levels and charging
 Any NVIDIA or AMD graphics card that is supported by MSI Afterburner can be automated by having Oyasumi activate the profiles you've set up within MSI Afterburner.
 
 Directly controlling the power limits of your graphics card with Oyasumi is only supported with NVIDIA cards. AMD users will have to use the MSI Afterburner profile automations to be able to control their power limits with Oyasumi.
+
+### Display Brightness Automations
+
+These automations are currently only supported on the Valve Index.
+
+Supporting more headsets by adjusting the image brightness is something that is [planned for a future release](https://github.com/Raphiiko/Oyasumi/issues/14).
 
 ## Development
 
