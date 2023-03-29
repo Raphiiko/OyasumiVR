@@ -32,9 +32,6 @@ export function createBrightnessTransitionTask(
     // Calculate the number of steps to take
     const steps = Math.round((duration / 1000) * frequency);
     // Start transitioning
-    info(
-      `[BrightnessControl] Starting display brightness transition (${currentBrightness}%=>${targetBrightness}%, ${duration}ms)`
-    );
     const startTime = Date.now();
     while (Date.now() <= startTime + duration) {
       // Sleep to match the frequency

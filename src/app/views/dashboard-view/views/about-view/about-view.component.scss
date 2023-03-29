@@ -1,4 +1,4 @@
-@import 'shadows.scss';
+@import 'shadows';
 
 :host {
   display: flex;
@@ -35,6 +35,7 @@
   align-items: stretch;
   margin: 0 auto;
 }
+
 
 .row {
   padding: 1em 0;

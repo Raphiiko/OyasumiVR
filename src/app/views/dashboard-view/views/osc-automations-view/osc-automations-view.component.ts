@@ -50,14 +50,13 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
   config: SleepingAnimationsAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
-  footLockReleaseWindowError?: string;
   currentPose: SleepingPose = 'UNKNOWN';
   sleepingPoses: SleepingPose[] = ['SIDE_FRONT', 'SIDE_BACK', 'SIDE_LEFT', 'SIDE_RIGHT'];
   footLockActions: Array<'FOOT_LOCK' | 'FOOT_UNLOCK'> = ['FOOT_LOCK', 'FOOT_UNLOCK'];
   presetNotes: SleepingAnimationPresetNote[] = [];
 
   get showManualControl(): boolean {
-    return !!Object.values(this.config.oscScripts).find((s) => !!s);
+    return this.config && this.config.preset === 'CUSTOM';
   }
 
   constructor(
@@ -115,20 +114,8 @@ export class OscAutomationsViewComponent implements OnInit, OnDestroy {
     });
   }
 
-  async updateFootLockReleaseWindow(value: string) {
-    const intValue = parseInt(value);
-    if (intValue <= 100) {
-      this.footLockReleaseWindowError =
-        'oscAutomations.sleepingAnimations.errors.releaseDurationTooShort';
-      return;
-    }
-    if (intValue > 5000) {
-      this.footLockReleaseWindowError =
-        'oscAutomations.sleepingAnimations.errors.releaseDurationTooLong';
-      return;
-    }
-    this.footLockReleaseWindowError = undefined;
-    await this.updateConfig({ footLockReleaseWindow: intValue });
+  async updateFootLockReleaseWindow(value: number) {
+    await this.updateConfig({ footLockReleaseWindow: value });
   }
 
   async setSleepingPosition(position: SleepingPose) {

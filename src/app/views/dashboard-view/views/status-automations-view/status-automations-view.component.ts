@@ -17,6 +17,7 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
+import { clamp } from '../../../../utils/number-utils';
 
 @Component({
   selector: 'app-status-automations-view',
@@ -120,9 +121,12 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
     await this.vrchat.setStatus(status);
   }
 
-  onLimitChange(value: string) {
-    if (value.trim() === '') return;
-    this.limit.next(Math.min(Math.max(parseInt(value) || 1, 1), 40));
+  onLimitChange(value: string | number) {
+    if (typeof value === 'string') {
+      if (value.trim() === '') return;
+      value = parseInt(value) || 1;
+    }
+    this.limit.next(clamp(value, 1, 40));
   }
 
   async setStatusSetOption(

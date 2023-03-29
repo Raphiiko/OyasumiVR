@@ -149,10 +149,6 @@
       "description": "Oyasumi kan automatisch de animaties van je avatar veranderen wanneer je je slaap houding wijzigd. Dit kan handig zijn als je geen full body tracking hebt, of als je je trackers s'nachts uitzet (of door Oyasumi laat uitzetten). Een voorbeeld hoe dit er uit ziet kan je <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">hier</a> vinden.\n\nEr zijn presets beschikbaar voor verschillende bestaande locomotion prefabs, maar je kan ook je eigen animaties specificeren.",
       "enable": "Automatische slaap animaties inschakelen",
       "customPreset": "Eigen Animaties",
-      "errors": {
-        "releaseDurationTooShort": "De duur moet minimaal 0.1 seconden zijn.",
-        "releaseDurationTooLong": "De duur mag maximaal 10 seconden zijn."
-      },
       "options": {
         "positions": {
           "title": "Slaap Houdingen",
@@ -190,8 +186,6 @@
   "battery-automations": {
     "title": "Batterij Automatiseringen",
     "devicePowerOff": {
-      "title": "Apparaten uitzetten",
-      "description": "Verschillende automatiseringen voor het uitzetten van je SteamVR apparaten.",
       "onSleepModeEnable": {
         "title": "Wanneer ik ga slapen",
         "description": "Zet apparaten uit wanneer slaap modus wordt ingeschakeld.",
@@ -568,8 +562,7 @@
       "statusAutomations": "Status Automatiseringen",
       "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
       "settings": "Instellingen",
-      "about": "Over Oyasumi",
-      "batteryManagement": "Batterij Management"
+      "about": "Over Oyasumi"
     },
     "device-list": {
       "title": "Apparaten",

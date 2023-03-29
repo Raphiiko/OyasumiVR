@@ -12,43 +12,7 @@
   <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'" [@noop]>
     <div class="pane-width-constraint">
       <!-- MANUAL CONTROL PANE-->
-      <div class="pane manual-control-pane" @vshrink *ngIf="showManualControl">
-        <div class="pane-content">
-          <div class="manual-control-pane-title">
-            <h3 translate>oscAutomations.sleepingAnimations.manualControl</h3>
-            <p class="current-pose">
-              {{ 'oscAutomations.sleepingAnimations.currentPose' | translate }}:&nbsp;
-              {{ 'oscAutomations.sleepingAnimations.options.positions.' + currentPose | translate }}
-            </p>
-          </div>
-          <div class="manual-control-row">
-            <button
-              *ngFor="let action of sleepingPoses"
-              class="btn btn-secondary"
-              (click)="setSleepingPosition(action)"
-              [disabled]="!config.oscScripts[action]"
-            >
-              <i class="material-icons">play_arrow</i>
-              <span>
-                {{ 'oscAutomations.sleepingAnimations.options.positions.' + action | translate }}
-              </span>
-            </button>
-          </div>
-          <div class="manual-control-row">
-            <button
-              *ngFor="let action of footLockActions"
-              class="btn btn-secondary"
-              (click)="setFootLock(action === 'FOOT_LOCK')"
-              [disabled]="!config.oscScripts[action]"
-            >
-              <i class="material-icons">play_arrow</i>
-              <span>
-                {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
-              </span>
-            </button>
-          </div>
-        </div>
-      </div>
+
       <p
         style="white-space: pre-wrap"
         [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"
@@ -155,123 +119,217 @@
                 ></app-osc-script-button>
               </div>
             </div>
+            <div class="manual-control-pane" @vshrink *ngIf="showManualControl">
+              <div class="manual-control-pane-title">
+                <h3 translate>oscAutomations.sleepingAnimations.manualControl</h3>
+                <p class="current-pose">
+                  {{ 'oscAutomations.sleepingAnimations.currentPose' | translate }}:&nbsp;
+                  {{
+                  'oscAutomations.sleepingAnimations.options.positions.' + currentPose | translate
+                  }}
+                </p>
+              </div>
+              <div class="manual-control-row">
+                <button
+                  *ngFor="let action of sleepingPoses"
+                  class="btn btn-secondary"
+                  (click)="setSleepingPosition(action)"
+                  [disabled]="!config.oscScripts[action]"
+                >
+                  <i class="material-icons">play_arrow</i>
+                  <span>
+                    {{
+                    'oscAutomations.sleepingAnimations.options.positions.' + action | translate
+                    }}
+                  </span>
+                </button>
+              </div>
+              <div class="manual-control-row">
+                <button
+                  *ngFor="let action of footLockActions"
+                  class="btn btn-secondary"
+                  (click)="setFootLock(action === 'FOOT_LOCK')"
+                  [disabled]="!config.oscScripts[action]"
+                >
+                  <i class="material-icons">play_arrow</i>
+                  <span>
+                    {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- EXTRA OPTIONS PANE-->
-      <div class="pane option-pane">
-        <div class="pane-content">
-          <h3 translate>oscAutomations.sleepingAnimations.options.general.title</h3>
-          <p translate>oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</p>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.onlyIfSleepModeEnabled"
-              (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled
-            </span>
-          </label>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.onlyIfAllTrackersTurnedOff"
-              (change)="
-                updateConfig({ onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff })
-              "
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff
-            </span>
-          </label>
-          <h3 style="margin-top: 1em" translate>
-            oscAutomations.sleepingAnimations.options.general.footLock.title
-          </h3>
-          <p translate> oscAutomations.sleepingAnimations.options.general.footLock.description </p>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.lockFeetOnSleepModeEnable"
-              (change)="
-                updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
-              "
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable
-            </span>
-          </label>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.unlockFeetOnSleepModeDisable"
-              (change)="
-                updateConfig({ unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable })
-              "
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable
-            </span>
-          </label>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.unlockFeetOnAutomationDisable"
-              (change)="
-                updateConfig({
-                  unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
-                })
-              "
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable
-            </span>
-          </label>
-          <label class="check-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.releaseFootLockOnPoseChange"
-              (change)="
-                updateConfig({ releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange })
-              "
-            />
-            <span class="check-toggle-checkmark"></span>
-            <span class="check-toggle-label" translate>
-              oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange
-            </span>
-          </label>
-          <div class="suboptions">
-            <div class="option suboption">
-              <div class="option-label" translate>
-                oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow
+      <!-- GENERAL OPTIONS PANE-->
+      <div class="setting-category">
+        <h3 translate>oscAutomations.sleepingAnimations.options.general.title</h3>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+            </div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row">
+              <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
+              >
+                <span></span>
               </div>
-              <div class="option-actions">
-                <div
-                  class="input-wrapper with-unit"
-                  [class.invalid]="footLockReleaseWindowError"
-                  [class.disabled]="!config.releaseFootLockOnPoseChange"
-                >
+              <div class="setting-row-action">
+                <label class="switch-toggle">
                   <input
-                    type="number"
-                    step="1"
-                    style="width: 5em"
-                    [value]="config.footLockReleaseWindow"
-                    (change)="updateFootLockReleaseWindow(footLockReleaseWindowInput.value)"
-                    #footLockReleaseWindowInput
-                    [disabled]="!config.releaseFootLockOnPoseChange"
+                    type="checkbox"
+                    [checked]="config.onlyIfSleepModeEnabled"
+                    (change)="
+                    updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })
+                  "
                   />
-                  <span>ms</span>
-                </div>
+                  <span class="switch-toggle-slider"></span>
+                </label>
               </div>
             </div>
-            <span *ngIf="footLockReleaseWindowError" style="color: var(--color-caution)" @vshrink>
-              {{ footLockReleaseWindowError | translate }}
-            </span>
+            <div class="setting-row">
+              <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span
+              >
+                <span></span>
+              </div>
+              <div class="setting-row-action">
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="config.onlyIfAllTrackersTurnedOff"
+                    (change)="
+                    updateConfig({ onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff })
+                  "
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="setting-category">
+        <h3 translate>oscAutomations.sleepingAnimations.options.general.footLock.title</h3>
+        <p translate>oscAutomations.sleepingAnimations.options.general.footLock.description</p>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.lockFeetOnSleepModeEnable"
+                  (change)="
+                    updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.unlockFeetOnSleepModeDisable"
+                  (change)="
+                    updateConfig({
+                      unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.unlockFeetOnAutomationDisable"
+                  (change)="
+                    updateConfig({
+                      unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
+              >
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.releaseFootLockOnPoseChange"
+                  (change)="
+                    updateConfig({
+                      releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
+                    })
+                  "
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row" [class.disabled]="!config.releaseFootLockOnPoseChange">
+              <div class="setting-row-label" translate>
+                <span translate
+                >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
+                >
+                <span></span>
+              </div>
+              <div class="setting-row-action">
+                <app-slider-setting
+                  [step]="1"
+                  [min]="100"
+                  [max]="5000"
+                  unit="ms"
+                  [value]="config.footLockReleaseWindow"
+                  (valueChange)="updateFootLockReleaseWindow($event)"
+                  [snapValues]="[600]"
+                  [snapDistance]="400"
+                ></app-slider-setting>
+              </div>
+            </div>
           </div>
         </div>
       </div>

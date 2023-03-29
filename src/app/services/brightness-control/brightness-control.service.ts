@@ -24,7 +24,11 @@ export class BrightnessControlService {
   private driver: BehaviorSubject<BrightnessControlDriver | null> =
     new BehaviorSubject<BrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private activeTransition?: CancellableTask;
+  private _activeTransition?: CancellableTask;
+
+  public get activeTransition() {
+    return this._activeTransition;
+  }
 
   get brightness(): number {
     return this._brightness.value;
@@ -52,24 +56,32 @@ export class BrightnessControlService {
       });
   }
 
-  async transitionBrightness(
+  transitionBrightness(
     percentage: number,
     duration: number,
     reason: 'DIRECT' | 'BRIGHTNESS_AUTOMATION'
-  ) {
-    if (this.activeTransition) {
-      this.activeTransition.cancel();
-    }
-    this.activeTransition = createBrightnessTransitionTask(this, percentage, duration);
-    this.activeTransition.onComplete.subscribe(() => {
-      if (this.activeTransition?.isComplete()) this.activeTransition = undefined;
+  ): CancellableTask {
+    this._activeTransition?.cancel();
+    this._activeTransition = createBrightnessTransitionTask(this, percentage, duration);
+    this._activeTransition.onComplete.subscribe(() => {
+      if (this._activeTransition?.isComplete()) this._activeTransition = undefined;
     });
-    await info(`[BrightnessControl] Starting display brightness transition (${reason})`);
-    await this.activeTransition.start();
+    this._activeTransition.onError.subscribe(() => {
+      if (this._activeTransition?.isError()) this._activeTransition = undefined;
+    });
+    info(`[BrightnessControl] Starting display brightness transition (${reason})`);
+    this._activeTransition.start();
+    return this._activeTransition;
+  }
+
+  cancelActiveTransition() {
+    this._activeTransition?.cancel();
+    this._activeTransition = undefined;
   }
 
   async setBrightness(percentage: number, reason: 'DIRECT' | 'BRIGHTNESS_AUTOMATION') {
     if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
+    if (reason !== 'BRIGHTNESS_AUTOMATION') this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);
     await this.driver.value!.setBrightnessPercentage(percentage);

@@ -174,10 +174,6 @@
       "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
       "customPreset": "Custom Animations",
-      "errors": {
-        "releaseDurationTooShort": "The release duration has to be at least 100ms.",
-        "releaseDurationTooLong": "The release duration cannot exceed 5000ms."
-      },
       "options": {
         "positions": {
           "title": "Sleeping Positions",

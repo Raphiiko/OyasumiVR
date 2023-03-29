@@ -75,7 +75,7 @@ alert {
     }
 
     > .pane {
-      background-color: var(--color-surface-3);
+      background-color: var(--color-surface-1);
 
       > .pane-content {
         padding: 1.5em;
@@ -118,7 +118,7 @@ alert {
   }
 
   .gpu-current-info {
-    background-color: var(--color-surface-3);
+    background-color: var(--color-surface-1);
     align-self: start;
     height: auto;
     transition: all 0.15s ease;

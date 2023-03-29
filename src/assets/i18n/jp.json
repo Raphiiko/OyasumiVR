@@ -149,10 +149,6 @@
       "description": "睡眠中に姿勢が変わることで自動的にアバターのアニメーションを変更することができます。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合（またはOyasumiを使用している場合）などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nまた、アバターのロコモーションはいくつかのプリセットを用意していますが、自分でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
-      "errors": {
-        "releaseDurationTooShort": "解除時間は100ms以上である必要があります。",
-        "releaseDurationTooLong": "解除時間は5000msを超えてはいけません。"
-      },
       "options": {
         "positions": {
           "title": "寝姿勢",
@@ -190,8 +186,6 @@
   "battery-automations": {
     "title": "バッテリーの自動化",
     "devicePowerOff": {
-      "title": "機器の電源を切る",
-      "description": "SteamVR機器をオフにするための様々な自動化機能です。",
       "onSleepModeEnable": {
         "title": "睡眠時",
         "description": "睡眠モード有効時、機器の電源をオフにする。",

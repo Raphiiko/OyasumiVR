@@ -117,7 +117,7 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     });
     this.snapIndicatorStyleLeft = this.snapValues.map((snapValue) => {
       const stopOffset = (snapValue - this.min) / (this.max - this.min);
-      return `calc(${stopOffset} * calc(${trackWidth}px - 1em))`;
+      return `calc(${stopOffset} * ${trackWidth}px - 0.5em)`;
     });
     this.cdr.detectChanges();
   }

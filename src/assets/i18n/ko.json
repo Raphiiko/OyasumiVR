@@ -131,8 +131,7 @@
         "GenericTracker": "트래커",
         "fallsBelow": "조건 값"
       }
-    },
-    "description": "여기서는 다양한 요인을 바탕으로 수면 모드를 자동으로 활성화하거나 비활성화하는 자동화 기능을 설정할 수 있어요."
+    }
   },
   "oscAutomations": {
     "title": "OSC 자동화",
@@ -146,10 +145,6 @@
       "description": "Oyasumi는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
       "enable": "자동 수면 애니메이션 활성화",
       "customPreset": "커스텀 애니메이션",
-      "errors": {
-        "releaseDurationTooShort": "해제 시간은 100ms 이상이어야 해요.",
-        "releaseDurationTooLong": "해제 시간은 100ms를 초과할 수 없어요."
-      },
       "options": {
         "positions": {
           "title": "수면 자세",
@@ -187,8 +182,6 @@
   "battery-automations": {
     "title": "배터리 자동화",
     "devicePowerOff": {
-      "title": "기기의 전원 끄기",
-      "description": "Steam VR 기기를 끄기 위한 다양한 자동화 기능이에요.",
       "onSleepModeEnable": {
         "title": "수면 모드 활성화 시",
         "description": "수면 모드 활성화 시 기기의 전원을 꺼요.",

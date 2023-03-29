@@ -1,24 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import { vshrink } from '../../../../utils/animations';
+import { fade, vshrink } from '../../../../utils/animations';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
   DisplayBrightnessOnSleepModeAutomationConfig,
-  TurnOffDevicesOnSleepModeEnableAutomationConfig,
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { clamp } from '../../../../utils/number-utils';
-import { error } from 'tauri-plugin-log-api';
 import { BrightnessControlService } from '../../../../services/brightness-control/brightness-control.service';
+import { BrightnessControlAutomationService } from '../../../../services/brightness-control/brightness-control-automation.service';
 
 @Component({
   selector: 'app-brightness-automations-view',
   templateUrl: './brightness-automations-view.component.html',
   styleUrls: ['./brightness-automations-view.component.scss'],
-  animations: [vshrink()],
+  animations: [vshrink(), fade()],
 })
 export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
@@ -51,7 +50,8 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private automationConfigService: AutomationConfigService,
-    protected brightnessControl: BrightnessControlService
+    protected brightnessControl: BrightnessControlService,
+    protected brightnessAutomation: BrightnessControlAutomationService
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +99,24 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
 
   async setAutomationEnabled(automation: AutomationType, enabled: boolean) {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });
+    // Cancel running transitions if disabling
+    console.log(1);
+    switch (automation) {
+      case 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
+        console.log(2);
+        if (this.brightnessAutomation.isSleepEnableTransitionActive) {
+          console.log('Cancelling transition');
+          this.brightnessControl.cancelActiveTransition();
+        }
+        break;
+      case 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
+        console.log(2);
+        if (this.brightnessAutomation.isSleepDisableTransitionActive) {
+          console.log('Cancelling transition');
+          this.brightnessControl.cancelActiveTransition();
+        }
+        break;
+    }
   }
 
   async toggleTransitioning(automation: AutomationType, transition: boolean) {

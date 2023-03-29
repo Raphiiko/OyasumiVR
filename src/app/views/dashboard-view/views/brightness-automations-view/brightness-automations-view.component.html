@@ -24,6 +24,7 @@
             <span translate>brightness-automations.onSleepEnable.description</span>
           </div>
           <div class="setting-row-action">
+            <div class="small-spinner" @fade *ngIf="brightnessAutomation.isSleepEnableTransitionActive"></div>
             <label class="switch-toggle">
               <input
                 type="checkbox"
@@ -38,6 +39,7 @@
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
+          <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepEnableTransitionActive"></div>
         </div>
 
         <div class="setting-row-group">
@@ -113,6 +115,7 @@
             <span translate>brightness-automations.onSleepDisable.description</span>
           </div>
           <div class="setting-row-action">
+            <div class="small-spinner" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive"></div>
             <label class="switch-toggle">
               <input
                 type="checkbox"
@@ -127,6 +130,7 @@
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
+          <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive"></div>
         </div>
 
         <div class="setting-row-group">

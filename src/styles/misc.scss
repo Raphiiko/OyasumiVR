@@ -41,6 +41,7 @@
   margin-bottom: 1em;
   background: var(--color-surface-1);
   border-radius: var(--surface-border-radius);
+  z-index: 0;
 
   & > * {
     transition: all 0.15s ease;
@@ -65,6 +66,7 @@
     margin-left: 2em;
     position: relative;
     border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
+    z-index: 5;
 
     &:not(:last-child) {
       border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) var(--surface-border-radius);
@@ -79,6 +81,7 @@
     padding: 1em;
     position: relative;
     transition: all .15s ease;
+    z-index: 10;
 
     &.disabled {
       pointer-events: none;
@@ -129,3 +132,12 @@
     }
   }
 }
+
+@function pow($base, $exponent) {
+  $result: 1;
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
+  }
+  @return $result;
+}
+

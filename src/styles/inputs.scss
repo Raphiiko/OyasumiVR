@@ -223,41 +223,6 @@ input:checked + .switch-toggle-slider:before {
 }
 
 //
-// SLIDER
-//
-
-.slider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 0.25em;
-  border-radius: 0.25em;
-  background: var(--color-surface-1);
-  outline: none;
-  margin: 0;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
-  position: relative;
-}
-
-.slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 0.5em;
-  height: 1em;
-  border-radius: 0.125em;
-  background: var(--color-primary);
-  cursor: pointer;
-}
-
-.slider::-moz-range-thumb {
-  width: 0.5em;
-  height: 1em;
-  border-radius: 0.125em;
-  background: var(--color-primary);
-  cursor: pointer;
-}
-
-//
 // GENERIC INPUTS
 //
 

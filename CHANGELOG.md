@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
 ### Changed
-- Updated layout of battery automations pane to match recent views.
+- Updated layout and styling of various views to match more recent views.
 - Reorganized navigation bar to reduce clutter.
 - Updated to Angular 15
 

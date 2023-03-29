@@ -12,7 +12,8 @@
     <span class="logo-tagline" translate>shared.logo.tagline</span>
   </div>
 </div>
-<div class="menu">
+<div class="menu" [class.translucent]="!!(background.background | async)">
+  <div class="bg"></div>
   <!-- General Root Menu -->
   <div class="rootmenu" [@rootMenu]="subMenu === 'GENERAL' ? 'active' : 'inactive'">
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
@@ -67,6 +68,7 @@
         <i class="material-icons-round">brightness_6</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.brightnessAutomations</div>
+      <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive || brightnessAutomation.isSleepEnableTransitionActive"></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
