@@ -1,4 +1,3 @@
-
 :host {
   display: block;
   overflow: hidden;
@@ -49,7 +48,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
   padding: 1em;
   overflow: hidden;
 
@@ -60,7 +59,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     padding: 0.5em 1em;
     border-radius: 999999px;
     background-color: var(--color-surface-3);

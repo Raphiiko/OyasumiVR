@@ -1,15 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
-import {
-  BehaviorSubject,
-  combineLatest,
-  map,
-  Observable,
-  skip,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { EventLogEntry } from '../../models/event-log-entry';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
 import { SimpleModalService } from 'ngx-simple-modal';

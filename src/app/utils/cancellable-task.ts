@@ -1,4 +1,4 @@
-import { BehaviorSubject, filter, map, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 
 type CancellableTaskStatus = 'waiting' | 'running' | 'completed' | 'cancelled' | 'error';
 

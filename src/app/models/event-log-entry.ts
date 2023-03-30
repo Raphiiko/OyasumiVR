@@ -1,5 +1,4 @@
 import { SleepModeStatusChangeReason } from './sleep-mode';
-import { AppSettings } from './settings';
 import { UserStatus } from 'vrchat/dist';
 
 export type EventLog = {

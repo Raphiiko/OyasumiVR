@@ -2,19 +2,14 @@
   <div class="pane-title" translate>brightness-automations.title</div>
   <div class="pane-content">
     <div class="setting-category">
-      <p
-        translate>brightness-automations.description</p
-      >
+      <p translate>brightness-automations.description</p>
       <div class="alert warning" @vshrink *ngIf="!brightnessControlAvailable">
         <div class="alert-bg"></div>
         <div class="alert-icon">
           <i class="material-icons"> warning </i>
         </div>
         <div class="alert-content">
-          <span>{{
-            'brightness-automations.indexWarning'
-              | translate
-            }}</span>
+          <span>{{ 'brightness-automations.indexWarning' | translate }}</span>
         </div>
       </div>
       <div class="settings">
@@ -24,7 +19,11 @@
             <span translate>brightness-automations.onSleepEnable.description</span>
           </div>
           <div class="setting-row-action">
-            <div class="small-spinner" @fade *ngIf="brightnessAutomation.isSleepEnableTransitionActive"></div>
+            <div
+              class="small-spinner"
+              @fade
+              *ngIf="brightnessAutomation.isSleepEnableTransitionActive"
+            ></div>
             <label class="switch-toggle">
               <input
                 type="checkbox"
@@ -39,11 +38,18 @@
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
-          <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepEnableTransitionActive"></div>
+          <div
+            class="active-effect"
+            @fade
+            *ngIf="brightnessAutomation.isSleepEnableTransitionActive"
+          ></div>
         </div>
 
         <div class="setting-row-group">
-          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
+          <div
+            class="setting-row"
+            [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled"
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.brightness.title</span>
               <span translate>brightness-automations.brightness.description</span>
@@ -62,28 +68,38 @@
             </div>
           </div>
 
-          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled">
+          <div
+            class="setting-row"
+            [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled"
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.transition.title</span>
               <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
-                <input type="checkbox"
-                       [checked]="onSleepModeEnableConfig.transition"
-                       (change)="
-                  toggleTransitioning(
-                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
-                    !onSleepModeEnableConfig.transition
-                  )
-                "
+                <input
+                  type="checkbox"
+                  [checked]="onSleepModeEnableConfig.transition"
+                  (change)="
+                    toggleTransitioning(
+                      'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                      !onSleepModeEnableConfig.transition
+                    )
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
           </div>
-          <div class="setting-row"
-               [class.disabled]="!brightnessControlAvailable || !onSleepModeEnableConfig.enabled || !onSleepModeEnableConfig.transition">
+          <div
+            class="setting-row"
+            [class.disabled]="
+              !brightnessControlAvailable ||
+              !onSleepModeEnableConfig.enabled ||
+              !onSleepModeEnableConfig.transition
+            "
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.transitionTime.title</span>
               <span translate>brightness-automations.transitionTime.description</span>
@@ -92,7 +108,13 @@
               <app-slider-setting
                 [min]="1"
                 [value]="transitionValueOnEnable"
-                (valueChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', $event, transitionUnitOptionOnEnable)"
+                (valueChange)="
+                  onChangeTransition(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    $event,
+                    transitionUnitOptionOnEnable
+                  )
+                "
                 [snapValues]="[15, 30, 45]"
                 [snapDistance]="5"
                 [max]="59"
@@ -103,7 +125,13 @@
                 [type]="'SMALL'"
                 [items]="transitionUnitOptions"
                 [selected]="transitionUnitOptionOnEnable"
-                (selectedChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', transitionValueOnEnable, $event)"
+                (selectedChange)="
+                  onChangeTransition(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    transitionValueOnEnable,
+                    $event
+                  )
+                "
                 #transitionUnitOnEnable
               ></app-select-box>
             </div>
@@ -115,7 +143,11 @@
             <span translate>brightness-automations.onSleepDisable.description</span>
           </div>
           <div class="setting-row-action">
-            <div class="small-spinner" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive"></div>
+            <div
+              class="small-spinner"
+              @fade
+              *ngIf="brightnessAutomation.isSleepDisableTransitionActive"
+            ></div>
             <label class="switch-toggle">
               <input
                 type="checkbox"
@@ -130,11 +162,18 @@
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
-          <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive"></div>
+          <div
+            class="active-effect"
+            @fade
+            *ngIf="brightnessAutomation.isSleepDisableTransitionActive"
+          ></div>
         </div>
 
         <div class="setting-row-group">
-          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
+          <div
+            class="setting-row"
+            [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled"
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.brightness.title</span>
               <span translate>brightness-automations.brightness.description</span>
@@ -153,27 +192,38 @@
             </div>
           </div>
 
-          <div class="setting-row" [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled">
+          <div
+            class="setting-row"
+            [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled"
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.transition.title</span>
               <span translate>brightness-automations.transition.description</span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
-                <input type="checkbox"
-                       [checked]="onSleepModeDisableConfig.transition"
-                       (change)="
-                  toggleTransitioning(
-                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
-                    !onSleepModeDisableConfig.transition
-                  )
-                " />
+                <input
+                  type="checkbox"
+                  [checked]="onSleepModeDisableConfig.transition"
+                  (change)="
+                    toggleTransitioning(
+                      'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                      !onSleepModeDisableConfig.transition
+                    )
+                  "
+                />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
           </div>
-          <div class="setting-row"
-               [class.disabled]="!brightnessControlAvailable || !onSleepModeDisableConfig.enabled || !onSleepModeDisableConfig.transition">
+          <div
+            class="setting-row"
+            [class.disabled]="
+              !brightnessControlAvailable ||
+              !onSleepModeDisableConfig.enabled ||
+              !onSleepModeDisableConfig.transition
+            "
+          >
             <div class="setting-row-label" translate>
               <span translate>brightness-automations.transitionTime.title</span>
               <span translate>brightness-automations.transitionTime.description</span>
@@ -183,7 +233,13 @@
                 [min]="1"
                 [snapValues]="[15, 30, 45]"
                 [value]="transitionValueOnDisable"
-                (valueChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', $event, transitionUnitOptionOnDisable)"
+                (valueChange)="
+                  onChangeTransition(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    $event,
+                    transitionUnitOptionOnDisable
+                  )
+                "
                 [snapDistance]="5"
                 [max]="59"
                 [step]="1"
@@ -193,7 +249,13 @@
                 [type]="'SMALL'"
                 [items]="transitionUnitOptions"
                 [selected]="transitionUnitOptionOnDisable"
-                (selectedChange)="onChangeTransition('DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', transitionValueOnDisable, $event)"
+                (selectedChange)="
+                  onChangeTransition(
+                    'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    transitionValueOnDisable,
+                    $event
+                  )
+                "
               ></app-select-box>
             </div>
           </div>

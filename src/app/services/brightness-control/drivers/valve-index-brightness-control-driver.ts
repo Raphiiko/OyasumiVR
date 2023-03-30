@@ -59,9 +59,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
       [...sampleKeys].reverse().find((k) => parseFloat(k) <= analogGain)!
     );
     const upperBound: number =
-      lowerBound == 1
-        ? 1
-        : parseFloat(sampleKeys[sampleKeys.indexOf(lowerBound.toString()) + 1]);
+      lowerBound == 1 ? 1 : parseFloat(sampleKeys[sampleKeys.indexOf(lowerBound.toString()) + 1]);
     // Linearly interpolate between the two samples
     return ensurePrecision(
       lerp(
@@ -75,8 +73,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
 
   private percentageToAnalogGain(percentage: number): number {
     // 100 and above are linear
-    if (percentage >= 100)
-      return ensurePrecision(clamp(percentage / 100, 1, 1.6), 2);
+    if (percentage >= 100) return ensurePrecision(clamp(percentage / 100, 1, 1.6), 2);
     // Valve whyyyyyyyyyyyyyyYYYYYYYY
     const sampleMap = new Map(
       [...VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP].map(([key, value]) => [
@@ -97,9 +94,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
       lerp(
         sampleMap.get(lowerBound.toString())!,
         sampleMap.get(upperBound.toString())!,
-        upperBound == lowerBound
-          ? 0.5
-          : (percentage - lowerBound) / (upperBound - lowerBound)
+        upperBound == lowerBound ? 0.5 : (percentage - lowerBound) / (upperBound - lowerBound)
       ),
       3
     );

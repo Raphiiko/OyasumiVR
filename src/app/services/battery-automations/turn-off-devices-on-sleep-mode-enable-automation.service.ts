@@ -9,7 +9,7 @@ import {
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
 import { SleepService } from '../sleep.service';
-import { EventLog, EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 import { error } from 'tauri-plugin-log-api';
 

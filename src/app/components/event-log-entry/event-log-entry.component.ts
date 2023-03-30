@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
-import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
+import { EventLogEntry } from '../../models/event-log-entry';
 import { EventLogEntryParser } from './event-log-entry-parser';
 import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
 import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode-disabled';

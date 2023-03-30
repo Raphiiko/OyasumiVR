@@ -1,9 +1,5 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import {
-  EventLogType,
-  EventLogBrightnessChanged,
-  EventLogAcceptedInviteRequest,
-} from '../../../models/event-log-entry';
+import { EventLogAcceptedInviteRequest, EventLogType } from '../../../models/event-log-entry';
 
 export class EventLogAcceptedInviteRequestEntryParser extends EventLogEntryParser<EventLogAcceptedInviteRequest> {
   entryType(): EventLogType {

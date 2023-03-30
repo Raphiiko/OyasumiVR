@@ -9,13 +9,11 @@
   }
 }
 
-
 .alert {
   &:not(:last-child) {
     margin-bottom: 1em;
   }
 }
-
 
 .setting-row {
   &:first-child {
@@ -41,8 +39,6 @@
     pointer-events: none;
     @include attention-glow(0.15);
     z-index: 20;
-    transition: all .25s ease;
+    transition: all 0.25s ease;
   }
 }
-
-

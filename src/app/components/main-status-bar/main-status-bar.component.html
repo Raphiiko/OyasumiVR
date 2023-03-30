@@ -19,11 +19,11 @@
         <i class="material-icons-round">nights_stay</i>
       </div>
       <span @hshrink *ngIf="state.hover"
-      >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="(sleepMode | async) === false" @hshrink translate
-      >comp.main-status-bar.inactive</span
+        >comp.main-status-bar.inactive</span
       >
     </div>
   </div>
@@ -63,7 +63,7 @@
         </div>
         <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
           <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-          >brightness_1</i
+            >brightness_1</i
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>

@@ -67,7 +67,8 @@
     border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
 
     &:not(:last-child) {
-      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) var(--surface-border-radius);
+      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius)
+        var(--surface-border-radius);
     }
   }
 
@@ -78,7 +79,7 @@
     align-items: center;
     padding: 1em;
     position: relative;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
 
     &.disabled {
       pointer-events: none;
@@ -137,4 +138,3 @@
   }
   @return $result;
 }
-

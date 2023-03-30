@@ -1,9 +1,5 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import {
-  EventLogSleepModeEnabled,
-  EventLogTurnedOffDevices,
-  EventLogType,
-} from '../../../models/event-log-entry';
+import { EventLogTurnedOffDevices, EventLogType } from '../../../models/event-log-entry';
 
 export class EventLogTurnedOffDevicesEntryParser extends EventLogEntryParser<EventLogTurnedOffDevices> {
   entryType(): EventLogType {

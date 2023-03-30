@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { fade, vshrink } from '../../../../utils/animations';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,

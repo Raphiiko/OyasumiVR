@@ -27,14 +27,14 @@
       padding: 0.5em 1em;
 
       ::ng-deep {
-        i.material-icons, i.material-icons-round {
+        i.material-icons,
+        i.material-icons-round {
           font-size: 1.125em;
           margin-right: 0.25em;
           line-height: 0;
           transform: translateY(0.125em);
         }
       }
-
 
       span:first-child {
         font-weight: 500;
@@ -55,5 +55,4 @@
       color: var(--color-text-3);
     }
   }
-
 }

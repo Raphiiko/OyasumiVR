@@ -91,8 +91,8 @@
   }
 }
 
-.submenu, .rootmenu.translucent {
-
+.submenu,
+.rootmenu.translucent {
   .menu-item {
     &:hover {
       background: rgba(white, 0.1);
@@ -202,7 +202,8 @@
         height: 1.5em;
 
         &.vrchat {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
+            contrast(89%);
         }
       }
     }
@@ -234,7 +235,7 @@
       pointer-events: none;
       @include attention-glow(0.05);
       z-index: 20;
-      transition: all .25s ease;
+      transition: all 0.25s ease;
       border-radius: 99999px;
     }
   }

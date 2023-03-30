@@ -1,15 +1,28 @@
 <div class="track-container" (mousedown)="onDragStart($event)">
   <div class="track">
     <div class="track-fill" [style.width]="trackFillStyleWidth"></div>
-    <div class="track-stop" *ngFor="let snapValue of snapValues; let i = index" [style.left]="trackStopStyleLeft[i]"
-         [class.surpassed]="snapValue < value"></div>
+    <div
+      class="track-stop"
+      *ngFor="let snapValue of snapValues; let i = index"
+      [style.left]="trackStopStyleLeft[i]"
+      [class.surpassed]="snapValue < value"
+    ></div>
   </div>
-  <div class="thumb" #thumbEl [style.left]="thumbStyleLeft" [class.dragging]="dragging" (mousedown)="onDragStart($event)"></div>
+  <div
+    class="thumb"
+    #thumbEl
+    [style.left]="thumbStyleLeft"
+    [class.dragging]="dragging"
+    (mousedown)="onDragStart($event)"
+  ></div>
 </div>
 <div class="snap-indicator-container">
-  <div class="snap-indicator" *ngFor="let snapValue of snapValues; let i = index"
-       [style.left]="snapIndicatorStyleLeft[i]"
-       [class.surpassed]="snapValue < value">
+  <div
+    class="snap-indicator"
+    *ngFor="let snapValue of snapValues; let i = index"
+    [style.left]="snapIndicatorStyleLeft[i]"
+    [class.surpassed]="snapValue < value"
+  >
     <i class="material-icons-round">arrow_drop_up</i>
   </div>
 </div>

@@ -2,7 +2,6 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
-import { isInteger } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {

@@ -5,7 +5,7 @@ import { SleepService } from './sleep.service';
 import { OpenVRService } from './openvr.service';
 import { combineLatest, debounceTime, firstValueFrom, map, startWith, Subject, tap } from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
-import { error, info } from 'tauri-plugin-log-api';
+import { info } from 'tauri-plugin-log-api';
 import { LighthouseService } from './lighthouse.service';
 import { EventLogTurnedOffDevices } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
@@ -77,7 +77,8 @@ export class OscControlService {
         this.syncParameters.next();
         await this.osc.send_int(ADDRESS_CMD, 0);
         break;
-      case 2: // All Trackers
+      case 2: {
+        // All Trackers
         const devices = (await firstValueFrom(this.openvr.devices)).filter(
           (d) => d.class === 'GenericTracker'
         );
@@ -88,7 +89,9 @@ export class OscControlService {
           devices: devices.length > 1 ? 'TRACKERS' : 'TRACKER',
         } as EventLogTurnedOffDevices);
         break;
-      case 3: // All Controllers
+      }
+      case 3: {
+        // All Controllers
         setTimeout(async () => {
           const devices = (await firstValueFrom(this.openvr.devices)).filter(
             (d) => d.class === 'Controller'
@@ -101,7 +104,9 @@ export class OscControlService {
           } as EventLogTurnedOffDevices);
         }, 2000);
         break;
-      case 4: // All Devices
+      }
+      case 4: {
+        // All Devices
         setTimeout(async () => {
           await this.lighthouse.turnOffDevices(await firstValueFrom(this.openvr.devices));
           this.eventLog.logEvent({
@@ -111,6 +116,7 @@ export class OscControlService {
           } as EventLogTurnedOffDevices);
         }, 2000);
         break;
+      }
     }
   }
 

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
-  EventLogEntry,
-  EventLogDraft,
-  EventLog,
   EVENT_LOG_DEFAULT,
+  EventLog,
+  EventLogDraft,
+  EventLogEntry,
 } from '../models/event-log-entry';
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';

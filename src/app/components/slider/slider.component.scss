@@ -62,13 +62,15 @@ $thumb-size: 1.25em;
   left: 0;
   transform: translate($thumb-size/-2, $thumb-size/-2);
   @include shadow(1, true);
-  transition: box-shadow 0.1s ease, opacity 0.1s ease, background-color 0.1s ease, border-color 0.1s ease;
+  transition: box-shadow 0.1s ease, opacity 0.1s ease, background-color 0.1s ease,
+    border-color 0.1s ease;
 
   &:not(.disabled) {
     cursor: pointer;
   }
 
-  &:hover, &.dragging {
+  &:hover,
+  &.dragging {
     background-color: var(--color-primary);
     border-color: var(--color-primary-hover);
   }
