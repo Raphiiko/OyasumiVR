@@ -10,7 +10,7 @@ export class EventLogStatusChangedOnPlayerCountChangeEntryParser extends EventLo
     return 'statusChangedOnPlayerCountChange';
   }
 
-  override headerInfoTitle(entry: EventLogStatusChangedOnPlayerCountChange): string {
+  override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.statusChangedOnPlayerCountChange.title';
   }
 

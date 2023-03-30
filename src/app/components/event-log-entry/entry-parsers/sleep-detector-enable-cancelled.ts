@@ -9,7 +9,7 @@ export class EventLogSleepDetectorEnableCancelledEntryParser extends EventLogEnt
     return 'sleepDetectorEnableCancelled';
   }
 
-  override headerInfoSubTitle(entry: EventLogSleepDetectorEnableCancelled): string {
+  override headerInfoSubTitle(): string {
     return 'comp.event-log-entry.type.sleepDetectorEnableCancelled.subtitle';
   }
 }

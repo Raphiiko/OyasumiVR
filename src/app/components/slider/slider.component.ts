@@ -10,7 +10,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { orderBy } from 'lodash';
@@ -40,7 +39,7 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
 
   constructor(private el: ElementRef, private cdr: ChangeDetectorRef) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.recalculateStyles();
   }
 
@@ -60,7 +59,7 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   };
 
   @HostListener('window:mouseup', ['$event'])
-  onDragEnd = ($event: MouseEvent) => {
+  onDragEnd = () => {
     if (!this.dragging) return;
     this.dragging = false;
   };

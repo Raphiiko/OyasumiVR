@@ -9,7 +9,7 @@ export function createBrightnessTransitionTask(
   duration: number,
   frequency = 60
 ): CancellableTask {
-  return new CancellableTask(async (task, taskStatus) => {
+  return new CancellableTask(async (task) => {
     // Ensure the target brightness is within the bounds of the brightness control
     const [min, max] = await brightnessControl.getBrightnessBounds();
     const clampedBrightness = clamp(targetBrightness, min, max);
@@ -27,10 +27,6 @@ export function createBrightnessTransitionTask(
       );
       throw 'BRIGHTNESS_UNAVAILABLE';
     }
-    // Calculate the brightness delta
-    const brightnessDelta = targetBrightness - currentBrightness;
-    // Calculate the number of steps to take
-    const steps = Math.round((duration / 1000) * frequency);
     // Start transitioning
     const startTime = Date.now();
     while (Date.now() <= startTime + duration) {
