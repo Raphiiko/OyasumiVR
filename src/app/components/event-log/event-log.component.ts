@@ -11,13 +11,15 @@ import {
   tap,
 } from 'rxjs';
 import { EventLogEntry } from '../../models/event-log-entry';
-import { fade, noop, vshrink } from '../../utils/animations';
+import { fade, hshrink, noop, vshrink } from '../../utils/animations';
+import { SimpleModalService } from 'ngx-simple-modal';
+import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-event-log',
   templateUrl: './event-log.component.html',
   styleUrls: ['./event-log.component.scss'],
-  animations: [vshrink(), noop(), fade()],
+  animations: [vshrink(), noop(), fade(), hshrink()],
 })
 export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroy$ = new Subject<void>();
@@ -27,8 +29,13 @@ export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
 
   protected logsInView: Observable<EventLogEntry[]>;
   animationPause = true;
+  clearHover = false;
 
-  constructor(private eventLog: EventLogService, private cdr: ChangeDetectorRef) {
+  constructor(
+    private eventLog: EventLogService,
+    private cdr: ChangeDetectorRef,
+    private modalService: SimpleModalService
+  ) {
     this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount]).pipe(
       takeUntil(this.destroy$),
       tap(([log]) => {
@@ -67,5 +74,18 @@ export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
 
   hasMore(): boolean {
     return this.showCount.value < this.entries;
+  }
+
+  clearLog() {
+    this.modalService
+      .addModal(ConfirmModalComponent, {
+        title: 'comp.event-log.clearLogModal.title',
+        message: 'comp.event-log.clearLogModal.message',
+      })
+      .subscribe((data) => {
+        if (data.confirmed) {
+          this.eventLog.clearLog();
+        }
+      });
   }
 }

@@ -2,10 +2,16 @@
   <div class="pane-title">
     <span translate>comp.event-log.title</span>
     <button
-      class="btn btn-secondary btn-icon"
-      translate
+      class="btn btn-secondary"
+      (mouseover)="clearHover = true"
+      (mouseleave)="clearHover = false"
+      (click)="clearLog()"
+      [disabled]="entries === 0"
     >
-      <i class="material-icons-round">more_vert</i>
+      <span>&nbsp;</span>
+      <i class="material-icons-round">clear</i>
+      <span>&nbsp;</span>
+      <span translate @hshrink *ngIf="clearHover" class="label">comp.event-log.clearLog</span>
     </button>
   </div>
   <div class="pane-content">

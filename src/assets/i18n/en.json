@@ -667,7 +667,12 @@
     "event-log": {
       "title": "Events",
       "show-more": "Show More",
-      "no-logs": "No events have been logged yet!"
+      "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "clearLog": "Clear",
+      "clearLogModal": {
+        "title": "Confirm clear",
+        "message": "Are you sure you want to clear the event log? This cannot be undone."
+      }
     },
     "event-log-entry": {
       "type": {

@@ -33,6 +33,10 @@ export class EventLogService {
       .subscribe(() => this.saveEventLog());
   }
 
+  public clearLog() {
+    this._eventLog.next(cloneDeep(EVENT_LOG_DEFAULT));
+  }
+
   public logEvent(event: EventLogDraft) {
     const fullEvent = { ...event, id: uuidv4(), time: Date.now() } as EventLogEntry;
     const events = this._eventLog.value.logs;

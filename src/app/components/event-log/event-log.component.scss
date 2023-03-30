@@ -11,8 +11,21 @@
 .pane-title {
   flex-shrink: 0;
 
-  .btn-icon {
+  .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     margin-right: -0.5em;
+    font-size: 0.75em;
+
+    i.material-icons-round {
+      font-size: 0.9em;
+      margin: 0 -0.5em;
+    }
+
+    .label {
+      margin-left: 0.5em;
+    }
   }
 }
 
@@ -72,6 +85,8 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  white-space: pre-line;
+  text-align: center;
 
   i.material-icons-round {
     font-size: 2.5em;
