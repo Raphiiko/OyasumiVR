@@ -78,6 +78,7 @@
         "startCalibration": "キャリブレーションを開始する",
         "restartCalibration": "キャリブレーションを再開する",
         "info": {
+          "intro": "HMDの動きから入眠を検知して睡眠モードに移行します。",
           "stepPrefix": "キャリブレーション手順は以下の通りです。",
           "step": {
             "one": "HMDを装着し、横になる",
@@ -128,7 +129,7 @@
           }
         },
         "sleepCheck": {
-          "title": "有効化の確認通知",
+          "title": "有効化の最終確認",
           "description": "<a class=\"notificationSettingsLink\">通知</a>を有効にする必要があります"
         }
       },
