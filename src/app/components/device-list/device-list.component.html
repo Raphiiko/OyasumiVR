@@ -28,7 +28,7 @@
           class="btn-power-off"
           *ngIf="category.canPowerOff"
           [@fade]
-          (click)="turnOffDevices(category.devices)"
+          (click)="turnOffDevices(category)"
         >
           <i class="material-icons">power_settings_new</i>
         </button>

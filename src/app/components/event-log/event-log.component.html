@@ -1,0 +1,30 @@
+<div class="pane">
+  <div class="pane-title">
+    <span translate>comp.event-log.title</span>
+    <button
+      class="btn btn-secondary"
+      (mouseover)="clearHover = true"
+      (mouseleave)="clearHover = false"
+      (click)="clearLog()"
+      [disabled]="entries === 0"
+    >
+      <span>&nbsp;</span>
+      <i class="material-icons-round">clear</i>
+      <span>&nbsp;</span>
+      <span translate @hshrink *ngIf="clearHover" class="label">comp.event-log.clearLog</span>
+    </button>
+  </div>
+  <div class="pane-content">
+    <div class="no-event-logs" *ngIf="entries === 0" @fade @noop>
+      <i class="material-icons-round">info</i>
+      <span translate>comp.event-log.no-logs</span>
+    </div>
+    <div class="event-logs" @noop>
+      <app-event-log-entry [entry]="entry" *ngFor="let entry of (logsInView | async); trackBy: trackLogEntryBy"
+                           @vshrink [@.disabled]="animationPause"></app-event-log-entry>
+      <div class="show-more" @vshrink *ngIf="hasMore()" [@.disabled]="animationPause">
+        <span (click)="showMore()" translate>comp.event-log.show-more</span>
+      </div>
+    </div>
+  </div>
+</div>

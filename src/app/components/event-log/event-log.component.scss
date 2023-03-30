@@ -1,0 +1,101 @@
+
+:host {
+  display: block;
+  overflow: hidden;
+}
+
+.pane {
+  height: 100%;
+}
+
+.pane-title {
+  flex-shrink: 0;
+
+  .btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: -0.5em;
+    font-size: 0.75em;
+
+    i.material-icons-round {
+      font-size: 0.9em;
+      margin: 0 -0.5em;
+    }
+
+    .label {
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.pane-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+}
+
+.event-logs {
+  overflow-y: overlay;
+  flex: 1;
+  background: var(--color-surface-1);
+}
+
+.show-more {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+  padding: 1em;
+  overflow: hidden;
+
+  span {
+    text-align: center;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all .15s ease;
+    padding: 0.5em 1em;
+    border-radius: 999999px;
+    background-color: var(--color-surface-3);
+
+    &:hover {
+      background-color: var(--color-surface-4);
+    }
+
+    &:active {
+      background-color: var(--color-surface-2);
+    }
+  }
+}
+
+.no-event-logs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  white-space: pre-line;
+  text-align: center;
+
+  i.material-icons-round {
+    font-size: 2.5em;
+    color: var(--color-text-2);
+    margin-bottom: 0.25em;
+  }
+
+  span {
+    font-size: 1em;
+    color: var(--color-text-2);
+  }
+}

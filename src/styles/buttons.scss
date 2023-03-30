@@ -74,6 +74,14 @@ button.btn {
     }
   }
 
+  &.btn-icon {
+    padding: 0.4em 0.4em;
+
+    .material-icons, .material-icons-round {
+      font-size: 1em;
+    }
+  }
+
   &.btn-primary {
     --scoped-bg-color: var(--color-primary);
     --scoped-color: var(--color-on-primary);

@@ -69,6 +69,7 @@
     @include shadow(2, true);
     max-height: 20em;
     overflow-y: overlay;
+    z-index: 200;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -89,7 +90,6 @@
 
 .dropdown-container {
   position: relative;
-  z-index: 10;
 }
 
 .select-item {

@@ -663,6 +663,101 @@
       "noFriendsSelected": "No friends selected",
       "noResultsFor": "No results for '{{query}}'",
       "noFriends": "Your friends list is empty"
+    },
+    "event-log": {
+      "title": "Events",
+      "show-more": "Show More",
+      "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "clearLog": "Clear",
+      "clearLogModal": {
+        "title": "Confirm clear",
+        "message": "Are you sure you want to clear the event log? This cannot be undone."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "Sleep mode enabled",
+          "reason": {
+            "manual": "You enabled sleep mode manually",
+            "osc-control": "Sleep mode was enabled over OSC",
+            "automation": {
+              "unknown": "By an unknown automation",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "As you were asleep",
+              "SLEEP_MODE_ENABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "As a device battery level met the threshold",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "Sleep mode disabled",
+          "reason": {
+            "manual": "You disabled sleep mode manually",
+            "osc-control": "Sleep mode was disabled over OSC",
+            "automation": {
+              "unknown": "By an unknown automation",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
+              "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on"
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "Turned off a controller",
+            "CONTROLLERS": "Turned off multiple controllers",
+            "TRACKER": "Turned off a tracker",
+            "TRACKERS": "Turned off multiple trackers",
+            "ALL": "Turned off all devices",
+            "VARIOUS": "Turned off various devices"
+          },
+          "reason": {
+            "MANUAL": "Turned off manually",
+            "OSC_CONTROL": "Turned off over OSC",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "CHARGING": "As the device is recharging"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "Power limit for '{{device}}' restored to {{limit}}",
+            "set": "Power limit for '{{device}}' set to {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "Headset brightness set to {{value}}",
+            "transition": "Headset brightness transitioning to {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "Auto-accepted invite request from '{{displayName}}'",
+          "subtitle": {
+            "whitelist": "As this player was whitelisted",
+            "blacklist": "As this player was not blacklisted"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "Changed your VRChat status from {{oldStatus}} to {{newStatus}}",
+          "reason": {
+            "BELOW_LIMIT": "As the amount of players in your world dropped below {{threshold}}",
+            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {{threshold}}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "Automatic enabling of sleep mode cancelled",
+          "subtitle": "As the user was still awake"
+        }
+      }
     }
   }
 }

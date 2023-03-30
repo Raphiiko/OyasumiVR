@@ -1,18 +1,17 @@
 <div class="pane" [@noop]>
   <div class="pane-title" translate>oscAutomations.title</div>
-  <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'SLEEPING_ANIMATIONS'"
-      (click)="activeTab = 'SLEEPING_ANIMATIONS'"
-    >
-      <div class="tab-label" translate>oscAutomations.tab.sleepingAnimations</div>
-    </div>
-  </div>
+<!--  <div class="tab-bar">-->
+<!--    <div-->
+<!--      class="tab"-->
+<!--      [class.active]="activeTab === 'SLEEPING_ANIMATIONS'"-->
+<!--      (click)="activeTab = 'SLEEPING_ANIMATIONS'"-->
+<!--    >-->
+<!--      <div class="tab-label" translate>oscAutomations.tab.sleepingAnimations</div>-->
+<!--    </div>-->
+<!--  </div>-->
   <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'" [@noop]>
     <div class="pane-width-constraint">
-      <!-- MANUAL CONTROL PANE-->
-
+      <h2 translate>oscAutomations.tab.sleepingAnimations</h2>
       <p
         style="white-space: pre-wrap"
         [innerHtml]="'oscAutomations.sleepingAnimations.description' | translate"
