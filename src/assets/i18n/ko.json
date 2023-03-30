@@ -16,6 +16,31 @@
       "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     }
   },
+  "brightness-automations": {
+    "title": "밝기 자동화",
+    "description": "Oyasumi는 수면 모드가 변경되었을 때 헤드셋의 밝기를 자동으로 조정할 수 있어요.",
+    "indexWarning": "밝기 제어는 현재 Valve Index에서만 가능해요. SteamVR이 켜져 있고 헤드셋이 연결되어있는지 확인해주세요.",
+    "onSleepEnable": {
+      "title": "수면 모드 활성화 시",
+      "description": "헤드셋의 밝기를 조정해요."
+    },
+    "onSleepDisable": {
+      "title": "수면 모드 비활성화 시",
+      "description": "헤드셋의 밝기를 조정해요."
+    },
+    "brightness": {
+      "title": "조정할 밝기",
+      "description": ""
+    },
+    "transition": {
+      "title": "점진적 밝기 조정",
+      "description": "원하는 밝기까지 조금씩 부드럽게 조정해요."
+    },
+    "transitionTime": {
+      "title": "변화 시간",
+      "description": "원하는 밝기까지 조정될 때까지 걸리는 시간이에요."
+    }
+  },
   "overview": {
     "sleep-mode": {
       "label": "수면 모드",
@@ -29,7 +54,7 @@
     "title": "수면 감지",
     "enableAutomations": {
       "title": "수면 모드 활성화",
-      "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "atTime": "지정된 시간에",
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
       "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
@@ -40,7 +65,7 @@
     },
     "disableAutomations": {
       "title": "수면 모드 비활성화",
-      "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요.",
       "atTime": "지정된 시간에",
       "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
       "onSteamVRStop": "SteamVR이 멈췄을 때"
@@ -129,7 +154,11 @@
         "whenA": "기준 기기",
         "Controller": "컨트롤러",
         "GenericTracker": "트래커",
-        "fallsBelow": "조건 값"
+        "fallsBelow": "조건 값",
+        "errors": {
+          "thresholdOutOfRange": "조건 값은 0%에서 100% 사이여야 해요.",
+          "thresholdNotInteger": "조건 값은 숫자이여야 해요."
+        }
       }
     }
   },
@@ -305,6 +334,10 @@
     "noPlayersAdded": "목록에 아무도 추가되지 않았어요.",
     "addFriends": "플레이어 추가",
     "clearPlayers": "목록 비우기",
+    "removeModal": {
+      "title": "제거 확인",
+      "message": "'{{name}}'님을 정말로 리스트에서 지울까요?"
+    },
     "options": {
       "enable": {
         "title": "활성화",
@@ -554,6 +587,8 @@
       "statusAutomations": "스테이터스 자동화",
       "autoInviteRequestAccept": "인바이트 리퀘스트 \n자동 수락",
       "settings": "설정",
+      "vrcAutomations": "VRChat 자동화",
+      "brightnessAutomations": "밝기 자동화",
       "about": "Oyasumi에 대해"
     },
     "device-list": {
@@ -596,7 +631,7 @@
       "commands": {
         "COMMAND": {
           "title": "OSC 커멘드",
-          "description": "OSC 커멘드 실행해요."
+          "description": "OSC 커멘드를 실행해요."
         },
         "SLEEP": {
           "title": "수면",
