@@ -91,20 +91,21 @@
   }
 }
 
-.submenu {
-  z-index: 10;
+.submenu, .rootmenu.translucent {
 
   .menu-item {
     &:hover {
       background: rgba(white, 0.1);
-      //border-color: var(--color-text-3);
     }
 
     &.active {
       background: rgba(white, 0.1);
-      //border-color: var(--color-text-1);
     }
   }
+}
+
+.submenu {
+  z-index: 10;
 }
 
 .rootmenu,

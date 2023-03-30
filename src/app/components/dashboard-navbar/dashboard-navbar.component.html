@@ -15,7 +15,8 @@
 <div class="menu" [class.translucent]="!!(background.background | async)">
   <div class="bg"></div>
   <!-- General Root Menu -->
-  <div class="rootmenu" [@rootMenu]="subMenu === 'GENERAL' ? 'active' : 'inactive'">
+  <div class="rootmenu" [@rootMenu]="subMenu === 'GENERAL' ? 'active' : 'inactive'"
+       [class.translucent]="!!(background.background | async)">
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">apps</i>
@@ -59,7 +60,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -68,7 +69,8 @@
         <i class="material-icons-round">brightness_6</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.brightnessAutomations</div>
-      <div class="active-effect" @fade *ngIf="brightnessAutomation.isSleepDisableTransitionActive || brightnessAutomation.isSleepEnableTransitionActive"></div>
+      <div class="active-effect" @fade
+           *ngIf="brightnessAutomation.isSleepDisableTransitionActive || brightnessAutomation.isSleepEnableTransitionActive"></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
