@@ -21,6 +21,8 @@ import { SleepService } from '../sleep.service';
 import { WorldContext } from '../../models/vrchat';
 import { CurrentUser, UserStatus } from 'vrchat/dist';
 import { info } from 'tauri-plugin-log-api';
+import { EventLogService } from '../event-log.service';
+import { EventLogStatusChangedOnPlayerCountChange } from '../../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -29,7 +31,8 @@ export class StatusChangeForPlayerCountAutomationService {
   constructor(
     private vrchat: VRChatService,
     private automationConfig: AutomationConfigService,
-    private sleep: SleepService
+    private sleep: SleepService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -64,22 +67,31 @@ export class StatusChangeForPlayerCountAutomationService {
               worldContext.playerCount < config.limit
                 ? config.statusBelowLimit
                 : config.statusAtLimitOrAbove,
-            currentStatus: user!.status,
+            oldStatus: user!.status,
+            reason: worldContext.playerCount < config.limit ? 'BELOW_LIMIT' : 'AT_LIMIT_OR_ABOVE',
+            threshold: config.limit,
           })
         ),
         // Stop if status is already set or user is offline
         filter(
-          ({ newStatus, currentStatus }) =>
-            newStatus !== currentStatus && currentStatus !== UserStatus.Offline
+          ({ newStatus, oldStatus }) => newStatus !== oldStatus && oldStatus !== UserStatus.Offline
         ),
         // Throttle to prevent spamming, just in case. (This should already be handled at the service level).
         throttleTime(500, async, { leading: true, trailing: true }),
         // Set the status
-        switchMap(({ newStatus }) => {
+        switchMap(({ oldStatus, newStatus, reason, threshold }) => {
           info(
             `[StatusChangeForPlayerCountAutomation] Detected changed conditions, setting new status...`
           );
-          return this.vrchat.setStatus(newStatus);
+          return this.vrchat.setStatus(newStatus).then(() => {
+            this.eventLog.logEvent({
+              type: 'statusChangedOnPlayerCountChange',
+              reason,
+              threshold,
+              newStatus,
+              oldStatus,
+            } as EventLogStatusChangedOnPlayerCountChange);
+          });
         })
       )
       .subscribe();

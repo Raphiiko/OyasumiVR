@@ -100,19 +100,14 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
   async setAutomationEnabled(automation: AutomationType, enabled: boolean) {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });
     // Cancel running transitions if disabling
-    console.log(1);
     switch (automation) {
       case 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
-        console.log(2);
         if (this.brightnessAutomation.isSleepEnableTransitionActive) {
-          console.log('Cancelling transition');
           this.brightnessControl.cancelActiveTransition();
         }
         break;
       case 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
-        console.log(2);
         if (this.brightnessAutomation.isSleepDisableTransitionActive) {
-          console.log('Cancelling transition');
           this.brightnessControl.cancelActiveTransition();
         }
         break;

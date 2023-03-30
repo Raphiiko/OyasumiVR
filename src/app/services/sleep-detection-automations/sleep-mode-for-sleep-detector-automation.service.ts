@@ -11,6 +11,7 @@ import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EventLogService } from '../event-log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -39,7 +40,8 @@ export class SleepModeForSleepDetectorAutomationService {
     private automationConfig: AutomationConfigService,
     private sleep: SleepService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -54,6 +56,9 @@ export class SleepModeForSleepDetectorAutomationService {
       if (this.sleepEnableTimeoutId) {
         clearTimeout(this.sleepEnableTimeoutId);
         this.sleepEnableTimeoutId = null;
+        this.eventLog.logEvent({
+          type: 'sleepDetectorEnableCancelled',
+        });
         await this.notifications.play_sound('bell');
         await this.notifications.send(
           this.translate.instant('notifications.sleepCheckCancel.title'),
@@ -78,7 +83,7 @@ export class SleepModeForSleepDetectorAutomationService {
     )
       return;
     // Stop here if the last time we tried enabling was less than 15 minutes ago
-    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * 1500) return;
+    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * 15) return;
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.

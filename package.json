@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "start": "npm run build-preload-assets && ng serve",
+    "build": "npm run build-preload-assets && ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
     "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && node scripts/move-sidecar-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -16,7 +16,8 @@
     "translation-converter": "node scripts/translation-converter.js",
     "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders",
     "tl": "node scripts/translation-utils.js",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "build-preload-assets": "node scripts/build-preload-assets.js"
   },
   "private": true,
   "dependencies": {

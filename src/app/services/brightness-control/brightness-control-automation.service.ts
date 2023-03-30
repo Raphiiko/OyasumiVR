@@ -4,6 +4,8 @@ import { SleepService } from '../sleep.service';
 import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
 import { BrightnessControlService } from './brightness-control.service';
 import { CancellableTask } from '../../utils/cancellable-task';
+import { EventLogService } from '../event-log.service';
+import { EventLogBrightnessChanged } from '../../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +16,8 @@ export class BrightnessControlAutomationService {
   constructor(
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
-    private brightnessControl: BrightnessControlService
+    private brightnessControl: BrightnessControlService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -60,7 +63,14 @@ export class BrightnessControlAutomationService {
         sleepMode,
       };
     } else {
-      this.brightnessControl.setBrightness(config.brightness, 'BRIGHTNESS_AUTOMATION');
+      await this.brightnessControl.setBrightness(config.brightness, 'BRIGHTNESS_AUTOMATION');
     }
+    this.eventLog.logEvent({
+      type: 'brightnessChanged',
+      reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+      value: config.brightness,
+      transition: config.transition,
+      transitionTime: config.transitionTime,
+    } as EventLogBrightnessChanged);
   }
 }
