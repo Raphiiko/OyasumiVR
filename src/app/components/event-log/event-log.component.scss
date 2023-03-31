@@ -9,23 +9,6 @@
 
 .pane-title {
   flex-shrink: 0;
-
-  .btn {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-right: -0.5em;
-    font-size: 0.75em;
-
-    i.material-icons-round {
-      font-size: 0.9em;
-      margin: 0 -0.5em;
-    }
-
-    .label {
-      margin-left: 0.5em;
-    }
-  }
 }
 
 .pane-content {
@@ -96,5 +79,26 @@
   span {
     font-size: 1em;
     color: var(--color-text-2);
+  }
+}
+
+
+.btn-clear {
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-right: -0.5em;
+  font-size: 0.75em;
+  height: 2em;
+
+  i.material-icons-round {
+    font-size: 0.9em;
+    margin: 0 -0.5em;
+  }
+
+  .label {
+    margin-left: 0.5em;
+    white-space: nowrap;
   }
 }
