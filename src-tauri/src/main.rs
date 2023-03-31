@@ -162,6 +162,8 @@ fn main() {
             commands::openvr::openvr_status,
             commands::openvr::openvr_get_analog_gain,
             commands::openvr::openvr_set_analog_gain,
+            commands::openvr::openvr_get_supersample_scale,
+            commands::openvr::openvr_set_supersample_scale,
             commands::os::run_command,
             commands::os::play_sound,
             commands::splash::close_splashscreen,

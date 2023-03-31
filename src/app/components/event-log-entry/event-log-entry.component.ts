@@ -12,6 +12,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, takeUntil } from 'rxjs';
 import { EventLogSleepDetectorEnableCancelledEntryParser } from './entry-parsers/sleep-detector-enable-cancelled';
+import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/render-resolution-changed';
 
 const parsers: EventLogEntryParser<EventLogEntry>[] = [
   new EventLogSleepModeEnabledEntryParser(),
@@ -22,6 +23,7 @@ const parsers: EventLogEntryParser<EventLogEntry>[] = [
   new EventLogAcceptedInviteRequestEntryParser(),
   new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
   new EventLogSleepDetectorEnableCancelledEntryParser(),
+  new EventLogRenderResolutionChangedEntryParser(),
 ];
 
 @Component({

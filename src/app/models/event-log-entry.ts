@@ -19,7 +19,8 @@ export type EventLogEntry =
   | EventLogBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogStatusChangedOnPlayerCountChange
-  | EventLogSleepDetectorEnableCancelled;
+  | EventLogSleepDetectorEnableCancelled
+  | EventLogRenderResolutionChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -31,7 +32,8 @@ export type EventLogType =
   | 'brightnessChanged'
   | 'acceptedInviteRequest'
   | 'statusChangedOnPlayerCountChange'
-  | 'sleepDetectorEnableCancelled';
+  | 'sleepDetectorEnableCancelled'
+  | 'renderResolutionChanged';
 
 export interface EventLogBase {
   id: string;
@@ -88,4 +90,10 @@ export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
 
 export interface EventLogSleepDetectorEnableCancelled extends EventLogBase {
   type: 'sleepDetectorEnableCancelled';
+}
+
+export interface EventLogRenderResolutionChanged extends EventLogBase {
+  type: 'renderResolutionChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  resolution: number | null;
 }

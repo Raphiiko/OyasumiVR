@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Automations for adjusting SteamVR's render resolution.
+
+## [1.6.0]
+
+### Added
 - Display brightness automations for Valve Index.
 - Event log for displaying actions taken by Oyasumi
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).

@@ -105,6 +105,8 @@ import localeJP from '@angular/common/locales/ja';
 import localeNL from '@angular/common/locales/nl';
 import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
+import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
+import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -170,6 +172,7 @@ export function createTranslateLoader(http: HttpClient) {
     SliderComponent,
     EventLogComponent,
     EventLogEntryComponent,
+    ResolutionAutomationsViewComponent,
   ],
   imports: [
     CommonModule,
@@ -241,6 +244,7 @@ export class AppModule {
     private inviteAutomationsService: InviteAutomationsService,
     private brightnessControlService: BrightnessControlService,
     private brightnessControlAutomationService: BrightnessControlAutomationService,
+    private renderResolutionAutomationService: RenderResolutionAutomationService,
     private eventLog: EventLogService
   ) {
     this.init();
@@ -271,10 +275,7 @@ export class AppModule {
       await this.nvmlService.init();
     });
     // Initialize Brightness Control
-    await Promise.all([
-      this.brightnessControlService.init(),
-      this.brightnessControlAutomationService.init(),
-    ]);
+    await this.brightnessControlService.init();
     // Initialize automations
     await Promise.all([
       // GPU automations
@@ -296,6 +297,10 @@ export class AppModule {
       this.statusChangeForPlayerCountAutomationService.init(),
       // Invite automations
       this.inviteAutomationsService.init(),
+      // Brightness automations
+      this.brightnessControlAutomationService.init(),
+      // Resolution automations
+      this.renderResolutionAutomationService.init(),
     ]);
     await invoke('close_splashscreen');
     // Language selection modal

@@ -14,7 +14,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
   }
 
   async getBrightnessPercentage(): Promise<number> {
-    let analogGain = await invoke<number>('openvr_get_analog_gain');
+    let analogGain = await this.openvr.getAnalogGain();
     analogGain = ensurePrecision(analogGain, 3);
     return this.analogGainToPercentage(analogGain);
   }
@@ -23,7 +23,7 @@ export class ValveIndexBrightnessControlDriver extends BrightnessControlDriver {
     const bounds = await this.getBrightnessBounds();
     percentage = clamp(percentage, bounds[0], bounds[1]);
     const analogGain = this.percentageToAnalogGain(percentage);
-    await invoke('openvr_set_analog_gain', { analogGain });
+    this.openvr.setAnalogGain(analogGain);
   }
 
   isAvailable(): Observable<boolean> {
