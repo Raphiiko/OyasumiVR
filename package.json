@@ -92,5 +92,21 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^2.7.1",
     "typescript": "^4.8.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,json,js}": [
+      "ng-lint-staged lint --fix --",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{html,scss,md,html,yml,json}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
