@@ -30,7 +30,6 @@
     },
     "brightness": {
       "title": "明るさを変更",
-      "description": "{PLACEHOLDER}"
     },
     "transition": {
       "title": "輝度遷移のスムージング",
