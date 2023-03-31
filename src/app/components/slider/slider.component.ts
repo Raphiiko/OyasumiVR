@@ -51,6 +51,11 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
     this.recalculateStyles();
   }
 
+  @HostListener('window:resize', ['$event'])
+  onResize = () => {
+    this.recalculateStyles();
+  };
+
   onDragStart = (event: MouseEvent) => {
     event.stopImmediatePropagation();
     if (this.dragging) return;
