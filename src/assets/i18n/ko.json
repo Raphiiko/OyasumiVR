@@ -663,6 +663,101 @@
       "noFriendsSelected": "친구가 선택되지 않았어요",
       "noResultsFor": "'{{query}}'에 대한 결과가 없어요",
       "noFriends": "친구 목록이 비어있어요"
+    },
+    "event-log": {
+      "title": "이벤트",
+      "show-more": "더보기",
+      "no-logs": "아직 아무 이벤트도 기록되지 않았어요.\n로그는 최대 48시간 보관되어요.",
+      "clearLog": "비우기",
+      "clearLogModal": {
+        "title": "비우기 확인",
+        "message": "정말로 이벤트 로그를 지울까요? 이 작업은 취소할 수 없어요."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "수면 모드가 활성화됨",
+          "reason": {
+            "manual": "수동으로 수면 모드를 활성화했어요.",
+            "osc-control": "OSC를 통해 수면 모드가 활성화되었어요.",
+            "automation": {
+              "unknown": "알 수 없는 자동화에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "수면 감지에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "장치의 배터리 잔량이 설정 값이 되어서 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "컨트롤러의 전원이 꺼져서 수면 모드가 활성화되었어요."
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "수면 모드가 비활성화됨",
+          "reason": {
+            "manual": "수동으로 수면 모드를 비활성화했어요.",
+            "osc-control": "OSC를 통해 수면 모드가 비활성화되었어요.",
+            "automation": {
+              "unknown": "알 수 없는 자동화에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR이 꺼져서 수면 모드가 비활성화되었어요.",
+              "SLEEP_MODE_DISABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 비활성화되었어요.",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "컨트롤러의 전원이 켜져서 수면 모드가 비활성화되었어요."
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "컨트롤러를 끔",
+            "CONTROLLERS": "여러 컨트롤러 끔",
+            "TRACKER": "트래커가 끔",
+            "TRACKERS": "여러 트래커를 끔",
+            "ALL": "모든 기기를 끔",
+            "VARIOUS": "다양한 기기를 끔"
+          },
+          "reason": {
+            "MANUAL": "수동으로 기기를 껐어요.",
+            "OSC_CONTROL": "OSC를 통해 기기를 껐어요.",
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 기기를 껐어요.",
+            "CHARGING": "기기가 충전중으로 기기를 껐어요."
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "'{{device}}'의 전력 제한을 {{limit}}으로 복원함",
+            "set": "'{{device}}'의 전력 제한을 {{limit}}으로 설정함"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 전력 제한을 설정했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 전력 제한을 복원했어요."
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "헤드셋의 밝기를 {{value}}으로 설정함",
+            "transition": "헤드셋의 밝기를 {{value}}으로 점차 변화시킴"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 밝기를 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 밝기를 변경했어요."
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "'{{displayName}}'의 인바이트 리퀘스트를 수락함",
+          "subtitle": {
+            "whitelist": "이 플레이어가 화이트리스트에 있었기에 수락했어요.",
+            "blacklist": "이 플레이어가 블랙리스트에 없었기에 수락했어요."
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "VRChat 스테이터스를 {{oldStatus}}에서 {{newStatus}}으로 변경함",
+          "reason": {
+            "BELOW_LIMIT": "월드의 플레이어가 {{threshold}}인 미만이기에 스테이터스가 변경되었어요.",
+            "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {{threshold}}인 이상이기에 스테이터스가 변경되었어요."
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "수면 모드 자동 실행이 취소됨",
+          "subtitle": "유저가 깨어있었기 때문에 수면 모드의 자동 실행을 취소했어요."
+        }
+      }
     }
   }
 }
