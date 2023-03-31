@@ -99,8 +99,14 @@
     }
   },
   "lint-staged": {
-    "src/**/*": [
-      "ng-lint-staged lint --fix --"
+    "*.{ts,json,js}": [
+      "ng-lint-staged lint --fix --",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{html,scss,md,html,yml,json}": [
+      "prettier --write",
+      "git add"
     ]
   }
 }
