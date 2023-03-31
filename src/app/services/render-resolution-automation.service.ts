@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
-import { BrightnessControlService } from './brightness-control/brightness-control.service';
 import { EventLogService } from './event-log.service';
 import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
 import { EventLogRenderResolutionChanged } from '../models/event-log-entry';

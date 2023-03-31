@@ -1,5 +1,4 @@
 import { BrightnessControlDriver } from './brightness-control-driver';
-import { invoke } from '@tauri-apps/api';
 import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
 import { combineLatest, map, Observable } from 'rxjs';
