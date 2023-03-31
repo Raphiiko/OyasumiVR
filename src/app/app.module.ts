@@ -107,6 +107,9 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
+import { SleepingAnimationsTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/sleeping-animations-tab/sleeping-animations-tab.component';
+import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/osc-general-tab/osc-general-tab.component';
+import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -173,6 +176,8 @@ export function createTranslateLoader(http: HttpClient) {
     EventLogComponent,
     EventLogEntryComponent,
     ResolutionAutomationsViewComponent,
+    SleepingAnimationsTabComponent,
+    OscGeneralTabComponent,
   ],
   imports: [
     CommonModule,
@@ -237,6 +242,7 @@ export class AppModule {
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
     // OSC automations
+    private oscGeneralAutomationsService: OscGeneralAutomationsService,
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
@@ -292,6 +298,7 @@ export class AppModule {
       this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
       this.turnOffDevicesWhenChargingAutomationService.init(),
       // OSC automations
+      this.oscGeneralAutomationsService.init(),
       this.sleepingAnimationsAutomationService.init(),
       // Status automations
       this.statusChangeForPlayerCountAutomationService.init(),

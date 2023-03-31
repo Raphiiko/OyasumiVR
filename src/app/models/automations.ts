@@ -19,6 +19,7 @@ export type AutomationType =
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
   // OSC AUTOMATIONS
+  | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
   // STATUS AUTOMATIONS
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
@@ -47,6 +48,7 @@ export interface AutomationConfigs {
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
   // OSC AUTOMATIONS
+  OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   // STATUS AUTOMATIONS
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
@@ -141,6 +143,11 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 }
 
 // OSC AUTOMATIONS
+export interface OscGeneralAutomationConfig extends AutomationConfig {
+  onSleepModeEnable?: OscScript;
+  onSleepModeDisable?: OscScript;
+}
+
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   preset: string | null;
   oscScripts: {
@@ -257,6 +264,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     deviceClasses: [],
   },
   // OSC AUTOMATIONS
+  OSC_GENERAL: {
+    enabled: true,
+  },
   SLEEPING_ANIMATIONS: {
     enabled: false,
     preset: null,

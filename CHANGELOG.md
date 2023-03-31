@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Display brightness automations for Valve Index.
 - Automations for adjusting SteamVR's render resolution.
 - Event log for displaying actions taken by Oyasumi
+- OSC Automations for sending custom OSC commands when the sleep mode changes.
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
 ### Changed
