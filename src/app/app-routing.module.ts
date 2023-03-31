@@ -12,6 +12,7 @@ import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-au
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
+import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 
 const routes: Routes = [
   {
@@ -46,6 +47,10 @@ const routes: Routes = [
       {
         path: 'brightnessAutomations',
         component: BrightnessAutomationsViewComponent,
+      },
+      {
+        path: 'resolutionAutomations',
+        component: ResolutionAutomationsViewComponent,
       },
       {
         path: 'autoInviteRequestAccept',

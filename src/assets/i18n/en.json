@@ -589,7 +589,8 @@
       "settings": "Settings",
       "vrcAutomations": "VRChat Automations",
       "brightnessAutomations": "Brightness Automations",
-      "about": "About Oyasumi"
+      "about": "About Oyasumi",
+      "resolutionAutomations": "Resolution Automations"
     },
     "device-list": {
       "title": "Devices",
@@ -756,8 +757,35 @@
         "sleepDetectorEnableCancelled": {
           "title": "Automatic enabling of sleep mode cancelled",
           "subtitle": "As the user was still awake"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR render resolution set to 'auto'",
+            "custom": "SteamVR render resolution set to {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
         }
       }
+    }
+  },
+  "resolution-automations": {
+    "title": "Resolution Automations",
+    "description": "Oyasumi can automatically adjust the render resolution of SteamVR when sleep mode is enabled or disabled.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Adjust my render resolution"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Adjust my render resolution"
+    },
+    "renderResolution": {
+      "title": "Change the render resolution to",
+      "custom": "Custom",
+      "auto": "Auto"
     }
   }
 }

@@ -20,7 +20,17 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 export class SliderSettingComponent implements OnInit, OnDestroy {
   @Input() min = 0;
   @Input() max = 100;
-  @Input() value = 50;
+
+  _value = 50;
+  @Input() set value(value: number | null) {
+    if (value === null) return;
+    this._value = value;
+  }
+
+  get value(): number {
+    return this._value;
+  }
+
   @Input() step = 1;
   @Input() unit?: string;
   @Input() snapValues: number[] = [];

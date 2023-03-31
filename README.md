@@ -91,6 +91,8 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
   - Configure whose invite requests are accepted using a black- or whitelist.
 - :low_brightness: Automatic smooth adjustment of display brightness (Valve Index)
   - Allows you to gradually lower your headset's brightness when you fall asleep
+- :eyeglasses: Automatic adjustment of SteamVR's render resolution 
+  - Allows you to lower your headset's render resolution when you fall asleep 
 - :calling: [Premade expression menu](https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu) for controlling some features right from within VRChat
 - :dizzy: Automatic sleep animations with pose detection
   - Detects your sleeping position to switch between your avatar's sleeping animations automatically.

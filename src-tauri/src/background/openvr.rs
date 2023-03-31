@@ -1,7 +1,8 @@
 use std::{
+    ffi::CStr,
     sync::{Arc, Mutex},
     thread,
-    time::Duration, ffi::CStr,
+    time::Duration,
 };
 
 use chrono::{naive::NaiveDateTime, Utc};
@@ -39,10 +40,10 @@ pub struct OpenVRManager {
 impl OpenVRManager {
     pub fn new() -> OpenVRManager {
         let state = Arc::new(OpenVRManagerState {
-                active: Mutex::new(false),
-                status: Mutex::new(OpenVRStatus::Inactive),
-                devices: Mutex::new(vec![]),
-                settings: Mutex::new(None),
+            active: Mutex::new(false),
+            status: Mutex::new(OpenVRStatus::Inactive),
+            devices: Mutex::new(vec![]),
+            settings: Mutex::new(None),
         });
         let mut task = OpenVRManagerTask::new(state.clone());
         thread::spawn(move || {
@@ -114,6 +115,54 @@ impl OpenVRManager {
         }
     }
 
+    pub fn get_supersample_scale(&self) -> Result<Option<f32>, String> {
+        let settings = self.state.settings.lock().unwrap();
+        if settings.is_none() {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        let supersample_manual_override = settings.as_ref().unwrap().get_bool(
+            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+        );
+        let supersample_manual_override = match supersample_manual_override {
+            Ok(supersample_manual_override) => supersample_manual_override,
+            Err(_) => return Err("SUPERSAMPLE_MANUAL_OVERRIDE_NOT_FOUND".to_string()),
+        };
+        // Supersampling is set to auto
+        if !supersample_manual_override {
+            return Ok(None);
+        }
+        // Supersampling is set to custom
+        let supersample_scale = settings.as_ref().unwrap().get_float(
+            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+        );
+        return match supersample_scale {
+            Ok(supersample_scale) => Ok(Some(supersample_scale)),
+            Err(_) => Err("SUPERSAMPLE_SCALE_NOT_FOUND".to_string()),
+        };
+    }
+
+    pub fn set_supersample_scale(&self, supersample_scale: Option<f32>) -> Result<(), String> {
+        let settings = self.state.settings.lock().unwrap();
+        if settings.is_some() {
+            let _ = settings.as_ref().unwrap().set_bool(
+                &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+                supersample_scale.is_some(),
+            );
+            if supersample_scale.is_some() {
+                let _ = settings.as_ref().unwrap().set_float(
+                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+                    supersample_scale.unwrap(),
+                );
+            }
+        } else {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        Ok(())
+    }
 }
 
 struct OpenVRManagerTask {
