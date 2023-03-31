@@ -165,7 +165,8 @@
   "oscAutomations": {
     "title": "OSC Automations",
     "tab": {
-      "sleepingAnimations": "Sleeping Animations"
+      "sleepingAnimations": "Sleeping Animations",
+      "general": "General"
     },
     "sleepingAnimations": {
       "currentPose": "Current Position",
@@ -205,6 +206,19 @@
           "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
           "footLockReleaseWindow": "Foot lock release duration"
         }
+      }
+    },
+    "general": {
+      "description": "Here you can configure Oyasumi to send out OSC commands to VRChat when certain events happen. This can, for example, be useful if you want to change your avatar toggles when you go to sleep or wake up.",
+      "onSleepEnable": {
+        "title": "When I go to sleep",
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Enabled"
+      },
+      "onSleepDisable": {
+        "title": "When I wake up",
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Disabled"
       }
     }
   },
