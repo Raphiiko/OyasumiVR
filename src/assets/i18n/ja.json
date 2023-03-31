@@ -29,7 +29,7 @@
       "description": "睡眠モードが無効になったときの明るさを調整します"
     },
     "brightness": {
-      "title": "明るさを変更",
+      "title": "明るさを変更"
     },
     "transition": {
       "title": "輝度遷移のスムージング",
