@@ -8,6 +8,7 @@ import {
   RenderResolutionOnSleepModeAutomationConfig,
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
+import { debounce } from 'typescript-debounce-decorator';
 
 @Component({
   selector: 'app-resolution-automations-view',
@@ -46,7 +47,9 @@ export class ResolutionAutomationsViewComponent implements OnInit, OnDestroy {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });
   }
 
+  @debounce(250)
   async setRenderResolution(automation: AutomationType, resolution: number | null) {
+    console.log('setRenderResolution', automation, resolution);
     await this.automationConfigService.updateAutomationConfig<RenderResolutionOnSleepModeAutomationConfig>(
       automation,
       {

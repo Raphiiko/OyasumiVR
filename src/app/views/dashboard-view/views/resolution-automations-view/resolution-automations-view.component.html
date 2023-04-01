@@ -51,7 +51,8 @@
               <app-slider-setting
                 [class.disabled]="onSleepModeEnableConfig.resolution === null"
                 unit="%"
-                [value]="onSleepModeEnableConfig.resolution"
+                [value]="onSleepModeEnableConfig.resolution ?? 150"
+                (valueChange)="setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE', $event)"
                 [min]="20"
                 [max]="500"
                 [step]="1"
@@ -109,7 +110,8 @@
               <app-slider-setting
                 [class.disabled]="onSleepModeDisableConfig.resolution === null"
                 unit="%"
-                [value]="onSleepModeDisableConfig.resolution"
+                [value]="onSleepModeDisableConfig.resolution ?? 150"
+                (valueChange)="setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE', $event)"
                 [min]="20"
                 [max]="500"
                 [step]="1"
