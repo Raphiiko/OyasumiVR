@@ -165,7 +165,8 @@
   "oscAutomations": {
     "title": "OSC 자동화",
     "tab": {
-      "sleepingAnimations": "수면 애니메이션"
+      "sleepingAnimations": "수면 애니메이션",
+      "general": "일반"
     },
     "sleepingAnimations": {
       "currentPose": "현재 위치",
@@ -205,6 +206,19 @@
           "releaseFootLockOnPoseChange": "수면 자세가 바뀔 때 다리 잠금을 바로 해제",
           "footLockReleaseWindow": "다리 잠금 해제 조건"
         }
+      }
+    },
+    "general": {
+      "description": "여기서 특정 이벤트가 발생할 때 OSC 커멘드을 VRChat으로 보내도록 Oyasumi를 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 아바타의 익스프레션을 변경하려는 경우 유용할 수 있어요.",
+      "onSleepEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "이 OSC 커멘드들을 전송해요.",
+        "script": "수면 모드 활성화 됨"
+      },
+      "onSleepDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "이 OSC 커멘드들을 전송해요.",
+        "script": "수면 모드 비활성화 됨"
       }
     }
   },
@@ -494,7 +508,7 @@
         "loadFile": "언어 파일 불러오기"
       },
       "sleepingPose": {
-        "title": "잠자는 포즈"
+        "title": "수면 자세"
       },
       "sleepingDetection": {
         "title": "수면 감지 리포트"
@@ -589,7 +603,8 @@
       "settings": "설정",
       "vrcAutomations": "VRChat 자동화",
       "brightnessAutomations": "밝기 자동화",
-      "about": "Oyasumi에 대해"
+      "about": "Oyasumi에 대해",
+      "resolutionAutomations": "해상도 자동화"
     },
     "device-list": {
       "title": "기기",
@@ -634,7 +649,7 @@
           "description": "OSC 커멘드를 실행해요."
         },
         "SLEEP": {
-          "title": "수면",
+          "title": "대기",
           "description": "지정된 시간 동안 대기해요."
         }
       }
@@ -756,8 +771,35 @@
         "sleepDetectorEnableCancelled": {
           "title": "수면 모드 자동 실행이 취소됨",
           "subtitle": "유저가 깨어있었기 때문에 수면 모드의 자동 실행을 취소했어요."
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR 렌더 해상도를 'auto'로 변경",
+            "custom": "SteamVR 렌더 해상도를 {{value}}으로 변경"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 해상도를 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 해상도를 변경했어요."
+          }
         }
       }
+    }
+  },
+  "resolution-automations": {
+    "title": "해상도 자동화",
+    "description": "Oyasumi는 수면 모드가 활성화되거나 비활성화될 때 자동으로 SteamVR의 렌더 해상도를 조정할 수 있어요.",
+    "onSleepEnable": {
+      "title": "수면 모드 활성화 시",
+      "description": "렌더 해상도를 변경해요"
+    },
+    "onSleepDisable": {
+      "title": "수면 모드 비활성화 시",
+      "description": "렌더 해상도를 변경해요"
+    },
+    "renderResolution": {
+      "title": "변경할 렌더 해상도",
+      "custom": "커스텀",
+      "auto": "자동"
     }
   }
 }
