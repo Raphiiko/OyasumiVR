@@ -1,10 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
-  AutomationType,
   OscGeneralAutomationConfig,
-  RenderResolutionOnSleepModeAutomationConfig,
 } from '../../../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { OpenVRService } from '../../../../../../services/openvr.service';
@@ -16,7 +14,7 @@ import { OscScript } from '../../../../../../models/osc-script';
   templateUrl: './osc-general-tab.component.html',
   styleUrls: ['./osc-general-tab.component.scss'],
 })
-export class OscGeneralTabComponent {
+export class OscGeneralTabComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject();
   protected config: OscGeneralAutomationConfig = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.OSC_GENERAL);
 

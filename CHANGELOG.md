@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.6.0]
 
 ### Added
+
 - Display brightness automations for Valve Index.
 - Automations for adjusting SteamVR's render resolution.
 - Event log for displaying actions taken by Oyasumi
@@ -15,7 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
 ### Changed
+
 - Updated layout and styling of various views to match more recent views.
+- Prevent sleep detector from triggering when sleep mode was disabled less than 15 minutes ago.
 - Reorganized navigation bar to reduce clutter.
 - Updated to Angular 15
 
@@ -45,7 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
-- Various small bugs 
+- Various small bugs
 
 ## [1.4.1]
 
