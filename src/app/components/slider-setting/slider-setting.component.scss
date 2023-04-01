@@ -82,8 +82,8 @@ $overlay-border: 0.15em;
     top: 0;
     left: 0;
     transform: translate(
-      calc($overlay-width + $overlay-padding) - $overlay-border / 2,
-      $overlay-padding - $overlay-border / 2
+      calc($overlay-width + $overlay-padding) - $overlay-border * 0.5,
+      $overlay-padding - $overlay-border * 0.5
     );
   }
 

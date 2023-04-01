@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import 'shadows';
 
 :host {
@@ -26,7 +28,7 @@ $thumb-size: 1.25em;
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translate($thumb-size / 2, -0.125em);
+  transform: translate($thumb-size * 0.5, -0.125em);
 
   &-fill {
     height: 100%;
@@ -56,11 +58,11 @@ $thumb-size: 1.25em;
   height: $thumb-size;
   background-color: var(--color-surface-2);
   border: 0.125em solid var(--color-surface-4);
-  border-radius: $thumb-size / 2;
+  border-radius: $thumb-size * 0.5;
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translate($thumb-size/-2, $thumb-size/-2);
+  transform: translate(math.div($thumb-size, -2), math.div($thumb-size, -2));
   @include shadow(1, true);
   transition: box-shadow 0.1s ease, opacity 0.1s ease, background-color 0.1s ease,
     border-color 0.1s ease;
@@ -81,7 +83,7 @@ $thumb-size: 1.25em;
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateX($thumb-size / 2);
+  transform: translateX($thumb-size * 0.5);
 }
 
 .snap-indicator {
