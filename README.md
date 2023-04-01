@@ -36,33 +36,31 @@ Grab the latest installer over on the [Releases](https://github.com/Raphiiko/Oya
 <p align="center">
 <table>
 <tr>
+<td><p align="center"><b>Overview</b></p></td>
 <td><p align="center"><b>Sleeping Animations</b></p></td>
 <td><p align="center"><b>GPU Power Limiting</b></p></td>
 <td><p align="center"><b>MSI Afterburner Automations</b></p></td>
-<td><p align="center"><b>Sleep Automations</b></p></td>
-<td><p align="center"><b>Device Overview</b></p></td>
+<td><p align="center"><b>Sleep Detection</b></p></td>
 </tr>
-<tr>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258665-6e31caf3-b037-477f-9245-75af27f4b4ec.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258580-a9cf380c-6e64-4ef9-aa8b-97bdb473bbfa.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258490-7baa4575-c479-4ca6-a4ab-f99ac976fcd1.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258355-8ddde3a4-eb4a-4dff-904e-158337223955.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/213735354-51b8c1fb-e39c-44e0-8317-de0c91063d1a.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172557-9df82c8c-697d-490a-98d6-e055b06b6367.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172232-54285875-5242-46bb-9254-7ba41549fb84.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172301-6739bca9-925b-4d3e-be21-1379ccf55c9f.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172397-f4b09cf8-f8e1-4803-aeef-974abcded722.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172492-2223b914-c231-47f7-8b8a-61bd487017bc.png" width="100%" crossorigin></p></td>
 </tr>
 <tr>
 <td><p align="center"><b>Status Automations</b></p></td>
-<td><p align="center"><b>General Settings</b></p></td>
+<td><p align="center"><b>Resolution Automations</b></p></td>
 <td><p align="center"><b>Auto Accept Invite Requests</b></p></td>
 <td><p align="center"><b>Battery Automations</b></p></td>
-<td><p align="center"><b>Sleep Detection</b></p></td>
-
+<td><p align="center"><b>Brightness Automations</b></p></td>
 </tr>
 <tr>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221258922-ebf8fcbd-9223-42da-b54b-584e7ec3b1fe.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259843-694a9449-82b9-4c34-8fdf-8ddd18c1bff0.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259235-ded642d2-9614-45d7-9477-d33ab7e467f7.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259448-e7d5d869-fba6-414c-b167-b06cfb6b1fa4.png" width="100%" crossorigin></p></td>
-<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/221259916-cdd66e56-f489-4db7-8759-fab60994735c.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172710-ee10a31e-899a-4337-88c1-83005d2f211b.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229173014-db751c21-1956-446c-88c2-f6f870ea9767.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172786-73c85c96-a758-437a-a102-884d47957067.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172848-20896789-60a2-4e9a-8795-19ae2bb3c276.png" width="100%" crossorigin></p></td>
+<td><p align="center"><img src="https://user-images.githubusercontent.com/111654848/229172896-f95d89e1-3beb-4a0e-9b5d-2b7c82badd86.png" width="100%" crossorigin></p></td>
 </tr>
 </table>
 </p>
