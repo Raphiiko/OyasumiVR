@@ -567,6 +567,7 @@
       "gpuAutomations": "Automatisations GPU",
       "statusAutomations": "Automatisations de statut",
       "autoInviteRequestAccept": "Gestion des demandes",
+      "vrcAutomations": "Automatisations VRChat",
       "settings": "Paramètres",
       "about": "A propos"
     },
