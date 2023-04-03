@@ -540,7 +540,7 @@
       "sleepMode": "Mode sommeil",
       "active": "Actif",
       "inactive": "Inactif",
-      "loggedOut": "Décionnecté",
+      "loggedOut": "Déconnecté",
       "steamvr": {
         "INACTIVE": "Inactif",
         "INITIALIZING": "En attente",
