@@ -110,6 +110,8 @@
 
 .rootmenu,
 .submenu {
+  height: 100%;
+  overflow-y: overlay;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -202,8 +204,7 @@
         height: 1.5em;
 
         &.vrchat {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
-            contrast(89%);
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
         }
       }
     }

@@ -3,9 +3,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { fade } from '../../utils/animations';
@@ -17,7 +19,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
 })
-export class SliderSettingComponent implements OnInit, OnDestroy {
+export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   @Input() min = 0;
   @Input() max = 100;
 
@@ -35,6 +37,7 @@ export class SliderSettingComponent implements OnInit, OnDestroy {
   @Input() unit?: string;
   @Input() snapValues: number[] = [];
   @Input() snapDistance = 5;
+  @Input() disabled = false;
   @Output() valueChange = new EventEmitter<number>();
   protected showOverlay = false;
   protected input$ = new Subject<string>();
@@ -53,6 +56,11 @@ export class SliderSettingComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (!changes['disabled']?.currentValue) return;
+    this.showOverlay = false;
+  }
+
   ngOnDestroy(): void {
     this.destroy$.next();
   }
@@ -64,5 +72,10 @@ export class SliderSettingComponent implements OnInit, OnDestroy {
   onSliderChange(value: number) {
     this.value = value;
     this.valueChange.emit(value);
+  }
+
+  onMouseEnter() {
+    if (this.disabled) return;
+    this.showOverlay = true;
   }
 }
