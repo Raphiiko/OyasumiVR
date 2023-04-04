@@ -49,7 +49,6 @@ export class ResolutionAutomationsViewComponent implements OnInit, OnDestroy {
 
   @debounce(250)
   async setRenderResolution(automation: AutomationType, resolution: number | null) {
-    console.log('setRenderResolution', automation, resolution);
     await this.automationConfigService.updateAutomationConfig<RenderResolutionOnSleepModeAutomationConfig>(
       automation,
       {
