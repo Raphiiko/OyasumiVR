@@ -49,7 +49,7 @@
                 <span class="switch-toggle-slider"></span>
               </label>
               <app-slider-setting
-                [class.disabled]="onSleepModeEnableConfig.resolution === null"
+                [disabled]="onSleepModeEnableConfig.resolution === null"
                 unit="%"
                 [value]="onSleepModeEnableConfig.resolution ?? 150"
                 (valueChange)="setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE', $event)"
@@ -108,7 +108,7 @@
                 <span class="switch-toggle-slider"></span>
               </label>
               <app-slider-setting
-                [class.disabled]="onSleepModeDisableConfig.resolution === null"
+                [disabled]="onSleepModeDisableConfig.resolution === null"
                 unit="%"
                 [value]="onSleepModeDisableConfig.resolution ?? 150"
                 (valueChange)="setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE', $event)"

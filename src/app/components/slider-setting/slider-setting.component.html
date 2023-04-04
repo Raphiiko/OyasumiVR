@@ -15,8 +15,9 @@
 <div
   class="input-container"
   [class.has-unit]="!!unit"
-  (mouseenter)="showOverlay = true"
+  (mouseenter)="onMouseEnter()"
   [class.overlay-active]="showOverlay"
+  [class.disabled]="disabled"
 >
   <input
     type="number"
@@ -27,6 +28,6 @@
     #inputValue
   />
   <div class="unit" *ngIf="unit"
-    ><span>{{ unit }}</span></div
+  ><span>{{ unit }}</span></div
   >
 </div>
