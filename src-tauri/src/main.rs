@@ -40,6 +40,7 @@ mod elevated_sidecar;
 mod gesture_detector;
 mod image_cache;
 mod sleep_detector;
+mod system_tray;
 mod utils;
 
 lazy_static! {
@@ -177,10 +178,20 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
-        ]);
+        ])
+        .system_tray(system_tray::init())
+        .on_system_tray_event(system_tray::event_handler());
 
-    app.run(tauri::generate_context!())
-        .expect("An error occurred while running the application");
+    app
+    .on_window_event(|event| match event.event() {
+        tauri::WindowEvent::CloseRequested { api, .. } => {
+            event.window().hide().unwrap();
+            api.prevent_close();
+        }
+        _ => {}
+    })
+    .run(tauri::generate_context!())
+    .expect("An error occurred while running the application");
 }
 
 fn on_cron_minute_start(_: &str) {
