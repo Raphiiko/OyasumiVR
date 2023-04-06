@@ -352,6 +352,10 @@
       "title": "Bevestig verwijderen",
       "message": "Weet je zeker dat je '{{name}}' van de lijst wilt verwijderen?"
     },
+    "removeModalBulk": {
+      "title": "Bevestig verwijderen",
+      "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?"
+    },
     "options": {
       "enable": {
         "title": "Activeren",

@@ -352,6 +352,10 @@
       "title": "Confirm Removal",
       "message": "Are you sure you want to remove '{{name}}' from your list?"
     },
+    "removeModalBulk": {
+      "title": "Confirm Removal",
+      "message": "Are you sure you want to remove everyone from your list?"
+    },
     "options": {
       "enable": {
         "title": "Enable",

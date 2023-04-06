@@ -17,23 +17,24 @@
     }
   },
   "brightness-automations": {
-    "title": "輝度の自動化",
-    "description": "睡眠モードによって画面の明るさを調整します。",
+    "title": "明るさの自動化",
+    "description": "睡眠モードによって、画面の輝度を調整します。",
     "indexWarning": "現在、Valve Indexでのみ利用可能です。SteamVRが起動しており、HMDが接続されていることを確認してください。",
     "onSleepEnable": {
       "title": "睡眠モード有効時",
-      "description": "睡眠モードが有効になったときの明るさを調整します"
+      "description": "睡眠モードが有効になったときの輝度を調整します"
     },
     "onSleepDisable": {
       "title": "起床時",
-      "description": "睡眠モードが無効になったときの明るさを調整します"
+      "description": "睡眠モードが無効になったときの輝度を調整します"
     },
     "brightness": {
-      "title": "明るさを変更"
+      "title": "輝度を変更",
+      "description": ""
     },
     "transition": {
       "title": "輝度遷移のスムージング",
-      "description": "設定した明るさに徐々に移行させる"
+      "description": "設定した輝度に徐々に移行させる"
     },
     "transitionTime": {
       "title": "遷移時間",
@@ -164,7 +165,8 @@
   "oscAutomations": {
     "title": "OSC自動化",
     "tab": {
-      "sleepingAnimations": "睡眠アニメーション"
+      "sleepingAnimations": "睡眠アニメーション",
+      "general": "一般"
     },
     "sleepingAnimations": {
       "currentPose": "現在位置",
@@ -204,6 +206,19 @@
           "releaseFootLockOnPoseChange": "寝姿勢が変わる際にフットロックを瞬時に解除",
           "footLockReleaseWindow": "フットロックの解除時間"
         }
+      }
+    },
+    "general": {
+      "description": "特定のイベントが発生したときに、VRChatにOSCコマンドを送信するための設定です。例えば睡眠時や起床時に、アバターのトグルを変更したい場合に使用できます。",
+      "onSleepEnable": {
+        "title": "睡眠時",
+        "description": "送信コマンド",
+        "script": "睡眠モード有効時"
+      },
+      "onSleepDisable": {
+        "title": "起床時",
+        "description": "送信コマンド",
+        "script": "睡眠モード無効時"
       }
     }
   },
@@ -302,10 +317,10 @@
   "status-automations": {
     "title": "ステータス自動化",
     "enable": "ステータス自動化を有効にする",
-    "description": "自分のワールドにいるプレイヤーの数に応じてステータスを自動設定し、参加する人数を制限することができます。",
-    "exampleUse": "使用例: 誰かが参加してきたとき、自動的にステータスをオレンジや赤に切り替え、二人きりになれます。\n参加者が退出してまた一人になったら、自動的にステータスを青に戻して、他の人が参加できるようにします。",
+    "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限することができます。",
+    "exampleUse": "使用例: フレンドがJoinしてきたとき、自動的にステータスをオレンジや赤に切り替え、二人きりになれます。\nフレンドが退出したとき、自動的にステータスを青に戻して、他のフレンドがJoinできるようにします。",
     "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
-    "playerLimit": "プレイヤー数制限",
+    "playerLimit": "人数制限",
     "playerLimitLabel": {
       "singular": "{{count}} 人のプレイヤー(自分を含む)",
       "plural": "{{count}} 人のプレイヤー(自分を含む)"
@@ -321,7 +336,7 @@
     "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
     "behaviourWarning": "Oyasumiによるステータスの変更は、自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、Oyasumiが修正することはできません。",
     "moreInfo": "詳細",
-    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: Oyasumiがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないので参加できません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。参加したいのに参加できない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
+    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: Oyasumiがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。JoinしたいのにJoinできない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
   },
   "auto-invite-request-accept": {
     "title": "Req Inviteの自動承認",
@@ -538,7 +553,7 @@
   "notifications": {
     "sleepCheck": {
       "title": "Oyasumi",
-      "content": "眠りましたか？20秒後にスリープモードに切り替わります。/n/n(頭を軽く振ることでキャンセルできます)"
+      "content": "眠りましたか？20秒後にスリープモードに切り替わります。\n\n(頭を軽く振ることでキャンセルできます)"
     },
     "sleepCheckCancel": {
       "title": "Oyasumi",
@@ -587,8 +602,9 @@
       "autoInviteRequestAccept": "Req Inviteの自動承認",
       "settings": "設定",
       "vrcAutomations": "VRC関係の自動化",
-      "brightnessAutomations": "輝度の自動化",
-      "about": "Oyasumiについて"
+      "brightnessAutomations": "明るさの自動化",
+      "about": "Oyasumiについて",
+      "resolutionAutomations": "解像度の自動化"
     },
     "device-list": {
       "title": "機器",
@@ -662,6 +678,128 @@
       "noFriendsSelected": "選択されたフレンドはいません",
       "noResultsFor": "'{{query}}'の結果が見つかりません",
       "noFriends": "フレンドリストが空です"
+    },
+    "event-log": {
+      "title": "イベント",
+      "show-more": "詳細",
+      "no-logs": "ログは最大48時間保存されます",
+      "clearLog": "消去",
+      "clearLogModal": {
+        "title": "消去を確認",
+        "message": "イベントログを消去しますか？元に戻すことはできません。"
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "睡眠モードを有効化",
+          "reason": {
+            "manual": "手動で有効化",
+            "osc-control": "OSCにより有効化",
+            "automation": {
+              "unknown": "不明な自動機能",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "睡眠検知による",
+              "SLEEP_MODE_ENABLE_AT_TIME": "予定時刻による",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "バッテリー残量による",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "機器の電源が切れたため"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "睡眠モードを無効化",
+          "reason": {
+            "manual": "手動で無効化",
+            "osc-control": "OSCによって無効化",
+            "automation": {
+              "unknown": "不明な自動機能",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVRの終了による",
+              "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入ったため"
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "コントローラーをオフにした",
+            "CONTROLLERS": "複数のコントローラーをオフにした",
+            "TRACKER": "トラッカーをオフにした",
+            "TRACKERS": "複数のトラッカーをオフにした",
+            "ALL": "全ての機器の電源を切った",
+            "VARIOUS": "複数の機器の電源を切った"
+          },
+          "reason": {
+            "MANUAL": "手動でオフにした",
+            "OSC_CONTROL": "OSCによってオフになった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "CHARGING": "充電器に接続された"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "{{device}}'の電源制限を{{limit}}にリセット",
+            "set": "'{{device}}'の電源制限を{{limit}}に設定"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "HMDの輝度を{{value}}に設定",
+            "transition": "HMDの輝度を{{value}}に移行"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "'{{displayName}}'からのRequestInviteを自動的に承認",
+          "subtitle": {
+            "whitelist": "ホワイトリストに入っていたため",
+            "blacklist": "ブラックリストに入っていなかったため"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "VRChatステータスを{{oldStatus}}から{{newStatus}}に変更",
+          "reason": {
+            "BELOW_LIMIT": "ワールド人数が{{threshold}}人以下になったため",
+            "AT_LIMIT_OR_ABOVE": "ワールド人数が{{threshold}}人に達したため"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "睡眠モードを有効にする処理をキャンセル",
+          "subtitle": "ユーザーがまだ起きていたため"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVRのレンダリング解像度を「自動」に設定",
+            "custom": "SteamVRのレンダリング解像度を{{value}}に設定"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+          }
+        }
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "解像度の自動化",
+    "description": "睡眠モードによって、SteamVRのレンダリング解像度を自動的に調整します。",
+    "onSleepEnable": {
+      "title": "睡眠時",
+      "description": "レンダリング解像度を調整する"
+    },
+    "onSleepDisable": {
+      "title": "起床時",
+      "description": "レンダリング解像度を調整する"
+    },
+    "renderResolution": {
+      "title": "レンダリング解像度を変更",
+      "custom": "カスタム",
+      "auto": "自動"
     }
   }
 }
