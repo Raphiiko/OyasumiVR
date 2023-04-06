@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated layout and styling of various views to match more recent views.
 - Prevent sleep detector from triggering when sleep mode was disabled less than 15 minutes ago.
+- Bulk removing friends from the player list for automatic invite request accepts, now requires confirmation.
 - Reorganized navigation bar to reduce clutter.
 - Updated to Angular 15
 
