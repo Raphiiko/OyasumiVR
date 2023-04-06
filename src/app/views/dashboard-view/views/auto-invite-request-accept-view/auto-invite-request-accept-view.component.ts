@@ -140,8 +140,19 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
   }
 
   async clearPlayers() {
-    this.playerList = [];
-    await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
+    this.modalService
+      .addModal(ConfirmModalComponent, {
+        title: 'auto-invite-request-accept.removeModalBulk.title',
+        message: {
+          string: 'auto-invite-request-accept.removeModalBulk.message',
+        },
+      })
+      .subscribe(async (data) => {
+        if (data.confirmed) {
+          this.playerList = [];
+          await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
+        }
+      });
   }
 
   async setListMode(id?: string) {
