@@ -1,3 +1,5 @@
+@import 'effects';
+
 :host {
   width: 100%;
   height: 100%;
@@ -47,11 +49,32 @@
 }
 
 .menu {
-  background-color: var(--color-surface-1);
   border-radius: var(--surface-border-radius);
   flex: 1;
   overflow: hidden;
+  border: transparent 0.15em solid;
+  transition: all 0.5s ease;
   position: relative;
+
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-1);
+    opacity: 1;
+    transition: all 0.5s ease;
+  }
+
+  &.translucent {
+    border-color: var(--color-surface-3);
+    backdrop-filter: blur(6px);
+
+    .bg {
+      opacity: 0.25;
+    }
+  }
 }
 
 .rootmenu {
@@ -68,24 +91,27 @@
   }
 }
 
-.submenu {
-  z-index: 10;
-
+.submenu,
+.rootmenu.translucent {
   .menu-item {
     &:hover {
       background: rgba(white, 0.1);
-      //border-color: var(--color-text-3);
     }
 
     &.active {
       background: rgba(white, 0.1);
-      //border-color: var(--color-text-1);
     }
   }
 }
 
+.submenu {
+  z-index: 10;
+}
+
 .rootmenu,
 .submenu {
+  height: 100%;
+  overflow-y: overlay;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -137,6 +163,7 @@
     transition: all 0.15s ease;
     color: var(--color-text-2);
     cursor: pointer;
+    position: relative;
 
     &:not(:last-child) {
       margin-bottom: 0.5em;
@@ -177,8 +204,7 @@
         height: 1.5em;
 
         &.vrchat {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
-            contrast(89%);
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
         }
       }
     }
@@ -199,6 +225,19 @@
         font-size: 0.8em;
         color: var(--color-text-4);
       }
+    }
+
+    .active-effect {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      @include attention-glow(0.05);
+      z-index: 20;
+      transition: all 0.25s ease;
+      border-radius: 99999px;
     }
   }
 }

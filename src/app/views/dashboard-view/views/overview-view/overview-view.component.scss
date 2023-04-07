@@ -10,9 +10,17 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
+  overflow: hidden;
+}
+
+app-event-log {
+  display: block;
+  flex: 1;
 }
 
 .sleep-mode {
+  margin-bottom: 1em;
+  flex-shrink: 0;
   display: flex;
   flex-direction: row;
   align-items: center;

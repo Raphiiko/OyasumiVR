@@ -23,6 +23,8 @@ import * as THREE from 'three';
 import { info } from 'tauri-plugin-log-api';
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EventLogService } from './event-log.service';
+import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 
 export const SETTINGS_KEY_SLEEP_MODE = 'SLEEP_MODE';
 
@@ -58,7 +60,8 @@ export class SleepService {
   constructor(
     private openvr: OpenVRService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -77,6 +80,10 @@ export class SleepService {
     if (this._mode.value) return;
     reason.enabled = true;
     info(`[Sleep] Sleep mode enabled (reason=${reason.type})`);
+    this.eventLog.logEvent({
+      type: 'sleepModeEnabled',
+      reason: reason,
+    } as EventLogSleepModeEnabled);
     this._mode.next(true);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
     await this.store.save();
@@ -90,6 +97,10 @@ export class SleepService {
     if (!this._mode.value) return;
     reason.enabled = false;
     info(`[Sleep] Sleep mode disabled (reason=${reason.type})`);
+    this.eventLog.logEvent({
+      type: 'sleepModeDisabled',
+      reason: reason,
+    } as EventLogSleepModeDisabled);
     this._mode.next(false);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
     await this.store.save();

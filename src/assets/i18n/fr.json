@@ -149,10 +149,6 @@
       "description": "Oyasumi peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour supporter différents prefabs de locomotion de votre avatar, mais vous pouvez également spéficier vos propres animations.",
       "enable": "Activer automatiquement les animations de sommeil",
       "customPreset": "Animations custom",
-      "errors": {
-        "releaseDurationTooShort": "La durée de dévérouillage doit être d'au moins 100ms.",
-        "releaseDurationTooLong": "La durée de dévérouillage ne peut être supérieure à 5000ms."
-      },
       "options": {
         "positions": {
           "title": "Positions de sommeil",
@@ -190,8 +186,6 @@
   "battery-automations": {
     "title": "Automatisations de batterie",
     "devicePowerOff": {
-      "title": "Éteindre tous mes appareils",
-      "description": "Diverses automatisations pour éteindre tous les appareils SteamVR.",
       "onSleepModeEnable": {
         "title": "Quand je vais dormir",
         "description": "Éteindre tous mes appareils lorsque le mode sommeil est activé.",

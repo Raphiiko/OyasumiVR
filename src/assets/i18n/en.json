@@ -16,6 +16,31 @@
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     }
   },
+  "brightness-automations": {
+    "title": "Brightness Automations",
+    "description": "Oyasumi can automatically adjust the brightness of your headset when sleep mode is enabled or disabled.",
+    "indexWarning": "Display brightness control is currently only available on Valve Index. Please make sure SteamVR is running and your headset is connected.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Adjust my display brightness"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Adjust my display brightness"
+    },
+    "brightness": {
+      "title": "Change the brightness to",
+      "description": ""
+    },
+    "transition": {
+      "title": "Adjust brightness gradually",
+      "description": "Smoothly transition to your desired brightness value"
+    },
+    "transitionTime": {
+      "title": "Transition time",
+      "description": "How long it should take to transition to the new brightness setting"
+    }
+  },
   "overview": {
     "sleep-mode": {
       "label": "Sleep Mode",
@@ -140,7 +165,8 @@
   "oscAutomations": {
     "title": "OSC Automations",
     "tab": {
-      "sleepingAnimations": "Sleeping Animations"
+      "sleepingAnimations": "Sleeping Animations",
+      "general": "General"
     },
     "sleepingAnimations": {
       "currentPose": "Current Position",
@@ -149,10 +175,6 @@
       "description": "Oyasumi can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have Oyasumi) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
       "customPreset": "Custom Animations",
-      "errors": {
-        "releaseDurationTooShort": "The release duration has to be at least 100ms.",
-        "releaseDurationTooLong": "The release duration cannot exceed 5000ms."
-      },
       "options": {
         "positions": {
           "title": "Sleeping Positions",
@@ -184,6 +206,19 @@
           "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
           "footLockReleaseWindow": "Foot lock release duration"
         }
+      }
+    },
+    "general": {
+      "description": "Here you can configure Oyasumi to send out OSC commands to VRChat when certain events happen. This can, for example, be useful if you want to change your avatar toggles when you go to sleep or wake up.",
+      "onSleepEnable": {
+        "title": "When I go to sleep",
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Enabled"
+      },
+      "onSleepDisable": {
+        "title": "When I wake up",
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Disabled"
       }
     }
   },
@@ -316,6 +351,10 @@
     "removeModal": {
       "title": "Confirm Removal",
       "message": "Are you sure you want to remove '{{name}}' from your list?"
+    },
+    "removeModalBulk": {
+      "title": "Confirm Removal",
+      "message": "Are you sure you want to remove everyone from your list?"
     },
     "options": {
       "enable": {
@@ -567,7 +606,9 @@
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "settings": "Settings",
       "vrcAutomations": "VRChat Automations",
-      "about": "About Oyasumi"
+      "brightnessAutomations": "Brightness Automations",
+      "about": "About Oyasumi",
+      "resolutionAutomations": "Resolution Automations"
     },
     "device-list": {
       "title": "Devices",
@@ -641,6 +682,128 @@
       "noFriendsSelected": "No friends selected",
       "noResultsFor": "No results for '{{query}}'",
       "noFriends": "Your friends list is empty"
+    },
+    "event-log": {
+      "title": "Events",
+      "show-more": "Show More",
+      "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "clearLog": "Clear",
+      "clearLogModal": {
+        "title": "Confirm clear",
+        "message": "Are you sure you want to clear the event log? This cannot be undone."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "Sleep mode enabled",
+          "reason": {
+            "manual": "You enabled sleep mode manually",
+            "osc-control": "Sleep mode was enabled over OSC",
+            "automation": {
+              "unknown": "By an unknown automation",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "As you were asleep",
+              "SLEEP_MODE_ENABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "As a device battery level met the threshold",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "Sleep mode disabled",
+          "reason": {
+            "manual": "You disabled sleep mode manually",
+            "osc-control": "Sleep mode was disabled over OSC",
+            "automation": {
+              "unknown": "By an unknown automation",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
+              "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on"
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "Turned off a controller",
+            "CONTROLLERS": "Turned off multiple controllers",
+            "TRACKER": "Turned off a tracker",
+            "TRACKERS": "Turned off multiple trackers",
+            "ALL": "Turned off all devices",
+            "VARIOUS": "Turned off various devices"
+          },
+          "reason": {
+            "MANUAL": "Turned off manually",
+            "OSC_CONTROL": "Turned off over OSC",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "CHARGING": "As the device is recharging"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "Power limit for '{{device}}' restored to {{limit}}",
+            "set": "Power limit for '{{device}}' set to {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "Headset brightness set to {{value}}",
+            "transition": "Headset brightness transitioning to {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "Auto-accepted invite request from '{{displayName}}'",
+          "subtitle": {
+            "whitelist": "As this player was whitelisted",
+            "blacklist": "As this player was not blacklisted"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "Changed your VRChat status from {{oldStatus}} to {{newStatus}}",
+          "reason": {
+            "BELOW_LIMIT": "As the amount of players in your world dropped below {{threshold}}",
+            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {{threshold}}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "Automatic enabling of sleep mode cancelled",
+          "subtitle": "As the user was still awake"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR render resolution set to 'auto'",
+            "custom": "SteamVR render resolution set to {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        }
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "Resolution Automations",
+    "description": "Oyasumi can automatically adjust the render resolution of SteamVR when sleep mode is enabled or disabled.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Adjust my render resolution"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Adjust my render resolution"
+    },
+    "renderResolution": {
+      "title": "Change the render resolution to",
+      "custom": "Custom",
+      "auto": "Auto"
     }
   }
 }

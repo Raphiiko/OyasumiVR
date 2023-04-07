@@ -1,0 +1,33 @@
+<div class="overlay-container" *ngIf="showOverlay" (mouseleave)="showOverlay = false" @fade>
+  <div class="bg"></div>
+  <div class="slider-container">
+    <app-slider
+      [min]="min"
+      [max]="max"
+      [step]="step"
+      [snapDistance]="snapDistance"
+      [snapValues]="snapValues"
+      [value]="value"
+      (valueChange)="onSliderChange($event)"
+    ></app-slider>
+  </div>
+</div>
+<div
+  class="input-container"
+  [class.has-unit]="!!unit"
+  (mouseenter)="onMouseEnter()"
+  [class.overlay-active]="showOverlay"
+  [class.disabled]="disabled"
+>
+  <input
+    type="number"
+    class="small"
+    [value]="value"
+    (input)="input$.next(inputValue.value)"
+    (blur)="onInputBlur()"
+    #inputValue
+  />
+  <div class="unit" *ngIf="unit"
+  ><span>{{ unit }}</span></div
+  >
+</div>

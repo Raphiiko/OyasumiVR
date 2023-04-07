@@ -9,6 +9,8 @@ import { ElevatedSidecarService } from '../../services/elevated-sidecar.service'
 import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { BackgroundService } from '../../services/background.service';
+import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -137,7 +139,9 @@ export class DashboardNavbarComponent implements OnInit {
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
-    protected router: Router
+    protected router: Router,
+    protected background: BackgroundService,
+    protected brightnessAutomation: BrightnessControlAutomationService
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
     this.settingErrors = combineLatest([
@@ -202,7 +206,7 @@ export class DashboardNavbarComponent implements OnInit {
 
   onLogoClick() {
     if (this.logoClicked++ > 5) {
-      this.router.navigate(['/sleepDebug']);
+      // mmmmm
     }
   }
 

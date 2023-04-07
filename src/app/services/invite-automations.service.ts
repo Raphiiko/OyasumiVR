@@ -5,6 +5,8 @@ import { SleepService } from './sleep.service';
 import { Notification, NotificationType, UserStatus } from 'vrchat';
 import { info, warn } from 'tauri-plugin-log-api';
 import { firstValueFrom } from 'rxjs';
+import { EventLogService } from './event-log.service';
+import { EventLogAcceptedInviteRequest } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +15,8 @@ export class InviteAutomationsService {
   constructor(
     private vrchat: VRChatService,
     private automationConfig: AutomationConfigService,
-    private sleep: SleepService
+    private sleep: SleepService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -76,5 +79,10 @@ export class InviteAutomationsService {
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
     await this.vrchat.deleteNotification(notification.id);
     await this.vrchat.inviteUser(notification.senderUserId);
+    this.eventLog.logEvent({
+      type: 'acceptedInviteRequest',
+      displayName: notification.senderUsername,
+      mode: config.listMode,
+    } as EventLogAcceptedInviteRequest);
   }
 }

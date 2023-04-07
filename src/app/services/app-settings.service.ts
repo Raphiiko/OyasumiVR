@@ -5,6 +5,7 @@ import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE } from '../globals';
 import { cloneDeep } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
+import { TranslateService } from '@ngx-translate/core';
 
 export const SETTINGS_KEY_APP_SETTINGS = 'APP_SETTINGS';
 
@@ -20,14 +21,14 @@ export class AppSettingsService {
   private _loadedDefaults: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   loadedDefaults: Observable<boolean> = this._loadedDefaults.asObservable();
 
-  constructor() {}
+  constructor(private translateService: TranslateService) {}
 
   async init() {
     await this.loadSettings();
     this.settings
       .pipe(
         skip(1),
-        throttleTime(500, asyncScheduler, { leading: false, trailing: true }),
+        throttleTime(500, asyncScheduler, { leading: true, trailing: true }),
         switchMap(() => this.saveSettings())
       )
       .subscribe();
@@ -37,7 +38,11 @@ export class AppSettingsService {
     let settings: AppSettings | null = await this.store.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     let loadedDefaults = false;
     if (settings) {
+      const oldSettings = cloneDeep(settings);
       settings = migrateAppSettings(settings);
+      if (oldSettings.userLanguage !== settings.userLanguage) {
+        this.translateService.use(settings.userLanguage);
+      }
     } else {
       settings = this._settings.value;
       loadedDefaults = true;

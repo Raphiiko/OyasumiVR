@@ -107,7 +107,7 @@
           [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
           [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
           [powerLimit]="powerLimitOnSleepEnable"
-          (powerLimitChange)="onPowerLimitChange('SLEEP_ENABLE', $event)"
+          (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })"
         ></app-power-limit-input>
       </div>
     </div>
@@ -130,7 +130,7 @@
           [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
           [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
           [powerLimit]="powerLimitOnSleepDisable"
-          (powerLimitChange)="onPowerLimitChange('SLEEP_DISABLE', $event)"
+          (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })"
         ></app-power-limit-input>
       </div>
     </div>

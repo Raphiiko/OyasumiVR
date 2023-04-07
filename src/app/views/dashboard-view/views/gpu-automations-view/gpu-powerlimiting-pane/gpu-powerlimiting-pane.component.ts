@@ -5,7 +5,7 @@ import { GpuAutomationsService } from '../../../../../services/gpu-automations.s
 import { ElevatedSidecarService } from '../../../../../services/elevated-sidecar.service';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { debounceTime, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 import { TString } from 'src/app/models/translatable-string';
 
@@ -17,14 +17,18 @@ import { TString } from 'src/app/models/translatable-string';
 })
 export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
-  panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
-  disabledMessage: TString = '';
-  gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
-  selectedGpu?: GPUDevice;
-  onSleepEnableAutomationEnabled = false;
-  powerLimitOnSleepEnable?: GPUPowerLimit;
-  onSleepDisableAutomationEnabled = false;
-  powerLimitOnSleepDisable?: GPUPowerLimit;
+  protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
+  protected disabledMessage: TString = '';
+  protected gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
+  protected selectedGpu?: GPUDevice;
+  protected onSleepEnableAutomationEnabled = false;
+  protected powerLimitOnSleepEnable?: GPUPowerLimit;
+  protected onSleepDisableAutomationEnabled = false;
+  protected powerLimitOnSleepDisable?: GPUPowerLimit;
+  protected readonly powerLimitChange: Subject<{
+    automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE';
+    limit: GPUPowerLimit;
+  }> = new Subject();
 
   constructor(
     private nvml: NVMLService,
@@ -88,22 +92,23 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
           break;
       }
     });
+    this.powerLimitChange
+      .pipe(takeUntil(this.destroy$), debounceTime(100))
+      .subscribe(async ({ automation, limit }) => {
+        switch (automation) {
+          case 'SLEEP_ENABLE':
+            await this.gpuAutomations.setSleepEnablePowerLimit(limit);
+            break;
+          case 'SLEEP_DISABLE':
+            await this.gpuAutomations.setSleepDisablePowerLimit(limit);
+            break;
+        }
+      });
   }
 
   async ngOnInit() {}
 
   async ngOnDestroy() {
     this.destroy$.next();
-  }
-
-  async onPowerLimitChange(automation: 'SLEEP_ENABLE' | 'SLEEP_DISABLE', limit: GPUPowerLimit) {
-    switch (automation) {
-      case 'SLEEP_ENABLE':
-        await this.gpuAutomations.setSleepEnablePowerLimit(limit);
-        break;
-      case 'SLEEP_DISABLE':
-        await this.gpuAutomations.setSleepDisablePowerLimit(limit);
-        break;
-    }
   }
 }

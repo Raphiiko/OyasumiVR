@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "start": "npm run build-preload-assets && ng serve",
+    "build": "npm run build-preload-assets && ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
     "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && node scripts/move-sidecar-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
@@ -15,7 +15,9 @@
     "set-version": "node scripts/set-version.js",
     "translation-converter": "node scripts/translation-converter.js",
     "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders",
-    "lint": "ng lint"
+    "tl": "node scripts/translation-utils.js",
+    "lint": "ng lint",
+    "build-preload-assets": "node scripts/build-preload-assets.js"
   },
   "private": true,
   "dependencies": {
@@ -55,6 +57,7 @@
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#dev",
     "three": "^0.146.0",
     "tslib": "^2.4.1",
+    "typescript-debounce-decorator": "^0.0.18",
     "uuid": "^9.0.0",
     "vrchat": "github:Raphiiko/vrchatapi-javascript#oyasumi-patch",
     "zone.js": "^0.11.4"
@@ -90,5 +93,21 @@
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^2.7.1",
     "typescript": "^4.8.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,json,js}": [
+      "ng-lint-staged lint --fix --",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{html,scss,md,html,yml,json}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

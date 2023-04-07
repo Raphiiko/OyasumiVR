@@ -44,7 +44,15 @@
               "includePaths": [
                 "src/styles"
               ]
-            }
+            },
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "moment",
+              "vrchat",
+              "cookie",
+              "set-cookie-parser",
+              "typescript-debounce-decorator"
+            ]
           },
           "configurations": {
             "production": {

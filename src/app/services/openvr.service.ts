@@ -51,20 +51,7 @@ export class OpenVRService {
     ]);
   }
 
-  async onStatusUpdate(status: OpenVRStatus) {
-    this._status.next(status);
-    switch (status) {
-      case 'INACTIVE':
-      case 'INITIALIZING':
-        this._devices.next([]);
-        this._devicePoses.next({});
-        break;
-      case 'INITIALIZED':
-        break;
-    }
-  }
-
-  onDeviceUpdate(device: OVRDevice) {
+  public onDeviceUpdate(device: OVRDevice) {
     device = Object.assign({}, device);
     if (device.isTurningOff === null || device.isTurningOff === undefined)
       device.isTurningOff =
@@ -78,6 +65,35 @@ export class OpenVRService {
       )
     );
     this.appRef.tick();
+  }
+
+  public setAnalogGain(analogGain: number): Promise<void> {
+    return invoke('openvr_set_analog_gain', { analogGain });
+  }
+
+  public getAnalogGain(): Promise<number> {
+    return invoke<number>('openvr_get_analog_gain');
+  }
+
+  public setSupersampleScale(supersampleScale: number | null): Promise<void> {
+    return invoke('openvr_set_supersample_scale', { supersampleScale });
+  }
+
+  public getSupersampleScale(): Promise<number | null> {
+    return invoke<number | null>('openvr_get_supersample_scale');
+  }
+
+  private onStatusUpdate(status: OpenVRStatus) {
+    this._status.next(status);
+    switch (status) {
+      case 'INACTIVE':
+      case 'INITIALIZING':
+        this._devices.next([]);
+        this._devicePoses.next({});
+        break;
+      case 'INITIALIZED':
+        break;
+    }
   }
 
   private async getDevices(): Promise<Array<OVRDevice>> {

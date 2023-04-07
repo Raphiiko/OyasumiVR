@@ -1,0 +1,12 @@
+<div class="container" *ngIf="!!entry && !!parser">
+  <div class="header">
+    <div class="header-info">
+      <span [innerHtml]="headerInfoTitle"></span>
+      <span [innerHtml]="headerInfoSubTitle"></span>
+    </div>
+    <div class="header-time">
+      <span>{{ entry.time | localizedDate : 'HH:mm:ss' }}</span>
+      <span>{{ entry.time | localizedDate : 'MMMM d' }}</span>
+    </div>
+  </div>
+</div>
