@@ -58,12 +58,33 @@
     }
   }
 
+  .setting-row-group {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface-0);
+    margin-left: 2em;
+    position: relative;
+    border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
+
+    &:not(:last-child) {
+      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius)
+        var(--surface-border-radius);
+    }
+  }
+
   .setting-row,
   .setting-alert-row {
     display: flex;
     flex-direction: row;
     align-items: center;
     padding: 1em;
+    position: relative;
+    transition: all 0.15s ease;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
 
     &.setting-alert-row {
       padding: 0em 1em 1em 1em;
@@ -108,4 +129,12 @@
       }
     }
   }
+}
+
+@function pow($base, $exponent) {
+  $result: 1;
+  @for $_ from 1 through $exponent {
+    $result: $result * $base;
+  }
+  @return $result;
 }

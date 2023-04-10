@@ -27,7 +27,7 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
-  disabledMessage: string = '';
+  disabledMessage = '';
   nvmlErrors?: Observable<boolean>;
   msiAfterburnerErrors?: Observable<boolean>;
 

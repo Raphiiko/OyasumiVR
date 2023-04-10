@@ -7,6 +7,8 @@ import { combineLatest, debounceTime, firstValueFrom, map, startWith, Subject, t
 import { AutomationConfigService } from './automation-config.service';
 import { info } from 'tauri-plugin-log-api';
 import { LighthouseService } from './lighthouse.service';
+import { EventLogTurnedOffDevices } from '../models/event-log-entry';
+import { EventLogService } from './event-log.service';
 
 const ADDRESS_CMD = '/avatar/parameters/Oyasumi/Cmd';
 const ADDRESS_SLEEP_MODE = '/avatar/parameters/Oyasumi/SleepMode';
@@ -29,7 +31,8 @@ export class OscControlService {
     private sleep: SleepService,
     private openvr: OpenVRService,
     private automationConfig: AutomationConfigService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -74,23 +77,46 @@ export class OscControlService {
         this.syncParameters.next();
         await this.osc.send_int(ADDRESS_CMD, 0);
         break;
-      case 2: // All Trackers
-        await this.lighthouse.turnOffDevices(
-          (await firstValueFrom(this.openvr.devices)).filter((d) => d.class === 'GenericTracker')
+      case 2: {
+        // All Trackers
+        const devices = (await firstValueFrom(this.openvr.devices)).filter(
+          (d) => d.class === 'GenericTracker'
         );
+        await this.lighthouse.turnOffDevices(devices);
+        this.eventLog.logEvent({
+          type: 'turnedOffDevices',
+          reason: 'OSC_CONTROL',
+          devices: devices.length > 1 ? 'TRACKERS' : 'TRACKER',
+        } as EventLogTurnedOffDevices);
         break;
-      case 3: // All Controllers
+      }
+      case 3: {
+        // All Controllers
         setTimeout(async () => {
-          await this.lighthouse.turnOffDevices(
-            (await firstValueFrom(this.openvr.devices)).filter((d) => d.class === 'Controller')
+          const devices = (await firstValueFrom(this.openvr.devices)).filter(
+            (d) => d.class === 'Controller'
           );
+          await this.lighthouse.turnOffDevices(devices);
+          this.eventLog.logEvent({
+            type: 'turnedOffDevices',
+            reason: 'OSC_CONTROL',
+            devices: devices.length > 1 ? 'CONTROLLERS' : 'CONTROLLER',
+          } as EventLogTurnedOffDevices);
         }, 2000);
         break;
-      case 4: // All Devices
+      }
+      case 4: {
+        // All Devices
         setTimeout(async () => {
           await this.lighthouse.turnOffDevices(await firstValueFrom(this.openvr.devices));
+          this.eventLog.logEvent({
+            type: 'turnedOffDevices',
+            reason: 'OSC_CONTROL',
+            devices: 'ALL',
+          } as EventLogTurnedOffDevices);
         }, 2000);
         break;
+      }
     }
   }
 
@@ -99,10 +125,11 @@ export class OscControlService {
       case '/avatar/change':
         this.syncParameters.next();
         break;
-      case ADDRESS_CMD:
+      case ADDRESS_CMD: {
         const { value } = message.values[0] as OSCIntValue;
         await this.handleCommand(value);
         break;
+      }
       case ADDRESS_SLEEP_MODE: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.sleepMode === enable) return;

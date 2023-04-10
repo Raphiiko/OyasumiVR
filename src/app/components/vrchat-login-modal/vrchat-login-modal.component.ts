@@ -19,8 +19,8 @@ export class VRChatLoginModalComponent
   extends SimpleModalComponent<VRChatLoginModalInputModel, VRChatLoginModalOutputModel>
   implements OnInit, VRChatLoginModalInputModel
 {
-  username: string = '';
-  password: string = '';
+  username = '';
+  password = '';
   loggingIn = false;
   error = '';
 
@@ -59,7 +59,7 @@ export class VRChatLoginModalComponent
       switch (e) {
         case '2FA_TOTP_REQUIRED':
         case '2FA_EMAILOTP_REQUIRED':
-        case '2FA_OTP_REQUIRED':
+        case '2FA_OTP_REQUIRED': {
           let lastCodeInvalid = false;
           while (true) {
             this.error = '';
@@ -93,6 +93,7 @@ export class VRChatLoginModalComponent
             break;
           }
           break;
+        }
         case 'INVALID_CREDENTIALS':
         case 'CHECK_EMAIL':
         case 'UNEXPECTED_RESPONSE':

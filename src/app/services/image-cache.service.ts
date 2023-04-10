@@ -6,7 +6,7 @@ import { warn } from 'tauri-plugin-log-api';
   providedIn: 'root',
 })
 export class ImageCacheService {
-  httpServerPort: number = 0;
+  httpServerPort = 0;
 
   constructor() {}
 
@@ -18,7 +18,7 @@ export class ImageCacheService {
     }
   }
 
-  getImageUrl(remoteUrl: string, ttl: number = 3600) {
+  getImageUrl(remoteUrl: string, ttl = 3600) {
     if (!this.httpServerPort)
       warn('[ImageCache] Attempted getting url before http server port was initialized');
     return (

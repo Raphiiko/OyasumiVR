@@ -1,7 +1,7 @@
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[ngVar]',
 })
 export class VarDirective {
@@ -23,7 +23,7 @@ export class VarDirective {
     ngVar: null,
   };
 
-  private hasView: boolean = false;
+  private hasView = false;
 
   constructor(private templateRef: TemplateRef<any>, private vcRef: ViewContainerRef) {}
 }

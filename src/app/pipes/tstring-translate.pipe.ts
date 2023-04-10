@@ -9,7 +9,7 @@ import { TString } from '../models/translatable-string';
 export class TStringTranslatePipePipe implements PipeTransform {
   constructor(private translate: TranslateService) {}
 
-  transform(value?: TString, ...args: unknown[]): unknown {
+  transform(value?: TString): unknown {
     if (!value) return '';
     if (typeof value === 'string') {
       return this.translate.instant(value);

@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi-elevated-sidecar"
-version = "1.5.1"
+version = "1.6.0"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
@@ -27,5 +27,9 @@ features = ["full"]
 version = "0.14.20"
 features = ["full"]
 
-
-
+[profile.release]
+panic = "abort" # Strip expensive panic clean-up logic
+codegen-units = 1 # Compile crates one after another so the compiler can optimize better
+lto = true # Enables link to optimizations
+opt-level = "s" # Optimize for binary size
+strip = true # Remove debug symbols

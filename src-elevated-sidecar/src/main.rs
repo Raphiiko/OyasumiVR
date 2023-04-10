@@ -91,8 +91,7 @@ async fn main() {
     let client = reqwest::Client::new();
     let res = client
         .post(format!(
-            "http://127.0.0.1:{}/elevated_sidecar/init",
-            host_port
+            "http://127.0.0.1:{host_port}/elevated_sidecar/init"
         ))
         .body(
             serde_json::to_string(&ElevatedSidecarInitRequest {

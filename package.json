@@ -1,31 +1,34 @@
 {
   "name": "oyasumi",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
-    "build:sidecar": "cd src-elevated-sidecar && cargo build -r && cd .. && node scripts/move-sidecar-build.js && node scripts/copy-dependencies.js",
+    "start": "npm run build-preload-assets && ng serve",
+    "build": "npm run build-preload-assets && ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && node scripts/move-sidecar-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "tauri": "tauri",
     "set-version": "node scripts/set-version.js",
     "translation-converter": "node scripts/translation-converter.js",
-    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders"
+    "tl:get-placeholders": "node scripts/translation-converter.js jsonToXLS --placeholders",
+    "tl": "node scripts/translation-utils.js",
+    "lint": "ng lint",
+    "build-preload-assets": "node scripts/build-preload-assets.js"
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^14.2.9",
-    "@angular/common": "^14.2.9",
-    "@angular/compiler": "^14.2.9",
-    "@angular/core": "^14.2.9",
-    "@angular/forms": "^14.2.9",
-    "@angular/platform-browser": "^14.2.9",
-    "@angular/platform-browser-dynamic": "^14.2.9",
-    "@angular/router": "^14.2.9",
+    "@angular/animations": "^15.2.4",
+    "@angular/common": "^15.2.4",
+    "@angular/compiler": "^15.2.4",
+    "@angular/core": "^15.2.4",
+    "@angular/forms": "^15.2.4",
+    "@angular/platform-browser": "^15.2.4",
+    "@angular/platform-browser-dynamic": "^15.2.4",
+    "@angular/router": "^15.2.4",
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/noto-sans-jp": "^4.5.12",
     "@fontsource/noto-sans-kr": "^4.5.12",
@@ -37,13 +40,14 @@
     "@ngx-translate/http-loader": "^7.0.0",
     "@tauri-apps/api": "^1.2.0",
     "cookie": "^0.5.0",
+    "eslint-plugin-json": "^3.1.0",
     "flag-icons": "^6.6.6",
     "fuse.js": "^6.6.2",
     "lodash": "^4.17.21",
     "marked": "^4.2.2",
     "material-icons": "^1.12.1",
     "moment": "^2.29.4",
-    "ngx-pipes": "^3.1.0",
+    "ngx-pipes": "^3.2.0",
     "ngx-simple-modal": "^1.4.17",
     "rxjs": "^7.5.7",
     "sass-material-colors": "^0.0.5",
@@ -53,14 +57,20 @@
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#dev",
     "three": "^0.146.0",
     "tslib": "^2.4.1",
+    "typescript-debounce-decorator": "^0.0.18",
     "uuid": "^9.0.0",
     "vrchat": "github:Raphiiko/vrchatapi-javascript#oyasumi-patch",
     "zone.js": "^0.11.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.8",
-    "@angular/cli": "^14.2.8",
-    "@angular/compiler-cli": "^14.2.9",
+    "@angular-devkit/build-angular": "^15.2.4",
+    "@angular-eslint/builder": "15.2.1",
+    "@angular-eslint/eslint-plugin": "15.2.1",
+    "@angular-eslint/eslint-plugin-template": "15.2.1",
+    "@angular-eslint/schematics": "15.2.1",
+    "@angular-eslint/template-parser": "15.2.1",
+    "@angular/cli": "^15.2.4",
+    "@angular/compiler-cli": "^15.2.4",
     "@tauri-apps/cli": "^1.2.0",
     "@types/jasmine": "^4.3.0",
     "@types/lodash": "^4.14.188",
@@ -68,7 +78,11 @@
     "@types/set-cookie-parser": "^2.4.2",
     "@types/three": "^0.146.0",
     "@types/uuid": "^8.3.4",
+    "@typescript-eslint/eslint-plugin": "5.48.2",
+    "@typescript-eslint/parser": "5.48.2",
     "check-more-types": "^2.24.0",
+    "eslint": "^8.33.0",
+    "eslint-config-prettier": "^8.8.0",
     "exceljs": "^4.3.0",
     "execa": "^6.1.0",
     "jasmine-core": "^4.5.0",
@@ -78,6 +92,22 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "prettier": "^2.7.1",
-    "typescript": "^4.7.0"
+    "typescript": "^4.8.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,json,js}": [
+      "ng-lint-staged lint --fix --",
+      "prettier --write",
+      "git add"
+    ],
+    "*.{html,scss,md,html,yml,json}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }

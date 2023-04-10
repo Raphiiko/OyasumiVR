@@ -180,7 +180,7 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
         let file = File::open(path.clone()).unwrap();
         let reader = BufReader::new(file);
         let lines = reader.lines();
-        let mut lines_iterator = lines.into_iter();
+        let mut lines_iterator = lines;
         let mut first_run = true;
         loop {
             if !first_run {
@@ -197,7 +197,7 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
                 Err(TryRecvError::Empty) => (),
             }
             // Process new lines
-            while let Some(line) = lines_iterator.next() {
+            for line in lines_iterator.by_ref() {
                 let line = line.unwrap();
                 if line.trim().is_empty() {
                     continue;

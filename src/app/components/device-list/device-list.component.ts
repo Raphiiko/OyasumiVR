@@ -5,11 +5,15 @@ import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
 import { LighthouseService } from '../../services/lighthouse.service';
 import { OpenVRService } from '../../services/openvr.service';
+import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogService } from '../../services/event-log.service';
+import { error } from 'tauri-plugin-log-api';
 
 interface DisplayCategory {
   label: string;
   devices: OVRDevice[];
   canPowerOff: boolean;
+  class: OVRDeviceClass;
 }
 
 @Component({
@@ -21,12 +25,13 @@ interface DisplayCategory {
 export class DeviceListComponent implements OnInit, OnDestroy {
   private destroy$: Subject<void> = new Subject<void>();
   deviceCategories: Array<DisplayCategory> = [];
-  devicesCanPowerOff: boolean = false;
+  devicesCanPowerOff = false;
 
   constructor(
     protected openvr: OpenVRService,
     private cdr: ChangeDetectorRef,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private eventLog: EventLogService
   ) {}
 
   ngOnInit(): void {
@@ -48,7 +53,12 @@ export class DeviceListComponent implements OnInit, OnDestroy {
             let category = this.deviceCategories.find((c) => c.label === categoryLabel);
             if (!category) {
               this.deviceCategories.push(
-                (category = { label: categoryLabel, devices: [], canPowerOff: false })
+                (category = {
+                  label: categoryLabel,
+                  devices: [],
+                  canPowerOff: false,
+                  class: deviceGroup[0],
+                })
               );
             }
             for (const device of deviceGroup[1]) {
@@ -103,11 +113,39 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     return category.label;
   }
 
-  turnOffDevices(devices: OVRDevice[]) {
-    this.lighthouse.turnOffDevices(devices);
+  async turnOffDevices(category: DisplayCategory) {
+    const devices = category.devices.filter((d) => d.canPowerOff);
+    if (!devices.length) return;
+    await this.lighthouse.turnOffDevices(devices);
+    this.eventLog.logEvent({
+      type: 'turnedOffDevices',
+      reason: 'MANUAL',
+      devices: (() => {
+        switch (category.class) {
+          case 'Controller':
+            return devices.length > 1 ? 'CONTROLLERS' : 'CONTROLLER';
+          case 'GenericTracker':
+            return devices.length > 1 ? 'TRACKERS' : 'TRACKER';
+          default:
+            error(
+              `[DeviceList] Couldn't determine device class for event log entry (${category.class})`
+            );
+            return 'VARIOUS';
+        }
+      })(),
+    } as EventLogTurnedOffDevices);
   }
 
-  turnOffAllDevices() {
-    this.lighthouse.turnOffDevices(flatten(this.deviceCategories.map((c) => c.devices)));
+  async turnOffAllDevices() {
+    const devices = flatten(this.deviceCategories.map((c) => c.devices)).filter(
+      (d) => d.canPowerOff
+    );
+    if (!devices.length) return;
+    await this.lighthouse.turnOffDevices(devices);
+    this.eventLog.logEvent({
+      type: 'turnedOffDevices',
+      reason: 'MANUAL',
+      devices: 'ALL',
+    } as EventLogTurnedOffDevices);
   }
 }

@@ -66,27 +66,25 @@ impl GestureDetector {
             movements.push(yaw_diff);
         }
         // Detect head shake
-        if get_time() - self.last_detection >= 5000 {
-            if self.detect_head_shake(movements) {
-                self.last_detection = get_time();
-                {
-                    let window_guard = TAURI_WINDOW.lock().unwrap();
-                    let window = window_guard.as_ref().unwrap();
-                    window
-                        .emit_all(
-                            "GESTURE_DETECTED",
-                            GestureDetected {
-                                gesture: "head_shake".to_string(),
-                            },
-                        )
-                        .ok();
-                }
+        if get_time() - self.last_detection >= 5000 && self.detect_head_shake(movements) {
+            self.last_detection = get_time();
+            {
+                let window_guard = TAURI_WINDOW.lock().unwrap();
+                let window = window_guard.as_ref().unwrap();
+                window
+                    .emit_all(
+                        "GESTURE_DETECTED",
+                        GestureDetected {
+                            gesture: "head_shake".to_string(),
+                        },
+                    )
+                    .ok();
             }
         }
     }
 
     fn detect_head_shake(&self, movements: Vec<f64>) -> bool {
-        let mut data = movements.clone();
+        let mut data = movements;
         let mut offset_dir = 1.0;
         let mut change: Option<usize>;
         let change_dir_a = self.detect_angular_change(data.clone(), -15.0);
@@ -105,11 +103,11 @@ impl GestureDetector {
             return false;
         }
         data = data[change.unwrap()..].to_vec();
-        change = self.detect_angular_change(data.clone(), -15.0 * offset_dir);
+        change = self.detect_angular_change(data, -15.0 * offset_dir);
         if change.is_none() {
             return false;
         }
-        return true;
+        true
     }
 
     fn detect_angular_change(&self, mut data: Vec<f64>, mut offset: f64) -> Option<usize> {
@@ -120,8 +118,8 @@ impl GestureDetector {
             offset *= -1.0;
         }
         // Loop over all data points
-        for i in 0..data.len() {
-            delta += data[i];
+        for (i, item) in data.iter().enumerate() {
+            delta += item;
             // if delta is negative, reset to 0
             if delta < 0.0 {
                 delta = 0.0;
@@ -132,6 +130,6 @@ impl GestureDetector {
             }
         }
         // Desired angular change could not be found
-        return None;
+        None
     }
 }

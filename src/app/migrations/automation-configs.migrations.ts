@@ -10,6 +10,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   5: from4to5,
   6: from5to6,
   7: from6to7,
+  8: from7to8,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -38,6 +39,24 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from7to8(data: any): any {
+  data.version = 8;
+  data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
+  );
+  data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
+  );
+  data.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE
+  );
+  data.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE
+  );
+  data.OSC_GENERAL = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.OSC_GENERAL);
   return data;
 }
 
@@ -78,10 +97,5 @@ function from3to4(data: any): any {
 function from2to3(data: any): any {
   data.version = 3;
   data.SLEEPING_ANIMATIONS = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS);
-  return data;
-}
-
-function from0to1(data: any): any {
-  data.version = 1;
   return data;
 }

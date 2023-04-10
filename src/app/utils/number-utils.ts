@@ -8,3 +8,15 @@ export function floatPrecision(a: number): number {
   }
   return p;
 }
+
+export function lerp(a: number, b: number, alpha: number) {
+  return a + alpha * (b - a);
+}
+
+export function clamp(val: number, min: number, max: number) {
+  return Math.min(Math.max(val, min), max);
+}
+
+export function ensurePrecision(num: number, decimals: number) {
+  return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+}

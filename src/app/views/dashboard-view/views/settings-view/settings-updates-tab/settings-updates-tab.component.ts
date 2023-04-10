@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
@@ -16,9 +16,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./settings-updates-tab.component.scss'],
   animations: [hshrink()],
 })
-export class SettingsUpdatesTabComponent extends SettingsTabComponent {
+export class SettingsUpdatesTabComponent extends SettingsTabComponent implements OnInit {
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
-  version: string = '';
+  version = '';
   changelog: SafeHtml = '';
   updateOrCheckInProgress = false;
 
@@ -55,7 +55,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent {
         })
       );
     }
-    let firstIndex = changelog.indexOf('##');
+    const firstIndex = changelog.indexOf('##');
     changelog = changelog.slice(firstIndex, changelog.length);
     changelog = marked.parse(changelog);
     changelog = changelog.replace(/<a /g, '<a target="_blank" ');

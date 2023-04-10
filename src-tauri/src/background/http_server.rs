@@ -6,7 +6,7 @@ use hyper::{
 };
 use log::{error, info};
 
-use crate::{elevated_sidecar, MAIN_HTTP_SERVER_PORT, IMAGE_CACHE};
+use crate::{elevated_sidecar, IMAGE_CACHE, MAIN_HTTP_SERVER_PORT};
 
 pub fn spawn_http_server_thread() {
     thread::spawn(move || {

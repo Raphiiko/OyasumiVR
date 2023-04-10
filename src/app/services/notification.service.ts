@@ -7,8 +7,6 @@ import {
   sendNotification,
 } from '@tauri-apps/api/notification';
 import { AppSettingsService } from './app-settings.service';
-import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { cloneDeep } from 'lodash';
 import { firstValueFrom } from 'rxjs';
 
 interface XSOMessage {
@@ -94,7 +92,7 @@ export class NotificationService {
   }
 
   private async sendDesktopNotification(title: string, content: string) {
-    let permissionGranted = await isPermissionGranted();
+    const permissionGranted = await isPermissionGranted();
     if (!permissionGranted) {
       await this.enableDesktopNotifications(false);
       return;

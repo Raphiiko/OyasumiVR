@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ThemeService } from './services/theme.service';
@@ -60,7 +60,7 @@ import { UpdateModalComponent } from './components/update-modal/update-modal.com
 import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
-import { filter } from 'rxjs';
+import { filter, firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat.service';
 import { SettingsGeneralTabComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/settings-general-tab.component';
 import { SettingsUpdatesTabComponent } from './views/dashboard-view/views/settings-view/settings-updates-tab/settings-updates-tab.component';
@@ -85,11 +85,35 @@ import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-au
 import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
-import { SleepDebugViewComponent } from './views/sleep-debug-view/sleep-debug-view.component';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
+import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
+import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
+import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
+import { SliderComponent } from './components/slider/slider.component';
+import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
+import { EventLogService } from './services/event-log.service';
+import { debug } from 'tauri-plugin-log-api';
+import { EventLogComponent } from './components/event-log/event-log.component';
+import { EventLogEntryComponent } from './components/event-log-entry/event-log-entry.component';
+import { LocalizedDatePipe } from './pipes/localized-date.pipe';
+import localeEN from '@angular/common/locales/en';
+import localeFR from '@angular/common/locales/fr';
+import localeJP from '@angular/common/locales/ja';
+import localeNL from '@angular/common/locales/nl';
+import localeCN_TW from '@angular/common/locales/zh';
+import localeKO from '@angular/common/locales/ko';
+import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
+import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
+import { SleepingAnimationsTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/sleeping-animations-tab/sleeping-animations-tab.component';
+import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/osc-general-tab/osc-general-tab.component';
+import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
+
+[localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
+  registerLocaleData(locale)
+);
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -122,6 +146,7 @@ export function createTranslateLoader(http: HttpClient) {
     OscAutomationsViewComponent,
     SelectBoxComponent,
     TStringTranslatePipePipe,
+    LocalizedDatePipe,
     ImageCachePipe,
     OscScriptButtonComponent,
     OscScriptModalComponent,
@@ -145,7 +170,14 @@ export function createTranslateLoader(http: HttpClient) {
     FriendSelectionModalComponent,
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
-    SleepDebugViewComponent,
+    BrightnessAutomationsViewComponent,
+    SliderSettingComponent,
+    SliderComponent,
+    EventLogComponent,
+    EventLogEntryComponent,
+    ResolutionAutomationsViewComponent,
+    SleepingAnimationsTabComponent,
+    OscGeneralTabComponent,
   ],
   imports: [
     CommonModule,
@@ -182,6 +214,7 @@ export function createTranslateLoader(http: HttpClient) {
 })
 export class AppModule {
   constructor(
+    private http: HttpClient,
     private openvrService: OpenVRService,
     private nvmlService: NVMLService,
     private sleepService: SleepService,
@@ -209,11 +242,16 @@ export class AppModule {
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
     // OSC automations
+    private oscGeneralAutomationsService: OscGeneralAutomationsService,
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService
+    private inviteAutomationsService: InviteAutomationsService,
+    private brightnessControlService: BrightnessControlService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService,
+    private renderResolutionAutomationService: RenderResolutionAutomationService,
+    private eventLog: EventLogService
   ) {
     this.init();
   }
@@ -221,8 +259,10 @@ export class AppModule {
   async init() {
     // Clean cache
     await CachedValue.cleanCache();
-    // Initialize app settings
-    await this.appSettingsService.init();
+    // Preload assets
+    await this.preloadAssets();
+    // Initialize app settings and event log
+    await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
     // Initialize telemetry and updates
     await Promise.all([this.updateService.init(), this.telemetryService.init()]);
     // Initialize general utility services
@@ -240,6 +280,8 @@ export class AppModule {
     await this.sidecarService.init().then(async () => {
       await this.nvmlService.init();
     });
+    // Initialize Brightness Control
+    await this.brightnessControlService.init();
     // Initialize automations
     await Promise.all([
       // GPU automations
@@ -256,11 +298,16 @@ export class AppModule {
       this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
       this.turnOffDevicesWhenChargingAutomationService.init(),
       // OSC automations
+      this.oscGeneralAutomationsService.init(),
       this.sleepingAnimationsAutomationService.init(),
       // Status automations
       this.statusChangeForPlayerCountAutomationService.init(),
       // Invite automations
       this.inviteAutomationsService.init(),
+      // Brightness automations
+      this.brightnessControlAutomationService.init(),
+      // Resolution automations
+      this.renderResolutionAutomationService.init(),
     ]);
     await invoke('close_splashscreen');
     // Language selection modal
@@ -274,5 +321,26 @@ export class AppModule {
           })
           .subscribe();
       });
+  }
+
+  async preloadAssets() {
+    const preloadAssets = await firstValueFrom(
+      this.http.get<{ imageUrls: string[] }>('/assets/preload-assets.json')
+    );
+    await Promise.all(
+      preloadAssets.imageUrls.map((imageUrl) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            debug('Preloaded asset: ' + imageUrl);
+            resolve(void 0);
+          };
+          img.onerror = () => {
+            reject();
+          };
+          img.src = imageUrl;
+        });
+      })
+    );
   }
 }

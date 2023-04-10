@@ -19,14 +19,21 @@ export type AutomationType =
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
   // OSC AUTOMATIONS
+  | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
   // STATUS AUTOMATIONS
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
   // INVITE AUTOMATIONS
-  | 'AUTO_ACCEPT_INVITE_REQUESTS';
+  | 'AUTO_ACCEPT_INVITE_REQUESTS'
+  // BRIGHTNESS AUTOMATIONS
+  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
+  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
+  // RESOLUTION AUTOMATIONS
+  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
+  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 7;
+  version: 8;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -41,11 +48,18 @@ export interface AutomationConfigs {
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
   // OSC AUTOMATIONS
+  OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   // STATUS AUTOMATIONS
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   // INVITE AUTOMATIONS
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
+  // BRIGHTNESS AUTOMATIONS
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: DisplayBrightnessOnSleepModeAutomationConfig;
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: DisplayBrightnessOnSleepModeAutomationConfig;
+  // RESOLUTION AUTOMATIONS
+  RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
+  RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -55,6 +69,18 @@ export interface AutomationConfig {
 //
 // Automation configs
 //
+
+// BRIGHTNESS AUTOMATIONS
+
+export interface DisplayBrightnessOnSleepModeAutomationConfig extends AutomationConfig {
+  brightness: number;
+  transition: boolean;
+  transitionTime: number;
+}
+
+export interface RenderResolutionOnSleepModeAutomationConfig extends AutomationConfig {
+  resolution: number | null;
+}
 
 // GPU AUTOMATIONS
 export interface GPUPowerLimitsAutomationConfig extends AutomationConfig {
@@ -93,7 +119,7 @@ export interface SleepModeEnableAtBatteryPercentageAutomationConfig extends Auto
   threshold: number;
 }
 
-export interface SleepModeEnableAtControllersPoweredOffAutomationConfig extends AutomationConfig {}
+export type SleepModeEnableAtControllersPoweredOffAutomationConfig = AutomationConfig;
 
 export interface SleepModeChangeOnSteamVRStatusAutomationConfig extends AutomationConfig {
   disableOnSteamVRStop: boolean;
@@ -117,6 +143,11 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 }
 
 // OSC AUTOMATIONS
+export interface OscGeneralAutomationConfig extends AutomationConfig {
+  onSleepModeEnable?: OscScript;
+  onSleepModeDisable?: OscScript;
+}
+
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   preset: string | null;
   oscScripts: {
@@ -151,7 +182,29 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 7,
+  version: 8,
+  // BRIGHTNESS AUTOMATIONS
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+    brightness: 20,
+    transition: true,
+    transitionTime: 1000 * 60 * 5,
+  },
+  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
+    brightness: 100,
+    transition: true,
+    transitionTime: 10000,
+  },
+  // RESOLUTION AUTOMATIONS
+  RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+    resolution: 50,
+  },
+  RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
+    resolution: null,
+  },
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -211,6 +264,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     deviceClasses: [],
   },
   // OSC AUTOMATIONS
+  OSC_GENERAL: {
+    enabled: true,
+  },
   SLEEPING_ANIMATIONS: {
     enabled: false,
     preset: null,

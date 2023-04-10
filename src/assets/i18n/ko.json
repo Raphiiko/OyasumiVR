@@ -16,6 +16,31 @@
       "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     }
   },
+  "brightness-automations": {
+    "title": "밝기 자동화",
+    "description": "Oyasumi는 수면 모드가 변경되었을 때 헤드셋의 밝기를 자동으로 조정할 수 있어요.",
+    "indexWarning": "밝기 제어는 현재 Valve Index에서만 가능해요. SteamVR이 켜져 있고 헤드셋이 연결되어있는지 확인해주세요.",
+    "onSleepEnable": {
+      "title": "수면 모드 활성화 시",
+      "description": "헤드셋의 밝기를 조정해요."
+    },
+    "onSleepDisable": {
+      "title": "수면 모드 비활성화 시",
+      "description": "헤드셋의 밝기를 조정해요."
+    },
+    "brightness": {
+      "title": "조정할 밝기",
+      "description": ""
+    },
+    "transition": {
+      "title": "점진적 밝기 조정",
+      "description": "원하는 밝기까지 조금씩 부드럽게 조정해요."
+    },
+    "transitionTime": {
+      "title": "변화 시간",
+      "description": "원하는 밝기까지 조정될 때까지 걸리는 시간이에요."
+    }
+  },
   "overview": {
     "sleep-mode": {
       "label": "수면 모드",
@@ -29,7 +54,7 @@
     "title": "수면 감지",
     "enableAutomations": {
       "title": "수면 모드 활성화",
-      "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "atTime": "지정된 시간에",
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
       "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
@@ -40,7 +65,7 @@
     },
     "disableAutomations": {
       "title": "수면 모드 비활성화",
-      "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요",
+      "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요.",
       "atTime": "지정된 시간에",
       "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
       "onSteamVRStop": "SteamVR이 멈췄을 때"
@@ -129,15 +154,19 @@
         "whenA": "기준 기기",
         "Controller": "컨트롤러",
         "GenericTracker": "트래커",
-        "fallsBelow": "조건 값"
+        "fallsBelow": "조건 값",
+        "errors": {
+          "thresholdOutOfRange": "조건 값은 0%에서 100% 사이여야 해요.",
+          "thresholdNotInteger": "조건 값은 숫자이여야 해요."
+        }
       }
-    },
-    "description": "여기서는 다양한 요인을 바탕으로 수면 모드를 자동으로 활성화하거나 비활성화하는 자동화 기능을 설정할 수 있어요."
+    }
   },
   "oscAutomations": {
     "title": "OSC 자동화",
     "tab": {
-      "sleepingAnimations": "수면 애니메이션"
+      "sleepingAnimations": "수면 애니메이션",
+      "general": "일반"
     },
     "sleepingAnimations": {
       "currentPose": "현재 위치",
@@ -146,10 +175,6 @@
       "description": "Oyasumi는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
       "enable": "자동 수면 애니메이션 활성화",
       "customPreset": "커스텀 애니메이션",
-      "errors": {
-        "releaseDurationTooShort": "해제 시간은 100ms 이상이어야 해요.",
-        "releaseDurationTooLong": "해제 시간은 100ms를 초과할 수 없어요."
-      },
       "options": {
         "positions": {
           "title": "수면 자세",
@@ -182,13 +207,24 @@
           "footLockReleaseWindow": "다리 잠금 해제 조건"
         }
       }
+    },
+    "general": {
+      "description": "여기서 특정 이벤트가 발생할 때 OSC 커멘드을 VRChat으로 보내도록 Oyasumi를 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 아바타의 익스프레션을 변경하려는 경우 유용할 수 있어요.",
+      "onSleepEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "이 OSC 커멘드들을 전송해요.",
+        "script": "수면 모드 활성화 됨"
+      },
+      "onSleepDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "이 OSC 커멘드들을 전송해요.",
+        "script": "수면 모드 비활성화 됨"
+      }
     }
   },
   "battery-automations": {
     "title": "배터리 자동화",
     "devicePowerOff": {
-      "title": "기기의 전원 끄기",
-      "description": "Steam VR 기기를 끄기 위한 다양한 자동화 기능이에요.",
       "onSleepModeEnable": {
         "title": "수면 모드 활성화 시",
         "description": "수면 모드 활성화 시 기기의 전원을 꺼요.",
@@ -312,6 +348,10 @@
     "noPlayersAdded": "목록에 아무도 추가되지 않았어요.",
     "addFriends": "플레이어 추가",
     "clearPlayers": "목록 비우기",
+    "removeModal": {
+      "title": "제거 확인",
+      "message": "'{{name}}'님을 정말로 리스트에서 지울까요?"
+    },
     "options": {
       "enable": {
         "title": "활성화",
@@ -468,7 +508,7 @@
         "loadFile": "언어 파일 불러오기"
       },
       "sleepingPose": {
-        "title": "잠자는 포즈"
+        "title": "수면 자세"
       },
       "sleepingDetection": {
         "title": "수면 감지 리포트"
@@ -561,7 +601,10 @@
       "statusAutomations": "스테이터스 자동화",
       "autoInviteRequestAccept": "인바이트 리퀘스트 \n자동 수락",
       "settings": "설정",
-      "about": "Oyasumi에 대해"
+      "vrcAutomations": "VRChat 자동화",
+      "brightnessAutomations": "밝기 자동화",
+      "about": "Oyasumi에 대해",
+      "resolutionAutomations": "해상도 자동화"
     },
     "device-list": {
       "title": "기기",
@@ -603,10 +646,10 @@
       "commands": {
         "COMMAND": {
           "title": "OSC 커멘드",
-          "description": "OSC 커멘드 실행해요."
+          "description": "OSC 커멘드를 실행해요."
         },
         "SLEEP": {
-          "title": "수면",
+          "title": "대기",
           "description": "지정된 시간 동안 대기해요."
         }
       }
@@ -635,6 +678,128 @@
       "noFriendsSelected": "친구가 선택되지 않았어요",
       "noResultsFor": "'{{query}}'에 대한 결과가 없어요",
       "noFriends": "친구 목록이 비어있어요"
+    },
+    "event-log": {
+      "title": "이벤트",
+      "show-more": "더보기",
+      "no-logs": "아직 아무 이벤트도 기록되지 않았어요.\n로그는 최대 48시간 보관되어요.",
+      "clearLog": "비우기",
+      "clearLogModal": {
+        "title": "비우기 확인",
+        "message": "정말로 이벤트 로그를 지울까요? 이 작업은 취소할 수 없어요."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "수면 모드가 활성화됨",
+          "reason": {
+            "manual": "수동으로 수면 모드를 활성화했어요.",
+            "osc-control": "OSC를 통해 수면 모드가 활성화되었어요.",
+            "automation": {
+              "unknown": "알 수 없는 자동화에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "수면 감지에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "장치의 배터리 잔량이 설정 값이 되어서 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "컨트롤러의 전원이 꺼져서 수면 모드가 활성화되었어요."
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "수면 모드가 비활성화됨",
+          "reason": {
+            "manual": "수동으로 수면 모드를 비활성화했어요.",
+            "osc-control": "OSC를 통해 수면 모드가 비활성화되었어요.",
+            "automation": {
+              "unknown": "알 수 없는 자동화에 의해 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR이 꺼져서 수면 모드가 비활성화되었어요.",
+              "SLEEP_MODE_DISABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 비활성화되었어요.",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "컨트롤러의 전원이 켜져서 수면 모드가 비활성화되었어요."
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "컨트롤러를 끔",
+            "CONTROLLERS": "여러 컨트롤러 끔",
+            "TRACKER": "트래커가 끔",
+            "TRACKERS": "여러 트래커를 끔",
+            "ALL": "모든 기기를 끔",
+            "VARIOUS": "다양한 기기를 끔"
+          },
+          "reason": {
+            "MANUAL": "수동으로 기기를 껐어요.",
+            "OSC_CONTROL": "OSC를 통해 기기를 껐어요.",
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 기기를 껐어요.",
+            "CHARGING": "기기가 충전중으로 기기를 껐어요."
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "'{{device}}'의 전력 제한을 {{limit}}으로 복원함",
+            "set": "'{{device}}'의 전력 제한을 {{limit}}으로 설정함"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 전력 제한을 설정했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 전력 제한을 복원했어요."
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "헤드셋의 밝기를 {{value}}으로 설정함",
+            "transition": "헤드셋의 밝기를 {{value}}으로 점차 변화시킴"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 밝기를 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 밝기를 변경했어요."
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "'{{displayName}}'의 인바이트 리퀘스트를 수락함",
+          "subtitle": {
+            "whitelist": "이 플레이어가 화이트리스트에 있었기에 수락했어요.",
+            "blacklist": "이 플레이어가 블랙리스트에 없었기에 수락했어요."
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "VRChat 스테이터스를 {{oldStatus}}에서 {{newStatus}}으로 변경함",
+          "reason": {
+            "BELOW_LIMIT": "월드의 플레이어가 {{threshold}}인 미만이기에 스테이터스가 변경되었어요.",
+            "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {{threshold}}인 이상이기에 스테이터스가 변경되었어요."
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "수면 모드 자동 실행이 취소됨",
+          "subtitle": "유저가 깨어있었기 때문에 수면 모드의 자동 실행을 취소했어요."
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR 렌더 해상도를 'auto'로 변경",
+            "custom": "SteamVR 렌더 해상도를 {{value}}으로 변경"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 해상도를 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 해상도를 변경했어요."
+          }
+        }
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "해상도 자동화",
+    "description": "Oyasumi는 수면 모드가 활성화되거나 비활성화될 때 자동으로 SteamVR의 렌더 해상도를 조정할 수 있어요.",
+    "onSleepEnable": {
+      "title": "수면 모드 활성화 시",
+      "description": "렌더 해상도를 변경해요"
+    },
+    "onSleepDisable": {
+      "title": "수면 모드 비활성화 시",
+      "description": "렌더 해상도를 변경해요"
+    },
+    "renderResolution": {
+      "title": "변경할 렌더 해상도",
+      "custom": "커스텀",
+      "auto": "자동"
     }
   }
 }

@@ -1,5 +1,5 @@
 export interface AppSettings {
-  version: 3;
+  version: 4;
   userLanguage: string;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
@@ -12,7 +12,7 @@ export interface AppSettings {
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 3,
+  version: 4,
   userLanguage: 'en',
   askForAdminOnStart: false,
   lighthouseConsolePath:

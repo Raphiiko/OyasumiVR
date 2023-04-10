@@ -1,5 +1,11 @@
-<div class="top-decoration"></div>
-<div class="main-bar" @noop>
+<div class="top-decoration left" [class.translucent]="!!(background.background | async)">
+  <div></div>
+</div>
+<div class="top-decoration right" [class.translucent]="!!(background.background | async)">
+  <div></div>
+</div>
+<div class="main-bar" @noop [class.translucent]="!!(background.background | async)">
+  <div class="bg"></div>
   <div class="left">
     <div
       class="pill sleep-mode clickable"
@@ -16,7 +22,9 @@
         >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
-      <span *ngIf="!(sleepMode | async)" @hshrink translate>comp.main-status-bar.inactive</span>
+      <span *ngIf="(sleepMode | async) === false" @hshrink translate
+        >comp.main-status-bar.inactive</span
+      >
     </div>
   </div>
   <div class="right">

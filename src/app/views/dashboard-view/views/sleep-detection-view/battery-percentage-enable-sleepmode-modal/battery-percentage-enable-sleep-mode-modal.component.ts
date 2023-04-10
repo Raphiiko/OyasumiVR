@@ -2,7 +2,6 @@ import { Component, HostBinding, OnInit } from '@angular/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
-import { isInteger } from 'lodash';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {
@@ -29,7 +28,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
   implements OnInit, BatteryPercentageEnableSleepModeModalInputModel
 {
   triggerClasses: OVRDeviceClass[] = [];
-  threshold: number = 0;
+  threshold = 0;
 
   @HostBinding('[@fadeUp]') get fadeUp() {
     return;
@@ -55,28 +54,5 @@ export class BatteryPercentageEnableSleepModeModalComponent
     } else {
       this.triggerClasses.push(deviceClass);
     }
-  }
-
-  updateThreshold(value: string, el: HTMLInputElement) {
-    const threshold = parseFloat(value);
-
-    if (threshold < 0 || threshold > 100) {
-      el.setCustomValidity(
-        this.translate.instant(
-          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdOutOfRange'
-        )
-      );
-      return;
-    } else if (!isInteger(threshold)) {
-      el.setCustomValidity(
-        this.translate.instant(
-          'sleep-detection.modals.enableAtBatteryPercentage.errors.thresholdNotInteger'
-        )
-      );
-      return;
-    } else {
-      el.setCustomValidity('');
-    }
-    this.threshold = threshold;
   }
 }

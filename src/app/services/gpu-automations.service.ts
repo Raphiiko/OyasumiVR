@@ -29,6 +29,8 @@ import { error, info, warn } from 'tauri-plugin-log-api';
 import { invoke } from '@tauri-apps/api/tauri';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
+import { EventLogService } from './event-log.service';
+import { EventLogGpuPowerLimitChanged } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -57,7 +59,8 @@ export class GpuAutomationsService {
     private automationConfig: AutomationConfigService,
     private nvml: NVMLService,
     private sleep: SleepService,
-    private sidecar: ElevatedSidecarService
+    private sidecar: ElevatedSidecarService,
+    private eventLog: EventLogService
   ) {
     this.powerLimitsConfig.subscribe((config) => (this.currentPowerLimitsConfig = config));
     this.msiAfterburnerConfig.subscribe((config) => (this.currentMSIAfterburnerConfig = config));
@@ -217,12 +220,12 @@ export class GpuAutomationsService {
             }
           }),
           // Check if GPU automations are enabled
-          switchMap((_) => this.isEnabled().pipe(take(1))),
+          switchMap(() => this.isEnabled().pipe(take(1))),
           filter((gpuAutomationsEnabled) => gpuAutomationsEnabled),
           // Check if on sleep disable automation is enabled
-          filter((_) => getAutomationConfig().enabled),
+          filter(() => getAutomationConfig().enabled),
           // Fetch selected device
-          switchMap((_) =>
+          switchMap(() =>
             this.nvmlDevices.pipe(
               take(1),
               map((devices) =>
@@ -234,12 +237,18 @@ export class GpuAutomationsService {
           filter((selectedDevice) => !!selectedDevice && !!selectedDevice.supportsPowerLimiting),
           switchMap((selectedDevice) => {
             info('[GpuAutomations] Setting power limit');
-            return this.nvml.setPowerLimit(
-              selectedDevice!.id,
-              (getAutomationConfig().resetToDefault
-                ? selectedDevice!.defaultPowerLimit!
-                : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!) * 1000
-            );
+            const powerLimit = getAutomationConfig().resetToDefault
+              ? selectedDevice!.defaultPowerLimit!
+              : getAutomationConfig().powerLimit || selectedDevice!.defaultPowerLimit!;
+            return this.nvml.setPowerLimit(selectedDevice!.id, powerLimit * 1000).then(() => {
+              this.eventLog.logEvent({
+                type: 'gpuPowerLimitChanged',
+                device: selectedDevice!.name,
+                limit: powerLimit,
+                resetToDefault: getAutomationConfig().resetToDefault,
+                reason: on === 'ENABLE' ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+              } as EventLogGpuPowerLimitChanged);
+            });
           })
         )
         .subscribe();
@@ -286,9 +295,9 @@ export class GpuAutomationsService {
             map((gpuAutomationsEnabled) => [gpuAutomationsEnabled, sleepModeEnabled])
           )
         ),
-        filter(([gpuAutomationsEnabled, _]) => gpuAutomationsEnabled),
+        filter(([gpuAutomationsEnabled]) => gpuAutomationsEnabled),
         // Check profile to be enabled
-        map(([_, sleepModeEnabled]) =>
+        map(([, sleepModeEnabled]) =>
           sleepModeEnabled
             ? this.currentMSIAfterburnerConfig.onSleepEnableProfile
             : this.currentMSIAfterburnerConfig.onSleepDisableProfile
@@ -310,7 +319,7 @@ export class GpuAutomationsService {
             this._msiAfterburnerStatus.value === 'UNKNOWN' ||
             prev.msiAfterburnerPath !== curr.msiAfterburnerPath
         ),
-        map(([_, curr]) => curr.msiAfterburnerPath),
+        map(([, curr]) => curr.msiAfterburnerPath),
         // Only while the sidecar is running
         switchMap((msiAfterburnerPath) =>
           this.sidecar.sidecarRunning.pipe(
@@ -360,7 +369,7 @@ export class GpuAutomationsService {
     }
   }
 
-  async setMSIAfterburnerPath(path: string, save: boolean = true) {
+  async setMSIAfterburnerPath(path: string, save = true) {
     if (save)
       await this.automationConfig.updateAutomationConfig<MSIAfterburnerAutomationConfig>(
         'MSI_AFTERBURNER',

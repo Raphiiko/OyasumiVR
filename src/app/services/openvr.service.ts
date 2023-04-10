@@ -6,6 +6,7 @@ import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
+import { error } from 'tauri-plugin-log-api';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
@@ -51,20 +52,7 @@ export class OpenVRService {
     ]);
   }
 
-  async onStatusUpdate(status: OpenVRStatus) {
-    this._status.next(status);
-    switch (status) {
-      case 'INACTIVE':
-      case 'INITIALIZING':
-        this._devices.next([]);
-        this._devicePoses.next({});
-        break;
-      case 'INITIALIZED':
-        break;
-    }
-  }
-
-  onDeviceUpdate(device: OVRDevice) {
+  public onDeviceUpdate(device: OVRDevice) {
     device = Object.assign({}, device);
     if (device.isTurningOff === null || device.isTurningOff === undefined)
       device.isTurningOff =
@@ -78,6 +66,40 @@ export class OpenVRService {
       )
     );
     this.appRef.tick();
+  }
+
+  public async setAnalogGain(analogGain: number): Promise<void> {
+    if (analogGain !== null && analogGain !== undefined) {
+      return invoke('openvr_set_analog_gain', { analogGain });
+    } else {
+      console.error('[OpenVR] Attempted to set analogGain to null or undefined', analogGain);
+      error('[OpenVR] Attempted to set analogGain to null or undefined');
+    }
+  }
+
+  public getAnalogGain(): Promise<number> {
+    return invoke<number>('openvr_get_analog_gain');
+  }
+
+  public setSupersampleScale(supersampleScale: number | null): Promise<void> {
+    return invoke('openvr_set_supersample_scale', { supersampleScale });
+  }
+
+  public getSupersampleScale(): Promise<number | null> {
+    return invoke<number | null>('openvr_get_supersample_scale');
+  }
+
+  private onStatusUpdate(status: OpenVRStatus) {
+    this._status.next(status);
+    switch (status) {
+      case 'INACTIVE':
+      case 'INITIALIZING':
+        this._devices.next([]);
+        this._devicePoses.next({});
+        break;
+      case 'INITIALIZED':
+        break;
+    }
   }
 
   private async getDevices(): Promise<Array<OVRDevice>> {

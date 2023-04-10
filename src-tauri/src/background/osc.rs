@@ -1,9 +1,10 @@
 use std::{
+    io,
     sync::mpsc::{self, TryRecvError},
-    thread, io,
+    thread,
 };
 
-use log::{info, error};
+use log::{error, info};
 use rosc::{OscPacket, OscType};
 
 use crate::{
@@ -32,44 +33,41 @@ pub fn spawn_osc_receiver_thread() -> mpsc::Sender<()> {
             match socket.recv(&mut buf) {
                 Ok(size) => {
                     let (_, packet) = rosc::decoder::decode_udp(&buf[..size]).unwrap();
-                    match packet {
-                        OscPacket::Message(msg) => {
-                            let window_guard = TAURI_WINDOW.lock().unwrap();
-                            let window = window_guard.as_ref().unwrap();
-                            let _ = window.emit(
-                                "OSC_MESSAGE",
-                                OSCMessage {
-                                    address: msg.addr,
-                                    values: msg
-                                        .args
-                                        .iter()
-                                        .map(|value| match value {
-                                            OscType::Int(v) => OSCValue {
-                                                kind: "int".into(),
-                                                value: Some(v.to_string()),
-                                            },
-                                            OscType::Float(v) => OSCValue {
-                                                kind: "float".into(),
-                                                value: Some(v.to_string()),
-                                            },
-                                            OscType::String(v) => OSCValue {
-                                                kind: "string".into(),
-                                                value: Some(v.clone()),
-                                            },
-                                            OscType::Bool(v) => OSCValue {
-                                                kind: "bool".into(),
-                                                value: Some(v.to_string()),
-                                            },
-                                            _ => OSCValue {
-                                                kind: "unsupported".into(),
-                                                value: None,
-                                            },
-                                        })
-                                        .collect(),
-                                },
-                            );
-                        }
-                        _ => (),
+                    if let OscPacket::Message(msg) = packet {
+                        let window_guard = TAURI_WINDOW.lock().unwrap();
+                        let window = window_guard.as_ref().unwrap();
+                        let _ = window.emit(
+                            "OSC_MESSAGE",
+                            OSCMessage {
+                                address: msg.addr,
+                                values: msg
+                                    .args
+                                    .iter()
+                                    .map(|value| match value {
+                                        OscType::Int(v) => OSCValue {
+                                            kind: "int".into(),
+                                            value: Some(v.to_string()),
+                                        },
+                                        OscType::Float(v) => OSCValue {
+                                            kind: "float".into(),
+                                            value: Some(v.to_string()),
+                                        },
+                                        OscType::String(v) => OSCValue {
+                                            kind: "string".into(),
+                                            value: Some(v.clone()),
+                                        },
+                                        OscType::Bool(v) => OSCValue {
+                                            kind: "bool".into(),
+                                            value: Some(v.to_string()),
+                                        },
+                                        _ => OSCValue {
+                                            kind: "unsupported".into(),
+                                            value: None,
+                                        },
+                                    })
+                                    .collect(),
+                            },
+                        );
                     }
                 }
                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}

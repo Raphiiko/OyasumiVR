@@ -19,7 +19,6 @@ import { BatteryPercentageEnableSleepModeModalComponent } from './battery-percen
 import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
 import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
-import { SleepDetectorCalibrationModalComponent } from './sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 
 @Component({
@@ -119,7 +118,7 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
     this.modalService
       .addModal(SleepDetectorEnableSleepModeModalComponent, {})
       .pipe(filter((data) => !!data))
-      .subscribe((_) => {});
+      .subscribe(() => {});
   }
 
   toggleAutomation(automation: AutomationType, field = 'enabled') {

@@ -8,7 +8,7 @@ import { ImageCacheService } from '../services/image-cache.service';
 export class ImageCachePipe implements PipeTransform {
   constructor(private imageCache: ImageCacheService) {}
 
-  transform(value?: string, ttl: number = 3600): string {
+  transform(value?: string, ttl = 3600): string {
     if (!value) return '';
     return this.imageCache.getImageUrl(value, ttl);
   }

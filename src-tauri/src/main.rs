@@ -14,9 +14,7 @@ use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
-use tauri_plugin_fs_extra::FsExtra;
-use tauri_plugin_log::{LogTarget, LoggerBuilder, RotationStrategy};
-use tauri_plugin_store::PluginBuilder;
+use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 mod commands {
     pub mod admin;
@@ -56,11 +54,11 @@ lazy_static! {
 }
 
 fn main() {
-    tauri::Builder::default()
-        .plugin(PluginBuilder::default().build())
-        .plugin(FsExtra::default())
+    let app = tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::default().build())
+        .plugin(tauri_plugin_fs_extra::init())
         .plugin(
-            LoggerBuilder::default()
+            tauri_plugin_log::Builder::default()
                 .format(move |out, message, record| {
                     let format = time::format_description::parse(
                         "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -81,12 +79,38 @@ fn main() {
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
             // Focus main window when user attempts to launch a second instance.
             let window = app.get_window("main").unwrap();
-            if let Some(is_visible) = window.is_visible().ok() {
+            if let Ok(is_visible) = window.is_visible() {
                 if is_visible {
                     window.set_focus().unwrap();
                 }
             }
         }))
+        // .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+        //     event.window().hide().unwrap();
+        //     api.prevent_close();
+        // })
+        // .system_tray(
+        //     SystemTray::new()
+        // )
+        // .on_system_tray_event(|app, event| match event {
+        //     SystemTrayEvent::LeftClick {
+        //       position: _,
+        //       size: _,
+        //       ..
+        //     } => {
+        //       let window = app.get_window("main").unwrap();
+        //       window.show().unwrap();
+        //       window.set_focus().unwrap();
+        //     }
+        //     SystemTrayEvent::RightClick {
+        //       position: _,
+        //       size: _,
+        //       ..
+        //     } => {
+        //       // TODO: Implement context menu
+        //     }
+        //     _ => (),
+        // })
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -96,11 +120,11 @@ fn main() {
             }
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             // Get dependencies
-            let cache_dir = app.path_resolver().app_cache_dir().unwrap().clone();
-            std::thread::spawn(move || -> () {
+            let cache_dir = app.path_resolver().app_cache_dir().unwrap();
+            std::thread::spawn(move || {
                 // Initialize Image Cache
                 let image_cache_dir = cache_dir.join("image_cache");
-                let image_cache = ImageCache::new(image_cache_dir.into_os_string().clone());
+                let image_cache = ImageCache::new(image_cache_dir.into_os_string());
                 image_cache.clean(true);
                 *IMAGE_CACHE.lock().unwrap() = Some(image_cache);
                 // Initialize OpenVR Manager
@@ -136,6 +160,10 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::openvr::openvr_get_devices,
             commands::openvr::openvr_status,
+            commands::openvr::openvr_get_analog_gain,
+            commands::openvr::openvr_set_analog_gain,
+            commands::openvr::openvr_get_supersample_scale,
+            commands::openvr::openvr_set_supersample_scale,
             commands::os::run_command,
             commands::os::play_sound,
             commands::splash::close_splashscreen,
@@ -153,8 +181,9 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
-        ])
-        .run(tauri::generate_context!())
+        ]);
+
+    app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
 }
 

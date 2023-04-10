@@ -10,7 +10,7 @@ interface CachedValueEntry<T> {
 
 export class CachedValue<T> {
   private static store = new Store(CACHE_FILE);
-  lastSet: number = -1;
+  lastSet = -1;
   private initialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   static async cleanCache(includeNonExpired = false) {
@@ -21,7 +21,7 @@ export class CachedValue<T> {
       // Clear expired cache entries only
       const entries: [key: string, value: CachedValueEntry<unknown>][] =
         await CachedValue.store.entries<CachedValueEntry<unknown>>();
-      for (let entry of entries) {
+      for (const entry of entries) {
         const ttlExpired = entry[1].lastSet + entry[1].ttl < Date.now();
         if (ttlExpired) await CachedValue.store.delete(entry[0]);
       }

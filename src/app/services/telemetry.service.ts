@@ -110,7 +110,15 @@ export class TelemetryService {
       Object.entries(this.manifest.v1.heartbeatHeaders).forEach(
         ([key, value]) => (headers = headers.set(key, value))
       );
-      info('[Telemetry] Sending heartbeat (version=' + version + ', lang=' + lang + ')');
+      info(
+        '[Telemetry] Sending heartbeat (id=' +
+          settings.telemetryId +
+          ',version=' +
+          version +
+          ', lang=' +
+          lang +
+          ')'
+      );
       const response = await firstValueFrom(
         this.http.post<{ status: string }>(
           this.manifest.v1.heartbeatUrl,
