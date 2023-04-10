@@ -701,7 +701,7 @@
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "睡眠検知による",
               "SLEEP_MODE_ENABLE_AT_TIME": "予定時刻による",
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "バッテリー残量による",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "機器の電源が切れたため"
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "機器の電源が切れた"
             }
           }
         },
@@ -714,7 +714,7 @@
               "unknown": "不明な自動機能",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVRの終了による",
               "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
-              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入ったため"
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入った"
             }
           }
         },
@@ -736,7 +736,7 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "{{device}}'の電源制限を{{limit}}にリセット",
+            "reset": "'{{device}}'の電源制限を{{limit}}にリセット",
             "set": "'{{device}}'の電源制限を{{limit}}に設定"
           },
           "reason": {
