@@ -1,0 +1,23 @@
+@keyframes breathing {
+  0% {
+    opacity: 0.5;
+  }
+
+  25% {
+    opacity: 0.9;
+  }
+
+  60% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+@mixin attention-glow($size) {
+  box-shadow: 0 0 ($size * 15px) ($size * 7.5px) rgba(white, 0.8),
+    /* inner white */ 0 0 ($size * 100px) ($size * 60px) rgba(#f0f, 0.6),
+    /* middle magenta */ 0 0 ($size * 140px) ($size * 90px) rgba(#0ff, 0.3); /* outer cyan */
+  animation: breathing 3s ease-out infinite normal;
+}

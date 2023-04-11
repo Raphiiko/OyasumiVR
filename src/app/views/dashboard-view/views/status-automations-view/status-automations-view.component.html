@@ -69,15 +69,13 @@
         </div>
         <div class="limit-setting-controls">
           <div class="limit-setting-controls-slider">
-            <input
-              type="range"
-              min="1"
-              max="40"
-              step="1"
+            <app-slider
+              [min]="1"
+              [max]="40"
+              [step]="1"
               [value]="limit.value"
-              (input)="onLimitChange(limitSliderInput.value)"
-              #limitSliderInput
-            />
+              (valueChange)="onLimitChange($event)"
+            ></app-slider>
           </div>
           <div class="limit-setting-controls-numeric-input">
             <input

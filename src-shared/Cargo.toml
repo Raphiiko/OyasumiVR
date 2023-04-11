@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi-shared"
-version = "1.5.1"
+version = "1.6.0"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"
@@ -11,7 +11,6 @@ serde = { version = "1.0", features = ["derive"] }
 
 [dependencies.openvr]
 git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
-rev = "c2f95d27a6f911cf360420b2279f0d1c9f2af52e"
 
 [dependencies.windows-sys]
 version = "0.36.1"

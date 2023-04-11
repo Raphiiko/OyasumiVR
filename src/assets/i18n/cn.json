@@ -149,10 +149,6 @@
       "description": "Oyasumi 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 Oyasumi）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自定义动画",
-      "errors": {
-        "releaseDurationTooShort": "释放持续时间必须至少为 100 毫秒",
-        "releaseDurationTooLong": "释放持续时间必须至少为 500 毫秒"
-      },
       "options": {
         "positions": {
           "title": "睡眠姿势",
@@ -202,21 +198,14 @@
         "description": "当你将设备进行充电时，让设备自动关闭",
         "optionControllers": "关闭控制器",
         "optionTrackers": "关闭追踪器"
-      },
-      "title": "关闭所有设备",
-      "description": "用于关闭 SteamVR 设备的各种自动化功能"
+      }
     }
   },
   "gpu-automations": {
     "title": "GPU 自动化",
     "disabled": {
       "disabled": "Oyasumi 允许你自动调整 GPU 的功耗限制\n这样你就可以在睡觉时节省用电量\n\nGPU 自动化目前仅适用于 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
-      "noSidecar": "为了让 Oyasumi 能够控制 GPU 设定，它需要管理员权限。请点击下方按钮授予 Oyasumi 管理员权限",
-      "initializing": "GPU 自动化目前仍在初始化...",
-      "noElevation": "为了让 Oyasumi 能够控制 GPU 的功耗限制，它需要管理员权限。 请点击下方按钮授予 Oyasumi 管理员权限",
-      "driverNotLoaded": "Oyasumi 没有检测到已安装的 NVIDIA 驱动程序\n\n请确保你的系统使用 NVIDIA GPU 并安装了适当的驱动程序",
-      "noDevices": "在你的系统中找不到显卡\n\n请确保你的系统有 NVIDIA 显卡并安装了适当的驱动程序",
-      "unknown": "尝试开启 GPU 自动化功能时发生未知错误"
+      "noSidecar": "为了让 Oyasumi 能够控制 GPU 设定，它需要管理员权限。请点击下方按钮授予 Oyasumi 管理员权限"
     },
     "tabs": {
       "powerLimiting": "GPU 功耗限制",
@@ -284,21 +273,7 @@
           "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到并正常运作！"
         }
       }
-    },
-    "description": "在这里，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
-    "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
-    "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制",
-    "currentPowerLimit": "当前功耗限制",
-    "activatingSleepMode": {
-      "title": "当我睡觉时",
-      "description": "指定在开启睡眠模式时要设定的功耗限制："
-    },
-    "deactivatingSleepMode": {
-      "title": "当我醒来时",
-      "description": "指定在关闭睡眠模式时要设定的功耗限制："
-    },
-    "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
-    "inputDefault": "将 GPU 功耗重置到默认数值"
+    }
   },
   "status-automations": {
     "title": "状态 自动化",

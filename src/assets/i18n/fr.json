@@ -16,6 +16,31 @@
       "vrcLoginRequired": "Cette fonctionnalité nécessite d'être connecté(e) à VRChat."
     }
   },
+  "brightness-automations": {
+    "title": "Automatisation de luminosité",
+    "description": "Oyasumi peut ajuster la luminosité de votre casque VR lorsque le mode sommeil est actif ou inactif.",
+    "indexWarning": "Le contrôle de luminosité est disponible sur le Valve Index uniquement. Veuillez vérifier que votre casque est branché et que SteamVR fonctionne.",
+    "onSleepEnable": {
+      "title": "Lorsque je dors",
+      "description": "Ajuster la luminosité"
+    },
+    "onSleepDisable": {
+      "title": "Lorsque je me réveille",
+      "description": "Ajuster la luminosité"
+    },
+    "brightness": {
+      "title": "Changer la luminosité pour",
+      "description": ""
+    },
+    "transition": {
+      "title": "Ajuster la luminosité graduellement",
+      "description": "Transitionne en douceur vers la luminosité paramétrée"
+    },
+    "transitionTime": {
+      "title": "Temps de transition",
+      "description": "En combien de temps la transition de luminosité s'effectue"
+    }
+  },
   "overview": {
     "sleep-mode": {
       "label": "Mode sommeil",
@@ -140,7 +165,8 @@
   "oscAutomations": {
     "title": "Automatisations OSC",
     "tab": {
-      "sleepingAnimations": "Animations de sommeil"
+      "sleepingAnimations": "Animations de sommeil",
+      "general": "Général"
     },
     "sleepingAnimations": {
       "currentPose": "Position actuelle",
@@ -149,10 +175,6 @@
       "description": "Oyasumi peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour supporter différents prefabs de locomotion de votre avatar, mais vous pouvez également spéficier vos propres animations.",
       "enable": "Activer automatiquement les animations de sommeil",
       "customPreset": "Animations custom",
-      "errors": {
-        "releaseDurationTooShort": "La durée de dévérouillage doit être d'au moins 100ms.",
-        "releaseDurationTooLong": "La durée de dévérouillage ne peut être supérieure à 5000ms."
-      },
       "options": {
         "positions": {
           "title": "Positions de sommeil",
@@ -185,13 +207,24 @@
           "footLockReleaseWindow": "Durée de dévérouillage"
         }
       }
+    },
+    "general": {
+      "description": "Configurez Oyasumi pour envoyer des commandes OSC à VRChat lorsque certains évènements sont déclenchés. Cela peut, par exemple, être utile afin de changer vos toggles d'avatar lors du sommeil ou du réveil.",
+      "onSleepEnable": {
+        "title": "Lors du sommeil",
+        "description": "Envoyer ces commandes OSC",
+        "script": "Mode sommeil activé"
+      },
+      "onSleepDisable": {
+        "title": "Lors du réveil",
+        "description": "Envoyer ces commandes OSC",
+        "script": "Mode sommeil désactivé"
+      }
     }
   },
   "battery-automations": {
     "title": "Automatisations de batterie",
     "devicePowerOff": {
-      "title": "Éteindre tous mes appareils",
-      "description": "Diverses automatisations pour éteindre tous les appareils SteamVR.",
       "onSleepModeEnable": {
         "title": "Quand je vais dormir",
         "description": "Éteindre tous mes appareils lorsque le mode sommeil est activé.",
@@ -318,6 +351,10 @@
     "removeModal": {
       "title": "Confirmer la suppression",
       "message": "Voulez vous supprimer '{{name}}' de votre liste?"
+    },
+    "removeModalBulk": {
+      "title": "Confirmer la suppression",
+      "message": "Voulez vous supprimer tout le monde de votre liste ?"
     },
     "options": {
       "enable": {
@@ -540,7 +577,7 @@
       "sleepMode": "Mode sommeil",
       "active": "Actif",
       "inactive": "Inactif",
-      "loggedOut": "Décionnecté",
+      "loggedOut": "Déconnecté",
       "steamvr": {
         "INACTIVE": "Inactif",
         "INITIALIZING": "En attente",
@@ -567,8 +604,11 @@
       "gpuAutomations": "Automatisations GPU",
       "statusAutomations": "Automatisations de statut",
       "autoInviteRequestAccept": "Gestion des demandes",
+      "vrcAutomations": "Automatisations VRChat",
       "settings": "Paramètres",
-      "about": "A propos"
+      "brightnessAutomations": "Automatisation de luminosité",
+      "about": "A propos",
+      "resolutionAutomations": "Automatisation de résolution"
     },
     "device-list": {
       "title": "Appareils",
@@ -642,6 +682,128 @@
       "noFriendsSelected": "Aucun ami sélectionné",
       "noResultsFor": "Aucun résultat pour '{{query}}'",
       "noFriends": "Votre liste d'amis est vide"
+    },
+    "event-log": {
+      "title": "Évènements",
+      "show-more": "Voir plus",
+      "no-logs": "Aucun évènement n'a été enregistré.\nLes journaux sont gardés pour 24h maximum.",
+      "clearLog": "Effacer",
+      "clearLogModal": {
+        "title": "Confirmer l'effacement",
+        "message": "Voulez-vous effacer les journaux d'évènements ? Les journaux seront perdus."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "Mode sommeil activé",
+          "reason": {
+            "manual": "Vous avez activé le mode sommeil manuellement",
+            "osc-control": "Le mode sommeil a été activé via OSC",
+            "automation": {
+              "unknown": "Par une automatisation inconnue",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Car votre sommeil a été détecté",
+              "SLEEP_MODE_ENABLE_AT_TIME": "À une heure prédéfinie",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Car la batterie d'un appareil a atteint le seuil prédéfini",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Car vos contrôleurs ont été éteints"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "Mode sommeil désactivé",
+          "reason": {
+            "manual": "Vous avez désactivé le mode sommeil manuellement",
+            "osc-control": "Le mode sommeil a été désactivé via OSC",
+            "automation": {
+              "unknown": "Par une automatisation inconnue",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "À la fermeture de SteamVR",
+              "SLEEP_MODE_DISABLE_AT_TIME": "À une heure prédéfinie",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Car un appareil a été mis sous tension"
+            }
+          }
+        },
+        "turnedOffDevices": {
+          "title": {
+            "CONTROLLER": "Un contrôleur a été éteint",
+            "CONTROLLERS": "Plusieurs contrôleurs ont été éteints",
+            "TRACKER": "Un tracker a été éteint",
+            "TRACKERS": "Plusieurs trackers ont été éteints",
+            "ALL": "Tous les appareils ont été éteints",
+            "VARIOUS": "Divers appareils ont été éteints"
+          },
+          "reason": {
+            "MANUAL": "Éteint manuellement",
+            "OSC_CONTROL": "Éteint via OSC",
+            "SLEEP_MODE_ENABLED": "À l'activation du mode sommeil",
+            "CHARGING": "À la mise en charge"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "Limite de consommation pour '{{device}}' restaurée à {{limit}}",
+            "set": "Limite de consommation pour '{{device}}' définie à {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé"
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "Luminosité du casque réglée à {{value}}",
+            "transition": "Transition de la luminosité du casque vers {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "Invitation de '{{displayName}}' acceptée automatiquement",
+          "subtitle": {
+            "whitelist": "Car ce joueur est sur liste blanche",
+            "blacklist": "Car ce joueur n'est pas sur liste noire"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "Votre statut VRChat a été changé de {{oldStatus}} pour {{newStatus}}",
+          "reason": {
+            "BELOW_LIMIT": "Car le nombre de joueurs dans votre monde est inférieur à {{threshold}}",
+            "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a dépassé {{threshold}}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "Activation automatique du mode sommeil refusée",
+          "subtitle": "Car l'utilisateur est toujours éveillé"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
+            "custom": "Résolution d'affichage de SteamVR passée à {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé"
+          }
+        }
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "Automatisations de résolution",
+    "description": "Oyasumi peut automatiquement ajuster la résolution d'affichage de votre casque lors de l'activation ou la désactivation du mode sommeil.",
+    "onSleepEnable": {
+      "title": "Quand je dors",
+      "description": "Ajuster ma résolution d'affichage"
+    },
+    "onSleepDisable": {
+      "title": "Quand je me réveille",
+      "description": "Ajuster ma résolution d'affichage"
+    },
+    "renderResolution": {
+      "title": "Changer la résolution d'affichage pour",
+      "custom": "Customisée",
+      "auto": "Auto"
     }
   }
 }

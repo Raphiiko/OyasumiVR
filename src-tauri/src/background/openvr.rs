@@ -1,4 +1,5 @@
 use std::{
+    ffi::CStr,
     sync::{Arc, Mutex},
     thread,
     time::Duration,
@@ -7,6 +8,7 @@ use std::{
 use chrono::{naive::NaiveDateTime, Utc};
 use log::info;
 use openvr::TrackedDeviceIndex;
+use openvr_sys::k_pch_SteamVR_Section;
 use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 use serde::Serialize;
 use sleep_detector::SleepDetector;
@@ -28,6 +30,7 @@ struct OpenVRManagerState {
     active: Mutex<bool>,
     status: Mutex<OpenVRStatus>,
     devices: Mutex<Vec<OVRDevice>>,
+    settings: Mutex<Option<openvr::Settings>>,
 }
 
 pub struct OpenVRManager {
@@ -36,15 +39,17 @@ pub struct OpenVRManager {
 
 impl OpenVRManager {
     pub fn new() -> OpenVRManager {
-        let mut manager = OpenVRManager {
-            state: Arc::new(OpenVRManagerState {
-                active: Mutex::new(false),
-                status: Mutex::new(OpenVRStatus::Inactive),
-                devices: Mutex::new(vec![]),
-            }),
-        };
-        manager.openvr_loop();
-        manager
+        let state = Arc::new(OpenVRManagerState {
+            active: Mutex::new(false),
+            status: Mutex::new(OpenVRStatus::Inactive),
+            devices: Mutex::new(vec![]),
+            settings: Mutex::new(None),
+        });
+        let mut task = OpenVRManagerTask::new(state.clone());
+        thread::spawn(move || {
+            task.run();
+        });
+        OpenVRManager { state }
     }
 
     pub fn get_devices(&self) -> Vec<OVRDevice> {
@@ -62,30 +67,120 @@ impl OpenVRManager {
         *_active = active;
     }
 
-    fn openvr_loop(&mut self) {
-        let mut core: OpenVRManagerCore = OpenVRManagerCore::new(self.state.clone());
-        thread::spawn(move || {
-            core.openvr_loop();
-        });
+    pub fn get_analog_gain(&self) -> Result<f32, String> {
+        let mut devices = self.state.devices.lock().unwrap();
+        let device = devices
+            .iter_mut()
+            .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
+        if let Some(_) = device {
+            // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
+            let settings = self.state.settings.lock().unwrap();
+            if settings.is_some() {
+                let analog_gain = settings.as_ref().unwrap().get_float(
+                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    &CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+                );
+                return match analog_gain {
+                    Ok(analog_gain) => Ok(analog_gain),
+                    Err(_) => Err("ANALOG_GAIN_NOT_FOUND".to_string()),
+                };
+            } else {
+                return Err("OPENVR_NOT_INITIALISED".to_string());
+            }
+        } else {
+            return Err("NO_HMD_FOUND".to_string());
+        }
+    }
+
+    pub fn set_analog_gain(&self, analog_gain: f32) -> Result<(), String> {
+        let mut devices = self.state.devices.lock().unwrap();
+        let device = devices
+            .iter_mut()
+            .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
+        if let Some(_) = device {
+            // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
+            let settings = self.state.settings.lock().unwrap();
+            if settings.is_some() {
+                let _ = settings.as_ref().unwrap().set_float(
+                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    &CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+                    analog_gain,
+                );
+            } else {
+                return Err("OPENVR_NOT_INITIALISED".to_string());
+            }
+            Ok(())
+        } else {
+            return Err("NO_HMD_FOUND".to_string());
+        }
+    }
+
+    pub fn get_supersample_scale(&self) -> Result<Option<f32>, String> {
+        let settings = self.state.settings.lock().unwrap();
+        if settings.is_none() {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        let supersample_manual_override = settings.as_ref().unwrap().get_bool(
+            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+        );
+        let supersample_manual_override = match supersample_manual_override {
+            Ok(supersample_manual_override) => supersample_manual_override,
+            Err(_) => return Err("SUPERSAMPLE_MANUAL_OVERRIDE_NOT_FOUND".to_string()),
+        };
+        // Supersampling is set to auto
+        if !supersample_manual_override {
+            return Ok(None);
+        }
+        // Supersampling is set to custom
+        let supersample_scale = settings.as_ref().unwrap().get_float(
+            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+        );
+        return match supersample_scale {
+            Ok(supersample_scale) => Ok(Some(supersample_scale)),
+            Err(_) => Err("SUPERSAMPLE_SCALE_NOT_FOUND".to_string()),
+        };
+    }
+
+    pub fn set_supersample_scale(&self, supersample_scale: Option<f32>) -> Result<(), String> {
+        let settings = self.state.settings.lock().unwrap();
+        if settings.is_some() {
+            let _ = settings.as_ref().unwrap().set_bool(
+                &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+                supersample_scale.is_some(),
+            );
+            if supersample_scale.is_some() {
+                let _ = settings.as_ref().unwrap().set_float(
+                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+                    supersample_scale.unwrap(),
+                );
+            }
+        } else {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        Ok(())
     }
 }
 
-struct OpenVRManagerCore {
+struct OpenVRManagerTask {
     state: Arc<OpenVRManagerState>,
     sleep_detector: SleepDetector,
     gesture_detector: GestureDetector,
 }
 
-impl OpenVRManagerCore {
-    pub fn new(state: Arc<OpenVRManagerState>) -> OpenVRManagerCore {
-        OpenVRManagerCore {
+impl OpenVRManagerTask {
+    pub fn new(state: Arc<OpenVRManagerState>) -> OpenVRManagerTask {
+        OpenVRManagerTask {
             state,
             sleep_detector: SleepDetector::new(),
             gesture_detector: GestureDetector::new(),
         }
     }
 
-    fn openvr_loop(&mut self) {
+    fn run(&mut self) {
         // Thread dependencies
         let mut sysinfo = sysinfo::System::new_all();
 
@@ -145,6 +240,23 @@ impl OpenVRManagerCore {
                         ovr_context = None;
                         continue;
                     }
+                    // Obtain the settings context
+                    let ovr_settings = match ovr_context.as_mut().unwrap().settings() {
+                        Ok(set) => Some(set),
+                        Err(_err) => None,
+                    };
+                    // If we failed, continue to try again later
+                    if ovr_settings.is_none() {
+                        unsafe {
+                            ovr_context.unwrap().shutdown();
+                        }
+                        ovr_context = None;
+                        ovr_system = None;
+                        continue;
+                    }
+                    // Set the settings context on the state
+                    let mut settings_guard = self.state.settings.lock().unwrap();
+                    *settings_guard = ovr_settings;
                     // We've successfully initialized OpenVR
                     info!("[Core] OpenVR Initialized");
                     ovr_active = true;

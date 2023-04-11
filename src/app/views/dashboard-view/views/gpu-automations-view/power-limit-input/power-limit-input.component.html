@@ -19,16 +19,13 @@
       </div>
     </div>
     <div class="slider-container">
-      <input
-        type="range"
+      <app-slider
         [min]="minPowerLimit"
         [max]="maxPowerLimit"
         [value]="powerLimit?.limit ?? 0"
-        class="slider"
-        (input)="onSliderChange(slider.value, false)"
-        (change)="onSliderChange(slider.value, true)"
-        #slider
-      />
+        (valueChange)="onSliderChange($event)"
+      >
+      </app-slider>
     </div>
     <div class="label-container">
       <span>{{ minPowerLimit | floor }}W</span>

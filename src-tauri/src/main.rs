@@ -13,7 +13,7 @@ use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
 use std::{net::UdpSocket, sync::Mutex};
-use tauri::{Manager, SystemTray, SystemTrayEvent};
+use tauri::Manager;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 mod commands {
@@ -86,32 +86,32 @@ fn main() {
                 }
             }
         }))
-        .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-            event.window().hide().unwrap();
-            api.prevent_close();
-        })
-        .system_tray(
-            SystemTray::new()
-        )
-        .on_system_tray_event(|app, event| match event {
-            SystemTrayEvent::LeftClick {
-              position: _,
-              size: _,
-              ..
-            } => {
-              let window = app.get_window("main").unwrap();
-              window.show().unwrap();
-              window.set_focus().unwrap();
-            }
-            SystemTrayEvent::RightClick {
-              position: _,
-              size: _,
-              ..
-            } => {
-              // TODO: Implement context menu
-            }
-            _ => (),
-        })
+        // .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+        //     event.window().hide().unwrap();
+        //     api.prevent_close();
+        // })
+        // .system_tray(
+        //     SystemTray::new()
+        // )
+        // .on_system_tray_event(|app, event| match event {
+        //     SystemTrayEvent::LeftClick {
+        //       position: _,
+        //       size: _,
+        //       ..
+        //     } => {
+        //       let window = app.get_window("main").unwrap();
+        //       window.show().unwrap();
+        //       window.set_focus().unwrap();
+        //     }
+        //     SystemTrayEvent::RightClick {
+        //       position: _,
+        //       size: _,
+        //       ..
+        //     } => {
+        //       // TODO: Implement context menu
+        //     }
+        //     _ => (),
+        // })
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -161,6 +161,10 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::openvr::openvr_get_devices,
             commands::openvr::openvr_status,
+            commands::openvr::openvr_get_analog_gain,
+            commands::openvr::openvr_set_analog_gain,
+            commands::openvr::openvr_get_supersample_scale,
+            commands::openvr::openvr_set_supersample_scale,
             commands::os::run_command,
             commands::os::play_sound,
             commands::splash::close_splashscreen,

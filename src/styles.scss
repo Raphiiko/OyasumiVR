@@ -28,6 +28,24 @@ body {
 * {
   box-sizing: border-box;
   user-select: none;
+
+  &::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+    width: 4px;
+    height: 8px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb,
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-surface-4);
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-track-piece,
+  *::-webkit-scrollbar-track-piece {
+    display: none;
+  }
 }
 
 a,

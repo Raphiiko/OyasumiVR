@@ -9,6 +9,9 @@ import {
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
 import { SleepService } from '../sleep.service';
+import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogService } from '../event-log.service';
+import { error } from 'tauri-plugin-log-api';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +25,8 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
     private lighthouse: LighthouseService,
-    private sleepMode: SleepService
+    private sleepMode: SleepService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -36,10 +40,30 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
         filter((sleepMode) => sleepMode)
       )
       .subscribe(async () => {
-        const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
-          this.config.deviceClasses.includes(d.class)
+        const devices = (await firstValueFrom(this.openvr.devices)).filter(
+          (d) => this.config.deviceClasses.includes(d.class) && d.canPowerOff
         );
+        if (!devices.length) return;
         await this.lighthouse.turnOffDevices(devices);
+        this.eventLog.logEvent({
+          type: 'turnedOffDevices',
+          reason: 'SLEEP_MODE_ENABLED',
+          devices: (() => {
+            const classes = devices.map((d) => d.class);
+            const total = classes.length;
+            const controllers = classes.filter((c) => c === 'Controller').length;
+            const trackers = classes.filter((c) => c === 'GenericTracker').length;
+            if (controllers > 0 && trackers > 0) return 'ALL';
+            if (controllers > 1 && controllers === total) return 'CONTROLLERS';
+            if (controllers === 1 && controllers === total) return 'CONTROLLER';
+            if (trackers > 1 && trackers === total) return 'TRACKERS';
+            if (trackers === 1 && trackers === total) return 'TRACKER';
+            error(
+              `[TurnOffDevicesOnSleepModeEnableAutomation] Couldn't determine device class for event log entry (${classes})`
+            );
+            return 'VARIOUS';
+          })(),
+        } as EventLogTurnedOffDevices);
       });
   }
 }

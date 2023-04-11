@@ -27,11 +27,11 @@ export class PowerLimitInputComponent implements OnInit {
     this.powerLimitChange.emit(this.powerLimit);
   }
 
-  onSliderChange(value: string, emit: boolean) {
+  onSliderChange(value: number) {
     if (!this.powerLimit) return;
     this.powerLimit.default = false;
-    this.powerLimit.limit = parseInt(value);
-    if (emit) this.powerLimitChange.emit(this.powerLimit);
+    this.powerLimit.limit = value;
+    this.powerLimitChange.emit(this.powerLimit);
   }
 
   get isEnabled() {

@@ -8,7 +8,9 @@ import {
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../models/automations';
 import { LighthouseService } from '../lighthouse.service';
-import { info } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
+import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogService } from '../event-log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,8 @@ export class TurnOffDevicesWhenChargingAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -43,6 +46,24 @@ export class TurnOffDevicesWhenChargingAutomationService {
               `[TurnOffDevicesWhenChargingAutomationService] Detected device being put on charger. Turning off device (${device.class}:${device.serialNumber})`
             );
             this.lighthouse.turnOffDevices([device]);
+            this.eventLog.logEvent({
+              type: 'turnedOffDevices',
+              reason: 'CHARGING',
+              devices: (() => {
+                switch (device.class) {
+                  case 'Controller':
+                    return 'CONTROLLER';
+                  case 'GenericTracker':
+                    return 'TRACKER';
+                  default: {
+                    error(
+                      `[TurnOffDevicesWhenChargingAutomationService] Couldn't determine device class for event log entry (${device.class})`
+                    );
+                    return 'VARIOUS';
+                  }
+                }
+              })(),
+            } as EventLogTurnedOffDevices);
           }
         } else if (!device.isCharging && this.chargingDevices.includes(device.index)) {
           this.chargingDevices = this.chargingDevices.filter((d) => d !== device.index);

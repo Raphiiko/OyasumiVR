@@ -7,11 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0]
+
 ### Added
+
+- Display brightness automations for Valve Index.
+- Automations for adjusting SteamVR's render resolution.
+- Event log for displaying actions taken by Oyasumi
+- OSC Automations for sending custom OSC commands when the sleep mode changes.
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
 ### Changed
-- Updated layout of battery automations pane to match recent views.
+
+- Updated layout and styling of various views to match more recent views.
+- Prevent sleep detector from triggering when sleep mode was disabled less than 15 minutes ago.
+- Bulk removing friends from the player list for automatic invite request accepts, now requires confirmation.
 - Reorganized navigation bar to reduce clutter.
 - Updated to Angular 15
 
@@ -41,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
-- Various small bugs 
+- Various small bugs
 
 ## [1.4.1]
 

@@ -6,11 +6,12 @@ import {
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable, skip } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { EventLogService } from '../event-log.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 export class SleepModeForSleepDetectorAutomationService {
   private sleepEnableTimeoutId: number | null = null;
   private lastEnableAttempt = 0;
+  private lastSleepModeDisable = 0;
   private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
   );
@@ -39,13 +41,17 @@ export class SleepModeForSleepDetectorAutomationService {
     private automationConfig: AutomationConfigService,
     private sleep: SleepService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
     this.automationConfig.configs.subscribe(
       (configs) => (this.enableConfig = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR)
     );
+    this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe((mode) => {
+      if (!mode) this.lastSleepModeDisable = Date.now();
+    });
     await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', (event) =>
       this.handleStateReportForEnable(event.payload)
     );
@@ -54,6 +60,9 @@ export class SleepModeForSleepDetectorAutomationService {
       if (this.sleepEnableTimeoutId) {
         clearTimeout(this.sleepEnableTimeoutId);
         this.sleepEnableTimeoutId = null;
+        this.eventLog.logEvent({
+          type: 'sleepDetectorEnableCancelled',
+        });
         await this.notifications.play_sound('bell');
         await this.notifications.send(
           this.translate.instant('notifications.sleepCheckCancel.title'),
@@ -78,7 +87,9 @@ export class SleepModeForSleepDetectorAutomationService {
     )
       return;
     // Stop here if the last time we tried enabling was less than 15 minutes ago
-    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * 1500) return;
+    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * 15) return;
+    // Stop here if the last time we disabled sleep mode was less than 15 minutes ago
+    if (Date.now() - this.lastSleepModeDisable < 1000 * 60 * 15) return;
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.

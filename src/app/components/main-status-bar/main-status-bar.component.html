@@ -1,5 +1,11 @@
-<div class="top-decoration"></div>
-<div class="main-bar" @noop>
+<div class="top-decoration left" [class.translucent]="!!(background.background | async)">
+  <div></div>
+</div>
+<div class="top-decoration right" [class.translucent]="!!(background.background | async)">
+  <div></div>
+</div>
+<div class="main-bar" @noop [class.translucent]="!!(background.background | async)">
+  <div class="bg"></div>
   <div class="left">
     <div
       class="pill sleep-mode clickable"

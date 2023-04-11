@@ -178,33 +178,6 @@
 
     &-slider {
       flex: 1;
-
-      input {
-        width: 100%;
-        -webkit-appearance: none;
-        appearance: none;
-        background: transparent;
-        cursor: pointer;
-        $track-height: 0.5em;
-        $thumb-size: 1.125em;
-
-        &::-webkit-slider-runnable-track {
-          background: var(--color-surface-3);
-          height: $track-height;
-          border-radius: 0.25em;
-        }
-
-        &::-webkit-slider-thumb {
-          -webkit-appearance: none;
-          appearance: none;
-          margin-top: #{(math.div($thumb-size, -2) + $track-height * 0.5)};
-          background-color: var(--color-primary);
-          border-radius: $thumb-size;
-          @include shadow(1, true);
-          height: $thumb-size;
-          width: $thumb-size;
-        }
-      }
     }
 
     &-numeric-input {
