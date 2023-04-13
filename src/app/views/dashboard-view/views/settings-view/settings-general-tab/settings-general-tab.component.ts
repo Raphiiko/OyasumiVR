@@ -34,7 +34,7 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
   constructor(
     settingsService: AppSettingsService,
     private lighthouse: LighthouseService,
-    private telemetry: TelemetryService
+    private telemetry: TelemetryService,
   ) {
     super(settingsService);
   }
@@ -102,5 +102,9 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
 
   setTelemetryEnabled(enabled: boolean) {
     this.telemetry.updateSettings({ enabled });
+  }
+  
+  setSystemTrayExitEnabled(enableTrayExit: boolean) {
+    this.settingsService.updateSettings({ enableTrayExit })
   }
 }

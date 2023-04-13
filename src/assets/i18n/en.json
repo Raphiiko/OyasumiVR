@@ -420,6 +420,13 @@
         "title": "Telemetry",
         "label": "Send anonymous usage data",
         "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
+      },
+      "systemTray": {
+        "title": "System tray",
+        "close": {
+          "label": "Exit with system tray",
+          "description": "Collapses the program into the system tray upon clicking on exit button"
+        }
       }
     },
     "vrchat": {

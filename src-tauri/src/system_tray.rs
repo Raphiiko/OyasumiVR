@@ -9,7 +9,7 @@ const QUIT: &'static str = "quit";
 
 pub fn init() -> SystemTray {
     // Menus
-    let menu_sleepmode = CustomMenuItem::new(SLEEPMODE, "Disable sleep mode");
+    let menu_sleepmode = CustomMenuItem::new(SLEEPMODE, "Enable sleep mode");
     let menu_quit = CustomMenuItem::new(QUIT, "Quit");
 
     let tray_menu = SystemTrayMenu::new()
