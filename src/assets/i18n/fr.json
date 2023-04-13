@@ -420,6 +420,13 @@
         "title": "Télémétrie",
         "label": "Envoyer des données d'utilisation anonymes",
         "description": "Les données envoyées seront limitées à la version d'Oyasumi que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques."
+      },
+      "systemTray": {
+        "title": "Barre d'état",
+        "close": {
+          "label": "Fermer l'application dans la barre d'état",
+          "description": "Réduit l'application dans la barre d'état système lorsque vous cliquez sur le bouton 'Fermer'"
+        }
       }
     },
     "vrchat": {
