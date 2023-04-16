@@ -33,7 +33,7 @@ export type AutomationType =
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 8;
+  version: 9;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -108,6 +108,7 @@ export interface SleepModeEnableForSleepDetectorAutomationConfig extends Automat
   calibrationValue: number;
   sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
   sleepCheck: boolean;
+  detectionWindowMinutes: number;
 }
 
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -182,7 +183,7 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 8,
+  version: 9,
   // BRIGHTNESS AUTOMATIONS
   DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
@@ -230,6 +231,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     calibrationValue: 0.01,
     sensitivity: 'MEDIUM',
     sleepCheck: false,
+    detectionWindowMinutes: 15,
   },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,

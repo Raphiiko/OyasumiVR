@@ -59,8 +59,7 @@
       "atBatteryPercentage": "機器のバッテリー残量が<strong>{{value}}%</strong>を下回ったとき",
       "onControllersPoweredOff": "全てのコントローラーの電源が切れたとき",
       "onMotionDetection": {
-        "title": "HMDの動きから入眠を検知したとき",
-        "subtitle": "<b>実験的な機能</b>(正しく動作しない場合があります)"
+        "title": "HMDの動きから入眠を検知したとき"
       }
     },
     "disableAutomations": {
@@ -111,7 +110,6 @@
       },
       "enableForSleepDetector": {
         "title": "睡眠モードの有効化",
-        "description": "HMDの動きから入眠を検知して睡眠モードに移行します。",
         "calibration": {
           "title": "キャリブレーション",
           "description": "少なくとも一度はキャリブレーションを行う必要があります",

@@ -8,9 +8,8 @@ describe('OscGeneralTabComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ OscGeneralTabComponent ]
-    })
-    .compileComponents();
+      declarations: [OscGeneralTabComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OscGeneralTabComponent);
     component = fixture.componentInstance;

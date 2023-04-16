@@ -59,8 +59,7 @@
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
       "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
       "onMotionDetection": {
-        "title": "Wanneer Oyasumi detecteert dat je slaapt gebaseerd op je bewegingen",
-        "subtitle": "<b>Let op:</b> Dit is een <b>experimentele feature</b>! Het kan zijn dat het nog niet helemaal goed werkt."
+        "title": "Wanneer Oyasumi detecteert dat je slaapt gebaseerd op je bewegingen"
       }
     },
     "disableAutomations": {
@@ -111,7 +110,6 @@
       },
       "enableForSleepDetector": {
         "title": "Slaap modus inschakelen",
-        "description": "Met deze feature, zal Oyasumi automatisch de slaap modus inschakelen wanneer het op basis van je beweging detecteert dat je in slaap bent gevallen.\n\nDit is nog een experimentele feature, dus het kan zijn dat het nog niet helemaal goed werkt.",
         "calibration": {
           "title": "Kalibratie",
           "description": "Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",

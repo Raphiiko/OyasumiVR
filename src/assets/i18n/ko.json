@@ -59,8 +59,7 @@
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
       "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
       "onMotionDetection": {
-        "title": "Oyasumi가 당신의 움직임을 보고 당신이 자고 있다고 추측할 때",
-        "subtitle": "<b>참고:</b> 이것은 <b>실험적인</b> 기능이에요! 제대로 작동하지 않을 수 있어요."
+        "title": "Oyasumi가 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
       }
     },
     "disableAutomations": {
@@ -111,7 +110,6 @@
       },
       "enableForSleepDetector": {
         "title": "수면 모드 활성화",
-        "description": "이 기능을 활성화하면 Oyasumi가 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 절전 모드를 활성화해요.\n\n이 기능은 아직 실험적인 기능이며 아직 제대로 작동하지 않을 수 있어요.",
         "calibration": {
           "title": "보정",
           "description": "이 기능을 사용하려면 적어도 한 번은 보정이 필요해요.",

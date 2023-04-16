@@ -59,8 +59,7 @@
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "Lorsque l'un des contrôleurs est éteint",
       "onMotionDetection": {
-        "title": "Quand Oyasumi détecte que vous dormez selon vos mouvements",
-        "subtitle": "<b>NOTE:</b> Ceci est une <b>fonctionnalité expérimentale</b>! Peut ne pas fonctionner correctement."
+        "title": "Quand Oyasumi détecte que vous dormez selon vos mouvements"
       }
     },
     "disableAutomations": {
@@ -111,7 +110,6 @@
       },
       "enableForSleepDetector": {
         "title": "Activer le mode sommeil",
-        "description": "Avec cette fonctionnalité activée, Oyasumi activera automatiquement le mode sommeil lorsqu'il pense que vous dormez, en se basant sur vos mouvements.\n\nCeci est une fonctionnalité expérimentale et peut ne pas fonctionner correctement.",
         "calibration": {
           "title": "Calibration",
           "description": "Oyasumi doit être calibré avant de pouvoir utiliser cette fonctionnalité.",

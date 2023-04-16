@@ -34,8 +34,7 @@
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "当所有控制器都关闭时",
       "onMotionDetection": {
-        "title": "Oyasumi 根据你的睡眠动作检测你是否睡眠",
-        "subtitle": "<b>注意：</b>这是<b>实验性功能</b>！ 它可能无法正常运做"
+        "title": "Oyasumi 根据你的睡眠动作检测你是否睡眠"
       }
     },
     "disableAutomations": {
@@ -86,7 +85,6 @@
       },
       "enableForSleepDetector": {
         "title": "开启睡眠模式",
-        "description": "启用此功能后，Oyasumi 会根据你的动作猜测你睡着时自动启用睡眠模式\n\n这仍是一项实验性功能，可能还无法正常运作",
         "calibration": {
           "title": "校准",
           "description": "在尝试使用此功能之前，你需要至少校准一次",
