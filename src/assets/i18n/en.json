@@ -395,7 +395,7 @@
       "vrchat": "VRChat",
       "notifications": "Notifications",
       "updates": "Updates",
-      "debug": "Debug"
+      "advanced": "Advanced"
     },
     "general": {
       "language": {
@@ -499,27 +499,80 @@
       "notChecked": "Oyasumi did not check for updates yet.",
       "updateAvailable": "A new version of Oyasumi is available! You are currently running v{{currentVersion}}.\nThe newest version is v{{latestVersion}}."
     },
-    "debug": {
-      "description": "On this page you can find some debug tools. You should not need these, but especially with Oyasumi still being in early testing, they're here if you need them.",
-      "persistentStorage": {
-        "title": "Persistent Storage",
-        "description": "These buttons help you clear parts of Oyasumi's persistent storage. Use this if you wish to restore defaults in case of an error occurring.",
-        "clearAllSettings": "Clear All Settings",
-        "clearAutomationSettings": "Clear Automation Settings",
-        "clearAppSettings": "Clear App Settings",
-        "clearCache": "Clear Cache",
-        "printSettings": "Log Settings"
+    "advanced": {
+      "persistentData": {
+        "title": "Persistent Data",
+        "description": "Manage the data that Oyasumi stores on your disk",
+        "dataType": {
+          "all": {
+            "title": "All Data",
+            "description": "All data that Oyasumi stores, including all your settings"
+          },
+          "appSettings": {
+            "title": "Application Settings",
+            "description": "All of Oyasumi's general settings"
+          },
+          "automationSettings": {
+            "title": "Automation Settings",
+            "description": "All settings specific to one of Oyasumi's automations"
+          },
+          "vrcData": {
+            "title": "VRChat Data",
+            "description": "Data specific to VRChat, such as authentication data"
+          },
+          "miscData": {
+            "title": "Other Data",
+            "description": "All other data that Oyasumi stores, not covered by other categories"
+          },
+          "appCache": {
+            "title": "Data Cache",
+            "description": "All data that is stored temporarily, such as VRChat API responses"
+          },
+          "imageCache": {
+            "title": "Image Cache",
+            "description": "All images that are stored temporarily, such as VRChat player icons"
+          },
+          "logs": {
+            "title": "Log Files",
+            "description": "The log files that Oyasumi creates"
+          },
+          "eventLog": {
+            "title": "Event Log",
+            "description": "The events that are logged in the overview"
+          }
+        },
+        "clearData": "Clear Data",
+        "clearModal": {
+          "title": "Confirm clearing data",
+          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{{items}}"
+        },
+        "relaunchModal": {
+          "title": "Restart Oyasumi",
+          "message": "The requested data has been cleared. It is recommended to restart Oyasumi after doing this.\n\nDo you want to do this now? Not restarting Oyasumi could have unwanted effects.",
+          "relaunch": "Restart Oyasumi now",
+          "later": "I'll do it later"
+        }
       },
-      "language": {
-        "title": "Language",
-        "description": "This option allows you to manually load a language file. This can be useful for testing new translations.",
-        "loadFile": "Load Language File"
+      "translation": {
+        "title": "Language & Translation",
+        "loadFile": {
+          "title": "Load translation file",
+          "description": "Load a custom language file. Useful when testing new translations.",
+          "action": "Load File"
+        },
+        "contribute": {
+          "docs": "Learn How",
+          "title": "Help out by contributing translations",
+          "description": "Contribute missing translations, or help add new languages!"
+        }
       },
-      "sleepingPose": {
-        "title": "Sleeping Pose"
-      },
-      "sleepingDetection": {
-        "title": "Sleeping Detector Reports"
+      "logs": {
+        "title": "Log Files",
+        "openFolder": {
+          "title": "Open log folder",
+          "description": "Opens the location of Oyasumi's log files in your file explorer",
+          "action": "Open Log Folder"
+        }
       }
     }
   },

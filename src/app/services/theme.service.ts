@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_THEMING_SETTINGS } from '../globals';
 
 type ThemingMode = 'SYSTEM' | 'LIGHT' | 'DARK';
 
@@ -11,7 +11,6 @@ interface ThemingSettings {
 const THEMING_SETTINGS_DEFAULT: ThemingSettings = {
   mode: 'DARK',
 };
-const SETTINGS_KEY_THEMING_SETTINGS = 'THEMING_SETTINGS';
 
 @Injectable({
   providedIn: 'root',

@@ -388,8 +388,7 @@
       "general": "Algemeen",
       "vrchat": "VRChat",
       "notifications": "Notificaties",
-      "updates": "Updates",
-      "debug": "Debug"
+      "updates": "Updates"
     },
     "general": {
       "language": {
@@ -492,29 +491,6 @@
       "noUpdate": "Je draait nu Oyasumi v{{version}}, en dat is de laatste versie!",
       "notChecked": "Oyasumi heeft nog niet gecheckt of er een update beschikbaar is.",
       "updateAvailable": "Er is een nieuwe update beschikbaar voor Oyasumi! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
-    },
-    "debug": {
-      "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
-      "persistentStorage": {
-        "title": "Permanente opslag",
-        "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
-        "clearAllSettings": "Verwijder alle instellingen",
-        "clearAutomationSettings": "Verwijder automatiserings instellingen",
-        "clearAppSettings": "Verwijder programma instellingen",
-        "clearCache": "Verwijder cache",
-        "printSettings": "Instellingen loggen"
-      },
-      "language": {
-        "title": "Taal",
-        "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
-        "loadFile": "Vertalings Bestand Laden"
-      },
-      "sleepingPose": {
-        "title": "Slaap Houding"
-      },
-      "sleepingDetection": {
-        "title": "Slaap Detectie Rapportage"
-      }
     }
   },
   "about": {

@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_APP_SETTINGS } from '../globals';
 import { cloneDeep } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
 import { TranslateService } from '@ngx-translate/core';
-
-export const SETTINGS_KEY_APP_SETTINGS = 'APP_SETTINGS';
 
 @Injectable({
   providedIn: 'root',

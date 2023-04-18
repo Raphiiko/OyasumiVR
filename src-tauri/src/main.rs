@@ -9,6 +9,7 @@ extern crate lazy_static;
 use crate::commands::admin::start_elevation_sidecar;
 use crate::image_cache::ImageCache;
 use background::openvr::OpenVRManager;
+use commands::log_utils::LOG_DIR;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
@@ -20,7 +21,9 @@ mod commands {
     pub mod admin;
     pub mod afterburner;
     pub mod http;
+    pub mod image_cache;
     pub mod log_parser;
+    pub mod log_utils;
     pub mod notifications;
     pub mod nvml;
     pub mod openvr;
@@ -136,6 +139,10 @@ fn main() {
                 // Load sounds
                 commands::os::load_sounds();
             });
+            // Reference log dir
+            {
+                *LOG_DIR.lock().unwrap() = Some(app.path_resolver().app_log_dir().unwrap());
+            }
             // Setup start of minute cronjob
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
             cron.seconds("0");
@@ -166,6 +173,7 @@ fn main() {
             commands::openvr::openvr_set_supersample_scale,
             commands::os::run_command,
             commands::os::play_sound,
+            commands::os::show_in_folder,
             commands::splash::close_splashscreen,
             commands::nvml::nvml_status,
             commands::nvml::nvml_get_devices,
@@ -181,6 +189,8 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
+            commands::image_cache::clean_image_cache,
+            commands::log_utils::clean_log_files,
         ]);
 
     app.run(tauri::generate_context!())

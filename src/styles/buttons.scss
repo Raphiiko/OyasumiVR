@@ -39,6 +39,7 @@ button.btn-power-off {
   }
 }
 
+a.btn,
 button.btn {
   --scoped-bg-color: var(--color-surface);
   --scoped-color: var(--color-on-surface);
@@ -56,6 +57,14 @@ button.btn {
   background-color: var(--scoped-bg-color);
   color: var(--scoped-color);
   border-radius: 0.5em;
+  &,
+  &:visited,
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--scoped-color);
+    text-decoration: none;
+  }
 
   i.material-icons:not(:last-child),
   i.material-icons-round:not(:last-child) {

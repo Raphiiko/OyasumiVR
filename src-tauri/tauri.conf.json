@@ -22,6 +22,9 @@
           "$RESOURCE/*"
         ]
       },
+      "path": {
+        "all": true
+      },
       "shell": {
         "execute": true,
         "open": true
@@ -31,7 +34,8 @@
         "message": true
       },
       "process": {
-        "exit": true
+        "exit": true,
+        "relaunch": true
       },
       "http": {
         "request": true,

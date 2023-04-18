@@ -345,8 +345,7 @@
       "general": "一般",
       "vrchat": "VRChat",
       "notifications": "通知",
-      "updates": "更新",
-      "debug": "调试"
+      "updates": "更新"
     },
     "general": {
       "language": {
@@ -449,29 +448,6 @@
       "noUpdate": "你当前运行的是最新版本的 Oyasumi 版本 {{version}}！",
       "notChecked": "Oyasumi 尚未检查更新",
       "updateAvailable": "新版本的 Oyasumi 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
-    },
-    "debug": {
-      "description": "在此页面上，你可以找到一些调试工具。 你不应该需要这些，\n特别是 Oyasumi 仍处于早期测试阶段，如果你需要它们，它们就在这里。",
-      "persistentStorage": {
-        "title": "数据库",
-        "description": "这些按钮可帮助你清除 Oyasumi 的数据库。 如果你在发生错误时想重设至默认值，请使用此设定",
-        "clearAllSettings": "清除所有设定",
-        "clearAutomationSettings": "清除自动化设定",
-        "clearAppSettings": "清除应用程序设定",
-        "clearCache": "清除缓存",
-        "printSettings": "日志设定"
-      },
-      "language": {
-        "title": "语言",
-        "description": "此设定允许你手动载入语言文件，这对于测试翻译文件很有用",
-        "loadFile": "载入语言文件"
-      },
-      "sleepingPose": {
-        "title": "睡眠姿势"
-      },
-      "sleepingDetection": {
-        "title": "睡眠检测器报告"
-      }
     }
   },
   "about": {

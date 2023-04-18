@@ -384,8 +384,7 @@
       "general": "一般",
       "vrchat": "VRChat",
       "notifications": "通知",
-      "updates": "アップデート",
-      "debug": "デバッグ"
+      "updates": "アップデート"
     },
     "general": {
       "language": {
@@ -488,29 +487,6 @@
       "noUpdate": "現在、最新版であるOyasumi v{{version}} を利用しています！",
       "notChecked": "Oyasumiはまだアップデートを確認しておりません。",
       "updateAvailable": "Oyasumiの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
-    },
-    "debug": {
-      "description": "このページでは、デバッグ用のツールを用意しています。本来は必要ないものですが、Oyasumiはまだ初期のテスト段階のため、念のためここに実装しています。",
-      "persistentStorage": {
-        "title": "設定データ",
-        "description": "これらボタンを押すと、Oyasumiの設定データの一部を削除することができます。エラー発生時にデフォルトに戻す場合に使用します。",
-        "clearAllSettings": "すべてのセッティングを削除",
-        "clearAutomationSettings": "自動化設定をクリア",
-        "clearAppSettings": "アプリの設定を削除",
-        "clearCache": "キャッシュを削除",
-        "printSettings": "ログ設定"
-      },
-      "language": {
-        "title": "言語",
-        "description": "言語ファイルを手動で読み込むことができます。これは新しい翻訳を検証するのに役立ちます。",
-        "loadFile": "言語ファイルを読み込む"
-      },
-      "sleepingPose": {
-        "title": "寝相"
-      },
-      "sleepingDetection": {
-        "title": "睡眠検知のレポート"
-      }
     }
   },
   "about": {
