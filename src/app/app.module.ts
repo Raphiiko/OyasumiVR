@@ -110,6 +110,7 @@ import { RenderResolutionAutomationService } from './services/render-resolution-
 import { SleepingAnimationsTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/sleeping-animations-tab/sleeping-animations-tab.component';
 import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/osc-general-tab/osc-general-tab.component';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
+import { SystemTrayService } from './services/system-tray.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -251,6 +252,7 @@ export class AppModule {
     private brightnessControlService: BrightnessControlService,
     private brightnessControlAutomationService: BrightnessControlAutomationService,
     private renderResolutionAutomationService: RenderResolutionAutomationService,
+    private systemTrayService: SystemTrayService,
     private eventLog: EventLogService
   ) {
     this.init();
@@ -275,6 +277,7 @@ export class AppModule {
       this.vrchatService.init(),
       this.vrchatLogService.init(),
       this.imageCacheService.init(),
+      this.systemTrayService.init(),
     ]);
     // Initialize GPU control services
     await this.sidecarService.init().then(async () => {

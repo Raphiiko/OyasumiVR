@@ -27,6 +27,7 @@ mod commands {
     pub mod os;
     pub mod osc;
     pub mod splash;
+    pub mod system_tray;
 }
 
 mod background {
@@ -40,7 +41,6 @@ mod elevated_sidecar;
 mod gesture_detector;
 mod image_cache;
 mod sleep_detector;
-mod system_tray;
 mod utils;
 
 lazy_static! {
@@ -86,32 +86,6 @@ fn main() {
                 }
             }
         }))
-        // .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-        //     event.window().hide().unwrap();
-        //     api.prevent_close();
-        // })
-        // .system_tray(
-        //     SystemTray::new()
-        // )
-        // .on_system_tray_event(|app, event| match event {
-        //     SystemTrayEvent::LeftClick {
-        //       position: _,
-        //       size: _,
-        //       ..
-        //     } => {
-        //       let window = app.get_window("main").unwrap();
-        //       window.show().unwrap();
-        //       window.set_focus().unwrap();
-        //     }
-        //     SystemTrayEvent::RightClick {
-        //       position: _,
-        //       size: _,
-        //       ..
-        //     } => {
-        //       // TODO: Implement context menu
-        //     }
-        //     _ => (),
-        // })
         .setup(|app| {
             // Set up window reference
             let window = app.get_window("main").unwrap();
@@ -182,9 +156,10 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
+            commands::system_tray::set_exit_with_system_tray,
         ])
-        .system_tray(system_tray::init())
-        .on_system_tray_event(system_tray::event_handler());
+        .system_tray(commands::system_tray::init())
+        .on_system_tray_event(commands::system_tray::event_handler());
 
     app
     .on_window_event(|event| match event.event() {

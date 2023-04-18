@@ -87,8 +87,8 @@
         <label class="switch-toggle">
           <input
             type="checkbox"
-            [checked]="appSettings.enableTrayExit"
-            (change)="setSystemTrayExitEnabled(!appSettings.enableTrayExit)"
+            [checked]="appSettings.exitWithSystemTray"
+            (change)="setExitWithSystemTray(!appSettings.exitWithSystemTray)"
           />
           <span class="switch-toggle-slider"></span>
         </label>

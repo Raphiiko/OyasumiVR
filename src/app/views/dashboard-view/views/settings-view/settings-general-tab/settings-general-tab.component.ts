@@ -104,7 +104,7 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     this.telemetry.updateSettings({ enabled });
   }
   
-  setSystemTrayExitEnabled(enableTrayExit: boolean) {
-    this.settingsService.updateSettings({ enableTrayExit })
+  setExitWithSystemTray(exitWithSystemTray: boolean) {
+    this.settingsService.updateSettings({ exitWithSystemTray })
   }
 }
