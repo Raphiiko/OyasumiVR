@@ -18,7 +18,7 @@
   },
   "brightness-automations": {
     "title": "亮度自動化",
-    "description": "啟用或禁用睡眠模式時，Oyasumi可以自動調整頭盔的亮度。",
+    "description": "啟用或禁用睡眠模式時，Oyasumi可以自動調整頭盔的亮度",
     "indexWarning": "顯示器亮度控制目前只在Valve Index上可用。請確保SteamVR正在運行，並且你的耳機已經連接",
     "onSleepEnable": {
       "title": "當我入睡時",
@@ -135,7 +135,7 @@
           "description": "Oyasumi應該等待多久才能檢測到你在睡覺",
           "unit": "分鐘"
         },
-        "description": "Oyasumi在檢測到你睡著之前應等待多長時間啟用該功能後，當Oyasumi根據你的動作猜測你在睡覺時，它將自動啟用睡眠模式。"
+        "description": "Oyasumi在檢測到你睡著之前應等待多長時間啟用該功能後，當Oyasumi根據你的動作猜測你在睡覺時，它將自動啟用睡眠模式"
       },
       "enableAtTime": {
         "title": "開啟睡眠模式",
@@ -791,13 +791,13 @@
           "reason": {
             "MANUAL": "手動關閉",
             "OSC_CONTROL": "透過 OSC 關閉",
-            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式"
+            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
             "CHARGING": "當設備正在充電的時候"
           }
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "對'{{device}}的功率限制恢復到{{limit}}。",
+            "reset": "對'{{device}}的功率限制恢復到{{limit}}",
             "set": "對'{{device}}的功率限制設置為{{limit}}。"
           },
           "reason": {
@@ -816,16 +816,16 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "自動接受了來自'{{displayName}}的邀請請求。",
+          "title": "自動接受了來自'{{displayName}}的邀請請求",
           "subtitle": {
             "whitelist": "由於該玩家被列入白名單",
             "blacklist": "由於這名玩家沒有被列入黑名單"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "將你的VRChat狀態從{{oldStatus}}改為{{newStatus}}列出。",
+          "title": "將你的VRChat狀態從{{oldStatus}}改為{{newStatus}}列出",
           "reason": {
-            "BELOW_LIMIT": "當你的房間中的玩家數量下降到{{threshold}}位以下時。",
+            "BELOW_LIMIT": "當你的房間中的玩家數量下降到{{threshold}}位以下時",
             "AT_LIMIT_OR_ABOVE": "由於你的房間中的玩家數量達到了{{threshold}}位的極限"
           }
         },
@@ -848,7 +848,7 @@
   },
   "resolution-automations": {
     "title": "解析度自動化",
-    "description": "當啟用或禁用睡眠模式時，Oyasumi可以自動調整SteamVR的渲染解析度。",
+    "description": "當啟用或禁用睡眠模式時，Oyasumi可以自動調整SteamVR的渲染解析度",
     "onSleepEnable": {
       "title": "當我入睡時",
       "description": "調整我的渲染解析度"
