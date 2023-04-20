@@ -544,7 +544,7 @@
         "clearData": "清除數據",
         "clearModal": {
           "title": "確認清算數據",
-          "message": "你確定要刪除以下數據嗎？這是不可能被恢復的! \n\n{items}}。"
+          "message": "你確定要刪除以下數據嗎？這是不可能被恢復的! \n\n{items}}"
         },
         "relaunchModal": {
           "title": "重新啟動 Oyasumi",
@@ -797,8 +797,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "對'{{device}}的功率限制恢復到{{limit}}",
-            "set": "對'{{device}}的功率限制設置為{{limit}}。"
+            "reset": "對 {{device}} 的功率限制恢復到 {{limit}}",
+            "set": "對 {{device}} 的功率限制設置為 {{limit}}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
