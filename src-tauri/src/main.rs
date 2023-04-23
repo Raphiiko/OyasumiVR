@@ -9,6 +9,7 @@ extern crate lazy_static;
 use crate::commands::admin::start_elevation_sidecar;
 use crate::image_cache::ImageCache;
 use background::openvr::OpenVRManager;
+use commands::system_tray::SystemTrayManager;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
@@ -52,9 +53,11 @@ lazy_static! {
     static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
     static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
     static ref IMAGE_CACHE: Mutex<Option<ImageCache>> = Default::default();
+    static ref SYSTEMTRAY_MANAGER: Mutex<Option<SystemTrayManager>> = Default::default();
 }
 
 fn main() {
+    
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs_extra::init())
@@ -110,6 +113,10 @@ fn main() {
                 background::http_server::spawn_http_server_thread();
                 // Load sounds
                 commands::os::load_sounds();
+
+                // Initialize the system tray manager
+                let system_tray_manager = SystemTrayManager::new();
+                *SYSTEMTRAY_MANAGER.lock().unwrap() = Some(system_tray_manager);
             });
             // Setup start of minute cronjob
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
@@ -158,14 +165,22 @@ fn main() {
             commands::notifications::xsoverlay_send_message,
             commands::system_tray::set_exit_with_system_tray,
         ])
-        .system_tray(commands::system_tray::init())
-        .on_system_tray_event(commands::system_tray::event_handler());
+        .system_tray(commands::system_tray::init_system_tray())
+        .on_system_tray_event(commands::system_tray::handle_events());
 
     app
     .on_window_event(|event| match event.event() {
         tauri::WindowEvent::CloseRequested { api, .. } => {
-            event.window().hide().unwrap();
-            api.prevent_close();
+            let manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
+            let manager = manager_guard.as_ref().unwrap();
+        
+            if manager.exit_with_system_tray {
+                event.window().hide().unwrap();
+                api.prevent_close();
+            }
+            else {
+                std::process::exit(1);
+            }
         }
         _ => {}
     })
@@ -174,6 +189,7 @@ fn main() {
 }
 
 fn on_cron_minute_start(_: &str) {
+    
     let window_guard = TAURI_WINDOW.lock().unwrap();
     let window = window_guard.as_ref().unwrap();
     let _ = window.emit_all("CRON_MINUTE_START", ());
