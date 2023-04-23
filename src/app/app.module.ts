@@ -263,8 +263,8 @@ export class AppModule {
     await CachedValue.cleanCache();
     // Preload assets
     await this.preloadAssets();
-    // Initialize app settings and event log
-    await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
+    // Initialize app settings, event log and system tray settings.
+    await Promise.all([this.appSettingsService.init(), this.eventLog.init(), this.systemTrayService.init() ]);
     // Initialize telemetry and updates
     await Promise.all([this.updateService.init(), this.telemetryService.init()]);
     // Initialize general utility services
@@ -277,7 +277,6 @@ export class AppModule {
       this.vrchatService.init(),
       this.vrchatLogService.init(),
       this.imageCacheService.init(),
-      this.systemTrayService.init(),
     ]);
     // Initialize GPU control services
     await this.sidecarService.init().then(async () => {
