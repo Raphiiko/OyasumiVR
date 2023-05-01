@@ -87,8 +87,24 @@
         <label class="switch-toggle">
           <input
             type="checkbox"
-            [checked]="appSettings.exitWithSystemTray"
-            (change)="setExitWithSystemTray(!appSettings.exitWithSystemTray)"
+            [checked]="appSettings.exitInSystemTray"
+            (change)="setExitInSystemTray(!appSettings.exitInSystemTray)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.systemTray.start.label</span>
+        <span translate>settings.general.systemTray.start.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.startInSystemTray"
+            (change)="setStartInSystemTray(!appSettings.startInSystemTray)"
           />
           <span class="switch-toggle-slider"></span>
         </label>

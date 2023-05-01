@@ -163,7 +163,8 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
-            commands::system_tray::set_exit_with_system_tray,
+            commands::system_tray::set_exit_in_system_tray,
+            commands::system_tray::set_start_in_system_tray,
         ])
         .system_tray(commands::system_tray::init_system_tray())
         .on_system_tray_event(commands::system_tray::handle_events());
@@ -174,7 +175,7 @@ fn main() {
             let manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
             let manager = manager_guard.as_ref().unwrap();
         
-            if manager.exit_with_system_tray {
+            if manager.exit_in_tray {
                 event.window().hide().unwrap();
                 api.prevent_close();
             }

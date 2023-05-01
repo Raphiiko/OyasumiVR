@@ -424,8 +424,12 @@
       "systemTray": {
         "title": "System tray",
         "close": {
-          "label": "Exit with system tray",
+          "label": "Exit in system tray",
           "description": "Collapses the program into the system tray upon clicking on exit button"
+        },
+        "start": {
+          "label": "Start in system tray",
+          "description": "Starts the program reduced in the system tray."
         }
       }
     },

@@ -9,7 +9,8 @@ export interface AppSettings {
   oscReceivingPort: number;
   enableDesktopNotifications: boolean;
   enableXSOverlayNotifications: boolean;
-  exitWithSystemTray: boolean;
+  exitInSystemTray: boolean;
+  startInSystemTray: boolean;
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
@@ -24,7 +25,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   oscReceivingPort: 9001,
   enableXSOverlayNotifications: false,
   enableDesktopNotifications: false,
-  exitWithSystemTray: false,
+  exitInSystemTray: false,
+  startInSystemTray: false,
 };
 
 export type ExecutableReferenceStatus =

@@ -1,4 +1,4 @@
-use tauri::{Manager, GlobalWindowEvent, SystemTrayHandle};
+use tauri::Manager;
 use tauri::{
     AppHandle, CustomMenuItem, Runtime, SystemTray, SystemTrayEvent, SystemTrayMenu,
 };
@@ -9,12 +9,13 @@ const QUIT: &'static str = "quit";
 
 #[derive(Debug, Clone)]
 pub struct SystemTrayManager {
-    pub exit_with_system_tray: bool,
+    pub exit_in_tray: bool,
+    pub start_in_tray: bool,
 }
 
 impl SystemTrayManager {
     pub fn new() -> SystemTrayManager {
-        SystemTrayManager { exit_with_system_tray: false }
+        SystemTrayManager { exit_in_tray: false, start_in_tray: false, }
     }
     
     // pub fn handle_window_exit<R: Runtime>(&self) -> impl Fn(GlobalWindowEvent<R>) + Send + Sync + 'static {
@@ -68,9 +69,15 @@ pub fn handle_events<R: Runtime>() -> impl Fn(&AppHandle<R>, SystemTrayEvent) + 
 }
 
 #[tauri::command]
-pub fn set_exit_with_system_tray(app_handle: AppHandle, status: bool) {
+pub fn set_exit_in_system_tray(app_handle: AppHandle, status: bool) {
     let mut manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
     let mut manager: &mut SystemTrayManager = manager_guard.as_mut().unwrap();
-    manager.exit_with_system_tray = status;
-    println!("Status successfully changed {}", manager.exit_with_system_tray)
+    manager.exit_in_tray = status;
+}
+
+#[tauri::command]
+pub fn set_start_in_system_tray(app_handle: AppHandle, status: bool) {
+    let mut manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
+    let mut manager: &mut SystemTrayManager = manager_guard.as_mut().unwrap();
+    manager.start_in_tray = status;
 }
