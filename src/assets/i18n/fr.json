@@ -426,6 +426,10 @@
         "close": {
           "label": "Fermer l'application dans la barre d'état",
           "description": "Réduit l'application dans la barre d'état système lorsque vous cliquez sur le bouton 'Fermer'"
+        },
+        "start": {
+          "label": "Démarrer dans la barre d'état",
+          "description": "Démarrer l'application cachée dans la barre d'état. Vous pouvez la restaurer en cliquant sur l'icône dans la barre d'état."
         }
       }
     },
