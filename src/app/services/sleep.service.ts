@@ -12,7 +12,7 @@ import {
   Subject,
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_SLEEP_MODE } from '../globals';
 import { Store } from 'tauri-plugin-store-api';
 import { SleepingPose } from '../models/sleeping-pose';
 import { uniq } from 'lodash';
@@ -25,8 +25,6 @@ import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
-
-export const SETTINGS_KEY_SLEEP_MODE = 'SLEEP_MODE';
 
 @Injectable({
   providedIn: 'root',

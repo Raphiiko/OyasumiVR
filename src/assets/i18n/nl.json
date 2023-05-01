@@ -59,8 +59,7 @@
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
       "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
       "onMotionDetection": {
-        "title": "Wanneer Oyasumi detecteert dat je slaapt gebaseerd op je bewegingen",
-        "subtitle": "<b>Let op:</b> Dit is een <b>experimentele feature</b>! Het kan zijn dat het nog niet helemaal goed werkt."
+        "title": "Wanneer Oyasumi detecteert dat je slaapt gebaseerd op je bewegingen"
       }
     },
     "disableAutomations": {
@@ -111,7 +110,6 @@
       },
       "enableForSleepDetector": {
         "title": "Slaap modus inschakelen",
-        "description": "Met deze feature, zal Oyasumi automatisch de slaap modus inschakelen wanneer het op basis van je beweging detecteert dat je in slaap bent gevallen.\n\nDit is nog een experimentele feature, dus het kan zijn dat het nog niet helemaal goed werkt.",
         "calibration": {
           "title": "Kalibratie",
           "description": "Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
@@ -390,8 +388,7 @@
       "general": "Algemeen",
       "vrchat": "VRChat",
       "notifications": "Notificaties",
-      "updates": "Updates",
-      "debug": "Debug"
+      "updates": "Updates"
     },
     "general": {
       "language": {
@@ -494,29 +491,6 @@
       "noUpdate": "Je draait nu Oyasumi v{{version}}, en dat is de laatste versie!",
       "notChecked": "Oyasumi heeft nog niet gecheckt of er een update beschikbaar is.",
       "updateAvailable": "Er is een nieuwe update beschikbaar voor Oyasumi! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
-    },
-    "debug": {
-      "description": "Op deze pagina kun je wat debug tools vinden. Deze zou je nooit nodig moeten hebben, maar omdat Oyasumi nog steeds in een test fase verkeert zijn ze hier als je ze nodig hebt.",
-      "persistentStorage": {
-        "title": "Permanente opslag",
-        "description": "Met deze knoppen kun je delen van Oyasumi's opslag legen. Gebruik dit als je terug wilt gaan naar standaard instellingen wanneer je tegen een foutmelding aanloopt.",
-        "clearAllSettings": "Verwijder alle instellingen",
-        "clearAutomationSettings": "Verwijder automatiserings instellingen",
-        "clearAppSettings": "Verwijder programma instellingen",
-        "clearCache": "Verwijder cache",
-        "printSettings": "Instellingen loggen"
-      },
-      "language": {
-        "title": "Taal",
-        "description": "Met deze optie kun je handmatig een vertalings bestand inladen. Dit kan handig zijn voor het testen van nieuwe vertalingen.",
-        "loadFile": "Vertalings Bestand Laden"
-      },
-      "sleepingPose": {
-        "title": "Slaap Houding"
-      },
-      "sleepingDetection": {
-        "title": "Slaap Detectie Rapportage"
-      }
     }
   },
   "about": {

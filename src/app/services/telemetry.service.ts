@@ -1,7 +1,7 @@
 import { Injectable, isDevMode } from '@angular/core';
 import { TelemetryManifest } from '../models/telemetry-manifest';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_TELEMETRY_SETTINGS } from '../globals';
 import {
   BehaviorSubject,
   debounceTime,
@@ -18,8 +18,6 @@ import { cloneDeep } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { getVersion } from '../utils/app-utils';
 import { debug, info } from 'tauri-plugin-log-api';
-
-export const SETTINGS_KEY_TELEMETRY_SETTINGS = 'TELEMETRY_SETTINGS';
 
 @Injectable({
   providedIn: 'root',

@@ -12,6 +12,7 @@ import {
 import { SleepDetectorCalibrationModalComponent } from '../sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { Router } from '@angular/router';
+import { debounce } from 'typescript-debounce-decorator';
 
 export interface SleepDetectorEnableSleepModeModalInputModel {}
 
@@ -145,6 +146,17 @@ export class SleepDetectorEnableSleepModeModalComponent
       'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
       {
         sleepCheck: !this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck,
+      }
+    );
+  }
+
+  @debounce(250)
+  async onDetectionWindowChange(value: number) {
+    if (value < 15 || value > 60) return;
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        detectionWindowMinutes: value,
       }
     );
   }

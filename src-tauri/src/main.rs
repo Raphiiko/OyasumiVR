@@ -9,6 +9,7 @@ extern crate lazy_static;
 use crate::commands::admin::start_elevation_sidecar;
 use crate::image_cache::ImageCache;
 use background::openvr::OpenVRManager;
+use commands::log_utils::LOG_DIR;
 use commands::system_tray::SystemTrayManager;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
@@ -21,7 +22,9 @@ mod commands {
     pub mod admin;
     pub mod afterburner;
     pub mod http;
+    pub mod image_cache;
     pub mod log_parser;
+    pub mod log_utils;
     pub mod notifications;
     pub mod nvml;
     pub mod openvr;
@@ -118,6 +121,10 @@ fn main() {
                 let system_tray_manager = SystemTrayManager::new();
                 *SYSTEMTRAY_MANAGER.lock().unwrap() = Some(system_tray_manager);
             });
+            // Reference log dir
+            {
+                *LOG_DIR.lock().unwrap() = Some(app.path_resolver().app_log_dir().unwrap());
+            }
             // Setup start of minute cronjob
             let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
             cron.seconds("0");
@@ -148,6 +155,7 @@ fn main() {
             commands::openvr::openvr_set_supersample_scale,
             commands::os::run_command,
             commands::os::play_sound,
+            commands::os::show_in_folder,
             commands::splash::close_splashscreen,
             commands::nvml::nvml_status,
             commands::nvml::nvml_get_devices,
@@ -163,28 +171,30 @@ fn main() {
             commands::http::get_http_server_port,
             commands::afterburner::msi_afterburner_set_profile,
             commands::notifications::xsoverlay_send_message,
+            commands::image_cache::clean_image_cache,
+            commands::log_utils::clean_log_files,
             commands::system_tray::set_exit_in_system_tray,
             commands::system_tray::set_start_in_system_tray,
         ])
         .system_tray(commands::system_tray::init_system_tray())
-        .on_system_tray_event(commands::system_tray::handle_events());
+        .on_system_tray_event(commands::system_tray::handle_events())
+        .on_window_event(|event| match event.event() {
+            tauri::WindowEvent::CloseRequested { api, .. } => {
+                let manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
+                let manager = manager_guard.as_ref().unwrap();
+            
+                if manager.exit_in_tray {
+                    event.window().hide().unwrap();
+                    api.prevent_close();
+                }
+                else {
+                    std::process::exit(1);
+                }
+            }
+            _ => {}
+        });
 
     app
-    .on_window_event(|event| match event.event() {
-        tauri::WindowEvent::CloseRequested { api, .. } => {
-            let manager_guard = SYSTEMTRAY_MANAGER.lock().unwrap();
-            let manager = manager_guard.as_ref().unwrap();
-        
-            if manager.exit_in_tray {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
-            else {
-                std::process::exit(1);
-            }
-        }
-        _ => {}
-    })
     .run(tauri::generate_context!())
     .expect("An error occurred while running the application");
 }

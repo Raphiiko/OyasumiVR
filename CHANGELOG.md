@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Option to increase the detection window for sleep detection.
+
+### Removed
+
+- Removed experimental flag for sleep detection feature.
+
 ## [1.6.0]
 
 ### Added

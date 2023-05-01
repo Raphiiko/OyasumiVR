@@ -49,7 +49,7 @@ hyper = { version = "0.14.24", features = ["full"] }
 
 [dependencies.tauri]
 version = "1.2.4"
-features = [
+features = [ "path-all", "process-relaunch",
   "system-tray",
   "dialog-message",
   "dialog-open",

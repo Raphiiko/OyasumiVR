@@ -58,6 +58,32 @@
           </label>
         </div>
       </div>
+
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.enableForSleepDetector.detectionWindow.title</span>
+          <span translate
+            >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <app-slider-setting
+            [unit]="
+              'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | translate
+            "
+            [min]="15"
+            [max]="60"
+            [value]="
+              automationConfigs?.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR?.detectionWindowMinutes ??
+              null
+            "
+            (valueChange)="onDetectionWindowChange($event)"
+            [snapValues]="[15]"
+            [snapDistance]="5"
+            [step]="1"
+          ></app-slider-setting>
+        </div>
+      </div>
     </div>
   </div>
   <div class="pane-actions spread">

@@ -7,11 +7,9 @@ import {
 } from '../models/automations';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
 import { cloneDeep } from 'lodash';
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
-
-export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
 
 @Injectable({
   providedIn: 'root',

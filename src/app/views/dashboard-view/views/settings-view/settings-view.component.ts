@@ -5,7 +5,7 @@ import { UpdateService } from '../../../../services/update.service';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { ActivatedRoute } from '@angular/router';
 
-type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'DEBUG';
+type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'ADVANCED';
 
 @Component({
   selector: 'app-settings-view',

@@ -78,18 +78,24 @@ export class SleepModeForSleepDetectorAutomationService {
     if (!this.enableConfig.enabled) return;
     // Stop here if the sleep mode is already enabled
     if (await firstValueFrom(this.sleep.mode)) return;
-    // Stop here if the sleep detection has been running for less than 15 minutes
-    if (Date.now() - report.startTime < 1000 * 60 * 15) return;
+    // Stop here if the sleep detection has been running for less than the detection window
+    if (Date.now() - report.startTime < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
+      return;
     // Stop here if the positional movement was too high in the past 15 minutes
     if (
       report.distanceInLast15Minutes >
       this.enableConfig.calibrationValue * this.calibrationFactors[this.enableConfig.sensitivity]
     )
       return;
-    // Stop here if the last time we tried enabling was less than 15 minutes ago
-    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * 15) return;
-    // Stop here if the last time we disabled sleep mode was less than 15 minutes ago
-    if (Date.now() - this.lastSleepModeDisable < 1000 * 60 * 15) return;
+    // Stop here if the last time we tried enabling was less than the detection window
+    if (Date.now() - this.lastEnableAttempt < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
+      return;
+    // Stop here if the last time we disabled sleep mode was less than the detection window
+    if (
+      Date.now() - this.lastSleepModeDisable <
+      1000 * 60 * this.enableConfig.detectionWindowMinutes
+    )
+      return;
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.

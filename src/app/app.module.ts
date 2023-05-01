@@ -64,7 +64,7 @@ import { filter, firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat.service';
 import { SettingsGeneralTabComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/settings-general-tab.component';
 import { SettingsUpdatesTabComponent } from './views/dashboard-view/views/settings-view/settings-updates-tab/settings-updates-tab.component';
-import { SettingsDebugTabComponent } from './views/dashboard-view/views/settings-view/settings-debug-tab/settings-debug-tab.component';
+import { SettingsAdvancedTabComponent } from './views/dashboard-view/views/settings-view/settings-advanced-tab/settings-advanced-tab.component';
 import { SettingsVRChatTabComponent } from './views/dashboard-view/views/settings-view/settings-vrchat-tab/settings-vrchat-tab.component';
 import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrchat-login-modal.component';
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
@@ -160,7 +160,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsGeneralTabComponent,
     SettingsNotificationsTabComponent,
     SettingsUpdatesTabComponent,
-    SettingsDebugTabComponent,
+    SettingsAdvancedTabComponent,
     SettingsVRChatTabComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
