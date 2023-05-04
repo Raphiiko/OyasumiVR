@@ -7,7 +7,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run build-preload-assets && ng serve",
-    "build": "npm run build-preload-assets && node scripts/splashscreen-blurhash.js && build && npm run build:sidecar && node scripts/copy-dependencies.js",
+    "build": "npm run build-preload-assets && node scripts/splashscreen-blurhash.js && ng build && npm run build:sidecar && node scripts/copy-dependencies.js",
     "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && node scripts/move-sidecar-build.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
