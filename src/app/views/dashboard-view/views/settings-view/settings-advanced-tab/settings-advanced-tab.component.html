@@ -7,10 +7,7 @@
         <span translate>settings.advanced.translation.loadFile.description</span>
       </div>
       <div class="setting-row-action">
-        <button
-          class="btn btn-primary"
-          (click)="loadLanguageFile()"
-        >
+        <button class="btn btn-primary" (click)="loadLanguageFile()">
           <i class="material-icons-round">file_open</i>
           <span translate>settings.advanced.translation.loadFile.action</span>
         </button>
@@ -42,10 +39,7 @@
         <span translate>settings.advanced.logs.openFolder.description</span>
       </div>
       <div class="setting-row-action">
-        <button
-          class="btn btn-primary"
-          (click)="openLogsFolder()"
-        >
+        <button class="btn btn-primary" (click)="openLogsFolder()">
           <i class="material-icons-round">folder</i>
           <span translate>settings.advanced.logs.openFolder.action</span>
         </button>
@@ -86,9 +80,12 @@
     <div class="setting-row-group">
       <div class="setting-row compact" *ngFor="let item of persistentStorageItems">
         <div class="setting-row-label" translate>
-          <span translate>{{ 'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate }}</span>
-          <span
-            translate>{{ 'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate }}</span>
+          <span translate>{{
+            'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
+          }}</span>
+          <span translate>{{
+            'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
+          }}</span>
         </div>
         <div class="setting-row-action">
           <label class="check-toggle">

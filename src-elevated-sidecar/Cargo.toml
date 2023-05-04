@@ -1,6 +1,6 @@
 [package]
 name = "oyasumi-elevated-sidecar"
-version = "1.6.0"
+version = "1.7.0"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"

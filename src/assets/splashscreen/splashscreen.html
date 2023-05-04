@@ -14,14 +14,22 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" type="text/css" href="splashscreen.css" />
+    <link rel="stylesheet" type="text/css" href="splash-blurhash.css" />
   </head>
   <body>
     <div class="splashscreen">
+      <div class="splash-blurhash"></div>
+      <img class="splash-image" data-src="splash.jpg" />
       <div class="vignette"></div>
       <div class="info-container">
-        <div class="logo-container">
+        <div class="logo-container pending-child">
           <div class="logo-image">
-            <img draggable="false" src="../img/icon_150x150.png" alt="Oyasumi Icon" />
+            <img
+              class="no-fade"
+              draggable="false"
+              data-src="../img/icon_150x150.png"
+              alt="Oyasumi Icon"
+            />
           </div>
           <div class="logo-text">
             <div class="main">Oyasumi</div>
@@ -29,19 +37,90 @@
           </div>
         </div>
         <div id="version">&nbsp;</div>
-        <div>
-          <div class="status">Initializing...</div>
-        </div>
+        <div class="loader"></div>
+        <div id="status">Initializing...</div>
       </div>
-      <div class="progress-bar">
-        <div class="progress-bar-value"></div>
+      <div class="bottom-bar">
+        <div class="left">
+          <span class="author">oyasumi.raphii.co</span>
+        </div>
+        <div class="right">
+          <span class="author">By Raphiiko</span>
+        </div>
       </div>
     </div>
     <script>
-      window.__TAURI__.app.getVersion().then(function (version) {
-        if (version === '0.0.0') version = 'DEV';
-        document.getElementById('version').innerHTML = 'v' + version;
+      [].forEach.call(document.querySelectorAll('img[data-src]'), function (img) {
+        img.setAttribute('src', img.getAttribute('data-src'));
+        img.onload = function () {
+          img.removeAttribute('data-src');
+          let parent = img;
+          for (let i = 0; i < 2; i++) {
+            parent = parent.parentElement;
+            if (!parent) break;
+            parent.classList.remove('pending-child');
+          }
+        };
       });
+      const version = window.__TAURI__
+        ? window.__TAURI__.app.getVersion().then(function (version) {
+            return version === '0.0.0' ? 'DEV' : version;
+          })
+        : Promise.resolve('0.0.0');
+      version.then((version) => (document.getElementById('version').innerHTML = 'v' + version));
     </script>
+    <!--AMBILIGHT-->
+    <svg width="0" height="0">
+      <filter
+        id="ambilight"
+        width="1000%"
+        height="1000%"
+        x="-1"
+        y="-3"
+        color-interpolation-filters="sRGB"
+      >
+        <feOffset in="SourceGraphic" result="source-copy" />
+        <feColorMatrix in="source-copy" type="saturate" values="3" result="saturated-copy" />
+        <feColorMatrix
+          in="saturated-copy"
+          type="matrix"
+          values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    33 33 33 101 -132"
+          result="bright-colors"
+        />
+        <feMorphology in="bright-colors" operator="dilate" radius="10" result="spread" />
+        <feGaussianBlur in="spread" stdDeviation="30" result="ambilight-light" />
+        <feOffset in="SourceGraphic" result="source" />
+        <feComposite in="source" in2="ambilight-light" operator="over" />
+      </filter>
+    </svg>
+    <svg width="0" height="0">
+      <filter
+        id="ambilight2"
+        width="1000%"
+        height="1000%"
+        x="-0.75"
+        y="-5"
+        color-interpolation-filters="sRGB"
+      >
+        <feOffset in="SourceGraphic" result="source-copy" />
+        <feColorMatrix in="source-copy" type="saturate" values="3" result="saturated-copy" />
+        <feColorMatrix
+          in="saturated-copy"
+          type="matrix"
+          values="1 0 0 0 0
+                    0 1 0 0 0
+                    0 0 1 0 0
+                    33 33 33 101 -132"
+          result="bright-colors"
+        />
+        <feMorphology in="bright-colors" operator="dilate" radius="10" result="spread" />
+        <feGaussianBlur in="spread" stdDeviation="30" result="ambilight-light" />
+        <feOffset in="SourceGraphic" result="source" />
+        <feComposite in="source" in2="ambilight-light" operator="over" />
+      </filter>
+    </svg>
   </body>
 </html>

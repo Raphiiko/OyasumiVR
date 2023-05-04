@@ -110,6 +110,8 @@ import { RenderResolutionAutomationService } from './services/render-resolution-
 import { SleepingAnimationsTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/sleeping-animations-tab/sleeping-animations-tab.component';
 import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/osc-general-tab/osc-general-tab.component';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
+import pMinDelay from 'p-min-delay';
+import { SPLASH_MIN_DURATION } from './globals';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -257,58 +259,63 @@ export class AppModule {
   }
 
   async init() {
-    // Clean cache
-    await CachedValue.cleanCache();
-    // Preload assets
-    await this.preloadAssets();
-    // Initialize app settings and event log
-    await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
-    // Initialize telemetry and updates
-    await Promise.all([this.updateService.init(), this.telemetryService.init()]);
-    // Initialize general utility services
-    await Promise.all([
-      this.openvrService.init(),
-      this.oscService.init().then(async () => {
-        await this.oscControlService.init();
-      }),
-      this.sleepService.init(),
-      this.vrchatService.init(),
-      this.vrchatLogService.init(),
-      this.imageCacheService.init(),
-    ]);
-    // Initialize GPU control services
-    await this.sidecarService.init().then(async () => {
-      await this.nvmlService.init();
-    });
-    // Initialize Brightness Control
-    await this.brightnessControlService.init();
-    // Initialize automations
-    await Promise.all([
-      // GPU automations
-      this.gpuAutomations.init(),
-      // Sleep mode automations
-      this.sleepModeForSleepDetectorAutomationService.init(),
-      this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
-      this.sleepModeEnableAtBatteryPercentageAutomation.init(),
-      this.sleepModeEnableAtTimeAutomationService.init(),
-      this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
-      this.sleepModeDisableAtTimeAutomationService.init(),
-      this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
-      // Battery automations
-      this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
-      this.turnOffDevicesWhenChargingAutomationService.init(),
-      // OSC automations
-      this.oscGeneralAutomationsService.init(),
-      this.sleepingAnimationsAutomationService.init(),
-      // Status automations
-      this.statusChangeForPlayerCountAutomationService.init(),
-      // Invite automations
-      this.inviteAutomationsService.init(),
-      // Brightness automations
-      this.brightnessControlAutomationService.init(),
-      // Resolution automations
-      this.renderResolutionAutomationService.init(),
-    ]);
+    await pMinDelay(
+      (async () => {
+        // Clean cache
+        await CachedValue.cleanCache();
+        // Preload assets
+        await this.preloadAssets();
+        // Initialize app settings and event log
+        await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
+        // Initialize telemetry and updates
+        await Promise.all([this.updateService.init(), this.telemetryService.init()]);
+        // Initialize general utility services
+        await Promise.all([
+          this.openvrService.init(),
+          this.oscService.init().then(async () => {
+            await this.oscControlService.init();
+          }),
+          this.sleepService.init(),
+          this.vrchatService.init(),
+          this.vrchatLogService.init(),
+          this.imageCacheService.init(),
+        ]);
+        // Initialize GPU control services
+        await this.sidecarService.init().then(async () => {
+          await this.nvmlService.init();
+        });
+        // Initialize Brightness Control
+        await this.brightnessControlService.init();
+        // Initialize automations
+        await Promise.all([
+          // GPU automations
+          this.gpuAutomations.init(),
+          // Sleep mode automations
+          this.sleepModeForSleepDetectorAutomationService.init(),
+          this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
+          this.sleepModeEnableAtBatteryPercentageAutomation.init(),
+          this.sleepModeEnableAtTimeAutomationService.init(),
+          this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
+          this.sleepModeDisableAtTimeAutomationService.init(),
+          this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
+          // Battery automations
+          this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
+          this.turnOffDevicesWhenChargingAutomationService.init(),
+          // OSC automations
+          this.oscGeneralAutomationsService.init(),
+          this.sleepingAnimationsAutomationService.init(),
+          // Status automations
+          this.statusChangeForPlayerCountAutomationService.init(),
+          // Invite automations
+          this.inviteAutomationsService.init(),
+          // Brightness automations
+          this.brightnessControlAutomationService.init(),
+          // Resolution automations
+          this.renderResolutionAutomationService.init(),
+        ]);
+      })(),
+      SPLASH_MIN_DURATION
+    );
     await invoke('close_splashscreen');
     // Language selection modal
     this.appSettingsService.loadedDefaults
