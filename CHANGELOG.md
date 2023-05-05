@@ -24,6 +24,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed experimental flag for sleep detection feature.
 - Removed debug tab in the settings view.
 
+### Fixed
+
+- Stopped brightness automations from triggering when there is no headset available.
+
 ## [1.6.0]
 
 ### Added

@@ -51,6 +51,7 @@ export class BrightnessControlAutomationService {
         : c.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
     );
     if (!config.enabled) return;
+    if (!(await firstValueFrom(this.brightnessControl.driverIsAvailable()))) return;
     this.brightnessControl.cancelActiveTransition();
     if (config.transition) {
       const task = this.brightnessControl.transitionBrightness(
