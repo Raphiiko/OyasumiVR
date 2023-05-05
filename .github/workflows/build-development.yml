@@ -82,6 +82,7 @@ jobs:
           prerelease: true
           includeDebug: true
           includeRelease: false
+          args: --verbose
       - name: Get current development release ID if it exists
         uses: actions/github-script@v6
         continue-on-error: true

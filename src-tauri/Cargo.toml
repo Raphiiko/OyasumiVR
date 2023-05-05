@@ -50,7 +50,7 @@ hyper = { version = "0.14.26", features = ["full"] }
 
 [dependencies.tauri]
 version = "1.3.0"
-features = [ "path-all", "process-relaunch",
+features = ["path-all", "process-relaunch",
   "system-tray",
   "dialog-message",
   "dialog-open",
@@ -67,6 +67,12 @@ features = [ "path-all", "process-relaunch",
 
 [dependencies.openvr]
 git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
+
+# Fix for broken window transparency in Tauri v1.6.0.
+# https://github.com/tauri-apps/tauri/issues/6868
+# Remove once fixed.
+[patch.crates-io]
+tao = { git = "https://github.com/tauri-apps/tao", branch = "v0.16" }
 
 [features]
 # by default Tauri runs in production mode
