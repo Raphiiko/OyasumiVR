@@ -60,7 +60,7 @@ jobs:
           cargo clippy --all-features --no-deps # Check Rust code in core module
           rm src-elevated-sidecar/target/release/oyasumi-elevated-sidecar*.exe # Clean up dummy sidecar executable(s)
       - name: Test if Oyasumi compiles
-        uses: Raphiiko/tauri-action@dev
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}

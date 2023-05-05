@@ -69,7 +69,7 @@ jobs:
           version: Unreleased
           path: ./CHANGELOG.md
       - name: Build and release Oyasumi development build
-        uses: Raphiiko/tauri-action@dev
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
