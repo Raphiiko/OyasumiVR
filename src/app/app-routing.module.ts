@@ -13,6 +13,7 @@ import { StatusAutomationsViewComponent } from './views/dashboard-view/views/sta
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
+import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 
 const routes: Routes = [
   {
@@ -31,6 +32,10 @@ const routes: Routes = [
       {
         path: 'oscAutomations',
         component: OscAutomationsViewComponent,
+      },
+      {
+        path: 'sleepAnimations',
+        component: SleepAnimationsViewComponent,
       },
       {
         path: 'batteryAutomations',

@@ -1,21 +1,37 @@
 <div class="pane">
   <div class="pane-title" translate>oscAutomations.title</div>
-  <div class="tab-bar">
-    <div class="tab" [class.active]="activeTab === 'GENERAL'" (click)="activeTab = 'GENERAL'">
-      <div class="tab-label" translate>oscAutomations.tab.general</div>
+  <div class="pane-content">
+    <div class="setting-category">
+      <p translate>oscAutomations.general.description</p>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>oscAutomations.general.onSleepEnable.title</span>
+            <span translate>oscAutomations.general.onSleepEnable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-osc-script-button
+              [label]="'oscAutomations.general.onSleepEnable.script'"
+              [script]="config.onSleepModeEnable"
+              (scriptChange)="setOscScript('onSleepModeEnable', $event)"
+            ></app-osc-script-button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>oscAutomations.general.onSleepDisable.title</span>
+            <span translate>oscAutomations.general.onSleepDisable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-osc-script-button
+              [label]="'oscAutomations.general.onSleepDisable.script'"
+              [script]="config.onSleepModeDisable"
+              (scriptChange)="setOscScript('onSleepModeDisable', $event)"
+            ></app-osc-script-button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'SLEEPING_ANIMATIONS'"
-      (click)="activeTab = 'SLEEPING_ANIMATIONS'"
-    >
-      <div class="tab-label" translate>oscAutomations.tab.sleepingAnimations</div>
-    </div>
-  </div>
-  <div class="pane-content" *ngIf="activeTab === 'SLEEPING_ANIMATIONS'">
-    <app-sleeping-animations-tab></app-sleeping-animations-tab>
-  </div>
-  <div class="pane-content" *ngIf="activeTab === 'GENERAL'">
-    <app-osc-general-tab></app-osc-general-tab>
+
   </div>
 </div>

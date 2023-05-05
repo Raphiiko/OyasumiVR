@@ -14,8 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tools for clearing (parts of) Oyasumi's persistent data.
 - Button for opening Oyasumi's log folder.
 
-### Updated
+### Changed
 
+- Separated sleeping animations into its own navigation item.
 - Updated splash screen.
 - Updated to Angular 16.
 - Updated to Tauri 1.3.

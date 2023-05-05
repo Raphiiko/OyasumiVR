@@ -1,5 +1,13 @@
 @import 'panes';
 
+:host > .pane {
+  height: 100%;
+
+  > .pane-content {
+    overflow-y: overlay;
+  }
+}
+
 .manual-control-pane {
   margin-top: 1em;
 

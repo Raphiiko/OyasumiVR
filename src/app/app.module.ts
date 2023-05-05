@@ -101,13 +101,12 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
-import { SleepingAnimationsTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/sleeping-animations-tab/sleeping-animations-tab.component';
-import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automations-view/tabs/osc-general-tab/osc-general-tab.component';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
 import pMinDelay from 'p-min-delay';
 import { SPLASH_MIN_DURATION } from './globals';
 import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
+import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -174,9 +173,8 @@ export function createTranslateLoader(http: HttpClient) {
     EventLogComponent,
     EventLogEntryComponent,
     ResolutionAutomationsViewComponent,
-    SleepingAnimationsTabComponent,
-    OscGeneralTabComponent,
     BaseModalComponent,
+    SleepAnimationsViewComponent,
   ],
   imports: [
     CommonModule,

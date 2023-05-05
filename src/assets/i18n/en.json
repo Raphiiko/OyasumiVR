@@ -665,7 +665,8 @@
       "vrcAutomations": "VRChat Automations",
       "brightnessAutomations": "Brightness Automations",
       "about": "About Oyasumi",
-      "resolutionAutomations": "Resolution Automations"
+      "resolutionAutomations": "Resolution Automations",
+      "sleepAnimations": "Sleep Animations"
     },
     "device-list": {
       "title": "Devices",
@@ -862,5 +863,8 @@
       "custom": "Custom",
       "auto": "Auto"
     }
+  },
+  "sleepAnimations": {
+    "title": "Sleep Animations"
   }
 }

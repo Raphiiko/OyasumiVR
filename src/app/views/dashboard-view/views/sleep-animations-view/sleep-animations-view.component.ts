@@ -1,34 +1,34 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
+import { hshrink, noop, vshrink } from '../../../../utils/animations';
+import { Subject, takeUntil } from 'rxjs';
+import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
   SLEEPING_ANIMATION_PRESETS,
   SleepingAnimationPreset,
   SleepingAnimationPresetNote,
-} from '../../../../../../models/sleeping-animation-presets';
+} from '../../../../models/sleeping-animation-presets';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepingAnimationsAutomationConfig,
-} from '../../../../../../models/automations';
+} from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
-import { SleepingPose } from '../../../../../../models/sleeping-pose';
-import { AutomationConfigService } from '../../../../../../services/automation-config.service';
-import { OscService } from '../../../../../../services/osc.service';
-import { SleepingAnimationsAutomationService } from '../../../../../../services/osc-automations/sleeping-animations-automation.service';
-import { SleepService } from '../../../../../../services/sleep.service';
-import { ModalService } from 'src/app/services/modal.service';
-import { Subject, takeUntil } from 'rxjs';
-import { OscScript } from '../../../../../../models/osc-script';
+import { SleepingPose } from '../../../../models/sleeping-pose';
+import { AutomationConfigService } from '../../../../services/automation-config.service';
+import { OscService } from '../../../../services/osc.service';
+import { SleepingAnimationsAutomationService } from '../../../../services/osc-automations/sleeping-animations-automation.service';
+import { SleepService } from '../../../../services/sleep.service';
+import { ModalService } from '../../../../services/modal.service';
+import { OscScript } from '../../../../models/osc-script';
 import { open } from '@tauri-apps/api/shell';
-import { SleepingAnimationPresetModalComponent } from '../../../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
-import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
+import { SleepingAnimationPresetModalComponent } from '../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 
 @Component({
-  selector: 'app-sleeping-animations-tab',
-  templateUrl: './sleeping-animations-tab.component.html',
-  styleUrls: ['./sleeping-animations-tab.component.scss'],
+  selector: 'app-sleep-animations-view',
+  templateUrl: './sleep-animations-view.component.html',
+  styleUrls: ['./sleep-animations-view.component.scss'],
   animations: [noop(), vshrink(), hshrink()],
 })
-export class SleepingAnimationsTabComponent implements OnDestroy, OnInit {
+export class SleepAnimationsViewComponent implements OnDestroy, OnInit {
   private destroy$: Subject<void> = new Subject();
   oscOptionsExpanded = false;
   oscPresetOptions: SelectBoxItem[] = [
