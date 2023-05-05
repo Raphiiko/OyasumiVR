@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option to increase the detection window for sleep detection.
 - New "Advanced" tab in the settings for advanced configuration options.
 - Tools for clearing (parts of) Oyasumi's persistent data.
+- Button for opening Oyasumi's log folder.
 
 ### Updated
 
