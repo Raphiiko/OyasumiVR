@@ -9,7 +9,7 @@
       </div>
       <div class="alert-content">
         <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
-        <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login </button>
+        <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
       </div>
     </div>
     <div class="alert warning" *ngIf="isOnBusyStatus" @vshrink>
@@ -82,10 +82,10 @@
 <div class="player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>
   <div class="pane player-list">
     <div class="pane-title" *ngIf="config.listMode === 'WHITELIST'" translate
-      >auto-invite-request-accept.whitelist
+    >auto-invite-request-accept.whitelist
     </div>
     <div class="pane-title" *ngIf="config.listMode === 'BLACKLIST'" translate
-      >auto-invite-request-accept.blacklist
+    >auto-invite-request-accept.blacklist
     </div>
     <div class="pane-content">
       <div class="players-list" @noop>
@@ -96,7 +96,7 @@
                 draggable="false"
                 onerror="this.style.display='none'"
                 loading="lazy"
-                [src]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
+                [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
               />
             </div>
             <div class="player-name">{{ player.displayName }}</div>

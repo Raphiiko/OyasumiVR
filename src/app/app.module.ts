@@ -107,6 +107,7 @@ import { SPLASH_MIN_DURATION } from './globals';
 import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
+import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -175,6 +176,7 @@ export function createTranslateLoader(http: HttpClient) {
     ResolutionAutomationsViewComponent,
     BaseModalComponent,
     SleepAnimationsViewComponent,
+    ImgSmoothLoaderDirective,
   ],
   imports: [
     CommonModule,

@@ -12,13 +12,13 @@ import { fade } from '../../utils/animations';
 })
 export class DashboardViewComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
-  protected backgroundImage?: SafeStyle = this.sanitizer.bypassSecurityTrustStyle('none');
+  protected backgroundImage: string | null = null;
 
   constructor(private background: BackgroundService, private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     this.background.background.pipe(takeUntil(this.destroy$)).subscribe((url) => {
-      this.backgroundImage = this.sanitizer.bypassSecurityTrustStyle(url ? `url(${url})` : 'none');
+      this.backgroundImage = url;
     });
   }
 

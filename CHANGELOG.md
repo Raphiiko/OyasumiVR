@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Separated sleeping animations into its own navigation item.
+- Remote images now fade in smoothly upon load.
 - Updated splash screen.
 - Updated to Angular 16.
 - Updated to Tauri 1.3.
