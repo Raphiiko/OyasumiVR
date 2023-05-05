@@ -54,7 +54,7 @@ import { UpdateModalComponent } from './components/update-modal/update-modal.com
 import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
-import { filter, firstValueFrom } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat.service';
 import { SettingsGeneralTabComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/settings-general-tab.component';
 import { SettingsUpdatesTabComponent } from './views/dashboard-view/views/settings-view/settings-updates-tab/settings-updates-tab.component';
@@ -249,8 +249,8 @@ export class AppModule {
         await this.preloadAssets();
         // Initialize app settings and event log
         await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
-        // Initialize telemetry and updates
-        await Promise.all([this.updateService.init(), this.telemetryService.init()]);
+        // Initialize telemetry
+        await Promise.all([this.telemetryService.init()]);
         // Initialize general utility services
         await Promise.all([
           this.openvrService.init(),
@@ -298,17 +298,19 @@ export class AppModule {
       })(),
       SPLASH_MIN_DURATION
     );
+    // Close the splash screen after initialization
     await invoke('close_splashscreen');
-    // Language selection modal
-    this.appSettingsService.loadedDefaults
-      .pipe(filter((loadedDefaults) => loadedDefaults))
-      .subscribe(() => {
-        this.modalService
-          .addModal(LanguageSelectModalComponent, void 0, {
-            closeOnEscape: false,
-          })
-          .subscribe();
-      });
+    // Show language selection modal if user hasn't picked a language yet
+    const settings = await firstValueFrom(this.appSettingsService.settings);
+    if (!settings.userLanguagePicked) {
+      await firstValueFrom(
+        this.modalService.addModal(LanguageSelectModalComponent, void 0, {
+          closeOnEscape: false,
+        })
+      );
+    }
+    // Only initialize update service after language selection
+    await this.updateService.init();
   }
 
   async preloadAssets() {

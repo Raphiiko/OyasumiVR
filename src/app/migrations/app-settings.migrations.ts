@@ -7,6 +7,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   2: from1to2,
   3: from2to3,
   4: from3to4,
+  5: from4to5,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -31,6 +32,12 @@ export function migrateAppSettings(data: any): AppSettings {
 function toLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from4to5(data: any): any {
+  data.version = 5;
+  data.userLanguagePicked = APP_SETTINGS_DEFAULT.userLanguagePicked;
   return data;
 }
 

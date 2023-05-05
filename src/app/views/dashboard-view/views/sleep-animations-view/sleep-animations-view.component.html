@@ -45,7 +45,9 @@
             <div class="alert-icon">
               <i class="material-icons-round" *ngIf="note.type === 'CAUTION'">error_outline</i>
               <i class="material-icons-outlined" *ngIf="note.type === 'INFO'">info</i>
-              <i class="material-icons-round" *ngIf="note.type === 'SUCCESS'"> check_circle_outline </i>
+              <i class="material-icons-round" *ngIf="note.type === 'SUCCESS'">
+                check_circle_outline
+              </i>
               <i class="material-icons-round" *ngIf="note.type === 'WARNING'">warning_amber</i>
             </div>
             <div class="alert-content">{{ note.text | tsTranslate }}</div>
@@ -55,7 +57,9 @@
           <div class="option">
             <div class="option-label">
               <span translate>oscAutomations.sleepingAnimations.options.positions.title</span>
-              <span translate> oscAutomations.sleepingAnimations.options.positions.description </span>
+              <span translate>
+                oscAutomations.sleepingAnimations.options.positions.description
+              </span>
             </div>
             <div class="option-actions">
               <app-osc-script-button
@@ -83,7 +87,9 @@
           <div class="option">
             <div class="option-label">
               <span translate>oscAutomations.sleepingAnimations.options.footLock.title</span>
-              <span translate> oscAutomations.sleepingAnimations.options.footLock.description </span>
+              <span translate>
+                oscAutomations.sleepingAnimations.options.footLock.description
+              </span>
             </div>
             <div class="option-actions">
               <app-osc-script-button
@@ -103,7 +109,9 @@
               <h3 translate>oscAutomations.sleepingAnimations.manualControl</h3>
               <p class="current-pose">
                 {{ 'oscAutomations.sleepingAnimations.currentPose' | translate }}:&nbsp;
-                {{ 'oscAutomations.sleepingAnimations.options.positions.' + currentPose | translate }}
+                {{
+                  'oscAutomations.sleepingAnimations.options.positions.' + currentPose | translate
+                }}
               </p>
             </div>
             <div class="manual-control-row">
@@ -115,8 +123,8 @@
               >
                 <i class="material-icons">play_arrow</i>
                 <span>
-              {{ 'oscAutomations.sleepingAnimations.options.positions.' + action | translate }}
-            </span>
+                  {{ 'oscAutomations.sleepingAnimations.options.positions.' + action | translate }}
+                </span>
               </button>
             </div>
             <div class="manual-control-row">
@@ -128,8 +136,8 @@
               >
                 <i class="material-icons">play_arrow</i>
                 <span>
-              {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
-            </span>
+                  {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
+                </span>
               </button>
             </div>
           </div>
@@ -142,9 +150,9 @@
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
-        <span translate
-        >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
-        >
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action"></div>
@@ -152,9 +160,9 @@
         <div class="setting-row-group">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-          <span translate
-          >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
-          >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -162,7 +170,9 @@
                 <input
                   type="checkbox"
                   [checked]="config.onlyIfSleepModeEnabled"
-                  (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+                  (change)="
+                    updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -170,9 +180,9 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-          <span translate
-          >oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span
-          >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -181,10 +191,10 @@
                   type="checkbox"
                   [checked]="config.onlyIfAllTrackersTurnedOff"
                   (change)="
-                updateConfig({
-                  onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff
-                })
-              "
+                    updateConfig({
+                      onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff
+                    })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -199,9 +209,9 @@
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
-        <span translate
-        >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
-        >
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -210,8 +220,8 @@
                 type="checkbox"
                 [checked]="config.lockFeetOnSleepModeEnable"
                 (change)="
-              updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
-            "
+                  updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
+                "
               />
               <span class="switch-toggle-slider"></span>
             </label>
@@ -219,9 +229,9 @@
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
-        <span translate
-        >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
-        >
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -230,10 +240,10 @@
                 type="checkbox"
                 [checked]="config.unlockFeetOnSleepModeDisable"
                 (change)="
-              updateConfig({
-                unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
-              })
-            "
+                  updateConfig({
+                    unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
+                  })
+                "
               />
               <span class="switch-toggle-slider"></span>
             </label>
@@ -241,9 +251,9 @@
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
-        <span translate
-        >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
-        >
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -252,10 +262,10 @@
                 type="checkbox"
                 [checked]="config.unlockFeetOnAutomationDisable"
                 (change)="
-              updateConfig({
-                unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
-              })
-            "
+                  updateConfig({
+                    unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
+                  })
+                "
               />
               <span class="switch-toggle-slider"></span>
             </label>
@@ -263,9 +273,9 @@
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
-        <span translate
-        >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
-        >
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
+            >
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -274,10 +284,10 @@
                 type="checkbox"
                 [checked]="config.releaseFootLockOnPoseChange"
                 (change)="
-              updateConfig({
-                releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
-              })
-            "
+                  updateConfig({
+                    releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
+                  })
+                "
               />
               <span class="switch-toggle-slider"></span>
             </label>
@@ -286,9 +296,9 @@
         <div class="setting-row-group">
           <div class="setting-row" [class.disabled]="!config.releaseFootLockOnPoseChange">
             <div class="setting-row-label" translate>
-          <span translate
-          >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
-          >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -309,4 +319,3 @@
     </div>
   </div>
 </div>
-

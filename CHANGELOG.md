@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Separated sleeping animations into its own navigation item.
 - Remote images now fade in smoothly upon load.
+- Language selection modal now always shows if the user has not picked a language.
 - Updated splash screen.
 - Updated to Angular 16.
 - Updated to Tauri 1.3.
@@ -30,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Stopped brightness automations from triggering when there is no headset available.
+- Prevent the update service from being initialised until after language selection.
 
 ## [1.6.0]
 

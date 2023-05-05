@@ -1,6 +1,7 @@
 export interface AppSettings {
-  version: 4;
+  version: 5;
   userLanguage: string;
+  userLanguagePicked: boolean;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
   oscSendingHost: string;
@@ -12,8 +13,9 @@ export interface AppSettings {
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 4,
+  version: 5,
   userLanguage: 'en',
+  userLanguagePicked: false,
   askForAdminOnStart: false,
   lighthouseConsolePath:
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',

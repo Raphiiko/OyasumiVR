@@ -16,8 +16,10 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
-  private _loadedDefaults: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  loadedDefaults: Observable<boolean> = this._loadedDefaults.asObservable();
+  private _loadedDefaults: BehaviorSubject<boolean | undefined> = new BehaviorSubject<
+    boolean | undefined
+  >(undefined);
+  loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
   constructor(private translateService: TranslateService) {}
 
@@ -47,7 +49,7 @@ export class AppSettingsService {
     }
     this._settings.next(settings);
     await this.saveSettings();
-    if (loadedDefaults) this._loadedDefaults.next(true);
+    this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {

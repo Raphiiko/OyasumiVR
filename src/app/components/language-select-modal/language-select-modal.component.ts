@@ -18,7 +18,7 @@ export class LanguageSelectModalComponent extends BaseModalComponent<void, void>
   }
 
   async selectLanguage(language: { code: string; label: string; flag?: string }) {
-    this.settingsService.updateSettings({ userLanguage: language.code });
+    this.settingsService.updateSettings({ userLanguage: language.code, userLanguagePicked: true });
     await this.close();
   }
 }
