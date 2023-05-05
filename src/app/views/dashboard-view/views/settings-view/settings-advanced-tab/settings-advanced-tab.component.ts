@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error, info } from 'tauri-plugin-log-api';
 import { ConfirmModalComponent } from '../../../../../components/confirm-modal/confirm-modal.component';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { invoke } from '@tauri-apps/api';
 import { relaunch } from '@tauri-apps/api/process';
 import { EventLogService } from '../../../../../services/event-log.service';
@@ -51,7 +51,7 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
     settingsService: AppSettingsService,
     private router: Router,
     private translate: TranslateService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private eventLogService: EventLogService
   ) {
     super(settingsService);

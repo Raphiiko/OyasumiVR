@@ -1,5 +1,4 @@
 import { Component, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { SimpleModalComponent, SimpleModalService } from 'ngx-simple-modal';
 import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
@@ -13,6 +12,8 @@ import { SleepDetectorCalibrationModalComponent } from '../sleep-detector-calibr
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { Router } from '@angular/router';
 import { debounce } from 'typescript-debounce-decorator';
+import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
+import { ModalService } from '../../../../../services/modal.service';
 
 export interface SleepDetectorEnableSleepModeModalInputModel {}
 
@@ -25,7 +26,7 @@ export interface SleepDetectorEnableSleepModeModalOutputModel {}
   animations: [fadeUp(), fade(), triggerChildren()],
 })
 export class SleepDetectorEnableSleepModeModalComponent
-  extends SimpleModalComponent<
+  extends BaseModalComponent<
     SleepDetectorEnableSleepModeModalInputModel,
     SleepDetectorEnableSleepModeModalOutputModel
   >
@@ -66,7 +67,7 @@ export class SleepDetectorEnableSleepModeModalComponent
   constructor(
     private settingsService: AppSettingsService,
     private automationConfigService: AutomationConfigService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private router: Router
   ) {
     super();
@@ -114,7 +115,6 @@ export class SleepDetectorEnableSleepModeModalComponent
         },
         {
           closeOnEscape: false,
-          closeOnClickOutside: false,
         }
       )
       .pipe(filter((data) => !!data))

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fadeUp, hshrink, vshrink } from 'src/app/utils/animations';
 import {
   BehaviorSubject,
@@ -25,7 +25,7 @@ interface VRChatLoginTFAModalOutputModel {
   animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class VRChatLoginTFAModalComponent
-  extends SimpleModalComponent<VRChatLoginTFAModalInputModel, VRChatLoginTFAModalOutputModel>
+  extends BaseModalComponent<VRChatLoginTFAModalInputModel, VRChatLoginTFAModalOutputModel>
   implements OnInit, VRChatLoginTFAModalInputModel, OnDestroy
 {
   lastCodeInvalid = false;

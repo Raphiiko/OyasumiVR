@@ -3,7 +3,7 @@ import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { EventLogEntry } from '../../models/event-log-entry';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
 
 @Component({
@@ -25,7 +25,7 @@ export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private eventLog: EventLogService,
     private cdr: ChangeDetectorRef,
-    private modalService: SimpleModalService
+    private modalService: ModalService
   ) {
     this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount]).pipe(
       takeUntil(this.destroy$),

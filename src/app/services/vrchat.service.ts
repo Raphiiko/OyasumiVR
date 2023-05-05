@@ -21,7 +21,7 @@ import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
 import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { TaskQueue } from '../utils/task-queue';
 import { WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
@@ -84,7 +84,7 @@ export class VRChatService {
   ]).pipe(map(([world]) => world));
   public notifications = this._notifications.asObservable();
 
-  constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
+  constructor(private modalService: ModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
   }
 
@@ -240,7 +240,6 @@ export class VRChatService {
         {},
         {
           closeOnEscape: false,
-          closeOnClickOutside: false,
         }
       )
       .subscribe(() => {});

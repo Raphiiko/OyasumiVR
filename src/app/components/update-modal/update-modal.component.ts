@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UpdateManifest } from '@tauri-apps/api/updater';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
 import { fadeUp, hshrink } from '../../utils/animations';
 import { getVersion } from '../../utils/app-utils';
@@ -18,7 +18,7 @@ interface UpdateModalOutputModel {}
   animations: [hshrink(), fadeUp()],
 })
 export class UpdateModalComponent
-  extends SimpleModalComponent<UpdateModalInputModel, UpdateModalOutputModel>
+  extends BaseModalComponent<UpdateModalInputModel, UpdateModalOutputModel>
   implements OnInit, UpdateModalInputModel
 {
   manifest?: UpdateManifest;

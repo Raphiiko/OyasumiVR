@@ -15,12 +15,6 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import {
-  DefaultSimpleModalOptionConfig,
-  defaultSimpleModalOptions,
-  SimpleModalModule,
-  SimpleModalService,
-} from 'ngx-simple-modal';
 import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
 import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
@@ -112,6 +106,8 @@ import { OscGeneralTabComponent } from './views/dashboard-view/views/osc-automat
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
 import pMinDelay from 'p-min-delay';
 import { SPLASH_MIN_DURATION } from './globals';
+import { ModalService } from './services/modal.service';
+import { BaseModalComponent } from './components/base-modal/base-modal.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -180,13 +176,13 @@ export function createTranslateLoader(http: HttpClient) {
     ResolutionAutomationsViewComponent,
     SleepingAnimationsTabComponent,
     OscGeneralTabComponent,
+    BaseModalComponent,
   ],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    SimpleModalModule,
     HttpClientModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
@@ -198,21 +194,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     NgPipesModule,
   ],
-  providers: [
-    ThemeService,
-    {
-      provide: DefaultSimpleModalOptionConfig,
-      useValue: {
-        ...defaultSimpleModalOptions,
-        ...{
-          closeOnEscape: true,
-          closeOnClickOutside: false,
-          wrapperDefaultClasses: 'modal-wrapper',
-          animationDuration: '150',
-        },
-      },
-    },
-  ],
+  providers: [ThemeService],
 })
 export class AppModule {
   constructor(
@@ -226,7 +208,7 @@ export class AppModule {
     private updateService: UpdateService,
     private telemetryService: TelemetryService,
     private appSettingsService: AppSettingsService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private vrchatService: VRChatService,
     private vrchatLogService: VRChatLogService,
     private imageCacheService: ImageCacheService,
@@ -324,7 +306,6 @@ export class AppModule {
         this.modalService
           .addModal(LanguageSelectModalComponent, void 0, {
             closeOnEscape: false,
-            closeOnClickOutside: false,
           })
           .subscribe();
       });

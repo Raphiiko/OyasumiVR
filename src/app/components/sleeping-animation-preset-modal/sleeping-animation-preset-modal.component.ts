@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { SleepingAnimationPreset } from '../../models/sleeping-animation-presets';
 import { open } from '@tauri-apps/api/shell';
 
@@ -13,7 +13,7 @@ interface SleepingAnimationPresetModalInputModel {
   styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
 })
 export class SleepingAnimationPresetModalComponent
-  extends SimpleModalComponent<SleepingAnimationPresetModalInputModel, void>
+  extends BaseModalComponent<SleepingAnimationPresetModalInputModel, void>
   implements OnInit, SleepingAnimationPresetModalInputModel
 {
   preset?: SleepingAnimationPreset;

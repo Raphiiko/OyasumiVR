@@ -16,7 +16,7 @@ import {
   tap,
 } from 'rxjs';
 import { CurrentUser as VRChatUser } from 'vrchat/dist';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { OscService } from '../../../../../services/osc.service';
 import { isValidHostname, isValidIPv4, isValidIPv6 } from '../../../../../utils/regex-utils';
 import { APP_SETTINGS_DEFAULT } from '../../../../../models/settings';
@@ -56,7 +56,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
   constructor(
     settingsService: AppSettingsService,
     private vrchat: VRChatService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private osc: OscService
   ) {
     super(settingsService);

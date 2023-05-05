@@ -3,7 +3,7 @@ import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
 import { NVMLService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import { ElevatedSidecarService } from '../../../../../services/elevated-sidecar.service';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { debounceTime, firstValueFrom, Subject, takeUntil } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
@@ -34,7 +34,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
     private nvml: NVMLService,
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private settingsService: AppSettingsService
   ) {
     this.gpuAutomations.nvmlDevices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {

@@ -15,7 +15,7 @@ import { AutomationConfigService } from '../../../../../../services/automation-c
 import { OscService } from '../../../../../../services/osc.service';
 import { SleepingAnimationsAutomationService } from '../../../../../../services/osc-automations/sleeping-animations-automation.service';
 import { SleepService } from '../../../../../../services/sleep.service';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { Subject, takeUntil } from 'rxjs';
 import { OscScript } from '../../../../../../models/osc-script';
 import { open } from '@tauri-apps/api/shell';
@@ -63,7 +63,7 @@ export class SleepingAnimationsTabComponent implements OnDestroy, OnInit {
     private osc: OscService,
     private sleepingAnimationsAutomation: SleepingAnimationsAutomationService,
     private sleep: SleepService,
-    private modalService: SimpleModalService
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {

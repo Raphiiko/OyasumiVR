@@ -4,7 +4,7 @@ import { checkUpdate, installUpdate, UpdateManifest } from '@tauri-apps/api/upda
 import { relaunch } from '@tauri-apps/api/process';
 import { listen } from '@tauri-apps/api/event';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { getVersion } from '../utils/app-utils';
 import { info } from 'tauri-plugin-log-api';
@@ -18,7 +18,7 @@ export class UpdateService {
   public updateAvailable: Observable<{ checked: boolean; manifest?: UpdateManifest }> =
     this._updateAvailable.asObservable();
 
-  constructor(private modalService: SimpleModalService) {}
+  constructor(private modalService: ModalService) {}
 
   async init() {
     listen('tauri://update-status', (res) => {
@@ -84,7 +84,6 @@ export class UpdateService {
           },
           {
             closeOnEscape: false,
-            closeOnClickOutside: false,
           }
         )
         .subscribe();

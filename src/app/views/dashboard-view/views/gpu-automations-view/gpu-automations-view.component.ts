@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { fade, hshrink, noop, vshrink } from 'src/app/utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
 import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
@@ -35,7 +35,7 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
     private nvml: NVMLService,
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private settingsService: AppSettingsService
   ) {
     combineLatest([sidecar.sidecarRunning, this.gpuAutomations.isEnabled()])

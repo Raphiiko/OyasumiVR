@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import { LimitedUser } from 'vrchat/dist';
 import { VRChatService } from '../../services/vrchat.service';
@@ -42,7 +42,7 @@ export interface FriendSelectionOutputModel {
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
 })
 export class FriendSelectionModalComponent
-  extends SimpleModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>
+  extends BaseModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>
   implements OnInit, FriendSelectionInputModel, OnDestroy
 {
   private destroy$: Subject<void> = new Subject<void>();

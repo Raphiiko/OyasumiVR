@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { fade, vshrink } from '../../../../utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { TimeEnableSleepModeModalComponent } from './time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { filter, Subject, takeUntil } from 'rxjs';
@@ -32,7 +32,7 @@ export class SleepDetectionViewComponent implements OnInit, OnDestroy {
   automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
 
   constructor(
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private automationConfigService: AutomationConfigService,
     private translate: TranslateService
   ) {}

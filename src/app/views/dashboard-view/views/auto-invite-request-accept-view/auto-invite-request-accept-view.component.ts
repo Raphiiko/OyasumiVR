@@ -3,7 +3,7 @@ import { SelectBoxItem } from '../../../../components/select-box/select-box.comp
 import { distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat.service';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import {
   FriendSelectionModalComponent,
   SelectedFriendPlayer,
@@ -53,9 +53,9 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
 
   constructor(
     protected vrchat: VRChatService,
-    private modal: SimpleModalService,
+    private modal: ModalService,
     private automationConfig: AutomationConfigService,
-    private modalService: SimpleModalService
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
@@ -132,7 +132,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit, OnDestroy {
         },
       })
       .subscribe(async (data) => {
-        if (data.confirmed) {
+        if (data?.confirmed) {
           this.playerList = this.playerList.filter((p) => p.id !== player.id);
           await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
         }

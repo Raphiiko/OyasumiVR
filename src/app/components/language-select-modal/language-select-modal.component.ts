@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { fadeUp } from '../../utils/animations';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { LANGUAGES } from 'src/app/globals';
 import { AppSettingsService } from '../../services/app-settings.service';
 
@@ -10,7 +10,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   styleUrls: ['./language-select-modal.component.scss'],
   animations: [fadeUp()],
 })
-export class LanguageSelectModalComponent extends SimpleModalComponent<void, void> {
+export class LanguageSelectModalComponent extends BaseModalComponent<void, void> {
   languages = LANGUAGES;
 
   constructor(private settingsService: AppSettingsService) {

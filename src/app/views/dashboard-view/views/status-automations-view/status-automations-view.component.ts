@@ -11,7 +11,7 @@ import {
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
@@ -75,7 +75,7 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
     private vrchat: VRChatService,
     private sanitizer: DomSanitizer,
     private automationConfig: AutomationConfigService,
-    private modalService: SimpleModalService
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {
