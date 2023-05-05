@@ -24,7 +24,7 @@ jobs:
         with:
           node-version: 16
       - name: Install NodeJS dependencies
-        run: npm install
+        run: npm install --force
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:

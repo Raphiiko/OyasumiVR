@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 16
       - name: Install NodeJS dependencies
-        run: npm install
+        run: npm install --force
       - name: Set app version to DEV version
         run: npm run set-version DEV
       - name: Lint Angular project
