@@ -10,10 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Option to increase the detection window for sleep detection.
+- New "Advanced" tab in the settings for advanced configuration options.
+- Tools for clearing (parts of) Oyasumi's persistent data.
+
+### Updated
+
+- Updated splash screen.
+- Updated to Angular 16.
+- Updated to Tauri 1.3.
 
 ### Removed
 
 - Removed experimental flag for sleep detection feature.
+- Removed debug tab in the settings view.
 
 ## [1.6.0]
 
@@ -21,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Display brightness automations for Valve Index.
 - Automations for adjusting SteamVR's render resolution.
-- Event log for displaying actions taken by Oyasumi
+- Event log for displaying actions taken by Oyasumi.
 - OSC Automations for sending custom OSC commands when the sleep mode changes.
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
@@ -31,7 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent sleep detector from triggering when sleep mode was disabled less than 15 minutes ago.
 - Bulk removing friends from the player list for automatic invite request accepts, now requires confirmation.
 - Reorganized navigation bar to reduce clutter.
-- Updated to Angular 15
+- Updated to Angular 15.
 
 ## [1.5.1]
 
