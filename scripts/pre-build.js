@@ -1,9 +1,30 @@
-import { blurhashToCss } from 'blurhash-to-css';
 import fs from 'fs';
+import { blurhashToCss } from 'blurhash-to-css';
 import sharp from 'sharp';
 import { encode } from 'blurhash';
 import Css from 'json-to-css';
 
+//
+// BUILD PRELOAD ASSETS JSON
+//
+function getFilePaths(folder, prefix) {
+  return fs.readdirSync(folder).map((file) => `${prefix}/${file}`);
+}
+
+const imageUrls = [
+  ...getFilePaths('./src/assets/img', '/assets/img'),
+  'https://avatars.githubusercontent.com/u/111654848', // Raphiiko Avatar
+];
+
+const preloadAssetsData = {
+  imageUrls,
+};
+
+fs.writeFileSync('./src/assets/preload-assets.json', JSON.stringify(preloadAssetsData));
+
+//
+// GENERATE BLURHASH CSS FOR SPLASH SCREEN IMAGE
+//
 const kebabize = (str) =>
   str.replace(/[A-Z]+(?![a-z])|[A-Z]/g, ($, ofs) => (ofs ? '-' : '') + $.toLowerCase());
 
@@ -30,3 +51,9 @@ encodeImageToBlurhash('./src/assets/splashscreen/splash.jpg').then((hash) => {
     '/* GENERATED FILE, DO NOT EDIT!*/\n' + css
   );
 });
+
+//
+// COPY DEPENDENCIES
+//
+fs.copyFileSync('CHANGELOG.md', 'src/assets/CHANGELOG.md');
+fs.copyFileSync('src-tauri/icons/Square150x150Logo.png', 'src/assets/img/icon_150x150.png');

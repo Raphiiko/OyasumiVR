@@ -13,8 +13,8 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ windows-latest ]
-
     runs-on: ${{ matrix.platform }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Setup NodeJS
@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 16
       - name: Install NodeJS dependencies
-        run: npm install --force
+        run: npm install
       - name: Set app version to DEV version
         run: npm run set-version DEV
       - name: Lint Angular project
@@ -53,14 +53,6 @@ jobs:
           cd src-tauri
           cargo clippy --all-features --no-deps # Check Rust code in core module
           rm src-elevated-sidecar/target/release/oyasumi-elevated-sidecar*.exe # Clean up dummy sidecar executable(s)
-      - name: Delete new development release and tag if they exist
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        continue-on-error: true
-        with:
-          delete_release: true
-          tag_name: oyasumi-vDEV-new
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -75,64 +67,59 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: oyasumi-vDEV-new
-          releaseName: Oyasumi Development Build
-          releaseBody: ${{ steps.changelog_reader.outputs.changes }}
+          releaseId: 102092545
+          tagName: oyasumi-vDEV
           releaseDraft: false
           prerelease: true
           includeDebug: true
           includeRelease: false
-          args: --verbose
-      - name: Get current development release ID if it exists
-        uses: actions/github-script@v6
-        continue-on-error: true
-        id: get-current-release-id
+          includeUpdaterJson: true
+      - name: Update release data
+        uses: actions/github-script@v3
         with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: "oyasumi-vDEV"
-            })
-            return release.data.id
-      - name: Get new development release ID
-        uses: actions/github-script@v6
-        id: get-new-release-id
+            console.log("Deleting existing oyasumi-vDEV tag...");
+            try {
+              await github.git.deleteRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: "tags/oyasumi-vDEV"
+              })
+              console.log("Deleted existing oyasumi-vDEV tag!");
+            } catch (e) {
+              console.log("The oyasumi-vDEV tag doesn't exist yet: " + e)
+            }
+            console.log("Recreating oyasumi-vDEV tag on current commit...");
+            try {
+              await github.git.createRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: "refs/tags/oyasumi-vDEV",
+                sha: context.sha
+              })
+              console.log("Recreated oyasumi-vDEV tag!");
+            } catch (e) {
+              console.log("Could not recreate oyasumi-vDEV tag: " + e)
+            }
+            console.log("Updating release data...");
+            try {
+              await github.request('PATCH /repos/Raphiiko/Oyasumi/releases/102092545', {
+                tag_name: 'oyasumi-vDEV',
+                name: 'Oyasumi Development Build',
+                body: `${{ steps.changelog_reader.outputs.changes }}`,
+                draft: false,
+                prerelease: true
+              })
+              console.log("Updated release data!");
+            } catch (e) {
+              console.log("Could not update release data: " + e)
+            }
+      - name: Update the update manifest
+        uses: exuanbo/actions-deploy-gist@v1
         with:
-          script: |
-            const release = await github.rest.repos.getReleaseByTag({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag: "oyasumi-vDEV-new"
-            })
-            return release.data.id
-      - name: Delete current development release and tag if they exist
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        continue-on-error: true
-        with:
-          delete_release: true # default: false
-          tag_name: oyasumi-vDEV
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create development tag on current commit
-        uses: EndBug/latest-tag@latest
-        with:
-          ref: oyasumi-vDEV
-      - name: Set new tag on new development release
-        uses: actions/github-script@v6
-        env:
-          release_id: ${{ steps.get-new-release-id.outputs.result }}
-        with:
-          script: |
-            github.rest.repos.updateRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: process.env.release_id,
-              tag_name: "oyasumi-vDEV"
-            })
-      - name: Delete temporary development tag
-        uses: dev-drprasad/delete-tag-and-release@v0.2.1
-        with:
-          tag_name: oyasumi-vDEV-new
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN_GIST }}
+          gist_id: 8af3d105fe9a59db304cca2cfea216c8
+          file_path: latest.json
+          gist_file_name: 'oyasumi_update_manifest_dev.json'
+          gist_description: Oyasumi Update Manifest [Development Channel]

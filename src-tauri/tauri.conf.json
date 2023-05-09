@@ -79,19 +79,26 @@
         "sounds/*.ogg"
       ],
       "shortDescription": "",
-      "targets": "all",
+      "targets": [
+        "nsis",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
-        "wix": {
-          "language": [
-            "en-US",
-            "nl-NL",
-            "ja-JP",
-            "ko-KR",
-            "zh-TW",
-            "zh-CN"
+        "nsis": {
+          "license": "../LICENSE.md",
+          "installerIcon": "icons/icon.ico",
+          "headerImage": "images/installer_header.bmp",
+          "sidebarImage": "images/installer_sidebar.bmp",
+          "displayLanguageSelector": true,
+          "installMode": "both",
+          "languages": [
+            "English",
+            "French",
+            "SimpChinese",
+            "TradChinese"
           ]
         }
       }

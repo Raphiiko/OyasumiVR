@@ -240,7 +240,7 @@
   dependencies:
     "tslib" "^2.3.0"
 
-"@angular/core@^16.0.0", "@angular/core@>=13.0.0", "@angular/core@14 - 15", "@angular/core@16.0.0":
+"@angular/core@^16.0.0", "@angular/core@>=13.0.0", "@angular/core@>=14", "@angular/core@16.0.0":
   "integrity" "sha512-scppDxtXubum6ZiGu3ogmReBtMuA5XXk5FL3YKLb3c9O7q9Z5PC8KNQ6SsaOwEb6oW+0BWXMV698p/zmd0J4tA=="
   "resolved" "https://registry.npmjs.org/@angular/core/-/core-16.0.0.tgz"
   "version" "16.0.0"
@@ -1612,7 +1612,7 @@
   "resolved" "https://registry.npmjs.org/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz"
   "version" "3.1.0"
 
-"@tauri-apps/api@^1.2.0":
+"@tauri-apps/api@^1.2.0", "@tauri-apps/api@^1.3.0":
   "integrity" "sha512-AH+3FonkKZNtfRtGrObY38PrzEj4d+1emCbwNGu0V2ENbXjlLHMZQlUh+Bhu/CRmjaIwZMGJ3yFvWaZZgTHoog=="
   "resolved" "https://registry.npmjs.org/@tauri-apps/api/-/api-1.3.0.tgz"
   "version" "1.3.0"
@@ -1622,7 +1622,7 @@
   "resolved" "https://registry.npmjs.org/@tauri-apps/cli-win32-x64-msvc/-/cli-win32-x64-msvc-1.3.0.tgz"
   "version" "1.3.0"
 
-"@tauri-apps/cli@^1.2.0":
+"@tauri-apps/cli@^1.3.0":
   "integrity" "sha512-H65YQQkE6SBTQ+KlqTmzx7oCL/2p36v2jPFVNHBhZ5EN7g0VLYmImh9TFcB/QsO2aT+sVlRZSmTpL3R0Iiu8pA=="
   "resolved" "https://registry.npmjs.org/@tauri-apps/cli/-/cli-1.3.0.tgz"
   "version" "1.3.0"
@@ -5867,10 +5867,10 @@
   "resolved" "https://registry.npmjs.org/neo-async/-/neo-async-2.6.2.tgz"
   "version" "2.6.2"
 
-"ngx-pipes@^3.2.0":
-  "integrity" "sha512-ISfWCtGeaY1XEl4rbwXcBOH+EOq+IVgqjo0Q+4uExfjrcVkAuHe8LjLHJbpDzp80ln3yClNcLwnS5OkcFbwwpA=="
-  "resolved" "https://registry.npmjs.org/ngx-pipes/-/ngx-pipes-3.2.0.tgz"
-  "version" "3.2.0"
+"ngx-pipes@^3.2.2":
+  "integrity" "sha512-nhNIUJe/bud5ir4RD2YDA6MdrJUh3YASIcNrMFX9WljTxuvAb99SZ88PaKSFGy9SXjHg8MxjxHfCoOLlTkxxlQ=="
+  "resolved" "https://registry.npmjs.org/ngx-pipes/-/ngx-pipes-3.2.2.tgz"
+  "version" "3.2.2"
   dependencies:
     "postcss" "^8.4.19"
     "tslib" "^2.3.0"
@@ -7602,22 +7602,19 @@
     "yallist" "^4.0.0"
 
 "tauri-plugin-fs-extra-api@github:tauri-apps/tauri-plugin-fs-extra":
-  "integrity" "sha512-yTt33/ZgkyiHVzk7TEQtBiumEyiSEcRPMeG+h6QJnZeVfl6edsB+AJz9EmSZ0LV+PCazaoaWpzSgoGv31/qb+Q=="
-  "resolved" "https://codeload.github.com/tauri-apps/tauri-plugin-fs-extra/tar.gz/ea47666db97e48e2230dd330fd791a7180d0586d"
+  "resolved" "git+ssh://git@github.com/tauri-apps/tauri-plugin-fs-extra.git#ea47666db97e48e2230dd330fd791a7180d0586d"
   "version" "0.0.0"
   dependencies:
     "@tauri-apps/api" "^1.2.0"
 
 "tauri-plugin-log-api@github:tauri-apps/tauri-plugin-log#dev":
-  "integrity" "sha512-bZFjquDs762oit4/o47xqslBrPXK3P1+Wqq30X86FbjNW9cwPBfY/hId1w/BOeW3BialMQQ9Sf1zmafHyAEtnA=="
-  "resolved" "https://codeload.github.com/tauri-apps/tauri-plugin-log/tar.gz/be811332676ff73e1e891f31ce3de8d447fdf07e"
+  "resolved" "git+ssh://git@github.com/tauri-apps/tauri-plugin-log.git#be811332676ff73e1e891f31ce3de8d447fdf07e"
   "version" "0.0.0"
   dependencies:
     "@tauri-apps/api" "^1.2.0"
 
 "tauri-plugin-store-api@github:tauri-apps/tauri-plugin-store#dev":
-  "integrity" "sha512-b4Pr2f6aGNxK8oI1ZPApag9a2DIO9BOwexuMKsGdAVTsPLniic1oXXJjuk9JognFDLIpLzAN9wTaHUYNI2rZ9A=="
-  "resolved" "https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/f4ef29684e4a32eddf51befaae98a5e498df8574"
+  "resolved" "git+ssh://git@github.com/tauri-apps/tauri-plugin-store.git#f4ef29684e4a32eddf51befaae98a5e498df8574"
   "version" "0.0.0"
   dependencies:
     "@tauri-apps/api" "^1.2.0"
@@ -7987,8 +7984,7 @@
   "version" "2.0.1"
 
 "vrchat@github:Raphiiko/vrchatapi-javascript#oyasumi-patch":
-  "integrity" "sha512-YrZ0T93G7fMtxISPe6rYWwbtizw3dSm9hi/KIDiwOSWZlbWg4h3h+X4snjSD1PTrohw/P5LNDDkfeNAIbazxeA=="
-  "resolved" "https://codeload.github.com/Raphiiko/vrchatapi-javascript/tar.gz/cc9e0402c8c193fe49f0d46e364157da0418d4c2"
+  "resolved" "git+ssh://git@github.com/Raphiiko/vrchatapi-javascript.git#cc9e0402c8c193fe49f0d46e364157da0418d4c2"
   "version" "1.7.7"
   dependencies:
     "axios" "^0.21.4"
