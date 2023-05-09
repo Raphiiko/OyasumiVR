@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New "Advanced" tab in the settings for advanced configuration options.
 - Tools for clearing (parts of) Oyasumi's persistent data.
 - Button for opening Oyasumi's log folder.
+- New multilingual NSIS based installer package for new releases.
 
 ### Changed
 
@@ -27,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed experimental flag for sleep detection feature.
 - Removed debug tab in the settings view.
+- Removed bundling of WIX based installer packages.
 
 ### Fixed
 
