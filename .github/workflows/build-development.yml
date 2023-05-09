@@ -115,6 +115,23 @@ jobs:
             } catch (e) {
               console.log("Could not update release data: " + e)
             }
+      - name: Sleep for 5 seconds
+        run: Start-Sleep -s 5
+        shell: powershell
+      - name: Publish release if needed
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            console.log("Publishing release...");
+            try {
+              await github.request('PATCH /repos/Raphiiko/Oyasumi/releases/102092545', {
+                draft: false
+              })
+              console.log("Published release!");
+            } catch (e) {
+              console.log("Could not publish release: " + e)
+            }
       - name: Update the update manifest
         uses: exuanbo/actions-deploy-gist@v1
         with:
