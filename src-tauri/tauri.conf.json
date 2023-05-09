@@ -51,8 +51,8 @@
     },
     "bundle": {
       "active": true,
-      "category": "DeveloperTool",
-      "copyright": "",
+      "category": "Utility",
+      "copyright": "Copyright (c) 2022 Raphiiko",
       "deb": {
         "depends": []
       },
@@ -66,6 +66,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
+      "publisher": "Raphiiko",
       "identifier": "co.raphii.oyasumi",
       "longDescription": "",
       "macOS": {
@@ -78,7 +79,7 @@
       "resources": [
         "sounds/*.ogg"
       ],
-      "shortDescription": "",
+      "shortDescription": "A collection of utilities to assist with sleeping in virtual reality.",
       "targets": [
         "nsis",
         "updater"
