@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tools for clearing (parts of) Oyasumi's persistent data.
 - Button for opening Oyasumi's log folder.
 - New multilingual NSIS based installer package for new releases.
+- Allow for disabling of OSC features to prevent Oyasumi from binding ports.
+- Show error indicators in navigation and tabs when the OSC server cannot be started.
 
 ### Changed
 

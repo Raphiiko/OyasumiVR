@@ -5,7 +5,15 @@
       <div class="tab-label" translate>settings.tab.general</div>
     </div>
     <div class="tab" [class.active]="activeTab === 'VRCHAT'" (click)="activeTab = 'VRCHAT'">
-      <div class="tab-label" translate>settings.tab.vrchat</div>
+      <div class="tab-label" translate><i
+        class="material-icons"
+        style="color: var(--color-caution)"
+        @hshrink
+        *ngIf="oscError"
+      >
+        error_outline
+      </i>
+        <span translate>settings.tab.vrchat</span></div>
     </div>
     <div
       class="tab"

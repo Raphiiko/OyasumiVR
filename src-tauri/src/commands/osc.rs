@@ -1,10 +1,10 @@
 use std::{
-    net::{Ipv4Addr, SocketAddrV4, UdpSocket},
+    net::{SocketAddrV4, UdpSocket},
     str::FromStr,
     sync::{mpsc, Mutex},
 };
 
-use log::{debug, error};
+use log::{debug, error, info};
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 use serde::{Deserialize, Serialize};
 
@@ -28,52 +28,48 @@ lazy_static! {
 }
 
 #[tauri::command]
-pub fn osc_init(receive_addr: String) -> bool {
+pub fn stop_osc_server() {
     // Terminate existing thread if it exists
-    let termination_guard = TERMINATION_TX.lock().unwrap();
-    let termination = termination_guard.as_ref();
-    if let Some(t) = termination {
+    let mut termination_guard = TERMINATION_TX.lock().unwrap();
+    if let Some(t) = termination_guard.as_ref() {
+        info!("[Core] Stopping OSC server");
         t.send(()).unwrap();
+        *termination_guard = None;
     }
-    drop(termination_guard);
-    // Setup sending socket
-    *OSC_SEND_SOCKET.lock().unwrap() = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
-        Ok(s) => Some(s),
+    let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().unwrap();
+    if let Some(socket) = receive_socket_guard.as_ref() {
+        drop(socket);
+        *receive_socket_guard = None;
+    }
+}
+
+#[tauri::command]
+pub fn start_osc_server(receive_addr: String) -> bool {
+    info!("[Core] Starting OSC server on ({})", receive_addr.as_str());
+    stop_osc_server();
+    // Setup receiving socket
+    let receive_addr = match SocketAddrV4::from_str(receive_addr.as_str()) {
+        Ok(addr) => addr,
         Err(err) => {
             error!(
-                "[Core] Could not initialize send socket for OSC module: {}",
+                "[Core] Could not initialize receive socket for OSC module (addr init): {}",
                 err
             );
             return false;
         }
     };
-    // Setup receiving socket if needed
-    let receive_socket_guard = OSC_RECEIVE_SOCKET.lock().unwrap();
-    if receive_socket_guard.is_none() {
-        drop(receive_socket_guard);
-        let receive_addr = match SocketAddrV4::from_str(receive_addr.as_str()) {
-            Ok(addr) => addr,
-            Err(err) => {
-                error!(
-                    "[Core] Could not initialize receive socket for OSC module (addr init): {}",
-                    err
-                );
-                return false;
-            }
-        };
-        let receive_socket = match UdpSocket::bind(receive_addr) {
-            Ok(s) => s,
-            Err(err) => {
-                error!(
-                    "[Core] Could not initialize receive socket for OSC module (socket init): {}",
-                    err
-                );
-                return false;
-            }
-        };
-        receive_socket.set_nonblocking(true).unwrap();
-        *OSC_RECEIVE_SOCKET.lock().unwrap() = Some(receive_socket);
-    }
+    let receive_socket = match UdpSocket::bind(receive_addr) {
+        Ok(s) => s,
+        Err(err) => {
+            error!(
+                "[Core] Could not initialize receive socket for OSC module (socket init): {}",
+                err
+            );
+            return false;
+        }
+    };
+    receive_socket.set_nonblocking(true).unwrap();
+    *OSC_RECEIVE_SOCKET.lock().unwrap() = Some(receive_socket);
     // Process incoming messages
     let termination_tx = background::osc::spawn_osc_receiver_thread();
     *TERMINATION_TX.lock().unwrap() = Some(termination_tx);

@@ -470,10 +470,24 @@
           "description": "The port number Oyasumi will send OSC messages to.\n(VRChat listens on port 9000 by default)"
         },
         "errors": {
-          "bindFailed": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
-          "invalidPort": "A port has to be a valid number between 1 and 65535.",
-          "samePort": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same.",
-          "invalidHost": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+          "PORT_IN_USE": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
+          "PORT_INVALID": "A port has to be a valid number between 1 and 65535.",
+          "PORT_IO_IDENTICAL": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same.",
+          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+        },
+        "features": {
+          "all": {
+            "title": "Enable all features",
+            "description": "Disabling each of these features will stop Oyasumi from listening for OSC messages"
+          },
+          "expressionMenu": {
+            "title": "Enable VRChat expression menu control",
+            "description": "Control Oyasumi features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">expression menu</a>"
+          },
+          "externalControl": {
+            "title": "Enable external control",
+            "description": "Control Oyasumi features over <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a>"
+          }
         }
       }
     },

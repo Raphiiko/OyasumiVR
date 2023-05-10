@@ -3,7 +3,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE, SETTINGS_KEY_APP_SETTINGS } from '../globals';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -59,6 +59,7 @@ export class AppSettingsService {
 
   updateSettings(settings: Partial<AppSettings>) {
     const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    if (isEqual(newSettings, this._settings.value)) return;
     this._settings.next(newSettings);
   }
 }

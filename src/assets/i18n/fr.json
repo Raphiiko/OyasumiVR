@@ -463,10 +463,10 @@
           "description": "Le port sur lequel Oyasumi envoie des messages OSC.\n(VRChat reçoit les messages par défaut sur le port 9000)"
         },
         "errors": {
-          "bindFailed": "Cette adresse n'a pas pu être affectée. Il se peut qu'une autre application l'utilise déjà. Merci de fermer cette application et réessayer, ou choisir un autre hôte ou port de réception.",
-          "invalidPort": "Un port valide se situe entre 1 et 65535.",
-          "samePort": "Vous ne pouvez pas utiliser le même port pour l'envoi et la réception.",
-          "invalidHost": "L'hôte doit être un nom d'hôte, une adresse IPv4 ou IPv6 valide."
+          "PORT_IN_USE": "Cette adresse n'a pas pu être affectée. Il se peut qu'une autre application l'utilise déjà. Merci de fermer cette application et réessayer, ou choisir un autre hôte ou port de réception.",
+          "PORT_INVALID": "Un port valide se situe entre 1 et 65535.",
+          "PORT_IO_IDENTICAL": "Vous ne pouvez pas utiliser le même port pour l'envoi et la réception.",
+          "INVALID_HOST": "L'hôte doit être un nom d'hôte, une adresse IPv4 ou IPv6 valide."
         }
       }
     },

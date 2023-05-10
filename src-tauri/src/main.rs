@@ -138,6 +138,8 @@ fn main() {
                 background::http_server::spawn_http_server_thread();
                 // Load sounds
                 commands::os::load_sounds();
+                // Initialize OSC
+                background::osc::init_osc();
             });
             // Reference log dir
             {
@@ -181,8 +183,9 @@ fn main() {
             commands::osc::osc_send_bool,
             commands::osc::osc_send_float,
             commands::osc::osc_send_int,
-            commands::osc::osc_init,
             commands::osc::osc_valid_addr,
+            commands::osc::start_osc_server,
+            commands::osc::stop_osc_server,
             commands::admin::elevation_sidecar_running,
             commands::admin::start_elevation_sidecar,
             commands::log_parser::init_vrc_log_watcher,

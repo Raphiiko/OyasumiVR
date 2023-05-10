@@ -37,7 +37,9 @@ function toLatest(data: any): any {
 
 function from4to5(data: any): any {
   data.version = 5;
-  data.userLanguagePicked = APP_SETTINGS_DEFAULT.userLanguagePicked;
+  data.userLanguagePicked = true;
+  data.oscEnableExpressionMenu = APP_SETTINGS_DEFAULT.oscEnableExpressionMenu;
+  data.oscEnableExternalControl = APP_SETTINGS_DEFAULT.oscEnableExternalControl;
   return data;
 }
 

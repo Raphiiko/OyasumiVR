@@ -463,10 +463,10 @@
           "description": "De poort waar naar Oyasumi OSC berichten verstuurt.\n(VRChat luistert standaard naar poort 9000)"
         },
         "errors": {
-          "bindFailed": "Het adres kon niet worden gebonden. Dit kan komen doordat er al een andere applicatie luistert naar dezelfde adres en poort combinatie. Je kan proberen die andere applicatie te sluiten en het opnieuw te proberen, of een een andere poort of host te kiezen.",
-          "invalidPort": "Deze poort is niet geldig. Poorten moeten tussen 1 en 65535 liggen.",
-          "samePort": "Je kan niet dezelfde poort gebruiken voor zowel ontvangst als verzending, als de host voor beide hetzelfde is.",
-          "invalidHost": "Deze host is niet geldig. Hosts moeten een geldig IPv4 adres, IPv6 adres, of een geldige hostnaam zijn."
+          "PORT_IN_USE": "Het adres kon niet worden gebonden. Dit kan komen doordat er al een andere applicatie luistert naar dezelfde adres en poort combinatie. Je kan proberen die andere applicatie te sluiten en het opnieuw te proberen, of een een andere poort of host te kiezen.",
+          "PORT_INVALID": "Deze poort is niet geldig. Poorten moeten tussen 1 en 65535 liggen.",
+          "PORT_IO_IDENTICAL": "Je kan niet dezelfde poort gebruiken voor zowel ontvangst als verzending, als de host voor beide hetzelfde is.",
+          "INVALID_HOST": "Deze host is niet geldig. Hosts moeten een geldig IPv4 adres, IPv6 adres, of een geldige hostnaam zijn."
         }
       }
     },

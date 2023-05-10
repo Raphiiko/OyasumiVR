@@ -15,21 +15,21 @@
   >
     <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_IN'">
       <p
-        ><span
-          translate="settings.vrchat.logIn.loggedIn.title"
-          [translateParams]="{ name: currentUser?.displayName }"
-        ></span
-        ><br /><span translate>settings.vrchat.logIn.loggedIn.subtext</span></p
+      ><span
+        translate="settings.vrchat.logIn.loggedIn.title"
+        [translateParams]="{ name: currentUser?.displayName }"
+      ></span
+      ><br /><span translate>settings.vrchat.logIn.loggedIn.subtext</span></p
       >
       <button class="btn btn-secondary" (click)="logout()" translate
-        >settings.vrchat.logIn.loggedIn.logOut
+      >settings.vrchat.logIn.loggedIn.logOut
       </button>
     </div>
     <div class="pane-content" *ngIf="vrchatStatus === 'LOGGED_OUT'">
       <p
-        ><span translate>settings.vrchat.logIn.loggedOut.title</span><br /><span translate
-          >settings.vrchat.logIn.loggedOut.subtext</span
-        ></p
+      ><span translate>settings.vrchat.logIn.loggedOut.title</span><br /><span translate
+      >settings.vrchat.logIn.loggedOut.subtext</span
+      ></p
       >
       <button class="btn btn-primary" (click)="login()" translate>shared.modals.login</button>
     </div>
@@ -42,12 +42,63 @@
   <h2>
     <span translate>settings.vrchat.OSC.title</span>
     <button class="btn btn-secondary" translate (click)="resetOSCAddresses()"
-      >settings.vrchat.OSC.reset</button
+    >settings.vrchat.OSC.reset
+    </button
     >
   </h2>
   <p translate>settings.vrchat.OSC.description</p>
   <div class="settings">
     <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.vrchat.OSC.features.all.title</span>
+        <span translate>settings.vrchat.OSC.features.all.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="someOSCFeaturesEnabled"
+            (change)="disableAllOSCFeatures()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row-group">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.vrchat.OSC.features.expressionMenu.title</span>
+          <span [innerHtml]="'settings.vrchat.OSC.features.expressionMenu.description' | translate"></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="appSettings.oscEnableExpressionMenu"
+              (change)="toggleOSCExpressionMenu()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.vrchat.OSC.features.externalControl.title</span>
+          <span [innerHtml]="'settings.vrchat.OSC.features.externalControl.description' | translate"></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="appSettings.oscEnableExternalControl"
+              (change)="toggleOSCExternalControl()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="setting-row" [class.disabled]="!someOSCFeaturesEnabled">
       <div class="setting-row-label" translate>
         <span translate>settings.vrchat.OSC.receivingHost.title</span>
         <span translate>settings.vrchat.OSC.receivingHost.description</span>
@@ -57,15 +108,15 @@
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-green)"
-          *ngIf="oscReceivingHostStatus === 'OK'"
-          >check</i
+          *ngIf="oscReceivingHostStatus === 'OK' && someOSCFeaturesEnabled"
+        >check</i
         >
         <i
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-red)"
-          *ngIf="oscReceivingHostStatus === 'ERROR'"
-          >error</i
+          *ngIf="oscReceivingHostStatus === 'ERROR' && someOSCFeaturesEnabled"
+        >error</i
         >
         <div @hshrink class="small-spinner" *ngIf="oscReceivingHostStatus === 'CHECKING'"></div>
         <input
@@ -82,6 +133,7 @@
       class="setting-alert-row"
       @vshrink
       *ngIf="oscReceivingHostStatus === 'ERROR' && oscReceivingHostError"
+      [class.disabled]="!someOSCFeaturesEnabled"
     >
       <div class="alert error">
         <div class="alert-bg"></div>
@@ -90,10 +142,10 @@
         </div>
         <div class="alert-content">{{
           'settings.vrchat.OSC.errors.' + oscReceivingHostError | translate
-        }}</div>
+          }}</div>
       </div>
     </div>
-    <div class="setting-row">
+    <div class="setting-row" [class.disabled]="!someOSCFeaturesEnabled">
       <div class="setting-row-label" translate>
         <span translate>settings.vrchat.OSC.receivingPort.title</span>
         <span translate>settings.vrchat.OSC.receivingPort.description</span>
@@ -103,15 +155,15 @@
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-green)"
-          *ngIf="oscReceivingPortStatus === 'OK'"
-          >check</i
+          *ngIf="oscReceivingPortStatus === 'OK' && someOSCFeaturesEnabled"
+        >check</i
         >
         <i
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-red)"
-          *ngIf="oscReceivingPortStatus === 'ERROR'"
-          >error</i
+          *ngIf="oscReceivingPortStatus === 'ERROR' && someOSCFeaturesEnabled"
+        >error</i
         >
         <div @hshrink class="small-spinner" *ngIf="oscReceivingPortStatus === 'CHECKING'"></div>
         <input
@@ -130,6 +182,7 @@
       class="setting-alert-row"
       @vshrink
       *ngIf="oscReceivingPortStatus === 'ERROR' && oscReceivingPortError"
+      [class.disabled]="!someOSCFeaturesEnabled"
     >
       <div class="alert error">
         <div class="alert-bg"></div>
@@ -138,7 +191,7 @@
         </div>
         <div class="alert-content">{{
           'settings.vrchat.OSC.errors.' + oscReceivingPortError | translate
-        }}</div>
+          }}</div>
       </div>
     </div>
     <div class="setting-row">
@@ -152,14 +205,14 @@
           class="material-icons-round"
           style="color: var(--color-vrchat-status-green)"
           *ngIf="oscSendingHostStatus === 'OK'"
-          >check</i
+        >check</i
         >
         <i
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-red)"
           *ngIf="oscSendingHostStatus === 'ERROR'"
-          >error</i
+        >error</i
         >
         <div @hshrink class="small-spinner" *ngIf="oscSendingHostStatus === 'CHECKING'"></div>
         <input
@@ -184,7 +237,7 @@
         </div>
         <div class="alert-content">{{
           'settings.vrchat.OSC.errors.' + oscSendingHostError | translate
-        }}</div>
+          }}</div>
       </div>
     </div>
     <div class="setting-row">
@@ -198,14 +251,14 @@
           class="material-icons-round"
           style="color: var(--color-vrchat-status-green)"
           *ngIf="oscSendingPortStatus === 'OK'"
-          >check</i
+        >check</i
         >
         <i
           @hshrink
           class="material-icons-round"
           style="color: var(--color-vrchat-status-red)"
           *ngIf="oscSendingPortStatus === 'ERROR'"
-          >error</i
+        >error</i
         >
         <div @hshrink class="small-spinner" *ngIf="oscSendingPortStatus === 'CHECKING'"></div>
         <input
@@ -232,7 +285,7 @@
         </div>
         <div class="alert-content">{{
           'settings.vrchat.OSC.errors.' + oscSendingPortError | translate
-        }}</div>
+          }}</div>
       </div>
     </div>
   </div>

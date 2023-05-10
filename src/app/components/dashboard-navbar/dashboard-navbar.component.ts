@@ -1,5 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
+import {
+  asyncScheduler,
+  combineLatest,
+  map,
+  Observable,
+  startWith,
+  takeUntil,
+  throttleTime,
+} from 'rxjs';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
@@ -11,6 +19,8 @@ import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
+import { flatten } from 'lodash';
+import { OscService } from '../../services/osc.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -139,6 +149,7 @@ export class DashboardNavbarComponent implements OnInit {
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
+    private osc: OscService,
     protected router: Router,
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessControlAutomationService
@@ -148,6 +159,9 @@ export class DashboardNavbarComponent implements OnInit {
       this.lighthouse.consoleStatus.pipe(
         map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
         startWith(false)
+      ),
+      this.osc.addressValidation.pipe(
+        map((validation) => flatten(Object.values(validation)).length > 0)
       ),
     ]).pipe(map((errorAreas: boolean[]) => !!errorAreas.find((a) => a)));
     this.gpuAutomationsErrors = combineLatest([

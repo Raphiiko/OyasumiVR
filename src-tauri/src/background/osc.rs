@@ -1,7 +1,7 @@
 use std::{
     io,
     sync::mpsc::{self, TryRecvError},
-    thread,
+    thread, net::{UdpSocket, Ipv4Addr},
 };
 
 use log::{error, info};
@@ -9,8 +9,22 @@ use rosc::{OscPacket, OscType};
 
 use crate::{
     commands::osc::{OSCMessage, OSCValue},
-    OSC_RECEIVE_SOCKET, TAURI_WINDOW,
+    OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET, TAURI_WINDOW,
 };
+
+pub fn init_osc() {
+    // Setup sending socket
+    *OSC_SEND_SOCKET.lock().unwrap() = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
+        Ok(s) => Some(s),
+        Err(err) => {
+            error!(
+                "[Core] Could not initialize send socket for OSC module: {}",
+                err
+            );
+            return;
+        }
+    };
+}
 
 pub fn spawn_osc_receiver_thread() -> mpsc::Sender<()> {
     info!("[Core] Starting OSC receiver thread");
