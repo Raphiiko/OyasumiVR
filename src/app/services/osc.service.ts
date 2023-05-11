@@ -14,10 +14,7 @@ import {
   firstValueFrom,
   map,
   Observable,
-  skip,
   Subject,
-  take,
-  tap,
 } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 import { AppSettings } from '../models/settings';

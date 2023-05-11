@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { DropdownItem } from '../dropdown-button/dropdown-button.component';
 import {
   OscParameterType,
@@ -11,8 +11,9 @@ import { SelectBoxItem } from '../select-box/select-box.component';
 import { fade, hshrink, noop, vshrink } from 'src/app/utils/animations';
 import { TString } from '../../models/translatable-string';
 import { floatPrecision } from '../../utils/number-utils';
-import { debounceTime, startWith, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, startWith, Subject, tap } from 'rxjs';
 import { OscService } from '../../services/osc.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface ValidationError {
   actionIndex: number;
@@ -25,9 +26,8 @@ interface ValidationError {
   styleUrls: ['./osc-script-simple-editor.component.scss'],
   animations: [vshrink(), noop(), hshrink(), fade()],
 })
-export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
+export class OscScriptSimpleEditorComponent implements OnInit {
   private validationTrigger: Subject<void> = new Subject<void>();
-  private destroy$: Subject<void> = new Subject<void>();
   protected _script: OscScript = { version: 1, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
@@ -79,12 +79,12 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
     },
   ];
 
-  constructor(private osc: OscService) {}
+  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
 
   ngOnInit(): void {
     this.validationTrigger
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         startWith(void 0),
         tap(() => (this.validated = false)),
         debounceTime(500)
@@ -96,11 +96,6 @@ export class OscScriptSimpleEditorComponent implements OnInit, OnDestroy {
         this.scriptChange.emit(this._script);
       });
   }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-  }
-
   onAdd(item: DropdownItem) {
     switch (item.id) {
       case 'COMMAND':

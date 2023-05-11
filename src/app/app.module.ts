@@ -108,6 +108,7 @@ import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
+import { SettingsTabComponent } from './views/dashboard-view/views/settings-view/settings-tab/settings-tab.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -139,6 +140,7 @@ export function createTranslateLoader(http: HttpClient) {
     BatteryPercentageEnableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
+    SettingsTabComponent,
     PowerLimitInputComponent,
     SleepingPoseViewerComponent,
     OscAutomationsViewComponent,

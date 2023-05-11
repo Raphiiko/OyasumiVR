@@ -1,13 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  asyncScheduler,
-  combineLatest,
-  map,
-  Observable,
-  startWith,
-  takeUntil,
-  throttleTime,
-} from 'rxjs';
+import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';

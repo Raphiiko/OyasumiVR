@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Subject, takeUntil, tap } from 'rxjs';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
+import { map, tap } from 'rxjs';
 import { flatten, groupBy, orderBy } from 'lodash';
 import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
@@ -8,6 +8,7 @@ import { OpenVRService } from '../../services/openvr.service';
 import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
 import { error } from 'tauri-plugin-log-api';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface DisplayCategory {
   label: string;
@@ -22,8 +23,7 @@ interface DisplayCategory {
   styleUrls: ['./device-list.component.scss'],
   animations: [vshrink(), triggerChildren(), fade()],
 })
-export class DeviceListComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class DeviceListComponent implements OnInit {
   deviceCategories: Array<DisplayCategory> = [];
   devicesCanPowerOff = false;
 
@@ -31,13 +31,14 @@ export class DeviceListComponent implements OnInit, OnDestroy {
     protected openvr: OpenVRService,
     private cdr: ChangeDetectorRef,
     private lighthouse: LighthouseService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.openvr.devices
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         map((devices) => devices.filter((d) => ['GenericTracker', 'Controller'].includes(d.class))),
         map(
           (devices) =>
@@ -103,10 +104,6 @@ export class DeviceListComponent implements OnInit, OnDestroy {
       default:
         return 'comp.device-list.category.other';
     }
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   trackDeviceCategoryBy(index: number, category: DisplayCategory) {

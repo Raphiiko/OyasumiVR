@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { LighthouseService } from '../../../../../services/lighthouse.service';
 import { open as openFile } from '@tauri-apps/api/dialog';
 import { TelemetryService } from '../../../../../services/telemetry.service';
@@ -13,6 +13,7 @@ import { cloneDeep } from 'lodash';
 import { LANGUAGES } from '../../../../../globals';
 import { vshrink } from '../../../../../utils/animations';
 import { ExecutableReferenceStatus } from 'src/app/models/settings';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -42,16 +43,18 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
   override ngOnInit(): void {
     super.ngOnInit();
     this.lighthouse.consoleStatus
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => this.processLighthouseConsoleStatus(status));
     this.lighthouseConsolePathInputChange
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged(), debounceTime(500))
+      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), debounceTime(500))
       .subscribe(async (path) => {
         await this.lighthouse.setConsolePath(path);
       });
-    this.telemetry.settings.pipe(takeUntil(this.destroy$)).subscribe((telemetrySettings) => {
-      this.telemetrySettings = telemetrySettings;
-    });
+    this.telemetry.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((telemetrySettings) => {
+        this.telemetrySettings = telemetrySettings;
+      });
   }
 
   setUserLanguage(languageCode: string) {

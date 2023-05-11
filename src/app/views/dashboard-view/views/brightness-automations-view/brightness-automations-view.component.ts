@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { fade, vshrink } from '../../../../utils/animations';
-import { Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
@@ -12,6 +11,7 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import { clamp } from '../../../../utils/number-utils';
 import { BrightnessControlService } from '../../../../services/brightness-control/brightness-control.service';
 import { BrightnessControlAutomationService } from '../../../../services/brightness-control/brightness-control-automation.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-brightness-automations-view',
@@ -19,8 +19,7 @@ import { BrightnessControlAutomationService } from '../../../../services/brightn
   styleUrls: ['./brightness-automations-view.component.scss'],
   animations: [vshrink(), fade()],
 })
-export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject();
+export class BrightnessAutomationsViewComponent implements OnInit {
   protected transitionUnitOptions: SelectBoxItem[] = [
     {
       id: 'SECONDS',
@@ -51,12 +50,13 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
   constructor(
     private automationConfigService: AutomationConfigService,
     protected brightnessControl: BrightnessControlService,
-    protected brightnessAutomation: BrightnessControlAutomationService
+    protected brightnessAutomation: BrightnessControlAutomationService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.automationConfigService.configs
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
         this.onSleepModeEnableConfig = configs.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
         this.onSleepModeDisableConfig = configs.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
@@ -79,7 +79,7 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
       });
     this.brightnessControl
       .driverIsAvailable()
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (available) => {
         this.brightnessControlAvailable = available;
         if (available) {
@@ -94,8 +94,6 @@ export class BrightnessAutomationsViewComponent implements OnInit, OnDestroy {
         }
       });
   }
-
-  ngOnDestroy(): void {}
 
   async setAutomationEnabled(automation: AutomationType, enabled: boolean) {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });

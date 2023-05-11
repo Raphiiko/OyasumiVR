@@ -1,13 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { GPUDevice, GPUPowerLimit } from '../../../../../models/gpu-device';
 import { NVMLService } from '../../../../../services/nvml.service';
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
-import { ElevatedSidecarService } from '../../../../../services/elevated-sidecar.service';
-import { ModalService } from 'src/app/services/modal.service';
-import { AppSettingsService } from '../../../../../services/app-settings.service';
-import { debounceTime, firstValueFrom, Subject, takeUntil } from 'rxjs';
+import { debounceTime, firstValueFrom, Subject } from 'rxjs';
 import { noop, vshrink } from '../../../../../utils/animations';
 import { TString } from 'src/app/models/translatable-string';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-gpu-powerlimiting-pane',
@@ -15,8 +13,7 @@ import { TString } from 'src/app/models/translatable-string';
   styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
   animations: [vshrink(), noop()],
 })
-export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class GpuPowerlimitingPaneComponent implements OnInit {
   protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';
   protected disabledMessage: TString = '';
   protected gpuDevices: Array<GPUDevice & { selected: boolean }> = [];
@@ -30,14 +27,8 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
     limit: GPUPowerLimit;
   }> = new Subject();
 
-  constructor(
-    private nvml: NVMLService,
-    protected gpuAutomations: GpuAutomationsService,
-    private sidecar: ElevatedSidecarService,
-    private modalService: ModalService,
-    private settingsService: AppSettingsService
-  ) {
-    this.gpuAutomations.nvmlDevices.pipe(takeUntil(this.destroy$)).subscribe(async (devices) => {
+  constructor(private nvml: NVMLService, protected gpuAutomations: GpuAutomationsService) {
+    this.gpuAutomations.nvmlDevices.pipe(takeUntilDestroyed()).subscribe(async (devices) => {
       this.gpuDevices = devices;
       this.selectedGpu = devices.find((d) => d.selected);
       if (this.selectedGpu) {
@@ -54,7 +45,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
         };
       }
     });
-    nvml.status.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+    nvml.status.pipe(takeUntilDestroyed()).subscribe((status) => {
       switch (status) {
         case 'INIT_COMPLETE':
           this.panel = 'ENABLED';
@@ -93,7 +84,7 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
       }
     });
     this.powerLimitChange
-      .pipe(takeUntil(this.destroy$), debounceTime(100))
+      .pipe(takeUntilDestroyed(), debounceTime(100))
       .subscribe(async ({ automation, limit }) => {
         switch (automation) {
           case 'SLEEP_ENABLE':
@@ -107,8 +98,4 @@ export class GpuPowerlimitingPaneComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {}
-
-  async ngOnDestroy() {
-    this.destroy$.next();
-  }
 }

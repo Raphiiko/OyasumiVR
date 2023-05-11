@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { noop } from '../../../../utils/animations';
 import { SleepService } from '../../../../services/sleep.service';
-import { filter, map, Subject, takeUntil, tap } from 'rxjs';
+import { filter, map, tap } from 'rxjs';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-overview-view',
@@ -11,20 +12,24 @@ import { OscService } from '../../../../services/osc.service';
   styleUrls: ['./overview-view.component.scss'],
   animations: [noop()],
 })
-export class OverviewViewComponent implements OnInit, OnDestroy {
-  destroy$: Subject<void> = new Subject<void>();
+export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;
   quaternion: [number, number, number, number] = [0, 0, 0, 0];
 
-  constructor(private sleep: SleepService, public openvr: OpenVRService, public osc: OscService) {}
+  constructor(
+    private sleep: SleepService,
+    public openvr: OpenVRService,
+    public osc: OscService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.sleep.mode
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((sleepModeActive) => (this.sleepModeActive = sleepModeActive));
     this.openvr.devicePoses
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         map((poses) => poses[0]),
         filter((p) => !!p),
         tap((pose) => (this.quaternion = pose.quaternion))
@@ -38,9 +43,5 @@ export class OverviewViewComponent implements OnInit, OnDestroy {
     } else {
       await this.sleep.disableSleepMode({ type: 'MANUAL' });
     }
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 }

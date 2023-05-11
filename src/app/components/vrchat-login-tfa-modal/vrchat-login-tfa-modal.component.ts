@@ -1,14 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fadeUp, hshrink, vshrink } from 'src/app/utils/animations';
-import {
-  BehaviorSubject,
-  debounceTime,
-  distinctUntilChanged,
-  skip,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, skip } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface VRChatLoginTFAModalInputModel {
   lastCodeInvalid: boolean;
@@ -26,22 +20,21 @@ interface VRChatLoginTFAModalOutputModel {
 })
 export class VRChatLoginTFAModalComponent
   extends BaseModalComponent<VRChatLoginTFAModalInputModel, VRChatLoginTFAModalOutputModel>
-  implements OnInit, VRChatLoginTFAModalInputModel, OnDestroy
+  implements OnInit, VRChatLoginTFAModalInputModel
 {
   lastCodeInvalid = false;
-  private destroy$: Subject<void> = new Subject<void>();
   code: BehaviorSubject<string> = new BehaviorSubject<string>('');
   codeValid = false;
   error = '';
 
-  constructor() {
+  constructor(private destroyRef: DestroyRef) {
     super();
   }
 
   ngOnInit(): void {
     if (this.lastCodeInvalid) this.error = 'comp.vrchat-login-tfa-modal.errors.LAST_CODE_INVALID';
     this.code
-      .pipe(takeUntil(this.destroy$), distinctUntilChanged(), skip(1), debounceTime(300))
+      .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged(), skip(1), debounceTime(300))
       .subscribe((code) => {
         if (/^[0-9]{6}$/.test(code)) {
           this.codeValid = true;
@@ -52,10 +45,6 @@ export class VRChatLoginTFAModalComponent
             this.error = 'comp.vrchat-login-tfa-modal.errors.INVALID_FORMAT';
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 
   async login() {

@@ -1,6 +1,5 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
 import { noop } from '../../../../utils/animations';
-import { Subject, takeUntil } from 'rxjs';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -11,6 +10,7 @@ import {
 import { cloneDeep } from 'lodash';
 import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-battery-automations-view',
@@ -18,8 +18,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./battery-automations-view.component.scss'],
   animations: [noop()],
 })
-export class BatteryAutomationsViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject();
+export class BatteryAutomationsViewComponent implements OnInit {
   protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   );
@@ -27,7 +26,11 @@ export class BatteryAutomationsViewComponent implements OnInit, OnDestroy {
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
 
-  constructor(private router: Router, private automationConfigService: AutomationConfigService) {}
+  constructor(
+    private router: Router,
+    private automationConfigService: AutomationConfigService,
+    private destroyRef: DestroyRef
+  ) {}
 
   @HostListener('click', ['$event'])
   onClick(event: MouseEvent) {
@@ -37,14 +40,12 @@ export class BatteryAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.automationConfigService.configs.pipe(takeUntil(this.destroy$)).subscribe((configs) => {
-      this.onSleepModeConfig = configs.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE;
-      this.onChargeConfig = configs.TURN_OFF_DEVICES_WHEN_CHARGING;
-    });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
+    this.automationConfigService.configs
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((configs) => {
+        this.onSleepModeConfig = configs.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE;
+        this.onChargeConfig = configs.TURN_OFF_DEVICES_WHEN_CHARGING;
+      });
   }
 
   async toggleDeviceClass(automation: AutomationType, deviceClass: OVRDeviceClass) {

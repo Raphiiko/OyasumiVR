@@ -3,11 +3,12 @@ import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { hshrink, vshrink } from '../../../../../utils/animations';
 import { VRChatService, VRChatServiceStatus } from '../../../../../services/vrchat.service';
-import { debounceTime, distinctUntilChanged, Subject, takeUntil, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, tap } from 'rxjs';
 import { CurrentUser as VRChatUser } from 'vrchat/dist';
 import { ModalService } from 'src/app/services/modal.service';
 import { OscAddressValidation, OscService } from '../../../../../services/osc.service';
 import { APP_SETTINGS_DEFAULT } from '../../../../../models/settings';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings-vrchat-tab',
@@ -58,9 +59,11 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
     super.ngOnInit();
     // Listen for account changes
     this.vrchat.status
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => (this.vrchatStatus = status));
-    this.vrchat.user.pipe(takeUntil(this.destroy$)).subscribe((user) => (this.currentUser = user));
+    this.vrchat.user
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((user) => (this.currentUser = user));
     this.listenForReceivingHostChanges();
     this.listenForReceivingPortChanges();
     this.listenForSendingHostChanges();
@@ -71,35 +74,37 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
 
   listenForValidationChanges() {
     this.osc.addressValidation
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((validation) => this.processValidation(validation));
   }
 
   listenForSettingsChanges() {
-    this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((settings) => {
-      if (settings.oscReceivingHost !== this.oscReceivingHost) {
-        this.oscReceivingHost = settings.oscReceivingHost;
-        this.oscReceivingHostChange.next(this.oscReceivingHost);
-      }
-      if (settings.oscReceivingPort !== this.oscReceivingPort) {
-        this.oscReceivingPort = settings.oscReceivingPort;
-        this.oscReceivingPortChange.next(this.oscReceivingPort + '');
-      }
-      if (settings.oscSendingHost !== this.oscSendingHost) {
-        this.oscSendingHost = settings.oscSendingHost;
-        this.oscSendingHostChange.next(this.oscSendingHost);
-      }
-      if (settings.oscSendingPort !== this.oscSendingPort) {
-        this.oscSendingPort = settings.oscSendingPort;
-        this.oscSendingPortChange.next(this.oscSendingPort + '');
-      }
-    });
+    this.settingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((settings) => {
+        if (settings.oscReceivingHost !== this.oscReceivingHost) {
+          this.oscReceivingHost = settings.oscReceivingHost;
+          this.oscReceivingHostChange.next(this.oscReceivingHost);
+        }
+        if (settings.oscReceivingPort !== this.oscReceivingPort) {
+          this.oscReceivingPort = settings.oscReceivingPort;
+          this.oscReceivingPortChange.next(this.oscReceivingPort + '');
+        }
+        if (settings.oscSendingHost !== this.oscSendingHost) {
+          this.oscSendingHost = settings.oscSendingHost;
+          this.oscSendingHostChange.next(this.oscSendingHost);
+        }
+        if (settings.oscSendingPort !== this.oscSendingPort) {
+          this.oscSendingPort = settings.oscSendingPort;
+          this.oscSendingPortChange.next(this.oscSendingPort + '');
+        }
+      });
   }
 
   listenForReceivingHostChanges() {
     this.oscReceivingHostChange
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         distinctUntilChanged(),
         tap(() => {
           this.oscReceivingHostStatus = 'CHECKING';
@@ -116,7 +121,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
   listenForSendingHostChanges() {
     this.oscSendingHostChange
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         distinctUntilChanged(),
         tap(() => {
           this.oscSendingHostStatus = 'CHECKING';
@@ -133,7 +138,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
   listenForReceivingPortChanges() {
     this.oscReceivingPortChange
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         distinctUntilChanged(),
         tap(() => {
           this.oscReceivingPortStatus = 'CHECKING';
@@ -151,7 +156,7 @@ export class SettingsVRChatTabComponent extends SettingsTabComponent implements 
   listenForSendingPortChanges() {
     this.oscSendingPortChange
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         distinctUntilChanged(),
         tap(() => {
           this.oscSendingPortStatus = 'CHECKING';

@@ -1,6 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
-import { Subject, takeUntil } from 'rxjs';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import {
   SLEEPING_ANIMATION_PRESETS,
@@ -21,6 +20,7 @@ import { ModalService } from '../../../../services/modal.service';
 import { OscScript } from '../../../../models/osc-script';
 import { open } from '@tauri-apps/api/shell';
 import { SleepingAnimationPresetModalComponent } from '../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-sleep-animations-view',
@@ -28,8 +28,7 @@ import { SleepingAnimationPresetModalComponent } from '../../../../components/sl
   styleUrls: ['./sleep-animations-view.component.scss'],
   animations: [noop(), vshrink(), hshrink()],
 })
-export class SleepAnimationsViewComponent implements OnDestroy, OnInit {
-  private destroy$: Subject<void> = new Subject();
+export class SleepAnimationsViewComponent implements OnInit {
   oscOptionsExpanded = false;
   oscPresetOptions: SelectBoxItem[] = [
     {
@@ -63,28 +62,26 @@ export class SleepAnimationsViewComponent implements OnDestroy, OnInit {
     private osc: OscService,
     private sleepingAnimationsAutomation: SleepingAnimationsAutomationService,
     private sleep: SleepService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
-    this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe(async (configs) => {
-      this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
-      this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
-      if (this.config.preset && this.config.preset !== 'CUSTOM') {
-        this.presetNotes =
-          SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === this.config.preset)!.notes ||
-          [];
-      }
-    });
-    this.sleep.pose.pipe(takeUntil(this.destroy$)).subscribe((pose) => {
+    this.automationConfig.configs
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async (configs) => {
+        this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
+        this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
+        if (this.config.preset && this.config.preset !== 'CUSTOM') {
+          this.presetNotes =
+            SLEEPING_ANIMATION_PRESETS.find((preset) => preset.id === this.config.preset)!.notes ||
+            [];
+        }
+      });
+    this.sleep.pose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((pose) => {
       this.currentPose = pose;
     });
   }
-
-  ngOnDestroy() {
-    this.destroy$.next();
-  }
-
   async updateConfig(config: Partial<SleepingAnimationsAutomationConfig>) {
     await this.automationConfig.updateAutomationConfig('SLEEPING_ANIMATIONS', config);
   }
