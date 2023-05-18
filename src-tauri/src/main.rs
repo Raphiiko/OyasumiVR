@@ -8,10 +8,10 @@ extern crate lazy_static;
 
 use crate::commands::admin::start_elevation_sidecar;
 use crate::image_cache::ImageCache;
-use background::openvr::OpenVRManager;
 use commands::log_utils::LOG_DIR;
 use cronjob::CronJob;
 use log::{info, LevelFilter};
+use modules::openvr::OpenVRManager;
 use oyasumi_shared::windows::is_elevated;
 use std::{net::UdpSocket, sync::Mutex};
 use tauri::Manager;
@@ -22,6 +22,7 @@ mod commands {
     pub mod afterburner;
     pub mod http;
     pub mod image_cache;
+    pub mod lighthouse;
     pub mod log_parser;
     pub mod log_utils;
     pub mod notifications;
@@ -32,11 +33,12 @@ mod commands {
     pub mod splash;
 }
 
-mod background {
+mod modules {
     pub mod http_server;
     pub mod log_parser;
     pub mod openvr;
     pub mod osc;
+    pub mod lighthouse;
 }
 
 mod elevated_sidecar;
@@ -124,7 +126,7 @@ fn main() {
             *TAURI_WINDOW.lock().unwrap() = Some(window);
             // Get dependencies
             let cache_dir = app.path_resolver().app_cache_dir().unwrap();
-            std::thread::spawn(move || {
+            tauri::async_runtime::spawn(async move {
                 // Initialize Image Cache
                 let image_cache_dir = cache_dir.join("image_cache");
                 let image_cache = ImageCache::new(image_cache_dir.into_os_string());
@@ -135,11 +137,13 @@ fn main() {
                 openvr_manager.set_active(true);
                 *OPENVR_MANAGER.lock().unwrap() = Some(openvr_manager);
                 // Spawn HTTP server thread
-                background::http_server::spawn_http_server_thread();
+                modules::http_server::spawn_http_server_thread();
                 // Load sounds
                 commands::os::load_sounds();
                 // Initialize OSC
-                background::osc::init_osc();
+                modules::osc::init_osc();
+                // Initialize Lighthouse Bluetooth
+                commands::lighthouse::init_bt().await;
             });
             // Reference log dir
             {
@@ -194,6 +198,7 @@ fn main() {
             commands::notifications::xsoverlay_send_message,
             commands::image_cache::clean_image_cache,
             commands::log_utils::clean_log_files,
+            commands::lighthouse::lighthouse_scan_devices,
         ]);
 
     app.run(tauri::generate_context!())

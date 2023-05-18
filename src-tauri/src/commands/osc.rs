@@ -8,7 +8,7 @@ use log::{debug, error, info};
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 use serde::{Deserialize, Serialize};
 
-use crate::{background, OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
+use crate::{modules, OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -71,7 +71,7 @@ pub fn start_osc_server(receive_addr: String) -> bool {
     receive_socket.set_nonblocking(true).unwrap();
     *OSC_RECEIVE_SOCKET.lock().unwrap() = Some(receive_socket);
     // Process incoming messages
-    let termination_tx = background::osc::spawn_osc_receiver_thread();
+    let termination_tx = modules::osc::spawn_osc_receiver_thread();
     *TERMINATION_TX.lock().unwrap() = Some(termination_tx);
     true
 }

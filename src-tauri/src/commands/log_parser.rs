@@ -2,7 +2,7 @@ use std::sync::{mpsc, Mutex};
 
 use log::info;
 
-use crate::background;
+use crate::modules;
 
 lazy_static! {
     static ref TERMINATION_TX: Mutex<Option<mpsc::Sender<()>>> = Default::default();
@@ -19,6 +19,6 @@ pub fn init_vrc_log_watcher() {
     }
     drop(termination_guard);
     // Start new parser thread
-    let termination = background::log_parser::spawn_log_parser_thread();
+    let termination = modules::log_parser::spawn_log_parser_thread();
     *TERMINATION_TX.lock().unwrap() = Some(termination);
 }
