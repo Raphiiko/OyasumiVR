@@ -1,34 +1,28 @@
+use super::{OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
+use log::{debug, error, info};
+use rosc::{encoder, OscMessage, OscPacket, OscType};
 use std::{
     net::{SocketAddrV4, UdpSocket},
     str::FromStr,
-    sync::mpsc,
 };
-use log::{debug, error, info};
-use rosc::{encoder, OscMessage, OscPacket, OscType};
 use tokio::sync::Mutex;
-use super::{
-    OSC_RECEIVE_SOCKET,
-    OSC_SEND_SOCKET,
-};
+use tokio_util::sync::CancellationToken;
 
 lazy_static! {
-    static ref TERMINATION_TX: Mutex<Option<mpsc::Sender<()>>> = Default::default();
+    static ref CANCELLATION_TOKEN: Mutex<Option<CancellationToken>> = Default::default();
 }
 
 #[tauri::command]
 pub async fn stop_osc_server() {
-    // Terminate existing thread if it exists
-    let mut termination_guard = TERMINATION_TX.lock().await;
-    if let Some(t) = termination_guard.as_ref() {
+    // Terminate existing task if it exists
+    let mut cancellation_token = CANCELLATION_TOKEN.lock().await;
+    if let Some(token) = cancellation_token.as_ref() {
         info!("[Core] Stopping OSC server");
-        t.send(()).unwrap();
-        *termination_guard = None;
+        token.cancel();
+        *cancellation_token = None;
     }
     let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().await;
-    if let Some(socket) = receive_socket_guard.as_ref() {
-        drop(socket);
-        *receive_socket_guard = None;
-    }
+    *receive_socket_guard = None;
 }
 
 #[tauri::command]
@@ -59,8 +53,8 @@ pub async fn start_osc_server(receive_addr: String) -> bool {
     receive_socket.set_nonblocking(true).unwrap();
     *OSC_RECEIVE_SOCKET.lock().await = Some(receive_socket);
     // Process incoming messages
-    let termination_tx = super::spawn_receiver_task().await;
-    *TERMINATION_TX.lock().await = Some(termination_tx);
+    let cancellation_token = super::spawn_receiver_task().await;
+    *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     true
 }
 

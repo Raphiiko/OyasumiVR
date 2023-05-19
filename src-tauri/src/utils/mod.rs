@@ -2,7 +2,7 @@ use log::error;
 use serde::Serialize;
 use std::time::{SystemTime, UNIX_EPOCH};
 use sysinfo::{System, SystemExt};
-use tauri::{Manager};
+use tauri::Manager;
 use tokio::sync::Mutex;
 
 use crate::globals::TAURI_APP_HANDLE;
@@ -29,12 +29,9 @@ pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
     let app_handle_guard = TAURI_APP_HANDLE.lock().await;
     let app_handle = app_handle_guard.as_ref().unwrap();
     match app_handle.emit_all(event, payload) {
-        Ok(_) => {
-            return;
-        }
+        Ok(_) => {}
         Err(e) => {
             error!("[Core] Failed to send event {}: {}", event, e);
-            return;
         }
     };
 }

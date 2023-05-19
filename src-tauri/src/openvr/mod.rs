@@ -76,23 +76,23 @@ impl OpenVRManager {
         let device = devices
             .iter_mut()
             .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
-        if let Some(_) = device {
+        if device.is_some() {
             // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
             let settings = self.settings.lock().await;
             if settings.is_some() {
                 let analog_gain = settings.as_ref().unwrap().get_float(
-                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-                    &CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
                 );
-                return match analog_gain {
+                match analog_gain {
                     Ok(analog_gain) => Ok(analog_gain),
                     Err(_) => Err("ANALOG_GAIN_NOT_FOUND".to_string()),
-                };
+                }
             } else {
-                return Err("OPENVR_NOT_INITIALISED".to_string());
+                Err("OPENVR_NOT_INITIALISED".to_string())
             }
         } else {
-            return Err("NO_HMD_FOUND".to_string());
+            Err("NO_HMD_FOUND".to_string())
         }
     }
 
@@ -101,13 +101,13 @@ impl OpenVRManager {
         let device = devices
             .iter_mut()
             .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
-        if let Some(_) = device {
+        if device.is_some() {
             // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
             let settings = self.settings.lock().await;
             if settings.is_some() {
                 let _ = settings.as_ref().unwrap().set_float(
-                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-                    &CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
                     analog_gain,
                 );
             } else {
@@ -115,7 +115,7 @@ impl OpenVRManager {
             }
             Ok(())
         } else {
-            return Err("NO_HMD_FOUND".to_string());
+            Err("NO_HMD_FOUND".to_string())
         }
     }
 
@@ -125,8 +125,8 @@ impl OpenVRManager {
             return Err("OPENVR_NOT_INITIALISED".to_string());
         }
         let supersample_manual_override = settings.as_ref().unwrap().get_bool(
-            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-            &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+            CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
         );
         let supersample_manual_override = match supersample_manual_override {
             Ok(supersample_manual_override) => supersample_manual_override,
@@ -138,13 +138,13 @@ impl OpenVRManager {
         }
         // Supersampling is set to custom
         let supersample_scale = settings.as_ref().unwrap().get_float(
-            &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-            &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+            CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
         );
-        return match supersample_scale {
+        match supersample_scale {
             Ok(supersample_scale) => Ok(Some(supersample_scale)),
             Err(_) => Err("SUPERSAMPLE_SCALE_NOT_FOUND".to_string()),
-        };
+        }
     }
 
     pub async fn set_supersample_scale(
@@ -154,14 +154,14 @@ impl OpenVRManager {
         let settings = self.settings.lock().await;
         if settings.is_some() {
             let _ = settings.as_ref().unwrap().set_bool(
-                &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-                &CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+                CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
                 supersample_scale.is_some(),
             );
             if supersample_scale.is_some() {
                 let _ = settings.as_ref().unwrap().set_float(
-                    &CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
-                    &CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
                     supersample_scale.unwrap(),
                 );
             }

@@ -4,13 +4,13 @@ mod models;
 use std::{
     io,
     net::{Ipv4Addr, UdpSocket},
-    sync::mpsc::{self, TryRecvError},
 };
 
 use log::{error, info};
+use models::{OSCMessage, OSCValue};
 use rosc::{OscPacket, OscType};
 use tokio::sync::Mutex;
-use models::{OSCMessage, OSCValue};
+use tokio_util::sync::CancellationToken;
 
 use crate::utils::send_event;
 
@@ -33,23 +33,14 @@ pub async fn init() {
     };
 }
 
-async fn spawn_receiver_task() -> mpsc::Sender<()> {
+async fn spawn_receiver_task() -> CancellationToken {
     info!("[Core] Starting OSC receiver task");
-    let (termination_tx, termination_rx) = mpsc::channel::<()>();
+    let cancellation_token = CancellationToken::new();
+    let cancellation_token_internal = cancellation_token.clone();
     tokio::spawn(async move {
-        loop {
+        while !cancellation_token_internal.is_cancelled() {
             let socket_guard = OSC_RECEIVE_SOCKET.lock().await;
             let socket = socket_guard.as_ref().unwrap();
-            // Check if we have to terminate this task
-            let val = termination_rx.try_recv();
-            match val {
-                Ok(_) | Err(TryRecvError::Disconnected) => {
-                    // Break to terminate this task
-                    info!("[Core] Terminated OSC receiver task");
-                    break;
-                }
-                Err(TryRecvError::Empty) => (),
-            }
             let mut buf = [0u8; rosc::decoder::MTU];
             match socket.recv(&mut buf) {
                 Ok(size) => {
@@ -86,7 +77,8 @@ async fn spawn_receiver_task() -> mpsc::Sender<()> {
                                     })
                                     .collect(),
                             },
-                        ).await;
+                        )
+                        .await;
                     }
                 }
                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}
@@ -98,6 +90,6 @@ async fn spawn_receiver_task() -> mpsc::Sender<()> {
             }
         }
     });
-    // Return OSC Retrieval thread terminator
-    termination_tx
+    info!("[Core] Terminated OSC receiver task");
+    cancellation_token
 }

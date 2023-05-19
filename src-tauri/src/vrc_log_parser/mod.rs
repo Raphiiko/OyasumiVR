@@ -65,15 +65,9 @@ fn parse_datetime_from_line(line: String) -> u64 {
 }
 
 async fn process_log_line(line: String, initial_load: bool) {
-    if parse_on_player_joined(line.clone(), initial_load.clone()).await {
-        return;
-    }
-    if parse_on_player_left(line.clone(), initial_load.clone()).await {
-        return;
-    }
-    if parse_on_location_change(line.clone(), initial_load.clone()).await {
-        return;
-    }
+    let _ = parse_on_player_joined(line.clone(), initial_load).await
+        || parse_on_player_left(line.clone(), initial_load).await
+        || parse_on_location_change(line.clone(), initial_load).await;
 }
 
 async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
@@ -166,107 +160,102 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
     false
 }
 
-async fn log_watch_task(path: String, cancellation_token: CancellationToken) {
-    let file = File::open(path.clone()).unwrap();
-    let reader = BufReader::new(file);
-    let lines = reader.lines();
-    let mut lines_iterator = lines;
-    let mut first_run = true;
-
-    // Use an async block to make the loop asynchronous
-    while !cancellation_token.is_cancelled() {
-        if !first_run {
-            // Check for new log lines every second
-            tokio::time::sleep(Duration::from_secs(1)).await;
-        }
-
-        // Process new lines
-        for line in lines_iterator.by_ref() {
-            let line = line.unwrap();
-            if line.trim().is_empty() {
-                continue;
-            }
-            process_log_line(line, first_run).await;
-        }
-
-        if first_run {
-            debug!(
-                "[Core] Initial read of VRChat log file complete. ({})",
-                path
-            );
-            send_event(
-                "VRC_LOG_EVENT",
-                VRCLogEvent {
-                    time: Arc::new(SystemTime::now())
-                        .duration_since(UNIX_EPOCH)
-                        .unwrap()
-                        .as_millis() as u64,
-                    event: String::from("InitialLoadComplete"),
-                    data: String::from(""),
-                    initial_load: true,
-                },
-            )
-            .await;
-            first_run = false;
-        }
-    }
-
-    info!("[Core] Log reader task terminated. ({})", path);
-}
-
 fn start_log_watch_task(path: String) -> CancellationToken {
     let cancellation_token = CancellationToken::new();
-    tokio::spawn(log_watch_task(path, cancellation_token.clone()));
-    cancellation_token
-}
+    let cancellation_token_internal = cancellation_token.clone();
+    tokio::spawn(async move {
+        let file = File::open(path.clone()).unwrap();
+        let reader = BufReader::new(file);
+        let lines = reader.lines();
+        let mut lines_iterator = lines;
+        let mut first_run = true;
 
-async fn log_locator_task(cancellation_token: CancellationToken) {
-    struct LoopContext {
-        current_log_path: Option<String>,
-        reader_task_cancellation_token: Option<CancellationToken>,
-    }
-    let mut loop_context = LoopContext {
-        current_log_path: None,
-        reader_task_cancellation_token: None,
-    };
-    let ctx = &mut loop_context;
-    loop {
-        tokio::time::sleep(Duration::from_millis(1000)).await;
-        // Check if we have to terminate this task
-        if cancellation_token.is_cancelled() {
-            // Terminate any reader task
-            if let Some(token) = &ctx.reader_task_cancellation_token {
-                token.cancel();
+        // Use an async block to make the loop asynchronous
+        while !cancellation_token_internal.is_cancelled() {
+            if !first_run {
+                // Check for new log lines every second
+                tokio::time::sleep(Duration::from_secs(1)).await;
             }
-            // Break to terminate this task
-            info!("[Core] Terminated VRChat log watcher");
-            break;
+
+            // Process new lines
+            for line in lines_iterator.by_ref() {
+                let line = line.unwrap();
+                if line.trim().is_empty() {
+                    continue;
+                }
+                process_log_line(line, first_run).await;
+            }
+
+            if first_run {
+                debug!(
+                    "[Core] Initial read of VRChat log file complete. ({})",
+                    path
+                );
+                send_event(
+                    "VRC_LOG_EVENT",
+                    VRCLogEvent {
+                        time: Arc::new(SystemTime::now())
+                            .duration_since(UNIX_EPOCH)
+                            .unwrap()
+                            .as_millis() as u64,
+                        event: String::from("InitialLoadComplete"),
+                        data: String::from(""),
+                        initial_load: true,
+                    },
+                )
+                .await;
+                first_run = false;
+            }
         }
-        // Check the current log file path
-        let log_path_option = get_latest_log_path();
-        if log_path_option.is_none() {
-            continue;
-        }
-        let log_path = log_path_option.unwrap();
-        // If we are already watching the current file, stop here
-        if ctx.current_log_path.is_some() && *ctx.current_log_path.as_ref().unwrap() == log_path {
-            continue;
-        }
-        // We need to watch a new file. Terminate the old reader task first if it exists.
-        if let Some(token) = &ctx.reader_task_cancellation_token {
-            token.cancel();
-        }
-        // Start watching the new file
-        info!("[Core] Starting VRChat log watcher. ({})", log_path.clone());
-        *ctx = LoopContext {
-            current_log_path: Some(log_path.clone()),
-            reader_task_cancellation_token: Some(start_log_watch_task(log_path.clone())),
-        };
-    }
+
+        info!("[Core] Log reader task terminated. ({})", path);
+    });
+    cancellation_token
 }
 
 pub fn start_log_locator_task() -> CancellationToken {
     let cancellation_token = CancellationToken::new();
-    tokio::spawn(log_locator_task(cancellation_token.clone()));
+    let cancellation_token_internal = cancellation_token.clone();
+    tokio::spawn(async move {
+        struct LoopContext {
+            current_log_path: Option<String>,
+            reader_task_cancellation_token: Option<CancellationToken>,
+        }
+        let mut loop_context = LoopContext {
+            current_log_path: None,
+            reader_task_cancellation_token: None,
+        };
+        let ctx = &mut loop_context;
+        while !cancellation_token_internal.is_cancelled() {
+            tokio::time::sleep(Duration::from_millis(1000)).await;
+            // Check the current log file path
+            let log_path_option = get_latest_log_path();
+            if log_path_option.is_none() {
+                continue;
+            }
+            let log_path = log_path_option.unwrap();
+            // If we are already watching the current file, stop here
+            if ctx.current_log_path.is_some() && *ctx.current_log_path.as_ref().unwrap() == log_path
+            {
+                continue;
+            }
+            // We need to watch a new file. Terminate the old reader task first if it exists.
+            if let Some(token) = &ctx.reader_task_cancellation_token {
+                token.cancel();
+            }
+            // Start watching the new file
+            info!("[Core] Starting VRChat log watcher. ({})", log_path.clone());
+            *ctx = LoopContext {
+                current_log_path: Some(log_path.clone()),
+                reader_task_cancellation_token: Some(start_log_watch_task(log_path.clone())),
+            };
+        }
+        // Terminate any reader task
+        if let Some(token) = &ctx.reader_task_cancellation_token {
+            token.cancel();
+        }
+        // Break to terminate this task
+        info!("[Core] Terminated VRChat log watcher");
+    });
     cancellation_token
 }

@@ -11,7 +11,6 @@ mod elevated_sidecar;
 mod globals;
 mod http_server;
 mod image_cache;
-mod lighthouse;
 mod openvr;
 mod os;
 mod osc;
@@ -37,7 +36,7 @@ fn main() {
             ))) {
                 Ok(_) => {}
                 Err(e) => {
-                    eprintln!("Error during Oyasumi's application setup: {}", e);
+                    eprintln!("Error during Oyasumi's application setup: {e}");
                     std::process::exit(1);
                 }
             }
@@ -71,7 +70,6 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         vrc_log_parser::commands::init_vrc_log_watcher,
         http_server::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
-        lighthouse::commands::lighthouse_scan_devices,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
@@ -117,11 +115,10 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 async fn app_setup(app_handle: tauri::AppHandle) {
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
-    // Get reference to main window
-    let window = app_handle.get_window("main").unwrap();
     // Open devtools if we're in debug mode
     #[cfg(debug_assertions)]
     {
+        let window = app_handle.get_window("main").unwrap();
         window.open_devtools();
     }
     // Get dependencies
@@ -136,8 +133,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::load_sounds();
     // Initialize OSC
     osc::init().await;
-    // Initialize Lighthouse Bluetooth
-    lighthouse::init().await;
     // Initialize log commands
     commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
     // Setup start of minute cronjob
@@ -164,5 +159,5 @@ async fn app_setup(app_handle: tauri::AppHandle) {
 }
 
 fn on_cron_minute_start(_: &str) {
-   tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }
