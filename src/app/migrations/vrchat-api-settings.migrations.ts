@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { info } from 'tauri-plugin-log-api';
 
@@ -26,6 +26,7 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
       }`
     );
   }
+  data = merge({}, VRCHAT_API_SETTINGS_DEFAULT, data);
   return data as VRChatApiSettings;
 }
 

@@ -12,6 +12,8 @@ export interface AppSettings {
   oscEnableExternalControl: boolean;
   enableDesktopNotifications: boolean;
   enableXSOverlayNotifications: boolean;
+  exitInSystemTray: boolean;
+  startInSystemTray: boolean;
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
@@ -29,6 +31,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   oscEnableExternalControl: true,
   enableXSOverlayNotifications: false,
   enableDesktopNotifications: false,
+  exitInSystemTray: false,
+  startInSystemTray: false,
 };
 
 export type ExecutableReferenceStatus =
