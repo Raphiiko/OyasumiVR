@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New multilingual NSIS based installer package for new releases.
 - Allow for disabling of OSC features to prevent Oyasumi from binding ports.
 - Show error indicators in navigation and tabs when the OSC server cannot be started.
+- System tray icon (by [neuroblack](https://github.com/neuroblack)).
+- Option to close Oyasumi's window to the system tray, rather than quitting the application
+  (by [neuroblack](https://github.com/neuroblack)).
+- Option to start Oyasumi hidden in the system tray (by [neuroblack](https://github.com/neuroblack)).
 
 ### Changed
 
@@ -23,8 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remote images now fade in smoothly upon load.
 - Language selection modal now always shows if the user has not picked a language.
 - Updated splash screen.
-- Updated to Angular 16.
-- Updated to Tauri 1.3.
+- Updated to Angular 16 & Tauri 1.3.
 
 ### Removed
 
