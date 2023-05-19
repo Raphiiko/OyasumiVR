@@ -102,6 +102,7 @@ import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
+import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
 import { SPLASH_MIN_DURATION } from './globals';
 import { ModalService } from './services/modal.service';
@@ -237,6 +238,7 @@ export class AppModule {
     private brightnessControlService: BrightnessControlService,
     private brightnessControlAutomationService: BrightnessControlAutomationService,
     private renderResolutionAutomationService: RenderResolutionAutomationService,
+    private systemTrayService: SystemTrayService,
     private eventLog: EventLogService
   ) {
     this.init();
@@ -249,8 +251,12 @@ export class AppModule {
         await CachedValue.cleanCache();
         // Preload assets
         await this.preloadAssets();
-        // Initialize app settings and event log
-        await Promise.all([this.appSettingsService.init(), this.eventLog.init()]);
+        // Initialize base utilities
+        await Promise.all([
+          this.appSettingsService.init(),
+          this.eventLog.init(),
+          this.systemTrayService.init(),
+        ]);
         // Initialize telemetry
         await Promise.all([this.telemetryService.init()]);
         // Initialize general utility services
@@ -299,6 +305,11 @@ export class AppModule {
       SPLASH_MIN_DURATION
     );
     // Close the splash screen after initialization
+    await Promise.all([
+      this.appSettingsService.init(),
+      this.eventLog.init(),
+      this.systemTrayService.init(),
+    ]);
     await invoke('close_splashscreen');
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);

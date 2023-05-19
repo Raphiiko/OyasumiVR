@@ -1,3 +1,4 @@
+use crate::system_tray::SYSTEMTRAY_MANAGER;
 use log::debug;
 use tauri::Manager;
 
@@ -8,6 +9,16 @@ pub async fn close_splashscreen(window: tauri::Window) {
     if let Some(splashscreen) = window.get_window("splashscreen") {
         splashscreen.close().unwrap();
     }
-    // Show main window
-    window.get_window("main").unwrap().show().unwrap();
+
+    // Show the window if the "Start in system tray" option is set to false.
+    // Otherwise, keep the window hidden until the user clicks the system tray icon to show it.
+    if !SYSTEMTRAY_MANAGER
+        .lock()
+        .await
+        .as_ref()
+        .unwrap()
+        .start_in_tray
+    {
+        window.get_window("main").unwrap().show().unwrap();
+    }
 }
