@@ -165,15 +165,12 @@ Supporting more headsets by adjusting the image brightness is something that is 
 ### Prerequisites
 
 #### Tauri
-To start development on Oyasumi, start by following Tauri's [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites)
+To start development on Oyasumi, start by following Tauri's [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites).
+
 This involves installing C++ Build tools, WebView2, and Rust.
 
 #### NodeJS
 Next, install [NodeJS](https://nodejs.org/en/download/).
-
-#### Yarn
-Instead of using `npm` as your package manager, Oyasumi is set up with `yarn` in mind.
-Make sure you have [Yarn](https://yarnpkg.com/getting-started/install) installed.
 
 ### Setting up the project
 
@@ -181,10 +178,10 @@ Once you have set up these dependencies, you can continue as follows:
 
 1. Check out Oyasumi somewhyere on your machine: `git clone https://github.com/Raphiiko/Oyasumi.git`
 2. Change into the new project directory: `cd Oyasumi`
-2. Install the front-end's dependencies from NPM: `yarn`
-3. Run `yarn build` at least once.
+2. Install the front-end's dependencies from NPM: `npm install`
+3. Run `npm run build` at least once.
 
-From here, you can run `yarn tauri dev` to run the application locally and start developing!
+From here, you can run `npm run tauri dev` to run Oyasumi locally and start developing!
 
 ## VRChat
 
