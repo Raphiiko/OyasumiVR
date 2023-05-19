@@ -45,7 +45,7 @@ jobs:
       - name: Check Rust code in elevated sidecar module
         run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
       - name: Check Rust code in core module
-        run: >
+        run: |
           mkdir -p dist/oyasumi/ # Create empty dist folder
           mkdir -p src-elevated-sidecar/target/release/ # Create empty target folder for sidecar executable
           touch src-elevated-sidecar/target/release/oyasumi-elevated-sidecar.exe  # Create dummy sidecar executable
