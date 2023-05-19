@@ -52,6 +52,7 @@ jobs:
           node scripts/sidecar-post-build.js # Rename dummy sidecar executable to the correct name
           cd src-tauri
           cargo clippy --all-features --no-deps # Check Rust code in core module
+          cd ..
           rm src-elevated-sidecar/target/release/oyasumi-elevated-sidecar*.exe # Clean up dummy sidecar executable(s)
       - name: Get Changelog Entry
         id: changelog_reader
