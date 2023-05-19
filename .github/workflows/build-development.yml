@@ -49,7 +49,7 @@ jobs:
           mkdir -p dist/oyasumi/ # Create empty dist folder
           mkdir -p src-elevated-sidecar/target/release/ # Create empty target folder for sidecar executable
           touch src-elevated-sidecar/target/release/oyasumi-elevated-sidecar.exe  # Create dummy sidecar executable
-          node scripts/move-sidecar-build.js # Rename dummy sidecar executable to the correct name
+          node scripts/post-sidecar-build.js # Rename dummy sidecar executable to the correct name
           cd src-tauri
           cargo clippy --all-features --no-deps # Check Rust code in core module
           rm src-elevated-sidecar/target/release/oyasumi-elevated-sidecar*.exe # Clean up dummy sidecar executable(s)
