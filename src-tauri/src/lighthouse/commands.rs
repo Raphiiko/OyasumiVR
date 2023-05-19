@@ -1,10 +1,7 @@
-use btleplug::api::{Central, CentralEvent, Manager as _, Peripheral, ScanFilter};
-use btleplug::platform::{Adapter, Manager, PeripheralId};
-use futures::{Stream, StreamExt};
-use log::{error, info, warn};
-use tokio::sync::Mutex;
-use uuid::Uuid;
+use btleplug::api::{Central, ScanFilter};
+use log::{error, info};
 
+use super::{BT_CENTRAL, BT_SCANNING};
 
 #[tauri::command]
 pub async fn lighthouse_scan_devices() -> Result<(), String> {

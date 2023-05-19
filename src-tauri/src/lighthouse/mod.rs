@@ -1,4 +1,6 @@
-use btleplug::api::{Central, CentralEvent, Manager as _, Peripheral, ScanFilter};
+pub mod commands;
+
+use btleplug::api::{Central, CentralEvent, Manager as _, Peripheral};
 use btleplug::platform::{Adapter, Manager, PeripheralId};
 use futures::{Stream, StreamExt};
 use log::{error, info, warn};
@@ -81,7 +83,7 @@ async fn handle_bt_events(mut events: std::pin::Pin<Box<dyn Stream<Item = Centra
     }
 }
 
-pub async fn init_bt() {
+pub async fn init() {
     // Initialize manager
     {
         let manager = match Manager::new().await {

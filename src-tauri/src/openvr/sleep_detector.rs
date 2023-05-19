@@ -1,7 +1,5 @@
+use crate::utils::{get_time, send_event};
 use oyasumi_shared::models::SleepDetectorStateReport;
-use tauri::Manager;
-
-use crate::{utils::get_time, TAURI_WINDOW};
 
 const MAX_EVENT_AGE_MS: u128 = 900000; // 15 minutes
 
@@ -70,7 +68,7 @@ impl SleepDetector {
         }
     }
 
-    pub fn log_pose(&mut self, position: [f32; 3], quaternion: [f64; 4]) {
+    pub async fn log_pose(&mut self, position: [f32; 3], quaternion: [f64; 4]) {
         // Add the event
         let event = PoseEvent {
             x: position[0],
@@ -108,7 +106,7 @@ impl SleepDetector {
         // Send a state report if it's been over a second since the last one
         if get_time() > self.next_state_report {
             self.next_state_report = get_time() + 1000;
-            self.send_state_report();
+            self.send_state_report().await;
         }
     }
 
@@ -152,31 +150,26 @@ impl SleepDetector {
         total_rotation
     }
 
-    fn send_state_report(&self) {
-        {
-            let window_guard = TAURI_WINDOW.lock().unwrap();
-            let window = window_guard.as_ref().unwrap();
-            window
-                .emit_all(
-                    "SLEEP_DETECTOR_STATE_REPORT",
-                    SleepDetectorStateReport {
-                        distance_in_last_15_minutes: self.distance_in_last_15_minutes,
-                        distance_in_last_10_minutes: self.distance_in_last_10_minutes,
-                        distance_in_last_5_minutes: self.distance_in_last_5_minutes,
-                        distance_in_last_1_minute: self.distance_in_last_1_minute,
-                        distance_in_last_10_seconds: self.distance_in_last_10_seconds,
-                        rotation_in_last_15_minutes: self.rotation_in_last_15_minutes,
-                        rotation_in_last_10_minutes: self.rotation_in_last_10_minutes,
-                        rotation_in_last_5_minutes: self.rotation_in_last_5_minutes,
-                        rotation_in_last_1_minute: self.rotation_in_last_1_minute,
-                        rotation_in_last_10_seconds: self.rotation_in_last_10_seconds,
-                        start_time: self.start_time,
-                        last_log: self.last_log,
-                    },
-                )
-                .ok();
-            // self.send_influxdb_report();
-        }
+    async fn send_state_report(&self) {
+        send_event(
+            "SLEEP_DETECTOR_STATE_REPORT",
+            SleepDetectorStateReport {
+                distance_in_last_15_minutes: self.distance_in_last_15_minutes,
+                distance_in_last_10_minutes: self.distance_in_last_10_minutes,
+                distance_in_last_5_minutes: self.distance_in_last_5_minutes,
+                distance_in_last_1_minute: self.distance_in_last_1_minute,
+                distance_in_last_10_seconds: self.distance_in_last_10_seconds,
+                rotation_in_last_15_minutes: self.rotation_in_last_15_minutes,
+                rotation_in_last_10_minutes: self.rotation_in_last_10_minutes,
+                rotation_in_last_5_minutes: self.rotation_in_last_5_minutes,
+                rotation_in_last_1_minute: self.rotation_in_last_1_minute,
+                rotation_in_last_10_seconds: self.rotation_in_last_10_seconds,
+                start_time: self.start_time,
+                last_log: self.last_log,
+            },
+        )
+        .await;
+        // self.send_influxdb_report();
     }
 
     // #[tokio::main]

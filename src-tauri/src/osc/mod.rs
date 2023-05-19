@@ -1,20 +1,27 @@
+pub mod commands;
+mod models;
+
 use std::{
     io,
+    net::{Ipv4Addr, UdpSocket},
     sync::mpsc::{self, TryRecvError},
-    thread, net::{UdpSocket, Ipv4Addr},
 };
 
 use log::{error, info};
 use rosc::{OscPacket, OscType};
+use tokio::sync::Mutex;
+use models::{OSCMessage, OSCValue};
 
-use crate::{
-    commands::osc::{OSCMessage, OSCValue},
-    OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET, TAURI_WINDOW,
-};
+use crate::utils::send_event;
 
-pub fn init_osc() {
+lazy_static! {
+    static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+}
+
+pub async fn init() {
     // Setup sending socket
-    *OSC_SEND_SOCKET.lock().unwrap() = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
+    *OSC_SEND_SOCKET.lock().await = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
         Ok(s) => Some(s),
         Err(err) => {
             error!(
@@ -26,19 +33,19 @@ pub fn init_osc() {
     };
 }
 
-pub fn spawn_osc_receiver_thread() -> mpsc::Sender<()> {
-    info!("[Core] Starting OSC receiver thread");
+async fn spawn_receiver_task() -> mpsc::Sender<()> {
+    info!("[Core] Starting OSC receiver task");
     let (termination_tx, termination_rx) = mpsc::channel::<()>();
-    thread::spawn(move || {
+    tokio::spawn(async move {
         loop {
-            let socket_guard = OSC_RECEIVE_SOCKET.lock().unwrap();
+            let socket_guard = OSC_RECEIVE_SOCKET.lock().await;
             let socket = socket_guard.as_ref().unwrap();
-            // Check if we have to terminate this thread
+            // Check if we have to terminate this task
             let val = termination_rx.try_recv();
             match val {
                 Ok(_) | Err(TryRecvError::Disconnected) => {
-                    // Break to terminate this thread
-                    info!("[Core] Terminated OSC receiver thread");
+                    // Break to terminate this task
+                    info!("[Core] Terminated OSC receiver task");
                     break;
                 }
                 Err(TryRecvError::Empty) => (),
@@ -48,9 +55,7 @@ pub fn spawn_osc_receiver_thread() -> mpsc::Sender<()> {
                 Ok(size) => {
                     let (_, packet) = rosc::decoder::decode_udp(&buf[..size]).unwrap();
                     if let OscPacket::Message(msg) = packet {
-                        let window_guard = TAURI_WINDOW.lock().unwrap();
-                        let window = window_guard.as_ref().unwrap();
-                        let _ = window.emit(
+                        send_event(
                             "OSC_MESSAGE",
                             OSCMessage {
                                 address: msg.addr,
@@ -81,7 +86,7 @@ pub fn spawn_osc_receiver_thread() -> mpsc::Sender<()> {
                                     })
                                     .collect(),
                             },
-                        );
+                        ).await;
                     }
                 }
                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}
