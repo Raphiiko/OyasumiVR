@@ -7,7 +7,7 @@ pub async fn msi_afterburner_set_profile(
     executable_path: String,
     profile: i8,
 ) -> Result<bool, String> {
-    let url = match elevated_sidecar::get_base_url() {
+    let url = match elevated_sidecar::get_base_url().await {
         Some(base_url) => base_url + "/msi_afterburner/set_profile",
         None => return Err("ELEVATED_SIDECAR_INACTIVE".into()),
     };

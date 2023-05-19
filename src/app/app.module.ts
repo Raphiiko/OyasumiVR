@@ -256,9 +256,7 @@ export class AppModule {
         // Initialize general utility services
         await Promise.all([
           this.openvrService.init(),
-          this.oscService.init().then(async () => {
-            await this.oscControlService.init();
-          }),
+          this.oscService.init().then(() => this.oscControlService.init()),
           this.sleepService.init(),
           this.vrchatService.init(),
           this.vrchatLogService.init(),

@@ -1,13 +1,27 @@
+pub mod commands;
+
 use hyper::{
     header::{CONTENT_TYPE, USER_AGENT},
     Body, Request, Response,
 };
 use log::{error, info};
 use mime::Mime;
-
 use serde_json::json;
-use std::{collections::HashMap, convert::Infallible, ffi::OsString, path::Path, str::FromStr};
+use tokio::sync::Mutex;
+use std::{collections::HashMap, convert::Infallible, ffi::OsString, path::{Path, PathBuf}, str::FromStr};
 use urlencoding::decode;
+
+lazy_static! {
+    pub static ref INSTANCE: Mutex<Option<ImageCache>> = Default::default();
+}
+
+pub async fn init(cache_dir: PathBuf) {
+    let image_cache_dir = cache_dir.join("image_cache");
+    let image_cache = ImageCache::new(image_cache_dir.into_os_string());
+    image_cache.clean(true);
+    *INSTANCE.lock().await = Some(image_cache);
+}
+
 
 #[derive(Debug, Clone)]
 pub struct ImageCache {

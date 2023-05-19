@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
-    "beforeBuildCommand": "npm run build",
-    "beforeDevCommand": "npm run start",
+    "beforeBuildCommand": "yarn build",
+    "beforeDevCommand": "yarn start",
     "devPath": "http://localhost:4200",
     "distDir": "../dist/oyasumi",
     "withGlobalTauri": true

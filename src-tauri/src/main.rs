@@ -6,202 +6,158 @@
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
-use crate::commands::admin::start_elevation_sidecar;
-use crate::image_cache::ImageCache;
-use background::openvr::OpenVRManager;
-use commands::log_utils::LOG_DIR;
+mod commands;
+mod elevated_sidecar;
+mod globals;
+mod http_server;
+mod image_cache;
+mod openvr;
+mod os;
+mod osc;
+mod utils;
+mod vrc_log_parser;
+
 use cronjob::CronJob;
+use globals::TAURI_APP_HANDLE;
 use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
-use std::{net::UdpSocket, sync::Mutex};
-use tauri::Manager;
+use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-
-mod commands {
-    pub mod admin;
-    pub mod afterburner;
-    pub mod http;
-    pub mod image_cache;
-    pub mod log_parser;
-    pub mod log_utils;
-    pub mod notifications;
-    pub mod nvml;
-    pub mod openvr;
-    pub mod os;
-    pub mod osc;
-    pub mod splash;
-}
-
-mod background {
-    pub mod http_server;
-    pub mod log_parser;
-    pub mod openvr;
-    pub mod osc;
-}
-
-mod elevated_sidecar;
-mod gesture_detector;
-mod image_cache;
-mod sleep_detector;
-mod utils;
-
-lazy_static! {
-    static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
-    static ref TAURI_WINDOW: Mutex<Option<tauri::Window>> = Default::default();
-    static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
-    static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
-    static ref MAIN_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
-    static ref SIDECAR_HTTP_SERVER_PORT: Mutex<Option<u16>> = Default::default();
-    static ref SIDECAR_PID: Mutex<Option<u32>> = Default::default();
-    static ref IMAGE_CACHE: Mutex<Option<ImageCache>> = Default::default();
-}
 
 fn main() {
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs_extra::init())
-        .plugin(
-            tauri_plugin_log::Builder::default()
-                .format(move |out, message, record| {
-                    let format = time::format_description::parse(
-                        "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
-                    )
-                    .unwrap();
-                    out.finish(format_args!(
-                        "{}[{}] {}",
-                        time::OffsetDateTime::now_utc().format(&format).unwrap(),
-                        record.level(),
-                        message
-                    ))
-                })
-                .level(LevelFilter::Info)
-                .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
-                .rotation_strategy(RotationStrategy::KeepAll)
-                .build(),
-        )
-        .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
-            // Focus main window when user attempts to launch a second instance.
-            let window = app.get_window("main").unwrap();
-            if let Ok(is_visible) = window.is_visible() {
-                if is_visible {
-                    window.set_focus().unwrap();
-                }
-            }
-        }))
-        // .on_window_event(|event| if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
-        //     event.window().hide().unwrap();
-        //     api.prevent_close();
-        // })
-        // .system_tray(
-        //     SystemTray::new()
-        // )
-        // .on_system_tray_event(|app, event| match event {
-        //     SystemTrayEvent::LeftClick {
-        //       position: _,
-        //       size: _,
-        //       ..
-        //     } => {
-        //       let window = app.get_window("main").unwrap();
-        //       window.show().unwrap();
-        //       window.set_focus().unwrap();
-        //     }
-        //     SystemTrayEvent::RightClick {
-        //       position: _,
-        //       size: _,
-        //       ..
-        //     } => {
-        //       // TODO: Implement context menu
-        //     }
-        //     _ => (),
-        // })
+        .plugin(configure_tauri_plugin_log())
+        .plugin(configure_tauri_plugin_single_instance())
         .setup(|app| {
-            // Set up window reference
-            let window = app.get_window("main").unwrap();
-            #[cfg(debug_assertions)] // only include this code on debug builds
-            {
-                window.open_devtools();
-            }
-            *TAURI_WINDOW.lock().unwrap() = Some(window);
-            // Get dependencies
-            let cache_dir = app.path_resolver().app_cache_dir().unwrap();
-            std::thread::spawn(move || {
-                // Initialize Image Cache
-                let image_cache_dir = cache_dir.join("image_cache");
-                let image_cache = ImageCache::new(image_cache_dir.into_os_string());
-                image_cache.clean(true);
-                *IMAGE_CACHE.lock().unwrap() = Some(image_cache);
-                // Initialize OpenVR Manager
-                let openvr_manager = OpenVRManager::new();
-                openvr_manager.set_active(true);
-                *OPENVR_MANAGER.lock().unwrap() = Some(openvr_manager);
-                // Spawn HTTP server thread
-                background::http_server::spawn_http_server_thread();
-                // Load sounds
-                commands::os::load_sounds();
-                // Initialize OSC
-                background::osc::init_osc();
-            });
-            // Reference log dir
-            {
-                *LOG_DIR.lock().unwrap() = Some(app.path_resolver().app_log_dir().unwrap());
-            }
-            // Setup start of minute cronjob
-            let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
-            cron.seconds("0");
-            CronJob::start_job_threaded(cron);
-            // If we have admin privileges, prelaunch the elevation sidecar
-            if is_elevated() {
-                info!("[Core] Main process is running with elevation. Pre-launching sidecar...");
-                loop {
-                    {
-                        let main_http_port = MAIN_HTTP_SERVER_PORT.lock().unwrap();
-                        if main_http_port.is_some() {
-                            start_elevation_sidecar();
-                            break;
-                        }
-                    }
+            match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
+                app.handle(),
+            ))) {
+                Ok(_) => {}
+                Err(e) => {
+                    eprintln!("Error during Oyasumi's application setup: {e}");
+                    std::process::exit(1);
                 }
-            } else {
-                info!("[Core] Main process is running without elevation. Sidecar will be launched on demand.");
             }
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![
-            commands::openvr::openvr_get_devices,
-            commands::openvr::openvr_status,
-            commands::openvr::openvr_get_analog_gain,
-            commands::openvr::openvr_set_analog_gain,
-            commands::openvr::openvr_get_supersample_scale,
-            commands::openvr::openvr_set_supersample_scale,
-            commands::os::run_command,
-            commands::os::play_sound,
-            commands::os::show_in_folder,
-            commands::splash::close_splashscreen,
-            commands::nvml::nvml_status,
-            commands::nvml::nvml_get_devices,
-            commands::nvml::nvml_set_power_management_limit,
-            commands::osc::osc_send_bool,
-            commands::osc::osc_send_float,
-            commands::osc::osc_send_int,
-            commands::osc::osc_valid_addr,
-            commands::osc::start_osc_server,
-            commands::osc::stop_osc_server,
-            commands::admin::elevation_sidecar_running,
-            commands::admin::start_elevation_sidecar,
-            commands::log_parser::init_vrc_log_watcher,
-            commands::http::get_http_server_port,
-            commands::afterburner::msi_afterburner_set_profile,
-            commands::notifications::xsoverlay_send_message,
-            commands::image_cache::clean_image_cache,
-            commands::log_utils::clean_log_files,
-        ]);
+        .invoke_handler(configure_command_handlers());
 
     app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
 }
 
+fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
+    tauri::generate_handler![
+        openvr::commands::openvr_get_devices,
+        openvr::commands::openvr_status,
+        openvr::commands::openvr_get_analog_gain,
+        openvr::commands::openvr_set_analog_gain,
+        openvr::commands::openvr_get_supersample_scale,
+        openvr::commands::openvr_set_supersample_scale,
+        os::commands::run_command,
+        os::commands::play_sound,
+        os::commands::show_in_folder,
+        osc::commands::osc_send_bool,
+        osc::commands::osc_send_float,
+        osc::commands::osc_send_int,
+        osc::commands::osc_valid_addr,
+        osc::commands::start_osc_server,
+        osc::commands::stop_osc_server,
+        elevated_sidecar::commands::elevation_sidecar_running,
+        elevated_sidecar::commands::start_elevation_sidecar,
+        vrc_log_parser::commands::init_vrc_log_watcher,
+        http_server::commands::get_http_server_port,
+        image_cache::commands::clean_image_cache,
+        commands::log_utils::clean_log_files,
+        commands::afterburner::msi_afterburner_set_profile,
+        commands::notifications::xsoverlay_send_message,
+        commands::splash::close_splashscreen,
+        commands::nvml::nvml_status,
+        commands::nvml::nvml_get_devices,
+        commands::nvml::nvml_set_power_management_limit,
+    ]
+}
+
+fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
+    tauri_plugin_log::Builder::default()
+        .format(move |out, message, record| {
+            let format = time::format_description::parse(
+                "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
+            )
+            .unwrap();
+            out.finish(format_args!(
+                "{}[{}] {}",
+                time::OffsetDateTime::now_utc().format(&format).unwrap(),
+                record.level(),
+                message
+            ))
+        })
+        .level(LevelFilter::Info)
+        .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+        .rotation_strategy(RotationStrategy::KeepAll)
+        .build()
+}
+
+fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
+    tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        // Focus main  window when user attempts to launch a second instance.
+        let window = app.get_window("main").unwrap();
+        if let Ok(is_visible) = window.is_visible() {
+            if is_visible {
+                window.set_focus().unwrap();
+            }
+        }
+    })
+}
+
+async fn app_setup(app_handle: tauri::AppHandle) {
+    // Set up app reference
+    *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
+    // Open devtools if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        let window = app_handle.get_window("main").unwrap();
+        window.open_devtools();
+    }
+    // Get dependencies
+    let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
+    // Initialize Image Cache
+    image_cache::init(cache_dir).await;
+    // Initialize OpenVR Manager
+    openvr::init().await;
+    // Initialize HTTP server
+    http_server::init().await;
+    // Load sounds
+    os::load_sounds();
+    // Initialize OSC
+    osc::init().await;
+    // Initialize log commands
+    commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
+    // Setup start of minute cronjob
+    let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
+    cron.seconds("0");
+    CronJob::start_job_threaded(cron);
+    // If we have admin privileges, prelaunch the elevation sidecar
+    if is_elevated() {
+        info!("[Core] Main process is running with elevation. Pre-launching sidecar...");
+        // Wait for http server to start so we can poass the port
+        loop {
+            let main_http_port = http_server::PORT.lock().await;
+            // Once we have the port, start the sidecar
+            if main_http_port.is_some() {
+                elevated_sidecar::start().await;
+                break;
+            }
+        }
+    } else {
+        info!(
+            "[Core] Main process is running without elevation. Sidecar will be launched on demand."
+        );
+    }
+}
+
 fn on_cron_minute_start(_: &str) {
-    let window_guard = TAURI_WINDOW.lock().unwrap();
-    let window = window_guard.as_ref().unwrap();
-    let _ = window.emit_all("CRON_MINUTE_START", ());
+    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }

@@ -1,20 +1,18 @@
+pub mod commands;
+
+use crate::utils::send_event;
+use chrono::{Local, NaiveDateTime, TimeZone};
+use log::{debug, info, trace, warn};
+use serde::{Deserialize, Serialize};
 use std::{
     fs::File,
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
-    sync::{
-        mpsc::{self, TryRecvError},
-        Arc,
-    },
-    thread,
+    sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-
-use crate::TAURI_WINDOW;
-use chrono::{Local, NaiveDateTime, TimeZone};
-use log::{debug, info, trace, warn};
-use serde::{Deserialize, Serialize};
-use tauri::{api::path::home_dir, Manager};
+use tauri::api::path::home_dir;
+use tokio_util::sync::CancellationToken;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[serde(rename_all = "camelCase")]
@@ -66,18 +64,13 @@ fn parse_datetime_from_line(line: String) -> u64 {
     time.timestamp_millis() as u64
 }
 
-fn process_log_line(line: String, initial_load: bool) {
-    let parsers: Vec<fn(String, bool) -> bool> = vec![
-        parse_on_player_joined,
-        parse_on_player_left,
-        parse_on_location_change,
-    ];
-    parsers
-        .iter()
-        .find(|parser| parser(line.clone(), initial_load));
+async fn process_log_line(line: String, initial_load: bool) {
+    let _ = parse_on_player_joined(line.clone(), initial_load).await
+        || parse_on_player_left(line.clone(), initial_load).await
+        || parse_on_location_change(line.clone(), initial_load).await;
 }
 
-fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
+async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
     if line.contains("[Behaviour] OnPlayerJoined") && !line.contains("] OnPlayerJoined:") {
         let mut offset = match line.rfind("] OnPlayerJoined") {
             Some(v) => v,
@@ -94,9 +87,7 @@ fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             data: display_name,
             initial_load,
         };
-        let window_guard = TAURI_WINDOW.lock().unwrap();
-        let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {:#?}", event);
         } else {
@@ -107,7 +98,7 @@ fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
     false
 }
 
-fn parse_on_player_left(line: String, initial_load: bool) -> bool {
+async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
     if line.contains("[Behaviour] OnPlayerLeft")
         && !line.contains("] OnPlayerLeft:")
         && !line.contains("] OnPlayerLeftRoom")
@@ -127,9 +118,7 @@ fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             data: display_name,
             initial_load,
         };
-        let window_guard = TAURI_WINDOW.lock().unwrap();
-        let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {:#?}", event);
         } else {
@@ -140,7 +129,7 @@ fn parse_on_player_left(line: String, initial_load: bool) -> bool {
     false
 }
 
-fn parse_on_location_change(line: String, initial_load: bool) -> bool {
+async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
     if line.contains("[Behaviour] Joining ")
         && !line.contains("] Joining or Creating Room: ")
         && !line.contains("] Joining friend: ")
@@ -160,9 +149,7 @@ fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             data: instance_id,
             initial_load,
         };
-        let window_guard = TAURI_WINDOW.lock().unwrap();
-        let window = window_guard.as_ref().unwrap();
-        let _ = window.emit_all("VRC_LOG_EVENT", event.clone());
+        send_event("VRC_LOG_EVENT", event.clone()).await;
         if initial_load {
             trace!("[Core] VRC Log Event: {:?}", event);
         } else {
@@ -173,45 +160,38 @@ fn parse_on_location_change(line: String, initial_load: bool) -> bool {
     false
 }
 
-fn watch_log_file(path: String) -> mpsc::Sender<()> {
-    let (reader_thread_termination_tx, reader_thread_termination_rx) = mpsc::channel::<()>();
-    thread::spawn(move || {
-        // Open file stream
+fn start_log_watch_task(path: String) -> CancellationToken {
+    let cancellation_token = CancellationToken::new();
+    let cancellation_token_internal = cancellation_token.clone();
+    tokio::spawn(async move {
         let file = File::open(path.clone()).unwrap();
         let reader = BufReader::new(file);
         let lines = reader.lines();
         let mut lines_iterator = lines;
         let mut first_run = true;
-        loop {
+
+        // Use an async block to make the loop asynchronous
+        while !cancellation_token_internal.is_cancelled() {
             if !first_run {
                 // Check for new log lines every second
-                thread::sleep(Duration::from_secs(1));
+                tokio::time::sleep(Duration::from_secs(1)).await;
             }
-            // Check if we have to terminate this reader thread
-            let val = reader_thread_termination_rx.try_recv();
-            match val {
-                Ok(_) | Err(TryRecvError::Disconnected) => {
-                    info!("[Core] Log reader thread terminated. ({})", path);
-                    break;
-                }
-                Err(TryRecvError::Empty) => (),
-            }
+
             // Process new lines
             for line in lines_iterator.by_ref() {
                 let line = line.unwrap();
                 if line.trim().is_empty() {
                     continue;
                 }
-                process_log_line(line, first_run);
+                process_log_line(line, first_run).await;
             }
+
             if first_run {
                 debug!(
                     "[Core] Initial read of VRChat log file complete. ({})",
                     path
                 );
-                let window_guard = TAURI_WINDOW.lock().unwrap();
-                let window = window_guard.as_ref().unwrap();
-                let _ = window.emit_all(
+                send_event(
                     "VRC_LOG_EVENT",
                     VRCLogEvent {
                         time: Arc::new(SystemTime::now())
@@ -222,43 +202,32 @@ fn watch_log_file(path: String) -> mpsc::Sender<()> {
                         data: String::from(""),
                         initial_load: true,
                     },
-                );
+                )
+                .await;
                 first_run = false;
             }
         }
+
+        info!("[Core] Log reader task terminated. ({})", path);
     });
-    // Return sender that can be used to terminate reader thread
-    reader_thread_termination_tx
+    cancellation_token
 }
 
-pub fn spawn_log_parser_thread() -> mpsc::Sender<()> {
-    let (parser_thread_termination_tx, parser_thread_termination_rx) = mpsc::channel::<()>();
-    thread::spawn(move || {
+pub fn start_log_locator_task() -> CancellationToken {
+    let cancellation_token = CancellationToken::new();
+    let cancellation_token_internal = cancellation_token.clone();
+    tokio::spawn(async move {
         struct LoopContext {
             current_log_path: Option<String>,
-            reader_thread_termination_tx: Option<mpsc::Sender<()>>,
+            reader_task_cancellation_token: Option<CancellationToken>,
         }
         let mut loop_context = LoopContext {
             current_log_path: None,
-            reader_thread_termination_tx: None,
+            reader_task_cancellation_token: None,
         };
         let ctx = &mut loop_context;
-        loop {
-            thread::sleep(Duration::from_millis(1000));
-            // Check if we have to terminate this thread
-            let val = parser_thread_termination_rx.try_recv();
-            match val {
-                Ok(_) | Err(TryRecvError::Disconnected) => {
-                    // Terminate any reader thread
-                    if ctx.reader_thread_termination_tx.is_some() {
-                        let _ = ctx.reader_thread_termination_tx.as_ref().unwrap().send(());
-                    }
-                    // Break to terminate this thread
-                    info!("[Core] Terminated VRChat log watcher");
-                    break;
-                }
-                Err(TryRecvError::Empty) => (),
-            }
+        while !cancellation_token_internal.is_cancelled() {
+            tokio::time::sleep(Duration::from_millis(1000)).await;
             // Check the current log file path
             let log_path_option = get_latest_log_path();
             if log_path_option.is_none() {
@@ -270,18 +239,23 @@ pub fn spawn_log_parser_thread() -> mpsc::Sender<()> {
             {
                 continue;
             }
-            // We need to watch a new file. Terminate the old reader thread first if it exists.
-            if ctx.reader_thread_termination_tx.is_some() {
-                let _ = ctx.reader_thread_termination_tx.as_ref().unwrap().send(());
+            // We need to watch a new file. Terminate the old reader task first if it exists.
+            if let Some(token) = &ctx.reader_task_cancellation_token {
+                token.cancel();
             }
             // Start watching the new file
             info!("[Core] Starting VRChat log watcher. ({})", log_path.clone());
             *ctx = LoopContext {
                 current_log_path: Some(log_path.clone()),
-                reader_thread_termination_tx: Some(watch_log_file(log_path.clone())),
+                reader_task_cancellation_token: Some(start_log_watch_task(log_path.clone())),
             };
         }
+        // Terminate any reader task
+        if let Some(token) = &ctx.reader_task_cancellation_token {
+            token.cancel();
+        }
+        // Break to terminate this task
+        info!("[Core] Terminated VRChat log watcher");
     });
-    // Return sender that can be used to terminate parser thread
-    parser_thread_termination_tx
+    cancellation_token
 }

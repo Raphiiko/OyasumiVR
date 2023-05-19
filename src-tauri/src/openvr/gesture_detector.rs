@@ -1,8 +1,7 @@
 use nalgebra::{Quaternion, UnitQuaternion};
 use oyasumi_shared::models::GestureDetected;
-use tauri::Manager;
 
-use crate::{utils::get_time, TAURI_WINDOW};
+use crate::utils::{get_time, send_event};
 
 const MAX_EVENT_AGE_MS: u128 = 5000; // 5 seconds
 
@@ -25,7 +24,7 @@ impl GestureDetector {
         }
     }
 
-    pub fn log_pose(&mut self, _position: [f32; 3], quaternion: [f64; 4]) {
+    pub async fn log_pose(&mut self, _position: [f32; 3], quaternion: [f64; 4]) {
         // Determine yaw
         let q = UnitQuaternion::from_quaternion(Quaternion::new(
             quaternion[3],
@@ -68,18 +67,13 @@ impl GestureDetector {
         // Detect head shake
         if get_time() - self.last_detection >= 5000 && self.detect_head_shake(movements) {
             self.last_detection = get_time();
-            {
-                let window_guard = TAURI_WINDOW.lock().unwrap();
-                let window = window_guard.as_ref().unwrap();
-                window
-                    .emit_all(
-                        "GESTURE_DETECTED",
-                        GestureDetected {
-                            gesture: "head_shake".to_string(),
-                        },
-                    )
-                    .ok();
-            }
+            send_event(
+                "GESTURE_DETECTED",
+                GestureDetected {
+                    gesture: "head_shake".to_string(),
+                },
+            )
+            .await;
         }
     }
 
