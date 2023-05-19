@@ -13,7 +13,6 @@ import { BackgroundService } from '../../services/background.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
-import { invoke } from '@tauri-apps/api';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -219,8 +218,8 @@ export class DashboardNavbarComponent implements OnInit {
   logoClicked = 0;
 
   async onLogoClick() {
-    if (this.logoClicked++ > 5) {
-    }
+    // if (this.logoClicked++ > 5) {
+    // }
   }
 
   openSubMenu(subMenu: SubMenu) {

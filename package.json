@@ -6,9 +6,9 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
-    "start": "yarn pre-build && ng serve",
-    "build": "yarn pre-build && ng build && yarn build:sidecar",
-    "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && yarn sidecar-post-build",
+    "start": "npm run pre-build && ng serve",
+    "build": "npm run pre-build && ng build && npm run build:sidecar",
+    "build:sidecar": "cd src-elevated-sidecar && cargo build --release && cd .. && npm run sidecar-post-build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "tauri": "tauri",
