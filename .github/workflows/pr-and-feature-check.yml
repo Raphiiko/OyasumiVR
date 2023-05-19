@@ -23,11 +23,11 @@ jobs:
         with:
           node-version: 16
       - name: Install NodeJS dependencies
-        run: npm install
+        run: yarn
       - name: Lint Angular project
-        run: npm run lint
+        run: yarn lint
       - name: Set app version to DEV version
-        run: npm run set-version DEV
+        run: yarn set-version DEV
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
