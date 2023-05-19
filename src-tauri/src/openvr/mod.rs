@@ -3,7 +3,7 @@ mod gesture_detector;
 mod models;
 mod sleep_detector;
 
-use std::{ffi::CStr, time::Duration};
+use std::{ffi::CStr, sync::Arc, time::Duration};
 
 use chrono::{naive::NaiveDateTime, Utc};
 use log::info;
@@ -24,37 +24,36 @@ lazy_static! {
 }
 
 pub async fn init() {
-    {
-        let manager = OpenVRManager::new();
-        manager.set_active(true).await;
-        *OPENVR_MANAGER.lock().await = Some(manager);
-    }
-    tokio::spawn(async {
-        let mut manager_guard = OPENVR_MANAGER.lock().await;
-        let manager = manager_guard.as_mut().unwrap();
-        manager.init().await;
-    });
+    let manager = OpenVRManager::new();
+    manager.set_active(true).await;
+    *OPENVR_MANAGER.lock().await = Some(manager);
 }
 
+#[derive(Clone)]
 pub struct OpenVRManager {
-    active: Mutex<bool>,
-    status: Mutex<OpenVRStatus>,
-    devices: Mutex<Vec<OVRDevice>>,
-    settings: Mutex<Option<openvr::Settings>>,
-    gesture_detector: GestureDetector,
-    sleep_detector: SleepDetector,
+    active: Arc<Mutex<bool>>,
+    status: Arc<Mutex<OpenVRStatus>>,
+    devices: Arc<Mutex<Vec<OVRDevice>>>,
+    settings: Arc<Mutex<Option<openvr::Settings>>>,
+    gesture_detector: Arc<Mutex<GestureDetector>>,
+    sleep_detector: Arc<Mutex<SleepDetector>>,
 }
 
 impl OpenVRManager {
     pub fn new() -> OpenVRManager {
-        OpenVRManager {
-            active: Mutex::new(false),
-            status: Mutex::new(OpenVRStatus::Inactive),
-            devices: Mutex::new(vec![]),
-            settings: Mutex::new(None),
-            gesture_detector: GestureDetector::new(),
-            sleep_detector: SleepDetector::new(),
-        }
+        let manager = OpenVRManager {
+            active: Arc::new(Mutex::new(false)),
+            status: Arc::new(Mutex::new(OpenVRStatus::Inactive)),
+            devices: Arc::new(Mutex::new(vec![])),
+            settings: Arc::new(Mutex::new(None)),
+            gesture_detector: Arc::new(Mutex::new(GestureDetector::new())),
+            sleep_detector: Arc::new(Mutex::new(SleepDetector::new())),
+        };
+        let mut manager_clone = manager.clone();
+        tokio::spawn(async move {
+            manager_clone.init().await;
+        });
+        manager
     }
 
     pub async fn get_devices(&self) -> Vec<OVRDevice> {
@@ -279,7 +278,8 @@ impl OpenVRManager {
                             }
                             openvr::system::event::Event::TrackedDeviceActivated
                             | openvr::system::event::Event::TrackedDeviceDeactivated => {
-                                self.update_device(e.tracked_device_index, true, system).await;
+                                self.update_device(e.tracked_device_index, true, system)
+                                    .await;
                             }
                             openvr::system::event::Event::PropertyChanged(prop) => {
                                 if matches!(
@@ -294,7 +294,8 @@ impl OpenVRManager {
                                         | openvr::property::ManufacturerName_String
                                         | openvr::property::ModelNumber_String
                                 ) {
-                                    self.update_device(e.tracked_device_index, true, system).await;
+                                    self.update_device(e.tracked_device_index, true, system)
+                                        .await;
                                 }
                             }
                             _ => {}
@@ -362,8 +363,16 @@ impl OpenVRManager {
                 };
                 // Update sleep and gesture detectors (0 == HMD)
                 if n == 0 {
-                    self.sleep_detector.log_pose(pos.v, [q.x, q.y, q.z, q.w]).await;
-                    self.gesture_detector.log_pose(pos.v, [q.x, q.y, q.z, q.w]).await;
+                    self.sleep_detector
+                        .lock()
+                        .await
+                        .log_pose(pos.v, [q.x, q.y, q.z, q.w])
+                        .await;
+                    self.gesture_detector
+                        .lock()
+                        .await
+                        .log_pose(pos.v, [q.x, q.y, q.z, q.w])
+                        .await;
                 }
                 // Emit event
                 send_event(

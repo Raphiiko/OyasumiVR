@@ -208,12 +208,12 @@ export class DashboardNavbarComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    setTimeout(async () => {
-      await invoke('lighthouse_scan_devices');
-      setInterval(async () => {
-        await invoke('lighthouse_scan_devices');
-      }, 10500);
-    }, 1000);
+    // setTimeout(async () => {
+    //   await invoke('lighthouse_scan_devices');
+    //   setInterval(async () => {
+    //     await invoke('lighthouse_scan_devices');
+    //   }, 10500);
+    // }, 1000);
   }
 
   logoClicked = 0;

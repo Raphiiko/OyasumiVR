@@ -164,5 +164,5 @@ async fn app_setup(app_handle: tauri::AppHandle) {
 }
 
 fn on_cron_minute_start(_: &str) {
-    tokio::spawn(utils::send_event("CRON_MINUTE_START", ()));
+   tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }

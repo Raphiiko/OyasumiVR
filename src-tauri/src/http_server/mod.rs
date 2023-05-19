@@ -26,9 +26,11 @@ pub async fn init() {
         server.local_addr().port()
     );
     // Run server forever
-    if let Err(e) = server.await {
-        error!("[Core] HTTP server error: {}", e);
-    }
+    tokio::spawn(async move {
+        if let Err(e) = server.await {
+            error!("[Core] HTTP server error: {}", e);
+        }
+    });
 }
 
 async fn request_handler(req: Request<Body>) -> Result<Response<Body>, Infallible> {
