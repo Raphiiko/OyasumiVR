@@ -27,8 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remote images now fade in smoothly upon load.
 - Language selection modal now always shows if the user has not picked a language.
 - Updated splash screen.
-- Updated to Angular 16.
-- Updated to Tauri 1.3.
+- Updated to Angular 16 & Tauri 1.3.
 
 ### Removed
 
