@@ -53,27 +53,6 @@
     </div>
   </div>
 </div>
-<div class="setting-category">
-  <h2 translate>settings.general.adminPrivileges.title</h2>
-  <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>settings.general.adminPrivileges.label</span>
-        <span translate>settings.general.adminPrivileges.description</span>
-      </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="appSettings.askForAdminOnStart"
-            (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
-      </div>
-    </div>
-  </div>
-</div>
 
 <div class="setting-category">
   <h2 translate>settings.general.systemTray.title</h2>
@@ -113,6 +92,27 @@
   </div>
 </div>
 
+<div class="setting-category">
+  <h2 translate>settings.general.adminPrivileges.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.adminPrivileges.label</span>
+        <span translate>settings.general.adminPrivileges.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.askForAdminOnStart"
+            (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
 
 <div class="setting-category">
   <h2 translate>settings.general.telemetry.title</h2>
