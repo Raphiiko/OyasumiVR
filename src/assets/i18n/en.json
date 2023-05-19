@@ -424,6 +424,17 @@
         "title": "Telemetry",
         "label": "Send anonymous usage data",
         "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
+      },
+      "systemTray": {
+        "title": "System tray",
+        "close": {
+          "label": "Close to the system tray",
+          "description": "Closes Oyasumi to the system tray instead of exiting the program."
+        },
+        "start": {
+          "label": "Start in the system tray",
+          "description": "Starts Oyasumi minimized to the system tray."
+        }
       }
     },
     "vrchat": {

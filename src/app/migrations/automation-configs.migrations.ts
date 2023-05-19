@@ -1,24 +1,23 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {
-  1: toLatest,
-  2: toLatest,
+  1: resetToLatest,
+  2: resetToLatest,
   3: from2to3,
   4: from3to4,
   5: from4to5,
   6: from5to6,
   7: from6to7,
   8: from7to8,
-  9: from8to9,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
   let currentVersion = data.version || 0;
   // Reset to latest when the current version is higher than the latest
   if (currentVersion > AUTOMATION_CONFIGS_DEFAULT.version) {
-    data = toLatest(data);
+    data = resetToLatest(data);
     info(
       `[automation-configs-migrations] Reset future automation configs version back to version ${
         currentVersion + ''
@@ -34,51 +33,25 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
+  data = merge({}, AUTOMATION_CONFIGS_DEFAULT, data);
   return data as AutomationConfigs;
 }
 
-function toLatest(data: any): any {
+function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
   return data;
 }
 
-function from8to9(data: any): any {
-  data.version = 9;
-  data.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR = {
-    ...data.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR,
-    detectionWindowMinutes:
-      AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes,
-  };
-  return data;
-}
-
 function from7to8(data: any): any {
   data.version = 8;
-  data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
-  );
-  data.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
-  );
-  data.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE
-  );
-  data.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE
-  );
-  data.OSC_GENERAL = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.OSC_GENERAL);
+  // Missing keys are now always added by default
   return data;
 }
 
 function from6to7(data: any): any {
   data.version = 7;
-  data.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS
-  );
-  data.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
-  );
+  // Missing keys are now always added by default
   return data;
 }
 
@@ -91,22 +64,18 @@ function from5to6(data: any): any {
 
 function from4to5(data: any): any {
   data.version = 5;
-  data.AUTO_ACCEPT_INVITE_REQUESTS = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
-  );
+  // Missing keys are now always added by default
   return data;
 }
 
 function from3to4(data: any): any {
   data.version = 4;
-  data.CHANGE_STATUS_BASED_ON_PLAYER_COUNT = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
-  );
+  // Missing keys are now always added by default
   return data;
 }
 
 function from2to3(data: any): any {
   data.version = 3;
-  data.SLEEPING_ANIMATIONS = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS);
+  // Missing keys are now always added by default
   return data;
 }

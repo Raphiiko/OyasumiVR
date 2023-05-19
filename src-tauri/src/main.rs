@@ -14,6 +14,7 @@ mod image_cache;
 mod openvr;
 mod os;
 mod osc;
+mod system_tray;
 mod utils;
 mod vrc_log_parser;
 
@@ -25,6 +26,7 @@ use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
+    // Construct Oyasumi Tauri application
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs_extra::init())
@@ -42,8 +44,11 @@ fn main() {
             }
             Ok(())
         })
+        .system_tray(system_tray::init_system_tray())
+        .on_system_tray_event(system_tray::handle_system_tray_events())
+        .on_window_event(system_tray::handle_window_events())
         .invoke_handler(configure_command_handlers());
-
+    // Run Oyasumi
     app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
 }
@@ -65,6 +70,8 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
         osc::commands::stop_osc_server,
+        system_tray::commands::set_close_to_system_tray,
+        system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevation_sidecar_running,
         elevated_sidecar::commands::start_elevation_sidecar,
         vrc_log_parser::commands::init_vrc_log_watcher,
@@ -123,6 +130,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     }
     // Get dependencies
     let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
+    // Initialize the system tray manager
+    system_tray::init().await;
     // Initialize Image Cache
     image_cache::init(cache_dir).await;
     // Initialize OpenVR Manager
