@@ -160,6 +160,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             let main_http_port = http_server::PORT.lock().await;
             // Once we have the port, start the sidecar
             if main_http_port.is_some() {
+                drop(main_http_port);
                 elevated_sidecar::start().await;
                 break;
             }
