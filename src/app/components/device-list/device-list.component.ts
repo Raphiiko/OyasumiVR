@@ -3,7 +3,7 @@ import { map, tap } from 'rxjs';
 import { flatten, groupBy, orderBy } from 'lodash';
 import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
-import { LighthouseService } from '../../services/lighthouse.service';
+import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
 import { OpenVRService } from '../../services/openvr.service';
 import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
@@ -30,7 +30,7 @@ export class DeviceListComponent implements OnInit {
   constructor(
     protected openvr: OpenVRService,
     private cdr: ChangeDetectorRef,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private eventLog: EventLogService,
     private destroyRef: DestroyRef
   ) {}

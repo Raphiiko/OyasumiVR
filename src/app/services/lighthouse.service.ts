@@ -1,92 +1,39 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, Observable, pairwise, startWith } from 'rxjs';
-import { OpenVRService } from './openvr.service';
-import { AppSettingsService } from './app-settings.service';
-import { invoke } from '@tauri-apps/api/tauri';
-import { OVRDevice } from '../models/ovr-device';
-import { info } from 'tauri-plugin-log-api';
-import { ExecutableReferenceStatus } from '../models/settings';
+import { invoke } from '@tauri-apps/api';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LighthouseService {
-  private _consoleStatus: BehaviorSubject<ExecutableReferenceStatus> =
-    new BehaviorSubject<ExecutableReferenceStatus>('UNKNOWN');
-  public consoleStatus: Observable<ExecutableReferenceStatus> = this._consoleStatus.asObservable();
-
-  constructor(private appSettings: AppSettingsService, private openvr: OpenVRService) {
-    this.init();
-  }
+  constructor() {}
 
   async init() {
-    this.appSettings.settings
-      .pipe(startWith(await firstValueFrom(this.appSettings.settings)), pairwise())
-      .subscribe(([previousSettings, currentSettings]) => {
-        if (
-          this._consoleStatus.value === 'UNKNOWN' ||
-          previousSettings.lighthouseConsolePath !== currentSettings.lighthouseConsolePath
-        ) {
-          this.setConsolePath(currentSettings.lighthouseConsolePath, false);
-        }
-      });
+    listen('LIGHTHOUSE_STATUS_CHANGED', (event) => this.handleStatusChange(event.payload));
+    listen('LIGHTHOUSE_SCANNING_STATUS_CHANGED', (event) =>
+      this.handleScanningStatusChange(event.payload)
+    );
+    listen('EVENT_DEVICE_DISCOVERED', (event) => this.handleDeviceDiscovered(event.payload));
+    listen('EVENT_DEVICE_POWER_STATE_CHANGED', (event) =>
+      this.handleDevicePowerStateChange(event.payload)
+    );
+
+    await invoke('lighthouse_start_scan', { duration: 10 });
   }
 
-  async setConsolePath(path: string, save = true) {
-    if (save) this.appSettings.updateSettings({ lighthouseConsolePath: path });
-    this._consoleStatus.next('CHECKING');
-    if (!path.endsWith('lighthouse_console.exe')) {
-      this._consoleStatus.next('NOT_FOUND');
-      return;
-    }
-    // Get output
-    let stdout;
-    try {
-      stdout = (
-        await invoke<{ stdout: string; stderr: string; status: number }>('run_command', {
-          command: path,
-          args: ['bogus_command'],
-        })
-      ).stdout;
-    } catch (e) {
-      if (
-        typeof e === 'string' &&
-        ['NOT_FOUND', 'PERMISSION_DENIED', 'INVALID_FILENAME'].includes(e)
-      ) {
-        this._consoleStatus.next(e as ExecutableReferenceStatus);
-        return;
-      }
-      this._consoleStatus.next('UNKNOWN_ERROR');
-      return;
-    }
-    // Check output
-    const stdoutLines = stdout.split('\n');
-    if (
-      !stdoutLines.length ||
-      !stdoutLines[0].trim().startsWith('Version:  lighthouse_console.exe')
-    ) {
-      this._consoleStatus.next('INVALID_EXECUTABLE');
-    }
-    this._consoleStatus.next('SUCCESS');
+  handleStatusChange(event: any) {
+    console.log('STATUS CHANGE', event);
   }
 
-  async turnOffDevices(ovrDevices: OVRDevice[]) {
-    const lighthouseConsolePath = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.lighthouseConsolePath
-    );
-    if (this._consoleStatus.value !== 'SUCCESS') return;
-    ovrDevices = ovrDevices.filter(
-      (device) => device.canPowerOff && device.dongleId && !device.isTurningOff
-    );
-    await Promise.all(
-      ovrDevices.map(async (device) => {
-        this.openvr.onDeviceUpdate(Object.assign({}, device, { isTurningOff: true }));
-        info(`[Lighthouse] Turning off device ${device.class}:${device.serialNumber}`);
-        await invoke('run_command', {
-          command: lighthouseConsolePath,
-          args: ['/serial', device.dongleId, 'poweroff'],
-        });
-      })
-    );
+  handleScanningStatusChange(event: any) {
+    console.log('SCANNING STATUS CHANGE', event);
+  }
+
+  handleDeviceDiscovered(event: any) {
+    console.log('DEVICE DISCOVERED', event);
+  }
+
+  handleDevicePowerStateChange(event: any) {
+    console.log('POWER STATE CHANGE', event);
   }
 }

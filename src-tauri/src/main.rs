@@ -25,7 +25,6 @@ use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-
 fn main() {
     // Construct Oyasumi Tauri application
     let app = tauri::Builder::default()
@@ -78,7 +77,10 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         vrc_log_parser::commands::init_vrc_log_watcher,
         http_server::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
-        lighthouse::commands::lighthouse_scan_devices,
+        lighthouse::commands::lighthouse_start_scan,
+        lighthouse::commands::lighthouse_get_devices,
+        lighthouse::commands::lighthouse_set_device_power_state,
+        lighthouse::commands::lighthouse_get_device_power_state,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,

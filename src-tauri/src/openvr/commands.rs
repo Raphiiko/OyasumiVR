@@ -11,9 +11,7 @@ pub async fn openvr_get_devices() -> Vec<OVRDevice> {
 
 #[tauri::command]
 pub async fn openvr_status() -> String {
-    println!("PASSED?");
     let manager_guard = OPENVR_MANAGER.lock().await;
-    println!("PASSED");
     let manager = manager_guard.as_ref().unwrap();
     let status = manager.get_status().await;
     let status_str = serde_json::to_string(&status).unwrap();

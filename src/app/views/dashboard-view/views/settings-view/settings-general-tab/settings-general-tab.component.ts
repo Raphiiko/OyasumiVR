@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { LighthouseService } from '../../../../../services/lighthouse.service';
+import { LighthouseConsoleService } from '../../../../../services/lighthouse-console.service';
 import { open as openFile } from '@tauri-apps/api/dialog';
 import { TelemetryService } from '../../../../../services/telemetry.service';
 import {
@@ -34,7 +34,7 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
 
   constructor(
     settingsService: AppSettingsService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private telemetry: TelemetryService
   ) {
     super(settingsService);

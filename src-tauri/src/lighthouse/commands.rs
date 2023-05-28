@@ -1,33 +1,29 @@
-use btleplug::api::{Central, ScanFilter};
-use log::{error, info};
+use std::time::Duration;
 
-use super::{BT_CENTRAL, BT_SCANNING};
+use super::models::{LighthouseDevice, LighthouseError};
+use bluest::DeviceId;
 
 #[tauri::command]
-pub async fn lighthouse_scan_devices() -> Result<(), String> {
-    // Stop quietly if we are already scanning
-    if *BT_SCANNING.lock().await {
-        return Ok(());
-    }
-    // Start scanning
-    if let Some(central) = BT_CENTRAL.lock().await.as_ref() {
-        if let Err(e) = central.start_scan(ScanFilter::default()).await {
-            error!("[Core] Could not start bluetooth scan: {}", e);
-            return Err("BLUETOOTH_ERROR".into());
-        }
-        *BT_SCANNING.lock().await = true;
-        info!("[Core] Started scanning for lighthouse devices");
-    } else {
-        error!("[Core] Tried scanning for lighthouse devices while no bluetooth adapter was initialized");
-        return Err("BLUETOOTH_UNINITIALIZED".into());
-    }
-    // Wait 10 seconds
-    tokio::time::sleep(std::time::Duration::from_secs(10)).await;
-    // Stop scanning
-    if let Some(central) = BT_CENTRAL.lock().await.as_ref() {
-        central.stop_scan().await.unwrap();
-        info!("[Core] Stopped scanning for lighthouse devices");
-    }
-    *BT_SCANNING.lock().await = false;
-    Ok(())
+pub async fn lighthouse_start_scan(duration: u64) {
+    tokio::spawn(super::start_scan(Duration::from_secs(duration)));
+}
+
+#[tauri::command]
+pub async fn lighthouse_get_devices() -> Vec<LighthouseDevice> {
+    super::get_devices().await
+}
+
+#[tauri::command]
+pub async fn lighthouse_set_device_power_state(
+    device_id: DeviceId,
+    power_state: super::models::LighthousePowerState,
+) -> Result<(), LighthouseError> {
+    super::set_device_power_state(device_id, power_state).await
+}
+
+#[tauri::command]
+pub async fn lighthouse_get_device_power_state(
+    device_id: DeviceId,
+) -> Result<super::models::LighthousePowerState, LighthouseError> {
+    super::get_device_power_state(device_id).await
 }

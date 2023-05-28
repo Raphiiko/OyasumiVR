@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { OVRDevice } from 'src/app/models/ovr-device';
 import { fade, vshrink } from 'src/app/utils/animations';
-import { LighthouseService } from '../../services/lighthouse.service';
+import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
 import { error } from 'tauri-plugin-log-api';
 import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
@@ -15,7 +15,7 @@ import { EventLogService } from '../../services/event-log.service';
 export class DeviceListItemComponent implements OnInit {
   @Input() device: OVRDevice | undefined;
 
-  constructor(private lighthouse: LighthouseService, private eventLog: EventLogService) {}
+  constructor(private lighthouse: LighthouseConsoleService, private eventLog: EventLogService) {}
 
   ngOnInit(): void {}
 
