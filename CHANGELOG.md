@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option to close Oyasumi's window to the system tray, rather than quitting the application
   (by [neuroblack](https://github.com/neuroblack)).
 - Option to start Oyasumi hidden in the system tray (by [neuroblack](https://github.com/neuroblack)).
+- Power management for SteamVR base stations (Supports V2 Lighthouses only).
 
 ### Changed
 

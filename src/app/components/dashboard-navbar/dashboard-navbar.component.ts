@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
-import { LighthouseService } from 'src/app/services/lighthouse.service';
+import { LighthouseConsoleService } from 'src/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
@@ -136,7 +136,7 @@ export class DashboardNavbarComponent implements OnInit {
 
   constructor(
     private settingsService: AppSettingsService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,

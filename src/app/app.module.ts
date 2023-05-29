@@ -45,7 +45,7 @@ import { DropdownButtonComponent } from './components/dropdown-button/dropdown-b
 import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
 import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
 import { DeviceListComponent } from './components/device-list/device-list.component';
-import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
+import { DeviceListItemComponent } from './components/device-list/device-list-item/device-list-item.component';
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
@@ -110,6 +110,7 @@ import { BaseModalComponent } from './components/base-modal/base-modal.component
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
 import { SettingsTabComponent } from './views/dashboard-view/views/settings-view/settings-tab/settings-tab.component';
+import { LighthouseService } from './services/lighthouse.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -215,6 +216,12 @@ export class AppModule {
     private vrchatService: VRChatService,
     private vrchatLogService: VRChatLogService,
     private imageCacheService: ImageCacheService,
+    private brightnessControlService: BrightnessControlService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService,
+    private renderResolutionAutomationService: RenderResolutionAutomationService,
+    private systemTrayService: SystemTrayService,
+    private eventLog: EventLogService,
+    private lighthouseService: LighthouseService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -234,12 +241,7 @@ export class AppModule {
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService,
-    private brightnessControlService: BrightnessControlService,
-    private brightnessControlAutomationService: BrightnessControlAutomationService,
-    private renderResolutionAutomationService: RenderResolutionAutomationService,
-    private systemTrayService: SystemTrayService,
-    private eventLog: EventLogService
+    private inviteAutomationsService: InviteAutomationsService
   ) {
     this.init();
   }
@@ -267,6 +269,7 @@ export class AppModule {
           this.vrchatService.init(),
           this.vrchatLogService.init(),
           this.imageCacheService.init(),
+          this.lighthouseService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {

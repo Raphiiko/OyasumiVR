@@ -6,7 +6,7 @@ import { OpenVRService } from './openvr.service';
 import { combineLatest, debounceTime, firstValueFrom, map, startWith, Subject, tap } from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
 import { info } from 'tauri-plugin-log-api';
-import { LighthouseService } from './lighthouse.service';
+import { LighthouseConsoleService } from './lighthouse-console.service';
 import { EventLogTurnedOffDevices } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { AppSettingsService } from './app-settings.service';
@@ -40,7 +40,7 @@ export class OscControlService {
     private sleep: SleepService,
     private openvr: OpenVRService,
     private automationConfig: AutomationConfigService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private eventLog: EventLogService,
     private appSettings: AppSettingsService
   ) {}

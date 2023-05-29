@@ -1,10 +1,14 @@
 <div class="pane">
   <div class="pane-title">
     <span translate>comp.device-list.title</span>
-    <button class="btn-power-off" *ngIf="devicesCanPowerOff" [@fade] (click)="turnOffAllDevices()">
-      <span style="font-weight: 600; padding-left: 0.25em" translate>
-        comp.device-list.turnOffAll
-      </span>
+    <button
+      class="btn-power power-off btn-turn-off-all"
+      *ngIf="devicesCanPowerOff"
+      [@fade]
+      (click)="turnOffAllOVRDevices()"
+    >
+      <img [src]="'/assets/img/icon_controller.png'" class="category-icon" />
+      <img [src]="'/assets/img/icon_tracker.png'" class="category-icon" />
       &nbsp;
       <i class="material-icons">power_settings_new</i>
     </button>
@@ -20,23 +24,59 @@
       *ngFor="let category of deviceCategories; trackBy: trackDeviceCategoryBy"
       [@triggerChildren]
     >
-      <div class="device-list-category-header" [@vshrink]>
-        <div class="device-list-category-header-label">
-          {{ category.label | translate }}
+      <ng-container *ngIf="category.type === 'OpenVR'">
+        <div class="device-list-category-header" [@vshrink]>
+          <div class="device-list-category-header-label">
+            <img
+              *ngIf="category.icon"
+              [src]="'/assets/img/icon_' + category.icon + '.png'"
+              class="category-icon"
+            />
+            <span>{{ category.label | translate }}</span>
+          </div>
+          <button
+            class="btn-power power-off"
+            *ngIf="category.canBulkPowerOff"
+            [@fade]
+            (click)="turnOffOVRDevices(category)"
+          >
+            <i class="material-icons">power_settings_new</i>
+          </button>
         </div>
-        <button
-          class="btn-power-off"
-          *ngIf="category.canPowerOff"
-          [@fade]
-          (click)="turnOffDevices(category)"
-        >
-          <i class="material-icons">power_settings_new</i>
-        </button>
-      </div>
-      <app-device-list-item
-        *ngFor="let device of category.devices"
-        [device]="device"
-      ></app-device-list-item>
+        <app-device-list-item
+          *ngFor="let device of category.devices"
+          [ovrDevice]="device"
+          [icon]="category.icon"
+        ></app-device-list-item>
+      </ng-container>
+
+      <ng-container *ngIf="category.type === 'Lighthouse'">
+        <div class="device-list-category-header" [@vshrink]>
+          <div class="device-list-category-header-label">
+            <img
+              *ngIf="category.icon"
+              [src]="'/assets/img/icon_' + category.icon + '.png'"
+              class="category-icon"
+            />
+            <span>{{ category.label | translate }}</span>
+          </div>
+          <button
+            class="btn-power"
+            [class.power-off]="category.canBulkPowerOff"
+            [class.power-on]="category.canBulkPowerOn"
+            *ngIf="category.canBulkPowerOff || category.canBulkPowerOn"
+            (click)="bulkPowerLighthouseDevices(category)"
+            @fade
+          >
+            <i class="material-icons">power_settings_new</i>
+          </button>
+        </div>
+        <app-device-list-item
+          *ngFor="let device of category.devices"
+          [lighthouseDevice]="device"
+          [icon]="'lighthouse'"
+        ></app-device-list-item>
+      </ng-container>
     </div>
   </div>
 </div>

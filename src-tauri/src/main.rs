@@ -11,6 +11,7 @@ mod elevated_sidecar;
 mod globals;
 mod http_server;
 mod image_cache;
+mod lighthouse;
 mod openvr;
 mod os;
 mod osc;
@@ -24,7 +25,6 @@ use log::{info, LevelFilter};
 use oyasumi_shared::windows::is_elevated;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-
 fn main() {
     // Construct Oyasumi Tauri application
     let app = tauri::Builder::default()
@@ -77,6 +77,13 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         vrc_log_parser::commands::init_vrc_log_watcher,
         http_server::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
+        lighthouse::commands::lighthouse_start_scan,
+        lighthouse::commands::lighthouse_get_devices,
+        lighthouse::commands::lighthouse_set_device_power_state,
+        lighthouse::commands::lighthouse_get_device_power_state,
+        lighthouse::commands::lighthouse_get_status,
+        lighthouse::commands::lighthouse_get_scanning_status,
+        lighthouse::commands::lighthouse_reset,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
@@ -142,6 +149,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::load_sounds();
     // Initialize OSC
     osc::init().await;
+    // Initialize Lighthouse Bluetooth
+    lighthouse::init().await;
     // Initialize log commands
     commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
     // Setup start of minute cronjob

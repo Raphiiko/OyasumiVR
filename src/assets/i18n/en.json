@@ -435,6 +435,25 @@
           "label": "Start in the system tray",
           "description": "Starts Oyasumi minimized to the system tray."
         }
+      },
+      "lighthousePowerControl": {
+        "title": "SteamVR Base Station Power Control",
+        "powerOffMode": {
+          "standby": {
+            "title": "Standby",
+            "description": "Power off\nlasers"
+          },
+          "sleep": {
+            "title": "Sleep",
+            "description": "Power off\nlasers & motors"
+          },
+          "title": "Preferred power off state",
+          "description": "Unlike Standby mode, Sleep mode also turns off the motors, which can take longer to turn back on."
+        },
+        "enable": {
+          "title": "Enable power control",
+          "description": "If enabled, you will be able to power your base stations off and on using Oyasumi. Requires bluetooth, and supports V2 base stations only."
+        }
       }
     },
     "vrchat": {
@@ -700,7 +719,18 @@
       "category": {
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
-        "other": "Others"
+        "other": "Others",
+        "Lighthouse": "Base Stations"
+      },
+      "deviceName": {
+        "lighthouseV2": "V2 Lighthouse"
+      },
+      "lighthouseStatus": {
+        "on": "Active",
+        "unknown": "Unknown Status",
+        "sleep": "Sleeping",
+        "standby": "Standby",
+        "booting": "Booting"
       }
     },
     "osc-script-modal": {

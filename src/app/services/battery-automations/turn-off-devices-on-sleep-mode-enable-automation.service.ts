@@ -7,7 +7,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
 } from '../../models/automations';
-import { LighthouseService } from '../lighthouse.service';
+import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { SleepService } from '../sleep.service';
 import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
@@ -24,7 +24,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private sleepMode: SleepService,
     private eventLog: EventLogService
   ) {}

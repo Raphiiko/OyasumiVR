@@ -7,7 +7,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../models/automations';
-import { LighthouseService } from '../lighthouse.service';
+import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { error, info } from 'tauri-plugin-log-api';
 import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
@@ -24,7 +24,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
   constructor(
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private eventLog: EventLogService
   ) {}
 

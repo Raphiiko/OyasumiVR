@@ -1,9 +1,5 @@
 @import 'shadows';
 
-:host {
-  //min-width: 15em;
-}
-
 .select-box {
   display: flex;
   flex-direction: row;
@@ -170,11 +166,11 @@
 
   &-title {
     color: var(--color-text-2);
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 
   &-subtitle {
     color: var(--color-text-3);
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 }
