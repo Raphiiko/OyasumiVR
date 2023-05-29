@@ -7,6 +7,7 @@
 
 .pane {
   height: 100%;
+  background: var(--color-surface-1);
 
   &-title {
     padding-right: 0.75em;
@@ -51,6 +52,9 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1em;
+    span {
+      vertical-align: middle;
+    }
 
     &-label {
       flex: 1;
@@ -59,6 +63,30 @@
 
     button {
       flex-shrink: 0;
+    }
+  }
+}
+
+.category-icon {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  margin-right: 1em;
+  filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+}
+
+.btn-turn-off-all {
+  .category-icon {
+  margin-right: 0.4em;
+    filter: invert(24%) sepia(84%) saturate(1782%) hue-rotate(340deg) brightness(106%) contrast(93%);
+  }
+  >i.material-icons {
+    margin-left: -0.3em;
+  }
+  &:hover {
+    .category-icon {
+      filter: invert(99%) sepia(0%) saturate(2934%) hue-rotate(279deg) brightness(116%)
+        contrast(101%);
     }
   }
 }

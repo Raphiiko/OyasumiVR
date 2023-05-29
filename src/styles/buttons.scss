@@ -1,4 +1,4 @@
-button.btn-power-off {
+button.btn-power {
   background: var(--color-surface-1);
   color: var(--color-text-2);
   display: flex;
@@ -10,15 +10,23 @@ button.btn-power-off {
   transition: all 0.1s ease;
   padding: 0.25em 0.25em;
   overflow: hidden;
+  border-color: var(--color-surface-3);
 
   &:disabled {
     color: var(--color-text-4);
   }
 
   &:not(:disabled) {
+    cursor: pointer;
     &:hover {
-      background: var(--color-alert-error);
-      color: var(--color-on-alert-error);
+      &.power-off {
+        background: var(--color-alert-error);
+        color: var(--color-on-alert-error);
+      }
+      &.power-on {
+        background: var(--color-alert-success);
+        color: var(--color-on-alert-success);
+      }
     }
 
     &:active:after {
@@ -36,6 +44,14 @@ button.btn-power-off {
     height: 100%;
     background: black;
     opacity: 0;
+  }
+
+  &.power-off {
+    color: var(--color-alert-error);
+  }
+
+  &.power-on {
+    color: var(--color-alert-success);
   }
 }
 

@@ -1,3 +1,5 @@
+import { LighthouseDevicePowerState } from './lighthouse-device';
+
 export interface AppSettings {
   version: 5;
   userLanguage: string;
@@ -14,6 +16,8 @@ export interface AppSettings {
   enableXSOverlayNotifications: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
+  lighthousePowerControl: boolean;
+  lighthousePowerOffState: LighthouseDevicePowerState;
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
@@ -33,6 +37,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   enableDesktopNotifications: false,
   exitInSystemTray: false,
   startInSystemTray: false,
+  lighthousePowerControl: true,
+  lighthousePowerOffState: 'sleep',
 };
 
 export type ExecutableReferenceStatus =

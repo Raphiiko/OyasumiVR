@@ -14,6 +14,8 @@ import { LANGUAGES } from '../../../../../globals';
 import { vshrink } from '../../../../../utils/animations';
 import { ExecutableReferenceStatus } from 'src/app/models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SelectBoxItem } from 'src/app/components/select-box/select-box.component';
+import { LighthouseDevicePowerState } from 'src/app/models/lighthouse-device';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -31,6 +33,19 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
   telemetrySettings: TelemetrySettings = cloneDeep(TELEMETRY_SETTINGS_DEFAULT);
+  lighthousePowerOffModeOptions: SelectBoxItem[] = [
+    {
+      id: 'standby',
+      label: 'settings.general.lighthousePowerControl.powerOffMode.standby.title',
+      subLabel: 'settings.general.lighthousePowerControl.powerOffMode.standby.description',
+    },
+    {
+      id: 'sleep',
+      label: 'settings.general.lighthousePowerControl.powerOffMode.sleep.title',
+      subLabel: 'settings.general.lighthousePowerControl.powerOffMode.sleep.description',
+    },
+  ];
+  lighthousePowerOffModeOption: SelectBoxItem | undefined;
 
   constructor(
     settingsService: AppSettingsService,
@@ -54,6 +69,13 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((telemetrySettings) => {
         this.telemetrySettings = telemetrySettings;
+      });
+    this.settingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((settings) => {
+        this.lighthousePowerOffModeOption = this.lighthousePowerOffModeOptions.find(
+          (o) => o.id === settings.lighthousePowerOffState
+        );
       });
   }
 
@@ -113,5 +135,16 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
 
   setStartInSystemTray(startInSystemTray: boolean) {
     this.settingsService.updateSettings({ startInSystemTray });
+  }
+
+  setLighthousePowerControl(enabled: boolean) {
+    this.settingsService.updateSettings({ lighthousePowerControl: enabled });
+  }
+
+  onChangeLighthousePowerOffMode(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.settingsService.updateSettings({
+      lighthousePowerOffState: option.id as LighthouseDevicePowerState,
+    });
   }
 }

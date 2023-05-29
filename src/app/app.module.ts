@@ -45,7 +45,7 @@ import { DropdownButtonComponent } from './components/dropdown-button/dropdown-b
 import { OscScriptSimpleEditorComponent } from './components/osc-script-simple-editor/osc-script-simple-editor.component';
 import { DashboardNavbarComponent } from './components/dashboard-navbar/dashboard-navbar.component';
 import { DeviceListComponent } from './components/device-list/device-list.component';
-import { DeviceListItemComponent } from './components/device-list-item/device-list-item.component';
+import { DeviceListItemComponent } from './components/device-list/device-list-item/device-list-item.component';
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
@@ -241,7 +241,7 @@ export class AppModule {
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService,
+    private inviteAutomationsService: InviteAutomationsService
   ) {
     this.init();
   }

@@ -1,7 +1,7 @@
-use bluest::DeviceId;
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[serde(rename_all = "camelCase")]
 pub enum LighthouseStatus {
     Uninitialized,
     NoAdapter,
@@ -10,12 +10,19 @@ pub enum LighthouseStatus {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub enum LighthousePowerState {
     Unknown,
     Sleep,
     Standby,
     Booting,
     On,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, PartialEq)]
+#[serde(rename_all = "camelCase")]
+pub enum LighthouseDeviceType {
+    LighthouseV2, // V2 Base Station (Valve)
 }
 
 #[derive(Debug)]
@@ -30,6 +37,7 @@ pub enum LighthouseError {
 }
 
 #[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SerializedLighthouseError {
     error: String,
     message: Option<String>,
@@ -76,22 +84,38 @@ impl Serialize for LighthouseError {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct LighthouseDevice {
-    pub id: DeviceId,
+    pub id: String,
     pub device_name: Option<String>,
     pub power_state: LighthousePowerState,
+    pub device_type: LighthouseDeviceType,
 }
 
 //
 // Events
 //
 #[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LighthouseScanningStatusChangedEvent {
+    pub scanning: bool,
+}
+
+#[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct LighthouseStatusChangedEvent {
+    pub status: LighthouseStatus,
+}
+
+#[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct LighthouseDeviceDiscoveredEvent {
     pub device: LighthouseDevice,
 }
 
 #[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct LighthouseDevicePowerStateChangedEvent {
-    pub device_id: DeviceId,
+    pub device_id: String,
     pub power_state: LighthousePowerState,
 }

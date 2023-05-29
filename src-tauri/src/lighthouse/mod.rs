@@ -12,7 +12,8 @@ use crate::utils::send_event;
 
 use self::models::{
     LighthouseDevice, LighthouseDeviceDiscoveredEvent, LighthouseDevicePowerStateChangedEvent,
-    LighthouseError, LighthousePowerState, LighthouseStatus,
+    LighthouseDeviceType, LighthouseError, LighthousePowerState,
+    LighthouseScanningStatusChangedEvent, LighthouseStatus, LighthouseStatusChangedEvent,
 };
 
 const LIGHTHOUSE_V2_SERVICE: Uuid = Uuid::from_u128(0x00001523_1212_efde_1523_785feabcd124);
@@ -31,7 +32,7 @@ static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_C
 lazy_static! {
     static ref DISCOVERED_DEVICES: Mutex<Vec<DeviceId>> = Mutex::new(Vec::new());
     static ref LIGHTHOUSE_DEVICES: Arc<Mutex<Vec<Device>>> = Arc::new(Mutex::new(Vec::new()));
-    static ref LIGHTHOUSE_DEVICE_POWER_STATES: Mutex<HashMap<DeviceId, LighthousePowerState>> =
+    static ref LIGHTHOUSE_DEVICE_POWER_STATES: Mutex<HashMap<String, LighthousePowerState>> =
         Mutex::new(HashMap::new());
     static ref SCANNING: Mutex<bool> = Mutex::new(false);
     static ref ADAPTER: Mutex<Option<Adapter>> = Mutex::default();
@@ -71,7 +72,7 @@ pub async fn init() {
             let devices = devices_guard.clone();
             drop(devices_guard);
             for device in devices.iter() {
-                let _ = get_device_power_state(device.id()).await;
+                let _ = get_device_power_state(device.id().to_string()).await;
             }
         }
     });
@@ -98,21 +99,10 @@ pub async fn start_scan(duration: Duration) {
         }
     }
     set_scanning_status(true).await;
-    // Disconnect from any connected devices
-    {
-        let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
-        let devices = devices_guard.clone();
-        drop(devices_guard);
-        for device in devices.iter() {
-            let _ = adapter.disconnect_device(device).await;
-        }
-    }
     // Empty the lists of (discovered) devices
     {
         let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
         discovered_devices_guard.clear();
-        let mut lighthouse_devices_guard = LIGHTHOUSE_DEVICES.lock().await;
-        lighthouse_devices_guard.clear();
     }
     // Start the scan
     let mut scan = match adapter.scan(&[]).await {
@@ -153,8 +143,10 @@ pub async fn get_devices() -> Vec<LighthouseDevice> {
     lighthouse_devices
 }
 
-pub async fn get_device_power_state(id: DeviceId) -> Result<LighthousePowerState, LighthouseError> {
-    let characteristic = match get_power_characteristic(id.clone()).await {
+pub async fn get_device_power_state(
+    device_id: String,
+) -> Result<LighthousePowerState, LighthouseError> {
+    let characteristic = match get_power_characteristic(device_id.clone()).await {
         Ok(characteristic) => characteristic,
         Err(err) => return Err(err),
     };
@@ -173,7 +165,7 @@ pub async fn get_device_power_state(id: DeviceId) -> Result<LighthousePowerState
         _ => LighthousePowerState::Unknown,
     };
     // Get currently known power state
-    let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&id) {
+    let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&device_id) {
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
@@ -182,11 +174,11 @@ pub async fn get_device_power_state(id: DeviceId) -> Result<LighthousePowerState
         LIGHTHOUSE_DEVICE_POWER_STATES
             .lock()
             .await
-            .insert(id.clone(), state.clone());
+            .insert(device_id.clone(), state.clone());
         send_event(
             EVENT_DEVICE_POWER_STATE_CHANGED,
             LighthouseDevicePowerStateChangedEvent {
-                device_id: id.clone(),
+                device_id: device_id.clone(),
                 power_state: state.clone(),
             },
         )
@@ -196,10 +188,10 @@ pub async fn get_device_power_state(id: DeviceId) -> Result<LighthousePowerState
 }
 
 pub async fn set_device_power_state(
-    id: DeviceId,
+    device_id: String,
     state: LighthousePowerState,
 ) -> Result<(), LighthouseError> {
-    let characteristic = match get_power_characteristic(id.clone()).await {
+    let characteristic = match get_power_characteristic(device_id.clone()).await {
         Ok(characteristic) => characteristic,
         Err(err) => return Err(err),
     };
@@ -220,24 +212,13 @@ pub async fn set_device_power_state(
         }
     };
     // Get currently known power state
-    let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&id) {
+    let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&device_id) {
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
-    // Set the new state and send an event if the state has changed
+    // Fetch the new state for confirmation, if we changed it
     if wrote_state && current_state != state {
-        LIGHTHOUSE_DEVICE_POWER_STATES
-            .lock()
-            .await
-            .insert(id.clone(), state.clone());
-        send_event(
-            EVENT_DEVICE_POWER_STATE_CHANGED,
-            LighthouseDevicePowerStateChangedEvent {
-                device_id: id.clone(),
-                power_state: state.clone(),
-            },
-        )
-        .await;
+        let _ = get_device_power_state(device_id).await;
     }
     Ok(())
 }
@@ -317,26 +298,34 @@ async fn handle_discovered_device(device: Device) {
 
 async fn set_lighthouse_status(status: LighthouseStatus) {
     *STATUS.lock().await = status;
-    send_event(EVENT_STATUS_CHANGED, status).await;
+    send_event(
+        EVENT_STATUS_CHANGED,
+        LighthouseStatusChangedEvent { status: status },
+    )
+    .await;
 }
 
 async fn set_scanning_status(scanning: bool) {
     *SCANNING.lock().await = scanning;
-    send_event(EVENT_SCANNING_STATUS_CHANGED, scanning).await;
+    send_event(
+        EVENT_SCANNING_STATUS_CHANGED,
+        LighthouseScanningStatusChangedEvent { scanning: scanning },
+    )
+    .await;
 }
 
-async fn get_device(id: DeviceId) -> Option<Arc<Device>> {
+async fn get_device(device_id: String) -> Option<Arc<Device>> {
     let devices = LIGHTHOUSE_DEVICES.lock().await;
     for device in devices.iter() {
-        if device.id().eq(&id) {
+        if device.id().to_string().eq(&device_id) {
             return Some(Arc::new(device.clone()));
         }
     }
     None
 }
 
-async fn get_lighthouse_service(id: DeviceId) -> Result<Service, LighthouseError> {
-    let device = match get_device(id).await {
+async fn get_lighthouse_service(device_id: String) -> Result<Service, LighthouseError> {
+    let device = match get_device(device_id).await {
         Some(device) => device,
         None => return Err(LighthouseError::DeviceNotFound),
     };
@@ -353,8 +342,8 @@ async fn get_lighthouse_service(id: DeviceId) -> Result<Service, LighthouseError
     }
 }
 
-async fn get_power_characteristic(id: DeviceId) -> Result<Characteristic, LighthouseError> {
-    let service = match get_lighthouse_service(id).await {
+async fn get_power_characteristic(device_id: String) -> Result<Characteristic, LighthouseError> {
+    let service = match get_lighthouse_service(device_id).await {
         Ok(service) => service,
         Err(err) => return Err(err),
     };
@@ -377,14 +366,15 @@ async fn map_device_to_lighthouse_device(device: Device) -> LighthouseDevice {
     let power_state = match LIGHTHOUSE_DEVICE_POWER_STATES
         .lock()
         .await
-        .get(&device.id())
+        .get(&device.id().to_string())
     {
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
     LighthouseDevice {
-        id: device.id(),
+        id: device.id().to_string(),
         device_name: device.name().ok(),
         power_state: power_state,
+        device_type: LighthouseDeviceType::LighthouseV2,
     }
 }

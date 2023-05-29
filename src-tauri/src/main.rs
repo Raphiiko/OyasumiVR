@@ -81,6 +81,8 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         lighthouse::commands::lighthouse_get_devices,
         lighthouse::commands::lighthouse_set_device_power_state,
         lighthouse::commands::lighthouse_get_device_power_state,
+        lighthouse::commands::lighthouse_get_status,
+        lighthouse::commands::lighthouse_get_scanning_status,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,

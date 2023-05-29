@@ -93,6 +93,43 @@
 </div>
 
 <div class="setting-category">
+  <h2 translate>settings.general.lighthousePowerControl.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.lighthousePowerControl.enable.title</span>
+        <span translate>settings.general.lighthousePowerControl.enable.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.lighthousePowerControl"
+            (change)="setLighthousePowerControl(!appSettings.lighthousePowerControl)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.lighthousePowerControl.powerOffMode.title</span>
+        <span translate>settings.general.lighthousePowerControl.powerOffMode.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          class="lighthouse-power-off-mode-dropdown"
+          [items]="lighthousePowerOffModeOptions"
+          [selected]="lighthousePowerOffModeOption"
+          (selectedChange)="onChangeLighthousePowerOffMode($event)"
+          #transitionUnitOnEnable
+        ></app-select-box>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
   <h2 translate>settings.general.adminPrivileges.title</h2>
   <div class="settings">
     <div class="setting-row">
