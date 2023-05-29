@@ -77,10 +77,10 @@
 
 .btn-turn-off-all {
   .category-icon {
-  margin-right: 0.4em;
+    margin-right: 0.4em;
     filter: invert(24%) sepia(84%) saturate(1782%) hue-rotate(340deg) brightness(106%) contrast(93%);
   }
-  >i.material-icons {
+  > i.material-icons {
     margin-left: -0.3em;
   }
   &:hover {

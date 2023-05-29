@@ -3,12 +3,12 @@ import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 import {
   BehaviorSubject,
-  Observable,
   delay,
   filter,
   firstValueFrom,
   interval,
   merge,
+  Observable,
   of,
   skip,
   take,
