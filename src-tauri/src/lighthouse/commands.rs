@@ -36,3 +36,8 @@ pub async fn lighthouse_get_status() -> super::models::LighthouseStatus {
 pub async fn lighthouse_get_scanning_status() -> bool {
     super::SCANNING.lock().await.clone()
 }
+
+#[tauri::command]
+pub async fn lighthouse_reset() {
+    super::reset().await
+}

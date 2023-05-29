@@ -129,8 +129,8 @@ button.btn {
       --scoped-bg-color: var(--color-secondary-hover);
     }
 
-    body.dark & {
-    }
+    // body.dark & {
+    // }
 
     &:disabled {
       opacity: 0.5;

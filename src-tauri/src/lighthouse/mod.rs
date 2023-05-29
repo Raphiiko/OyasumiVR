@@ -378,3 +378,30 @@ async fn map_device_to_lighthouse_device(device: Device) -> LighthouseDevice {
         device_type: LighthouseDeviceType::LighthouseV2,
     }
 }
+
+async fn reset() {
+    // Wait until we are no longer scanning
+    loop {
+        let scanning_guard = SCANNING.lock().await;
+        if !*scanning_guard {
+            break;
+        }
+        drop(scanning_guard);
+        sleep(Duration::from_millis(100)).await;
+    }
+    // Clear all known devices
+    {
+        let mut lighthouse_devices_guard = LIGHTHOUSE_DEVICES.lock().await;
+        lighthouse_devices_guard.clear();
+    }
+    // Clear all discovered devices
+    {
+        let mut discovered_devices_guard = DISCOVERED_DEVICES.lock().await;
+        discovered_devices_guard.clear();
+    }
+    // Clear all known power states
+    {
+        let mut lighthouse_device_power_states_guard = LIGHTHOUSE_DEVICE_POWER_STATES.lock().await;
+        lighthouse_device_power_states_guard.clear();
+    }
+}

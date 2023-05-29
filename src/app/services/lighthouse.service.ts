@@ -10,11 +10,11 @@ import {
   interval,
   merge,
   of,
+  skip,
   take,
-  tap,
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
-import { cloneDeep } from 'lodash';
+import { AppSettingsService } from './app-settings.service';
 
 type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
 
@@ -49,7 +49,7 @@ export class LighthouseService {
   >([]);
   public readonly devices: Observable<LighthouseDevice[]> = this._devices.asObservable();
 
-  constructor() {}
+  constructor(private appSettings: AppSettingsService) {}
 
   async init() {
     listen<LighthouseStatusChangedEvent>('LIGHTHOUSE_STATUS_CHANGED', (event) =>
@@ -65,12 +65,19 @@ export class LighthouseService {
       'LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED',
       (event) => this.handleDevicePowerStateChange(event.payload)
     );
-    const status = await invoke<LighthouseStatus>('lighthouse_get_status');
-    this._status.next(status);
-    this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
-    if (status === 'ready') {
-      await invoke('lighthouse_start_scan', { duration: 5 });
-    }
+    this.appSettings.settings.pipe(skip(1)).subscribe(async (settings) => {
+      if (settings.lighthousePowerControl) {
+        const status = await invoke<LighthouseStatus>('lighthouse_get_status');
+        this._status.next(status);
+        this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
+        if (status === 'ready') {
+          await invoke('lighthouse_start_scan', { duration: 5 });
+        }
+      } else {
+        this._devices.next([]);
+        await invoke('lighthouse_reset');
+      }
+    });
   }
 
   public async setPowerState(device: LighthouseDevice, powerState: LighthouseDevicePowerState) {
@@ -99,8 +106,10 @@ export class LighthouseService {
   private async handleStatusChange(event: LighthouseStatusChangedEvent) {
     if (this._status.value !== event.status) {
       this._status.next(event.status);
-      if (event.status === 'ready') {
-        await invoke('lighthouse_start_scan', { duration: 10 });
+      if ((await firstValueFrom(this.appSettings.settings)).lighthousePowerControl) {
+        if (event.status === 'ready') {
+          await invoke('lighthouse_start_scan', { duration: 10 });
+        }
       }
     }
   }
