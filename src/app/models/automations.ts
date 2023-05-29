@@ -30,7 +30,10 @@ export type AutomationType =
   | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
-  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE';
+  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
+  // FADE DISTANCE AUTOMATIONS
+  | 'FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
+  | 'FADE_DISTANCE_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
   version: 8;
@@ -60,6 +63,8 @@ export interface AutomationConfigs {
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
+  FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: FadeDistanceOnSleepModeAutomationConfig;
+  FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: FadeDistanceOnSleepModeAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -80,6 +85,10 @@ export interface DisplayBrightnessOnSleepModeAutomationConfig extends Automation
 
 export interface RenderResolutionOnSleepModeAutomationConfig extends AutomationConfig {
   resolution: number | null;
+}
+
+export interface FadeDistanceOnSleepModeAutomationConfig extends AutomationConfig {
+  fadeDistance: number;
 }
 
 // GPU AUTOMATIONS
@@ -205,6 +214,14 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
     resolution: null,
+  },
+  FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+    fadeDistance: 0.0,
+  },
+  FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
+    fadeDistance: 0.7
   },
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {

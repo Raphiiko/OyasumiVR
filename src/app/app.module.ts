@@ -101,6 +101,7 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
+import { FadeDistanceAutomationService } from './services/fade-distance-automation.service';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
 import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
@@ -111,6 +112,7 @@ import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep
 import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
 import { SettingsTabComponent } from './views/dashboard-view/views/settings-view/settings-tab/settings-tab.component';
 import { LighthouseService } from './services/lighthouse.service';
+import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -178,6 +180,7 @@ export function createTranslateLoader(http: HttpClient) {
     EventLogComponent,
     EventLogEntryComponent,
     ResolutionAutomationsViewComponent,
+    ChaperoneAutomationsViewComponent,
     BaseModalComponent,
     SleepAnimationsViewComponent,
     ImgSmoothLoaderDirective,
@@ -219,6 +222,7 @@ export class AppModule {
     private brightnessControlService: BrightnessControlService,
     private brightnessControlAutomationService: BrightnessControlAutomationService,
     private renderResolutionAutomationService: RenderResolutionAutomationService,
+    private fadeDistanceAutomationService: FadeDistanceAutomationService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
@@ -303,6 +307,8 @@ export class AppModule {
           this.brightnessControlAutomationService.init(),
           // Resolution automations
           this.renderResolutionAutomationService.init(),
+          // Fade distance automations
+          this.fadeDistanceAutomationService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

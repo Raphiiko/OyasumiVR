@@ -9,7 +9,7 @@ use chrono::{naive::NaiveDateTime, Utc};
 use log::info;
 use models::OpenVRStatus;
 use openvr::TrackedDeviceIndex;
-use openvr_sys::k_pch_SteamVR_Section;
+use openvr_sys::{k_pch_SteamVR_Section, k_pch_CollisionBounds_Section};
 use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 use sleep_detector::SleepDetector;
 use substring::Substring;
@@ -165,6 +165,38 @@ impl OpenVRManager {
                     supersample_scale.unwrap(),
                 );
             }
+        } else {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        Ok(())
+    }
+
+    pub async fn get_fade_distance(&self) -> Result<f32, String> {
+        let settings = self.settings.lock().await;
+        if settings.is_none() {
+            return Err("OPENVR_NOT_INITIALISED".to_string());
+        }
+        let fade_distance = settings.as_ref().unwrap().get_float(
+            CStr::from_bytes_with_nul(k_pch_CollisionBounds_Section).unwrap(),
+            CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
+        );
+        match fade_distance {
+            Ok(fade_distance) => Ok(fade_distance),
+            Err(_) => Err("FADE_DISTANCE_NOT_FOUND".to_string()),
+        }
+    }
+
+    pub async fn set_fade_distance(
+        &self,
+        fade_distance: f32,
+    ) -> Result<(), String> {
+        let settings = self.settings.lock().await;
+        if settings.is_some() {
+            let _ = settings.as_ref().unwrap().set_float(
+                CStr::from_bytes_with_nul(k_pch_CollisionBounds_Section).unwrap(),
+                CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
+                fade_distance,
+            );
         } else {
             return Err("OPENVR_NOT_INITIALISED".to_string());
         }
