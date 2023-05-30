@@ -762,6 +762,7 @@
       "brightnessAutomations": "Brightness Automations",
       "about": "About Oyasumi",
       "resolutionAutomations": "Resolution Automations",
+      "chaperoneAutomations": "Chaperone Automations",
       "sleepAnimations": "Sleep Animations"
     },
     "device-list": {
@@ -1010,6 +1011,13 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
           }
+        },
+        "fadeDistanceChanged": {
+          "title": "SteamVR fade distance set to {{value}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
         }
       }
     }
@@ -1029,6 +1037,21 @@
       "title": "Change the render resolution to",
       "custom": "Custom",
       "auto": "Auto"
+    }
+  },
+  "chaperone-automations": {
+    "title": "Chaperone Automations",
+    "description": "Oyasumi can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Adjust my chaperone's fade distance"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Adjust my chaperone's fade distance"
+    },
+    "fadeDistance": {
+      "title": "Change the chaperone's fade distance to"
     }
   },
   "sleepAnimations": {

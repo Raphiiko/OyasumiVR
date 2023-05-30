@@ -89,6 +89,14 @@ export class OpenVRService {
     return invoke<number | null>('openvr_get_supersample_scale');
   }
 
+  public setFadeDistance(fadeDistance: number): Promise<void> {
+    return invoke('openvr_set_fade_distance', { fadeDistance });
+  }
+
+  public getFadeDistance(): Promise<number> {
+    return invoke<number>('openvr_get_fade_distance');
+  }
+
   private onStatusUpdate(status: OpenVRStatus) {
     this._status.next(status);
     switch (status) {

@@ -61,6 +61,8 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_set_analog_gain,
         openvr::commands::openvr_get_supersample_scale,
         openvr::commands::openvr_set_supersample_scale,
+        openvr::commands::openvr_get_fade_distance,
+        openvr::commands::openvr_set_fade_distance,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
