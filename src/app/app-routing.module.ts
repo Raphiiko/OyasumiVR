@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { trigger } from '@angular/animations';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
-import { BatteryAutomationsViewComponent } from './views/dashboard-view/views/battery-automations-view/battery-automations-view.component';
 import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
@@ -15,6 +14,7 @@ import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
+import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
 
 const routes: Routes = [
   {
@@ -39,8 +39,8 @@ const routes: Routes = [
         component: SleepAnimationsViewComponent,
       },
       {
-        path: 'batteryAutomations',
-        component: BatteryAutomationsViewComponent,
+        path: 'powerAutomations',
+        component: PowerAutomationsViewComponent,
       },
       {
         path: 'gpuAutomations',

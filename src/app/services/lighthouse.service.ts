@@ -16,7 +16,7 @@ import {
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
 
-type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
+export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
 
 interface LighthouseScanningStatusChangedEvent {
   scanning: boolean;

@@ -220,8 +220,7 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "Batterij Automatiseringen",
+  "power-automations": {
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "Wanneer ik ga slapen",
@@ -574,7 +573,6 @@
       "overview": "Overzicht",
       "sleepDetection": "Slaap Detectie",
       "oscAutomations": "OSC Automatiseringen",
-      "batteryAutomations": "Batterij Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "statusAutomations": "Status Automatiseringen",
       "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
@@ -696,7 +694,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "Een controller uitgeschakeld",
             "CONTROLLERS": "Meerdere controllers uitgeschakeld",

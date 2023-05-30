@@ -15,9 +15,12 @@ export type AutomationType =
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
-  // BATTERY AUTOMATIONS
+  // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
+  | 'TURN_ON_LIGHTHOUSES_ON_OYASUMI_START'
+  | 'TURN_ON_LIGHTHOUSES_ON_STEAMVR_START'
+  | 'TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP'
   // OSC AUTOMATIONS
   | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
@@ -47,9 +50,12 @@ export interface AutomationConfigs {
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
-  // BATTERY AUTOMATIONS
+  // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
+  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: TurnOnLighthousesOnOyasumiStartAutomationConfig;
+  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: TurnOnLighthousesOnSteamVRStartAutomationConfig;
+  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: TurnOffLighthousesOnSteamVRStopAutomationConfig;
   // OSC AUTOMATIONS
   OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
@@ -143,7 +149,7 @@ export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends Automat
   triggerClasses: OVRDeviceClass[];
 }
 
-// DEVICE BATTERY AUTOMATIONS
+// DEVICE POWER AUTOMATIONS
 export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
 }
@@ -151,6 +157,12 @@ export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends Automat
 export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
 }
+
+export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
+
+export interface TurnOnLighthousesOnSteamVRStartAutomationConfig extends AutomationConfig {}
+
+export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends AutomationConfig {}
 
 // OSC AUTOMATIONS
 export interface OscGeneralAutomationConfig extends AutomationConfig {
@@ -274,6 +286,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
   },
+  // DEVICE POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {
     enabled: true,
     deviceClasses: [],
@@ -281,6 +294,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   TURN_OFF_DEVICES_WHEN_CHARGING: {
     enabled: true,
     deviceClasses: [],
+  },
+  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
+    enabled: false,
+  },
+  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: {
+    enabled: false,
+  },
+  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: {
+    enabled: false,
   },
   // OSC AUTOMATIONS
   OSC_GENERAL: {

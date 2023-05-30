@@ -21,12 +21,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (by [neuroblack](https://github.com/neuroblack)).
 - Option to start Oyasumi hidden in the system tray (by [neuroblack](https://github.com/neuroblack)).
 - Power management for SteamVR base stations (Supports V2 Lighthouses only).
+- Option for forcing the state of the sleep mode at launch
+- Automations for turning base stations on and off with SteamVR
+- Automation for turning base stations on with Oyasumi
 
 ### Changed
 
 - Separated sleeping animations into its own navigation item.
 - Remote images now fade in smoothly upon load.
 - Language selection modal now always shows if the user has not picked a language.
+- Battery automations were moved to power automations.
 - Updated splash screen.
 - Updated to Angular 16 & Tauri 1.3.
 

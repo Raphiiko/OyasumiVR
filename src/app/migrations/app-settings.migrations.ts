@@ -39,8 +39,6 @@ function resetToLatest(data: any): any {
 function from4to5(data: any): any {
   data.version = 5;
   data.userLanguagePicked = true;
-  data.lighthousePowerOffState = 'sleep';
-  data.lighthousePowerControl = true;
   return data;
 }
 

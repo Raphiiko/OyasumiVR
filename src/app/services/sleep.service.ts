@@ -5,6 +5,7 @@ import {
   combineLatest,
   distinctUntilChanged,
   filter,
+  firstValueFrom,
   map,
   merge,
   Observable,
@@ -25,6 +26,7 @@ import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
+import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -59,11 +61,25 @@ export class SleepService {
     private openvr: OpenVRService,
     private notifications: NotificationService,
     private translate: TranslateService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private appSettings: AppSettingsService
   ) {}
 
   async init() {
-    this._mode.next((await this.store.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false);
+    const settings = await firstValueFrom(this.appSettings.settings);
+    let mode: boolean;
+    switch (settings.sleepModeStartupBehaviour) {
+      case 'PERSIST':
+        mode = (await this.store.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false;
+        break;
+      case 'ACTIVE':
+        mode = true;
+        break;
+      case 'INACTIVE':
+        mode = false;
+        break;
+    }
+    this._mode.next(mode);
   }
 
   forcePose(pose: SleepingPose) {

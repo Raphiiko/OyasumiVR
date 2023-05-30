@@ -220,8 +220,7 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "Automatisations de batterie",
+  "power-automations": {
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "Quand je vais dormir",
@@ -585,7 +584,6 @@
       "overview": "Résumé",
       "sleepDetection": "Détection de sommeil",
       "oscAutomations": "Automatisations OSC",
-      "batteryAutomations": "Automatisations de la batterie",
       "gpuAutomations": "Automatisations GPU",
       "statusAutomations": "Automatisations de statut",
       "autoInviteRequestAccept": "Gestion des demandes",
@@ -707,7 +705,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "Un contrôleur a été éteint",
             "CONTROLLERS": "Plusieurs contrôleurs ont été éteints",

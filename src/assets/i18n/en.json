@@ -226,8 +226,8 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "Battery Automations",
+  "power-automations": {
+    "title": "Power Automations",
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "When I go to sleep",
@@ -242,6 +242,37 @@
         "optionControllers": "Turn off controllers",
         "optionTrackers": "Turn off trackers"
       }
+    },
+    "tabs": {
+      "controllersAndTrackers": "Controllers & Trackers",
+      "baseStations": "Base Stations"
+    },
+    "lighthousePowerOn": {
+      "title": "Turn on base stations",
+      "description": "Have Oyasumi automatically turn on your base stations.",
+      "onOyasumiStart": {
+        "title": "When Oyasumi starts",
+        "description": "Automatically turn on your base stations when Oyasumi starts"
+      },
+      "onSteamVRStart": {
+        "title": "When SteamVR starts",
+        "description": "Automatically turn on your base stations when SteamVR starts"
+      }
+    },
+    "lighthousePowerOff": {
+      "title": "Turn off base stations",
+      "description": "Have Oyasumi automatically turn off your base stations.",
+      "onSteamVRStop": {
+        "title": "When SteamVR stops",
+        "description": "Automatically turn off your base stations when SteamVR stops"
+      }
+    },
+    "powerManagementWarning": "When choosing to use Oyasumi's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
+    "lighthouseControlDisabledWarning": "These automations are unavailable because you have disabled base station power control in Oyasumi's settings. Enable this if you want to use these automations.",
+    "enableLighthouseControl": "Enable",
+    "error": {
+      "noAdapter": "No Bluetooth adapter could be found in your system. Please make sure your system is equipped with a Bluetooth adapter and that it is enabled.",
+      "adapterError": "An error occurred while trying to communicate with your Bluetooth adapter. Please make sure your Bluetooth adapter is enabled and try again."
     }
   },
   "gpu-automations": {
@@ -426,7 +457,7 @@
         "description": "The data that will be sent is limited to the version of Oyasumi that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
       },
       "systemTray": {
-        "title": "System tray",
+        "title": "System Tray",
         "close": {
           "label": "Close to the system tray",
           "description": "Closes Oyasumi to the system tray instead of exiting the program."
@@ -453,6 +484,27 @@
         "enable": {
           "title": "Enable power control",
           "description": "If enabled, you will be able to power your base stations off and on using Oyasumi. Requires bluetooth, and supports V2 base stations only."
+        }
+      },
+      "sleepMode": {
+        "title": "Sleep Mode",
+        "startupBehaviour": {
+          "title": "Startup State",
+          "description": "What the sleep mode should be when you start Oyasumi",
+          "option": {
+            "persist": {
+              "title": "Saved State",
+              "description": "Remember from last time"
+            },
+            "enabled": {
+              "title": "Active",
+              "description": "Start as active"
+            },
+            "disabled": {
+              "title": "Inactive",
+              "description": "Start as inactive"
+            }
+          }
         }
       }
     },
@@ -701,8 +753,8 @@
       "overview": "Overview",
       "sleepDetection": "Sleep Detection",
       "oscAutomations": "OSC Automations",
-      "batteryAutomations": "Battery Automations",
       "gpuAutomations": "GPU Automations",
+      "powerAutomations": "Power Automations",
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "settings": "Settings",
@@ -836,7 +888,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "Turned off a controller",
             "CONTROLLERS": "Turned off multiple controllers",
@@ -850,6 +902,66 @@
             "OSC_CONTROL": "Turned off over OSC",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "CHARGING": "As the device is recharging"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "SINGLE": {
+            "on": {
+              "title": "Turned on a base station",
+              "reasons": {
+                "MANUAL": "Turned on manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            },
+            "sleep": {
+              "title": "Set a base station to sleep mode",
+              "reasons": {
+                "MANUAL": "Set manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            },
+            "standby": {
+              "title": "Set a base station to standby mode",
+              "reasons": {
+                "MANUAL": "Set manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            }
+          },
+          "ALL": {
+            "on": {
+              "title": "Turned on all base stations",
+              "reasons": {
+                "MANUAL": "Turned on manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            },
+            "sleep": {
+              "title": "Set all base stations to sleep mode",
+              "reasons": {
+                "MANUAL": "Set manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            },
+            "standby": {
+              "title": "Set all base stations to standby mode",
+              "reasons": {
+                "MANUAL": "Set manually",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "OYASUMI_START": "As Oyasumi started"
+              }
+            }
           }
         },
         "gpuPowerLimitChanged": {

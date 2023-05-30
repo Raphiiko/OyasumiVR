@@ -9,7 +9,7 @@ import {
 } from '../../models/automations';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { SleepService } from '../sleep.service';
-import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 import { error } from 'tauri-plugin-log-api';
 
@@ -46,7 +46,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
         if (!devices.length) return;
         await this.lighthouse.turnOffDevices(devices);
         this.eventLog.logEvent({
-          type: 'turnedOffDevices',
+          type: 'turnedOffOpenVRDevices',
           reason: 'SLEEP_MODE_ENABLED',
           devices: (() => {
             const classes = devices.map((d) => d.class);
@@ -63,7 +63,7 @@ export class TurnOffDevicesOnSleepModeEnableAutomationService {
             );
             return 'VARIOUS';
           })(),
-        } as EventLogTurnedOffDevices);
+        } as EventLogTurnedOffOpenVRDevices);
       });
   }
 }

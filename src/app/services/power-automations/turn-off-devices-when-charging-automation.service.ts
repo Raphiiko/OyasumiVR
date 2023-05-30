@@ -9,7 +9,7 @@ import {
 } from '../../models/automations';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { error, info } from 'tauri-plugin-log-api';
-import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 
 @Injectable({
@@ -47,7 +47,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
             );
             this.lighthouse.turnOffDevices([device]);
             this.eventLog.logEvent({
-              type: 'turnedOffDevices',
+              type: 'turnedOffOpenVRDevices',
               reason: 'CHARGING',
               devices: (() => {
                 switch (device.class) {
@@ -63,7 +63,7 @@ export class TurnOffDevicesWhenChargingAutomationService {
                   }
                 }
               })(),
-            } as EventLogTurnedOffDevices);
+            } as EventLogTurnedOffOpenVRDevices);
           }
         } else if (!device.isCharging && this.chargingDevices.includes(device.index)) {
           this.chargingDevices = this.chargingDevices.filter((d) => d !== device.index);
