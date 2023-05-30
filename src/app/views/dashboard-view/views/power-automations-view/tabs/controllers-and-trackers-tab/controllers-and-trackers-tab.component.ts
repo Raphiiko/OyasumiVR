@@ -1,24 +1,22 @@
 import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
-import { noop } from '../../../../utils/animations';
-import { AutomationConfigService } from '../../../../services/automation-config.service';
+import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
   TurnOffDevicesWhenChargingAutomationConfig,
-} from '../../../../models/automations';
+} from '../../../../../../models/automations';
 import { cloneDeep } from 'lodash';
-import { OVRDeviceClass } from '../../../../models/ovr-device';
+import { OVRDeviceClass } from '../../../../../../models/ovr-device';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-battery-automations-view',
-  templateUrl: './battery-automations-view.component.html',
-  styleUrls: ['./battery-automations-view.component.scss'],
-  animations: [noop()],
+  selector: 'app-controllers-and-trackers-tab',
+  templateUrl: './controllers-and-trackers-tab.component.html',
+  styleUrls: ['./controllers-and-trackers-tab.component.scss'],
 })
-export class BatteryAutomationsViewComponent implements OnInit {
+export class ControllersAndTrackersTabComponent implements OnInit {
   protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   );

@@ -1,0 +1,87 @@
+<div class="pane-content">
+  <div class="setting-category">
+    <h2 translate>power-automations.devicePowerOff.onSleepModeEnable.title</h2>
+    <p>
+      <span translate> power-automations.devicePowerOff.onSleepModeEnable.description</span
+      ><br /><span
+        [innerHTML]="'power-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
+      ></span>
+    </p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate
+            >power-automations.devicePowerOff.onSleepModeEnable.optionControllers</span
+          >
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeConfig.deviceClasses.includes('Controller')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'Controller')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.devicePowerOff.onSleepModeEnable.optionTrackers</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeConfig.deviceClasses.includes('GenericTracker')"
+              (change)="
+                toggleDeviceClass('TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE', 'GenericTracker')
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="setting-category">
+    <h2 translate>power-automations.devicePowerOff.onCharge.title</h2>
+    <p translate>power-automations.devicePowerOff.onCharge.description</p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.devicePowerOff.onCharge.optionControllers</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onChargeConfig.deviceClasses.includes('Controller')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_WHEN_CHARGING', 'Controller')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.devicePowerOff.onCharge.optionTrackers</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onChargeConfig.deviceClasses.includes('GenericTracker')"
+              (change)="toggleDeviceClass('TURN_OFF_DEVICES_WHEN_CHARGING', 'GenericTracker')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

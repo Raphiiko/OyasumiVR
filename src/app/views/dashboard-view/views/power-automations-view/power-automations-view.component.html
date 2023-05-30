@@ -1,0 +1,23 @@
+<div class="pane">
+  <div class="pane-title" translate>power-automations.title</div>
+  <div class="tab-bar">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'CONTROLLERS_AND_TRACKERS'"
+      (click)="activeTab = 'CONTROLLERS_AND_TRACKERS'"
+    >
+      <div class="tab-label" translate>power-automations.tabs.controllersAndTrackers</div>
+    </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'BASE_STATIONS'"
+      (click)="activeTab = 'BASE_STATIONS'"
+    >
+      <div class="tab-label" translate>power-automations.tabs.baseStations</div>
+    </div>
+  </div>
+  <app-controllers-and-trackers-tab
+    *ngIf="activeTab === 'CONTROLLERS_AND_TRACKERS'"
+  ></app-controllers-and-trackers-tab>
+  <app-base-stations-tab *ngIf="activeTab === 'BASE_STATIONS'"></app-base-stations-tab>
+</div>

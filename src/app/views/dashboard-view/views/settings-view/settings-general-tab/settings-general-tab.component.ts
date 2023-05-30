@@ -46,6 +46,24 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     },
   ];
   lighthousePowerOffModeOption: SelectBoxItem | undefined;
+  sleepModeStartupBehaviourOptions: SelectBoxItem[] = [
+    {
+      id: 'PERSIST',
+      label: 'settings.general.sleepMode.startupBehaviour.option.persist.title',
+      subLabel: 'settings.general.sleepMode.startupBehaviour.option.persist.description',
+    },
+    {
+      id: 'ACTIVE',
+      label: 'settings.general.sleepMode.startupBehaviour.option.enabled.title',
+      subLabel: 'settings.general.sleepMode.startupBehaviour.option.enabled.description',
+    },
+    {
+      id: 'INACTIVE',
+      label: 'settings.general.sleepMode.startupBehaviour.option.disabled.title',
+      subLabel: 'settings.general.sleepMode.startupBehaviour.option.disabled.description',
+    },
+  ];
+  sleepModeStartupBehaviourOption: SelectBoxItem | undefined;
 
   constructor(
     settingsService: AppSettingsService,
@@ -75,6 +93,9 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
       .subscribe((settings) => {
         this.lighthousePowerOffModeOption = this.lighthousePowerOffModeOptions.find(
           (o) => o.id === settings.lighthousePowerOffState
+        );
+        this.sleepModeStartupBehaviourOption = this.sleepModeStartupBehaviourOptions.find(
+          (o) => o.id === settings.sleepModeStartupBehaviour
         );
       });
   }
@@ -145,6 +166,13 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     if (!option) return;
     this.settingsService.updateSettings({
       lighthousePowerOffState: option.id as LighthouseDevicePowerState,
+    });
+  }
+
+  onChangeSleepModeStartupBehaviour(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.settingsService.updateSettings({
+      sleepModeStartupBehaviour: option.id as 'PERSIST' | 'ACTIVE' | 'INACTIVE',
     });
   }
 }

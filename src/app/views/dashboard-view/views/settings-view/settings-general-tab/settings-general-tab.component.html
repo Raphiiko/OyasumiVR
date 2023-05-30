@@ -55,6 +55,26 @@
 </div>
 
 <div class="setting-category">
+  <h2 translate>settings.general.sleepMode.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.sleepMode.startupBehaviour.title</span>
+        <span translate>settings.general.sleepMode.startupBehaviour.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          class="sleep-mode-startup-behaviour-dropdown"
+          [items]="sleepModeStartupBehaviourOptions"
+          [selected]="sleepModeStartupBehaviourOption"
+          (selectedChange)="onChangeSleepModeStartupBehaviour($event)"
+        ></app-select-box>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
   <h2 translate>settings.general.systemTray.title</h2>
   <div class="settings">
     <div class="setting-row">
@@ -122,7 +142,6 @@
           [items]="lighthousePowerOffModeOptions"
           [selected]="lighthousePowerOffModeOption"
           (selectedChange)="onChangeLighthousePowerOffMode($event)"
-          #transitionUnitOnEnable
         ></app-select-box>
       </div>
     </div>

@@ -41,6 +41,8 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
+      - name: Install development Tauri CLI
+        run: cargo install --git https://github.com/tauri-apps/tauri --branch dev tauri-cli
       - name: Check Rust code in shared module
         run: cd src-shared && cargo clippy --all-features --no-deps
       - name: Check Rust code in elevated sidecar module
@@ -61,4 +63,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+        with:
+          tauriScript: cargo-tauri
 

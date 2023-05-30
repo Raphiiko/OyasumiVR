@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ windows-latest ]
+        platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -40,6 +40,8 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
+      - name: Install development Tauri CLI
+        run: cargo install --git https://github.com/tauri-apps/tauri --branch dev tauri-cli
       - name: Check Rust code in shared module
         run: cd src-shared && cargo clippy --all-features --no-deps
       - name: Check Rust code in elevated sidecar module
@@ -75,6 +77,7 @@ jobs:
           includeDebug: true
           includeRelease: false
           includeUpdaterJson: true
+          tauriScript: cargo-tauri
       - name: Update release data
         uses: actions/github-script@v3
         with:

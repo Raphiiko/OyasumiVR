@@ -7,7 +7,7 @@ import { combineLatest, debounceTime, firstValueFrom, map, startWith, Subject, t
 import { AutomationConfigService } from './automation-config.service';
 import { info } from 'tauri-plugin-log-api';
 import { LighthouseConsoleService } from './lighthouse-console.service';
-import { EventLogTurnedOffDevices } from '../models/event-log-entry';
+import { EventLogTurnedOffOpenVRDevices } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { AppSettingsService } from './app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
@@ -182,10 +182,10 @@ export class OscControlService {
         );
         await this.lighthouse.turnOffDevices(devices);
         this.eventLog.logEvent({
-          type: 'turnedOffDevices',
+          type: 'turnedOffOpenVRDevices',
           reason: 'OSC_CONTROL',
           devices: devices.length > 1 ? 'TRACKERS' : 'TRACKER',
-        } as EventLogTurnedOffDevices);
+        } as EventLogTurnedOffOpenVRDevices);
         break;
       }
       case 3: {
@@ -196,10 +196,10 @@ export class OscControlService {
           );
           await this.lighthouse.turnOffDevices(devices);
           this.eventLog.logEvent({
-            type: 'turnedOffDevices',
+            type: 'turnedOffOpenVRDevices',
             reason: 'OSC_CONTROL',
             devices: devices.length > 1 ? 'CONTROLLERS' : 'CONTROLLER',
-          } as EventLogTurnedOffDevices);
+          } as EventLogTurnedOffOpenVRDevices);
         }, 2000);
         break;
       }
@@ -208,10 +208,10 @@ export class OscControlService {
         setTimeout(async () => {
           await this.lighthouse.turnOffDevices(await firstValueFrom(this.openvr.devices));
           this.eventLog.logEvent({
-            type: 'turnedOffDevices',
+            type: 'turnedOffOpenVRDevices',
             reason: 'OSC_CONTROL',
             devices: 'ALL',
-          } as EventLogTurnedOffDevices);
+          } as EventLogTurnedOffOpenVRDevices);
         }, 2000);
         break;
       }

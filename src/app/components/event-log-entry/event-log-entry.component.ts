@@ -3,7 +3,7 @@ import { EventLogEntry } from '../../models/event-log-entry';
 import { EventLogEntryParser } from './event-log-entry-parser';
 import { EventLogSleepModeEnabledEntryParser } from './entry-parsers/sleep-mode-enabled';
 import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode-disabled';
-import { EventLogTurnedOffDevicesEntryParser } from './entry-parsers/device-turned-off';
+import { EventLogTurnedOffOpenVRDevicesEntryParser } from './entry-parsers/openvr-device-turned-off';
 import { EventLogGpuPowerLimitChangedEntryParser } from './entry-parsers/gpu-power-limit-changed';
 import { EventLogBrightnessChangedEntryParser } from './entry-parsers/brightness-changed';
 import { EventLogAcceptedInviteRequestEntryParser } from './entry-parsers/accepted-invite-request';
@@ -13,11 +13,13 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventLogSleepDetectorEnableCancelledEntryParser } from './entry-parsers/sleep-detector-enable-cancelled';
 import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/render-resolution-changed';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EventLogLighthouseSetPowerStateEntryParser } from './entry-parsers/lighthouse-set-power-state';
 
 const parsers: EventLogEntryParser<EventLogEntry>[] = [
   new EventLogSleepModeEnabledEntryParser(),
   new EventLogSleepModeDisabledEntryParser(),
-  new EventLogTurnedOffDevicesEntryParser(),
+  new EventLogTurnedOffOpenVRDevicesEntryParser(),
+  new EventLogLighthouseSetPowerStateEntryParser(),
   new EventLogGpuPowerLimitChangedEntryParser(),
   new EventLogBrightnessChangedEntryParser(),
   new EventLogAcceptedInviteRequestEntryParser(),

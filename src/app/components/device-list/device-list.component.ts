@@ -4,7 +4,10 @@ import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
 import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
 import { OpenVRService } from '../../services/openvr.service';
-import { EventLogTurnedOffDevices } from '../../models/event-log-entry';
+import {
+  EventLogLighthouseSetPowerState,
+  EventLogTurnedOffOpenVRDevices,
+} from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
 import { error } from 'tauri-plugin-log-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -219,7 +222,7 @@ export class DeviceListComponent implements OnInit {
     if (!devices.length) return;
     await this.lighthouseConsole.turnOffDevices(devices);
     this.eventLog.logEvent({
-      type: 'turnedOffDevices',
+      type: 'turnedOffOpenVRDevices',
       reason: 'MANUAL',
       devices: (() => {
         switch (category.class) {
@@ -234,27 +237,35 @@ export class DeviceListComponent implements OnInit {
             return 'VARIOUS';
         }
       })(),
-    } as EventLogTurnedOffDevices);
+    } as EventLogTurnedOffOpenVRDevices);
   }
 
   async bulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
     if (category.canBulkPowerOn) {
-      await Promise.all(
-        category.devices
-          .filter((d) => d.powerState === 'standby' || d.powerState === 'sleep')
-          .map(async (device) => {
-            return this.lighthouse.setPowerState(device, 'on');
-          })
+      const devices = category.devices.filter(
+        (d) => d.powerState === 'standby' || d.powerState === 'sleep'
       );
+      this.eventLog.logEvent({
+        type: 'lighthouseSetPowerState',
+        reason: 'MANUAL',
+        state: 'on',
+        devices: 'ALL',
+      } as EventLogLighthouseSetPowerState);
+      await Promise.all(devices.map(async (device) => this.lighthouse.setPowerState(device, 'on')));
     } else if (category.canBulkPowerOff) {
       const powerOffState = (await firstValueFrom(this.appSettings.settings))
         .lighthousePowerOffState;
+      const devices = category.devices.filter((d) => d.powerState === 'on');
+      this.eventLog.logEvent({
+        type: 'lighthouseSetPowerState',
+        reason: 'MANUAL',
+        state: powerOffState,
+        devices: 'ALL',
+      } as EventLogLighthouseSetPowerState);
       await Promise.all(
-        category.devices
-          .filter((d) => d.powerState === 'on')
-          .map(async (device) => {
-            return this.lighthouse.setPowerState(device, powerOffState);
-          })
+        devices.map(async (device) => {
+          return this.lighthouse.setPowerState(device, powerOffState);
+        })
       );
     }
   }
@@ -268,9 +279,9 @@ export class DeviceListComponent implements OnInit {
     if (!devices.length) return;
     await this.lighthouseConsole.turnOffDevices(devices);
     this.eventLog.logEvent({
-      type: 'turnedOffDevices',
+      type: 'turnedOffOpenVRDevices',
       reason: 'MANUAL',
       devices: 'ALL',
-    } as EventLogTurnedOffDevices);
+    } as EventLogTurnedOffOpenVRDevices);
   }
 }

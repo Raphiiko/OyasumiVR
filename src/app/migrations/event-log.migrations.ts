@@ -4,6 +4,7 @@ import { EVENT_LOG_DEFAULT, EventLog } from '../models/event-log-entry';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
+  2: from1to2,
 };
 
 export function migrateEventLog(log: EventLog): EventLog {
@@ -23,6 +24,17 @@ export function migrateEventLog(log: EventLog): EventLog {
     info(`[event-log-migrations] Migrated event log to version ${currentVersion + ''}`);
   }
   return log as EventLog;
+}
+
+function from1to2(data: any): any {
+  data.version = 2;
+  data.logs = data.logs.map((log: any) => {
+    if (log.type === 'turnedOffDevices') {
+      log.type = 'turnedOffOpenVRDevices';
+    }
+    return log;
+  });
+  return data;
 }
 
 function toLatest(data: any): any {

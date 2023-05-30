@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ThemeService } from './services/theme.service';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
-import { BatteryAutomationsViewComponent } from './views/dashboard-view/views/battery-automations-view/battery-automations-view.component';
 import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
@@ -24,8 +23,6 @@ import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/
 import { SleepModeEnableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-time-automation.service';
 import { SleepModeDisableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-at-time-automation.service';
 import { SleepModeDisableOnDevicePowerOnAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-device-power-on-automation.service';
-import { TurnOffDevicesWhenChargingAutomationService } from './services/battery-automations/turn-off-devices-when-charging-automation.service';
-import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/battery-automations/turn-off-devices-on-sleep-mode-enable-automation.service';
 import { NVMLService } from './services/nvml.service';
 import { OpenVRService } from './services/openvr.service';
 import { GpuAutomationsViewComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-automations-view.component';
@@ -111,6 +108,14 @@ import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep
 import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
 import { SettingsTabComponent } from './views/dashboard-view/views/settings-view/settings-tab/settings-tab.component';
 import { LighthouseService } from './services/lighthouse.service';
+import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
+import { ControllersAndTrackersTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/controllers-and-trackers-tab/controllers-and-trackers-tab.component';
+import { BaseStationsTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/base-stations-tab/base-stations-tab.component';
+import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/power-automations/turn-off-devices-on-sleep-mode-enable-automation.service';
+import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
+import { TurnOnLighthousesOnOyasumiStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-oyasumi-start-automation.service';
+import { TurnOnLighthousesOnSteamVRStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-steamvr-start-automation.service';
+import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/power-automations/turn-off-lighthouses-on-steamvr-stop-automation.service copy';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -125,7 +130,7 @@ export function createTranslateLoader(http: HttpClient) {
   declarations: [
     AppComponent,
     DashboardViewComponent,
-    BatteryAutomationsViewComponent,
+    PowerAutomationsViewComponent,
     SettingsViewComponent,
     DashboardNavbarComponent,
     DeviceListComponent,
@@ -181,6 +186,8 @@ export function createTranslateLoader(http: HttpClient) {
     BaseModalComponent,
     SleepAnimationsViewComponent,
     ImgSmoothLoaderDirective,
+    ControllersAndTrackersTabComponent,
+    BaseStationsTabComponent,
   ],
   imports: [
     CommonModule,
@@ -232,9 +239,12 @@ export class AppModule {
     private sleepModeChangeOnSteamVRStatusAutomationService: SleepModeChangeOnSteamVRStatusAutomationService,
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
-    // Battery automations
+    // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    private turnOnLighthousesOnOyasumiStartAutomationService: TurnOnLighthousesOnOyasumiStartAutomationService,
+    private turnOnLighthousesOnSteamVRStartAutomationService: TurnOnLighthousesOnSteamVRStartAutomationService,
+    private turnOffLighthousesOnSteamVRStopAutomationService: TurnOffLighthousesOnSteamVRStopAutomationService,
     // OSC automations
     private oscGeneralAutomationsService: OscGeneralAutomationsService,
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
@@ -289,9 +299,12 @@ export class AppModule {
           this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
           this.sleepModeDisableAtTimeAutomationService.init(),
           this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
-          // Battery automations
+          // Power automations
           this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
           this.turnOffDevicesWhenChargingAutomationService.init(),
+          this.turnOnLighthousesOnOyasumiStartAutomationService.init(),
+          this.turnOnLighthousesOnSteamVRStartAutomationService.init(),
+          this.turnOffLighthousesOnSteamVRStopAutomationService.init(),
           // OSC automations
           this.oscGeneralAutomationsService.init(),
           this.sleepingAnimationsAutomationService.init(),

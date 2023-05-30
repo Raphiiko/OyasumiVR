@@ -3,7 +3,10 @@ import { OVRDevice } from 'src/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
 import { error } from 'tauri-plugin-log-api';
-import { EventLogTurnedOffDevices } from '../../../models/event-log-entry';
+import {
+  EventLogLighthouseSetPowerState,
+  EventLogTurnedOffOpenVRDevices,
+} from '../../../models/event-log-entry';
 import { EventLogService } from '../../../services/event-log.service';
 import { LighthouseDevice } from 'src/app/models/lighthouse-device';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
@@ -121,7 +124,7 @@ export class DeviceListItemComponent implements OnInit {
     if (this.ovrDevice) {
       await this.lighthouseConsole.turnOffDevices([this.ovrDevice]);
       this.eventLog.logEvent({
-        type: 'turnedOffDevices',
+        type: 'turnedOffOpenVRDevices',
         reason: 'MANUAL',
         devices: (() => {
           switch (this.ovrDevice.class) {
@@ -136,18 +139,29 @@ export class DeviceListItemComponent implements OnInit {
               return 'VARIOUS';
           }
         })(),
-      } as EventLogTurnedOffDevices);
+      } as EventLogTurnedOffOpenVRDevices);
     }
     if (this.lighthouseDevice) {
       switch (this.lighthouseDevice.powerState) {
-        case 'on':
-          this.lighthouse.setPowerState(
-            this.lighthouseDevice,
-            (await firstValueFrom(this.appSettings.settings)).lighthousePowerOffState
-          );
+        case 'on': {
+          const state = (await firstValueFrom(this.appSettings.settings)).lighthousePowerOffState;
+          this.eventLog.logEvent({
+            type: 'lighthouseSetPowerState',
+            reason: 'MANUAL',
+            state,
+            devices: 'SINGLE',
+          } as EventLogLighthouseSetPowerState);
+          await this.lighthouse.setPowerState(this.lighthouseDevice, state);
           break;
+        }
         case 'sleep':
         case 'standby':
+          this.eventLog.logEvent({
+            type: 'lighthouseSetPowerState',
+            reason: 'MANUAL',
+            state: 'on',
+            devices: 'SINGLE',
+          } as EventLogLighthouseSetPowerState);
           await this.lighthouse.setPowerState(this.lighthouseDevice, 'on');
           break;
         case 'booting':

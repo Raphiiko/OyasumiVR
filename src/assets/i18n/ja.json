@@ -220,8 +220,7 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "バッテリーの自動化",
+  "power-automations": {
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "睡眠モード有効時",
@@ -570,7 +569,6 @@
       "overview": "概要",
       "sleepDetection": "睡眠検出",
       "oscAutomations": "OSC自動化",
-      "batteryAutomations": "バッテリー自動化",
       "gpuAutomations": "GPU自動化",
       "statusAutomations": "ステータス自動化",
       "autoInviteRequestAccept": "Req Inviteの自動承認",
@@ -692,7 +690,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "コントローラーをオフにした",
             "CONTROLLERS": "複数のコントローラーをオフにした",

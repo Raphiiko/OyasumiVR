@@ -226,8 +226,7 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "배터리 자동화",
+  "power-automations": {
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "수면 모드 활성화 시",
@@ -671,7 +670,6 @@
       "overview": "개요",
       "sleepDetection": "수면 감지",
       "oscAutomations": "OSC 자동화",
-      "batteryAutomations": "배터리 자동화",
       "gpuAutomations": "GPU 자동화",
       "statusAutomations": "스테이터스 자동화",
       "autoInviteRequestAccept": "인바이트 리퀘스트 \n자동 수락",
@@ -794,7 +792,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "컨트롤러를 끔",
             "CONTROLLERS": "여러 컨트롤러 끔",

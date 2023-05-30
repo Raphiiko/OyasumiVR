@@ -18,6 +18,7 @@ export interface AppSettings {
   startInSystemTray: boolean;
   lighthousePowerControl: boolean;
   lighthousePowerOffState: LighthouseDevicePowerState;
+  sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
 }
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
@@ -39,6 +40,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   startInSystemTray: false,
   lighthousePowerControl: true,
   lighthousePowerOffState: 'sleep',
+  sleepModeStartupBehaviour: 'PERSIST',
 };
 
 export type ExecutableReferenceStatus =

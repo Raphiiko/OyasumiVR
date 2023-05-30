@@ -226,8 +226,7 @@
       }
     }
   },
-  "battery-automations": {
-    "title": "電源管理 自動化",
+  "power-automations": {
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "當我去睡覺時",
@@ -657,7 +656,6 @@
       "overview": "首頁",
       "sleepDetection": "睡眠偵測",
       "oscAutomations": "OSC 自動化",
-      "batteryAutomations": "電源管理自動化",
       "gpuAutomations": "GPU 自動化",
       "statusAutomations": "狀態 自動化",
       "autoInviteRequestAccept": "自動接受 \n加入請求",
@@ -779,7 +777,7 @@
             }
           }
         },
-        "turnedOffDevices": {
+        "turnedOffOpenVRDevices": {
           "title": {
             "CONTROLLER": "關閉一個控制器",
             "CONTROLLERS": "關閉多個控制器",
