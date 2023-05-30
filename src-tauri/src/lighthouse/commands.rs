@@ -34,7 +34,7 @@ pub async fn lighthouse_get_status() -> super::models::LighthouseStatus {
 
 #[tauri::command]
 pub async fn lighthouse_get_scanning_status() -> bool {
-    super::SCANNING.lock().await.clone()
+    *super::SCANNING.lock().await
 }
 
 #[tauri::command]

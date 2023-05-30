@@ -16,9 +16,9 @@ use self::models::{
     LighthouseScanningStatusChangedEvent, LighthouseStatus, LighthouseStatusChangedEvent,
 };
 
-const LIGHTHOUSE_V2_SERVICE: Uuid = Uuid::from_u128(0x00001523_1212_efde_1523_785feabcd124);
+const LIGHTHOUSE_V2_SERVICE: Uuid = Uuid::from_u128(0x00001523_1212_EFDE_1523_785FEABCD124);
 const LIGHTHOUSE_V2_POWER_CHARACTERISTIC: Uuid =
-    Uuid::from_u128(0x00001525_1212_EFDE_1523_785feabcd124);
+    Uuid::from_u128(0x00001525_1212_EFDE_1523_785FEABCD124);
 static EVENT_STATUS_CHANGED: &str = "LIGHTHOUSE_STATUS_CHANGED";
 static EVENT_SCANNING_STATUS_CHANGED: &str = "LIGHTHOUSE_SCANNING_STATUS_CHANGED";
 static EVENT_DEVICE_DISCOVERED: &str = "LIGHTHOUSE_DEVICE_DISCOVERED";
@@ -43,7 +43,7 @@ pub async fn init() {
     // Initialize adapter
     {
         let adapter = Adapter::default().await;
-        if let None = adapter {
+        if adapter.is_none() {
             set_lighthouse_status(LighthouseStatus::NoAdapter).await;
             warn!("[Core] No bluetooth adapter was found. Disabling lighthouse module.");
             return;
@@ -297,10 +297,12 @@ async fn handle_discovered_device(device: Device) {
 }
 
 async fn set_lighthouse_status(status: LighthouseStatus) {
-    *STATUS.lock().await = status;
+    *STATUS.lock().await = status.clone();
     send_event(
         EVENT_STATUS_CHANGED,
-        LighthouseStatusChangedEvent { status: status },
+        LighthouseStatusChangedEvent {
+            status: status.clone(),
+        },
     )
     .await;
 }
@@ -309,7 +311,7 @@ async fn set_scanning_status(scanning: bool) {
     *SCANNING.lock().await = scanning;
     send_event(
         EVENT_SCANNING_STATUS_CHANGED,
-        LighthouseScanningStatusChangedEvent { scanning: scanning },
+        LighthouseScanningStatusChangedEvent { scanning },
     )
     .await;
 }
@@ -374,7 +376,7 @@ async fn map_device_to_lighthouse_device(device: Device) -> LighthouseDevice {
     LighthouseDevice {
         id: device.id().to_string(),
         device_name: device.name().ok(),
-        power_state: power_state,
+        power_state,
         device_type: LighthouseDeviceType::LighthouseV2,
     }
 }
