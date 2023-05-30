@@ -27,11 +27,6 @@
       <ng-container *ngIf="category.type === 'OpenVR'">
         <div class="device-list-category-header" [@vshrink]>
           <div class="device-list-category-header-label">
-            <img
-              *ngIf="category.icon"
-              [src]="'/assets/img/icon_' + category.icon + '.png'"
-              class="category-icon"
-            />
             <span>{{ category.label | translate }}</span>
           </div>
           <button
@@ -53,11 +48,6 @@
       <ng-container *ngIf="category.type === 'Lighthouse'">
         <div class="device-list-category-header" [@vshrink]>
           <div class="device-list-category-header-label">
-            <img
-              *ngIf="category.icon"
-              [src]="'/assets/img/icon_' + category.icon + '.png'"
-              class="category-icon"
-            />
             <span>{{ category.label | translate }}</span>
           </div>
           <button
