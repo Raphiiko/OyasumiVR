@@ -168,7 +168,8 @@
     padding-bottom: 0.25em;
   }
 
-  .translation-author-list {
+  .translation-author-list,
+  .contributor-list {
     display: flex;
     flex-direction: column;
     align-items: flex-end;

@@ -679,7 +679,8 @@
     "translations": "Translations",
     "projectLinks": "Project Links",
     "sourceLink": "Source Code @ GitHub",
-    "discordInvite": "Discord Server"
+    "discordInvite": "Discord Server",
+    "contributions": "Contributions"
   },
   "updater": {
     "modals": {
