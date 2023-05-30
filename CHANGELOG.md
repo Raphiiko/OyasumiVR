@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Separated sleeping animations into its own navigation item.
 - Remote images now fade in smoothly upon load.
 - Language selection modal now always shows if the user has not picked a language.
-- Battery automations were moved to Power automations.
+- Battery automations were moved to power automations.
 - Updated splash screen.
 - Updated to Angular 16 & Tauri 1.3.
 
