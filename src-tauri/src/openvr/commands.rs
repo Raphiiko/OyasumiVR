@@ -45,3 +45,17 @@ pub async fn openvr_get_supersample_scale() -> Result<Option<f32>, String> {
     let manager = manager_guard.as_ref().unwrap();
     manager.get_supersample_scale().await
 }
+
+#[tauri::command]
+pub async fn openvr_set_fade_distance(fade_distance: f32) -> Result<(), String> {
+    let manager_guard = OPENVR_MANAGER.lock().await;
+    let manager = manager_guard.as_ref().unwrap();
+    manager.set_fade_distance(fade_distance).await
+}
+
+#[tauri::command]
+pub async fn openvr_get_fade_distance() -> Result<f32, String> {
+    let manager_guard = OPENVR_MANAGER.lock().await;
+    let manager = manager_guard.as_ref().unwrap();
+    manager.get_fade_distance().await
+}
