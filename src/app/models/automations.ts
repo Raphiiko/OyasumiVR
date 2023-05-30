@@ -34,9 +34,9 @@ export type AutomationType =
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
-  // FADE DISTANCE AUTOMATIONS
-  | 'FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
-  | 'FADE_DISTANCE_ON_SLEEP_MODE_DISABLE';
+  // CHAPERONE AUTOMATIONS
+  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
+  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
   version: 8;
@@ -70,8 +70,8 @@ export interface AutomationConfigs {
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
   // CHAPERONE AUTOMATIONS
-  FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: FadeDistanceOnSleepModeAutomationConfig;
-  FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: FadeDistanceOnSleepModeAutomationConfig;
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -95,7 +95,7 @@ export interface RenderResolutionOnSleepModeAutomationConfig extends AutomationC
 }
 
 // CHAPERONE AUTOMATIONS
-export interface FadeDistanceOnSleepModeAutomationConfig extends AutomationConfig {
+export interface ChaperoneFadeDistanceOnSleepModeAutomationConfig extends AutomationConfig {
   fadeDistance: number;
 }
 
@@ -230,11 +230,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     resolution: null,
   },
   // CHAPERONE AUTOMATIONS
-  FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: {
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
     fadeDistance: 0.0,
   },
-  FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: {
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
     fadeDistance: 0.7,
   },

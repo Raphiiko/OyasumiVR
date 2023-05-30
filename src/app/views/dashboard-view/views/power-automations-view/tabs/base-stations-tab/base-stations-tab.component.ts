@@ -9,13 +9,13 @@ import {
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { AutomationConfigService } from 'src/app/services/automation-config.service';
 import { LighthouseService, LighthouseStatus } from 'src/app/services/lighthouse.service';
-import { vshrink } from 'src/app/utils/animations';
+import { noop, vshrink } from 'src/app/utils/animations';
 
 @Component({
   selector: 'app-base-stations-tab',
   templateUrl: './base-stations-tab.component.html',
   styleUrls: ['./base-stations-tab.component.scss'],
-  animations: [vshrink()],
+  animations: [vshrink(), noop()],
 })
 export class BaseStationsTabComponent implements OnInit {
   automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);

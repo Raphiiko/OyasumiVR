@@ -1,22 +1,26 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import { EventLogFadeDistanceChanged, EventLogType } from '../../../models/event-log-entry';
+import {
+  EventLogChaperoneFadeDistanceChanged,
+  EventLogType,
+} from '../../../models/event-log-entry';
+import { ensurePrecision } from 'src/app/utils/number-utils';
 
-export class EventLogFadeDistanceChangedEntryParser extends EventLogEntryParser<EventLogFadeDistanceChanged> {
+export class EventLogFadeDistanceChangedEntryParser extends EventLogEntryParser<EventLogChaperoneFadeDistanceChanged> {
   entryType(): EventLogType {
-    return 'fadeDistanceChanged';
+    return 'chaperoneFadeDistanceChanged';
   }
 
-  override headerInfoTitle(entry: EventLogFadeDistanceChanged): string {
-    return (
-      'comp.event-log-entry.type.fadeDistanceChanged.title'
-    );
+  override headerInfoTitle(entry: EventLogChaperoneFadeDistanceChanged): string {
+    return 'comp.event-log-entry.type.chaperoneFadeDistanceChanged.title';
   }
 
-  override headerInfoTitleParams(entry: EventLogFadeDistanceChanged): { [p: string]: string } {
-    return { value: entry.fadeDistance + "" };
+  override headerInfoTitleParams(entry: EventLogChaperoneFadeDistanceChanged): {
+    [p: string]: string;
+  } {
+    return { value: ensurePrecision(entry.fadeDistance, 2) + 'm' };
   }
 
-  override headerInfoSubTitle(entry: EventLogFadeDistanceChanged): string {
-    return 'comp.event-log-entry.type.fadeDistanceChanged.reason.' + entry.reason;
+  override headerInfoSubTitle(entry: EventLogChaperoneFadeDistanceChanged): string {
+    return 'comp.event-log-entry.type.chaperoneFadeDistanceChanged.reason.' + entry.reason;
   }
 }

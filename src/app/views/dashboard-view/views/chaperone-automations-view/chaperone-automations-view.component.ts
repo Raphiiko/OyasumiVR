@@ -4,7 +4,7 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
-  FadeDistanceOnSleepModeAutomationConfig,
+  ChaperoneFadeDistanceOnSleepModeAutomationConfig,
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { debounce } from 'typescript-debounce-decorator';
@@ -17,11 +17,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   animations: [],
 })
 export class ChaperoneAutomationsViewComponent implements OnInit {
-  protected onSleepModeEnableConfig: FadeDistanceOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.FADE_DISTANCE_ON_SLEEP_MODE_ENABLE
+  protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE
   );
-  protected onSleepModeDisableConfig: FadeDistanceOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.FADE_DISTANCE_ON_SLEEP_MODE_DISABLE
+  protected onSleepModeDisableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE
   );
 
   constructor(
@@ -34,8 +34,8 @@ export class ChaperoneAutomationsViewComponent implements OnInit {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
-        this.onSleepModeEnableConfig = configs.FADE_DISTANCE_ON_SLEEP_MODE_ENABLE;
-        this.onSleepModeDisableConfig = configs.FADE_DISTANCE_ON_SLEEP_MODE_DISABLE;
+        this.onSleepModeEnableConfig = configs.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE;
+        this.onSleepModeDisableConfig = configs.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE;
       });
   }
 
@@ -45,7 +45,7 @@ export class ChaperoneAutomationsViewComponent implements OnInit {
 
   @debounce(250)
   async setFadeDistance(automation: AutomationType, fadeDistance: number) {
-    await this.automationConfigService.updateAutomationConfig<FadeDistanceOnSleepModeAutomationConfig>(
+    await this.automationConfigService.updateAutomationConfig<ChaperoneFadeDistanceOnSleepModeAutomationConfig>(
       automation,
       {
         fadeDistance,

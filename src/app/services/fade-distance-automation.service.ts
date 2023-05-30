@@ -3,13 +3,13 @@ import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { EventLogService } from './event-log.service';
 import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
-import { EventLogFadeDistanceChanged } from '../models/event-log-entry';
 import { OpenVRService } from './openvr.service';
+import { EventLogChaperoneFadeDistanceChanged } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FadeDistanceAutomationService {
+export class ChaperoneFadeDistanceAutomationService {
   constructor(
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
@@ -26,8 +26,8 @@ export class FadeDistanceAutomationService {
   private async onSleepModeChange(sleepMode: boolean) {
     const config = await firstValueFrom(this.automationConfigService.configs).then((c) =>
       sleepMode
-        ? c.FADE_DISTANCE_ON_SLEEP_MODE_ENABLE
-        : c.FADE_DISTANCE_ON_SLEEP_MODE_DISABLE
+        ? c.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE
+        : c.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE
     );
     if (!config.enabled) {
       return;
@@ -38,9 +38,9 @@ export class FadeDistanceAutomationService {
     }
     await this.openvr.setFadeDistance(config.fadeDistance);
     this.eventLog.logEvent({
-      type: 'fadeDistanceChanged',
+      type: 'chaperoneFadeDistanceChanged',
       reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
       fadeDistance: config.fadeDistance,
-    } as EventLogFadeDistanceChanged);
+    } as EventLogChaperoneFadeDistanceChanged);
   }
 }

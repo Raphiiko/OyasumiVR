@@ -98,7 +98,7 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
-import { FadeDistanceAutomationService } from './services/fade-distance-automation.service';
+import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
 import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
 import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
@@ -229,7 +229,7 @@ export class AppModule {
     private brightnessControlService: BrightnessControlService,
     private brightnessControlAutomationService: BrightnessControlAutomationService,
     private renderResolutionAutomationService: RenderResolutionAutomationService,
-    private fadeDistanceAutomationService: FadeDistanceAutomationService,
+    private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
@@ -321,7 +321,7 @@ export class AppModule {
           // Resolution automations
           this.renderResolutionAutomationService.init(),
           // Fade distance automations
-          this.fadeDistanceAutomationService.init(),
+          this.chaperoneFadeDistanceAutomationService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

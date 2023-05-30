@@ -16,7 +16,7 @@
                 [checked]="onSleepModeEnableConfig.enabled"
                 (change)="
                   setAutomationEnabled(
-                    'FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
+                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
                     !onSleepModeEnableConfig.enabled
                   )
                 "
@@ -35,7 +35,9 @@
               <app-slider-setting
                 unit="m"
                 [value]="onSleepModeEnableConfig.fadeDistance"
-                (valueChange)="setFadeDistance('FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)"
+                (valueChange)="
+                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
+                "
                 [min]="0"
                 [max]="1.4"
                 [step]="0.01"
@@ -58,7 +60,7 @@
                 [checked]="onSleepModeDisableConfig.enabled"
                 (change)="
                   setAutomationEnabled(
-                    'FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
+                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
                     !onSleepModeDisableConfig.enabled
                   )
                 "
@@ -77,7 +79,9 @@
               <app-slider-setting
                 unit="m"
                 [value]="onSleepModeDisableConfig.fadeDistance"
-                (valueChange)="setFadeDistance('FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)"
+                (valueChange)="
+                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
+                "
                 [min]="0"
                 [max]="1.4"
                 [step]="0.01"

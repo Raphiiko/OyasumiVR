@@ -23,7 +23,7 @@ export type EventLogEntry =
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogSleepDetectorEnableCancelled
   | EventLogRenderResolutionChanged
-  | EventLogFadeDistanceChanged;
+  | EventLogChaperoneFadeDistanceChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -38,7 +38,7 @@ export type EventLogType =
   | 'statusChangedOnPlayerCountChange'
   | 'sleepDetectorEnableCancelled'
   | 'renderResolutionChanged'
-  | 'fadeDistanceChanged';
+  | 'chaperoneFadeDistanceChanged';
 
 export interface EventLogBase {
   id: string;
@@ -110,8 +110,8 @@ export interface EventLogRenderResolutionChanged extends EventLogBase {
   resolution: number | null;
 }
 
-export interface EventLogFadeDistanceChanged extends EventLogBase {
-  type: 'fadeDistanceChanged';
+export interface EventLogChaperoneFadeDistanceChanged extends EventLogBase {
+  type: 'chaperoneFadeDistanceChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
   fadeDistance: number;
 }

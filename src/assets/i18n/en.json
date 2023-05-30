@@ -1013,7 +1013,7 @@
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
           }
         },
-        "fadeDistanceChanged": {
+        "chaperoneFadeDistanceChanged": {
           "title": "SteamVR fade distance set to {{value}}",
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
