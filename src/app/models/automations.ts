@@ -69,6 +69,7 @@ export interface AutomationConfigs {
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
+  // CHAPERONE AUTOMATIONS
   FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: FadeDistanceOnSleepModeAutomationConfig;
   FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: FadeDistanceOnSleepModeAutomationConfig;
 }
@@ -82,17 +83,18 @@ export interface AutomationConfig {
 //
 
 // BRIGHTNESS AUTOMATIONS
-
 export interface DisplayBrightnessOnSleepModeAutomationConfig extends AutomationConfig {
   brightness: number;
   transition: boolean;
   transitionTime: number;
 }
 
+// RESOLUTION AUTOMATIONS
 export interface RenderResolutionOnSleepModeAutomationConfig extends AutomationConfig {
   resolution: number | null;
 }
 
+// CHAPERONE AUTOMATIONS
 export interface FadeDistanceOnSleepModeAutomationConfig extends AutomationConfig {
   fadeDistance: number;
 }
@@ -227,13 +229,14 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     resolution: null,
   },
+  // CHAPERONE AUTOMATIONS
   FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
     fadeDistance: 0.0,
   },
   FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
-    fadeDistance: 0.7
+    fadeDistance: 0.7,
   },
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {

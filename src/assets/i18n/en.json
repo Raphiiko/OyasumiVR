@@ -1041,17 +1041,17 @@
   },
   "chaperone-automations": {
     "title": "Chaperone Automations",
-    "description": "Oyasumi can automatically adjust the fade distance of SteamVR when sleep mode is enabled or disabled.",
+    "description": "Oyasumi can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
     "onSleepEnable": {
       "title": "When I go to sleep",
-      "description": "Adjust my fade distance"
+      "description": "Adjust my chaperone's fade distance"
     },
     "onSleepDisable": {
       "title": "When I wake up",
-      "description": "Adjust my fade distance"
+      "description": "Adjust my chaperone's fade distance"
     },
     "fadeDistance": {
-      "title": "Change the fade distance to"
+      "title": "Change the chaperone's fade distance to"
     }
   },
   "sleepAnimations": {
