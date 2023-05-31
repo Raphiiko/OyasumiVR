@@ -1,11 +1,13 @@
 @import '@fontsource/fira-code/index.css';
 
 :host {
-  height: calc(100% - 4em);
-  width: calc(100% - 4em);
-  max-width: 1280px;
-  max-height: 720px;
-  margin: 2em;
+}
+
+.modal-inner-wrapper {
+  height: 100%;
+  width: 100%;
+  max-width: min(1280px, calc(100% - 4em));
+  max-height: min(720px, calc(100% - 4em));
 }
 
 .modal {
