@@ -51,8 +51,8 @@ jobs:
         run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
       - name: Check Rust code in core module
         run: |
-          rm -rf dist/oyasumi # Delete dist folder if it exists
-          rm -rf src-elevated-sidecar/target/release # Delete sidecar release folder if it exists
+          rmdir dist/oyasumi # Delete dist folder if it exists
+          rmdir src-elevated-sidecar/target/release # Delete sidecar release folder if it exists
           mkdir -p dist/oyasumi/ # Create empty dist folder
           mkdir -p src-elevated-sidecar/target/release/ # Create empty target folder for sidecar executable
           touch src-elevated-sidecar/target/release/oyasumi-elevated-sidecar.exe  # Create dummy sidecar executable
