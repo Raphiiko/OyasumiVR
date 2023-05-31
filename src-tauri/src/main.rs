@@ -66,6 +66,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
+        os::commands::quit_steamvr,
         osc::commands::osc_send_bool,
         osc::commands::osc_send_float,
         osc::commands::osc_send_int,

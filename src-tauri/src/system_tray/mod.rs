@@ -34,7 +34,7 @@ pub async fn init() {
 // Initializes the system tray with menus.
 pub fn init_system_tray() -> SystemTray {
     // Menus
-    let menu_quit = CustomMenuItem::new(QUIT, "Quit");
+    let menu_quit = CustomMenuItem::new(QUIT, "Quit Oyasumi");
 
     let tray_menu = SystemTrayMenu::new()
         //.add_native_item(SystemTrayMenuItem::Separator)

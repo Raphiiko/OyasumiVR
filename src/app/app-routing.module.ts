@@ -15,6 +15,7 @@ import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views
 import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
+import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 
 const routes: Routes = [
   {
@@ -60,11 +61,15 @@ const routes: Routes = [
       },
       {
         path: 'chaperoneAutomations',
-        component: ChaperoneAutomationsViewComponent
+        component: ChaperoneAutomationsViewComponent,
       },
       {
         path: 'autoInviteRequestAccept',
         component: AutoInviteRequestAcceptViewComponent,
+      },
+      {
+        path: 'shutdownAutomations',
+        component: ShutdownAutomationsViewComponent,
       },
       {
         path: 'settings',

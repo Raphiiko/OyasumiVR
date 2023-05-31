@@ -25,13 +25,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automations for turning base stations on and off with SteamVR
 - Automation for turning base stations on with Oyasumi
 - Automations for controlling the Chaperone fade distance (by [TheMrGong](https://github.com/TheMrGong))
+- Added shutdown sequence automations for helping with sleeping outside VR.
 
 ### Changed
 
-- Separated sleeping animations into its own navigation item.
 - Remote images now fade in smoothly upon load.
 - Language selection modal now always shows if the user has not picked a language.
-- Battery automations were moved to power automations.
+- Reorganized navigation.
 - Updated splash screen.
 - Updated to Angular 16 & Tauri 1.3.
 

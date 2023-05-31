@@ -115,7 +115,7 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
   ]);
 }
 
-type SubMenu = 'GENERAL' | 'VRCHAT';
+type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE';
 
 @Component({
   selector: 'app-dashboard-navbar',

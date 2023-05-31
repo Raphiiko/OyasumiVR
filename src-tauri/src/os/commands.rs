@@ -1,7 +1,7 @@
+use super::{models::Output, SOLOUD, SOUNDS};
+use log::error;
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::Command;
-use log::error;
-use super::{models::Output, SOLOUD, SOUNDS};
 
 #[tauri::command]
 pub fn play_sound(name: String) {
@@ -24,6 +24,11 @@ pub fn play_sound(name: String) {
             }
         }
     });
+}
+
+#[tauri::command]
+pub async fn quit_steamvr(kill: bool) {
+    crate::utils::stop_process("vrmonitor.exe", kill).await;
 }
 
 #[tauri::command]

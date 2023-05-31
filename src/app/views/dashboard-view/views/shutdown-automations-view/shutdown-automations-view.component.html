@@ -1,0 +1,214 @@
+<div class="pane">
+  <div class="pane-title" translate>shutdown-automations.title</div>
+  <div class="pane-content">
+    <p translate>shutdown-automations.description</p>
+    <div class="alert info" @vshrink>
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons"> info </i>
+      </div>
+      <div class="alert-content">
+        <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>shutdown-automations.triggers.title</h2>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>shutdown-automations.triggers.whenAsleep.title</span>
+            <span translate>shutdown-automations.triggers.whenAsleep.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.triggerOnSleep"
+                (change)="toggleTriggerOnSleep()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row-group">
+          <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
+            <div class="setting-row-label" translate>
+              <span translate>shutdown-automations.triggers.whenAsleepDuration.title</span>
+              <span translate>shutdown-automations.triggers.whenAsleepDuration.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="1"
+                [snapValues]="[15, 30, 45]"
+                [snapDistance]="5"
+                [max]="59"
+                [step]="1"
+                [value]="duration"
+                (valueChange)="onChangeDuration($event, onSleepTriggerDurationUnit?.id)"
+              ></app-slider-setting>
+              <app-select-box
+                class="status-dropdown"
+                [type]="'SMALL'"
+                [items]="durationUnitOptions"
+                [selected]="onSleepTriggerDurationUnit"
+                (selectedChange)="onChangeDuration(duration, $event?.id)"
+              ></app-select-box>
+            </div>
+          </div>
+
+          <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
+            <div class="setting-row-label" translate>
+              <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.title</span>
+              <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.description</span>
+            </div>
+            <div class="setting-row-action">
+              <div class="input-wrapper" *ngIf="config.activationWindow" @fade>
+                <input
+                  type="time"
+                  [value]="activationWindowStart"
+                  (change)="onChangeActivationWindowStart(activationWindowStartInput.value)"
+                  #activationWindowStartInput
+                />
+              </div>
+              <span *ngIf="config.activationWindow" @fade> to </span>
+              <div class="input-wrapper" *ngIf="config.activationWindow" @fade>
+                <input
+                  type="time"
+                  [value]="activationWindowEnd"
+                  (change)="onChangeActivationWindowEnd(activationWindowEndInput.value)"
+                  #activationWindowEndInput
+                />
+              </div>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.activationWindow"
+                  (change)="toggleActivationWindow()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-category">
+      <h2>
+        <span translate>shutdown-automations.sequence.title</span>
+        <button
+          class="btn btn-secondary"
+          translate
+          (click)="runSequence()"
+          [disabled]="noOptionsSelected"
+          >shutdown-automations.sequence.run</button
+        >
+      </h2>
+      <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> warning </i>
+        </div>
+        <div class="alert-content">
+          <span>{{ 'shutdown-automations.noOptionsSelected' | translate }}</span>
+        </div>
+      </div>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>shutdown-automations.sequence.quitSteamVR.title</span>
+            <span translate>shutdown-automations.sequence.quitSteamVR.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.quitSteamVR"
+                (change)="toggleQuitSteamVR()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>shutdown-automations.sequence.turnOffDevices.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action"> </div>
+        </div>
+
+        <div class="setting-row-group">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>shutdown-automations.sequence.turnOffControllers.title</span>
+              <span translate>shutdown-automations.sequence.turnOffControllers.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.turnOffControllers"
+                  (change)="toggleTurnOffControllers()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>shutdown-automations.sequence.turnOffTrackers.title</span>
+              <span translate>shutdown-automations.sequence.turnOffTrackers.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.turnOffTrackers"
+                  (change)="toggleTurnOffTrackers()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="setting-row" [class.disabled]="lighthouseControlDisabled">
+            <div class="setting-row-label" translate>
+              <span translate>shutdown-automations.sequence.turnOffBaseStations.title</span>
+              <span translate>shutdown-automations.sequence.turnOffBaseStations.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.turnOffBaseStations"
+                  (change)="toggleTurnOffBaseStations()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>shutdown-automations.sequence.shutDownWindows.title</span>
+            <span translate>shutdown-automations.sequence.shutDownWindows.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.shutdownWindows"
+                (change)="toggleShutdownWindows()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

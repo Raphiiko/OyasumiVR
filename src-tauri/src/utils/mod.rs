@@ -1,7 +1,7 @@
 use log::error;
 use serde::Serialize;
 use std::time::{SystemTime, UNIX_EPOCH};
-use sysinfo::{System, SystemExt};
+use sysinfo::{ProcessExt, Signal, System, SystemExt};
 use tauri::Manager;
 use tokio::sync::Mutex;
 
@@ -17,6 +17,22 @@ pub async fn is_process_active(process_name: &str) -> bool {
     sysinfo.refresh_processes();
     let processes = sysinfo.processes_by_exact_name(process_name);
     processes.count() > 0
+}
+
+pub async fn stop_process(process_name: &str, kill: bool) {
+    let mut sysinfo_guard = SYSINFO.lock().await;
+    let sysinfo = &mut *sysinfo_guard;
+    sysinfo.refresh_processes();
+    let processes = sysinfo.processes_by_exact_name(process_name);
+    for process in processes {
+        if kill {
+            let _ = process.kill_with(Signal::Kill);
+        } else if process.kill_with(Signal::Term).is_none() {
+            if process.kill_with(Signal::Quit).is_none() {
+                let _ = process.kill_with(Signal::Kill);
+            }
+        }
+    }
 }
 
 pub fn get_time() -> u128 {

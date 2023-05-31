@@ -36,7 +36,9 @@ export type AutomationType =
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
   // CHAPERONE AUTOMATIONS
   | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
-  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE';
+  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE'
+  // SHUTDOWN AUTOMATIONS
+  | 'SHUTDOWN_AUTOMATIONS';
 
 export interface AutomationConfigs {
   version: 8;
@@ -72,6 +74,8 @@ export interface AutomationConfigs {
   // CHAPERONE AUTOMATIONS
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
+  // SHUTDOWN AUTOMATIONS
+  SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -199,6 +203,20 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   onlyIfSleepModeEnabled: boolean;
   listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
   playerIds: string[];
+}
+
+// SHUTDOWN AUTOMATIONS
+export interface ShutdownAutomationsConfig extends AutomationConfig {
+  triggerOnSleep: boolean;
+  sleepDuration: number;
+  activationWindow: boolean;
+  activationWindowStart: [number, number];
+  activationWindowEnd: [number, number];
+  quitSteamVR: boolean;
+  turnOffControllers: boolean;
+  turnOffTrackers: boolean;
+  turnOffBaseStations: boolean;
+  shutdownWindows: boolean;
 }
 
 //
@@ -337,5 +355,19 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onlyIfSleepModeEnabled: false,
     listMode: 'WHITELIST',
     playerIds: [],
+  },
+  // SHUTDOWN AUTOMATIONS
+  SHUTDOWN_AUTOMATIONS: {
+    enabled: true,
+    triggerOnSleep: false,
+    sleepDuration: 15 * 60 * 1000,
+    activationWindow: false,
+    activationWindowStart: [23, 0],
+    activationWindowEnd: [7, 0],
+    quitSteamVR: true,
+    turnOffControllers: true,
+    turnOffTrackers: true,
+    turnOffBaseStations: true,
+    shutdownWindows: true,
   },
 };

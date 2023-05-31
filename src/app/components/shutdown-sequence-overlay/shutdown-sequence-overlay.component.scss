@@ -1,0 +1,104 @@
+:host {
+  z-index: 100;
+  pointer-events: none;
+}
+
+:host,
+.overlay-container,
+.overlay-bg,
+.overlay-content {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.overlay-container {
+  pointer-events: all;
+}
+
+.overlay-bg {
+  background-color: #00000088;
+  backdrop-filter: blur(5px);
+}
+
+.overlay-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+  font-size: 4em;
+  font-weight: 200;
+  margin-bottom: 2em;
+  filter: url(#ambilight);
+}
+
+.stages {
+  width: 50em;
+  height: 20em;
+  position: relative;
+  filter: url(#ambilight);
+  .stage {
+    transition: all 0.25s ease;
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2em;
+    text-align: left;
+    white-space: nowrap;
+
+    .small-spinner {
+      position: absolute;
+      font-size: 0.75em;
+      top: 50%;
+      transform: translate(calc(-100% - 0.5em), calc(-50% + 0.1em));
+      left: 0;
+    }
+  }
+}
+
+.btn-cancel {
+  outline: none;
+  background: none;
+  font-size: 1.25em;
+  cursor: pointer;
+  margin-top: 2em;
+  color: white;
+  border: none;
+  padding: 0.5em 0;
+  transition: all 0.15s ease;
+  position: relative;
+
+  span {
+    filter: url(#ambilight2);
+  }
+
+  &:after {
+    content: '';
+    transition: all 0.6s ease;
+    position: absolute;
+    width: 100%;
+    height: 0.25em;
+    bottom: -0.25em;
+    left: 0;
+    background: rgba(white, 0.2);
+    border-radius: 999999px;
+  }
+
+  &:hover {
+    &:after {
+      background: rgba(white, 0.5);
+    }
+  }
+
+  &:active {
+    opacity: 0.6;
+  }
+}

@@ -118,6 +118,9 @@ import { TurnOffDevicesWhenChargingAutomationService } from './services/power-au
 import { TurnOnLighthousesOnOyasumiStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-oyasumi-start-automation.service';
 import { TurnOnLighthousesOnSteamVRStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-steamvr-start-automation.service';
 import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/power-automations/turn-off-lighthouses-on-steamvr-stop-automation.service copy';
+import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
+import { ShutdownAutomationsService } from './services/shutdown-automations.service';
+import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -191,6 +194,8 @@ export function createTranslateLoader(http: HttpClient) {
     ImgSmoothLoaderDirective,
     ControllersAndTrackersTabComponent,
     BaseStationsTabComponent,
+    ShutdownAutomationsViewComponent,
+    ShutdownSequenceOverlayComponent,
   ],
   imports: [
     CommonModule,
@@ -227,9 +232,6 @@ export class AppModule {
     private vrchatLogService: VRChatLogService,
     private imageCacheService: ImageCacheService,
     private brightnessControlService: BrightnessControlService,
-    private brightnessControlAutomationService: BrightnessControlAutomationService,
-    private renderResolutionAutomationService: RenderResolutionAutomationService,
-    private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
@@ -255,7 +257,15 @@ export class AppModule {
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
-    private inviteAutomationsService: InviteAutomationsService
+    private inviteAutomationsService: InviteAutomationsService,
+    // Shutdown automations
+    private shutdownAutomationsService: ShutdownAutomationsService,
+    // Brightness control automations
+    private brightnessControlAutomationService: BrightnessControlAutomationService,
+    // Render resolution automations
+    private renderResolutionAutomationService: RenderResolutionAutomationService,
+    // Chaperone fade dinstance automations
+    private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService
   ) {
     this.init();
   }
@@ -322,6 +332,8 @@ export class AppModule {
           this.renderResolutionAutomationService.init(),
           // Fade distance automations
           this.chaperoneFadeDistanceAutomationService.init(),
+          // Shutdown automations
+          this.shutdownAutomationsService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

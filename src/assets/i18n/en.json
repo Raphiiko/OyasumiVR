@@ -764,7 +764,9 @@
       "about": "About Oyasumi",
       "resolutionAutomations": "Resolution Automations",
       "chaperoneAutomations": "Chaperone Automations",
-      "sleepAnimations": "Sleep Animations"
+      "sleepAnimations": "Sleep Animations",
+      "hardwareAutomations": "Hardware Automations",
+      "shutdownAutomations": "Shutdown Sequence"
     },
     "device-list": {
       "title": "Devices",
@@ -1057,5 +1059,67 @@
   },
   "sleepAnimations": {
     "title": "Sleep Animations"
+  },
+  "shutdown-automations": {
+    "title": "Shutdown Sequence",
+    "description": "If enjoy falling asleep in VR, but don't want to sleep in VR for the entire night, you can use Oyasumi's shutdown sequence. This feature automatically shuts down gracefully once you've dozed off, so that you can smoothly continue your sleep outside of VR.",
+    "triggers": {
+      "title": "Automatic Triggers",
+      "whenAsleep": {
+        "title": "Activate when I am asleep",
+        "description": "Activate the shutdown sequence when sleep mode has been activated for a certain amount of time"
+      },
+      "whenAsleepDuration": {
+        "title": "Sleep duration",
+        "description": "How long sleep mode should be active before the shutdown sequence runs"
+      },
+      "whenAsleepTimeWindow": {
+        "title": "Activation Window",
+        "description": "Only allow shutdown to trigger between certain hours of day"
+      }
+    },
+    "sequence": {
+      "title": "Shutdown Settings",
+      "quitSteamVR": {
+        "title": "Quit SteamVR",
+        "description": "This should also quit any game or overlay you have running"
+      },
+      "turnOffDevices": {
+        "title": "Turn off devices"
+      },
+      "turnOffControllers": {
+        "title": "Turn off controllers",
+        "description": "Turns off your controllers"
+      },
+      "turnOffTrackers": {
+        "title": "Turn off trackers",
+        "description": "Turns off your trackers"
+      },
+      "turnOffBaseStations": {
+        "title": "Turn off base stations",
+        "description": "Turns off any base stations that are still active"
+      },
+      "shutDownWindows": {
+        "title": "Shut down Windows",
+        "description": "Attempts to shut down your computer"
+      },
+      "run": "Run Sequence"
+    },
+    "confirm-modal": {
+      "title": "Are you sure?",
+      "message": "Are you sure you want to activate the shutdown sequence right now?"
+    },
+    "noOptionsSelected": "As you have no actions selected to run during the shutdown sequence, running it will have no effects. In order for this feature to do something, choose at least one of the options below.",
+    "overlay": {
+      "stage": {
+        "QUITTING_STEAM": "Quitting Steam...",
+        "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
+        "TURNING_OFF_TRACKERS": "Turning off trackers...",
+        "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
+        "SHUTTING_DOWN": "Shutting down Windows..."
+      },
+      "title": "Shutting Down",
+      "cancel": "Cancel Now"
+    }
   }
 }
