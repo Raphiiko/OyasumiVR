@@ -61,7 +61,6 @@ export class ShutdownAutomationsService {
   ) {}
 
   async init() {
-    this._stage.subscribe((stage) => console.log('SHUTDOWN STAGE', stage));
     // Update with config changes
     this.automationConfigService.configs
       .pipe(

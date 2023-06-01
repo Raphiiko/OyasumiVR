@@ -17,6 +17,7 @@
 .device-list {
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
   //noinspection CssInvalidPropertyValue
   overflow-y: overlay;
   flex: 1;
@@ -87,6 +88,59 @@
     .category-icon {
       filter: invert(99%) sepia(0%) saturate(2934%) hue-rotate(279deg) brightness(116%)
         contrast(101%);
+    }
+  }
+}
+
+.footer-bar {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25em;
+  background: var(--color-surface-2);
+  overflow: hidden;
+  flex-shrink: 0;
+
+  button.btn-lighthouse-scan {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-surface-3);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: var(--color-text-2);
+    padding: 0.5em;
+    border-radius: 0.25em;
+    font-size: 0.9em;
+    transition: all 0.1s ease;
+
+    &:not(:disabled) {
+      cursor: pointer;
+      &:hover {
+        background: var(--color-surface-2);
+      }
+
+      &:active {
+        background: var(--color-surface-1);
+        & > * {
+          opacity: 0.8;
+        }
+      }
+    }
+
+    &:disabled {
+      & > * {
+        opacity: 0.8;
+      }
+    }
+
+    .category-icon,
+    .small-spinner {
+      margin-right: 0.5em;
+    }
+
+    & > * {
+      transition: all 0.1s ease;
     }
   }
 }

@@ -787,7 +787,8 @@
         "sleep": "Sleeping",
         "standby": "Standby",
         "booting": "Booting"
-      }
+      },
+      "scanForLighthouses": "Scan"
     },
     "osc-script-modal": {
       "title": "OSC Script",

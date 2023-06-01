@@ -80,6 +80,12 @@ export class LighthouseService {
     });
   }
 
+  async scan() {
+    if (this._scanning.value) return;
+    this._scanning.next(true);
+    await invoke('lighthouse_start_scan', { duration: 5 });
+  }
+
   public async setPowerState(device: LighthouseDevice, powerState: LighthouseDevicePowerState) {
     if (powerState === device.powerState) return;
     device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)

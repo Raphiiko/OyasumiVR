@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
 import { flatten, groupBy, uniq } from 'lodash';
-import { fade, triggerChildren, vshrink } from 'src/app/utils/animations';
+import { fade, hshrink, triggerChildren, vshrink } from 'src/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src/app/models/ovr-device';
 import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
 import { OpenVRService } from '../../services/openvr.service';
@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice } from 'src/app/models/lighthouse-device';
 import { LighthouseService } from 'src/app/services/lighthouse.service';
 import { filterInPlace } from 'src/app/utils/arrays';
-import { combineLatest, firstValueFrom, tap } from 'rxjs';
+import { combineLatest, debounceTime, firstValueFrom, tap } from 'rxjs';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 
 type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
@@ -43,11 +43,13 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   selector: 'app-device-list',
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
-  animations: [vshrink(), triggerChildren(), fade()],
+  animations: [vshrink(), triggerChildren(), fade(), hshrink()],
 })
 export class DeviceListComponent implements OnInit {
   deviceCategories: Array<DisplayCategory> = [];
   devicesCanPowerOff = false;
+  scanningForLighthouses = false;
+  lighthousePowerControl = false;
 
   constructor(
     protected openvr: OpenVRService,
@@ -72,6 +74,12 @@ export class DeviceListComponent implements OnInit {
     ])
       .pipe(tap(() => this.sortDeviceCategories()))
       .subscribe();
+    this.lighthouse.scanning.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((scanning) => {
+      this.scanningForLighthouses = scanning;
+    });
+    this.appSettings.settings
+      .pipe(takeUntilDestroyed(this.destroyRef), debounceTime(100))
+      .subscribe((settings) => (this.lighthousePowerControl = settings.lighthousePowerControl));
   }
 
   processOpenVRDevices(devices: OVRDevice[]) {
@@ -283,5 +291,9 @@ export class DeviceListComponent implements OnInit {
       reason: 'MANUAL',
       devices: 'ALL',
     } as EventLogTurnedOffOpenVRDevices);
+  }
+
+  async scanForLighthouses() {
+    this.lighthouse.scan();
   }
 }
