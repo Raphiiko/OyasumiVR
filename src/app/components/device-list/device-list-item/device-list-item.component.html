@@ -29,16 +29,6 @@
           *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
         ></div>
       </button>
-      <!-- <button
-        class="btn-power power-off"
-        *ngIf="device.canPowerOff && device.dongleId"
-        [disabled]="device.isTurningOff"
-        [@fade]
-        (click)="turnOffDevice(device)"
-      >
-        <i class="material-icons" *ngIf="!device.isTurningOff">power_settings_new</i>
-        <div class="small-spinner" *ngIf="device.isTurningOff"></div>
-      </button> -->
     </div>
   </div>
   <div class="status-info" [@vshrink] *ngIf="status">
