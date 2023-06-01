@@ -1112,7 +1112,7 @@
     "noOptionsSelected": "As you have no actions selected to run during the shutdown sequence, running it will have no effects. In order for this feature to do something, choose at least one of the options below.",
     "overlay": {
       "stage": {
-        "QUITTING_STEAM": "Quitting Steam...",
+        "QUITTING_STEAMVR": "Quitting SteamVR...",
         "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
         "TURNING_OFF_TRACKERS": "Turning off trackers...",
         "TURNING_OFF_BASESTATIONS": "Turning off base stations...",

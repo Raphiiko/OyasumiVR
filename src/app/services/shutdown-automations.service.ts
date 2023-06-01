@@ -30,7 +30,7 @@ import { invoke } from '@tauri-apps/api';
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
   'IDLE',
-  'QUITTING_STEAM',
+  'QUITTING_STEAMVR',
   'TURNING_OFF_CONTROLLERS',
   'TURNING_OFF_TRACKERS',
   'TURNING_OFF_BASESTATIONS',
@@ -99,7 +99,7 @@ export class ShutdownAutomationsService {
 
   getApplicableStages(): ShutdownSequenceStage[] {
     const stages: ShutdownSequenceStage[] = [];
-    if (this.config.quitSteamVR) stages.push('QUITTING_STEAM');
+    if (this.config.quitSteamVR) stages.push('QUITTING_STEAMVR');
     if (this.config.turnOffControllers) stages.push('TURNING_OFF_CONTROLLERS');
     if (this.config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
     if (this.config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
@@ -173,7 +173,7 @@ export class ShutdownAutomationsService {
       return false;
     }
     if (!this.config.quitSteamVR) return true;
-    this._stage.next('QUITTING_STEAM');
+    this._stage.next('QUITTING_STEAMVR');
     // Quit steam
     await invoke('quit_steamvr', { kill: false });
     // Wait for steam to quit with a timeout of 10 seconds
