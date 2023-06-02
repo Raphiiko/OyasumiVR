@@ -1022,6 +1022,19 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
           }
+        },
+        "shutdownSequenceStarted": {
+          "title": "The shutdown sequence was started",
+          "reason": {
+            "MANUAL": "Triggered manually",
+            "SLEEP_TRIGGER": "As you were asleep for long enough"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "title": "The shutdown sequence was cancelled",
+          "reason": {
+            "MANUAL": "Cancelled manually"
+          }
         }
       }
     }

@@ -26,6 +26,11 @@ import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { LighthouseService } from './lighthouse.service';
 import { invoke } from '@tauri-apps/api';
+import {
+  EventLogShutdownSequenceCancelled,
+  EventLogShutdownSequenceStarted,
+} from '../models/event-log-entry';
+import { EventLogService } from './event-log.service';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
@@ -57,7 +62,8 @@ export class ShutdownAutomationsService {
     private appSettings: AppSettingsService,
     private openvr: OpenVRService,
     private lighthouseConsole: LighthouseConsoleService,
-    private lighthouse: LighthouseService
+    private lighthouse: LighthouseService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -94,7 +100,7 @@ export class ShutdownAutomationsService {
         pairwise(),
         filter(([a, b]) => a && !b)
       )
-      .subscribe(() => this.cancelSequence());
+      .subscribe(() => this.cancelSequence('MANUAL'));
   }
 
   getApplicableStages(): ShutdownSequenceStage[] {
@@ -107,10 +113,14 @@ export class ShutdownAutomationsService {
     return stages;
   }
 
-  async cancelSequence() {
+  async cancelSequence(reason: 'MANUAL') {
     if (this._stage.value === 'IDLE' || this.cancelFlag) return;
     this.cancelFlag = true;
     this.cancelEvent.next();
+    this.eventLog.logEvent({
+      type: 'shutdownSequenceCancelled',
+      reason,
+    } as EventLogShutdownSequenceCancelled);
     // Cancel any pending shutdown
     await invoke('run_command', {
       command: 'shutdown',
@@ -118,8 +128,13 @@ export class ShutdownAutomationsService {
     });
   }
 
-  async runSequence() {
+  async runSequence(reason: 'MANUAL' | 'SLEEP_TRIGGER') {
     if (this._stage.value !== 'IDLE') return;
+    this.eventLog.logEvent({
+      type: 'shutdownSequenceStarted',
+      reason,
+      stages: this.getApplicableStages(),
+    } as EventLogShutdownSequenceStarted);
     if (!(await this.turnOffControllers())) return;
     if (!(await this.turnOffTrackers())) return;
     if (!(await this.turnOffBaseStations())) return;
@@ -147,7 +162,7 @@ export class ShutdownAutomationsService {
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )
-      .subscribe(() => this.runSequence());
+      .subscribe(() => this.runSequence('SLEEP_TRIGGER'));
   }
 
   private isInActivationWindow(

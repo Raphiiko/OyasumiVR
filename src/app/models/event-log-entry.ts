@@ -1,3 +1,4 @@
+import { ShutdownSequenceStage } from '../services/shutdown-automations.service';
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
@@ -23,7 +24,9 @@ export type EventLogEntry =
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogSleepDetectorEnableCancelled
   | EventLogRenderResolutionChanged
-  | EventLogChaperoneFadeDistanceChanged;
+  | EventLogChaperoneFadeDistanceChanged
+  | EventLogShutdownSequenceStarted
+  | EventLogShutdownSequenceCancelled;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -38,13 +41,26 @@ export type EventLogType =
   | 'statusChangedOnPlayerCountChange'
   | 'sleepDetectorEnableCancelled'
   | 'renderResolutionChanged'
-  | 'chaperoneFadeDistanceChanged';
+  | 'chaperoneFadeDistanceChanged'
+  | 'shutdownSequenceStarted'
+  | 'shutdownSequenceCancelled';
 
 export interface EventLogBase {
   id: string;
   type: EventLogType;
 
   time: number;
+}
+
+export interface EventLogShutdownSequenceStarted extends EventLogBase {
+  type: 'shutdownSequenceStarted';
+  reason: 'MANUAL' | 'SLEEP_TRIGGER';
+  stages: ShutdownSequenceStage[];
+}
+
+export interface EventLogShutdownSequenceCancelled extends EventLogBase {
+  type: 'shutdownSequenceCancelled';
+  reason: 'MANUAL';
 }
 
 export interface EventLogSleepModeEnabled extends EventLogBase {

@@ -15,6 +15,8 @@ import { EventLogRenderResolutionChangedEntryParser } from './entry-parsers/rend
 import { EventLogFadeDistanceChangedEntryParser } from './entry-parsers/fade-distance-changed';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventLogLighthouseSetPowerStateEntryParser } from './entry-parsers/lighthouse-set-power-state';
+import { EventLogShutdownSequenceStartedEntryParser } from './entry-parsers/shutdown-sequence-started';
+import { EventLogShutdownSequenceCancelledEntryParser } from './entry-parsers/shutdown-sequence-cancelled';
 
 const parsers: EventLogEntryParser<EventLogEntry>[] = [
   new EventLogSleepModeEnabledEntryParser(),
@@ -28,6 +30,8 @@ const parsers: EventLogEntryParser<EventLogEntry>[] = [
   new EventLogSleepDetectorEnableCancelledEntryParser(),
   new EventLogRenderResolutionChangedEntryParser(),
   new EventLogFadeDistanceChangedEntryParser(),
+  new EventLogShutdownSequenceStartedEntryParser(),
+  new EventLogShutdownSequenceCancelledEntryParser(),
 ];
 
 @Component({

@@ -83,7 +83,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
         message: 'shutdown-automations.confirm-modal.message',
       })
       .pipe(filter((result) => result.confirmed))
-      .subscribe(() => this.shutdownAutomations.runSequence());
+      .subscribe(() => this.shutdownAutomations.runSequence('MANUAL'));
   }
 
   get noOptionsSelected() {

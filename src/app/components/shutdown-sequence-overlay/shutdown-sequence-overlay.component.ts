@@ -26,10 +26,8 @@ export class ShutdownSequenceOverlayComponent {
     });
   }
 
-  ngOnInit(): void {}
-
   cancel() {
-    this.shutdownAutomationsService.cancelSequence();
+    this.shutdownAutomationsService.cancelSequence('MANUAL');
     this.canCancel = false;
   }
 
