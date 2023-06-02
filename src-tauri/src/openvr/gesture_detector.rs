@@ -1,7 +1,8 @@
 use nalgebra::{Quaternion, UnitQuaternion};
-use oyasumi_shared::models::GestureDetected;
 
 use crate::utils::{get_time, send_event};
+
+use super::models::GestureDetected;
 
 const MAX_EVENT_AGE_MS: u128 = 5000; // 5 seconds
 

@@ -9,8 +9,7 @@ use chrono::{naive::NaiveDateTime, Utc};
 use log::info;
 use models::OpenVRStatus;
 use openvr::TrackedDeviceIndex;
-use openvr_sys::{k_pch_SteamVR_Section, k_pch_CollisionBounds_Section};
-use oyasumi_shared::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
+use openvr_sys::{k_pch_CollisionBounds_Section, k_pch_SteamVR_Section};
 use sleep_detector::SleepDetector;
 use substring::Substring;
 use tokio::sync::Mutex;
@@ -18,6 +17,8 @@ use tokio::sync::Mutex;
 use gesture_detector::GestureDetector;
 
 use crate::utils::send_event;
+
+use self::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
 
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
@@ -186,10 +187,7 @@ impl OpenVRManager {
         }
     }
 
-    pub async fn set_fade_distance(
-        &self,
-        fade_distance: f32,
-    ) -> Result<(), String> {
+    pub async fn set_fade_distance(&self, fade_distance: f32) -> Result<(), String> {
         let settings = self.settings.lock().await;
         if settings.is_some() {
             let _ = settings.as_ref().unwrap().set_float(

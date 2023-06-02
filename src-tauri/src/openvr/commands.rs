@@ -1,5 +1,4 @@
-use super::OPENVR_MANAGER;
-use oyasumi_shared::models::OVRDevice;
+use super::{models::OVRDevice, OPENVR_MANAGER};
 use substring::Substring;
 
 #[tauri::command]
