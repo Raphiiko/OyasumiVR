@@ -79,6 +79,11 @@ features = [
 [dependencies.openvr]
 git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
 
+[dependencies.ovr_overlay]
+git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
+rev = "d9aa37eb8d9d59d1e111d85e9afebb1d17280611"
+features = ["ovr_system"]
+
 [patch.crates-io]
 # Fix for broken window transparency in Tauri v1.3.0.
 # https://github.com/tauri-apps/tauri/issues/6868

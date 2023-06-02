@@ -15,6 +15,7 @@ mod lighthouse;
 mod openvr;
 mod os;
 mod osc;
+mod ovr_brightness;
 mod system_tray;
 mod utils;
 mod vrc_log_parser;
@@ -87,6 +88,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         lighthouse::commands::lighthouse_get_status,
         lighthouse::commands::lighthouse_get_scanning_status,
         lighthouse::commands::lighthouse_reset,
+        ovr_brightness::commands::openvr_set_image_brightness,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
@@ -146,6 +148,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     image_cache::init(cache_dir).await;
     // Initialize OpenVR Manager
     openvr::init().await;
+    // Initialize OVR brightness overlay
+    ovr_brightness::init().await;
     // Initialize HTTP server
     http_server::init().await;
     // Load sounds
