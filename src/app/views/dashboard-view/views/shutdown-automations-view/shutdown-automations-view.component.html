@@ -116,23 +116,6 @@
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.sequence.quitSteamVR.title</span>
-            <span translate>shutdown-automations.sequence.quitSteamVR.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.quitSteamVR"
-                (change)="toggleQuitSteamVR()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
             <span translate>shutdown-automations.sequence.turnOffDevices.title</span>
             <span></span>
           </div>
@@ -189,6 +172,23 @@
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>shutdown-automations.sequence.quitSteamVR.title</span>
+            <span translate>shutdown-automations.sequence.quitSteamVR.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.quitSteamVR"
+                (change)="toggleQuitSteamVR()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
 

@@ -1,6 +1,6 @@
+use super::OPENVR_MANAGER;
 use oyasumi_shared::models::OVRDevice;
 use substring::Substring;
-use super::OPENVR_MANAGER;
 
 #[tauri::command]
 pub async fn openvr_get_devices() -> Vec<OVRDevice> {

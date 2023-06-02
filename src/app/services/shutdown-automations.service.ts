@@ -30,10 +30,10 @@ import { invoke } from '@tauri-apps/api';
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
   'IDLE',
-  'QUITTING_STEAMVR',
   'TURNING_OFF_CONTROLLERS',
   'TURNING_OFF_TRACKERS',
   'TURNING_OFF_BASESTATIONS',
+  'QUITTING_STEAMVR',
   'SHUTTING_DOWN',
 ];
 
@@ -61,6 +61,7 @@ export class ShutdownAutomationsService {
   ) {}
 
   async init() {
+    this._stage.subscribe((stage) => console.log('SHUTDOWN_STAGE', stage));
     // Update with config changes
     this.automationConfigService.configs
       .pipe(
@@ -98,10 +99,10 @@ export class ShutdownAutomationsService {
 
   getApplicableStages(): ShutdownSequenceStage[] {
     const stages: ShutdownSequenceStage[] = [];
-    if (this.config.quitSteamVR) stages.push('QUITTING_STEAMVR');
     if (this.config.turnOffControllers) stages.push('TURNING_OFF_CONTROLLERS');
     if (this.config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
     if (this.config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
+    if (this.config.quitSteamVR) stages.push('QUITTING_STEAMVR');
     if (this.config.shutdownWindows) stages.push('SHUTTING_DOWN');
     return stages;
   }
@@ -119,10 +120,10 @@ export class ShutdownAutomationsService {
 
   async runSequence() {
     if (this._stage.value !== 'IDLE') return;
-    if (!(await this.quitSteam())) return;
     if (!(await this.turnOffControllers())) return;
     if (!(await this.turnOffTrackers())) return;
     if (!(await this.turnOffBaseStations())) return;
+    if (!(await this.quitSteamVR())) return;
     if (!(await this.shutdownWindows())) return;
     this._stage.next('IDLE');
     this.cancelFlag = false;
@@ -165,7 +166,7 @@ export class ShutdownAutomationsService {
     return nowMinutes <= endMinutes || nowMinutes >= startMinutes;
   }
 
-  private async quitSteam() {
+  private async quitSteamVR() {
     if (this.cancelFlag) {
       this.cancelFlag = false;
       this._stage.next('IDLE');
