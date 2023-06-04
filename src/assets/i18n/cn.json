@@ -555,20 +555,20 @@
           "PORT_IN_USE": "无法绑定此地址。 可能是另一个应用程序已经在使用它。 你可以尝试关闭该应用程序并重试，或者选择不同的接收埠或主机。",
           "PORT_INVALID": "埠必须是 1 到 65535 之间的有效数字。",
           "PORT_IO_IDENTICAL": "当发送主机和接收主机相同时，发送埠和接收埠不能使用相同的埠",
-          "INVALID_HOST": "主机必须是有效的主机名、IPv4 地址或 IPv6 地址。"          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+          "INVALID_HOST": "主机必须是有效的主机名、IPv4 地址或 IPv6 地址。"
         },
         "features": {
           "all": {
-            "title": "Enable all features",
-            "description": "Disabling each of these features will stop Oyasumi from listening for OSC messages"
+            "title": "启用所有功能",
+            "description": "禁用这些功能将使Oyasumi停止监听OSC信息"
           },
           "expressionMenu": {
-            "title": "Enable VRChat expression menu control",
-            "description": "Control Oyasumi features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">expression menu</a>"
+            "title": "启用VRChat表达式菜单控制",
+            "description": "从你的VRChat头像的<a href="https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target="_blank\">表情菜单</a>控制Oyasumi功能。"
           },
           "externalControl": {
-            "title": "Enable external control",
-            "description": "Control Oyasumi features over <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a>"
+            "title": "启用外部控制l",
+            "description": "控制Oyasumi的功能超过<a href="https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target="_blank\">OSC</a>。"
           }
         }
       }
@@ -680,7 +680,7 @@
     "projectLinks": "项目连结",
     "sourceLink": "源代码 @ GitHub",
     "discordInvite": "Discord 服务器",
-    "contributions": "Contributions"
+    "contributions": "贡献"
   },
   "updater": {
     "modals": {
@@ -775,7 +775,7 @@
       "category": {
         "Controller": "控制器",
         "GenericTracker": "追踪器",
-        "other": "其他"
+        "other": "其他",
         "Lighthouse": "基站"
       },
       "deviceName": {
@@ -1081,7 +1081,7 @@
       "title": "自动触发",
       "whenAsleep": {
         "title": "在我睡觉时启动",
-        "description": "当睡眠模式被激活一定时间后，启动关机程序"
+        "description": "当睡眠模式被启用一定时间后，启动关机程序"
       },
       "whenAsleepDuration": {
         "title": "睡眠时间",
