@@ -47,7 +47,7 @@ jobs:
         run: cargo install --git https://github.com/Raphiiko/tauri --branch fix/nsis-language-japanese tauri-cli
       # - name: Check Rust code in shared module
       #   run: cd src-shared && cargo clippy --all-features --no-deps
-      # - name: Check Rust code in elevated sidecar module
+      # - name: Check Rust code in elevated sidecar moduler
       #   run: cd src-elevated-sidecar && cargo clippy --all-features --no-deps
       # - name: Check Rust code in core module
       #   run: |
@@ -65,7 +65,9 @@ jobs:
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
           tauriScript: cargo-tauri
+          includeDebug: true
+          includeRelease: false
+          includeUpdaterJson: false
+          args: -b "{\"tauri\":{\"bundle\":{\"active\":false}}}"
