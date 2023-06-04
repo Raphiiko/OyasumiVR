@@ -2,10 +2,8 @@ import { Component } from '@angular/core';
 import {
   ShutdownAutomationsService,
   ShutdownSequenceStage,
-  ShutdownSequenceStageOrder,
 } from 'src/app/services/shutdown-automations.service';
 import { fade, vshrink } from 'src/app/utils/animations';
-import { clamp } from 'src/app/utils/number-utils';
 
 @Component({
   selector: 'app-shutdown-sequence-overlay',

@@ -16,7 +16,6 @@ import {
   of,
   pairwise,
   skipUntil,
-  skipWhile,
   throttleTime,
 } from 'rxjs';
 import { OpenVRService } from '../openvr.service';

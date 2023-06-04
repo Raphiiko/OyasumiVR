@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
-import { debounceTime, delay, firstValueFrom, map, of, skipUntil, takeUntil } from 'rxjs';
+import { debounceTime, delay, firstValueFrom, map, of, takeUntil } from 'rxjs';
 import { EventLogLighthouseSetPowerState } from 'src/app/models/event-log-entry';
 
 @Injectable({
