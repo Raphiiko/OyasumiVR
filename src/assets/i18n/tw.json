@@ -555,20 +555,20 @@
           "PORT_IN_USE": "無法綁定此地址。 可能是另一個應用程式已經在使用它。 你可以嘗試關閉該應用程式並重試，或者選擇不同的接收埠或主機。",
           "PORT_INVALID": "埠必須是 1 到 65535 之間的有效數字。",
           "PORT_IO_IDENTICAL": "當發送主機和接收主機相同時，發送埠和接收埠不能使用相同的埠",
-          "INVALID_HOST": "主機必須是有效的主機名、IPv4 地址或 IPv6 地址。"          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
+          "INVALID_HOST": "主機必須是有效的主機名、IPv4 地址或 IPv6 地址。"
         },
         "features": {
           "all": {
-            "title": "Enable all features",
-            "description": "Disabling each of these features will stop Oyasumi from listening for OSC messages"
+            "title": "啟用所有功能",
+            "description": "禁用這些功能將使Oyasumi停止監聽OSC訊息"
           },
           "expressionMenu": {
-            "title": "Enable VRChat expression menu control",
-            "description": "Control Oyasumi features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">expression menu</a>"
+            "title": "啟用VRChat表達式菜單控制",
+            "description": "從你的VRChat頭像的<a href="https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target="_blank\">表情菜單</a>控制Oyasumi功能。"
           },
           "externalControl": {
-            "title": "Enable external control",
-            "description": "Control Oyasumi features over <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a>"
+            "title": "啟用外部控制l",
+            "description": "控制Oyasumi的功能超過<a href="https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target="_blank\">OSC</a>。"
           }
         }
       }
@@ -680,7 +680,7 @@
     "projectLinks": "專案連結",
     "sourceLink": "原始碼 @ GitHub",
     "discordInvite": "Discord 伺服器",
-    "contributions": "Contributions"
+    "contributions": "貢獻"
   },
   "updater": {
     "modals": {
@@ -775,7 +775,7 @@
       "category": {
         "Controller": "控制器",
         "GenericTracker": "追蹤器",
-        "other": "其他"
+        "other": "其他",
         "Lighthouse": "基地台"
       },
       "deviceName": {
