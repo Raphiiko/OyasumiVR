@@ -564,12 +564,12 @@
           },
           "expressionMenu": {
             "title": "启用VRChat表达式菜单控制",
-            "description": "从你的VRChat头像的<a href="https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target="_blank\">表情菜单</a>控制Oyasumi功能。"
+            "description": "从你的VRChat头像的 <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">表情菜单</a> 控制Oyasumi功能"
           },
           "externalControl": {
-            "title": "启用外部控制l",
-            "description": "控制Oyasumi的功能超过<a href="https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target="_blank\">OSC</a>。"
-          }
+            "title": "启用外部控制",
+            "description": "控制Oyasumi的功能超过 <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a>"
+			}
         }
       }
     },
