@@ -1,6 +1,6 @@
 use crate::elevated_sidecar;
 use log::error;
-use oyasumi_shared::models::{
+use oyasumivr_shared::models::{
     NVMLDevice, NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
 };
 

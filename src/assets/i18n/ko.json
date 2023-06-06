@@ -18,7 +18,7 @@
   },
   "brightness-automations": {
     "title": "밝기 자동화",
-    "description": "Oyasumi는 수면 모드가 변경되었을 때 헤드셋의 밝기를 자동으로 조정할 수 있어요.",
+    "description": "OyasumiVR는 수면 모드가 변경되었을 때 헤드셋의 밝기를 자동으로 조정할 수 있어요.",
     "indexWarning": "밝기 제어는 현재 Valve Index에서만 가능해요. SteamVR이 켜져 있고 헤드셋이 연결되어있는지 확인해주세요.",
     "onSleepEnable": {
       "title": "수면 모드 활성화 시",
@@ -59,7 +59,7 @@
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
       "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
       "onMotionDetection": {
-        "title": "Oyasumi가 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
+        "title": "OyasumiVR가 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
       }
     },
     "disableAutomations": {
@@ -77,14 +77,14 @@
         "startCalibration": "보정 시작",
         "restartCalibration": "보정 재시작",
         "info": {
-          "intro": "Oyasumi는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있어요. 이 기능을 사용하려면 여러분의 VR 설정에 맞게 보정해야 해요. 이 기능을 사용하려면 적어도 한 번은 보정이 필요해요.",
+          "intro": "OyasumiVR는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있어요. 이 기능을 사용하려면 여러분의 VR 설정에 맞게 보정해야 해요. 이 기능을 사용하려면 적어도 한 번은 보정이 필요해요.",
           "stepPrefix": "보정은 다음과 같이 진행됩니다:",
           "step": {
             "one": "VR 헤드셋을 착용하고 눕습니다.",
-            "two": "오버레이를 사용하여 Oyasumi에서 보정을 시작합니다.",
+            "two": "오버레이를 사용하여 OyasumiVR에서 보정을 시작합니다.",
             "three": "10초 동안 가만히 누워 있습니다."
           },
-          "stepSuffix": "이제 끝이에요! 보정이 끝나면 Oyasumi는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있을 거에요."
+          "stepSuffix": "이제 끝이에요! 보정이 끝나면 OyasumiVR는 VR 헤드셋의 움직임에 따라 사용자가 잠들었는지 감지할 수 있을 거에요."
         },
         "prepare": {
           "instruction": "VR 헤드셋을 착용하고 누워주세요.",
@@ -117,7 +117,7 @@
         },
         "sensitivity": {
           "title": "민감도",
-          "description": "Oyasumi가 당신의 움직임에 얼마나 민감해야 할까요?",
+          "description": "OyasumiVR가 당신의 움직임에 얼마나 민감해야 할까요?",
           "presets": {
             "LOWEST": "가장 낮음",
             "LOW": "낮음",
@@ -132,10 +132,10 @@
         },
         "detectionWindow": {
           "title": "감지 창",
-          "description": "Oyasumi가 사용자가 잠든 것을 감지하기까지 얼마나 기다려야 할까요?",
+          "description": "OyasumiVR가 사용자가 잠든 것을 감지하기까지 얼마나 기다려야 할까요?",
           "unit": "분"
         },
-        "description": "이 기능을 활성화하면 Oyasumi는 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요."
+        "description": "이 기능을 활성화하면 OyasumiVR는 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요."
       },
       "enableAtTime": {
         "title": "수면 모드 활성화",
@@ -176,7 +176,7 @@
       "currentPose": "현재 위치",
       "manualControl": "수동 조작",
       "presetAuthor": "{{author}} 제작",
-      "description": "Oyasumi는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
+      "description": "OyasumiVR는 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
       "enable": "자동 수면 애니메이션 활성화",
       "customPreset": "커스텀 애니메이션",
       "options": {
@@ -213,7 +213,7 @@
       }
     },
     "general": {
-      "description": "여기서 특정 이벤트가 발생할 때 OSC 커멘드을 VRChat으로 보내도록 Oyasumi를 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 아바타의 익스프레션을 변경하려는 경우 유용할 수 있어요.",
+      "description": "여기서 특정 이벤트가 발생할 때 OSC 커멘드을 VRChat으로 보내도록 OyasumiVR를 설정할 수 있어요. 예를 들어, 잠들거나 일어날 때 아바타의 익스프레션을 변경하려는 경우 유용할 수 있어요.",
       "onSleepEnable": {
         "title": "수면 모드 활성화 시",
         "description": "이 OSC 커멘드들을 전송해요.",
@@ -249,10 +249,10 @@
     },
     "lighthousePowerOn": {
       "title": "베이스스테이션 켜기",
-      "description": "Oyasumi가 자동으로 베이스스테이션을 켜도록 설정해요.",
-      "onOyasumiStart": {
-        "title": "Oyasumi가 시작될 때",
-        "description": "Oyasumi가 시작되면 자동으로 베이스스테이션을 켜요."
+      "description": "OyasumiVR가 자동으로 베이스스테이션을 켜도록 설정해요.",
+      "onOyasumiVRStart": {
+        "title": "OyasumiVR가 시작될 때",
+        "description": "OyasumiVR가 시작되면 자동으로 베이스스테이션을 켜요."
       },
       "onSteamVRStart": {
         "title": "SteamVR이 시작될 때",
@@ -261,14 +261,14 @@
     },
     "lighthousePowerOff": {
       "title": "베이스스테이션 끄기",
-      "description": "Oyasumi가 자동으로 베이스스테이션을 끄도록 설정해요.",
+      "description": "OyasumiVR가 자동으로 베이스스테이션을 끄도록 설정해요.",
       "onSteamVRStop": {
         "title": "SteamVR이 중지될 때",
         "description": "SteamVR이 중지되면 자동으로 베이스스테이션을 꺼요."
       }
     },
-    "powerManagementWarning": "베이스스테이션을 켜거나 끄는 데 Oyasumi의 자동화 기능을 사용하려면 SteamVR의 베이스스테이션 설정에서 전원 관리 기능을 비활성화할 것을 권장해요.",
-    "lighthouseControlDisabledWarning": "Oyasumi의 설정에서 베이스스테이션의 전원 제어 기능을 비활성화했기 때문에 이러한 자동화를 사용할 수 없어요. 이 자동화를 사용하려면 이 기능을 활성화하세요.",
+    "powerManagementWarning": "베이스스테이션을 켜거나 끄는 데 OyasumiVR의 자동화 기능을 사용하려면 SteamVR의 베이스스테이션 설정에서 전원 관리 기능을 비활성화할 것을 권장해요.",
+    "lighthouseControlDisabledWarning": "OyasumiVR의 설정에서 베이스스테이션의 전원 제어 기능을 비활성화했기 때문에 이러한 자동화를 사용할 수 없어요. 이 자동화를 사용하려면 이 기능을 활성화하세요.",
     "enableLighthouseControl": "활성화",
     "error": {
       "noAdapter": "시스템에서 블루투스 어댑터를 찾을 수 없어요. 시스템에 블루투스 어댑터가 장착되어 있고 활성화되어 있는지 확인해주세요.",
@@ -278,8 +278,8 @@
   "gpu-automations": {
     "title": "GPU 자동화",
     "disabled": {
-      "disabled": "Oyasumi는 GPU 설정을 자동으로 조정하는 다양한 방법을 가지고 있어요. \n잠자는 동안 전력을 절약할 수 있어요.\n\n고급 사용자를 위한 기능이므로 기본적으로 비활성화되어 있어요.\n아래 버튼을 클릭하여 활성화할 수 있어요.",
-      "noSidecar": "Oyasumi가 GPU 설정을 변경할 수 있도록 하려면 관리자 권한이 필요해요. Oyasumi에게 관리자 권한을 부여하려면 아래 버튼을 클릭해주세요."
+      "disabled": "OyasumiVR는 GPU 설정을 자동으로 조정하는 다양한 방법을 가지고 있어요. \n잠자는 동안 전력을 절약할 수 있어요.\n\n고급 사용자를 위한 기능이므로 기본적으로 비활성화되어 있어요.\n아래 버튼을 클릭하여 활성화할 수 있어요.",
+      "noSidecar": "OyasumiVR가 GPU 설정을 변경할 수 있도록 하려면 관리자 권한이 필요해요. OyasumiVR에게 관리자 권한을 부여하려면 아래 버튼을 클릭해주세요."
     },
     "tabs": {
       "powerLimiting": "전력 제한",
@@ -292,7 +292,7 @@
     "enableWarning": "GPU 매개 변수를 잘못 조정하면 시스템이 불안정해질 수 있어요. 이 점에 유의하고 이 작업을 알고 있는 경우에만 이 기능을 사용하도록 설정해주세요.",
     "elevationSidecarModal": {
       "title": "관리자 권한을 부여하기",
-      "message": "Oyasumi에게 항상 관리자 권한을 부여할까요?\n\n 이것을 활성화하면 Oyasumi는 부팅 시 즉시 관리자 권한을 요구해요. 이 설정은 나중에 언제든지 비활성화할 수 있어요.",
+      "message": "OyasumiVR에게 항상 관리자 권한을 부여할까요?\n\n 이것을 활성화하면 OyasumiVR는 부팅 시 즉시 관리자 권한을 요구해요. 이 설정은 나중에 언제든지 비활성화할 수 있어요.",
       "confirm": "항상",
       "cancel": "한번만"
     },
@@ -300,9 +300,9 @@
       "disabled": {
         "initializing": "전력 제한 자동화가 초기화되고 있어요...",
         "noNvidia": "실행 중인 NVIDIA 드라이버가 없기 때문에 전력 제한 자동화를 사용할 수 없어요. 전력 제한 자동화는 NVIDIA GPU에만 사용할 수 있어요. \n\n시스템에 NVIDIA GPU가 있는 경우 해당 GPU에 적합한 드라이버가 설치되어 있는지 확인해주세요. \n\n({{code}})",
-        "noPermission": "Oyasumi는 관리자 권한이 있지만 GPU 설정을 변경할 수 있는 권한이 없는 것 같아요. \n\n일반적으로 이런 일이 발생해서는 안 되므로 시스템 설정을 확인해주세요.",
-        "noSidecar": "알 수 없는 이유로 인해 관리자 권한을 얻을 수 없어요. \n관리자 권한은 GPU의 전력 제한을 제어하는 데 필요해요. \n\nOyasumi를 다시 시작해주세요.",
-        "unknown": "알 수 없는 이유로 전력 제한 자동화를 사용할 수 없어요. \n\nOyasumi를 다시 시작해주세요."
+        "noPermission": "OyasumiVR는 관리자 권한이 있지만 GPU 설정을 변경할 수 있는 권한이 없는 것 같아요. \n\n일반적으로 이런 일이 발생해서는 안 되므로 시스템 설정을 확인해주세요.",
+        "noSidecar": "알 수 없는 이유로 인해 관리자 권한을 얻을 수 없어요. \n관리자 권한은 GPU의 전력 제한을 제어하는 데 필요해요. \n\nOyasumiVR를 다시 시작해주세요.",
+        "unknown": "알 수 없는 이유로 전력 제한 자동화를 사용할 수 없어요. \n\nOyasumiVR를 다시 시작해주세요."
       },
       "noGPUSelected": "GPU가 선택되지 않음",
       "gpuUnsupported": "GPU 미지원",
@@ -323,7 +323,7 @@
       "inputDefault": "GPU의 기본 제한값으로 리셋해요."
     },
     "msiAfterburner": {
-      "description": "Oyasumi는 MSI Afterburner에서 만든 프로파일을 적용하여 잠들거나 일어날 때 GPU 설정을 자동으로 조정할 수 있어요. 이 기능의 목적은 자는 동안 전기를 절약하고 깨어났을 때 GPU 전원을 다시 사용하도록 하는 것이에요. <br><br>MSI 애프터버너에서 적용할 프로파일을 설정해야 해요.<br><a href='https://www.msi.com/Landing/afterburner/graphics-cards' target='_blank'>여기에서</a> MSI Afterburner를 다운로드 할 수 있어요.",
+      "description": "OyasumiVR는 MSI Afterburner에서 만든 프로파일을 적용하여 잠들거나 일어날 때 GPU 설정을 자동으로 조정할 수 있어요. 이 기능의 목적은 자는 동안 전기를 절약하고 깨어났을 때 GPU 전원을 다시 사용하도록 하는 것이에요. <br><br>MSI 애프터버너에서 적용할 프로파일을 설정해야 해요.<br><a href='https://www.msi.com/Landing/afterburner/graphics-cards' target='_blank'>여기에서</a> MSI Afterburner를 다운로드 할 수 있어요.",
       "sleepModeEnable": {
         "title": "수면 모드 활성화 시",
         "description": "다음 MSI Afterburner 프로파일을 적용해요"
@@ -337,12 +337,12 @@
       "enabledWarning": "MSI Afterburner에서 GPU를 잘못 구성하면 시스템이 불안정해질 수 있어요. 작업 내용을 모르는 경우 이 기능을 비활성화해주세요.",
       "executable": {
         "title": "설정",
-        "description": "Oyasumi는 <strong>MSIAfterburner.exe</strong>의 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
+        "description": "OyasumiVR는 <strong>MSIAfterburner.exe</strong>의 위치를 파악해야 해요.\nOyasumiVR가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
         "status": {
           "CHECKING": "유효한 <strong>MSIAfterburner.exe</strong>인지 확인중이에요.",
           "NOT_FOUND": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾을 수 없어요.",
           "INVALID_EXECUTABLE": "해당 위치의 <strong>MSIAfterburner.exe</strong>가 작동하는지 확인할 수 없어요.",
-          "INVALID_SIGNATURE": "이 위치의 <strong>MSIAfterburner.exe</strong>가 MSI에서 가져온 것인지 확인할 수 없기 때문에 보안상의 이유로 사용할 수 없어요. 최신 버전의 MSI Afterburner를 사용하고 있는지 확인해주세요. 문제가 지속되거나 이것이 맞다고 확신할 경우, Oyasumi의 개발자에게 문의하거나 버그 보고서를 제출해주세요.",
+          "INVALID_SIGNATURE": "이 위치의 <strong>MSIAfterburner.exe</strong>가 MSI에서 가져온 것인지 확인할 수 없기 때문에 보안상의 이유로 사용할 수 없어요. 최신 버전의 MSI Afterburner를 사용하고 있는지 확인해주세요. 문제가 지속되거나 이것이 맞다고 확신할 경우, OyasumiVR의 개발자에게 문의하거나 버그 보고서를 제출해주세요.",
           "UNKNOWN_ERROR": "해당 위치에서 <strong>MSIAfterburner.exe</strong>를 찾는데 오류가 발생했어요.",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong>이 발견되어 정상적으로 작동하고 있어요!"
         }
@@ -352,7 +352,7 @@
   "status-automations": {
     "title": "스테이터스 자동화",
     "enable": "스테이터스 자동화 활성화하기",
-    "description": "Oyasumi는 자신의 월드에 있는 플레이어의 수에 따라 스테이터스를 자동 설정하여 참가 인원을 제한할 수 있어요.",
+    "description": "OyasumiVR는 자신의 월드에 있는 플레이어의 수에 따라 스테이터스를 자동 설정하여 참가 인원을 제한할 수 있어요.",
     "exampleUse": "사용 예: 누군가가 참여하면 자동으로 상태를 주황색이나 빨간색으로 전환해요!\n 그리고 누군가 나가서 다시 혼자가 되면 자동으로 상태를 파란색으로 되돌려 다른 사람이 참여할 수 있도록 할 수 있어요.",
     "disableToEdit": "설정을 변경하기 전에 기능을 비활성화해주세요.",
     "playerLimit": "플레이어 수 제한",
@@ -369,13 +369,13 @@
       "description": "스테이터스 설정"
     },
     "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
-    "behaviourWarning": "Oyasumi에 의한 상태 변경은 플레이어에게 표시되지 않아요. 다른 플레이어가 볼 때 스테이터스 업데이트가 표시되기까지 조금 시간이 걸릴 수 있어요. 이는 VRChat 사양상의 제한으로 Oyasumi가 수정할 수 없어요.",
+    "behaviourWarning": "OyasumiVR에 의한 상태 변경은 플레이어에게 표시되지 않아요. 다른 플레이어가 볼 때 스테이터스 업데이트가 표시되기까지 조금 시간이 걸릴 수 있어요. 이는 VRChat 사양상의 제한으로 OyasumiVR가 수정할 수 없어요.",
     "moreInfo": "자세히",
-    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: Oyasumi가 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
+    "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR가 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요."
   },
   "auto-invite-request-accept": {
     "title": "인바이트 리퀘스트 자동 수락",
-    "description": "Oyasumi는 여러분이 받는 초대 요청을 자동으로 수락할 수 있어요. 플레이어 화이트리스트 또는 블랙리스트를 사용하면 선택한 친구만 초대 요청을 자동으로 수락하도록 할 수 있습니다.",
+    "description": "OyasumiVR는 여러분이 받는 초대 요청을 자동으로 수락할 수 있어요. 플레이어 화이트리스트 또는 블랙리스트를 사용하면 선택한 친구만 초대 요청을 자동으로 수락하도록 할 수 있습니다.",
     "userOnBusyStatus": "스테이터스가 busy(빨간색)이므로 다른 친구의 초대 요청을 수락할 수 없어요.",
     "userOnJoinMeStatus": "스테이터스가 join me(파란색)이므로 VRChat이 설정과 관계없이 모든 초대 요청을 수락해요.",
     "whitelist": "플레이어 화이트리스트",
@@ -435,11 +435,11 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouse 콘솔",
-        "description": "Oyasumi는 Steam VR의 <strong>lighthouse_console.exe</strong>의 위치를 파악해야 해요.\nOyasumi가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
+        "description": "OyasumiVR는 Steam VR의 <strong>lighthouse_console.exe</strong>의 위치를 파악해야 해요.\nOyasumiVR가 기본 위치에서 그것을 찾을 수 없는 경우 찾을 수 있는 위치로 설정하는 것이 필요해요.",
         "status": {
           "NOT_FOUND": "해당 위치에서 <strong>lighthouse_console.exe</strong>를 찾을 수 없어요.",
           "INVALID_EXECUTABLE": "해당 위치의 <strong>lighthouse_console.exe</strong>가 작동하는지 확인할 수 없어요.",
-          "PERMISSION_DENIED": "Oyasumi는 해당 위치의 <strong>lighthouse_console.exe</strong>를 실행할 권한이 없어요. 관리자 권한으로 Oyasumi를 실행해주세요.",
+          "PERMISSION_DENIED": "OyasumiVR는 해당 위치의 <strong>lighthouse_console.exe</strong>를 실행할 권한이 없어요. 관리자 권한으로 OyasumiVR를 실행해주세요.",
           "INVALID_FILENAME": "설정한 위치는 유효한 파일 경로가 아니에요.",
           "UNKNOWN_ERROR": "해당 위치에서 <strong>lighthouse_console.exe</strong>를 찾는데 오류가 발생했어요.",
           "CHECKING": "유효한 <strong>lighthouse_console.exe</strong>인지 확인중이에요.",
@@ -449,22 +449,22 @@
       "adminPrivileges": {
         "title": "관리자 권한",
         "label": "부팅 시 관리자 권한을 요구하기",
-        "description": "Oyasumi는 GPU의 전력 제한을 제어할 수 있도록 하기 위해 관리자 권한이 필요해요. 이를 활성화함으로써 Oyasumi는 부팅 시 관리자 권한을 요구하게 되어요."
+        "description": "OyasumiVR는 GPU의 전력 제한을 제어할 수 있도록 하기 위해 관리자 권한이 필요해요. 이를 활성화함으로써 OyasumiVR는 부팅 시 관리자 권한을 요구하게 되어요."
       },
       "telemetry": {
         "title": "텔레메트리",
         "label": "익명의 사용 데이터 전송하기",
-        "description": "전송되는 데이터는 사용 중인 Oyasumi 버전과 설정된 언어로만 제한되어요. 이 데이터는 일반적인 사용 통계를 위해서만 사용되어요. 그 이외의 데이터는 전송되지 않고 완전히 익명이에요. "
+        "description": "전송되는 데이터는 사용 중인 OyasumiVR 버전과 설정된 언어로만 제한되어요. 이 데이터는 일반적인 사용 통계를 위해서만 사용되어요. 그 이외의 데이터는 전송되지 않고 완전히 익명이에요. "
       },
       "systemTray": {
         "title": "시스템 트레이",
         "close": {
           "label": "시스템 트레이로 닫기",
-          "description": "Oyasumi를 닫을 때 프로그램을 종료하지 않고 시스템 트레이로 최소화해요."
+          "description": "OyasumiVR를 닫을 때 프로그램을 종료하지 않고 시스템 트레이로 최소화해요."
         },
         "start": {
           "label": "시스템 트레이로 열기",
-          "description": "Oyasumi를 열 때 시스템 트레이로 최소화해요."
+          "description": "OyasumiVR를 열 때 시스템 트레이로 최소화해요."
         }
       },
       "lighthousePowerControl": {
@@ -483,14 +483,14 @@
         },
         "enable": {
           "title": "전원 제어 활성화",
-          "description": "이 기능을 활성화하면 Oyasumi를 사용하여 베이스스테이션의 전원을 끄고 켤 수 있어요. 블루투스가 필요하며 V2 베이스 스테이션만 지원해요."
+          "description": "이 기능을 활성화하면 OyasumiVR를 사용하여 베이스스테이션의 전원을 끄고 켤 수 있어요. 블루투스가 필요하며 V2 베이스 스테이션만 지원해요."
         }
       },
       "sleepMode": {
         "title": "수면 모드",
         "startupBehaviour": {
           "title": "시작 상태",
-          "description": "Oyasumi가 시작될 때 어떤 상태이여야 하나요?",
+          "description": "OyasumiVR가 시작될 때 어떤 상태이여야 하나요?",
           "option": {
             "persist": {
               "title": "저장된 상태",
@@ -511,7 +511,7 @@
     "vrchat": {
       "logIn": {
         "title": "로그인",
-        "description": "Oyasumi 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
+        "description": "OyasumiVR 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
         "loggedIn": {
           "title": "{{name}}님, 어서오세요!",
           "subtext": "현재 VRChat 계정으로 로그인 중이에요.",
@@ -523,12 +523,12 @@
           "logIn": "로그인"
         },
         "errors": {
-          "initError": "VRChat 모듈이 초기화되지 않았어요. 인터넷 접속을 확인하고 잠시 후에 Oyasumi를 재부팅해 다시 시도해주세요."
+          "initError": "VRChat 모듈이 초기화되지 않았어요. 인터넷 접속을 확인하고 잠시 후에 OyasumiVR를 재부팅해 다시 시도해주세요."
         },
         "disclaimers": {
           "use": "로그인 정보는 보관되지 않고 인증을 위해 VRChat 서버로만 전송되어요.",
-          "brand": "Oyasumi는 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
-          "liability": "Raphiiko는 Oyasumi와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
+          "brand": "OyasumiVR는 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
+          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
         }
       },
       "OSC": {
@@ -537,19 +537,19 @@
         "reset": "기본 설정으로 초기화",
         "receivingHost": {
           "title": "수신 호스트",
-          "description": "Oyasumi가 OSC 메시지를 받을 호스트에요.\n(VRChat은 기본적으로 127.0.0.1로 전송해요)"
+          "description": "OyasumiVR가 OSC 메시지를 받을 호스트에요.\n(VRChat은 기본적으로 127.0.0.1로 전송해요)"
         },
         "receivingPort": {
           "title": "수신 포트",
-          "description": "Oyasumi가 OSC 메시지를 받을 포트 번호에요.\n(VRChat은 기본적으로 포트 9001로 전송해요)"
+          "description": "OyasumiVR가 OSC 메시지를 받을 포트 번호에요.\n(VRChat은 기본적으로 포트 9001로 전송해요)"
         },
         "sendingHost": {
           "title": "VRChat 호스트",
-          "description": "Oyasumi가 OSC 메시지를 수신할 호스트에요.\n(같은 컴퓨터에서 VRChat이 실행되는 경우 127.0.0.1 이에요)"
+          "description": "OyasumiVR가 OSC 메시지를 수신할 호스트에요.\n(같은 컴퓨터에서 VRChat이 실행되는 경우 127.0.0.1 이에요)"
         },
         "sendingPort": {
           "title": "VRChat 포트",
-          "description": "Oyasumi가 OSC 메시지를 보낼 포트 번호에요.\n(VRChat은 기본적으로 포트 9000에서 수신을 대기해요)"
+          "description": "OyasumiVR가 OSC 메시지를 보낼 포트 번호에요.\n(VRChat은 기본적으로 포트 9000에서 수신을 대기해요)"
         },
         "errors": {
           "PORT_IN_USE": "이 주소는 바인딩할 수 없어요. 다른 애플리케이션에서 이미 사용 중일 수 있어요. 해당 애플리케이션을 닫고 다시 시도하거나 다른 수신 포트 또는 호스트를 선택할 수 있어요.",
@@ -560,15 +560,15 @@
         "features": {
           "all": {
             "title": "모든 기능 활성화하기",
-            "description": "이러한 각 기능을 비활성화하면 Oyasumi가 OSC 메시지를 수신하지 않아요."
+            "description": "이러한 각 기능을 비활성화하면 OyasumiVR가 OSC 메시지를 수신하지 않아요."
           },
           "expressionMenu": {
             "title": "VRChat 익스프레션 메뉴 제어 활성화하기",
-            "description": "VRChat 아바타의 <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">표현 메뉴</a>에서 Oyasumi의 기능을 제어해요."
+            "description": "VRChat 아바타의 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">표현 메뉴</a>에서 OyasumiVR의 기능을 제어해요."
           },
           "externalControl": {
             "title": "외부 제어 활성화하기",
-            "description": "<a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a>에서 Oyasumi의 기능을 제어해요."
+            "description": "<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>에서 OyasumiVR의 기능을 제어해요."
           }
         }
       }
@@ -579,7 +579,7 @@
         "description": "일부 기능은 알림을 보낼 수 있거나 보내야 해요. 여기에서 선호하는 알림 방식을 선택하세요.",
         "xsoverlay": {
           "title": "XSOverlay 알림",
-          "description": "XSOverlay를 사용하여 Oyasumi의 알림을 VR로 가져와요."
+          "description": "XSOverlay를 사용하여 OyasumiVR의 알림을 VR로 가져와요."
         },
         "desktop": {
           "title": "데스크톱 알림",
@@ -591,26 +591,26 @@
       "checkForUpdates": "업데이트 확인하기",
       "changelog": "변경 사항",
       "install": "v{version} 설치",
-      "noUpdate": "현재 최신 버전의 Oyasumi v{{version}}을 이용하고 있어요!",
-      "notChecked": "Oyasumi의 업데이트를 확인하지 못했어요.",
-      "updateAvailable": "Oyasumi의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다."
+      "noUpdate": "현재 최신 버전의 OyasumiVR v{{version}}을 이용하고 있어요!",
+      "notChecked": "OyasumiVR의 업데이트를 확인하지 못했어요.",
+      "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다."
     },
     "advanced": {
       "persistentData": {
         "title": "영구 데이터",
-        "description": "Oyasumi가 디스크에 저장하는 데이터를 관리합니다.",
+        "description": "OyasumiVR가 디스크에 저장하는 데이터를 관리합니다.",
         "dataType": {
           "all": {
             "title": "모든 데이터",
-            "description": "모든 설정을 포함하여 Oyasumi가 저장하는 모든 데이터"
+            "description": "모든 설정을 포함하여 OyasumiVR가 저장하는 모든 데이터"
           },
           "appSettings": {
             "title": "애플리케이션 설정",
-            "description": "Oyasumi의 모든 일반 설정"
+            "description": "OyasumiVR의 모든 일반 설정"
           },
           "automationSettings": {
             "title": "자동화 설정",
-            "description": "Oyasumi의 자동화 중 하나에 특정한 모든 설정"
+            "description": "OyasumiVR의 자동화 중 하나에 특정한 모든 설정"
           },
           "vrcData": {
             "title": "VRChat 데이터",
@@ -618,7 +618,7 @@
           },
           "miscData": {
             "title": "기타 데이터",
-            "description": "다른 카테고리에서 다루지 않는 Oyasumi가 저장하는 기타 모든 데이터"
+            "description": "다른 카테고리에서 다루지 않는 OyasumiVR가 저장하는 기타 모든 데이터"
           },
           "appCache": {
             "title": "데이터 캐시",
@@ -630,7 +630,7 @@
           },
           "logs": {
             "title": "로그 파일",
-            "description": "Oyasumi가 생성하는 로그 파일"
+            "description": "OyasumiVR가 생성하는 로그 파일"
           },
           "eventLog": {
             "title": "이벤트 로그",
@@ -643,8 +643,8 @@
           "message": "다음 데이터를 삭제할까요? 이 데이터는 되돌릴 수 없습니다!\n\n{{items}}"
         },
         "relaunchModal": {
-          "title": "Oyasumi 재시작",
-          "message": "요청된 데이터가 삭제되었어요. 이 작업을 수행한 후 Oyasumi를 다시 시작하는 것을 추천해요.\n\n지금 다시 시작하시겠어요? Oyasumi를 다시 시작하지 않으면 원치 않는 결과가 발생할 수 있어요.",
+          "title": "OyasumiVR 재시작",
+          "message": "요청된 데이터가 삭제되었어요. 이 작업을 수행한 후 OyasumiVR를 다시 시작하는 것을 추천해요.\n\n지금 다시 시작하시겠어요? OyasumiVR를 다시 시작하지 않으면 원치 않는 결과가 발생할 수 있어요.",
           "relaunch": "지금 재시작",
           "later": "나중에 재시작"
         }
@@ -666,7 +666,7 @@
         "title": "로그 파일",
         "openFolder": {
           "title": "로그 폴더 열기",
-          "description": "파일 탐색기에서 Oyasumi의 로그 파일 위치를 열어요.",
+          "description": "파일 탐색기에서 OyasumiVR의 로그 파일 위치를 열어요.",
           "action": "로그 폴더 열기"
         }
       }
@@ -710,19 +710,19 @@
   },
   "notifications": {
     "sleepCheck": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "20초 후에 수면 모드가 활성화되어요. 잠들었나요? \n\n(취소하려면 고개를 흔들어 주세요)"
     },
     "sleepCheckCancel": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "수면 모드 자동 활성화가 취소되었어요."
     },
     "sleepModeEnabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "수면 모드가 활성화되었어요."
     },
     "sleepModeDisabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "수면 모드가 비활성화되었어요."
     }
   },
@@ -745,7 +745,7 @@
       "title": "업데이트 가능",
       "updateNow": "v{{version}} 설치",
       "updateLater": "나중에",
-      "message": "Oyasumi의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{{currentVersion}}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
+      "message": "OyasumiVR의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{{currentVersion}}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
     },
     "select-box": {
       "defaultPlaceholder": "선택하기..."
@@ -761,7 +761,7 @@
       "settings": "설정",
       "vrcAutomations": "VRChat 자동화",
       "brightnessAutomations": "밝기 자동화",
-      "about": "Oyasumi에 대해",
+      "about": "OyasumiVR에 대해",
       "resolutionAutomations": "해상도 자동화",
       "chaperoneAutomations": "경계 표시 자동화",
       "sleepAnimations": "수면 애니메이션",
@@ -916,7 +916,7 @@
                 "MANUAL": "수동으로 기기를 켰어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 기기를 켰어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 기기를 켰어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 기기를 켰어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 기기를 켰어요."
               }
             },
             "sleep": {
@@ -925,7 +925,7 @@
                 "MANUAL": "수동으로 모드를 바꿨어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 모드를 바꿨어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 모드를 바꿨어요."
               }
             },
             "standby": {
@@ -934,7 +934,7 @@
                 "MANUAL": "수동으로 모드를 바꿨어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 모드를 바꿨어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 모드를 바꿨어요."
               }
             }
           },
@@ -945,7 +945,7 @@
                 "MANUAL": "수동으로 기기를 켰어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 기기를 켰어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 기기를 켰어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 기기를 켰어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 기기를 켰어요."
               }
             },
             "sleep": {
@@ -954,7 +954,7 @@
                 "MANUAL": "수동으로 모드를 바꿨어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 모드를 바꿨어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 모드를 바꿨어요."
               }
             },
             "standby": {
@@ -963,7 +963,7 @@
                 "MANUAL": "수동으로 모드를 바꿨어요.",
                 "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
                 "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "Oyasumi가 시작되어 모드를 바꿨어요."
+                "OYASUMI_START": "OyasumiVR가 시작되어 모드를 바꿨어요."
               }
             }
           }
@@ -1041,7 +1041,7 @@
   },
   "resolution-automations": {
     "title": "해상도 자동화",
-    "description": "Oyasumi는 수면 모드가 활성화되거나 비활성화될 때 자동으로 SteamVR의 렌더 해상도를 조정할 수 있어요.",
+    "description": "OyasumiVR는 수면 모드가 활성화되거나 비활성화될 때 자동으로 SteamVR의 렌더 해상도를 조정할 수 있어요.",
     "onSleepEnable": {
       "title": "수면 모드 활성화 시",
       "description": "렌더 해상도를 변경해요"
@@ -1058,7 +1058,7 @@
   },
   "chaperone-automations": {
     "title": "경계 표시 자동화",
-    "description": "Oyasumi는 수면 모드가 활성화되거나 비활성화될 때 SteamVR의 경계 표시가 흐려지는 거리를 자동으로 조정할 수 있어요.",
+    "description": "OyasumiVR는 수면 모드가 활성화되거나 비활성화될 때 SteamVR의 경계 표시가 흐려지는 거리를 자동으로 조정할 수 있어요.",
     "onSleepEnable": {
       "title": "수면 모드 활성화 시",
       "description": "경계 표시 거리를 조절해요"
@@ -1076,7 +1076,7 @@
   },
   "shutdown-automations": {
     "title": "종료 시퀀스",
-    "description": "VR에서 잠드는 것이 즐겁지만 밤새도록 VR에서 잠을 자고 싶지 않다면 Oyasumi의 종료 시퀀스를 사용할 수 있어요. 이 기능은 잠이 들면 자동으로 부드럽게 종료하여 VR 밖에서도 원활하게 수면을 이어갈 수 있도록 도와줍니다.",
+    "description": "VR에서 잠드는 것이 즐겁지만 밤새도록 VR에서 잠을 자고 싶지 않다면 OyasumiVR의 종료 시퀀스를 사용할 수 있어요. 이 기능은 잠이 들면 자동으로 부드럽게 종료하여 VR 밖에서도 원활하게 수면을 이어갈 수 있도록 도와줍니다.",
     "triggers": {
       "title": "실행 조건",
       "whenAsleep": {

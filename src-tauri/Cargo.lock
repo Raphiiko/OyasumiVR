@@ -2558,7 +2558,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 
 [[package]]
-name = "oyasumi"
+name = "oyasumivr"
 version = "1.7.0"
 dependencies = [
  "bluest",
@@ -2576,7 +2576,7 @@ dependencies = [
  "nalgebra",
  "openvr",
  "openvr_sys",
- "oyasumi-shared",
+ "oyasumivr-shared",
  "reqwest",
  "rosc",
  "serde",
@@ -2601,7 +2601,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "oyasumi-shared"
+name = "oyasumivr-shared"
 version = "1.7.0"
 dependencies = [
  "openvr",

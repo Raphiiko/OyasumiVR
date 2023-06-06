@@ -4,11 +4,11 @@
     "beforeBuildCommand": "npm run build",
     "beforeDevCommand": "npm run start",
     "devPath": "http://localhost:4200",
-    "distDir": "../dist/oyasumi",
+    "distDir": "../dist/oyasumivr",
     "withGlobalTauri": true
   },
   "package": {
-    "productName": "Oyasumi",
+    "productName": "OyasumiVR",
     "version": "1.7.0"
   },
   "tauri": {
@@ -127,7 +127,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "Oyasumi",
+        "title": "OyasumiVR",
         "width": 960,
         "minWidth": 960,
         "minHeight": 600,
@@ -135,7 +135,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "OyasumiVR/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
       },
       {
         "width": 700,
@@ -147,7 +147,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "Oyasumi/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "OyasumiVR/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
       }
     ]
   }

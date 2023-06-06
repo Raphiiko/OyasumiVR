@@ -18,7 +18,7 @@
   },
   "brightness-automations": {
     "title": "Automatisation de luminosité",
-    "description": "Oyasumi peut ajuster la luminosité de votre casque VR lorsque le mode sommeil est actif ou inactif.",
+    "description": "OyasumiVR peut ajuster la luminosité de votre casque VR lorsque le mode sommeil est actif ou inactif.",
     "indexWarning": "Le contrôle de luminosité est disponible sur le Valve Index uniquement. Veuillez vérifier que votre casque est branché et que SteamVR fonctionne.",
     "onSleepEnable": {
       "title": "Lorsque je dors",
@@ -59,7 +59,7 @@
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "Lorsque l'un des contrôleurs est éteint",
       "onMotionDetection": {
-        "title": "Quand Oyasumi détecte que vous dormez selon vos mouvements"
+        "title": "Quand OyasumiVR détecte que vous dormez selon vos mouvements"
       }
     },
     "disableAutomations": {
@@ -77,14 +77,14 @@
         "startCalibration": "Débuter la calibration",
         "restartCalibration": "Recommencer la calibration",
         "info": {
-          "intro": "Oyasumi peut détecter si vous êtes en train de dormir grâce au mouvement de votre casque VR. Cela nécessite une calibration de votre setup VR. La calibration doit être faite une fois avant de pouvoir détecter votre sommeil.",
+          "intro": "OyasumiVR peut détecter si vous êtes en train de dormir grâce au mouvement de votre casque VR. Cela nécessite une calibration de votre setup VR. La calibration doit être faite une fois avant de pouvoir détecter votre sommeil.",
           "stepPrefix": "La calibration consiste en:",
           "step": {
             "one": "Mettre son casque et s'allonger.",
-            "two": "Débuter la calibration d'Oyasumi depuis l'overlay.",
+            "two": "Débuter la calibration d'OyasumiVR depuis l'overlay.",
             "three": "Attendre 10 secondes sans bouger."
           },
-          "stepSuffix": "Et voilà! Après calibration, Oyasumi devrait détecter si vous vous êtes endormi grâce aux mouvement du casque VR."
+          "stepSuffix": "Et voilà! Après calibration, OyasumiVR devrait détecter si vous vous êtes endormi grâce aux mouvement du casque VR."
         },
         "prepare": {
           "instruction": "Mettez votre casque VR et allongez-vous.",
@@ -112,12 +112,12 @@
         "title": "Activer le mode sommeil",
         "calibration": {
           "title": "Calibration",
-          "description": "Oyasumi doit être calibré avant de pouvoir utiliser cette fonctionnalité.",
+          "description": "OyasumiVR doit être calibré avant de pouvoir utiliser cette fonctionnalité.",
           "action": "Calibrer"
         },
         "sensitivity": {
           "title": "Sensibilité",
-          "description": "Sensibilité de détection de vous mouvements par Oyasumi.",
+          "description": "Sensibilité de détection de vous mouvements par OyasumiVR.",
           "presets": {
             "LOWEST": "Minimale",
             "LOW": "Basse",
@@ -170,7 +170,7 @@
       "currentPose": "Position actuelle",
       "manualControl": "Contrôle manuel",
       "presetAuthor": "par {{author}}",
-      "description": "Oyasumi peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour supporter différents prefabs de locomotion de votre avatar, mais vous pouvez également spéficier vos propres animations.",
+      "description": "OyasumiVR peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour supporter différents prefabs de locomotion de votre avatar, mais vous pouvez également spéficier vos propres animations.",
       "enable": "Activer automatiquement les animations de sommeil",
       "customPreset": "Animations custom",
       "options": {
@@ -207,7 +207,7 @@
       }
     },
     "general": {
-      "description": "Configurez Oyasumi pour envoyer des commandes OSC à VRChat lorsque certains évènements sont déclenchés. Cela peut, par exemple, être utile afin de changer vos toggles d'avatar lors du sommeil ou du réveil.",
+      "description": "Configurez OyasumiVR pour envoyer des commandes OSC à VRChat lorsque certains évènements sont déclenchés. Cela peut, par exemple, être utile afin de changer vos toggles d'avatar lors du sommeil ou du réveil.",
       "onSleepEnable": {
         "title": "Lors du sommeil",
         "description": "Envoyer ces commandes OSC",
@@ -240,8 +240,8 @@
   "gpu-automations": {
     "title": "Automatisations du GPU",
     "disabled": {
-      "disabled": "Oyasumi peut automatiser votre carte graphique de nombreuses façons.\nCela permet d'économiser de l'énergie pendant votre sommeil.\n\nCette fonctionnalité est avancée, et donc désactivée par défaut.\nVous pouvez l'activer en cliquant sur le bouton ci-dessous",
-      "noSidecar": "Pour permettre le changement des paramètres de votre GPU, Oyasumi requiert les droits administrateurs. Vous pouvez donner les privilèges administrateur à Oyasumi en cliquant sur le bouton ci-dessous."
+      "disabled": "OyasumiVR peut automatiser votre carte graphique de nombreuses façons.\nCela permet d'économiser de l'énergie pendant votre sommeil.\n\nCette fonctionnalité est avancée, et donc désactivée par défaut.\nVous pouvez l'activer en cliquant sur le bouton ci-dessous",
+      "noSidecar": "Pour permettre le changement des paramètres de votre GPU, OyasumiVR requiert les droits administrateurs. Vous pouvez donner les privilèges administrateur à OyasumiVR en cliquant sur le bouton ci-dessous."
     },
     "tabs": {
       "powerLimiting": "Economie d'énergie",
@@ -254,7 +254,7 @@
     "enableWarning": "Un mauvais paramétrage du GPU peut entrainer une instabilité de votre système. Merci d'agir en connaissance de cause.",
     "elevationSidecarModal": {
       "title": "Donner les droits administrateur",
-      "message": "Voulez-vous donner les privilèges administrateur à Oyasumi de manière permanente ?\n\n Si vous activez ceci, Oyasumi les demandera lors du démarrage. Vous pouvez désactiver ceci plus tard dans les paramètres.",
+      "message": "Voulez-vous donner les privilèges administrateur à OyasumiVR de manière permanente ?\n\n Si vous activez ceci, OyasumiVR les demandera lors du démarrage. Vous pouvez désactiver ceci plus tard dans les paramètres.",
       "confirm": "Toujours",
       "cancel": "Seulement cette fois"
     },
@@ -262,9 +262,9 @@
       "disabled": {
         "initializing": "Initialisation de l'économie d'énergie...",
         "noNvidia": "L'économie d'énergie est indisponible car nous ne détéctons pas de pilote NVIDIA. L'économie d'énergie n'est disponible que sur les cartes NVIDIA.\n\nSi vous avez un GPU NVIDIA, vérifiez l'installation des derniers pilotes graphiques.\n\n({{code}})",
-        "noPermission": "Oyasumi a les droits administrateurs mais ne semble pas avoir la permission de changer vos paramètres GPU.\n\nCeci ne devrait pas arriver, merci de vérifier votre configuration système.",
-        "noSidecar": "Pour une raison inconnue, les droits administrateur n'ont pas pu être transférés.\n Ils sont nécéssaires pour contrôler la consommation de votre GPU.\n\nMerci de redémarrer Oyasumi et réessayer.",
-        "unknown": "L'économie d'énergie est indisponible pour une raison inconnue.\n\nMerci de redémarrer Oyasumi et réessayer."
+        "noPermission": "OyasumiVR a les droits administrateurs mais ne semble pas avoir la permission de changer vos paramètres GPU.\n\nCeci ne devrait pas arriver, merci de vérifier votre configuration système.",
+        "noSidecar": "Pour une raison inconnue, les droits administrateur n'ont pas pu être transférés.\n Ils sont nécéssaires pour contrôler la consommation de votre GPU.\n\nMerci de redémarrer OyasumiVR et réessayer.",
+        "unknown": "L'économie d'énergie est indisponible pour une raison inconnue.\n\nMerci de redémarrer OyasumiVR et réessayer."
       },
       "noGPUSelected": "Aucun GPU sélectionné",
       "gpuUnsupported": "GPU non pris en charge",
@@ -285,7 +285,7 @@
       "inputDefault": "Restaurer la limite de consommation par défaut."
     },
     "msiAfterburner": {
-      "description": "Oyasumi peut automatiquement appliquer des profils MSI Afterburner lorsque vous aller dormir ou lors du réveil. Un cas d'utilisation de cette fonctionnalité est d'économiser de l'énergie pendant votre sommeil, et regagner de la puissance GPU lors du réveil.<br><br>Vous devez paramétrer les profils que vous voulez appliquer dans MSI Afterburner.<br>Vous pouvez télécharger MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ici</a>.",
+      "description": "OyasumiVR peut automatiquement appliquer des profils MSI Afterburner lorsque vous aller dormir ou lors du réveil. Un cas d'utilisation de cette fonctionnalité est d'économiser de l'énergie pendant votre sommeil, et regagner de la puissance GPU lors du réveil.<br><br>Vous devez paramétrer les profils que vous voulez appliquer dans MSI Afterburner.<br>Vous pouvez télécharger MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">ici</a>.",
       "sleepModeEnable": {
         "title": "Lors de l'activation du mode sommeil",
         "description": "Appliquer le profil MSI Afterburner suivant"
@@ -299,12 +299,12 @@
       "enabledWarning": "Attention, une mauvaise configuration du GPU peut rendre votre système instable. Désactivez cette fonctionnalité si vous n'êtes pas sûr(e) de ce que vous faites.",
       "executable": {
         "title": "Configuration",
-        "description": "Oyasumi doit connaître l'emplacement de l'exécutable <strong>MSIAfterburner.exe</strong>.\nSi Oyasumi ne peut pas trouver l'emplacement par défaut, merci de le spécifier.",
+        "description": "OyasumiVR doit connaître l'emplacement de l'exécutable <strong>MSIAfterburner.exe</strong>.\nSi OyasumiVR ne peut pas trouver l'emplacement par défaut, merci de le spécifier.",
         "status": {
           "CHECKING": "Validation de l'exécutable <strong>MSIAfterburner.exe</strong>",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong> n'a pas pu être trouvé à cet emplacement.",
           "INVALID_EXECUTABLE": "L'exécutable <strong>MSIAfterburner.exe</strong> de cet emplacement n'a pas pu être vérifié.",
-          "INVALID_SIGNATURE": "L'authenticité du fichier <strong>MSIAfterburner.exe</strong> n'a pas pu être validée. Pour des raisons de sécurité, nous ne pouvons pas l'utiliser. Merci de vérifier que vous utilisez la dernière version de MSI Afterburner. Si le problème persiste, merci de contacter le développeur d'Oyasumi ou de soumettre un ticket de bug report.",
+          "INVALID_SIGNATURE": "L'authenticité du fichier <strong>MSIAfterburner.exe</strong> n'a pas pu être validée. Pour des raisons de sécurité, nous ne pouvons pas l'utiliser. Merci de vérifier que vous utilisez la dernière version de MSI Afterburner. Si le problème persiste, merci de contacter le développeur d'OyasumiVR ou de soumettre un ticket de bug report.",
           "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>MSIAfterburner.exe</strong> à cet emplacement.",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong> a été trouvé et fonctionne correctement !"
         }
@@ -314,7 +314,7 @@
   "status-automations": {
     "title": "Automatisations de statut",
     "enable": "Activer les automatisations de statut",
-    "description": "Oyasumi peut limiter le nombre de personnes vous rejoignant en changeant votre statut\n      basé sur le nombre de joueurs dans votre instance.",
+    "description": "OyasumiVR peut limiter le nombre de personnes vous rejoignant en changeant votre statut\n      basé sur le nombre de joueurs dans votre instance.",
     "exampleUse": "Exemple: Lorsque quelqu'un vous rejoint, votre statut sera changé d'orange à rouge.\n Lorsqu'une personne quitte votre instance et vous vous retrouvez seul(e), votre statut sera automatiquement changé en bleu pour que quelqu'un d'autre puisse vous rejoindre.",
     "disableToEdit": "Merci de désactiver les automatisations de statut avant tout changement.",
     "playerLimit": "Limite de joueurs",
@@ -331,15 +331,15 @@
       "description": "Changer votre statut pour"
     },
     "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
-    "behaviourWarning": "Les changement de statut par Oyasumi ne sont pas visibles par le joueur. Même pour les autres joueurs, il peut y avoir un délai avant la mise à jour du statut. Cela est dû à une limitation de VRChat et ne peut pas être corrigé par Oyasumi.",
+    "behaviourWarning": "Les changement de statut par OyasumiVR ne sont pas visibles par le joueur. Même pour les autres joueurs, il peut y avoir un délai avant la mise à jour du statut. Cela est dû à une limitation de VRChat et ne peut pas être corrigé par OyasumiVR.",
     "moreInfo": "Plus d'informations",
-    "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si Oyasumi change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
+    "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si OyasumiVR change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal."
   },
   "auto-invite-request-accept": {
     "title": "Accepter les demandes d'invitation automatiquement",
-    "description": "Oyasumi peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
+    "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
     "userOnBusyStatus": "Vous ne pouvez pas accepter que les demandes d'invitation quand votre statut est busy (rouge).",
-    "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres Oyasumi, car votre statut est 'join me' (bleu).",
+    "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu).",
     "whitelist": "Liste blanche",
     "blacklist": "Liste noire",
     "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
@@ -392,15 +392,15 @@
     "general": {
       "language": {
         "title": "Langue",
-        "description": "Vous pouvez choisir la langue de l'interface ci-dessous. S'il manque des traductions ou si vous voulez traduire Oyasumi dans votre propre langue, n'hésitez pas à nous contacter."
+        "description": "Vous pouvez choisir la langue de l'interface ci-dessous. S'il manque des traductions ou si vous voulez traduire OyasumiVR dans votre propre langue, n'hésitez pas à nous contacter."
       },
       "lighthouseConsole": {
         "title": "Lighthouse Console",
-        "description": "Oyasumi a besoin de l'emplacement de <strong>lighthouse_console.exe</strong>, dans le dossier d'installation de SteamVR.\nSi Oyasumi ne peut pas trouver l'emplacement par défaut, vous devrez le spécifier manuellement.",
+        "description": "OyasumiVR a besoin de l'emplacement de <strong>lighthouse_console.exe</strong>, dans le dossier d'installation de SteamVR.\nSi OyasumiVR ne peut pas trouver l'emplacement par défaut, vous devrez le spécifier manuellement.",
         "status": {
           "NOT_FOUND": "<strong>lighthouse_console.exe</strong> n'a pas pu être trouvé à cet emplacement.",
           "INVALID_EXECUTABLE": "Le fonctionnement du fichier <strong>lighthouse_console.exe</strong> de cet emplacement n'a pas pu être vérifié.",
-          "PERMISSION_DENIED": "Oyasumi n'a pas la permission d'exécuter le fichier <strong>lighthouse_console.exe</strong> à cet emplacement. Merci d'exécuter Oyasumi en mode administrateur.",
+          "PERMISSION_DENIED": "OyasumiVR n'a pas la permission d'exécuter le fichier <strong>lighthouse_console.exe</strong> à cet emplacement. Merci d'exécuter OyasumiVR en mode administrateur.",
           "INVALID_FILENAME": "Le chemin d'accès est invalide.",
           "UNKNOWN_ERROR": "Une erreur inconnue est survenue lors de la recherche de <strong>lighthouse_console.exe</strong> à cet emplacement",
           "CHECKING": "Vérification de <strong>lighthouse_console.exe</strong>",
@@ -410,12 +410,12 @@
       "adminPrivileges": {
         "title": "Droits administrateur",
         "label": "Demander les droits administrateurs au démarrage",
-        "description": "Oyasumi a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme."
+        "description": "OyasumiVR a besoin des droits administrateurs pour gérer la consommation de votre GPU. Les privilèges seront demandés au démarrage du programme."
       },
       "telemetry": {
         "title": "Télémétrie",
         "label": "Envoyer des données d'utilisation anonymes",
-        "description": "Les données envoyées seront limitées à la version d'Oyasumi que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques."
+        "description": "Les données envoyées seront limitées à la version d'OyasumiVR que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques."
       },
       "systemTray": {
         "title": "Barre d'état",
@@ -432,7 +432,7 @@
     "vrchat": {
       "logIn": {
         "title": "Connexion",
-        "description": "Certaines fonctionnalités d'Oyasumi nécessitent d'être connecté à votre compte VRChat.",
+        "description": "Certaines fonctionnalités d'OyasumiVR nécessitent d'être connecté à votre compte VRChat.",
         "loggedIn": {
           "title": "Bonjour {{name}}!",
           "subtext": "Vous êtes actuellement connecté(e) à votre compte VRChat.",
@@ -448,8 +448,8 @@
         },
         "disclaimers": {
           "use": "Vos informations de connexion ne sont pas stockées et sont uniquement envoyées à VRChat pour vous identifier.",
-          "brand": "Oyasumi n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko n'est responsable d'aucun dommage causé par Oyasumi. Utilisez ce programme à vos risques et périls!"
+          "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
         }
       },
       "OSC": {
@@ -458,19 +458,19 @@
         "reset": "Réinitialiser les paramètres",
         "receivingHost": {
           "title": "Hôte de réception",
-          "description": "L'adresse sur laquelle Oyasumi reçoit les messages OSC.\n(VRCHat envoie sur 127.0.0.1 par défaut)"
+          "description": "L'adresse sur laquelle OyasumiVR reçoit les messages OSC.\n(VRCHat envoie sur 127.0.0.1 par défaut)"
         },
         "receivingPort": {
           "title": "Port de réception",
-          "description": "Le port sur lequel Oyasumi reçoit les messages OSC.\n(VRCHat envoie le port 9001 par défaut)"
+          "description": "Le port sur lequel OyasumiVR reçoit les messages OSC.\n(VRCHat envoie le port 9001 par défaut)"
         },
         "sendingHost": {
           "title": "Hôte d'envoi",
-          "description": "L'adresse sur laquelle Oyasumi envoie des messages OSC.\n(Si VRChat tourne sur la même machine, l'adresse sera 127.0.0.1)"
+          "description": "L'adresse sur laquelle OyasumiVR envoie des messages OSC.\n(Si VRChat tourne sur la même machine, l'adresse sera 127.0.0.1)"
         },
         "sendingPort": {
           "title": "Port d'envoi",
-          "description": "Le port sur lequel Oyasumi envoie des messages OSC.\n(VRChat reçoit les messages par défaut sur le port 9000)"
+          "description": "Le port sur lequel OyasumiVR envoie des messages OSC.\n(VRChat reçoit les messages par défaut sur le port 9000)"
         },
         "errors": {
           "PORT_IN_USE": "Cette adresse n'a pas pu être affectée. Il se peut qu'une autre application l'utilise déjà. Merci de fermer cette application et réessayer, ou choisir un autre hôte ou port de réception.",
@@ -486,7 +486,7 @@
         "description": "Certaines fonctionnalités nécessitent de vous envoyer des notifications. Veuillez choisir votre fournisseur de notifications dans cette rubrique.",
         "xsoverlay": {
           "title": "Notifications XSOverlay",
-          "description": "Utiliser XSOverlay pour qu'Oyasumi vous envoie des notifications en VR."
+          "description": "Utiliser XSOverlay pour qu'OyasumiVR vous envoie des notifications en VR."
         },
         "desktop": {
           "title": "Notifications de bureau",
@@ -498,9 +498,9 @@
       "checkForUpdates": "Rechercher des mises à jour",
       "changelog": "Changelog",
       "install": "Installer v{{version}}",
-      "noUpdate": "Vous utilisez actuellement la dernière version d'Oyasumi (v{{version}}) !",
-      "notChecked": "Oyasumi n'a pas encore recherché de mises à jour.",
-      "updateAvailable": "Une nouvelle version d'Oyasumi est disponible! Vous utilisez actuellement la v{{currentVersion}}.\nLa nouvelle version est la v{{latestVersion}}."
+      "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{{version}}) !",
+      "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
+      "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{{currentVersion}}.\nLa nouvelle version est la v{{latestVersion}}."
     }
   },
   "about": {
@@ -540,19 +540,19 @@
   },
   "notifications": {
     "sleepCheck": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "Le mode sommeil s'activera dans 20 secondes. Dormez-vous ?\n\n(Hochez la tête pour annuler)"
     },
     "sleepCheckCancel": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "L'activation automatique du mode sommeil a été désactivée."
     },
     "sleepModeEnabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "Mode sommeil est activé."
     },
     "sleepModeDisabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "Mode sommeil désactivé."
     }
   },
@@ -575,7 +575,7 @@
       "title": "Mise à jour disponible",
       "updateNow": "Installer la v{{version}}",
       "updateLater": "Plus tard",
-      "message": "Une nouvelle mise à jour d'Oyasumi est disponible : v{{newVersion}}.\n\nVous utilisez actuellement la v{{currentVersion}}.\n\nVoulez-vous effectuer la mise à jour maintenant?"
+      "message": "Une nouvelle mise à jour d'OyasumiVR est disponible : v{{newVersion}}.\n\nVous utilisez actuellement la v{{currentVersion}}.\n\nVoulez-vous effectuer la mise à jour maintenant?"
     },
     "select-box": {
       "defaultPlaceholder": "Sélectionner..."
@@ -774,7 +774,7 @@
   },
   "resolution-automations": {
     "title": "Automatisations de résolution",
-    "description": "Oyasumi peut automatiquement ajuster la résolution d'affichage de votre casque lors de l'activation ou la désactivation du mode sommeil.",
+    "description": "OyasumiVR peut automatiquement ajuster la résolution d'affichage de votre casque lors de l'activation ou la désactivation du mode sommeil.",
     "onSleepEnable": {
       "title": "Quand je dors",
       "description": "Ajuster ma résolution d'affichage"

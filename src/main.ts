@@ -15,7 +15,7 @@ if (isDevMode()) {
 }
 
 getVersion().then((version) => {
-  info('[Oyasumi] Starting Oyasumi v' + version);
+  info('[Oyasumi] Starting OyasumiVR v' + version);
 });
 
 platformBrowserDynamic()

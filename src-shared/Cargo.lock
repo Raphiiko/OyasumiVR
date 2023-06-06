@@ -42,7 +42,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "oyasumi-shared"
+name = "oyasumivr-shared"
 version = "1.7.0"
 dependencies = [
  "openvr",

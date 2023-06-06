@@ -1,5 +1,5 @@
 [package]
-name = "oyasumi-elevated-sidecar"
+name = "oyasumivr-elevated-sidecar"
 version = "1.7.0"
 authors = ["Raphiiko"]
 license = "MIT"
@@ -7,7 +7,7 @@ edition = "2021"
 rust-version = "1.64.0"
 
 [dependencies]
-oyasumi-shared = { path = "../src-shared", version = '*' }
+oyasumivr-shared = { path = "../src-shared", version = '*' }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 nvml-wrapper = "0.8.0"

@@ -220,7 +220,7 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
 
   async openLogsFolder() {
     await invoke('show_in_folder', {
-      path: await appLogDir().then((dir) => dir + 'Oyasumi.log'),
+      path: await appLogDir().then((dir) => dir + 'OyasumiVR.log'),
     });
   }
 }
