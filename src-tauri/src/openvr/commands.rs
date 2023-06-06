@@ -58,3 +58,8 @@ pub async fn openvr_get_fade_distance() -> Result<f32, String> {
     let manager = manager_guard.as_ref().unwrap();
     manager.get_fade_distance().await
 }
+
+#[tauri::command]
+pub async fn openvr_set_image_brightness(brightness: f32) {
+    // super::brightness_overlay::set_brightness(brightness).await;
+}

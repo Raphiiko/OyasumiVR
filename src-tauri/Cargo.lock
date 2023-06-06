@@ -2864,7 +2864,6 @@ checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 [[package]]
 name = "ovr_overlay"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=d9aa37eb8d9d59d1e111d85e9afebb1d17280611#d9aa37eb8d9d59d1e111d85e9afebb1d17280611"
 dependencies = [
  "byteorder",
  "derive_more",
@@ -2879,7 +2878,6 @@ dependencies = [
 [[package]]
 name = "ovr_overlay_sys"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=d9aa37eb8d9d59d1e111d85e9afebb1d17280611#d9aa37eb8d9d59d1e111d85e9afebb1d17280611"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -2892,6 +2890,7 @@ name = "oyasumi"
 version = "1.7.0"
 dependencies = [
  "bluest",
+ "byteorder",
  "bytes",
  "chrono",
  "cronjob",
@@ -2904,8 +2903,6 @@ dependencies = [
  "mime",
  "mime_guess",
  "nalgebra",
- "openvr",
- "openvr_sys",
  "ovr_overlay",
  "oyasumi-shared",
  "reqwest",

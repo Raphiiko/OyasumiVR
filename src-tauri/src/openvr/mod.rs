@@ -1,27 +1,25 @@
+// mod brightness_overlay;
 pub mod commands;
 mod gesture_detector;
 mod models;
 mod sleep_detector;
 
-use std::{ffi::CStr, sync::Arc, time::Duration};
-
+use self::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose, TrackedDeviceClass};
+use crate::utils::send_event;
+use byteorder::{ByteOrder, LE};
 use chrono::{naive::NaiveDateTime, Utc};
+use gesture_detector::GestureDetector;
 use log::info;
 use models::OpenVRStatus;
-use openvr::TrackedDeviceIndex;
-use openvr_sys::{k_pch_CollisionBounds_Section, k_pch_SteamVR_Section};
+use ovr_overlay as ovr;
 use sleep_detector::SleepDetector;
+use std::{ffi::CStr, sync::Arc, time::Duration};
 use substring::Substring;
 use tokio::sync::Mutex;
 
-use gesture_detector::GestureDetector;
-
-use crate::utils::send_event;
-
-use self::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
-
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
+    static ref OPENVR_CONTEXT: Mutex<Option<ovr::Context>> = Default::default();
 }
 
 pub async fn init() {
@@ -35,7 +33,6 @@ pub struct OpenVRManager {
     active: Arc<Mutex<bool>>,
     status: Arc<Mutex<OpenVRStatus>>,
     devices: Arc<Mutex<Vec<OVRDevice>>>,
-    settings: Arc<Mutex<Option<openvr::Settings>>>,
     gesture_detector: Arc<Mutex<GestureDetector>>,
     sleep_detector: Arc<Mutex<SleepDetector>>,
 }
@@ -46,7 +43,6 @@ impl OpenVRManager {
             active: Arc::new(Mutex::new(false)),
             status: Arc::new(Mutex::new(OpenVRStatus::Inactive)),
             devices: Arc::new(Mutex::new(vec![])),
-            settings: Arc::new(Mutex::new(None)),
             gesture_detector: Arc::new(Mutex::new(GestureDetector::new())),
             sleep_detector: Arc::new(Mutex::new(SleepDetector::new())),
         };
@@ -76,13 +72,13 @@ impl OpenVRManager {
         let mut devices = self.devices.lock().await;
         let device = devices
             .iter_mut()
-            .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
+            .find(|device| device.class == TrackedDeviceClass::HMD);
         if device.is_some() {
             // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
             let settings = self.settings.lock().await;
             if settings.is_some() {
                 let analog_gain = settings.as_ref().unwrap().get_float(
-                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
                     CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
                 );
                 match analog_gain {
@@ -101,13 +97,13 @@ impl OpenVRManager {
         let mut devices = self.devices.lock().await;
         let device = devices
             .iter_mut()
-            .find(|device| device.class == openvr::TrackedDeviceClass::HMD);
+            .find(|device| device.class == TrackedDeviceClass::HMD);
         if device.is_some() {
             // TODO: CHECK IF HMD SUPPORTS ANALOG GAIN
             let settings = self.settings.lock().await;
             if settings.is_some() {
                 let _ = settings.as_ref().unwrap().set_float(
-                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
                     CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
                     analog_gain,
                 );
@@ -126,7 +122,7 @@ impl OpenVRManager {
             return Err("OPENVR_NOT_INITIALISED".to_string());
         }
         let supersample_manual_override = settings.as_ref().unwrap().get_bool(
-            CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
             CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
         );
         let supersample_manual_override = match supersample_manual_override {
@@ -139,7 +135,7 @@ impl OpenVRManager {
         }
         // Supersampling is set to custom
         let supersample_scale = settings.as_ref().unwrap().get_float(
-            CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
             CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
         );
         match supersample_scale {
@@ -155,13 +151,13 @@ impl OpenVRManager {
         let settings = self.settings.lock().await;
         if settings.is_some() {
             let _ = settings.as_ref().unwrap().set_bool(
-                CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
                 CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
                 supersample_scale.is_some(),
             );
             if supersample_scale.is_some() {
                 let _ = settings.as_ref().unwrap().set_float(
-                    CStr::from_bytes_with_nul(k_pch_SteamVR_Section).unwrap(),
+                    CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
                     CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
                     supersample_scale.unwrap(),
                 );
@@ -178,7 +174,7 @@ impl OpenVRManager {
             return Err("OPENVR_NOT_INITIALISED".to_string());
         }
         let fade_distance = settings.as_ref().unwrap().get_float(
-            CStr::from_bytes_with_nul(k_pch_CollisionBounds_Section).unwrap(),
+            CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
             CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
         );
         match fade_distance {
@@ -191,7 +187,7 @@ impl OpenVRManager {
         let settings = self.settings.lock().await;
         if settings.is_some() {
             let _ = settings.as_ref().unwrap().set_float(
-                CStr::from_bytes_with_nul(k_pch_CollisionBounds_Section).unwrap(),
+                CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
                 CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
                 fade_distance,
             );
@@ -206,13 +202,14 @@ impl OpenVRManager {
         let mut ovr_active = false;
         let mut ovr_next_init = NaiveDateTime::from_timestamp_millis(0).unwrap();
         let mut ovr_next_device_refresh = NaiveDateTime::from_timestamp_millis(0).unwrap();
-        let mut ovr_context: Option<openvr::Context> = None;
-        let mut ovr_system: Option<openvr::System> = None;
+        // let mut ovr_context: Option<ovr::Context> = None;
+        let mut ovr_system: Option<ovr::system::SystemManager> = None;
 
         // Main Loop
         'ovr_loop: loop {
             tokio::time::sleep(Duration::from_millis(32)).await;
             let state_active = self.active.lock().await;
+            let mut ovr_context = OPENVR_CONTEXT.lock().await;
             if *state_active {
                 drop(state_active);
                 // If we're not active, try to initialize OpenVR
@@ -231,46 +228,24 @@ impl OpenVRManager {
                     // Update the status
                     self.update_status(OpenVRStatus::Initializing).await;
                     // Try to initialize OpenVR
-                    unsafe {
-                        ovr_context = match openvr::init(openvr::ApplicationType::Background) {
-                            Ok(ctx) => Some(ctx),
-                            Err(_err) => None,
-                        };
-                    }
+                    let ctx = match ovr::Context::init(
+                        ovr::sys::EVRApplicationType::VRApplication_Background,
+                    ) {
+                        Ok(ctx) => Some(ctx),
+                        Err(_) => None,
+                    };
                     // If we failed, continue to try again later
-                    if ovr_context.is_none() {
+                    if ctx.is_none() {
+                        *ovr_context = None;
                         continue;
                     }
+                    // Set the context on the module state
+                    *ovr_context = ctx;
                     // Obtain the system context
-                    ovr_system = match ovr_context.as_mut().unwrap().system() {
-                        Ok(sys) => Some(sys),
-                        Err(_err) => None,
-                    };
-                    // If we failed, continue to tryt again later
-                    if ovr_system.is_none() {
-                        unsafe {
-                            ovr_context.unwrap().shutdown();
-                        }
-                        ovr_context = None;
-                        continue;
-                    }
+                    let system = ctx.as_ref().unwrap().system_mngr();
+                    ovr_system = Some(system);
                     // Obtain the settings context
-                    let ovr_settings = match ovr_context.as_mut().unwrap().settings() {
-                        Ok(set) => Some(set),
-                        Err(_err) => None,
-                    };
-                    // If we failed, continue to try again later
-                    if ovr_settings.is_none() {
-                        unsafe {
-                            ovr_context.unwrap().shutdown();
-                        }
-                        ovr_context = None;
-                        ovr_system = None;
-                        continue;
-                    }
-                    // Set the settings context on the state
-                    let mut settings_guard = self.settings.lock().await;
-                    *settings_guard = ovr_settings;
+                    let ovr_settings = Some(ovr_context.as_ref().unwrap().settings_mngr());
                     // We've successfully initialized OpenVR
                     info!("[Core] OpenVR Initialized");
                     ovr_active = true;
@@ -286,45 +261,45 @@ impl OpenVRManager {
                     // Update poses
                     self.refresh_device_poses(system).await;
                     // Poll for events
-                    while let Some((e, _)) =
-                        system.poll_next_event_with_pose(openvr::TrackingUniverseOrigin::Standing)
-                    {
+                    while let Some(event) = system.poll_next_event() {
                         // Handle Quit event
-                        match e.event {
-                            openvr::system::event::Event::Quit(_) => {
+                        match event.event_type {
+                            ovr::sys::EVREventType::VREvent_Quit => {
                                 // Shutdown OpenVR
                                 info!("[Core] OpenVR is Quitting. Shutting down OpenVR module");
                                 ovr_active = false;
                                 self.update_status(OpenVRStatus::Inactive).await;
                                 unsafe {
-                                    ovr_context.unwrap().shutdown();
-                                    ovr_context = None;
+                                    ovr::sys::VR_Shutdown();
                                 }
+                                *ovr_context = None;
                                 ovr_system = None;
                                 // Schedule next initialization attempt
                                 ovr_next_init =
                                     Utc::now().naive_utc() + chrono::Duration::seconds(5);
                                 continue 'ovr_loop;
                             }
-                            openvr::system::event::Event::TrackedDeviceActivated
-                            | openvr::system::event::Event::TrackedDeviceDeactivated => {
-                                self.update_device(e.tracked_device_index, true, system)
+                            ovr::sys::EVREventType::VREvent_TrackedDeviceActivated
+                            | ovr::sys::EVREventType::VREvent_TrackedDeviceDeactivated => {
+                                self.update_device(event.tracked_device_index, true, system)
                                     .await;
                             }
-                            openvr::system::event::Event::PropertyChanged(prop) => {
-                                if matches!(
-                                    prop.property,
-                                    openvr::property::DeviceBatteryPercentage_Float
-                                        | openvr::property::DeviceProvidesBatteryStatus_Bool
-                                        | openvr::property::DeviceCanPowerOff_Bool
-                                        | openvr::property::DeviceIsCharging_Bool
-                                        | openvr::property::ConnectedWirelessDongle_String
-                                        | openvr::property::SerialNumber_String
-                                        | openvr::property::HardwareRevision_String
-                                        | openvr::property::ManufacturerName_String
-                                        | openvr::property::ModelNumber_String
-                                ) {
-                                    self.update_device(e.tracked_device_index, true, system)
+                            ovr::sys::EVREventType::VREvent_PropertyChanged => {
+                                let tracked_device_property: u32 =
+                                    LE::read_u32(&event.data[12..16]);
+                                let matching_properties = [
+                                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String as u32,
+                                    ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String as u32,
+                                ];
+                                if matching_properties.contains(&tracked_device_property) {
+                                    self.update_device(event.tracked_device_index, true, system)
                                         .await;
                                 }
                             }
@@ -337,12 +312,13 @@ impl OpenVRManager {
                 info!("[Core] Shutting down OpenVR module");
                 self.update_status(OpenVRStatus::Inactive).await;
                 // Shutdown OpenVR
-                if let Some(ctx) = ovr_context {
+                let ctx = ovr_context.as_ref();
+                if let Some(ctx) = ctx {
                     ovr_system = None;
                     unsafe {
-                        ctx.shutdown();
+                        ovr::sys::VR_Shutdown();
                     }
-                    ovr_context = None;
+                    *ovr_context = None;
                 }
             }
         }
@@ -359,14 +335,16 @@ impl OpenVRManager {
         .await;
     }
 
-    async fn refresh_device_poses(&mut self, system: &openvr::System) {
-        let poses =
-            system.device_to_absolute_tracking_pose(openvr::TrackingUniverseOrigin::Standing, 0.0);
+    async fn refresh_device_poses<'a>(&mut self, system: &mut ovr::system::SystemManager<'a>) {
+        let poses = system.get_device_to_absolute_tracking_pose(
+            ovr::sys::ETrackingUniverseOrigin::TrackingUniverseStanding,
+            0.0,
+        );
         for (n, pose) in poses.iter().enumerate() {
-            if pose.device_is_connected() && pose.pose_is_valid() {
-                let matrix = *pose.device_to_absolute_tracking();
+            if pose.bDeviceIsConnected && pose.bPoseIsValid {
+                let matrix = pose.mDeviceToAbsoluteTracking.m;
                 // Extract quaternion
-                let q = openvr_sys::HmdQuaternion_t {
+                let q = ovr::sys::HmdQuaternion_t {
                     w: 0.0f64
                         .max((1.0 + matrix[0][0] + matrix[1][1] + matrix[2][2]).into())
                         .sqrt()
@@ -388,7 +366,7 @@ impl OpenVRManager {
                         .copysign((matrix[1][0] - matrix[0][1]).into()),
                 };
                 // Extract position
-                let pos = openvr_sys::HmdVector3_t {
+                let pos = ovr::sys::HmdVector3_t {
                     v: [matrix[0][3], matrix[1][3], matrix[2][3]],
                 };
                 // Update sleep and gesture detectors (0 == HMD)
@@ -418,69 +396,79 @@ impl OpenVRManager {
         }
     }
 
-    async fn update_all_devices(&self, emit: bool, system: &openvr::System) {
-        for n in 0..openvr::MAX_TRACKED_DEVICE_COUNT {
-            self.update_device(n as u32, emit, system).await;
+    async fn update_all_devices<'a>(&self, emit: bool, system: &ovr::system::SystemManager<'a>) {
+        for n in 0..(ovr::sys::k_unMaxTrackedDeviceCount as usize) {
+            self.update_device(ovr::TrackedDeviceIndex(n.try_into().unwrap()), emit, system)
+                .await;
         }
     }
 
-    async fn update_device(
+    async fn update_device<'a>(
         &self,
-        device_index: TrackedDeviceIndex,
+        device_index: ovr::TrackedDeviceIndex,
         emit: bool,
-        system: &openvr::System,
+        system: &ovr::system::SystemManager<'a>,
     ) {
         let device = OVRDevice {
-            index: device_index,
-            class: system.tracked_device_class(device_index),
+            index: device_index.0,
+            class: system.get_tracked_device_class(device_index).into(),
             battery: system
-                .float_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::DeviceBatteryPercentage_Float,
+                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
                 )
                 .ok(),
             provides_battery_status: system
-                .bool_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::DeviceProvidesBatteryStatus_Bool,
+                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
                 )
                 .ok(),
             can_power_off: system
-                .bool_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::DeviceCanPowerOff_Bool,
+                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
                 )
                 .ok(),
             is_charging: system
-                .bool_tracked_device_property(device_index, openvr::property::DeviceIsCharging_Bool)
+                .get_tracked_device_property(
+                    device_index,
+                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
+                )
                 .ok(),
             dongle_id: system
-                .string_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::ConnectedWirelessDongle_String,
+                    ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
                 )
                 .ok()
                 .map(|value| value.into_string().unwrap()),
             serial_number: system
-                .string_tracked_device_property(device_index, openvr::property::SerialNumber_String)
+                .get_tracked_device_property(
+                    device_index,
+                    ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String,
+                )
                 .ok()
                 .map(|value| value.into_string().unwrap()),
             hardware_revision: system
-                .string_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::HardwareRevision_String,
+                    ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String,
                 )
                 .ok()
                 .map(|value| value.into_string().unwrap()),
             manufacturer_name: system
-                .string_tracked_device_property(
+                .get_tracked_device_property(
                     device_index,
-                    openvr::property::ManufacturerName_String,
+                    ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String,
                 )
                 .ok()
                 .map(|value| value.into_string().unwrap()),
             model_number: system
-                .string_tracked_device_property(device_index, openvr::property::ModelNumber_String)
+                .get_tracked_device_property(
+                    device_index,
+                    ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String,
+                )
                 .ok()
                 .map(|value| value.into_string().unwrap()),
         };
@@ -489,7 +477,7 @@ impl OpenVRManager {
         let mut devices = self.devices.lock().await;
         let mut found = false;
         for i in 0..devices.len() {
-            if devices[i].index == device_index {
+            if devices[i].index == device_index.0 {
                 devices[i] = device.clone();
                 found = true;
                 break;
