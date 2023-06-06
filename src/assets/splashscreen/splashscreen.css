@@ -103,9 +103,10 @@ img[data-src]:not(.no-fade) {
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   text-shadow: 0 0 4px #00000066;
   transition: all 0.6s;
+  transform: translateX(0.5em);
 }
 
 .logo-container.pending-child {
@@ -118,7 +119,7 @@ img[data-src]:not(.no-fade) {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-right: 1em;
+  margin-right: 0.75em;
   filter: url(#ambilight);
 }
 
@@ -138,16 +139,21 @@ img[data-src]:not(.no-fade) {
 }
 
 .logo-text .main {
-  font-size: 4em;
+  font-size: 3em;
   font-weight: 200;
   text-align: center;
   color: white;
 }
 
+.logo-text .main b {
+  font-weight: 500;
+}
+
 .logo-text .tag-line {
   color: white;
+  font-size: 0.95em;
   opacity: 0.75;
-  transform: translate(-1em, -1.5em);
+  transform: translate(-4.5em, -1.2em);
 }
 
 #version {

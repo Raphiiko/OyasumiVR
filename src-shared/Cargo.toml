@@ -1,5 +1,5 @@
 [package]
-name = "oyasumi-shared"
+name = "oyasumivr-shared"
 version = "1.7.0"
 authors = ["Raphiiko"]
 edition = "2021"

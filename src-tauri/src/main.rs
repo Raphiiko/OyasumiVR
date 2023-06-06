@@ -22,7 +22,7 @@ mod utils;
 // use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
 use log::{info, LevelFilter};
-// use oyasumi_shared::windows::is_elevated;
+//use oyasumivr_shared::windows::is_elevated;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 fn main() {

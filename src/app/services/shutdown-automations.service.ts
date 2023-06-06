@@ -92,14 +92,6 @@ export class ShutdownAutomationsService {
     });
     // Trigger when asleep long enough
     this.handleTriggerOnSleep();
-    // Treat sleep mode disabling as a cancel request
-    this.sleepService.mode
-      .pipe(
-        distinctUntilChanged(),
-        pairwise(),
-        filter(([a, b]) => a && !b)
-      )
-      .subscribe(() => this.cancelSequence('MANUAL'));
   }
 
   getApplicableStages(): ShutdownSequenceStage[] {

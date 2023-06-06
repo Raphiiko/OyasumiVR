@@ -1,29 +1,26 @@
 #![cfg_attr(
-all(not(debug_assertions), target_os = "windows"),
-windows_subsystem = "windows"
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
 )]
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
+use directories::BaseDirs;
 use hyper::service::{make_service_fn, service_fn};
 use hyper::Server;
 use log::{error, info};
-use oyasumi_shared::models::ElevatedSidecarInitRequest;
+use oyasumivr_shared::models::ElevatedSidecarInitRequest;
+use oyasumivr_shared::windows::{is_elevated, relaunch_with_elevation};
+use simplelog::{
+    ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
+};
 use std::convert::Infallible;
 use std::env;
-use std::fs::{
-    // OpenOptions,
-    File
-};
+use std::fs::File;
 use std::net::SocketAddr;
 use std::path::Path;
 use std::time::Duration;
 use sysinfo::{Pid, PidExt, System, SystemExt};
-use directories::BaseDirs;
-use oyasumi_shared::windows::{is_elevated, relaunch_with_elevation};
-use simplelog::{
-    ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
-};
 
 mod afterburner;
 mod http_handler;
@@ -51,13 +48,13 @@ async fn main() {
             Config::default(),
             File::create(log_path).unwrap(),
             // OpenOptions::new()
-            //     .create(true) 
+            //     .create(true)
             //     .append(true)
             //     .open(log_path)
             //     .unwrap(),
         ),
     ])
-        .unwrap();
+    .unwrap();
     // Get port of host http server from 1st argument
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
@@ -98,7 +95,7 @@ async fn main() {
                 sidecar_port: server.local_addr().port(),
                 sidecar_pid: std::process::id(),
             })
-                .unwrap(),
+            .unwrap(),
         )
         .send()
         .await;

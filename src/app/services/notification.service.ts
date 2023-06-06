@@ -121,7 +121,7 @@ export class NotificationService {
       height: 175,
       opacity: 0,
       useBase64Icon: true,
-      sourceApp: 'Oyasumi/' + (await getVersion()),
+      sourceApp: 'OyasumiVR/' + (await getVersion()),
     };
     await invoke('xsoverlay_send_message', {
       message: Array.from(new TextEncoder().encode(JSON.stringify(message))),

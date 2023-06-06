@@ -2,13 +2,13 @@ pub mod commands;
 
 use std::{convert::Infallible, time::Duration};
 
+use crate::utils::send_event;
 use futures::executor::block_on;
 use hyper::{body::Buf, Body, Request, Response};
 use log::info;
-use oyasumi_shared::models::ElevatedSidecarInitRequest;
+use oyasumivr_shared::models::ElevatedSidecarInitRequest;
 use sysinfo::{Pid, PidExt, System, SystemExt};
 use tokio::sync::Mutex;
-use crate::utils::send_event;
 
 lazy_static! {
     static ref SIDECAR_HTTP_PORT: Mutex<Option<u16>> = Default::default();

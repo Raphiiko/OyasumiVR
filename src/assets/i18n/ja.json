@@ -170,7 +170,7 @@
       "currentPose": "現在位置",
       "manualControl": "マニュアル操作",
       "presetAuthor": "{{author}}による",
-      "description": "就寝中に姿勢が変わることでアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nまた、アバターのロコモーションはいくつかのプリセットを用意していますが、自分でアニメーションを指定することも可能です。",
+      "description": "就寝中に姿勢が変わることでアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nまた、アバターのロコモーションはいくつかのプリセットを用意していますが、自分でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
       "options": {
@@ -241,7 +241,7 @@
     "title": "GPU自動化",
     "disabled": {
       "disabled": "GPU設定を調整します。\nパーフォマンスを抑制し使用電力を制限することが可能です。\n\nこれは上級者向けの機能であるため、デフォルトでは無効になっています。\n下のボタンをクリックして有効にすることができます。",
-      "noSidecar": "OyasumiにGPUの設定変更を許可するためには、管理者権限が必要です。以下のボタンをクリックし、Oyasumiに管理者権限を付与してください。"
+      "noSidecar": "OyasumiVRにGPUの設定変更を許可するためには、管理者権限が必要です。以下のボタンをクリックし、OyasumiVRに管理者権限を付与してください。"
     },
     "tabs": {
       "powerLimiting": "パワーリミッター",
@@ -254,7 +254,7 @@
     "enableWarning": "GPUパラメータを誤って調整すると、システムが不安定になる可能性があります。内容を理解できる場合に限り、この機能を有効にしてください。",
     "elevationSidecarModal": {
       "title": "管理者権限を付与する",
-      "message": "Oyasumi に常に管理者権限を与えますか？\n\n有効にすると、Oyasumiは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
+      "message": "OyasumiVR に常に管理者権限を与えますか？\n\n有効にすると、OyasumiVRは起動時にすぐに管理者権限を要求します。この設定は後でいつでも無効にすることができます。",
       "confirm": "常に",
       "cancel": "一回のみ"
     },
@@ -263,8 +263,8 @@
         "initializing": "パワーリミッターを初期化しています...",
         "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、パワーリミッターは利用できません。パワーリミッターは、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({{code}})",
         "noPermission": "管理者権限を取得していますが、GPUの設定を変更する権限がありません。\n\n通常は発生しないはずですので、システム設定をご確認ください。",
-        "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\n\nOyasumiを再起動してみてください。",
-        "unknown": "パワーリミッターは、未知の理由で利用できません。\n\nOyasumiを再起動してみてください。"
+        "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\n\nOyasumiVRを再起動してみてください。",
+        "unknown": "パワーリミッターは、未知の理由で利用できません。\n\nOyasumiVRを再起動してみてください。"
       },
       "noGPUSelected": "GPUが選択されていません",
       "gpuUnsupported": "選択されたGPUは対応していません",
@@ -304,7 +304,7 @@
           "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> か確認中です。",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>MSIAfterburner.exe</strong> が機能していることを確認できませんでした。",
-          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであると確認できませんでした。セキュリティ上の理由から、これは使用できません。MSI Afterburnerが最新バージョンか確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、Oyasumi開発者に連絡するか、バグレポートを提出してください。",
+          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであると確認できませんでした。セキュリティ上の理由から、これは使用できません。MSI Afterburnerが最新バージョンか確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、OyasumiVR開発者に連絡するか、バグレポートを提出してください。",
           "UNKNOWN_ERROR": "この場所で<strong>MSIAfterburner.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています！"
         }
@@ -331,9 +331,9 @@
       "description": "ステータスの設定"
     },
     "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
-    "behaviourWarning": "Oyasumiによるステータスの変更は、自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、Oyasumiが修正することはできません。",
+    "behaviourWarning": "OyasumiVRによるステータスの変更は、自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRが修正することはできません。",
     "moreInfo": "詳細",
-    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: Oyasumiがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。JoinしたいのにJoinできない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
+    "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。JoinしたいのにJoinできない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
   },
   "auto-invite-request-accept": {
     "title": "Req Inviteの自動承認",
@@ -396,7 +396,7 @@
         "status": {
           "NOT_FOUND": "<strong>lighthouse_console.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>lighthouse_console.exe</strong> が機能していることを確認できませんでした。",
-          "PERMISSION_DENIED": "この場所の<strong>lighthouse_console.exe</strong>を実行する権限を持っていません。管理者としてOyasumiを実行してください。",
+          "PERMISSION_DENIED": "この場所の<strong>lighthouse_console.exe</strong>を実行する権限を持っていません。管理者としてOyasumiVRを実行してください。",
           "INVALID_FILENAME": "設定した場所は有効なファイルパスではありません。",
           "UNKNOWN_ERROR": "この場所で<strong>lighthouse_console.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "CHECKING": "有効な <strong>lighthouse_console.exe</strong> であるかどうか確認中です。",
@@ -406,18 +406,18 @@
       "adminPrivileges": {
         "title": "管理者権限",
         "label": "起動時に管理者権限を要求する",
-        "description": "OyasumiはGPUの電力制限を制御できるようにするために管理者権限が必要です。これを有効にすることで、Oyasumiは起動時に管理者権限を要求するようになります。"
+        "description": "OyasumiVRはGPUの電力制限を制御できるようにするために管理者権限が必要です。これを有効にすることで、OyasumiVRは起動時に管理者権限を要求するようになります。"
       },
       "telemetry": {
         "title": "データの送信",
         "label": "利用データの送信(匿名)",
-        "description": "送信されるデータは、使用中のOyasumiのバージョンと設定されている言語に限定されており、他のデータは送信されません。このデータは完全に匿名で、一般的な使用統計の提供にのみ使用されます。"
+        "description": "送信されるデータは、使用中のOyasumiVRのバージョンと設定されている言語に限定されており、他のデータは送信されません。このデータは完全に匿名で、一般的な使用統計の提供にのみ使用されます。"
       }
     },
     "vrchat": {
       "logIn": {
         "title": "ログイン",
-        "description": "Oyasumi機能の中には、VRChatアカウントでログインしないと使用できないものがあります。",
+        "description": "OyasumiVR機能の中には、VRChatアカウントでログインしないと使用できないものがあります。",
         "loggedIn": {
           "title": "{{name}}さん、こんにちは！",
           "subtext": "現在、VRChatアカウントでログインしています。",
@@ -429,12 +429,12 @@
           "logIn": "ログイン"
         },
         "errors": {
-          "initError": "VRChatモジュールが初期化されませんでした。インターネットに接続していることを確認し、時間をおいてからOyasumiを再起動し、再度お試しください。"
+          "initError": "VRChatモジュールが初期化されませんでした。インターネットに接続していることを確認し、時間をおいてからOyasumiVRを再起動し、再度お試しください。"
         },
         "disclaimers": {
           "use": "ログイン情報は保管されず、認証のためにVRChatのサーバーに送信されます。",
-          "brand": "OyasumiはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
-          "liability": "Raphiiko はOyasumiに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
+          "brand": "OyasumiVRはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
+          "liability": "Raphiiko はOyasumiVRに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
         }
       },
       "OSC": {
@@ -443,19 +443,19 @@
         "reset": "デフォルトにリセットする",
         "receivingHost": {
           "title": "受信ホスト",
-          "description": "OyasumiがOSCメッセージを受信するホストです。\n(VRChatはデフォルトで127.0.0.1に送信します)"
+          "description": "OyasumiVRがOSCメッセージを受信するホストです。\n(VRChatはデフォルトで127.0.0.1に送信します)"
         },
         "receivingPort": {
           "title": "受信ポート",
-          "description": "OyasumiがOSCメッセージを受信するために使用するポート番号です。\n(VRChatはデフォルトでポート9001に送信します)"
+          "description": "OyasumiVRがOSCメッセージを受信するために使用するポート番号です。\n(VRChatはデフォルトでポート9001に送信します)"
         },
         "sendingHost": {
           "title": "送信ホスト",
-          "description": "OyasumiがOSCメッセージを送信するホストです。\n(VRChatが同じマシン上で実行されている場合は127.0.0.1です。)"
+          "description": "OyasumiVRがOSCメッセージを送信するホストです。\n(VRChatが同じマシン上で実行されている場合は127.0.0.1です。)"
         },
         "sendingPort": {
           "title": "送信ポート",
-          "description": "OyasumiがOSCメッセージを送信するために使用するポート番号です。\n(VRChatはデフォルトでポート9000で受信します)"
+          "description": "OyasumiVRがOSCメッセージを送信するために使用するポート番号です。\n(VRChatはデフォルトでポート9000で受信します)"
         },
         "errors": {
           "PORT_IN_USE": "このアドレスをバインドできませんでした。他のアプリケーションが既に使用している可能性があります。そのアプリケーションを終了し、再度実行するか、異なる受信ポートまたはホストを選択してください。",
@@ -471,7 +471,7 @@
         "description": "一部の機能では、通知を使用します。希望の通知先を選択してください。",
         "xsoverlay": {
           "title": "XSOverlay",
-          "description": "XSOverlayを使って、VRでOyasumiの通知を表示します。"
+          "description": "XSOverlayを使って、VRでOyasumiVRの通知を表示します。"
         },
         "desktop": {
           "title": "デスクトップ通知",
@@ -483,9 +483,9 @@
       "checkForUpdates": "アップデートを確認する",
       "changelog": "変更履歴",
       "install": "v{{version}}をインストール",
-      "noUpdate": "現在、最新版であるOyasumi v{{version}} を利用しています！",
-      "notChecked": "Oyasumiはまだアップデートを確認しておりません。",
-      "updateAvailable": "Oyasumiの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
+      "noUpdate": "現在、最新版であるOyasumiVR v{{version}} を利用しています！",
+      "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
+      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
     }
   },
   "about": {
@@ -525,19 +525,19 @@
   },
   "notifications": {
     "sleepCheck": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "眠りましたか？20秒後にスリープモードに切り替わります。\n\n(頭を軽く振ることでキャンセルできます)"
     },
     "sleepCheckCancel": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "スリープモードの自動有効化が解除されました。"
     },
     "sleepModeEnabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "スリープモードが有効化されました。"
     },
     "sleepModeDisabled": {
-      "title": "Oyasumi",
+      "title": "OyasumiVR",
       "content": "スリープモードが無効化されました。"
     }
   },
@@ -560,7 +560,7 @@
       "title": "アップデート可能",
       "updateNow": "v{{version}}をインストール",
       "updateLater": "後で",
-      "message": "Oyasumiの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
+      "message": "OyasumiVRの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
     },
     "select-box": {
       "defaultPlaceholder": "選択する..."
@@ -575,7 +575,7 @@
       "settings": "設定",
       "vrcAutomations": "VRC関係の自動化",
       "brightnessAutomations": "明るさの自動化",
-      "about": "Oyasumiについて",
+      "about": "OyasumiVRについて",
       "resolutionAutomations": "解像度の自動化"
     },
     "device-list": {

@@ -1,6 +1,6 @@
 use crate::elevated_sidecar;
 use log::error;
-use oyasumi_shared::models::{MSIAfterburnerSetProfileRequest, MSIAfterburnerSetProfileResponse};
+use oyasumivr_shared::models::{MSIAfterburnerSetProfileRequest, MSIAfterburnerSetProfileResponse};
 
 #[tauri::command]
 pub async fn msi_afterburner_set_profile(

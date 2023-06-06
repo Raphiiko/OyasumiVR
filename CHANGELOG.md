@@ -24,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option for forcing the state of the sleep mode at launch
 - Automations for turning base stations on and off with SteamVR
 - Automation for turning base stations on with Oyasumi
-- Automations for controlling the Chaperone fade distance (by [TheMrGong](https://github.com/TheMrGong))
+- Automations for controlling the Chaperone fade distance (by [góngo](https://github.com/TheMrGong))
 - Added shutdown sequence automations for helping with sleeping outside VR.
 
 ### Changed

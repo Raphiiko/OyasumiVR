@@ -10,7 +10,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "oyasumi": {
+    "oyasumivr": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -24,7 +24,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/oyasumi",
+            "outputPath": "dist/oyasumivr",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -80,10 +80,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "oyasumi:build:production"
+              "browserTarget": "oyasumivr:build:production"
             },
             "development": {
-              "browserTarget": "oyasumi:build:development"
+              "browserTarget": "oyasumivr:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "oyasumi:build"
+            "browserTarget": "oyasumivr:build"
           }
         },
         "test": {

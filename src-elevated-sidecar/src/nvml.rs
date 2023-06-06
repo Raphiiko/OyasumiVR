@@ -2,7 +2,7 @@ use std::sync::Mutex;
 
 use log::{error, info};
 use nvml_wrapper::Nvml;
-use oyasumi_shared::models::NVMLDevice;
+use oyasumivr_shared::models::NVMLDevice;
 
 lazy_static! {
     static ref NVML_STATUS: Mutex<String> = Mutex::new(String::from("INITIALIZING"));
