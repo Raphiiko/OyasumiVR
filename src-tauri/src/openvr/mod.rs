@@ -19,7 +19,6 @@ use tokio::sync::Mutex;
 
 lazy_static! {
     static ref OPENVR_MANAGER: Mutex<Option<OpenVRManager>> = Default::default();
-    static ref OPENVR_CONTEXT: Mutex<Option<ovr::Context>> = Default::default();
 }
 
 pub async fn init() {
@@ -35,6 +34,7 @@ pub struct OpenVRManager {
     devices: Arc<Mutex<Vec<OVRDevice>>>,
     gesture_detector: Arc<Mutex<GestureDetector>>,
     sleep_detector: Arc<Mutex<SleepDetector>>,
+    ovr_context: Arc<Mutex<Option<ovr::Context>>>,
 }
 
 impl OpenVRManager {
@@ -45,6 +45,7 @@ impl OpenVRManager {
             devices: Arc::new(Mutex::new(vec![])),
             gesture_detector: Arc::new(Mutex::new(GestureDetector::new())),
             sleep_detector: Arc::new(Mutex::new(SleepDetector::new())),
+            ovr_context: Arc::new(Mutex::new(None)),
         };
         let mut manager_clone = manager.clone();
         tokio::spawn(async move {
@@ -74,22 +75,22 @@ impl OpenVRManager {
             .iter_mut()
             .find(|device| device.class == TrackedDeviceClass::HMD);
         if device.is_some() {
-            let context_guard = &*OPENVR_CONTEXT.lock().await;
-            let context = match context_guard {
-                Some(ref context) => context,
+            let context_guard = self.ovr_context.lock().await;
+            let context = match context_guard.as_ref() {
+                Some(context) => context,
                 None => return Err("OPENVR_NOT_INITIALISED".to_string()),
             };
-            let settings = &mut context.settings_mngr();
+            let mut settings = context.settings_mngr();
             let analog_gain = settings.get_float(
                 CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
                 CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
             );
-            match analog_gain {
+            return match analog_gain {
                 Ok(analog_gain) => Ok(analog_gain),
                 Err(_) => Err("ANALOG_GAIN_NOT_FOUND".to_string()),
-            }
+            };
         } else {
-            Err("NO_HMD_FOUND".to_string())
+            return Err("NO_HMD_FOUND".to_string());
         }
     }
 
@@ -99,9 +100,9 @@ impl OpenVRManager {
             .iter_mut()
             .find(|device| device.class == TrackedDeviceClass::HMD);
         if device.is_some() {
-            let context_guard = &*OPENVR_CONTEXT.lock().await;
-            let context = match context_guard {
-                Some(ref context) => context,
+            let context_guard = self.ovr_context.lock().await;
+            let context = match context_guard.as_ref() {
+                Some(context) => context,
                 None => return Err("OPENVR_NOT_INITIALISED".to_string()),
             };
             let settings = &mut context.settings_mngr();
@@ -117,9 +118,9 @@ impl OpenVRManager {
     }
 
     pub async fn get_supersample_scale(&self) -> Result<Option<f32>, String> {
-        let context_guard = &*OPENVR_CONTEXT.lock().await;
-        let context = match context_guard {
-            Some(ref context) => context,
+        let context_guard = self.ovr_context.lock().await;
+        let context = match context_guard.as_ref() {
+            Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
         let settings = &mut context.settings_mngr();
@@ -150,9 +151,9 @@ impl OpenVRManager {
         &self,
         supersample_scale: Option<f32>,
     ) -> Result<(), String> {
-        let context_guard = &*OPENVR_CONTEXT.lock().await;
-        let context = match context_guard {
-            Some(ref context) => context,
+        let context_guard = self.ovr_context.lock().await;
+        let context = match context_guard.as_ref() {
+            Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
         let settings = &mut context.settings_mngr();
@@ -172,9 +173,9 @@ impl OpenVRManager {
     }
 
     pub async fn get_fade_distance(&self) -> Result<f32, String> {
-        let context_guard = &*OPENVR_CONTEXT.lock().await;
-        let context = match context_guard {
-            Some(ref context) => context,
+        let context_guard = self.ovr_context.lock().await;
+        let context = match context_guard.as_ref() {
+            Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
         let settings = &mut context.settings_mngr();
@@ -189,9 +190,9 @@ impl OpenVRManager {
     }
 
     pub async fn set_fade_distance(&self, fade_distance: f32) -> Result<(), String> {
-        let context_guard = &*OPENVR_CONTEXT.lock().await;
-        let context = match context_guard {
-            Some(ref context) => context,
+        let context_guard = self.ovr_context.lock().await;
+        let context = match context_guard.as_ref() {
+            Some(context) => context,
             None => return Err("OPENVR_NOT_INITIALISED".to_string()),
         };
         let settings = &mut context.settings_mngr();
@@ -213,7 +214,7 @@ impl OpenVRManager {
         'ovr_loop: loop {
             tokio::time::sleep(Duration::from_millis(32)).await;
             let state_active = self.active.lock().await;
-            let mut ovr_context = OPENVR_CONTEXT.lock().await;
+            let mut ovr_context = self.ovr_context.lock().await;
             if *state_active {
                 drop(state_active);
                 // If we're not active, try to initialize OpenVR
@@ -250,7 +251,7 @@ impl OpenVRManager {
                     ovr_active = true;
                     self.update_status(OpenVRStatus::Initialized).await;
                 }
-                // Get system manager
+                //Get system manager
                 let system = &mut ovr_context.as_ref().unwrap().system_mngr();
                 // Refresh all devices when needed
                 if (Utc::now().naive_utc() - ovr_next_device_refresh).num_milliseconds() > 0 {
@@ -307,10 +308,10 @@ impl OpenVRManager {
                 info!("[Core] Shutting down OpenVR module");
                 self.update_status(OpenVRStatus::Inactive).await;
                 // Shutdown OpenVR
-                let ctx = ovr_context.as_ref();
+                let ctx = ovr_context.as_mut();
                 if ctx.is_some() {
                     unsafe {
-                        ovr::sys::VR_Shutdown();
+                        ctx.unwrap().shutdown();
                     }
                     *ovr_context = None;
                 }
@@ -329,7 +330,7 @@ impl OpenVRManager {
         .await;
     }
 
-    async fn refresh_device_poses<'a>(&mut self, system: &mut ovr::system::SystemManager<'a>) {
+    async fn refresh_device_poses<'a>(&self, system: &mut ovr::system::SystemManager<'a>) {
         let poses = system.get_device_to_absolute_tracking_pose(
             ovr::sys::ETrackingUniverseOrigin::TrackingUniverseStanding,
             0.0,
@@ -407,63 +408,73 @@ impl OpenVRManager {
         emit: bool,
         system: &mut ovr::system::SystemManager<'a>,
     ) {
+        let battery: Option<f32> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
+            )
+            .ok();
+        let provides_battery_status: Option<bool> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
+            )
+            .ok();
+        let can_power_off: Option<bool> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
+            )
+            .ok();
+        let is_charging: Option<bool> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
+            )
+            .ok();
+        let dongle_id: Option<String> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
+            )
+            .ok();
+        let serial_number: Option<String> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String,
+            )
+            .ok();
+        let hardware_revision: Option<String> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String,
+            )
+            .ok();
+        let manufacturer_name: Option<String> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String,
+            )
+            .ok();
+        let model_number: Option<String> = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String,
+            )
+            .ok();
+
         let device = OVRDevice {
             index: device_index.0,
             class: system.get_tracked_device_class(device_index).into(),
-            battery: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceBatteryPercentage_Float,
-                )
-                .ok(),
-            provides_battery_status: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceProvidesBatteryStatus_Bool,
-                )
-                .ok(),
-            can_power_off: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceCanPowerOff_Bool,
-                )
-                .ok(),
-            is_charging: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_DeviceIsCharging_Bool,
-                )
-                .ok(),
-            dongle_id: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_ConnectedWirelessDongle_String,
-                )
-                .ok(),
-            serial_number: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_SerialNumber_String,
-                )
-                .ok(),
-            hardware_revision: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_HardwareRevision_String,
-                )
-                .ok(),
-            manufacturer_name: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_ManufacturerName_String,
-                )
-                .ok(),
-            model_number: system
-                .get_tracked_device_property(
-                    device_index,
-                    ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String,
-                )
-                .ok(),
+            battery,
+            provides_battery_status,
+            can_power_off,
+            is_charging,
+            dongle_id,
+            serial_number,
+            hardware_revision,
+            manufacturer_name,
+            model_number,
         };
 
         // Add or update device in list

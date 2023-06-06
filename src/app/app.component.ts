@@ -25,9 +25,9 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    interval(32).subscribe(() => {
-      const brightness = Math.sin(Date.now() / 250.0) / 2.0 + 0.5;
-      invoke('openvr_set_image_brightness', { brightness });
-    });
+    // interval(32).subscribe(() => {
+    //   const brightness = Math.sin(Date.now() / 250.0) / 2.0 + 0.5;
+    //   invoke('openvr_set_image_brightness', { brightness });
+    // });
   }
 }
