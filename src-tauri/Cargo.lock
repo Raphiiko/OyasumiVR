@@ -2818,24 +2818,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "openvr"
-version = "0.6.0"
-source = "git+https://github.com/Raphiiko/oyasumi-rust-openvr#8218a29e55507021b35a45eeceaeaaa87e794d2f"
-dependencies = [
- "lazy_static",
- "openvr_sys",
-]
-
-[[package]]
-name = "openvr_sys"
-version = "2.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46af40862e3c6be0c176d4b8cf1f7af0f8038cfb500e9cd57c82ad945a29b4b8"
-dependencies = [
- "cmake",
-]
-
-[[package]]
 name = "ordered-stream"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2886,7 +2868,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "oyasumi"
+name = "oyasumivr"
 version = "1.7.0"
 dependencies = [
  "bluest",
@@ -2904,7 +2886,7 @@ dependencies = [
  "mime_guess",
  "nalgebra",
  "ovr_overlay",
- "oyasumi-shared",
+ "oyasumivr-shared",
  "reqwest",
  "rosc",
  "serde",
@@ -2932,7 +2914,6 @@ dependencies = [
 name = "oyasumivr-shared"
 version = "1.7.0"
 dependencies = [
- "openvr",
  "serde",
  "winapi",
  "windows-sys 0.36.1",

@@ -60,6 +60,6 @@ pub async fn openvr_get_fade_distance() -> Result<f32, String> {
 }
 
 #[tauri::command]
-pub async fn openvr_set_image_brightness(brightness: f32) {
+pub async fn openvr_set_image_brightness(_brightness: f32) {
     // super::brightness_overlay::set_brightness(brightness).await;
 }
