@@ -1,4 +1,3 @@
-use openvr::TrackedDeviceClass;
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Clone)]
@@ -9,9 +8,8 @@ pub enum OpenVRStatus {
     Initialized,
 }
 
-#[derive(Clone, Serialize, Deserialize)]
-#[serde(remote = "TrackedDeviceClass")]
-pub enum TrackedDeviceClassDef {
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
+pub enum TrackedDeviceClass {
     Invalid,
     HMD,
     Controller,
@@ -20,11 +18,36 @@ pub enum TrackedDeviceClassDef {
     DisplayRedirect,
 }
 
+impl From<ovr_overlay::sys::ETrackedDeviceClass> for TrackedDeviceClass {
+    fn from(item: ovr_overlay::sys::ETrackedDeviceClass) -> Self {
+        match item {
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_Invalid => {
+                TrackedDeviceClass::Invalid
+            }
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_HMD => {
+                TrackedDeviceClass::HMD
+            }
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_Controller => {
+                TrackedDeviceClass::Controller
+            }
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_GenericTracker => {
+                TrackedDeviceClass::GenericTracker
+            }
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_TrackingReference => {
+                TrackedDeviceClass::TrackingReference
+            }
+            ovr_overlay::sys::ETrackedDeviceClass::TrackedDeviceClass_DisplayRedirect => {
+                TrackedDeviceClass::DisplayRedirect
+            }
+            _ => TrackedDeviceClass::Invalid,
+        }
+    }
+}
+
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OVRDevice {
     pub index: u32,
-    #[serde(with = "TrackedDeviceClassDef")]
     pub class: TrackedDeviceClass,
     pub battery: Option<f32>,
     pub provides_battery_status: Option<bool>,

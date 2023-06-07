@@ -63,6 +63,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_set_supersample_scale,
         openvr::commands::openvr_get_fade_distance,
         openvr::commands::openvr_set_fade_distance,
+        openvr::commands::openvr_set_image_brightness,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
@@ -146,6 +147,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     image_cache::init(cache_dir).await;
     // Initialize OpenVR Manager
     openvr::init().await;
+    // Initialize OVR brightness overlay
+    // ovr_brightness::init().await;
     // Initialize HTTP server
     http_server::init().await;
     // Load sounds

@@ -4,6 +4,8 @@ import { routeAnimations } from './app-routing.module';
 import { TranslateService } from '@ngx-translate/core';
 import { AppSettingsService } from './services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { interval } from 'rxjs';
+import { invoke } from '@tauri-apps/api';
 
 @Component({
   selector: 'app-root',
@@ -22,5 +24,10 @@ export class AppComponent implements OnInit {
     });
   }
 
-  async ngOnInit(): Promise<void> {}
+  async ngOnInit(): Promise<void> {
+    // interval(32).subscribe(() => {
+    //   const brightness = Math.sin(Date.now() / 250.0) / 2.0 + 0.5;
+    //   invoke('openvr_set_image_brightness', { brightness });
+    // });
+  }
 }

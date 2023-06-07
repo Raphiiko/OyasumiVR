@@ -65,15 +65,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
-name = "cmake"
-version = "0.1.49"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db34956e100b30725f2eb215f90d4871051239535632f84fea3bc92722c66b7c"
-dependencies = [
- "cc",
-]
-
-[[package]]
 name = "codesigned"
 version = "0.0.3"
 source = "git+https://github.com/rustysec/codesigned-rs#1d177d2ff8eff4d65830a46358aca66042c49662"
@@ -659,24 +650,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "openvr"
-version = "0.6.0"
-source = "git+https://github.com/Raphiiko/oyasumi-rust-openvr#00a406695781c011bab73013d6ecd0f536120475"
-dependencies = [
- "lazy_static",
- "openvr_sys",
-]
-
-[[package]]
-name = "openvr_sys"
-version = "2.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "46af40862e3c6be0c176d4b8cf1f7af0f8038cfb500e9cd57c82ad945a29b4b8"
-dependencies = [
- "cmake",
-]
-
-[[package]]
 name = "oyasumivr-elevated-sidecar"
 version = "1.7.0"
 dependencies = [
@@ -699,7 +672,6 @@ dependencies = [
 name = "oyasumivr-shared"
 version = "1.7.0"
 dependencies = [
- "openvr",
  "serde",
  "winapi",
  "windows-sys 0.36.1",
