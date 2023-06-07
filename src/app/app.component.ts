@@ -4,8 +4,6 @@ import { routeAnimations } from './app-routing.module';
 import { TranslateService } from '@ngx-translate/core';
 import { AppSettingsService } from './services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { interval } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
 
 @Component({
   selector: 'app-root',
