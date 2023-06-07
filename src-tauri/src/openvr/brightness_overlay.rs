@@ -1,5 +1,5 @@
 use super::OVR_CONTEXT;
-use log::{error, info};
+use log::error;
 use ovr_overlay as ovr;
 use tokio::sync::Mutex;
 
