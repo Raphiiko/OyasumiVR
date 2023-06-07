@@ -1,21 +1,29 @@
-use chrono::{NaiveDateTime, Utc};
-use std::time::Duration;
+use super::OVR_CONTEXT;
+use log::{error, info};
+use ovr_overlay as ovr;
 use tokio::sync::Mutex;
 
 lazy_static! {
-    static ref ACTIVE: Mutex<bool> = Mutex::new(false);
     static ref OVERLAY_HANDLE: Mutex<Option<ovr_overlay::overlay::OverlayHandle>> =
         Default::default();
-    static ref OVR_CONTEXT: Mutex<Option<ovr_overlay::Context>> = Default::default();
     static ref BRIGHTNESS: Mutex<f32> = Mutex::new(1.0);
 }
 
-pub async fn init() {
-    if *ACTIVE.lock().await {
-        return;
-    }
-    *ACTIVE.lock().await = true;
-    tokio::spawn(main_task());
+pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
+    // Dispose of any existing overlay
+    *OVERLAY_HANDLE.lock().await = None;
+    // Create the overlay
+    let overlay_handle = match create_overlay(&context).await {
+        Ok(handle) => handle,
+        Err(_) => return Err("Failed to create overlay".to_string()),
+    };
+    // Save the handle
+    *OVERLAY_HANDLE.lock().await = Some(overlay_handle);
+    Ok(())
+}
+
+pub async fn on_ovr_quit() {
+    *OVERLAY_HANDLE.lock().await = None;
 }
 
 pub async fn set_brightness(brightness: f32) {
@@ -40,91 +48,8 @@ pub async fn set_brightness(brightness: f32) {
     };
     // Set the brightness
     if let Err(e) = manager.set_opacity(*overlay_handle, alpha) {
-        eprintln!("[Core] Failed to set overlay opacity: {}", e);
+        error!("[Core] Failed to set overlay opacity: {}", e);
     };
-}
-
-async fn main_task() {
-    let mut ovr_active = false;
-    let mut ovr_next_init = NaiveDateTime::from_timestamp_millis(0).unwrap();
-
-    'ovr_loop: loop {
-        tokio::time::sleep(Duration::from_millis(32)).await;
-        let mut ovr_context = OVR_CONTEXT.lock().await;
-        let state_active = ACTIVE.lock().await;
-        if *state_active {
-            drop(state_active);
-            if ovr_context.is_none() {
-                // Stop if we cannot yet (re)initialize OpenVR
-                if (Utc::now().naive_utc() - ovr_next_init).num_milliseconds() <= 0 {
-                    continue;
-                }
-                // If we need to reinitialize OpenVR after this, wait at least 3 seconds
-                ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(3);
-                // Check if SteamVR is running, and stop initializing if it's not.
-                // if !crate::utils::is_process_active("vrmonitor.exe").await {
-                //     continue;
-                // }
-                // Attempt initializing OpenVR
-                *ovr_context = match ovr_overlay::Context::init(
-                    ovr_overlay::sys::EVRApplicationType::VRApplication_Background,
-                ) {
-                    Ok(ctx) => Some(ctx),
-                    Err(_) => None,
-                };
-                // If we failed, continue to try again later
-                if ovr_context.is_none() {
-                    continue;
-                }
-                let context = ovr_context.as_ref().unwrap();
-                // Create the overlay
-                let overlay_handle = match create_overlay(&context).await {
-                    Ok(handle) => Some(handle),
-                    Err(_) => None,
-                };
-                *OVERLAY_HANDLE.lock().await = overlay_handle;
-                // If we failed, continue to try again later
-                if overlay_handle.is_none() {
-                    continue;
-                }
-                // Success!
-                println!("[Core] OVR brightness overlay initialized");
-                ovr_active = true;
-            }
-            // Get the system reference
-            let mut system = ovr_context.as_ref().unwrap().system_mngr();
-            // Poll events
-            while let Some(e) = system.poll_next_event() {
-                // Handle Quit event
-                match e.event_type {
-                    ovr_overlay::sys::EVREventType::VREvent_Quit => {
-                        // Shutdown OpenVR
-                        println!("[Core] OpenVR is Quitting. Disabling OVR brightness overlay");
-                        ovr_active = false;
-                        *OVERLAY_HANDLE.lock().await = None;
-                        unsafe {
-                            ovr_overlay::sys::VR_Shutdown();
-                        }
-                        *ovr_context = None;
-                        // Schedule next initialization attempt
-                        ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(5);
-                        continue 'ovr_loop;
-                    }
-                    _ => {}
-                }
-            }
-        } else if ovr_active {
-            ovr_active = false;
-            println!("[Core] Disabling OVR brightness overlay");
-            if let Some(_) = ovr_context.as_ref() {
-                *OVERLAY_HANDLE.lock().await = None;
-                unsafe {
-                    ovr_overlay::sys::VR_Shutdown();
-                }
-                *ovr_context = None;
-            }
-        }
-    }
 }
 
 async fn create_overlay(
@@ -140,7 +65,7 @@ async fn create_overlay(
     };
     // Set overlay image data (1 black pixel)
     if let Err(e) = manager.set_raw_data(overlay, &[0x00, 0x00, 0x00, 0xff], 1, 1, 4) {
-        eprintln!("[Core] Failed to set overlay image data: {}", e);
+        error!("[Core] Failed to set overlay image data: {}", e);
         return Err(());
     }
     // Transform the overlay
@@ -151,27 +76,27 @@ async fn create_overlay(
         ovr_overlay::TrackedDeviceIndex::new(0).unwrap(), // HMD is always at 0
         &transformation_matrix,
     ) {
-        eprintln!("[Core] Failed to set overlay transform: {}", e);
+        error!("[Core] Failed to set overlay transform: {}", e);
         return Err(());
     }
     // Set overlay properties
     if let Err(e) = manager.set_width(overlay, 1.) {
-        eprintln!("[Core] Failed to set overlay width: {}", e);
+        error!("[Core] Failed to set overlay width: {}", e);
         return Err(());
     }
     if let Err(e) = manager.set_curvature(overlay, 0.5) {
-        eprintln!("[Core] Failed to set overlay curvature: {}", e);
+        error!("[Core] Failed to set overlay curvature: {}", e);
         return Err(());
     }
     let brightness = BRIGHTNESS.lock().await;
     let alpha = 1.0 - *brightness;
     if let Err(e) = manager.set_opacity(overlay, alpha) {
-        eprintln!("[Core] Failed to set overlay opacity: {}", e);
+        error!("[Core] Failed to set overlay opacity: {}", e);
         return Err(());
     }
     // Show overlay
     if let Err(e) = manager.set_visibility(overlay, true) {
-        eprintln!("[Core] Failed to set overlay visibility: {}", e);
+        error!("[Core] Failed to set overlay visibility: {}", e);
         return Err(());
     }
     // Return overlay
