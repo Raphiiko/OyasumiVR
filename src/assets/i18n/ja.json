@@ -129,7 +129,13 @@
         "sleepCheck": {
           "title": "有効化の最終確認",
           "description": "<a class=\"notificationSettingsLink\">通知</a>を有効にする必要があります"
-        }
+        },
+        "detectionWindow": {
+          "title": "検出待機時間",
+          "description": "入眠を検出するまでの時間を設定します",
+          "unit": "分"
+        },
+        "description": "この機能を有効にすると、OyasumiVRは動きから寝ていると推測すると、自動的に睡眠モードになります。"
       },
       "enableAtTime": {
         "title": "睡眠モードの有効化",
@@ -221,6 +227,7 @@
     }
   },
   "power-automations": {
+    "title": "電源の自動化",
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "睡眠モード有効時",
@@ -235,6 +242,37 @@
         "optionControllers": "コントローラーをオフにする",
         "optionTrackers": "トラッカーをオフにする"
       }
+    },
+    "tabs": {
+      "controllersAndTrackers": "コントローラー & トラッカー",
+      "baseStations": "ベースステーション"
+    },
+    "lighthousePowerOn": {
+      "title": "ベースステーションをオンにする",
+      "description": "ベースステーションを自動でオンにします。",
+      "onOyasumiStart": {
+        "title": "OyasumiVRを起動したとき",
+        "description": "OyasumiVRの起動時にベースステーションを自動でオンにする"
+      },
+      "onSteamVRStart": {
+        "title": "SteamVRを起動したとき",
+        "description": "SteamVRの起動時にベースステーションを自動でオンにする。"
+      }
+    },
+    "lighthousePowerOff": {
+      "title": "ベースステーションをオフにする",
+      "description": "ベースステーションを自動でオフにする。",
+      "onSteamVRStop": {
+        "title": "SteamVRを停止したとき",
+        "description": "SteamVRの停止時にベースステーションを自動でオフにする"
+      }
+    },
+    "powerManagementWarning": "OyasumiVRのベースステーションのオン/オフの自動化を選択する場合、SteamVRのベースステーションの設定で電源管理を無効にすることが推奨されます。",
+    "lighthouseControlDisabledWarning": "OyasumiVRの設定でベースステーションの電力制御を無効にしているため、これらの自動化を利用することができません。これらの自動化を使用する場合は、これを有効にしてください。",
+    "enableLighthouseControl": "無効にする",
+    "error": {
+      "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載されているか、また、それが有効になっているかを確認してください。",
+      "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。"
     }
   },
   "gpu-automations": {
@@ -299,7 +337,7 @@
       "enabledWarning": "誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "executable": {
         "title": "構成",
-        "description": "実行可能な<strong>MSIAfterburner.exe</strong>のフォルダを把握する必要があります。 デフォルトのフォルダにない場合は、格納先を手動で設定する必要があります。",
+        "description": "実行可能な<strong>MSIAfterburner.exe</strong>のフォルダを指定する必要があります。 デフォルトのフォルダにない場合は、格納先を手動で指定してください。",
         "status": {
           "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> か確認中です。",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>が見つかりませんでした。",
@@ -347,7 +385,11 @@
     "clearPlayers": "リスト消去",
     "removeModal": {
       "title": "確認",
-      "message": "'{{name}}'を削除しますか？"
+      "message": "'{{name}}'をリストから削除しますか？"
+    },
+    "removeModalBulk": {
+      "title": "確認",
+      "message": "全員をリストから削除しますか？"
     },
     "options": {
       "enable": {
@@ -383,7 +425,8 @@
       "general": "一般",
       "vrchat": "VRChat",
       "notifications": "通知",
-      "updates": "アップデート"
+      "updates": "アップデート",
+      "advanced": "高度な機能"
     },
     "general": {
       "language": {
@@ -392,12 +435,12 @@
       },
       "lighthouseConsole": {
         "title": "Lighthouseコンソール",
-        "description": "SteamVRの<strong>lighthouse_console.exe</strong>のフォルダを把握する必要があります。\nデフォルトのフォルダにない場合は、格納先を手動で設定する必要があります。",
+        "description": "SteamVRの<strong>lighthouse_console.exe</strong>のフォルダを指定する必要があります。\nデフォルトのフォルダにない場合は、格納先を手動で指定してください。",
         "status": {
           "NOT_FOUND": "<strong>lighthouse_console.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>lighthouse_console.exe</strong> が機能していることを確認できませんでした。",
           "PERMISSION_DENIED": "この場所の<strong>lighthouse_console.exe</strong>を実行する権限を持っていません。管理者としてOyasumiVRを実行してください。",
-          "INVALID_FILENAME": "設定した場所は有効なファイルパスではありません。",
+          "INVALID_FILENAME": "指定した場所は有効なファイルパスではありません。",
           "UNKNOWN_ERROR": "この場所で<strong>lighthouse_console.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "CHECKING": "有効な <strong>lighthouse_console.exe</strong> であるかどうか確認中です。",
           "SUCCESS": "<strong>lighthouse_console.exe</strong>が見つかり、正常に機能しています！"
@@ -412,6 +455,57 @@
         "title": "データの送信",
         "label": "利用データの送信(匿名)",
         "description": "送信されるデータは、使用中のOyasumiVRのバージョンと設定されている言語に限定されており、他のデータは送信されません。このデータは完全に匿名で、一般的な使用統計の提供にのみ使用されます。"
+      },
+      "systemTray": {
+        "title": "システムトレイ",
+        "close": {
+          "label": "システムトレイに閉じる",
+          "description": "プログラムを終了させず、システムトレイに閉じます。"
+        },
+        "start": {
+          "label": "システムトレイで起動する",
+          "description": "システムトレイに最小化された状態で起動します。"
+        }
+      },
+      "lighthousePowerControl": {
+        "title": "SteamVRベースステーションの電源制御",
+        "powerOffMode": {
+          "standby": {
+            "title": "スタンバイ",
+            "description": "電源オフ\nレーザー"
+          },
+          "sleep": {
+            "title": "スリープ",
+            "description": "電源オフ\nレーザー・モーター"
+          },
+          "title": "優先電源オフ状態",
+          "description": "スリープモードはスタンバイモードと異なり、モーターもオフになるため、復帰に時間がかかる場合があります。"
+        },
+        "enable": {
+          "title": "電源制御を有効にする",
+          "description": "有効にすると、OyasumiVRを使用してベースステーションの電源をオフにしたりオンにしたりすることができるようになります。ブルートゥースを必要とし、V2ベースステーションのみをサポートします。"
+        }
+      },
+      "sleepMode": {
+        "title": "睡眠モード",
+        "startupBehaviour": {
+          "title": "スタートアップの状態",
+          "description": "OyasumiVRを起動したときの睡眠モードの設定",
+          "option": {
+            "persist": {
+              "title": "セーブする",
+              "description": "前回と同じ状態で起動"
+            },
+            "enabled": {
+              "title": "アクティブ",
+              "description": "アクティブな状態で起動"
+            },
+            "disabled": {
+              "title": "非アクティブ",
+              "description": "非アクティブな状態で起動"
+            }
+          }
+        }
       }
     },
     "vrchat": {
@@ -462,6 +556,20 @@
           "PORT_INVALID": "ポートは、1から65535の有効な数値である必要があります。",
           "PORT_IO_IDENTICAL": "送信先と受信先のホストが同じ場合、同じポート番号を送信と受信のポート番号として使用することはできません。",
           "INVALID_HOST": "ホスト名、IPv4アドレス, IPv6アドレスが有効な形式であるか確認してください。"
+        },
+        "features": {
+          "all": {
+            "title": "すべての機能を有効にする",
+            "description": "それぞれの機能を無効にすることで、OyasumiVRがOSCの各通信を停止します。"
+          },
+          "expressionMenu": {
+            "title": "Expression menu制御を有効にする",
+            "description": "VRChatアバターの <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">Expression menu</a> からOyasumiVRの機能を制御する。"
+          },
+          "externalControl": {
+            "title": "外部制御を有効にする",
+            "description": "<a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a> でOyasumiVRの機能を制御する。"
+          }
         }
       }
     },
@@ -486,6 +594,82 @@
       "noUpdate": "現在、最新版であるOyasumiVR v{{version}} を利用しています！",
       "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
       "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
+    },
+    "advanced": {
+      "persistentData": {
+        "title": "永続的なデータ",
+        "description": "OyasumiVRがローカルディスクに保存するデータの管理",
+        "dataType": {
+          "all": {
+            "title": "全データ",
+            "description": "OyasumiVRが保存する全てのデータ。"
+          },
+          "appSettings": {
+            "title": "アプリケーション設定",
+            "description": "OyasumiVRの一般設定のすべて"
+          },
+          "automationSettings": {
+            "title": "自動化の設定",
+            "description": "OyasumiVRの1つのオートメーションに固有のすべての設定"
+          },
+          "vrcData": {
+            "title": "VRChatデータ",
+            "description": "認証データなど、VRChatに特有のデータ"
+          },
+          "miscData": {
+            "title": "その他のデータ",
+            "description": "OyasumiVRが保管する、他のカテゴリーに含まれないすべてのデータ"
+          },
+          "appCache": {
+            "title": "データキャッシュ",
+            "description": "VRChat APIレスポンスなど、一時的に保存されるすべてのデータ"
+          },
+          "imageCache": {
+            "title": "画像キャッシュ",
+            "description": "VRChatのプレイヤーアイコンなど、一時的に保存されるすべての画像"
+          },
+          "logs": {
+            "title": "ログファイル",
+            "description": "OyasumiVRが作成するログファイル"
+          },
+          "eventLog": {
+            "title": "イベントログ",
+            "description": "概要に記録されるイベント"
+          }
+        },
+        "clearData": "クリアデータ",
+        "clearModal": {
+          "title": "消去の確認",
+          "message": "以下のデータを削除しますか？元に戻せません。\n\n{{items}}"
+        },
+        "relaunchModal": {
+          "title": "OyasumiVRを再起動する",
+          "message": "要求されたデータはクリアされました。この後、OyasumiVRを再起動することをお勧めします。OyasumiVRを再起動しないと、好ましくない影響が出る可能性があります。",
+          "relaunch": "OyasumiVRを今すぐ再起動する",
+          "later": "あとでやる"
+        }
+      },
+      "translation": {
+        "title": "言語・翻訳",
+        "loadFile": {
+          "title": "翻訳ファイルを読み込む",
+          "description": "カスタム言語ファイルを読み込みます。新しい翻訳をテストするときに便利です。",
+          "action": "ファイルを読み込む"
+        },
+        "contribute": {
+          "docs": "もっと詳しく",
+          "title": "翻訳に貢献できます！",
+          "description": "不足している翻訳を提供や、新しい言語の追加にご協力ください！"
+        }
+      },
+      "logs": {
+        "title": "ログファイル",
+        "openFolder": {
+          "title": "ログフォルダを開く",
+          "description": "エクスプローラーでログファイルの場所を開く",
+          "action": "フォルダを開く"
+        }
+      }
     }
   },
   "about": {
@@ -494,8 +678,9 @@
     },
     "translations": "翻訳",
     "projectLinks": "プロジェクトリンク",
-    "sourceLink": "ソースコード @ GitHub",
-    "discordInvite": "Discordサーバー"
+    "sourceLink": "Source Code @ GitHub",
+    "discordInvite": "Discordサーバー",
+    "contributions": "貢献"
   },
   "updater": {
     "modals": {
@@ -570,13 +755,18 @@
       "sleepDetection": "睡眠検出",
       "oscAutomations": "OSC自動化",
       "gpuAutomations": "GPU自動化",
+      "powerAutomations": "電源の自動化",
       "statusAutomations": "ステータス自動化",
       "autoInviteRequestAccept": "Req Inviteの自動承認",
       "settings": "設定",
-      "vrcAutomations": "VRC関係の自動化",
+      "vrcAutomations": "VRChat関係の自動化",
       "brightnessAutomations": "明るさの自動化",
       "about": "OyasumiVRについて",
-      "resolutionAutomations": "解像度の自動化"
+      "resolutionAutomations": "解像度の自動化",
+      "chaperoneAutomations": "ガーディアンの自動化",
+      "sleepAnimations": "スリープアニメーション",
+      "hardwareAutomations": "ハードウェアの自動化",
+      "shutdownAutomations": "シャットダウンプロセス"
     },
     "device-list": {
       "title": "機器",
@@ -585,8 +775,20 @@
       "category": {
         "Controller": "コントローラー",
         "GenericTracker": "トラッカー",
-        "other": "その他"
-      }
+        "other": "その他",
+        "Lighthouse": "ベースステーション"
+      },
+      "deviceName": {
+        "lighthouseV2": "V2 Lighthouse"
+      },
+      "lighthouseStatus": {
+        "on": "アクティブ",
+        "unknown": "不明な状態",
+        "sleep": "スリーピング",
+        "standby": "スタンバイ",
+        "booting": "起動中"
+      },
+      "scanForLighthouses": "スキャン"
     },
     "osc-script-modal": {
       "title": "OSCスクリプト",
@@ -657,8 +859,8 @@
       "no-logs": "ログは最大48時間保存されます",
       "clearLog": "消去",
       "clearLogModal": {
-        "title": "消去を確認",
-        "message": "イベントログを消去しますか？元に戻すことはできません。"
+        "title": "消去の確認",
+        "message": "イベントログを消去しますか？元に戻せません。"
       }
     },
     "event-log-entry": {
@@ -704,6 +906,66 @@
             "OSC_CONTROL": "OSCによってオフになった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "CHARGING": "充電器に接続された"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "SINGLE": {
+            "on": {
+              "title": "ベースステーションの電源を入れた",
+              "reasons": {
+                "MANUAL": "手動でオンにした",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            },
+            "sleep": {
+              "title": "ベースステーションをスリープモードにする",
+              "reasons": {
+                "MANUAL": "手動で設定した",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            },
+            "standby": {
+              "title": "ベースステーションをスタンバイモードにする",
+              "reasons": {
+                "MANUAL": "手動で設定した",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            }
+          },
+          "ALL": {
+            "on": {
+              "title": "すべてのベースステーションをオンにする",
+              "reasons": {
+                "MANUAL": "手動でオンにした",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            },
+            "sleep": {
+              "title": "すべてのベースステーションをスリープモードにする",
+              "reasons": {
+                "MANUAL": "手動で設定した",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            },
+            "standby": {
+              "title": "すべてのベースステーションをスタンバイモードにする",
+              "reasons": {
+               "MANUAL": "手動で設定した",
+                "STEAMVR_START": "SteamVRの起動に合わせて",
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "OYASUMI_START": "OyasumiVRの起動に合わせて"
+              }
+            }
           }
         },
         "gpuPowerLimitChanged": {
@@ -753,6 +1015,26 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
           }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "title": "SteamVRのフェード距離を{{value}}に設定した。",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+          }
+        },
+        "shutdownSequenceStarted": {
+          "title": "シャットダウンプロセスを開始した",
+          "reason": {
+            "MANUAL": "手動で開始した",
+            "SLEEP_TRIGGER": "長い間眠っていたため"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "title": "シャットダウンプロセスがキャンセルされた",
+          "reason": {
+            "MANUAL": "手動でキャンセルした"
+          }
         }
       }
     }
@@ -772,6 +1054,86 @@
       "title": "レンダリング解像度を変更",
       "custom": "カスタム",
       "auto": "自動"
+    }
+  },
+  "chaperone-automations": {
+    "title": "ガーディアンの自動化",
+    "description": "OyasumiVRは、スリープモードの有効・無効時にSteamVRのガーディアンのフェード距離を自動調整することができます。",
+    "onSleepEnable": {
+      "title": "眠りにつくとき",
+      "description": "付き添いのフェード距離を調整する"
+    },
+    "onSleepDisable": {
+      "title": "目が覚めたら",
+      "description": "付き添いのフェード距離を調整する"
+    },
+    "fadeDistance": {
+      "title": "ガーディアンのフェード距離を変更する"
+    }
+  },
+  "sleepAnimations": {
+    "title": "スリープアニメーション"
+  },
+  "shutdown-automations": {
+    "title": "シャットダウンプロセス",
+    "description": "VRでの入眠を楽しみたいが、一晩中VRの中で眠りたくないという場合は、OyasumiVRのシャットダウンプロセスをご利用ください。\n自動的に優雅にシャットダウンするので、VRの外でもスムーズに睡眠を継続することができます。",
+    "triggers": {
+      "title": "自動トリガー",
+      "whenAsleep": {
+        "title": "寝ているときに起動する",
+        "description": "スリープモードが一定時間継続した場合に、シャットダウンプロセスを起動させる機能"
+      },
+      "whenAsleepDuration": {
+        "title": "睡眠時間",
+        "description": "シャットダウンプロセスが実行されるまでのスリープモードの有効時間"
+      },
+      "whenAsleepTimeWindow": {
+        "title": "アクティベーションウィンドウ",
+        "description": "シャットダウンのトリガーを特定の時間帯にのみ許可する。"
+      }
+    },
+    "sequence": {
+      "title": "シャットダウン設定",
+      "quitSteamVR": {
+        "title": "SteamVRを終了する",
+        "description": "これにより、実行中のゲームやオーバーレイも終了します。"
+      },
+      "turnOffDevices": {
+        "title": "デバイスの電源を切る"
+      },
+      "turnOffControllers": {
+        "title": "コントローラーの電源を切る",
+        "description": "コントローラーの電源をオフにする"
+      },
+      "turnOffTrackers": {
+        "title": "トラッカーをオフにする",
+        "description": "トラッカーをオフにする"
+      },
+      "turnOffBaseStations": {
+        "title": "ベースステーションをオフにする",
+        "description": "まだアクティブなベースステーションをオフにする"
+      },
+      "shutDownWindows": {
+        "title": "Windowsをシャットダウンする",
+        "description": "コンピュータをシャットダウンしようとする"
+      },
+      "run": "シーケンス実行"
+    },
+    "confirm-modal": {
+      "title": "本当にいいんですか？",
+      "message": "今すぐシャットダウンプロセスを実行させますか？"
+    },
+    "noOptionsSelected": "シャットダウンプロセス中に実行するアクションが選択されていないため、この機能を実行しても何の影響もありません。この機能を実行するためには、以下のオプションのうち少なくとも1つを選択してください。",
+    "overlay": {
+      "stage": {
+        "QUITTING_STEAMVR": "SteamVRを終了する...",
+        "TURNING_OFF_CONTROLLERS": "コントローラーの電源を切る...",
+        "TURNING_OFF_TRACKERS": "トラッカーをオフにする...",
+        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする...",
+        "SHUTTING_DOWN": "Windowsをシャットダウンする..."
+      },
+      "title": "シャットダウン",
+      "cancel": "今すぐキャンセルする"
     }
   }
 }
