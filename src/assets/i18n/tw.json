@@ -250,7 +250,7 @@
     "lighthousePowerOn": {
       "title": "開啟基地台",
       "description": "讓OyasumiVR自動開啟您的基地台。",
-      "onOyasumiVRStart": {
+      "onOyasumiStart": {
         "title": "當 OyasumiVR 啟動時",
         "description": "當OyasumiVR啟動時，自動打開您的基地台"
       },

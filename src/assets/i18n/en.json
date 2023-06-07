@@ -250,7 +250,7 @@
     "lighthousePowerOn": {
       "title": "Turn on base stations",
       "description": "Have OyasumiVR automatically turn on your base stations.",
-      "onOyasumiVRStart": {
+      "onOyasumiStart": {
         "title": "When OyasumiVR starts",
         "description": "Automatically turn on your base stations when OyasumiVR starts"
       },

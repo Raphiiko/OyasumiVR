@@ -250,7 +250,7 @@
     "lighthousePowerOn": {
       "title": "베이스스테이션 켜기",
       "description": "OyasumiVR가 자동으로 베이스스테이션을 켜도록 설정해요.",
-      "onOyasumiVRStart": {
+      "onOyasumiStart": {
         "title": "OyasumiVR가 시작될 때",
         "description": "OyasumiVR가 시작되면 자동으로 베이스스테이션을 켜요."
       },
