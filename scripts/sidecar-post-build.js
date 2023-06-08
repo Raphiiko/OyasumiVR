@@ -19,7 +19,7 @@ async function main() {
   }
   fs.renameSync(
     `src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar${extension}`,
-    `src-elevated-sidecar/target/release/oyasumvr-elevated-sidecar-${targetTriple}${extension}`
+    `src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar-${targetTriple}${extension}`
   );
 }
 

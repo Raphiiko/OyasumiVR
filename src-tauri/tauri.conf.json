@@ -53,7 +53,7 @@
       "deb": {
         "depends": []
       },
-      "externalBin": ["../src-elevated-sidecar/target/release/oyasumi-elevated-sidecar"],
+      "externalBin": ["../src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
