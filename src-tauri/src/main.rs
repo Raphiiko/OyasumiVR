@@ -12,6 +12,7 @@ mod globals;
 mod http_server;
 mod image_cache;
 mod lighthouse;
+mod migrations;
 mod openvr;
 mod os;
 mod osc;
@@ -131,6 +132,8 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    // Run any migrations first
+    migrations::run_migrations().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     // Open devtools if we're in debug mode
