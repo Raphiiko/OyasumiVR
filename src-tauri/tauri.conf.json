@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "OyasumiVR",
-    "version": "1.7.0"
+    "version": "1.7.1"
   },
   "tauri": {
     "allowlist": {
@@ -17,7 +17,10 @@
         "readFile": true,
         "readDir": true,
         "exists": true,
-        "scope": ["$HOME/AppData/LocalLow/VRChat/**/*", "$RESOURCE/*"]
+        "scope": [
+          "$HOME/AppData/LocalLow/VRChat/**/*",
+          "$RESOURCE/*"
+        ]
       },
       "path": {
         "all": true
@@ -53,7 +56,9 @@
       "deb": {
         "depends": []
       },
-      "externalBin": ["../src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar"],
+      "externalBin": [
+        "../src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar"
+      ],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -71,9 +76,15 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": ["./sounds/*.ogg", "./openvr_api.dll"],
+      "resources": [
+        "./sounds/*.ogg",
+        "./openvr_api.dll"
+      ],
       "shortDescription": "A collection of utilities to assist with sleeping in virtual reality.",
-      "targets": ["nsis", "updater"],
+      "targets": [
+        "nsis",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -125,7 +136,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "OyasumiVR/1.7.1 (https://github.com/Raphiiko/Oyasumi)"
       },
       {
         "width": 700,
@@ -137,7 +148,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.7.0 (https://github.com/Raphiiko/Oyasumi)"
+        "userAgent": "OyasumiVR/1.7.1 (https://github.com/Raphiiko/Oyasumi)"
       }
     ]
   }
