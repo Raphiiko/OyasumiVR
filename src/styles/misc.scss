@@ -35,6 +35,34 @@
 ///
 /// Settings Layout
 ///
+.setting-category {
+  &:not(:first-child) {
+    margin-top: 1em;
+  }
+
+  p {
+    white-space: pre-wrap;
+  }
+
+  p::ng-deep strong {
+    background: var(--color-surface-1);
+    border-radius: 0.25em;
+    padding: 0.125em 0.25em;
+    font-weight: 500;
+  }
+
+  h2 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      margin-left: 1em;
+      font-size: 0.6em;
+    }
+  }
+}
 
 .settings {
   display: flow-root;
@@ -87,12 +115,28 @@
     }
 
     &.setting-alert-row {
-      padding: 0em 1em 1em 1em;
+      padding: 0 1em 1em 1em;
       flex-direction: column;
 
       .alert {
         width: 100%;
         margin: 0;
+      }
+    }
+
+    &.compact {
+      padding: 0.25em 1em;
+
+      .setting-row-label > span:first-child {
+        margin-bottom: 0.0625em;
+      }
+
+      &:first-child {
+        margin-top: 0.25em;
+      }
+
+      &:last-child {
+        margin-bottom: 0.25em;
       }
     }
 

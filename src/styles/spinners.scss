@@ -2,6 +2,7 @@
   display: inline-block;
   width: 1.5em;
   height: 1.5em;
+  --spinner-color: var(--color-text-2);
 }
 
 .small-spinner:after {
@@ -11,8 +12,8 @@
   width: 1em;
   height: 1em;
   border-radius: 50%;
-  border: 2px solid var(--color-text-2);
-  border-color: var(--color-text-2) transparent var(--color-text-2) transparent;
+  border: 2px solid var(--spinner-color);
+  border-color: var(--spinner-color) transparent var(--spinner-color) transparent;
   animation: small-spinner 0.75s linear infinite;
 }
 

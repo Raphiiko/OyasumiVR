@@ -3,7 +3,7 @@ import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@t
 import { APIConfig, CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
+import { SETTINGS_FILE, SETTINGS_KEY_VRCHAT_API } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
 import {
@@ -21,7 +21,7 @@ import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
 import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { TaskQueue } from '../utils/task-queue';
 import { WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
@@ -29,7 +29,6 @@ import { CachedValue } from '../utils/cached-value';
 import { error, info, warn } from 'tauri-plugin-log-api';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
-const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
 export type VRChatServiceStatus = 'PRE_INIT' | 'ERROR' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 @Injectable({
@@ -85,7 +84,7 @@ export class VRChatService {
   ]).pipe(map(([world]) => world));
   public notifications = this._notifications.asObservable();
 
-  constructor(private modalService: SimpleModalService, private logService: VRChatLogService) {
+  constructor(private modalService: ModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
   }
 
@@ -94,7 +93,7 @@ export class VRChatService {
     // Load settings from disk
     await this.loadSettings();
     // Construct user agent
-    this.userAgent = `Oyasumi/${await getVersion()} (https://github.com/Raphiiko/Oyasumi)`;
+    this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/Oyasumi)`;
     // Setup socket connection management
     await this.manageSocketConnection();
     // Fetch the api config if needed
@@ -241,7 +240,6 @@ export class VRChatService {
         {},
         {
           closeOnEscape: false,
-          closeOnClickOutside: false,
         }
       )
       .subscribe(() => {});
@@ -667,6 +665,7 @@ export class VRChatService {
   private async patchHttpClient(client: Client): Promise<Client> {
     const isDev = (await getVersion()) === 'DEV';
     const next = client.request.bind(client);
+
     async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {
       info(`[VRChat] API Request: ${options.url}`);
       if (isDev)
@@ -684,6 +683,7 @@ export class VRChatService {
         throw e;
       }
     }
+
     client.request = requestWrapper.bind(client);
     return client;
   }

@@ -26,6 +26,9 @@
     .logo-title {
       font-size: 2em;
       font-weight: 300;
+      b {
+        font-weight: 500;
+      }
     }
 
     .logo-tagline {
@@ -203,8 +206,14 @@
         width: 1.5em;
         height: 1.5em;
 
-        &.vrchat {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%) contrast(89%);
+        &.vrchat-icon {
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
+            contrast(89%);
+        }
+
+        &.hardware-icon {
+          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
+            contrast(89%);
         }
       }
     }
@@ -219,11 +228,18 @@
       display: flex;
       flex-direction: row;
       align-items: center;
-      padding: 0 0.5em 0 0.25em;
+      position: relative;
+      width: 0.75em;
 
       i.material-icons-round {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
         font-size: 0.8em;
         color: var(--color-text-4);
+        line-height: 0;
+        vertical-align: middle;
       }
     }
 

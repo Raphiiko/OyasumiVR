@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { SimpleModalComponent, SimpleModalService } from 'ngx-simple-modal';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { VRChatService } from '../../services/vrchat.service';
 import { firstValueFrom, map } from 'rxjs';
 import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
+import { BaseModalComponent } from '../base-modal/base-modal.component';
+import { ModalService } from '../../services/modal.service';
 
 interface VRChatLoginModalInputModel {}
 
@@ -16,7 +17,7 @@ interface VRChatLoginModalOutputModel {}
   animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class VRChatLoginModalComponent
-  extends SimpleModalComponent<VRChatLoginModalInputModel, VRChatLoginModalOutputModel>
+  extends BaseModalComponent<VRChatLoginModalInputModel, VRChatLoginModalOutputModel>
   implements OnInit, VRChatLoginModalInputModel
 {
   username = '';
@@ -24,7 +25,7 @@ export class VRChatLoginModalComponent
   loggingIn = false;
   error = '';
 
-  constructor(private vrchat: VRChatService, private modalService: SimpleModalService) {
+  constructor(private vrchat: VRChatService, private modalService: ModalService) {
     super();
   }
 
@@ -40,7 +41,6 @@ export class VRChatLoginModalComponent
           },
           {
             closeOnEscape: false,
-            closeOnClickOutside: false,
           }
         )
         .pipe(map((output) => output?.code || null))

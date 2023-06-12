@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ export interface BatteryPercentageEnableSleepModeModalOutputModel {
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
 })
 export class BatteryPercentageEnableSleepModeModalComponent
-  extends SimpleModalComponent<
+  extends BaseModalComponent<
     BatteryPercentageEnableSleepModeModalInputModel,
     BatteryPercentageEnableSleepModeModalOutputModel
   >

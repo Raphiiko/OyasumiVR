@@ -1,10 +1,11 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
-import { BehaviorSubject, combineLatest, map, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
 import { EventLogEntry } from '../../models/event-log-entry';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-event-log',
@@ -12,8 +13,7 @@ import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component'
   styleUrls: ['./event-log.component.scss'],
   animations: [vshrink(), noop(), fade(), hshrink()],
 })
-export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
-  private destroy$ = new Subject<void>();
+export class EventLogComponent implements OnInit, AfterViewInit {
   private readonly pageSize = 10;
   private showCount = new BehaviorSubject<number>(this.pageSize);
   protected entries = 0;
@@ -25,10 +25,10 @@ export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private eventLog: EventLogService,
     private cdr: ChangeDetectorRef,
-    private modalService: SimpleModalService
+    private modalService: ModalService
   ) {
     this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount]).pipe(
-      takeUntil(this.destroy$),
+      takeUntilDestroyed(),
       tap(([log]) => {
         this.entries = log.logs.length;
         this.cdr.detectChanges();
@@ -38,10 +38,6 @@ export class EventLogComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {}
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
-  }
 
   ngAfterViewInit() {
     this.animationPause = false;

@@ -1,0 +1,91 @@
+:host {
+  color: var(--color-text-2);
+  background: var(--color-surface-2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.header-bar {
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+
+    // .device-name {
+    // }
+
+    .device-serial {
+      color: var(--color-text-4);
+    }
+  }
+
+  &-action {
+    flex-shrink: 0;
+  }
+}
+
+.status-info {
+  background: var(--color-surface-3);
+  padding: 0.25em 0.75em;
+  color: var(--color-text-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  overflow: hidden;
+  height: 2em;
+}
+
+.battery-info {
+  background: var(--color-surface-3);
+
+  &-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.25em 0.75em;
+    color: var(--color-text-2);
+    justify-content: flex-end;
+  }
+
+  &-bar {
+    height: 0.25em;
+    background: var(--color-surface-1);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    &-fill {
+      width: 0%;
+      transition: width 0.15s ease;
+      height: 100%;
+      background: var(--color-primary);
+    }
+  }
+}
+
+.small-spinner {
+  &.power-on {
+    --spinner-color: var(--color-alert-success);
+  }
+  &.power-off {
+    --spinner-color: var(--color-alert-error);
+  }
+}
+
+.category-icon {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  margin-right: 1em;
+  filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+}

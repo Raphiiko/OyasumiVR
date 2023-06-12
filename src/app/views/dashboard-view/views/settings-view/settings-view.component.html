@@ -5,7 +5,12 @@
       <div class="tab-label" translate>settings.tab.general</div>
     </div>
     <div class="tab" [class.active]="activeTab === 'VRCHAT'" (click)="activeTab = 'VRCHAT'">
-      <div class="tab-label" translate>settings.tab.vrchat</div>
+      <div class="tab-label" translate
+        ><i class="material-icons" style="color: var(--color-caution)" @hshrink *ngIf="oscError">
+          error_outline
+        </i>
+        <span translate>settings.tab.vrchat</span></div
+      >
     </div>
     <div
       class="tab"
@@ -27,8 +32,8 @@
         <span translate>settings.tab.updates</span>
       </div>
     </div>
-    <div class="tab" [class.active]="activeTab === 'DEBUG'" (click)="activeTab = 'DEBUG'">
-      <div class="tab-label" translate>settings.tab.debug</div>
+    <div class="tab" [class.active]="activeTab === 'ADVANCED'" (click)="activeTab = 'ADVANCED'">
+      <div class="tab-label" translate>settings.tab.advanced</div>
     </div>
   </div>
   <app-settings-general-tab
@@ -51,9 +56,9 @@
     *ngIf="activeTab === 'UPDATES'"
     @noop
   ></app-settings-updates-tab>
-  <app-settings-debug-tab
+  <app-settings-advanced-tab
     class="pane-content"
-    *ngIf="activeTab === 'DEBUG'"
+    *ngIf="activeTab === 'ADVANCED'"
     @noop
-  ></app-settings-debug-tab>
+  ></app-settings-advanced-tab>
 </div>

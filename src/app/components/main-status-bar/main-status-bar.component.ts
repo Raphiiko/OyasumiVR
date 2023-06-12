@@ -6,6 +6,7 @@ import { hshrink, noop } from '../../utils/animations';
 import { firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../services/openvr.service';
 import { BackgroundService } from '../../services/background.service';
+import { OscService } from '../../services/osc.service';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -21,7 +22,8 @@ export class MainStatusBarComponent implements OnInit {
     private sleepService: SleepService,
     private vrchat: VRChatService,
     protected openvr: OpenVRService,
-    protected background: BackgroundService
+    protected background: BackgroundService,
+    protected osc: OscService
   ) {}
 
   ngOnInit(): void {}

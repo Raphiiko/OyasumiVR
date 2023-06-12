@@ -3,9 +3,9 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
-  OnDestroy,
   ViewChild,
 } from '@angular/core';
 import * as THREE from 'three';
@@ -13,10 +13,11 @@ import { Object3D, PerspectiveCamera, Vector3, WebGLRenderer } from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { OpenVRService } from '../../services/openvr.service';
-import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
+import { combineLatest, filter, map } from 'rxjs';
 import { SleepService } from '../../services/sleep.service';
 import { OVRDevicePose } from '../../models/ovr-device';
 import { SleepingPose } from '../../models/sleeping-pose';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-sleeping-pose-viewer',
@@ -24,20 +25,20 @@ import { SleepingPose } from '../../models/sleeping-pose';
   styleUrls: ['./sleeping-pose-viewer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SleepingPoseViewerComponent implements OnDestroy, AfterViewInit {
+export class SleepingPoseViewerComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvasRef?: ElementRef;
   private renderer!: WebGLRenderer;
   private camera!: PerspectiveCamera;
   private headsetModel!: Object3D;
-  private destroy$: Subject<void> = new Subject<void>();
   protected sleepingPose: SleepingPose = 'UNKNOWN';
 
   constructor(
     private openvr: OpenVRService,
     private sleep: SleepService,
     private cdr: ChangeDetectorRef,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private destroyRef: DestroyRef
   ) {}
 
   @HostListener('window:resize', ['$event'])
@@ -52,13 +53,13 @@ export class SleepingPoseViewerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.sleep.pose.pipe(takeUntil(this.destroy$)).subscribe((pose) => {
+    this.sleep.pose.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((pose) => {
       this.sleepingPose = pose;
       this.cdr.detectChanges();
     });
     combineLatest([this.openvr.devices, this.openvr.devicePoses])
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         map(([devices, poses]) => {
           const hmdDevice = devices.find((d) => d.class === 'HMD');
           if (!hmdDevice) return null;
@@ -72,10 +73,6 @@ export class SleepingPoseViewerComponent implements OnDestroy, AfterViewInit {
         const scene = this.sleep.getPoseDetectorScene();
         this.render(scene, hmdOrientation);
       });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   async render(scene: THREE.Scene, hmdOrientation: THREE.Quaternion) {

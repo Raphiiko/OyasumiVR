@@ -28,7 +28,7 @@
             draggable="false"
             onerror="this.style.display='none'"
             loading="lazy"
-            [src]="vrchat.imageUrlForPlayer(result) | imageCache : 3600 * 6"
+            [imgSmoothLoader]="vrchat.imageUrlForPlayer(result) | imageCache : 3600 * 6"
           />
         </div>
         <div class="friend-label">{{ result.displayName }}</div>

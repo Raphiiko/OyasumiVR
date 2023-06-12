@@ -11,6 +11,9 @@
 npm-debug.log
 yarn-error.log
 
+# Yarn
+yarn.lock
+
 # IDEs and editors
 .idea/
 .project
@@ -46,3 +49,5 @@ Thumbs.db
 # Oyasumi specific
 *.xls
 *.xlsx
+src/assets/preload-assets.json
+src/assets/splashscreen/splash-blurhash.css

@@ -15,9 +15,12 @@ export type AutomationType =
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
-  // BATTERY AUTOMATIONS
+  // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
+  | 'TURN_ON_LIGHTHOUSES_ON_OYASUMI_START'
+  | 'TURN_ON_LIGHTHOUSES_ON_STEAMVR_START'
+  | 'TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP'
   // OSC AUTOMATIONS
   | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
@@ -30,7 +33,12 @@ export type AutomationType =
   | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
-  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE';
+  | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
+  // CHAPERONE AUTOMATIONS
+  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
+  | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE'
+  // SHUTDOWN AUTOMATIONS
+  | 'SHUTDOWN_AUTOMATIONS';
 
 export interface AutomationConfigs {
   version: 8;
@@ -44,9 +52,12 @@ export interface AutomationConfigs {
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
-  // BATTERY AUTOMATIONS
+  // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
+  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: TurnOnLighthousesOnOyasumiStartAutomationConfig;
+  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: TurnOnLighthousesOnSteamVRStartAutomationConfig;
+  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: TurnOffLighthousesOnSteamVRStopAutomationConfig;
   // OSC AUTOMATIONS
   OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
@@ -60,6 +71,11 @@ export interface AutomationConfigs {
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
+  // CHAPERONE AUTOMATIONS
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
+  // SHUTDOWN AUTOMATIONS
+  SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -71,15 +87,20 @@ export interface AutomationConfig {
 //
 
 // BRIGHTNESS AUTOMATIONS
-
 export interface DisplayBrightnessOnSleepModeAutomationConfig extends AutomationConfig {
   brightness: number;
   transition: boolean;
   transitionTime: number;
 }
 
+// RESOLUTION AUTOMATIONS
 export interface RenderResolutionOnSleepModeAutomationConfig extends AutomationConfig {
   resolution: number | null;
+}
+
+// CHAPERONE AUTOMATIONS
+export interface ChaperoneFadeDistanceOnSleepModeAutomationConfig extends AutomationConfig {
+  fadeDistance: number;
 }
 
 // GPU AUTOMATIONS
@@ -108,6 +129,7 @@ export interface SleepModeEnableForSleepDetectorAutomationConfig extends Automat
   calibrationValue: number;
   sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
   sleepCheck: boolean;
+  detectionWindowMinutes: number;
 }
 
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -133,7 +155,7 @@ export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends Automat
   triggerClasses: OVRDeviceClass[];
 }
 
-// DEVICE BATTERY AUTOMATIONS
+// DEVICE POWER AUTOMATIONS
 export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
 }
@@ -141,6 +163,12 @@ export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends Automat
 export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
 }
+
+export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
+
+export interface TurnOnLighthousesOnSteamVRStartAutomationConfig extends AutomationConfig {}
+
+export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends AutomationConfig {}
 
 // OSC AUTOMATIONS
 export interface OscGeneralAutomationConfig extends AutomationConfig {
@@ -177,6 +205,20 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   playerIds: string[];
 }
 
+// SHUTDOWN AUTOMATIONS
+export interface ShutdownAutomationsConfig extends AutomationConfig {
+  triggerOnSleep: boolean;
+  sleepDuration: number;
+  activationWindow: boolean;
+  activationWindowStart: [number, number];
+  activationWindowEnd: [number, number];
+  quitSteamVR: boolean;
+  turnOffControllers: boolean;
+  turnOffTrackers: boolean;
+  turnOffBaseStations: boolean;
+  shutdownWindows: boolean;
+}
+
 //
 // DEFAULT
 //
@@ -205,6 +247,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     resolution: null,
   },
+  // CHAPERONE AUTOMATIONS
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+    fadeDistance: 0.0,
+  },
+  CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
+    fadeDistance: 0.7,
+  },
   // GPU AUTOMATIONS
   GPU_POWER_LIMITS: {
     enabled: false,
@@ -230,6 +281,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     calibrationValue: 0.01,
     sensitivity: 'MEDIUM',
     sleepCheck: false,
+    detectionWindowMinutes: 15,
   },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,
@@ -255,6 +307,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
   },
+  // DEVICE POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {
     enabled: true,
     deviceClasses: [],
@@ -262,6 +315,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   TURN_OFF_DEVICES_WHEN_CHARGING: {
     enabled: true,
     deviceClasses: [],
+  },
+  TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
+    enabled: false,
+  },
+  TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: {
+    enabled: false,
+  },
+  TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: {
+    enabled: false,
   },
   // OSC AUTOMATIONS
   OSC_GENERAL: {
@@ -293,5 +355,19 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onlyIfSleepModeEnabled: false,
     listMode: 'WHITELIST',
     playerIds: [],
+  },
+  // SHUTDOWN AUTOMATIONS
+  SHUTDOWN_AUTOMATIONS: {
+    enabled: true,
+    triggerOnSleep: false,
+    sleepDuration: 15 * 60 * 1000,
+    activationWindow: false,
+    activationWindowStart: [23, 0],
+    activationWindowEnd: [7, 0],
+    quitSteamVR: true,
+    turnOffControllers: true,
+    turnOffTrackers: true,
+    turnOffBaseStations: true,
+    shutdownWindows: true,
   },
 };

@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { VRChatService } from '../../../../services/vrchat.service';
-import { BehaviorSubject, debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UserStatus } from 'vrchat/dist';
@@ -11,13 +11,14 @@ import {
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { clamp } from '../../../../utils/number-utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-status-automations-view',
@@ -25,8 +26,7 @@ import { clamp } from '../../../../utils/number-utils';
   styleUrls: ['./status-automations-view.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
 })
-export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class StatusAutomationsViewComponent implements OnInit {
   UserStatus = UserStatus;
   loggedIn = false;
   limit: BehaviorSubject<number> = new BehaviorSubject<number>(1);
@@ -75,35 +75,34 @@ export class StatusAutomationsViewComponent implements OnInit, OnDestroy {
     private vrchat: VRChatService,
     private sanitizer: DomSanitizer,
     private automationConfig: AutomationConfigService,
-    private modalService: SimpleModalService
+    private modalService: ModalService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
-    this.automationConfig.configs.pipe(takeUntil(this.destroy$)).subscribe(async (configs) => {
-      this.config = cloneDeep(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
-      this.limit.next(this.config.limit);
-      this.optionSetStatusAtLimitOrAbove = this.statusOptions.find(
-        (o) => o.id === this.config.statusAtLimitOrAbove
-      )!;
-      this.optionSetStatusBelowLimit = this.statusOptions.find(
-        (o) => o.id === this.config.statusBelowLimit
-      )!;
-    });
-    this.vrchat.status.pipe(takeUntil(this.destroy$)).subscribe((status) => {
+    this.automationConfig.configs
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async (configs) => {
+        this.config = cloneDeep(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
+        this.limit.next(this.config.limit);
+        this.optionSetStatusAtLimitOrAbove = this.statusOptions.find(
+          (o) => o.id === this.config.statusAtLimitOrAbove
+        )!;
+        this.optionSetStatusBelowLimit = this.statusOptions.find(
+          (o) => o.id === this.config.statusBelowLimit
+        )!;
+      });
+    this.vrchat.status.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.loggedIn = status === 'LOGGED_IN';
     });
     this.limit
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         tap((limit) => (this.bedLimit = Math.min(limit, 10))),
         debounceTime(300),
         switchMap((limit) => this.updateConfig({ limit }))
       )
       .subscribe();
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   login() {

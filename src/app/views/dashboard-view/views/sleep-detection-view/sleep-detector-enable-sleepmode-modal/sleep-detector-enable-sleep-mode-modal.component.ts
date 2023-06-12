@@ -1,9 +1,8 @@
-import { Component, HostBinding, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { SimpleModalComponent, SimpleModalService } from 'ngx-simple-modal';
+import { Component, DestroyRef, HostBinding, HostListener, OnInit } from '@angular/core';
 import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,
@@ -12,6 +11,10 @@ import {
 import { SleepDetectorCalibrationModalComponent } from '../sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { Router } from '@angular/router';
+import { debounce } from 'typescript-debounce-decorator';
+import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
+import { ModalService } from '../../../../../services/modal.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export interface SleepDetectorEnableSleepModeModalInputModel {}
 
@@ -24,13 +27,12 @@ export interface SleepDetectorEnableSleepModeModalOutputModel {}
   animations: [fadeUp(), fade(), triggerChildren()],
 })
 export class SleepDetectorEnableSleepModeModalComponent
-  extends SimpleModalComponent<
+  extends BaseModalComponent<
     SleepDetectorEnableSleepModeModalInputModel,
     SleepDetectorEnableSleepModeModalOutputModel
   >
-  implements OnInit, OnDestroy, SleepDetectorEnableSleepModeModalInputModel
+  implements OnInit, SleepDetectorEnableSleepModeModalInputModel
 {
-  private destroy$: Subject<void> = new Subject<void>();
   sensitivityOptions: SelectBoxItem[] = [
     {
       id: 'LOWEST',
@@ -65,8 +67,9 @@ export class SleepDetectorEnableSleepModeModalComponent
   constructor(
     private settingsService: AppSettingsService,
     private automationConfigService: AutomationConfigService,
-    private modalService: SimpleModalService,
-    private router: Router
+    private modalService: ModalService,
+    private router: Router,
+    private destroyRef: DestroyRef
   ) {
     super();
   }
@@ -80,21 +83,21 @@ export class SleepDetectorEnableSleepModeModalComponent
   }
 
   ngOnInit(): void {
-    this.automationConfigService.configs.pipe(takeUntil(this.destroy$)).subscribe((configs) => {
-      this.automationConfigs = configs;
-      this.sensitivityOption = this.sensitivityOptions.find(
-        (o) => o.id === configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity
-      );
-      if (!this.sensitivityOption) this.setSensitivityOption('MEDIUM');
-    });
-    this.settingsService.settings.pipe(takeUntil(this.destroy$)).subscribe((settings) => {
-      this.notificationsEnabled =
-        settings.enableXSOverlayNotifications || settings.enableDesktopNotifications;
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
+    this.automationConfigService.configs
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((configs) => {
+        this.automationConfigs = configs;
+        this.sensitivityOption = this.sensitivityOptions.find(
+          (o) => o.id === configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity
+        );
+        if (!this.sensitivityOption) this.setSensitivityOption('MEDIUM');
+      });
+    this.settingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((settings) => {
+        this.notificationsEnabled =
+          settings.enableXSOverlayNotifications || settings.enableDesktopNotifications;
+      });
   }
 
   save() {
@@ -113,7 +116,6 @@ export class SleepDetectorEnableSleepModeModalComponent
         },
         {
           closeOnEscape: false,
-          closeOnClickOutside: false,
         }
       )
       .pipe(filter((data) => !!data))
@@ -145,6 +147,17 @@ export class SleepDetectorEnableSleepModeModalComponent
       'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
       {
         sleepCheck: !this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck,
+      }
+    );
+  }
+
+  @debounce(250)
+  async onDetectionWindowChange(value: number) {
+    if (value < 15 || value > 60) return;
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        detectionWindowMinutes: value,
       }
     );
   }

@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { UpdateManifest } from '@tauri-apps/api/updater';
 import { SettingsTabComponent } from '../settings-tab/settings-tab.component';
 import { AppSettingsService } from '../../../../../services/app-settings.service';
 import { getVersion } from '../../../../../utils/app-utils';
-import { firstValueFrom, takeUntil } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { marked } from 'marked';
 import { UpdateService } from '../../../../../services/update.service';
 import { HttpClient } from '@angular/common/http';
 import { hshrink } from '../../../../../utils/animations';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings-updates-tab',
@@ -24,6 +25,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent implements
 
   constructor(
     settingsService: AppSettingsService,
+    destroyRef: DestroyRef,
     private update: UpdateService,
     private http: HttpClient,
     private sanitizer: DomSanitizer
@@ -34,7 +36,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent implements
   override async ngOnInit() {
     super.ngOnInit();
     this.version = await getVersion();
-    this.update.updateAvailable.pipe(takeUntil(this.destroy$)).subscribe((available) => {
+    this.update.updateAvailable.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((available) => {
       this.updateAvailable = available;
     });
     this.changelog = await this.getChangeLog();

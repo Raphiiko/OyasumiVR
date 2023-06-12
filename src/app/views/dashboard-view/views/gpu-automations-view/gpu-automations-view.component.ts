@@ -1,21 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NVMLService } from '../../../../services/nvml.service';
-import {
-  asyncScheduler,
-  combineLatest,
-  firstValueFrom,
-  map,
-  Observable,
-  Subject,
-  takeUntil,
-  throttleTime,
-} from 'rxjs';
+import { asyncScheduler, combineLatest, firstValueFrom, map, Observable, throttleTime } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { fade, hshrink, noop, vshrink } from 'src/app/utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
 import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-gpu-automations-view',
@@ -23,8 +15,7 @@ import { ConfirmModalComponent } from '../../../../components/confirm-modal/conf
   styleUrls: ['./gpu-automations-view.component.scss'],
   animations: [vshrink(), fade(), noop(), hshrink()],
 })
-export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class GpuAutomationsViewComponent implements OnInit {
   activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage = '';
@@ -35,11 +26,11 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
     private nvml: NVMLService,
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private settingsService: AppSettingsService
   ) {
     combineLatest([sidecar.sidecarRunning, this.gpuAutomations.isEnabled()])
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed())
       .subscribe(([sidecarRunning, isEnabled]: [boolean, boolean]) => {
         if (!isEnabled) {
           this.disabledMessage = 'gpu-automations.disabled.disabled';
@@ -101,10 +92,6 @@ export class GpuAutomationsViewComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {}
-
-  async ngOnDestroy() {
-    this.destroy$.next();
-  }
 
   async startSidecar() {
     if (!(await firstValueFrom(this.settingsService.settings)).askForAdminOnStart) {

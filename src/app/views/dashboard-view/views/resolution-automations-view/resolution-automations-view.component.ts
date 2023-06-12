@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { Subject, takeUntil } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
@@ -9,6 +8,7 @@ import {
 } from '../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { debounce } from 'typescript-debounce-decorator';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-resolution-automations-view',
@@ -16,8 +16,7 @@ import { debounce } from 'typescript-debounce-decorator';
   styleUrls: ['./resolution-automations-view.component.scss'],
   animations: [],
 })
-export class ResolutionAutomationsViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject();
+export class ResolutionAutomationsViewComponent implements OnInit {
   protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE
   );
@@ -27,20 +26,17 @@ export class ResolutionAutomationsViewComponent implements OnInit, OnDestroy {
 
   constructor(
     private openvr: OpenVRService,
-    private automationConfigService: AutomationConfigService
+    private automationConfigService: AutomationConfigService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.automationConfigService.configs
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
         this.onSleepModeEnableConfig = configs.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE;
         this.onSleepModeDisableConfig = configs.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE;
       });
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   async setAutomationEnabled(automation: AutomationType, enabled: boolean) {

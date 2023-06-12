@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { fade, vshrink } from '../../../../utils/animations';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { TimeEnableSleepModeModalComponent } from './time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { filter, Subject, takeUntil } from 'rxjs';
+import { filter } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,
@@ -20,6 +20,7 @@ import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-di
 import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
 import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -27,24 +28,20 @@ import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-ena
   styleUrls: ['./sleep-detection-view.component.scss'],
   animations: [vshrink(), fade()],
 })
-export class SleepDetectionViewComponent implements OnInit, OnDestroy {
-  private destroy$: Subject<void> = new Subject<void>();
+export class SleepDetectionViewComponent implements OnInit {
   automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
 
   constructor(
-    private modalService: SimpleModalService,
+    private modalService: ModalService,
     private automationConfigService: AutomationConfigService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
     this.automationConfigService.configs
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => (this.automationConfigs = configs));
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 
   openModal_EnableSleepModeAtTime() {

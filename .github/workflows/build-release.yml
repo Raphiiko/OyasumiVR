@@ -11,14 +11,13 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ windows-latest ]
-
     runs-on: ${{ matrix.platform }}
+
     steps:
       - uses: actions/checkout@v2
       - name: Get Package Version
         id: get-package-version
         uses: stevenbenitez/get-package-version-action@v1
-
       - name: Setup NodeJS
         uses: actions/setup-node@v1
         with:
@@ -38,6 +37,8 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-tauri
+      - name: Install development Tauri CLI
+        run: cargo install --git https://github.com/tauri-apps/tauri --branch dev tauri-cli
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -56,3 +57,13 @@ jobs:
           releaseName: Oyasumi v${{ steps.get-package-version.outputs.version }}
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
+          includeUpdaterJson: true
+          tauriScript: cargo-tauri
+#      - name: Update the update manifest
+#        uses: exuanbo/actions-deploy-gist@v1
+#        with:
+#          token: ${{ secrets.GH_TOKEN_GIST }}
+#          gist_id: 16ed38d8ccd9282675d04478f887f76f
+#          file_path: latest.json
+#          gist_file_name: 'oyasumi_update_manifest.json'
+#          gist_description: Oyasumi Update Manifest [Release Channel]

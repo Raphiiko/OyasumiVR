@@ -1,12 +1,12 @@
 use crate::elevated_sidecar;
 use log::error;
-use oyasumi_shared::models::{
+use oyasumivr_shared::models::{
     NVMLDevice, NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
 };
 
 #[tauri::command]
 pub async fn nvml_status() -> String {
-    let url = match elevated_sidecar::get_base_url() {
+    let url = match elevated_sidecar::get_base_url().await {
         Some(base_url) => base_url + "/nvml/status",
         None => {
             error!("[Core] Tried getting NVML status while sidecar is inactive");
@@ -25,7 +25,7 @@ pub async fn nvml_status() -> String {
 
 #[tauri::command]
 pub async fn nvml_get_devices() -> Vec<NVMLDevice> {
-    let url = match elevated_sidecar::get_base_url() {
+    let url = match elevated_sidecar::get_base_url().await {
         Some(base_url) => base_url + "/nvml/get_devices",
         None => return Vec::new(),
     };
@@ -39,7 +39,7 @@ pub async fn nvml_get_devices() -> Vec<NVMLDevice> {
 
 #[tauri::command]
 pub async fn nvml_set_power_management_limit(uuid: String, limit: u32) -> Result<bool, String> {
-    let url = match elevated_sidecar::get_base_url() {
+    let url = match elevated_sidecar::get_base_url().await {
         Some(base_url) => base_url + "/nvml/set_power_management_limit",
         None => return Err("ELEVATED_SIDECAR_INACTIVE".into()),
     };

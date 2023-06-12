@@ -1,0 +1,107 @@
+<div class="pane-content" @noop>
+  <div class="alert warning" *ngIf="lighthousePowerControlDisabled" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'power-automations.lighthouseControlDisabledWarning' | translate }}</span>
+      <button class="btn btn-secondary" (click)="enableLighthouseControl()" translate>{{
+        'power-automations.enableLighthouseControl' | translate
+      }}</button>
+    </div>
+  </div>
+
+  <div
+    class="alert warning"
+    @vshrink
+    *ngIf="
+      !lighthousePowerControlDisabled &&
+      (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
+    "
+  >
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'power-automations.error.' + lighthouseStatus | translate }}</span>
+    </div>
+  </div>
+
+  <div class="alert info" *ngIf="!lighthousePowerControlDisabled" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> info </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'power-automations.powerManagementWarning' | translate }}</span>
+    </div>
+  </div>
+
+  <div class="setting-category">
+    <h2 translate>power-automations.lighthousePowerOn.title</h2>
+    <p>
+      <span translate> power-automations.lighthousePowerOn.description</span>
+    </p>
+    <div class="settings">
+      <div class="setting-row" [class.disabled]="lighthousePowerControlDisabled">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.lighthousePowerOn.onOyasumiStart.title</span>
+          <span translate>power-automations.lighthousePowerOn.onOyasumiStart.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="automationConfigs.TURN_ON_LIGHTHOUSES_ON_OYASUMI_START.enabled"
+              (change)="toggleAutomationEnabled('TURN_ON_LIGHTHOUSES_ON_OYASUMI_START')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row" [class.disabled]="lighthousePowerControlDisabled">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.lighthousePowerOn.onSteamVRStart.title</span>
+          <span translate>power-automations.lighthousePowerOn.onSteamVRStart.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="automationConfigs.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START.enabled"
+              (change)="toggleAutomationEnabled('TURN_ON_LIGHTHOUSES_ON_STEAMVR_START')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="setting-category">
+    <h2 translate>power-automations.lighthousePowerOff.title</h2>
+    <p>
+      <span translate> power-automations.lighthousePowerOff.description</span>
+    </p>
+    <div class="settings">
+      <div class="setting-row" [class.disabled]="lighthousePowerControlDisabled">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.lighthousePowerOff.onSteamVRStop.title</span>
+          <span translate>power-automations.lighthousePowerOff.onSteamVRStop.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="automationConfigs.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP.enabled"
+              (change)="toggleAutomationEnabled('TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
-import { LighthouseService } from 'src/app/services/lighthouse.service';
+import { LighthouseConsoleService } from 'src/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
+import { flatten } from 'lodash';
+import { OscService } from '../../services/osc.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -113,7 +115,7 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
   ]);
 }
 
-type SubMenu = 'GENERAL' | 'VRCHAT';
+type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -134,11 +136,12 @@ export class DashboardNavbarComponent implements OnInit {
 
   constructor(
     private settingsService: AppSettingsService,
-    private lighthouse: LighthouseService,
+    private lighthouse: LighthouseConsoleService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NVMLService,
     private sidecar: ElevatedSidecarService,
     private update: UpdateService,
+    private osc: OscService,
     protected router: Router,
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessControlAutomationService
@@ -148,6 +151,9 @@ export class DashboardNavbarComponent implements OnInit {
       this.lighthouse.consoleStatus.pipe(
         map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
         startWith(false)
+      ),
+      this.osc.addressValidation.pipe(
+        map((validation) => flatten(Object.values(validation)).length > 0)
       ),
     ]).pipe(map((errorAreas: boolean[]) => !!errorAreas.find((a) => a)));
     this.gpuAutomationsErrors = combineLatest([
@@ -200,14 +206,20 @@ export class DashboardNavbarComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    // setTimeout(async () => {
+    //   await invoke('lighthouse_scan_devices');
+    //   setInterval(async () => {
+    //     await invoke('lighthouse_scan_devices');
+    //   }, 10500);
+    // }, 1000);
+  }
 
   logoClicked = 0;
 
-  onLogoClick() {
-    if (this.logoClicked++ > 5) {
-      // mmmmm
-    }
+  async onLogoClick() {
+    // if (this.logoClicked++ > 5) {
+    // }
   }
 
   openSubMenu(subMenu: SubMenu) {

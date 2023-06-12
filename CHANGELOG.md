@@ -5,13 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0]
+
+### Added
+
+- Option to increase the detection window for sleep detection.
+- New "Advanced" tab in the settings for advanced configuration options.
+- Tools for clearing (parts of) Oyasumi's persistent data.
+- Button for opening Oyasumi's log folder.
+- New multilingual NSIS based installer package for new releases.
+- Allow for disabling of OSC features to prevent Oyasumi from binding ports.
+- Show error indicators in navigation and tabs when the OSC server cannot be started.
+- System tray icon (by [neuroblack](https://github.com/neuroblack)).
+- Option to close Oyasumi's window to the system tray, rather than quitting the application
+  (by [neuroblack](https://github.com/neuroblack)).
+- Option to start Oyasumi hidden in the system tray (by [neuroblack](https://github.com/neuroblack)).
+- Power management for SteamVR base stations (Supports V2 Lighthouses only).
+- Option for forcing the state of the sleep mode at launch
+- Automations for turning base stations on and off with SteamVR
+- Automation for turning base stations on with Oyasumi
+- Automations for controlling the Chaperone fade distance (by [góngo](https://github.com/TheMrGong))
+- Added shutdown sequence automations for helping with sleeping outside VR.
+
+### Changed
+
+- Remote images now fade in smoothly upon load.
+- Language selection modal now always shows if the user has not picked a language.
+- Reorganized navigation.
+- Updated splash screen.
+- Updated to Angular 16 & Tauri 1.3.
+
+### Removed
+
+- Removed experimental flag for sleep detection feature.
+- Removed debug tab in the settings view.
+- Removed bundling of WIX based installer packages.
+
+### Fixed
+
+- Stopped brightness automations from triggering when there is no headset available.
+- Prevent the update service from being initialised until after language selection.
+
 ## [1.6.0]
 
 ### Added
 
 - Display brightness automations for Valve Index.
 - Automations for adjusting SteamVR's render resolution.
-- Event log for displaying actions taken by Oyasumi
+- Event log for displaying actions taken by Oyasumi.
 - OSC Automations for sending custom OSC commands when the sleep mode changes.
 - Language support for French, thanks to [neuroblack](https://github.com/neuroblack).
 
@@ -21,7 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Prevent sleep detector from triggering when sleep mode was disabled less than 15 minutes ago.
 - Bulk removing friends from the player list for automatic invite request accepts, now requires confirmation.
 - Reorganized navigation bar to reduce clutter.
-- Updated to Angular 15
+- Updated to Angular 15.
 
 ## [1.5.1]
 

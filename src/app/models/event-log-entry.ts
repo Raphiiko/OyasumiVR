@@ -1,3 +1,5 @@
+import { ShutdownSequenceStage } from '../services/shutdown-automations.service';
+import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
 
@@ -7,39 +9,58 @@ export type EventLog = {
 };
 
 export const EVENT_LOG_DEFAULT: EventLog = {
-  version: 1,
+  version: 2,
   logs: [],
 };
 
 export type EventLogEntry =
   | EventLogSleepModeEnabled
   | EventLogSleepModeDisabled
-  | EventLogTurnedOffDevices
+  | EventLogTurnedOffOpenVRDevices
+  | EventLogLighthouseSetPowerState
   | EventLogGpuPowerLimitChanged
   | EventLogBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogSleepDetectorEnableCancelled
-  | EventLogRenderResolutionChanged;
+  | EventLogRenderResolutionChanged
+  | EventLogChaperoneFadeDistanceChanged
+  | EventLogShutdownSequenceStarted
+  | EventLogShutdownSequenceCancelled;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
 export type EventLogType =
   | 'sleepModeEnabled'
   | 'sleepModeDisabled'
-  | 'turnedOffDevices'
+  | 'turnedOffOpenVRDevices'
+  | 'lighthouseSetPowerState'
   | 'gpuPowerLimitChanged'
   | 'brightnessChanged'
   | 'acceptedInviteRequest'
   | 'statusChangedOnPlayerCountChange'
   | 'sleepDetectorEnableCancelled'
-  | 'renderResolutionChanged';
+  | 'renderResolutionChanged'
+  | 'chaperoneFadeDistanceChanged'
+  | 'shutdownSequenceStarted'
+  | 'shutdownSequenceCancelled';
 
 export interface EventLogBase {
   id: string;
   type: EventLogType;
 
   time: number;
+}
+
+export interface EventLogShutdownSequenceStarted extends EventLogBase {
+  type: 'shutdownSequenceStarted';
+  reason: 'MANUAL' | 'SLEEP_TRIGGER';
+  stages: ShutdownSequenceStage[];
+}
+
+export interface EventLogShutdownSequenceCancelled extends EventLogBase {
+  type: 'shutdownSequenceCancelled';
+  reason: 'MANUAL';
 }
 
 export interface EventLogSleepModeEnabled extends EventLogBase {
@@ -52,10 +73,17 @@ export interface EventLogSleepModeDisabled extends EventLogBase {
   reason: SleepModeStatusChangeReason;
 }
 
-export interface EventLogTurnedOffDevices extends EventLogBase {
-  type: 'turnedOffDevices';
+export interface EventLogTurnedOffOpenVRDevices extends EventLogBase {
+  type: 'turnedOffOpenVRDevices';
   reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING';
   devices: 'CONTROLLER' | 'CONTROLLERS' | 'TRACKER' | 'TRACKERS' | 'ALL' | 'VARIOUS';
+}
+
+export interface EventLogLighthouseSetPowerState extends EventLogBase {
+  type: 'lighthouseSetPowerState';
+  reason: 'MANUAL' | 'OYASUMI_START' | 'STEAMVR_START' | 'STEAMVR_STOP';
+  devices: 'ALL' | 'SINGLE';
+  state: LighthouseDevicePowerState;
 }
 
 export interface EventLogGpuPowerLimitChanged extends EventLogBase {
@@ -96,4 +124,10 @@ export interface EventLogRenderResolutionChanged extends EventLogBase {
   type: 'renderResolutionChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
   resolution: number | null;
+}
+
+export interface EventLogChaperoneFadeDistanceChanged extends EventLogBase {
+  type: 'chaperoneFadeDistanceChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  fadeDistance: number;
 }

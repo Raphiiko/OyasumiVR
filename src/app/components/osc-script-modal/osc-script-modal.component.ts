@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { OscScript } from '../../models/osc-script';
 import { fadeUp } from '../../utils/animations';
 
@@ -19,7 +19,7 @@ interface OscScriptModalOutputModel {
   animations: [fadeUp()],
 })
 export class OscScriptModalComponent
-  extends SimpleModalComponent<OscScriptModalInputModel, OscScriptModalOutputModel>
+  extends BaseModalComponent<OscScriptModalInputModel, OscScriptModalOutputModel>
   implements OnInit, OscScriptModalInputModel
 {
   script?: OscScript;

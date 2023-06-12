@@ -1,0 +1,19 @@
+@import '../settings-tab/settings-tab.component.scss';
+
+.action-row {
+  p {
+    margin: 0;
+  }
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+button,
+a {
+  i {
+    font-size: 1.25em;
+  }
+}

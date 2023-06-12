@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
 import { LimitedUser } from 'vrchat/dist';
 import { VRChatService } from '../../services/vrchat.service';
@@ -10,10 +10,9 @@ import {
   filter,
   firstValueFrom,
   startWith,
-  Subject,
-  takeUntil,
 } from 'rxjs';
 import Fuse from 'fuse.js';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export type SelectedFriend = SelectedFriendGroup | SelectedFriendPlayer;
 
@@ -42,10 +41,9 @@ export interface FriendSelectionOutputModel {
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
 })
 export class FriendSelectionModalComponent
-  extends SimpleModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>
-  implements OnInit, FriendSelectionInputModel, OnDestroy
+  extends BaseModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>
+  implements OnInit, FriendSelectionInputModel
 {
-  private destroy$: Subject<void> = new Subject<void>();
   selection: SelectedFriend[] = [];
   initialSelection: SelectedFriend[] = [];
   friends: LimitedUser[] = [];
@@ -53,7 +51,7 @@ export class FriendSelectionModalComponent
   query: BehaviorSubject<string> = new BehaviorSubject<string>('');
   activeQuery: string = this.query.value;
 
-  constructor(protected vrchat: VRChatService) {
+  constructor(protected vrchat: VRChatService, private destroyRef: DestroyRef) {
     super();
   }
 
@@ -64,17 +62,13 @@ export class FriendSelectionModalComponent
     this.friends = await this.vrchat.listFriends();
     this.query
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         debounceTime(300),
         startWith(this.query.value),
         distinctUntilChanged()
       )
       .subscribe((query) => this.search(query));
     this.results = this.friends;
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   async cancel() {

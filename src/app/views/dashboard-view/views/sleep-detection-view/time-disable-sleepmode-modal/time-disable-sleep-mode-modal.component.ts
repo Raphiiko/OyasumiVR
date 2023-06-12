@@ -1,5 +1,5 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
 
 export interface TimeDisableSleepModeModalInputModel {
@@ -17,7 +17,7 @@ export interface TimeDisableSleepModeModalOutputModel {
   animations: [fadeUp(), fade(), triggerChildren()],
 })
 export class TimeDisableSleepModeModalComponent
-  extends SimpleModalComponent<
+  extends BaseModalComponent<
     TimeDisableSleepModeModalInputModel,
     TimeDisableSleepModeModalOutputModel
   >

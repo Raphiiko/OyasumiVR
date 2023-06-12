@@ -1,17 +1,18 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { fade } from '../../utils/animations';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { debounceTime, Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-slider-setting',
@@ -19,7 +20,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
 })
-export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
+export class SliderSettingComponent implements OnInit, OnChanges {
   @Input() min = 0;
   @Input() max = 100;
 
@@ -41,28 +42,27 @@ export class SliderSettingComponent implements OnInit, OnChanges, OnDestroy {
   @Output() valueChange = new EventEmitter<number>();
   protected showOverlay = false;
   protected input$ = new Subject<string>();
-  private destroy$ = new Subject<void>();
 
   @ViewChild('inputValue') inputEl?: ElementRef;
 
+  constructor(private destroyRef: DestroyRef) {}
+
   ngOnInit(): void {
-    this.input$.pipe(debounceTime(300), takeUntil(this.destroy$)).subscribe((strValue) => {
-      let value = parseInt(strValue, 10);
-      if (isNaN(value)) return;
-      value = Math.max(this.min, Math.min(this.max, value));
-      if (value === this.value) return;
-      this.value = value;
-      this.valueChange.emit(value);
-    });
+    this.input$
+      .pipe(debounceTime(300), takeUntilDestroyed(this.destroyRef))
+      .subscribe((strValue) => {
+        let value = parseInt(strValue, 10);
+        if (isNaN(value)) return;
+        value = Math.max(this.min, Math.min(this.max, value));
+        if (value === this.value) return;
+        this.value = value;
+        this.valueChange.emit(value);
+      });
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes['disabled']?.currentValue) return;
     this.showOverlay = false;
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 
   onInputBlur() {

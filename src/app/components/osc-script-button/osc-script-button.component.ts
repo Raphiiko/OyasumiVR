@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { OscScript } from '../../models/osc-script';
 import { filter } from 'rxjs';
-import { SimpleModalService } from 'ngx-simple-modal';
+import { ModalService } from 'src/app/services/modal.service';
 import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.component';
 
 @Component({
@@ -14,7 +14,7 @@ export class OscScriptButtonComponent implements OnInit {
   @Input() script?: OscScript;
   @Output() scriptChange = new EventEmitter<OscScript>();
 
-  constructor(private modalService: SimpleModalService) {}
+  constructor(private modalService: ModalService) {}
 
   ngOnInit(): void {}
 

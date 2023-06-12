@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { BaseModalComponent } from 'src/app/components/base-modal/base-modal.component';
 import { fadeUp } from 'src/app/utils/animations';
 import { TString } from '../../models/translatable-string';
 
@@ -22,7 +22,7 @@ export interface ConfirmModalOutputModel {
   animations: [fadeUp()],
 })
 export class ConfirmModalComponent
-  extends SimpleModalComponent<ConfirmModalInputModel, ConfirmModalOutputModel>
+  extends BaseModalComponent<ConfirmModalInputModel, ConfirmModalOutputModel>
   implements OnInit, ConfirmModalInputModel
 {
   title?: TString;
@@ -33,6 +33,7 @@ export class ConfirmModalComponent
 
   constructor() {
     super();
+    this.result = { confirmed: false };
   }
 
   ngOnInit(): void {
@@ -40,7 +41,6 @@ export class ConfirmModalComponent
   }
 
   async cancel() {
-    this.result = { confirmed: false };
     await this.close();
   }
 

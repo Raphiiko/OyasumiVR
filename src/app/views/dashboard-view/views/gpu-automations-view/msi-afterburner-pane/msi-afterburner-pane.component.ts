@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
@@ -14,6 +14,7 @@ import {
 } from '../../../../../models/automations';
 import { vshrink } from '../../../../../utils/animations';
 import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-msi-afterburner-pane',
@@ -21,7 +22,7 @@ import { SelectBoxItem } from '../../../../../components/select-box/select-box.c
   styleUrls: ['./msi-afterburner-pane.component.scss'],
   animations: [vshrink()],
 })
-export class MsiAfterburnerPaneComponent implements OnInit, OnDestroy {
+export class MsiAfterburnerPaneComponent implements OnInit {
   msiAfterburnerStatus: ExecutableReferenceStatus = 'UNKNOWN';
   msiAfterburnerPathAlert?: {
     text: string;
@@ -29,7 +30,6 @@ export class MsiAfterburnerPaneComponent implements OnInit, OnDestroy {
     loadingIndicator?: boolean;
   };
   msiAfterburnerPathInputChange: Subject<string> = new Subject();
-  destroy$: Subject<void> = new Subject<void>();
   appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
   config: MSIAfterburnerAutomationConfig = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
   profileOptions: SelectBoxItem[] = [
@@ -48,21 +48,19 @@ export class MsiAfterburnerPaneComponent implements OnInit, OnDestroy {
   onDisableProfile: SelectBoxItem = this.profileOptions[0];
   onEnableProfile: SelectBoxItem = this.profileOptions[0];
 
-  constructor(protected gpuAutomations: GpuAutomationsService) {}
+  constructor(protected gpuAutomations: GpuAutomationsService, private destroyRef: DestroyRef) {}
 
   ngOnInit() {
-    this.gpuAutomations.msiAfterburnerConfig.pipe(takeUntil(this.destroy$)).subscribe((config) => {
-      this.config = config;
-      this.onEnableProfile = this.profileOptions[config.onSleepEnableProfile];
-      this.onDisableProfile = this.profileOptions[config.onSleepDisableProfile];
-    });
+    this.gpuAutomations.msiAfterburnerConfig
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((config) => {
+        this.config = config;
+        this.onEnableProfile = this.profileOptions[config.onSleepEnableProfile];
+        this.onDisableProfile = this.profileOptions[config.onSleepDisableProfile];
+      });
     this.gpuAutomations.msiAfterburnerStatus
-      .pipe(takeUntil(this.destroy$))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => this.processMSIAfterburnerStatus(status));
-  }
-
-  ngOnDestroy() {
-    this.destroy$.next();
   }
 
   processMSIAfterburnerStatus(status: ExecutableReferenceStatus) {

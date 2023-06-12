@@ -1,4 +1,4 @@
-button.btn-power-off {
+button.btn-power {
   background: var(--color-surface-1);
   color: var(--color-text-2);
   display: flex;
@@ -10,15 +10,23 @@ button.btn-power-off {
   transition: all 0.1s ease;
   padding: 0.25em 0.25em;
   overflow: hidden;
+  border-color: var(--color-surface-3);
 
   &:disabled {
     color: var(--color-text-4);
   }
 
   &:not(:disabled) {
+    cursor: pointer;
     &:hover {
-      background: var(--color-alert-error);
-      color: var(--color-on-alert-error);
+      &.power-off {
+        background: var(--color-alert-error);
+        color: var(--color-on-alert-error);
+      }
+      &.power-on {
+        background: var(--color-alert-success);
+        color: var(--color-on-alert-success);
+      }
     }
 
     &:active:after {
@@ -37,8 +45,17 @@ button.btn-power-off {
     background: black;
     opacity: 0;
   }
+
+  &.power-off {
+    color: var(--color-alert-error);
+  }
+
+  &.power-on {
+    color: var(--color-alert-success);
+  }
 }
 
+a.btn,
 button.btn {
   --scoped-bg-color: var(--color-surface);
   --scoped-color: var(--color-on-surface);
@@ -56,6 +73,14 @@ button.btn {
   background-color: var(--scoped-bg-color);
   color: var(--scoped-color);
   border-radius: 0.5em;
+  &,
+  &:visited,
+  &:hover,
+  &:focus,
+  &:active {
+    color: var(--scoped-color);
+    text-decoration: none;
+  }
 
   i.material-icons:not(:last-child),
   i.material-icons-round:not(:last-child) {
@@ -104,8 +129,8 @@ button.btn {
       --scoped-bg-color: var(--color-secondary-hover);
     }
 
-    body.dark & {
-    }
+    // body.dark & {
+    // }
 
     &:disabled {
       opacity: 0.5;

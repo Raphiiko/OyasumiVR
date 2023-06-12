@@ -75,11 +75,15 @@
         font-weight: 200;
         text-align: center;
         color: var(--color-text-1);
+        b {
+          font-weight: 500;
+        }
       }
 
       .tag-line {
         color: var(--color-text-4);
-        transform: translateY(-1.75em);
+        font-size: 1.35em;
+        transform: translate(-5.3em, -1.5em);
       }
     }
   }
@@ -168,7 +172,8 @@
     padding-bottom: 0.25em;
   }
 
-  .translation-author-list {
+  .translation-author-list,
+  .contributor-list {
     display: flex;
     flex-direction: column;
     align-items: flex-end;

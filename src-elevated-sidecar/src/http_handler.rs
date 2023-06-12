@@ -1,7 +1,7 @@
 use std::convert::Infallible;
 
 use hyper::{body::Buf, Body, Method, Request, Response};
-use oyasumi_shared::models::{
+use oyasumivr_shared::models::{
     MSIAfterburnerSetProfileRequest, MSIAfterburnerSetProfileResponse,
     NVMLSetPowerManagementLimitRequest, NVMLSetPowerManagementLimitResponse,
 };

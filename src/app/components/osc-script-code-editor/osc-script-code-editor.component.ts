@@ -1,20 +1,21 @@
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { BehaviorSubject, debounceTime, map, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, map, Observable, tap } from 'rxjs';
 import { OscParameterType, OscScript, OscScriptCodeValidationError } from '../../models/osc-script';
 import { fade, hshrink, noop } from '../../utils/animations';
 import { isEqual } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-osc-script-code-editor',
@@ -22,7 +23,7 @@ import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
   styleUrls: ['./osc-script-code-editor.component.scss'],
   animations: [fade(), hshrink(), noop()],
 })
-export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterViewInit {
+export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editor') editorRef!: ElementRef;
   @ViewChild('lineCounter') lineCounterRef!: ElementRef;
   @Input() minHeight = 10;
@@ -34,7 +35,6 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
   @Output() scriptChange = new EventEmitter<OscScript>();
   @Output() errorCount = new EventEmitter<number>();
   @Output() validatedChange = new EventEmitter<boolean>();
-  private destroy$: Subject<void> = new Subject<void>();
   private _code: BehaviorSubject<string> = new BehaviorSubject<string>('');
   errors: OscScriptCodeValidationError[] = [];
   tooltipErrors: OscScriptCodeValidationError[] = [];
@@ -62,7 +62,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
     })
   );
 
-  constructor(private osc: OscService) {}
+  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
 
   protected setScript(script: OscScript, force = false) {
     const { script: currentScript } = parseOscScriptFromCode(this._code.value);
@@ -75,7 +75,7 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
   ngOnInit(): void {
     this._code
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         tap(() => (this.validated = false)),
         debounceTime(500)
       )
@@ -87,10 +87,6 @@ export class OscScriptCodeEditorComponent implements OnInit, OnDestroy, AfterVie
         this.errorCount.emit(errors.length);
         this.scriptChange.emit(script);
       });
-  }
-
-  ngOnDestroy(): void {
-    this.destroy$.next();
   }
 
   ngAfterViewInit() {

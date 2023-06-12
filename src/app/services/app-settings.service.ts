@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE } from '../globals';
-import { cloneDeep } from 'lodash';
+import { SETTINGS_FILE, SETTINGS_KEY_APP_SETTINGS } from '../globals';
+import { cloneDeep, isEqual } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
 import { TranslateService } from '@ngx-translate/core';
-
-export const SETTINGS_KEY_APP_SETTINGS = 'APP_SETTINGS';
 
 @Injectable({
   providedIn: 'root',
@@ -18,8 +16,10 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
-  private _loadedDefaults: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  loadedDefaults: Observable<boolean> = this._loadedDefaults.asObservable();
+  private _loadedDefaults: BehaviorSubject<boolean | undefined> = new BehaviorSubject<
+    boolean | undefined
+  >(undefined);
+  loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
   constructor(private translateService: TranslateService) {}
 
@@ -49,7 +49,7 @@ export class AppSettingsService {
     }
     this._settings.next(settings);
     await this.saveSettings();
-    if (loadedDefaults) this._loadedDefaults.next(true);
+    this._loadedDefaults.next(loadedDefaults);
   }
 
   async saveSettings() {
@@ -59,6 +59,7 @@ export class AppSettingsService {
 
   updateSettings(settings: Partial<AppSettings>) {
     const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    if (isEqual(newSettings, this._settings.value)) return;
     this._settings.next(newSettings);
   }
 }

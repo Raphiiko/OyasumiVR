@@ -1,6 +1,6 @@
 [package]
-name = "oyasumi-shared"
-version = "1.6.0"
+name = "oyasumivr-shared"
+version = "1.7.0"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"
@@ -9,20 +9,23 @@ rust-version = "1.64.0"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 
-[dependencies.openvr]
-git = "https://github.com/Raphiiko/oyasumi-rust-openvr"
-
 [dependencies.windows-sys]
 version = "0.36.1"
 features = ["Win32_UI_Shell", "Win32_Foundation"]
 
 [dependencies.winapi]
 version = "0.3.9"
-features = ["handleapi", "processthreadsapi", "winnt", "securitybaseapi", "impl-default"]
+features = [
+    "handleapi",
+    "processthreadsapi",
+    "winnt",
+    "securitybaseapi",
+    "impl-default",
+]
 
 [profile.release]
-panic = "abort" # Strip expensive panic clean-up logic
+panic = "abort"   # Strip expensive panic clean-up logic
 codegen-units = 1 # Compile crates one after another so the compiler can optimize better
-lto = true # Enables link to optimizations
-opt-level = "s" # Optimize for binary size
-strip = true # Remove debug symbols
+lto = true        # Enables link to optimizations
+opt-level = "s"   # Optimize for binary size
+strip = true      # Remove debug symbols
