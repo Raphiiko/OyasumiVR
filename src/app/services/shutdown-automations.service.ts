@@ -333,7 +333,7 @@ export class ShutdownAutomationsService {
     // Shutdown windows
     await invoke('run_command', {
       command: 'shutdown',
-      args: ['/s', '/t', '30'],
+      args: ['/s', '/t', '10'],
     });
     // Wait for 30 seconds, then stop the sequence (if the pc hasn't already shut down)
     await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
