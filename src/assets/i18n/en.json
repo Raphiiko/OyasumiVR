@@ -1017,7 +1017,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "SteamVR fade distance set to {{value}}",
+          "title": "Chaperone fade distance set to {{value}}",
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"

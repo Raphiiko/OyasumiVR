@@ -1017,7 +1017,7 @@
 			}
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "SteamVR淡化距离设置为{{价值}}。",
+          "title": "Chaperone淡化距离设置为{{价值}}。",
           "reason": {
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
             "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"

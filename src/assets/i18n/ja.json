@@ -1017,7 +1017,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "SteamVRのフェード距離を{{value}}に設定した。",
+          "title": "ガーディアンのフェード距離を{{value}}に設定した。",
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"

@@ -569,7 +569,7 @@
           "externalControl": {
             "title": "啟用外部控制",
             "description": "控制OyasumiVR的功能超過 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
-			}
+          }
         }
       }
     },
@@ -755,7 +755,7 @@
       "sleepDetection": "睡眠偵測",
       "oscAutomations": "OSC 自動化",
       "gpuAutomations": "GPU 自動化",
-	  "powerAutomations": "Power Automations",
+      "powerAutomations": "Power Automations",
       "statusAutomations": "狀態 自動化",
       "autoInviteRequestAccept": "自動接受 \n加入請求",
       "settings": "設定",
@@ -763,7 +763,7 @@
       "brightnessAutomations": "亮度自動化",
       "about": "關於 OyasumiVR",
       "resolutionAutomations": "解析度自動化",
-	  "chaperoneAutomations": "Chaperone Automations",
+      "chaperoneAutomations": "Chaperone Automations",
       "sleepAnimations": "Sleep Animations",
       "hardwareAutomations": "Hardware Automations",
       "shutdownAutomations": "Shutdown Sequence"
@@ -906,7 +906,7 @@
             "OSC_CONTROL": "透過 OSC 關閉",
             "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
             "CHARGING": "當設備正在充電的時候"
-			}
+          }
         },
         "lighthouseSetPowerState": {
           "SINGLE": {
@@ -1014,10 +1014,10 @@
           "reason": {
             "SLEEP_MODE_ENABLED": "由於開啟睡眠模式",
             "SLEEP_MODE_DISABLED": "由於關閉睡眠模式"
-			}
+          }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "SteamVR淡化距離設置為{{價值}}。",
+          "title": "Chaperone淡化距離設置為{{價值}}。",
           "reason": {
             "SLEEP_MODE_ENABLED": "由於開啟睡眠模式",
             "SLEEP_MODE_DISABLED": "由於關閉睡眠模式"
@@ -1054,7 +1054,7 @@
       "title": "將渲染解析度改為",
       "custom": "自訂",
       "auto": "自動"
-	  }
+    }
   },
   "chaperone-automations": {
     "title": "保護牆自動化",
