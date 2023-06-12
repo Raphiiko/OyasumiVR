@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Fixed enabling GPU automations crashing Oyasumi
+
 ## [1.7.0]
 
 ### Added
