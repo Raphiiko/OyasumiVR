@@ -51,7 +51,7 @@ pub async fn start() {
     info!("[Core] Starting sidecar...");
     tokio::spawn(async move {
         let (mut _rx, mut _child) =
-            tauri::api::process::Command::new(String::from("oyasumi-elevated-sidecar.exe"))
+            tauri::api::process::Command::new(String::from("oyasumivr-elevated-sidecar.exe"))
                 .args(vec![format!("{port}"), format!("{}", std::process::id())])
                 .spawn()
                 .expect("Could not spawn command");
