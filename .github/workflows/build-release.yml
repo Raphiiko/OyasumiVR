@@ -10,7 +10,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ windows-latest ]
+        platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
 
     steps:
@@ -59,11 +59,11 @@ jobs:
           releaseDraft: false
           includeUpdaterJson: true
           tauriScript: cargo-tauri
-#      - name: Update the update manifest
-#        uses: exuanbo/actions-deploy-gist@v1
-#        with:
-#          token: ${{ secrets.GH_TOKEN_GIST }}
-#          gist_id: 16ed38d8ccd9282675d04478f887f76f
-#          file_path: latest.json
-#          gist_file_name: 'oyasumi_update_manifest.json'
-#          gist_description: Oyasumi Update Manifest [Release Channel]
+      - name: Update the update manifest
+        uses: exuanbo/actions-deploy-gist@v1
+        with:
+          token: ${{ secrets.GH_TOKEN_GIST }}
+          gist_id: 16ed38d8ccd9282675d04478f887f76f
+          file_path: latest.json
+          gist_file_name: 'oyasumi_update_manifest.json'
+          gist_description: Oyasumi Update Manifest [Release Channel]
