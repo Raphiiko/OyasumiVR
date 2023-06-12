@@ -87,6 +87,8 @@ features = ["ovr_system", "ovr_settings"]
 # https://github.com/tauri-apps/tauri/issues/6868
 # Remove once fixed.
 tao = { git = "https://github.com/tauri-apps/tao", branch = "v0.16" }
+tauri = { git = "https://github.com/Raphiiko/tauri", branch = "fix/nsis-admin" }
+tauri-build = { git = "https://github.com/Raphiiko/tauri", branch = "fix/nsis-admin" }
 
 [features]
 # by default Tauri runs in production mode
