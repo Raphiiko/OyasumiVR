@@ -564,11 +564,11 @@
           },
           "expressionMenu": {
             "title": "Expression menu制御を有効にする",
-            "description": "VRChatアバターの <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">Expression menu</a> からOyasumiVRの機能を制御する。"
+            "description": "VRChatアバターの <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">Expression menu</a> からOyasumiVRの機能を制御する。"
           },
           "externalControl": {
             "title": "外部制御を有効にする",
-            "description": "<a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a> でOyasumiVRの機能を制御する。"
+            "description": "<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a> でOyasumiVRの機能を制御する。"
           }
         }
       }

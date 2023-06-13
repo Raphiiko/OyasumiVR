@@ -46,7 +46,7 @@ export class SettingsUpdatesTabComponent extends SettingsTabComponent implements
     let changelog = '';
     try {
       changelog = await firstValueFrom(
-        this.http.get('https://raw.githubusercontent.com/Raphiiko/Oyasumi/main/CHANGELOG.md', {
+        this.http.get('https://raw.githubusercontent.com/Raphiiko/OyasumiVR/main/CHANGELOG.md', {
           responseType: 'text',
         })
       );

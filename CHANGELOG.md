@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Updated Japanese Translations
+- Updated references to the new GitHub repository, following the rebrand to OyasumiVR
+
 ## [1.7.1]
 
 ### Fixed

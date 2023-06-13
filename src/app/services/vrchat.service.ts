@@ -93,7 +93,7 @@ export class VRChatService {
     // Load settings from disk
     await this.loadSettings();
     // Construct user agent
-    this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/Oyasumi)`;
+    this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/OyasumiVR)`;
     // Setup socket connection management
     await this.manageSocketConnection();
     // Fetch the api config if needed
