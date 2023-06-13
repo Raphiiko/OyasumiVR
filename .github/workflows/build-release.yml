@@ -46,7 +46,7 @@ jobs:
           validation_level: warn
           version: ${{ steps.get-package-version.outputs.version }}
           path: ./CHANGELOG.md
-      - name: Build and release Oyasumi
+      - name: Build and release OyasumiVR
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,7 +54,7 @@ jobs:
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
           tagName: oyasumi-v${{ steps.get-package-version.outputs.version }}
-          releaseName: Oyasumi v${{ steps.get-package-version.outputs.version }}
+          releaseName: OyasumiVR v${{ steps.get-package-version.outputs.version }}
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           includeUpdaterJson: true
@@ -66,4 +66,4 @@ jobs:
           gist_id: 16ed38d8ccd9282675d04478f887f76f
           file_path: latest.json
           gist_file_name: 'oyasumi_update_manifest.json'
-          gist_description: Oyasumi Update Manifest [Release Channel]
+          gist_description: OyasumiVR Update Manifest [Release Channel]

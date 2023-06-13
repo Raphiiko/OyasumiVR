@@ -65,7 +65,7 @@ jobs:
           validation_level: warn
           version: Unreleased
           path: ./CHANGELOG.md
-      - name: Build and release Oyasumi development build
+      - name: Build and release OyasumiVR development build
         uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -110,9 +110,9 @@ jobs:
             }
             console.log("Updating release data...");
             try {
-              await github.request('PATCH /repos/Raphiiko/Oyasumi/releases/102092545', {
+              await github.request('PATCH /repos/Raphiiko/OyasumiVR/releases/102092545', {
                 tag_name: 'oyasumi-vDEV',
-                name: 'Oyasumi Development Build',
+                name: 'OyasumiVR Development Build',
                 body: `${{ steps.changelog_reader.outputs.changes }}`,
                 draft: false,
                 prerelease: true
@@ -131,7 +131,7 @@ jobs:
           script: |
             console.log("Publishing release...");
             try {
-              await github.request('PATCH /repos/Raphiiko/Oyasumi/releases/102092545', {
+              await github.request('PATCH /repos/Raphiiko/OyasumiVR/releases/102092545', {
                 draft: false
               })
               console.log("Published release!");
@@ -145,4 +145,4 @@ jobs:
           gist_id: 8af3d105fe9a59db304cca2cfea216c8
           file_path: latest.json
           gist_file_name: 'oyasumi_update_manifest_dev.json'
-          gist_description: Oyasumi Update Manifest [Development Channel]
+          gist_description: OyasumiVR Update Manifest [Development Channel]
