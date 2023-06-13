@@ -21,7 +21,7 @@
     "description": "睡眠モードによって、画面の輝度を調整します。",
     "indexWarning": "現在、Valve Indexでのみ利用可能です。SteamVRが起動しており、HMDが接続されていることを確認してください。",
     "onSleepEnable": {
-      "title": "睡眠モード有効時",
+      "title": "睡眠時",
       "description": "睡眠モードが有効になったときの輝度を調整します"
     },
     "onSleepDisable": {
@@ -135,7 +135,7 @@
           "description": "入眠を検出するまでの時間を設定します",
           "unit": "分"
         },
-        "description": "この機能を有効にすると、OyasumiVRは動きから寝ていると推測すると、自動的に睡眠モードになります。"
+        "description": "動きから寝ていると推測すると、自動的に睡眠モードになります。"
       },
       "enableAtTime": {
         "title": "睡眠モードの有効化",
@@ -230,7 +230,7 @@
     "title": "電源の自動化",
     "devicePowerOff": {
       "onSleepModeEnable": {
-        "title": "睡眠モード有効時",
+        "title": "睡眠時",
         "description": "睡眠モードが有効になったとき、電源をオフにする設定です。",
         "optionControllers": "すべてのコントローラーをオフにする",
         "optionTrackers": "すべてのトラッカーをオフにする",
@@ -449,7 +449,7 @@
       "adminPrivileges": {
         "title": "管理者権限",
         "label": "起動時に管理者権限を要求する",
-        "description": "OyasumiVRはGPUの電力制限を制御できるようにするために管理者権限が必要です。これを有効にすることで、OyasumiVRは起動時に管理者権限を要求するようになります。"
+        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。これを有効にすることで、OyasumiVRは起動時に管理者権限を要求するようになります。"
       },
       "telemetry": {
         "title": "データの送信",
@@ -564,11 +564,11 @@
           },
           "expressionMenu": {
             "title": "Expression menu制御を有効にする",
-            "description": "VRChatアバターの <a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">Expression menu</a> からOyasumiVRの機能を制御する。"
+            "description": "VRChatアバターの <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Oyasumi-Expression-Menu\" target=\"_blank\">Expression menu</a> からOyasumiVRの機能を制御する。"
           },
           "externalControl": {
             "title": "外部制御を有効にする",
-            "description": "<a href=\"https://github.com/Raphiiko/Oyasumi/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a> でOyasumiVRの機能を制御する。"
+            "description": "<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-Oyasumi-over-OSC\" target=\"_blank\">OSC</a> でOyasumiVRの機能を制御する。"
           }
         }
       }
@@ -753,20 +753,20 @@
     "dashboard-navbar": {
       "overview": "概要",
       "sleepDetection": "睡眠検出",
-      "oscAutomations": "OSC自動化",
-      "gpuAutomations": "GPU自動化",
-      "powerAutomations": "電源の自動化",
-      "statusAutomations": "ステータス自動化",
-      "autoInviteRequestAccept": "Req Inviteの自動承認",
+      "oscAutomations": "OSC",
+      "gpuAutomations": "GPUの電力",
+      "powerAutomations": "機器の電源",
+      "statusAutomations": "ステータス",
+      "autoInviteRequestAccept": "Req Inviteの承認",
       "settings": "設定",
       "vrcAutomations": "VRChat関係の自動化",
-      "brightnessAutomations": "明るさの自動化",
+      "brightnessAutomations": "明るさ",
       "about": "OyasumiVRについて",
-      "resolutionAutomations": "解像度の自動化",
+      "resolutionAutomations": "解像度",
       "chaperoneAutomations": "ガーディアンの自動化",
-      "sleepAnimations": "スリープアニメーション",
+      "sleepAnimations": "アニメーション",
       "hardwareAutomations": "ハードウェアの自動化",
-      "shutdownAutomations": "シャットダウンプロセス"
+      "shutdownAutomations": "シャットダウン機能"
     },
     "device-list": {
       "title": "機器",
@@ -1024,14 +1024,14 @@
           }
         },
         "shutdownSequenceStarted": {
-          "title": "シャットダウンプロセスを開始した",
+          "title": "シャットダウン機能を開始した",
           "reason": {
             "MANUAL": "手動で開始した",
             "SLEEP_TRIGGER": "長い間眠っていたため"
           }
         },
         "shutdownSequenceCancelled": {
-          "title": "シャットダウンプロセスがキャンセルされた",
+          "title": "シャットダウン機能がキャンセルされた",
           "reason": {
             "MANUAL": "手動でキャンセルした"
           }
@@ -1058,72 +1058,72 @@
   },
   "chaperone-automations": {
     "title": "ガーディアンの自動化",
-    "description": "OyasumiVRは、スリープモードの有効・無効時にSteamVRのガーディアンのフェード距離を自動調整することができます。",
+    "description": "スリープモードの有効・無効時にSteamVRのガーディアンのフェード距離を自動調整します。",
     "onSleepEnable": {
-      "title": "眠りにつくとき",
-      "description": "付き添いのフェード距離を調整する"
+      "title": "睡眠時",
+      "description": "睡眠モード有効時にフェード距離を調整する"
     },
     "onSleepDisable": {
-      "title": "目が覚めたら",
-      "description": "付き添いのフェード距離を調整する"
+      "title": "起床時",
+      "description": "睡眠モード無効時にフェード距離を調整する"
     },
     "fadeDistance": {
       "title": "ガーディアンのフェード距離を変更する"
     }
   },
   "sleepAnimations": {
-    "title": "スリープアニメーション"
+    "title": "アニメーション"
   },
   "shutdown-automations": {
-    "title": "シャットダウンプロセス",
-    "description": "VRでの入眠を楽しみたいが、一晩中VRの中で眠りたくないという場合は、OyasumiVRのシャットダウンプロセスをご利用ください。\n自動的に優雅にシャットダウンするので、VRの外でもスムーズに睡眠を継続することができます。",
+    "title": "シャットダウン機能",
+    "description": "VRでの入眠を楽しみたいが、一晩中VRの中で眠りたくないという場合は、OyasumiVRのシャットダウン機能をご利用ください。\n自動で優雅にシャットダウンするので、VRの外でもスムーズに睡眠を継続することができます。",
     "triggers": {
       "title": "自動トリガー",
       "whenAsleep": {
         "title": "寝ているときに起動する",
-        "description": "スリープモードが一定時間継続した場合に、シャットダウンプロセスを起動させる機能"
+        "description": "スリープモードが一定時間継続した場合に、シャットダウン機能を起動させる機能"
       },
       "whenAsleepDuration": {
         "title": "睡眠時間",
-        "description": "シャットダウンプロセスが実行されるまでのスリープモードの有効時間"
+        "description": "シャットダウン機能が実行されるまでのスリープモードの有効時間"
       },
       "whenAsleepTimeWindow": {
         "title": "アクティベーションウィンドウ",
-        "description": "シャットダウンのトリガーを特定の時間帯にのみ許可する。"
+        "description": "シャットダウンのトリガーを特定の時間帯にのみ許可する"
       }
     },
     "sequence": {
       "title": "シャットダウン設定",
       "quitSteamVR": {
         "title": "SteamVRを終了する",
-        "description": "これにより、実行中のゲームやオーバーレイも終了します。"
+        "description": "これにより、実行中のゲームやオーバーレイも終了します"
       },
       "turnOffDevices": {
         "title": "デバイスの電源を切る"
       },
       "turnOffControllers": {
-        "title": "コントローラーの電源を切る",
-        "description": "コントローラーの電源をオフにする"
+        "title": "コントローラーをオフにする",
+        "description": "コントローラーをオフにします"
       },
       "turnOffTrackers": {
         "title": "トラッカーをオフにする",
-        "description": "トラッカーをオフにする"
+        "description": "トラッカーをオフにします"
       },
       "turnOffBaseStations": {
         "title": "ベースステーションをオフにする",
-        "description": "まだアクティブなベースステーションをオフにする"
+        "description": "アクティブなベースステーションをオフにします"
       },
       "shutDownWindows": {
         "title": "Windowsをシャットダウンする",
-        "description": "コンピュータをシャットダウンしようとする"
+        "description": "コンピューターをシャットダウンします"
       },
       "run": "シーケンス実行"
     },
     "confirm-modal": {
-      "title": "本当にいいんですか？",
-      "message": "今すぐシャットダウンプロセスを実行させますか？"
+      "title": "確認",
+      "message": "今すぐシャットダウン機能を実行させますか？"
     },
-    "noOptionsSelected": "シャットダウンプロセス中に実行するアクションが選択されていないため、この機能を実行しても何の影響もありません。この機能を実行するためには、以下のオプションのうち少なくとも1つを選択してください。",
+    "noOptionsSelected": "シャットダウン中に実行するアクションが選択されていないため、この機能を実行しても何の影響もありません。この機能を実行するためには、以下のオプションのうち少なくとも1つを選択してください。",
     "overlay": {
       "stage": {
         "QUITTING_STEAMVR": "SteamVRを終了する...",
@@ -1133,7 +1133,7 @@
         "SHUTTING_DOWN": "Windowsをシャットダウンする..."
       },
       "title": "シャットダウン",
-      "cancel": "今すぐキャンセルする"
+      "cancel": "キャンセル"
     }
   }
 }

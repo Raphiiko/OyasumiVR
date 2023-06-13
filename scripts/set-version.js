@@ -23,7 +23,7 @@ tauriConfJson.package.version = version;
 tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
   window.userAgent = `OyasumiVR/${
     version === '0.0.0' ? 'DEV' : version
-  } (https://github.com/Raphiiko/Oyasumi)`;
+  } (https://github.com/Raphiiko/OyasumiVR)`;
   return window;
 });
 writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2));
