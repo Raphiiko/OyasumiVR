@@ -2933,7 +2933,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "1.7.2"
+version = "1.7.3"
 dependencies = [
  "bluest",
  "byteorder",
@@ -2981,7 +2981,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.7.2"
+version = "1.7.3"
 dependencies = [
  "serde",
  "winapi",
