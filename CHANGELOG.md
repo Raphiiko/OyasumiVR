@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.3]
+
+### Fixed
+
+- Fixed Oyasumi not being able to start on some systems due to locked Bluetooth adapters.
+
 ## [1.7.2]
 
 ### Changed
