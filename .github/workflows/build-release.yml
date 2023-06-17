@@ -38,7 +38,7 @@ jobs:
         with:
           workspaces: |
             src-shared
-            src-elevated-sidecar
+            elevated-sidecar
             src-tauri
       - name: Install development Tauri CLI
         run: cargo install --git https://github.com/tauri-apps/tauri --branch dev tauri-cli

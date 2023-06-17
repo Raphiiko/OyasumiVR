@@ -37,12 +37,12 @@ tauriCargoToml = tauriCargoToml.replaceAll(
 writeFileSync('src-tauri/Cargo.toml', tauriCargoToml);
 
 // Elevated sidecar cargo toml
-let adminCargoToml = readFileSync('src-elevated-sidecar/Cargo.toml').toString();
+let adminCargoToml = readFileSync('elevated-sidecar/Cargo.toml').toString();
 adminCargoToml = adminCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumivr-elevated-sidecar"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
   `[package]\r\nname = "oyasumivr-elevated-sidecar"\r\nversion = "${version}"`
 );
-writeFileSync('src-elevated-sidecar/Cargo.toml', adminCargoToml);
+writeFileSync('elevated-sidecar/Cargo.toml', adminCargoToml);
 
 // Shared cargo toml
 let sharedCargoToml = readFileSync('src-shared/Cargo.toml').toString();

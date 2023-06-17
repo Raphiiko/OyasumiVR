@@ -18,8 +18,8 @@ async function main() {
     console.error('Failed to determine platform target triple');
   }
   fs.renameSync(
-    `src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar${extension}`,
-    `src-elevated-sidecar/target/release/oyasumivr-elevated-sidecar-${targetTriple}${extension}`
+    `elevated-sidecar/target/release/oyasumivr-elevated-sidecar${extension}`,
+    `elevated-sidecar/target/release/oyasumivr-elevated-sidecar-${targetTriple}${extension}`
   );
 }
 

@@ -19,6 +19,7 @@ mod osc;
 mod system_tray;
 mod utils;
 mod vrc_log_parser;
+mod grpc;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
@@ -152,6 +153,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     openvr::init().await;
     // Initialize OVR brightness overlay
     // ovr_brightness::init().await;
+    // Initialize gRPC server
+    grpc::init().await;
     // Initialize HTTP server
     http_server::init().await;
     // Load sounds
