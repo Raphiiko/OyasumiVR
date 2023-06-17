@@ -50,19 +50,6 @@ pub async fn init() {
         }
         *ADAPTER.lock().await = adapter;
     }
-    // Wait until the adapter is available
-    {
-        let adapter_guard = ADAPTER.lock().await;
-        let adapter = adapter_guard.as_ref().unwrap();
-        if let Err(e) = adapter.wait_available().await {
-            set_lighthouse_status(LighthouseStatus::AdapterError).await;
-            warn!(
-                "[Core] Failed to wait for bluetooth adapter to become available: {}",
-                e
-            );
-            return;
-        }
-    }
     set_lighthouse_status(LighthouseStatus::Ready).await;
     // Poll the status of connected lighthouses every second in a separate task
     tokio::spawn(async move {
