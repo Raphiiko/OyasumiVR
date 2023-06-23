@@ -38,8 +38,8 @@ jobs:
         with:
           workspaces: |
             src-shared
-            elevated-sidecar
-            src-tauri
+            src-elevated-sidecar
+            src-core
       - name: Install development Tauri CLI
         run: cargo install --git https://github.com/Raphiiko/tauri --branch dev tauri-cli
       - name: Get Changelog Entry

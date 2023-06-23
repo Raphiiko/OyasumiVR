@@ -164,24 +164,31 @@ Supporting more headsets by adjusting the image brightness is something that is 
 
 ### Prerequisites
 
-#### Tauri
+#### Rust & Tauri
 To start development on Oyasumi, start by following Tauri's [prerequisites](https://tauri.app/v1/guides/getting-started/prerequisites).
 
-This involves installing C++ Build tools, WebView2, and Rust.
+This involves installing VS C++ Build tools, WebView2, and Rust.
+
+#### Clang
+Next, you need to [install clang](https://rust-lang.github.io/rust-bindgen/requirements.html#windows). This is required for generating the bindings to OpenVR.
+
+Following the linked guide, make sure to
+1. Install Clang (e.g. through `winget install LLVM.LLVM`)
+2. Set the `LIBCLANG_PATH` environment variable to the `bin` directory of your LLVM install.
 
 #### NodeJS
-Next, install [NodeJS](https://nodejs.org/en/download/).
+Next, install [NodeJS](https://nodejs.org/en/download/). This is necessary for building the web frontends for the UI and the Overlay.
 
 ### Setting up the project
 
 Once you have set up these dependencies, you can continue as follows:
 
-1. Check out Oyasumi somewhyere on your machine: `git clone https://github.com/Raphiiko/Oyasumi.git`
-2. Change into the new project directory: `cd Oyasumi`
-2. Install the front-end's dependencies from NPM: `npm install`
-3. Run `npm run build` at least once.
+1. Check out Oyasumi somewhyere on your machine: `git clone https://github.com/Raphiiko/OyasumiVR.git`
+2. Change into the new project directory: `cd OyasumiVR`
+3. Install the main UI's dependencies from NPM: `npm install`
+4. Run `npm run build` at least once.
 
-From here, you can run `npm run tauri dev` to run Oyasumi locally and start developing!
+Once this has completed successfully, you can run `npm run dev` to run Oyasumi locally and start developing!
 
 ## VRChat
 

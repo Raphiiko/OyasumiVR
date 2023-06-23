@@ -18,7 +18,7 @@ writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
 if (version === 'DEV') version = '0.0.0';
 
 // Tauri config json
-const tauriConfJson = JSON.parse(readFileSync('src-tauri/tauri.conf.json').toString());
+const tauriConfJson = JSON.parse(readFileSync('src-core/tauri.conf.json').toString());
 tauriConfJson.package.version = version;
 tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
   window.userAgent = `OyasumiVR/${
@@ -26,23 +26,23 @@ tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
   } (https://github.com/Raphiiko/OyasumiVR)`;
   return window;
 });
-writeFileSync('src-tauri/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2));
+writeFileSync('src-core/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2));
 
 // Tauri cargo toml
-let tauriCargoToml = readFileSync('src-tauri/Cargo.toml').toString();
+let tauriCargoToml = readFileSync('src-core/Cargo.toml').toString();
 tauriCargoToml = tauriCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumivr"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
   `[package]\r\nname = "oyasumivr"\r\nversion = "${version}"`
 );
-writeFileSync('src-tauri/Cargo.toml', tauriCargoToml);
+writeFileSync('src-core/Cargo.toml', tauriCargoToml);
 
 // Elevated sidecar cargo toml
-let adminCargoToml = readFileSync('elevated-sidecar/Cargo.toml').toString();
+let adminCargoToml = readFileSync('src-elevated-sidecar/Cargo.toml').toString();
 adminCargoToml = adminCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumivr-elevated-sidecar"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
   `[package]\r\nname = "oyasumivr-elevated-sidecar"\r\nversion = "${version}"`
 );
-writeFileSync('elevated-sidecar/Cargo.toml', adminCargoToml);
+writeFileSync('src-elevated-sidecar/Cargo.toml', adminCargoToml);
 
 // Shared cargo toml
 let sharedCargoToml = readFileSync('src-shared/Cargo.toml').toString();

@@ -1,0 +1,25 @@
+<div class="pane">
+  <div class="pane-title" translate>brightness-automations.title</div>
+  <div class="tab-bar">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'IMAGE_BRIGHTNESS'"
+      (click)="activeTab = 'IMAGE_BRIGHTNESS'"
+    >
+      <div class="tab-label" translate>brightness-automations.tabs.imageBrightness</div>
+    </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'DISPLAY_BRIGHTNESS'"
+      (click)="activeTab = 'DISPLAY_BRIGHTNESS'"
+    >
+      <div class="tab-label" translate>brightness-automations.tabs.displayBrightness</div>
+    </div>
+  </div>
+  <app-image-brightness-automations-tab
+    *ngIf="activeTab === 'IMAGE_BRIGHTNESS'"
+  ></app-image-brightness-automations-tab>
+  <app-display-brightness-automations-tab
+    *ngIf="activeTab === 'DISPLAY_BRIGHTNESS'"
+  ></app-display-brightness-automations-tab>
+</div>

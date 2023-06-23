@@ -1,0 +1,51 @@
+<div class="setting-category">
+  <h2 translate>settings.notifications.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.notifications.provider.title</span>
+        <span translate>settings.notifications.provider.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          class="sleep-mode-startup-behaviour-dropdown"
+          [type]="'SMALL'"
+          [items]="providerOptions"
+          [selected]="providerOption"
+          (selectedChange)="onChangeProviderOption($event)"
+        ></app-select-box>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.notifications.notifications.title</span>
+        <span translate>settings.notifications.notifications.description</span>
+      </div>
+      <div class="setting-row-action"> </div>
+    </div>
+    <div class="setting-row-group">
+      <div class="setting-row compact" *ngFor="let notificationType of notificationTypes">
+        <div class="setting-row-label" translate>
+          <span>{{
+            'settings.notifications.notifications.category.' + notificationType + '.title'
+              | translate
+          }}</span>
+          <span>{{
+            'settings.notifications.notifications.category.' + notificationType + '.description'
+              | translate
+          }}</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="check-toggle">
+            <input
+              type="checkbox"
+              [checked]="isNotificationTypeChecked(notificationType)"
+              (change)="toggleNotificationType(notificationType)"
+            />
+            <span class="check-toggle-checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

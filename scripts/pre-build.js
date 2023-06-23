@@ -12,7 +12,7 @@ function getFilePaths(folder, prefix) {
 }
 
 const imageUrls = [
-  ...getFilePaths('./src/assets/img', '/assets/img'),
+  ...getFilePaths('./src-ui/assets/img', '/assets/img'),
   'https://avatars.githubusercontent.com/u/111654848', // Raphiiko Avatar
 ];
 
@@ -20,7 +20,7 @@ const preloadAssetsData = {
   imageUrls,
 };
 
-fs.writeFileSync('./src/assets/preload-assets.json', JSON.stringify(preloadAssetsData));
+fs.writeFileSync('./src-ui/assets/preload-assets.json', JSON.stringify(preloadAssetsData));
 
 //
 // GENERATE BLURHASH CSS FOR SPLASH SCREEN IMAGE
@@ -40,14 +40,14 @@ const encodeImageToBlurhash = (path) =>
       });
   });
 
-encodeImageToBlurhash('./src/assets/splashscreen/splash.jpg').then((hash) => {
+encodeImageToBlurhash('./src-ui/assets/splashscreen/splash.jpg').then((hash) => {
   const css = Css.of({
     '.splash-blurhash': Object.fromEntries(
       Object.entries(blurhashToCss(hash)).map(([k, v]) => [kebabize(k), v])
     ),
   });
   fs.writeFileSync(
-    './src/assets/splashscreen/splash-blurhash.css',
+    './src-ui/assets/splashscreen/splash-blurhash.css',
     '/* GENERATED FILE, DO NOT EDIT!*/\n' + css
   );
 });
@@ -55,5 +55,5 @@ encodeImageToBlurhash('./src/assets/splashscreen/splash.jpg').then((hash) => {
 //
 // COPY DEPENDENCIES
 //
-fs.copyFileSync('CHANGELOG.md', 'src/assets/CHANGELOG.md');
-fs.copyFileSync('src-tauri/icons/Square150x150Logo.png', 'src/assets/img/icon_150x150.png');
+fs.copyFileSync('CHANGELOG.md', 'src-ui/assets/CHANGELOG.md');
+fs.copyFileSync('src-core/icons/Square150x150Logo.png', 'src-ui/assets/img/icon_150x150.png');
