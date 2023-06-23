@@ -33,6 +33,8 @@ jobs:
           toolchain: stable
           default: true
           override: true
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v2
       - name: Configure Rust cache
         uses: Swatinem/rust-cache@v2
         with:
