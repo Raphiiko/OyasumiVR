@@ -24,7 +24,8 @@
     "ng": "ng",
     "lint": "ng lint",
     "tl": "node scripts/translation-utils.js",
-    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar"
+    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar",
+    "postinstall": "cd src-overlay-ui && npm install && cd .."
   },
   "private": true,
   "dependencies": {
