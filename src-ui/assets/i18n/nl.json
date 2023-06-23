@@ -1,0 +1,1098 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "VR Slaap Tools"
+    },
+    "modals": {
+      "cancel": "Annuleren",
+      "save": "Opslaan",
+      "confirm": "Bevestig",
+      "ok": "Ok",
+      "open": "Open",
+      "close": "Sluiten",
+      "login": "Log in"
+    },
+    "misc": {
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
+    }
+  },
+  "brightness-automations": {
+    "title": "Helderheid Automatiseringen",
+    "brightness": {
+      "title": "Zet de helderheid naar",
+      "description": ""
+    },
+    "transition": {
+      "title": "Vloeiende overgang",
+      "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid"
+    },
+    "transitionTime": {
+      "title": "Overgangsduur",
+      "description": "Hoe lang de vloeiende overgang zal duren"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "Slaap modus",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "activate": "Activeer",
+      "deactivate": "Deactiveer"
+    }
+  },
+  "sleep-detection": {
+    "title": "Slaap Detectie",
+    "enableAutomations": {
+      "title": "Slaap modus inschakelen",
+      "description": "Automatisch de slaap modus inschakelen",
+      "atTime": "Om een specifieke tijd",
+      "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
+      "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
+      "onMotionDetection": {
+        "title": "Wanneer OyasumiVR detecteert dat je slaapt gebaseerd op je bewegingen"
+      }
+    },
+    "disableAutomations": {
+      "title": "Slaap modus uitschakelen",
+      "description": "Automatisch de slaap modus uitschakelen",
+      "atTime": "Om een specifieke tijd",
+      "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
+      "onSteamVRStop": "Wanneer SteamVR stopt"
+    },
+    "modals": {
+      "sleepDetectorCalibration": {
+        "title": "Kalibratie van slaap detectie",
+        "currentCalibration": "Je huidige kalibratie nummer:",
+        "noSteamVR": "Om de kalibratie te kunnen beginnen moet SteamVR gestart zijn en je VR headset verbonden zijn.",
+        "startCalibration": "Begin Kalibratie",
+        "restartCalibration": "Herstart Kalibratie",
+        "info": {
+          "intro": "OyasumiVR kan detecteren of je in slaap bent gevallen, gebaseerd op de beweging van je VR bril. Om dit te kunnen doen, moet OyasumiVR eerst gekalibreerd worden met jouw VR setup. Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
+          "stepPrefix": "Het kalibratieproces werkt als volgt:",
+          "step": {
+            "one": "Je zet je VR bril op en gaat liggen.",
+            "two": "Je start de kalibratie in OyasumiVR vanuit je overlay.",
+            "three": "Je blijft voor 10 seconden stil liggen."
+          },
+          "stepSuffix": "Dat is alles! Na kalibratie zou OyasumiVR moeten kunnen detecteren of je in slaap bent gevallen, gebaseerd op de beweging van je VR bril."
+        },
+        "prepare": {
+          "instruction": "Zet je VR bril op en ga liggen.",
+          "note": "Als je er klaar voor bent, en je dit venster kunt zien vanuit je overlay, druk je op 'Begin Kalibratie' om te beginnen."
+        },
+        "countdown": {
+          "instruction": "We beginnen in {{counter}}",
+          "note": "Blijf stil liggen tijdens het kalibreren! Doe net alsof je slaapt.\nBewegen tijdens het kalibreren kan er voor zorgen dat deze feature niet goed werkt."
+        },
+        "calibrating": {
+          "instruction": "Aan het kalibreren...",
+          "note": "Blijf even stil liggen.",
+          "countdown": "Nog {{counter}} seconde(n)..."
+        },
+        "done": {
+          "instruction": "Kalibratie voltooid!",
+          "note": "Je kunt nu deze feature gebruiken."
+        },
+        "failed": {
+          "instruction": "Kalibratie mislukt",
+          "note": "Er is iets misgegaan tijdens het kalibreren, waarschijnlijk omdat je VR bril geen bewegingsdata doorgeeft. Check of je VR bril trackt en probeer het opnieuw."
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "Slaap modus inschakelen",
+        "calibration": {
+          "title": "Kalibratie",
+          "description": "Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
+          "action": "Kalibreer"
+        },
+        "sensitivity": {
+          "title": "Gevoeligheid",
+          "presets": {
+            "LOWEST": "Laagst",
+            "LOW": "Laag",
+            "MEDIUM": "Gemiddeld",
+            "HIGH": "Hoog",
+            "HIGHEST": "Hoogst"
+          }
+        },
+        "sleepCheck": {
+          "title": "Vraag of ik nog wakker ben voordat de slaap modus wordt ingeschakeld"
+        },
+        "detectionWindow": {
+          "title": "Detectie venster",
+          "description": "Hoe lang OyasumiVR zal wachten voordat het aanneemt dat je in slaap gevallen bent",
+          "unit": "min"
+        },
+        "description": "Met deze feature zal OyasumiVR automatisch de slaap modus inschakelen wanneer je in slaap bent gevallen. Dit is gebaseerd op de beweging van je VR headset."
+      },
+      "enableAtTime": {
+        "title": "Slaap modus inschakelen",
+        "description": "Om een specifieke tijd op de dag",
+        "time": "Tijd"
+      },
+      "disableAtTime": {
+        "title": "Slaap modus uitschakelen",
+        "description": "Om een specifieke tijd op de dag",
+        "time": "Tijd"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Slaap modus uitschakelen",
+        "whenTurningOn": "Bij het aanzetten van",
+        "Controller": "Een controller",
+        "GenericTracker": "Een tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Slaap modus inschakelen",
+        "whenA": "Wanneer een",
+        "Controller": "Controller",
+        "GenericTracker": "Tracker",
+        "fallsBelow": "Valt onder de",
+        "errors": {
+          "thresholdOutOfRange": "Het percentage moet tussen de 0% en 100% vallen.",
+          "thresholdNotInteger": "Het percentage moet een geheel getal zijn."
+        }
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC Automatiseringen",
+    "tab": {
+      "sleepingAnimations": "Slaap Animaties",
+      "general": "Algemeen"
+    },
+    "sleepingAnimations": {
+      "currentPose": "Huidige Houding",
+      "manualControl": "Handmatige Bediening",
+      "presetAuthor": "van {{author}}",
+      "description": "OyasumiVR kan automatisch de animaties van je avatar veranderen wanneer je je slaap houding wijzigd. Dit kan handig zijn als je geen full body tracking hebt, of als je je trackers s'nachts uitzet (of door OyasumiVR laat uitzetten). Een voorbeeld hoe dit er uit ziet kan je <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">hier</a> vinden.\n\nEr zijn presets beschikbaar voor verschillende bestaande locomotion prefabs, maar je kan ook je eigen animaties specificeren.",
+      "enable": "Automatische slaap animaties inschakelen",
+      "customPreset": "Eigen Animaties",
+      "options": {
+        "positions": {
+          "title": "Slaap Houdingen",
+          "description": "Stel de OSC commandos in om de animatie voor elke slaap houding te activeren.",
+          "SIDE_FRONT": "Rechtop",
+          "SIDE_BACK": "Op je rug",
+          "SIDE_LEFT": "Op je linkerzij",
+          "SIDE_RIGHT": "Op je rechterzij",
+          "UNKNOWN": "Onbekend"
+        },
+        "footLock": {
+          "title": "Voeten vastzetten",
+          "description": "Stel de OSC commandos in om de voeten van je avatar vast te zetten.",
+          "FOOT_LOCK": "Voeten vastzetten",
+          "FOOT_UNLOCK": "Voeten losmaken"
+        },
+        "general": {
+          "title": "Algemene Opties",
+          "onlySwitchAnimations": "Alleen animaties wisselen",
+          "onlyIfSleepModeEnabled": "Wanneer slaap modus actief is",
+          "onlyIfAllTrackersTurnedOff": "Wanneer alle trackers uit staan",
+          "footLock": {
+            "title": "Voeten vastzetten",
+            "description": "Het vastzetten van de voeten voorkomt meestal dat de avatar kan bewegen of met de speler mee kan draaien."
+          },
+          "lockFeetOnSleepModeEnable": "Voeten vastzetten wanneer slaap modus wordt ingeschakeld",
+          "unlockFeetOnSleepModeDisable": "Voeten losmaken wanneer slaap modus wordt uitgeschakeld",
+          "unlockFeetOnAutomationDisable": "Voeten losmaken wanneer de automatische slaap animaties worden uitgeschakeld",
+          "releaseFootLockOnPoseChange": "Voeten tijdelijk losmaken wanneer je van slaap houding veranderd",
+          "footLockReleaseWindow": "Duur van het tijdelijk losmaken van de voeten"
+        }
+      }
+    },
+    "general": {
+      "description": "Hier kan je OyasumiVR instellen om OSC commandos naar VRChat te versturen voor verschillende gebeurtenissen. Dit kan bijvoorbeeld handig zijn als je de toggles op je avatar wilt aanpassen wanneer je in slaap valt of wakker wordt.",
+      "onSleepEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Stuur deze OSC commandos",
+        "script": "Slaap Modus Ingeschakeld"
+      },
+      "onSleepDisable": {
+        "title": "Wanneer ik wakker word",
+        "description": "Stuur deze OSC commandos",
+        "script": "Slaap Modus Uitgeschakeld"
+      }
+    }
+  },
+  "power-automations": {
+    "title": "Energie Automatiseringen",
+    "devicePowerOff": {
+      "onSleepModeEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Zet apparaten uit wanneer slaap modus wordt ingeschakeld.",
+        "optionControllers": "Alle controllers uitzetten",
+        "optionTrackers": "Alle trackers uitzetten",
+        "hint": "Je kan configureren wanneer slaap modus wordt ingeschakeld in <a class=\"sleepDetectionLink\">Slaap Detectie</a>."
+      },
+      "onCharge": {
+        "title": "Wanneer ik ze oplaad",
+        "description": "Zorg dat apparaten worden uitgezet wanneer je ze aan de lader legt.",
+        "optionControllers": "Controllers uitzetten",
+        "optionTrackers": "Trackers uitzetten"
+      }
+    },
+    "tabs": {
+      "controllersAndTrackers": "Controllers & Trackers",
+      "baseStations": "Base Stations"
+    },
+    "lighthousePowerOn": {
+      "title": "Base stations aanzetten",
+      "description": "Laat OyasumiVR automatisch je base stations aanzetten.",
+      "onOyasumiStart": {
+        "title": "Wanneer OyasumiVR start",
+        "description": "Zet al je base stations aan wanneer OyasumiVR start"
+      },
+      "onSteamVRStart": {
+        "title": "Wanneer SteamVR start",
+        "description": "Zet al je base stations aan wanneer SteamVR start"
+      }
+    },
+    "lighthousePowerOff": {
+      "title": "Base stations uitzetten",
+      "description": "Laat OyasumiVR automatisch je base stations uitzetten.",
+      "onSteamVRStop": {
+        "title": "Wanneer SteamVR stopt",
+        "description": "Zet al je base stations uit wanneer SteamVR stopt"
+      }
+    },
+    "powerManagementWarning": "Als je OyasumiVR's automatiseringen gebruikt om je base stations aan of uit te zetten, wordt het aangeraden om Power Management uit te zetten in SteamVR's base station instellingen.",
+    "lighthouseControlDisabledWarning": "Deze automatiseringen zijn niet beschikbaar omdat je base station aansturing hebt uitgeschakeld in OyasumiVR's instellingen. Zet dit weer aan als je gebruik wilt maken van deze automatiseringen.",
+    "enableLighthouseControl": "Zet aan",
+    "error": {
+      "noAdapter": "Er kon geen bluetooth adapter worden gevonden in je systeem. Zorg dat je computer beschikt over een bluetooth adapter, en dat deze is ingeschakeld.",
+      "adapterError": "Er is een fout opgetreden bij het verbinden met je bluetooth adapter. Check of je bluetooth adapter is ingeschakeld, en probeer het nog eens."
+    }
+  },
+  "gpu-automations": {
+    "title": "GPU Automatiseringen",
+    "disabled": {
+      "disabled": "OyasumiVR kan op verschillende manieren je GPU instellingen automatisch aanpassen.\nDit stelt je bijvoorbeeld in staat om stroom te besparen wanneer je slaapt.\n\nDeze functie is standaard uitgeschakeld, omdat dit functionaliteit is voor geavanceerde gebruikers.\nAls je deze functionaliteit wilt gebruiken kun je deze inschakelen met de knop hier onder.",
+      "noSidecar": "OyasumiVR heeft beheerders rechten nodig om de GPU instellingen aan te kunnen passen. Klik a.u.b. op de knop hier onder om OyasumiVR beheerders rechten te geven."
+    },
+    "tabs": {
+      "powerLimiting": "Power Limiting",
+      "msiAfterburner": "MSI Afterburner"
+    },
+    "requestAdministrator": "Geef Beheerders Rechten",
+    "disable": "Deactiveer GPU Automatiseringen",
+    "enable": "Activeer GPU Automatiseringen",
+    "automations": "Slaap Automatiseringen",
+    "enableWarning": "Het verkeerd aanpassen van je GPU instellingen kan resulteren in een onstabiel systeem. Gebruik deze functionaliteit alleen als je weet waar je mee bezig bent.",
+    "elevationSidecarModal": {
+      "title": "Beheerders rechten geven",
+      "message": "Wil je OyasumiVR altijd beheerders rechten geven?\n\nAls je dit doet, zal OyasumiVR voortaan meteen bij het starten hier om deze rechten vragen. Je kunt dit later altijd weer uitzetten in de instellingen.",
+      "confirm": "Altijd",
+      "cancel": "Alleen deze keer"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "Power limiting automatiseringen zijn nog aan het starten...",
+        "noNvidia": "Power limiting automatiseringen zijn niet beschikbaar omdat er geen draaiende NVIDIA driver kon worden gedetecteerd. Power Limiting automatiseringen zijn alleen beschikbaar op NVIDIA GPUs.\n\nAls je wel een NVIDIA GPU in je systeem hebt, check dan of de correcte driver hier voor is geïnstalleerd.\n\n({{code}})",
+        "noPermission": "OyasumiVR heeft geen toestemming om je GPU instellingen aan te passen, ondanks dat OyasumiVR wel beheerders rechten heeft.\n\nCheck je systeem instellingen aangezien dit zou normaal nooit moeten gebeuren.",
+        "noSidecar": "Beheerders rechten konden niet worden verkregen om onbekende redenen.\nDeze rechten zijn nodig om je GPU instellingen aan te kunnen passen.\n\nProbeer OyasumiVR te herstarten.",
+        "unknown": "Power limiting automatiseringen zijn niet beschikbaar om een onbekende reden.\n\nProbeer OyasumiVR opnieuw te starten."
+      },
+      "noGPUSelected": "Geen GPU Geselecteerd",
+      "gpuUnsupported": "GPU wordt niet ondersteund",
+      "noGPUs": "Er konden geen NVIDIA GPUs gevonden worden.",
+      "description": "Hier kan je de stroom limieten van je videokaart automatiseren, om tijdens je slaap energie te besparen.",
+      "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:",
+      "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
+      "currentPowerLimit": "Huidig stroom limiet",
+      "activatingSleepMode": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus activeert"
+      },
+      "deactivatingSleepMode": {
+        "title": "Wanneer ik wakker word",
+        "description": "Specificeer de stroom limiet voor wanneer de slaap modus deactiveert"
+      },
+      "enabledWarning": "Wees je er a.u.b. van bewust dat het het te laag instellen van stroom limieten kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+      "inputDefault": "Herstel naar de GPU's standaard limiet."
+    },
+    "msiAfterburner": {
+      "description": "OyasumiVR kan automatisch je GPU instellingen aanpassen wanneer je gaat slapen of wakker word, door jouw zelfgemaakte profielen in MSI Afterburner te activeren. Dit kan je bijvoorbeeld helpen om stroom te besparen wanneer je slaapt, en weer grafische kracht terug te krijgen wanneer je wakker wordt.<br><br>Je moet zelf de profielen die je wilt activeren instellen in MSI Afterburner.<br>Je kunt MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">hier</a> downloaden.",
+      "sleepModeEnable": {
+        "title": "Wanneer slaap modus activeert",
+        "description": "Activeer het volgende MSI Afterburner profiel"
+      },
+      "sleepModeDisable": {
+        "title": "Wanneer slaap modus deactiveert",
+        "description": "Activeer het volgende MSI Afterburner profiel"
+      },
+      "profile": "Profiel {{index}}",
+      "none": "Geen",
+      "enabledWarning": "Wees er van bewust dat het verkeerd instellen van je GPU in MSI Afterburner kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
+      "executable": {
+        "title": "Configuratie",
+        "description": "OyasumiVR heeft de locatie van je <strong>MSIAfterburner.exe</strong> bestand nodig.\nAls OyasumiVR deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
+        "status": {
+          "CHECKING": "Aan het checken voor een geldige <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "De <strong>MSIAfterburner.exe</strong> kon niet worden gevonden op deze locatie.",
+          "INVALID_EXECUTABLE": "De <strong>MSIAfterburner.exe</strong> op deze locatie werkt niet zoals verwacht.",
+          "INVALID_SIGNATURE": "Het kon niet geverifieerd worden dat de <strong>MSIAfterburner.exe</strong> op deze locatie van MSI afkomt. Om veiligheidsredenen kan deze niet worden gebruikt. Als dit probleem daarna aanhoud en je zeker weet dat je installatie klopt, neem dan contact op met OyasumiVR's ontwikkelaar of stuur een bug report.",
+          "UNKNOWN_ERROR": "Een onbekende fout is opgetreden bij het zoeken van <strong>MSIAfterburner.exe</strong> op deze locatie.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> is gevonden en werkt naar behoren!"
+        }
+      }
+    }
+  },
+  "status-automations": {
+    "title": "Status Automatiseringen",
+    "enable": "Activeer Status Automatiseringen",
+    "description": "OyasumiVR kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
+    "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
+    "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
+    "playerLimit": "Speler limiet",
+    "playerLimitLabel": {
+      "singular": "{{count}} speler (inclusief jezelf)",
+      "plural": "{{count}} spelers (inclusief jezelf)"
+    },
+    "belowLimit": {
+      "title": "Onder het limiet",
+      "description": "Verander je status naar"
+    },
+    "atLimitOrAbove": {
+      "title": "Op het limiet of erboven",
+      "description": "Verander je status naar"
+    },
+    "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
+    "behaviourWarning": "Aanpassingen van de status zijn niet zichtbaar voor jouwzelf. Ook voor andere spelers kan het even duren voordat de statusverandering zichtbaar is. Dit is een limitatie van VRChat zelf en kan niet worden opgelost door OyasumiVR.",
+    "moreInfo": "Meer info",
+    "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu."
+  },
+  "auto-invite-request-accept": {
+    "title": "Invite Requests Automatisch Accepteren",
+    "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+    "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
+    "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
+    "whitelist": "Speler Whitelist",
+    "blacklist": "Speler Blacklist",
+    "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
+    "addFriends": "Vrienden toevoegen",
+    "clearPlayers": "Alle spelers verwijderen",
+    "removeModal": {
+      "title": "Bevestig verwijderen",
+      "message": "Weet je zeker dat je '{{name}}' van de lijst wilt verwijderen?"
+    },
+    "removeModalBulk": {
+      "title": "Bevestig verwijderen",
+      "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?"
+    },
+    "options": {
+      "enable": {
+        "title": "Activeren",
+        "description": "Accepteer automatisch invite requests die je van vrienden ontvangt."
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "Alleen als de slaap modus is geactiveerd"
+      },
+      "listMode": {
+        "title": "Lijst Modus",
+        "description": "Hoe de speler lijst moet worden gebruikt.",
+        "options": {
+          "DISABLED": {
+            "label": "Uitgeschakeld",
+            "subLabel": "Accepteer van iedereen"
+          },
+          "WHITELIST": {
+            "label": "Whitelist",
+            "subLabel": "Accepteer van vrienden op de lijst"
+          },
+          "BLACKLIST": {
+            "label": "Blacklist",
+            "subLabel": "Accepteer van iedereen behalve vrienden op de lijst"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Instellingen",
+    "tab": {
+      "general": "Algemeen",
+      "vrchat": "VRChat",
+      "notifications": "Notificaties",
+      "updates": "Updates",
+      "advanced": "Geavanceerd"
+    },
+    "general": {
+      "language": {
+        "title": "Taal",
+        "description": "Je kan hier je voorkeurstaal selecteren. Als er vertalingen missen, neem a.u.b. contact op!"
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouse Console",
+        "description": "OyasumiVR heeft de locatie van de <strong>lighthouse_console.exe</strong> van je SteamVR installatie nodig.\nAls OyasumiVR deze niet kan vinden op de standaard locatie, moet je zelf aangeven waar deze kan worden gevonden.",
+        "status": {
+          "NOT_FOUND": "De <strong>lighthouse_console.exe</strong> kon niet worden gevonden op deze locatie.",
+          "INVALID_EXECUTABLE": "De <strong>lighthouse_console.exe</strong> op deze locatie werkt niet zoals verwacht.",
+          "PERMISSION_DENIED": "OyasumiVR heeft niet de rechten om de <strong>lighthouse_console.exe</strong> op deze locatie aan te roepen. Probeer OyasumiVR als beheerder te starten.",
+          "INVALID_FILENAME": "De gegeven locatie is geen correct bestands pad.",
+          "UNKNOWN_ERROR": "Een onbekende fout is opgetreden bij het zoeken van <strong>lighthouse_console.exe</strong> op deze locatie.",
+          "CHECKING": "Aan het checken voor een geldige <strong>lighthouse_console.exe</strong>",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> is gevonden en werkt naar behoren!"
+        }
+      },
+      "adminPrivileges": {
+        "title": "Beheerders Rechten",
+        "label": "Vraag om beheerders rechten bij het opstarten",
+        "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen."
+      },
+      "telemetry": {
+        "title": "Telemetrie",
+        "label": "Verstuur anonieme telemetrie data",
+        "description": "De enige data die wordt verstuurd, is de versie van OyasumiVR die je gebruikt en je ingestelde taal. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor algemene gebruikstatistieken van OyasumiVR."
+      },
+      "systemTray": {
+        "title": "Systeemvak",
+        "close": {
+          "label": "Sluit OyasumiVR naar het systeemvak",
+          "description": "Wanneer je het venster sluit zal OyasumiVR in je systeemvak gaan liggen ipv te stoppen."
+        },
+        "start": {
+          "label": "Start Oyasumi VR in het systeemvak",
+          "description": "Wanneer je OyasumiVR start, zal het meteen in je systeemvak gaan liggen."
+        }
+      },
+      "lighthousePowerControl": {
+        "title": "Aansturing van SteamVR Base Stations",
+        "powerOffMode": {
+          "standby": {
+            "title": "Standby modus",
+            "description": "Lasers\nuitzetten"
+          },
+          "sleep": {
+            "title": "Slaap modus",
+            "description": "Lasers & Motors\nuitzetten"
+          },
+          "title": "Voorkeurs modus voor uitzetten",
+          "description": "In tegenstelling tot standby modus, zet de slaap modus ook de motors uit, die wat langer duren om weer aan te zetten."
+        },
+        "enable": {
+          "title": "Aansturing inschakelen",
+          "description": "Als deze functie aan staat, kun je met OyasumiVR je base stations uit en aanzetten. Dit heeft Bluetooth nodig, en ondersteunt alleen V2 base stations."
+        }
+      },
+      "sleepMode": {
+        "title": "Slaap Modus",
+        "startupBehaviour": {
+          "title": "Instelling bij het opstarten",
+          "description": "Hoe de slaap modus ingesteld moet zijn wanneer je OyasumiVR start",
+          "option": {
+            "persist": {
+              "title": "Behoud instelling",
+              "description": "Onthoud van de vorige keer"
+            },
+            "enabled": {
+              "title": "Actief",
+              "description": "Start als ingeschakeld"
+            },
+            "disabled": {
+              "title": "Inactief",
+              "description": "Start als uitgeschakeld"
+            }
+          }
+        }
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "Log in",
+        "description": "Sommige OyasumiVR features vereisen dat je bent ingelogd met je VRChat account om hun ding te kunnen doen.",
+        "loggedIn": {
+          "title": "Hey {{name}}!",
+          "subtext": "Je bent ingelogd met je VRChat account.",
+          "logOut": "Log uit"
+        },
+        "loggedOut": {
+          "title": "Uitgelogd",
+          "subtext": "Je bent niet ingelogd met je VRChat account.",
+          "logIn": "Log in"
+        },
+        "errors": {
+          "initError": "De VRChat module kon niet worden geinitialiseerd. Check of je internet verbinding werkt en herstart OyasumiVR op een later moment om het opnieuw te proberen."
+        },
+        "disclaimers": {
+          "use": "Je login gegevens zullen nooit ergens opgeslagen worden en worden alleen direct naar VRChat's servers gestuurd om in te kunnen loggen.",
+          "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico."
+        }
+      },
+      "OSC": {
+        "title": "OSC Configuratie",
+        "description": "Sommige functies van OyasumiVR moeten communiceren met VRChat via OSC. Tenzij je een reden hebt om deze instellingen aan te passen, kan je ze het beste op de standaard waarden laten staan.",
+        "reset": "Reset naar standaard waarden",
+        "receivingHost": {
+          "title": "Host voor ontvangst",
+          "description": "De host waarop OyasumiVR naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar 127.0.0.1)"
+        },
+        "receivingPort": {
+          "title": "Poort voor ontvangst",
+          "description": "De poort waarop OyasumiVR naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar poort 9001)"
+        },
+        "sendingHost": {
+          "title": "Host voor verzending",
+          "description": "De host waar naar OyasumiVR OSC berichten verstuurt.\n(Als VRChat op dezelfde computer draait, is dit 127.0.0.1)"
+        },
+        "sendingPort": {
+          "title": "Poort voor verzending",
+          "description": "De poort waar naar OyasumiVR OSC berichten verstuurt.\n(VRChat luistert standaard naar poort 9000)"
+        },
+        "errors": {
+          "PORT_IN_USE": "Het adres kon niet worden gebonden. Dit kan komen doordat er al een andere applicatie luistert naar dezelfde adres en poort combinatie. Je kan proberen die andere applicatie te sluiten en het opnieuw te proberen, of een een andere poort of host te kiezen.",
+          "PORT_INVALID": "Deze poort is niet geldig. Poorten moeten tussen 1 en 65535 liggen.",
+          "PORT_IO_IDENTICAL": "Je kan niet dezelfde poort gebruiken voor zowel ontvangst als verzending, als de host voor beide hetzelfde is.",
+          "INVALID_HOST": "Deze host is niet geldig. Hosts moeten een geldig IPv4 adres, IPv6 adres, of een geldige hostnaam zijn."
+        },
+        "features": {
+          "all": {
+            "title": "Alle features inschakelen",
+            "description": "OyasumiVR zal niet luisteren naar OSC berichten als je al deze features uitschakelt"
+          },
+          "expressionMenu": {
+            "title": "VRChat Expression Menu Aansturing",
+            "description": "Stuur OyasumiVR features aan vanaf je VRChat avatar's <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu</a>."
+          },
+          "externalControl": {
+            "title": "Externe aansturing",
+            "description": "Stuur OyasumiVR features extern aan via <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
+          }
+        }
+      }
+    },
+    "updates": {
+      "checkForUpdates": "Updates checken",
+      "changelog": "Changelog",
+      "install": "Installeer v{{version}}",
+      "noUpdate": "Je draait nu OyasumiVR v{{version}}, en dat is de laatste versie!",
+      "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
+      "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
+    },
+    "advanced": {
+      "persistentData": {
+        "title": "Opgeslagen Gegevens",
+        "description": "Beheer de gegevens die OyasumiVR opslaat op je schijf",
+        "dataType": {
+          "all": {
+            "title": "Alle Gegevens",
+            "description": "Alle gegevens die OyasumiVR opslaat, inclusief al je instellingen"
+          },
+          "appSettings": {
+            "title": "Applicatie Instellingen",
+            "description": "Alle algemene instellingen van OyasumiVR"
+          },
+          "automationSettings": {
+            "title": "Instellingen van Automatiseringen",
+            "description": "Alle instellingen van elk van OyasumiVR's automatiseringen"
+          },
+          "vrcData": {
+            "title": "VRChat Gegevens",
+            "description": "Alle gegevens gerelateerd aan VRChat, zoals authenticatie sleutels"
+          },
+          "miscData": {
+            "title": "Overige Gegevens",
+            "description": "Alle overige gegevens die Oyasumi opslaat die niet onder andere opties vallen"
+          },
+          "appCache": {
+            "title": "Gegevens Cache",
+            "description": "Alle gegevens die OyasumiVR tijdelijk opslaat, zoals VRChat API responses"
+          },
+          "imageCache": {
+            "title": "Afbeeldings Cache",
+            "description": "Alle afbeeldingen die OyasumiVR tijdelijk opslaat, zoals de profielplaatjes van VRChat spelers"
+          },
+          "logs": {
+            "title": "Logbestanden",
+            "description": "De bestanden waar OyasumiVR de logs naar weg schrijft"
+          },
+          "eventLog": {
+            "title": "Logboek",
+            "description": "Alle gebeurtenissen die OyasumiVR heeft gelogd in het overzicht"
+          }
+        },
+        "clearData": "Verwijder Gegevens",
+        "clearModal": {
+          "title": "Bevestig verwijderen",
+          "message": "Weet je zeker dat je de volgende gegevens wilt verwijderen? Dit kan niet ongedaan worden gemaakt!\n\n{{items}}"
+        },
+        "relaunchModal": {
+          "title": "Herstart OyasumiVR",
+          "message": "De geselecteerde gegevens zijn verwijderd. Het is aan te randen om OyasumiVR nu te herstarten.\n\nWil je dit nu doen? Als je OyasumiVR nu niet herstart kan dit ongewenste consequenties hebben.",
+          "relaunch": "Herstart OyasumiVR nu",
+          "later": "Doe ik later"
+        }
+      },
+      "translation": {
+        "title": "Taal & Vertalen",
+        "loadFile": {
+          "title": "Laad vertalingsbestand",
+          "description": "Laad een eigen vertalingsbestand. Dit is handig wanneer je je eigen vertalingen wilt testen.",
+          "action": "Laad Bestand"
+        },
+        "contribute": {
+          "docs": "Leer Hoe",
+          "title": "Help mee met vertalen",
+          "description": "Help met het toevoegen van missende vertalingen, of hele nieuwe talen!"
+        }
+      },
+      "logs": {
+        "title": "Logbestanden",
+        "openFolder": {
+          "title": "Open Map",
+          "description": "Opent de map waar OyasumiVR de logbestanden opslaat.",
+          "action": "Open Map"
+        }
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "Ontwikkelaar"
+    },
+    "translations": "Vertalingen",
+    "projectLinks": "Project Links",
+    "sourceLink": "Broncode @ GitHub",
+    "discordInvite": "Discord Server",
+    "contributions": "Contributies"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "Update Fout",
+        "message": "De update kon niet geinstalleerd worden. Probeer het later nog eens."
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "Milliseconden mogen geen decimalen hebben.",
+      "durationTooShort": "Een wacht tijd moet minimaal 0.1 seconden zijn.",
+      "durationTooLong": "Een wacht tijd mag niet langer zijn dan 5 seconden.",
+      "durationRequired": "Een wacht tijd is vereist.",
+      "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden.",
+      "intOutOfBounds": "Een integer moet een waarde hebben tussen 0 en 255.",
+      "floatOutOfBounds": "Een float moet een waarde hebben tussen -1.0 en 1.0.",
+      "floatTooPrecise": "Een float mag niet meer dan 3 decimalen hebben.",
+      "invalidSyntax": "Incorrecte syntax.",
+      "tooManyCommands": "Een OSC script mag niet meer dan {{value}} acties bevatten.",
+      "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
+      "addressRequired": "Een OSC adres is vereist.",
+      "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten."
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "content": "De slaap modus wordt over 20 seconden ingeschakeld. Slaap je al?\n\n(Schud nee om dit te annuleren)"
+    },
+    "sleepCheckCancel": {
+      "content": "Automatische activering van de slaap modus is geannuleerd."
+    },
+    "sleepModeEnabled": {
+      "content": "De slaap modus is geactiveerd."
+    },
+    "sleepModeDisabled": {
+      "content": "De slaap modus is gedeactiveerd."
+    }
+  },
+  "comp": {
+    "main-status-bar": {
+      "sleepMode": "Slaap Modus",
+      "active": "Actief",
+      "inactive": "Inactief",
+      "loggedOut": "Uitgelogd",
+      "steamvr": {
+        "INACTIVE": "Inactief",
+        "INITIALIZING": "Wachten",
+        "INITIALIZED": "Actief"
+      }
+    },
+    "confirm-modal": {
+      "defaultTitle": "Bevestig"
+    },
+    "update-modal": {
+      "title": "Update Beschikbaar",
+      "updateNow": "Installeer v{{version}}",
+      "updateLater": "Niet nu",
+      "message": "Er is een nieuwe update beschikbaar voor OyasumiVR: v{{newVersion}}.\n\nJe draait op dit moment nog v{{currentVersion}}.\n\n.Wil je de update nu installeren?"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Selecteer..."
+    },
+    "dashboard-navbar": {
+      "overview": "Overzicht",
+      "sleepDetection": "Slaap Detectie",
+      "oscAutomations": "OSC Automatiseringen",
+      "gpuAutomations": "GPU Automatiseringen",
+      "powerAutomations": "Energie Automatiseringen",
+      "statusAutomations": "Status Automatiseringen",
+      "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
+      "settings": "Instellingen",
+      "vrcAutomations": "VRChat Automatiseringen",
+      "brightnessAutomations": "Helderheid Automatiseringen",
+      "about": "Over OyasumiVR",
+      "resolutionAutomations": "Resolutie Automatiseringen",
+      "chaperoneAutomations": "Chaperone Automatiseringen",
+      "sleepAnimations": "Slaap Animaties",
+      "hardwareAutomations": "Hardware Automatiseringen",
+      "shutdownAutomations": "Afsluit Procedure"
+    },
+    "device-list": {
+      "title": "Apparaten",
+      "turnOffAll": "ALLE",
+      "category": {
+        "Controller": "Controllers",
+        "GenericTracker": "Trackers",
+        "other": "Overige",
+        "Lighthouse": "Base Stations"
+      },
+      "deviceName": {
+        "lighthouseV2": "V2 Lighthouse"
+      },
+      "lighthouseStatus": {
+        "on": "Actief",
+        "unknown": "Onbekende Status",
+        "sleep": "Slaap modus",
+        "standby": "Standby modus",
+        "booting": "Aan het starten"
+      },
+      "scanForLighthouses": "Scan"
+    },
+    "osc-script-modal": {
+      "title": "OSC Script",
+      "simple": "Simpel",
+      "script": "Script"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC Script Bewerker",
+      "syntaxGuide": "Syntax Handleiding",
+      "format": "Formatteren",
+      "test": "Test"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} Commando",
+        "plural": "{{value}} Commandos"
+      },
+      "errorCounter": {
+        "singular": "{{value}} Validatie fout",
+        "plural": "{{value}} Validatie fouten"
+      },
+      "addCommand": "Voeg Toe",
+      "test": "Test",
+      "action": {
+        "osc": "OSC",
+        "sleep": "Wacht",
+        "none": "Er zijn nog geen acties toegevoegd"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC Commando",
+          "description": "Voer een OSC commando uit"
+        },
+        "SLEEP": {
+          "title": "Wacht",
+          "description": "Wacht voor een bepaalde tijd"
+        }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "Log in met VRChat",
+      "username": "VRChat Gebruikersnaam/E-mail",
+      "password": "Wachtwoord",
+      "errors": {
+        "CHECK_EMAIL": "Login mislukt: Voor meer informatie, check de mailbox van het e-mailadres dat gekoppeld is aan je VRChat account.",
+        "INVALID_CREDENTIALS": "De logingegevens zijn onjuist.",
+        "UNEXPECTED_RESPONSE": "Login mislukt: Een onverwachte fout is opgetreden. Check je internetverbinding en probeer het later nog eens."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "Twee-Factor Authenticatie",
+      "description": "Je VRCHat account wordt beschermt met twee-factor authenticatie. Voer een 2FA code in:",
+      "errors": {
+        "LAST_CODE_INVALID": "De 2FA code is onjuist.",
+        "INVALID_FORMAT": "Een 2FA code bestaat altijd uit een reeks van 6 cijfers. Deze code is niet correct."
+      }
+    },
+    "friend-selection-modal": {
+      "title": "Selecteer Vrienden",
+      "searchPlaceholder": "Zoek vrienden op naam...",
+      "noFriendsSelected": "Geen vrienden geselecteerd",
+      "noResultsFor": "Geen resultaten voor '{{query}}'",
+      "noFriends": "Je vriendenlijst is leeg"
+    },
+    "event-log": {
+      "title": "Logboek",
+      "show-more": "Toon meer",
+      "no-logs": "Er zijn nog geen logboek items.\nLogs worden bewaard voor een maximum van 48 uur.",
+      "clearLog": "Wissen",
+      "clearLogModal": {
+        "title": "Bevestig wissen",
+        "message": "Weet je zeker dat je het logboek wilt wissen? Dit kan niet ongedaan worden gemaakt."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "Slaap modus ingeschakeld",
+          "reason": {
+            "manual": "Je hebt de slaap modus handmatig ingeschakeld",
+            "osc-control": "De slaap modus werdt ingeschakeld via OSC",
+            "automation": {
+              "unknown": "Door een onbekende automatisering",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Omdat je in slaap gevallen bent",
+              "SLEEP_MODE_ENABLE_AT_TIME": "Op de ingestelde tijd",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Omdat een batterijniveau laag genoeg is gezakt",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Omdat alle controllers uitgeschakeld zijn"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "Slaap modus uitgeschakeld",
+          "reason": {
+            "manual": "Je hebt de slaap modus handmatig uitgeschakeld",
+            "osc-control": "De slaap modus werdt uitgeschakeld via OSC",
+            "automation": {
+              "unknown": "Door een onbekende automatisering",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Omdat SteamVR is gestopt",
+              "SLEEP_MODE_DISABLE_AT_TIME": "Op de ingestelde tijd",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Omdat een controller of tracker is ingeschakeld"
+            }
+          }
+        },
+        "turnedOffOpenVRDevices": {
+          "title": {
+            "CONTROLLER": "Een controller uitgeschakeld",
+            "CONTROLLERS": "Meerdere controllers uitgeschakeld",
+            "TRACKER": "Een tracker uitgeschakeld",
+            "TRACKERS": "Meerdere trackers uitgeschakeld",
+            "ALL": "Alle apparaten uitgeschakeld",
+            "VARIOUS": "Meerdere apparaten uitgeschakeld"
+          },
+          "reason": {
+            "MANUAL": "Handmatig uitgeschakeld",
+            "OSC_CONTROL": "Uitgeschakeld via OSC",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "CHARGING": "Omdat het apparaat aan het opladen is"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "SINGLE": {
+            "on": {
+              "title": "Een base station aangezet",
+              "reasons": {
+                "MANUAL": "Handmatig aangezet",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            },
+            "sleep": {
+              "title": "Een base station in slaap modus gezet",
+              "reasons": {
+                "MANUAL": "Handmatig aangezet",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            },
+            "standby": {
+              "title": "Een base station in standby modus gezet",
+              "reasons": {
+                "MANUAL": "Handmatig aangezet",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            }
+          },
+          "ALL": {
+            "on": {
+              "title": "Alle base stations aangezet",
+              "reasons": {
+                "MANUAL": "Handmatig aangezet",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            },
+            "sleep": {
+              "title": "Alle base stations in slaap modus gezet",
+              "reasons": {
+                "MANUAL": "Handmatig veranderd",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            },
+            "standby": {
+              "title": "Alle base stations in standby modus gezet",
+              "reasons": {
+                "MANUAL": "Handmatig veranderd",
+                "STEAMVR_START": "Omdat SteamVR is gestart",
+                "STEAMVR_STOP": "Omdat SteamVR is gestopt",
+                "OYASUMI_START": "Omdat Oyasumi is gestart"
+              }
+            }
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "Stroom limiet voor '{{device}}' herstelt naar {{limit}}",
+            "set": "Stroom limiet voor '{{device}}' ingesteld op {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "Invite request van '{{displayName}}' automatisch geaccepteerd",
+          "subtitle": {
+            "whitelist": "Omdat deze speler op de whitelist staat",
+            "blacklist": "Omdat deze speler niet op de blacklist staat"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "Status gewijzigd van '{{oldStatus}}' naar '{{newStatus}}'",
+          "reason": {
+            "BELOW_LIMIT": "Omdat het aantal spelers onder het limiet is gezakt",
+            "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers op of boven het limiet is gekomen"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "Automatische inschakeling van slaapmodus geannuleerd",
+          "subtitle": "Omdat de gebruiker nog wakker is"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR render resolutie ingesteld op 'auto'",
+            "custom": "SteamVR render resolutie ingesteld op {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "title": "Chaperone activatie afstand ingesteld op {{value}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
+        "shutdownSequenceStarted": {
+          "title": "De afsluit procedure is gestart",
+          "reason": {
+            "MANUAL": "Handmatig gestart",
+            "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "title": "De afsluit prodedure is geannuleerd",
+          "reason": {
+            "MANUAL": "Handmatig geannuleerd"
+          }
+        }
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "Resolutie Automatiseringen",
+    "description": "OyasumiVR kan automatisch de render resolutie van SteamVR aanpassen wanneer de slaap modus wordt ingeschakeld of uitgeschakeld.",
+    "onSleepEnable": {
+      "title": "Wanneer ik ga slapen",
+      "description": "Pas de render resolutie aan"
+    },
+    "onSleepDisable": {
+      "title": "Wanneer ik wakker word",
+      "description": "Pas de render resolutie aan"
+    },
+    "renderResolution": {
+      "title": "Zet de render resolutie naar",
+      "custom": "Custom",
+      "auto": "Auto"
+    }
+  },
+  "chaperone-automations": {
+    "title": "Chaperone Automatiseringen",
+    "description": "OyasumiVR kan automatisch de activatie afstand van SteamVR's chaperone aanpassen wanneer de slaap modus wordt ingeschakeld of uitgeschakeld.",
+    "onSleepEnable": {
+      "title": "Wanneer ik ga slapen",
+      "description": "Pas de activatie afstand aan"
+    },
+    "onSleepDisable": {
+      "title": "Wanneer ik wakker word",
+      "description": "Pas de activatie afstand aan"
+    },
+    "fadeDistance": {
+      "title": "Zet de chaperone's activatie afstand op"
+    }
+  },
+  "sleepAnimations": {
+    "title": "Slaap Animaties"
+  },
+  "shutdown-automations": {
+    "title": "Afsluit Procedure",
+    "description": "Als je het fijn vind om in VR in slaap te vallen, maar niet de hele nacht in VR wilt slapen, kan je gebruik maken van Oyasumi's afsluit procedure. Deze feature sluit verschillende dingen automatisch af zodra je in slaap bent gevallen, zodat je makkelijk buiten vr door kunt slapen.",
+    "triggers": {
+      "title": "Automatische Triggers",
+      "whenAsleep": {
+        "title": "Activeer wanneer ik slaap",
+        "description": "Activeer de afsluit procedure wanneer de slaap modus lang genoeg is ingeschakeld"
+      },
+      "whenAsleepDuration": {
+        "title": "Wanneer ik slaap voor",
+        "description": "Hoe lang de slaap modus ingeschakeld moet zijn voordat de afsluit procedure wordt gestart"
+      },
+      "whenAsleepTimeWindow": {
+        "title": "Tijdsvenster",
+        "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden"
+      }
+    },
+    "sequence": {
+      "title": "Afsluit Instellingen",
+      "quitSteamVR": {
+        "title": "Stop SteamVR",
+        "description": "Dit stopt ook alle SteamVR games en overlays die je hebt draaien"
+      },
+      "turnOffDevices": {
+        "title": "Zet apparaten uit"
+      },
+      "turnOffControllers": {
+        "title": "Zet controllers uit",
+        "description": "Dit zet alle controllers uit die nog aan staan"
+      },
+      "turnOffTrackers": {
+        "title": "Zet trackers uit",
+        "description": "Dit zet alle trackers uit die nog aan staan"
+      },
+      "turnOffBaseStations": {
+        "title": "Zet base stations uit",
+        "description": "Dit zet alle base stations uit die nog aan staan"
+      },
+      "shutDownWindows": {
+        "title": "Windows Afsluiten",
+        "description": "Sluit je computer af."
+      },
+      "run": "Start Afsluit Procedure"
+    },
+    "confirm-modal": {
+      "title": "Afsluit procedure starten",
+      "message": "Weet je zeker dat je de afsluit procedure nu wilt starten?"
+    },
+    "noOptionsSelected": "De afsluit procedure heeft op dit moment geen effect, omdat je geen enkele actie hebt geselecteerd. Kies hier onder tenminste één actie om te zorgen dat de afsluit procedure iets doet.",
+    "overlay": {
+      "stage": {
+        "QUITTING_STEAMVR": "Stoppen van SteamVR...",
+        "TURNING_OFF_CONTROLLERS": "Uischakelen van controllers...",
+        "TURNING_OFF_TRACKERS": "Uitschakelen van trackers...",
+        "TURNING_OFF_BASESTATIONS": "Uitschakelen van basestations...",
+        "SHUTTING_DOWN": "Computer Afsluiten..."
+      },
+      "title": "Uitschakelen...",
+      "cancel": "Annuleer"
+    }
+  }
+}

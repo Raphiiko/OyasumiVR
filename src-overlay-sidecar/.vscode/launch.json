@@ -1,0 +1,24 @@
+{
+  "configurations": [
+  {
+    "name": "Overlay Sidecar",
+    "type": "coreclr",
+    "request": "launch",
+    "preLaunchTask": "build",
+    "program": "${workspaceFolder}/bin/Debug/net7.0/win-x64/overlay-sidecar.dll",
+    "args": ["8080"],
+    "cwd": "${workspaceFolder}",
+    "stopAtEntry": false,
+    "serverReadyAction": {
+      "action": "openExternally",
+      "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+    },
+    "env": {
+      "ASPNETCORE_ENVIRONMENT": "Development"
+    },
+    "sourceFileMap": {
+      "/Views": "${workspaceFolder}/Views"
+    }
+  }
+  ]
+}

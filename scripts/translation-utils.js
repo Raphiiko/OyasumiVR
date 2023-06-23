@@ -71,10 +71,10 @@ const flattenObj = (ob) => {
 };
 
 const getLangFilePath = (lang) =>
-  `./src/assets/i18n/${lang.endsWith('.json') ? lang.split('.')[0] : lang}.json`;
+  `./src-ui/assets/i18n/${lang.endsWith('.json') ? lang.split('.')[0] : lang}.json`;
 
 const getLangFilePaths = () => {
-  const langFiles = fs.readdirSync('./src/assets/i18n');
+  const langFiles = fs.readdirSync('./src-ui/assets/i18n');
   return langFiles.map((langFile) => getLangFilePath(langFile));
 };
 

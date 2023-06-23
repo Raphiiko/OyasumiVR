@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package OyasumiElevatedSidecar;
+
+// Services
+
+service OyasumiElevatedSidecar {
+    rpc Ping (Empty) returns (PingResponse) {}
+    rpc RequestStop (Empty) returns (Empty) {}
+    rpc GetNvmlStatus (Empty) returns (NvmlStatusResponse) {}
+    rpc GetNvmlDevices (Empty) returns (NvmlDevicesResponse) {}
+    rpc SetNvmlPowerManagementLimit (NvmlPowerManagementLimitRequest) returns (NvmlPowerManagementLimitResponse) {}
+    rpc SetMsiAfterburnerProfile (SetMsiAfterburnerProfileRequest) returns (SetMsiAfterburnerProfileResponse) {}
+}
+
+// Requests & Responses
+message PingResponse {
+    uint32 pid = 1;
+}
+
+message NvmlStatusResponse {
+    NvmlStatus status = 1;
+}
+
+message NvmlDevicesResponse {
+    repeated NvmlDevice devices = 1;
+}
+
+message NvmlPowerManagementLimitRequest {
+    string uuid = 1;
+    uint32 power_limit = 2;
+}
+
+message NvmlPowerManagementLimitResponse {
+    bool success = 1;
+    optional NvmlSetPowerManagementLimitError error = 2;
+}
+
+message SetMsiAfterburnerProfileRequest {
+    string executable_path = 1;
+    uint32 profile = 2;
+}
+
+message SetMsiAfterburnerProfileResponse {
+    bool success = 1;
+    optional SetMsiAfterburnerProfileError error = 2;
+}
+
+// Types
+
+enum NvmlStatus {
+    NvmlStatus_Initializing = 0;
+    NvmlStatus_InitComplete = 1;
+    NvmlStatus_DriverNotLoaded = 2;
+    NvmlStatus_LibLoadingError = 3;
+    NvmlStatus_NoPermission = 4;
+    NvmlStatus_NvmlUnknownError = 5;
+    NvmlStatus_SidecarUnavailable = 6;
+    NvmlStatus_UnknownError = 7;
+}
+
+enum NvmlSetPowerManagementLimitError {
+  NvmlSetPowerManagementLimitError_DeviceAccessError = 0;
+  NvmlSetPowerManagementLimitError_DeviceSetPowerLimitError = 1;
+  NvmlSetPowerManagementLimitError_SidecarUnavailable = 2;
+  NvmlSetPowerManagementLimitError_UnknownError = 3;
+}
+
+enum SetMsiAfterburnerProfileError {
+    SetMsiAfterburnerProfileError_InvalidProfileIndex = 0;
+    SetMsiAfterburnerProfileError_ExeNotFound = 1;
+    SetMsiAfterburnerProfileError_ExeCannotExecute = 2;
+    SetMsiAfterburnerProfileError_ExeUnverifiable = 3;
+    SetMsiAfterburnerProfileError_ExeNotSigned = 4;
+    SetMsiAfterburnerProfileError_ExeSignatureDisallowedNonEmbedded = 5;
+    SetMsiAfterburnerProfileError_ExeSignatureDisallowedNoIssuer = 6;
+    SetMsiAfterburnerProfileError_ExeSignatureDisallowedNoSubject = 7;
+    SetMsiAfterburnerProfileError_ExeSignatureDisallowedNoMatch = 8;
+    SetMsiAfterburnerProfileError_UnknownError = 9;
+}
+
+message NvmlDevice {
+    string uuid = 1;
+    string name = 2;
+    uint32 power_limit = 3;
+    uint32 min_power_limit = 4;
+    uint32 max_power_limit = 5;
+    uint32 default_power_limit = 6;
+}
+
+message Empty {}
+

@@ -4,7 +4,10 @@ version = "1.7.3"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
-rust-version = "1.64.0"
+rust-version = "1.70.0"
+
+[build-dependencies]
+tonic-build = "0.9"
 
 [dependencies]
 oyasumivr-shared = { path = "../src-shared", version = '*' }
@@ -18,18 +21,21 @@ codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
 log = "0.4.17"
 simplelog = "^0.12.0"
 directories = "4.0.1"
+tonic = "0.9"
+prost = "0.11"
+tokio-stream = { version = "0.1.14", features = ["full"] }
+
+[dependencies.windows-sys]
+version = "0.36.1"
+features = ["Win32_UI_Shell", "Win32_Foundation"]
 
 [dependencies.tokio]
 version = "1.21.1"
 features = ["full"]
 
-[dependencies.hyper]
-version = "0.14.20"
-features = ["full"]
-
 [profile.release]
-panic = "abort" # Strip expensive panic clean-up logic
+panic = "abort"   # Strip expensive panic clean-up logic
 codegen-units = 1 # Compile crates one after another so the compiler can optimize better
-lto = true # Enables link to optimizations
-opt-level = "s" # Optimize for binary size
-strip = true # Remove debug symbols
+lto = true        # Enables link to optimizations
+opt-level = "s"   # Optimize for binary size
+strip = true      # Remove debug symbols

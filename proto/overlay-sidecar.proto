@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrcpOverlaySidecar";
+
+package OyasumiOverlaySidecar;
+
+service OyasumiOverlaySidecar {
+    rpc Ping (Empty) returns (PingResponse) {}
+    rpc RequestStop (Empty) returns (Empty) {}
+    rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
+    rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
+}
+
+// Requests & Responses
+message PingResponse {
+    uint32 pid = 1;
+}
+
+message AddNotificationRequest {
+    string message = 1;
+    uint32 duration = 2;
+}
+
+message AddNotificationResponse {
+    optional string notification_id = 1;
+}
+
+message ClearNotificationRequest {
+    string notification_id = 1;
+}
+
+message Empty {
+
+}

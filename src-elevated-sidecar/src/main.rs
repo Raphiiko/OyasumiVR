@@ -1,30 +1,29 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 #[macro_use(lazy_static)]
 extern crate lazy_static;
 
 use directories::BaseDirs;
-use hyper::service::{make_service_fn, service_fn};
-use hyper::Server;
+use grpc::oyasumi_core::{oyasumi_core_client::OyasumiCoreClient, ElevatedSidecarStartArgs};
+pub use grpc::oyasumi_elevated_sidecar as Models;
 use log::{error, info};
-use oyasumivr_shared::models::ElevatedSidecarInitRequest;
-use oyasumivr_shared::windows::{is_elevated, relaunch_with_elevation};
+use oyasumivr_shared::windows::is_elevated;
 use simplelog::{
     ColorChoice, CombinedLogger, Config, LevelFilter, TermLogger, TerminalMode, WriteLogger,
 };
-use std::convert::Infallible;
 use std::env;
 use std::fs::File;
-use std::net::SocketAddr;
 use std::path::Path;
 use std::time::Duration;
 use sysinfo::{Pid, PidExt, System, SystemExt};
+use windows::relaunch_with_elevation;
 
 mod afterburner;
-mod http_handler;
+mod grpc;
 mod nvml;
+mod windows;
 
 #[tokio::main]
 async fn main() {
@@ -54,15 +53,15 @@ async fn main() {
             //     .unwrap(),
         ),
     ])
-    .unwrap();
-    // Get port of host http server from 1st argument
+        .unwrap();
+    // Parse the arguments
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
         error!("Missing arguments. Expected format");
-        error!("oyasumi-admin.exe [main-http-port] [main-process-id]");
+        error!("oyasumivr-elevated-sidecar.exe [main-grpc-port] [main-process-id] [optional: old-process-id]");
         std::process::exit(0);
     }
-    let host_port = if let Ok(n) = args[1].parse::<u16>() {
+    let host_port = if let Ok(n) = args[1].parse::<u32>() {
         n
     } else {
         error!("Invalid port number");
@@ -74,54 +73,56 @@ async fn main() {
         error!("Invalid main process id");
         std::process::exit(0);
     };
+    let old_process_id = if args.len() > 3 {
+        if let Ok(n) = args[3].parse::<u32>() {
+            Some(n)
+        } else {
+            error!("Invalid old process id");
+            std::process::exit(0);
+        }
+    } else {
+        None
+    };
     // Relaunch as admin if not elevated
     if !is_elevated() {
         relaunch_with_elevation(host_port, main_pid, true);
     }
-    // Setup the http server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 0));
-    let make_svc = make_service_fn(|_conn| async {
-        Ok::<_, Infallible>(service_fn(http_handler::handle_http))
+    // Setup the grpc server
+    let port = grpc::init().await;
+    // Inform the main process of the sidecar start
+    let mut client =
+        match OyasumiCoreClient::connect(format!("http://127.0.0.1:{}", host_port)).await {
+            Ok(client) => client,
+            Err(e) => {
+                error!("Could not connect to main process: {}", e);
+                std::process::exit(0);
+            }
+        };
+    let request = tonic::Request::new(ElevatedSidecarStartArgs {
+        pid: std::process::id(),
+        port: port as u32,
+        old_pid: old_process_id,
     });
-    let server = Server::bind(&addr).serve(make_svc);
-    // Inform the main process of the port and pid of this sidecar
-    let client = reqwest::Client::new();
-    let res = client
-        .post(format!(
-            "http://127.0.0.1:{host_port}/elevated_sidecar/init"
-        ))
-        .body(
-            serde_json::to_string(&ElevatedSidecarInitRequest {
-                sidecar_port: server.local_addr().port(),
-                sidecar_pid: std::process::id(),
-            })
-            .unwrap(),
-        )
-        .send()
-        .await;
-    if res.is_err() {
+    let response = client.on_elevated_sidecar_start(request).await;
+    if response.is_err() {
         error!("Could not inform main process of sidecar initialization");
         std::process::exit(0);
     }
     // Init NVML
     nvml::init();
     // Keep an eye on the main process and quit alongside it
-    watch_main_process(main_pid);
-    // Keep the HTTP server alive
-    if let Err(e) = server.await {
-        error!("Server error: {}", e);
-    }
+    watch_main_process(main_pid).await;
 }
 
-fn watch_main_process(main_pid: u32) {
+async fn watch_main_process(main_pid: u32) {
     let pid = Pid::from_u32(main_pid);
     let mut s = System::new_all();
-    std::thread::spawn(move || loop {
+    loop {
         s.refresh_processes();
         if s.process(pid).is_none() {
             info!("Main process has exited. Stopping elevated sidecar.");
             std::process::exit(0);
         }
         std::thread::sleep(Duration::from_secs(1));
-    });
+    }
 }

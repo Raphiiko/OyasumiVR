@@ -1,0 +1,188 @@
+<div class="logo-container">
+  <div class="logo-image" (click)="onLogoClick()">
+    <img draggable="false" src="/assets/img/icon_150x150.png" alt="OyasumiVR Icon" />
+  </div>
+  <div class="logo-text">
+    <span class="logo-title">Oyasumi<b>VR</b></span>
+    <span class="logo-tagline" translate>shared.logo.tagline</span>
+  </div>
+</div>
+<div class="menu" [class.translucent]="!!(background.background | async)">
+  <div class="bg"></div>
+  <!-- General Root Menu -->
+  <div
+    class="rootmenu"
+    [@rootMenu]="subMenu === 'GENERAL' ? 'active' : 'inactive'"
+    [class.translucent]="!!(background.background | async)"
+  >
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'overview'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">apps</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.overview</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepDetection'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">bedtime</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.sleepDetection</div>
+    </div>
+
+    <div
+      class="menu-item"
+      (click)="openSubMenu('HARDWARE')"
+      [class.active]="
+        pathIsActive([
+          'brightnessAutomations',
+          'powerAutomations',
+          'gpuAutomations',
+          'resolutionAutomations'
+        ])
+      "
+    >
+      <div class="menu-item-icon-prefix">
+        <img draggable="false" src="/assets/img/vr-cardboard-solid.svg" class="hardware-icon" />
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
+      <div class="menu-item-submenu-icon"
+        ><i class="material-icons-round">arrow_forward_ios</i></div
+      >
+    </div>
+
+    <div
+      class="menu-item"
+      (click)="openSubMenu('VRCHAT')"
+      [class.active]="
+        pathIsActive(['oscAutomations', 'statusAutomations', 'autoInviteRequestAccept'])
+      "
+    >
+      <div class="menu-item-icon-prefix">
+        <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat-icon" />
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
+      <div class="menu-item-submenu-icon"
+        ><i class="material-icons-round">arrow_forward_ios</i></div
+      >
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">view_in_ar</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'shutdownAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">settings_power</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.shutdownAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">settings</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings</div>
+      <div class="menu-item-icon-suffix" @fade *ngIf="settingErrors | async">
+        <i class="material-icons-round">error_outline</i>
+      </div>
+      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'about'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">info</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.about</div>
+    </div>
+  </div>
+  <!-- VRChat Automations Submenu -->
+  <div class="submenu" *ngIf="subMenu === 'VRCHAT'" @subMenu>
+    <div class="menu-header">
+      <button class="btn" (click)="openSubMenu('GENERAL')">
+        <i class="material-icons-round">arrow_back_ios_new</i>
+        <div class="menu-header-label" translate>comp.dashboard-navbar.vrcAutomations</div>
+      </button>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">bedtime</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.sleepAnimations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'statusAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">brightness_1</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.statusAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'autoInviteRequestAccept'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">mark_email_read</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.autoInviteRequestAccept</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">accessibility_new</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.oscAutomations</div>
+    </div>
+  </div>
+  <!-- Hardware Automations Submenu -->
+  <div class="submenu" *ngIf="subMenu === 'HARDWARE'" @subMenu>
+    <div class="menu-header">
+      <button class="btn" (click)="openSubMenu('GENERAL')">
+        <i class="material-icons-round">arrow_back_ios_new</i>
+        <div class="menu-header-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
+      </button>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'powerAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">battery_charging_full</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.powerAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'gpuAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">energy_savings_leaf</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.gpuAutomations</div>
+      <div class="menu-item-icon-suffix" @fade *ngIf="gpuAutomationsErrors | async">
+        <i class="material-icons-round">error_outline</i>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'brightnessAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">brightness_6</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.brightnessAutomations</div>
+      <div
+        class="active-effect"
+        @fade
+        *ngIf="
+          brightnessAutomation.isSleepDisableTransitionActive ||
+          brightnessAutomation.isSleepEnableTransitionActive
+        "
+      ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">blur_on</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.resolutionAutomations</div>
+    </div>
+  </div>
+</div>
