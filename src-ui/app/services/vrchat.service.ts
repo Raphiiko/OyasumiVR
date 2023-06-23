@@ -663,7 +663,7 @@ export class VRChatService {
   }
 
   private async patchHttpClient(client: Client): Promise<Client> {
-    const isDev = (await getVersion()) === 'DEV';
+    const isDev = (await getVersion()) === '0.0.0';
     const next = client.request.bind(client);
 
     async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {

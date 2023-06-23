@@ -55,7 +55,7 @@ export class UpdateService {
 
   async checkForUpdate(showDialog = false) {
     // Don't ever update the dev version
-    if ((await getVersion()) === 'DEV') {
+    if ((await getVersion()) === '0.0.0') {
       this._updateAvailable.next({
         checked: true,
       });

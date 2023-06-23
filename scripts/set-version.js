@@ -11,11 +11,11 @@ if (version !== 'DEV' && !semver(version)) {
   process.exit(1);
 }
 
+if (version === 'DEV') version = '0.0.0';
+
 const packageJson = JSON.parse(readFileSync('package.json').toString());
 packageJson.version = version;
 writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
-
-if (version === 'DEV') version = '0.0.0';
 
 // Tauri config json
 const tauriConfJson = JSON.parse(readFileSync('src-core/tauri.conf.json').toString());

@@ -92,7 +92,7 @@ export class TelemetryService {
       // Stop if telemetry is not enabled
       if (!settings.enabled) return false;
       // Determine version and language to send
-      const version = await getVersion(true);
+      const version = await getVersion();
       const lang = await firstValueFrom(this.appSettings.settings).then(
         (settings) => settings.userLanguage
       );
