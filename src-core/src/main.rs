@@ -128,12 +128,13 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 
 fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
     tauri_plugin_single_instance::init(|app, _argv, _cwd| {
-        // Focus main  window when user attempts to launch a second instance.
+        // Focus main window when user attempts to launch a second instance.
         let window = app.get_window("main").unwrap();
         if let Ok(is_visible) = window.is_visible() {
-            if is_visible {
-                window.set_focus().unwrap();
+            if !is_visible {
+                window.show().unwrap();
             }
+            window.set_focus().unwrap();
         }
     })
 }
