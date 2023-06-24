@@ -18,6 +18,16 @@
   },
   "brightness-automations": {
     "title": "亮度自动化",
+    "description": "OyasumiVR可以在启用或禁用睡眠模式时自动调整头盔的亮度。",
+    "indexWarning": "显示器亮度控制目前只在Valve Index上可用。请确保SteamVR正在运行，并且你的头盔已经连接。",
+    "onSleepEnable": {
+      "title": "当我入睡时",
+      "description": "调整我的显示亮度"
+    },
+    "onSleepDisable": {
+      "title": "当我醒来时",
+      "description": "调整我的显示亮度"
+    },
     "brightness": {
       "title": "将亮度改为",
       "description": ""
@@ -90,7 +100,7 @@
           "countdown": "还剩 {{counter}} 秒"
         },
         "done": {
-          "instruction": "ˋ校准完成！",
+          "instruction": "校准完成！",
           "note": "现在你可以用此自动化了"
         },
         "failed": {
@@ -107,6 +117,7 @@
         },
         "sensitivity": {
           "title": "灵敏度",
+          "description": "让 OyasumiVR 对你的动作有多敏感",
           "presets": {
             "LOWEST": "最低",
             "LOW": "低",
@@ -116,7 +127,8 @@
           }
         },
         "sleepCheck": {
-          "title": "在启用睡眠模式之前，询问我是否还醒着"
+          "title": "在启用睡眠模式之前，询问我是否还醒着",
+          "description": "要求<a class=\"notificationSettingsLink\">通知</a>功能启用"
         },
         "detectionWindow": {
           "title": "检测窗口",
@@ -139,13 +151,13 @@
         "title": "关闭睡眠模式",
         "whenTurningOn": "当启动其中一个",
         "Controller": "控制器",
-        "GenericTracker": "追踪器"
+        "GenericTracker": "定位器"
       },
       "enableAtBatteryPercentage": {
         "title": "开启睡眠模式",
         "whenA": "当其中一个",
         "Controller": "控制器",
-        "GenericTracker": "追踪器",
+        "GenericTracker": "定位器",
         "fallsBelow": "电量降低到",
         "errors": {
           "thresholdOutOfRange": "百分比必须介于 0% 和 100% 之间",
@@ -164,7 +176,7 @@
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
       "presetAuthor": "由于 {{author}} 制作",
-      "description": "OyasumiVR 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
+      "description": "OyasumiVR 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的定位器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自订动画",
       "options": {
@@ -187,7 +199,7 @@
           "title": "一般设定",
           "onlySwitchAnimations": "只用于切换睡眠动画",
           "onlyIfSleepModeEnabled": "当睡眠模式启动时",
-          "onlyIfAllTrackersTurnedOff": "当所有追踪器关闭时",
+          "onlyIfAllTrackersTurnedOff": "当所有定位器关闭时",
           "footLock": {
             "title": "脚部(移动)锁定",
             "description": "脚部锁定在开启时通常会阻止玩家移动或旋转"
@@ -561,6 +573,20 @@
         }
       }
     },
+    "notifications": {
+      "providers": {
+        "title": "通知提供者",
+        "description": "有些功能能够或要求能够向你发送通知。请在这里选择你想要的通知提供者。",
+        "xsoverlay": {
+          "title": "XSOverlay通知",
+          "description": "使用XSOverlay将OyasumiVR通知带入VR。"
+        },
+        "desktop": {
+          "title": "桌面通知",
+          "description": "使用默认的Windows桌面通知。你可以使用像OVR工具包这样的叠层工具将这些带入VR。"
+        }
+      }
+    },
     "updates": {
       "checkForUpdates": "检查更新",
       "changelog": "更新日志",
@@ -684,15 +710,19 @@
   },
   "notifications": {
     "sleepCheck": {
+      "title": "OyasumiVR",
       "content": "睡眠模式将在 20 秒后启用。 你睡着了吗？\n\n（摇头取消）"
     },
     "sleepCheckCancel": {
+      "title": "OyasumiVR",
       "content": "自动启用睡眠模式已被取消。"
     },
     "sleepModeEnabled": {
+      "title": "OyasumiVR",
       "content": "睡眠模式已启用。"
     },
     "sleepModeDisabled": {
+      "title": "OyasumiVR",
       "content": "睡眠模式已被关闭。"
     }
   },
@@ -725,7 +755,7 @@
       "sleepDetection": "睡眠侦测",
       "oscAutomations": "OSC 自动化",
       "gpuAutomations": "GPU 自动化",
-      "powerAutomations": "Power Automations",
+      "powerAutomations": "电源自动化",
       "statusAutomations": "状态 自动化",
       "autoInviteRequestAccept": "自动接受 \n加入请求",
       "settings": "设定",
@@ -733,22 +763,23 @@
       "brightnessAutomations": "亮度自动化",
       "about": "关于 OyasumiVR",
       "resolutionAutomations": "分辨率自动化",
-      "chaperoneAutomations": "Chaperone Automations",
-      "sleepAnimations": "Sleep Animations",
-      "hardwareAutomations": "Hardware Automations",
-      "shutdownAutomations": "Shutdown Sequence"
+      "chaperoneAutomations": "防撞墙自动化",
+      "sleepAnimations": "睡眠动画",
+      "hardwareAutomations": "硬件自动化",
+      "shutdownAutomations": "关机程序"
     },
     "device-list": {
       "title": "装置",
       "turnOffAll": "全部",
+      "noDevices": "没有检测到控制器或定位器",
       "category": {
         "Controller": "控制器",
-        "GenericTracker": "追踪器",
+        "GenericTracker": "定位器",
         "other": "其他",
         "Lighthouse": "基站"
       },
       "deviceName": {
-        "lighthouseV2": "V2 灯塔"
+        "lighthouseV2": "V2 基站"
       },
       "lighthouseStatus": {
         "on": "启动",
@@ -865,8 +896,8 @@
           "title": {
             "CONTROLLER": "关闭一个控制器",
             "CONTROLLERS": "关闭多个控制器",
-            "TRACKER": "关闭一个追踪器",
-            "TRACKERS": "关闭多个追踪器",
+            "TRACKER": "关闭一个定位器",
+            "TRACKERS": "关闭多个定位器",
             "ALL": "关闭全部设备",
             "VARIOUS": "关闭各种设备"
           },
@@ -947,6 +978,16 @@
             "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
           }
         },
+        "brightnessChanged": {
+          "title": {
+            "set": "头盔亮度设置为 {{value}}",
+            "transition": "头盔亮度过渡至 {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于关闭了睡眠模式被禁用"
+          }
+        },
         "acceptedInviteRequest": {
           "title": "自动接受了来自'{{displayName}}的邀请请求",
           "subtitle": {
@@ -992,7 +1033,7 @@
         "shutdownSequenceCancelled": {
           "title": "关机程序被取消了",
           "reason": {
-            "MANUAL": "Cancelled manually"
+            "MANUAL": "手动取消"
           }
         }
       }
@@ -1044,7 +1085,7 @@
       },
       "whenAsleepDuration": {
         "title": "睡眠时间",
-        "description": "How long sleep mode should be active before the shutdown sequence runs"
+        "description": "在关机程序运行之前，睡眠模式应该启动多长时间"
       },
       "whenAsleepTimeWindow": {
         "title": "开启Windows",
