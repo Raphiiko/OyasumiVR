@@ -22,14 +22,14 @@ public class IPCManager {
       var server = app.Services.GetRequiredService<IServer>();
       var addressFeature = server.Features.Get<IServerAddressesFeature>();
       var address = addressFeature!.Addresses.First();
-      Console.WriteLine("gRPC interface listening on address: " + address);
+      Log.Logger.Information("gRPC interface listening on address: " + address);
       // Parse port from address
       if (!int.TryParse(address.Split(':').Last(), out var port))
       {
-        Console.Error.WriteLine("Cannot parse bound port for gRPC interface.");
+        Log.Logger.Error("Cannot parse bound port for gRPC interface.");
         if (!Debugger.IsAttached)
         {
-          Console.Error.WriteLine("Quitting...");
+          Log.Logger.Information("Quitting...");
           Environment.Exit(1);
           return;
         }
@@ -47,12 +47,15 @@ public class IPCManager {
       }
       catch (RpcException e)
       {
-        Console.Error.WriteLine("Cannot inform core of overlay sidecar start:");
         if (!Debugger.IsAttached)
         {
-          Console.Error.WriteLine(e);
-          Console.Error.WriteLine("Quitting...");
+          Log.Logger.Error(e, "Cannot inform core of overlay sidecar start");
+          Log.Logger.Information("Quitting...");
           Environment.Exit(1);
+        }
+        else
+        {
+          Log.Logger.Error("Cannot inform core of overlay sidecar start");
         }
       }
     }).Start();
