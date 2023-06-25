@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed menus for Hardware Automations and VRChat Automations not being correctly highlighted when one of their submenus is active
 - Optimized CPU usage
 - Fixed short loss of tracking in SteamVR when launching or reloading OyasumiVR.
+- Fixed friend selection modal for automatic invite request acceptance becoming unusable when too many players have been selected.
 
 ## [1.7.3]
 
