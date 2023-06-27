@@ -65,7 +65,7 @@ jobs:
           includeUpdaterJson: true
           tauriScript: cargo-tauri
       - name: Update the update manifest
-        uses: Raphiiko/actions-deploy-gist
+        uses: Raphiiko/actions-deploy-gist@main
         with:
           token: ${{ secrets.GH_TOKEN_GIST }}
           gist_id: 16ed38d8ccd9282675d04478f887f76f
