@@ -668,14 +668,13 @@ export class VRChatService {
 
     async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {
       info(`[VRChat] API Request: ${options.url}`);
-      if (isDev)
-        console.log(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`, options);
+      if (isDev) info(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`);
       try {
         const response = await next<T>(options);
         if (isDev)
-          console.log(
-            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}`,
-            response
+          info(
+            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}\n` +
+              JSON.stringify(response, null, 2)
           );
         return response;
       } catch (e) {
