@@ -29,6 +29,7 @@ import { CachedValue } from '../utils/cached-value';
 import { error, info, warn } from 'tauri-plugin-log-api';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
+const MAX_VRCHAT_FRIENDS = 65536;
 export type VRChatServiceStatus = 'PRE_INIT' | 'ERROR' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 @Injectable({
@@ -325,30 +326,35 @@ export class VRChatService {
       throw new Error('Tried listing friends while not logged in');
     }
     // Fetch friends
-    const friends = [];
+    const friends: LimitedUser[] = [];
     // Fetch online and active friends
     for (const offline of ['false', 'true']) {
-      for (let offset = 0; true; offset += 100) {
-        // Send request
-        const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
-          typeId: 'LIST_FRIENDS',
-          runnable: () => {
-            return this.http.get(`${BASE_URL}/auth/user/friends`, {
-              headers: this.getDefaultHeaders(),
-              query: {
-                offset: offset.toString(),
-                n: '100',
-                offline,
-              },
-            });
-          },
-        });
-        if (response.result && response.result.ok) {
-          // Add friends to list
-          friends.push(...response.result.data);
-          // If we got 100 friends, try fetching more.
-          if (response.result.data.length >= 100) continue;
+      try {
+        for (let offset = 0; offset < MAX_VRCHAT_FRIENDS; offset += 100) {
+          // Send request
+          const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
+            typeId: 'LIST_FRIENDS',
+            runnable: () => {
+              return this.http.get(`${BASE_URL}/auth/user/friends`, {
+                headers: this.getDefaultHeaders(),
+                query: {
+                  offset: offset.toString(),
+                  n: '100',
+                  offline,
+                },
+              });
+            },
+          });
+          if (response.result && response.result.ok) {
+            // Add friends to list
+            friends.push(...response.result.data);
+            // If we got some friends, continue fetching
+            if (response.result.data.length > 0) continue;
+          }
+          break;
         }
+      } catch (e) {
+        error('[VRChat] Failed to list friends: ' + JSON.stringify(e));
         break;
       }
     }
@@ -668,13 +674,13 @@ export class VRChatService {
 
     async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {
       info(`[VRChat] API Request: ${options.url}`);
-      if (isDev) info(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`);
+      if (isDev) console.log(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`);
       try {
         const response = await next<T>(options);
         if (isDev)
-          info(
-            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}\n` +
-              JSON.stringify(response, null, 2)
+          console.log(
+            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}` +
+              response
           );
         return response;
       } catch (e) {
