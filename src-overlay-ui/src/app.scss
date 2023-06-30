@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import 'material-icons/iconfont/material-icons.css';
+
+.vrc-status-color {
+	
+	&-active {
+		background-color: var(--color-vrchat-status-green);
+	}
+	&-join-me {
+		background-color: var(--color-vrchat-status-blue);
+	}
+	&-ask-me {
+		background-color: var(--color-vrchat-status-orange);
+	}
+	&-busy {
+		background-color: var(--color-vrchat-status-red);
+	}
+	&-offline {
+		background-color: black;
+	}
+}

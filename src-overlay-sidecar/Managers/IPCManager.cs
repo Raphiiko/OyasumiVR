@@ -9,8 +9,17 @@ using GrcpOverlaySidecar;
 namespace overlay_sidecar;
 
 public class IPCManager {
-  public IPCManager(int mainProcessPort)
+  public static IPCManager Instance { get; } = new();
+  private bool _initialized;
+
+  private IPCManager()
   {
+  }
+
+  public void init(int mainProcessPort)
+  {
+    if (_initialized) return;
+    _initialized = true;
     var builder = WebApplication.CreateBuilder();
     builder.Services.AddGrpc();
     var app = builder.Build();
@@ -66,7 +75,19 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
   public override Task<AddNotificationResponse> AddNotification(AddNotificationRequest request,
     ServerCallContext context)
   {
-    var id = Program.OVRManager.NotificationOverlay.AddNotification(
+    if (OVRManager.Instance.Active == false)
+    {
+      throw new RpcException(new Status(StatusCode.FailedPrecondition,
+        "OpenVR Manager is not active"));
+    }
+
+    if (OVRManager.Instance.NotificationOverlay == null)
+    {
+      throw new RpcException(new Status(StatusCode.FailedPrecondition,
+        "Notification overlay is currently unavailable"));
+    }
+
+    var id = OVRManager.Instance.NotificationOverlay.AddNotification(
       request.Message,
       TimeSpan.FromMilliseconds(request.Duration)
     );
@@ -84,7 +105,19 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
   public override Task<GrcpOverlaySidecar.Empty> ClearNotification(ClearNotificationRequest request,
     ServerCallContext context)
   {
-    Program.OVRManager.NotificationOverlay.ClearNotification(request.NotificationId);
+    if (OVRManager.Instance.Active == false)
+    {
+      throw new RpcException(new Status(StatusCode.FailedPrecondition,
+        "OpenVR Manager is not active"));
+    }
+
+    if (OVRManager.Instance.NotificationOverlay == null)
+    {
+      throw new RpcException(new Status(StatusCode.FailedPrecondition,
+        "Notification overlay is currently unavailable"));
+    }
+
+    OVRManager.Instance.NotificationOverlay.ClearNotification(request.NotificationId);
     return Task.FromResult(new GrcpOverlaySidecar.Empty { });
   }
 }

@@ -8,8 +8,6 @@ using CefSharp.SchemeHandler;
 namespace overlay_sidecar;
 
 public static class Program {
-  public static OVRManager OVRManager;
-  public static IPCManager IPCManager;
   public static bool GPUFix = false;
 
   public static void Main(string[] args)
@@ -32,8 +30,8 @@ public static class Program {
     // Initialize
     InitCef();
     WatchMainProcess(mainProcessId);
-    OVRManager = new OVRManager();
-    IPCManager = new IPCManager(mainProcessPort);
+    OVRManager.Instance.init();
+    IPCManager.Instance.init(mainProcessPort);
   }
 
   private static void InitCef()

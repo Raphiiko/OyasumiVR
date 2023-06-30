@@ -35,6 +35,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"material-icons": "^1.13.8",
 		"rxjs": "^7.8.1"
 	}
 }
