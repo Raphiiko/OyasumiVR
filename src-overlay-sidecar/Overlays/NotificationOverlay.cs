@@ -12,14 +12,14 @@ public class NotificationOverlay : BaseOverlay {
     overlay.WidthInMeters = 0.35f;
     OpenVR.Overlay.SetOverlaySortOrder(overlay.Handle, 150);
     overlay.Show();
-    // new Thread(() =>
-    // {
-    //   while (!Disposed)
-    //   {
-    //     Thread.Sleep(11);
-    //     UpdatePosition();
-    //   }
-    // }).Start();
+    new Thread(() =>
+    {
+      while (!Disposed)
+      {
+        UpdatePosition();
+        Thread.Sleep(11);
+      }
+    }).Start();
   }
 
   public string? AddNotification(string message, TimeSpan? duration = null)
