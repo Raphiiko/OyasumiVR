@@ -46,7 +46,7 @@ public class DashboardOverlay : BaseOverlay {
     OVRManager.Instance.OverlayPointer!.StartForOverlay(this);
     vrcUsername = "Raphiiko";
     vrcStatus = "active";
-    SyncParameters();
+    SendParameters();
     ShowDashboard();
     overlay.Show();
   }
@@ -82,16 +82,13 @@ public class DashboardOverlay : BaseOverlay {
     var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
     var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4x4();
     var posOffset = Matrix4x4.CreateTranslation(0, 0.15f, -0.2f);
-    var rotOffset = Matrix4x4.CreateRotationX(-75f.ToRadians());
-    var handYpr = Quaternion.CreateFromRotationMatrix(handMatrix).ToYawPitchRoll();
-    var headYpr = Quaternion.CreateFromRotationMatrix(headMatrix).ToYawPitchRoll();
-    var origin =
-      Matrix4x4.CreateFromYawPitchRoll(handYpr.X, handYpr.Y, headYpr.Z) *
+    var headRotation = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix));
+    var handPosition =
       Matrix4x4.CreateTranslation(handMatrix.Translation);
-    return posOffset * rotOffset * origin;
+    return posOffset * headRotation * handPosition;
   }
 
-  private void SyncParameters()
+  private void SendParameters()
   {
     browser.ExecuteScriptAsync(
       @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(vrcStatus)}"");");
