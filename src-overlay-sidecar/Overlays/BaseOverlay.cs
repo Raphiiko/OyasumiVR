@@ -14,7 +14,6 @@ public class BaseOverlay {
   protected readonly Texture2D texture;
   protected readonly Device device;
   protected bool Disposed;
-  protected long lastRender;
 
   public ulong OverlayHandle => overlayHandle!.Value;
   public OffScreenBrowser Browser => browser;
@@ -85,7 +84,7 @@ public class BaseOverlay {
 
   private void UpdateFrame()
   {
-    if (Disposed || lastRender >= browser.LastPaint) return;
+    if (Disposed || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - browser.LastPaint >= 1000) return;
     browser.RenderToTexture(this.texture);
     var texture = new Texture_t
     {
@@ -93,6 +92,5 @@ public class BaseOverlay {
     };
     var err = OpenVR.Overlay.SetOverlayTexture(overlayHandle!.Value, ref texture);
     if (err != EVROverlayError.None) Console.WriteLine("Could not set overlay texture.");
-    lastRender = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
   }
 }
