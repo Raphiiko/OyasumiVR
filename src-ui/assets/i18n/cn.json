@@ -1,7 +1,11 @@
 {
   "shared": {
     "logo": {
+<<<<<<< HEAD
       "tagline": "VR Sleeping Utilities"
+=======
+      "tagline": "VR 睡眠辅助功能"
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
     },
     "modals": {
       "cancel": "取消",
@@ -18,6 +22,7 @@
   },
   "brightness-automations": {
     "title": "亮度自动化",
+<<<<<<< HEAD
     "tabs": {
       "imageBrightness": "影像亮度",
       "displayBrightness": "显示亮度"
@@ -44,6 +49,17 @@
         "title": "当我醒来时",
         "description": "调整影像亮度"
       }
+=======
+    "description": "OyasumiVR可以在启用或禁用睡眠模式时自动调整头盔的亮度。",
+    "indexWarning": "显示器亮度控制目前只在Valve Index上可用。请确保SteamVR正在运行，并且你的头盔已经连接。",
+    "onSleepEnable": {
+      "title": "当我入睡时",
+      "description": "调整我的显示亮度"
+    },
+    "onSleepDisable": {
+      "title": "当我醒来时",
+      "description": "调整我的显示亮度"
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
     },
     "brightness": {
       "title": "将亮度改为",
@@ -591,6 +607,7 @@
       }
     },
     "notifications": {
+<<<<<<< HEAD
       "title": "通知设定",
       "provider": {
         "title": "通知提供者",
@@ -674,6 +691,76 @@
           "title": "确认清算数据",
           "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}}"
         },
+=======
+      "providers": {
+        "title": "通知提供者",
+        "description": "有些功能能够或要求能够向你发送通知。请在这里选择你想要的通知提供者。",
+        "xsoverlay": {
+          "title": "XSOverlay通知",
+          "description": "使用XSOverlay将OyasumiVR通知带入VR。"
+        },
+        "desktop": {
+          "title": "桌面通知",
+          "description": "使用默认的Windows桌面通知。你可以使用像OVR工具包这样的叠层工具将这些带入VR。"
+        }
+      }
+    },
+    "updates": {
+      "checkForUpdates": "检查更新",
+      "changelog": "更新日志",
+      "install": "安装版本 {{version}}",
+      "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
+      "notChecked": "OyasumiVR 尚未检查更新",
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
+    },
+    "advanced": {
+      "persistentData": {
+        "title": "持久性数据",
+        "description": "管理OyasumiVR储存在你磁盘上的数据",
+        "dataType": {
+          "all": {
+            "title": "所有数据",
+            "description": "OyasumiVR储存的所有数据，包括你的所有设置"
+          },
+          "appSettings": {
+            "title": "应用程序设定",
+            "description": "OyasumiVR的所有一般设定"
+          },
+          "automationSettings": {
+            "title": "自动化设置",
+            "description": "针对OyasumiVR的一个自动装置的所有设置"
+          },
+          "vrcData": {
+            "title": "VRChat数据",
+            "description": "VRChat特有的数据，如认证数据Data"
+          },
+          "miscData": {
+            "title": "其他数据",
+            "description": "OyasumiVR储存的所有其他数据，不包括在其他类别中。"
+          },
+          "appCache": {
+            "title": "数据快取",
+            "description": "所有临时储存的数据，如VRChat API响应"
+          },
+          "imageCache": {
+            "title": "图像快取",
+            "description": "所有临时储存的图像，如VRChat播放器图示"
+          },
+          "logs": {
+            "title": "日志档案",
+            "description": "OyasumiVR创建的日志档案"
+          },
+          "eventLog": {
+            "title": "事件日志",
+            "description": "被记录在概览中的事件"
+          }
+        },
+        "clearData": "清除数据",
+        "clearModal": {
+          "title": "确认清算数据",
+          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}}"
+        },
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
         "relaunchModal": {
           "title": "重新启动 OyasumiVR",
           "message": "所要求的数据已经被清除了。建议在做完这些后，重新启动OyasumiVR。不重新启动OyasumiVR可能会产生不必要的影响。",
@@ -723,7 +810,11 @@
     }
   },
   "misc": {
+<<<<<<< HEAD
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此默认档使用的解决方法存在一些问题。如果你不能使用较新的 GoGo Loco 默认，请仅使用此默认档。如果你的角色仍然使用旧版本的 GoGo Loco，建议你将你的角色更新使用最新的 GoGo Loco 版本",
+=======
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "此默认档使用的解决方法存在一些问题。 如果你不能使用较新的 GoGo Loco 默认，请仅使用此默认档。 如果你的角色仍然使用旧版本的 GoGo Loco，建议你将你的角色更新使用最新的 GoGo Loco 版本",
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
     "oscScriptEditorErrors": {
       "noFloatMilliseconds": "毫秒值必须定义为整数",
       "durationTooShort": "睡眠持续时间必须至少为 1 毫秒",
@@ -742,6 +833,7 @@
   },
   "notifications": {
     "sleepCheck": {
+<<<<<<< HEAD
       "content": "睡眠模式将在 20 秒后启用。 你睡着了吗？\n\n（摇头取消）"
     },
     "sleepCheckCancel": {
@@ -758,6 +850,22 @@
     },
     "autoAcceptedInviteRequest": {
       "content": "自动接受来自 {{username}} 的邀请请求"
+=======
+      "title": "OyasumiVR",
+      "content": "睡眠模式将在 20 秒后启用。 你睡着了吗？\n\n（摇头取消）"
+    },
+    "sleepCheckCancel": {
+      "title": "OyasumiVR",
+      "content": "自动启用睡眠模式已被取消。"
+    },
+    "sleepModeEnabled": {
+      "title": "OyasumiVR",
+      "content": "睡眠模式已启用。"
+    },
+    "sleepModeDisabled": {
+      "title": "OyasumiVR",
+      "content": "睡眠模式已被关闭。"
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
     }
   },
   "comp": {
@@ -1004,6 +1112,7 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
+<<<<<<< HEAD
             "reset": "将 '{{device}}' 的功率限制恢复为 {{limit}}",
             "set": "将 '{{device}}' 的功率限制设定为 {{limit}}"
           },
@@ -1016,13 +1125,21 @@
           "title": {
             "set": "头戴式显示器的影像亮度设定为 {{value}}",
             "transition": "头戴式显示器的影像亮度正在过渡到 {{value}}"
+=======
+            "reset": "对 {{device}} 的功率限制恢复到 {{limit}}",
+            "set": "对 {{device}} 的功率限制设置为 {{limit}}"
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
             "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
           }
         },
+<<<<<<< HEAD
         "displayBrightnessChanged": {
+=======
+        "brightnessChanged": {
+>>>>>>> 841a05cc40c83b20680bf61f686649b5c9d1e33c
           "title": {
             "set": "头盔亮度设置为 {{value}}",
             "transition": "头盔亮度过渡至 {{value}}"
