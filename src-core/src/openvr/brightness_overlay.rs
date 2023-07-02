@@ -58,7 +58,7 @@ async fn create_overlay(
     // Get the manager
     let mut manager = context.overlay_mngr();
     // Create the overlay
-    let result = manager.create_overlay("OYASUMI_OVR_BRIGHTNESS", "Oyasumi Brightness Overlay");
+    let result = manager.create_overlay("co.raphii.oyasumi:BrightnessOverlay", "OyasumiVR Brightness Overlay");
     let overlay: ovr_overlay::overlay::OverlayHandle = match result {
         Ok(handle) => handle,
         Err(_) => return Err(()),
@@ -80,6 +80,10 @@ async fn create_overlay(
         return Err(());
     }
     // Set overlay properties
+    if let Err(e) = manager.set_sort_order(overlay, 200) {
+        error!("[Core] Failed to set overlay sort order: {}", e);
+        return Err(());
+    }
     if let Err(e) = manager.set_width(overlay, 1.) {
         error!("[Core] Failed to set overlay width: {}", e);
         return Err(());

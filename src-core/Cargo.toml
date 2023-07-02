@@ -83,7 +83,7 @@ features = [
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "4214b3ca193c0d1ede8aae6b71615405f5328089"
+rev = "7e27051d2d1cdd6f838de9ea4c58ee5e712de958"
 features = ["ovr_system", "ovr_settings"]
 
 #[patch.crates-io]

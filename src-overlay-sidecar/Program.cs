@@ -37,7 +37,7 @@ public static class Program {
   private static void InitCef()
   {
     Log.Logger.Information("Initializing CEF");
-    var rootDir = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.ProcessPath), @"ui\");
+    var rootDir = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"ui\");
     Directory.CreateDirectory(rootDir);
     var settings = new CefSettings();
     settings.RegisterScheme(new CefCustomScheme
@@ -45,7 +45,7 @@ public static class Program {
       SchemeName = "oyasumivroverlay",
       DomainName = "ui",
       SchemeHandlerFactory = new FolderSchemeHandlerFactory(
-        rootFolder: rootDir,
+        rootDir,
         hostName: "ui",
         defaultPage: "index.html" // will default to index.html
       )
@@ -85,6 +85,7 @@ public static class Program {
           Environment.Exit(0);
           return;
         }
+
         Thread.Sleep(1000);
       }
     }).Start();

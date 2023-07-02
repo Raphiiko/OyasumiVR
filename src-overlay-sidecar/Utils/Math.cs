@@ -60,7 +60,7 @@ public static class Math {
       m8 = matrix.M13,
       m9 = matrix.M23,
       m10 = matrix.M33,
-      m11 = matrix.M43,
+      m11 = matrix.M43
     };
   }
 
@@ -95,7 +95,7 @@ public static class Math {
     {
       X = MathF.Atan2(2.0f * (r.Y * r.W + r.X * r.Z), 1.0f - 2.0f * (r.X * r.X + r.Y * r.Y)),
       Y = MathF.Asin(2.0f * (r.X * r.W - r.Y * r.Z)),
-      Z = MathF.Atan2(2.0f * (r.X * r.Y + r.Z * r.W), 1.0f - 2.0f * (r.X * r.X + r.Z * r.Z)),
+      Z = MathF.Atan2(2.0f * (r.X * r.Y + r.Z * r.W), 1.0f - 2.0f * (r.X * r.X + r.Z * r.Z))
     };
   }
 
@@ -125,5 +125,4 @@ public static class Math {
     var offset = Matrix4x4.CreateTranslation(0, 0, -1f);
     return Vector3.Normalize((offset * rotation).Translation);
   }
-
 }

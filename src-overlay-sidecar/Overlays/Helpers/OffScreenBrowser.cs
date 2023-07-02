@@ -45,10 +45,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
     _paintBufferLock.EnterWriteLock();
     try
     {
-      if (_paintBuffer.IsAllocated == true)
-      {
-        _paintBuffer.Free();
-      }
+      if (_paintBuffer.IsAllocated == true) _paintBuffer.Free();
     }
     finally
     {
@@ -80,15 +77,12 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
           var pitch = _width * 4;
           var rowPitch = dataBox.RowPitch;
           if (pitch == rowPitch)
-          {
             WinApi.CopyMemory(
               destinationPtr,
               sourcePtr,
               (uint)(_width * _height * 4)
             );
-          }
           else
-          {
             for (var y = _height; y > 0; --y)
             {
               WinApi.CopyMemory(
@@ -99,7 +93,6 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
               sourcePtr += pitch;
               destinationPtr += rowPitch;
             }
-          }
         }
 
         context.UnmapSubresource(texture, 0);
@@ -152,10 +145,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
       {
         _width = width;
         _height = height;
-        if (_paintBuffer.IsAllocated == true)
-        {
-          _paintBuffer.Free();
-        }
+        if (_paintBuffer.IsAllocated == true) _paintBuffer.Free();
 
         _paintBuffer = GCHandle.Alloc(
           new byte[_width * _height * 4],

@@ -55,18 +55,12 @@ public class OVRManager {
         _system = OpenVR.System;
         if (_system == null)
         {
-          if (DateTime.UtcNow.CompareTo(nextInit) <= 0)
-          {
-            continue;
-          }
+          if (DateTime.UtcNow.CompareTo(nextInit) <= 0) continue;
 
           var err = EVRInitError.None;
           _system = OpenVR.Init(ref err, EVRApplicationType.VRApplication_Background);
           nextInit = DateTime.UtcNow.AddSeconds(5);
-          if (_system == null)
-          {
-            continue;
-          }
+          if (_system == null) continue;
 
           active = true;
           Log.Logger.Information("OpenVR Manager Started");
@@ -91,9 +85,7 @@ public class OVRManager {
 
           if (type is EVREventType.VREvent_ButtonPress or EVREventType.VREvent_ButtonUnpress
               or EVREventType.VREvent_ButtonTouch or EVREventType.VREvent_ButtonUntouch)
-          {
             _buttonDetector!.HandleEvent(type, e);
-          }
         }
       }
       else if (active)

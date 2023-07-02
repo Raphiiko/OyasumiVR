@@ -16,11 +16,12 @@ public class OverlayPointer {
 
   public OverlayPointer()
   {
+    // Setup pointer overlays
     _rightPointer = new PointerData()
     {
       Overlay = new Overlay("co.raphii.oyasumi:PointerRight", "OyasumiVR Right Pointer", false)
       {
-        WidthInMeters = 0.01f
+        WidthInMeters = 0.02f
       },
       LastUVPosition = Vector2.Zero
     };
@@ -28,21 +29,26 @@ public class OverlayPointer {
     {
       Overlay = new Overlay("co.raphii.oyasumi:PointerLeft", "OyasumiVR Left Pointer", false)
       {
-        WidthInMeters = 0.01f
+        WidthInMeters = 0.02f
       },
       LastUVPosition = Vector2.Zero
     };
-
-    var color = new byte[] { 0, 128, 255, 255 };
-    IntPtr intPtr = Marshal.AllocHGlobal(color.Length);
-    Marshal.Copy(color, 0, intPtr, color.Length);
-    OpenVR.Overlay.SetOverlayRaw(_rightPointer.Overlay.Handle, intPtr, 1, 1, 4);
-    OpenVR.Overlay.SetOverlayRaw(_leftPointer.Overlay.Handle, intPtr, 1, 1, 4);
+    // Set sort order for pointer overlays
+    OpenVR.Overlay.SetOverlaySortOrder(_leftPointer.Overlay.Handle, 150);
+    OpenVR.Overlay.SetOverlaySortOrder(_rightPointer.Overlay.Handle, 150);
+    // Load pointer image into overlays
+    var pointerImage = Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("overlay-sidecar.Resources.pointer.png"));
+    var intPtr = Marshal.AllocHGlobal(pointerImage.Item1.Length);
+    Marshal.Copy(pointerImage.Item1, 0, intPtr, pointerImage.Item1.Length);
+    OpenVR.Overlay.SetOverlayRaw(_rightPointer.Overlay.Handle, intPtr, (uint)pointerImage.Item2,
+      (uint)pointerImage.Item3, 4);
+    OpenVR.Overlay.SetOverlayRaw(_leftPointer.Overlay.Handle, intPtr, (uint)pointerImage.Item2,
+      (uint)pointerImage.Item3, 4);
     Marshal.FreeHGlobal(intPtr);
-
+    // Handle trigger events
     OVRManager.Instance.ButtonDetector!.OnTriggerPress += OnTriggerPress;
     OVRManager.Instance.ButtonDetector!.OnTriggerRelease += OnTriggerRelease;
-
+    // Start tasks
     new Thread(Start).Start();
     new Thread(ProcessMouseMovement).Start();
   }
@@ -108,13 +114,13 @@ public class OverlayPointer {
           foreach (var overlay in _overlays)
           {
             var controllerTransform = controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
-            VROverlayIntersectionParams_t intersectionParams = new VROverlayIntersectionParams_t()
+            var intersectionParams = new VROverlayIntersectionParams_t()
             {
               eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding,
               vSource = controllerTransform.Translation.ToHmdVector3_t(),
-              vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t(),
+              vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t()
             };
-            VROverlayIntersectionResults_t intersectionResults = new VROverlayIntersectionResults_t();
+            var intersectionResults = new VROverlayIntersectionResults_t();
             if (!OpenVR.Overlay.ComputeOverlayIntersection(overlay.Overlay.Handle, ref intersectionParams,
                   ref intersectionResults)) continue;
             intersections.Add((intersectionResults, controllerRole, overlay));
@@ -140,11 +146,9 @@ public class OverlayPointer {
       {
         foreach (var (intersection, pointer) in new[]
                    { (rightIntersection, _rightPointer), (leftIntersection, _leftPointer) })
-        {
           if (intersection.HasValue)
           {
-            var position = Vector3.Add(intersection.Value.Item1.vPoint.ToVector3(),
-              Vector3.Multiply(intersection.Value.Item1.vNormal.ToVector3(), 0.02f));
+            var position = intersection.Value.Item1.vPoint.ToVector3();
             pointer.Overlay.Transform =
               (Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headTransform)) *
                Matrix4x4.CreateTranslation(position)).ToHmdMatrix34_t();
@@ -175,7 +179,6 @@ public class OverlayPointer {
             pointer.LastUVPosition = null;
             pointer.LastActiveOverlay = null;
           }
-        }
       }
 
       Thread.Sleep(TimeSpan.FromMilliseconds(16));

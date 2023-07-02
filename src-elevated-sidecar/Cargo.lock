@@ -797,7 +797,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-elevated-sidecar"
-version = "1.7.3"
+version = "0.0.0"
 dependencies = [
  "codesigned",
  "directories",
@@ -820,7 +820,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.7.3"
+version = "0.0.0"
 dependencies = [
  "winapi",
 ]

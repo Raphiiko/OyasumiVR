@@ -13,8 +13,8 @@ public class TooltipOverlay : BaseOverlay {
   public TooltipOverlay() :
     base("/tooltip", 512, "co.raphii.oyasumi:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay")
   {
-    overlay.WidthInMeters = 0.20f;
-    overlay.SetFlag(VROverlayFlags.WantsModalBehavior, true);
+    overlay.WidthInMeters = 0.35f;
+    OpenVR.Overlay.SetOverlaySortOrder(overlay.Handle, 150);
     new Thread(() =>
     {
       while (!Disposed)
@@ -30,7 +30,7 @@ public class TooltipOverlay : BaseOverlay {
     _targetPosition = Vector3.Add(position, new Vector3(0, 0.025f, 0));
   }
 
-  public async void SetText(String? text)
+  public async void SetText(string? text)
   {
     var content = text != null ? $@"""{HttpUtility.JavaScriptStringEncode(text)}""" : "null";
     browser.ExecuteScriptAsync($"window.OyasumiIPCIn.showToolTip({content})");
@@ -68,5 +68,8 @@ public class TooltipOverlay : BaseOverlay {
     targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.2f);
     // Apply the transformation
     overlay.Transform = targetTransform.ToHmdMatrix34_t();
+    // Set the overlay size based on the distance
+    overlay.WidthInMeters = 0.35f * Vector3.Distance(headMatrix.Translation, targetTransform.Translation);
+    ;
   }
 }

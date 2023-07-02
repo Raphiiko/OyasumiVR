@@ -12,8 +12,8 @@ public class DashboardOverlay : BaseOverlay {
   private Matrix4x4? _targetTransform;
   private TooltipOverlay _tooltipOverlay;
 
-  private String? vrcUsername;
-  private String vrcStatus = "offline";
+  private string? vrcUsername;
+  private string vrcStatus = "offline";
   private bool sleepMode = false;
 
   public bool Open => _open;
@@ -69,7 +69,7 @@ public class DashboardOverlay : BaseOverlay {
     }, TimeSpan.FromSeconds(1));
   }
 
-  public void ShowToolTip(String? text)
+  public void ShowToolTip(string? text)
   {
     _tooltipOverlay.SetText(text);
   }
@@ -115,10 +115,7 @@ public class DashboardOverlay : BaseOverlay {
     while (!Disposed)
     {
       var position = OVRManager.Instance.OverlayPointer!.GetPointerLocationForOverlay(this);
-      if (position.HasValue)
-      {
-        _tooltipOverlay.SetPosition(position.Value);
-      }
+      if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
 
       Thread.Sleep(16);
     }

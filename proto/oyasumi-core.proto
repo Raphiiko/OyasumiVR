@@ -5,20 +5,20 @@ option csharp_namespace = "GrcpOyasumiCore";
 package OyasumiCore;
 
 service OyasumiCore {
-    rpc OnOverlaySidecarStart (OverlaySidecarStartArgs) returns (Empty) {}
-    rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
+  rpc OnOverlaySidecarStart (OverlaySidecarStartArgs) returns (Empty) {}
+  rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
 }
 
 message OverlaySidecarStartArgs {
-    uint32 port = 1;
-    uint32 pid = 2;
+  uint32 port = 1;
+  uint32 pid = 2;
 }
 
-message ElevatedSidecarStartArgs  {
-    uint32 port = 1;
-    uint32 pid = 2;
-    // Set to the pid of the previous process in case the sidecar relaunched itself
-    optional uint32 old_pid = 3;
+message ElevatedSidecarStartArgs {
+  uint32 port = 1;
+  uint32 pid = 2;
+  // Set to the pid of the previous process in case the sidecar relaunched itself
+  optional uint32 old_pid = 3;
 }
 
 message Empty {}

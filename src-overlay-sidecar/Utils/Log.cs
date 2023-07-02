@@ -7,10 +7,7 @@ namespace overlay_sidecar;
 public class Log {
   private static Logger _logger;
 
-  public static Logger Logger
-  {
-    get => _logger;
-  }
+  public static Logger Logger => _logger;
 
   public static void Init()
   {

@@ -1,13 +1,7 @@
-using System.Diagnostics;
 using System.Numerics;
 using System.Web;
 using CefSharp;
 using Valve.VR;
-using OVRSharp;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Device = SharpDX.Direct3D11.Device;
 
 namespace overlay_sidecar;
 
@@ -16,6 +10,7 @@ public class NotificationOverlay : BaseOverlay {
     base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay")
   {
     overlay.WidthInMeters = 0.35f;
+    OpenVR.Overlay.SetOverlaySortOrder(overlay.Handle, 150);
     overlay.Show();
     new Thread(() =>
     {
@@ -27,7 +22,7 @@ public class NotificationOverlay : BaseOverlay {
     }).Start();
   }
 
-  public string? AddNotification(String message, TimeSpan? duration = null)
+  public string? AddNotification(string message, TimeSpan? duration = null)
   {
     var script = $@"window.OyasumiIPCIn.addNotification({{
             message: ""{HttpUtility.JavaScriptStringEncode(message)}"",

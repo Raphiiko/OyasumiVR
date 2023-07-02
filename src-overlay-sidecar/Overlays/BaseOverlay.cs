@@ -19,7 +19,7 @@ public class BaseOverlay {
   public Overlay Overlay => overlay;
   public OffScreenBrowser Browser => browser;
 
-  protected BaseOverlay(String path, int resolution, String overlayKey, String overlayName)
+  protected BaseOverlay(string path, int resolution, string overlayKey, string overlayName)
   {
     var uiUrl = Debugger.IsAttached ? "http://localhost:5173" + path : "oyasumivroverlay://ui" + path;
     browser = new OffScreenBrowser(uiUrl, resolution, resolution);
@@ -79,10 +79,7 @@ public class BaseOverlay {
     {
       handle = this.texture.NativePointer
     };
-    var err = OpenVR.Overlay.SetOverlayTexture(this.overlay.Handle, ref texture);
-    if (err != EVROverlayError.None)
-    {
-      Console.WriteLine("Could not set overlay texture.");
-    }
+    var err = OpenVR.Overlay.SetOverlayTexture(overlay.Handle, ref texture);
+    if (err != EVROverlayError.None) Console.WriteLine("Could not set overlay texture.");
   }
 }

@@ -49,10 +49,7 @@ public class ButtonDetector {
           }
         }
 
-        if (button is EVRButtonId.k_EButton_SteamVR_Trigger)
-        {
-          OnTriggerPress?.Invoke(this, role);
-        }
+        if (button is EVRButtonId.k_EButton_SteamVR_Trigger) OnTriggerPress?.Invoke(this, role);
 
         break;
       }
@@ -60,10 +57,7 @@ public class ButtonDetector {
       case EVREventType.VREvent_ButtonUnpress:
       {
         var button = (EVRButtonId)ev.data.controller.button;
-        if (button is EVRButtonId.k_EButton_SteamVR_Trigger)
-        {
-          OnTriggerRelease?.Invoke(this, role);
-        }
+        if (button is EVRButtonId.k_EButton_SteamVR_Trigger) OnTriggerRelease?.Invoke(this, role);
 
         break;
       }
