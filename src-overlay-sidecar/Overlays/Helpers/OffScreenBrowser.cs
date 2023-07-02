@@ -16,7 +16,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
   private GCHandle _paintBuffer;
   private int _width;
   private int _height;
-  private long _lastPaint = 0;
+  private long _lastPaint;
   public long LastPaint => _lastPaint;
 
   public OffScreenBrowser(string address, int width, int height)
@@ -45,7 +45,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
     _paintBufferLock.EnterWriteLock();
     try
     {
-      if (_paintBuffer.IsAllocated == true) _paintBuffer.Free();
+      if (_paintBuffer.IsAllocated) _paintBuffer.Free();
     }
     finally
     {
@@ -145,7 +145,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
       {
         _width = width;
         _height = height;
-        if (_paintBuffer.IsAllocated == true) _paintBuffer.Free();
+        if (_paintBuffer.IsAllocated) _paintBuffer.Free();
 
         _paintBuffer = GCHandle.Alloc(
           new byte[_width * _height * 4],

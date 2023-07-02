@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using OVRSharp;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -10,13 +9,14 @@ namespace overlay_sidecar;
 
 public class BaseOverlay {
   protected bool UiReady;
-  protected readonly Overlay overlay;
+  protected readonly ulong? overlayHandle;
   protected readonly OffScreenBrowser browser;
   protected readonly Texture2D texture;
   protected readonly Device device;
   protected bool Disposed;
+  protected long lastRender;
 
-  public Overlay Overlay => overlay;
+  public ulong OverlayHandle => overlayHandle!.Value;
   public OffScreenBrowser Browser => browser;
 
   protected BaseOverlay(string path, int resolution, string overlayKey, string overlayName)
@@ -42,13 +42,25 @@ public class BaseOverlay {
       }
     );
     browser.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
-    overlay = new Overlay(overlayKey, overlayName);
+    ulong overlayHandle = 0;
+    {
+      var err = OpenVR.Overlay.CreateOverlay(overlayKey, overlayName, ref overlayHandle);
+      if (err != EVROverlayError.None)
+      {
+        Log.Logger.Error("Could not create overlay: " + err);
+        Dispose();
+        return;
+      }
+    }
+    this.overlayHandle = overlayHandle;
     new Thread(() =>
     {
+      var timer = new RefreshRateTimer();
       while (!Disposed)
       {
-        Thread.Sleep(11);
+        timer.tickStart();
         UpdateFrame();
+        timer.sleepUntilNextTick();
       }
     }).Start();
   }
@@ -59,7 +71,7 @@ public class BaseOverlay {
     browser?.Dispose();
     texture?.Dispose();
     device?.Dispose();
-    overlay?.Destroy();
+    if (overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(overlayHandle!.Value);
   }
 
   public void OnUiReady()
@@ -73,13 +85,14 @@ public class BaseOverlay {
 
   private void UpdateFrame()
   {
-    if (Disposed || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - browser.LastPaint > 1000) return;
+    if (Disposed || lastRender >= browser.LastPaint) return;
     browser.RenderToTexture(this.texture);
     var texture = new Texture_t
     {
       handle = this.texture.NativePointer
     };
-    var err = OpenVR.Overlay.SetOverlayTexture(overlay.Handle, ref texture);
+    var err = OpenVR.Overlay.SetOverlayTexture(overlayHandle!.Value, ref texture);
     if (err != EVROverlayError.None) Console.WriteLine("Could not set overlay texture.");
+    lastRender = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
   }
 }

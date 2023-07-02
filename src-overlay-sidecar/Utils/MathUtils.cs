@@ -4,7 +4,7 @@ using CMath = System.Math;
 
 namespace overlay_sidecar;
 
-public static class Math {
+public static class MathUtils {
   public static float ToRadians(this float degrees)
   {
     return (int)(degrees * (CMath.PI / 180));

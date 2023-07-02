@@ -13,14 +13,16 @@ public class TooltipOverlay : BaseOverlay {
   public TooltipOverlay() :
     base("/tooltip", 512, "co.raphii.oyasumi:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay")
   {
-    overlay.WidthInMeters = 0.35f;
-    OpenVR.Overlay.SetOverlaySortOrder(overlay.Handle, 150);
+    OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
+    OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
     new Thread(() =>
     {
+      var timer = new RefreshRateTimer();
       while (!Disposed)
       {
+        timer.tickStart();
         UpdatePosition();
-        Thread.Sleep(11);
+        timer.sleepUntilNextTick();
       }
     }).Start();
   }
@@ -38,7 +40,7 @@ public class TooltipOverlay : BaseOverlay {
     {
       _shown = true;
       _closing = false;
-      overlay.Show();
+      OpenVR.Overlay.ShowOverlay(OverlayHandle);
     }
     else
     {
@@ -48,7 +50,7 @@ public class TooltipOverlay : BaseOverlay {
         if (!_closing) return;
         _closing = false;
         _shown = false;
-        overlay.Hide();
+        OpenVR.Overlay.HideOverlay(OverlayHandle);
       }, TimeSpan.FromSeconds(1));
     }
   }
@@ -57,7 +59,10 @@ public class TooltipOverlay : BaseOverlay {
   {
     if (!_shown || _targetPosition == null) return;
     // Get current transform
-    var currentTransform = overlay.Transform.ToMatrix4x4();
+    var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
+    HmdMatrix34_t currentTransform34T = default;
+    OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
+    var currentTransform = currentTransform34T.ToMatrix4x4();
     // Calculate target transform
     var headPose = OVRUtils.GetHeadPose().mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4x4();
@@ -67,9 +72,12 @@ public class TooltipOverlay : BaseOverlay {
     // Lerp the position
     targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.2f);
     // Apply the transformation
-    overlay.Transform = targetTransform.ToHmdMatrix34_t();
+    var transform = targetTransform.ToHmdMatrix34_t();
+    OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
+      ref transform);
     // Set the overlay size based on the distance
-    overlay.WidthInMeters = 0.35f * Vector3.Distance(headMatrix.Translation, targetTransform.Translation);
-    ;
+    OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle,
+      0.35f * Vector3.Distance(headMatrix.Translation, targetTransform.Translation)
+    );
   }
 }

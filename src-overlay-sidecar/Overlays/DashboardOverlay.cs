@@ -10,11 +10,11 @@ public class DashboardOverlay : BaseOverlay {
   private bool _open;
   private bool _closing;
   private Matrix4x4? _targetTransform;
-  private TooltipOverlay _tooltipOverlay;
+  private readonly TooltipOverlay _tooltipOverlay;
 
-  private string? vrcUsername;
-  private string vrcStatus = "offline";
-  private bool sleepMode = false;
+  private string? _vrcUsername;
+  private string _vrcStatus = "offline";
+  private bool _sleepMode = false;
 
   public bool Open => _open;
   public event Action OnClose;
@@ -23,7 +23,7 @@ public class DashboardOverlay : BaseOverlay {
     base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
   {
     _tooltipOverlay = new TooltipOverlay();
-    overlay.WidthInMeters = 0.45f;
+    OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
     browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
   }
@@ -40,15 +40,19 @@ public class DashboardOverlay : BaseOverlay {
     while (!UiReady) await Task.Delay(TimeSpan.FromMilliseconds(16));
     _targetTransform = GetTargetTransform(role);
     if (!_targetTransform.HasValue) return;
-    overlay.Transform = _targetTransform.Value.ToHmdMatrix34_t();
+    var transform = _targetTransform.Value.ToHmdMatrix34_t();
+    OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle,
+      ETrackingUniverseOrigin.TrackingUniverseStanding,
+      ref transform
+    );
     _open = true;
     _closing = false;
     OVRManager.Instance.OverlayPointer!.StartForOverlay(this);
-    vrcUsername = "Raphiiko";
-    vrcStatus = "active";
+    _vrcUsername = "Raphiiko";
+    _vrcStatus = "active";
     SendParameters();
     ShowDashboard();
-    overlay.Show();
+    OpenVR.Overlay.ShowOverlay(OverlayHandle);
   }
 
   public async void close()
@@ -64,7 +68,7 @@ public class DashboardOverlay : BaseOverlay {
       _closing = false;
       _open = false;
       _tooltipOverlay.SetText("");
-      overlay.Hide();
+      OpenVR.Overlay.HideOverlay(OverlayHandle);
       OnClose?.Invoke();
     }, TimeSpan.FromSeconds(1));
   }
@@ -91,10 +95,10 @@ public class DashboardOverlay : BaseOverlay {
   private void SendParameters()
   {
     browser.ExecuteScriptAsync(
-      @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(vrcStatus)}"");");
-    var username = vrcUsername != null ? $@"""{HttpUtility.JavaScriptStringEncode(vrcUsername)}""" : "null";
+      @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(_vrcStatus)}"");");
+    var username = _vrcUsername != null ? $@"""{HttpUtility.JavaScriptStringEncode(_vrcUsername)}""" : "null";
     browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setVRCUsername({username});");
-    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setSleepMode({(sleepMode ? "true" : "false")});");
+    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setSleepMode({(_sleepMode ? "true" : "false")});");
   }
 
   private void HideDashboard()
@@ -109,12 +113,13 @@ public class DashboardOverlay : BaseOverlay {
 
   private void UpdateTooltipPosition()
   {
+      var timer = new RefreshRateTimer();
     while (!Disposed)
     {
+      timer.tickStart();
       var position = OVRManager.Instance.OverlayPointer!.GetPointerLocationForOverlay(this);
       if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
-
-      Thread.Sleep(16);
+      timer.sleepUntilNextTick();
     }
   }
 }

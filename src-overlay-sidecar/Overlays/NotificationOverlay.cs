@@ -9,15 +9,17 @@ public class NotificationOverlay : BaseOverlay {
   public NotificationOverlay() :
     base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay")
   {
-    overlay.WidthInMeters = 0.35f;
-    OpenVR.Overlay.SetOverlaySortOrder(overlay.Handle, 150);
-    overlay.Show();
+    OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
+    OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
+    OpenVR.Overlay.ShowOverlay(OverlayHandle);
     new Thread(() =>
     {
+      var timer = new RefreshRateTimer();
       while (!Disposed)
       {
+        timer.tickStart();
         UpdatePosition();
-        Thread.Sleep(11);
+        timer.sleepUntilNextTick();
       }
     }).Start();
   }
@@ -44,7 +46,10 @@ public class NotificationOverlay : BaseOverlay {
   {
     if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - browser.LastPaint > 1000) return;
     // Get current transform
-    var currentTransform = overlay.Transform.ToMatrix4x4();
+    var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
+    HmdMatrix34_t currentTransform34T = default;
+    OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
+    var currentTransform = currentTransform34T.ToMatrix4x4();
     // Calculate target transform
     var headPose = OVRUtils.GetHeadPose().mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4x4();
@@ -54,6 +59,8 @@ public class NotificationOverlay : BaseOverlay {
     // Lerp the position
     targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.04f);
     // Apply the transformation
-    overlay.Transform = targetTransform.ToHmdMatrix34_t();
+    var transform = targetTransform.ToHmdMatrix34_t();
+    OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
+      ref transform);
   }
 }
