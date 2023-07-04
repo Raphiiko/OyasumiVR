@@ -10,15 +10,17 @@ service OyasumiCore {
 }
 
 message OverlaySidecarStartArgs {
-  uint32 port = 1;
-  uint32 pid = 2;
+  uint32 pid = 1;
+  uint32 grpc_port = 2;
+  uint32 grpc_web_port = 3;
 }
 
 message ElevatedSidecarStartArgs {
-  uint32 port = 1;
-  uint32 pid = 2;
+  uint32 pid = 1;
+  uint32 grpc_port = 2;
+  uint32 grpc_web_port = 3;
   // Set to the pid of the previous process in case the sidecar relaunched itself
-  optional uint32 old_pid = 3;
+  optional uint32 old_pid = 4;
 }
 
 message Empty {}

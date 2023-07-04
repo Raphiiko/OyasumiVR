@@ -28,30 +28,9 @@ public static class Program {
     }
 
     // Initialize
-    InitCef();
     WatchMainProcess(mainProcessId);
     OVRManager.Instance.init();
     IPCManager.Instance.init(mainProcessPort);
-  }
-
-  private static void InitCef()
-  {
-    Log.Logger.Information("Initializing CEF");
-    var rootDir = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"ui\");
-    Directory.CreateDirectory(rootDir);
-    var settings = new CefSettings();
-    settings.RegisterScheme(new CefCustomScheme
-    {
-      SchemeName = "oyasumivroverlay",
-      DomainName = "ui",
-      SchemeHandlerFactory = new FolderSchemeHandlerFactory(
-        rootDir,
-        hostName: "ui",
-        defaultPage: "index.html" // will default to index.html
-      )
-    });
-    Cef.Initialize(settings);
-    Log.Logger.Information("Initialized CEF");
   }
 
   private static void WatchMainProcess(int mainPid)

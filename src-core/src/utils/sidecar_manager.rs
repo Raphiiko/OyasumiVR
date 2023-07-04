@@ -5,15 +5,17 @@ use sysinfo::{Pid, PidExt, System, SystemExt};
 use tokio::sync::{mpsc, Mutex};
 
 #[derive(Clone)]
+#[readonly::make]
 pub struct SidecarManager {
-    sidecar_id: String,
-    exe_file: String,
-    exe_dir: String,
-    grpc_port: Arc<Mutex<Option<u32>>>,
-    active: Arc<Mutex<bool>>,
-    started: Arc<Mutex<bool>>,
-    sidecar_pid: Arc<Mutex<Option<u32>>>,
-    on_stop_tx: mpsc::Sender<()>,
+    pub sidecar_id: String,
+    pub exe_file: String,
+    pub exe_dir: String,
+    pub grpc_port: Arc<Mutex<Option<u32>>>,
+    pub grpc_web_port: Arc<Mutex<Option<u32>>>,
+    pub active: Arc<Mutex<bool>>,
+    pub started: Arc<Mutex<bool>>,
+    pub sidecar_pid: Arc<Mutex<Option<u32>>>,
+    pub on_stop_tx: mpsc::Sender<()>,
 }
 
 impl SidecarManager {
@@ -28,6 +30,7 @@ impl SidecarManager {
             exe_file,
             exe_dir,
             grpc_port: Arc::new(Mutex::new(None)),
+            grpc_web_port: Arc::new(Mutex::new(None)),
             active: Arc::new(Mutex::new(false)),
             started: Arc::new(Mutex::new(false)),
             sidecar_pid: Arc::new(Mutex::new(None)),
@@ -75,6 +78,7 @@ impl SidecarManager {
     pub async fn handle_start_signal(
         &self,
         grpc_port: u32,
+        grpc_web_port: u32,
         pid: u32,
         old_pid: Option<u32>,
     ) -> bool {
@@ -98,11 +102,12 @@ impl SidecarManager {
         }
         // Store started state
         *self.started.lock().await = true;
-        // Store the GRPC port
+        // Store the GRPC ports
         *self.grpc_port.lock().await = Some(grpc_port);
+        *self.grpc_web_port.lock().await = Some(grpc_web_port);
         info!(
-            "[Core] Detected start of {} sidecar (pid={}, port={})",
-            self.sidecar_id, pid, grpc_port
+            "[Core] Detected start of {} sidecar (pid={}, grpc_port={}, grpc_web_port={})",
+            self.sidecar_id, pid, grpc_port, grpc_web_port
         );
         return true;
     }

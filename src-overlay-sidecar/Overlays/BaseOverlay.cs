@@ -20,7 +20,10 @@ public class BaseOverlay {
 
   protected BaseOverlay(string path, int resolution, string overlayKey, string overlayName)
   {
-    var uiUrl = Debugger.IsAttached ? "http://localhost:5173" + path : "oyasumivroverlay://ui" + path;
+    var uiUrl = Debugger.IsAttached
+      ? "http://localhost:5173" + path
+      : IPCManager.Instance.StaticBaseUrl + path;
+    Log.Logger.Information("Using UI URL: {url}", uiUrl);
     browser = new OffScreenBrowser(uiUrl, resolution, resolution);
     device = Program.GPUFix
       ? new Device(new Factory1().GetAdapter(1), DeviceCreationFlags.BgraSupport)

@@ -60,9 +60,9 @@ export class SleepService {
   constructor(
     private openvr: OpenVRService,
     private notifications: NotificationService,
-    private translate: TranslateService,
     private eventLog: EventLogService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private translate: TranslateService
   ) {}
 
   async init() {

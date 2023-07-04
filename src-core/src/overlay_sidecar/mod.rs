@@ -29,6 +29,7 @@ pub async fn init() {
     // Wait for sidecar stop signals
     tokio::spawn(async move {
         while let Some(_) = rx.recv().await {
+            *SIDECAR_GRPC_CLIENT.lock().await = None;
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }
     });
@@ -51,16 +52,10 @@ pub async fn add_notification(message: String, duration: Duration) -> Result<Str
     let notification_id = client.add_notification(tonic::Request::new(message)).await;
     match notification_id {
         Ok(response) => match response.into_inner().notification_id.clone() {
-            Some(notification_id) => {
-                Ok(notification_id)
-            }
-            None => {
-                Err("Failed to add notification".to_string())
-            }
+            Some(notification_id) => Ok(notification_id),
+            None => Err("Failed to add notification".to_string()),
         },
-        Err(e) => {
-            Err(e.to_string())
-        }
+        Err(e) => Err(e.to_string()),
     }
 }
 
@@ -98,13 +93,16 @@ pub async fn handle_overlay_sidecar_start(
     let manager_guard = SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref().unwrap();
     // Ignore this signal if it is invalid
-    if !manager.handle_start_signal(args.port, args.pid, None).await {
+    if !manager
+        .handle_start_signal(args.grpc_port, args.grpc_web_port, args.pid, None)
+        .await
+    {
         return Ok(());
     }
     // Create new GRPC client
     let grpc_client =
-        OyasumiOverlaySidecarClient::connect(format!("http://127.0.0.1:{}", args.port)).await?;
+        OyasumiOverlaySidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port)).await?;
     *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
-    send_event("OVERLAY_SIDECAR_STARTED", ()).await;
+    send_event("OVERLAY_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())
 }

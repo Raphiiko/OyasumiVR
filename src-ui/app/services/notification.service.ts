@@ -7,6 +7,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
 import { warn } from 'tauri-plugin-log-api';
+import { IPCService } from './ipc.service';
 
 interface XSOMessage {
   messageType: number;
@@ -27,7 +28,7 @@ interface XSOMessage {
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private appSettingsService: AppSettingsService) {}
+  constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
 
   public async play_sound(sound: 'bell' | 'block') {
     await invoke('play_sound', {
@@ -45,7 +46,6 @@ export class NotificationService {
       case 'DESKTOP':
         return await this.sendDesktopNotification('OyasumiVR', content);
     }
-    return null;
   }
 
   async clearNotification(notificationId: string) {
@@ -98,10 +98,14 @@ export class NotificationService {
   }
 
   private async sendOyasumiNotification(content: string, duration: number): Promise<string | null> {
-    return await invoke<string | null>('add_notification', {
+    const client = await firstValueFrom(this.ipcService.overlaySidecarClient);
+    if (!client) return null;
+    const result = await client.addNotification({
       message: content,
       duration,
     });
+    console.log(result, result.response, result.response.notificationId);
+    return result.response.notificationId ?? null;
   }
 
   private async sendDesktopNotification(title: string, content: string): Promise<string | null> {

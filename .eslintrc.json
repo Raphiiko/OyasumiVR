@@ -5,7 +5,6 @@
     "ecmaVersion": 2020
   },
   "ignorePatterns": [
-    "projects/**/*"
   ],
   "plugins": [
     "json"

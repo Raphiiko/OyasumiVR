@@ -27,6 +27,7 @@ pub async fn init() {
     // Wait for sidecar stop signals
     tokio::spawn(async move {
         while let Some(_) = rx.recv().await {
+            *SIDECAR_GRPC_CLIENT.lock().await = None;
             send_event("ELEVATED_SIDECAR_STOPPED", ()).await;
         }
     });
@@ -54,15 +55,16 @@ pub async fn handle_elevated_sidecar_start(
     let manager = manager_guard.as_ref().unwrap();
     // Ignore this signal if it is invalid
     if !manager
-        .handle_start_signal(args.port, args.pid, args.old_pid)
+        .handle_start_signal(args.grpc_port, args.grpc_web_port, args.pid, args.old_pid)
         .await
     {
         return Ok(());
     }
     // Create new GRPC client
     let grpc_client =
-        OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.port)).await?;
+        OyasumiElevatedSidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port))
+            .await?;
     *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
-    send_event("ELEVATED_SIDECAR_STARTED", ()).await;
+    send_event("ELEVATED_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())
 }

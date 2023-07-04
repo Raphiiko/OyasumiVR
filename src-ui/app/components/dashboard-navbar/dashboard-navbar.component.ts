@@ -15,6 +15,7 @@ import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { invoke } from '@tauri-apps/api';
 import { ImageBrightnessControlAutomationService } from '../../services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { IPCService } from 'src-ui/app/services/ipc.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -137,7 +138,6 @@ export class DashboardNavbarComponent implements OnInit {
   subMenu: SubMenu = 'GENERAL';
 
   constructor(
-    private settingsService: AppSettingsService,
     private lighthouse: LighthouseConsoleService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NvmlService,
@@ -209,24 +209,13 @@ export class DashboardNavbarComponent implements OnInit {
     );
   }
 
-  async ngOnInit(): Promise<void> {
-    // setTimeout(async () => {
-    //   await invoke('lighthouse_scan_devices');
-    //   setInterval(async () => {
-    //     await invoke('lighthouse_scan_devices');
-    //   }, 10500);
-    // }, 1000);
-  }
+  async ngOnInit(): Promise<void> {}
 
   logoClicked = 0;
 
   async onLogoClick() {
     if (++this.logoClicked >= 3) {
       this.logoClicked = 0;
-      invoke('add_notification', {
-        message: 'THIS IS A TEST NOTIFICATION\nWHOOOOOOOOOO',
-        duration: 5000,
-      });
     }
   }
 
