@@ -26,17 +26,30 @@ pub async fn init() {
         "overlay-sidecar.exe".to_string(),
         tx,
     ));
-    // Wait for sidecar stop signals
+    // Listen for sidecar stop signals
     tokio::spawn(async move {
         while let Some(_) = rx.recv().await {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }
     });
-    // Start sidecar on start
-    let mut manager_guard = SIDECAR_MANAGER.lock().await;
-    let manager = manager_guard.as_mut().unwrap();
-    manager.start().await;
+    // If the development flag has been set, we don't need to start the sidecar
+    if crate::utils::cli_sidecar_overlay_mode().await.eq("dev") {
+        // We already expect it to run in development mode
+        let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
+            pid: 0,
+            grpc_port: 5174,
+            grpc_web_port: 5175,
+        })
+        .await;
+        return;
+    }
+    // Otherwise, start the sidecar in release mode
+    else {
+        let mut manager_guard = SIDECAR_MANAGER.lock().await;
+        let manager = manager_guard.as_mut().unwrap();
+        manager.start().await;
+    }
 }
 
 pub async fn add_notification(message: String, duration: Duration) -> Result<String, String> {
@@ -101,7 +114,8 @@ pub async fn handle_overlay_sidecar_start(
     }
     // Create new GRPC client
     let grpc_client =
-        OyasumiOverlaySidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port)).await?;
+        OyasumiOverlaySidecarClient::connect(format!("http://127.0.0.1:{}", args.grpc_port))
+            .await?;
     *SIDECAR_GRPC_CLIENT.lock().await = Some(grpc_client);
     send_event("OVERLAY_SIDECAR_STARTED", args.grpc_web_port).await;
     Ok(())

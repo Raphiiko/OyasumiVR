@@ -4,6 +4,7 @@ using System.Diagnostics;
 using CefSharp;
 using CefSharp.OffScreen;
 using CefSharp.SchemeHandler;
+using Serilog;
 
 namespace overlay_sidecar;
 
@@ -12,7 +13,7 @@ public static class Program {
 
   public static void Main(string[] args)
   {
-    Log.Init();
+    LogConfigurator.Init();
 
     // Parse args
     if (args.Length < 1 || !int.TryParse(args[0], out var mainProcessPort))
@@ -29,8 +30,21 @@ public static class Program {
 
     // Initialize
     WatchMainProcess(mainProcessId);
+    InitCef();
     OVRManager.Instance.init();
     IPCManager.Instance.init(mainProcessPort);
+  }
+
+  private static void InitCef()
+  {
+    var settings = new CefSettings();
+    if (!Debugger.IsAttached)
+    {
+      settings.LogSeverity = LogSeverity.Disable;
+      var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
+      if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
+    }
+    Cef.Initialize(settings);
   }
 
   private static void WatchMainProcess(int mainPid)
@@ -43,10 +57,10 @@ public static class Program {
     }
     catch (ArgumentException)
     {
-      Log.Logger.Error("Could not find main process to watch (pid=" + mainPid + ")");
+      Log.Error("Could not find main process to watch (pid=" + mainPid + ")");
       if (!Debugger.IsAttached)
       {
-        Log.Logger.Information("Quitting...");
+        Log.Information("Quitting...");
         Environment.Exit(1);
         return;
       }
@@ -60,7 +74,7 @@ public static class Program {
       {
         if (mainProcess.HasExited)
         {
-          Log.Logger.Information("Main process has exited. Stopping overlay sidecar.");
+          Log.Information("Main process has exited. Stopping overlay sidecar.");
           Environment.Exit(0);
           return;
         }

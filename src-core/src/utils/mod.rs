@@ -5,7 +5,7 @@ use sysinfo::{ProcessExt, Signal, System, SystemExt};
 use tauri::Manager;
 use tokio::sync::Mutex;
 
-use crate::globals::TAURI_APP_HANDLE;
+use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 
 lazy_static! {
     static ref SYSINFO: Mutex<System> = Mutex::new(System::new_all());
@@ -52,4 +52,19 @@ pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
             error!("[Core] Failed to send event {}: {}", event, e);
         }
     };
+}
+
+pub async fn cli_sidecar_overlay_mode() -> String {
+    let default = "release";
+    let match_guard = TAURI_CLI_MATCHES.lock().await;
+    let mode = match match_guard
+        .as_ref()
+        .unwrap()
+        .args
+        .get("overlay-sidecar-mode")
+    {
+        Some(data) => data.value.as_str().unwrap_or(default),
+        None => default,
+    };
+    mode.to_string()
 }

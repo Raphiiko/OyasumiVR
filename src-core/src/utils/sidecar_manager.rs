@@ -82,23 +82,29 @@ impl SidecarManager {
         pid: u32,
         old_pid: Option<u32>,
     ) -> bool {
-        // If the sidecar is not active, ignore this signal
-        let active_guard = self.active.lock().await;
-        if !*active_guard {
-            warn!(
-                "Ignoring start signal for {} sidecar with pid {} because it is not active",
-                self.sidecar_id, pid
-            );
-            return false;
-        }
-        // If another sidecar is already running that does not have the old pid, ignore this signal
-        let current_pid = self.sidecar_pid.lock().await;
-        if current_pid.is_some()
-            && (current_pid.unwrap() != pid
-                && (old_pid.is_some() && current_pid.unwrap() != old_pid.unwrap()))
-        {
-            warn!("Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid.unwrap());
-            return false;
+        // pid == 0 means that we are assuming the sidecar is running in development mode.
+        if pid != 0 {
+            // If the sidecar is not active, ignore this signal
+            let active_guard = self.active.lock().await;
+            if !*active_guard {
+                warn!(
+                    "Ignoring start signal for {} sidecar with pid {} because it is not active",
+                    self.sidecar_id, pid
+                );
+                return false;
+            }
+            // If another sidecar is already running that does not have the old pid, ignore this signal
+            let current_pid = self.sidecar_pid.lock().await;
+            if current_pid.is_some()
+                && (current_pid.unwrap() != pid
+                    && (old_pid.is_some() && current_pid.unwrap() != old_pid.unwrap()))
+            {
+                warn!("Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid.unwrap());
+                return false;
+            }
+        } else {
+            // We already expect it to run in development mode
+            *self.active.lock().await = true;
         }
         // Store started state
         *self.started.lock().await = true;

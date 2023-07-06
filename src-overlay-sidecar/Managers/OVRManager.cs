@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Serilog;
 using Valve.VR;
 
 namespace overlay_sidecar;
@@ -63,7 +64,7 @@ public class OVRManager {
           if (_system == null) continue;
 
           active = true;
-          Log.Logger.Information("OpenVR Manager Started");
+          Log.Information("OpenVR Manager Started");
           _buttonDetector = new ButtonDetector();
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
@@ -76,7 +77,7 @@ public class OVRManager {
           var type = (EVREventType)e.eventType;
           if (type == EVREventType.VREvent_Quit)
           {
-            Log.Logger.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
+            Log.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
             active = false;
             nextInit = DateTime.UtcNow.AddSeconds(5);
             Shutdown();
@@ -110,7 +111,7 @@ public class OVRManager {
     _dashboardOverlay = null;
     _system = null;
     OpenVR.Shutdown();
-    Log.Logger.Information("Stopped OpenVR Manager");
+    Log.Information("Stopped OpenVR Manager");
   }
 
   private void HandleButtonDetections()

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Grpc.Net.Client;
 using GrcpOverlaySidecar;
 using Microsoft.Extensions.FileProviders;
+using Serilog;
 
 namespace overlay_sidecar;
 
@@ -23,7 +24,10 @@ public class IPCManager {
   {
     if (_initialized) return;
     _initialized = true;
+    var uiPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"ui");
+    Directory.CreateDirectory(uiPath);
     var builder = WebApplication.CreateBuilder();
+    builder.Host.UseSerilog();
     builder.Services.AddCors(o => o.AddPolicy("AllowAll", corsPolicyBuilder =>
     {
       corsPolicyBuilder.AllowAnyOrigin()
@@ -39,8 +43,7 @@ public class IPCManager {
     app.UseStaticFiles();
     app.UseFileServer(new FileServerOptions()
     {
-      FileProvider = new PhysicalFileProvider(
-        Path.Combine(Path.GetDirectoryName(Environment.ProcessPath), @"ui")),
+      FileProvider = new PhysicalFileProvider(uiPath),
       RequestPath = new PathString("/static"),
       EnableDirectoryBrowsing = false
     });
@@ -58,15 +61,15 @@ public class IPCManager {
       var grpcWebAddress = addressFeature.Addresses.Skip(1).First();
       // Use grpc web address to determine the static url
       staticBaseUrl = grpcWebAddress + "/static";
-      Log.Logger.Information("gRPC interface listening on address: " + grpcAddress);
-      Log.Logger.Information("gRPC-Web interface listening on address: " + grpcWebAddress);
+      Log.Information("gRPC interface listening on address: " + grpcAddress);
+      Log.Information("gRPC-Web interface listening on address: " + grpcWebAddress);
       // Parse port from address
       if (!int.TryParse(grpcAddress.Split(':').Last(), out var grpcPort))
       {
-        Log.Logger.Error("Cannot parse bound port for gRPC interface.");
+        Log.Error("Cannot parse bound port for gRPC interface.");
         if (!Debugger.IsAttached)
         {
-          Log.Logger.Information("Quitting...");
+          Log.Information("Quitting...");
           Environment.Exit(1);
           return;
         }
@@ -74,10 +77,10 @@ public class IPCManager {
 
       if (!int.TryParse(grpcWebAddress.Split(':').Last(), out var grpcWebPort))
       {
-        Log.Logger.Error("Cannot parse bound port for gRPC-Web interface.");
+        Log.Error("Cannot parse bound port for gRPC-Web interface.");
         if (!Debugger.IsAttached)
         {
-          Log.Logger.Information("Quitting...");
+          Log.Information("Quitting...");
           Environment.Exit(1);
           return;
         }
@@ -98,13 +101,13 @@ public class IPCManager {
       {
         if (!Debugger.IsAttached)
         {
-          Log.Logger.Error(e, "Cannot inform core of overlay sidecar start");
-          Log.Logger.Information("Quitting...");
+          Log.Error(e, "Cannot inform core of overlay sidecar start");
+          Log.Information("Quitting...");
           Environment.Exit(1);
         }
         else
         {
-          Log.Logger.Error("Cannot inform core of overlay sidecar start");
+          Log.Error("Cannot inform core of overlay sidecar start");
         }
       }
     }).Start();

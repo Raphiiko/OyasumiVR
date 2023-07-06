@@ -9,7 +9,6 @@ public class NotificationOverlay : BaseOverlay {
   public NotificationOverlay() :
     base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay")
   {
-    browser.ShowDevTools();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
     OpenVR.Overlay.ShowOverlay(OverlayHandle);

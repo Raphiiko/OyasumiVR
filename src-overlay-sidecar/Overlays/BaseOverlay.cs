@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Serilog;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
@@ -23,7 +24,7 @@ public class BaseOverlay {
     var uiUrl = Debugger.IsAttached
       ? "http://localhost:5173" + path
       : IPCManager.Instance.StaticBaseUrl + path;
-    Log.Logger.Information("Using UI URL: {url}", uiUrl);
+    Log.Information("Using UI URL: {url}", uiUrl);
     browser = new OffScreenBrowser(uiUrl, resolution, resolution);
     device = Program.GPUFix
       ? new Device(new Factory1().GetAdapter(1), DeviceCreationFlags.BgraSupport)
@@ -49,7 +50,7 @@ public class BaseOverlay {
       var err = OpenVR.Overlay.CreateOverlay(overlayKey, overlayName, ref overlayHandle);
       if (err != EVROverlayError.None)
       {
-        Log.Logger.Error("Could not create overlay: " + err);
+        Log.Error("Could not create overlay: " + err);
         Dispose();
         return;
       }

@@ -39,6 +39,10 @@ fn main() {
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
         .setup(|app| {
+            let matches = app.get_cli_matches().unwrap();
+            tauri::async_runtime::block_on(async {
+                *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
+            });
             match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle(),
             ))) {

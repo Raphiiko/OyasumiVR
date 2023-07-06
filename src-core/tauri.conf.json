@@ -17,10 +17,7 @@
         "readFile": true,
         "readDir": true,
         "exists": true,
-        "scope": [
-          "$HOME/AppData/LocalLow/VRChat/**/*",
-          "$RESOURCE/*"
-        ]
+        "scope": ["$HOME/AppData/LocalLow/VRChat/**/*", "$RESOURCE/*"]
       },
       "path": {
         "all": true
@@ -56,10 +53,7 @@
       "deb": {
         "depends": []
       },
-      "resources": [
-        "./openvr_api.dll",
-        "./resources/**/*"
-      ],
+      "resources": ["./openvr_api.dll", "./resources/**/*"],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -78,10 +72,7 @@
         "signingIdentity": null
       },
       "shortDescription": "OyasumiVR",
-      "targets": [
-        "nsis",
-        "updater"
-      ],
+      "targets": ["nsis", "updater"],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -104,6 +95,23 @@
           ]
         }
       }
+    },
+    "cli": {
+      "description": "OyasumiVR - VR Sleep Utilities",
+      "longDescription": "",
+      "beforeHelp": "",
+      "afterHelp": "",
+      "args": [
+        {
+          "name": "overlay-sidecar-mode",
+          "short": "o",
+          "description": "Mode for handling the overlay sidecar",
+          "longDescription": "'release' mode\n - OyasumiVR will start the bundled overlay sidecar by itself.\n\n'dev' mode:\n - OyasumiVR will not start a sidecar overlay, and assumes that you are running the sidecar yourself on the default development port.",
+          "maxValues": 1,
+          "takesValue": true,
+          "possibleValues": ["release", "dev"]
+        }
+      ]
     },
     "security": {
       "csp": null

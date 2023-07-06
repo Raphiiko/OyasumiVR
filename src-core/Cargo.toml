@@ -67,6 +67,7 @@ readonly = "0.2"
 [dependencies.tauri]
 version = "1.4.1"
 features = [
+  "cli",
   "path-all",
   "process-relaunch",
   "system-tray",
