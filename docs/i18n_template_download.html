@@ -30,7 +30,7 @@
 <button onclick="downloadEN()">Download English example</button>
 
 <script>
-  fetch("https://api.github.com/repos/Raphiiko/Oyasumi/git/trees/develop?recursive=1")
+  fetch("https://api.github.com/repos/Raphiiko/OyasumiVR/git/trees/develop?recursive=1")
     .then((res) => res.json())
     .then((data) => {
       data.tree
@@ -55,12 +55,12 @@
 
   function downloadExpansion() {
     let lang = document.getElementById("languages").value;
-    fetch("https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json")
+    fetch("https://raw.githubusercontent.com/Raphiiko/OyasumiVR/develop/src-ui/assets/i18n/en.json")
       .then((res) => res.json())
       .then((template) => stripObject(template))
       .then((enTemplate) => {
         return fetch(
-          `https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/${lang}.json`
+          `https://raw.githubusercontent.com/Raphiiko/OyasumiVR/develop/src-ui/assets/i18n/${lang}.json`
         )
           .then((res) => res.json())
           .then((langTemplate) => mergeDeep(enTemplate, langTemplate))
@@ -70,13 +70,13 @@
   }
 
   function downloadEN() {
-    fetch("https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json")
+    fetch("https://raw.githubusercontent.com/Raphiiko/OyasumiVR/develop/src-ui/assets/i18n/en.json")
       .then((res) => res.json())
       .then((template) => downloadText("en.json", JSON.stringify(template, null, 2)));
   }
 
   function downloadFreshTemplate() {
-    fetch("https://raw.githubusercontent.com/Raphiiko/Oyasumi/develop/src/assets/i18n/en.json")
+    fetch("https://raw.githubusercontent.com/Raphiiko/OyasumiVR/develop/src-ui/assets/i18n/en.json")
       .then((res) => res.json())
       .then((template) => stripObject(template))
       .then((template) =>

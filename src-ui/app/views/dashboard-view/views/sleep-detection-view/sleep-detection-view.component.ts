@@ -13,7 +13,7 @@ import {
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, uniq } from 'lodash';
 import { TimeDisableSleepModeModalComponent } from './time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
 import { BatteryPercentageEnableSleepModeModalComponent } from './battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
 import { DevicePowerOnDisableSleepModeModalComponent } from './device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
@@ -88,7 +88,7 @@ export class SleepDetectionViewComponent implements OnInit {
         this.automationConfigService.updateAutomationConfig<SleepModeEnableAtBatteryPercentageAutomationConfig>(
           'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE',
           {
-            triggerClasses: data.triggerClasses,
+            triggerClasses: uniq(data.triggerClasses),
             threshold: data.threshold,
           }
         );
