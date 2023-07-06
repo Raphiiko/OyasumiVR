@@ -4,20 +4,19 @@
 @import 'material-icons/iconfont/material-icons.css';
 
 .vrc-status-color {
-	
-	&-active {
+	&-Active {
 		background-color: var(--color-vrchat-status-green);
 	}
-	&-join-me {
+	&-JoinMe {
 		background-color: var(--color-vrchat-status-blue);
 	}
-	&-ask-me {
+	&-AskMe {
 		background-color: var(--color-vrchat-status-orange);
 	}
-	&-busy {
+	&-Busy {
 		background-color: var(--color-vrchat-status-red);
 	}
-	&-offline {
+	&-Offline {
 		background-color: black;
 	}
 }

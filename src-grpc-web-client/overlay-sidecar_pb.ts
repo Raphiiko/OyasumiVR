@@ -58,6 +58,48 @@ export interface ClearNotificationRequest {
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
  */
 export interface Empty {}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarState
+ */
+export interface OyasumiSidecarState {
+  /**
+   * @generated from protobuf field: optional bool sleep_mode = 1;
+   */
+  sleepMode?: boolean;
+  /**
+   * @generated from protobuf field: optional OyasumiOverlaySidecar.VRCStatus vrc_status = 2;
+   */
+  vrcStatus?: VRCStatus;
+  /**
+   * @generated from protobuf field: optional string vrc_username = 3;
+   */
+  vrcUsername?: string;
+}
+/**
+ * @generated from protobuf enum OyasumiOverlaySidecar.VRCStatus
+ */
+export enum VRCStatus {
+  /**
+   * @generated from protobuf enum value: VRCStatus_Offline = 0;
+   */
+  VRCStatus_Offline = 0,
+  /**
+   * @generated from protobuf enum value: VRCStatus_Busy = 1;
+   */
+  VRCStatus_Busy = 1,
+  /**
+   * @generated from protobuf enum value: VRCStatus_AskMe = 2;
+   */
+  VRCStatus_AskMe = 2,
+  /**
+   * @generated from protobuf enum value: VRCStatus_Active = 3;
+   */
+  VRCStatus_Active = 3,
+  /**
+   * @generated from protobuf enum value: VRCStatus_JoinMe = 4;
+   */
+  VRCStatus_JoinMe = 4,
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class PingResponse$Type extends MessageType<PingResponse> {
   constructor() {
@@ -347,6 +389,87 @@ class Empty$Type extends MessageType<Empty> {
  * @generated MessageType for protobuf message OyasumiOverlaySidecar.Empty
  */
 export const Empty = new Empty$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarState', [
+      { no: 1, name: 'sleep_mode', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      {
+        no: 2,
+        name: 'vrc_status',
+        kind: 'enum',
+        opt: true,
+        T: () => ['OyasumiOverlaySidecar.VRCStatus', VRCStatus],
+      },
+      { no: 3, name: 'vrc_username', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
+    const message = {};
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarState
+  ): OyasumiSidecarState {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* optional bool sleep_mode */ 1:
+          message.sleepMode = reader.bool();
+          break;
+        case /* optional OyasumiOverlaySidecar.VRCStatus vrc_status */ 2:
+          message.vrcStatus = reader.int32();
+          break;
+        case /* optional string vrc_username */ 3:
+          message.vrcUsername = reader.string();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarState,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* optional bool sleep_mode = 1; */
+    if (message.sleepMode !== undefined) writer.tag(1, WireType.Varint).bool(message.sleepMode);
+    /* optional OyasumiOverlaySidecar.VRCStatus vrc_status = 2; */
+    if (message.vrcStatus !== undefined) writer.tag(2, WireType.Varint).int32(message.vrcStatus);
+    /* optional string vrc_username = 3; */
+    if (message.vrcUsername !== undefined)
+      writer.tag(3, WireType.LengthDelimited).string(message.vrcUsername);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarState
+ */
+export const OyasumiSidecarState = new OyasumiSidecarState$Type();
 /**
  * @generated ServiceType for protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */
@@ -357,5 +480,6 @@ export const OyasumiOverlaySidecar = new ServiceType(
     { name: 'RequestStop', options: {}, I: Empty, O: Empty },
     { name: 'AddNotification', options: {}, I: AddNotificationRequest, O: AddNotificationResponse },
     { name: 'ClearNotification', options: {}, I: ClearNotificationRequest, O: Empty },
+    { name: 'SyncState', options: {}, I: OyasumiSidecarState, O: Empty },
   ]
 );

@@ -41,17 +41,18 @@ class IPCService {
 		if (!browser) return;
 		window.OyasumiIPCIn.setSleepMode = async (mode: boolean) => set(mode);
 	});
-	vrcStatus = writable<VRCStatus>('offline', (set) => {
+	vrcStatus = writable<VRCStatus>('Offline', (set) => {
 		if (!browser) return;
 		window.OyasumiIPCIn.setVRCStatus = async (status: VRCStatus) => set(status);
 	});
 	vrcUsername = writable<string | null>(null, (set) => {
 		if (!browser) return;
-		window.OyasumiIPCIn.setVRCUsername = async (username: string | null) => set(username);
+		window.OyasumiIPCIn.setVRCUsername = async (username: string | null) =>
+			set(username ? username : null);
 	});
 	vrcLoggedIn = derived(
 		[this.vrcUsername, this.vrcStatus],
-		([$username, $status]) => $username !== null && $status !== 'offline'
+		([$username, $status]) => $username !== null && $status !== 'Offline'
 	);
 
 	async init() {

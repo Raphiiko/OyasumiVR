@@ -4,7 +4,6 @@ using GrcpOyasumiCore;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Grpc.Net.Client;
-using GrcpOverlaySidecar;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 
@@ -111,45 +110,5 @@ public class IPCManager {
         }
       }
     }).Start();
-  }
-}
-
-public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlaySidecarBase {
-  public override Task<AddNotificationResponse> AddNotification(AddNotificationRequest request,
-    ServerCallContext context)
-  {
-    if (OVRManager.Instance.Active == false)
-      throw new RpcException(new Status(StatusCode.FailedPrecondition,
-        "OpenVR Manager is not active"));
-
-    if (OVRManager.Instance.NotificationOverlay == null)
-      throw new RpcException(new Status(StatusCode.FailedPrecondition,
-        "Notification overlay is currently unavailable"));
-
-    var id = OVRManager.Instance.NotificationOverlay.AddNotification(
-      request.Message,
-      TimeSpan.FromMilliseconds(request.Duration)
-    );
-    if (id == null) return Task.FromResult(new AddNotificationResponse { });
-
-    return Task.FromResult(new AddNotificationResponse
-    {
-      NotificationId = id
-    });
-  }
-
-  public override Task<GrcpOverlaySidecar.Empty> ClearNotification(ClearNotificationRequest request,
-    ServerCallContext context)
-  {
-    if (OVRManager.Instance.Active == false)
-      throw new RpcException(new Status(StatusCode.FailedPrecondition,
-        "OpenVR Manager is not active"));
-
-    if (OVRManager.Instance.NotificationOverlay == null)
-      throw new RpcException(new Status(StatusCode.FailedPrecondition,
-        "Notification overlay is currently unavailable"));
-
-    OVRManager.Instance.NotificationOverlay.ClearNotification(request.NotificationId);
-    return Task.FromResult(new GrcpOverlaySidecar.Empty { });
   }
 }

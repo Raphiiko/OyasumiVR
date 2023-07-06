@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Web;
 using CefSharp;
+using GrcpOverlaySidecar;
 using Valve.VR;
 using static overlay_sidecar.Utils;
 
@@ -12,10 +13,6 @@ public class DashboardOverlay : BaseOverlay {
   private Matrix4x4? _targetTransform;
   private readonly TooltipOverlay _tooltipOverlay;
 
-  private string? _vrcUsername;
-  private string _vrcStatus = "offline";
-  private bool _sleepMode = false;
-
   public bool Open => _open;
   public event Action OnClose;
 
@@ -26,14 +23,16 @@ public class DashboardOverlay : BaseOverlay {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
     browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
+    StateManager.Instance.StateChanged += OnStateChanged;
   }
-
 
   public void Dispose()
   {
+    StateManager.Instance.StateChanged -= OnStateChanged;
     _tooltipOverlay.Dispose();
     base.Dispose();
   }
+
 
   public async void open(ETrackedControllerRole role)
   {
@@ -48,9 +47,7 @@ public class DashboardOverlay : BaseOverlay {
     _open = true;
     _closing = false;
     OVRManager.Instance.OverlayPointer!.StartForOverlay(this);
-    _vrcUsername = "Raphiiko";
-    _vrcStatus = "active";
-    SendParameters();
+    SyncState();
     ShowDashboard();
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
   }
@@ -73,10 +70,21 @@ public class DashboardOverlay : BaseOverlay {
     }, TimeSpan.FromSeconds(1));
   }
 
+  //
+  // IPC OUT
+  //
   public void ShowToolTip(string? text)
   {
     _tooltipOverlay.SetText(text);
   }
+
+  public void SetSleepMode(bool enabled)
+  {
+  }
+
+  //
+  // Internals
+  //
 
   private static Matrix4x4? GetTargetTransform(ETrackedControllerRole controllerRole)
   {
@@ -92,13 +100,16 @@ public class DashboardOverlay : BaseOverlay {
     return posOffset * headRotation * handPosition;
   }
 
-  private void SendParameters()
+  private void SyncState(OyasumiSidecarState? state = null)
   {
+    state ??= StateManager.Instance.GetAppState();
     browser.ExecuteScriptAsync(
-      @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(_vrcStatus)}"");");
-    var username = _vrcUsername != null ? $@"""{HttpUtility.JavaScriptStringEncode(_vrcUsername)}""" : "null";
+      @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(state.VrcStatus.ToString())}"");");
+    var username = string.IsNullOrEmpty(state.VrcUsername)
+      ? "null"
+      : $@"""{HttpUtility.JavaScriptStringEncode(state.VrcUsername)}""";
     browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setVRCUsername({username});");
-    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setSleepMode({(_sleepMode ? "true" : "false")});");
+    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setSleepMode({(state.SleepMode ? "true" : "false")});");
   }
 
   private void HideDashboard()
@@ -113,7 +124,7 @@ public class DashboardOverlay : BaseOverlay {
 
   private void UpdateTooltipPosition()
   {
-      var timer = new RefreshRateTimer();
+    var timer = new RefreshRateTimer();
     while (!Disposed)
     {
       timer.tickStart();
@@ -121,5 +132,10 @@ public class DashboardOverlay : BaseOverlay {
       if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
       timer.sleepUntilNextTick();
     }
+  }
+
+  private void OnStateChanged(object? sender, OyasumiSidecarState e)
+  {
+    SyncState(e);
   }
 }

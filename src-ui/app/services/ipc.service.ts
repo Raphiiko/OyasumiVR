@@ -20,11 +20,15 @@ export class IPCService {
   public readonly overlaySidecarClient = this._overlaySidecarClient.asObservable();
   public readonly elevatedSidecarClient = this._elevatedSidecarClient.asObservable();
 
-  constructor() {
+  constructor() {}
+
+  public async init() {
+    // Listen for sidecars starting/stopping
     listen<number>('OVERLAY_SIDECAR_STARTED', (e) => this.onOverlaySidecarStarted(e.payload));
     listen('OVERLAY_SIDECAR_STOPPED', () => this.onOverlaySidecarStopped());
     listen<number>('ELEVATED_SIDECAR_STARTED', (e) => this.onElevatedSidecarStarted(e.payload));
     listen('ELEVATED_SIDECAR_STOPPED', () => this.onElevatedSidecarStopped());
+    // Get current sidecar status
     invoke<number | undefined>('overlay_sidecar_get_grpc_web_port').then((port) => {
       if (port) this.onOverlaySidecarStarted(port);
       else this.onOverlaySidecarStopped();
@@ -33,10 +37,9 @@ export class IPCService {
       if (port) this.onElevatedSidecarStarted(port);
       else this.onElevatedSidecarStopped();
     });
-    // this.onOverlaySidecarStarted(5175);
   }
 
-  onOverlaySidecarStarted(port: number) {
+  private onOverlaySidecarStarted(port: number) {
     this._overlaySidecarClient.next(
       new OyasumiOverlaySidecarClient(
         new GrpcWebFetchTransport({
@@ -46,11 +49,11 @@ export class IPCService {
     );
   }
 
-  onOverlaySidecarStopped() {
+  private onOverlaySidecarStopped() {
     this._overlaySidecarClient.next(undefined);
   }
 
-  onElevatedSidecarStarted(port: number) {
+  private onElevatedSidecarStarted(port: number) {
     this._elevatedSidecarClient.next(
       new OyasumiElevatedSidecarClient(
         new GrpcWebFetchTransport({
@@ -60,7 +63,7 @@ export class IPCService {
     );
   }
 
-  onElevatedSidecarStopped() {
+  private onElevatedSidecarStopped() {
     this._elevatedSidecarClient.next(undefined);
   }
 }

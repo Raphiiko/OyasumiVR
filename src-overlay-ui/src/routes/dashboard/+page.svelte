@@ -140,7 +140,7 @@
 							<div class="flex-shrink-0 flex flex-row items-center" transition:fade>
 								<div
 									class="rounded-full w-4 h-4 mr-2 drop-shadow-[0_0_4px_rgba(255,255,255,40%)] transition-all
-                    vrc-status-color-{$vrcStatus.replaceAll(' ', '-')}
+                    vrc-status-color-{$vrcStatus}
                   "
 								/>
 								<span>{$vrcUsername}</span>

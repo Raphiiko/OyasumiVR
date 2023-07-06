@@ -8,11 +8,11 @@ const dev = process.argv.includes('dev');
 const config = {
 	preprocess: vitePreprocess(),
 	onwarn: (warning, handler) => {
-		if (warning.code.startsWith('a11y-')) {
-			return;
-		}
-		handler(warning);
-	},
+    if (warning.code.startsWith('a11y-')) {
+      return;
+    }
+    handler(warning);
+  },
 	kit: {
 		adapter: adapter({
 			fallback: 'index.html'

@@ -56,6 +56,7 @@ public class BaseOverlay {
       }
     }
     this.overlayHandle = overlayHandle;
+    OpenVR.Overlay.SetOverlayFlag(OverlayHandle, VROverlayFlags.VisibleInDashboard, false);
     new Thread(() =>
     {
       var timer = new RefreshRateTimer();
@@ -82,9 +83,6 @@ public class BaseOverlay {
     UiReady = true;
   }
 
-  public void SetSleepMode(bool enabled)
-  {
-  }
 
   private void UpdateFrame()
   {

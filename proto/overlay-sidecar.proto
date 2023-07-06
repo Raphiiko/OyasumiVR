@@ -9,6 +9,7 @@ service OyasumiOverlaySidecar {
   rpc RequestStop (Empty) returns (Empty) {}
   rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
   rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
+  rpc SyncState (OyasumiSidecarState) returns (Empty) {}
 }
 
 // Requests & Responses
@@ -32,3 +33,18 @@ message ClearNotificationRequest {
 message Empty {
 
 }
+
+message OyasumiSidecarState {
+  optional bool sleep_mode = 1;
+  optional VRCStatus vrc_status = 2;
+  optional string vrc_username = 3;
+}
+
+enum VRCStatus {
+  VRCStatus_Offline = 0;
+  VRCStatus_Busy = 1;
+  VRCStatus_AskMe = 2;
+  VRCStatus_Active = 3;
+  VRCStatus_JoinMe = 4;
+}
+

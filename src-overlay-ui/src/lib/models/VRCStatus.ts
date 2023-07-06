@@ -1,1 +1,1 @@
-export type VRCStatus = 'active' | 'join me' | 'ask me' | 'busy' | 'offline';
+export type VRCStatus = 'Active' | 'JoinMe' | 'AskMe' | 'Budy' | 'Offline';

@@ -28,7 +28,7 @@
     <Protobuf Include="..\proto\overlay-sidecar.proto" GrpcServices="Server" Link="Protos\overlay-sidecar.proto" />
     <Protobuf Include="..\proto\oyasumi-core.proto" GrcpServices="Client" Link="Protos\oyasumi-core.proto" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <None Include="appsettings.json" CopyToPublishDirectory="Always" />
     <None Remove="app.manifest" />
