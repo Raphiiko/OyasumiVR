@@ -3,6 +3,7 @@ import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.
 import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
+import { uniq } from 'lodash';
 
 export interface BatteryPercentageEnableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];
@@ -42,7 +43,7 @@ export class BatteryPercentageEnableSleepModeModalComponent
 
   save() {
     this.result = {
-      triggerClasses: this.triggerClasses,
+      triggerClasses: uniq(this.triggerClasses),
       threshold: this.threshold,
     };
     this.close();
@@ -54,5 +55,6 @@ export class BatteryPercentageEnableSleepModeModalComponent
     } else {
       this.triggerClasses.push(deviceClass);
     }
+
   }
 }
