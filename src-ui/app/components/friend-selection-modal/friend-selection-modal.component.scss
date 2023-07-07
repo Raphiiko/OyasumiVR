@@ -25,7 +25,8 @@
   align-items: flex-start;
   justify-content: flex-start;
   overflow: auto;
-  min-height: 7em;
+  min-height: calc(6.5em + 1px);
+  max-height: 10.5em;
   position: relative;
 
   .none-selected {

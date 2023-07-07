@@ -94,7 +94,7 @@ public class NotificationOverlay {
     );
     _overlay = new Overlay("OYASUMIVR_NOTIFICATION_OVERLAY", "OyasumiVR Notification Overlay")
     {
-      WidthInMeters = 0.5f
+      WidthInMeters = 0.35f
     };
     OpenVR.Overlay.ShowOverlay(_overlay.Handle);
   }
@@ -107,7 +107,8 @@ public class NotificationOverlay {
     // Calculate target transform
     var headPose = GetHeadPose().mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4x4();
-    var offset = Matrix4x4.CreateTranslation(0, 0, -0.5f);
+    var offset = Matrix4x4.CreateRotationX(-15f * (float)(System.Math.PI / 180f)) *
+                 Matrix4x4.CreateTranslation(0, -0.125f, -0.55f);
     var targetTransform = offset * headMatrix;
     // Lerp the position
     targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.04f);

@@ -14,6 +14,7 @@ import { DisplayBrightnessControlAutomationService } from '../../services/bright
 import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { invoke } from '@tauri-apps/api';
+import { ImageBrightnessControlAutomationService } from '../../services/brightness-control/image-brightness/image-brightness-control-automation.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -145,7 +146,8 @@ export class DashboardNavbarComponent implements OnInit {
     private osc: OscService,
     protected router: Router,
     protected background: BackgroundService,
-    protected brightnessAutomation: DisplayBrightnessControlAutomationService
+    protected displayBrightnessAutomation: DisplayBrightnessControlAutomationService,
+    protected imageBrightnessAutomation: ImageBrightnessControlAutomationService
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
     this.settingErrors = combineLatest([

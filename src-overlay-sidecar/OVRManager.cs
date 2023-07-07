@@ -54,7 +54,7 @@ public class OVRManager {
           }
 
           active = true;
-          Console.WriteLine("OpenVR initialized.");
+          Log.Logger.Information("OpenVR Manager Started");
 
           _notificationOverlay = new NotificationOverlay();
         }
@@ -64,6 +64,7 @@ public class OVRManager {
           var type = (EVREventType)e.eventType;
           if (type == EVREventType.VREvent_Quit)
           {
+            Log.Logger.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
             active = false;
             nextInit = DateTime.UtcNow.AddSeconds(5);
             Shutdown();
@@ -86,5 +87,6 @@ public class OVRManager {
     _notificationOverlay = null;
     OpenVR.Shutdown();
     _system = null;
+    Log.Logger.Information("Stopped OpenVR Manager");
   }
 }

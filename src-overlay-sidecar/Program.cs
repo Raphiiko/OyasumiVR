@@ -14,6 +14,8 @@ public static class Program {
 
   public static void Main(string[] args)
   {
+    Log.Init();
+
     // Parse args
     if (args.Length < 1 || !int.TryParse(args[0], out var mainProcessPort))
     {
@@ -36,6 +38,7 @@ public static class Program {
 
   private static void InitCef()
   {
+    Log.Logger.Information("Initializing CEF");
     var rootDir = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.ProcessPath), @"ui\");
     Directory.CreateDirectory(rootDir);
     var settings = new CefSettings();
@@ -50,6 +53,7 @@ public static class Program {
       )
     });
     Cef.Initialize(settings);
+    Log.Logger.Information("Initialized CEF");
   }
 
   private static void WatchMainProcess(int mainPid)
@@ -62,10 +66,10 @@ public static class Program {
     }
     catch (ArgumentException)
     {
-      Console.Error.WriteLine("Could not find main process to watch (pid=" + mainPid + ")");
+      Log.Logger.Error("Could not find main process to watch (pid=" + mainPid + ")");
       if (!Debugger.IsAttached)
       {
-        Console.Error.WriteLine("Quitting...");
+        Log.Logger.Information("Quitting...");
         Environment.Exit(1);
         return;
       }
@@ -79,7 +83,7 @@ public static class Program {
       {
         if (mainProcess.HasExited)
         {
-          Console.Error.WriteLine("Main process has exited. Stopping overlay sidecar.");
+          Log.Logger.Information("Main process has exited. Stopping overlay sidecar.");
           Environment.Exit(0);
           return;
         }

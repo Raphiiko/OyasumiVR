@@ -125,7 +125,7 @@ jobs:
               console.log("Could not publish release: " + e)
             }
       - name: Update the update manifest
-        uses: exuanbo/actions-deploy-gist@v1
+        uses: Raphiiko/actions-deploy-gist@main
         with:
           token: ${{ secrets.GH_TOKEN_GIST }}
           gist_id: 8af3d105fe9a59db304cca2cfea216c8
