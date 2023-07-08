@@ -22,6 +22,7 @@
   <br>
   Oyasumiは、バーチャルリアリティの中で睡眠をアシストするオープンソースソフトウェアです。
   <br>
+  <br>
   <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。
   <br>
   <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/Readme_TW.md">中文的說明手冊在這裡</a>。
