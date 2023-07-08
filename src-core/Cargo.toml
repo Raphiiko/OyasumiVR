@@ -64,7 +64,7 @@ tokio-stream = { version = "0.1.14", features = ["full"] }
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [
+features = [ "fs-write-file", "dialog-save",
   "path-all",
   "process-relaunch",
   "system-tray",

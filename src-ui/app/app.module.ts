@@ -125,6 +125,8 @@ import { DisplayBrightnessAutomationsTabComponent } from './views/dashboard-view
 import { ImageBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/image-brightness-automations-tab/image-brightness-automations-tab.component';
 import { ImageBrightnessControlService } from './services/brightness-control/image-brightness/image-brightness-control.service';
 import { ImageBrightnessControlAutomationService } from './services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
+import { DeveloperDebugService } from './services/developer-debug.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -202,6 +204,7 @@ export function createTranslateLoader(http: HttpClient) {
     BaseStationsTabComponent,
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
+    DeveloperDebugModalComponent,
   ],
   imports: [
     CommonModule,
@@ -242,6 +245,7 @@ export class AppModule {
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
+    private developerDebugService: DeveloperDebugService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -281,6 +285,7 @@ export class AppModule {
   async init() {
     await pMinDelay(
       (async () => {
+        await this.developerDebugService.init();
         // Clean cache
         await CachedValue.cleanCache();
         // Preload assets

@@ -50,3 +50,10 @@ import 'zone.js'; // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+import * as uPlot from 'uplot';
+
+declare global {
+  interface Window {
+    uPlot: uPlot;
+  }
+}

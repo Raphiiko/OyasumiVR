@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
-import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
 import { NvmlService } from '../../services/nvml.service';
@@ -13,8 +12,9 @@ import { BackgroundService } from '../../services/background.service';
 import { DisplayBrightnessControlAutomationService } from '../../services/brightness-control/display-brightness/display-brightness-control-automation.service';
 import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
-import { invoke } from '@tauri-apps/api';
 import { ImageBrightnessControlAutomationService } from '../../services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { ModalService } from 'src-ui/app/services/modal.service';
+import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -137,7 +137,6 @@ export class DashboardNavbarComponent implements OnInit {
   subMenu: SubMenu = 'GENERAL';
 
   constructor(
-    private settingsService: AppSettingsService,
     private lighthouse: LighthouseConsoleService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NvmlService,
@@ -147,7 +146,8 @@ export class DashboardNavbarComponent implements OnInit {
     protected router: Router,
     protected background: BackgroundService,
     protected displayBrightnessAutomation: DisplayBrightnessControlAutomationService,
-    protected imageBrightnessAutomation: ImageBrightnessControlAutomationService
+    protected imageBrightnessAutomation: ImageBrightnessControlAutomationService,
+    private modalService: ModalService
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
     this.settingErrors = combineLatest([
@@ -209,24 +209,16 @@ export class DashboardNavbarComponent implements OnInit {
     );
   }
 
-  async ngOnInit(): Promise<void> {
-    // setTimeout(async () => {
-    //   await invoke('lighthouse_scan_devices');
-    //   setInterval(async () => {
-    //     await invoke('lighthouse_scan_devices');
-    //   }, 10500);
-    // }, 1000);
-  }
+  async ngOnInit(): Promise<void> {}
 
   logoClicked = 0;
 
   async onLogoClick() {
     if (++this.logoClicked >= 3) {
       this.logoClicked = 0;
-      invoke('add_notification', {
-        message: 'THIS IS A TEST NOTIFICATION\nWHOOOOOOOOOO',
-        duration: 5000,
-      });
+      this.modalService
+        .addModal<DeveloperDebugModalComponent>(DeveloperDebugModalComponent)
+        .subscribe();
     }
   }
 

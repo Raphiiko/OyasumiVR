@@ -35,10 +35,12 @@
               "src-ui/assets"
             ],
             "styles": [
-              "src-ui/styles.scss"
+              "src-ui/styles.scss",
+              "node_modules/uplot/dist/uPlot.min.css"
             ],
             "scripts": [
-              "node_modules/marked/marked.min.js"
+              "node_modules/marked/marked.min.js",
+              "node_modules/uplot/dist/uPlot.iife.min.js"
             ],
             "stylePreprocessorOptions": {
               "includePaths": [

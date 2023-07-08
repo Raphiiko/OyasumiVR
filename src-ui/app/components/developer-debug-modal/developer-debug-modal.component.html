@@ -1,0 +1,25 @@
+<div class="pane modal" @fadeUp>
+  <div class="pane-title">Developer Debug Tools</div>
+  <div class="pane-content">
+    <h2>Sleep Detector Debugger</h2>
+    <div class="sleep-detector-debugger">
+      <div class="action-row">
+        <button class="btn btn-secondary" [disabled]="debug.sleepDetectionDebugger.started"
+                (click)="debug.sleepDetectionDebugger.start()">Start Recording
+        </button>
+        <button class="btn btn-secondary" [disabled]="!debug.sleepDetectionDebugger.started"
+                (click)="debug.sleepDetectionDebugger.stop()">Stop Recording
+        </button>
+        <button class="btn btn-secondary" [disabled]="!debug.sleepDetectionDebugger.timeData?.length"
+                (click)="debug.sleepDetectionDebugger.exportData()">Export Data
+        </button>
+        <app-select-box type="SMALL" [items]="resolutionItems" [(selected)]="selectedResolution"></app-select-box>
+      </div>
+      <div class="chart-container">
+        <div class="timeseries-chart" #sleepDetectionTimeSeriesChart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -47,13 +47,13 @@ export class SleepModeForSleepDetectorAutomationService {
   ) {}
 
   async init() {
+    this.automationConfig.configs.subscribe(
+      (configs) => (this.enableConfig = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR)
+    );
+    this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe((mode) => {
+      if (!mode) this.lastSleepModeDisable = Date.now();
+    });
     new Promise((resolve) => setTimeout(resolve, 15000)).then(async () => {
-      this.automationConfig.configs.subscribe(
-        (configs) => (this.enableConfig = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR)
-      );
-      this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe((mode) => {
-        if (!mode) this.lastSleepModeDisable = Date.now();
-      });
       await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', (event) =>
         this.handleStateReportForEnable(event.payload)
       );
@@ -146,5 +146,17 @@ export class SleepModeForSleepDetectorAutomationService {
       );
     }
     return distanceInLast10Seconds;
+  }
+
+  getThresholdValues(): Array<{
+    sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
+    threshold: number;
+    active: boolean;
+  }> {
+    return Object.entries(this.calibrationFactors).map((entry) => ({
+      sensitivity: entry[0] as 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST',
+      threshold: this.enableConfig.calibrationValue * entry[1],
+      active: this.enableConfig.sensitivity === entry[0],
+    }));
   }
 }
