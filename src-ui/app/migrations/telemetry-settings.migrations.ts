@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, mergeWith } from 'lodash';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { info } from 'tauri-plugin-log-api';
 import { v4 as uuidv4 } from 'uuid';
@@ -27,7 +27,11 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
       }`
     );
   }
-  data = merge({}, TELEMETRY_SETTINGS_DEFAULT, data);
+  data = mergeWith(cloneDeep(TELEMETRY_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    if (Array.isArray(objValue)) {
+      return srcValue;
+    }
+  });
   return data as TelemetrySettings;
 }
 

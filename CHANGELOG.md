@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed short loss of tracking in SteamVR when launching or reloading OyasumiVR.
 - Fixed friend selection modal for automatic invite request acceptance becoming unusable when too many players have been selected.
 - Added workaround for VRChat's API not always returning the entire friends list.
+- Fixed settings migrations sometimes not merging arrays correctly, leading to unexpected behavior.
 
 ## [1.7.3]
 

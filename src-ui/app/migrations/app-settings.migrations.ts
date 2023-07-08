@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { info } from 'tauri-plugin-log-api';
 
@@ -27,7 +27,11 @@ export function migrateAppSettings(data: any): AppSettings {
     currentVersion = data.version;
     info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
-  data = Object.assign({}, APP_SETTINGS_DEFAULT, data);
+  data = mergeWith(cloneDeep(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    if (Array.isArray(objValue)) {
+      return srcValue;
+    }
+  });
   return data as AppSettings;
 }
 
