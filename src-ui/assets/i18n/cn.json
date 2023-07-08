@@ -1,1183 +1,1183 @@
 {
-    "shared": {
-        "logo": {
-            "tagline": "VR 睡眠辅助功能"
-        },
-        "modals": {
-            "cancel": "取消",
-            "save": "保存",
-            "confirm": "确认",
-            "ok": "Ok",
-            "open": "开启",
-            "close": "关闭",
-            "login": "登入"
-        },
-        "misc": {
-            "vrcLoginRequired": "这个功能需要你登入你的 VRChat 账号"
-        }
+  "shared": {
+    "logo": {
+      "tagline": "VR 睡眠辅助功能"
     },
-    "brightness-automations": {
-        "title": "亮度自动调整",
-        "tabs": {
-            "imageBrightness": "图像亮度",
-            "displayBrightness": "显示器亮度"
-        },
-        "displayBrightness": {
-            "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的显示器亮度。\n\n显示器亮度影响头戴式设备液晶面板的背光强度，而不是降低图像亮度。显示器亮度调整仅适用于 Valve Index。",
-            "indexWarning": "请确保您的 Valve Index 已连接且 SteamVR 正在运行。",
-            "onSleepEnable": {
-                "title": "当我进入睡眠模式时",
-                "description": "调整显示器亮度"
-            },
-            "onSleepDisable": {
-                "title": "当我醒来时",
-                "description": "调整显示器亮度"
-            }
-        },
-        "imageBrightness": {
-            "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的图像亮度。\n\n图像亮度会使显示的图像变暗。与显示器亮度不同，图像亮度调整适用于所有头戴式设备。",
-            "onSleepEnable": {
-                "title": "当我进入睡眠模式时",
-                "description": "调整图像亮度"
-            },
-            "onSleepDisable": {
-                "title": "当我醒来时",
-                "description": "调整图像亮度"
-            }
-        },
-        "brightness": {
-            "title": "将亮度改为",
-            "description": ""
-        },
-        "transition": {
-            "title": "逐步调整亮度",
-            "description": "平滑地过渡到所需的亮度值"
-        },
-        "transitionTime": {
-            "title": "过渡时间",
-            "description": "过渡到新亮度设定所需的时间"
-        }
-    },
-    "overview": {
-        "sleep-mode": {
-            "label": "睡眠模式",
-            "active": "已启动",
-            "inactive": "已关闭",
-            "activate": "启动",
-            "deactivate": "关闭"
-        }
-    },
-    "sleep-detection": {
-        "title": "睡眠侦测",
-        "enableAutomations": {
-            "title": "启动睡眠模式",
-            "description": "根据各种触发器自动启用睡眠模式",
-            "atTime": "在特定时间",
-            "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
-            "onControllersPoweredOff": "当所有控制器都关闭时",
-            "onMotionDetection": {
-                "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
-            }
-        },
-        "disableAutomations": {
-            "title": "关闭睡眠模式",
-            "description": "根据各种触发器自动禁用睡眠模式",
-            "atTime": "在特定时间",
-            "onDevicePowerOn": "当设备启动时候",
-            "onSteamVRStop": "当 SteamVR 停止时"
-        },
-        "modals": {
-            "sleepDetectorCalibration": {
-                "title": "校准睡眠检测",
-                "currentCalibration": "你当前的校准值：",
-                "noSteamVR": "你只能在 SteamVR 在插入 VR 头的情况下才能开始校准",
-                "startCalibration": "开始校准",
-                "restartCalibration": "重新开始校准",
-                "info": {
-                    "intro": "重新校准",
-                    "stepPrefix": "校准步骤如下：",
-                    "step": {
-                        "one": "戴上头盔并躺下",
-                        "two": "从叠层上开启 OyasumiVR 进行校准",
-                        "three": "躺着持续 10 秒"
-                    },
-                    "stepSuffix": "就是这样！ 校准后，OyasumiVR 应该能够根据 VR 头盔的移动来检测你是否进入睡眠"
-                },
-                "prepare": {
-                    "instruction": "戴上你的 VR 头盔并躺下",
-                    "note": "当你准备好后你会再叠层看到这视窗，点击「开始校准」来进行校准"
-                },
-                "countdown": {
-                    "instruction": "{{counter}} 秒后开始",
-                    "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能运做"
-                },
-                "calibrating": {
-                    "instruction": "校准中",
-                    "note": "继续保持",
-                    "countdown": "还剩 {{counter}} 秒"
-                },
-                "done": {
-                    "instruction": "ˋ校准完成！",
-                    "note": "现在你可以用此自动化了"
-                },
-                "failed": {
-                    "instruction": "校准失败",
-                    "note": "校准无法成功完成，可能是因为你的头盔未回报任何数据。请确保你的头盔正在追踪状态，然后重新尝试"
-                }
-            },
-            "enableForSleepDetector": {
-                "title": "开启睡眠模式",
-                "calibration": {
-                    "title": "校准",
-                    "description": "在尝试使用此功能之前，你需要至少校准一次",
-                    "action": "校准"
-                },
-                "sensitivity": {
-                    "title": "灵敏度",
-                    "description": "OyasumiVR 对动作侦测灵敏度",
-                    "presets": {
-                        "LOWEST": "最低",
-                        "LOW": "低",
-                        "MEDIUM": "中",
-                        "HIGH": "高",
-                        "HIGHEST": "最高"
-                    }
-                },
-                "sleepCheck": {
-                    "title": "在启用睡眠模式之前，询问我是否还醒着",
-                    "description": "需要启用<a class=\"notificationSettingsLink\">通知</a>"
-                },
-                "detectionWindow": {
-                    "title": "检测窗口",
-                    "description": "OyasumiVR应该等待多久才能检测到你在睡觉",
-                    "unit": "分钟"
-                },
-                "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式"
-            },
-            "enableAtTime": {
-                "title": "开启睡眠模式",
-                "description": "在特定时间开启睡眠模式",
-                "time": "时间"
-            },
-            "disableAtTime": {
-                "title": "关闭睡眠模式",
-                "description": "在特定时间关闭睡眠模式",
-                "time": "时间"
-            },
-            "disableOnDevicePowerOn": {
-                "title": "关闭睡眠模式",
-                "whenTurningOn": "当启动其中一个",
-                "Controller": "控制器",
-                "GenericTracker": "追踪器"
-            },
-            "enableAtBatteryPercentage": {
-                "title": "开启睡眠模式",
-                "whenA": "当其中一个",
-                "Controller": "控制器",
-                "GenericTracker": "追踪器",
-                "fallsBelow": "电量降低到",
-                "errors": {
-                    "thresholdOutOfRange": "百分比必须介于 0% 和 100% 之间",
-                    "thresholdNotInteger": "百分比值必须是整数"
-                }
-            }
-        }
-    },
-    "oscAutomations": {
-        "title": "OSC 自动化",
-        "tab": {
-            "sleepingAnimations": "睡眠动画",
-            "general": "一般设定"
-        },
-        "sleepingAnimations": {
-            "currentPose": "目前姿势",
-            "manualControl": "手动控制",
-            "presetAuthor": "由于 {{author}} 制作",
-            "description": "OyasumiVR 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
-            "enable": "开启睡眠动画自动化",
-            "customPreset": "自订动画",
-            "options": {
-                "positions": {
-                    "title": "睡眠姿势",
-                    "description": "设定 OSC 指令以启动每个睡姿动画",
-                    "SIDE_FRONT": "正躺",
-                    "SIDE_BACK": "趴躺",
-                    "SIDE_LEFT": "左侧躺",
-                    "SIDE_RIGHT": "右侧躺",
-                    "UNKNOWN": "未知"
-                },
-                "footLock": {
-                    "title": "脚部(移动)锁定",
-                    "description": "设定 OSC 指令来控制脚部锁定开关",
-                    "FOOT_LOCK": "开启脚部锁定",
-                    "FOOT_UNLOCK": "关闭脚部锁定"
-                },
-                "general": {
-                    "title": "一般设定",
-                    "onlySwitchAnimations": "只用于切换睡眠动画",
-                    "onlyIfSleepModeEnabled": "当睡眠模式启动时",
-                    "onlyIfAllTrackersTurnedOff": "当所有追踪器关闭时",
-                    "footLock": {
-                        "title": "脚部(移动)锁定",
-                        "description": "脚部锁定在开启时通常会阻止玩家移动或旋转"
-                    },
-                    "lockFeetOnSleepModeEnable": "当睡眠模式启动时开启脚部锁定",
-                    "unlockFeetOnSleepModeDisable": "当睡眠模式关闭时关闭脚部锁定",
-                    "unlockFeetOnAutomationDisable": "当自动睡眠姿势关闭时关闭脚部锁定",
-                    "releaseFootLockOnPoseChange": "切换睡眠姿势时暂时释放脚部锁定",
-                    "footLockReleaseWindow": "脚部锁定释放持续时间"
-                }
-            }
-        },
-        "general": {
-            "description": "在这里，你可以配置OyasumiVR在某些事件发生时向VRChat发送OSC命令。例如，如果你想在睡觉或醒来时改变你的角色切换，这可能很有用。",
-            "onSleepEnable": {
-                "title": "当我入睡时",
-                "description": "发送这些OSC命令",
-                "script": "睡眠模式启用"
-            },
-            "onSleepDisable": {
-                "title": "当我醒来时",
-                "description": "发送这些OSC命令",
-                "script": "禁用睡眠模式"
-            }
-        }
-    },
-    "power-automations": {
-        "title": "电源自动化",
-        "devicePowerOff": {
-            "onSleepModeEnable": {
-                "title": "当我入睡时",
-                "description": "启用睡眠模式时关闭设备。",
-                "optionControllers": "关掉所有的控制器",
-                "optionTrackers": "关闭所有定位器",
-                "hint": "你可以在<a class=\"sleepDetectionLink\">睡眠检测</a>中配置何时启用睡眠模式。."
-            },
-            "onCharge": {
-                "title": "给它们充电时",
-                "description": "让设备当你把它们接上充电器时自动关闭。",
-                "optionControllers": "关掉控制器",
-                "optionTrackers": "关掉定位器"
-            }
-        },
-        "tabs": {
-            "controllersAndTrackers": "控制器和定位器",
-            "baseStations": "基站"
-        },
-        "lighthousePowerOn": {
-            "title": "开启基站",
-            "description": "让OyasumiVR自动开启您的基站。",
-            "onOyasumiStart": {
-                "title": "当 OyasumiVR 启动时",
-                "description": "当OyasumiVR启动时，自动打开您的基站"
-            },
-            "onSteamVRStart": {
-                "title": "当 SteamVR 启动时",
-                "description": "当SteamVR启动时，自动打开你的基站"
-            }
-        },
-        "lighthousePowerOff": {
-            "title": "关掉基站",
-            "description": "让OyasumiVR自动关闭您的基站。",
-            "onSteamVRStop": {
-                "title": "当SteamVR停止时",
-                "description": "当SteamVR停止时，自动关闭你的基站"
-            }
-        },
-        "powerManagementWarning": "当选择使用OyasumiVR的自动装置来打开或关闭你的基站时，建议你在SteamVR的基站设置中禁用电源管理。",
-        "lighthouseControlDisabledWarning": "由于您在OyasumiVR的设置中禁用了基站功率控制，所以这些自动化功能不可用。如果您想使用这些自动化功能，请启用该功能。",
-        "enableLighthouseControl": "启用",
-        "error": {
-            "noAdapter": "在您的系统中找不到蓝牙适配器。请确认您的系统配备了蓝牙适配器，并且已经启用。",
-            "adapterError": "在试图与您的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。"
-        }
-    },
-    "gpu-automations": {
-        "title": "GPU 自动化",
-        "disabled": {
-            "disabled": "OyasumiVR 允许你自动调整 GPU 的功耗限制\n这样你就可以在睡觉时节省用电量\n\nGPU 自动化目前仅适用于 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
-            "noSidecar": "为了让 OyasumiVR 能够控制 GPU 设定，它需要管理员权限。请点击下方按钮授予 OyasumiVR 管理员权限"
-        },
-        "tabs": {
-            "powerLimiting": "GPU 功耗限制",
-            "msiAfterburner": "MSI Afterburner"
-        },
-        "requestAdministrator": "授予管理员权限",
-        "disable": "关闭 GPU 自动化",
-        "enable": "开启 GPU 自动化",
-        "automations": "睡眠自动化",
-        "enableWarning": "这是功能是给一些进阶用户的！\n设定错误的功耗限制可能会导致你的系统变得不稳定\n请牢记这一点，最好只在你知道自己在做什么时才调整它",
-        "elevationSidecarModal": {
-            "title": "授予管理员权限",
-            "message": "你确定想要授予 OyasumiVR 管理员权限吗？\n\n如果你开启此权限，OyasumiVR 将在启动时立即请求这些权限。 你可以稍后随时在设定中关闭此功能",
-            "confirm": "总是",
-            "cancel": "只有这次"
-        },
-        "powerLimiting": {
-            "disabled": {
-                "initializing": "功耗限制自动化正在初始化中.....",
-                "noNvidia": "功耗限制自动化不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制自动化仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({{code}})",
-                "noPermission": "尽管 OyasumiVR 拥有管理员权限，但它似乎没有权限更改你的 GPU 设定\n\n请检查你的系统规格，因为这通常不会发生",
-                "noSidecar": "由于未知原因，无法获得管理员权限\n这些是控制 GPU 功耗限制所必需的\n\n请尝试重新启动 OyasumiVR",
-                "unknown": "由于未知原因，功耗限制自动化不可用。\n\n请尝试重新启动 OyasumiVR"
-            },
-            "noGPUSelected": "没有选择 GPU",
-            "gpuUnsupported": "不支援的 GPU",
-            "noGPUs": "在你的系统中找不到任何 Nivida 显卡",
-            "description": "在这里，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
-            "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
-            "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制",
-            "currentPowerLimit": "当前功耗限制",
-            "activatingSleepMode": {
-                "title": "当我睡觉时",
-                "description": "指定在开启睡眠模式时要设定的功耗限制："
-            },
-            "deactivatingSleepMode": {
-                "title": "当我醒来时",
-                "description": "指定在关闭睡眠模式时要设定的功耗限制："
-            },
-            "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
-            "inputDefault": "将 GPU 功耗重设到默认数值"
-        },
-        "msiAfterburner": {
-            "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设定，使用你在 MSI Afterburner 中所建立的设定档。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新获得 GPU 功耗。<br><br>你必须在 MSI Afterburner 设定设定档。<br>你可以在这里<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下载</a> MSI Afterburner",
-            "sleepModeEnable": {
-                "title": "当睡眠模式启动时",
-                "description": "使用所选的 MSI Afterburner 设定档"
-            },
-            "sleepModeDisable": {
-                "title": "当睡眠模式关闭时",
-                "description": "使用所选的 MSI Afterburner 设定档"
-            },
-            "profile": "设定档 {{index}}",
-            "none": "无",
-            "enabledWarning": "请注意，在 MSI Afterburner 中错误的设定 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
-            "executable": {
-                "title": "设定",
-                "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行档的位置\n如果 OyasumiVR 在默认位置找不到它，需要你手动设定它的位置",
-                "status": {
-                    "CHECKING": "正在验证 <strong>MSIAfterburner.exe</strong>",
-                    "NOT_FOUND": "无法在此位置中找到 <strong>MSIAfterburner.exe</strong> ",
-                    "INVALID_EXECUTABLE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 正常运作",
-                    "INVALID_SIGNATURE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 是否来源 MSI。 出于系统安全考量，这位置的程序将不会被使用。 请确保你使用的是官方最新版本的 MSI Afterburner。 如果问题依然存在或者你确定这是正确的城市，请联络 OyasumiVR 的开发人员或提交错误报告",
-                    "UNKNOWN_ERROR": "尝试在此位置寻找 <strong>MSIAfterburner.exe</strong> 时发生未知错误",
-                    "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到并正常运作！"
-                }
-            }
-        }
-    },
-    "status-automations": {
-        "title": "状态 自动化",
-        "enable": "开启状态自动化",
-        "description": "OyasumiVR 可以根据你的世界中有多少玩家自动设定你的状态\n从而限制你房间的人数",
-        "exampleUse": "使用示例：当有人加入你时，自动将你的状态切换为橙色或红色！\n当他们离开而你又独自一人时，自动将你的状态切换回蓝色以便其他人可以加入你",
-        "disableToEdit": "请在进行任何变更之前关闭状态自动化",
-        "playerLimit": "玩家人数限制",
-        "playerLimitLabel": {
-            "singular": "{{count}} 位玩家（包括你）",
-            "plural": "{{count}} 位玩家（包括你）"
-        },
-        "belowLimit": {
-            "title": "低于限制人数",
-            "description": "将你的状态设定为"
-        },
-        "atLimitOrAbove": {
-            "title": "高于限制人数",
-            "description": "将你的状态设定为"
-        },
-        "onlyIfSleepModeEnabled": "只有在睡眠模式开启的时候",
-        "behaviourWarning": "OyasumiVR 的状态变更对玩家是不可见。 即使对于其他玩家，状态更新也可能需要一些时间才能显示出来。 这是 VRChat 的限制，OyasumiVR 无法修复",
-        "moreInfo": "更多资讯",
-        "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受邀请请求吗？\n答：如果你有 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管自动接受你收到的任何邀请加入请求。\n\n问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入但不能，他们可以透过在主选单中中打开你的个人资料来强制刷新你的状态。"
-    },
-    "auto-invite-request-accept": {
-        "title": "自动接受加入请求",
-        "description": "OyasumiVR 可以自动接受你收到的加入请求。 透过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的邀请请求",
-        "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
-        "userOnJoinMeStatus": "无论你的设定如何，VRChat 都会自动接受所有邀请请求，因为你的状态是加入我（蓝色）",
-        "whitelist": "玩家白名单",
-        "blacklist": "玩家黑名单",
-        "noPlayersAdded": "目前没有任何玩家在此列表中",
-        "addFriends": "新增朋友",
-        "clearPlayers": "清除玩家",
-        "removeModal": {
-            "title": "确认删除",
-            "message": "你确定要从列表中删除「{{name}}」吗？"
-        },
-        "removeModalBulk": {
-            "title": "确认删除",
-            "message": "你确定要把每个人都从你的名单中删除吗？"
-        },
-        "options": {
-            "enable": {
-                "title": "开启",
-                "description": "自动接受好友的加入请求"
-            },
-            "onlyIfSleepModeEnabled": {
-                "title": "当睡眠模式启动时"
-            },
-            "listMode": {
-                "title": "列表模式",
-                "description": "玩家列表的运作模式",
-                "options": {
-                    "DISABLED": {
-                        "label": "关闭",
-                        "subLabel": "接受所有人"
-                    },
-                    "WHITELIST": {
-                        "label": "白名单",
-                        "subLabel": "接受所有来自此列表的朋友加入邀请"
-                    },
-                    "BLACKLIST": {
-                        "label": "黑名单",
-                        "subLabel": "接受所有非此列表的朋友加入邀请"
-                    }
-                }
-            }
-        }
-    },
-    "settings": {
-        "title": "设定",
-        "tab": {
-            "general": "一般",
-            "vrchat": "VRChat",
-            "notifications": "通知",
-            "updates": "更新",
-            "advanced": "进阶"
-        },
-        "general": {
-            "language": {
-                "title": "语言",
-                "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属国家语言的支持，请联络我们！"
-            },
-            "lighthouseConsole": {
-                "title": "Lighthouse 控制台",
-                "description": "OyasumiVR 需要知道你的 SteamVR 安装的 <strong>lighthouse_console.exe</strong> 的位置\n如果 OyasumiVR 在默认位置找不到它，你需要自行设定它的位置",
-                "status": {
-                    "NOT_FOUND": "在此位置下找不到 <strong>lighthouse_console.exe</strong>",
-                    "INVALID_EXECUTABLE": "无法验证此位置的 <strong>lighthouse_console.exe</strong> 是否正常运作",
-                    "PERMISSION_DENIED": "OyasumiVR 没有在此位置运行 <strong>lighthouse_console.exe</strong> 的权限。 尝试以管理员身份运行 OyasumiVR",
-                    "INVALID_FILENAME": "所设定的位置不是有效的文件路径",
-                    "UNKNOWN_ERROR": "尝试在此位置查找 <strong>lighthouse_console.exe</strong> 时发生未知错误",
-                    "CHECKING": "正在验证 <strong>lighthouse_console.exe</strong>",
-                    "SUCCESS": "<strong>lighthouse_console.exe</strong> 已找到并且正常运作！"
-                }
-            },
-            "adminPrivileges": {
-                "title": "管理员权限",
-                "label": "启动时请求管理员权限",
-                "description": "OyasumiVR 需要管理员权限才能控制 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限"
-            },
-            "telemetry": {
-                "title": "匿名数据",
-                "label": "发送匿名的使用数据",
-                "description": "发送的数据仅限于您正在使用的OyasumiVR版本，以及您所设定的语言。没有其他数据会被发送，而且是完全匿名的。这些数据只用于提供一些一般的使用统计。"
-            },
-            "systemTray": {
-                "title": "系统工作列",
-                "close": {
-                    "label": "靠近系统托盘",
-                    "description": "将OyasumiVR关闭到系统托盘，而不是退出程序。"
-                },
-                "start": {
-                    "label": "在系统托盘中启动",
-                    "description": "启动OyasumiVR时，将其最小化到系统托盘。"
-                }
-            },
-            "lighthousePowerControl": {
-                "title": "SteamVR基站电源控制",
-                "powerOffMode": {
-                    "standby": {
-                        "title": "待机",
-                        "description": "关闭电源/激光"
-                    },
-                    "sleep": {
-                        "title": "睡眠",
-                        "description": "关闭电源/激光&马达"
-                    },
-                    "title": "首选的断电状态",
-                    "description": "与待机模式不同的是，睡眠模式也关闭了电机，重新开启可能需要更长时间。"
-                },
-                "enable": {
-                    "title": "启用电源控制",
-                    "description": "如果启用，您将能够使用OyasumiVR关闭和开启您的基站电源。需要使用蓝牙，并且只支持V2基站。"
-                }
-            },
-            "sleepMode": {
-                "title": "睡眠模式",
-                "startupBehaviour": {
-                    "title": "初始化状态",
-                    "description": "当你启动OyasumiVR时，睡眠模式应该是什么？",
-                    "option": {
-                        "persist": {
-                            "title": "保存状态",
-                            "description": "使用上次最后状态"
-                        },
-                        "enabled": {
-                            "title": "启用",
-                            "description": "启动后启用"
-                        },
-                        "disabled": {
-                            "title": "关闭",
-                            "description": "启动后关闭"
-                        }
-                    }
-                }
-            }
-        },
-        "vrchat": {
-            "logIn": {
-                "title": "登入",
-                "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登入才能使用",
-                "loggedIn": {
-                    "title": "你好 {{name}}!",
-                    "subtext": "你当前已使用 VRChat 账户登入",
-                    "logOut": "登出"
-                },
-                "loggedOut": {
-                    "title": "已登出",
-                    "subtext": "你目前没有使用你的 VRChat 账户登入",
-                    "logIn": "登入"
-                },
-                "errors": {
-                    "initError": "无法初始化 VRChat 模组。 请确保你有连上互联网并稍后重新启动 OyasumiVR 重试"
-                },
-                "disclaimers": {
-                    "use": "你的登入凭证永远不会储存在任何地方，只会发送到 VRChat 的服务器以进行身份验证",
-                    "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不表示 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
-                    "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自己承担！"
-                }
-            },
-            "OSC": {
-                "title": "OSC 设定",
-                "description": "某些功能需要通过 OSC 连接到 VRChat。 除非你有特殊原因要更改这些，否则你应该将它们保留为默认值。",
-                "reset": "重设为默认值",
-                "receivingHost": {
-                    "title": "接收 IP",
-                    "description": "OyasumiVR 将监听此 IP 的 OSC 资讯\n（VRChat 默认发送到 127.0.0.1）"
-                },
-                "receivingPort": {
-                    "title": "接收埠",
-                    "description": "OyasumiVR 将监听 OSC 资讯的埠\n（VRChat 默认发送到埠 9001）"
-                },
-                "sendingHost": {
-                    "title": "发送 IP",
-                    "description": "OyasumiVR 将向此 IP 发送 OSC 资讯。\n（如果 VRChat 在同一台计算机上运行，则为 127.0.0.1）"
-                },
-                "sendingPort": {
-                    "title": "发送埠",
-                    "description": "OyasumiVR 将向其发送 OSC 资讯的埠。\n（VRChat 默认侦听埠 9000）"
-                },
-                "errors": {
-                    "PORT_IN_USE": "无法绑定此地址。 可能是另一个应用程序已经在使用它。 你可以尝试关闭该应用程序并重试，或者选择不同的接收埠或主机。",
-                    "PORT_INVALID": "埠必须是 1 到 65535 之间的有效数字。",
-                    "PORT_IO_IDENTICAL": "当发送主机和接收主机相同时，发送埠和接收埠不能使用相同的埠",
-                    "INVALID_HOST": "主机必须是有效的主机名、IPv4 地址或 IPv6 地址。"
-                },
-                "features": {
-                    "all": {
-                        "title": "启用所有功能",
-                        "description": "禁用这些功能将使OyasumiVR停止监听OSC信息"
-                    },
-                    "expressionMenu": {
-                        "title": "启用VRChat表达式菜单控制",
-                        "description": "从你的VRChat头像的 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">表情菜单</a> 控制OyasumiVR功能"
-                    },
-                    "externalControl": {
-                        "title": "启用外部控制",
-                        "description": "控制OyasumiVR的功能超过 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
-                    }
-                }
-            }
-        },
-        "notifications": {
-            "title": "通知设定",
-            "provider": {
-                "title": "通知提供者",
-                "description": "选择要用于向您传递通知的提供者"
-            },
-            "notifications": {
-                "title": "启用的通知",
-                "description": "选择要发送和不发送的通知",
-                "category": {
-                    "SLEEP_MODE_ENABLED": {
-                        "title": "已启用睡眠模式",
-                        "description": "在睡眠模式被启用时收到通知"
-                    },
-                    "SLEEP_MODE_DISABLED": {
-                        "title": "已停用睡眠模式",
-                        "description": "在睡眠模式被停用时收到通知"
-                    },
-                    "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-                        "title": "VRChat 状态更新（玩家限制自动化）",
-                        "description": "在 Oyasumi 自动更新您的 VRChat 状态时收到通知"
-                    },
-                    "AUTO_ACCEPTED_INVITE_REQUEST": {
-                        "title": "自动接受邀请请求",
-                        "description": "在 Oyasumi 自动接受他人的邀请请求时收到通知"
-                    }
-                }
-            }
-        },
-        "updates": {
-            "checkForUpdates": "检查更新",
-            "changelog": "更新日志",
-            "install": "安装版本 {{version}}",
-            "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
-            "notChecked": "OyasumiVR 尚未检查更新",
-            "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
-        },
-        "advanced": {
-            "persistentData": {
-                "title": "持久性数据",
-                "description": "管理OyasumiVR储存在你磁盘上的数据",
-                "dataType": {
-                    "all": {
-                        "title": "所有数据",
-                        "description": "OyasumiVR储存的所有数据，包括你的所有设置"
-                    },
-                    "appSettings": {
-                        "title": "应用程序设定",
-                        "description": "OyasumiVR的所有一般设定"
-                    },
-                    "automationSettings": {
-                        "title": "自动化设置",
-                        "description": "针对OyasumiVR的一个自动装置的所有设置"
-                    },
-                    "vrcData": {
-                        "title": "VRChat数据",
-                        "description": "VRChat特有的数据，如认证数据Data"
-                    },
-                    "miscData": {
-                        "title": "其他数据",
-                        "description": "OyasumiVR储存的所有其他数据，不包括在其他类别中。"
-                    },
-                    "appCache": {
-                        "title": "数据快取",
-                        "description": "所有临时储存的数据，如VRChat API响应"
-                    },
-                    "imageCache": {
-                        "title": "图像快取",
-                        "description": "所有临时储存的图像，如VRChat播放器图示"
-                    },
-                    "logs": {
-                        "title": "日志档案",
-                        "description": "OyasumiVR创建的日志档案"
-                    },
-                    "eventLog": {
-                        "title": "事件日志",
-                        "description": "被记录在概览中的事件"
-                    }
-                },
-                "clearData": "清除数据",
-                "clearModal": {
-                    "title": "确认清算数据",
-                    "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}}"
-                },
-                "relaunchModal": {
-                    "title": "重新启动 OyasumiVR",
-                    "message": "所要求的数据已经被清除了。建议在做完这些后，重新启动OyasumiVR。不重新启动OyasumiVR可能会产生不必要的影响。",
-                    "relaunch": "现在就重新启动 OyasumiVR",
-                    "later": "我以后会做的"
-                }
-            },
-            "translation": {
-                "title": "语言和翻译",
-                "loadFile": {
-                    "title": "载入翻译文件",
-                    "description": "载入一个自订的语言文件。在测试新的翻译时很有用。",
-                    "action": "载入文件"
-                },
-                "contribute": {
-                    "docs": "学习如何",
-                    "title": "通过提供翻译帮助",
-                    "description": "贡献缺失的翻译，或帮助添加新的语言"
-                }
-            },
-            "logs": {
-                "title": "日志档案",
-                "openFolder": {
-                    "title": "打开日志文件夹",
-                    "description": "在你的文件资源管理器中打开OyasumiVR的日志档案的位置",
-                    "action": "打开日志文件夹"
-                }
-            }
-        }
-    },
-    "about": {
-        "author": {
-            "role": "开发者"
-        },
-        "translations": "翻译人员",
-        "projectLinks": "项目连结",
-        "sourceLink": "源代码 @ GitHub",
-        "discordInvite": "Discord 服务器",
-        "contributions": "贡献"
-    },
-    "updater": {
-        "modals": {
-            "error": {
-                "title": "更新失败",
-                "message": "本次更新安装失败。请稍后再尝试一次"
-            }
-        }
+    "modals": {
+      "cancel": "取消",
+      "save": "保存",
+      "confirm": "确认",
+      "ok": "Ok",
+      "open": "开启",
+      "close": "关闭",
+      "login": "登入"
     },
     "misc": {
-        "GOGO_LOCO_LEGACY_PRESET_WARNING": "此默认档使用的解决方法存在一些问题。 如果你不能使用较新的 GoGo Loco 默认，请仅使用此默认档。 如果你的角色仍然使用旧版本的 GoGo Loco，建议你将你的角色更新使用最新的 GoGo Loco 版本",
-        "oscScriptEditorErrors": {
-            "noFloatMilliseconds": "毫秒值必须定义为整数",
-            "durationTooShort": "睡眠持续时间必须至少为 1 毫秒",
-            "durationTooLong": "睡眠持续时间不能超过 5 秒",
-            "durationRequired": "需要睡眠持续时间数值",
-            "totalDurationTooLong": "总脚本持续时间不能超过 10 秒。",
-            "intOutOfBounds": "该值必须是 0 到 255 之间的有效整数",
-            "floatOutOfBounds": "该值必须是介于 -1.0 和 1.0 之间的有效浮点值",
-            "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
-            "invalidSyntax": "无效的语法",
-            "tooManyCommands": "OSC 脚本不能有超过 {{value}} 个操作。",
-            "addressNoSlash": "有效的 OSC 数值必须以“/”符号开头。",
-            "addressRequired": "需要 OSC 数值",
-            "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字元。"
+      "vrcLoginRequired": "这个功能需要你登入你的 VRChat 账号"
+    }
+  },
+  "brightness-automations": {
+    "title": "亮度自动调整",
+    "tabs": {
+      "imageBrightness": "图像亮度",
+      "displayBrightness": "显示器亮度"
+    },
+    "displayBrightness": {
+      "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的显示器亮度。\n\n显示器亮度影响头戴式设备液晶面板的背光强度，而不是降低图像亮度。显示器亮度调整仅适用于 Valve Index。",
+      "indexWarning": "请确保您的 Valve Index 已连接且 SteamVR 正在运行。",
+      "onSleepEnable": {
+        "title": "当我进入睡眠模式时",
+        "description": "调整显示器亮度"
+      },
+      "onSleepDisable": {
+        "title": "当我醒来时",
+        "description": "调整显示器亮度"
+      }
+    },
+    "imageBrightness": {
+      "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的图像亮度。\n\n图像亮度会使显示的图像变暗。与显示器亮度不同，图像亮度调整适用于所有头戴式设备。",
+      "onSleepEnable": {
+        "title": "当我进入睡眠模式时",
+        "description": "调整图像亮度"
+      },
+      "onSleepDisable": {
+        "title": "当我醒来时",
+        "description": "调整图像亮度"
+      }
+    },
+    "brightness": {
+      "title": "将亮度改为",
+      "description": ""
+    },
+    "transition": {
+      "title": "逐步调整亮度",
+      "description": "平滑地过渡到所需的亮度值"
+    },
+    "transitionTime": {
+      "title": "过渡时间",
+      "description": "过渡到新亮度设定所需的时间"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "睡眠模式",
+      "active": "已启动",
+      "inactive": "已关闭",
+      "activate": "启动",
+      "deactivate": "关闭"
+    }
+  },
+  "sleep-detection": {
+    "title": "睡眠侦测",
+    "enableAutomations": {
+      "title": "启动睡眠模式",
+      "description": "根据各种触发器自动启用睡眠模式",
+      "atTime": "在特定时间",
+      "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
+      "onControllersPoweredOff": "当所有控制器都关闭时",
+      "onMotionDetection": {
+        "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
+      }
+    },
+    "disableAutomations": {
+      "title": "关闭睡眠模式",
+      "description": "根据各种触发器自动禁用睡眠模式",
+      "atTime": "在特定时间",
+      "onDevicePowerOn": "当设备启动时候",
+      "onSteamVRStop": "当 SteamVR 停止时"
+    },
+    "modals": {
+      "sleepDetectorCalibration": {
+        "title": "校准睡眠检测",
+        "currentCalibration": "你当前的校准值：",
+        "noSteamVR": "你只能在 SteamVR 在插入 VR 头的情况下才能开始校准",
+        "startCalibration": "开始校准",
+        "restartCalibration": "重新开始校准",
+        "info": {
+          "intro": "重新校准",
+          "stepPrefix": "校准步骤如下：",
+          "step": {
+            "one": "戴上头盔并躺下",
+            "two": "从叠层上开启 OyasumiVR 进行校准",
+            "three": "躺着持续 10 秒"
+          },
+          "stepSuffix": "就是这样！ 校准后，OyasumiVR 应该能够根据 VR 头盔的移动来检测你是否进入睡眠"
+        },
+        "prepare": {
+          "instruction": "戴上你的 VR 头盔并躺下",
+          "note": "当你准备好后你会再叠层看到这视窗，点击「开始校准」来进行校准"
+        },
+        "countdown": {
+          "instruction": "{{counter}} 秒后开始",
+          "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能运做"
+        },
+        "calibrating": {
+          "instruction": "校准中",
+          "note": "继续保持",
+          "countdown": "还剩 {{counter}} 秒"
+        },
+        "done": {
+          "instruction": "ˋ校准完成！",
+          "note": "现在你可以用此自动化了"
+        },
+        "failed": {
+          "instruction": "校准失败",
+          "note": "校准无法成功完成，可能是因为你的头盔未回报任何数据。请确保你的头盔正在追踪状态，然后重新尝试"
         }
+      },
+      "enableForSleepDetector": {
+        "title": "开启睡眠模式",
+        "calibration": {
+          "title": "校准",
+          "description": "在尝试使用此功能之前，你需要至少校准一次",
+          "action": "校准"
+        },
+        "sensitivity": {
+          "title": "灵敏度",
+          "description": "OyasumiVR 对动作侦测灵敏度",
+          "presets": {
+            "LOWEST": "最低",
+            "LOW": "低",
+            "MEDIUM": "中",
+            "HIGH": "高",
+            "HIGHEST": "最高"
+          }
+        },
+        "sleepCheck": {
+          "title": "在启用睡眠模式之前，询问我是否还醒着",
+          "description": "需要启用<a class=\"notificationSettingsLink\">通知</a>"
+        },
+        "detectionWindow": {
+          "title": "检测窗口",
+          "description": "OyasumiVR应该等待多久才能检测到你在睡觉",
+          "unit": "分钟"
+        },
+        "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式"
+      },
+      "enableAtTime": {
+        "title": "开启睡眠模式",
+        "description": "在特定时间开启睡眠模式",
+        "time": "时间"
+      },
+      "disableAtTime": {
+        "title": "关闭睡眠模式",
+        "description": "在特定时间关闭睡眠模式",
+        "time": "时间"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "关闭睡眠模式",
+        "whenTurningOn": "当启动其中一个",
+        "Controller": "控制器",
+        "GenericTracker": "追踪器"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "开启睡眠模式",
+        "whenA": "当其中一个",
+        "Controller": "控制器",
+        "GenericTracker": "追踪器",
+        "fallsBelow": "电量降低到",
+        "errors": {
+          "thresholdOutOfRange": "百分比必须介于 0% 和 100% 之间",
+          "thresholdNotInteger": "百分比值必须是整数"
+        }
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "OSC 自动化",
+    "tab": {
+      "sleepingAnimations": "睡眠动画",
+      "general": "一般设定"
+    },
+    "sleepingAnimations": {
+      "currentPose": "目前姿势",
+      "manualControl": "手动控制",
+      "presetAuthor": "由于 {{author}} 制作",
+      "description": "OyasumiVR 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
+      "enable": "开启睡眠动画自动化",
+      "customPreset": "自订动画",
+      "options": {
+        "positions": {
+          "title": "睡眠姿势",
+          "description": "设定 OSC 指令以启动每个睡姿动画",
+          "SIDE_FRONT": "正躺",
+          "SIDE_BACK": "趴躺",
+          "SIDE_LEFT": "左侧躺",
+          "SIDE_RIGHT": "右侧躺",
+          "UNKNOWN": "未知"
+        },
+        "footLock": {
+          "title": "脚部(移动)锁定",
+          "description": "设定 OSC 指令来控制脚部锁定开关",
+          "FOOT_LOCK": "开启脚部锁定",
+          "FOOT_UNLOCK": "关闭脚部锁定"
+        },
+        "general": {
+          "title": "一般设定",
+          "onlySwitchAnimations": "只用于切换睡眠动画",
+          "onlyIfSleepModeEnabled": "当睡眠模式启动时",
+          "onlyIfAllTrackersTurnedOff": "当所有追踪器关闭时",
+          "footLock": {
+            "title": "脚部(移动)锁定",
+            "description": "脚部锁定在开启时通常会阻止玩家移动或旋转"
+          },
+          "lockFeetOnSleepModeEnable": "当睡眠模式启动时开启脚部锁定",
+          "unlockFeetOnSleepModeDisable": "当睡眠模式关闭时关闭脚部锁定",
+          "unlockFeetOnAutomationDisable": "当自动睡眠姿势关闭时关闭脚部锁定",
+          "releaseFootLockOnPoseChange": "切换睡眠姿势时暂时释放脚部锁定",
+          "footLockReleaseWindow": "脚部锁定释放持续时间"
+        }
+      }
+    },
+    "general": {
+      "description": "在这里，你可以配置OyasumiVR在某些事件发生时向VRChat发送OSC命令。例如，如果你想在睡觉或醒来时改变你的角色切换，这可能很有用。",
+      "onSleepEnable": {
+        "title": "当我入睡时",
+        "description": "发送这些OSC命令",
+        "script": "睡眠模式启用"
+      },
+      "onSleepDisable": {
+        "title": "当我醒来时",
+        "description": "发送这些OSC命令",
+        "script": "禁用睡眠模式"
+      }
+    }
+  },
+  "power-automations": {
+    "title": "电源自动化",
+    "devicePowerOff": {
+      "onSleepModeEnable": {
+        "title": "当我入睡时",
+        "description": "启用睡眠模式时关闭设备。",
+        "optionControllers": "关掉所有的控制器",
+        "optionTrackers": "关闭所有定位器",
+        "hint": "你可以在<a class=\"sleepDetectionLink\">睡眠检测</a>中配置何时启用睡眠模式。."
+      },
+      "onCharge": {
+        "title": "给它们充电时",
+        "description": "让设备当你把它们接上充电器时自动关闭。",
+        "optionControllers": "关掉控制器",
+        "optionTrackers": "关掉定位器"
+      }
+    },
+    "tabs": {
+      "controllersAndTrackers": "控制器和定位器",
+      "baseStations": "基站"
+    },
+    "lighthousePowerOn": {
+      "title": "开启基站",
+      "description": "让OyasumiVR自动开启您的基站。",
+      "onOyasumiStart": {
+        "title": "当 OyasumiVR 启动时",
+        "description": "当OyasumiVR启动时，自动打开您的基站"
+      },
+      "onSteamVRStart": {
+        "title": "当 SteamVR 启动时",
+        "description": "当SteamVR启动时，自动打开你的基站"
+      }
+    },
+    "lighthousePowerOff": {
+      "title": "关掉基站",
+      "description": "让OyasumiVR自动关闭您的基站。",
+      "onSteamVRStop": {
+        "title": "当SteamVR停止时",
+        "description": "当SteamVR停止时，自动关闭你的基站"
+      }
+    },
+    "powerManagementWarning": "当选择使用OyasumiVR的自动装置来打开或关闭你的基站时，建议你在SteamVR的基站设置中禁用电源管理。",
+    "lighthouseControlDisabledWarning": "由于您在OyasumiVR的设置中禁用了基站功率控制，所以这些自动化功能不可用。如果您想使用这些自动化功能，请启用该功能。",
+    "enableLighthouseControl": "启用",
+    "error": {
+      "noAdapter": "在您的系统中找不到蓝牙适配器。请确认您的系统配备了蓝牙适配器，并且已经启用。",
+      "adapterError": "在试图与您的蓝牙适配器进行通信时发生了错误。请确保你的蓝牙适配器已启用，然后再试一次。"
+    }
+  },
+  "gpu-automations": {
+    "title": "GPU 自动化",
+    "disabled": {
+      "disabled": "OyasumiVR 允许你自动调整 GPU 的功耗限制\n这样你就可以在睡觉时节省用电量\n\nGPU 自动化目前仅适用于 NVIDIA GPU\nAMD 和 Intel GPU 仍然不支持",
+      "noSidecar": "为了让 OyasumiVR 能够控制 GPU 设定，它需要管理员权限。请点击下方按钮授予 OyasumiVR 管理员权限"
+    },
+    "tabs": {
+      "powerLimiting": "GPU 功耗限制",
+      "msiAfterburner": "MSI Afterburner"
+    },
+    "requestAdministrator": "授予管理员权限",
+    "disable": "关闭 GPU 自动化",
+    "enable": "开启 GPU 自动化",
+    "automations": "睡眠自动化",
+    "enableWarning": "这是功能是给一些进阶用户的！\n设定错误的功耗限制可能会导致你的系统变得不稳定\n请牢记这一点，最好只在你知道自己在做什么时才调整它",
+    "elevationSidecarModal": {
+      "title": "授予管理员权限",
+      "message": "你确定想要授予 OyasumiVR 管理员权限吗？\n\n如果你开启此权限，OyasumiVR 将在启动时立即请求这些权限。 你可以稍后随时在设定中关闭此功能",
+      "confirm": "总是",
+      "cancel": "只有这次"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "功耗限制自动化正在初始化中.....",
+        "noNvidia": "功耗限制自动化不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制自动化仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({{code}})",
+        "noPermission": "尽管 OyasumiVR 拥有管理员权限，但它似乎没有权限更改你的 GPU 设定\n\n请检查你的系统规格，因为这通常不会发生",
+        "noSidecar": "由于未知原因，无法获得管理员权限\n这些是控制 GPU 功耗限制所必需的\n\n请尝试重新启动 OyasumiVR",
+        "unknown": "由于未知原因，功耗限制自动化不可用。\n\n请尝试重新启动 OyasumiVR"
+      },
+      "noGPUSelected": "没有选择 GPU",
+      "gpuUnsupported": "不支援的 GPU",
+      "noGPUs": "在你的系统中找不到任何 Nivida 显卡",
+      "description": "在这里，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
+      "selectGPU": "选择你希望为其设定功耗限制的 GPU：",
+      "gpuPowerLimitsUnsupported": "所选 GPU 不支持设定功耗限制",
+      "currentPowerLimit": "当前功耗限制",
+      "activatingSleepMode": {
+        "title": "当我睡觉时",
+        "description": "指定在开启睡眠模式时要设定的功耗限制："
+      },
+      "deactivatingSleepMode": {
+        "title": "当我醒来时",
+        "description": "指定在关闭睡眠模式时要设定的功耗限制："
+      },
+      "enabledWarning": "请注意，将功耗限制设定得太低可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
+      "inputDefault": "将 GPU 功耗重设到默认数值"
+    },
+    "msiAfterburner": {
+      "description": "OyasumiVR 可以在你入睡或醒来时自动调整你的 GPU 设定，使用你在 MSI Afterburner 中所建立的设定档。 此功能的其中一个用途是在你入睡时节省电力，并在你醒来时重新获得 GPU 功耗。<br><br>你必须在 MSI Afterburner 设定设定档。<br>你可以在这里<a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">下载</a> MSI Afterburner",
+      "sleepModeEnable": {
+        "title": "当睡眠模式启动时",
+        "description": "使用所选的 MSI Afterburner 设定档"
+      },
+      "sleepModeDisable": {
+        "title": "当睡眠模式关闭时",
+        "description": "使用所选的 MSI Afterburner 设定档"
+      },
+      "profile": "设定档 {{index}}",
+      "none": "无",
+      "enabledWarning": "请注意，在 MSI Afterburner 中错误的设定 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
+      "executable": {
+        "title": "设定",
+        "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行档的位置\n如果 OyasumiVR 在默认位置找不到它，需要你手动设定它的位置",
+        "status": {
+          "CHECKING": "正在验证 <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "无法在此位置中找到 <strong>MSIAfterburner.exe</strong> ",
+          "INVALID_EXECUTABLE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 正常运作",
+          "INVALID_SIGNATURE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 是否来源 MSI。 出于系统安全考量，这位置的程序将不会被使用。 请确保你使用的是官方最新版本的 MSI Afterburner。 如果问题依然存在或者你确定这是正确的城市，请联络 OyasumiVR 的开发人员或提交错误报告",
+          "UNKNOWN_ERROR": "尝试在此位置寻找 <strong>MSIAfterburner.exe</strong> 时发生未知错误",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到并正常运作！"
+        }
+      }
+    }
+  },
+  "status-automations": {
+    "title": "状态 自动化",
+    "enable": "开启状态自动化",
+    "description": "OyasumiVR 可以根据你的世界中有多少玩家自动设定你的状态\n从而限制你房间的人数",
+    "exampleUse": "使用示例：当有人加入你时，自动将你的状态切换为橙色或红色！\n当他们离开而你又独自一人时，自动将你的状态切换回蓝色以便其他人可以加入你",
+    "disableToEdit": "请在进行任何变更之前关闭状态自动化",
+    "playerLimit": "玩家人数限制",
+    "playerLimitLabel": {
+      "singular": "{{count}} 位玩家（包括你）",
+      "plural": "{{count}} 位玩家（包括你）"
+    },
+    "belowLimit": {
+      "title": "低于限制人数",
+      "description": "将你的状态设定为"
+    },
+    "atLimitOrAbove": {
+      "title": "高于限制人数",
+      "description": "将你的状态设定为"
+    },
+    "onlyIfSleepModeEnabled": "只有在睡眠模式开启的时候",
+    "behaviourWarning": "OyasumiVR 的状态变更对玩家是不可见。 即使对于其他玩家，状态更新也可能需要一些时间才能显示出来。 这是 VRChat 的限制，OyasumiVR 无法修复",
+    "moreInfo": "更多资讯",
+    "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受邀请请求吗？\n答：如果你有 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管自动接受你收到的任何邀请加入请求。\n\n问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入但不能，他们可以透过在主选单中中打开你的个人资料来强制刷新你的状态。"
+  },
+  "auto-invite-request-accept": {
+    "title": "自动接受加入请求",
+    "description": "OyasumiVR 可以自动接受你收到的加入请求。 透过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的邀请请求",
+    "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
+    "userOnJoinMeStatus": "无论你的设定如何，VRChat 都会自动接受所有邀请请求，因为你的状态是加入我（蓝色）",
+    "whitelist": "玩家白名单",
+    "blacklist": "玩家黑名单",
+    "noPlayersAdded": "目前没有任何玩家在此列表中",
+    "addFriends": "新增朋友",
+    "clearPlayers": "清除玩家",
+    "removeModal": {
+      "title": "确认删除",
+      "message": "你确定要从列表中删除「{{name}}」吗？"
+    },
+    "removeModalBulk": {
+      "title": "确认删除",
+      "message": "你确定要把每个人都从你的名单中删除吗？"
+    },
+    "options": {
+      "enable": {
+        "title": "开启",
+        "description": "自动接受好友的加入请求"
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "当睡眠模式启动时"
+      },
+      "listMode": {
+        "title": "列表模式",
+        "description": "玩家列表的运作模式",
+        "options": {
+          "DISABLED": {
+            "label": "关闭",
+            "subLabel": "接受所有人"
+          },
+          "WHITELIST": {
+            "label": "白名单",
+            "subLabel": "接受所有来自此列表的朋友加入邀请"
+          },
+          "BLACKLIST": {
+            "label": "黑名单",
+            "subLabel": "接受所有非此列表的朋友加入邀请"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "设定",
+    "tab": {
+      "general": "一般",
+      "vrchat": "VRChat",
+      "notifications": "通知",
+      "updates": "更新",
+      "advanced": "进阶"
+    },
+    "general": {
+      "language": {
+        "title": "语言",
+        "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属国家语言的支持，请联络我们！"
+      },
+      "lighthouseConsole": {
+        "title": "Lighthouse 控制台",
+        "description": "OyasumiVR 需要知道你的 SteamVR 安装的 <strong>lighthouse_console.exe</strong> 的位置\n如果 OyasumiVR 在默认位置找不到它，你需要自行设定它的位置",
+        "status": {
+          "NOT_FOUND": "在此位置下找不到 <strong>lighthouse_console.exe</strong>",
+          "INVALID_EXECUTABLE": "无法验证此位置的 <strong>lighthouse_console.exe</strong> 是否正常运作",
+          "PERMISSION_DENIED": "OyasumiVR 没有在此位置运行 <strong>lighthouse_console.exe</strong> 的权限。 尝试以管理员身份运行 OyasumiVR",
+          "INVALID_FILENAME": "所设定的位置不是有效的文件路径",
+          "UNKNOWN_ERROR": "尝试在此位置查找 <strong>lighthouse_console.exe</strong> 时发生未知错误",
+          "CHECKING": "正在验证 <strong>lighthouse_console.exe</strong>",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> 已找到并且正常运作！"
+        }
+      },
+      "adminPrivileges": {
+        "title": "管理员权限",
+        "label": "启动时请求管理员权限",
+        "description": "OyasumiVR 需要管理员权限才能控制 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限"
+      },
+      "telemetry": {
+        "title": "匿名数据",
+        "label": "发送匿名的使用数据",
+        "description": "发送的数据仅限于您正在使用的OyasumiVR版本，以及您所设定的语言。没有其他数据会被发送，而且是完全匿名的。这些数据只用于提供一些一般的使用统计。"
+      },
+      "systemTray": {
+        "title": "系统工作列",
+        "close": {
+          "label": "靠近系统托盘",
+          "description": "将OyasumiVR关闭到系统托盘，而不是退出程序。"
+        },
+        "start": {
+          "label": "在系统托盘中启动",
+          "description": "启动OyasumiVR时，将其最小化到系统托盘。"
+        }
+      },
+      "lighthousePowerControl": {
+        "title": "SteamVR基站电源控制",
+        "powerOffMode": {
+          "standby": {
+            "title": "待机",
+            "description": "关闭电源/激光"
+          },
+          "sleep": {
+            "title": "睡眠",
+            "description": "关闭电源/激光&马达"
+          },
+          "title": "首选的断电状态",
+          "description": "与待机模式不同的是，睡眠模式也关闭了电机，重新开启可能需要更长时间。"
+        },
+        "enable": {
+          "title": "启用电源控制",
+          "description": "如果启用，您将能够使用OyasumiVR关闭和开启您的基站电源。需要使用蓝牙，并且只支持V2基站。"
+        }
+      },
+      "sleepMode": {
+        "title": "睡眠模式",
+        "startupBehaviour": {
+          "title": "初始化状态",
+          "description": "当你启动OyasumiVR时，睡眠模式应该是什么？",
+          "option": {
+            "persist": {
+              "title": "保存状态",
+              "description": "使用上次最后状态"
+            },
+            "enabled": {
+              "title": "启用",
+              "description": "启动后启用"
+            },
+            "disabled": {
+              "title": "关闭",
+              "description": "启动后关闭"
+            }
+          }
+        }
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "登入",
+        "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登入才能使用",
+        "loggedIn": {
+          "title": "你好 {{name}}!",
+          "subtext": "你当前已使用 VRChat 账户登入",
+          "logOut": "登出"
+        },
+        "loggedOut": {
+          "title": "已登出",
+          "subtext": "你目前没有使用你的 VRChat 账户登入",
+          "logIn": "登入"
+        },
+        "errors": {
+          "initError": "无法初始化 VRChat 模组。 请确保你有连上互联网并稍后重新启动 OyasumiVR 重试"
+        },
+        "disclaimers": {
+          "use": "你的登入凭证永远不会储存在任何地方，只会发送到 VRChat 的服务器以进行身份验证",
+          "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不表示 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
+          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自己承担！"
+        }
+      },
+      "OSC": {
+        "title": "OSC 设定",
+        "description": "某些功能需要通过 OSC 连接到 VRChat。 除非你有特殊原因要更改这些，否则你应该将它们保留为默认值。",
+        "reset": "重设为默认值",
+        "receivingHost": {
+          "title": "接收 IP",
+          "description": "OyasumiVR 将监听此 IP 的 OSC 资讯\n（VRChat 默认发送到 127.0.0.1）"
+        },
+        "receivingPort": {
+          "title": "接收埠",
+          "description": "OyasumiVR 将监听 OSC 资讯的埠\n（VRChat 默认发送到埠 9001）"
+        },
+        "sendingHost": {
+          "title": "发送 IP",
+          "description": "OyasumiVR 将向此 IP 发送 OSC 资讯。\n（如果 VRChat 在同一台计算机上运行，则为 127.0.0.1）"
+        },
+        "sendingPort": {
+          "title": "发送埠",
+          "description": "OyasumiVR 将向其发送 OSC 资讯的埠。\n（VRChat 默认侦听埠 9000）"
+        },
+        "errors": {
+          "PORT_IN_USE": "无法绑定此地址。 可能是另一个应用程序已经在使用它。 你可以尝试关闭该应用程序并重试，或者选择不同的接收埠或主机。",
+          "PORT_INVALID": "埠必须是 1 到 65535 之间的有效数字。",
+          "PORT_IO_IDENTICAL": "当发送主机和接收主机相同时，发送埠和接收埠不能使用相同的埠",
+          "INVALID_HOST": "主机必须是有效的主机名、IPv4 地址或 IPv6 地址。"
+        },
+        "features": {
+          "all": {
+            "title": "启用所有功能",
+            "description": "禁用这些功能将使OyasumiVR停止监听OSC信息"
+          },
+          "expressionMenu": {
+            "title": "启用VRChat表达式菜单控制",
+            "description": "从你的VRChat头像的 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">表情菜单</a> 控制OyasumiVR功能"
+          },
+          "externalControl": {
+            "title": "启用外部控制",
+            "description": "控制OyasumiVR的功能超过 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
+          }
+        }
+      }
     },
     "notifications": {
-        "sleepCheck": {
-            "content": "20秒后将启用睡眠模式。你已经入睡了吗？\n\n（摇头取消）"
+      "title": "通知设定",
+      "provider": {
+        "title": "通知提供者",
+        "description": "选择要用于向您传递通知的提供者"
+      },
+      "notifications": {
+        "title": "启用的通知",
+        "description": "选择要发送和不发送的通知",
+        "category": {
+          "SLEEP_MODE_ENABLED": {
+            "title": "已启用睡眠模式",
+            "description": "在睡眠模式被启用时收到通知"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "title": "已停用睡眠模式",
+            "description": "在睡眠模式被停用时收到通知"
+          },
+          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
+            "title": "VRChat 状态更新（玩家限制自动化）",
+            "description": "在 Oyasumi 自动更新您的 VRChat 状态时收到通知"
+          },
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "title": "自动接受邀请请求",
+            "description": "在 Oyasumi 自动接受他人的邀请请求时收到通知"
+          }
+        }
+      }
+    },
+    "updates": {
+      "checkForUpdates": "检查更新",
+      "changelog": "更新日志",
+      "install": "安装版本 {{version}}",
+      "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
+      "notChecked": "OyasumiVR 尚未检查更新",
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
+    },
+    "advanced": {
+      "persistentData": {
+        "title": "持久性数据",
+        "description": "管理OyasumiVR储存在你磁盘上的数据",
+        "dataType": {
+          "all": {
+            "title": "所有数据",
+            "description": "OyasumiVR储存的所有数据，包括你的所有设置"
+          },
+          "appSettings": {
+            "title": "应用程序设定",
+            "description": "OyasumiVR的所有一般设定"
+          },
+          "automationSettings": {
+            "title": "自动化设置",
+            "description": "针对OyasumiVR的一个自动装置的所有设置"
+          },
+          "vrcData": {
+            "title": "VRChat数据",
+            "description": "VRChat特有的数据，如认证数据Data"
+          },
+          "miscData": {
+            "title": "其他数据",
+            "description": "OyasumiVR储存的所有其他数据，不包括在其他类别中。"
+          },
+          "appCache": {
+            "title": "数据快取",
+            "description": "所有临时储存的数据，如VRChat API响应"
+          },
+          "imageCache": {
+            "title": "图像快取",
+            "description": "所有临时储存的图像，如VRChat播放器图示"
+          },
+          "logs": {
+            "title": "日志档案",
+            "description": "OyasumiVR创建的日志档案"
+          },
+          "eventLog": {
+            "title": "事件日志",
+            "description": "被记录在概览中的事件"
+          }
         },
-        "sleepCheckCancel": {
-            "content": "自动启用睡眠模式已取消。"
+        "clearData": "清除数据",
+        "clearModal": {
+          "title": "确认清算数据",
+          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}}"
         },
+        "relaunchModal": {
+          "title": "重新启动 OyasumiVR",
+          "message": "所要求的数据已经被清除了。建议在做完这些后，重新启动OyasumiVR。不重新启动OyasumiVR可能会产生不必要的影响。",
+          "relaunch": "现在就重新启动 OyasumiVR",
+          "later": "我以后会做的"
+        }
+      },
+      "translation": {
+        "title": "语言和翻译",
+        "loadFile": {
+          "title": "载入翻译文件",
+          "description": "载入一个自订的语言文件。在测试新的翻译时很有用。",
+          "action": "载入文件"
+        },
+        "contribute": {
+          "docs": "学习如何",
+          "title": "通过提供翻译帮助",
+          "description": "贡献缺失的翻译，或帮助添加新的语言"
+        }
+      },
+      "logs": {
+        "title": "日志档案",
+        "openFolder": {
+          "title": "打开日志文件夹",
+          "description": "在你的文件资源管理器中打开OyasumiVR的日志档案的位置",
+          "action": "打开日志文件夹"
+        }
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "开发者"
+    },
+    "translations": "翻译人员",
+    "projectLinks": "项目连结",
+    "sourceLink": "源代码 @ GitHub",
+    "discordInvite": "Discord 服务器",
+    "contributions": "贡献"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "更新失败",
+        "message": "本次更新安装失败。请稍后再尝试一次"
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "此默认档使用的解决方法存在一些问题。 如果你不能使用较新的 GoGo Loco 默认，请仅使用此默认档。 如果你的角色仍然使用旧版本的 GoGo Loco，建议你将你的角色更新使用最新的 GoGo Loco 版本",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "毫秒值必须定义为整数",
+      "durationTooShort": "睡眠持续时间必须至少为 1 毫秒",
+      "durationTooLong": "睡眠持续时间不能超过 5 秒",
+      "durationRequired": "需要睡眠持续时间数值",
+      "totalDurationTooLong": "总脚本持续时间不能超过 10 秒。",
+      "intOutOfBounds": "该值必须是 0 到 255 之间的有效整数",
+      "floatOutOfBounds": "该值必须是介于 -1.0 和 1.0 之间的有效浮点值",
+      "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
+      "invalidSyntax": "无效的语法",
+      "tooManyCommands": "OSC 脚本不能有超过 {{value}} 个操作。",
+      "addressNoSlash": "有效的 OSC 数值必须以“/”符号开头。",
+      "addressRequired": "需要 OSC 数值",
+      "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字元。"
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "content": "20秒后将启用睡眠模式。你已经入睡了吗？\n\n（摇头取消）"
+    },
+    "sleepCheckCancel": {
+      "content": "自动启用睡眠模式已取消。"
+    },
+    "sleepModeEnabled": {
+      "content": "睡眠模式已启用。"
+    },
+    "sleepModeDisabled": {
+      "content": "睡眠模式已停用。"
+    },
+    "vrcStatusChangedPlayerCount": {
+      "content": "您的 VRChat 状态已设置为 '{{newStatus}}'"
+    },
+    "autoAcceptedInviteRequest": {
+      "content": "已自动接受来自 {{username}} 的邀请请求"
+    }
+  },
+  "comp": {
+    "main-status-bar": {
+      "sleepMode": "睡眠模式",
+      "active": "启动",
+      "inactive": "未启动",
+      "loggedOut": "已登出",
+      "steamvr": {
+        "INACTIVE": "未启动",
+        "INITIALIZING": "等待启动",
+        "INITIALIZED": "启动"
+      }
+    },
+    "confirm-modal": {
+      "defaultTitle": "确认"
+    },
+    "update-modal": {
+      "title": "有新的更新",
+      "updateNow": "安装版本 {{version}}",
+      "updateLater": "稍后",
+      "message": "已找到 OyasumiVR 的新更新：版本 {{newVersion}}\n\n你当前仍在运行版本 {{currentVersion}}\n\n你要立即更新还是稍后更新？"
+    },
+    "select-box": {
+      "defaultPlaceholder": "选择..."
+    },
+    "dashboard-navbar": {
+      "overview": "首页",
+      "sleepDetection": "睡眠侦测",
+      "oscAutomations": "OSC 自动化",
+      "gpuAutomations": "GPU 自动化",
+      "powerAutomations": "电源自动化",
+      "statusAutomations": "状态自动化",
+      "autoInviteRequestAccept": "自动接受邀请请求",
+      "settings": "设定",
+      "vrcAutomations": "VRChat 自动化",
+      "brightnessAutomations": "亮度自动化",
+      "about": "关于 OyasumiVR",
+      "resolutionAutomations": "分辨率自动化",
+      "chaperoneAutomations": "守护范围自动化",
+      "sleepAnimations": "睡眠动画",
+      "hardwareAutomations": "硬件自动化",
+      "shutdownAutomations": "关机序列"
+    },
+    "device-list": {
+      "title": "装置",
+      "turnOffAll": "全部",
+      "noDevices": "没有侦测到控制器或追踪器",
+      "category": {
+        "Controller": "控制器",
+        "GenericTracker": "追踪器",
+        "other": "其他",
+        "Lighthouse": "基站"
+      },
+      "deviceName": {
+        "lighthouseV2": "V2 灯塔"
+      },
+      "lighthouseStatus": {
+        "on": "启动",
+        "unknown": "未知状态",
+        "sleep": "休眠",
+        "standby": "待机",
+        "booting": "启动中"
+      },
+      "scanForLighthouses": "扫描"
+    },
+    "osc-script-modal": {
+      "title": "OSC 脚本",
+      "simple": "范本",
+      "script": "脚本"
+    },
+    "osc-script-code-editor": {
+      "title": "OSC 脚本编辑器",
+      "syntaxGuide": "语法指南",
+      "format": "格式",
+      "test": "测试"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} 个指令",
+        "plural": "{{value}} 个指令"
+      },
+      "errorCounter": {
+        "singular": "{{value}} 个验证错误",
+        "plural": "{{value}} 个验证错误"
+      },
+      "addCommand": "新增",
+      "test": "测试",
+      "action": {
+        "osc": "OSC",
+        "sleep": "睡觉",
+        "none": "目前没有任何动作新增"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "OSC 指令",
+          "description": "执行一个 OSC 指令"
+        },
+        "SLEEP": {
+          "title": "睡觉",
+          "description": "等待指定的时间"
+        }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "登入到 VRChat",
+      "username": "VRChat 使用者名称/E-mail",
+      "password": "密码",
+      "errors": {
+        "CHECK_EMAIL": "登入失败：详情请查看你的 VRChat 账号绑定的信箱地址",
+        "INVALID_CREDENTIALS": "你提供的凭证不正确",
+        "UNEXPECTED_RESPONSE": "登入失败：发生未知错误。请验证你的网络连接或稍后重试"
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "双重认证",
+      "description": "你的 VRChat 账户受双重验证保护\n\n请输入 2FA 代码：",
+      "errors": {
+        "LAST_CODE_INVALID": "你提供的 2FA 代码不正确",
+        "INVALID_FORMAT": "有效的 2FA 代码是 6 个数字的序列，请确认你的输入"
+      }
+    },
+    "friend-selection-modal": {
+      "title": "选择好友",
+      "searchPlaceholder": "依名字寻找好友...",
+      "noFriendsSelected": "没有任何好友被选择",
+      "noResultsFor": "找不到任何结果 '{{query}}'",
+      "noFriends": "你的好友列表是空的"
+    },
+    "event-log": {
+      "title": "事件",
+      "show-more": "显示更多",
+      "no-logs": "还没有事件被记录下来。记录最多保存48小时。",
+      "clearLog": "清除",
+      "clearLogModal": {
+        "title": "确认清除",
+        "message": "你确定你要清除事件日志吗？这是不能撤销的。"
+      }
+    },
+    "event-log-entry": {
+      "type": {
         "sleepModeEnabled": {
-            "content": "睡眠模式已启用。"
+          "title": "启用睡眠模式",
+          "reason": {
+            "manual": "你手动启用了睡眠模式",
+            "osc-control": "透过OSC启用了睡眠模式",
+            "automation": {
+              "unknown": "通过一个未知的自动化",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "当你睡着的时候",
+              "SLEEP_MODE_ENABLE_AT_TIME": "在预定时间",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "作为一个设备的电量达到了设定值",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了"
+            }
+          }
         },
         "sleepModeDisabled": {
-            "content": "睡眠模式已停用。"
+          "title": "睡眠模式禁用",
+          "reason": {
+            "manual": "你手动关闭了睡眠模式",
+            "osc-control": "睡眠模式透过OSC被禁用",
+            "automation": {
+              "unknown": "通过一个未知的自动化",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "随着SteamVR的退出",
+              "SLEEP_MODE_DISABLE_AT_TIME": "在预定时间",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "当一个设备被打开时"
+            }
+          }
         },
-        "vrcStatusChangedPlayerCount": {
-            "content": "您的 VRChat 状态已设置为 '{{newStatus}}'"
+        "turnedOffOpenVRDevices": {
+          "title": {
+            "CONTROLLER": "关闭一个控制器",
+            "CONTROLLERS": "关闭多个控制器",
+            "TRACKER": "关闭一个追踪器",
+            "TRACKERS": "关闭多个追踪器",
+            "ALL": "关闭全部设备",
+            "VARIOUS": "关闭各种设备"
+          },
+          "reason": {
+            "MANUAL": "手动关闭",
+            "OSC_CONTROL": "透过 OSC 关闭",
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "CHARGING": "当设备正在充电的时候"
+          }
         },
-        "autoAcceptedInviteRequest": {
-            "content": "已自动接受来自 {{username}} 的邀请请求"
+        "lighthouseSetPowerState": {
+          "SINGLE": {
+            "on": {
+              "title": "打开了一个基站",
+              "reasons": {
+                "MANUAL": "手动开启",
+                "STEAMVR_START": "由于 SteamVR 开启",
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "OYASUMI_START": "由于 OyasumiVR 开启"
+              }
+            },
+            "sleep": {
+              "title": "将基站设置为睡眠模式",
+              "reasons": {
+                "MANUAL": "手动设置",
+                "STEAMVR_START": "由于 SteamVR 开启",
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "OYASUMI_START": "由于 OyasumiVR 开启"
+              }
+            },
+            "standby": {
+              "title": "将基站设置为待机模式",
+              "reasons": {
+                "MANUAL": "手动设置",
+                "STEAMVR_START": "由于 SteamVR 开启",
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "OYASUMI_START": "由于 OyasumiVR 开启"
+              }
+            }
+          },
+          "ALL": {
+            "on": {
+              "title": "打开所有的基站",
+              "reasons": {
+                "MANUAL": "手动设置",
+                "STEAMVR_START": "由于 SteamVR 开启",
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "OYASUMI_START": "由于 OyasumiVR 开启"
+              }
+            },
+            "sleep": {
+              "title": "将所有基站设置为睡眠模式",
+              "reasons": {
+                "MANUAL": "手动设置",
+                "STEAMVR_START": "由于 SteamVR 开启",
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "OYASUMI_START": "由于 OyasumiVR 开启"
+              }
+            },
+            "standby": {
+              "title": "将所有基站设置为待机模式",
+              "reasons": {
+                "MANUAL": "手动设置",
+                "STEAMVR_START": "由于SteamVR 开启",
+                "STEAMVR_STOP": "由于SteamVR 关闭",
+                "OYASUMI_START": "由于OyasumiVR 开启"
+              }
+            }
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "将 '{{device}}' 的功率限制恢复为 {{limit}}",
+            "set": "将 '{{device}}' 的功率限制设置为 {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "因为睡眠模式已启用",
+            "SLEEP_MODE_DISABLED": "因为睡眠模式已禁用"
+          }
+        },
+        "imageBrightnessChanged": {
+          "title": {
+            "set": "头戴式显示器图像亮度设置为 {{value}}",
+            "transition": "头戴式显示器图像亮度过渡到 {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
+          }
+        },
+        "brightnessChanged": {
+          "title": {
+            "set": "头盔亮度设置为{{value}}",
+            "transition": "头盔亮度调整到{{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "自动接受了来自'{{displayName}}的邀请请求",
+          "subtitle": {
+            "whitelist": "由于该玩家被列入白名单",
+            "blacklist": "由于这名玩家没有被列入黑名单"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "将你的VRChat状态从{{oldStatus}}改为{{newStatus}}列出",
+          "reason": {
+            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{{threshold}}位以下时",
+            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{{threshold}}位的极限"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "取消了睡眠模式的自动启用",
+          "subtitle": "由于用户仍处于清醒状态"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "SteamVR渲染分辨率设置为 '自动'",
+            "custom": "SteamVR的渲染分辨率设置为 {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "title": "Chaperone淡化距离设置为{{价值}}。",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"
+          }
+        },
+        "shutdownSequenceStarted": {
+          "title": "关机程序已经开始",
+          "reason": {
+            "MANUAL": "手动触发",
+            "SLEEP_TRIGGER": "因为你已经睡了足够长的时间"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "title": "关机程序被取消了",
+          "reason": {
+            "MANUAL": "Cancelled manually"
+          }
         }
-    },
-    "comp": {
-        "main-status-bar": {
-            "sleepMode": "睡眠模式",
-            "active": "启动",
-            "inactive": "未启动",
-            "loggedOut": "已登出",
-            "steamvr": {
-                "INACTIVE": "未启动",
-                "INITIALIZING": "等待启动",
-                "INITIALIZED": "启动"
-            }
-        },
-        "confirm-modal": {
-            "defaultTitle": "确认"
-        },
-        "update-modal": {
-            "title": "有新的更新",
-            "updateNow": "安装版本 {{version}}",
-            "updateLater": "稍后",
-            "message": "已找到 OyasumiVR 的新更新：版本 {{newVersion}}\n\n你当前仍在运行版本 {{currentVersion}}\n\n你要立即更新还是稍后更新？"
-        },
-        "select-box": {
-            "defaultPlaceholder": "选择..."
-        },
-        "dashboard-navbar": {
-            "overview": "首页",
-            "sleepDetection": "睡眠侦测",
-            "oscAutomations": "OSC 自动化",
-            "gpuAutomations": "GPU 自动化",
-            "powerAutomations": "电源自动化",
-            "statusAutomations": "状态自动化",
-            "autoInviteRequestAccept": "自动接受邀请请求",
-            "settings": "设定",
-            "vrcAutomations": "VRChat 自动化",
-            "brightnessAutomations": "亮度自动化",
-            "about": "关于 OyasumiVR",
-            "resolutionAutomations": "分辨率自动化",
-            "chaperoneAutomations": "守护范围自动化",
-            "sleepAnimations": "睡眠动画",
-            "hardwareAutomations": "硬件自动化",
-            "shutdownAutomations": "关机序列"
-        },
-        "device-list": {
-            "title": "装置",
-            "turnOffAll": "全部",
-            "noDevices": "没有侦测到控制器或追踪器",
-            "category": {
-                "Controller": "控制器",
-                "GenericTracker": "追踪器",
-                "other": "其他",
-                "Lighthouse": "基站"
-            },
-            "deviceName": {
-                "lighthouseV2": "V2 灯塔"
-            },
-            "lighthouseStatus": {
-                "on": "启动",
-                "unknown": "未知状态",
-                "sleep": "休眠",
-                "standby": "待机",
-                "booting": "启动中"
-            },
-            "scanForLighthouses": "扫描"
-        },
-        "osc-script-modal": {
-            "title": "OSC 脚本",
-            "simple": "范本",
-            "script": "脚本"
-        },
-        "osc-script-code-editor": {
-            "title": "OSC 脚本编辑器",
-            "syntaxGuide": "语法指南",
-            "format": "格式",
-            "test": "测试"
-        },
-        "osc-script-simple-editor": {
-            "commandCounter": {
-                "singular": "{{value}} 个指令",
-                "plural": "{{value}} 个指令"
-            },
-            "errorCounter": {
-                "singular": "{{value}} 个验证错误",
-                "plural": "{{value}} 个验证错误"
-            },
-            "addCommand": "新增",
-            "test": "测试",
-            "action": {
-                "osc": "OSC",
-                "sleep": "睡觉",
-                "none": "目前没有任何动作新增"
-            },
-            "commands": {
-                "COMMAND": {
-                    "title": "OSC 指令",
-                    "description": "执行一个 OSC 指令"
-                },
-                "SLEEP": {
-                    "title": "睡觉",
-                    "description": "等待指定的时间"
-                }
-            }
-        },
-        "vrchat-login-modal": {
-            "title": "登入到 VRChat",
-            "username": "VRChat 使用者名称/E-mail",
-            "password": "密码",
-            "errors": {
-                "CHECK_EMAIL": "登入失败：详情请查看你的 VRChat 账号绑定的信箱地址",
-                "INVALID_CREDENTIALS": "你提供的凭证不正确",
-                "UNEXPECTED_RESPONSE": "登入失败：发生未知错误。请验证你的网络连接或稍后重试"
-            }
-        },
-        "vrchat-login-tfa-modal": {
-            "title": "双重认证",
-            "description": "你的 VRChat 账户受双重验证保护\n\n请输入 2FA 代码：",
-            "errors": {
-                "LAST_CODE_INVALID": "你提供的 2FA 代码不正确",
-                "INVALID_FORMAT": "有效的 2FA 代码是 6 个数字的序列，请确认你的输入"
-            }
-        },
-        "friend-selection-modal": {
-            "title": "选择好友",
-            "searchPlaceholder": "依名字寻找好友...",
-            "noFriendsSelected": "没有任何好友被选择",
-            "noResultsFor": "找不到任何结果 '{{query}}'",
-            "noFriends": "你的好友列表是空的"
-        },
-        "event-log": {
-            "title": "事件",
-            "show-more": "显示更多",
-            "no-logs": "还没有事件被记录下来。记录最多保存48小时。",
-            "clearLog": "清除",
-            "clearLogModal": {
-                "title": "确认清除",
-                "message": "你确定你要清除事件日志吗？这是不能撤销的。"
-            }
-        },
-        "event-log-entry": {
-            "type": {
-                "sleepModeEnabled": {
-                    "title": "启用睡眠模式",
-                    "reason": {
-                        "manual": "你手动启用了睡眠模式",
-                        "osc-control": "透过OSC启用了睡眠模式",
-                        "automation": {
-                            "unknown": "通过一个未知的自动化",
-                            "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "当你睡着的时候",
-                            "SLEEP_MODE_ENABLE_AT_TIME": "在预定时间",
-                            "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "作为一个设备的电量达到了设定值",
-                            "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了"
-                        }
-                    }
-                },
-                "sleepModeDisabled": {
-                    "title": "睡眠模式禁用",
-                    "reason": {
-                        "manual": "你手动关闭了睡眠模式",
-                        "osc-control": "睡眠模式透过OSC被禁用",
-                        "automation": {
-                            "unknown": "通过一个未知的自动化",
-                            "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "随着SteamVR的退出",
-                            "SLEEP_MODE_DISABLE_AT_TIME": "在预定时间",
-                            "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "当一个设备被打开时"
-                        }
-                    }
-                },
-                "turnedOffOpenVRDevices": {
-                    "title": {
-                        "CONTROLLER": "关闭一个控制器",
-                        "CONTROLLERS": "关闭多个控制器",
-                        "TRACKER": "关闭一个追踪器",
-                        "TRACKERS": "关闭多个追踪器",
-                        "ALL": "关闭全部设备",
-                        "VARIOUS": "关闭各种设备"
-                    },
-                    "reason": {
-                        "MANUAL": "手动关闭",
-                        "OSC_CONTROL": "透过 OSC 关闭",
-                        "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
-                        "CHARGING": "当设备正在充电的时候"
-                    }
-                },
-                "lighthouseSetPowerState": {
-                    "SINGLE": {
-                        "on": {
-                            "title": "打开了一个基站",
-                            "reasons": {
-                                "MANUAL": "手动开启",
-                                "STEAMVR_START": "由于 SteamVR 开启",
-                                "STEAMVR_STOP": "由于 SteamVR 关闭",
-                                "OYASUMI_START": "由于 OyasumiVR 开启"
-                            }
-                        },
-                        "sleep": {
-                            "title": "将基站设置为睡眠模式",
-                            "reasons": {
-                                "MANUAL": "手动设置",
-                                "STEAMVR_START": "由于 SteamVR 开启",
-                                "STEAMVR_STOP": "由于 SteamVR 关闭",
-                                "OYASUMI_START": "由于 OyasumiVR 开启"
-                            }
-                        },
-                        "standby": {
-                            "title": "将基站设置为待机模式",
-                            "reasons": {
-                                "MANUAL": "手动设置",
-                                "STEAMVR_START": "由于 SteamVR 开启",
-                                "STEAMVR_STOP": "由于 SteamVR 关闭",
-                                "OYASUMI_START": "由于 OyasumiVR 开启"
-                            }
-                        }
-                    },
-                    "ALL": {
-                        "on": {
-                            "title": "打开所有的基站",
-                            "reasons": {
-                                "MANUAL": "手动设置",
-                                "STEAMVR_START": "由于 SteamVR 开启",
-                                "STEAMVR_STOP": "由于 SteamVR 关闭",
-                                "OYASUMI_START": "由于 OyasumiVR 开启"
-                            }
-                        },
-                        "sleep": {
-                            "title": "将所有基站设置为睡眠模式",
-                            "reasons": {
-                                "MANUAL": "手动设置",
-                                "STEAMVR_START": "由于 SteamVR 开启",
-                                "STEAMVR_STOP": "由于 SteamVR 关闭",
-                                "OYASUMI_START": "由于 OyasumiVR 开启"
-                            }
-                        },
-                        "standby": {
-                            "title": "将所有基站设置为待机模式",
-                            "reasons": {
-                                "MANUAL": "手动设置",
-                                "STEAMVR_START": "由于SteamVR 开启",
-                                "STEAMVR_STOP": "由于SteamVR 关闭",
-                                "OYASUMI_START": "由于OyasumiVR 开启"
-                            }
-                        }
-                    }
-                },
-                "gpuPowerLimitChanged": {
-                    "title": {
-                        "reset": "将 '{{device}}' 的功率限制恢复为 {{limit}}",
-                        "set": "将 '{{device}}' 的功率限制设置为 {{limit}}"
-                    },
-                    "reason": {
-                        "SLEEP_MODE_ENABLED": "因为睡眠模式已启用",
-                        "SLEEP_MODE_DISABLED": "因为睡眠模式已禁用"
-                    }
-                },
-                "imageBrightnessChanged": {
-                    "title": {
-                        "set": "头戴式显示器图像亮度设置为 {{value}}",
-                        "transition": "头戴式显示器图像亮度过渡到 {{value}}"
-                    },
-                    "reason": {
-                        "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
-                        "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
-                    }
-                },
-                "brightnessChanged": {
-                    "title": {
-                        "set": "头盔亮度设置为{{value}}",
-                        "transition": "头盔亮度调整到{{value}}"
-                    },
-                    "reason": {
-                        "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
-                        "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
-                    }
-                },
-                "acceptedInviteRequest": {
-                    "title": "自动接受了来自'{{displayName}}的邀请请求",
-                    "subtitle": {
-                        "whitelist": "由于该玩家被列入白名单",
-                        "blacklist": "由于这名玩家没有被列入黑名单"
-                    }
-                },
-                "statusChangedOnPlayerCountChange": {
-                    "title": "将你的VRChat状态从{{oldStatus}}改为{{newStatus}}列出",
-                    "reason": {
-                        "BELOW_LIMIT": "当你的房间中的玩家数量下降到{{threshold}}位以下时",
-                        "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{{threshold}}位的极限"
-                    }
-                },
-                "sleepDetectorEnableCancelled": {
-                    "title": "取消了睡眠模式的自动启用",
-                    "subtitle": "由于用户仍处于清醒状态"
-                },
-                "renderResolutionChanged": {
-                    "title": {
-                        "auto": "SteamVR渲染分辨率设置为 '自动'",
-                        "custom": "SteamVR的渲染分辨率设置为 {{value}}"
-                    },
-                    "reason": {
-                        "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
-                        "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"
-                    }
-                },
-                "chaperoneFadeDistanceChanged": {
-                    "title": "Chaperone淡化距离设置为{{价值}}。",
-                    "reason": {
-                        "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
-                        "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"
-                    }
-                },
-                "shutdownSequenceStarted": {
-                    "title": "关机程序已经开始",
-                    "reason": {
-                        "MANUAL": "手动触发",
-                        "SLEEP_TRIGGER": "因为你已经睡了足够长的时间"
-                    }
-                },
-                "shutdownSequenceCancelled": {
-                    "title": "关机程序被取消了",
-                    "reason": {
-                        "MANUAL": "Cancelled manually"
-                    }
-                }
-            }
-        }
-    },
-    "resolution-automations": {
-        "title": "分辨率自动化",
-        "description": "当启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的渲染分辨率",
-        "onSleepEnable": {
-            "title": "当我入睡时",
-            "description": "调整我的渲染分辨率"
-        },
-        "onSleepDisable": {
-            "title": "当我醒来时",
-            "description": "调整我的渲染分辨率"
-        },
-        "renderResolution": {
-            "title": "将渲染分辨率改为",
-            "custom": "自订",
-            "auto": "自动"
-        }
-    },
-    "chaperone-automations": {
-        "title": "保护墙自动化",
-        "description": "在启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的保护墙的淡出距离。",
-        "onSleepEnable": {
-            "title": "当我入睡时",
-            "description": "调整我的保护墙的淡化距离"
-        },
-        "onSleepDisable": {
-            "title": "当我醒来的时候",
-            "description": "调整我的保护墙的淡化距离"
-        },
-        "fadeDistance": {
-            "title": "将保护墙的淡化距离改为"
-        }
-    },
-    "sleepAnimations": {
-        "title": "睡眠动画"
-    },
-    "shutdown-automations": {
-        "title": "关机顺序",
-        "description": "如果喜欢在VR中入睡，但又不想在VR中睡一整晚，你可以使用OyasumiVR的关闭程序。一旦你打了瞌睡，这个功能就会自动优雅地关闭，这样你就可以顺利地在VR之外继续你的睡眠。",
-        "triggers": {
-            "title": "自动触发",
-            "whenAsleep": {
-                "title": "在我睡觉时启动",
-                "description": "当睡眠模式被启用一定时间后，启动关机程序"
-            },
-            "whenAsleepDuration": {
-                "title": "睡眠时间",
-                "description": "睡眠模式启用后，在关机序列执行之前应该持续多长时间"
-            },
-            "whenAsleepTimeWindow": {
-                "title": "开启Windows",
-                "description": "只允许在一天中的某些时间段触发关机"
-            }
-        },
-        "sequence": {
-            "title": "关机设置",
-            "quitSteamVR": {
-                "title": "退出SteamVR",
-                "description": "这也应该退出你正在运行的任何游戏或覆盖物。"
-            },
-            "turnOffDevices": {
-                "title": "关闭设备"
-            },
-            "turnOffControllers": {
-                "title": "关掉控制器",
-                "description": "关掉你的控制器"
-            },
-            "turnOffTrackers": {
-                "title": "关掉定位器",
-                "description": "关掉你的定位器"
-            },
-            "turnOffBaseStations": {
-                "title": "关掉基站",
-                "description": "关闭任何仍在活动的基站"
-            },
-            "shutDownWindows": {
-                "title": "关闭Windows",
-                "description": "试图关闭你的电脑"
-            },
-            "run": "运行序列"
-        },
-        "confirm-modal": {
-            "title": "你确定吗？",
-            "message": "你确定你现在就想启动关机程序吗？"
-        },
-        "noOptionsSelected": "由于你没有选择在关机程序中运行的操作，运行它不会有任何影响。为了让这个功能有所作为，请至少选择下面的一个选项。",
-        "overlay": {
-            "stage": {
-                "QUITTING_STEAMVR": "退出SteamVR...",
-                "TURNING_OFF_CONTROLLERS": "关掉控制器...",
-                "TURNING_OFF_TRACKERS": "关掉定位器...",
-                "TURNING_OFF_BASESTATIONS": "关闭基站...",
-                "SHUTTING_DOWN": "关闭Windows..."
-            },
-            "title": "正在关闭",
-            "cancel": "立即取消"
-        }
+      }
     }
+  },
+  "resolution-automations": {
+    "title": "分辨率自动化",
+    "description": "当启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的渲染分辨率",
+    "onSleepEnable": {
+      "title": "当我入睡时",
+      "description": "调整我的渲染分辨率"
+    },
+    "onSleepDisable": {
+      "title": "当我醒来时",
+      "description": "调整我的渲染分辨率"
+    },
+    "renderResolution": {
+      "title": "将渲染分辨率改为",
+      "custom": "自订",
+      "auto": "自动"
+    }
+  },
+  "chaperone-automations": {
+    "title": "保护墙自动化",
+    "description": "在启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的保护墙的淡出距离。",
+    "onSleepEnable": {
+      "title": "当我入睡时",
+      "description": "调整我的保护墙的淡化距离"
+    },
+    "onSleepDisable": {
+      "title": "当我醒来的时候",
+      "description": "调整我的保护墙的淡化距离"
+    },
+    "fadeDistance": {
+      "title": "将保护墙的淡化距离改为"
+    }
+  },
+  "sleepAnimations": {
+    "title": "睡眠动画"
+  },
+  "shutdown-automations": {
+    "title": "关机顺序",
+    "description": "如果喜欢在VR中入睡，但又不想在VR中睡一整晚，你可以使用OyasumiVR的关闭程序。一旦你打了瞌睡，这个功能就会自动优雅地关闭，这样你就可以顺利地在VR之外继续你的睡眠。",
+    "triggers": {
+      "title": "自动触发",
+      "whenAsleep": {
+        "title": "在我睡觉时启动",
+        "description": "当睡眠模式被启用一定时间后，启动关机程序"
+      },
+      "whenAsleepDuration": {
+        "title": "睡眠时间",
+        "description": "睡眠模式启用后，在关机序列执行之前应该持续多长时间"
+      },
+      "whenAsleepTimeWindow": {
+        "title": "开启Windows",
+        "description": "只允许在一天中的某些时间段触发关机"
+      }
+    },
+    "sequence": {
+      "title": "关机设置",
+      "quitSteamVR": {
+        "title": "退出SteamVR",
+        "description": "这也应该退出你正在运行的任何游戏或覆盖物。"
+      },
+      "turnOffDevices": {
+        "title": "关闭设备"
+      },
+      "turnOffControllers": {
+        "title": "关掉控制器",
+        "description": "关掉你的控制器"
+      },
+      "turnOffTrackers": {
+        "title": "关掉定位器",
+        "description": "关掉你的定位器"
+      },
+      "turnOffBaseStations": {
+        "title": "关掉基站",
+        "description": "关闭任何仍在活动的基站"
+      },
+      "shutDownWindows": {
+        "title": "关闭Windows",
+        "description": "试图关闭你的电脑"
+      },
+      "run": "运行序列"
+    },
+    "confirm-modal": {
+      "title": "你确定吗？",
+      "message": "你确定你现在就想启动关机程序吗？"
+    },
+    "noOptionsSelected": "由于你没有选择在关机程序中运行的操作，运行它不会有任何影响。为了让这个功能有所作为，请至少选择下面的一个选项。",
+    "overlay": {
+      "stage": {
+        "QUITTING_STEAMVR": "退出SteamVR...",
+        "TURNING_OFF_CONTROLLERS": "关掉控制器...",
+        "TURNING_OFF_TRACKERS": "关掉定位器...",
+        "TURNING_OFF_BASESTATIONS": "关闭基站...",
+        "SHUTTING_DOWN": "关闭Windows..."
+      },
+      "title": "正在关闭",
+      "cancel": "立即取消"
+    }
+  }
 }
