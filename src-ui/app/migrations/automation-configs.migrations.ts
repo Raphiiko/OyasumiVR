@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep, mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 import { info } from 'tauri-plugin-log-api';
 
@@ -33,7 +33,11 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
-  data = merge({}, AUTOMATION_CONFIGS_DEFAULT, data);
+  data = mergeWith(cloneDeep(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
+    if (Array.isArray(objValue)) {
+      return srcValue;
+    }
+  });
   return data as AutomationConfigs;
 }
 

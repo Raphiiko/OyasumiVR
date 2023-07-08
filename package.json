@@ -72,6 +72,7 @@
     "three": "^0.146.0",
     "tslib": "^2.4.1",
     "typescript-debounce-decorator": "^0.0.18",
+    "uplot": "^1.6.24",
     "uuid": "^9.0.0",
     "vrchat": "github:Raphiiko/vrchatapi-javascript#oyasumi-patch",
     "zone.js": "^0.13.0"

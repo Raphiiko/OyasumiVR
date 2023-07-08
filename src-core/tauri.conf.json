@@ -16,6 +16,7 @@
       "fs": {
         "readFile": true,
         "readDir": true,
+        "writeFile": true,
         "exists": true,
         "scope": ["$HOME/AppData/LocalLow/VRChat/**/*", "$RESOURCE/*"]
       },
@@ -28,7 +29,8 @@
       },
       "dialog": {
         "open": true,
-        "message": true
+        "message": true,
+        "save": true
       },
       "process": {
         "exit": true,
