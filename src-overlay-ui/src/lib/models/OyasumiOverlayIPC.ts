@@ -19,4 +19,14 @@ export interface OyasumiOverlayIPCIn {
 export interface OyasumiOverlayIPCOut {
 	setSleepMode(enabled: boolean): Promise<void>;
 	onUiReady(): Promise<void>;
+  sendEventString(eventName: string, data: string): Promise<void>;
+  sendEventBool(eventName: string, data: boolean): Promise<void>;
+  sendEventInt(eventName: string, data: number): Promise<void>;
+  sendEventDouble(eventName: string, data: number): Promise<void>;
+  sendEventJson(eventName: string, data: string): Promise<void>;
+  sendEvent(eventName: string, data: string | boolean | number): Promise<void>;
+}
+
+export interface OyasumiOverlayIPCOut_Dashboard {
+  onUiReady(): Promise<void>;
 }

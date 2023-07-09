@@ -69,7 +69,6 @@ public class OVRManager {
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
           _notificationOverlay = new NotificationOverlay();
-          OnDoublePressA(null, ETrackedControllerRole.RightHand);
         }
 
         while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))

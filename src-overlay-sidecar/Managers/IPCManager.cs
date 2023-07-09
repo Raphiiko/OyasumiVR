@@ -13,7 +13,9 @@ public class IPCManager {
   public static IPCManager Instance { get; } = new();
   private bool _initialized;
   private String? staticBaseUrl;
+  private OyasumiCore.OyasumiCoreClient? _coreClient;
   public String StaticBaseUrl => staticBaseUrl!;
+  public OyasumiCore.OyasumiCoreClient CoreClient => _coreClient!;
 
   private IPCManager()
   {
@@ -85,11 +87,11 @@ public class IPCManager {
         }
       }
 
-      using var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
-      var client = new OyasumiCore.OyasumiCoreClient(channel);
+      var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
+      _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
       try
       {
-        client.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
+        _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
         {
           Pid = (uint)Environment.ProcessId,
           GrpcPort = (uint)grpcPort,
@@ -106,7 +108,7 @@ public class IPCManager {
         }
         else
         {
-          Log.Error("Cannot inform core of overlay sidecar start");
+          Log.Error("Cannot inform core of overlay sidecar start: " + e);
         }
       }
     }).Start();

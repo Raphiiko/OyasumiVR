@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using GrcpOyasumiCore;
 using Serilog;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
@@ -56,7 +57,6 @@ public class BaseOverlay {
       }
     }
     this.overlayHandle = overlayHandle;
-    OpenVR.Overlay.SetOverlayFlag(OverlayHandle, VROverlayFlags.VisibleInDashboard, false);
     new Thread(() =>
     {
       var timer = new RefreshRateTimer();
@@ -83,6 +83,55 @@ public class BaseOverlay {
     UiReady = true;
   }
 
+  public void SendEventString(string eventName, string data)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+      StringData = data
+    };
+    IPCManager.Instance.CoreClient.SendEvent(p);
+  }
+
+  public void SendEventInt(string eventName, int data)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+      IntData = data
+    };
+    IPCManager.Instance.CoreClient.SendEvent(p);
+  }
+
+  public void SendEventDouble(string eventName, double data)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+      DoubleData = data
+    };
+    IPCManager.Instance.CoreClient.SendEvent(p);
+  }
+
+  public void SendEventBool(string eventName, bool data)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+      BoolData = data
+    };
+    IPCManager.Instance.CoreClient.SendEvent(p);
+  }
+
+  public void SendEventJson(string eventName, String data)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+      JsonData = data
+    };
+    IPCManager.Instance.CoreClient.SendEvent(p);
+  }
 
   private void UpdateFrame()
   {

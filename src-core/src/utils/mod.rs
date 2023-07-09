@@ -68,3 +68,22 @@ pub async fn cli_sidecar_overlay_mode() -> String {
     };
     mode.to_string()
 }
+
+pub async fn cli_grpc_port_core() -> u32 {
+    let default: u32 = 0;
+    let match_guard = TAURI_CLI_MATCHES.lock().await;
+    let arg = match_guard.as_ref().unwrap().args.get("grpc-port-core");
+    let port = match arg {
+        Some(args) => match args
+            .value
+            .as_str()
+            .unwrap_or(&default.to_string().as_str())
+            .parse::<u32>()
+        {
+            Ok(port) => port,
+            Err(_) => default,
+        },
+        None => default,
+    };
+    port
+}

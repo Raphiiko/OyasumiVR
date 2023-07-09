@@ -18,7 +18,10 @@
         "readDir": true,
         "writeFile": true,
         "exists": true,
-        "scope": ["$HOME/AppData/LocalLow/VRChat/**/*", "$RESOURCE/*"]
+        "scope": [
+          "$HOME/AppData/LocalLow/VRChat/**/*",
+          "$RESOURCE/*"
+        ]
       },
       "path": {
         "all": true
@@ -55,7 +58,10 @@
       "deb": {
         "depends": []
       },
-      "resources": ["./openvr_api.dll", "./resources/**/*"],
+      "resources": [
+        "./openvr_api.dll",
+        "./resources/**/*"
+      ],
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -74,7 +80,10 @@
         "signingIdentity": null
       },
       "shortDescription": "OyasumiVR",
-      "targets": ["nsis", "updater"],
+      "targets": [
+        "nsis",
+        "updater"
+      ],
       "windows": {
         "certificateThumbprint": null,
         "digestAlgorithm": "sha256",
@@ -111,7 +120,18 @@
           "longDescription": "'release' mode\n - OyasumiVR will start the bundled overlay sidecar by itself.\n\n'dev' mode:\n - OyasumiVR will not start a sidecar overlay, and assumes that you are running the sidecar yourself on the default development port.",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": ["release", "dev"]
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
+        },
+        {
+          "name": "grpc-port-core",
+          "short": "c",
+          "description": "Port to host the core module's gRPC server on (default: 0 (randomly picked))",
+          "longDescription": "By default, the port for the core module's gRPC server is randomly selected. This is to avoid conflicts with other applications that may be using the same port. If you want to specify a port, say for development purposes, you can do so with this argument.",
+          "maxValues": 1,
+          "takesValue": true
         }
       ]
     },

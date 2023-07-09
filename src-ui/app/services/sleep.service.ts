@@ -27,6 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -66,6 +67,7 @@ export class SleepService {
   ) {}
 
   async init() {
+    // Load default settings
     const settings = await firstValueFrom(this.appSettings.settings);
     let mode: boolean;
     switch (settings.sleepModeStartupBehaviour) {
@@ -80,6 +82,14 @@ export class SleepService {
         break;
     }
     this._mode.next(mode);
+    // Handle events
+    await listen<boolean>('setSleepMode', (e) => {
+      if (e.payload) {
+        this.enableSleepMode({ type: 'MANUAL' });
+      } else {
+        this.disableSleepMode({ type: 'MANUAL' });
+      }
+    });
   }
 
   forcePose(pose: SleepingPose) {

@@ -29,7 +29,10 @@ lazy_static! {
 
 pub async fn init_server() -> u16 {
     info!("[Core] Starting gRPC server");
-    let addr: SocketAddr = "127.0.0.1:0".parse().unwrap();
+    let addr: SocketAddr = format!("127.0.0.1:{}", crate::utils::cli_grpc_port_core().await)
+        .parse()
+        .unwrap();
+    info!("[Core] Starting gRPC server on {}", addr.to_string());
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(listener) => listener,
         Err(e) => {

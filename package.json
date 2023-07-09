@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "npm run tauri dev",
-    "dev-o": "npm run tauri dev -- -- -- -o dev",
+    "dev-o": "npm run tauri dev -- -- -- --overlay-sidecar-mode dev --grpc-port-core 5176",
     "start": "node scripts/pre-build.js && ng serve",
     "build": "run-s build:core",
     "build:core": "npm run tauri build",

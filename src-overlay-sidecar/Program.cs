@@ -14,18 +14,23 @@ public static class Program {
   public static void Main(string[] args)
   {
     LogConfigurator.Init();
+    var mainProcessPort = 5176;
+    var mainProcessId = 0;
 
-    // Parse args
-    if (args.Length < 1 || !int.TryParse(args[0], out var mainProcessPort))
+    if (!Debugger.IsAttached)
     {
-      Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
-      return;
-    }
+      // Parse args
+      if (args.Length < 1 || !int.TryParse(args[0], out mainProcessPort))
+      {
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        return;
+      }
 
-    if (args.Length < 2 || !int.TryParse(args[1], out var mainProcessId))
-    {
-      Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
-      return;
+      if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
+      {
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        return;
+      }
     }
 
     // Initialize
@@ -44,6 +49,7 @@ public static class Program {
       var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
       if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
     }
+
     Cef.Initialize(settings);
   }
 

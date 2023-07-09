@@ -53,6 +53,57 @@ export interface ElevatedSidecarStartArgs {
   oldPid?: number;
 }
 /**
+ * @generated from protobuf message OyasumiCore.EventParams
+ */
+export interface EventParams {
+  /**
+   * @generated from protobuf field: string event_name = 1;
+   */
+  eventName: string;
+  /**
+   * @generated from protobuf oneof: event_data
+   */
+  eventData:
+    | {
+        oneofKind: 'stringData';
+        /**
+         * @generated from protobuf field: string string_data = 2;
+         */
+        stringData: string;
+      }
+    | {
+        oneofKind: 'boolData';
+        /**
+         * @generated from protobuf field: bool bool_data = 3;
+         */
+        boolData: boolean;
+      }
+    | {
+        oneofKind: 'jsonData';
+        /**
+         * @generated from protobuf field: string json_data = 4;
+         */
+        jsonData: string;
+      }
+    | {
+        oneofKind: 'intData';
+        /**
+         * @generated from protobuf field: int32 int_data = 5;
+         */
+        intData: number;
+      }
+    | {
+        oneofKind: 'doubleData';
+        /**
+         * @generated from protobuf field: double double_data = 6;
+         */
+        doubleData: number;
+      }
+    | {
+        oneofKind: undefined;
+      };
+}
+/**
  * @generated from protobuf message OyasumiCore.Empty
  */
 export interface Empty {}
@@ -211,6 +262,130 @@ class ElevatedSidecarStartArgs$Type extends MessageType<ElevatedSidecarStartArgs
  */
 export const ElevatedSidecarStartArgs = new ElevatedSidecarStartArgs$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class EventParams$Type extends MessageType<EventParams> {
+  constructor() {
+    super('OyasumiCore.EventParams', [
+      { no: 1, name: 'event_name', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      {
+        no: 2,
+        name: 'string_data',
+        kind: 'scalar',
+        oneof: 'eventData',
+        T: 9 /*ScalarType.STRING*/,
+      },
+      { no: 3, name: 'bool_data', kind: 'scalar', oneof: 'eventData', T: 8 /*ScalarType.BOOL*/ },
+      { no: 4, name: 'json_data', kind: 'scalar', oneof: 'eventData', T: 9 /*ScalarType.STRING*/ },
+      { no: 5, name: 'int_data', kind: 'scalar', oneof: 'eventData', T: 5 /*ScalarType.INT32*/ },
+      {
+        no: 6,
+        name: 'double_data',
+        kind: 'scalar',
+        oneof: 'eventData',
+        T: 1 /*ScalarType.DOUBLE*/,
+      },
+    ]);
+  }
+  create(value?: PartialMessage<EventParams>): EventParams {
+    const message = { eventName: '', eventData: { oneofKind: undefined } };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<EventParams>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: EventParams
+  ): EventParams {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* string event_name */ 1:
+          message.eventName = reader.string();
+          break;
+        case /* string string_data */ 2:
+          message.eventData = {
+            oneofKind: 'stringData',
+            stringData: reader.string(),
+          };
+          break;
+        case /* bool bool_data */ 3:
+          message.eventData = {
+            oneofKind: 'boolData',
+            boolData: reader.bool(),
+          };
+          break;
+        case /* string json_data */ 4:
+          message.eventData = {
+            oneofKind: 'jsonData',
+            jsonData: reader.string(),
+          };
+          break;
+        case /* int32 int_data */ 5:
+          message.eventData = {
+            oneofKind: 'intData',
+            intData: reader.int32(),
+          };
+          break;
+        case /* double double_data */ 6:
+          message.eventData = {
+            oneofKind: 'doubleData',
+            doubleData: reader.double(),
+          };
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: EventParams,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* string event_name = 1; */
+    if (message.eventName !== '') writer.tag(1, WireType.LengthDelimited).string(message.eventName);
+    /* string string_data = 2; */
+    if (message.eventData.oneofKind === 'stringData')
+      writer.tag(2, WireType.LengthDelimited).string(message.eventData.stringData);
+    /* bool bool_data = 3; */
+    if (message.eventData.oneofKind === 'boolData')
+      writer.tag(3, WireType.Varint).bool(message.eventData.boolData);
+    /* string json_data = 4; */
+    if (message.eventData.oneofKind === 'jsonData')
+      writer.tag(4, WireType.LengthDelimited).string(message.eventData.jsonData);
+    /* int32 int_data = 5; */
+    if (message.eventData.oneofKind === 'intData')
+      writer.tag(5, WireType.Varint).int32(message.eventData.intData);
+    /* double double_data = 6; */
+    if (message.eventData.oneofKind === 'doubleData')
+      writer.tag(6, WireType.Bit64).double(message.eventData.doubleData);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiCore.EventParams
+ */
+export const EventParams = new EventParams$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
     super('OyasumiCore.Empty', []);
@@ -249,4 +424,5 @@ export const Empty = new Empty$Type();
 export const OyasumiCore = new ServiceType('OyasumiCore.OyasumiCore', [
   { name: 'OnOverlaySidecarStart', options: {}, I: OverlaySidecarStartArgs, O: Empty },
   { name: 'OnElevatedSidecarStart', options: {}, I: ElevatedSidecarStartArgs, O: Empty },
+  { name: 'SendEvent', options: {}, I: EventParams, O: Empty },
 ]);

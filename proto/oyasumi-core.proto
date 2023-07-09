@@ -7,6 +7,7 @@ package OyasumiCore;
 service OyasumiCore {
   rpc OnOverlaySidecarStart (OverlaySidecarStartArgs) returns (Empty) {}
   rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
+  rpc SendEvent (EventParams) returns (Empty) {}
 }
 
 message OverlaySidecarStartArgs {
@@ -22,5 +23,17 @@ message ElevatedSidecarStartArgs {
   // Set to the pid of the previous process in case the sidecar relaunched itself
   optional uint32 old_pid = 4;
 }
+
+message EventParams {
+  string event_name = 1;
+  oneof event_data {
+    string string_data = 2;
+    bool bool_data = 3;
+    string json_data = 4;
+    int32 int_data = 5;
+    double double_data = 6;
+  }
+}
+
 
 message Empty {}

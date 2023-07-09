@@ -1,5 +1,6 @@
 use super::models::oyasumi_core::{
-    oyasumi_core_server::OyasumiCore, ElevatedSidecarStartArgs, Empty, OverlaySidecarStartArgs,
+    event_params::EventData, oyasumi_core_server::OyasumiCore, ElevatedSidecarStartArgs, Empty,
+    EventParams, OverlaySidecarStartArgs,
 };
 use log::error;
 use tonic::{Request, Response, Status};
@@ -33,5 +34,31 @@ impl OyasumiCore for OyasumiCoreServerImpl {
                 Err(Status::internal("Failed to handle elevated sidecar start"))
             }
         }
+    }
+
+    async fn send_event(&self, request: Request<EventParams>) -> Result<Response<Empty>, Status> {
+        let request = request.get_ref();
+
+        if let Some(data) = &request.event_data {
+            match data {
+                EventData::StringData(d) => {
+                    crate::utils::send_event(request.event_name.as_str(), d.clone()).await;
+                }
+                EventData::BoolData(d) => {
+                    crate::utils::send_event(request.event_name.as_str(), *d).await;
+                }
+                EventData::JsonData(d) => {
+                    crate::utils::send_event(request.event_name.as_str(), d.clone()).await;
+                }
+                EventData::IntData(d) => {
+                    crate::utils::send_event(request.event_name.as_str(), *d as f64).await;
+                }
+                EventData::DoubleData(d) => {
+                    crate::utils::send_event(request.event_name.as_str(), *d).await;
+                }
+            }
+        }
+
+        Ok(Response::new(Empty {}))
     }
 }

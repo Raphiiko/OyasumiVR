@@ -4,6 +4,7 @@
 import type { RpcTransport } from '@protobuf-ts/runtime-rpc';
 import type { ServiceInfo } from '@protobuf-ts/runtime-rpc';
 import { OyasumiCore } from './oyasumi-core_pb';
+import type { EventParams } from './oyasumi-core_pb';
 import type { ElevatedSidecarStartArgs } from './oyasumi-core_pb';
 import { stackIntercept } from '@protobuf-ts/runtime-rpc';
 import type { Empty } from './oyasumi-core_pb';
@@ -28,6 +29,10 @@ export interface IOyasumiCoreClient {
     input: ElevatedSidecarStartArgs,
     options?: RpcOptions
   ): UnaryCall<ElevatedSidecarStartArgs, Empty>;
+  /**
+   * @generated from protobuf rpc: SendEvent(OyasumiCore.EventParams) returns (OyasumiCore.Empty);
+   */
+  sendEvent(input: EventParams, options?: RpcOptions): UnaryCall<EventParams, Empty>;
 }
 /**
  * @generated from protobuf service OyasumiCore.OyasumiCore
@@ -70,5 +75,13 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
       opt,
       input
     );
+  }
+  /**
+   * @generated from protobuf rpc: SendEvent(OyasumiCore.EventParams) returns (OyasumiCore.Empty);
+   */
+  sendEvent(input: EventParams, options?: RpcOptions): UnaryCall<EventParams, Empty> {
+    const method = this.methods[2],
+      opt = this._transport.mergeOptions(options);
+    return stackIntercept<EventParams, Empty>('unary', this._transport, method, opt, input);
   }
 }

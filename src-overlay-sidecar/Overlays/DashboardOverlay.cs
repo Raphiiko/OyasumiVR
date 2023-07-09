@@ -24,6 +24,7 @@ public class DashboardOverlay : BaseOverlay {
     browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
     StateManager.Instance.StateChanged += OnStateChanged;
+    SyncState();
   }
 
   public void Dispose()
@@ -76,10 +77,6 @@ public class DashboardOverlay : BaseOverlay {
   public void ShowToolTip(string? text)
   {
     _tooltipOverlay.SetText(text);
-  }
-
-  public void SetSleepMode(bool enabled)
-  {
   }
 
   //
