@@ -134,7 +134,6 @@
         },
         "sensitivity": {
           "title": "감도 수준",
-          "description": "감도 수준이 높을수록 수면 모드가 실행될 가능성이 줄어들어요.",
           "presets": {
             "LOWEST": "가장 낮음",
             "LOW": "낮음",
@@ -754,7 +753,7 @@
       "content": "수면 모드가 비활성화되었어요."
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "VRChat 스테이터스가 '{{newStatus}}'로 설정되었어요." 
+      "content": "VRChat 스테이터스가 '{{newStatus}}'로 설정되었어요."
     },
     "autoAcceptedInviteRequest": {
       "content": "{{username}}의 초대 요청을 자동으로 수락했어요."
