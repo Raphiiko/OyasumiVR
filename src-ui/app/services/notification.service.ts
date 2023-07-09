@@ -49,8 +49,8 @@ export class NotificationService {
       }
     } catch (e) {
       warn('[Notification] Failed to send notification: ' + e);
-      return null;
     }
+    return null;
   }
 
   async clearNotification(notificationId: string) {
