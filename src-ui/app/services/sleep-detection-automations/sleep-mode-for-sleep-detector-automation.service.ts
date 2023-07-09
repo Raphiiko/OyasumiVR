@@ -13,6 +13,17 @@ import { NotificationService } from '../notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from '../event-log.service';
 
+export type SleepDetectorStateReportHandlingResult =
+  | 'AUTOMATION_DISABLED'
+  | 'SLEEP_MODE_ALREADY_ENABLED'
+  | 'NOT_RUNNING_LONG_ENOUGH'
+  | 'TOO_MUCH_MOVEMENT'
+  | 'RATE_LIMITED'
+  | 'SLEEP_MODE_DISABLED_TOO_RECENTLY'
+  | 'SLEEP_CHECK_ALREADY_IN_PROGRESS'
+  | 'SLEEP_CHECK'
+  | 'SLEEP_MODE_ENABLED';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -26,9 +37,13 @@ export class SleepModeForSleepDetectorAutomationService {
   );
   private _lastStateReport: BehaviorSubject<SleepDetectorStateReport | null> =
     new BehaviorSubject<SleepDetectorStateReport | null>(null);
+  private _lastStateReportHandlingResult: BehaviorSubject<SleepDetectorStateReportHandlingResult | null> =
+    new BehaviorSubject<SleepDetectorStateReportHandlingResult | null>(null);
 
   public lastStateReport: Observable<SleepDetectorStateReport | null> =
     this._lastStateReport.asObservable();
+  public lastStateReportHandlingResult: Observable<SleepDetectorStateReportHandlingResult | null> =
+    this._lastStateReportHandlingResult.asObservable();
 
   private calibrationFactors: { [key: string]: number } = {
     LOWEST: 100,
@@ -54,9 +69,11 @@ export class SleepModeForSleepDetectorAutomationService {
       if (!mode) this.lastSleepModeDisable = Date.now();
     });
     new Promise((resolve) => setTimeout(resolve, 15000)).then(async () => {
-      await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', (event) =>
-        this.handleStateReportForEnable(event.payload)
-      );
+      await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', async (event) => {
+        this._lastStateReport.next(event.payload);
+        const result = await this.handleStateReportForEnable(event.payload);
+        this._lastStateReportHandlingResult.next(result);
+      });
       await listen<{ gesture: string }>('GESTURE_DETECTED', async (event) => {
         if (event.payload.gesture !== 'head_shake') return;
         if (this.sleepEnableTimeoutId) {
@@ -78,28 +95,29 @@ export class SleepModeForSleepDetectorAutomationService {
     });
   }
 
-  async handleStateReportForEnable(report: SleepDetectorStateReport) {
-    this._lastStateReport.next(report);
+  async handleStateReportForEnable(
+    report: SleepDetectorStateReport
+  ): Promise<SleepDetectorStateReportHandlingResult> {
     // Stop here if the automation is disabled
-    if (!this.enableConfig.enabled) return;
+    if (!this.enableConfig.enabled) return 'AUTOMATION_DISABLED';
     // Stop here if the sleep mode is already enabled
-    if (await firstValueFrom(this.sleep.mode)) return;
+    if (await firstValueFrom(this.sleep.mode)) return 'SLEEP_MODE_ALREADY_ENABLED';
     // Stop here if the sleep detection has been running for less than the detection window
     if (Date.now() - report.startTime < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
-      return;
+      return 'NOT_RUNNING_LONG_ENOUGH';
     // Stop here if the positional movement was too high in the past 15 minutes
     const threshold =
       this.enableConfig.calibrationValue * this.calibrationFactors[this.enableConfig.sensitivity];
-    if (report.distanceInLast15Minutes > threshold) return;
+    if (report.distanceInLast15Minutes > threshold) return 'TOO_MUCH_MOVEMENT';
     // Stop here if the last time we tried enabling was less than the detection window
     if (Date.now() - this.lastEnableAttempt < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
-      return;
+      return 'RATE_LIMITED';
     // Stop here if the last time we disabled sleep mode was less than the detection window
     if (
       Date.now() - this.lastSleepModeDisable <
       1000 * 60 * this.enableConfig.detectionWindowMinutes
     )
-      return;
+      return 'SLEEP_MODE_DISABLED_TOO_RECENTLY';
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.
@@ -108,7 +126,7 @@ export class SleepModeForSleepDetectorAutomationService {
         this.translate.instant('notifications.sleepCheck.content'),
         8000
       );
-      if (this.sleepEnableTimeoutId) return;
+      if (this.sleepEnableTimeoutId) return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';
       this.sleepEnableTimeoutId = setTimeout(async () => {
         this.sleepEnableTimeoutId = null;
         await this.sleep.enableSleepMode({
@@ -116,6 +134,7 @@ export class SleepModeForSleepDetectorAutomationService {
           automation: 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
         });
       }, 20000) as unknown as number;
+      return 'SLEEP_CHECK';
     }
     // Otherwise, just enable sleep mode straight away.
     else {
@@ -123,10 +142,9 @@ export class SleepModeForSleepDetectorAutomationService {
         type: 'AUTOMATION',
         automation: 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
       });
+      return 'SLEEP_MODE_ENABLED';
     }
   }
-
-  async test() {}
 
   async calibrate(): Promise<number> {
     let distanceInLast10Seconds = -1;

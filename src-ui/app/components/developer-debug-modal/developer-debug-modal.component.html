@@ -19,6 +19,16 @@
         <div class="timeseries-chart" #sleepDetectionTimeSeriesChart>
         </div>
       </div>
+      <div class="state-handling-timeline">
+        <h3>Report Handling Timeline</h3>
+        <div class="state-handling-timeline-entry"
+             *ngFor="let entry of debug.sleepDetectionDebugger.reportHandlingData">
+          <div class="left">
+            <pre>{{entry.result}}</pre>
+          </div>
+          <div class="right">{{entry.firstSeen | localizedDate : 'HH:mm:ss'}}&nbsp;|&nbsp;x{{entry.amountSeen}}&nbsp;|&nbsp;{{entry.lastSeen | localizedDate : 'HH:mm:ss'}}</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
