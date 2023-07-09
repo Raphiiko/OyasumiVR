@@ -108,8 +108,12 @@ class SleepDetectionDebugger {
     };
     try {
       await writeTextFile(filePath, JSON.stringify(data));
+      await message('Sleep data has been exported', 'Sleep Data Exported');
     } catch (e) {
-      await message('Sleep data has been exported', 'File Saved');
+      await message(
+        'An error occurred and the sleep data could not be exported: ' + e,
+        'Sleep data could not be exported'
+      );
     }
   }
 }
