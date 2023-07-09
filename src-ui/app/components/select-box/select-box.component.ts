@@ -23,7 +23,7 @@ export class SelectBoxComponent implements OnInit {
   @Input() placeholder?: string;
   @Input() items: SelectBoxItem[] = [];
   @Input() showPlaceholderInDropdown = true;
-  @Input() selected?: SelectBoxItem;
+  @Input() selected?: SelectBoxItem | undefined;
   @Output() selectedChange: EventEmitter<SelectBoxItem | undefined> = new EventEmitter();
   collapsed = true;
 

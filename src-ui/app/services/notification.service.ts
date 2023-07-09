@@ -37,14 +37,19 @@ export class NotificationService {
   }
 
   public async send(content: string, duration = 3000): Promise<string | null> {
-    const settings = await firstValueFrom(this.appSettingsService.settings);
-    switch (settings.notificationProvider) {
-      case 'OYASUMIVR':
-        return await this.sendOyasumiNotification(content, duration);
-      case 'XSOVERLAY':
-        return await this.sendXSOverlayNotification('OyasumiVR', content, true, duration / 1000);
-      case 'DESKTOP':
-        return await this.sendDesktopNotification('OyasumiVR', content);
+    try {
+      const settings = await firstValueFrom(this.appSettingsService.settings);
+      switch (settings.notificationProvider) {
+        case 'OYASUMIVR':
+          return await this.sendOyasumiNotification(content, duration);
+        case 'XSOVERLAY':
+          return await this.sendXSOverlayNotification('OyasumiVR', content, true, duration / 1000);
+        case 'DESKTOP':
+          return await this.sendDesktopNotification('OyasumiVR', content);
+      }
+    } catch (e) {
+      warn('[Notification] Failed to send notification: ' + e);
+      return null;
     }
   }
 

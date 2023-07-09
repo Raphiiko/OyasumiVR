@@ -7,7 +7,7 @@ import { AlignedData } from 'uplot';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as uPlot from 'uplot';
 import { AutomationConfigService } from '../../services/automation-config.service';
-import { firstValueFrom, map } from 'rxjs';
+import { combineLatest, firstValueFrom, interval, map } from 'rxjs';
 
 @Component({
   selector: 'app-debug-modal',
@@ -44,9 +44,13 @@ export class DeveloperDebugModalComponent
     super();
   }
 
+  asSelectBoxItem(item: ({ interval?: number } & SelectBoxItem) | undefined): SelectBoxItem {
+    return item!;
+  }
+
   ngOnInit() {
     console.log('Developer debug modal opened');
-    this.debug.sleepDetectionDebugger.update
+    combineLatest([this.debug.sleepDetectionDebugger.update, interval(2000)])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async () => {
         if (!this.sleepDetectionTimeSeriesPlot) return;

@@ -66,8 +66,7 @@ readonly = "0.2"
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [ "fs-write-file", "dialog-save",
-  "cli",
+features = [ "cli", "fs-write-file", "dialog-save",
   "path-all",
   "process-relaunch",
   "system-tray",
