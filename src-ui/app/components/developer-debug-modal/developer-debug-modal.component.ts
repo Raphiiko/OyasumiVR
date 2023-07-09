@@ -44,6 +44,10 @@ export class DeveloperDebugModalComponent
     super();
   }
 
+  asSelectBoxItem(item: ({ interval?: number } & SelectBoxItem) | undefined): SelectBoxItem {
+    return item!;
+  }
+
   ngOnInit() {
     console.log('Developer debug modal opened');
     combineLatest([this.debug.sleepDetectionDebugger.update, interval(2000)])
