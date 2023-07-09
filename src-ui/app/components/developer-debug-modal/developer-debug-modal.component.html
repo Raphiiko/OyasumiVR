@@ -26,7 +26,15 @@
           <div class="left">
             <pre>{{entry.result}}</pre>
           </div>
-          <div class="right">{{entry.firstSeen | localizedDate : 'HH:mm:ss'}}&nbsp;|&nbsp;x{{entry.amountSeen}}&nbsp;|&nbsp;{{entry.lastSeen | localizedDate : 'HH:mm:ss'}}</div>
+          <div class="right">
+            <span>{{entry.amountSeen}} Reports</span>
+            <span>&nbsp;|&nbsp;</span>
+            <span>First: {{entry.firstSeen | localizedDate : 'HH:mm:ss'}}</span>
+            <span>&nbsp;-&nbsp;</span>
+            <span>Last: {{entry.lastSeen | localizedDate : 'HH:mm:ss'}}</span>
+            <span>&nbsp;</span>
+            <span>({{(entry.lastSeen - entry.firstSeen) | amDuration:'milliseconds'}})</span>
+          </div>
         </div>
       </div>
     </div>

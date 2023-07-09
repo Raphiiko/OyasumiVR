@@ -127,6 +127,7 @@ import { ImageBrightnessControlService } from './services/brightness-control/ima
 import { ImageBrightnessControlAutomationService } from './services/brightness-control/image-brightness/image-brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug.service';
+import { MomentModule } from 'ngx-moment';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -212,6 +213,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
+    MomentModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
       loader: {
