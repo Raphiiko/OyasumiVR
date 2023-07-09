@@ -88,11 +88,9 @@ export class SleepModeForSleepDetectorAutomationService {
     if (Date.now() - report.startTime < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
       return;
     // Stop here if the positional movement was too high in the past 15 minutes
-    if (
-      report.distanceInLast15Minutes >
-      this.enableConfig.calibrationValue * this.calibrationFactors[this.enableConfig.sensitivity]
-    )
-      return;
+    const threshold =
+      this.enableConfig.calibrationValue * this.calibrationFactors[this.enableConfig.sensitivity];
+    if (report.distanceInLast15Minutes > threshold) return;
     // Stop here if the last time we tried enabling was less than the detection window
     if (Date.now() - this.lastEnableAttempt < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
       return;

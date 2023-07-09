@@ -134,7 +134,6 @@
         },
         "sensitivity": {
           "title": "靈敏度",
-          "description": "OyasumiVR 對動作偵測靈敏度",
           "presets": {
             "LOWEST": "最低",
             "LOW": "低",

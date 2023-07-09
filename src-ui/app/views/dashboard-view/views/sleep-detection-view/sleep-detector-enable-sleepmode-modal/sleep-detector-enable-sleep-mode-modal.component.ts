@@ -55,7 +55,7 @@ export class SleepDetectorEnableSleepModeModalComponent
       label: 'sleep-detection.modals.enableForSleepDetector.sensitivity.presets.HIGHEST',
     },
   ];
-  sensitivityOption?: SelectBoxItem;
+  sensitivityOption: SelectBoxItem | undefined;
 
   automationConfigs?: AutomationConfigs;
 

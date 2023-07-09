@@ -134,7 +134,7 @@
         },
         "sensitivity": {
           "title": "Sensitivity",
-          "description": "With higher sensitivity levels sleep mode is less likely to trigger.",
+          "description": "The higher the sensitivity, the more likely that OyasumiVR will detect you being asleep.",
           "presets": {
             "LOWEST": "Lowest",
             "LOW": "Low",
