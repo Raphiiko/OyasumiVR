@@ -22,6 +22,8 @@ export type SleepDetectorStateReportHandlingResult =
   | 'SLEEP_MODE_DISABLED_TOO_RECENTLY'
   | 'SLEEP_CHECK_ALREADY_IN_PROGRESS'
   | 'SLEEP_CHECK'
+  | 'SLEEP_CHECK_USER_AWAKE'
+  | 'SLEEP_CHECK_USER_ASLEEP'
   | 'SLEEP_MODE_ENABLED';
 
 @Injectable({
@@ -82,6 +84,7 @@ export class SleepModeForSleepDetectorAutomationService {
           this.eventLog.logEvent({
             type: 'sleepDetectorEnableCancelled',
           });
+          this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_AWAKE');
           await this.notifications.play_sound('bell');
           await this.notifications.send(
             this.translate.instant('notifications.sleepCheckCancel.content')
@@ -129,10 +132,12 @@ export class SleepModeForSleepDetectorAutomationService {
       if (this.sleepEnableTimeoutId) return 'SLEEP_CHECK_ALREADY_IN_PROGRESS';
       this.sleepEnableTimeoutId = setTimeout(async () => {
         this.sleepEnableTimeoutId = null;
+        this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_ASLEEP');
         await this.sleep.enableSleepMode({
           type: 'AUTOMATION',
           automation: 'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
         });
+        this._lastStateReportHandlingResult.next('SLEEP_MODE_ENABLED');
       }, 20000) as unknown as number;
       return 'SLEEP_CHECK';
     }
