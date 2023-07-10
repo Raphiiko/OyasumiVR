@@ -125,6 +125,7 @@ public class OVRManager {
 
   private void OnDoublePressA(object? sender, ETrackedControllerRole role)
   {
+    if (role != ETrackedControllerRole.RightHand) return;
     if (_dashboardOverlay == null)
     {
       var o = new DashboardOverlay();
