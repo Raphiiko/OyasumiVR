@@ -41,6 +41,7 @@ export class SleepService {
   );
   private poseDetector: SleepingPoseDetector = new SleepingPoseDetector();
   private forcePose$: Subject<SleepingPose> = new Subject<SleepingPose>();
+  private lastNotificationId?: string | null;
 
   public pose: Observable<SleepingPose> = merge(
     combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
@@ -112,7 +113,9 @@ export class SleepService {
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
     await this.store.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
-      await this.notifications.send(
+      if (this.lastNotificationId)
+        await this.notifications.clearNotification(this.lastNotificationId);
+      this.lastNotificationId = await this.notifications.send(
         this.translate.instant('notifications.sleepModeEnabled.content')
       );
     }
@@ -130,7 +133,9 @@ export class SleepService {
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
     await this.store.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
-      await this.notifications.send(
+      if (this.lastNotificationId)
+        await this.notifications.clearNotification(this.lastNotificationId);
+      this.lastNotificationId = await this.notifications.send(
         this.translate.instant('notifications.sleepModeDisabled.content')
       );
     }
