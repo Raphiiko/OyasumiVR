@@ -122,7 +122,7 @@ public class OverlayPointer {
         {
           foreach (var overlay in _overlays)
           {
-            var controllerTransform = controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
+            var controllerTransform = Matrix4x4.CreateRotationX(345f) * controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
             var intersectionParams = new VROverlayIntersectionParams_t()
             {
               eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding,
