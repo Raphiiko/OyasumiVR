@@ -14,64 +14,36 @@ import {
 import { AutomationConfigs } from '../models/automations';
 import { TranslateService } from '@ngx-translate/core';
 import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
-import { AppSettings } from '../models/settings';
 import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class IPCStateSyncService {
-  private state = new BehaviorSubject<OyasumiSidecarState>(
-    {
-      sleepMode: false,
-      vrcStatus: VrcStatus.Offline,
-      vrcUsername: '',
-      automations: {
-        autoAcceptInviteRequests: {
-          enabled: false,
-          mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist,
-          playerCount: 0,
-        },
-        changeStatusBasedOnPlayerCount: {
-          enabled: false,
-          threshold: 1,
-        },
-        sleepingAnimations: {
-          enabled: false,
-          presetName: '',
-        },
-        shutdownAutomations: {
-          enabled: false,
-          timeDelay: 1000 * 60 * 30,
-        },
+  private state = new BehaviorSubject<OyasumiSidecarState>({
+    sleepMode: false,
+    vrcStatus: VrcStatus.Offline,
+    vrcUsername: '',
+    automations: {
+      autoAcceptInviteRequests: {
+        enabled: false,
+        mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist,
+        playerCount: 0,
       },
-    }
-    // OyasumiSidecarState.create({
-    //   sleepMode: false,
-    //   vrcStatus: VrcStatus.Offline,
-    //   vrcUsername: '',
-    //   automations: OyasumiSidecarAutomationsState.create({
-    //     autoAcceptInviteRequests: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests.create({
-    //       enabled: false,
-    //       mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist,
-    //       playerCount: 0,
-    //     }),
-    //     changeStatusBasedOnPlayerCount:
-    //       OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount.create({
-    //         enabled: false,
-    //         threshold: 1,
-    //       }),
-    //     sleepingAnimations: OyasumiSidecarAutomationsState_SleepingAnimations.create({
-    //       enabled: false,
-    //       presetName: '',
-    //     }),
-    //     shutdownAutomations: OyasumiSidecarAutomationsState_ShutdownAutomations.create({
-    //       enabled: false,
-    //       timeDelay: 1000 * 60 * 30,
-    //     }),
-    //   }),
-    // })
-  );
+      changeStatusBasedOnPlayerCount: {
+        enabled: false,
+        threshold: 1,
+      },
+      sleepingAnimations: {
+        enabled: false,
+        presetName: '',
+      },
+      shutdownAutomations: {
+        enabled: false,
+        timeDelay: 1000 * 60 * 30,
+      },
+    },
+  });
 
   constructor(
     private sleepService: SleepService,
@@ -130,7 +102,7 @@ export class IPCStateSyncService {
       .subscribe((configs) => {
         const state = cloneDeep(this.state.value);
         {
-          let automation = state.automations!.autoAcceptInviteRequests!;
+          const automation = state.automations!.autoAcceptInviteRequests!;
           automation.enabled = configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled;
           automation.mode = this.mapAutoAcceptInviteRequestsListMode(
             configs.AUTO_ACCEPT_INVITE_REQUESTS.listMode
@@ -138,12 +110,12 @@ export class IPCStateSyncService {
           automation.playerCount = configs.AUTO_ACCEPT_INVITE_REQUESTS.playerIds.length;
         }
         {
-          let automation = state.automations!.changeStatusBasedOnPlayerCount!;
+          const automation = state.automations!.changeStatusBasedOnPlayerCount!;
           automation.enabled = configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled;
           automation.threshold = configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.limit;
         }
         {
-          let automation = state.automations!.sleepingAnimations!;
+          const automation = state.automations!.sleepingAnimations!;
           automation.enabled = configs.SLEEPING_ANIMATIONS.enabled;
           if (
             configs.SLEEPING_ANIMATIONS.preset &&
@@ -158,7 +130,7 @@ export class IPCStateSyncService {
           }
         }
         {
-          let automation = state.automations!.shutdownAutomations!;
+          const automation = state.automations!.shutdownAutomations!;
           automation.enabled = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep;
           automation.timeDelay = configs.SHUTDOWN_AUTOMATIONS.sleepDuration;
         }
