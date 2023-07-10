@@ -1,9 +1,9 @@
 <script lang="ts">
-	import Notification from '$lib/components/Notification.svelte';
-	import type { AddNotificationParams } from '$lib/models/AddNotificationParams';
-	import ipcService from '$lib/services/ipc.service';
+  import Notification from "$lib/components/Notification.svelte";
+  import type { AddNotificationParams } from "$lib/models/AddNotificationParams";
+  import ipcService from "$lib/services/ipc.service";
 
-	let { addNotification, clearNotification } = ipcService.events;
+  let { addNotification, clearNotification } = ipcService.events;
 
 	let notifications: AddNotificationParams[] = [];
 	let activeNotification: AddNotificationParams | null = null;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
-import { BehaviorSubject, combineLatest, filter, map, pairwise } from 'rxjs';
+import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, pairwise } from 'rxjs';
 import { cloneDeep, isEqual } from 'lodash';
 import { UserStatus } from 'vrchat';
 import { IPCService } from './ipc.service';
@@ -14,6 +14,8 @@ import {
 import { AutomationConfigs } from '../models/automations';
 import { TranslateService } from '@ngx-translate/core';
 import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
+import { AppSettings } from '../models/settings';
+import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -76,7 +78,8 @@ export class IPCStateSyncService {
     private vrchatService: VRChatService,
     private ipcService: IPCService,
     private automationConfig: AutomationConfigService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private appSettings: AppSettingsService
   ) {}
 
   async init() {
@@ -96,6 +99,18 @@ export class IPCStateSyncService {
         vrcStatus: this.mapVRCStatus(user?.status),
       });
     });
+    // Update the state when the locale changes
+    this.appSettings.settings
+      .pipe(
+        map((settings) => settings.userLanguage),
+        distinctUntilChanged()
+      )
+      .subscribe((locale) => {
+        this.state.next({
+          ...cloneDeep(this.state.value),
+          locale,
+        });
+      });
     // Update the state when the automation configs change
     this.automationConfig.configs
       .pipe(
@@ -130,15 +145,16 @@ export class IPCStateSyncService {
         {
           let automation = state.automations!.sleepingAnimations!;
           automation.enabled = configs.SLEEPING_ANIMATIONS.enabled;
-          if (configs.SLEEPING_ANIMATIONS.preset) {
+          if (
+            configs.SLEEPING_ANIMATIONS.preset &&
+            configs.SLEEPING_ANIMATIONS.preset !== 'CUSTOM'
+          ) {
             const preset = SLEEPING_ANIMATION_PRESETS.find(
               (p) => p.id === configs.SLEEPING_ANIMATIONS.preset
             );
             automation.presetName = preset ? preset.name + ' ' + preset.versions : 'Unknown Preset';
           } else {
-            automation.presetName = this.translate.instant(
-              'oscAutomations.sleepingAnimations.customPreset'
-            );
+            automation.presetName = '';
           }
         }
         {

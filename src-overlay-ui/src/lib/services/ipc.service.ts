@@ -6,9 +6,10 @@ import { DEFAULT_OYASUMI_STATE } from "$lib/models/OyasumiState";
 import { cloneDeep, mergeWith } from "lodash";
 import {
   OyasumiSidecarAutomationsState,
-  OyasumiSidecarState
+  OyasumiSidecarState,
+  VrcStatus
 } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
-import { VrcStatus } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
+import { loadTranslations } from "$lib/translations";
 
 if (browser && !window.OyasumiIPCIn)
   window.OyasumiIPCIn = Object.assign(window.OyasumiIPCIn || {}, {});
@@ -20,6 +21,10 @@ class IPCService {
     [this.state],
     ([state]) => state.vrcUsername !== null && state.vrcStatus !== VrcStatus.Offline
   );
+  locale = derived(
+    [this.state],
+    ([state]) => state.locale
+  );
   events = {
     addNotification: writable<AddNotificationParams | null>(null),
     clearNotification: writable<string | null>(null),
@@ -29,6 +34,11 @@ class IPCService {
   async init() {
     if (!browser || !window.CefSharp || this.initialized) return;
     this.initialized = true;
+    // Update the locale
+    this.locale.subscribe(async (locale) => {
+      await loadTranslations(locale ?? "en", "");
+    });
+    // Define IPC functions
     await window.CefSharp.BindObjectAsync("OyasumiIPCOut");
     window.OyasumiIPCOut.sendEvent = async (eventName: string, data: string | boolean | number) => {
       if (typeof data === "string") await window.OyasumiIPCOut.sendEventString(eventName, data);

@@ -26,5 +26,6 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
       enabled: false,
       timeDelay: 0
     }
-  }
+  },
+  locale: "en"
 };

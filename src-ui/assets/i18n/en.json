@@ -1179,5 +1179,56 @@
       "title": "Shutting Down",
       "cancel": "Cancel Now"
     }
+  },
+  "overlay": {
+    "dashboard": {
+      "overview": {
+        "sleepMode": "Sleep Mode",
+        "active": "Active",
+        "inactive": "Inactive",
+        "tooltip": {
+          "automations": "Automations",
+          "deviceControl": "Device Control",
+          "shutdown": "Shutdown Sequence"
+        }
+      },
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "title": "Auto Accept Invite Requests",
+          "subtitle": {
+            "singular": "{{mode}}: {{playerCount}} friend",
+            "plural": "{{mode}}: {{playerCount}} friends"
+          },
+          "mode": {
+            "Disabled": "For everyone",
+            "Whitelist": "Whitelist",
+            "Blacklist": "Blacklist"
+          }
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "title": "Status Automations",
+          "subtitle": {
+            "singular": "Max {{threshold}} player",
+            "plural": "Max {{threshold}} players"
+          }
+        },
+        "sleepingAnimations": {
+          "title": "Sleeping Animations"
+        },
+        "shutdownAutomations": {
+          "title": "Automatic Shutdown",
+          "subtitle": "When sleeping for {{time}}",
+          "seconds": {
+            "singular": "{{seconds}} second",
+            "plural": "{{seconds}} seconds"
+          },
+          "minutes": {
+            "singular": "{{minutes}} minute",
+            "plural": "{{minutes}} minutes"
+          }
+        },
+        "title": "Automation Settings"
+      }
+    }
   }
 }

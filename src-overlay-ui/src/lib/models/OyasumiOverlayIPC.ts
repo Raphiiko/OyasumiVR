@@ -1,5 +1,4 @@
 import type { AddNotificationParams } from "./AddNotificationParams";
-import type { OyasumiSidecarState } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
 
 export interface OyasumiOverlayIPCIn {
   // Dashboard Specific

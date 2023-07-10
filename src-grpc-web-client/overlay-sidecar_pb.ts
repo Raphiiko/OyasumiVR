@@ -78,6 +78,10 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations = 4;
    */
   automations?: OyasumiSidecarAutomationsState;
+  /**
+   * @generated from protobuf field: optional string locale = 5;
+   */
+  locale?: string;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState
@@ -501,6 +505,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       },
       { no: 3, name: 'vrc_username', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
       { no: 4, name: 'automations', kind: 'message', T: () => OyasumiSidecarAutomationsState },
+      { no: 5, name: 'locale', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -536,6 +541,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
             options,
             message.automations
           );
+          break;
+        case /* optional string locale */ 5:
+          message.locale = reader.string();
           break;
         default:
           let u = options.readUnknownField;
@@ -575,6 +583,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
         writer.tag(4, WireType.LengthDelimited).fork(),
         options
       ).join();
+    /* optional string locale = 5; */
+    if (message.locale !== undefined)
+      writer.tag(5, WireType.LengthDelimited).string(message.locale);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

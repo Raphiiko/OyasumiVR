@@ -4,7 +4,7 @@
   import { blur, scale } from "svelte/transition";
   import VisualToggle from "$lib/components/VisualToggle.svelte";
   import ipcService from "$lib/services/ipc.service";
-  import { derived } from "svelte/store";
+  import { derived, get } from "svelte/store";
   import type {
     OyasumiSidecarAutomationsState,
     OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
@@ -15,6 +15,10 @@
     OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
     OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
   } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
+  import { t } from "$lib/translations";
+
+  $: _t = $t;
+
 
   const { state } = ipcService;
 
@@ -23,54 +27,55 @@
     data: e[1]
   })));
 
-  function getTitle(automationId: keyof OyasumiSidecarAutomationsState): string {
-    const m: { [k: keyof OyasumiSidecarAutomationsState]: string } = {
-      "autoAcceptInviteRequests": "Auto Accept Invite Requests",
-      "changeStatusBasedOnPlayerCount": "Status Automations",
-      "sleepingAnimations": "Sleeping Animations",
-      "shutdownAutomations": "Automatic Shutdown"
-    };
-    return m[automationId] ?? "Unknown Automation";
-  }
+  $: getTitle = function(automationId: keyof OyasumiSidecarAutomationsState): string {
+    return _t(`t.overlay.dashboard.automations.${automationId}.title`);
+  };
 
-  function getSubTitle<T = keyof OyasumiSidecarAutomationsState>(automationId: T, automation: OyasumiSidecarAutomationsState[T]): string | null {
+  $: getSubTitle = function <T = keyof OyasumiSidecarAutomationsState>(automationId: T, automation: OyasumiSidecarAutomationsState[T]): string | null {
     switch (automationId) {
       case "autoAcceptInviteRequests": {
         let a = automation as OyasumiSidecarAutomationsState_AutoAcceptInviteRequests;
-        const mode = (() => {
+        const { mode, isDisabled } = (() => {
           switch (a.mode!) {
             case OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Disabled:
-              return "Open to";
+              return {
+                mode: _t(`t.overlay.dashboard.automations.autoAcceptInviteRequests.mode.Disabled`),
+                isDisabled: true
+              };
             case OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist:
-              return "Whitelist";
+              return { mode: _t(`t.overlay.dashboard.automations.autoAcceptInviteRequests.mode.Whitelist`) };
             case OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Blacklist:
-              return "Blacklist";
+              return { mode: _t(`t.overlay.dashboard.automations.autoAcceptInviteRequests.mode.Blacklist`) };
           }
         })();
-        return `${mode}: ${a.playerCount} friend(s)`;
+        if (isDisabled) return mode;
+        return _t(`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle.${a.playerCount === 1 ? "singular" : "plural"}`, {
+          mode,
+          playerCount: a.playerCount
+        });
       }
       case "changeStatusBasedOnPlayerCount": {
         let a = automation as OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount;
-        return `Max ${a.threshold} player(s)`;
+        return _t(`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle.${a.threshold === 1 ? "singular" : "plural"}`, { threshold: a.threshold });
       }
       case "sleepingAnimations": {
         let a = automation as OyasumiSidecarAutomationsState_SleepingAnimations;
-        return a.presetName ?? "";
+        return a.presetName ? a.presetName : _t(`t.oscAutomations.sleepingAnimations.customPreset`);
       }
       case "shutdownAutomations": {
         let a = automation as OyasumiSidecarAutomationsState_ShutdownAutomations;
         let seconds = Math.floor(a.timeDelay / 1000);
         let time = "";
         if (seconds < 60) {
-          time = `${seconds} second(s)`;
+          time = _t(`t.overlay.dashboard.automations.shutdownAutomations.seconds.${seconds === 1 ? "singular" : "plural"}`, { seconds });
         } else {
           let minutes = Math.round(seconds / 60);
-          time = `${minutes} minute(s)`;
+          time = _t(`t.overlay.dashboard.automations.shutdownAutomations.minutes.${minutes === 1 ? "singular" : "plural"}`, { minutes });
         }
-        return `When sleeping for ${time}`;
+        return _t(`t.overlay.dashboard.automations.shutdownAutomations.subtitle`, { time });
       }
     }
-  }
+  };
 
   function getIcon<T = keyof OyasumiSidecarAutomationsState>(automationId: T): string {
     const m: { [k: keyof OyasumiSidecarAutomationsState]: string } = {
@@ -94,7 +99,8 @@
     <div class="w-full relative h-14">
       <div
         class="absolute top-0 left-0 w-full h-full p-4 text-white text-3xl drop-shadow-[0_0_16px_rgba(0,0,0,80%)] flex flex-row items-center justify-center">
-        <span class="drop-shadow-[0_0_8px_rgba(255,255,255,80%)]">Automation Toggles</span>
+        <span class="drop-shadow-[0_0_8px_rgba(255,255,255,80%)]">{$t(`t.overlay.dashboard.automations.title`)}</span>
+
       </div>
       <div class="absolute top-0 left-0 w-full h-full flex flex-row items-center justify-start"
            on:click={() => dispatch('nav', {mode:'OVERVIEW'})}>

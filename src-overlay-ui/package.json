@@ -36,6 +36,7 @@
 	"type": "module",
 	"dependencies": {
 		"material-icons": "^1.13.8",
-		"rxjs": "^7.8.1"
+		"rxjs": "^7.8.1",
+		"sveltekit-i18n": "^2.3.2"
 	}
 }

@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    fly,
-    type FlyParams,
-    blur,
-    type BlurParams,
-    fade,
-    type TransitionConfig
-  } from "svelte/transition";
+  import { blur, type BlurParams, fade, fly, type FlyParams, type TransitionConfig } from "svelte/transition";
   import { backOut } from "svelte/easing";
   import logo from "$lib/images/logo.png";
   import Card from "$lib/components/Card.svelte";
@@ -14,6 +7,7 @@
   import ipcService from "$lib/services/ipc.service";
   import { get } from "svelte/store";
   import { createEventDispatcher } from "svelte";
+  import { t } from "$lib/translations";
 
   // Animation settings
   let animationSpeed = 300;
@@ -69,8 +63,8 @@
         <div class="action-contents">
           <i class="material-icons">nights_stay</i>
           <div class="sleep-mode-info">
-            <span>Sleep Mode</span>
-            <span>{$state.sleepMode ? 'Active' : 'Inactive'}</span>
+            <span>{$t('t.overlay.dashboard.overview.sleepMode')}</span>
+            <span>{$state.sleepMode ? $t('t.overlay.dashboard.overview.active') : $t('t.overlay.dashboard.overview.inactive')}</span>
           </div>
         </div>
       </Card>
@@ -81,7 +75,7 @@
 						y: flyYTransform,
 						delay: staggerOffset * 2
 					}}
-      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip('Automations')}
+      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip($t('t.overlay.dashboard.overview.tooltip.automations'))}
       on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
       on:click={() => { dispatch('nav', {mode: 'AUTOMATIONS'}) }}
     >
@@ -97,7 +91,7 @@
 						y: flyYTransform,
 						delay: staggerOffset * 3
 					}}
-      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip('Shutdown Sequence')}
+      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip($t('t.overlay.dashboard.overview.tooltip.deviceControl'))}
       on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
     >
       <Card clickable={true} class="w-full h-full">
@@ -112,7 +106,7 @@
 						y: flyYTransform,
 						delay: staggerOffset * 4
 					}}
-      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip('Device Control')}
+      on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip($t('t.overlay.dashboard.overview.tooltip.shutdown'))}
       on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
     >
       <Card clickable={true} class="w-full h-full">

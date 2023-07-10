@@ -39,6 +39,7 @@ message OyasumiSidecarState {
   optional VrcStatus vrc_status = 2;
   optional string vrc_username = 3;
   optional OyasumiSidecarAutomationsState automations = 4;
+  optional string locale = 5;
 }
 
 message OyasumiSidecarAutomationsState {
