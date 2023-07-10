@@ -6,8 +6,7 @@
   type DashboardMode = "OVERVIEW" | "AUTOMATIONS";
 
   let ready = !window.CefSharp;
-  // let mode: "OVERVIEW" | "AUTOMATIONS" = "OVERVIEW";
-  let mode: "OVERVIEW" | "AUTOMATIONS" = "AUTOMATIONS";
+  let mode: "OVERVIEW" | "AUTOMATIONS" = "OVERVIEW";
   window.OyasumiIPCIn.hideDashboard = async () => ((ready = false), void 1);
   window.OyasumiIPCIn.showDashboard = async () => ((ready = true), void 0);
   onMount(() => window.OyasumiIPCOut.onUiReady());
