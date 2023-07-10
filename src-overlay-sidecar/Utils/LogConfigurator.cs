@@ -4,13 +4,10 @@ using Serilog.Core;
 
 namespace overlay_sidecar;
 
-public class Log {
+public class LogConfigurator {
   private static Logger _logger;
 
-  public static Logger Logger
-  {
-    get => _logger;
-  }
+  public static Logger Logger => _logger;
 
   public static void Init()
   {
@@ -20,12 +17,13 @@ public class Log {
       .WriteTo.Console()
       .WriteTo.Debug()
       .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(7));
-
     if (Debugger.IsAttached)
       config = config.MinimumLevel.Debug();
     else
       config = config.MinimumLevel.Information();
 
     _logger = config.CreateLogger();
+
+    Log.Logger = _logger;
   }
 }

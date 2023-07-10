@@ -1,6 +1,6 @@
 #![cfg_attr(
-all(not(debug_assertions), target_os = "windows"),
-windows_subsystem = "windows"
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
 )]
 #[macro_use(lazy_static)]
 extern crate lazy_static;
@@ -53,7 +53,7 @@ async fn main() {
             //     .unwrap(),
         ),
     ])
-        .unwrap();
+    .unwrap();
     // Parse the arguments
     let args: Vec<String> = env::args().collect();
     if args.len() < 3 {
@@ -88,7 +88,8 @@ async fn main() {
         relaunch_with_elevation(host_port, main_pid, true);
     }
     // Setup the grpc server
-    let port = grpc::init().await;
+    let grpc_port = grpc::init_server().await;
+    let grpc_web_port = grpc::init_web_server().await;
     // Inform the main process of the sidecar start
     let mut client =
         match OyasumiCoreClient::connect(format!("http://127.0.0.1:{}", host_port)).await {
@@ -100,7 +101,8 @@ async fn main() {
         };
     let request = tonic::Request::new(ElevatedSidecarStartArgs {
         pid: std::process::id(),
-        port: port as u32,
+        grpc_port: grpc_port as u32,
+        grpc_web_port: grpc_web_port as u32,
         old_pid: old_process_id,
     });
     let response = client.on_elevated_sidecar_start(request).await;

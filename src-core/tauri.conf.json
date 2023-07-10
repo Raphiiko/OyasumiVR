@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "OyasumiVR",
-    "version": "1.7.3"
+    "version": "0.0.0"
   },
   "tauri": {
     "allowlist": {
@@ -107,6 +107,34 @@
         }
       }
     },
+    "cli": {
+      "description": "OyasumiVR - VR Sleep Utilities",
+      "longDescription": "",
+      "beforeHelp": "",
+      "afterHelp": "",
+      "args": [
+        {
+          "name": "overlay-sidecar-mode",
+          "short": "o",
+          "description": "Mode for handling the overlay sidecar",
+          "longDescription": "'release' mode\n - OyasumiVR will start the bundled overlay sidecar by itself.\n\n'dev' mode:\n - OyasumiVR will not start a sidecar overlay, and assumes that you are running the sidecar yourself on the default development port.",
+          "maxValues": 1,
+          "takesValue": true,
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
+        },
+        {
+          "name": "grpc-port-core",
+          "short": "c",
+          "description": "Port to host the core module's gRPC server on (default: 0 (randomly picked))",
+          "longDescription": "By default, the port for the core module's gRPC server is randomly selected. This is to avoid conflicts with other applications that may be using the same port. If you want to specify a port, say for development purposes, you can do so with this argument.",
+          "maxValues": 1,
+          "takesValue": true
+        }
+      ]
+    },
     "security": {
       "csp": null
     },
@@ -135,7 +163,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.7.3 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/DEV (https://github.com/Raphiiko/OyasumiVR)"
       },
       {
         "width": 700,
@@ -147,7 +175,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.7.3 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/DEV (https://github.com/Raphiiko/OyasumiVR)"
       }
     ]
   }

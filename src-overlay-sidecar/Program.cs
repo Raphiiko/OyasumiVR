@@ -4,56 +4,53 @@ using System.Diagnostics;
 using CefSharp;
 using CefSharp.OffScreen;
 using CefSharp.SchemeHandler;
+using Serilog;
 
 namespace overlay_sidecar;
 
 public static class Program {
-  public static OVRManager OVRManager;
-  public static IPCManager IPCManager;
   public static bool GPUFix = false;
 
   public static void Main(string[] args)
   {
-    Log.Init();
+    LogConfigurator.Init();
+    var mainProcessPort = 5176;
+    var mainProcessId = 0;
 
-    // Parse args
-    if (args.Length < 1 || !int.TryParse(args[0], out var mainProcessPort))
+    if (!Debugger.IsAttached)
     {
-      Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
-      return;
-    }
+      // Parse args
+      if (args.Length < 1 || !int.TryParse(args[0], out mainProcessPort))
+      {
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        return;
+      }
 
-    if (args.Length < 2 || !int.TryParse(args[1], out var mainProcessId))
-    {
-      Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
-      return;
+      if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
+      {
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        return;
+      }
     }
 
     // Initialize
-    InitCef();
     WatchMainProcess(mainProcessId);
-    OVRManager = new OVRManager();
-    IPCManager = new IPCManager(mainProcessPort);
+    InitCef();
+    OVRManager.Instance.init();
+    IPCManager.Instance.init(mainProcessPort);
   }
 
   private static void InitCef()
   {
-    Log.Logger.Information("Initializing CEF");
-    var rootDir = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Environment.ProcessPath), @"ui\");
-    Directory.CreateDirectory(rootDir);
     var settings = new CefSettings();
-    settings.RegisterScheme(new CefCustomScheme
+    if (!Debugger.IsAttached)
     {
-      SchemeName = "oyasumivroverlay",
-      DomainName = "ui",
-      SchemeHandlerFactory = new FolderSchemeHandlerFactory(
-        rootFolder: rootDir,
-        hostName: "ui",
-        defaultPage: "index.html" // will default to index.html
-      )
-    });
+      settings.LogSeverity = LogSeverity.Disable;
+      var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
+      if (File.Exists(cefDebugLogPath)) File.Delete(cefDebugLogPath);
+    }
+
     Cef.Initialize(settings);
-    Log.Logger.Information("Initialized CEF");
   }
 
   private static void WatchMainProcess(int mainPid)
@@ -66,10 +63,10 @@ public static class Program {
     }
     catch (ArgumentException)
     {
-      Log.Logger.Error("Could not find main process to watch (pid=" + mainPid + ")");
+      Log.Error("Could not find main process to watch (pid=" + mainPid + ")");
       if (!Debugger.IsAttached)
       {
-        Log.Logger.Information("Quitting...");
+        Log.Information("Quitting...");
         Environment.Exit(1);
         return;
       }
@@ -83,10 +80,11 @@ public static class Program {
       {
         if (mainProcess.HasExited)
         {
-          Log.Logger.Information("Main process has exited. Stopping overlay sidecar.");
+          Log.Information("Main process has exited. Stopping overlay sidecar.");
           Environment.Exit(0);
           return;
         }
+
         Thread.Sleep(1000);
       }
     }).Start();

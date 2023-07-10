@@ -99,7 +99,7 @@ import localeKO from '@angular/common/locales/ko';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
-import { OscGeneralAutomationsService } from './services/osc-general-automations.service';
+import { OscGeneralAutomationsService } from './services/osc-automations/osc-general-automations.service';
 import { SystemTrayService } from './services/system-tray.service';
 import pMinDelay from 'p-min-delay';
 import { SPLASH_MIN_DURATION } from './globals';
@@ -128,6 +128,9 @@ import { ImageBrightnessControlAutomationService } from './services/brightness-c
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
+import { IPCStateSyncService } from './services/ipc-state-sync.service';
+import { IPCService } from './services/ipc.service';
+import { AutomationConfigService } from './services/automation-config.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -248,6 +251,9 @@ export class AppModule {
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
     private developerDebugService: DeveloperDebugService,
+    private ipcService: IPCService,
+    private ipcAppStateSyncService: IPCStateSyncService,
+    private automationConfigService: AutomationConfigService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -297,6 +303,7 @@ export class AppModule {
           this.appSettingsService.init(),
           this.eventLog.init(),
           this.systemTrayService.init(),
+          this.automationConfigService.init(),
         ]);
         // Initialize telemetry
         await Promise.all([this.telemetryService.init()]);
@@ -319,6 +326,9 @@ export class AppModule {
           this.displayBrightnessControlService.init(),
           this.imageBrightnessControlService.init(),
         ]);
+        // Initialize IPC
+        await this.ipcService.init();
+        await this.ipcAppStateSyncService.init();
         // Initialize automations
         await Promise.all([
           // GPU automations

@@ -11,8 +11,9 @@
 
   <ItemGroup>
     <PackageReference Include="CefSharp.OffScreen.NETCore" Version="114.2.100" />
-    <PackageReference Include="OVRSharp" Version="1.2.0" />
+    <PackageReference Include="Grpc.AspNetCore.Web" Version="2.54.0" />
     <PackageReference Include="Serilog" Version="3.0.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
@@ -21,6 +22,9 @@
     <PackageReference Include="Google.Protobuf" Version="3.23.3" />
     <PackageReference Include="Grpc.Net.Client" Version="2.54.0" />
     <PackageReference Include="Grpc.Tools" Version="2.54.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Protobuf Include="..\proto\overlay-sidecar.proto" GrpcServices="Server" Link="Protos\overlay-sidecar.proto" />
     <Protobuf Include="..\proto\oyasumi-core.proto" GrcpServices="Client" Link="Protos\oyasumi-core.proto" />
   </ItemGroup>
@@ -29,5 +33,17 @@
     <None Include="appsettings.json" CopyToPublishDirectory="Always" />
     <None Remove="app.manifest" />
     <ApplicationDefinition Include="app.manifest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\pointer.png" />
+    <EmbeddedResource Include="Resources\pointer.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="openvr_api.dll">
+      <PackageCopyToOutput>true</PackageCopyToOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

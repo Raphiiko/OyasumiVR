@@ -1,20 +1,17 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
-declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface Platform {}
-	}
-	declare interface Window {
-		Oyasumi: OyasumiOverlayWebAPI;
-	}
-}
+import type {
+  OyasumiOverlayIPCIn,
+  OyasumiOverlayIPCOut,
+  OyasumiOverlayIPCOut_Dashboard
+} from "$lib/models/OyasumiOverlayIPC";
 
-interface OyasumiOverlayWebAPI {
-	addNotification(params: NotificationParams): string;
-	dismissNotification(id: string): void;
+declare global {
+  declare interface Window {
+    OyasumiIPCIn: OyasumiOverlayIPCIn;
+    OyasumiIPCOut: OyasumiOverlayIPCOut;
+    OyasumiIPCOut_Dashboard: OyasumiOverlayIPCOut_Dashboard;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    CefSharp: any;
+  }
 }
 
 export {};

@@ -27,6 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from './event-log.service';
 import { EventLogSleepModeDisabled, EventLogSleepModeEnabled } from '../models/event-log-entry';
 import { AppSettingsService } from './app-settings.service';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -40,6 +41,7 @@ export class SleepService {
   );
   private poseDetector: SleepingPoseDetector = new SleepingPoseDetector();
   private forcePose$: Subject<SleepingPose> = new Subject<SleepingPose>();
+  private lastNotificationId?: string | null;
 
   public pose: Observable<SleepingPose> = merge(
     combineLatest([this.openvr.devices, this.openvr.devicePoses]).pipe(
@@ -60,12 +62,13 @@ export class SleepService {
   constructor(
     private openvr: OpenVRService,
     private notifications: NotificationService,
-    private translate: TranslateService,
     private eventLog: EventLogService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private translate: TranslateService
   ) {}
 
   async init() {
+    // Load default settings
     const settings = await firstValueFrom(this.appSettings.settings);
     let mode: boolean;
     switch (settings.sleepModeStartupBehaviour) {
@@ -80,6 +83,14 @@ export class SleepService {
         break;
     }
     this._mode.next(mode);
+    // Handle events
+    await listen<boolean>('setSleepMode', (e) => {
+      if (e.payload) {
+        this.enableSleepMode({ type: 'MANUAL' });
+      } else {
+        this.disableSleepMode({ type: 'MANUAL' });
+      }
+    });
   }
 
   forcePose(pose: SleepingPose) {
@@ -102,7 +113,9 @@ export class SleepService {
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
     await this.store.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
-      await this.notifications.send(
+      if (this.lastNotificationId)
+        await this.notifications.clearNotification(this.lastNotificationId);
+      this.lastNotificationId = await this.notifications.send(
         this.translate.instant('notifications.sleepModeEnabled.content')
       );
     }
@@ -120,7 +133,9 @@ export class SleepService {
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
     await this.store.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
-      await this.notifications.send(
+      if (this.lastNotificationId)
+        await this.notifications.clearNotification(this.lastNotificationId);
+      this.lastNotificationId = await this.notifications.send(
         this.translate.instant('notifications.sleepModeDisabled.content')
       );
     }

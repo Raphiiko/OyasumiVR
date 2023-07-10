@@ -5,30 +5,82 @@ option csharp_namespace = "GrcpOverlaySidecar";
 package OyasumiOverlaySidecar;
 
 service OyasumiOverlaySidecar {
-    rpc Ping (Empty) returns (PingResponse) {}
-    rpc RequestStop (Empty) returns (Empty) {}
-    rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
-    rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
+  rpc Ping (Empty) returns (PingResponse) {}
+  rpc RequestStop (Empty) returns (Empty) {}
+  rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
+  rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
+  rpc SyncState (OyasumiSidecarState) returns (Empty) {}
 }
 
 // Requests & Responses
 message PingResponse {
-    uint32 pid = 1;
+  uint32 pid = 1;
 }
 
 message AddNotificationRequest {
-    string message = 1;
-    uint32 duration = 2;
+  string message = 1;
+  uint32 duration = 2;
 }
 
 message AddNotificationResponse {
-    optional string notification_id = 1;
+  optional string notification_id = 1;
 }
 
 message ClearNotificationRequest {
-    string notification_id = 1;
+  string notification_id = 1;
 }
 
 message Empty {
 
 }
+
+message OyasumiSidecarState {
+  optional bool sleep_mode = 1;
+  optional VrcStatus vrc_status = 2;
+  optional string vrc_username = 3;
+  optional OyasumiSidecarAutomationsState automations = 4;
+  optional string locale = 5;
+}
+
+message OyasumiSidecarAutomationsState {
+  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
+  optional OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
+  optional OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
+  optional OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
+}
+
+message OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
+  optional bool enabled = 1;
+  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
+  optional uint32 player_count = 3;
+}
+
+message OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount {
+  optional bool enabled = 1;
+  optional uint32 threshold = 2;
+}
+
+message OyasumiSidecarAutomationsState_SleepingAnimations {
+  optional bool enabled = 1;
+  optional string preset_name = 2;
+}
+
+message OyasumiSidecarAutomationsState_ShutdownAutomations {
+  optional bool enabled = 1;
+  optional uint32 time_delay = 2;
+}
+
+enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Disabled = 0;
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Whitelist = 1;
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Blacklist = 2;
+}
+
+enum VrcStatus {
+  VRC_STATUS_Offline = 0;
+  VRC_STATUS_Busy = 1;
+  VRC_STATUS_AskMe = 2;
+  VRC_STATUS_Active = 3;
+  VRC_STATUS_JoinMe = 4;
+}
+

@@ -189,7 +189,7 @@ Once you have set up these dependencies, you can continue as follows:
 1. Check out Oyasumi somewhyere on your machine: `git clone https://github.com/Raphiiko/OyasumiVR.git`
 2. Change into the new project directory: `cd OyasumiVR`
 3. Install the main UI's dependencies from NPM: `npm install`
-4. Run `npm run build` at least once.
+4. Run `npm run init` at least once.
 
 Once this has completed successfully, you can run `npm run dev` to run Oyasumi locally and start developing!
 

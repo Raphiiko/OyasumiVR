@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "1.7.3"
+version = "0.0.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -59,12 +59,14 @@ futures-util = "0.3.28"
 byteorder = "1.4.3"
 winreg = "0.50.0"
 tonic = "0.9"
+tonic-web = "0.9.2"
 prost = "0.11"
 tokio-stream = { version = "0.1.14", features = ["full"] }
+readonly = "0.2"
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [ "fs-write-file", "dialog-save",
+features = [ "cli", "fs-write-file", "dialog-save",
   "path-all",
   "process-relaunch",
   "system-tray",
@@ -83,7 +85,7 @@ features = [ "fs-write-file", "dialog-save",
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "4214b3ca193c0d1ede8aae6b71615405f5328089"
+rev = "7e27051d2d1cdd6f838de9ea4c58ee5e712de958"
 features = ["ovr_system", "ovr_settings"]
 
 #[patch.crates-io]

@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr-shared"
-version = "1.7.3"
+version = "0.0.0"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"

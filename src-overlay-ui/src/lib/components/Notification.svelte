@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { blur, slide, fade, fly, crossfade } from 'svelte/transition';
-	import logo from '$lib/images/logo.png';
-	import { of, delay, firstValueFrom, startWith } from 'rxjs';
-	export let message = '';
+  import { blur, fade, slide } from "svelte/transition";
+  import logo from "$lib/images/logo.png";
+  import { delay, of, startWith } from "rxjs";
+
+  export let message = '';
 	export let duration = 3000;
 	export let active = false;
 

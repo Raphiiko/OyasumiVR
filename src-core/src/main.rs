@@ -39,6 +39,10 @@ fn main() {
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
         .setup(|app| {
+            let matches = app.get_cli_matches().unwrap();
+            tauri::async_runtime::block_on(async {
+                *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
+            });
             match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle(),
             ))) {
@@ -84,8 +88,10 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
+        elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::add_notification,
         overlay_sidecar::commands::clear_notification,
+        overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
@@ -162,7 +168,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Initialize HTTP server
     http::init().await;
     // Initialize gRPC server
-    grpc::init().await;
+    grpc::init_server().await;
+    grpc::init_web_server().await;
     // Initialize OSC
     osc::init().await;
     // Initialize OpenVR Manager
