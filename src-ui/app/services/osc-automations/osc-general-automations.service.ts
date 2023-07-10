@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AutomationConfigService } from './automation-config.service';
+import { AutomationConfigService } from '../automation-config.service';
 import { distinctUntilChanged, map, skip } from 'rxjs';
-import { OscGeneralAutomationConfig } from '../models/automations';
-import { SleepService } from './sleep.service';
-import { OscService } from './osc.service';
+import { OscGeneralAutomationConfig } from '../../models/automations';
+import { SleepService } from '../sleep.service';
+import { OscService } from '../osc.service';
 
 @Injectable({
   providedIn: 'root',

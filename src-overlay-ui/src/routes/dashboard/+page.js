@@ -1,3 +1,4 @@
+
 export async function load() {
-	await window.CefSharp.BindObjectAsync('OyasumiIPCOut_Dashboard');
+  if (window.CefSharp) await window.CefSharp.BindObjectAsync("OyasumiIPCOut_Dashboard");
 }

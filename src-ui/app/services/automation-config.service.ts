@@ -4,12 +4,14 @@ import {
   AutomationConfig,
   AutomationConfigs,
   AutomationType,
+  ShutdownAutomationsConfig,
 } from '../models/automations';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
 import { cloneDeep } from 'lodash';
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -21,10 +23,6 @@ export class AutomationConfigService {
   );
   configs: Observable<AutomationConfigs> = this._configs.asObservable();
 
-  constructor() {
-    this.init();
-  }
-
   async init() {
     await this.loadConfigs();
     this.configs
@@ -34,6 +32,20 @@ export class AutomationConfigService {
         switchMap(() => this.saveConfigs())
       )
       .subscribe();
+    // Listen for changes from the overlay
+    await listen<string>('setAutomationEnabled', async (event) => {
+      const payload: { automationId: AutomationType; enabled: boolean } = JSON.parse(event.payload);
+      console.log('setAutomationEnabled', payload);
+      switch (payload.automationId) {
+        case 'SHUTDOWN_AUTOMATIONS':
+          await this.updateAutomationConfig<ShutdownAutomationsConfig>(payload.automationId, {
+            triggerOnSleep: payload.enabled,
+          });
+          break;
+        default:
+          await this.updateAutomationConfig(payload.automationId, { enabled: payload.enabled });
+      }
+    });
   }
 
   async updateAutomationConfig<T extends AutomationConfig>(

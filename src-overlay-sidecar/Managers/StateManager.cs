@@ -20,27 +20,13 @@ public class StateManager {
     }
   }
 
-  public void SyncState(OyasumiSidecarState newState)
+  public void SyncState(OyasumiSidecarState? newState)
   {
+    if (newState == null) return;
     lock (_state)
     {
       var state = _state.Clone();
-
-      if (newState.HasSleepMode && newState.SleepMode != state.SleepMode)
-      {
-        state.SleepMode = newState.SleepMode;
-      }
-
-      if (newState.HasVrcStatus && newState.VrcStatus != state.VrcStatus)
-      {
-        state.VrcStatus = newState.VrcStatus;
-      }
-
-      if (newState.HasVrcUsername && newState.VrcUsername != state.VrcUsername)
-      {
-        state.VrcUsername = newState.VrcUsername;
-      }
-
+      state.MergeFrom(newState);
       _state = state;
       StateChanged?.Invoke(this, _state);
     }

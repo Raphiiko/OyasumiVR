@@ -19,17 +19,15 @@ public class DashboardOverlay : BaseOverlay {
   public DashboardOverlay() :
     base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
   {
+    // browser.ShowDevTools();
     _tooltipOverlay = new TooltipOverlay();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
     browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
-    StateManager.Instance.StateChanged += OnStateChanged;
-    SyncState();
   }
 
   public void Dispose()
   {
-    StateManager.Instance.StateChanged -= OnStateChanged;
     _tooltipOverlay.Dispose();
     base.Dispose();
   }
@@ -48,7 +46,6 @@ public class DashboardOverlay : BaseOverlay {
     _open = true;
     _closing = false;
     OVRManager.Instance.OverlayPointer!.StartForOverlay(this);
-    SyncState();
     ShowDashboard();
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
   }
@@ -97,17 +94,6 @@ public class DashboardOverlay : BaseOverlay {
     return posOffset * headRotation * handPosition;
   }
 
-  private void SyncState(OyasumiSidecarState? state = null)
-  {
-    state ??= StateManager.Instance.GetAppState();
-    browser.ExecuteScriptAsync(
-      @$"window.OyasumiIPCIn.setVRCStatus(""{HttpUtility.JavaScriptStringEncode(state.VrcStatus.ToString())}"");");
-    var username = string.IsNullOrEmpty(state.VrcUsername)
-      ? "null"
-      : $@"""{HttpUtility.JavaScriptStringEncode(state.VrcUsername)}""";
-    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setVRCUsername({username});");
-    browser.ExecuteScriptAsync(@$"window.OyasumiIPCIn.setSleepMode({(state.SleepMode ? "true" : "false")});");
-  }
 
   private void HideDashboard()
   {
@@ -129,10 +115,5 @@ public class DashboardOverlay : BaseOverlay {
       if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
       timer.sleepUntilNextTick();
     }
-  }
-
-  private void OnStateChanged(object? sender, OyasumiSidecarState e)
-  {
-    SyncState(e);
   }
 }

@@ -6,5 +6,5 @@ export const prerender = true;
 export const ssr = false;
 
 if (browser) {
-	ipcService.init();
+	await ipcService.init();
 }

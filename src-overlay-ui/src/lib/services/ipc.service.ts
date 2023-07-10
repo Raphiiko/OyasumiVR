@@ -1,62 +1,34 @@
 import { browser } from "$app/environment";
 import type { AddNotificationParams } from "$lib/models/AddNotificationParams";
-import type { VRCStatus } from "$lib/models/VRCStatus";
 import { tick } from "svelte";
-import { derived, readable, writable } from "svelte/store";
+import { derived, get, writable } from "svelte/store";
+import { DEFAULT_OYASUMI_STATE } from "$lib/models/OyasumiState";
+import { cloneDeep, mergeWith } from "lodash";
+import {
+  OyasumiSidecarAutomationsState,
+  OyasumiSidecarState
+} from "../../../../src-grpc-web-client/overlay-sidecar_pb";
+import { VrcStatus } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
 
 if (browser && !window.OyasumiIPCIn)
   window.OyasumiIPCIn = Object.assign(window.OyasumiIPCIn || {}, {});
 
 class IPCService {
+  initialized = false;
+  state = writable<OyasumiSidecarState>(DEFAULT_OYASUMI_STATE);
+  vrcLoggedIn = derived(
+    [this.state],
+    ([state]) => state.vrcUsername !== null && state.vrcStatus !== VrcStatus.Offline
+  );
   events = {
-    // Notification events
-    addNotification: readable<AddNotificationParams | null>(null, (set) => {
-      if (!browser) return;
-      window.OyasumiIPCIn.addNotification = async (notification: AddNotificationParams) => {
-        if (!notification.id) notification.id = Math.random().toString(36);
-        set(notification);
-        await tick();
-        set(null);
-        return notification.id;
-      };
-    }),
-    clearNotification: writable<string | null>(null, (set) => {
-      if (!browser) return;
-      window.OyasumiIPCIn.clearNotification = async (notificationId: string) => {
-        set(notificationId);
-        await tick();
-        set(null);
-      };
-    }),
-    // Tooltip Events
-    showToolTip: writable<string | null>(null, (set) => {
-      if (!browser) return;
-      window.OyasumiIPCIn.showToolTip = async (tooltip: string | null) => {
-        set(tooltip);
-      };
-    })
+    addNotification: writable<AddNotificationParams | null>(null),
+    clearNotification: writable<string | null>(null),
+    showToolTip: writable<string | null>(null)
   };
 
-  sleepMode = writable<boolean>(false, (set) => {
-    if (!browser) return;
-    window.OyasumiIPCIn.setSleepMode = async (mode: boolean) => set(mode);
-  });
-  vrcStatus = writable<VRCStatus>("Offline", (set) => {
-    if (!browser) return;
-    window.OyasumiIPCIn.setVRCStatus = async (status: VRCStatus) => set(status);
-  });
-  vrcUsername = writable<string | null>(null, (set) => {
-    if (!browser) return;
-    window.OyasumiIPCIn.setVRCUsername = async (username: string | null) =>
-      set(username ? username : null);
-  });
-  vrcLoggedIn = derived(
-    [this.vrcUsername, this.vrcStatus],
-    ([$username, $status]) => $username !== null && $status !== "Offline"
-  );
-
   async init() {
-    if (!browser || !window.CefSharp) return;
+    if (!browser || !window.CefSharp || this.initialized) return;
+    this.initialized = true;
     await window.CefSharp.BindObjectAsync("OyasumiIPCOut");
     window.OyasumiIPCOut.sendEvent = async (eventName: string, data: string | boolean | number) => {
       if (typeof data === "string") await window.OyasumiIPCOut.sendEventString(eventName, data);
@@ -64,13 +36,51 @@ class IPCService {
       else if (Number.isInteger(data)) await window.OyasumiIPCOut.sendEventInt(eventName, data);
       else await window.OyasumiIPCOut.sendEventDouble(eventName, data);
     };
+    window.OyasumiIPCIn.setState = async (b64state) => {
+      let state = OyasumiSidecarState.fromBinary(Uint8Array.from(window.atob(b64state), (c) => c.charCodeAt(0)));
+      state = mergeWith(cloneDeep(DEFAULT_OYASUMI_STATE), cloneDeep(get(INSTANCE.state)), state, (objValue, srcValue) => {
+        if (Array.isArray(objValue)) return srcValue;
+      });
+      this.state.set(state);
+    };
+    window.OyasumiIPCIn.showToolTip = async (tooltip) => this.events.showToolTip.set(tooltip);
+    window.OyasumiIPCIn.clearNotification = async (notificationId: string) => {
+      this.events.clearNotification.set(notificationId);
+      await tick();
+      this.events.clearNotification.set(null);
+    };
+    window.OyasumiIPCIn.addNotification = async (notification: AddNotificationParams) => {
+      if (!notification.id) notification.id = Math.random().toString(36);
+      this.events.addNotification.set(notification);
+      await tick();
+      this.events.addNotification.set(null);
+      return notification.id;
+    };
   }
 
   async setSleepMode(mode: boolean) {
     if (!browser) return;
-    this.sleepMode.set(mode);
+    this.state.update((state) => {
+      state = cloneDeep(state);
+      state.sleepMode = mode;
+      return state;
+    });
     await window.OyasumiIPCOut.sendEvent("setSleepMode", mode);
+  }
+
+  async setAutomationEnabled(automationId: keyof OyasumiSidecarAutomationsState, enabled: boolean) {
+    if (!browser) return;
+    this.state.update((state) => {
+      state = cloneDeep(state);
+      Object.assign(state.automations![automationId]!, { enabled });
+      return state;
+    });
+    await window.OyasumiIPCOut.sendEventJson("setAutomationEnabled", JSON.stringify({
+      automationId: automationId.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`).toUpperCase(),
+      enabled
+    }));
   }
 }
 
-export default new IPCService();
+const INSTANCE = new IPCService();
+export default INSTANCE;

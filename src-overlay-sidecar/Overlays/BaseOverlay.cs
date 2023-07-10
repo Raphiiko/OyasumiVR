@@ -1,4 +1,8 @@
 using System.Diagnostics;
+using System.Web;
+using CefSharp;
+using Google.Protobuf;
+using GrcpOverlaySidecar;
 using GrcpOyasumiCore;
 using Serilog;
 using SharpDX.Direct3D;
@@ -67,11 +71,14 @@ public class BaseOverlay {
         timer.sleepUntilNextTick();
       }
     }).Start();
+    StateManager.Instance.StateChanged += OnStateChanged;
+    SyncState();
   }
 
   public void Dispose()
   {
     Disposed = true;
+    StateManager.Instance.StateChanged -= OnStateChanged;
     browser?.Dispose();
     texture?.Dispose();
     device?.Dispose();
@@ -81,6 +88,16 @@ public class BaseOverlay {
   public void OnUiReady()
   {
     UiReady = true;
+    SyncState();
+  }
+
+  public void SyncState(OyasumiSidecarState? state = null)
+  {
+    if (!UiReady)
+      return;
+    state ??= StateManager.Instance.GetAppState();
+    browser.ExecuteScriptAsync(
+      @$"window.OyasumiIPCIn.setState(""{HttpUtility.JavaScriptStringEncode(state.ToByteString().ToBase64())}"");");
   }
 
   public void SendEventString(string eventName, string data)
@@ -143,5 +160,10 @@ public class BaseOverlay {
     };
     var err = OpenVR.Overlay.SetOverlayTexture(overlayHandle!.Value, ref texture);
     if (err != EVROverlayError.None) Console.WriteLine("Could not set overlay texture.");
+  }
+
+  private void OnStateChanged(object? sender, OyasumiSidecarState e)
+  {
+    SyncState(e);
   }
 }

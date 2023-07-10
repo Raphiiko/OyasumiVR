@@ -4,19 +4,23 @@
 @import 'material-icons/iconfont/material-icons.css';
 
 .vrc-status-color {
-	&-Active {
-		background-color: var(--color-vrchat-status-green);
-	}
-	&-JoinMe {
-		background-color: var(--color-vrchat-status-blue);
-	}
-	&-AskMe {
-		background-color: var(--color-vrchat-status-orange);
-	}
-	&-Busy {
-		background-color: var(--color-vrchat-status-red);
-	}
-	&-Offline {
-		background-color: black;
-	}
+  &-Active, &-3 {
+    background-color: var(--color-vrchat-status-green);
+  }
+
+  &-JoinMe, &-4 {
+    background-color: var(--color-vrchat-status-blue);
+  }
+
+  &-AskMe, &-2 {
+    background-color: var(--color-vrchat-status-orange);
+  }
+
+  &-Busy, &-1 {
+    background-color: var(--color-vrchat-status-red);
+  }
+
+  &-Offline, &-0 {
+    background-color: black;
+  }
 }

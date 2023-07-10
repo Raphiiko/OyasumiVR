@@ -108,7 +108,7 @@ public class IPCManager {
         }
         else
         {
-          Log.Error("Cannot inform core of overlay sidecar start: " + e);
+          Log.Error("Cannot inform core of overlay sidecar start");
         }
       }
     }).Start();

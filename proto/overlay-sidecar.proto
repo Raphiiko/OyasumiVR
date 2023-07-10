@@ -36,15 +36,50 @@ message Empty {
 
 message OyasumiSidecarState {
   optional bool sleep_mode = 1;
-  optional VRCStatus vrc_status = 2;
+  optional VrcStatus vrc_status = 2;
   optional string vrc_username = 3;
+  optional OyasumiSidecarAutomationsState automations = 4;
 }
 
-enum VRCStatus {
-  VRCStatus_Offline = 0;
-  VRCStatus_Busy = 1;
-  VRCStatus_AskMe = 2;
-  VRCStatus_Active = 3;
-  VRCStatus_JoinMe = 4;
+message OyasumiSidecarAutomationsState {
+  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
+  optional OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
+  optional OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
+  optional OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
+}
+
+message OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
+  optional bool enabled = 1;
+  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
+  optional uint32 player_count = 3;
+}
+
+message OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount {
+  optional bool enabled = 1;
+  optional uint32 threshold = 2;
+}
+
+message OyasumiSidecarAutomationsState_SleepingAnimations {
+  optional bool enabled = 1;
+  optional string preset_name = 2;
+}
+
+message OyasumiSidecarAutomationsState_ShutdownAutomations {
+  optional bool enabled = 1;
+  optional uint32 time_delay = 2;
+}
+
+enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Disabled = 0;
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Whitelist = 1;
+  OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Blacklist = 2;
+}
+
+enum VrcStatus {
+  VRC_STATUS_Offline = 0;
+  VRC_STATUS_Busy = 1;
+  VRC_STATUS_AskMe = 2;
+  VRC_STATUS_Active = 3;
+  VRC_STATUS_JoinMe = 4;
 }
 
