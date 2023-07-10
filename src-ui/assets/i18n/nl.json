@@ -1101,11 +1101,6 @@
         "sleepMode": "Slaap Modus",
         "active": "Actief",
         "inactive": "Inactief"
-      },
-      "automations": {
-        "autoAcceptInviteRequests": {
-          "title": "WEWLAD"
-        }
       }
     }
   }
