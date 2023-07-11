@@ -117,7 +117,7 @@ import { TurnOffDevicesOnSleepModeEnableAutomationService } from './services/pow
 import { TurnOffDevicesWhenChargingAutomationService } from './services/power-automations/turn-off-devices-when-charging-automation.service';
 import { TurnOnLighthousesOnOyasumiStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-oyasumi-start-automation.service';
 import { TurnOnLighthousesOnSteamVRStartAutomationService } from './services/power-automations/turn-on-lighthouses-on-steamvr-start-automation.service';
-import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/power-automations/turn-off-lighthouses-on-steamvr-stop-automation.service copy';
+import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/power-automations/turn-off-lighthouses-on-steamvr-stop-automation.service';
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';

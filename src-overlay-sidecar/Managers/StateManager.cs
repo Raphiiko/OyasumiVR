@@ -6,7 +6,7 @@ public class StateManager {
   public static StateManager Instance { get; } = new();
   private OyasumiSidecarState _state = new();
 
-  public event EventHandler<OyasumiSidecarState> StateChanged;
+  public event EventHandler<OyasumiSidecarState>? StateChanged;
 
   private StateManager()
   {
@@ -28,7 +28,7 @@ public class StateManager {
       var state = _state.Clone();
       state.MergeFrom(newState);
       _state = state;
-      StateChanged?.Invoke(this, _state);
+      StateChanged!.Invoke(this, _state);
     }
   }
 }

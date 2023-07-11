@@ -3,6 +3,9 @@ import i18n from "sveltekit-i18n";
 /** @type {import("sveltekit-i18n").Config} */
 const config = ({
   fallbackLocale: "en",
+  log: {
+    level: "error"
+  },
   loaders: [
     ...(["en", "cn", "fr", "ja", "ko", "nl", "tw"].map(locale => (
       {

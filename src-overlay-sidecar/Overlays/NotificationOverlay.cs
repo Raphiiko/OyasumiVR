@@ -7,7 +7,7 @@ namespace overlay_sidecar;
 
 public class NotificationOverlay : BaseOverlay {
   public NotificationOverlay() :
-    base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay")
+    base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay", false)
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
@@ -17,9 +17,9 @@ public class NotificationOverlay : BaseOverlay {
       var timer = new RefreshRateTimer();
       while (!Disposed)
       {
-        timer.tickStart();
+        timer.TickStart();
         UpdatePosition();
-        timer.sleepUntilNextTick();
+        timer.SleepUntilNextTick();
       }
     }).Start();
   }
@@ -30,7 +30,7 @@ public class NotificationOverlay : BaseOverlay {
             message: ""{HttpUtility.JavaScriptStringEncode(message)}"",
             duration: {duration?.TotalMilliseconds ?? 3000}
         }});";
-    var task = browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
+    var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
     task.Wait();
     return task.Result.Result as string;
   }
@@ -38,21 +38,21 @@ public class NotificationOverlay : BaseOverlay {
   public void ClearNotification(string notificationId)
   {
     var script = $@"window.OyasumiIPCIn.clearNotification(""{HttpUtility.JavaScriptStringEncode(notificationId)}"");";
-    var task = browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
+    var task = Browser.EvaluateScriptAsync(script, TimeSpan.FromMilliseconds(5000));
     task.Wait();
   }
 
   private void UpdatePosition()
   {
-    if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - browser.LastPaint > 1000) return;
+    if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint > 1000) return;
     // Get current transform
     var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
     HmdMatrix34_t currentTransform34T = default;
     OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
-    var currentTransform = currentTransform34T.ToMatrix4x4();
+    var currentTransform = currentTransform34T.ToMatrix4X4();
     // Calculate target transform
-    var headPose = OVRUtils.GetHeadPose().mDeviceToAbsoluteTracking;
-    var headMatrix = headPose.ToMatrix4x4();
+    var headPose = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking;
+    var headMatrix = headPose.ToMatrix4X4();
     var offset = Matrix4x4.CreateRotationX(-15f.ToRadians()) *
                  Matrix4x4.CreateTranslation(0, -0.125f, -0.55f);
     var targetTransform = offset * headMatrix;

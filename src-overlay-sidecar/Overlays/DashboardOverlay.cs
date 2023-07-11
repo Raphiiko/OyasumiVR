@@ -1,20 +1,18 @@
 using System.Numerics;
-using System.Web;
 using CefSharp;
-using GrcpOverlaySidecar;
 using Valve.VR;
 using static overlay_sidecar.Utils;
 
 namespace overlay_sidecar;
 
 public class DashboardOverlay : BaseOverlay {
-  private bool _open;
+  private bool _isOpen;
   private bool _closing;
   private Matrix4x4? _targetTransform;
   private readonly TooltipOverlay _tooltipOverlay;
 
-  public bool Open => _open;
-  public event Action OnClose;
+  public bool IsOpen => _isOpen;
+  public event Action? OnClose;
 
   public DashboardOverlay() :
     base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
@@ -22,18 +20,18 @@ public class DashboardOverlay : BaseOverlay {
     // browser.ShowDevTools();
     _tooltipOverlay = new TooltipOverlay();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
-    browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
+    Browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
   }
 
-  public void Dispose()
+  public new void Dispose()
   {
     _tooltipOverlay.Dispose();
     base.Dispose();
   }
 
 
-  public async void open(ETrackedControllerRole role)
+  public async void Open(ETrackedControllerRole role)
   {
     while (!UiReady) await Task.Delay(TimeSpan.FromMilliseconds(16));
     _targetTransform = GetTargetTransform(role);
@@ -43,26 +41,25 @@ public class DashboardOverlay : BaseOverlay {
       ETrackingUniverseOrigin.TrackingUniverseStanding,
       ref transform
     );
-    _open = true;
+    _isOpen = true;
     _closing = false;
-    OVRManager.Instance.OverlayPointer!.StartForOverlay(this);
+    OvrManager.Instance.OverlayPointer!.StartForOverlay(this);
     ShowDashboard();
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
   }
 
-  public async void close()
+  public async void Close()
   {
-    if (!_open || _closing) return;
+    if (!_isOpen || _closing) return;
     _closing = true;
-    OVRManager.Instance.OverlayPointer!.StopForOverlay(this);
+    OvrManager.Instance.OverlayPointer!.StopForOverlay(this);
     ShowToolTip("");
     HideDashboard();
     await DelayedAction(() =>
     {
       if (!_closing) return;
       _closing = false;
-      _open = false;
-      _tooltipOverlay.SetText("");
+      _isOpen = false;
       OpenVR.Overlay.HideOverlay(OverlayHandle);
       OnClose?.Invoke();
     }, TimeSpan.FromSeconds(1));
@@ -82,11 +79,11 @@ public class DashboardOverlay : BaseOverlay {
 
   private static Matrix4x4? GetTargetTransform(ETrackedControllerRole controllerRole)
   {
-    var handPose = OVRUtils.GetControllerPose(controllerRole);
-    var headPose = OVRUtils.GetHeadPose();
+    var handPose = OvrUtils.GetControllerPose(controllerRole);
+    var headPose = OvrUtils.GetHeadPose();
     if (handPose == null) return null;
-    var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
-    var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4x4();
+    var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
+    var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4X4();
     var posOffset = Matrix4x4.CreateTranslation(0, 0.15f, -0.2f);
     var headRotation = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix));
     var handPosition =
@@ -97,12 +94,12 @@ public class DashboardOverlay : BaseOverlay {
 
   private void HideDashboard()
   {
-    browser.ExecuteScriptAsync("window.OyasumiIPCIn.hideDashboard();");
+    Browser.ExecuteScriptAsync("window.OyasumiIPCIn.hideDashboard();");
   }
 
   private void ShowDashboard()
   {
-    browser.ExecuteScriptAsync("window.OyasumiIPCIn.showDashboard();");
+    Browser.ExecuteScriptAsync("window.OyasumiIPCIn.showDashboard();");
   }
 
   private void UpdateTooltipPosition()
@@ -110,10 +107,10 @@ public class DashboardOverlay : BaseOverlay {
     var timer = new RefreshRateTimer();
     while (!Disposed)
     {
-      timer.tickStart();
-      var position = OVRManager.Instance.OverlayPointer!.GetPointerLocationForOverlay(this);
+      timer.TickStart();
+      var position = OvrManager.Instance.OverlayPointer!.GetPointerLocationForOverlay(this);
       if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
-      timer.sleepUntilNextTick();
+      timer.SleepUntilNextTick();
     }
   }
 }

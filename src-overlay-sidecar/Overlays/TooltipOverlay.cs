@@ -9,9 +9,10 @@ public class TooltipOverlay : BaseOverlay {
   private bool _shown;
   private bool _closing;
   private Vector3? _targetPosition;
+  private string? _text = "";
 
   public TooltipOverlay() :
-    base("/tooltip", 512, "co.raphii.oyasumi:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay")
+    base("/tooltip", 512, "co.raphii.oyasumi:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay", false)
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
@@ -20,9 +21,9 @@ public class TooltipOverlay : BaseOverlay {
       var timer = new RefreshRateTimer();
       while (!Disposed)
       {
-        timer.tickStart();
+        timer.TickStart();
         UpdatePosition();
-        timer.sleepUntilNextTick();
+        timer.SleepUntilNextTick();
       }
     }).Start();
   }
@@ -34,8 +35,10 @@ public class TooltipOverlay : BaseOverlay {
 
   public async void SetText(string? text)
   {
+    _text = text;
+    if (!UiReady) return;
     var content = text != null ? $@"""{HttpUtility.JavaScriptStringEncode(text)}""" : "null";
-    browser.ExecuteScriptAsync($"window.OyasumiIPCIn.showToolTip({content})");
+    Browser.ExecuteScriptAsync($"window.OyasumiIPCIn.showToolTip({content})");
     if (text != null)
     {
       _shown = true;
@@ -55,6 +58,12 @@ public class TooltipOverlay : BaseOverlay {
     }
   }
 
+  public new void OnUiReady()
+  {
+    base.OnUiReady();
+    SetText(_text);
+  }
+
   private void UpdatePosition()
   {
     if (!_shown || _targetPosition == null) return;
@@ -62,10 +71,10 @@ public class TooltipOverlay : BaseOverlay {
     var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
     HmdMatrix34_t currentTransform34T = default;
     OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
-    var currentTransform = currentTransform34T.ToMatrix4x4();
+    var currentTransform = currentTransform34T.ToMatrix4X4();
     // Calculate target transform
-    var headPose = OVRUtils.GetHeadPose().mDeviceToAbsoluteTracking;
-    var headMatrix = headPose.ToMatrix4x4();
+    var headPose = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking;
+    var headMatrix = headPose.ToMatrix4X4();
     var targetTransform =
       Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix)) *
       Matrix4x4.CreateTranslation(_targetPosition.Value);

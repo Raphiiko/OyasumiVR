@@ -123,7 +123,6 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
 
   void IRenderHandler.OnAcceleratedPaint(PaintElementType type, Rect dirtyRect, IntPtr sharedHandle)
   {
-    // NOT USED
   }
 
   void IRenderHandler.OnCursorChange(IntPtr cursor, CursorType type, CursorInfo customCursorInfo)
@@ -165,11 +164,6 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
     {
       _paintBufferLock.ExitWriteLock();
     }
-
-    // if (OnPaintBufferUpdated != null)
-    // {
-    //     OnPaintBufferUpdated(this, new PaintBufferUpdated());
-    // }
   }
 
   void IRenderHandler.OnPopupShow(bool show)

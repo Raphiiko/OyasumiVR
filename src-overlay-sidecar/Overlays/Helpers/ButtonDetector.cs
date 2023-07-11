@@ -3,16 +3,12 @@ using Valve.VR;
 namespace overlay_sidecar;
 
 public class ButtonDetector {
-  public event EventHandler<ETrackedControllerRole> OnDoublePressA;
-  public event EventHandler<ETrackedControllerRole> OnSinglePressA;
-  public event EventHandler<ETrackedControllerRole> OnTriggerPress;
-  public event EventHandler<ETrackedControllerRole> OnTriggerRelease;
+  public event EventHandler<ETrackedControllerRole>? OnDoublePressA;
+  public event EventHandler<ETrackedControllerRole>? OnSinglePressA;
+  public event EventHandler<ETrackedControllerRole>? OnTriggerPress;
+  public event EventHandler<ETrackedControllerRole>? OnTriggerRelease;
 
-  private Dictionary<ETrackedControllerRole, DateTimeOffset> lastPressedA = new();
-
-  public ButtonDetector()
-  {
-  }
+  private readonly Dictionary<ETrackedControllerRole, DateTimeOffset> _lastPressedA = new();
 
   public void Dispose()
   {
@@ -31,21 +27,21 @@ public class ButtonDetector {
         if (button is EVRButtonId.k_EButton_IndexController_A or EVRButtonId.k_EButton_A)
         {
           OnSinglePressA?.Invoke(this, role);
-          if (lastPressedA.TryGetValue(role, out var lastPressed))
+          if (_lastPressedA.TryGetValue(role, out var lastPressed))
           {
             if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - lastPressed.ToUnixTimeMilliseconds() < 300)
             {
               OnDoublePressA?.Invoke(this, role);
-              lastPressedA[role] = DateTimeOffset.UnixEpoch;
+              _lastPressedA[role] = DateTimeOffset.UnixEpoch;
             }
             else
             {
-              lastPressedA[role] = DateTimeOffset.UtcNow;
+              _lastPressedA[role] = DateTimeOffset.UtcNow;
             }
           }
           else
           {
-            lastPressedA.Add(role, DateTimeOffset.UtcNow);
+            _lastPressedA.Add(role, DateTimeOffset.UtcNow);
           }
         }
 

@@ -14,28 +14,29 @@ using Device = SharpDX.Direct3D11.Device;
 namespace overlay_sidecar;
 
 public class BaseOverlay {
+  public readonly OffScreenBrowser Browser;
   protected bool UiReady;
-  protected readonly ulong? overlayHandle;
-  protected readonly OffScreenBrowser browser;
-  protected readonly Texture2D texture;
-  protected readonly Device device;
   protected bool Disposed;
+  private readonly bool _requiresState;
+  private readonly Texture2D _texture;
+  private readonly Device _device;
+  private readonly ulong? _overlayHandle;
 
-  public ulong OverlayHandle => overlayHandle!.Value;
-  public OffScreenBrowser Browser => browser;
+  public ulong OverlayHandle => _overlayHandle!.Value;
 
-  protected BaseOverlay(string path, int resolution, string overlayKey, string overlayName)
+  protected BaseOverlay(string path, int resolution, string overlayKey, string overlayName, bool requiresState = true)
   {
     var uiUrl = Debugger.IsAttached
       ? "http://localhost:5173" + path
-      : IPCManager.Instance.StaticBaseUrl + path;
-    Log.Information("Using UI URL: {url}", uiUrl);
-    browser = new OffScreenBrowser(uiUrl, resolution, resolution);
-    device = Program.GPUFix
+      : IpcManager.Instance.StaticBaseUrl + path;
+    if (Debugger.IsAttached) Log.Information("Using UI URL: {url}", uiUrl);
+    Browser = new OffScreenBrowser(uiUrl, resolution, resolution);
+    _requiresState = requiresState;
+    _device = Program.GPUFix
       ? new Device(new Factory1().GetAdapter(1), DeviceCreationFlags.BgraSupport)
       : new Device(DriverType.Hardware, DeviceCreationFlags.SingleThreaded | DeviceCreationFlags.BgraSupport);
-    texture = new Texture2D(
-      device,
+    _texture = new Texture2D(
+      _device,
       new Texture2DDescription
       {
         Width = resolution,
@@ -49,7 +50,7 @@ public class BaseOverlay {
         CpuAccessFlags = CpuAccessFlags.Write
       }
     );
-    browser.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
+    Browser.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
     ulong overlayHandle = 0;
     {
       var err = OpenVR.Overlay.CreateOverlay(overlayKey, overlayName, ref overlayHandle);
@@ -60,15 +61,15 @@ public class BaseOverlay {
         return;
       }
     }
-    this.overlayHandle = overlayHandle;
+    this._overlayHandle = overlayHandle;
     new Thread(() =>
     {
       var timer = new RefreshRateTimer();
       while (!Disposed)
       {
-        timer.tickStart();
+        timer.TickStart();
         UpdateFrame();
-        timer.sleepUntilNextTick();
+        timer.SleepUntilNextTick();
       }
     }).Start();
     StateManager.Instance.StateChanged += OnStateChanged;
@@ -79,10 +80,10 @@ public class BaseOverlay {
   {
     Disposed = true;
     StateManager.Instance.StateChanged -= OnStateChanged;
-    browser?.Dispose();
-    texture?.Dispose();
-    device?.Dispose();
-    if (overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(overlayHandle!.Value);
+    Browser.Dispose();
+    _texture.Dispose();
+    _device.Dispose();
+    if (_overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(_overlayHandle!.Value);
   }
 
   public void OnUiReady()
@@ -93,10 +94,10 @@ public class BaseOverlay {
 
   public void SyncState(OyasumiSidecarState? state = null)
   {
-    if (!UiReady)
+    if (!UiReady || !_requiresState)
       return;
     state ??= StateManager.Instance.GetAppState();
-    browser.ExecuteScriptAsync(
+    Browser.ExecuteScriptAsync(
       @$"window.OyasumiIPCIn.setState(""{HttpUtility.JavaScriptStringEncode(state.ToByteString().ToBase64())}"");");
   }
 
@@ -107,7 +108,7 @@ public class BaseOverlay {
       EventName = eventName,
       StringData = data
     };
-    IPCManager.Instance.CoreClient.SendEvent(p);
+    IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
   public void SendEventInt(string eventName, int data)
@@ -117,7 +118,7 @@ public class BaseOverlay {
       EventName = eventName,
       IntData = data
     };
-    IPCManager.Instance.CoreClient.SendEvent(p);
+    IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
   public void SendEventDouble(string eventName, double data)
@@ -127,7 +128,7 @@ public class BaseOverlay {
       EventName = eventName,
       DoubleData = data
     };
-    IPCManager.Instance.CoreClient.SendEvent(p);
+    IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
   public void SendEventBool(string eventName, bool data)
@@ -137,7 +138,7 @@ public class BaseOverlay {
       EventName = eventName,
       BoolData = data
     };
-    IPCManager.Instance.CoreClient.SendEvent(p);
+    IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
   public void SendEventJson(string eventName, String data)
@@ -147,19 +148,25 @@ public class BaseOverlay {
       EventName = eventName,
       JsonData = data
     };
-    IPCManager.Instance.CoreClient.SendEvent(p);
+    IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
   private void UpdateFrame()
   {
-    if (Disposed || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - browser.LastPaint >= 1000) return;
-    browser.RenderToTexture(this.texture);
+    if (Disposed || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint >= 1000) return;
+    Browser.RenderToTexture(this._texture);
     var texture = new Texture_t
     {
-      handle = this.texture.NativePointer
+      handle = _texture.NativePointer
     };
-    var err = OpenVR.Overlay.SetOverlayTexture(overlayHandle!.Value, ref texture);
-    if (err != EVROverlayError.None) Console.WriteLine("Could not set overlay texture.");
+    try
+    {
+      OpenVR.Overlay.SetOverlayTexture(_overlayHandle!.Value, ref texture);
+    }
+    catch (AccessViolationException)
+    {
+      // Shit happens sometimes
+    }
   }
 
   private void OnStateChanged(object? sender, OyasumiSidecarState e)

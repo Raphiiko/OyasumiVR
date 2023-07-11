@@ -9,19 +9,20 @@ using Serilog;
 
 namespace overlay_sidecar;
 
-public class IPCManager {
-  public static IPCManager Instance { get; } = new();
+public class IpcManager {
+  public static IpcManager Instance { get; } = new();
   private bool _initialized;
-  private String? staticBaseUrl;
+  private String? _staticBaseUrl;
   private OyasumiCore.OyasumiCoreClient? _coreClient;
-  public String StaticBaseUrl => staticBaseUrl!;
+
+  public String StaticBaseUrl => _staticBaseUrl!;
   public OyasumiCore.OyasumiCoreClient CoreClient => _coreClient!;
 
-  private IPCManager()
+  private IpcManager()
   {
   }
 
-  public void init(int mainProcessPort)
+  public void Init(int mainProcessPort)
   {
     if (_initialized) return;
     _initialized = true;
@@ -61,7 +62,7 @@ public class IPCManager {
       var grpcAddress = addressFeature!.Addresses.First();
       var grpcWebAddress = addressFeature.Addresses.Skip(1).First();
       // Use grpc web address to determine the static url
-      staticBaseUrl = grpcWebAddress + "/static";
+      _staticBaseUrl = grpcWebAddress + "/static";
       Log.Information("gRPC interface listening on address: " + grpcAddress);
       Log.Information("gRPC-Web interface listening on address: " + grpcWebAddress);
       // Parse port from address

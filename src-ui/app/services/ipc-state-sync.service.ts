@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, filter, map, pairwise } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  filter,
+  map,
+  pairwise,
+  startWith,
+} from 'rxjs';
 import { cloneDeep, isEqual } from 'lodash';
 import { UserStatus } from 'vrchat';
 import { IPCService } from './ipc.service';
@@ -58,7 +66,9 @@ export class IPCStateSyncService {
     // Sync state to overlay sidecar
     combineLatest([this.state, this.ipcService.overlaySidecarClient])
       .pipe(filter(([, client]) => !!client))
-      .subscribe(([state, client]) => client!.syncState(state));
+      .subscribe(([state, client]) => {
+        client!.syncState(state);
+      });
     // Update state when sleep mode changes
     this.sleepService.mode.subscribe((sleepMode) => {
       this.state.next({ ...cloneDeep(this.state.value), sleepMode });
@@ -87,6 +97,7 @@ export class IPCStateSyncService {
     this.automationConfig.configs
       .pipe(
         map((configs) => ({ ...configs })),
+        startWith({} as AutomationConfigs),
         pairwise(),
         filter(([oldConfigs, newConfigs]) => {
           const configIds: Array<keyof AutomationConfigs> = [

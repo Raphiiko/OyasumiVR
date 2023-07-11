@@ -4,8 +4,8 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class OVRManager {
-  public static OVRManager Instance { get; } = new();
+public class OvrManager {
+  public static OvrManager Instance { get; } = new();
 
   private bool _initialized;
   private Thread? _thread;
@@ -14,21 +14,22 @@ public class OVRManager {
   private ButtonDetector? _buttonDetector;
   private CVRSystem? _system;
   private OverlayPointer? _overlayPointer;
-  private bool active;
+  private bool _active;
 
-  public bool Active => active;
+  public bool Active => _active;
 
+  // ReSharper disable once MemberCanBePrivate.Global
   public bool Enabled { get; set; } = true;
   public NotificationOverlay? NotificationOverlay => _notificationOverlay;
   public OverlayPointer? OverlayPointer => _overlayPointer;
   public ButtonDetector? ButtonDetector => _buttonDetector;
 
 
-  private OVRManager()
+  private OvrManager()
   {
   }
 
-  public void init()
+  public void Init()
   {
     if (_initialized) return;
     _initialized = true;
@@ -47,7 +48,7 @@ public class OVRManager {
       {
         Thread.Sleep(32);
       }
-      catch (ThreadInterruptedException err)
+      catch (ThreadInterruptedException)
       {
       }
 
@@ -63,7 +64,7 @@ public class OVRManager {
           nextInit = DateTime.UtcNow.AddSeconds(5);
           if (_system == null) continue;
 
-          active = true;
+          _active = true;
           Log.Information("OpenVR Manager Started");
           _buttonDetector = new ButtonDetector();
           HandleButtonDetections();
@@ -77,7 +78,7 @@ public class OVRManager {
           if (type == EVREventType.VREvent_Quit)
           {
             Log.Information("Received quit event from SteamVR. Stopping OpenVR Manager...");
-            active = false;
+            _active = false;
             nextInit = DateTime.UtcNow.AddSeconds(5);
             Shutdown();
             break;
@@ -88,9 +89,9 @@ public class OVRManager {
             _buttonDetector!.HandleEvent(type, e);
         }
       }
-      else if (active)
+      else if (_active)
       {
-        active = false;
+        _active = false;
         nextInit = DateTime.UtcNow.AddSeconds(5);
         Shutdown();
       }
@@ -130,18 +131,19 @@ public class OVRManager {
     {
       var o = new DashboardOverlay();
       _dashboardOverlay = o;
-      _dashboardOverlay.open(role);
-      Action onCloseHandler = null;
-      onCloseHandler = () =>
+      _dashboardOverlay.Open(role);
+
+      void OnCloseHandler()
       {
-        o.OnClose -= onCloseHandler!;
+        o.OnClose -= OnCloseHandler;
         o.Dispose();
-      };
-      _dashboardOverlay.OnClose += onCloseHandler;
+      }
+
+      _dashboardOverlay.OnClose += OnCloseHandler;
     }
     else
     {
-      _dashboardOverlay.close();
+      _dashboardOverlay.Close();
       _dashboardOverlay = null;
     }
   }

@@ -43,8 +43,8 @@ public class OverlayPointer {
       (uint)pointerImage.Item3, 4);
     Marshal.FreeHGlobal(intPtr);
     // Handle trigger events
-    OVRManager.Instance.ButtonDetector!.OnTriggerPress += OnTriggerPress;
-    OVRManager.Instance.ButtonDetector!.OnTriggerRelease += OnTriggerRelease;
+    OvrManager.Instance.ButtonDetector!.OnTriggerPress += OnTriggerPress;
+    OvrManager.Instance.ButtonDetector!.OnTriggerRelease += OnTriggerRelease;
     // Start tasks
     new Thread(Start).Start();
     new Thread(ProcessMouseMovement).Start();
@@ -54,8 +54,8 @@ public class OverlayPointer {
   public void Dispose()
   {
     if (_disposed) return;
-    OVRManager.Instance.ButtonDetector!.OnTriggerPress -= OnTriggerPress;
-    OVRManager.Instance.ButtonDetector!.OnTriggerRelease -= OnTriggerRelease;
+    OvrManager.Instance.ButtonDetector!.OnTriggerPress -= OnTriggerPress;
+    OvrManager.Instance.ButtonDetector!.OnTriggerRelease -= OnTriggerRelease;
     lock (_leftPointer)
     {
       OpenVR.Overlay.DestroyOverlay(_leftPointer.OverlayHandle);
@@ -110,19 +110,19 @@ public class OverlayPointer {
     var timer = new RefreshRateTimer();
     while (!_disposed)
     {
-      timer.tickStart();
+      timer.TickStart();
       // Get all intersections between each controller and overlay
       intersections.Clear();
       foreach (var controllerRole in new[]
                  { ETrackedControllerRole.LeftHand, ETrackedControllerRole.RightHand })
       {
-        var controllerPose = OVRUtils.GetControllerPose(controllerRole);
+        var controllerPose = OvrUtils.GetControllerPose(controllerRole);
         if (controllerPose is not { bPoseIsValid: true } || !controllerPose.Value.bDeviceIsConnected) continue;
         lock (_overlays)
         {
           foreach (var overlay in _overlays)
           {
-            var controllerTransform = Matrix4x4.CreateRotationX(345f) * controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4x4();
+            var controllerTransform = Matrix4x4.CreateRotationX(345f) * controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
             var intersectionParams = new VROverlayIntersectionParams_t()
             {
               eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding,
@@ -138,7 +138,7 @@ public class OverlayPointer {
       }
 
       // Get the head transform
-      var headTransform = OVRUtils.GetHeadPose().mDeviceToAbsoluteTracking.ToMatrix4x4();
+      var headTransform = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking.ToMatrix4X4();
       // Find the closest intersection for each controller
       var closestIntersections = intersections
         .GroupBy(x => x!.Value.Item2)
@@ -193,7 +193,7 @@ public class OverlayPointer {
           }
       }
 
-      timer.sleepUntilNextTick();
+      timer.SleepUntilNextTick();
     }
   }
 

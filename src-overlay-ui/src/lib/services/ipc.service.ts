@@ -38,8 +38,9 @@ class IPCService {
     this.locale.subscribe(async (locale) => {
       await loadTranslations(locale ?? "en", "");
     });
-    // Define IPC functions
+    // Load IPC OUT functions
     await window.CefSharp.BindObjectAsync("OyasumiIPCOut");
+    // Define IPC IN functions
     window.OyasumiIPCOut.sendEvent = async (eventName: string, data: string | boolean | number) => {
       if (typeof data === "string") await window.OyasumiIPCOut.sendEventString(eventName, data);
       else if (typeof data === "boolean") await window.OyasumiIPCOut.sendEventBool(eventName, data);

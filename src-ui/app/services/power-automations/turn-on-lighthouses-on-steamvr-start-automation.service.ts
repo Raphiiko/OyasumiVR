@@ -9,6 +9,7 @@ import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
 import {
   asyncScheduler,
+  debounceTime,
   delay,
   filter,
   firstValueFrom,
@@ -16,10 +17,13 @@ import {
   of,
   pairwise,
   skipUntil,
+  startWith,
+  tap,
   throttleTime,
 } from 'rxjs';
 import { OpenVRService } from '../openvr.service';
 import { EventLogLighthouseSetPowerState } from 'src-ui/app/models/event-log-entry';
+import { LighthouseDevice } from '../../models/lighthouse-device';
 
 @Injectable({
   providedIn: 'root',
@@ -72,5 +76,46 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
         }
         devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'));
       });
+    // Listen for newly discovered lighthouses
+    this.lighthouse.devices
+      .pipe(
+        debounceTime(2000),
+        startWith([]),
+        pairwise(),
+        // Stop if the automation is disabled
+        filter(() => this.config.enabled),
+        // Get the newly discovered devices
+        map(([oldDevices, newDevices]) =>
+          newDevices.filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+        ),
+        // Handle the new devices
+        tap((newDevices) => {
+          newDevices.forEach((device) => this.handleNewDevice(device));
+        })
+      )
+      .subscribe();
+  }
+
+  private async handleNewDevice(device: LighthouseDevice, attempt = 0) {
+    if (!this.config.enabled) return;
+    if (!['INITIALIZED', 'INITIALIZING'].includes(await firstValueFrom(this.openvr.status))) return;
+    switch (device.powerState) {
+      case 'sleep':
+      case 'standby': {
+        await this.lighthouse.setPowerState(device, 'on');
+        break;
+      }
+      case 'unknown': {
+        // Attempt again in two seconds
+        if (attempt < 5) {
+          setTimeout(() => this.handleNewDevice(device, attempt + 1), 2000);
+        }
+        break;
+      }
+      case 'booting':
+      case 'on':
+      default:
+        break;
+    }
   }
 }

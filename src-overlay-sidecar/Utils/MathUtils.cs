@@ -79,7 +79,7 @@ public static class MathUtils {
   /// 13 23 33 XX <br/>
   /// 14 24 34 XX
   /// </summary>
-  public static Matrix4x4 ToMatrix4x4(this HmdMatrix34_t matrix)
+  public static Matrix4x4 ToMatrix4X4(this HmdMatrix34_t matrix)
   {
     return new Matrix4x4(
       matrix.m0, matrix.m4, matrix.m8, 0,

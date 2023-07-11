@@ -3,22 +3,22 @@ namespace overlay_sidecar;
 public class RefreshRateTimer {
   private long _lastTick;
 
-  public void tickStart()
+  public void TickStart()
   {
     _lastTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
   }
 
-  public float timeUntilNextTick(float minRefreshRate = 30, float maxRefreshRate = 144)
+  public float TimeUntilNextTick(float minRefreshRate = 30, float maxRefreshRate = 144)
   {
-    var refreshRate = float.Clamp(OVRUtils.GetRefreshRate(), minRefreshRate, maxRefreshRate);
+    var refreshRate = float.Clamp(OvrUtils.GetRefreshRate(), minRefreshRate, maxRefreshRate);
     var timeSinceLastTick = (float)(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _lastTick);
     var timeUntilNextTick = 1000f / refreshRate - timeSinceLastTick;
     return timeUntilNextTick;
   }
 
-  public void sleepUntilNextTick()
+  public void SleepUntilNextTick()
   {
-    var ms = float.Max(0, timeUntilNextTick());
+    var ms = float.Max(0, TimeUntilNextTick());
     Thread.Sleep((int)Math.Floor(ms));
   }
 }

@@ -15,7 +15,6 @@ import { OscService } from '../../services/osc.service';
 import { ImageBrightnessControlAutomationService } from '../../services/brightness-control/image-brightness/image-brightness-control-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
-import { IPCService } from 'src-ui/app/services/ipc.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [

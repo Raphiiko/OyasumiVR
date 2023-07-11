@@ -5,9 +5,9 @@ using Serilog.Core;
 namespace overlay_sidecar;
 
 public class LogConfigurator {
-  private static Logger _logger;
+  private static Logger? _logger;
 
-  public static Logger Logger => _logger;
+  public static Logger Logger => _logger!;
 
   public static void Init()
   {
