@@ -43,7 +43,7 @@ export class NotificationService {
         case 'OYASUMIVR':
           return await this.sendOyasumiNotification(content, duration);
         case 'XSOVERLAY':
-          return await this.sendXSOverlayNotification('OyasumiVR', content, true, duration / 1000);
+          return await this.sendXSOverlayNotification('OyasumiVR', content, false, duration / 1000);
         case 'DESKTOP':
           return await this.sendDesktopNotification('OyasumiVR', content);
       }

@@ -88,17 +88,6 @@ git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
 rev = "7e27051d2d1cdd6f838de9ea4c58ee5e712de958"
 features = ["ovr_system", "ovr_settings"]
 
-#[patch.crates-io]
-# Fix for broken window transparency in Tauri v1.3.0.
-# https://github.com/tauri-apps/tauri/issues/6868
-# Remove once fixed.
-#tao = { git = "https://github.com/tauri-apps/tao", branch = "v0.16" }
-# Remove once updating with elevated installers is fixed
-# https://github.com/tauri-apps/tauri/issues/7184
-# Remove once fixed.
-#tauri = { git = "https://github.com/Raphiiko/tauri", rev = "c7325372bdcffa97fd6ee8bc41e12800f47195be" }
-#tauri-build = { git = "https://github.com/Raphiiko/tauri", rev = "c7325372bdcffa97fd6ee8bc41e12800f47195be" }
-
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL

@@ -154,7 +154,7 @@ public class BaseOverlay {
   private void UpdateFrame()
   {
     if (Disposed || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint >= 1000) return;
-    Browser.RenderToTexture(this._texture);
+    Browser.RenderToTexture(_texture);
     var texture = new Texture_t
     {
       handle = _texture.NativePointer

@@ -43,8 +43,8 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-core
-      - name: Install development Tauri CLI
-        run: cargo install --git https://github.com/Raphiiko/tauri --branch dev tauri-cli
+#      - name: Install development Tauri CLI
+#        run: cargo install --git https://github.com/Raphiiko/tauri --branch dev tauri-cli
       - name: Test if OyasumiVR compiles
         uses: tauri-apps/tauri-action@v0
         env:

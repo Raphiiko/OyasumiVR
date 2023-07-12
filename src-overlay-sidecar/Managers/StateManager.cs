@@ -28,7 +28,7 @@ public class StateManager {
       var state = _state.Clone();
       state.MergeFrom(newState);
       _state = state;
-      StateChanged!.Invoke(this, _state);
+      StateChanged?.Invoke(this, _state);
     }
   }
 }

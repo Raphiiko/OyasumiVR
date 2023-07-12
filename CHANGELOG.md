@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Switched sidecar communication from HTTP to gRPC.
 - Changed SteamVR-based power automations for base stations to apply when new base stations are discovered.
+- Disabled notification sound for XSOverlay notifications.
 
 ### Fixed
 
