@@ -35,6 +35,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@fontsource/noto-sans-jp": "^5.0.5",
+		"@fontsource/noto-sans-kr": "^5.0.5",
+		"@fontsource/noto-sans-sc": "^5.0.5",
+		"@fontsource/noto-sans-tc": "^5.0.5",
+		"@fontsource/poppins": "^5.0.5",
 		"material-icons": "^1.13.8",
 		"rxjs": "^7.8.1",
 		"sveltekit-i18n": "^2.3.2"

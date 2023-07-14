@@ -1,7 +1,64 @@
+@import '@fontsource/poppins/index.css';
+@import '@fontsource/poppins/200.css';
+@import '@fontsource/poppins/400.css';
+@import '@fontsource/poppins/500.css';
+@import '@fontsource/poppins/600.css';
+@import '@fontsource/noto-sans-jp/index.css';
+@import '@fontsource/noto-sans-jp/300.css';
+@import '@fontsource/noto-sans-jp/400.css';
+@import '@fontsource/noto-sans-jp/500.css';
+@import '@fontsource/noto-sans-jp/700.css';
+@import '@fontsource/noto-sans-kr/index.css';
+@import '@fontsource/noto-sans-kr/300.css';
+@import '@fontsource/noto-sans-kr/400.css';
+@import '@fontsource/noto-sans-kr/500.css';
+@import '@fontsource/noto-sans-kr/700.css';
+@import '@fontsource/noto-sans-tc/index.css';
+@import '@fontsource/noto-sans-tc/300.css';
+@import '@fontsource/noto-sans-tc/400.css';
+@import '@fontsource/noto-sans-tc/500.css';
+@import '@fontsource/noto-sans-tc/700.css';
+@import '@fontsource/noto-sans-sc/index.css';
+@import '@fontsource/noto-sans-sc/300.css';
+@import '@fontsource/noto-sans-sc/400.css';
+@import '@fontsource/noto-sans-sc/500.css';
+@import '@fontsource/noto-sans-sc/700.css';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @import 'material-icons/iconfont/material-icons.css';
+
+* {
+  letter-spacing: 0.025em;
+}
+
+.glow {
+  &, &-40 {
+    @apply drop-shadow-[0_0_4px_rgba(255,255,255,40%)];
+  }
+
+  &-80 {
+    @apply drop-shadow-[0_0_8px_rgba(255,255,255,80%)]
+  }
+
+  &-100 {
+    @apply drop-shadow-[0_0_8px_rgba(255,255,255,100%)]
+  }
+}
+
+.dark-glow {
+  &, &-40 {
+    @apply drop-shadow-[0_0_16px_rgba(0,0,0,40%)];
+  }
+
+  &-80 {
+    @apply drop-shadow-[0_0_16px_rgba(0,0,0,80%)]
+  }
+
+  &-100 {
+    @apply drop-shadow-[0_0_16px_rgba(0,0,0,100%)]
+  }
+}
 
 .vrc-status-color {
   &-Active, &-3 {
