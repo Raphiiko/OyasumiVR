@@ -38,8 +38,8 @@ public static class Program {
     // Initialize
     WatchMainProcess(mainProcessId);
     InitCef();
-    OvrManager.Instance.Init();
     IpcManager.Instance.Init(mainProcessPort);
+    OvrManager.Instance.Init();
   }
 
   private static void InitCef()

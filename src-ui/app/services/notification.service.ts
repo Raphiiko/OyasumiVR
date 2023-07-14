@@ -109,7 +109,6 @@ export class NotificationService {
       message: content,
       duration,
     });
-    console.log(result, result.response, result.response.notificationId);
     return result.response.notificationId ?? null;
   }
 

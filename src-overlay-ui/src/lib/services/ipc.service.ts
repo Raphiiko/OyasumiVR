@@ -32,21 +32,23 @@ class IPCService {
   };
 
   async init() {
-    if (!browser || !window.CefSharp || this.initialized) return;
+    if (!browser || this.initialized) return;
     this.initialized = true;
     // Update the locale
     this.locale.subscribe(async (locale) => {
       await loadTranslations(locale ?? "en", "");
     });
     // Load IPC OUT functions
-    await window.CefSharp.BindObjectAsync("OyasumiIPCOut");
+    if (window.CefSharp) {
+      await window.CefSharp.BindObjectAsync("OyasumiIPCOut");
+      window.OyasumiIPCOut.sendEvent = async (eventName: string, data: string | boolean | number) => {
+        if (typeof data === "string") await window.OyasumiIPCOut.sendEventString(eventName, data);
+        else if (typeof data === "boolean") await window.OyasumiIPCOut.sendEventBool(eventName, data);
+        else if (Number.isInteger(data)) await window.OyasumiIPCOut.sendEventInt(eventName, data);
+        else await window.OyasumiIPCOut.sendEventDouble(eventName, data);
+      };
+    }
     // Define IPC IN functions
-    window.OyasumiIPCOut.sendEvent = async (eventName: string, data: string | boolean | number) => {
-      if (typeof data === "string") await window.OyasumiIPCOut.sendEventString(eventName, data);
-      else if (typeof data === "boolean") await window.OyasumiIPCOut.sendEventBool(eventName, data);
-      else if (Number.isInteger(data)) await window.OyasumiIPCOut.sendEventInt(eventName, data);
-      else await window.OyasumiIPCOut.sendEventDouble(eventName, data);
-    };
     window.OyasumiIPCIn.setState = async (b64state) => {
       let state = OyasumiSidecarState.fromBinary(Uint8Array.from(window.atob(b64state), (c) => c.charCodeAt(0)));
       state = mergeWith(cloneDeep(DEFAULT_OYASUMI_STATE), cloneDeep(get(INSTANCE.state)), state, (objValue, srcValue) => {
@@ -67,6 +69,7 @@ class IPCService {
       this.events.addNotification.set(null);
       return notification.id;
     };
+    console.log("IPC Initialized");
   }
 
   async setSleepMode(mode: boolean) {

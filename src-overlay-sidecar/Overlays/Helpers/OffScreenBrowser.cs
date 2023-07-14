@@ -1,7 +1,5 @@
 // Source: https://github.com/vrcx-team/VRCX/blob/master/OffScreenBrowser.cs
 
-using Microsoft.VisualBasic.CompilerServices;
-
 namespace overlay_sidecar;
 
 using CefSharp;
@@ -14,7 +12,6 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
-  private int subResourceIndex = 0;
   private readonly ReaderWriterLockSlim _paintBufferLock;
   private GCHandle _paintBuffer;
   private int _width;

@@ -53,43 +53,43 @@ public class IpcManager {
       .EnableGrpcWeb()
       .RequireCors("AllowAll");
     app.Start();
+    // Get the bound address
+    var server = app.Services.GetRequiredService<IServer>();
+    var addressFeature = server.Features.Get<IServerAddressesFeature>();
+    // Get first and second address
+    var grpcAddress = addressFeature!.Addresses.First();
+    var grpcWebAddress = addressFeature.Addresses.Skip(1).First();
+    // Use grpc web address to determine the static url
+    _staticBaseUrl = grpcWebAddress + "/static";
+    Log.Information("gRPC interface listening on address: " + grpcAddress);
+    Log.Information("gRPC-Web interface listening on address: " + grpcWebAddress);
+    // Parse ports from addresses
+    if (!int.TryParse(grpcAddress.Split(':').Last(), out var grpcPort))
+    {
+      Log.Error("Cannot parse bound port for gRPC interface.");
+      if (!Debugger.IsAttached)
+      {
+        Log.Information("Quitting...");
+        Environment.Exit(1);
+        return;
+      }
+    }
+
+    if (!int.TryParse(grpcWebAddress.Split(':').Last(), out var grpcWebPort))
+    {
+      Log.Error("Cannot parse bound port for gRPC-Web interface.");
+      if (!Debugger.IsAttached)
+      {
+        Log.Information("Quitting...");
+        Environment.Exit(1);
+        return;
+      }
+    }
+
+    var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
+    _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
     new Thread(() =>
     {
-      // Get the bound address
-      var server = app.Services.GetRequiredService<IServer>();
-      var addressFeature = server.Features.Get<IServerAddressesFeature>();
-      // Get first and second address
-      var grpcAddress = addressFeature!.Addresses.First();
-      var grpcWebAddress = addressFeature.Addresses.Skip(1).First();
-      // Use grpc web address to determine the static url
-      _staticBaseUrl = grpcWebAddress + "/static";
-      Log.Information("gRPC interface listening on address: " + grpcAddress);
-      Log.Information("gRPC-Web interface listening on address: " + grpcWebAddress);
-      // Parse port from address
-      if (!int.TryParse(grpcAddress.Split(':').Last(), out var grpcPort))
-      {
-        Log.Error("Cannot parse bound port for gRPC interface.");
-        if (!Debugger.IsAttached)
-        {
-          Log.Information("Quitting...");
-          Environment.Exit(1);
-          return;
-        }
-      }
-
-      if (!int.TryParse(grpcWebAddress.Split(':').Last(), out var grpcWebPort))
-      {
-        Log.Error("Cannot parse bound port for gRPC-Web interface.");
-        if (!Debugger.IsAttached)
-        {
-          Log.Information("Quitting...");
-          Environment.Exit(1);
-          return;
-        }
-      }
-
-      var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
-      _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
       try
       {
         _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
