@@ -57,7 +57,7 @@ export class FontLoaderService {
         variants: ['normal'],
       },
     ];
-    let loads = flattenDeep<Promise<FontFace>>(
+    const loads = flattenDeep<Promise<FontFace>>(
       fontDefs.map((fontDef) => {
         return fontDef.sets.map((set) => {
           return fontDef.weights.map((weight) => {
