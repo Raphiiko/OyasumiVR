@@ -6,20 +6,18 @@ public class OvrUtils {
   private static float _refreshRate = 90;
   private static long _refreshRateLastSet;
 
-  public static TrackedDevicePose_t GetHeadPose()
+  public static TrackedDevicePose_t GetHeadPose(TrackedDevicePose_t[] poseBuffer)
   {
-    var poses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-    OpenVR.System.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0, poses);
-    return poses[0];
+    OpenVR.System.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0, poseBuffer);
+    return poseBuffer[0];
   }
 
-  public static TrackedDevicePose_t? GetControllerPose(ETrackedControllerRole role)
+  public static TrackedDevicePose_t? GetControllerPose(ETrackedControllerRole role, TrackedDevicePose_t[] poseBuffer)
   {
     var index = OpenVR.System.GetTrackedDeviceIndexForControllerRole(role);
     if (index is < 1 or >= OpenVR.k_unMaxTrackedDeviceCount) return null;
-    var poses = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
-    OpenVR.System.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0, poses);
-    return poses[index];
+    OpenVR.System.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0, poseBuffer);
+    return poseBuffer[index];
   }
 
   public static float GetRefreshRate(bool force = false)

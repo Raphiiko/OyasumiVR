@@ -5,7 +5,9 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class TooltipOverlay : BaseOverlay {
+public class TooltipOverlay : BaseWebOverlay {
+  private static TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+
   private bool _shown;
   private bool _closing;
   private Vector3? _targetPosition;
@@ -73,7 +75,7 @@ public class TooltipOverlay : BaseOverlay {
     OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
     var currentTransform = currentTransform34T.ToMatrix4X4();
     // Calculate target transform
-    var headPose = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking;
+    var headPose = OvrUtils.GetHeadPose(_poseBuffer).mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4X4();
     var targetTransform =
       Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix)) *

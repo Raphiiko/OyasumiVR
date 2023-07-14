@@ -5,7 +5,9 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class NotificationOverlay : BaseOverlay {
+public class NotificationOverlay : BaseWebOverlay {
+  private static TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+
   public NotificationOverlay() :
     base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay", false)
   {
@@ -44,14 +46,14 @@ public class NotificationOverlay : BaseOverlay {
 
   private void UpdatePosition()
   {
-    if (DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint > 1000) return;
+    if (Browser == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint > 1000) return;
     // Get current transform
     var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
     HmdMatrix34_t currentTransform34T = default;
     OpenVR.Overlay.GetOverlayTransformAbsolute(OverlayHandle, ref origin, ref currentTransform34T);
     var currentTransform = currentTransform34T.ToMatrix4X4();
     // Calculate target transform
-    var headPose = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking;
+    var headPose = OvrUtils.GetHeadPose(_poseBuffer).mDeviceToAbsoluteTracking;
     var headMatrix = headPose.ToMatrix4X4();
     var offset = Matrix4x4.CreateRotationX(-15f.ToRadians()) *
                  Matrix4x4.CreateTranslation(0, -0.125f, -0.55f);

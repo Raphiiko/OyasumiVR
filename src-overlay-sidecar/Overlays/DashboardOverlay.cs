@@ -5,7 +5,9 @@ using static overlay_sidecar.Utils;
 
 namespace overlay_sidecar;
 
-public class DashboardOverlay : BaseOverlay {
+public class DashboardOverlay : BaseWebOverlay {
+  private static TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+
   private bool _isOpen;
   private bool _closing;
   private Matrix4x4? _targetTransform;
@@ -18,9 +20,9 @@ public class DashboardOverlay : BaseOverlay {
     base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
   {
     // browser.ShowDevTools();
+    Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     _tooltipOverlay = new TooltipOverlay();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
-    Browser.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     new Thread(UpdateTooltipPosition).Start();
   }
 
@@ -33,6 +35,8 @@ public class DashboardOverlay : BaseOverlay {
 
   public async void Open(ETrackedControllerRole role)
   {
+    if (_isOpen) return;
+    _isOpen = true;
     while (!UiReady) await Task.Delay(TimeSpan.FromMilliseconds(16));
     _targetTransform = GetTargetTransform(role);
     if (!_targetTransform.HasValue) return;
@@ -41,7 +45,6 @@ public class DashboardOverlay : BaseOverlay {
       ETrackingUniverseOrigin.TrackingUniverseStanding,
       ref transform
     );
-    _isOpen = true;
     _closing = false;
     OvrManager.Instance.OverlayPointer!.StartForOverlay(this);
     ShowDashboard();
@@ -79,8 +82,8 @@ public class DashboardOverlay : BaseOverlay {
 
   private static Matrix4x4? GetTargetTransform(ETrackedControllerRole controllerRole)
   {
-    var handPose = OvrUtils.GetControllerPose(controllerRole);
-    var headPose = OvrUtils.GetHeadPose();
+    var handPose = OvrUtils.GetControllerPose(controllerRole, _poseBuffer);
+    var headPose = OvrUtils.GetHeadPose(_poseBuffer);
     if (handPose == null) return null;
     var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
     var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4X4();

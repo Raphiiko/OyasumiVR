@@ -8,7 +8,7 @@ using MouseButtonType = CefSharp.MouseButtonType;
 namespace overlay_sidecar;
 
 public class OverlayPointer {
-  private readonly List<BaseOverlay> _overlays = new();
+  private readonly List<BaseWebOverlay> _overlays = new();
   private bool _disposed;
   private readonly PointerData _rightPointer;
   private readonly PointerData _leftPointer;
@@ -47,13 +47,13 @@ public class OverlayPointer {
     OvrManager.Instance.ButtonDetector!.OnTriggerRelease += OnTriggerRelease;
     // Start tasks
     new Thread(Start).Start();
-    new Thread(ProcessMouseMovement).Start();
   }
 
 
   public void Dispose()
   {
     if (_disposed) return;
+    _disposed = true;
     OvrManager.Instance.ButtonDetector!.OnTriggerPress -= OnTriggerPress;
     OvrManager.Instance.ButtonDetector!.OnTriggerRelease -= OnTriggerRelease;
     lock (_leftPointer)
@@ -65,11 +65,9 @@ public class OverlayPointer {
     {
       OpenVR.Overlay.DestroyOverlay(_rightPointer.OverlayHandle);
     }
-
-    _disposed = true;
   }
 
-  public void StartForOverlay(BaseOverlay overlay)
+  public void StartForOverlay(BaseWebOverlay overlay)
   {
     lock (_overlays)
     {
@@ -77,7 +75,7 @@ public class OverlayPointer {
     }
   }
 
-  public void StopForOverlay(BaseOverlay overlay)
+  public void StopForOverlay(BaseWebOverlay overlay)
   {
     lock (_overlays)
     lock (_leftPointer)
@@ -89,7 +87,7 @@ public class OverlayPointer {
     }
   }
 
-  public Vector3? GetPointerLocationForOverlay(BaseOverlay overlay)
+  public Vector3? GetPointerLocationForOverlay(BaseWebOverlay overlay)
   {
     lock (_leftPointer)
     {
@@ -106,30 +104,36 @@ public class OverlayPointer {
 
   private void Start()
   {
-    List<(VROverlayIntersectionResults_t, ETrackedControllerRole, BaseOverlay)?> intersections = new();
+    // Allocate working variables
+    List<(VROverlayIntersectionResults_t, ETrackedControllerRole, BaseWebOverlay)?> intersections = new();
+    var closestIntersections =
+      new (VROverlayIntersectionResults_t, BaseWebOverlay)?[] { null, null }; // [LEFT, RIGHT]
+
+    var controllerRoles = new[]
+      { ETrackedControllerRole.LeftHand, ETrackedControllerRole.RightHand };
+    var poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+    var intersectionParams = new VROverlayIntersectionParams_t();
+    var intersectionResults = new VROverlayIntersectionResults_t();
+
     var timer = new RefreshRateTimer();
     while (!_disposed)
     {
       timer.TickStart();
       // Get all intersections between each controller and overlay
       intersections.Clear();
-      foreach (var controllerRole in new[]
-                 { ETrackedControllerRole.LeftHand, ETrackedControllerRole.RightHand })
+      foreach (var controllerRole in controllerRoles)
       {
-        var controllerPose = OvrUtils.GetControllerPose(controllerRole);
+        var controllerPose = OvrUtils.GetControllerPose(controllerRole, poseBuffer);
         if (controllerPose is not { bPoseIsValid: true } || !controllerPose.Value.bDeviceIsConnected) continue;
         lock (_overlays)
         {
           foreach (var overlay in _overlays)
           {
-            var controllerTransform = Matrix4x4.CreateRotationX(345f) * controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
-            var intersectionParams = new VROverlayIntersectionParams_t()
-            {
-              eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding,
-              vSource = controllerTransform.Translation.ToHmdVector3_t(),
-              vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t()
-            };
-            var intersectionResults = new VROverlayIntersectionResults_t();
+            var controllerTransform = Matrix4x4.CreateRotationX(345f) *
+                                      controllerPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
+            intersectionParams.eOrigin = ETrackingUniverseOrigin.TrackingUniverseStanding;
+            intersectionParams.vSource = controllerTransform.Translation.ToHmdVector3_t();
+            intersectionParams.vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t();
             if (!OpenVR.Overlay.ComputeOverlayIntersection(overlay.OverlayHandle, ref intersectionParams,
                   ref intersectionResults)) continue;
             intersections.Add((intersectionResults, controllerRole, overlay));
@@ -137,24 +141,27 @@ public class OverlayPointer {
         }
       }
 
-      // Get the head transform
-      var headTransform = OvrUtils.GetHeadPose().mDeviceToAbsoluteTracking.ToMatrix4X4();
       // Find the closest intersection for each controller
-      var closestIntersections = intersections
-        .GroupBy(x => x!.Value.Item2)
-        .Select(x => x.OrderBy(y => y!.Value.Item1.fDistance).FirstOrDefault())
-        .Where(x => x.HasValue)
-        .ToList();
+      closestIntersections[0] = null;
+      closestIntersections[1] = null;
+      foreach (var intersection in intersections)
+      {
+        var index = intersection!.Value.Item2 == ETrackedControllerRole.LeftHand ? 0 : 1;
+        if (!closestIntersections[index].HasValue ||
+            closestIntersections[index]!.Value.Item1.fDistance > intersection.Value.Item1.fDistance)
+          closestIntersections[index] = (intersection.Value.Item1, intersection.Value.Item3);
+      }
+
+      // Get the head transform
+      var headTransform = OvrUtils.GetHeadPose(poseBuffer).mDeviceToAbsoluteTracking.ToMatrix4X4();
+
       // Update the pointer for each controller
-      var rightIntersection =
-        closestIntersections.FirstOrDefault(x => x!.Value.Item2 == ETrackedControllerRole.RightHand, null);
-      var leftIntersection =
-        closestIntersections.FirstOrDefault(x => x!.Value.Item2 == ETrackedControllerRole.LeftHand, null);
       lock (_leftPointer)
       lock (_rightPointer)
       {
         foreach (var (intersection, pointer) in new[]
-                   { (rightIntersection, _rightPointer), (leftIntersection, _leftPointer) })
+                   { (closestIntersections[0], _leftPointer), (closestIntersections[1], _rightPointer), })
+        {
           if (intersection.HasValue)
           {
             var position = intersection.Value.Item1.vPoint.ToVector3();
@@ -166,13 +173,16 @@ public class OverlayPointer {
             );
             OpenVR.Overlay.ShowOverlay(pointer.OverlayHandle);
             pointer.LastUvPosition = intersection.Value.Item1.vUVs.ToVector2();
-            pointer.LastActiveOverlay = intersection.Value.Item3;
+            pointer.LastActiveOverlay = intersection.Value.Item2;
             pointer.LastPosition = intersection.Value.Item1.vPoint.ToVector3();
-            var browser = intersection.Value.Item3.Browser;
-            var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
-            var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
-            browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false,
-              pointer.Pressed ? CefEventFlags.LeftMouseButton : CefEventFlags.None);
+            var browser = intersection.Value.Item2.Browser;
+            if (browser != null)
+            {
+              var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
+              var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
+              browser.GetBrowser().GetHost().SendMouseMoveEvent(x, y, false,
+                pointer.Pressed ? CefEventFlags.LeftMouseButton : CefEventFlags.None);
+            }
           }
           else
           {
@@ -180,10 +190,13 @@ public class OverlayPointer {
             if (pointer.LastActiveOverlay != null && pointer.LastUvPosition != null)
             {
               var browser = pointer.LastActiveOverlay!.Browser;
-              browser.GetBrowser().GetHost().SendMouseMoveEvent(
-                (int)(pointer.LastUvPosition.Value.X * browser.Size.Width),
-                (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height),
-                true, CefEventFlags.None);
+              if (browser != null)
+              {
+                browser.GetBrowser().GetHost().SendMouseMoveEvent(
+                  (int)(pointer.LastUvPosition.Value.X * browser.Size.Width),
+                  (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height),
+                  true, CefEventFlags.None);
+              }
             }
 
             pointer.LastPosition = null;
@@ -191,16 +204,10 @@ public class OverlayPointer {
             pointer.LastUvPosition = null;
             pointer.LastActiveOverlay = null;
           }
+        }
       }
 
       timer.SleepUntilNextTick();
-    }
-  }
-
-  private void ProcessMouseMovement()
-  {
-    while (!_disposed)
-    {
     }
   }
 
@@ -216,13 +223,15 @@ public class OverlayPointer {
         _ => null
       };
       if (pointer == null) return;
-      pointer.Pressed = false;
       if (pointer.LastActiveOverlay == null || pointer.LastUvPosition == null) return;
       var browser = pointer.LastActiveOverlay.Browser;
-      var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
-      var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
-      browser.GetBrowser().GetHost().SendMouseClickEvent(x, y,
-        MouseButtonType.Left, true, 1, CefEventFlags.None);
+      if (browser != null)
+      {
+        var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
+        var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
+        browser.GetBrowser().GetHost().SendMouseClickEvent(x, y,
+          MouseButtonType.Left, true, 1, CefEventFlags.None);
+      }
     }
   }
 
@@ -241,10 +250,13 @@ public class OverlayPointer {
       pointer.Pressed = true;
       if (pointer.LastActiveOverlay == null || pointer.LastUvPosition == null) return;
       var browser = pointer.LastActiveOverlay.Browser;
-      var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
-      var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
-      browser.GetBrowser().GetHost().SendMouseClickEvent(x, y,
-        MouseButtonType.Left, false, 1, CefEventFlags.None);
+      if (browser != null)
+      {
+        var x = (int)(pointer.LastUvPosition.Value.X * browser.Size.Width);
+        var y = (int)((1.0f - pointer.LastUvPosition.Value.Y) * browser.Size.Height);
+        browser.GetBrowser().GetHost().SendMouseClickEvent(x, y,
+          MouseButtonType.Left, false, 1, CefEventFlags.None);
+      }
     }
   }
 
@@ -252,7 +264,7 @@ public class OverlayPointer {
     public ulong OverlayHandle;
     public Vector2? LastUvPosition;
     public bool Pressed;
-    public BaseOverlay? LastActiveOverlay;
+    public BaseWebOverlay? LastActiveOverlay;
     public Vector3? LastPosition;
   }
 }

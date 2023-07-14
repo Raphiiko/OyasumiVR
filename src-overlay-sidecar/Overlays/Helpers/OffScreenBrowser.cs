@@ -1,5 +1,7 @@
 // Source: https://github.com/vrcx-team/VRCX/blob/master/OffScreenBrowser.cs
 
+using Microsoft.VisualBasic.CompilerServices;
+
 namespace overlay_sidecar;
 
 using CefSharp;
@@ -12,6 +14,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
+  private int subResourceIndex = 0;
   private readonly ReaderWriterLockSlim _paintBufferLock;
   private GCHandle _paintBuffer;
   private int _width;
@@ -26,13 +29,11 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
       {
         WindowlessFrameRate = 60,
         WebGl = CefState.Enabled,
-
         DefaultEncoding = "UTF-8"
       }
     )
   {
     _paintBufferLock = new ReaderWriterLockSlim();
-
     Size = new System.Drawing.Size(width, height);
     RenderHandler = this;
   }
@@ -40,6 +41,7 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
   public new void Dispose()
   {
     RenderHandler = null;
+    if (IsDisposed) return;
     base.Dispose();
 
     _paintBufferLock.EnterWriteLock();
@@ -94,11 +96,11 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
               destinationPtr += rowPitch;
             }
         }
-
         context.UnmapSubresource(texture, 0);
       }
     }
     finally
+
     {
       _paintBufferLock.ExitReadLock();
     }

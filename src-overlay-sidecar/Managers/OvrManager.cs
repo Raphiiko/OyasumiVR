@@ -1,6 +1,11 @@
 using System.Runtime.InteropServices;
 using Serilog;
+using SharpDX;
+using SharpDX.Direct3D;
+using SharpDX.Direct3D11;
+using SharpDX.DXGI;
 using Valve.VR;
+using Device = SharpDX.Direct3D11.Device;
 
 namespace overlay_sidecar;
 
@@ -8,13 +13,16 @@ public class OvrManager {
   public static OvrManager Instance { get; } = new();
 
   private bool _initialized;
-  private Thread? _thread;
+  private readonly List<BaseWebOverlay> _overlays = new();
+  private Thread? _mainThread;
+  private Thread? _renderThread;
   private NotificationOverlay? _notificationOverlay;
   private DashboardOverlay? _dashboardOverlay;
   private ButtonDetector? _buttonDetector;
   private CVRSystem? _system;
   private OverlayPointer? _overlayPointer;
   private bool _active;
+  private Device? _device;
 
   public bool Active => _active;
 
@@ -24,17 +32,75 @@ public class OvrManager {
   public OverlayPointer? OverlayPointer => _overlayPointer;
   public ButtonDetector? ButtonDetector => _buttonDetector;
 
+  public Device D3D11Device => _device!;
 
   private OvrManager()
   {
   }
 
-  public void Init()
+  public async void Init()
   {
     if (_initialized) return;
+    await InitializeDevice();
     _initialized = true;
-    _thread = new Thread(MainLoop);
-    _thread.Start();
+    // Start main loop
+    _mainThread = new Thread(MainLoop);
+    _mainThread.Start();
+    // Start frame updates for web overlays
+    _renderThread = new Thread(OverlayRenderLoop);
+    _renderThread.Start();
+  }
+
+  private async Task InitializeDevice()
+  {
+    var timings = new[] { 16, 100, 200, 500, 1000 };
+    for (var attempt = 0;; attempt++)
+    {
+      try
+      {
+        _device = Program.GPUFix
+          ? new Device(new Factory1().GetAdapter(1),
+            DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug)
+          : new Device(DriverType.Hardware,
+            DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug);
+      }
+      catch (SharpDXException err)
+      {
+        if (attempt >= timings.Length)
+        {
+          Log.Error("Could not initialize D3D device" + err);
+          throw;
+        }
+
+        await Task.Delay(timings[attempt]);
+        continue;
+      }
+
+      break;
+    }
+  }
+
+  private void OverlayRenderLoop()
+  {
+    var timer = new RefreshRateTimer();
+    while (true)
+    {
+      if (Active)
+      {
+        timer.TickStart();
+        lock (_overlays)
+        {
+          foreach (var overlay in _overlays)
+            overlay.UpdateFrame();
+        }
+
+        timer.SleepUntilNextTick();
+      }
+      else
+      {
+        Thread.Sleep(100);
+      }
+    }
   }
 
   private void MainLoop()
@@ -70,6 +136,18 @@ public class OvrManager {
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
           _notificationOverlay = new NotificationOverlay();
+          new Thread(() =>
+          {
+            Random r = new Random();
+            var i = 0;
+            while (true)
+            {
+              var sleepTime = (int)Math.Floor(r.NextDouble() * 500 + 250);
+              // var sleepTime = 300;
+              Thread.Sleep(sleepTime);
+              OnDoublePressA(null, ETrackedControllerRole.RightHand);
+            }
+          }).Start();
         }
 
         while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))
@@ -145,6 +223,22 @@ public class OvrManager {
     {
       _dashboardOverlay.Close();
       _dashboardOverlay = null;
+    }
+  }
+
+  public void RegisterWebOverlay(BaseWebOverlay overlay)
+  {
+    lock (_overlays)
+    {
+      if (!_overlays.Contains(overlay)) _overlays.Add(overlay);
+    }
+  }
+
+  public void UnregisterWebOverlay(BaseWebOverlay overlay)
+  {
+    lock (_overlays)
+    {
+      if (_overlays.Contains(overlay)) _overlays.Remove(overlay);
     }
   }
 }

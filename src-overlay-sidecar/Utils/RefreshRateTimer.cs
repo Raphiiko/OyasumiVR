@@ -5,6 +5,8 @@ public class RefreshRateTimer {
 
   public void TickStart()
   {
+    // var timeSinceLastTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _lastTick;
+    // Console.WriteLine("Time Since Last Tick: " + timeSinceLastTick + "ms");
     _lastTick = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
   }
 
