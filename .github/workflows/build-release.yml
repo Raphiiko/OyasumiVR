@@ -42,8 +42,8 @@ jobs:
             src-shared
             src-elevated-sidecar
             src-core
-#      - name: Install development Tauri CLI
-#        run: cargo install --git https://github.com/Raphiiko/tauri --branch dev tauri-cli
+      - name: Install development Tauri CLI
+        run: cargo install --git https://github.com/Raphiiko/tauri --branch 1.x tauri-cli
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -63,7 +63,7 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           includeUpdaterJson: true
-#          tauriScript: cargo-tauri
+          tauriScript: cargo-tauri
       - name: Update the update manifest
         uses: Raphiiko/actions-deploy-gist@main
         with:
