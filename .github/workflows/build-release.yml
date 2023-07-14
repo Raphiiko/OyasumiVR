@@ -63,7 +63,7 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           includeUpdaterJson: true
-          tauriScript: cargo-tauri
+#          tauriScript: cargo-tauri
       - name: Update the update manifest
         uses: Raphiiko/actions-deploy-gist@main
         with:

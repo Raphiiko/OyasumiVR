@@ -65,7 +65,7 @@ jobs:
           includeDebug: true
           includeRelease: false
           includeUpdaterJson: true
-          tauriScript: cargo-tauri
+#          tauriScript: cargo-tauri
       - name: Update release data
         uses: actions/github-script@v3
         with:
