@@ -7,7 +7,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <SelfContained Condition="'$(SelfContained)' == ''">false</SelfContained>
-    <RuntimeFrameworkVersion>5.0.0</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>7.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
 
   <ItemGroup>
