@@ -136,18 +136,18 @@ public class OvrManager {
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
           _notificationOverlay = new NotificationOverlay();
-          new Thread(() =>
-          {
-            Random r = new Random();
-            var i = 0;
-            while (true)
-            {
-              var sleepTime = (int)Math.Floor(r.NextDouble() * 500 + 250);
-              // var sleepTime = 300;
-              Thread.Sleep(sleepTime);
-              OnDoublePressA(null, ETrackedControllerRole.RightHand);
-            }
-          }).Start();
+//           new Thread(() =>
+//           {
+//             Random r = new Random();
+//             var i = 0;
+//             while (true)
+//             {
+//               var sleepTime = (int)Math.Floor(r.NextDouble() * 500 + 250);
+//               // var sleepTime = 300;
+//               Thread.Sleep(sleepTime);
+//               OnDoublePressA(null, ETrackedControllerRole.RightHand);
+//             }
+//           }).Start();
         }
 
         while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))
