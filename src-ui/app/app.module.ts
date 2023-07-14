@@ -131,6 +131,7 @@ import { MomentModule } from 'ngx-moment';
 import { IPCStateSyncService } from './services/ipc-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
+import { FontLoaderService } from './services/font-loader.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -254,6 +255,7 @@ export class AppModule {
     private ipcService: IPCService,
     private ipcAppStateSyncService: IPCStateSyncService,
     private automationConfigService: AutomationConfigService,
+    private fontLoaderService: FontLoaderService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -315,6 +317,7 @@ export class AppModule {
           this.vrchatService.init(),
           this.vrchatLogService.init(),
           this.imageCacheService.init(),
+          this.fontLoaderService.init(),
           this.lighthouseService.init(),
         ]);
         // Initialize GPU control services

@@ -1,3 +1,5 @@
+use crate::Models::oyasumi_core::HttpServerPort;
+
 use super::models::oyasumi_core::{
     event_params::EventData, oyasumi_core_server::OyasumiCore, ElevatedSidecarStartArgs, Empty,
     EventParams, OverlaySidecarStartArgs,
@@ -60,5 +62,17 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         }
 
         Ok(Response::new(Empty {}))
+    }
+
+    async fn get_http_server_port(
+        &self,
+        _: Request<Empty>,
+    ) -> Result<Response<HttpServerPort>, Status> {
+        let port = crate::http::PORT.lock().await;
+        let port = match port.as_ref() {
+            Some(p) => p,
+            None => &0,
+        };
+        Ok(Response::new(HttpServerPort { port: *port }))
     }
 }

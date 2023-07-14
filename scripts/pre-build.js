@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { mkdirp } from 'mkdirp';
 import { blurhashToCss } from 'blurhash-to-css';
 import sharp from 'sharp';
 import { encode } from 'blurhash';

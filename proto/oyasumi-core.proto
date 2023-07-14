@@ -8,6 +8,11 @@ service OyasumiCore {
   rpc OnOverlaySidecarStart (OverlaySidecarStartArgs) returns (Empty) {}
   rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
   rpc SendEvent (EventParams) returns (Empty) {}
+  rpc GetHTTPServerPort (Empty) returns (HTTPServerPort) {}
+}
+
+message HTTPServerPort {
+  uint32 port = 1;
 }
 
 message OverlaySidecarStartArgs {

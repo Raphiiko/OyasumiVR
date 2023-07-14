@@ -12,11 +12,14 @@ namespace overlay_sidecar;
 public class IpcManager {
   public static IpcManager Instance { get; } = new();
   private bool _initialized;
-  private String? _staticBaseUrl;
+  private string? _staticBaseUrl;
   private OyasumiCore.OyasumiCoreClient? _coreClient;
+  private uint _coreHttpServerPort;
 
-  public String StaticBaseUrl => _staticBaseUrl!;
+  public string StaticBaseUrl => _staticBaseUrl!;
   public OyasumiCore.OyasumiCoreClient CoreClient => _coreClient!;
+  public string CoreHttpBaseUrl => $"http://localhost:{CoreHttpPort}";
+  public uint CoreHttpPort => _coreHttpServerPort;
 
   private IpcManager()
   {
@@ -88,30 +91,58 @@ public class IpcManager {
 
     var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
     _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
-    new Thread(() =>
+    // Get the core HTTP server port
+    var attempts = 0;
+    var interval = 50;
+    while (_coreHttpServerPort == 0)
     {
       try
       {
-        _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
-        {
-          Pid = (uint)Environment.ProcessId,
-          GrpcPort = (uint)grpcPort,
-          GrpcWebPort = (uint)grpcWebPort
-        });
+        var response = _coreClient.GetHTTPServerPort(new Empty());
+        _coreHttpServerPort = response.Port;
       }
-      catch (RpcException e)
+      catch (RpcException)
       {
+      }
+
+      if (attempts > 5000 / interval)
+      {
+        Log.Error("Could not get HTTP server port from core.");
         if (!Debugger.IsAttached)
         {
-          Log.Error(e, "Cannot inform core of overlay sidecar start");
           Log.Information("Quitting...");
           Environment.Exit(1);
         }
-        else
-        {
-          Log.Error("Cannot inform core of overlay sidecar start");
-        }
+
+        break;
       }
-    }).Start();
+
+      attempts++;
+      Thread.Sleep(interval);
+    }
+
+    // Inform the core of the overlay sidecar start
+    try
+    {
+      _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
+      {
+        Pid = (uint)Environment.ProcessId,
+        GrpcPort = (uint)grpcPort,
+        GrpcWebPort = (uint)grpcWebPort
+      });
+    }
+    catch (RpcException e)
+    {
+      if (!Debugger.IsAttached)
+      {
+        Log.Error(e, "Cannot inform core of overlay sidecar start");
+        Log.Information("Quitting...");
+        Environment.Exit(1);
+      }
+      else
+      {
+        Log.Error("Cannot inform core of overlay sidecar start");
+      }
+    }
   }
 }

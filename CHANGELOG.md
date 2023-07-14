@@ -18,21 +18,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Switched sidecar communication from HTTP to gRPC.
-- Changed SteamVR-based power automations for base stations to apply when new base stations are discovered.
-- Disabled notification sound for XSOverlay notifications.
+- Switched sidecar communication from HTTP to gRPC
+- Changed SteamVR-based power automations for base stations to apply when new base stations are discovered
+- Disabled notification sound for XSOverlay notifications
+- Switched to dynamic font loading to decrease overall application size
+- Optimized CPU usage
 
 ### Fixed
 
 - Fixed menus for Hardware Automations and VRChat Automations not being correctly highlighted when one of their submenus
   is active
-- Optimized CPU usage
-- Fixed short loss of tracking in SteamVR when launching or reloading OyasumiVR.
+- Fixed short loss of tracking in SteamVR when launching or reloading OyasumiVR
 - Fixed friend selection modal for automatic invite request acceptance becoming unusable when too many players have been
-  selected.
-- Added workaround for VRChat's API not always returning the entire friends list.
-- Fixed settings migrations sometimes not merging arrays correctly, leading to unexpected behavior.
-- Fixed a potential issue where the sleep detector would not be able to properly trigger.
+  selected
+- Added workaround for VRChat's API not always returning the entire friends list
+- Fixed settings migrations sometimes not merging arrays correctly, leading to unexpected behavior
+- Fixed a potential issue where the sleep detector would not be able to properly trigger
 
 ## [1.7.3]
 
