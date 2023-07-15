@@ -17,7 +17,7 @@ if (browser) {
 export const load: Load = async ({ url }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const corePort = parseInt(urlParams.get("corePort") ?? "0", 10);
-  if (corePort > 0) await loadFonts(corePort);
+  if (corePort > 0) loadFonts(corePort);
   await ipcService.init();
   const { pathname } = url;
   await loadTranslations(get(ipcService.state).locale ?? "en", pathname);
