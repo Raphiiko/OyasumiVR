@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, warn } from 'tauri-plugin-log-api';
 import { Client, getClient, ResponseType } from '@tauri-apps/api/http';
-import { BehaviorSubject, filter } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ModalService } from './modal.service';
 import { DotnetUpgradeModalComponent } from '../components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
 import { cloneDeep } from 'lodash';

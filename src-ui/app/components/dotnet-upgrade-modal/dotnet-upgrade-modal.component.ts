@@ -80,7 +80,7 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
     this.installing = true;
     const toInstall = this.requiredRuntimes.filter((r) => r.status === 'INSTALL');
     this.dotnetService.markAllQueued();
-    for (let runtimeStatus of toInstall) {
+    for (const runtimeStatus of toInstall) {
       switch (runtimeStatus.type) {
         case 'netCore': {
           await this.dotnetService.upgradeNetCore(runtimeStatus.version!);
