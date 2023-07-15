@@ -29,7 +29,6 @@ class FontLoader {
       ...this.getExtraFontDefinitionsForLocale(this.activeLocale),
     ];
     await this.loadFonts(fontDefs);
-    console.log('All fonts loaded!');
   }
 
   public async loadFontsForNewLocale(locale: string) {

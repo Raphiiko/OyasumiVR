@@ -2988,6 +2988,7 @@ dependencies = [
  "tauri-plugin-log",
  "tauri-plugin-single-instance",
  "tauri-plugin-store",
+ "tempfile",
  "time 0.3.22",
  "tokio",
  "tokio-stream",

@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod dotnet;
 mod models;
 
 use soloud::*;

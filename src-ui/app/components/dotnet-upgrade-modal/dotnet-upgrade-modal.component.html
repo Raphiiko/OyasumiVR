@@ -1,0 +1,40 @@
+<div class="pane modal modal-lg" @fadeUp>
+  <div class="pane-title">
+    Install Missing Runtimes
+  </div>
+  <div class="pane-content">
+    <p>The following runtimes that are needed by OyasumiVR are either too outdated, or not installed on your system:</p>
+    <ul>
+      <li *ngFor="let runtime of requiredRuntimes" class="runtime"
+          [style.font-weight]="runtime.status === 'INSTALLING' ? 700 : 500">
+        <span>
+        <div class="small-spinner" *ngIf="runtime.status === 'INSTALLING'" @hshrink></div>
+        <i class="material-icons success" *ngIf="runtime.status === 'SUCCESS'" @hshrink>check</i>
+        <i class="material-icons failure" *ngIf="runtime.status === 'FAILED'" @hshrink>clear</i>
+        <span>{{runtime.name}}</span>
+        <span *ngIf="runtime.version">&nbsp;{{runtime.version}}</span>
+        <span *ngIf="runtime.status === 'QUEUED'">&nbsp;(Queued)</span>
+        </span>
+      </li>
+    </ul>
+    <p>To continue using OyasumiVR, the required runtimes have to be installed first.</p>
+    <p *ngIf="automaticInstallationPossible">Do you want OyasumiVR to try install these runtimes for you
+      automatically?</p>
+    <p *ngIf="!automaticInstallationPossible">OyasumiVR was unable to determine the latest versions of these runtimes,
+      and can therefore not install them automatically for you. Please either manually install these runtimes, or quit
+      OyasumiVR and try again at a later time.</p>
+    <p color="var(--color-gray-2)">You can find downloads and more information here: <a
+      href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0" target="_blank">https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a>
+    </p>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="quit()">
+      Quit OyasumiVR
+    </button>
+    <button class="btn btn-primary" (click)="installAutomatically()"
+            [disabled]="!automaticInstallationPossible">
+      <div class="small-spinner" *ngIf="installing" @hshrink></div>
+      <span *ngIf="!installing" @hshrink>Install Automatically</span>
+    </button>
+  </div>
+</div>

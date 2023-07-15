@@ -4,6 +4,36 @@ use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
 
 #[tauri::command]
+pub fn check_dotnet_upgrades_required() -> Result<Vec<String>, String> {
+    super::dotnet::check_dotnet_upgrades_required()
+}
+
+#[tauri::command]
+pub fn get_net_core_version() -> Result<Option<String>, String> {
+    super::dotnet::get_net_core_version()
+}
+
+#[tauri::command]
+pub fn get_asp_net_core_version() -> Result<Option<String>, String> {
+    super::dotnet::get_asp_net_core_version()
+}
+
+#[tauri::command]
+pub fn is_semver_higher(a: String, b: String) -> Result<bool, String> {
+    super::dotnet::is_semver_higher(&a, &b)
+}
+
+#[tauri::command]
+pub async fn upgrade_net_core(version: String) -> Result<(), String> {
+    super::dotnet::upgrade_net_core(&version).await
+}
+
+#[tauri::command]
+pub async fn upgrade_asp_net_core(version: String) -> Result<(), String> {
+    super::dotnet::upgrade_asp_net_core(&version).await
+}
+
+#[tauri::command]
 pub fn play_sound(name: String) {
     std::thread::spawn(move || {
         let mut wav = audio::Wav::default();

@@ -44,7 +44,8 @@
         "scope": [
           "https://api.vrchat.cloud/api/1/*",
           "https://assets.vrchat.com/*",
-          "https://files.vrchat.cloud/*"
+          "https://files.vrchat.cloud/*",
+          "https://dotnetcli.azureedge.net/*"
         ]
       },
       "notification": {

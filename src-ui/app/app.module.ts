@@ -132,6 +132,8 @@ import { IPCStateSyncService } from './services/ipc-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
+import { DotnetService } from './services/dotnet.service';
+import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -210,6 +212,7 @@ export function createTranslateLoader(http: HttpClient) {
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
     DeveloperDebugModalComponent,
+    DotnetUpgradeModalComponent,
   ],
   imports: [
     CommonModule,
@@ -256,6 +259,7 @@ export class AppModule {
     private ipcAppStateSyncService: IPCStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
+    private dotnetService: DotnetService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -381,7 +385,8 @@ export class AppModule {
         })
       );
     }
-    // Only initialize update service after language selection
+    // Only initialize update- and dotnet services after language selection
+    await this.dotnetService.init();
     await this.updateService.init();
   }
 
