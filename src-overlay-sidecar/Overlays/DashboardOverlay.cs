@@ -19,7 +19,7 @@ public class DashboardOverlay : BaseWebOverlay {
   public DashboardOverlay() :
     base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
   {
-    // browser.ShowDevTools();
+    Browser!.ShowDevTools();
     Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     _tooltipOverlay = new TooltipOverlay();
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.45f);
