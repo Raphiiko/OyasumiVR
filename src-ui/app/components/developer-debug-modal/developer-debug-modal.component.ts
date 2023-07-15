@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as uPlot from 'uplot';
 import { AutomationConfigService } from '../../services/automation-config.service';
 import { combineLatest, firstValueFrom, interval, map } from 'rxjs';
+import { relaunch } from '@tauri-apps/api/process';
 
 @Component({
   selector: 'app-debug-modal',
@@ -127,4 +128,6 @@ export class DeveloperDebugModalComponent
     });
     return data;
   }
+
+  protected readonly relaunch = relaunch;
 }

@@ -62,9 +62,11 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
           return runtimes;
         }),
         tap((runtimes) => {
-          this.automaticInstallationPossible = runtimes.every(
-            (runtime) => runtime.status === 'INSTALL'
-          );
+          if (runtimes.some((r) => r.status === 'INSTALL')) {
+            this.automaticInstallationPossible = !runtimes.some(
+              (r) => r.status === 'INSTALL' && !r.version
+            );
+          }
           this.requiredRuntimes = runtimes;
         })
       )
@@ -97,8 +99,8 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
       ? {
           title: 'Installation Successful',
           message:
-            'The required missing runtimes have been installed successfully. Please restart OyasumiVR in order to continue.',
-          confirmButtonText: 'Restart OyasumiVR',
+            'The required missing runtimes have been installed successfully. Please quit OyasumiVR, and start it again in order to continue.',
+          confirmButtonText: 'Quit OyasumiVR',
           showCancel: false,
         }
       : {
@@ -118,11 +120,7 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
       )
     );
     if (result.confirmed) {
-      if (success) {
-        await relaunch();
-      } else {
-        await exit(0);
-      }
+      await exit(0);
     }
   }
 }

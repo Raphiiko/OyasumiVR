@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Options for turning certain notification types on or off
 - Image brightness automations for all headsets
 - If the main window is minimized to the tray, it will reveal itself when the user tries to launch a second instance.
+- Startup check for missing (.NET) runtimes, with option for automatic installation.
 
 ### Changed
 
