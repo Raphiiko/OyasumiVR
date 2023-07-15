@@ -48,7 +48,6 @@ public class DashboardOverlay : BaseWebOverlay {
     OvrManager.Instance.OverlayPointer!.StartForOverlay(this);
     ShowDashboard();
     OpenVR.Overlay.ShowOverlay(OverlayHandle);
-    Browser!.ShowDevTools();
   }
 
   public async void Close()

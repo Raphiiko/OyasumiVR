@@ -27,9 +27,9 @@ public class BaseWebOverlay {
   protected BaseWebOverlay(string path, int resolution, string overlayKey, string overlayName,
     bool requiresState = true)
   {
-    var uiUrl = Debugger.IsAttached
-      ? "http://localhost:5173" + path + "?corePort=" + IpcManager.Instance.CoreHttpPort
-      : IpcManager.Instance.StaticBaseUrl + path;
+    var uiUrl = (Debugger.IsAttached
+      ? "http://localhost:5173"
+      : IpcManager.Instance.StaticBaseUrl) + path + "?corePort=" + IpcManager.Instance.CoreHttpPort;
     // Set up state management
     _requiresState = requiresState;
     StateManager.Instance.StateChanged += OnStateChanged;

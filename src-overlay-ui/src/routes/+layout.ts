@@ -62,16 +62,17 @@ async function loadFonts(coreHttpPort: number) {
       variants: ["normal"]
     }
   ];
-  let loads = flattenDeep<Promise<FontFace>>(fontDefs.map((fontDef) => {
+  const loads = flattenDeep<Promise<FontFace>>(fontDefs.map((fontDef) => {
     return fontDef.sets.map((set) => {
       return fontDef.weights.map((weight) => {
         return fontDef.variants.map((variant) => {
           const fileName = `${fontDef.family
             .toLowerCase()
             .replace(/\s+/g, "-")}-${set}-${weight}-${variant}.woff2`;
+          const fontUrl = `http://localhost:${coreHttpPort}/font/${fileName}`;
           const font = new FontFace(
             fontDef.family,
-            `url(http://localhost:${coreHttpPort}/font/${fileName})`,
+            `url(${fontUrl})`,
             {
               style: variant === "italic" ? "italic" : "normal",
               weight: weight.toString()
@@ -84,4 +85,5 @@ async function loadFonts(coreHttpPort: number) {
     });
   }));
   await Promise.all(loads);
+  console.log("All fonts loaded!");
 }
