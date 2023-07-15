@@ -60,9 +60,9 @@ public class OvrManager {
       {
         _device = Program.GPUFix
           ? new Device(new Factory1().GetAdapter(1),
-            DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug)
+            DeviceCreationFlags.BgraSupport)
           : new Device(DriverType.Hardware,
-            DeviceCreationFlags.BgraSupport | DeviceCreationFlags.Debug);
+            DeviceCreationFlags.BgraSupport);
       }
       catch (SharpDXException err)
       {

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Serilog;
 using Serilog.Core;
+using Serilog.Filters;
 
 namespace overlay_sidecar;
 
@@ -14,6 +15,7 @@ public class LogConfigurator {
     var logPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
       "co.raphii.oyasumi\\logs\\OyasumiVR_Overlay_Sidecar_.log");
     var config = new LoggerConfiguration()
+      .Filter.ByExcluding(Matching.FromSource("Microsoft"))
       .WriteTo.Console()
       .WriteTo.Debug()
       .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(7));
