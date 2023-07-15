@@ -1,7 +1,8 @@
 import i18n from "sveltekit-i18n";
+import type { Config } from "sveltekit-i18n";
 
 /** @type {import("sveltekit-i18n").Config} */
-const config = ({
+const config: Config = ({
   fallbackLocale: "en",
   log: {
     level: "error"

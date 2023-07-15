@@ -10,7 +10,7 @@ rust-version = "1.70.0"
 tonic-build = "0.9"
 
 [dependencies]
-oyasumivr-shared = { path = "../src-shared", version = '*' }
+oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 nvml-wrapper = "0.8.0"

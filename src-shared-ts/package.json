@@ -1,0 +1,12 @@
+{
+  "name": "src-shared-ts",
+  "description": "Shared typescript code for Oyasumi modules",
+  "scripts": {},
+  "version": "0.0.0",
+  "author": "Raphiiko",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
+}

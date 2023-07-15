@@ -10,6 +10,7 @@ import {
   VrcStatus
 } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
 import { loadTranslations } from "$lib/translations";
+import { fontLoader } from "src-shared-ts/src/font-loader";
 
 if (browser && !window.OyasumiIPCIn)
   window.OyasumiIPCIn = Object.assign(window.OyasumiIPCIn || {}, {});
@@ -36,7 +37,10 @@ class IPCService {
     this.initialized = true;
     // Update the locale
     this.locale.subscribe(async (locale) => {
-      await loadTranslations(locale ?? "en", "");
+      await Promise.all([
+        fontLoader.loadFontsForNewLocale(locale ?? "en"),
+        loadTranslations(locale ?? "en", "")
+      ]);
     });
     // Load IPC OUT functions
     if (window.CefSharp) {

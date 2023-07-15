@@ -39,7 +39,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
         with:
           workspaces: |
-            src-shared
+            src-shared-rust
             src-elevated-sidecar
             src-core
       - name: Install development Tauri CLI

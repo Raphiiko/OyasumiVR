@@ -13,9 +13,26 @@ if (version !== 'DEV' && !semver(version)) {
 
 if (version === 'DEV') version = '0.0.0';
 
-const packageJson = JSON.parse(readFileSync('package.json').toString());
-packageJson.version = version;
-writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+// UI package json
+{
+  const packageJson = JSON.parse(readFileSync('package.json').toString());
+  packageJson.version = version;
+  writeFileSync('package.json', JSON.stringify(packageJson, null, 2));
+}
+
+// Shared TS package json
+{
+  const packageJson = JSON.parse(readFileSync('src-shared-ts/package.json').toString());
+  packageJson.version = version;
+  writeFileSync('src-shared-ts/package.json', JSON.stringify(packageJson, null, 2));
+}
+
+// Overlay UI package json
+{
+  const packageJson = JSON.parse(readFileSync('src-overlay-ui/package.json').toString());
+  packageJson.version = version;
+  writeFileSync('src-overlay-ui/package.json', JSON.stringify(packageJson, null, 2));
+}
 
 // Tauri config json
 const tauriConfJson = JSON.parse(readFileSync('src-core/tauri.conf.json').toString());
@@ -28,7 +45,7 @@ tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
 });
 writeFileSync('src-core/tauri.conf.json', JSON.stringify(tauriConfJson, null, 2));
 
-// Tauri cargo toml
+// Core Cargo toml
 let tauriCargoToml = readFileSync('src-core/Cargo.toml').toString();
 tauriCargoToml = tauriCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumivr"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
@@ -44,12 +61,12 @@ adminCargoToml = adminCargoToml.replaceAll(
 );
 writeFileSync('src-elevated-sidecar/Cargo.toml', adminCargoToml);
 
-// Shared cargo toml
-let sharedCargoToml = readFileSync('src-shared/Cargo.toml').toString();
+// Shared Cargo toml
+let sharedCargoToml = readFileSync('src-shared-rust/Cargo.toml').toString();
 sharedCargoToml = sharedCargoToml.replaceAll(
   /\[package\]\r?\nname = "oyasumivr-shared"\r?\nversion = "[0-9]+\.[0-9]+\.[0-9]+"/g,
   `[package]\r\nname = "oyasumivr-shared"\r\nversion = "${version}"`
 );
-writeFileSync('src-shared/Cargo.toml', sharedCargoToml);
+writeFileSync('src-shared-rust/Cargo.toml', sharedCargoToml);
 
 console.log(`Set all versions to v${version}.`);

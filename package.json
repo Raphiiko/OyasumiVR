@@ -26,7 +26,7 @@
     "ng": "ng",
     "lint": "ng lint",
     "tl": "node scripts/translation-utils.js",
-    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
+    "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
     "generate:grpc-web-client": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/ts-proto-gen.ps1 && prettier --loglevel silent --write src-grpc-web-client/**/*",
     "postinstall": "cd src-overlay-ui && npm install && cd .. && node scripts/postinstall.js",
     "init": "cd src-overlay-ui && npm install && cd .. && run-s generate:grpc-web-client build:pre"
@@ -68,6 +68,7 @@
     "rxjs": "^7.5.7",
     "sass-material-colors": "^0.0.5",
     "set-cookie-parser": "^2.5.1",
+    "src-shared-ts": "file:src-shared-ts",
     "tauri-plugin-fs-extra-api": "github:tauri-apps/tauri-plugin-fs-extra",
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log",
     "tauri-plugin-store-api": "github:tauri-apps/tauri-plugin-store#dev",
