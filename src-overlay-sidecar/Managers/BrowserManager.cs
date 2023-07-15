@@ -10,13 +10,13 @@ public class BrowserManager {
   {
   }
 
-  public OffScreenBrowser GetBrowser(String url, int width, int height)
+  public OffScreenBrowser GetBrowser(string url, int width, int height)
   {
     lock (_browsers)
     {
       foreach (var cachedBrowser in _browsers)
       {
-        if (cachedBrowser.IsFree && cachedBrowser.width == width && cachedBrowser.height == height)
+        if (cachedBrowser.IsFree && cachedBrowser.Width == width && cachedBrowser.Height == height)
         {
           cachedBrowser.IsFree = false;
           cachedBrowser.Browser.LoadUrl(url);
@@ -25,7 +25,7 @@ public class BrowserManager {
       }
 
       var browser = new OffScreenBrowser(url, width, height);
-      _browsers.Add(new CachedBrowser { Browser = browser, IsFree = false, width = width, height = height });
+      _browsers.Add(new CachedBrowser(browser, false, width, height));
 
       return browser;
     }
@@ -51,7 +51,15 @@ public class BrowserManager {
   class CachedBrowser {
     public OffScreenBrowser Browser;
     public bool IsFree;
-    public int width;
-    public int height;
+    public int Width;
+    public int Height;
+
+    public CachedBrowser(OffScreenBrowser browser, bool isFree, int width, int height)
+    {
+      Browser = browser;
+      IsFree = isFree;
+      Width = width;
+      Height = height;
+    }
   }
 }

@@ -3,15 +3,12 @@
 using System.Diagnostics;
 using CefSharp;
 using CefSharp.OffScreen;
-using CefSharp.SchemeHandler;
 using Serilog;
-using SharpDX.Direct3D11;
 
 namespace overlay_sidecar;
 
 public static class Program {
-  public static bool GPUFix = false;
-  public static Device device;
+  public static readonly bool GpuFix = false;
 
   public static void Main(string[] args)
   {

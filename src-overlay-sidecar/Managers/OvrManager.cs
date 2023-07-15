@@ -58,7 +58,7 @@ public class OvrManager {
     {
       try
       {
-        _device = Program.GPUFix
+        _device = Program.GpuFix
           ? new Device(new Factory1().GetAdapter(1),
             DeviceCreationFlags.BgraSupport)
           : new Device(DriverType.Hardware,
@@ -101,6 +101,7 @@ public class OvrManager {
         Thread.Sleep(100);
       }
     }
+    // ReSharper disable once FunctionNeverReturns
   }
 
   private void MainLoop()

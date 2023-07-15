@@ -6,11 +6,9 @@ using GrcpOverlaySidecar;
 using GrcpOyasumiCore;
 using Serilog;
 using SharpDX;
-using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Valve.VR;
-using Device = SharpDX.Direct3D11.Device;
 
 namespace overlay_sidecar;
 
