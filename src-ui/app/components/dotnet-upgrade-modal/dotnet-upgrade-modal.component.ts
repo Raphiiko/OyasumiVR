@@ -3,9 +3,8 @@ import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp, hshrink } from '../../utils/animations';
 import { DotnetService } from '../../services/dotnet.service';
 import { filter, firstValueFrom, map, tap } from 'rxjs';
-import { exit, relaunch } from '@tauri-apps/api/process';
+import { exit } from '@tauri-apps/api/process';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { ModalService } from '../../services/modal.service';
 import {
   ConfirmModalComponent,
@@ -31,11 +30,7 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
   automaticInstallationPossible = false;
   installing = false;
 
-  constructor(
-    private dotnetService: DotnetService,
-    private modalService: ModalService,
-    private translate: TranslateService
-  ) {
+  constructor(private dotnetService: DotnetService, private modalService: ModalService) {
     super();
     dotnetService.status
       .pipe(
@@ -97,17 +92,15 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
     const success = this.requiredRuntimes.every((r) => r.status === 'SUCCESS');
     const modalInput: ConfirmModalInputModel = success
       ? {
-          title: 'Installation Successful',
-          message:
-            'The required missing runtimes have been installed successfully. Please quit OyasumiVR, and start it again in order to continue.',
-          confirmButtonText: 'Quit OyasumiVR',
+          title: 'comp.dotnet-upgrade-modal.success.title',
+          message: 'comp.dotnet-upgrade-modal.success.message',
+          confirmButtonText: 'comp.dotnet-upgrade-modal.quit',
           showCancel: false,
         }
       : {
-          title: 'Installation Failed',
-          message:
-            'The required missing runtimes could not be installed automatically. Please try to install them manually. You can check the log files for more information on what went wrong.\n\nIf you continue to experience issues, please reach out to @Raphiiko on Twitter, or in our Discord Server.',
-          confirmButtonText: 'Quit OyasumiVR',
+          title: 'comp.dotnet-upgrade-modal.failure.title',
+          message: 'comp.dotnet-upgrade-modal.failure.message',
+          confirmButtonText: 'comp.dotnet-upgrade-modal.quit',
           showCancel: false,
         };
     const result = await firstValueFrom(

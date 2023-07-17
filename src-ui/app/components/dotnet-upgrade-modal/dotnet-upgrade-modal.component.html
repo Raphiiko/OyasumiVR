@@ -1,9 +1,9 @@
 <div class="pane modal modal-lg" @fadeUp>
-  <div class="pane-title">
-    Install Missing Runtimes
+  <div class="pane-title" translate>
+    comp.dotnet-upgrade-modal.title
   </div>
   <div class="pane-content">
-    <p>The following runtimes that are needed by OyasumiVR are either too outdated, or not installed on your system:</p>
+    <p translate>comp.dotnet-upgrade-modal.description.text1</p>
     <ul>
       <li *ngFor="let runtime of requiredRuntimes" class="runtime"
           [style.font-weight]="runtime.status === 'INSTALLING' ? 700 : 500">
@@ -13,28 +13,28 @@
         <i class="material-icons failure" *ngIf="runtime.status === 'FAILED'" @hshrink>clear</i>
         <span>{{runtime.name}}</span>
         <span *ngIf="runtime.version">&nbsp;{{runtime.version}}</span>
-        <span *ngIf="runtime.status === 'QUEUED'">&nbsp;(Queued)</span>
+        <span *ngIf="runtime.status === 'QUEUED'">
+          &nbsp;
+          ({{ 'comp.dotnet-upgrade-modal.description.runtimeQueued' | translate }})
+        </span>
         </span>
       </li>
     </ul>
-    <p>To continue using OyasumiVR, the required runtimes have to be installed first.</p>
-    <p *ngIf="automaticInstallationPossible">Do you want OyasumiVR to try install these runtimes for you
-      automatically?</p>
-    <p *ngIf="!automaticInstallationPossible">OyasumiVR was unable to determine the latest versions of these runtimes,
-      and can therefore not install them automatically for you. Please either manually install these runtimes, or quit
-      OyasumiVR and try again at a later time.</p>
-    <p color="var(--color-gray-2)">You can find downloads and more information here: <a
+    <p translate>comp.dotnet-upgrade-modal.description.text2</p>
+    <p *ngIf="automaticInstallationPossible" translate>comp.dotnet-upgrade-modal.description.automaticInstall</p>
+    <p *ngIf="!automaticInstallationPossible" translate>comp.dotnet-upgrade-modal.description.noAutomaticInstall</p>
+    <p color="var(--color-gray-2)"><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
       href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0" target="_blank">https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a>
     </p>
   </div>
   <div class="pane-actions spread">
-    <button class="btn btn-secondary" (click)="quit()">
-      Quit OyasumiVR
+    <button class="btn btn-secondary" (click)="quit()" translate>
+      comp.dotnet-upgrade-modal.quit
     </button>
     <button class="btn btn-primary" (click)="installAutomatically()"
             [disabled]="!automaticInstallationPossible">
       <div class="small-spinner" *ngIf="installing" @hshrink></div>
-      <span *ngIf="!installing" @hshrink>Install Automatically</span>
+      <span *ngIf="!installing" @hshrink translate>comp.dotnet-upgrade-modal.installAutomatically</span>
     </button>
   </div>
 </div>

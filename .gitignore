@@ -45,6 +45,9 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# ReSharper
+*.sln.DotSettings.user
+
 # Oyasumi specific
 src-ui/assets/preload-assets.json
 src-ui/assets/splashscreen/splash-blurhash.css
