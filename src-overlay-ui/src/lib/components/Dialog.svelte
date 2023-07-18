@@ -13,6 +13,8 @@
   export let cancelText = "t.shared.modals.cancel";
   export let confirmText = "t.shared.modals.confirm";
   export let confirmColor: "normal" | "blue" | "red" = "normal";
+  export let confirmDisabled = false;
+  export let cancelDisabled = false;
 </script>
 
 <div class="w-[400px]">
@@ -29,12 +31,13 @@
   </Card>
   <div class="grid grid-cols-2 gap-4 w-full mt-4">
     <div on:click={() => dispatch('cancel') }>
-      <Card class="flex-1" clickable={true}>
+      <Card class="flex-1" clickable={true} disabled={cancelDisabled}>
         <div class="p-3 flex flex-row items-center justify-center font-medium">{$t(cancelText)}</div>
       </Card>
     </div>
     <div>
-      <Card class="flex-1" clickable={true} active={confirmColor !== 'normal'} activeColor={confirmColor}>
+      <Card class="flex-1" clickable={true} active={confirmColor !== 'normal'} activeColor={confirmColor}
+            disabled={confirmDisabled}>
         <div class="p-3 flex flex-row items-center justify-center font-medium">{$t(confirmText)}</div>
       </Card>
     </div>

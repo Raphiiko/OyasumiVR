@@ -6,7 +6,11 @@
   import { blur, scale } from "svelte/transition";
 
   let ready = !window.CefSharp;
-  let showShutdownSequenceDialog = false;
+  let shutdownSequenceDialog = {
+    shown: false,
+    startDisabled: false,
+    timeout: null as NodeJS.Timeout | null
+  };
 
   type DashboardMode = "OVERVIEW" | "AUTOMATIONS";
   let mode: "OVERVIEW" | "AUTOMATIONS" = "OVERVIEW";
@@ -22,10 +26,17 @@
     const event = typeof e === "string" ? e : e.detail;
     switch (event) {
       case "openShutdownSequence":
-        showShutdownSequenceDialog = true;
+        shutdownSequenceDialog.shown = true;
+        shutdownSequenceDialog.startDisabled = true;
+        if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
+        shutdownSequenceDialog.timeout = setTimeout(() => {
+          shutdownSequenceDialog.startDisabled = false;
+          shutdownSequenceDialog.timeout = null;
+        }, 2000);
         break;
       case "closeShutdownSequence":
-        showShutdownSequenceDialog = false;
+        if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
+        shutdownSequenceDialog.shown = false;
         break;
     }
   }
@@ -34,8 +45,8 @@
 <main class:non-overlay={!window.CefSharp}>
   {#if ready}
     {#if mode === 'OVERVIEW'}
-      <div class="stack-frame transition duration-700" class:blur-sm={showShutdownSequenceDialog}
-           class:opacity-80={showShutdownSequenceDialog}>
+      <div class="stack-frame transition duration-700" class:blur-sm={shutdownSequenceDialog.shown}
+           class:opacity-80={shutdownSequenceDialog.shown}>
         <Overview on:nav={navigate} on:event={handleEvent} />
       </div>
     {:else if mode === 'AUTOMATIONS'}
@@ -43,7 +54,7 @@
         <AutomationConfig on:nav={navigate} />
       </div>
     {/if}
-    {#if showShutdownSequenceDialog}
+    {#if shutdownSequenceDialog.shown}
       <div class="stack-frame" transition:blur>
         <div transition:scale>
           <Dialog
@@ -51,6 +62,7 @@
             message="t.overlay.dashboard.shutdownSequence.dialog.message"
             confirmText="t.overlay.dashboard.shutdownSequence.dialog.start"
             confirmColor="red"
+            confirmDisabled={shutdownSequenceDialog.startDisabled}
             on:cancel={() => handleEvent('closeShutdownSequence')}
           />
         </div>
