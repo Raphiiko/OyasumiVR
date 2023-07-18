@@ -9,25 +9,35 @@ namespace overlay_sidecar;
 
 public static class Program {
   public static readonly bool GpuFix = false;
+  public static SidecarMode Mode = SidecarMode.Release;
+
 
   public static void Main(string[] args)
   {
     LogConfigurator.Init();
-    var mainProcessPort = 5176;
+    var coreGrpcPort = (int)Globals.CORE_GRPC_DEV_PORT;
     var mainProcessId = 0;
 
-    if (!Debugger.IsAttached)
+    // Parse args
+    if (args.Length > 0 && args[0] == "dev")
     {
-      // Parse args
-      if (args.Length < 1 || !int.TryParse(args[0], out mainProcessPort))
+      Mode = SidecarMode.Dev;
+    }
+
+    Console.WriteLine("Starting OyasumiVR overlay sidecar in " + (Mode == SidecarMode.Dev ? "dev" : "release") +
+                      " mode.");
+
+    if (Mode == SidecarMode.Release)
+    {
+      if (args.Length < 1 || !int.TryParse(args[0], out coreGrpcPort))
       {
-        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
 
       if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
       {
-        Console.Error.WriteLine("Usage: overlay-sidecar.exe <main process port> <main process id>");
+        Console.Error.WriteLine("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
     }
@@ -35,14 +45,14 @@ public static class Program {
     // Initialize
     WatchMainProcess(mainProcessId);
     InitCef();
-    IpcManager.Instance.Init(mainProcessPort);
+    IpcManager.Instance.Init(coreGrpcPort);
     OvrManager.Instance.Init();
   }
 
   private static void InitCef()
   {
     var settings = new CefSettings();
-    if (!Debugger.IsAttached)
+    if (InReleaseMode())
     {
       settings.LogSeverity = LogSeverity.Disable;
       var cefDebugLogPath = Path.Combine(Path.GetDirectoryName(Environment.ProcessPath)!, @"debug.log");
@@ -54,7 +64,7 @@ public static class Program {
 
   private static void WatchMainProcess(int mainPid)
   {
-    if (Debugger.IsAttached) return;
+    if (InDevMode()) return;
     Process? mainProcess = null;
     try
     {
@@ -62,16 +72,10 @@ public static class Program {
     }
     catch (ArgumentException)
     {
-      Log.Error("Could not find main process to watch (pid=" + mainPid + ")");
-      if (!Debugger.IsAttached)
-      {
-        Log.Information("Quitting...");
-        Environment.Exit(1);
-        return;
-      }
+      Log.Error("Could not find main process to watch (pid=" + mainPid + "). Stopping overlay sidecar.");
+      Environment.Exit(1);
+      return;
     }
-
-    if (mainProcess == null) return;
 
     new Thread(() =>
     {
@@ -87,5 +91,20 @@ public static class Program {
         Thread.Sleep(1000);
       }
     }).Start();
+  }
+
+  public static bool InDevMode()
+  {
+    return Mode == SidecarMode.Dev;
+  }
+
+  public static bool InReleaseMode()
+  {
+    return Mode == SidecarMode.Release;
+  }
+
+  public enum SidecarMode {
+    Release,
+    Dev
   }
 }

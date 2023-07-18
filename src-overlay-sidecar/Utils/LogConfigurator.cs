@@ -19,10 +19,14 @@ public static class LogConfigurator {
       .WriteTo.Console()
       .WriteTo.Debug()
       .WriteTo.File(logPath, rollingInterval: RollingInterval.Day, retainedFileTimeLimit: TimeSpan.FromDays(7));
-    if (Debugger.IsAttached)
+    if (Program.InDevMode())
+    {
       config = config.MinimumLevel.Debug();
+    }
     else
+    {
       config = config.MinimumLevel.Information();
+    }
 
     _logger = config.CreateLogger();
 

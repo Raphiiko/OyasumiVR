@@ -152,6 +152,10 @@ fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    info!(
+        "[Core] Starting OyasumiVR in {} mode",
+        crate::utils::cli_core_mode().await
+    );
     // Ensure the working directory is the installation directory
     let executable_path = {
         let full_path = std::env::current_exe().unwrap();

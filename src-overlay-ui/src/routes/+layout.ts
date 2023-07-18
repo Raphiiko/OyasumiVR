@@ -13,11 +13,16 @@ if (browser) {
 }
 
 export const load: Load = async ({ url }) => {
+  // Obtain query params
   const urlParams = new URLSearchParams(window.location.search);
-  const corePort = parseInt(urlParams.get("corePort") ?? "0", 10);
-  if (corePort > 0) fontLoader.init(corePort);
+  const corePort = parseInt(urlParams.get("corePort") ?? "5177", 10);
+  // If the core port was provided, initialize the font loader
+  if (corePort > 0 && corePort < 65536) fontLoader.init(corePort);
+  // Initialize IPC
   await ipcService.init();
+  // Load translations
   const { pathname } = url;
   await loadTranslations(get(ipcService.state).locale ?? "en", pathname);
+
   return {};
 };

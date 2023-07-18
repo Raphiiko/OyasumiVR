@@ -2,6 +2,8 @@ pub mod commands;
 
 use std::time::Duration;
 
+use crate::globals::{OVERLAY_SIDECAR_GRPC_DEV_PORT, OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT};
+use crate::utils::models::OverlaySidecarMode;
 use crate::utils::sidecar_manager::SidecarManager;
 use crate::{
     utils::send_event,
@@ -33,22 +35,22 @@ pub async fn init() {
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }
     });
-    // If the development flag has been set, we don't need to start the sidecar
-    if crate::utils::cli_sidecar_overlay_mode().await.eq("dev") {
-        // We already expect it to run in development mode
-        let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
-            pid: 0,
-            grpc_port: 5174,
-            grpc_web_port: 5175,
-        })
-        .await;
-        return;
-    }
-    // Otherwise, start the sidecar in release mode
-    else {
-        let mut manager_guard = SIDECAR_MANAGER.lock().await;
-        let manager = manager_guard.as_mut().unwrap();
-        manager.start().await;
+    match crate::utils::cli_sidecar_overlay_mode().await {
+        // In release mode, start the sidecar
+        OverlaySidecarMode::Release => {
+            let mut manager_guard = SIDECAR_MANAGER.lock().await;
+            let manager = manager_guard.as_mut().unwrap();
+            manager.start().await;
+        }
+        // In development mode, we expect the sidecar to be started in development mode manually
+        OverlaySidecarMode::Dev => {
+            let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
+                pid: 0,
+                grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
+                grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
+            })
+            .await;
+        }
     }
 }
 

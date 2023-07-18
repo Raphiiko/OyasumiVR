@@ -1,3 +1,4 @@
+use crate::utils::models::CoreMode;
 use log::{error, info};
 use models::oyasumi_core::oyasumi_core_server::OyasumiCoreServer;
 use server::OyasumiCoreServerImpl;
@@ -29,9 +30,11 @@ lazy_static! {
 
 pub async fn init_server() -> u16 {
     info!("[Core] Starting gRPC server");
-    let addr: SocketAddr = format!("127.0.0.1:{}", crate::utils::cli_grpc_port_core().await)
-        .parse()
-        .unwrap();
+    let port: u16 = match crate::utils::cli_core_mode().await {
+        CoreMode::Dev => crate::globals::CORE_GRPC_DEV_PORT,
+        CoreMode::Release => 0,
+    };
+    let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().unwrap();
     info!("[Core] Starting gRPC server on {}", addr.to_string());
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(listener) => listener,

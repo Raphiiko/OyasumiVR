@@ -11,6 +11,7 @@ lazy_static! {
     static ref SYSINFO: Mutex<System> = Mutex::new(System::new_all());
 }
 
+pub mod models;
 pub mod sidecar_manager;
 
 pub async fn is_process_active(process_name: &str) -> bool {
@@ -54,7 +55,25 @@ pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
     };
 }
 
-pub async fn cli_sidecar_overlay_mode() -> String {
+pub async fn cli_core_mode() -> models::CoreMode {
+    let default = "release";
+    let match_guard = TAURI_CLI_MATCHES.lock().await;
+    let mode = match match_guard.as_ref().unwrap().args.get("core-mode") {
+        Some(data) => data.value.as_str().unwrap_or(default),
+        None => default,
+    };
+    // Determine the correct mode
+    match mode {
+        "dev" => models::CoreMode::Dev,
+        "release" => models::CoreMode::Release,
+        _ => {
+            error!("[Core] Invalid core mode specified. Defaulting to release mode.");
+            models::CoreMode::Release
+        }
+    }
+}
+
+pub async fn cli_sidecar_overlay_mode() -> models::OverlaySidecarMode {
     let default = "release";
     let match_guard = TAURI_CLI_MATCHES.lock().await;
     let mode = match match_guard
@@ -66,24 +85,13 @@ pub async fn cli_sidecar_overlay_mode() -> String {
         Some(data) => data.value.as_str().unwrap_or(default),
         None => default,
     };
-    mode.to_string()
-}
-
-pub async fn cli_grpc_port_core() -> u32 {
-    let default: u32 = 0;
-    let match_guard = TAURI_CLI_MATCHES.lock().await;
-    let arg = match_guard.as_ref().unwrap().args.get("grpc-port-core");
-    let port = match arg {
-        Some(args) => match args
-            .value
-            .as_str()
-            .unwrap_or(&default.to_string().as_str())
-            .parse::<u32>()
-        {
-            Ok(port) => port,
-            Err(_) => default,
-        },
-        None => default,
-    };
-    port
+    // Determine the correct mode
+    match mode {
+        "dev" => models::OverlaySidecarMode::Dev,
+        "release" => models::OverlaySidecarMode::Release,
+        _ => {
+            error!("[Core] Invalid overlay sidecar mode specified. Defaulting to release mode.");
+            models::OverlaySidecarMode::Release
+        }
+    }
 }

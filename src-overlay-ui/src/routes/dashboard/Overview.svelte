@@ -47,7 +47,7 @@
     class="logo-container"
     transition:blurFly={{ duration: animationSpeed, y: flyYTransform }}
   >
-    <img src={logo} alt="Oyasumi Logo" />
+    <img src={logo} alt="Oyasumi Logo" class="glow-100" />
   </div>
   <div class="action-container">
     <div
@@ -81,7 +81,7 @@
     >
       <Card clickable={true} class="w-full h-full">
         <div class="action-contents">
-          <i class="material-icons">settings_suggest</i>
+          <i class="material-icons glow">settings_suggest</i>
         </div>
       </Card>
     </div>
@@ -96,7 +96,7 @@
     >
       <Card clickable={true} class="w-full h-full">
         <div class="action-contents">
-          <i class="material-icons">power_off</i>
+          <i class="material-icons glow">power_off</i>
         </div>
       </Card>
     </div>
@@ -108,10 +108,11 @@
 					}}
       on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip($t('t.overlay.dashboard.overview.tooltip.shutdown'))}
       on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
+      on:click={() => { dispatch('event', 'openShutdownSequence'); }}
     >
       <Card clickable={true} class="w-full h-full">
         <div class="action-contents">
-          <i class="material-icons">settings_power</i>
+          <i class="material-icons glow">settings_power</i>
         </div>
       </Card>
     </div>
@@ -129,7 +130,7 @@
         {#if $vrcLoggedIn}
           <div class="flex-shrink-0 flex flex-row items-center" transition:fade>
             <div
-              class="rounded-full w-4 h-4 mr-2 drop-shadow-[0_0_4px_rgba(255,255,255,40%)] transition-all
+              class="rounded-full w-4 h-4 mr-2 glow transition-all
                     vrc-status-color-{$state.vrcStatus}
                   "
             />
@@ -158,9 +159,6 @@
 
   .logo-container {
     @apply flex flex-col items-center justify-center w-full px-[80px] mb-4;
-    img {
-      @apply drop-shadow-[0_0_4px_rgba(255,255,255,100%)];
-    }
   }
 
   .action-container {
@@ -180,7 +178,7 @@
     .action-contents {
       @apply flex flex-row items-center justify-center w-full h-full p-6;
       .material-icons {
-        @apply text-8xl drop-shadow-[0_0_8px_rgba(255,255,255,40%)] flex-shrink-0;
+        @apply text-8xl flex-shrink-0;
         line-height: 0;
       }
 

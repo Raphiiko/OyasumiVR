@@ -5,9 +5,10 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "npm run tauri dev",
-    "dev-o": "npm run tauri dev -- -- -- --overlay-sidecar-mode dev --grpc-port-core 5176",
-    "start": "node scripts/pre-build.js && ng serve",
+    "dev": "npm run tauri dev -- -- -- --core-mode dev --overlay-sidecar-mode dev",
+    "start": "npm run tauri dev",
+    "start:ui": "node scripts/pre-build.js && ng serve",
+    "start:overlay-ui": "cd src-overlay-ui && npm run dev",
     "build": "run-s build:core",
     "build:core": "npm run tauri build",
     "build:pre": "node scripts/pre-build.js && run-p build:front build:sidecars",

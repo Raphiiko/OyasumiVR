@@ -8,6 +8,8 @@ use log::{error, info};
 use std::{convert::Infallible, net::SocketAddr};
 use tokio::sync::Mutex;
 
+use crate::utils::models::CoreMode;
+
 lazy_static! {
     pub static ref PORT: Mutex<Option<u32>> = Default::default();
 }
@@ -15,7 +17,11 @@ lazy_static! {
 pub async fn init() {
     // Start server
     info!("[Core] Starting HTTP server...");
-    let addr = SocketAddr::from(([127, 0, 0, 1], 0));
+    let port: u16 = match crate::utils::cli_core_mode().await {
+        CoreMode::Dev => crate::globals::CORE_HTTP_DEV_PORT,
+        CoreMode::Release => 0,
+    };
+    let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().unwrap();
     let make_svc =
         make_service_fn(|_conn| async { Ok::<_, Infallible>(service_fn(request_handler)) });
     let server = Server::bind(&addr).serve(make_svc);
@@ -69,6 +75,7 @@ async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
     {
         return Ok(Response::builder()
             .status(400)
+            .header("Access-Control-Allow-Origin", "*")
             .body("Requested invalid font".into())
             .unwrap());
     }
@@ -78,6 +85,7 @@ async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
     if !std::path::Path::new(&font_path).exists() {
         return Ok(Response::builder()
             .status(404)
+            .header("Access-Control-Allow-Origin", "*")
             .body("Requested font does not exist".into())
             .unwrap());
     }
@@ -87,6 +95,7 @@ async fn handle_font_request(path: &str) -> Result<Response<Body>, Infallible> {
         Err(_) => {
             return Ok(Response::builder()
                 .status(500)
+                .header("Access-Control-Allow-Origin", "*")
                 .body("Requested font could not be served".into())
                 .unwrap());
         }

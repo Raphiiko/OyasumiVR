@@ -64,6 +64,8 @@ prost = "0.11"
 tokio-stream = { version = "0.1.14", features = ["full"] }
 readonly = "0.2"
 tempfile = "3.6.0"
+strum = "0.25"
+strum_macros = "0.25"
 
 [dependencies.tauri]
 version = "1.4.1"

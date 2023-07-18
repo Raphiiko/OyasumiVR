@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeBuildCommand": "npm run build:pre",
-    "beforeDevCommand": "npm run start",
+    "beforeDevCommand": "npm run start:ui",
     "devPath": "http://localhost:4200",
     "distDir": "../dist/oyasumivr",
     "withGlobalTauri": true
@@ -116,10 +116,10 @@
       "afterHelp": "",
       "args": [
         {
-          "name": "overlay-sidecar-mode",
-          "short": "o",
-          "description": "Mode for handling the overlay sidecar",
-          "longDescription": "'release' mode\n - OyasumiVR will start the bundled overlay sidecar by itself.\n\n'dev' mode:\n - OyasumiVR will not start a sidecar overlay, and assumes that you are running the sidecar yourself on the default development port.",
+          "name": "core-mode",
+          "short": "c",
+          "description": "Mode for running the core module",
+          "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
           "possibleValues": [
@@ -128,12 +128,16 @@
           ]
         },
         {
-          "name": "grpc-port-core",
-          "short": "c",
-          "description": "Port to host the core module's gRPC server on (default: 0 (randomly picked))",
-          "longDescription": "By default, the port for the core module's gRPC server is randomly selected. This is to avoid conflicts with other applications that may be using the same port. If you want to specify a port, say for development purposes, you can do so with this argument.",
+          "name": "overlay-sidecar-mode",
+          "short": "o",
+          "description": "Mode for handling the overlay sidecar",
+          "longDescription": "See developer notes for more information",
           "maxValues": 1,
-          "takesValue": true
+          "takesValue": true,
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
         }
       ]
     },

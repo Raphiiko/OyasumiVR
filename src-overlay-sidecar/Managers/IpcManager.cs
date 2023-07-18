@@ -1,9 +1,11 @@
 using System.Diagnostics;
+using System.Net;
 using Grpc.Core;
 using GrcpOyasumiCore;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Grpc.Net.Client;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.FileProviders;
 using Serilog;
 
@@ -33,6 +35,15 @@ public class IpcManager {
     Directory.CreateDirectory(uiPath);
     var builder = WebApplication.CreateBuilder();
     builder.Host.UseSerilog();
+    builder.WebHost.ConfigureKestrel(serverOptions =>
+    {
+      serverOptions.Listen(IPAddress.Parse("127.0.0.1"),
+        (int)(Program.InDevMode() ? Globals.OVERLAY_SIDECAR_GRPC_DEV_PORT : 0),
+        listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
+      serverOptions.Listen(IPAddress.Parse("127.0.0.1"),
+        (int)(Program.InDevMode() ? Globals.OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT : 0),
+        listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
+    });
     builder.Services.AddCors(o => o.AddPolicy("AllowAll", corsPolicyBuilder =>
     {
       corsPolicyBuilder.AllowAnyOrigin()
@@ -69,79 +80,63 @@ public class IpcManager {
     // Parse ports from addresses
     if (!int.TryParse(grpcAddress.Split(':').Last(), out var grpcPort))
     {
-      Log.Error("Cannot parse bound port for gRPC interface.");
-      if (!Debugger.IsAttached)
-      {
-        Log.Information("Quitting...");
-        Environment.Exit(1);
-        return;
-      }
+      Log.Error("Cannot parse bound port for gRPC interface. Quitting...");
+      Environment.Exit(1);
+      return;
     }
 
     if (!int.TryParse(grpcWebAddress.Split(':').Last(), out var grpcWebPort))
     {
-      Log.Error("Cannot parse bound port for gRPC-Web interface.");
-      if (!Debugger.IsAttached)
-      {
-        Log.Information("Quitting...");
-        Environment.Exit(1);
-        return;
-      }
+      Log.Error("Cannot parse bound port for gRPC-Web interface. Quitting...");
+      Environment.Exit(1);
     }
 
     var channel = GrpcChannel.ForAddress($"http://127.0.0.1:{mainProcessPort}");
     _coreClient = new OyasumiCore.OyasumiCoreClient(channel);
     // Get the core HTTP server port
-    var attempts = 0;
-    var interval = 50;
-    while (_coreHttpServerPort == 0)
+    if (Program.InDevMode())
     {
-      try
+      _coreHttpServerPort = Globals.CORE_HTTP_DEV_PORT;
+    }
+    else
+    {
+      var attempts = 0;
+      var interval = 50;
+      while (_coreHttpServerPort == 0)
       {
-        var response = _coreClient.GetHTTPServerPort(new Empty());
-        _coreHttpServerPort = response.Port;
-      }
-      catch (RpcException)
-      {
-      }
-
-      if (attempts > 5000 / interval)
-      {
-        Log.Error("Could not get HTTP server port from core.");
-        if (!Debugger.IsAttached)
+        try
         {
-          Log.Information("Quitting...");
-          Environment.Exit(1);
+          var response = _coreClient.GetHTTPServerPort(new Empty());
+          _coreHttpServerPort = response.Port;
+        }
+        catch (RpcException)
+        {
         }
 
-        break;
+        if (attempts > 5000 / interval)
+        {
+          Log.Error("Could not get HTTP server port from core. Quitting...");
+          Environment.Exit(1);
+          break;
+        }
+
+        attempts++;
+        Thread.Sleep(interval);
       }
 
-      attempts++;
-      Thread.Sleep(interval);
-    }
-
-    // Inform the core of the overlay sidecar start
-    try
-    {
-      _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
+      // Inform the core of the overlay sidecar start
+      try
       {
-        Pid = (uint)Environment.ProcessId,
-        GrpcPort = (uint)grpcPort,
-        GrpcWebPort = (uint)grpcWebPort
-      });
-    }
-    catch (RpcException e)
-    {
-      if (!Debugger.IsAttached)
-      {
-        Log.Error(e, "Cannot inform core of overlay sidecar start");
-        Log.Information("Quitting...");
-        Environment.Exit(1);
+        _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
+        {
+          Pid = (uint)Environment.ProcessId,
+          GrpcPort = (uint)grpcPort,
+          GrpcWebPort = (uint)grpcWebPort
+        });
       }
-      else
+      catch (RpcException e)
       {
-        Log.Error("Cannot inform core of overlay sidecar start");
+        Log.Error(e, "Cannot inform core of overlay sidecar start. Quitting...");
       }
     }
   }

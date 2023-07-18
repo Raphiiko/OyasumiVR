@@ -98,26 +98,26 @@
   <div class="flex flex-col items-center justify-center w-[500px]" transition:blur>
     <div class="w-full relative h-14">
       <div
-        class="absolute top-0 left-0 w-full h-full p-4 text-white text-3xl drop-shadow-[0_0_16px_rgba(0,0,0,80%)] flex flex-row items-center justify-center">
-        <span class="drop-shadow-[0_0_8px_rgba(255,255,255,80%)]">{$t(`t.overlay.dashboard.automations.title`)}</span>
+        class="absolute top-0 left-0 w-full h-full p-4 text-white text-3xl dark-glow-80 flex flex-row items-center justify-center">
+        <span class="glow-80">{$t(`t.overlay.dashboard.automations.title`)}</span>
 
       </div>
       <div class="absolute top-0 left-0 w-full h-full flex flex-row items-center justify-start"
            on:click={() => dispatch('nav', {mode:'OVERVIEW'})}>
         <Card clickable={true} small>
-          <i class="material-icons m-4 drop-shadow-[0_0_8px_rgba(255,255,255,40%)]">arrow_back</i>
+          <i class="material-icons m-4 glow">arrow_back</i>
         </Card>
       </div>
     </div>
     <div
-      class="w-[100px] h-[2px] rounded-full bg-white bg-opacity-80 mt-8 mb-6 drop-shadow-[0_0_4px_rgba(255,255,255,100%)] "></div>
+      class="w-[100px] h-[2px] rounded-full bg-white bg-opacity-80 mt-8 mb-6 glow-100"></div>
     {#each $viewAutomations as automation}
       <div class="w-full" on:click={() => toggleAutomation(automation.id)}>
         <Card class="w-full mb-6" clickable={true}>
           <div class="flex flex-row items-center p-4">
             <div class="flex-shrink-0 flex flex-row items-center">
               <i
-                class="material-icons text-3xl drop-shadow-[0_0_8px_rgba(255,255,255,40%)] mr-4">{getIcon(automation.id)}</i>
+                class="material-icons text-3xl glow mr-4">{getIcon(automation.id)}</i>
             </div>
             <div class="flex-1 flex flex-col items-start justify-center">
               <span class="text-[1.25em] font-medium">{ getTitle(automation.id) }</span>

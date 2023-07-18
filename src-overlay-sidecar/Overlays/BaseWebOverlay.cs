@@ -25,14 +25,14 @@ public class BaseWebOverlay {
   protected BaseWebOverlay(string path, int resolution, string overlayKey, string overlayName,
     bool requiresState = true)
   {
-    var uiUrl = (Debugger.IsAttached
+    var uiUrl = (Program.InDevMode()
       ? "http://localhost:5173"
       : IpcManager.Instance.StaticBaseUrl) + path + "?corePort=" + IpcManager.Instance.CoreHttpPort;
     // Set up state management
     _requiresState = requiresState;
     StateManager.Instance.StateChanged += OnStateChanged;
     // Set up browser
-    if (Debugger.IsAttached) Log.Information("Using UI URL: {url}", uiUrl);
+    if (Program.InDevMode()) Log.Information("Using UI URL: {url}", uiUrl);
     Browser = BrowserManager.Instance.GetBrowser(uiUrl, resolution, resolution);
     Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut", this);
     // Set up overlay

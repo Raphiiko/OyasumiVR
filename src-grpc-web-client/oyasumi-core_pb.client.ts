@@ -4,6 +4,7 @@
 import type { RpcTransport } from '@protobuf-ts/runtime-rpc';
 import type { ServiceInfo } from '@protobuf-ts/runtime-rpc';
 import { OyasumiCore } from './oyasumi-core_pb';
+import type { HTTPServerPort } from './oyasumi-core_pb';
 import type { EventParams } from './oyasumi-core_pb';
 import type { ElevatedSidecarStartArgs } from './oyasumi-core_pb';
 import { stackIntercept } from '@protobuf-ts/runtime-rpc';
@@ -33,6 +34,10 @@ export interface IOyasumiCoreClient {
    * @generated from protobuf rpc: SendEvent(OyasumiCore.EventParams) returns (OyasumiCore.Empty);
    */
   sendEvent(input: EventParams, options?: RpcOptions): UnaryCall<EventParams, Empty>;
+  /**
+   * @generated from protobuf rpc: GetHTTPServerPort(OyasumiCore.Empty) returns (OyasumiCore.HTTPServerPort);
+   */
+  getHTTPServerPort(input: Empty, options?: RpcOptions): UnaryCall<Empty, HTTPServerPort>;
 }
 /**
  * @generated from protobuf service OyasumiCore.OyasumiCore
@@ -83,5 +88,13 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
     const method = this.methods[2],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<EventParams, Empty>('unary', this._transport, method, opt, input);
+  }
+  /**
+   * @generated from protobuf rpc: GetHTTPServerPort(OyasumiCore.Empty) returns (OyasumiCore.HTTPServerPort);
+   */
+  getHTTPServerPort(input: Empty, options?: RpcOptions): UnaryCall<Empty, HTTPServerPort> {
+    const method = this.methods[3],
+      opt = this._transport.mergeOptions(options);
+    return stackIntercept<Empty, HTTPServerPort>('unary', this._transport, method, opt, input);
   }
 }
