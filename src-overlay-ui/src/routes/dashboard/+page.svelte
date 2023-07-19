@@ -5,6 +5,7 @@
   import Dialog from "$lib/components/Dialog.svelte";
   import { blur, scale } from "svelte/transition";
   import ipc from "$lib/services/ipc.service";
+  import { t } from "$lib/translations";
 
   let { state } = ipc;
 
@@ -43,7 +44,7 @@
     startDisabled: false,
     canStart: false,
     timeout: null as NodeJS.Timeout | null,
-    inProgress: true
+    inProgress: false
   };
 
   function openShutdownSequence() {
@@ -103,10 +104,12 @@
         </div>
       </div>
       <div class="stack-frame" transition:blur>
-        <div class="mb-10 glow-100">
-          <div class="large-spinner scale-[3]"></div>
+        <div class="flex flex-col items-center justify-center">
+          <span class="text-4xl text-white glow-100">{$t('t.shutdown-automations.overlay.title')}</span>
+          <div class="mt-[110px] glow-100">
+            <div class="large-spinner scale-[3]"></div>
+          </div>
         </div>
-        <span class="text-4xl text-white glow-100">Shutting Down...</span>
       </div>
     {/if}
   {/if}
@@ -128,5 +131,17 @@
 
   .stack-frame {
     @apply absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center;
+  }
+
+  .test {
+    @apply absolute w-full h-full;
+    &:before {
+      @apply absolute w-[1px] h-[100%] bg-white top-0 left-1/2;
+      content: '';
+    }
+    &:after {
+      @apply absolute h-[1px] w-[100%] bg-white top-1/2 left-0;
+      content: '';
+    }
   }
 </style>

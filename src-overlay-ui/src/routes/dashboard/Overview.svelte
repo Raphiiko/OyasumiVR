@@ -2,6 +2,7 @@
   import { blur, type BlurParams, fade, fly, type FlyParams, type TransitionConfig } from "svelte/transition";
   import { backOut } from "svelte/easing";
   import logo from "$lib/images/logo.png";
+  import deviceControlIcon from "$lib/images/icon_device_control.png";
   import Card from "$lib/components/Card.svelte";
   import BrightnessSlider from "$lib/components/BrightnessSlider.svelte";
   import ipcService from "$lib/services/ipc.service";
@@ -99,7 +100,7 @@
     >
       <Card clickable={true} class="w-full h-full">
         <div class="action-contents">
-          <i class="material-icons glow">power_off</i>
+          <img src={deviceControlIcon} class="glow w-8/12" />
         </div>
       </Card>
     </div>
