@@ -18,8 +18,6 @@
   import { t } from "$lib/translations";
 
   $: _t = $t;
-
-
   const { state } = ipcService;
 
   let viewAutomations = derived(state, (state) => Object.entries(state.automations ?? {}).map(e => ({

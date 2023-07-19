@@ -152,13 +152,21 @@ export interface OyasumiSidecarAutomationsState_SleepingAnimations {
  */
 export interface OyasumiSidecarAutomationsState_ShutdownAutomations {
   /**
-   * @generated from protobuf field: optional bool enabled = 1;
+   * @generated from protobuf field: optional bool sleep_trigger_enabled = 1;
    */
-  enabled?: boolean;
+  sleepTriggerEnabled?: boolean;
   /**
    * @generated from protobuf field: optional uint32 time_delay = 2;
    */
   timeDelay?: number;
+  /**
+   * @generated from protobuf field: optional bool running = 3;
+   */
+  running?: boolean;
+  /**
+   * @generated from protobuf field: optional bool can_start = 4;
+   */
+  canStart?: boolean;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -990,8 +998,10 @@ export const OyasumiSidecarAutomationsState_SleepingAnimations =
 class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageType<OyasumiSidecarAutomationsState_ShutdownAutomations> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations', [
-      { no: 1, name: 'enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'sleep_trigger_enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
       { no: 2, name: 'time_delay', kind: 'scalar', opt: true, T: 13 /*ScalarType.UINT32*/ },
+      { no: 3, name: 'running', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      { no: 4, name: 'can_start', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(
@@ -1018,11 +1028,17 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool enabled */ 1:
-          message.enabled = reader.bool();
+        case /* optional bool sleep_trigger_enabled */ 1:
+          message.sleepTriggerEnabled = reader.bool();
           break;
         case /* optional uint32 time_delay */ 2:
           message.timeDelay = reader.uint32();
+          break;
+        case /* optional bool running */ 3:
+          message.running = reader.bool();
+          break;
+        case /* optional bool can_start */ 4:
+          message.canStart = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -1048,10 +1064,15 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool enabled = 1; */
-    if (message.enabled !== undefined) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* optional bool sleep_trigger_enabled = 1; */
+    if (message.sleepTriggerEnabled !== undefined)
+      writer.tag(1, WireType.Varint).bool(message.sleepTriggerEnabled);
     /* optional uint32 time_delay = 2; */
     if (message.timeDelay !== undefined) writer.tag(2, WireType.Varint).uint32(message.timeDelay);
+    /* optional bool running = 3; */
+    if (message.running !== undefined) writer.tag(3, WireType.Varint).bool(message.running);
+    /* optional bool can_start = 4; */
+    if (message.canStart !== undefined) writer.tag(4, WireType.Varint).bool(message.canStart);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

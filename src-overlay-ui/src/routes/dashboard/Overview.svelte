@@ -9,6 +9,10 @@
   import { createEventDispatcher } from "svelte";
   import { t } from "$lib/translations";
 
+  // Input & Output
+  const dispatch = createEventDispatcher();
+  export let shutdownSequenceDisabled = true;
+
   // Animation settings
   let animationSpeed = 300;
   let staggerOffset = 60;
@@ -20,7 +24,6 @@
 
   const { state, vrcLoggedIn } = ipcService;
 
-  const dispatch = createEventDispatcher();
 
   function toggleSleepMode() {
     ipcService.setSleepMode(!get(state).sleepMode);
@@ -108,9 +111,9 @@
 					}}
       on:mouseenter={() => window.OyasumiIPCOut_Dashboard.showToolTip($t('t.overlay.dashboard.overview.tooltip.shutdown'))}
       on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
-      on:click={() => { dispatch('event', 'openShutdownSequence'); }}
+      on:click={() => { if (!shutdownSequenceDisabled) dispatch('event', 'openShutdownSequence'); }}
     >
-      <Card clickable={true} class="w-full h-full">
+      <Card clickable={true} class="w-full h-full" disabled={shutdownSequenceDisabled}>
         <div class="action-contents">
           <i class="material-icons glow">settings_power</i>
         </div>

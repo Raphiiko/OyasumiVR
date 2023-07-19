@@ -23,6 +23,10 @@ import { AutomationConfigs } from '../models/automations';
 import { TranslateService } from '@ngx-translate/core';
 import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
 import { AppSettingsService } from './app-settings.service';
+import {
+  ShutdownAutomationsService,
+  ShutdownSequenceStageOrder,
+} from './shutdown-automations.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,8 +51,10 @@ export class IPCStateSyncService {
         presetName: '',
       },
       shutdownAutomations: {
-        enabled: false,
+        sleepTriggerEnabled: false,
         timeDelay: 1000 * 60 * 30,
+        running: false,
+        canStart: false,
       },
     },
   });
@@ -59,7 +65,8 @@ export class IPCStateSyncService {
     private ipcService: IPCService,
     private automationConfig: AutomationConfigService,
     private translate: TranslateService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private shutdownAutomationsService: ShutdownAutomationsService
   ) {}
 
   async init() {
@@ -142,11 +149,25 @@ export class IPCStateSyncService {
         }
         {
           const automation = state.automations!.shutdownAutomations!;
-          automation.enabled = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep;
+          automation.sleepTriggerEnabled = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep;
           automation.timeDelay = configs.SHUTDOWN_AUTOMATIONS.sleepDuration;
+          automation.canStart =
+            this.shutdownAutomationsService.getApplicableStages(configs.SHUTDOWN_AUTOMATIONS)
+              .length > 0;
         }
         this.state.next(state);
       });
+    // Update the state when the shutdown automations state changes
+    this.shutdownAutomationsService.stage.subscribe((stage) => {
+      const index = ShutdownSequenceStageOrder.indexOf(stage);
+      const active = index > 0;
+      const state = cloneDeep(this.state.value);
+      if (state.automations?.shutdownAutomations?.running !== active) {
+        const automation = state.automations!.shutdownAutomations!;
+        automation.running = active;
+        this.state.next(state);
+      }
+    });
   }
 
   private mapVRCStatus(vrcStatus: UserStatus | undefined): VrcStatus {

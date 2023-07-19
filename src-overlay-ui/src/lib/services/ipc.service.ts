@@ -98,6 +98,10 @@ class IPCService {
       enabled
     }));
   }
+
+  async startShutdownSequence() {
+    await window.OyasumiIPCOut.sendEventVoid('startShutdownSequence');
+  }
 }
 
 const INSTANCE = new IPCService();

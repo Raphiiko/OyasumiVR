@@ -110,7 +110,7 @@ public class DashboardOverlay : BaseWebOverlay {
     while (!Disposed)
     {
       timer.TickStart();
-      var position = OvrManager.Instance.OverlayPointer!.GetPointerLocationForOverlay(this);
+      var position = OvrManager.Instance.OverlayPointer?.GetPointerLocationForOverlay(this);
       if (position.HasValue) _tooltipOverlay.SetPosition(position.Value);
       timer.SleepUntilNextTick();
     }

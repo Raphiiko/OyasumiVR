@@ -35,7 +35,7 @@
         <div class="p-3 flex flex-row items-center justify-center font-medium">{$t(cancelText)}</div>
       </Card>
     </div>
-    <div>
+    <div on:click={() => dispatch('confirm') }>
       <Card class="flex-1" clickable={true} active={confirmColor !== 'normal'} activeColor={confirmColor}
             disabled={confirmDisabled}>
         <div class="p-3 flex flex-row items-center justify-center font-medium">{$t(confirmText)}</div>

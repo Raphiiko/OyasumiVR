@@ -8,6 +8,7 @@
     "dev": "npm run tauri dev -- -- -- --core-mode dev --overlay-sidecar-mode dev",
     "start": "npm run tauri dev",
     "start:ui": "node scripts/pre-build.js && ng serve",
+    "start:overlay": "cd src-overlay-sidecar && dotnet build && dotnet run -- dev",
     "start:overlay-ui": "cd src-overlay-ui && npm run dev",
     "build": "run-s build:core",
     "build:core": "npm run tauri build",
@@ -29,8 +30,8 @@
     "tl": "node scripts/translation-utils.js",
     "clean": "rimraf dist && rimraf src-overlay-sidecar/bin && rimraf src-overlay-sidecar/obj && rimraf src-overlay-ui/build && rimraf src-elevated-sidecar/target && rimraf src-core/target && rimraf src-shared-rust/target && rimraf src-core/resources/elevated-sidecar && rimraf src-core/resources/overlay-sidecar && rimraf src-core/resources/fonts",
     "generate:grpc-web-client": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./scripts/ts-proto-gen.ps1 && prettier --loglevel silent --write src-grpc-web-client/**/*",
-    "postinstall": "cd src-overlay-ui && npm install && cd .. && node scripts/postinstall.js",
-    "init": "cd src-overlay-ui && npm install && cd .. && run-s generate:grpc-web-client build:pre"
+    "postinstall": "cd src-overlay-ui && npm install && cd ..",
+    "init": "npm install && run-s generate:grpc-web-client build:pre && node scripts/init.js"
   },
   "private": true,
   "dependencies": {

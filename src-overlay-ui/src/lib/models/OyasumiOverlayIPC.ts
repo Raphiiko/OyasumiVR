@@ -25,6 +25,8 @@ export interface OyasumiOverlayIPCOut {
 
   syncState(): Promise<void>;
 
+  sendEventVoid(eventName: string): Promise<void>;
+
   sendEventString(eventName: string, data: string): Promise<void>;
 
   sendEventBool(eventName: string, data: boolean): Promise<void>;

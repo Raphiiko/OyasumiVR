@@ -31,6 +31,7 @@ import {
   EventLogShutdownSequenceStarted,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
+import { listen } from '@tauri-apps/api/event';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
@@ -91,16 +92,21 @@ export class ShutdownAutomationsService {
       this.sleepModeLastSet = Date.now();
     });
     // Trigger when asleep long enough
-    this.handleTriggerOnSleep();
+    await this.handleTriggerOnSleep();
+    // Trigger through overlay
+    await listen('startShutdownSequence', () => {
+      this.runSequence('MANUAL');
+    });
   }
 
-  getApplicableStages(): ShutdownSequenceStage[] {
+  getApplicableStages(config?: ShutdownAutomationsConfig): ShutdownSequenceStage[] {
+    config ??= this.config;
     const stages: ShutdownSequenceStage[] = [];
-    if (this.config.turnOffControllers) stages.push('TURNING_OFF_CONTROLLERS');
-    if (this.config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
-    if (this.config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
-    if (this.config.quitSteamVR) stages.push('QUITTING_STEAMVR');
-    if (this.config.shutdownWindows) stages.push('SHUTTING_DOWN');
+    if (config.turnOffControllers) stages.push('TURNING_OFF_CONTROLLERS');
+    if (config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
+    if (config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
+    if (config.quitSteamVR) stages.push('QUITTING_STEAMVR');
+    if (config.shutdownWindows) stages.push('SHUTTING_DOWN');
     return stages;
   }
 
@@ -120,11 +126,12 @@ export class ShutdownAutomationsService {
   }
 
   async runSequence(reason: 'MANUAL' | 'SLEEP_TRIGGER') {
-    if (this._stage.value !== 'IDLE') return;
+    const stages = this.getApplicableStages();
+    if (this._stage.value !== 'IDLE' || !stages.length) return;
     this.eventLog.logEvent({
       type: 'shutdownSequenceStarted',
       reason,
-      stages: this.getApplicableStages(),
+      stages,
     } as EventLogShutdownSequenceStarted);
     if (!(await this.turnOffControllers())) return;
     if (!(await this.turnOffTrackers())) return;

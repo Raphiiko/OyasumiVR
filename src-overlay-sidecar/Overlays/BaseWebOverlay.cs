@@ -125,6 +125,15 @@ public class BaseWebOverlay {
       @$"window.OyasumiIPCIn.setState(""{HttpUtility.JavaScriptStringEncode(state.ToByteString().ToBase64())}"");");
   }
 
+  public void SendEventVoid(string eventName)
+  {
+    var p = new EventParams
+    {
+      EventName = eventName,
+    };
+    IpcManager.Instance.CoreClient.SendEvent(p);
+  }
+
   public void SendEventString(string eventName, string data)
   {
     var p = new EventParams

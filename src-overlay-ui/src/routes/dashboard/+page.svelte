@@ -4,20 +4,19 @@
   import { onMount } from "svelte";
   import Dialog from "$lib/components/Dialog.svelte";
   import { blur, scale } from "svelte/transition";
+  import ipc from "$lib/services/ipc.service";
 
+  let { state } = ipc;
+
+  // IPC & Readiness
   let ready = !window.CefSharp;
-  let shutdownSequenceDialog = {
-    shown: false,
-    startDisabled: false,
-    timeout: null as NodeJS.Timeout | null
-  };
-
   type DashboardMode = "OVERVIEW" | "AUTOMATIONS";
   let mode: "OVERVIEW" | "AUTOMATIONS" = "OVERVIEW";
   window.OyasumiIPCIn.hideDashboard = async () => ((ready = false), void 1);
   window.OyasumiIPCIn.showDashboard = async () => ((ready = true), void 0);
   onMount(() => window.OyasumiIPCOut.onUiReady());
 
+  // Utilities
   function navigate(e: CustomEvent<{ mode: DashboardMode }>) {
     mode = e.detail.mode;
   }
@@ -26,28 +25,57 @@
     const event = typeof e === "string" ? e : e.detail;
     switch (event) {
       case "openShutdownSequence":
-        shutdownSequenceDialog.shown = true;
-        shutdownSequenceDialog.startDisabled = true;
-        if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
-        shutdownSequenceDialog.timeout = setTimeout(() => {
-          shutdownSequenceDialog.startDisabled = false;
-          shutdownSequenceDialog.timeout = null;
-        }, 2000);
+        openShutdownSequence();
         break;
       case "closeShutdownSequence":
-        if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
-        shutdownSequenceDialog.shown = false;
+        closeShutdownSequence();
         break;
     }
+  }
+
+  // Shutdown Sequence
+
+  $: shutdownSequenceDialog.inProgress = $state.automations?.shutdownAutomations?.running ?? false;
+  $: shutdownSequenceDialog.canStart = $state.automations?.shutdownAutomations?.canStart ?? false;
+
+  let shutdownSequenceDialog = {
+    shown: false,
+    startDisabled: false,
+    canStart: false,
+    timeout: null as NodeJS.Timeout | null,
+    inProgress: true
+  };
+
+  function openShutdownSequence() {
+    shutdownSequenceDialog.shown = true;
+    shutdownSequenceDialog.startDisabled = true;
+    if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
+    shutdownSequenceDialog.timeout = setTimeout(() => {
+      shutdownSequenceDialog.startDisabled = false;
+      shutdownSequenceDialog.timeout = null;
+    }, 2000);
+  }
+
+  function closeShutdownSequence() {
+    if (shutdownSequenceDialog.timeout) clearTimeout(shutdownSequenceDialog.timeout);
+    shutdownSequenceDialog.shown = false;
+    shutdownSequenceDialog.inProgress = true;
+  }
+
+  function startShutdownSequence() {
+    ipc.startShutdownSequence();
+    closeShutdownSequence();
   }
 </script>
 
 <main class:non-overlay={!window.CefSharp}>
   {#if ready}
     {#if mode === 'OVERVIEW'}
-      <div class="stack-frame transition duration-700" class:blur-sm={shutdownSequenceDialog.shown}
-           class:opacity-80={shutdownSequenceDialog.shown}>
-        <Overview on:nav={navigate} on:event={handleEvent} />
+      <div class="stack-frame transition duration-700"
+           class:blur-sm={shutdownSequenceDialog.shown || shutdownSequenceDialog.inProgress}
+           class:opacity-80={shutdownSequenceDialog.shown || shutdownSequenceDialog.inProgress}>
+        <Overview on:nav={navigate} on:event={handleEvent}
+                  shutdownSequenceDisabled={!shutdownSequenceDialog.canStart} />
       </div>
     {:else if mode === 'AUTOMATIONS'}
       <div class="stack-frame">
@@ -62,16 +90,31 @@
             message="t.overlay.dashboard.shutdownSequence.dialog.message"
             confirmText="t.overlay.dashboard.shutdownSequence.dialog.start"
             confirmColor="red"
-            confirmDisabled={shutdownSequenceDialog.startDisabled}
-            on:cancel={() => handleEvent('closeShutdownSequence')}
+            confirmDisabled={shutdownSequenceDialog.startDisabled || shutdownSequenceDialog.inProgress || !shutdownSequenceDialog.canStart}
+            on:cancel={() => closeShutdownSequence()}
+            on:confirm={() => startShutdownSequence()}
           />
         </div>
+      </div>
+    {/if}
+    {#if shutdownSequenceDialog.inProgress}
+      <div class="stack-frame" transition:blur>
+        <div class="w-[600px] h-[500px] bg-black blur-3xl opacity-80 rounded-full">
+        </div>
+      </div>
+      <div class="stack-frame" transition:blur>
+        <div class="mb-10 glow-100">
+          <div class="large-spinner scale-[3]"></div>
+        </div>
+        <span class="text-4xl text-white glow-100">Shutting Down...</span>
       </div>
     {/if}
   {/if}
 </main>
 
 <style lang="scss">
+  @import '$lib/styles/spinners.scss';
+
   main {
     @apply w-[1024px] h-[1024px] select-none relative;
     background-size: cover;

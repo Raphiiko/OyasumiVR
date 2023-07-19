@@ -59,6 +59,8 @@ impl OyasumiCore for OyasumiCoreServerImpl {
                     crate::utils::send_event(request.event_name.as_str(), *d).await;
                 }
             }
+        } else {
+            crate::utils::send_event(request.event_name.as_str(), ()).await;
         }
 
         Ok(Response::new(Empty {}))

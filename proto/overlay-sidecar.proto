@@ -66,8 +66,10 @@ message OyasumiSidecarAutomationsState_SleepingAnimations {
 }
 
 message OyasumiSidecarAutomationsState_ShutdownAutomations {
-  optional bool enabled = 1;
+  optional bool sleep_trigger_enabled = 1;
   optional uint32 time_delay = 2;
+  optional bool running = 3;
+  optional bool can_start = 4;
 }
 
 enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
