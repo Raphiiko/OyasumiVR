@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run Dev Mode" type="CompoundRunConfigurationType">
+    <toRun name="Run Dev Mode: Core" type="js.build_tools.npm" />
+    <toRun name="Run Dev Mode: Overlay" type="js.build_tools.npm" />
+    <toRun name="Run Overlay UI" type="js.build_tools.npm" />
+    <method v="2" />
+  </configuration>
+</component>
