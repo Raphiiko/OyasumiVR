@@ -196,7 +196,7 @@ export class IPCStateSyncService {
               deviceInfo.controllers.push(this.mapOVRDevice(device));
               break;
             case 'GenericTracker':
-              deviceInfo.controllers.push(this.mapOVRDevice(device));
+              deviceInfo.trackers.push(this.mapOVRDevice(device));
               break;
           }
         }
