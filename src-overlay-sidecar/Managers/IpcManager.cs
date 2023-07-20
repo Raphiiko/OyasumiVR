@@ -123,21 +123,22 @@ public class IpcManager {
         attempts++;
         Thread.Sleep(interval);
       }
+    }
 
-      // Inform the core of the overlay sidecar start
-      try
+    // Inform the core of the overlay sidecar start
+    try
+    {
+      _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
       {
-        _coreClient.OnOverlaySidecarStart(new OverlaySidecarStartArgs()
-        {
-          Pid = (uint)Environment.ProcessId,
-          GrpcPort = (uint)grpcPort,
-          GrpcWebPort = (uint)grpcWebPort
-        });
-      }
-      catch (RpcException e)
-      {
-        Log.Error(e, "Cannot inform core of overlay sidecar start. Quitting...");
-      }
+        Pid = (uint)Environment.ProcessId,
+        GrpcPort = (uint)grpcPort,
+        GrpcWebPort = (uint)grpcWebPort
+      });
+    }
+    catch (RpcException e)
+    {
+      Log.Error(e, "Cannot inform core of overlay sidecar start. Quitting...");
+      if (Program.InReleaseMode()) Environment.Exit(1);
     }
   }
 }

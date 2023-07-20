@@ -2,57 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 @import 'material-icons/iconfont/material-icons.css';
+@import '$lib/styles/spinners.scss';
 
 * {
-  letter-spacing: 0.025em;
+	letter-spacing: 0.025em;
 }
 
 .glow {
-  &, &-40 {
-    @apply drop-shadow-[0_0_4px_rgba(255,255,255,40%)];
-  }
+	&,
+	&-40 {
+		@apply drop-shadow-[0_0_4px_rgba(255,255,255,40%)];
+	}
 
-  &-80 {
-    @apply drop-shadow-[0_0_8px_rgba(255,255,255,80%)]
-  }
+	&-80 {
+		@apply drop-shadow-[0_0_8px_rgba(255,255,255,80%)];
+	}
 
-  &-100 {
-    @apply drop-shadow-[0_0_8px_rgba(255,255,255,100%)]
-  }
+	&-100 {
+		@apply drop-shadow-[0_0_8px_rgba(255,255,255,100%)];
+	}
 }
 
 .dark-glow {
-  &, &-40 {
-    @apply drop-shadow-[0_0_16px_rgba(0,0,0,40%)];
-  }
+	&,
+	&-40 {
+		@apply drop-shadow-[0_0_16px_rgba(0,0,0,40%)];
+	}
 
-  &-80 {
-    @apply drop-shadow-[0_0_16px_rgba(0,0,0,80%)]
-  }
+	&-80 {
+		@apply drop-shadow-[0_0_16px_rgba(0,0,0,80%)];
+	}
 
-  &-100 {
-    @apply drop-shadow-[0_0_16px_rgba(0,0,0,100%)]
-  }
+	&-100 {
+		@apply drop-shadow-[0_0_16px_rgba(0,0,0,100%)];
+	}
 }
 
 .vrc-status-color {
-  &-Active, &-3 {
-    background-color: var(--color-vrchat-status-green);
-  }
+	&-Active,
+	&-3 {
+		background-color: var(--color-vrchat-status-green);
+	}
 
-  &-JoinMe, &-4 {
-    background-color: var(--color-vrchat-status-blue);
-  }
+	&-JoinMe,
+	&-4 {
+		background-color: var(--color-vrchat-status-blue);
+	}
 
-  &-AskMe, &-2 {
-    background-color: var(--color-vrchat-status-orange);
-  }
+	&-AskMe,
+	&-2 {
+		background-color: var(--color-vrchat-status-orange);
+	}
 
-  &-Busy, &-1 {
-    background-color: var(--color-vrchat-status-red);
-  }
+	&-Busy,
+	&-1 {
+		background-color: var(--color-vrchat-status-red);
+	}
 
-  &-Offline, &-0 {
-    background-color: black;
-  }
+	&-Offline,
+	&-0 {
+		background-color: black;
+	}
 }

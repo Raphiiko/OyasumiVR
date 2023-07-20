@@ -8,6 +8,8 @@ import { APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
 import { warn } from 'tauri-plugin-log-api';
 import { IPCService } from './ipc.service';
+import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
+import { listen } from '@tauri-apps/api/event';
 
 interface XSOMessage {
   messageType: number;
@@ -29,6 +31,14 @@ interface XSOMessage {
 })
 export class NotificationService {
   constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
+
+  public async init() {
+    await listen<AddNotificationRequest>('addNotification', async (request) => {
+      /*const notificationId = */
+      await this.send(request.payload.message, request.payload.duration);
+      // TODO: SEND BACK NOTIFICATION ID TO CORE
+    });
+  }
 
   public async play_sound(sound: 'bell' | 'block') {
     await invoke('play_sound', {

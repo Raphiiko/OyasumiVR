@@ -113,6 +113,28 @@ export interface EventParams {
       };
 }
 /**
+ * @generated from protobuf message OyasumiCore.AddNotificationRequest
+ */
+export interface AddNotificationRequest {
+  /**
+   * @generated from protobuf field: string message = 1;
+   */
+  message: string;
+  /**
+   * @generated from protobuf field: uint32 duration = 2;
+   */
+  duration: number;
+}
+/**
+ * @generated from protobuf message OyasumiCore.AddNotificationResponse
+ */
+export interface AddNotificationResponse {
+  /**
+   * @generated from protobuf field: optional string notification_id = 1;
+   */
+  notificationId?: string;
+}
+/**
  * @generated from protobuf message OyasumiCore.Empty
  */
 export interface Empty {}
@@ -457,6 +479,137 @@ class EventParams$Type extends MessageType<EventParams> {
  */
 export const EventParams = new EventParams$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class AddNotificationRequest$Type extends MessageType<AddNotificationRequest> {
+  constructor() {
+    super('OyasumiCore.AddNotificationRequest', [
+      { no: 1, name: 'message', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 2, name: 'duration', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+    ]);
+  }
+  create(value?: PartialMessage<AddNotificationRequest>): AddNotificationRequest {
+    const message = { message: '', duration: 0 };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<AddNotificationRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: AddNotificationRequest
+  ): AddNotificationRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* string message */ 1:
+          message.message = reader.string();
+          break;
+        case /* uint32 duration */ 2:
+          message.duration = reader.uint32();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: AddNotificationRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* string message = 1; */
+    if (message.message !== '') writer.tag(1, WireType.LengthDelimited).string(message.message);
+    /* uint32 duration = 2; */
+    if (message.duration !== 0) writer.tag(2, WireType.Varint).uint32(message.duration);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiCore.AddNotificationRequest
+ */
+export const AddNotificationRequest = new AddNotificationRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class AddNotificationResponse$Type extends MessageType<AddNotificationResponse> {
+  constructor() {
+    super('OyasumiCore.AddNotificationResponse', [
+      { no: 1, name: 'notification_id', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+    ]);
+  }
+  create(value?: PartialMessage<AddNotificationResponse>): AddNotificationResponse {
+    const message = {};
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<AddNotificationResponse>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: AddNotificationResponse
+  ): AddNotificationResponse {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* optional string notification_id */ 1:
+          message.notificationId = reader.string();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: AddNotificationResponse,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* optional string notification_id = 1; */
+    if (message.notificationId !== undefined)
+      writer.tag(1, WireType.LengthDelimited).string(message.notificationId);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiCore.AddNotificationResponse
+ */
+export const AddNotificationResponse = new AddNotificationResponse$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
     super('OyasumiCore.Empty', []);
@@ -497,4 +650,5 @@ export const OyasumiCore = new ServiceType('OyasumiCore.OyasumiCore', [
   { name: 'OnElevatedSidecarStart', options: {}, I: ElevatedSidecarStartArgs, O: Empty },
   { name: 'SendEvent', options: {}, I: EventParams, O: Empty },
   { name: 'GetHTTPServerPort', options: {}, I: Empty, O: HTTPServerPort },
+  { name: 'AddNotification', options: {}, I: AddNotificationRequest, O: AddNotificationResponse },
 ]);

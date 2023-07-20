@@ -40,6 +40,40 @@ message OyasumiSidecarState {
   optional string vrc_username = 3;
   optional OyasumiSidecarAutomationsState automations = 4;
   optional string locale = 5;
+  optional OyasumiSidecarDeviceInfo device_info = 6;
+}
+
+message OyasumiSidecarDeviceInfo {
+  repeated OyasumiSidecarDeviceInfo_Controller controllers = 1;
+  repeated OyasumiSidecarDeviceInfo_Tracker trackers = 2;
+}
+
+message OyasumiSidecarDeviceInfo_Controller {
+  int32 index = 1;
+  string manufacturer_name = 2;
+  string model_number = 3;
+  string serial_number = 4;
+  string hardware_revision = 5;
+  string dongle_id = 6;
+  double battery = 7;
+  bool is_turning_off = 8;
+  bool can_power_off = 9;
+  bool is_charging = 10;
+  bool provides_battery_status = 11;
+}
+
+message OyasumiSidecarDeviceInfo_Tracker {
+  int32 index = 1;
+  string manufacturer_name = 2;
+  string model_number = 3;
+  string serial_number = 4;
+  string hardware_revision = 5;
+  string dongle_id = 6;
+  double battery = 7;
+  bool is_turning_off = 8;
+  bool can_power_off = 9;
+  bool is_charging = 10;
+  bool provides_battery_status = 11;
 }
 
 message OyasumiSidecarAutomationsState {

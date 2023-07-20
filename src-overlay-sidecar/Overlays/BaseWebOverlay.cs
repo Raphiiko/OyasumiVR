@@ -184,6 +184,16 @@ public class BaseWebOverlay {
     IpcManager.Instance.CoreClient.SendEvent(p);
   }
 
+  public string? AddNotification(string message, int duration)
+  {
+    var response = IpcManager.Instance.CoreClient.AddNotification(new GrcpOyasumiCore.AddNotificationRequest()
+    {
+      Message = message,
+      Duration = (uint)duration
+    });
+    return response.HasNotificationId ? response.NotificationId : null;
+  }
+
   public void UpdateFrame()
   {
     // Stop here if we are not ready, already disposed, or if the browser hasn't painted anything new for the past second or so.

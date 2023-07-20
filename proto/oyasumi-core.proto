@@ -9,6 +9,7 @@ service OyasumiCore {
   rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
   rpc SendEvent (EventParams) returns (Empty) {}
   rpc GetHTTPServerPort (Empty) returns (HTTPServerPort) {}
+  rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
 }
 
 message HTTPServerPort {
@@ -40,5 +41,13 @@ message EventParams {
   }
 }
 
+message AddNotificationRequest {
+  string message = 1;
+  uint32 duration = 2;
+}
+
+message AddNotificationResponse {
+  optional string notification_id = 1;
+}
 
 message Empty {}
