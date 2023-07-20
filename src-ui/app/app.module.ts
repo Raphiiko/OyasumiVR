@@ -134,6 +134,7 @@ import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
 import { DotnetService } from './services/dotnet.service';
 import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
+import { NotificationService } from './services/notification.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -260,6 +261,7 @@ export class AppModule {
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
     private dotnetService: DotnetService,
+    private notificationService: NotificationService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -323,6 +325,7 @@ export class AppModule {
           this.imageCacheService.init(),
           this.fontLoaderService.init(),
           this.lighthouseService.init(),
+          this.notificationService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {

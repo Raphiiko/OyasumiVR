@@ -758,6 +758,15 @@
     },
     "autoAcceptedInviteRequest": {
       "content": "Automatically accepted invite request from {{username}}"
+    },
+    "turningOffControllers": {
+      "content": "Turning off your controllers"
+    },
+    "turningOffTrackers": {
+      "content": "Turning off your trackers"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "Turning off both your controllers and your trackers"
     }
   },
   "comp": {
@@ -1218,6 +1227,14 @@
           "title": "Shutdown Sequence",
           "message": "You are about to start the shutdown sequence.\nAre you sure you want to do this now?\n\nYou can configure which actions the shutdown sequence takes in the main OyasumiVR window.",
           "start": "Start Shutdown"
+        }
+      },
+      "deviceControl": {
+        "title": "Device Control",
+        "turnOff": {
+          "AllControllers": "Turn off all controllers",
+          "AllTrackers": "Turn off all trackers",
+          "AllControllersAndTrackers": "Turn off all controllers and trackers"
         }
       },
       "automations": {

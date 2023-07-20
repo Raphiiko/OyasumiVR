@@ -21,8 +21,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - name: Install NodeJS dependencies
-        run: npm install
+      - name: Initialize the project
+        run: npm run init
       - name: Set app version to DEV version
         run: npm run set-version DEV
       - name: Lint Angular project

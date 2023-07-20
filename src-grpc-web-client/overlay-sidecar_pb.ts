@@ -82,6 +82,121 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: optional string locale = 5;
    */
   locale?: string;
+  /**
+   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6;
+   */
+  deviceInfo?: OyasumiSidecarDeviceInfo;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
+ */
+export interface OyasumiSidecarDeviceInfo {
+  /**
+   * @generated from protobuf field: repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller controllers = 1;
+   */
+  controllers: OyasumiSidecarDeviceInfo_Controller[];
+  /**
+   * @generated from protobuf field: repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker trackers = 2;
+   */
+  trackers: OyasumiSidecarDeviceInfo_Tracker[];
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller
+ */
+export interface OyasumiSidecarDeviceInfo_Controller {
+  /**
+   * @generated from protobuf field: int32 index = 1;
+   */
+  index: number;
+  /**
+   * @generated from protobuf field: string manufacturer_name = 2;
+   */
+  manufacturerName: string;
+  /**
+   * @generated from protobuf field: string model_number = 3;
+   */
+  modelNumber: string;
+  /**
+   * @generated from protobuf field: string serial_number = 4;
+   */
+  serialNumber: string;
+  /**
+   * @generated from protobuf field: string hardware_revision = 5;
+   */
+  hardwareRevision: string;
+  /**
+   * @generated from protobuf field: string dongle_id = 6;
+   */
+  dongleId: string;
+  /**
+   * @generated from protobuf field: double battery = 7;
+   */
+  battery: number;
+  /**
+   * @generated from protobuf field: bool is_turning_off = 8;
+   */
+  isTurningOff: boolean;
+  /**
+   * @generated from protobuf field: bool can_power_off = 9;
+   */
+  canPowerOff: boolean;
+  /**
+   * @generated from protobuf field: bool is_charging = 10;
+   */
+  isCharging: boolean;
+  /**
+   * @generated from protobuf field: bool provides_battery_status = 11;
+   */
+  providesBatteryStatus: boolean;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker
+ */
+export interface OyasumiSidecarDeviceInfo_Tracker {
+  /**
+   * @generated from protobuf field: int32 index = 1;
+   */
+  index: number;
+  /**
+   * @generated from protobuf field: string manufacturer_name = 2;
+   */
+  manufacturerName: string;
+  /**
+   * @generated from protobuf field: string model_number = 3;
+   */
+  modelNumber: string;
+  /**
+   * @generated from protobuf field: string serial_number = 4;
+   */
+  serialNumber: string;
+  /**
+   * @generated from protobuf field: string hardware_revision = 5;
+   */
+  hardwareRevision: string;
+  /**
+   * @generated from protobuf field: string dongle_id = 6;
+   */
+  dongleId: string;
+  /**
+   * @generated from protobuf field: double battery = 7;
+   */
+  battery: number;
+  /**
+   * @generated from protobuf field: bool is_turning_off = 8;
+   */
+  isTurningOff: boolean;
+  /**
+   * @generated from protobuf field: bool can_power_off = 9;
+   */
+  canPowerOff: boolean;
+  /**
+   * @generated from protobuf field: bool is_charging = 10;
+   */
+  isCharging: boolean;
+  /**
+   * @generated from protobuf field: bool provides_battery_status = 11;
+   */
+  providesBatteryStatus: boolean;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState
@@ -514,6 +629,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 3, name: 'vrc_username', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
       { no: 4, name: 'automations', kind: 'message', T: () => OyasumiSidecarAutomationsState },
       { no: 5, name: 'locale', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+      { no: 6, name: 'device_info', kind: 'message', T: () => OyasumiSidecarDeviceInfo },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -552,6 +668,14 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
           break;
         case /* optional string locale */ 5:
           message.locale = reader.string();
+          break;
+        case /* optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info */ 6:
+          message.deviceInfo = OyasumiSidecarDeviceInfo.internalBinaryRead(
+            reader,
+            reader.uint32(),
+            options,
+            message.deviceInfo
+          );
           break;
         default:
           let u = options.readUnknownField;
@@ -594,6 +718,13 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     /* optional string locale = 5; */
     if (message.locale !== undefined)
       writer.tag(5, WireType.LengthDelimited).string(message.locale);
+    /* optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6; */
+    if (message.deviceInfo)
+      OyasumiSidecarDeviceInfo.internalBinaryWrite(
+        message.deviceInfo,
+        writer.tag(6, WireType.LengthDelimited).fork(),
+        options
+      ).join();
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -603,6 +734,384 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
  * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarState
  */
 export const OyasumiSidecarState = new OyasumiSidecarState$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarDeviceInfo$Type extends MessageType<OyasumiSidecarDeviceInfo> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo', [
+      {
+        no: 1,
+        name: 'controllers',
+        kind: 'message',
+        repeat: 1 /*RepeatType.PACKED*/,
+        T: () => OyasumiSidecarDeviceInfo_Controller,
+      },
+      {
+        no: 2,
+        name: 'trackers',
+        kind: 'message',
+        repeat: 1 /*RepeatType.PACKED*/,
+        T: () => OyasumiSidecarDeviceInfo_Tracker,
+      },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarDeviceInfo>): OyasumiSidecarDeviceInfo {
+    const message = { controllers: [], trackers: [] };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OyasumiSidecarDeviceInfo>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarDeviceInfo
+  ): OyasumiSidecarDeviceInfo {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller controllers */ 1:
+          message.controllers.push(
+            OyasumiSidecarDeviceInfo_Controller.internalBinaryRead(reader, reader.uint32(), options)
+          );
+          break;
+        case /* repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker trackers */ 2:
+          message.trackers.push(
+            OyasumiSidecarDeviceInfo_Tracker.internalBinaryRead(reader, reader.uint32(), options)
+          );
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarDeviceInfo,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller controllers = 1; */
+    for (let i = 0; i < message.controllers.length; i++)
+      OyasumiSidecarDeviceInfo_Controller.internalBinaryWrite(
+        message.controllers[i],
+        writer.tag(1, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    /* repeated OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker trackers = 2; */
+    for (let i = 0; i < message.trackers.length; i++)
+      OyasumiSidecarDeviceInfo_Tracker.internalBinaryWrite(
+        message.trackers[i],
+        writer.tag(2, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
+ */
+export const OyasumiSidecarDeviceInfo = new OyasumiSidecarDeviceInfo$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarDeviceInfo_Controller$Type extends MessageType<OyasumiSidecarDeviceInfo_Controller> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller', [
+      { no: 1, name: 'index', kind: 'scalar', T: 5 /*ScalarType.INT32*/ },
+      { no: 2, name: 'manufacturer_name', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 3, name: 'model_number', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 4, name: 'serial_number', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 5, name: 'hardware_revision', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 6, name: 'dongle_id', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 7, name: 'battery', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 8, name: 'is_turning_off', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 9, name: 'can_power_off', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 10, name: 'is_charging', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 11, name: 'provides_battery_status', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(
+    value?: PartialMessage<OyasumiSidecarDeviceInfo_Controller>
+  ): OyasumiSidecarDeviceInfo_Controller {
+    const message = {
+      index: 0,
+      manufacturerName: '',
+      modelNumber: '',
+      serialNumber: '',
+      hardwareRevision: '',
+      dongleId: '',
+      battery: 0,
+      isTurningOff: false,
+      canPowerOff: false,
+      isCharging: false,
+      providesBatteryStatus: false,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarDeviceInfo_Controller>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarDeviceInfo_Controller
+  ): OyasumiSidecarDeviceInfo_Controller {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* int32 index */ 1:
+          message.index = reader.int32();
+          break;
+        case /* string manufacturer_name */ 2:
+          message.manufacturerName = reader.string();
+          break;
+        case /* string model_number */ 3:
+          message.modelNumber = reader.string();
+          break;
+        case /* string serial_number */ 4:
+          message.serialNumber = reader.string();
+          break;
+        case /* string hardware_revision */ 5:
+          message.hardwareRevision = reader.string();
+          break;
+        case /* string dongle_id */ 6:
+          message.dongleId = reader.string();
+          break;
+        case /* double battery */ 7:
+          message.battery = reader.double();
+          break;
+        case /* bool is_turning_off */ 8:
+          message.isTurningOff = reader.bool();
+          break;
+        case /* bool can_power_off */ 9:
+          message.canPowerOff = reader.bool();
+          break;
+        case /* bool is_charging */ 10:
+          message.isCharging = reader.bool();
+          break;
+        case /* bool provides_battery_status */ 11:
+          message.providesBatteryStatus = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarDeviceInfo_Controller,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* int32 index = 1; */
+    if (message.index !== 0) writer.tag(1, WireType.Varint).int32(message.index);
+    /* string manufacturer_name = 2; */
+    if (message.manufacturerName !== '')
+      writer.tag(2, WireType.LengthDelimited).string(message.manufacturerName);
+    /* string model_number = 3; */
+    if (message.modelNumber !== '')
+      writer.tag(3, WireType.LengthDelimited).string(message.modelNumber);
+    /* string serial_number = 4; */
+    if (message.serialNumber !== '')
+      writer.tag(4, WireType.LengthDelimited).string(message.serialNumber);
+    /* string hardware_revision = 5; */
+    if (message.hardwareRevision !== '')
+      writer.tag(5, WireType.LengthDelimited).string(message.hardwareRevision);
+    /* string dongle_id = 6; */
+    if (message.dongleId !== '') writer.tag(6, WireType.LengthDelimited).string(message.dongleId);
+    /* double battery = 7; */
+    if (message.battery !== 0) writer.tag(7, WireType.Bit64).double(message.battery);
+    /* bool is_turning_off = 8; */
+    if (message.isTurningOff !== false) writer.tag(8, WireType.Varint).bool(message.isTurningOff);
+    /* bool can_power_off = 9; */
+    if (message.canPowerOff !== false) writer.tag(9, WireType.Varint).bool(message.canPowerOff);
+    /* bool is_charging = 10; */
+    if (message.isCharging !== false) writer.tag(10, WireType.Varint).bool(message.isCharging);
+    /* bool provides_battery_status = 11; */
+    if (message.providesBatteryStatus !== false)
+      writer.tag(11, WireType.Varint).bool(message.providesBatteryStatus);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Controller
+ */
+export const OyasumiSidecarDeviceInfo_Controller = new OyasumiSidecarDeviceInfo_Controller$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarDeviceInfo_Tracker$Type extends MessageType<OyasumiSidecarDeviceInfo_Tracker> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker', [
+      { no: 1, name: 'index', kind: 'scalar', T: 5 /*ScalarType.INT32*/ },
+      { no: 2, name: 'manufacturer_name', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 3, name: 'model_number', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 4, name: 'serial_number', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 5, name: 'hardware_revision', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 6, name: 'dongle_id', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 7, name: 'battery', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 8, name: 'is_turning_off', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 9, name: 'can_power_off', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 10, name: 'is_charging', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 11, name: 'provides_battery_status', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(
+    value?: PartialMessage<OyasumiSidecarDeviceInfo_Tracker>
+  ): OyasumiSidecarDeviceInfo_Tracker {
+    const message = {
+      index: 0,
+      manufacturerName: '',
+      modelNumber: '',
+      serialNumber: '',
+      hardwareRevision: '',
+      dongleId: '',
+      battery: 0,
+      isTurningOff: false,
+      canPowerOff: false,
+      isCharging: false,
+      providesBatteryStatus: false,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarDeviceInfo_Tracker>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarDeviceInfo_Tracker
+  ): OyasumiSidecarDeviceInfo_Tracker {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* int32 index */ 1:
+          message.index = reader.int32();
+          break;
+        case /* string manufacturer_name */ 2:
+          message.manufacturerName = reader.string();
+          break;
+        case /* string model_number */ 3:
+          message.modelNumber = reader.string();
+          break;
+        case /* string serial_number */ 4:
+          message.serialNumber = reader.string();
+          break;
+        case /* string hardware_revision */ 5:
+          message.hardwareRevision = reader.string();
+          break;
+        case /* string dongle_id */ 6:
+          message.dongleId = reader.string();
+          break;
+        case /* double battery */ 7:
+          message.battery = reader.double();
+          break;
+        case /* bool is_turning_off */ 8:
+          message.isTurningOff = reader.bool();
+          break;
+        case /* bool can_power_off */ 9:
+          message.canPowerOff = reader.bool();
+          break;
+        case /* bool is_charging */ 10:
+          message.isCharging = reader.bool();
+          break;
+        case /* bool provides_battery_status */ 11:
+          message.providesBatteryStatus = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarDeviceInfo_Tracker,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* int32 index = 1; */
+    if (message.index !== 0) writer.tag(1, WireType.Varint).int32(message.index);
+    /* string manufacturer_name = 2; */
+    if (message.manufacturerName !== '')
+      writer.tag(2, WireType.LengthDelimited).string(message.manufacturerName);
+    /* string model_number = 3; */
+    if (message.modelNumber !== '')
+      writer.tag(3, WireType.LengthDelimited).string(message.modelNumber);
+    /* string serial_number = 4; */
+    if (message.serialNumber !== '')
+      writer.tag(4, WireType.LengthDelimited).string(message.serialNumber);
+    /* string hardware_revision = 5; */
+    if (message.hardwareRevision !== '')
+      writer.tag(5, WireType.LengthDelimited).string(message.hardwareRevision);
+    /* string dongle_id = 6; */
+    if (message.dongleId !== '') writer.tag(6, WireType.LengthDelimited).string(message.dongleId);
+    /* double battery = 7; */
+    if (message.battery !== 0) writer.tag(7, WireType.Bit64).double(message.battery);
+    /* bool is_turning_off = 8; */
+    if (message.isTurningOff !== false) writer.tag(8, WireType.Varint).bool(message.isTurningOff);
+    /* bool can_power_off = 9; */
+    if (message.canPowerOff !== false) writer.tag(9, WireType.Varint).bool(message.canPowerOff);
+    /* bool is_charging = 10; */
+    if (message.isCharging !== false) writer.tag(10, WireType.Varint).bool(message.isCharging);
+    /* bool provides_battery_status = 11; */
+    if (message.providesBatteryStatus !== false)
+      writer.tag(11, WireType.Varint).bool(message.providesBatteryStatus);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo_Tracker
+ */
+export const OyasumiSidecarDeviceInfo_Tracker = new OyasumiSidecarDeviceInfo_Tracker$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAutomationsState> {
   constructor() {

@@ -6,6 +6,7 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice } from '../models/ovr-device';
 import { info } from 'tauri-plugin-log-api';
 import { ExecutableReferenceStatus } from '../models/settings';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,18 @@ export class LighthouseConsoleService {
           this.setConsolePath(currentSettings.lighthouseConsolePath, false);
         }
       });
+    await listen<string>('turnOffOVRDevices', async (event) => {
+      let deviceIndices: number[];
+      try {
+        deviceIndices = JSON.parse(event.payload);
+      } catch (e) {
+        return;
+      }
+      const devices = (await firstValueFrom(this.openvr.devices)).filter((d) =>
+        deviceIndices.includes(d.index)
+      );
+      await this.turnOffDevices(devices);
+    });
   }
 
   async setConsolePath(path: string, save = true) {

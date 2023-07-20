@@ -1,4 +1,6 @@
-use crate::Models::oyasumi_core::HttpServerPort;
+use crate::Models::oyasumi_core::{
+    AddNotificationRequest, AddNotificationResponse, HttpServerPort,
+};
 
 use super::models::oyasumi_core::{
     event_params::EventData, oyasumi_core_server::OyasumiCore, ElevatedSidecarStartArgs, Empty,
@@ -76,5 +78,15 @@ impl OyasumiCore for OyasumiCoreServerImpl {
             None => &0,
         };
         Ok(Response::new(HttpServerPort { port: *port }))
+    }
+
+    async fn add_notification(
+        &self,
+        request: Request<AddNotificationRequest>,
+    ) -> Result<Response<AddNotificationResponse>, Status> {
+        crate::utils::send_event("addNotification", request.get_ref().clone()).await;
+        Ok(Response::new(AddNotificationResponse {
+            notification_id: None, // TODO: IMPLEMENT METHOD TO RETRIEVE NOTIFICATION ID FROM FRONTEND
+        }))
     }
 }

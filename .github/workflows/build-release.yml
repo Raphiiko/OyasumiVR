@@ -25,8 +25,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
-      - name: Install NodeJS dependencies
-        run: npm install
+      - name: Initialize the project
+        run: npm run init
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:

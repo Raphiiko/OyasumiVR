@@ -18,10 +18,11 @@ export class FontLoaderService {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
     // Initialize font loader
-    await fontLoader.init(this.httpServerPort, this.translate.currentLang);
-    // Load fonts for new locale
-    this.translate.onLangChange.subscribe(async (event) => {
-      await fontLoader.loadFontsForNewLocale(event.lang);
+    fontLoader.init(this.httpServerPort, this.translate.currentLang).then(() => {
+      // Load fonts for new locale
+      this.translate.onLangChange.subscribe(async (event) => {
+        await fontLoader.loadFontsForNewLocale(event.lang);
+      });
     });
   }
 }

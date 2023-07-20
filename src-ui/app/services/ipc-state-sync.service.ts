@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
 import {
+  asyncScheduler,
   BehaviorSubject,
   combineLatest,
   distinctUntilChanged,
@@ -9,6 +10,7 @@ import {
   map,
   pairwise,
   startWith,
+  throttleTime,
 } from 'rxjs';
 import { cloneDeep, isEqual } from 'lodash';
 import { UserStatus } from 'vrchat';
@@ -16,6 +18,9 @@ import { IPCService } from './ipc.service';
 import { AutomationConfigService } from './automation-config.service';
 import {
   OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
+  OyasumiSidecarDeviceInfo,
+  OyasumiSidecarDeviceInfo_Controller,
+  OyasumiSidecarDeviceInfo_Tracker,
   OyasumiSidecarState,
   VrcStatus,
 } from '../../../src-grpc-web-client/overlay-sidecar_pb';
@@ -27,6 +32,8 @@ import {
   ShutdownAutomationsService,
   ShutdownSequenceStageOrder,
 } from './shutdown-automations.service';
+import { OpenVRService } from './openvr.service';
+import { OVRDevice } from '../models/ovr-device';
 
 @Injectable({
   providedIn: 'root',
@@ -57,6 +64,11 @@ export class IPCStateSyncService {
         canStart: false,
       },
     },
+    locale: 'en',
+    deviceInfo: {
+      controllers: [],
+      trackers: [],
+    },
   });
 
   constructor(
@@ -66,7 +78,8 @@ export class IPCStateSyncService {
     private automationConfig: AutomationConfigService,
     private translate: TranslateService,
     private appSettings: AppSettingsService,
-    private shutdownAutomationsService: ShutdownAutomationsService
+    private shutdownAutomationsService: ShutdownAutomationsService,
+    private openvr: OpenVRService
   ) {}
 
   async init() {
@@ -168,6 +181,30 @@ export class IPCStateSyncService {
         this.state.next(state);
       }
     });
+    // Update the state when OVR devices change
+    this.openvr.devices
+      .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
+      .subscribe((devices) => {
+        const state = cloneDeep(this.state.value);
+        const deviceInfo: OyasumiSidecarDeviceInfo = {
+          controllers: [],
+          trackers: [],
+        };
+        for (const device of devices) {
+          switch (device.class) {
+            case 'Controller':
+              deviceInfo.controllers.push(this.mapOVRDevice(device));
+              break;
+            case 'GenericTracker':
+              deviceInfo.controllers.push(this.mapOVRDevice(device));
+              break;
+          }
+        }
+        if (!isEqual(deviceInfo, state.deviceInfo)) {
+          state.deviceInfo = deviceInfo;
+          this.state.next(state);
+        }
+      });
   }
 
   private mapVRCStatus(vrcStatus: UserStatus | undefined): VrcStatus {
@@ -195,6 +232,43 @@ export class IPCStateSyncService {
         return OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist;
       case 'BLACKLIST':
         return OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Blacklist;
+    }
+  }
+
+  private mapOVRDevice(
+    device: OVRDevice
+  ): OyasumiSidecarDeviceInfo_Controller | OyasumiSidecarDeviceInfo_Tracker {
+    switch (device.class) {
+      case 'Controller':
+        return {
+          index: device.index,
+          manufacturerName: device.manufacturerName,
+          modelNumber: device.modelNumber,
+          serialNumber: device.serialNumber,
+          hardwareRevision: device.hardwareRevision,
+          dongleId: device.dongleId,
+          battery: device.battery,
+          isTurningOff: device.isTurningOff,
+          canPowerOff: device.canPowerOff,
+          isCharging: device.isCharging,
+          providesBatteryStatus: device.providesBatteryStatus,
+        } as OyasumiSidecarDeviceInfo_Controller;
+      case 'GenericTracker':
+        return {
+          index: device.index,
+          manufacturerName: device.manufacturerName,
+          modelNumber: device.modelNumber,
+          serialNumber: device.serialNumber,
+          hardwareRevision: device.hardwareRevision,
+          dongleId: device.dongleId,
+          battery: device.battery,
+          isTurningOff: device.isTurningOff,
+          canPowerOff: device.canPowerOff,
+          isCharging: device.isCharging,
+          providesBatteryStatus: device.providesBatteryStatus,
+        } as OyasumiSidecarDeviceInfo_Tracker;
+      default:
+        throw 'Received unsupported device class';
     }
   }
 }
