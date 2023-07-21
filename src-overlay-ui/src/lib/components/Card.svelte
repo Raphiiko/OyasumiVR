@@ -16,7 +16,7 @@
 		class:small
 		class:disabled
 	>
-		<div class="card-slot">
+		<div class="card-slot" class:pointer-events-none={clickable}>
 			<slot />
 		</div>
 	</div>

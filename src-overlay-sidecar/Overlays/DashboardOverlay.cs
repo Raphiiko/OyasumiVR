@@ -69,16 +69,12 @@ public class DashboardOverlay : BaseWebOverlay {
   }
 
   //
-  // IPC OUT
+  // Internals
   //
-  public void ShowToolTip(string? text)
+  protected override void ShowToolTipInternal(string? text)
   {
     _tooltipOverlay.SetText(text);
   }
-
-  //
-  // Internals
-  //
 
   private static Matrix4x4? GetTargetTransform(ETrackedControllerRole controllerRole)
   {

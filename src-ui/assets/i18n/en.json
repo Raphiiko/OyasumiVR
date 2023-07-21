@@ -1232,9 +1232,9 @@
       "deviceControl": {
         "title": "Device Control",
         "turnOff": {
-          "AllControllers": "Turn off all controllers",
-          "AllTrackers": "Turn off all trackers",
-          "AllControllersAndTrackers": "Turn off all controllers and trackers"
+          "AllControllers": "Turn off all\ncontrollers",
+          "AllTrackers": "Turn off all\ntrackers",
+          "AllControllersAndTrackers": "Turn off all\ncontrollers and trackers"
         }
       },
       "automations": {

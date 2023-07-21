@@ -7,17 +7,22 @@
 	import trackerIcon from '$lib/images/icon_tracker.png';
 	import { get } from 'svelte/store';
 	import { t } from '$lib/translations';
+	import Clickable from '$lib/components/Clickable.svelte';
 
 	const { state } = ipcService;
 	const dispatch = createEventDispatcher();
 
 	$: _t = $t;
+	$: activeControllers = ($state.deviceInfo?.controllers ?? []).filter(
+		(d) => d.canPowerOff && !d.isTurningOff
+	);
+	$: activeTrackers = ($state.deviceInfo?.trackers ?? []).filter(
+		(d) => d.canPowerOff && !d.isTurningOff
+	);
 	$: canTurnOffAllControllers =
-		($state.deviceInfo?.controllers?.length ?? 0) > 0 &&
-		Date.now() - turnOffAllControllersLastPressed > 400;
+		activeControllers.length > 0 && Date.now() - turnOffAllControllersLastPressed > 400;
 	$: canTurnOffAllTrackers =
-		($state.deviceInfo?.trackers?.length ?? 0) > 0 &&
-		Date.now() - turnOffAllTrackersLastPressed > 400;
+		activeTrackers.length > 0 && Date.now() - turnOffAllTrackersLastPressed > 400;
 	$: canTurnOffAllControllersAndTrackers =
 		canTurnOffAllControllers &&
 		canTurnOffAllTrackers &&
@@ -76,64 +81,66 @@
 			>
 				<span class="glow-80">{$t(`t.overlay.dashboard.deviceControl.title`)}</span>
 			</div>
-			<div
+			<Clickable
 				class="absolute top-0 left-0 w-full h-full flex flex-row items-center justify-start"
 				on:click={() => dispatch('nav', { mode: 'OVERVIEW' })}
 			>
 				<Card clickable={true} small>
 					<i class="material-icons m-4 glow">arrow_back</i>
 				</Card>
-			</div>
+			</Clickable>
 		</div>
 		<div class="w-[100px] h-[2px] rounded-full bg-white bg-opacity-80 mt-8 mb-6 glow-100" />
-		<!-- TURN OFF CONTROLLERS -->
-		<div class="w-full mb-6" on:click={turnOffAllControllers}>
-			<Card class="h-full" clickable disabled={!canTurnOffAllControllers}>
-				<div class="flex flex-row items-center p-4">
-					<div class="flex-1 flex flex-col items-start justify-center">
-						<span class="text-[1.25em] font-medium" style="text-wrap: balance"
-							>{$t('t.overlay.dashboard.deviceControl.turnOff.AllControllers')}</span
-						>
+		<div class="action-grid grid grid-cols-3 gap-6 w-full auto-rows-fr mt-4">
+			<!-- TURN OFF CONTROLLERS -->
+			<Clickable
+				class="w-full mb-6 col-start-1 row-start-1"
+				on:click={turnOffAllControllers}
+				tooltip={$t('t.overlay.dashboard.deviceControl.turnOff.AllControllers')}
+			>
+				<Card class="h-full" clickable disabled={!canTurnOffAllControllers}>
+					<div class="flex flex-col justify-center items-center w-full h-full">
+						<img src={controllerIcon} class="glow w-[72px]" />
 					</div>
-					<div class="flex-shrink-0 flex flex-row items-center">
-						<img src={controllerIcon} class="glow-100 ml-4 w-[32px]" />
+				</Card>
+			</Clickable>
+			<!-- TURN OFF TRACKERS -->
+			<Clickable
+				class="w-full mb-6"
+				on:click={turnOffAllTrackers}
+				tooltip={$t('t.overlay.dashboard.deviceControl.turnOff.AllTrackers')}
+			>
+				<Card class="h-full" clickable disabled={!canTurnOffAllTrackers}>
+					<div class="flex flex-col justify-center items-center w-full h-full">
+						<img src={trackerIcon} class="glow w-[72px]" />
 					</div>
-				</div>
-			</Card>
-		</div>
-		<!-- TURN OFF TRACKERS -->
-		<div class="w-full mb-6" on:click={turnOffAllTrackers}>
-			<Card class="h-full" clickable disabled={!canTurnOffAllTrackers}>
-				<div class="flex flex-row items-center p-4">
-					<div class="flex-1 flex flex-col items-start justify-center">
-						<span class="text-[1.25em] font-medium" style="text-wrap: balance"
-							>{$t('t.overlay.dashboard.deviceControl.turnOff.AllTrackers')}</span
-						>
+				</Card>
+			</Clickable>
+			<!-- TURN OFF CONTROLLERS AND TRACKERS -->
+			<Clickable
+				class="w-full mb-6"
+				on:click={turnOffAllControllersAndTrackers}
+				tooltip={$t('t.overlay.dashboard.deviceControl.turnOff.AllControllersAndTrackers')}
+			>
+				<Card class="h-full" clickable disabled={!canTurnOffAllControllersAndTrackers}>
+					<div class="flex flex-col justify-center items-center w-full h-full">
+						<img src={controllerIcon} class="glow w-[64px]" />
+						<img src={trackerIcon} class="glow w-[64px]" />
 					</div>
-					<div class="flex-shrink-0 flex flex-row items-center">
-						<img src={trackerIcon} class="glow-100 ml-4 w-[32px]" />
-					</div>
-				</div>
-			</Card>
-		</div>
-		<!-- TURN OFF CONTROLLERS AND TRACKERS -->
-		<div class="w-full mb-6" on:click={turnOffAllControllersAndTrackers}>
-			<Card class="h-full" clickable disabled={!canTurnOffAllControllersAndTrackers}>
-				<div class="flex flex-row items-center p-4">
-					<div class="flex-1 flex flex-col items-start justify-center">
-						<span class="text-[1.25em] font-medium" style="text-wrap: balance"
-							>{$t('t.overlay.dashboard.deviceControl.turnOff.AllControllersAndTrackers')}</span
-						>
-					</div>
-					<div class="flex-shrink-0 flex flex-row items-center">
-						<img src={controllerIcon} class="glow-100 ml-4 w-[32px]" />
-						<img src={trackerIcon} class="glow-100 w-[32px] ml-2" />
-					</div>
-				</div>
-			</Card>
+				</Card>
+			</Clickable>
 		</div>
 	</div>
 </div>
 
 <style lang="scss">
+	.action-grid {
+		&::before {
+			content: '';
+			width: 0;
+			padding-bottom: 100%;
+			grid-row: 1 / 1;
+			grid-column: 1 / 1;
+		}
+	}
 </style>

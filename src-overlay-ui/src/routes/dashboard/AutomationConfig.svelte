@@ -14,6 +14,7 @@
 		OyasumiSidecarAutomationsState_SleepingAnimations
 	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
 	import { t } from '$lib/translations';
+	import Clickable from '$lib/components/Clickable.svelte';
 
 	$: _t = $t;
 	const { state } = ipcService;
@@ -153,18 +154,18 @@
 			>
 				<span class="glow-80">{$t(`t.overlay.dashboard.automations.title`)}</span>
 			</div>
-			<div
+			<Clickable
 				class="absolute top-0 left-0 w-full h-full flex flex-row items-center justify-start"
 				on:click={() => dispatch('nav', { mode: 'OVERVIEW' })}
 			>
 				<Card clickable={true} small>
 					<i class="material-icons m-4 glow">arrow_back</i>
 				</Card>
-			</div>
+			</Clickable>
 		</div>
 		<div class="w-[100px] h-[2px] rounded-full bg-white bg-opacity-80 mt-8 mb-6 glow-100" />
 		{#each $viewAutomations as automation}
-			<div class="w-full" on:click={() => ipcService.toggleAutomation(automation.id)}>
+			<Clickable class="w-full" on:click={() => ipcService.toggleAutomation(automation.id)}>
 				<Card class="w-full mb-6" clickable={true}>
 					<div class="flex flex-row items-center p-4">
 						<div class="flex-shrink-0 flex flex-row items-center">
@@ -183,7 +184,7 @@
 						</div>
 					</div>
 				</Card>
-			</div>
+			</Clickable>
 		{/each}
 	</div>
 </div>

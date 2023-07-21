@@ -39,12 +39,11 @@ export interface OyasumiOverlayIPCOut {
 
 	sendEvent(eventName: string, data: string | boolean | number): Promise<void>;
 
-  addNotification(message: string, duration: number): Promise<string | null>;
+	addNotification(message: string, duration: number): Promise<string | null>;
+
+	showToolTip(tooltip: string | null): Promise<void>;
 }
 
 export interface OyasumiOverlayIPCOut_Dashboard {
-  close(): Promise<void>;
-	// Tooltip Specific
-	showToolTip(tooltip: string | null): Promise<void>;
-
+	close(): Promise<void>;
 }

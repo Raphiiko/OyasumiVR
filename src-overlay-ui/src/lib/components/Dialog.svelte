@@ -3,6 +3,7 @@
 	import { createEventDispatcher } from 'svelte';
 	import type { DialogProperties } from '$lib/models/DialogProperties';
 	import { t } from '$lib/translations';
+	import Clickable from './Clickable.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -12,7 +13,9 @@
 	export let cancelText = 't.shared.modals.cancel';
 	export let confirmText = 't.shared.modals.confirm';
 	export let confirmColor: 'normal' | 'blue' | 'red' = 'normal';
-  $: _confirmColor = ['blue', 'red'].includes(confirmColor) ? confirmColor as 'blue' | 'red' : undefined;
+	$: _confirmColor = ['blue', 'red'].includes(confirmColor)
+		? (confirmColor as 'blue' | 'red')
+		: undefined;
 	export let confirmDisabled = false;
 	export let cancelDisabled = false;
 </script>
@@ -31,15 +34,15 @@
 	</Card>
 	<div class="grid grid-cols-2 gap-4 w-full mt-4">
 		{#if showCancel}
-			<div on:click={() => dispatch('cancel')}>
+			<Clickable on:click={() => dispatch('cancel')}>
 				<Card class="flex-1" clickable={true} disabled={cancelDisabled}>
 					<div class="p-3 flex flex-row items-center justify-center font-medium">
 						{$t(cancelText)}
 					</div>
 				</Card>
-			</div>
+			</Clickable>
 		{/if}
-		<div on:click={() => dispatch('confirm')} class:col-span-2={cancelDisabled}>
+		<Clickable on:click={() => dispatch('confirm')} class={cancelDisabled ? 'col-span-2' : ''}>
 			<Card
 				class="flex-1"
 				clickable={true}
@@ -51,7 +54,7 @@
 					{$t(confirmText)}
 				</div>
 			</Card>
-		</div>
+		</Clickable>
 	</div>
 </div>
 

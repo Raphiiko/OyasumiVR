@@ -194,6 +194,11 @@ public class BaseWebOverlay {
     return response.HasNotificationId ? response.NotificationId : null;
   }
 
+  public void ShowToolTip(string? text)
+  {
+    ShowToolTipInternal(text);
+  }
+
   public void UpdateFrame()
   {
     // Stop here if we are not ready, already disposed, or if the browser hasn't painted anything new for the past second or so.
@@ -208,6 +213,11 @@ public class BaseWebOverlay {
     // Render the texture to the overlay
     if (!Disposed && !_texture.IsDisposed)
       OpenVR.Overlay.SetOverlayTexture(_overlayHandle!.Value, ref texture);
+  }
+
+  protected virtual void ShowToolTipInternal(string? text)
+  {
+    // Method to be overridden by overlays in case they support tool tips
   }
 
   private void OnStateChanged(object? sender, OyasumiSidecarState e)

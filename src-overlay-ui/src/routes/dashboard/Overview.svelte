@@ -16,6 +16,7 @@
 	import { get } from 'svelte/store';
 	import { createEventDispatcher } from 'svelte';
 	import { t } from '$lib/translations';
+	import Clickable from '$lib/components/Clickable.svelte';
 
 	// Input & Output
 	const dispatch = createEventDispatcher();
@@ -59,30 +60,31 @@
 	<div class="logo-container" transition:blurFly={{ duration: animationSpeed, y: flyYTransform }}>
 		<img src={logo} alt="Oyasumi Logo" class="glow-100" />
 	</div>
-	<div class="action-container">
+	<div
+		class="action-container"
+		transition:blurFly={{
+			duration: animationSpeed,
+			y: flyYTransform,
+			delay: staggerOffset
+		}}
+	>
 		<!-- SLEEP MODE TOGGLE -->
-		<div
-			class="action-large"
-			on:click={toggleSleepMode}
-			transition:blurFly={{
-				duration: animationSpeed,
-				y: flyYTransform,
-				delay: staggerOffset
-			}}
-		>
-			<Card clickable={true} active={$state.sleepMode} class="w-full h-full">
-				<div class="action-contents">
-					<i class="material-icons">nights_stay</i>
-					<div class="sleep-mode-info">
-						<span>{$t('t.overlay.dashboard.overview.sleepMode')}</span>
-						<span
-							>{$state.sleepMode
-								? $t('t.overlay.dashboard.overview.active')
-								: $t('t.overlay.dashboard.overview.inactive')}</span
-						>
+		<div class="action-large">
+			<Clickable on:click={toggleSleepMode}>
+				<Card clickable={true} active={$state.sleepMode} class="w-full h-full">
+					<div class="action-contents">
+						<i class="material-icons">nights_stay</i>
+						<div class="sleep-mode-info">
+							<span>{$t('t.overlay.dashboard.overview.sleepMode')}</span>
+							<span
+								>{$state.sleepMode
+									? $t('t.overlay.dashboard.overview.active')
+									: $t('t.overlay.dashboard.overview.inactive')}</span
+							>
+						</div>
 					</div>
-				</div>
-			</Card>
+				</Card>
+			</Clickable>
 		</div>
 		<!-- AUTOMATION CONFIG -->
 		<div
@@ -91,20 +93,19 @@
 				y: flyYTransform,
 				delay: staggerOffset * 2
 			}}
-			on:mouseenter={() =>
-				window.OyasumiIPCOut_Dashboard.showToolTip(
-					$t('t.overlay.dashboard.overview.tooltip.automations')
-				)}
-			on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
-			on:click={() => {
-				dispatch('nav', { mode: 'AUTOMATIONS' });
-			}}
 		>
-			<Card clickable={true} class="w-full h-full">
-				<div class="action-contents">
-					<i class="material-icons glow">settings_suggest</i>
-				</div>
-			</Card>
+			<Clickable
+				on:click={() => {
+					dispatch('nav', { mode: 'AUTOMATIONS' });
+				}}
+				tooltip={$t('t.overlay.dashboard.overview.tooltip.automations')}
+			>
+				<Card clickable={true} class="w-full h-full">
+					<div class="action-contents">
+						<i class="material-icons glow">settings_suggest</i>
+					</div>
+				</Card>
+			</Clickable>
 		</div>
 		<!-- DEVICE CONTROL -->
 		<div
@@ -113,20 +114,19 @@
 				y: flyYTransform,
 				delay: staggerOffset * 3
 			}}
-			on:mouseenter={() =>
-				window.OyasumiIPCOut_Dashboard.showToolTip(
-					$t('t.overlay.dashboard.overview.tooltip.deviceControl')
-				)}
-			on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
-			on:click={() => {
-				dispatch('nav', { mode: 'DEVICE_CONTROL' });
-			}}
 		>
-			<Card clickable={true} class="w-full h-full">
-				<div class="action-contents pointer-events-none">
-					<img src={deviceControlIcon} class="glow w-8/12" />
-				</div>
-			</Card>
+			<Clickable
+				on:click={() => {
+					dispatch('nav', { mode: 'DEVICE_CONTROL' });
+				}}
+				tooltip={$t('t.overlay.dashboard.overview.tooltip.deviceControl')}
+			>
+				<Card clickable={true} class="w-full h-full">
+					<div class="action-contents pointer-events-none">
+						<img src={deviceControlIcon} class="glow w-8/12" />
+					</div>
+				</Card>
+			</Clickable>
 		</div>
 		<!-- SHUTDOWN SEQUENCE -->
 		<div
@@ -135,20 +135,19 @@
 				y: flyYTransform,
 				delay: staggerOffset * 4
 			}}
-			on:mouseenter={() =>
-				window.OyasumiIPCOut_Dashboard.showToolTip(
-					$t('t.overlay.dashboard.overview.tooltip.shutdown')
-				)}
-			on:mouseleave={() => window.OyasumiIPCOut_Dashboard.showToolTip(null)}
-			on:click={() => {
-				if (!shutdownSequenceDisabled) dispatch('openShutdownSequence');
-			}}
 		>
-			<Card clickable={true} class="w-full h-full" disabled={shutdownSequenceDisabled}>
-				<div class="action-contents">
-					<i class="material-icons glow">settings_power</i>
-				</div>
-			</Card>
+			<Clickable
+				on:click={() => {
+					if (!shutdownSequenceDisabled) dispatch('openShutdownSequence');
+				}}
+				tooltip={$t('t.overlay.dashboard.overview.tooltip.shutdown')}
+			>
+				<Card clickable={true} class="w-full h-full" disabled={shutdownSequenceDisabled}>
+					<div class="action-contents">
+						<i class="material-icons glow">settings_power</i>
+					</div>
+				</Card>
+			</Clickable>
 		</div>
 	</div>
 	<!-- STATUS BAR -->
