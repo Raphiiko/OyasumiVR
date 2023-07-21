@@ -137,6 +137,7 @@ public class OvrManager {
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
           _notificationOverlay = new NotificationOverlay();
+          new SplashOverlay();
         }
 
         while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))

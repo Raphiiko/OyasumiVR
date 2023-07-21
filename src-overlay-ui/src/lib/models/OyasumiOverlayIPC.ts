@@ -42,6 +42,8 @@ export interface OyasumiOverlayIPCOut {
 	addNotification(message: string, duration: number): Promise<string | null>;
 
 	showToolTip(tooltip: string | null): Promise<void>;
+
+	dispose(): Promise<void>;
 }
 
 export interface OyasumiOverlayIPCOut_Dashboard {

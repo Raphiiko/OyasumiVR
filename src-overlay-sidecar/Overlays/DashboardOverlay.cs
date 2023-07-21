@@ -6,7 +6,7 @@ using static overlay_sidecar.Utils;
 namespace overlay_sidecar;
 
 public class DashboardOverlay : BaseWebOverlay {
-  private static TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
+  private static readonly TrackedDevicePose_t[] _poseBuffer = new TrackedDevicePose_t[OpenVR.k_unMaxTrackedDeviceCount];
 
   private bool _isOpen;
   private bool _closing;
