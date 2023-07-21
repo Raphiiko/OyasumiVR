@@ -595,6 +595,7 @@ public struct IVRChaperoneSetup
 	[MarshalAs(UnmanagedType.FunctionPtr)]
 	internal _GetWorkingStandingZeroPoseToRawTrackingPose GetWorkingStandingZeroPoseToRawTrackingPose;
 
+
 	[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 	internal delegate void _SetWorkingPlayAreaSize(float sizeX, float sizeZ);
 	[MarshalAs(UnmanagedType.FunctionPtr)]

@@ -25,14 +25,8 @@ public class StateManager {
     if (newState == null) return;
     lock (_state)
     {
-      var state = _state.Clone();
-      // Clear arrays before merging so they are properly overridden
-      state.DeviceInfo?.Controllers?.Clear();
-      state.DeviceInfo?.Trackers?.Clear();
-      // Merge in the new state
-      state.MergeFrom(newState);
       // Update the state
-      _state = state;
+      _state = newState;
       StateChanged?.Invoke(this, _state);
     }
   }

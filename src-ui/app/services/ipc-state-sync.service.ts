@@ -21,10 +21,13 @@ import {
   OyasumiSidecarDeviceInfo,
   OyasumiSidecarDeviceInfo_Controller,
   OyasumiSidecarDeviceInfo_Tracker,
+  OyasumiSidecarOverlayActivationAction,
+  OyasumiSidecarOverlayActivationController,
   OyasumiSidecarState,
+  OyasumiSidecarOverlaySettings,
   VrcStatus,
 } from '../../../src-grpc-web-client/overlay-sidecar_pb';
-import { AutomationConfigs } from '../models/automations';
+import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 import { TranslateService } from '@ngx-translate/core';
 import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
 import { AppSettingsService } from './app-settings.service';
@@ -34,6 +37,11 @@ import {
 } from './shutdown-automations.service';
 import { OpenVRService } from './openvr.service';
 import { OVRDevice } from '../models/ovr-device';
+import {
+  APP_SETTINGS_DEFAULT,
+  OverlayActivationAction,
+  OverlayActivationController,
+} from '../models/settings';
 
 @Injectable({
   providedIn: 'root',
@@ -45,29 +53,40 @@ export class IPCStateSyncService {
     vrcUsername: '',
     automations: {
       autoAcceptInviteRequests: {
-        enabled: false,
-        mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist,
-        playerCount: 0,
+        enabled: AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS.enabled,
+        mode: this.mapAutoAcceptInviteRequestsListMode(
+          AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS.listMode
+        ),
+        playerCount: AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS.playerIds.length,
       },
       changeStatusBasedOnPlayerCount: {
-        enabled: false,
-        threshold: 1,
+        enabled: AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled,
+        threshold: AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.limit,
       },
       sleepingAnimations: {
-        enabled: false,
-        presetName: '',
+        enabled: AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS.enabled,
+        presetName: AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS.preset ?? '',
       },
       shutdownAutomations: {
-        sleepTriggerEnabled: false,
-        timeDelay: 1000 * 60 * 30,
+        sleepTriggerEnabled: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleep,
+        timeDelay: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.sleepDuration,
         running: false,
         canStart: false,
       },
     },
-    locale: 'en',
+    locale: APP_SETTINGS_DEFAULT.userLanguage,
     deviceInfo: {
       controllers: [],
       trackers: [],
+    },
+    settings: {
+      activationAction: this.mapOverlayActivationAction(
+        APP_SETTINGS_DEFAULT.overlayActivationAction
+      ),
+      activationController: this.mapOverlayActivationController(
+        APP_SETTINGS_DEFAULT.overlayActivationController
+      ),
+      activationTriggerRequired: APP_SETTINGS_DEFAULT.overlayActivationTriggerRequired,
     },
   });
 
@@ -84,7 +103,10 @@ export class IPCStateSyncService {
 
   async init() {
     // Sync state to overlay sidecar
-    combineLatest([this.state, this.ipcService.overlaySidecarClient])
+    combineLatest([
+      this.state.pipe(distinctUntilChanged((a, b) => isEqual(a, b))),
+      this.ipcService.overlaySidecarClient,
+    ])
       .pipe(filter(([, client]) => !!client))
       .subscribe(([state, client]) => {
         client!.syncState(state);
@@ -205,6 +227,19 @@ export class IPCStateSyncService {
           this.state.next(state);
         }
       });
+    // Update the state when the app settings change
+    this.appSettings.settings.subscribe((settings) => {
+      const state = cloneDeep(this.state.value);
+      // Update overlay settings
+      state.settings = Object.assign(state.settings ?? {}, {
+        activationAction: this.mapOverlayActivationAction(settings.overlayActivationAction),
+        activationController: this.mapOverlayActivationController(
+          settings.overlayActivationController
+        ),
+        activationTriggerRequired: settings.overlayActivationTriggerRequired,
+      } as OyasumiSidecarOverlaySettings);
+      this.state.next(state);
+    });
   }
 
   private mapVRCStatus(vrcStatus: UserStatus | undefined): VrcStatus {
@@ -269,6 +304,40 @@ export class IPCStateSyncService {
         } as OyasumiSidecarDeviceInfo_Tracker;
       default:
         throw 'Received unsupported device class';
+    }
+  }
+
+  private mapOverlayActivationAction(
+    action: OverlayActivationAction
+  ): OyasumiSidecarOverlayActivationAction {
+    switch (action) {
+      case 'NONE':
+        return OyasumiSidecarOverlayActivationAction.None;
+      case 'SINGLE_A':
+        return OyasumiSidecarOverlayActivationAction.Single_A;
+      case 'SINGLE_B':
+        return OyasumiSidecarOverlayActivationAction.Single_B;
+      case 'DOUBLE_A':
+        return OyasumiSidecarOverlayActivationAction.Double_A;
+      case 'DOUBLE_B':
+        return OyasumiSidecarOverlayActivationAction.Double_B;
+      case 'TRIPLE_A':
+        return OyasumiSidecarOverlayActivationAction.Triple_A;
+      case 'TRIPLE_B':
+        return OyasumiSidecarOverlayActivationAction.Triple_B;
+    }
+  }
+
+  private mapOverlayActivationController(
+    controller: OverlayActivationController
+  ): OyasumiSidecarOverlayActivationController {
+    switch (controller) {
+      case 'EITHER':
+        return OyasumiSidecarOverlayActivationController.Either;
+      case 'LEFT':
+        return OyasumiSidecarOverlayActivationController.Left;
+      case 'RIGHT':
+        return OyasumiSidecarOverlayActivationController.Right;
     }
   }
 }

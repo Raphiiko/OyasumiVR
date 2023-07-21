@@ -19,7 +19,21 @@ export interface AppSettings {
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
   notificationProvider: NotificationProvider;
   notificationsEnabled: { types: NotificationType[] };
+  overlayActivationAction: OverlayActivationAction;
+  overlayActivationController: OverlayActivationController;
+  overlayActivationTriggerRequired: boolean;
 }
+
+export type OverlayActivationAction =
+  | 'NONE'
+  | 'SINGLE_A'
+  | 'DOUBLE_A'
+  | 'TRIPLE_A'
+  | 'SINGLE_B'
+  | 'DOUBLE_B'
+  | 'TRIPLE_B';
+
+export type OverlayActivationController = 'EITHER' | 'LEFT' | 'RIGHT';
 
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
@@ -50,6 +64,9 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   sleepModeStartupBehaviour: 'PERSIST',
   notificationProvider: 'OYASUMIVR',
   notificationsEnabled: { types: [...NotificationTypes] as NotificationType[] },
+  overlayActivationAction: 'DOUBLE_A',
+  overlayActivationController: 'RIGHT',
+  overlayActivationTriggerRequired: false,
 };
 
 export type ExecutableReferenceStatus =

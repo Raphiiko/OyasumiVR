@@ -63,29 +63,50 @@ export interface Empty {}
  */
 export interface OyasumiSidecarState {
   /**
-   * @generated from protobuf field: optional bool sleep_mode = 1;
+   * @generated from protobuf field: bool sleep_mode = 1;
    */
-  sleepMode?: boolean;
+  sleepMode: boolean;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.VrcStatus vrc_status = 2;
+   * @generated from protobuf field: OyasumiOverlaySidecar.VrcStatus vrc_status = 2;
    */
-  vrcStatus?: VrcStatus;
+  vrcStatus: VrcStatus;
   /**
-   * @generated from protobuf field: optional string vrc_username = 3;
+   * @generated from protobuf field: string vrc_username = 3;
    */
-  vrcUsername?: string;
+  vrcUsername: string;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations = 4;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations = 4;
    */
   automations?: OyasumiSidecarAutomationsState;
   /**
-   * @generated from protobuf field: optional string locale = 5;
+   * @generated from protobuf field: string locale = 5;
    */
-  locale?: string;
+  locale: string;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6;
    */
   deviceInfo?: OyasumiSidecarDeviceInfo;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings settings = 7;
+   */
+  settings?: OyasumiSidecarOverlaySettings;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
+ */
+export interface OyasumiSidecarOverlaySettings {
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1;
+   */
+  activationAction: OyasumiSidecarOverlayActivationAction;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2;
+   */
+  activationController: OyasumiSidecarOverlayActivationController;
+  /**
+   * @generated from protobuf field: bool activation_trigger_required = 3;
+   */
+  activationTriggerRequired: boolean;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
@@ -203,19 +224,19 @@ export interface OyasumiSidecarDeviceInfo_Tracker {
  */
 export interface OyasumiSidecarAutomationsState {
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
    */
   autoAcceptInviteRequests?: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
    */
   changeStatusBasedOnPlayerCount?: OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
    */
   sleepingAnimations?: OyasumiSidecarAutomationsState_SleepingAnimations;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
    */
   shutdownAutomations?: OyasumiSidecarAutomationsState_ShutdownAutomations;
 }
@@ -224,64 +245,64 @@ export interface OyasumiSidecarAutomationsState {
  */
 export interface OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
   /**
-   * @generated from protobuf field: optional bool enabled = 1;
+   * @generated from protobuf field: bool enabled = 1;
    */
-  enabled?: boolean;
+  enabled: boolean;
   /**
-   * @generated from protobuf field: optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
    */
-  mode?: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode;
+  mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode;
   /**
-   * @generated from protobuf field: optional uint32 player_count = 3;
+   * @generated from protobuf field: uint32 player_count = 3;
    */
-  playerCount?: number;
+  playerCount: number;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount
  */
 export interface OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount {
   /**
-   * @generated from protobuf field: optional bool enabled = 1;
+   * @generated from protobuf field: bool enabled = 1;
    */
-  enabled?: boolean;
+  enabled: boolean;
   /**
-   * @generated from protobuf field: optional uint32 threshold = 2;
+   * @generated from protobuf field: uint32 threshold = 2;
    */
-  threshold?: number;
+  threshold: number;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations
  */
 export interface OyasumiSidecarAutomationsState_SleepingAnimations {
   /**
-   * @generated from protobuf field: optional bool enabled = 1;
+   * @generated from protobuf field: bool enabled = 1;
    */
-  enabled?: boolean;
+  enabled: boolean;
   /**
-   * @generated from protobuf field: optional string preset_name = 2;
+   * @generated from protobuf field: string preset_name = 2;
    */
-  presetName?: string;
+  presetName: string;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations
  */
 export interface OyasumiSidecarAutomationsState_ShutdownAutomations {
   /**
-   * @generated from protobuf field: optional bool sleep_trigger_enabled = 1;
+   * @generated from protobuf field: bool sleep_trigger_enabled = 1;
    */
-  sleepTriggerEnabled?: boolean;
+  sleepTriggerEnabled: boolean;
   /**
-   * @generated from protobuf field: optional uint32 time_delay = 2;
+   * @generated from protobuf field: uint32 time_delay = 2;
    */
-  timeDelay?: number;
+  timeDelay: number;
   /**
-   * @generated from protobuf field: optional bool running = 3;
+   * @generated from protobuf field: bool running = 3;
    */
-  running?: boolean;
+  running: boolean;
   /**
-   * @generated from protobuf field: optional bool can_start = 4;
+   * @generated from protobuf field: bool can_start = 4;
    */
-  canStart?: boolean;
+  canStart: boolean;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -324,6 +345,56 @@ export enum VrcStatus {
    * @generated from protobuf enum value: VRC_STATUS_JoinMe = 4;
    */
   JoinMe = 4,
+}
+/**
+ * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction
+ */
+export enum OyasumiSidecarOverlayActivationAction {
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
+   */
+  None = 0,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
+   */
+  Single_A = 1,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
+   */
+  Double_A = 2,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
+   */
+  Triple_A = 3,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
+   */
+  Single_B = 4,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
+   */
+  Double_B = 5,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
+   */
+  Triple_B = 6,
+}
+/**
+ * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController
+ */
+export enum OyasumiSidecarOverlayActivationController {
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
+   */
+  Either = 0,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
+   */
+  Left = 1,
+  /**
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
+   */
+  Right = 2,
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class PingResponse$Type extends MessageType<PingResponse> {
@@ -618,22 +689,22 @@ export const Empty = new Empty$Type();
 class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarState', [
-      { no: 1, name: 'sleep_mode', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'sleep_mode', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       {
         no: 2,
         name: 'vrc_status',
         kind: 'enum',
-        opt: true,
         T: () => ['OyasumiOverlaySidecar.VrcStatus', VrcStatus, 'VRC_STATUS_'],
       },
-      { no: 3, name: 'vrc_username', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+      { no: 3, name: 'vrc_username', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
       { no: 4, name: 'automations', kind: 'message', T: () => OyasumiSidecarAutomationsState },
-      { no: 5, name: 'locale', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+      { no: 5, name: 'locale', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
       { no: 6, name: 'device_info', kind: 'message', T: () => OyasumiSidecarDeviceInfo },
+      { no: 7, name: 'settings', kind: 'message', T: () => OyasumiSidecarOverlaySettings },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
-    const message = {};
+    const message = { sleepMode: false, vrcStatus: 0, vrcUsername: '', locale: '' };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
     return message;
@@ -649,16 +720,16 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool sleep_mode */ 1:
+        case /* bool sleep_mode */ 1:
           message.sleepMode = reader.bool();
           break;
-        case /* optional OyasumiOverlaySidecar.VrcStatus vrc_status */ 2:
+        case /* OyasumiOverlaySidecar.VrcStatus vrc_status */ 2:
           message.vrcStatus = reader.int32();
           break;
-        case /* optional string vrc_username */ 3:
+        case /* string vrc_username */ 3:
           message.vrcUsername = reader.string();
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations */ 4:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations */ 4:
           message.automations = OyasumiSidecarAutomationsState.internalBinaryRead(
             reader,
             reader.uint32(),
@@ -666,15 +737,23 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
             message.automations
           );
           break;
-        case /* optional string locale */ 5:
+        case /* string locale */ 5:
           message.locale = reader.string();
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info */ 6:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info */ 6:
           message.deviceInfo = OyasumiSidecarDeviceInfo.internalBinaryRead(
             reader,
             reader.uint32(),
             options,
             message.deviceInfo
+          );
+          break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings settings */ 7:
+          message.settings = OyasumiSidecarOverlaySettings.internalBinaryRead(
+            reader,
+            reader.uint32(),
+            options,
+            message.settings
           );
           break;
         default:
@@ -701,28 +780,34 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool sleep_mode = 1; */
-    if (message.sleepMode !== undefined) writer.tag(1, WireType.Varint).bool(message.sleepMode);
-    /* optional OyasumiOverlaySidecar.VrcStatus vrc_status = 2; */
-    if (message.vrcStatus !== undefined) writer.tag(2, WireType.Varint).int32(message.vrcStatus);
-    /* optional string vrc_username = 3; */
-    if (message.vrcUsername !== undefined)
+    /* bool sleep_mode = 1; */
+    if (message.sleepMode !== false) writer.tag(1, WireType.Varint).bool(message.sleepMode);
+    /* OyasumiOverlaySidecar.VrcStatus vrc_status = 2; */
+    if (message.vrcStatus !== 0) writer.tag(2, WireType.Varint).int32(message.vrcStatus);
+    /* string vrc_username = 3; */
+    if (message.vrcUsername !== '')
       writer.tag(3, WireType.LengthDelimited).string(message.vrcUsername);
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations = 4; */
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState automations = 4; */
     if (message.automations)
       OyasumiSidecarAutomationsState.internalBinaryWrite(
         message.automations,
         writer.tag(4, WireType.LengthDelimited).fork(),
         options
       ).join();
-    /* optional string locale = 5; */
-    if (message.locale !== undefined)
-      writer.tag(5, WireType.LengthDelimited).string(message.locale);
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6; */
+    /* string locale = 5; */
+    if (message.locale !== '') writer.tag(5, WireType.LengthDelimited).string(message.locale);
+    /* OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo device_info = 6; */
     if (message.deviceInfo)
       OyasumiSidecarDeviceInfo.internalBinaryWrite(
         message.deviceInfo,
         writer.tag(6, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    /* OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings settings = 7; */
+    if (message.settings)
+      OyasumiSidecarOverlaySettings.internalBinaryWrite(
+        message.settings,
+        writer.tag(7, WireType.LengthDelimited).fork(),
         options
       ).join();
     let u = options.writeUnknownFields;
@@ -734,6 +819,106 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
  * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarState
  */
 export const OyasumiSidecarState = new OyasumiSidecarState$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverlaySettings> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', [
+      {
+        no: 1,
+        name: 'activation_action',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction',
+          OyasumiSidecarOverlayActivationAction,
+          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_',
+        ],
+      },
+      {
+        no: 2,
+        name: 'activation_controller',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController',
+          OyasumiSidecarOverlayActivationController,
+          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_',
+        ],
+      },
+      { no: 3, name: 'activation_trigger_required', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
+    const message = {
+      activationAction: 0,
+      activationController: 0,
+      activationTriggerRequired: false,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarOverlaySettings>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarOverlaySettings
+  ): OyasumiSidecarOverlaySettings {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action */ 1:
+          message.activationAction = reader.int32();
+          break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller */ 2:
+          message.activationController = reader.int32();
+          break;
+        case /* bool activation_trigger_required */ 3:
+          message.activationTriggerRequired = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarOverlaySettings,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1; */
+    if (message.activationAction !== 0)
+      writer.tag(1, WireType.Varint).int32(message.activationAction);
+    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2; */
+    if (message.activationController !== 0)
+      writer.tag(2, WireType.Varint).int32(message.activationController);
+    /* bool activation_trigger_required = 3; */
+    if (message.activationTriggerRequired !== false)
+      writer.tag(3, WireType.Varint).bool(message.activationTriggerRequired);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
+ */
+export const OyasumiSidecarOverlaySettings = new OyasumiSidecarOverlaySettings$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class OyasumiSidecarDeviceInfo$Type extends MessageType<OyasumiSidecarDeviceInfo> {
   constructor() {
@@ -1160,7 +1345,7 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests */ 1:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests */ 1:
           message.autoAcceptInviteRequests =
             OyasumiSidecarAutomationsState_AutoAcceptInviteRequests.internalBinaryRead(
               reader,
@@ -1169,7 +1354,7 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
               message.autoAcceptInviteRequests
             );
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount */ 2:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount */ 2:
           message.changeStatusBasedOnPlayerCount =
             OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount.internalBinaryRead(
               reader,
@@ -1178,7 +1363,7 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
               message.changeStatusBasedOnPlayerCount
             );
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations */ 3:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations */ 3:
           message.sleepingAnimations =
             OyasumiSidecarAutomationsState_SleepingAnimations.internalBinaryRead(
               reader,
@@ -1187,7 +1372,7 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
               message.sleepingAnimations
             );
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations */ 4:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations */ 4:
           message.shutdownAutomations =
             OyasumiSidecarAutomationsState_ShutdownAutomations.internalBinaryRead(
               reader,
@@ -1220,28 +1405,28 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1; */
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1; */
     if (message.autoAcceptInviteRequests)
       OyasumiSidecarAutomationsState_AutoAcceptInviteRequests.internalBinaryWrite(
         message.autoAcceptInviteRequests,
         writer.tag(1, WireType.LengthDelimited).fork(),
         options
       ).join();
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2; */
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2; */
     if (message.changeStatusBasedOnPlayerCount)
       OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount.internalBinaryWrite(
         message.changeStatusBasedOnPlayerCount,
         writer.tag(2, WireType.LengthDelimited).fork(),
         options
       ).join();
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3; */
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3; */
     if (message.sleepingAnimations)
       OyasumiSidecarAutomationsState_SleepingAnimations.internalBinaryWrite(
         message.sleepingAnimations,
         writer.tag(3, WireType.LengthDelimited).fork(),
         options
       ).join();
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4; */
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4; */
     if (message.shutdownAutomations)
       OyasumiSidecarAutomationsState_ShutdownAutomations.internalBinaryWrite(
         message.shutdownAutomations,
@@ -1261,25 +1446,24 @@ export const OyasumiSidecarAutomationsState = new OyasumiSidecarAutomationsState
 class OyasumiSidecarAutomationsState_AutoAcceptInviteRequests$Type extends MessageType<OyasumiSidecarAutomationsState_AutoAcceptInviteRequests> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests', [
-      { no: 1, name: 'enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       {
         no: 2,
         name: 'mode',
         kind: 'enum',
-        opt: true,
         T: () => [
           'OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode',
           OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
           'OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_',
         ],
       },
-      { no: 3, name: 'player_count', kind: 'scalar', opt: true, T: 13 /*ScalarType.UINT32*/ },
+      { no: 3, name: 'player_count', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_AutoAcceptInviteRequests>
   ): OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
-    const message = {};
+    const message = { enabled: false, mode: 0, playerCount: 0 };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_AutoAcceptInviteRequests>(
@@ -1300,13 +1484,13 @@ class OyasumiSidecarAutomationsState_AutoAcceptInviteRequests$Type extends Messa
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool enabled */ 1:
+        case /* bool enabled */ 1:
           message.enabled = reader.bool();
           break;
-        case /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode */ 2:
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode */ 2:
           message.mode = reader.int32();
           break;
-        case /* optional uint32 player_count */ 3:
+        case /* uint32 player_count */ 3:
           message.playerCount = reader.uint32();
           break;
         default:
@@ -1333,13 +1517,12 @@ class OyasumiSidecarAutomationsState_AutoAcceptInviteRequests$Type extends Messa
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool enabled = 1; */
-    if (message.enabled !== undefined) writer.tag(1, WireType.Varint).bool(message.enabled);
-    /* optional OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2; */
-    if (message.mode !== undefined) writer.tag(2, WireType.Varint).int32(message.mode);
-    /* optional uint32 player_count = 3; */
-    if (message.playerCount !== undefined)
-      writer.tag(3, WireType.Varint).uint32(message.playerCount);
+    /* bool enabled = 1; */
+    if (message.enabled !== false) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2; */
+    if (message.mode !== 0) writer.tag(2, WireType.Varint).int32(message.mode);
+    /* uint32 player_count = 3; */
+    if (message.playerCount !== 0) writer.tag(3, WireType.Varint).uint32(message.playerCount);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -1354,14 +1537,14 @@ export const OyasumiSidecarAutomationsState_AutoAcceptInviteRequests =
 class OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount$Type extends MessageType<OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount', [
-      { no: 1, name: 'enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
-      { no: 2, name: 'threshold', kind: 'scalar', opt: true, T: 13 /*ScalarType.UINT32*/ },
+      { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'threshold', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount>
   ): OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount {
-    const message = {};
+    const message = { enabled: false, threshold: 0 };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount>(
@@ -1382,10 +1565,10 @@ class OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount$Type extends
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool enabled */ 1:
+        case /* bool enabled */ 1:
           message.enabled = reader.bool();
           break;
-        case /* optional uint32 threshold */ 2:
+        case /* uint32 threshold */ 2:
           message.threshold = reader.uint32();
           break;
         default:
@@ -1412,10 +1595,10 @@ class OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount$Type extends
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool enabled = 1; */
-    if (message.enabled !== undefined) writer.tag(1, WireType.Varint).bool(message.enabled);
-    /* optional uint32 threshold = 2; */
-    if (message.threshold !== undefined) writer.tag(2, WireType.Varint).uint32(message.threshold);
+    /* bool enabled = 1; */
+    if (message.enabled !== false) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* uint32 threshold = 2; */
+    if (message.threshold !== 0) writer.tag(2, WireType.Varint).uint32(message.threshold);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -1430,14 +1613,14 @@ export const OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount =
 class OyasumiSidecarAutomationsState_SleepingAnimations$Type extends MessageType<OyasumiSidecarAutomationsState_SleepingAnimations> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepingAnimations', [
-      { no: 1, name: 'enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
-      { no: 2, name: 'preset_name', kind: 'scalar', opt: true, T: 9 /*ScalarType.STRING*/ },
+      { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'preset_name', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_SleepingAnimations>
   ): OyasumiSidecarAutomationsState_SleepingAnimations {
-    const message = {};
+    const message = { enabled: false, presetName: '' };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_SleepingAnimations>(
@@ -1458,10 +1641,10 @@ class OyasumiSidecarAutomationsState_SleepingAnimations$Type extends MessageType
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool enabled */ 1:
+        case /* bool enabled */ 1:
           message.enabled = reader.bool();
           break;
-        case /* optional string preset_name */ 2:
+        case /* string preset_name */ 2:
           message.presetName = reader.string();
           break;
         default:
@@ -1488,10 +1671,10 @@ class OyasumiSidecarAutomationsState_SleepingAnimations$Type extends MessageType
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool enabled = 1; */
-    if (message.enabled !== undefined) writer.tag(1, WireType.Varint).bool(message.enabled);
-    /* optional string preset_name = 2; */
-    if (message.presetName !== undefined)
+    /* bool enabled = 1; */
+    if (message.enabled !== false) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* string preset_name = 2; */
+    if (message.presetName !== '')
       writer.tag(2, WireType.LengthDelimited).string(message.presetName);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
@@ -1507,16 +1690,16 @@ export const OyasumiSidecarAutomationsState_SleepingAnimations =
 class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageType<OyasumiSidecarAutomationsState_ShutdownAutomations> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations', [
-      { no: 1, name: 'sleep_trigger_enabled', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
-      { no: 2, name: 'time_delay', kind: 'scalar', opt: true, T: 13 /*ScalarType.UINT32*/ },
-      { no: 3, name: 'running', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
-      { no: 4, name: 'can_start', kind: 'scalar', opt: true, T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'sleep_trigger_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'time_delay', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+      { no: 3, name: 'running', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 4, name: 'can_start', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_ShutdownAutomations>
   ): OyasumiSidecarAutomationsState_ShutdownAutomations {
-    const message = {};
+    const message = { sleepTriggerEnabled: false, timeDelay: 0, running: false, canStart: false };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_ShutdownAutomations>(
@@ -1537,16 +1720,16 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* optional bool sleep_trigger_enabled */ 1:
+        case /* bool sleep_trigger_enabled */ 1:
           message.sleepTriggerEnabled = reader.bool();
           break;
-        case /* optional uint32 time_delay */ 2:
+        case /* uint32 time_delay */ 2:
           message.timeDelay = reader.uint32();
           break;
-        case /* optional bool running */ 3:
+        case /* bool running */ 3:
           message.running = reader.bool();
           break;
-        case /* optional bool can_start */ 4:
+        case /* bool can_start */ 4:
           message.canStart = reader.bool();
           break;
         default:
@@ -1573,15 +1756,15 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* optional bool sleep_trigger_enabled = 1; */
-    if (message.sleepTriggerEnabled !== undefined)
+    /* bool sleep_trigger_enabled = 1; */
+    if (message.sleepTriggerEnabled !== false)
       writer.tag(1, WireType.Varint).bool(message.sleepTriggerEnabled);
-    /* optional uint32 time_delay = 2; */
-    if (message.timeDelay !== undefined) writer.tag(2, WireType.Varint).uint32(message.timeDelay);
-    /* optional bool running = 3; */
-    if (message.running !== undefined) writer.tag(3, WireType.Varint).bool(message.running);
-    /* optional bool can_start = 4; */
-    if (message.canStart !== undefined) writer.tag(4, WireType.Varint).bool(message.canStart);
+    /* uint32 time_delay = 2; */
+    if (message.timeDelay !== 0) writer.tag(2, WireType.Varint).uint32(message.timeDelay);
+    /* bool running = 3; */
+    if (message.running !== false) writer.tag(3, WireType.Varint).bool(message.running);
+    /* bool can_start = 4; */
+    if (message.canStart !== false) writer.tag(4, WireType.Varint).bool(message.canStart);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

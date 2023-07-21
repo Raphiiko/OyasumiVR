@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using GrcpOverlaySidecar;
 using Serilog;
 using SharpDX;
 using SharpDX.Direct3D;
@@ -184,17 +185,46 @@ public class OvrManager {
 
   private void HandleButtonDetections()
   {
-    _buttonDetector!.OnDoublePressA += OnDoublePressA;
+    _buttonDetector!.OnSinglePressA += ToggleDashboard;
+    _buttonDetector!.OnDoublePressA += ToggleDashboard;
+    _buttonDetector!.OnTriplePressA += ToggleDashboard;
+    _buttonDetector!.OnSinglePressB += ToggleDashboard;
+    _buttonDetector!.OnDoublePressB += ToggleDashboard;
+    _buttonDetector!.OnTriplePressB += ToggleDashboard;
   }
 
   private void ClearButtonDetections()
   {
-    _buttonDetector!.OnDoublePressA -= OnDoublePressA;
+    _buttonDetector!.OnSinglePressA -= ToggleDashboard;
+    _buttonDetector!.OnDoublePressA -= ToggleDashboard;
+    _buttonDetector!.OnTriplePressA -= ToggleDashboard;
+    _buttonDetector!.OnSinglePressB -= ToggleDashboard;
+    _buttonDetector!.OnDoublePressB -= ToggleDashboard;
+    _buttonDetector!.OnTriplePressB -= ToggleDashboard;
   }
 
-  private void OnDoublePressA(object? sender, ETrackedControllerRole role)
+  private void ToggleDashboard(object? sender, ETrackedControllerRole role)
   {
-    if (role != ETrackedControllerRole.RightHand) return;
+    if (_buttonDetector == null) return;
+    var action =
+      (OyasumiSidecarOverlayActivationAction)(sender ?? throw new ArgumentNullException(nameof(sender)));
+    // Verify it's the configured action
+    var settings = StateManager.Instance.GetAppState().Settings;
+    if (settings.ActivationAction != action) return;
+    // Verify it's for the configured controller
+    switch (settings.ActivationController)
+    {
+      case OyasumiSidecarOverlayActivationController.Left:
+        if (role != ETrackedControllerRole.LeftHand) return;
+        break;
+      case OyasumiSidecarOverlayActivationController.Right:
+        if (role != ETrackedControllerRole.RightHand) return;
+        break;
+    }
+
+    // Verify if the trigger was held (if needed)
+    if (settings.ActivationTriggerRequired && !_buttonDetector.IsTriggerPressed(role)) return;
+
     if (_dashboardOverlay == null)
     {
       var o = new DashboardOverlay();

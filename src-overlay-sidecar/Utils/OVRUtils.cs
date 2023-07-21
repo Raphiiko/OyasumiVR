@@ -23,6 +23,9 @@ public class OvrUtils {
   public static float GetRefreshRate(bool force = false)
   {
     if (!force && DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - _refreshRateLastSet <= 5000) return _refreshRate;
+    var system = OpenVR.System;
+    // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+    if (system == null) return _refreshRate; // This can be null sometimes...
     ETrackedPropertyError error = default;
     var displayFrequency =
       OpenVR.System.GetFloatTrackedDeviceProperty(0, ETrackedDeviceProperty.Prop_DisplayFrequency_Float, ref error);

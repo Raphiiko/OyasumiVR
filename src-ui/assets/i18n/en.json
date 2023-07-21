@@ -523,6 +523,33 @@
             }
           }
         }
+      },
+      "overlay": {
+        "activation": {
+          "title": "Activation action",
+          "description": "Select which action will open and close the overlay",
+          "action": {
+            "none": "None (disabled)",
+            "singleA": "Single press A",
+            "doubleA": "Double press A",
+            "tripleA": "Triple press A",
+            "singleB": "Single press B",
+            "doubleB": "Double press B",
+            "tripleB": "Triple press B"
+          },
+          "controller": {
+            "either": "Either Controller",
+            "left": "Left Controller",
+            "right": "Right Controller",
+            "title": "Controller",
+            "description": "Select which controllers can be used to activate the overlay"
+          },
+          "triggerFilter": {
+            "title": "Require trigger",
+            "description": "Only activate if the trigger is held down while doing the action."
+          }
+        },
+        "title": "Overlay"
       }
     },
     "vrchat": {

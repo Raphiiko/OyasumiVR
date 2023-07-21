@@ -35,12 +35,19 @@ message Empty {
 }
 
 message OyasumiSidecarState {
-  optional bool sleep_mode = 1;
-  optional VrcStatus vrc_status = 2;
-  optional string vrc_username = 3;
-  optional OyasumiSidecarAutomationsState automations = 4;
-  optional string locale = 5;
-  optional OyasumiSidecarDeviceInfo device_info = 6;
+  bool sleep_mode = 1;
+  VrcStatus vrc_status = 2;
+  string vrc_username = 3;
+  OyasumiSidecarAutomationsState automations = 4;
+  string locale = 5;
+  OyasumiSidecarDeviceInfo device_info = 6;
+  OyasumiSidecarOverlaySettings settings = 7;
+}
+
+message OyasumiSidecarOverlaySettings {
+  OyasumiSidecarOverlayActivationAction activation_action = 1;
+  OyasumiSidecarOverlayActivationController activation_controller = 2;
+  bool activation_trigger_required = 3;
 }
 
 message OyasumiSidecarDeviceInfo {
@@ -77,33 +84,33 @@ message OyasumiSidecarDeviceInfo_Tracker {
 }
 
 message OyasumiSidecarAutomationsState {
-  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
-  optional OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
-  optional OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
-  optional OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
+  OyasumiSidecarAutomationsState_AutoAcceptInviteRequests autoAcceptInviteRequests = 1;
+  OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
+  OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
+  OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
 }
 
 message OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
-  optional bool enabled = 1;
-  optional OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
-  optional uint32 player_count = 3;
+  bool enabled = 1;
+  OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode mode = 2;
+  uint32 player_count = 3;
 }
 
 message OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount {
-  optional bool enabled = 1;
-  optional uint32 threshold = 2;
+  bool enabled = 1;
+  uint32 threshold = 2;
 }
 
 message OyasumiSidecarAutomationsState_SleepingAnimations {
-  optional bool enabled = 1;
-  optional string preset_name = 2;
+  bool enabled = 1;
+  string preset_name = 2;
 }
 
 message OyasumiSidecarAutomationsState_ShutdownAutomations {
-  optional bool sleep_trigger_enabled = 1;
-  optional uint32 time_delay = 2;
-  optional bool running = 3;
-  optional bool can_start = 4;
+  bool sleep_trigger_enabled = 1;
+  uint32 time_delay = 2;
+  bool running = 3;
+  bool can_start = 4;
 }
 
 enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
@@ -118,5 +125,21 @@ enum VrcStatus {
   VRC_STATUS_AskMe = 2;
   VRC_STATUS_Active = 3;
   VRC_STATUS_JoinMe = 4;
+}
+
+enum OyasumiSidecarOverlayActivationAction {
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
+}
+
+enum OyasumiSidecarOverlayActivationController {
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
+  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
 }
 

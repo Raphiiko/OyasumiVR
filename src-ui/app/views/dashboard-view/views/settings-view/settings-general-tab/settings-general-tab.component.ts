@@ -12,7 +12,11 @@ import {
 import { cloneDeep } from 'lodash';
 import { LANGUAGES } from '../../../../../globals';
 import { vshrink } from '../../../../../utils/animations';
-import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
+import {
+  ExecutableReferenceStatus,
+  OverlayActivationAction,
+  OverlayActivationController,
+} from 'src-ui/app/models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
@@ -64,6 +68,52 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     },
   ];
   sleepModeStartupBehaviourOption: SelectBoxItem | undefined;
+  overlayActivationActionOptions: SelectBoxItem[] = [
+    {
+      id: 'NONE',
+      label: 'settings.general.overlay.activation.action.none',
+    },
+    {
+      id: 'SINGLE_A',
+      label: 'settings.general.overlay.activation.action.singleA',
+    },
+    {
+      id: 'DOUBLE_A',
+      label: 'settings.general.overlay.activation.action.doubleA',
+    },
+    {
+      id: 'TRIPLE_A',
+      label: 'settings.general.overlay.activation.action.tripleA',
+    },
+    {
+      id: 'SINGLE_B',
+      label: 'settings.general.overlay.activation.action.singleB',
+    },
+    {
+      id: 'DOUBLE_B',
+      label: 'settings.general.overlay.activation.action.doubleB',
+    },
+    {
+      id: 'TRIPLE_B',
+      label: 'settings.general.overlay.activation.action.tripleB',
+    },
+  ];
+  overlayActivationActionOption: SelectBoxItem | undefined;
+  overlayActivationControllerOptions: SelectBoxItem[] = [
+    {
+      id: 'EITHER',
+      label: 'settings.general.overlay.activation.controller.either',
+    },
+    {
+      id: 'RIGHT',
+      label: 'settings.general.overlay.activation.controller.right',
+    },
+    {
+      id: 'LEFT',
+      label: 'settings.general.overlay.activation.controller.left',
+    },
+  ];
+  overlayActivationControllerOption: SelectBoxItem | undefined;
 
   constructor(
     settingsService: AppSettingsService,
@@ -96,6 +146,12 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
         );
         this.sleepModeStartupBehaviourOption = this.sleepModeStartupBehaviourOptions.find(
           (o) => o.id === settings.sleepModeStartupBehaviour
+        );
+        this.overlayActivationActionOption = this.overlayActivationActionOptions.find(
+          (o) => o.id === settings.overlayActivationAction
+        );
+        this.overlayActivationControllerOption = this.overlayActivationControllerOptions.find(
+          (o) => o.id === settings.overlayActivationController
         );
       });
   }
@@ -174,5 +230,23 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     this.settingsService.updateSettings({
       sleepModeStartupBehaviour: option.id as 'PERSIST' | 'ACTIVE' | 'INACTIVE',
     });
+  }
+
+  onChangeOverlayActivationAction(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.settingsService.updateSettings({
+      overlayActivationAction: option.id as OverlayActivationAction,
+    });
+  }
+
+  onChangeOverlayActivationController(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.settingsService.updateSettings({
+      overlayActivationController: option.id as OverlayActivationController,
+    });
+  }
+
+  setOverlayActivationTriggerRequired(required: boolean) {
+    this.settingsService.updateSettings({ overlayActivationTriggerRequired: required });
   }
 }
