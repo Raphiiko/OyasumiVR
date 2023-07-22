@@ -23,8 +23,8 @@ import {
   OyasumiSidecarDeviceInfo_Tracker,
   OyasumiSidecarOverlayActivationAction,
   OyasumiSidecarOverlayActivationController,
-  OyasumiSidecarState,
   OyasumiSidecarOverlaySettings,
+  OyasumiSidecarState,
   VrcStatus,
 } from '../../../src-grpc-web-client/overlay-sidecar_pb';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';

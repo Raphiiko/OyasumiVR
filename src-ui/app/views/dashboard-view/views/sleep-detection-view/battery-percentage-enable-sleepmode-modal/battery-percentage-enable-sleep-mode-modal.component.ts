@@ -55,6 +55,5 @@ export class BatteryPercentageEnableSleepModeModalComponent
     } else {
       this.triggerClasses.push(deviceClass);
     }
-
   }
 }

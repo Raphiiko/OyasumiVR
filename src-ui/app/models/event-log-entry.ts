@@ -2,6 +2,7 @@ import { ShutdownSequenceStage } from '../services/shutdown-automations.service'
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
+import { WindowsPowerPolicy } from './windows-power-policy';
 
 export type EventLog = {
   version: 3;
@@ -27,7 +28,9 @@ export type EventLogEntry =
   | EventLogRenderResolutionChanged
   | EventLogChaperoneFadeDistanceChanged
   | EventLogShutdownSequenceStarted
-  | EventLogShutdownSequenceCancelled;
+  | EventLogShutdownSequenceCancelled
+  | EventLogWindowsPowerPolicySet
+  | EventLogMsiAfterburnerProfileSet;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -45,7 +48,9 @@ export type EventLogType =
   | 'renderResolutionChanged'
   | 'chaperoneFadeDistanceChanged'
   | 'shutdownSequenceStarted'
-  | 'shutdownSequenceCancelled';
+  | 'shutdownSequenceCancelled'
+  | 'windowsPowerPolicySet'
+  | 'msiAfterburnerProfileSet';
 
 export interface EventLogBase {
   id: string;
@@ -140,4 +145,16 @@ export interface EventLogChaperoneFadeDistanceChanged extends EventLogBase {
   type: 'chaperoneFadeDistanceChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
   fadeDistance: number;
+}
+
+export interface EventLogWindowsPowerPolicySet extends EventLogBase {
+  type: 'windowsPowerPolicySet';
+  policy: WindowsPowerPolicy;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+}
+
+export interface EventLogMsiAfterburnerProfileSet extends EventLogBase {
+  type: 'msiAfterburnerProfileSet';
+  profile: number;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
 }

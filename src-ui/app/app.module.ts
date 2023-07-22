@@ -135,6 +135,8 @@ import { FontLoaderService } from './services/font-loader.service';
 import { DotnetService } from './services/dotnet.service';
 import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
 import { NotificationService } from './services/notification.service';
+import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
+import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
   registerLocaleData(locale)
@@ -214,6 +216,7 @@ export function createTranslateLoader(http: HttpClient) {
     ShutdownSequenceOverlayComponent,
     DeveloperDebugModalComponent,
     DotnetUpgradeModalComponent,
+    WindowsPowerPolicyTabComponent,
   ],
   imports: [
     CommonModule,
@@ -293,7 +296,9 @@ export class AppModule {
     // Render resolution automations
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
-    private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService
+    private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
+    // Windows power policy automations
+    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService
   ) {
     this.init();
   }
@@ -373,6 +378,8 @@ export class AppModule {
           this.chaperoneFadeDistanceAutomationService.init(),
           // Shutdown automations
           this.shutdownAutomationsService.init(),
+          // Windows power policy automations
+          this.setWindowsPowerPolicyOnSleepModeAutomationService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

@@ -2,6 +2,7 @@ import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
+import { WindowsPowerPolicy } from './windows-power-policy';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -40,7 +41,10 @@ export type AutomationType =
   | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
   | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE'
   // SHUTDOWN AUTOMATIONS
-  | 'SHUTDOWN_AUTOMATIONS';
+  | 'SHUTDOWN_AUTOMATIONS'
+  // WINDOWS POWER POLICY AUTOMATIONS
+  | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
+  | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
   version: 8;
@@ -80,6 +84,9 @@ export interface AutomationConfigs {
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   // SHUTDOWN AUTOMATIONS
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
+  // WINDOWS POWER POLICY AUTOMATIONS
+  WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
+  WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -221,6 +228,11 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   turnOffTrackers: boolean;
   turnOffBaseStations: boolean;
   shutdownWindows: boolean;
+}
+
+// WINDOWS POWER POLICY AUTOMATIONS
+export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
+  powerPolicy?: WindowsPowerPolicy;
 }
 
 //
@@ -385,5 +397,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     turnOffTrackers: true,
     turnOffBaseStations: true,
     shutdownWindows: true,
+  },
+  // WINDOWS POWER POLICY AUTOMATIONS
+  WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: {
+    enabled: false,
+  },
+  WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: {
+    enabled: false,
   },
 };

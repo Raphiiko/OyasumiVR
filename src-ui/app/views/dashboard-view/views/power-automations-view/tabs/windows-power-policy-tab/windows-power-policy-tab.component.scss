@@ -1,0 +1,13 @@
+.description {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  p {
+    flex: 1;
+  }
+}
+.description-icon {
+  font-size: 6em;
+  margin-left: 0.25em;
+  flex-shrink: 0;
+}

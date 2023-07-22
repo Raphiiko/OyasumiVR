@@ -18,23 +18,8 @@ import { EventLogShutdownSequenceStartedEntryParser } from './entry-parsers/shut
 import { EventLogShutdownSequenceCancelledEntryParser } from './entry-parsers/shutdown-sequence-cancelled';
 import { EventLogDisplayBrightnessChangedEntryParser } from './entry-parsers/display-brightness-changed';
 import { EventLogImageBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
-
-const parsers: EventLogEntryParser<EventLogEntry>[] = [
-  new EventLogSleepModeEnabledEntryParser(),
-  new EventLogSleepModeDisabledEntryParser(),
-  new EventLogTurnedOffOpenVRDevicesEntryParser(),
-  new EventLogLighthouseSetPowerStateEntryParser(),
-  new EventLogGpuPowerLimitChangedEntryParser(),
-  new EventLogDisplayBrightnessChangedEntryParser(),
-  new EventLogImageBrightnessChangedEntryParser(),
-  new EventLogAcceptedInviteRequestEntryParser(),
-  new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
-  new EventLogSleepDetectorEnableCancelledEntryParser(),
-  new EventLogRenderResolutionChangedEntryParser(),
-  new EventLogFadeDistanceChangedEntryParser(),
-  new EventLogShutdownSequenceStartedEntryParser(),
-  new EventLogShutdownSequenceCancelledEntryParser(),
-];
+import { EventLogWindowsPowerPolicySetEntryParser } from './entry-parsers/windows-power-policy-set';
+import { EventLogMsiAfterburnerProfileSetEntryParser } from './entry-parsers/msi-afterburner-profile-set';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -45,6 +30,25 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   parser?: EventLogEntryParser<any>;
   headerInfoTitle?: SafeHtml;
   headerInfoSubTitle?: SafeHtml;
+
+  private readonly parsers: EventLogEntryParser<EventLogEntry>[] = [
+    new EventLogSleepModeEnabledEntryParser(),
+    new EventLogSleepModeDisabledEntryParser(),
+    new EventLogTurnedOffOpenVRDevicesEntryParser(),
+    new EventLogLighthouseSetPowerStateEntryParser(),
+    new EventLogGpuPowerLimitChangedEntryParser(),
+    new EventLogDisplayBrightnessChangedEntryParser(),
+    new EventLogImageBrightnessChangedEntryParser(),
+    new EventLogAcceptedInviteRequestEntryParser(),
+    new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
+    new EventLogSleepDetectorEnableCancelledEntryParser(),
+    new EventLogRenderResolutionChangedEntryParser(),
+    new EventLogFadeDistanceChangedEntryParser(),
+    new EventLogShutdownSequenceStartedEntryParser(),
+    new EventLogShutdownSequenceCancelledEntryParser(),
+    new EventLogWindowsPowerPolicySetEntryParser(),
+    new EventLogMsiAfterburnerProfileSetEntryParser(),
+  ];
 
   constructor(
     private sanitizer: DomSanitizer,
@@ -70,7 +74,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.parser = parsers.find((parser) => parser.entryType() === this.entry?.type);
+    this.parser = this.parsers.find((parser) => parser.entryType() === this.entry?.type);
     this.rebuild();
   }
 

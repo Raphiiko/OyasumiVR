@@ -35,7 +35,6 @@ export class AutomationConfigService {
     // Listen for changes from the overlay
     await listen<string>('setAutomationEnabled', async (event) => {
       const payload: { automationId: AutomationType; enabled: boolean } = JSON.parse(event.payload);
-      console.log('setAutomationEnabled', payload);
       switch (payload.automationId) {
         case 'SHUTDOWN_AUTOMATIONS':
           await this.updateAutomationConfig<ShutdownAutomationsConfig>(payload.automationId, {

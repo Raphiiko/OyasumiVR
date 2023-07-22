@@ -49,6 +49,7 @@ winapi = { version = "0.3.9", features = [
   "winnt",
   "securitybaseapi",
   "impl-default",
+  "powersetting",
 ] }
 tokio = { version = "1.28.0", features = ["full"] }
 hyper = { version = "0.14.26", features = ["full"] }
@@ -69,7 +70,10 @@ strum_macros = "0.25"
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [ "cli", "fs-write-file", "dialog-save",
+features = [
+  "cli",
+  "fs-write-file",
+  "dialog-save",
   "path-all",
   "process-relaunch",
   "system-tray",

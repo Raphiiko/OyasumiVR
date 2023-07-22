@@ -156,7 +156,9 @@
             <input
               type="checkbox"
               [checked]="appSettings.overlayActivationTriggerRequired"
-              (change)="setOverlayActivationTriggerRequired(!appSettings.overlayActivationTriggerRequired)"
+              (change)="
+                setOverlayActivationTriggerRequired(!appSettings.overlayActivationTriggerRequired)
+              "
             />
             <span class="switch-toggle-slider"></span>
           </label>

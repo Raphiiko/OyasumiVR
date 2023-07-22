@@ -1,5 +1,5 @@
 use super::{models::Output, SOLOUD, SOUNDS};
-use log::error;
+use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
 
@@ -157,4 +157,35 @@ pub async fn show_in_folder(path: String) {
     {
         Command::new("open").args(["-R", &path]).spawn().unwrap();
     }
+}
+
+#[tauri::command]
+pub async fn set_windows_power_policy(policy: String) {
+    let guid = match policy.as_str() {
+        "POWER_SAVING" => super::GUID_POWER_POLICY_POWER_SAVING,
+        "BALANCED" => super::GUID_POWER_POLICY_BALANCED,
+        "HIGH_PERFORMANCE" => super::GUID_POWER_POLICY_HIGH_PERFORMANCE,
+        _ => panic!("Unknown power policy: {}", policy),
+    };
+    info!("[Core] Setting Windows power policy to \"{}\" plan", policy);
+    super::set_windows_power_policy(&guid);
+}
+
+#[tauri::command]
+pub async fn active_windows_power_policy() -> Option<String> {
+    let guid = super::active_windows_power_policy();
+    if guid.is_none() {
+        return None;
+    }
+    let guid = guid.unwrap();
+    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_POWER_SAVING) {
+        return Some(String::from("POWER_SAVING"));
+    }
+    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_BALANCED) {
+        return Some(String::from("BALANCED"));
+    }
+    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_HIGH_PERFORMANCE) {
+        return Some(String::from("HIGH_PERFORMANCE"));
+    }
+    None
 }

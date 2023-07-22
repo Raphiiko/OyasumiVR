@@ -30,7 +30,10 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { EventLogService } from './event-log.service';
-import { EventLogGpuPowerLimitChanged } from '../models/event-log-entry';
+import {
+  EventLogGpuPowerLimitChanged,
+  EventLogMsiAfterburnerProfileSet,
+} from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -297,15 +300,19 @@ export class GpuAutomationsService {
         ),
         filter(([gpuAutomationsEnabled]) => gpuAutomationsEnabled),
         // Check profile to be enabled
-        map(([, sleepModeEnabled]) =>
-          sleepModeEnabled
-            ? this.currentMSIAfterburnerConfig.onSleepEnableProfile
-            : this.currentMSIAfterburnerConfig.onSleepDisableProfile
+        map(
+          ([, sleepModeEnabled]) =>
+            [
+              sleepModeEnabled
+                ? this.currentMSIAfterburnerConfig.onSleepEnableProfile
+                : this.currentMSIAfterburnerConfig.onSleepDisableProfile,
+              sleepModeEnabled ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+            ] as [number, 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED']
         ),
         // Stop if no profile is to be enabled
-        filter((profile) => profile > 0)
+        filter(([profile]) => profile > 0)
       )
-      .subscribe((profile) => this.setMSIAfterburnerProfile(profile));
+      .subscribe(([profile, reason]) => this.setMSIAfterburnerProfile(profile, reason));
   }
 
   async testMSIAfterburnerPathWhenNeeded() {
@@ -342,7 +349,10 @@ export class GpuAutomationsService {
       });
   }
 
-  async setMSIAfterburnerProfile(index: number) {
+  async setMSIAfterburnerProfile(
+    index: number,
+    reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED'
+  ) {
     if (index < 1 || index > 5) {
       await error(`[GpuAutomations] Attempted to set invalid MSI Afterburner profile (${index})`);
       return;
@@ -358,6 +368,11 @@ export class GpuAutomationsService {
         executablePath: this.currentMSIAfterburnerConfig.msiAfterburnerPath,
         profile: index,
       });
+      this.eventLog.logEvent({
+        type: 'msiAfterburnerProfileSet',
+        profile: index,
+        reason,
+      } as EventLogMsiAfterburnerProfileSet);
     } catch (e) {
       if (typeof e === 'string') {
         this.handleMSIAfterburnerError(e);

@@ -245,6 +245,23 @@
   },
   "power-automations": {
     "title": "Power Automations",
+    "tabs": {
+      "controllersAndTrackers": "Controllers & Trackers",
+      "baseStations": "Base Stations",
+      "windowsPowerPolicy": "Power Policy"
+    },
+    "windowsPowerPolicy": {
+      "description": "OyasumiVR can automatically change the active Windows Power Policy when you go to sleep or wake up. This can be useful to reduce your power consumption while you are asleep, and restore a higher performance policy when you wake up again.",
+      "automations": "Automations",
+      "sleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Set the following Windows Power Policy"
+      },
+      "sleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Set the following Windows Power Policy"
+      }
+    },
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "When I go to sleep",
@@ -259,10 +276,6 @@
         "optionControllers": "Turn off controllers",
         "optionTrackers": "Turn off trackers"
       }
-    },
-    "tabs": {
-      "controllersAndTrackers": "Controllers & Trackers",
-      "baseStations": "Base Stations"
     },
     "lighthousePowerOn": {
       "title": "Turn on base stations",
@@ -1114,6 +1127,25 @@
           "title": "The shutdown sequence was cancelled",
           "reason": {
             "MANUAL": "Cancelled manually"
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "title": "MSI Afterburner's profile was set to profile {{profile}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "title": "Windows Power Policy set to the '{{policy}}' plan",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+          },
+          "policy": {
+            "BALANCED": "Balanced",
+            "HIGH_PERFORMANCE": "High performance",
+            "POWER_SAVING": "Power saver"
           }
         }
       }

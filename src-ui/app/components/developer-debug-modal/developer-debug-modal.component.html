@@ -5,41 +5,54 @@
     <h2>Sleep Detector Debugger</h2>
     <div class="sleep-detector-debugger">
       <div class="action-row">
-        <button class="btn btn-secondary" [disabled]="debug.sleepDetectionDebugger.started"
-                (click)="debug.sleepDetectionDebugger.start()">Start Recording
+        <button
+          class="btn btn-secondary"
+          [disabled]="debug.sleepDetectionDebugger.started"
+          (click)="debug.sleepDetectionDebugger.start()"
+          >Start Recording
         </button>
-        <button class="btn btn-secondary" [disabled]="!debug.sleepDetectionDebugger.started"
-                (click)="debug.sleepDetectionDebugger.stop()">Stop Recording
+        <button
+          class="btn btn-secondary"
+          [disabled]="!debug.sleepDetectionDebugger.started"
+          (click)="debug.sleepDetectionDebugger.stop()"
+          >Stop Recording
         </button>
-        <button class="btn btn-secondary" [disabled]="!debug.sleepDetectionDebugger.timeData.length"
-                (click)="debug.sleepDetectionDebugger.exportData()">Export Data
+        <button
+          class="btn btn-secondary"
+          [disabled]="!debug.sleepDetectionDebugger.timeData.length"
+          (click)="debug.sleepDetectionDebugger.exportData()"
+          >Export Data
         </button>
-        <app-select-box type="SMALL" [items]="resolutionItems" [selected]="asSelectBoxItem(selectedResolution)"
-                        (selectedChange)="selectedResolution = $event"></app-select-box>
+        <app-select-box
+          type="SMALL"
+          [items]="resolutionItems"
+          [selected]="asSelectBoxItem(selectedResolution)"
+          (selectedChange)="selectedResolution = $event"
+        ></app-select-box>
       </div>
       <div class="chart-container">
-        <div class="timeseries-chart" #sleepDetectionTimeSeriesChart>
-        </div>
+        <div class="timeseries-chart" #sleepDetectionTimeSeriesChart> </div>
       </div>
       <div class="state-handling-timeline">
         <h3>Report Handling Timeline</h3>
-        <div class="state-handling-timeline-entry"
-             *ngFor="let entry of debug.sleepDetectionDebugger.reportHandlingData">
+        <div
+          class="state-handling-timeline-entry"
+          *ngFor="let entry of debug.sleepDetectionDebugger.reportHandlingData"
+        >
           <div class="left">
-            <pre>{{entry.result}}</pre>
+            <pre>{{ entry.result }}</pre>
           </div>
           <div class="right">
-            <span>{{entry.amountSeen}} Reports</span>
+            <span>{{ entry.amountSeen }} Reports</span>
             <span>&nbsp;|&nbsp;</span>
-            <span>First: {{entry.firstSeen | localizedDate : 'HH:mm:ss'}}</span>
+            <span>First: {{ entry.firstSeen | localizedDate : 'HH:mm:ss' }}</span>
             <span>&nbsp;-&nbsp;</span>
-            <span>Last: {{entry.lastSeen | localizedDate : 'HH:mm:ss'}}</span>
+            <span>Last: {{ entry.lastSeen | localizedDate : 'HH:mm:ss' }}</span>
             <span>&nbsp;</span>
-            <span>({{(entry.lastSeen - entry.firstSeen) | amDuration:'milliseconds'}})</span>
+            <span>({{ entry.lastSeen - entry.firstSeen | amDuration : 'milliseconds' }})</span>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
-

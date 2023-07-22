@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Image brightness automations for all headsets
 - If the main window is minimized to the tray, it will reveal itself when the user tries to launch a second instance.
 - Startup check for missing (.NET) runtimes, with option for automatic installation.
+- Automations for changing Windows' Power Policy when you go to sleep and wake up.
+- Event log entry when MSI Afterburner profiles are set.
 
 ### Changed
 

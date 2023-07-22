@@ -1,40 +1,53 @@
 <div class="pane modal modal-lg" @fadeUp>
-  <div class="pane-title" translate>
-    comp.dotnet-upgrade-modal.title
-  </div>
+  <div class="pane-title" translate> comp.dotnet-upgrade-modal.title </div>
   <div class="pane-content">
     <p translate>comp.dotnet-upgrade-modal.description.text1</p>
     <ul>
-      <li *ngFor="let runtime of requiredRuntimes" class="runtime"
-          [style.font-weight]="runtime.status === 'INSTALLING' ? 700 : 500">
+      <li
+        *ngFor="let runtime of requiredRuntimes"
+        class="runtime"
+        [style.font-weight]="runtime.status === 'INSTALLING' ? 700 : 500"
+      >
         <span>
-        <div class="small-spinner" *ngIf="runtime.status === 'INSTALLING'" @hshrink></div>
-        <i class="material-icons success" *ngIf="runtime.status === 'SUCCESS'" @hshrink>check</i>
-        <i class="material-icons failure" *ngIf="runtime.status === 'FAILED'" @hshrink>clear</i>
-        <span>{{runtime.name}}</span>
-        <span *ngIf="runtime.version">&nbsp;{{runtime.version}}</span>
-        <span *ngIf="runtime.status === 'QUEUED'">
-          &nbsp;
-          ({{ 'comp.dotnet-upgrade-modal.description.runtimeQueued' | translate }})
-        </span>
+          <div class="small-spinner" *ngIf="runtime.status === 'INSTALLING'" @hshrink></div>
+          <i class="material-icons success" *ngIf="runtime.status === 'SUCCESS'" @hshrink>check</i>
+          <i class="material-icons failure" *ngIf="runtime.status === 'FAILED'" @hshrink>clear</i>
+          <span>{{ runtime.name }}</span>
+          <span *ngIf="runtime.version">&nbsp;{{ runtime.version }}</span>
+          <span *ngIf="runtime.status === 'QUEUED'">
+            &nbsp; ({{ 'comp.dotnet-upgrade-modal.description.runtimeQueued' | translate }})
+          </span>
         </span>
       </li>
     </ul>
     <p translate>comp.dotnet-upgrade-modal.description.text2</p>
-    <p *ngIf="automaticInstallationPossible" translate>comp.dotnet-upgrade-modal.description.automaticInstall</p>
-    <p *ngIf="!automaticInstallationPossible" translate>comp.dotnet-upgrade-modal.description.noAutomaticInstall</p>
-    <p color="var(--color-gray-2)"><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
-      href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0" target="_blank">https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a>
+    <p *ngIf="automaticInstallationPossible" translate
+      >comp.dotnet-upgrade-modal.description.automaticInstall</p
+    >
+    <p *ngIf="!automaticInstallationPossible" translate
+      >comp.dotnet-upgrade-modal.description.noAutomaticInstall</p
+    >
+    <p color="var(--color-gray-2)"
+      ><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
+        href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0"
+        target="_blank"
+        >https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a
+      >
     </p>
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="quit()" translate>
       comp.dotnet-upgrade-modal.quit
     </button>
-    <button class="btn btn-primary" (click)="installAutomatically()"
-            [disabled]="!automaticInstallationPossible">
+    <button
+      class="btn btn-primary"
+      (click)="installAutomatically()"
+      [disabled]="!automaticInstallationPossible"
+    >
       <div class="small-spinner" *ngIf="installing" @hshrink></div>
-      <span *ngIf="!installing" @hshrink translate>comp.dotnet-upgrade-modal.installAutomatically</span>
+      <span *ngIf="!installing" @hshrink translate
+        >comp.dotnet-upgrade-modal.installAutomatically</span
+      >
     </button>
   </div>
 </div>
