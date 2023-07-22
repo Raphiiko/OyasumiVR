@@ -10,6 +10,11 @@ public class BrowserManager {
   {
   }
 
+  public void PreInitializeBrowser(int width, int height)
+  {
+    FreeBrowser(GetBrowser("about:blank", width, height));
+  }
+
   public OffScreenBrowser GetBrowser(string url, int width, int height)
   {
     lock (_browsers)

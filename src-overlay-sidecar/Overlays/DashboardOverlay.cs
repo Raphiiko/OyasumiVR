@@ -53,18 +53,16 @@ public class DashboardOverlay : BaseWebOverlay {
 
   public async void Close()
   {
-    if (!_isOpen || _closing) return;
+    if (_closing) return;
     _closing = true;
-    OvrManager.Instance.OverlayPointer!.StopForOverlay(this);
     ShowToolTip("");
-    HideDashboard();
+    if (UiReady) HideDashboard();
+    OvrManager.Instance.OverlayPointer!.StopForOverlay(this);
     await DelayedAction(() =>
     {
-      if (!_closing) return;
-      _closing = false;
-      _isOpen = false;
-      OpenVR.Overlay.HideOverlay(OverlayHandle);
       OnClose?.Invoke();
+      _isOpen = false;
+      OpenVR.Overlay.DestroyOverlay(OverlayHandle);
     }, TimeSpan.FromSeconds(1));
   }
 

@@ -27,7 +27,7 @@ public class SplashOverlay : BaseWebOverlay {
 
   private void UpdatePosition()
   {
-    if (Browser == null || DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint > 1000) return;
+    if (Browser == null) return;
     // Get current transform
     var origin = ETrackingUniverseOrigin.TrackingUniverseStanding;
     HmdMatrix34_t currentTransform34T = default;

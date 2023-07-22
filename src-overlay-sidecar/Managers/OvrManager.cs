@@ -138,7 +138,8 @@ public class OvrManager {
           HandleButtonDetections();
           _overlayPointer = new OverlayPointer();
           _notificationOverlay = new NotificationOverlay();
-          new SplashOverlay();
+          BrowserManager.Instance.PreInitializeBrowser(1024, 1024);
+          StartSplash();
         }
 
         while (_system.PollNextEvent(ref e, (uint)Marshal.SizeOf(e)))
@@ -235,7 +236,6 @@ public class OvrManager {
       {
         o.OnClose -= OnCloseHandler;
         o.Dispose();
-        if (_dashboardOverlay == o) _dashboardOverlay = null;
       }
 
       _dashboardOverlay.OnClose += OnCloseHandler;
@@ -261,5 +261,15 @@ public class OvrManager {
     {
       if (_overlays.Contains(overlay)) _overlays.Remove(overlay);
     }
+  }
+
+  private async void StartSplash()
+  {
+    await Utils.DelayedAction(() =>
+    {
+      if (!_active) return;
+      Console.WriteLine("Starting splash screen");
+      new SplashOverlay();
+    }, TimeSpan.FromSeconds(1));
   }
 }
