@@ -134,6 +134,7 @@
         },
         "sensitivity": {
           "title": "감도 수준",
+          "description": "감도가 높을수록 OyasumiVR이 사용자가 잠든 것을 감지할 가능성이 늘어나요.",
           "presets": {
             "LOWEST": "가장 낮음",
             "LOW": "낮음",
@@ -244,6 +245,23 @@
   },
   "power-automations": {
     "title": "전원 자동화",
+    "tabs": {
+      "controllersAndTrackers": "컨트롤러 & 트래커",
+      "baseStations": "베이스스테이션",
+      "windowsPowerPolicy": "전원 정책"
+    },
+    "windowsPowerPolicy": {
+      "description": "OyasumiVR은 사용자가 잠들거나 깨어날 때 활성 Windows의 전원 정책을 자동으로 변경할 수 있어요. 이 기능은 잠자는 동안 전력 소비를 줄이고 다시 깨어날 때 더 높은 성능의 정책으로 복원하는 데 유용할 수 있습니다.",
+      "automations": "자동화",
+      "sleepModeEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "다음 Windows 전원 정책을 적용해요."
+      },
+      "sleepModeDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "다음 Windows 전원 정책을 적용해요."
+      }
+    },
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "수면 모드 활성화 시",
@@ -258,10 +276,6 @@
         "optionControllers": "컨트롤러 끄기",
         "optionTrackers": "트래커 끄기"
       }
-    },
-    "tabs": {
-      "controllersAndTrackers": "컨트롤러 & 트래커",
-      "baseStations": "베이스스테이션"
     },
     "lighthousePowerOn": {
       "title": "베이스스테이션 켜기",
@@ -522,6 +536,33 @@
             }
           }
         }
+      },
+      "overlay": {
+        "activation": {
+          "title": "활성화 동작",
+          "description": "오버레이를 열고 닫을 동작을 선택해요.",
+          "action": {
+            "none": "없음 (비활성화)",
+            "singleA": "A 누름",
+            "doubleA": "A 두번 누름",
+            "tripleA": "A 세번 누름",
+            "singleB": "B 누름",
+            "doubleB": "B 두번 누름",
+            "tripleB": "B 세번 누름"
+          },
+          "controller": {
+            "either": "양쪽 컨트롤러",
+            "left": "왼쪽 컨트롤러",
+            "right": "오른쪽 컨트롤러",
+            "title": "컨트롤러",
+            "description": "오버레이를 활성화하는 데 사용할 수 있는 컨트롤러를 선택해요."
+          },
+          "triggerFilter": {
+            "title": "트리거 필터",
+            "description": "동작을 수행하는 동안 트리거를 누르고 있는 경우에만 활성화되어요."
+          }
+        },
+        "title": "오버레이"
       }
     },
     "vrchat": {
@@ -757,6 +798,15 @@
     },
     "autoAcceptedInviteRequest": {
       "content": "{{username}}의 초대 요청을 자동으로 수락했어요."
+    },
+    "turningOffControllers": {
+      "content": "컨트롤러를 끄고 있어요."
+    },
+    "turningOffTrackers": {
+      "content": "트래커를 끄고 있어요."
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "컨트롤러와 트래커를 끄고 있어요."
     }
   },
   "comp": {
@@ -1078,7 +1128,47 @@
           "reason": {
             "MANUAL": "수동으로 취소했어요."
           }
+        },
+        "msiAfterburnerProfileSet": {
+          "title": "MSI Afterburner의 프로파일을 프로파일 {{profile}}으로 변경함",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
+          }
+        },
+        "windowsPowerPolicySet": {
+          "title": "Windows의 전원 정책을 '{{policy}}'으로 변경함",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
+          },
+          "policy": {
+            "BALANCED": "균형",
+            "HIGH_PERFORMANCE": "고사양",
+            "POWER_SAVING": "절전"
+          }
         }
+      }
+    },
+    "dotnet-upgrade-modal": {
+      "title": "누락된 런타임 설치",
+      "description": {
+        "text1": "OyasumiVR에 필요한 다음 런타임이 너무 오래되었거나 시스템에 설치되어 있지 않아요:",
+        "runtimeQueued": "대기열",
+        "text2": "OyasumiVR을 계속 사용하려면 먼저 필요한 런타임을 설치해야 해요.",
+        "automaticInstall": "OyasumiVR이 이 런타임을 자동으로 설치하도록 하시겠어요?",
+        "noAutomaticInstall": "OyasumiVR에서 해당 런타임의 최신 버전을 확인할 수 없으므로 자동으로 설치할 수 없었어요. 해당 런타임을 수동으로 설치하거나 OyasumiVR을 종료한 후 다음에 다시 시도해 주세요.",
+        "moreInfo": "여기에서 다운로드하거나 자세한 정보를 확인할 수 있어요:"
+      },
+      "quit": "OyasumiVR 종료",
+      "installAutomatically": "자동으로 설치",
+      "success": {
+        "title": "설치 성공",
+        "message": "누락된 필수 런타임이 성공적으로 설치되었어요. 계속하려면 OyasumiVR을 종료한 후 다시 실행해주세요."
+      },
+      "failure": {
+        "title": "설치 실패",
+        "message": "누락된 필수 런타임을 자동으로 설치할 수 없었어요. 수동으로 설치해 보시는 것을 권장드려요. 로그 파일에서 무엇이 잘못되었는지에 대한 자세한 정보를 확인할 수 있습니다.\n\n문제가 계속 발생하면 트위터 또는 Discord 서버에서 @Raphiiko에게 문의해 주세요."
       }
     }
   },
@@ -1177,6 +1267,72 @@
       },
       "title": "끄는중",
       "cancel": "취소"
+    }
+  },
+  "overlay": {
+    "dashboard": {
+      "overview": {
+        "sleepMode": "수면 모드",
+        "active": "활성",
+        "inactive": "비활성",
+        "tooltip": {
+          "automations": "자동화",
+          "deviceControl": "장치 제어",
+          "shutdown": "종료 시퀀스"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "title": "종료 시퀀스",
+          "message": "종료 시퀀스를 시작하려고 합니다.\n\n지금 이 작업을 수행하시겠어요?\n\n종료 시퀀스가 수행할 동작은 OyasumiVR 기본 창에서 설정할 수 있습니다.",
+          "start": "시퀀스 시작"
+        }
+      },
+      "deviceControl": {
+        "title": "장치 제어",
+        "turnOff": {
+          "AllControllers": "모든 컨트롤러\n끄기",
+          "AllTrackers": "모든 트래커\n끄기",
+          "AllControllersAndTrackers": "모든 컨트롤러와 트래커\n끄기"
+        }
+      },
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "title": "인바이트 리퀘스트 자동 수락",
+          "subtitle": {
+            "singular": "{{mode}}: {{playerCount}}명",
+            "plural": "{{mode}}: {{playerCount}}명"
+          },
+          "mode": {
+            "Disabled": "모두",
+            "Whitelist": "화이트리스트",
+            "Blacklist": "블랙리스트"
+          }
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "title": "스테이터스 자동화",
+          "subtitle": {
+            "singular": "최대 {{threshold}}명",
+            "plural": "최대 {{threshold}}명"
+          }
+        },
+        "sleepingAnimations": {
+          "title": "수면 애니메이션"
+        },
+        "shutdownAutomations": {
+          "title": "자동 종료",
+          "subtitle": "{{time}} 동안 잠들었을 때",
+          "seconds": {
+            "singular": "{{seconds}}초",
+            "plural": "{{seconds}}초"
+          },
+          "minutes": {
+            "singular": "{{minutes}}분",
+            "plural": "{{minutes}}분"
+          }
+        },
+        "title": "자동화 설정"
+      }
     }
   }
 }
