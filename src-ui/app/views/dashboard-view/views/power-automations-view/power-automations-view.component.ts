@@ -8,7 +8,6 @@ import { noop } from '../../../../utils/animations';
   animations: [noop()],
 })
 export class PowerAutomationsViewComponent {
-  // activeTab: 'CONTROLLERS_AND_TRACKERS' | 'BASE_STATIONS' | 'WINDOWS_POWER_POLICY' = 'CONTROLLERS_AND_TRACKERS';
   activeTab: 'CONTROLLERS_AND_TRACKERS' | 'BASE_STATIONS' | 'WINDOWS_POWER_POLICY' =
-    'WINDOWS_POWER_POLICY';
+    'CONTROLLERS_AND_TRACKERS';
 }

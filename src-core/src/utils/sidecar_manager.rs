@@ -1,8 +1,20 @@
-use log::{info, warn};
+use log::{error, info, warn};
 use std::sync::Arc;
 use std::time::Duration;
 use sysinfo::{Pid, PidExt, System, SystemExt};
 use tokio::sync::{mpsc, Mutex};
+
+const LAUNCH_RETRY_INTERVALS: [Duration; 9] = [
+    Duration::from_millis(100),
+    Duration::from_secs(1),
+    Duration::from_secs(2),
+    Duration::from_secs(5),
+    Duration::from_secs(10),
+    Duration::from_secs(30),
+    Duration::from_secs(60),
+    Duration::from_secs(120),
+    Duration::from_secs(300),
+];
 
 #[derive(Clone)]
 #[readonly::make]
@@ -16,6 +28,7 @@ pub struct SidecarManager {
     pub started: Arc<Mutex<bool>>,
     pub sidecar_pid: Arc<Mutex<Option<u32>>>,
     pub on_stop_tx: mpsc::Sender<()>,
+    pub auto_restart: bool,
 }
 
 impl SidecarManager {
@@ -24,6 +37,7 @@ impl SidecarManager {
         exe_dir: String,
         exe_file: String,
         on_stop_tx: mpsc::Sender<()>,
+        auto_restart: bool,
     ) -> Self {
         Self {
             sidecar_id,
@@ -35,20 +49,28 @@ impl SidecarManager {
             started: Arc::new(Mutex::new(false)),
             sidecar_pid: Arc::new(Mutex::new(None)),
             on_stop_tx,
+            auto_restart,
         }
     }
 
-    pub async fn start(&mut self) {
+    pub async fn start(&mut self, relaunch: bool) -> u32 {
         let core_grpc_port_guard = crate::grpc::SERVER_PORT.lock().await;
         let core_grpc_port = match core_grpc_port_guard.as_ref() {
             Some(port) => *port,
-            None => return,
+            None => return 0,
         };
-        if *self.active.lock().await {
-            return;
+        if !relaunch && *self.active.lock().await {
+            return 0;
         }
         *self.active.lock().await = true;
-        info!("[Core] Starting {} sidecar...", self.sidecar_id);
+        info!(
+            "[Core] {} {} sidecar...",
+            match relaunch {
+                true => "Restarting",
+                false => "Starting",
+            },
+            self.sidecar_id
+        );
         let exe_file = self.exe_file.clone();
         let exe_dir = self.exe_dir.clone();
         let exe_path = std::path::Path::new(&exe_dir).join(&exe_file);
@@ -61,7 +83,10 @@ impl SidecarManager {
             .spawn()
             .expect("Could not spawn command");
         *self.sidecar_pid.lock().await = Some(child.id());
-        self.watch_process();
+        if !relaunch {
+            self.watch_process();
+        }
+        child.id()
     }
 
     // The sidecar process is running
@@ -123,39 +148,72 @@ impl SidecarManager {
         let self_arc = Arc::new(Mutex::new(self.clone()));
 
         tokio::spawn(async move {
-            loop {
-                tokio::time::sleep(Duration::from_secs(1)).await;
-                let pid = match self_arc.lock().await.sidecar_pid.lock().await.as_ref() {
-                    Some(pid) => *pid,
-                    None => break,
-                };
+            let mut retries = 0;
+            let mut pid = {
                 let self_guard = self_arc.lock().await;
-                s.refresh_processes();
-                if s.process(Pid::from_u32(pid)).is_none() {
-                    let current_sidecar_pid_guard = &self_guard.sidecar_pid.lock().await;
-                    let current_sidecar_pid = current_sidecar_pid_guard.as_ref();
-                    if match current_sidecar_pid {
-                        Some(current_sidecar_pid) => *current_sidecar_pid == pid,
-                        None => true,
-                    } {
-                        let sidecar_pid = &self_guard.sidecar_pid;
-                        *sidecar_pid.lock().await = None;
-                        let grpc_port = &self_guard.grpc_port;
-                        *grpc_port.lock().await = None;
-                        let active = &self_guard.active;
-                        *active.lock().await = false;
-                        let started = &self_guard.started;
-                        *started.lock().await = false;
+                let value = match self_guard.sidecar_pid.lock().await.as_ref() {
+                    Some(pid) => pid.clone(),
+                    None => {
+                        error!("[Core] Tried watching non-existant sidecar process");
+                        return;
                     }
-                    let _ = &self_guard.on_stop_tx.send(());
-                    info!(
-                        "[Core] {} sidecar has stopped (pid={})",
-                        &self_guard.sidecar_id, pid
-                    );
-                    break;
+                };
+                value
+            };
+            loop {
+                loop {
+                    tokio::time::sleep(Duration::from_secs(1)).await;
+                    let self_guard = self_arc.lock().await;
+                    s.refresh_processes();
+                    if s.process(Pid::from_u32(pid)).is_none() {
+                        let current_sidecar_pid = {
+                            match self_guard.sidecar_pid.lock().await.as_ref() {
+                                Some(pid) => Some(*pid),
+                                None => None,
+                            }
+                        };
+                        // Check if the sidecar pid is still the same.
+                        // If it is, then we can assume the sidecar stopped.
+                        // If not, it likely got replaced by another instance of the sidecar.
+                        if match current_sidecar_pid {
+                            Some(current_sidecar_pid) => current_sidecar_pid == pid,
+                            None => true,
+                        } {
+                            let sidecar_pid = &self_guard.sidecar_pid;
+                            *sidecar_pid.lock().await = None;
+                            let grpc_port = &self_guard.grpc_port;
+                            *grpc_port.lock().await = None;
+                            let active = &self_guard.active;
+                            *active.lock().await = false;
+                            let started = &self_guard.started;
+                            *started.lock().await = false;
+                        }
+                        // Send signal that the sidecar has stopped
+                        let _ = &self_guard.on_stop_tx.send(());
+                        info!(
+                            "[Core] {} sidecar has stopped (pid={})",
+                            &self_guard.sidecar_id, pid
+                        );
+                        break;
+                    } else {
+                        retries = 0;
+                    }
+                    // Drop the lock here before the next iteration
+                    drop(self_guard);
                 }
-                // Drop the lock here before the next iteration
-                drop(self_guard);
+                // Automatically try restarting the sidecar if desired
+                if self_arc.lock().await.auto_restart {
+                    let retry_interval = LAUNCH_RETRY_INTERVALS[retries];
+                    tokio::time::sleep(retry_interval).await;
+                    retries += 1;
+                    if retries >= LAUNCH_RETRY_INTERVALS.len() {
+                        retries = LAUNCH_RETRY_INTERVALS.len() - 1;
+                    }
+                    // KICKSTART THE SIDECAR
+                    pid = self_arc.lock().await.start(true).await;
+                    continue;
+                }
+                break;
             }
         });
     }

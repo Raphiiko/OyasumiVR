@@ -18,19 +18,19 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
   protected readonly policyOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
-      label: 'None',
+      label: 'shared.common.none',
     },
     {
       id: 'POWER_SAVING',
-      label: 'Power Saving',
+      label: 'shared.misc.windowsPowerPolicy.POWER_SAVING',
     },
     {
       id: 'BALANCED',
-      label: 'Balanced',
+      label: 'shared.misc.windowsPowerPolicy.BALANCED',
     },
     {
       id: 'HIGH_PERFORMANCE',
-      label: 'High Performance',
+      label: 'shared.misc.windowsPowerPolicy.HIGH_PERFORMANCE',
     },
   ];
 

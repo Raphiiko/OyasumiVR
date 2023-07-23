@@ -2,7 +2,7 @@ pub mod commands;
 pub mod dotnet;
 mod models;
 
-use log::{error, info};
+use log::error;
 use soloud::*;
 use std::{collections::HashMap, sync::Mutex};
 use winapi::shared::guiddef::GUID;
@@ -45,12 +45,11 @@ fn active_windows_power_policy() -> Option<GUID> {
 }
 
 fn set_windows_power_policy(guid: &GUID) -> bool {
-    info!("[Core] Setting Windows power policy to {:?}", guid);
     let result = unsafe { PowerSetActiveScheme(std::ptr::null_mut(), guid) };
     if result != 0 {
         error!(
-            "[Core] Failed to set Windows power policy to {:?}. Result code {:?}",
-            guid, result
+            "[Core] Failed to set Windows power policy. Result code {:?}",
+            result
         );
     };
     result == 0

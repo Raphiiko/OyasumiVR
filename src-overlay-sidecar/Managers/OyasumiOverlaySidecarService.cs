@@ -47,4 +47,10 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
     StateManager.Instance.SyncState(request);
     return Task.FromResult(new Empty());
   }
+
+  public override Task<Empty> SetDebugTranslations(SetDebugTranslationsRequest request, ServerCallContext context)
+  {
+    BaseWebOverlay.DebugTranslations = request.Translations;
+    return Task.FromResult(new Empty());
+  }
 }

@@ -13,6 +13,7 @@ using Valve.VR;
 namespace overlay_sidecar;
 
 public class BaseWebOverlay {
+  public static string DebugTranslations = "";
   public OffScreenBrowser? Browser;
   protected bool UiReady;
   protected bool Disposed;
@@ -114,6 +115,11 @@ public class BaseWebOverlay {
   {
     UiReady = true;
     SyncState();
+  }
+
+  public string GetDebugTranslations()
+  {
+    return DebugTranslations;
   }
 
   public void SyncState(OyasumiSidecarState? state = null)

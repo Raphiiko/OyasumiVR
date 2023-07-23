@@ -12,8 +12,16 @@
       "close": "Close",
       "login": "Log in"
     },
+    "common": {
+      "none": "None"
+    },
     "misc": {
-      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
+      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account.",
+      "windowsPowerPolicy": {
+        "BALANCED": "Balanced",
+        "HIGH_PERFORMANCE": "High performance",
+        "POWER_SAVING": "Power saver"
+      }
     }
   },
   "brightness-automations": {
@@ -1141,11 +1149,6 @@
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          },
-          "policy": {
-            "BALANCED": "Balanced",
-            "HIGH_PERFORMANCE": "High performance",
-            "POWER_SAVING": "Power saver"
           }
         }
       }

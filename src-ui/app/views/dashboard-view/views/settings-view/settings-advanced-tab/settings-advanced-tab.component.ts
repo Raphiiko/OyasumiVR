@@ -23,6 +23,9 @@ import { invoke } from '@tauri-apps/api';
 import { relaunch } from '@tauri-apps/api/process';
 import { EventLogService } from '../../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
+import { IPCService } from '../../../../../services/ipc.service';
+import { firstValueFrom } from 'rxjs';
+import { SetDebugTranslationsRequest } from '../../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 
 @Component({
   selector: 'app-settings-advanced-tab',
@@ -52,7 +55,8 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
     private router: Router,
     private translate: TranslateService,
     private modalService: ModalService,
-    private eventLogService: EventLogService
+    private eventLogService: EventLogService,
+    private ipcService: IPCService
   ) {
     super(settingsService);
   }
@@ -128,7 +132,16 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
       });
       return;
     }
+    // Set translations in overlay sidecar
+    const client = await firstValueFrom(this.ipcService.overlaySidecarClient);
+    if (client) {
+      await client.setDebugTranslations({
+        translations: JSON.stringify(translations),
+      } as SetDebugTranslationsRequest);
+    }
+    // Set translations in main application
     this.translate.setTranslation('DEBUG', translations);
+    // Switch language to DEBUG
     this.setUserLanguage('DEBUG');
     await message('Translations have been loaded from ' + path, 'Translations loaded');
   }

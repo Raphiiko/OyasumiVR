@@ -10,6 +10,7 @@ service OyasumiOverlaySidecar {
   rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
   rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
   rpc SyncState (OyasumiSidecarState) returns (Empty) {}
+  rpc SetDebugTranslations(SetDebugTranslationsRequest) returns (Empty) {}
 }
 
 // Requests & Responses
@@ -28,6 +29,10 @@ message AddNotificationResponse {
 
 message ClearNotificationRequest {
   string notification_id = 1;
+}
+
+message SetDebugTranslationsRequest {
+  string translations = 1;
 }
 
 message Empty {

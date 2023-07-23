@@ -3,3 +3,6 @@ dist
 .angulardoc.json
 .vscode/*
 lib
+src-overlay-ui/build
+src-overlay-ui/node_modules
+src-overlay-ui/.svelte-kit

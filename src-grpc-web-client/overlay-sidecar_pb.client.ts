@@ -4,6 +4,7 @@
 import type { RpcTransport } from '@protobuf-ts/runtime-rpc';
 import type { ServiceInfo } from '@protobuf-ts/runtime-rpc';
 import { OyasumiOverlaySidecar } from './overlay-sidecar_pb';
+import type { SetDebugTranslationsRequest } from './overlay-sidecar_pb';
 import type { OyasumiSidecarState } from './overlay-sidecar_pb';
 import type { ClearNotificationRequest } from './overlay-sidecar_pb';
 import type { AddNotificationResponse } from './overlay-sidecar_pb';
@@ -46,6 +47,13 @@ export interface IOyasumiOverlaySidecarClient {
     input: OyasumiSidecarState,
     options?: RpcOptions
   ): UnaryCall<OyasumiSidecarState, Empty>;
+  /**
+   * @generated from protobuf rpc: SetDebugTranslations(OyasumiOverlaySidecar.SetDebugTranslationsRequest) returns (OyasumiOverlaySidecar.Empty);
+   */
+  setDebugTranslations(
+    input: SetDebugTranslationsRequest,
+    options?: RpcOptions
+  ): UnaryCall<SetDebugTranslationsRequest, Empty>;
 }
 /**
  * @generated from protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
@@ -115,5 +123,22 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     const method = this.methods[4],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<OyasumiSidecarState, Empty>('unary', this._transport, method, opt, input);
+  }
+  /**
+   * @generated from protobuf rpc: SetDebugTranslations(OyasumiOverlaySidecar.SetDebugTranslationsRequest) returns (OyasumiOverlaySidecar.Empty);
+   */
+  setDebugTranslations(
+    input: SetDebugTranslationsRequest,
+    options?: RpcOptions
+  ): UnaryCall<SetDebugTranslationsRequest, Empty> {
+    const method = this.methods[5],
+      opt = this._transport.mergeOptions(options);
+    return stackIntercept<SetDebugTranslationsRequest, Empty>(
+      'unary',
+      this._transport,
+      method,
+      opt,
+      input
+    );
   }
 }

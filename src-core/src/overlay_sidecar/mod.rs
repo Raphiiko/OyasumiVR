@@ -27,6 +27,7 @@ pub async fn init() {
         "resources/overlay-sidecar/".to_string(),
         "overlay-sidecar.exe".to_string(),
         tx,
+        true,
     ));
     // Listen for sidecar stop signals
     tokio::spawn(async move {
@@ -40,7 +41,7 @@ pub async fn init() {
         OverlaySidecarMode::Release => {
             let mut manager_guard = SIDECAR_MANAGER.lock().await;
             let manager = manager_guard.as_mut().unwrap();
-            manager.start().await;
+            manager.start(false).await;
         }
         // In development mode, we expect the sidecar to be started in development mode manually
         OverlaySidecarMode::Dev => {

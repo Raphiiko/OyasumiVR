@@ -9,7 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Overlay for native OyasumiVR notifications
+- Native OyasumiVR notifications
+- SteamVR overlay for controlling basic OyasumiVR functionality (e.g. toggling sleep mode, toggling automations, running
+  the shutdown sequence, turning off devices)
 - Notification for when an invite request is automatically accepted
 - Notification for when your VRChat status is updated by the status automation
 - Options for turning certain notification types on or off

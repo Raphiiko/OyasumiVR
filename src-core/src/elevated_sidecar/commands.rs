@@ -2,7 +2,7 @@
 pub async fn start_elevated_sidecar() {
     let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
     let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
-    sidecar_manager.start().await;
+    sidecar_manager.start(false).await;
 }
 
 #[tauri::command]

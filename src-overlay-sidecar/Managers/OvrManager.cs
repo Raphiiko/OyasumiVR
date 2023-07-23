@@ -268,7 +268,6 @@ public class OvrManager {
     await Utils.DelayedAction(() =>
     {
       if (!_active) return;
-      Console.WriteLine("Starting splash screen");
       new SplashOverlay();
     }, TimeSpan.FromSeconds(1));
   }

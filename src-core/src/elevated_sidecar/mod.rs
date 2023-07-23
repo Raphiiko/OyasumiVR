@@ -23,6 +23,7 @@ pub async fn init() {
         "resources/elevated-sidecar/".to_string(),
         "oyasumivr-elevated-sidecar.exe".to_string(),
         tx,
+        false,
     ));
     // Wait for sidecar stop signals
     tokio::spawn(async move {
