@@ -1141,11 +1141,6 @@
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
-          },
-          "policy": {
-            "BALANCED": "균형",
-            "HIGH_PERFORMANCE": "고사양",
-            "POWER_SAVING": "절전"
           }
         }
       }

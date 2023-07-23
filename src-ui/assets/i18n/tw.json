@@ -1021,16 +1021,6 @@
             "SLEEP_MODE_DISABLED": "由於睡眠模式被禁用"
           }
         },
-        "brightnessChanged": {
-          "title": {
-            "set": "頭盔亮度設置為{{value}}",
-            "transition": "頭盔亮度調整到{{value}}"
-          },
-          "reason": {
-            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
-            "SLEEP_MODE_DISABLED": "由於睡眠模式被禁用"
-          }
-        },
         "acceptedInviteRequest": {
           "title": "自動接受了來自'{{displayName}}的邀請請求",
           "subtitle": {
