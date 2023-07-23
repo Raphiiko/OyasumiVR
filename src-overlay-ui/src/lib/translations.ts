@@ -16,6 +16,7 @@ function getTranslationLoader(locale: string): () => Promise<Record<any, any>> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const config: Config<{ [s: string]: any }> = {
   fallbackLocale: "en",
+  cache: 0,
   log: {
     level: "error"
   },
@@ -31,5 +32,6 @@ const config: Config<{ [s: string]: any }> = {
 export const { t, locale, loading, translations, locales, addTranslations, loadTranslations } = new i18n(config);
 
 export async function loadDebugTranslations() {
+  await loadTranslations("en", "");
   await loadTranslations("DEBUG", "");
 }
