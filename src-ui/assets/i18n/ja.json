@@ -18,9 +18,9 @@
     "misc": {
       "vrcLoginRequired": "VRChatアカウントでログインする必要があります。",
       "windowsPowerPolicy": {
-        "BALANCED": "Balanced",
-        "HIGH_PERFORMANCE": "High performance",
-        "POWER_SAVING": "Power saver"
+        "BALANCED": "バランス",
+        "HIGH_PERFORMANCE": "高パフォーマンス",
+        "POWER_SAVING": "省電力"
       }
     }
   },
