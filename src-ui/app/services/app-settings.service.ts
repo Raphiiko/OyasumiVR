@@ -47,6 +47,9 @@ export class AppSettingsService {
       settings = this._settings.value;
       loadedDefaults = true;
     }
+    if (settings.userLanguage === 'DEBUG') {
+      settings.userLanguage = 'en';
+    }
     this._settings.next(settings);
     await this.saveSettings();
     this._loadedDefaults.next(loadedDefaults);
