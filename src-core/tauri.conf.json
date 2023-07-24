@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "OyasumiVR",
-    "version": "0.0.0"
+    "version": "1.8.0"
   },
   "tauri": {
     "allowlist": {
@@ -169,7 +169,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/DEV (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.8.0 (https://github.com/Raphiiko/OyasumiVR)"
       },
       {
         "width": 700,
@@ -181,7 +181,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/DEV (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.8.0 (https://github.com/Raphiiko/OyasumiVR)"
       }
     ]
   }
