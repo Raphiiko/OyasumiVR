@@ -5,25 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.8.0]
 
 ### Added
 
-- Native OyasumiVR notifications
 - SteamVR overlay for controlling basic OyasumiVR functionality (e.g. toggling sleep mode, toggling automations, running
   the shutdown sequence, turning off devices)
+- Native OyasumiVR notifications
+- Image brightness automations for all headsets
+- Automations for changing Windows' Power Policy when you go to sleep and wake up.
 - Notification for when an invite request is automatically accepted
 - Notification for when your VRChat status is updated by the status automation
 - Options for turning certain notification types on or off
-- Image brightness automations for all headsets
-- If the main window is minimized to the tray, it will reveal itself when the user tries to launch a second instance.
 - Startup check for missing (.NET) runtimes, with option for automatic installation.
-- Automations for changing Windows' Power Policy when you go to sleep and wake up.
 - Event log entry when MSI Afterburner profiles are set.
 
 ### Changed
 
 - Changed SteamVR-based power automations for base stations to apply when new base stations are discovered
+- If the main window is minimized to the tray, it will reveal itself when the user tries to launch a second instance.
 - Disabled notification sound for XSOverlay notifications
 - Switched to dynamic font loading to decrease overall application size
 - Switched sidecar communication from HTTP to gRPC
