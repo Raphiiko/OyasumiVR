@@ -12,12 +12,47 @@
       "close": "Sluiten",
       "login": "Log in"
     },
+    "common": {
+      "none": "Geen"
+    },
     "misc": {
-      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account.",
+      "windowsPowerPolicy": {
+        "BALANCED": "Gebalanceerd",
+        "HIGH_PERFORMANCE": "Hoge prestaties",
+        "POWER_SAVING": "Energiebesparing"
+      }
     }
   },
   "brightness-automations": {
     "title": "Helderheid Automatiseringen",
+    "tabs": {
+      "imageBrightness": "Beeldhelderheid",
+      "displayBrightness": "Schermhelderheid"
+    },
+    "displayBrightness": {
+      "description": "OyasumiVR kan automatisch de schermhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nHet aanpassen van de schermhelderheid bestuurt de fysieke helderheid van het LCD paneel in je headset, in plaats van alleen het beeld te verduisteren. Het aanpassen van schermhelderheid is alleen beschikbaar op de Valve Index.",
+      "indexWarning": "Zorg er voor dat je Valve Index is aangesloten en dat SteamVR is opgestart.",
+      "onSleepEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Pas de schermhelderheid aan"
+      },
+      "onSleepDisable": {
+        "title": "Wanneer ik wakker word",
+        "description": "Pas de schermhelderheid aan"
+      }
+    },
+    "imageBrightness": {
+      "description": "OyasumiVR kan automatisch de beeldhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nBeeldhelderheid past de helderheid aan van het beeld dat wordt getoont, in plaats van de helderheid van het scherm zelf. In tegenstelling tot het aanpassen van schermhelderheid, is het aanpassen van de beeldhelderheid beschikbaar op elke VR headset. ",
+      "onSleepEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Pas de beeldhelderheid aan"
+      },
+      "onSleepDisable": {
+        "title": "Wanneer ik wakker word",
+        "description": "Pas de beeldhelderheid aan"
+      }
+    },
     "brightness": {
       "title": "Zet de helderheid naar",
       "description": ""
@@ -107,6 +142,7 @@
         },
         "sensitivity": {
           "title": "Gevoeligheid",
+          "description": "Hoe gevoeliger de slaap detectie, hoe groter de kans is dat OyasumiVR je als slapend detecteert.",
           "presets": {
             "LOWEST": "Laagst",
             "LOW": "Laag",
@@ -116,7 +152,8 @@
           }
         },
         "sleepCheck": {
-          "title": "Vraag of ik nog wakker ben voordat de slaap modus wordt ingeschakeld"
+          "title": "Vraag of ik nog wakker ben voordat de slaap modus wordt ingeschakeld",
+          "description": "Stuurt je een notificatie met de vraag of je nog wakker bent voordat de slaap modus wordt ingeschakeld."
         },
         "detectionWindow": {
           "title": "Detectie venster",
@@ -216,6 +253,23 @@
   },
   "power-automations": {
     "title": "Energie Automatiseringen",
+    "tabs": {
+      "controllersAndTrackers": "Controllers & Trackers",
+      "baseStations": "Base Stations",
+      "windowsPowerPolicy": "Energiebeheer"
+    },
+    "windowsPowerPolicy": {
+      "description": "OyasumiVR kan automatisch het actieve energiebeheerschema van Windows aanpassen wanneer je gaat slapen of wakker wordt. Dit kan handig zijn om je stroomverbruik te verminderen wanneer je slaapt, en een beter presterend schema te activeren wanneer je weer wakker word.",
+      "automations": "Automatiseringen",
+      "sleepModeEnable": {
+        "title": "Wanneer ik ga slapen",
+        "description": "Stel het volgende energiebeheerschema in"
+      },
+      "sleepModeDisable": {
+        "title": "Wanneer ik wakker word",
+        "description": "Stel het volgende energiebeheerschema in"
+      }
+    },
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "Wanneer ik ga slapen",
@@ -230,10 +284,6 @@
         "optionControllers": "Controllers uitzetten",
         "optionTrackers": "Trackers uitzetten"
       }
-    },
-    "tabs": {
-      "controllersAndTrackers": "Controllers & Trackers",
-      "baseStations": "Base Stations"
     },
     "lighthousePowerOn": {
       "title": "Base stations aanzetten",
@@ -494,6 +544,33 @@
             }
           }
         }
+      },
+      "overlay": {
+        "activation": {
+          "title": "Activatie actie",
+          "description": "Selecteer welke actie de overlay zal openen en sluiten",
+          "action": {
+            "none": "Geen (uitgeschakeld)",
+            "singleA": "A (Enkel)",
+            "doubleA": "A (Dubbel)",
+            "tripleA": "A (Driedubbel)",
+            "singleB": "B (Enkel)",
+            "doubleB": "B (Dubbel)",
+            "tripleB": "B (Driedubbel)"
+          },
+          "controller": {
+            "either": "Beide Controllers",
+            "left": "Linker COntroller",
+            "right": "Rechter Controller",
+            "title": "Controller",
+            "description": "Selecteer welke controllers gebruikt kunnen worden om de overlay te openen"
+          },
+          "triggerFilter": {
+            "title": "Vereis trigger",
+            "description": "Vereis dat de trigger ingedrukt is om de overlay te openen"
+          }
+        },
+        "title": "Overlay"
       }
     },
     "vrchat": {
@@ -557,6 +634,35 @@
           "externalControl": {
             "title": "Externe aansturing",
             "description": "Stuur OyasumiVR features extern aan via <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
+          }
+        }
+      }
+    },
+    "notifications": {
+      "title": "Notificatie instellingen",
+      "provider": {
+        "title": "Notificatie Provider",
+        "description": "Selecteer welke provider gebruikt wordt voor het versturen van notificaties"
+      },
+      "notifications": {
+        "title": "Ingeschakelde Notificaties",
+        "description": "Selecteer welke notificaties je wilt ontvangen",
+        "category": {
+          "SLEEP_MODE_ENABLED": {
+            "title": "Slaap Modus Uitgeschakeld",
+            "description": "Ontvang een notificatie wanneer de slaap modus wordt ingeschakeld"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "title": "Slaap Modus Uitgeschakeld",
+            "description": "Ontvang een notificatie wanneer de slaap modus wordt uitgeschakeld"
+          },
+          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
+            "title": "VRChat Status Aangepast (Speler Limiet)",
+            "description": "Ontvang een notificatie wanneer OyasumiVR automatisch je VRChat status heeft aangepast"
+          },
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "title": "Invite Request Automatisch Geaccepteerd",
+            "description": "Ontvang een notificatie wanneer OyasumiVR automatisch iemands invite request heeft geaccepteerd"
           }
         }
       }
@@ -687,13 +793,28 @@
       "content": "De slaap modus wordt over 20 seconden ingeschakeld. Slaap je al?\n\n(Schud nee om dit te annuleren)"
     },
     "sleepCheckCancel": {
-      "content": "Automatische activering van de slaap modus is geannuleerd."
+      "content": "Automatische activering van de slaap modus is geannuleerd"
     },
     "sleepModeEnabled": {
-      "content": "De slaap modus is geactiveerd."
+      "content": "De slaap modus is geactiveerd"
     },
     "sleepModeDisabled": {
-      "content": "De slaap modus is gedeactiveerd."
+      "content": "De slaap modus is gedeactiveerd"
+    },
+    "vrcStatusChangedPlayerCount": {
+      "content": "Je VRChat status is veranderd naar '{{newStatus}}'"
+    },
+    "autoAcceptedInviteRequest": {
+      "content": "Invite request van '{{username}}' is automatisch geaccepteerd"
+    },
+    "turningOffControllers": {
+      "content": "Je controllers worden uitgeschakeld"
+    },
+    "turningOffTrackers": {
+      "content": "Je trackers worden uitgeschakeld"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "Beide je controllers en trackers worden uitgeschakeld"
     }
   },
   "comp": {
@@ -741,6 +862,7 @@
     "device-list": {
       "title": "Apparaten",
       "turnOffAll": "ALLE",
+      "noDevices": "Geen apparaten gedetecteerd",
       "category": {
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
@@ -947,6 +1069,26 @@
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
           }
         },
+        "imageBrightnessChanged": {
+          "title": {
+            "set": "De beeldhelderheid is ingesteld op {{value}}",
+            "transition": "De beeldhelderheid wordt veranderd naar {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
+        "displayBrightnessChanged": {
+          "title": {
+            "set": "De schermhelderheid is ingesteld op {{value}}",
+            "transition": "De schermhelderheid wordt veranderd naar {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
         "acceptedInviteRequest": {
           "title": "Invite request van '{{displayName}}' automatisch geaccepteerd",
           "subtitle": {
@@ -994,7 +1136,42 @@
           "reason": {
             "MANUAL": "Handmatig geannuleerd"
           }
+        },
+        "msiAfterburnerProfileSet": {
+          "title": "MSI Afterburner profiel is ingesteld op profiel '{{profile}}'",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "title": "Het Windows energiebeheerschema is ingesteld op '{{policy}}'",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
+          }
         }
+      }
+    },
+    "dotnet-upgrade-modal": {
+      "title": "Installeer Vereiste Runtimes",
+      "description": {
+        "text1": "De volgende runtimes die OyasumiVR nodig heeft om te draaien, zijn niet geïnstalleerd, of niet up to date genoeg:",
+        "runtimeQueued": "In de wachtrij",
+        "text2": "Om gebruik te kunnen maken van OyasumiVR moet je deze runtimes eerst installeren.",
+        "automaticInstall": "Wil je dat OyasumiVR deze automatisch voor je probeert te installeren?",
+        "noAutomaticInstall": "OyasumiVR kon de meest recente versies van deze runtimes niet bepalen, en kan ze daarom niet automatisch voor je installeren. Installeer ze handmatig, of start OyasumiVR later opnieuw om nog eens te checken.",
+        "moreInfo": "Je kunt downloads voor deze runtimes en meer informatie vinden op de volgende pagina:"
+      },
+      "quit": "Sluit OyasumiVR",
+      "installAutomatically": "Installeer Automatisch",
+      "success": {
+        "title": "Installatie Gelukt",
+        "message": "De missende runtimes zijn succesvol geïnstalleerd. Sluit OyasumiVR en start het opnieuw om verder te gaan."
+      },
+      "failure": {
+        "title": "Installatie Mislukt",
+        "message": "De missende runtimes konden niet automatisch worden geinstalleerd. Installeer ze a.u.b. handmatig. Je kunt de logbestanden checken voor meer informatie over wat er mis ging.\n\nAls het je niet lukt om dit te doen en OyasumiVR draaiende te krijgen, neem dan a.u.b. contact op met @Raphiiko op Twitter, of in onze Discord server."
       }
     }
   },
@@ -1100,7 +1277,64 @@
       "overview": {
         "sleepMode": "Slaap Modus",
         "active": "Actief",
-        "inactive": "Inactief"
+        "inactive": "Inactief",
+        "tooltip": {
+          "automations": "Automatiseringen",
+          "deviceControl": "Apparaat Beheer",
+          "shutdown": "Afsluit Procedure"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "title": "Afsluit Procedure",
+          "message": "Je staat op het punt om de afsluit procedure te starten\nWeet je zeker dat je dit nu wilt doen?\n\nJe kunt configureren welke acties deel zijn van de afsluit procedure in Oyasumi's desktop venster.",
+          "start": "Start Procedure"
+        }
+      },
+      "deviceControl": {
+        "title": "Apparaat Beheer",
+        "turnOff": {
+          "AllControllers": "Alle controllers\nuitschakelen",
+          "AllTrackers": "Alle trackers\nuitschakelen",
+          "AllControllersAndTrackers": "Alle controllers en trackers\nuitschakelen"
+        }
+      },
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "title": "Automatisch Invite Requests Accepteren",
+          "subtitle": {
+            "singular": "{{mode}}: {{playerCount}} vriend",
+            "plural": "{{mode}}: {{playerCount}} vrienden"
+          },
+          "mode": {
+            "Disabled": "Van iedereen",
+            "Whitelist": "Whitelist",
+            "Blacklist": "Blacklist"
+          }
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "title": "Status Automatiseringen",
+          "subtitle": {
+            "singular": "Max {{threshold}} speler",
+            "plural": "Max {{threshold}} spelers"
+          }
+        },
+        "sleepingAnimations": {
+          "title": "Slaap Animaties"
+        },
+        "shutdownAutomations": {
+          "title": "Automatische Afsluit Procedure",
+          "subtitle": "Wanneer je slaapt voor {{time}}",
+          "seconds": {
+            "singular": "{{seconds}} seconde",
+            "plural": "{{seconds}} seconden"
+          },
+          "minutes": {
+            "singular": "{{minutes}} minuut",
+            "plural": "{{minutes}} minuten"
+          }
+        },
+        "title": "Automatiseringen"
       }
     }
   }

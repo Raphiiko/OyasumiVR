@@ -18,5 +18,6 @@ export class UserUpdateHandler implements VRChatEventHandler {
     } = JSON.parse(contentString);
     // Update the current user
     this.vrchat.patchCurrentUser(content.user);
+    this.vrchat.receivedUserUpdate();
   }
 }

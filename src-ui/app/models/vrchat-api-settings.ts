@@ -1,7 +1,5 @@
 export interface VRChatApiSettings {
-  version: 1;
-  apiKey?: string;
-  apiKeyExpiry?: number;
+  version: 2;
   authCookie?: string;
   authCookieExpiry?: number;
   twoFactorCookie?: string;
@@ -9,5 +7,5 @@ export interface VRChatApiSettings {
 }
 
 export const VRCHAT_API_SETTINGS_DEFAULT: VRChatApiSettings = {
-  version: 1,
+  version: 2,
 };

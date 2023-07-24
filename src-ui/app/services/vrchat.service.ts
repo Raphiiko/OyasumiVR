@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@tauri-apps/api/http';
-import { APIConfig, CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
+import { CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE, SETTINGS_KEY_VRCHAT_API } from '../globals';
@@ -30,7 +30,7 @@ import { error, info, warn } from 'tauri-plugin-log-api';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const MAX_VRCHAT_FRIENDS = 65536;
-export type VRChatServiceStatus = 'PRE_INIT' | 'ERROR' | 'LOGGED_OUT' | 'LOGGED_IN';
+export type VRChatServiceStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 @Injectable({
   providedIn: 'root',
@@ -58,6 +58,7 @@ export class VRChatService {
         DELETE_NOTIFICATION: 3,
         INVITE: 6,
         LIST_FRIENDS: 15,
+        POLL_USER: 1,
       },
     },
   });
@@ -76,6 +77,8 @@ export class VRChatService {
     'VRCHAT_FRIENDS'
   );
   private _notifications: Subject<Notification> = new Subject<Notification>();
+  private _userStatusLastUpdated = new BehaviorSubject<number>(0);
+  private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
@@ -97,10 +100,6 @@ export class VRChatService {
     this.userAgent = `OyasumiVR/${await getVersion()} (https://github.com/Raphiiko/OyasumiVR)`;
     // Setup socket connection management
     await this.manageSocketConnection();
-    // Fetch the api config if needed
-    if (!this.settings.value.apiKey) await this.fetchApiConfig();
-    // If we could not, error out (reinit required)
-    if (this._status.value === 'ERROR') return;
     // Load existing session if possible
     await this.loadSession();
     // Depending on if we have a user, set the status
@@ -114,6 +113,8 @@ export class VRChatService {
     }
     // Process VRChat log events
     await this.subscribeToLogEvents();
+    // Poll user for updating status
+    await this.pollUserForStatus();
   }
 
   //
@@ -251,6 +252,7 @@ export class VRChatService {
     if (!currentUser) return;
     Object.assign(currentUser, user);
     this._user.next(currentUser);
+    if (user.status) this._userStatusLastUpdated.next(Date.now());
   }
 
   public async handleNotification(notification: Notification) {
@@ -365,6 +367,25 @@ export class VRChatService {
   //
   // INTERNALS
   //
+
+  private async pollUserForStatus() {
+    interval(5000).subscribe(async () => {
+      if (this._status.value !== 'LOGGED_IN' || !this._user.value) return;
+      // If we have received a user update event in the past half hour or so,
+      // we can assume the update events are working, so we don't need to poll.
+      // We'll only poll if we haven't received an update in the past half hour.
+      if (Date.now() - this._userStatusLastUpdated.value < 60000 * 30) return;
+      // Only refetch every two minutes, if needed
+      const lastStatusUpdate = this._userStatusLastUpdated.value;
+      if (lastStatusUpdate === 0 && Date.now() - lastStatusUpdate < 60000 * 1) return;
+      // Refetch the user
+      const result = await this.apiCallQueue.queueTask<CurrentUser>({
+        typeId: 'POLL_USER',
+        runnable: () => this.getCurrentUser(undefined, true),
+      });
+      if (!result.error && result.result) this.patchCurrentUser(result.result);
+    });
+  }
 
   private async subscribeToLogEvents() {
     this.logService.logEvents.subscribe((event) => {
@@ -569,28 +590,14 @@ export class VRChatService {
     // Cache the user
     const user = response.data as CurrentUser;
     this._currentUserCache.set(user);
+    this._userStatusLastUpdated.next(Date.now());
     // Otherwise, return the fetched user
     return user;
-  }
-
-  private async fetchApiConfig() {
-    const response = await this.http.get<APIConfig>(`${BASE_URL}/config`, {
-      responseType: ResponseType.JSON,
-      headers: this.getDefaultHeaders(),
-    });
-    if (response.ok) {
-      // Store config if we end up needing it in the future
-      await this.parseResponseCookies(response);
-    } else {
-      warn('[VRChat] Could not fetch API config. Disabling module.');
-      this._status.next('ERROR');
-    }
   }
 
   private getDefaultHeaders(allow2FACookie = true): Record<string, string> {
     const settings = this.settings.value;
     const cookies = [];
-    if (settings.apiKey) cookies.push(serializeCookie('apiKey', settings.apiKey));
     if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
     if (settings.twoFactorCookie && allow2FACookie)
       cookies.push(serializeCookie('twoFactor', settings.twoFactorCookie));
@@ -605,12 +612,6 @@ export class VRChatService {
       for (const cookie of cookies) {
         const expiry = Math.floor((cookie.expires || new Date()).getTime() / 1000);
         switch (cookie.name) {
-          case 'apiKey':
-            await this.updateSettings({
-              apiKey: cookie.value,
-              apiKeyExpiry: Math.floor(Date.now() / 1000) + 3600, // Always shift this one hour into the future
-            });
-            break;
           case 'auth':
             await this.updateSettings({
               authCookie: cookie.value,
@@ -635,11 +636,6 @@ export class VRChatService {
     settings = settings ? migrateVRChatApiSettings(settings) : this.settings.value;
     // Handle cookie expiry
     this.loginExpired = false;
-    if (settings.apiKeyExpiry && settings.apiKeyExpiry < Date.now() / 1000) {
-      info('[VRChat] API key expired, throwing it away.');
-      settings.apiKey = undefined;
-      settings.apiKeyExpiry = undefined;
-    }
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
       info('[VRChat] Auth cookie expired, throwing it away.');
       settings.authCookie = undefined;
@@ -691,5 +687,13 @@ export class VRChatService {
 
     client.request = requestWrapper.bind(client);
     return client;
+  }
+
+  receivedUserUpdate() {
+    // We keep track of when the last `user-update` socket event was received
+    // because if we received these, we know we don't have to poll.
+    // There are some cases where users don't receive these events, in which case we need to poll.
+    // If we receive at least one, we know these events are working and we can disable polling.
+    this._userUpdateEventLastReceived.next(Date.now());
   }
 }

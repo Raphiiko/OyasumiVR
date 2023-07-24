@@ -19,6 +19,7 @@ import {
 import { clamp } from '../../../../utils/number-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ModalService } from 'src-ui/app/services/modal.service';
+import { vrcStatusToString } from '../../../../utils/status-utils';
 
 @Component({
   selector: 'app-status-automations-view',
@@ -37,28 +38,28 @@ export class StatusAutomationsViewComponent implements OnInit {
   statusOptions: SelectBoxItem[] = [
     {
       id: 'join me',
-      label: 'Join Me',
+      label: vrcStatusToString(UserStatus.JoinMe),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons-round" style="color: var(--color-vrchat-status-blue); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'active',
-      label: 'Online',
+      label: vrcStatusToString(UserStatus.Active),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons-round" style="color: var(--color-vrchat-status-green); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'ask me',
-      label: 'Ask Me',
+      label: vrcStatusToString(UserStatus.AskMe),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons-round" style="color: var(--color-vrchat-status-orange); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),
     },
     {
       id: 'busy',
-      label: 'Do Not Disturb',
+      label: vrcStatusToString(UserStatus.Busy),
       htmlPrefix: this.sanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons-round" style="color: var(--color-vrchat-status-red); font-size: 1.25em; margin-right: 0.25em;">brightness_1</i>'
       ),

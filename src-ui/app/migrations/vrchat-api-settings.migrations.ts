@@ -4,6 +4,7 @@ import { info } from 'tauri-plugin-log-api';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
+  2: from1To2,
 };
 
 export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
@@ -32,6 +33,13 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
     }
   });
   return data as VRChatApiSettings;
+}
+
+function from1To2(data: any): any {
+  delete data['apiKey'];
+  delete data['apiKeyExpiry'];
+  data.version = 2;
+  return data;
 }
 
 function toLatest(data: any): any {

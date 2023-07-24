@@ -587,9 +587,6 @@
           "subtext": "You are currently not logged in with your VRChat account.",
           "logIn": "Log in"
         },
-        "errors": {
-          "initError": "The VRChat module could not be initialised. Please ensure you have internet connectivity and restart OyasumiVR at a later time to try again."
-        },
         "disclaimers": {
           "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.",
           "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
@@ -658,11 +655,11 @@
           },
           "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
             "title": "VRChat Status Updated (Player Limit Automation)",
-            "description": "Get a notification when Oyasumi has automatically updated your VRChat status"
+            "description": "Get a notification when OyasumiVR has automatically updated your VRChat status"
           },
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "title": "Automatically Accepted Invite-Request",
-            "description": "Get a notification when Oyasumi has automatically accepted someones invite request"
+            "description": "Get a notification when OyasumiVR has automatically accepted someones invite request"
           }
         }
       }
@@ -1171,7 +1168,7 @@
       },
       "failure": {
         "title": "Installation Failed",
-        "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. You can check the log files for more information on what went wrong.\n\nIf you continue to experience issues, please reach out to @Raphiiko on Twitter, or in our Discord Server."
+        "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. You can check the log files for more information on what went wrong.\n\nIf you continue to experience issues, please reach out to @Raphiiko on Twitter, or in our Discord server."
       }
     }
   },

@@ -4,6 +4,7 @@ import {
   EventLogType,
 } from '../../../models/event-log-entry';
 import { UserStatus } from 'vrchat';
+import { vrcStatusToString } from '../../../utils/status-utils';
 
 export class EventLogStatusChangedOnPlayerCountChangeEntryParser extends EventLogEntryParser<EventLogStatusChangedOnPlayerCountChange> {
   entryType(): EventLogType {
@@ -20,8 +21,12 @@ export class EventLogStatusChangedOnPlayerCountChangeEntryParser extends EventLo
     const oldStatusColor = this.getStatusColor(entry.oldStatus);
     const newStatusColor = this.getStatusColor(entry.newStatus);
     return {
-      oldStatus: `<i class="material-icons-round" style="color: ${oldStatusColor}">brightness_1</i><span>${entry.oldStatus}</span>`,
-      newStatus: `<i class="material-icons-round" style="color: ${newStatusColor}">brightness_1</i><span>${entry.newStatus}</span>`,
+      oldStatus: `<i class="material-icons-round" style="color: ${oldStatusColor}">brightness_1</i><span>${vrcStatusToString(
+        entry.oldStatus
+      )}</span>`,
+      newStatus: `<i class="material-icons-round" style="color: ${newStatusColor}">brightness_1</i><span>${vrcStatusToString(
+        entry.newStatus
+      )}</span>`,
     };
   }
 
