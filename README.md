@@ -157,7 +157,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
           <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
         </li>
         <li>
-          <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franada">franada</a>
+          <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
         </li>
       </ul>
       <br>
