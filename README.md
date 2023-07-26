@@ -117,6 +117,29 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
   </tr>
 </table>
 
+### 🔌 GPU Automations
+<table>
+  <tr>
+    <td>
+      <b>GPU Power Limiting</b>
+      <br>
+      Save electricity by automatically power limiting your GPU when you go to sleep, and restoring its full power when you wake up! Simply set the desired watt limits and OyasumiVR will set them when needed.
+      <br><br>
+      <i>Power limiting is only available on Nvidia GPUs. AMD users can instead make use of the MSI Afterburner automations.</i>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ad20df81-ebb7-48f3-927d-afa007131e6c"></td>
+  </tr>
+  <tr>
+    <td>
+      <b>MSI Afterburner</b>
+      <br>
+      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in [MSI Afterburner](https://www.msi.com/Landing/afterburner/).
+      Tweak your over- or underclocks, power limits and more, and have OyasumiVR call for them when you go to sleep, or wake up!
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
+  </tr>
+</table>
+
 ### 💫 VRChat Automations
 <table>
   <tr>
@@ -177,29 +200,6 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
   </tr>
 </table>
 
-### 🔌 GPU Automations
-<table>
-  <tr>
-    <td>
-      <b>GPU Power Limiting</b>
-      <br>
-      Save electricity by automatically power limiting your GPU when you go to sleep, and restoring its full power when you wake up! Simply set the desired watt limits and OyasumiVR will set them when needed.
-      <br><br>
-      <i>Power limiting is only available on Nvidia GPUs. AMD and Intel users can instead make use of the MSI Afterburner automations.</i>
-    </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ad20df81-ebb7-48f3-927d-afa007131e6c"></td>
-  </tr>
-  <tr>
-    <td>
-      <b>MSI Afterburner</b>
-      <br>
-      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in [MSI Afterburner](https://www.msi.com/Landing/afterburner/).
-      Tweak your over- or underclocks, power limits and more, and have OyasumiVR call for them when you go to sleep, or wake up!
-    </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
-  </tr>
-</table>
-
 ### ⛔ Shutdown Sequence
 <table>
   <tr>
@@ -248,7 +248,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 <table>
   <tr>
     <td>
-      Automatically adjust the fade distance of SteamV's chaperone when you sleep! If you have a small play area, you can use this to deactivate the chaperone while you are asleep, and re-enable it when you wake up.
+      Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
   </tr>
@@ -265,11 +265,11 @@ OyasumiVR currently supports the following languages:
 - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack))
 
-_(\*) This is a community supported language, and thus the translations might not always be 100% complete with each and every update._
+_(\*) This is a community supported language, which means translations might not always be 100% complete with each and every update._
 
 ### Help out with translation
 
-OyasumiVR would not have supported as many languages as it does without the help of our fantastic volunteers. I personally think it's fantastic that thanks to their efforts, more people get to use OyasumiVR than would otherwise have been possible.
+OyasumiVR would not have supported as many languages as it does without the help of our fantastic volunteers. I personally think it's amazing that thanks to their efforts, more people get to use OyasumiVR than would otherwise have been possible.
 
 If you want to support us, either by contributing missing translations, or by adding an entirely new language, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started! In case you're looking for more information, please don't hesitate to hop in our [Discord](https://discord.gg/7MqdPJhYxC) and ask!
 
