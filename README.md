@@ -328,6 +328,11 @@ OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of 
 
 The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
 
+## Support
+If you are having trouble with OyasumiVR, say you have a bug, or a feature request, you can join our [Discord server](https://discord.gg/7MqdPJhYxC).
+
+Alternatively, you can reach out to me directly on [Twitter at @Raphiiko](https://twitter.com/Raphiiko). I'll try to get back to you as soon as possible!
+
 ## License
 
-OyasumiVR is available under the [MIT](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE.md) license.
+OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.
