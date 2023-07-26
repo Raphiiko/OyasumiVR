@@ -132,7 +132,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
     <td>
       <b>MSI Afterburner</b>
       <br>
-      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in [MSI Afterburner](https://www.msi.com/Landing/afterburner/).
+      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>.
       Tweak your over- or underclocks, power limits and more, and have OyasumiVR call for them when you go to sleep, or wake up!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
