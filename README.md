@@ -56,8 +56,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 <table>
   <tr>
     <td>
-      OyasumiVR can detect automatically when you are asleep, based on your movement! 
-      <br>Simply calibrate once, enable the automation, and you're set.
+      OyasumiVR can detect automatically when you are asleep, based on your movement! Simply calibrate once, enable the automation, and you're set.
       <br><br>
       If automatic detection is not what you're looking for, there's various alternative automations you can use, that are based on:
       <br><br>
