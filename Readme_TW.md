@@ -236,25 +236,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      ### 👓 Resolution Automations
-<table>
-  <tr>
-    <td>
       Automatically adjust your SteamVR render resolution when you sleep and wake up! Having OyasumiVR lower your render resolution helps you reduce the load on your hardware at times when you don't need it.
-    </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/fd6a29e2-54fd-428d-8358-63ab9aa73d10"></td>
-  </tr>
-</table>
-
-### 🔳 Chaperone Automations
-<table>
-  <tr>
-    <td>
-      Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
-    </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
-  </tr>
-</table>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/fd6a29e2-54fd-428d-8358-63ab9aa73d10"></td>
   </tr>
