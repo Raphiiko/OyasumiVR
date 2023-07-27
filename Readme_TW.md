@@ -228,59 +228,45 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
       <br><br>
       這不僅有助於你在 VR 中入睡，還可以避免在醒來時眼睛受到強烈的亮度刺激。
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/d76719c9-8b6c-4e64-bb38-cc160d39e6d3"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1f9bd880-507d-405f-97fb-525b3a9e195b"></td>
   </tr>
 </table>
 
-### 🔊 音量自動化
+### 👓 Resolution Automations
 <table>
   <tr>
     <td>
-      與亮度自動化類似，OyasumiVR 還可以平滑地過渡 VR 頭盔的音量。
-      <br><br>
-      你可以在入睡和醒來時自動調整音量，這樣就不會在入睡或醒來時被突然的聲音驚醒。
+      ### 👓 Resolution Automations
+<table>
+  <tr>
+    <td>
+      Automatically adjust your SteamVR render resolution when you sleep and wake up! Having OyasumiVR lower your render resolution helps you reduce the load on your hardware at times when you don't need it.
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/78d72a2a-532d-45f6-91d7-0a3cc94d59f6"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/fd6a29e2-54fd-428d-8358-63ab9aa73d10"></td>
   </tr>
 </table>
 
-### ⏰ 自動時間表
+### 🔳 Chaperone Automations
 <table>
   <tr>
     <td>
-      如果你希望在特定時間啟用或禁用入睡模式，OyasumiVR 的自動時間表功能非常適合你！
-      <br><br>
-      設定特定的時間，OyasumiVR 會在指定的時間啟用或禁用入睡模式。
+      Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/b5e4b83a-ae80-481a-aef1-688f44448c6e"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
+  </tr>
+</table>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/fd6a29e2-54fd-428d-8358-63ab9aa73d10"></td>
   </tr>
 </table>
 
-### 🎚️ UI 控制台
+### 🔳 Chaperone Automations
 <table>
   <tr>
     <td>
-      如果你喜歡在遊戲中直接進行操作，UI 控制台是你的首選！
-      <br><br>
-      它可以讓你以遊戲 UI 的形式對 OyasumiVR 進行配置，而不是在桌面應用程式中進行設置。
-      <br><br>
-      部分設定需要使用桌面應用程式進行配置，但對於常見的操作，UI 控制台是個很好的選擇。
+      Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f4a8dca8-29d1-4df1-8a54-cdbec6ea6663"></td>
-  </tr>
-</table>
-
-### 🧑‍💻 控制台
-<table>
-  <tr>
-    <td>
-      如果你喜歡在控制台中操作，或者希望深入了解 OyasumiVR 的運作方式，控制台是你的選擇。
-      <br><br>
-      進入控制台後，你可以使用各種命令進行操作，幾乎可以配置 OyasumiVR 的所有內容。
-      <br><br>
-      這是一個專家級的選擇，如果你不熟悉命令行，建議使用 UI 控制台進行配置。
-    </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/b52d248b-cb57-4e14-b4f3-7a91c2b10853"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
   </tr>
 </table>
 
