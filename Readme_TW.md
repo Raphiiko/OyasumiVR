@@ -1,3 +1,5 @@
+<h2 align="center">請注意，該自述文件已經過時<br>更新的（英文）文件可在此處找到: <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README.md">README.md</a></h3>
+
 <p align="center">
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_light.png?raw=true#gh-light-mode-only" width="450">
     <img src="https://github.com/Raphiiko/Oyasumi/blob/develop/docs/img/logo_dark.png?raw=true#gh-dark-mode-only" width="450">
@@ -22,7 +24,7 @@
   <br>
   Oyasumiは虛擬現實中幫助睡眠的開源工具軟體。
   <br>
-  您可以在 [booth.pm的商店頁面](https://raphiiko.booth.pm/items/4216880) 上找到日本語的說明。
+  您可以在 <a href="https://raphiiko.booth.pm/items/4216880">booth.pm的商店頁面</a> 上找到日本語的說明。
 </p>
 
 <p align="center">
