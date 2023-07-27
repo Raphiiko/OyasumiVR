@@ -7,7 +7,7 @@
 </h3>
 
 <p align="center">
-    <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=版本&sort=semver"></a>
+    <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=%E7%89%88%E6%9C%AC&sort=semver"></a>
     <a><img alt="正式版建置狀態" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-release.yml/badge.svg"/></a>
     <a><img alt="開發版建置狀態" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="授權條款" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
