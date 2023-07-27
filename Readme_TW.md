@@ -252,14 +252,23 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
   </tr>
 </table>
 
+## VRChat
+
+Some features of OyasumiVR require you to log in with your VRChat account for them to work. (E.g. status automations)
+
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.
+
+OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRChat inc. VRChat © VRChat Inc.
+
+The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
+
 ## 支援
 
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
 
+或者，您也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯繫我。我會盡快給您回复！
+
 ## 授權條款
 
 OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE)進行發布。這意味著你可以自由地使用、修改和分發它，只要你遵從授權條款。
-
----
-
-這就是 OyasumiVR 提供的一些功能。希望這些功能對你有所幫助，並讓你在虛擬實境世界中享受更好的睡眠體驗！如果你有其他問題或需要進一步的協助，請隨時問我！
