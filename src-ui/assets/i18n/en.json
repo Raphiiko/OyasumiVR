@@ -160,7 +160,11 @@
           "description": "How long OyasumiVR should wait before it detects you being asleep",
           "unit": "min"
         },
-        "description": "With this feature enabled, OyasumiVR will automatically enable sleep mode when it guesses you're asleep based on your movement."
+        "description": "With this feature enabled, OyasumiVR will automatically enable sleep mode when it guesses you're asleep based on your movement.",
+        "timeWindow": {
+          "title": "Activation Window",
+          "description": "Only allow sleep detection to activate the sleep mode between certain hours of day"
+        }
       },
       "enableAtTime": {
         "title": "Enable sleep mode",

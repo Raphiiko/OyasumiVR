@@ -6,7 +6,14 @@ import {
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable, skip } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  Observable,
+  skip,
+} from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
@@ -16,6 +23,7 @@ import { EventLogService } from '../event-log.service';
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
   | 'SLEEP_MODE_ALREADY_ENABLED'
+  | 'NOT_IN_ACTIVATION_WINDOW'
   | 'NOT_RUNNING_LONG_ENOUGH'
   | 'TOO_MUCH_MOVEMENT'
   | 'RATE_LIMITED'
@@ -105,6 +113,15 @@ export class SleepModeForSleepDetectorAutomationService {
     if (!this.enableConfig.enabled) return 'AUTOMATION_DISABLED';
     // Stop here if the sleep mode is already enabled
     if (await firstValueFrom(this.sleep.mode)) return 'SLEEP_MODE_ALREADY_ENABLED';
+    // Stop here if we are not in the activation window
+    if (
+      this.enableConfig.activationWindow &&
+      !this.isInActivationWindow(
+        this.enableConfig.activationWindowStart,
+        this.enableConfig.activationWindowEnd
+      )
+    )
+      return 'NOT_IN_ACTIVATION_WINDOW';
     // Stop here if the sleep detection has been running for less than the detection window
     if (Date.now() - report.startTime < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
       return 'NOT_RUNNING_LONG_ENOUGH';
@@ -151,7 +168,19 @@ export class SleepModeForSleepDetectorAutomationService {
     }
   }
 
-  async calibrate(): Promise<number> {
+  public getThresholdValues(): Array<{
+    sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
+    threshold: number;
+    active: boolean;
+  }> {
+    return Object.entries(this.calibrationFactors).map((entry) => ({
+      sensitivity: entry[0] as 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST',
+      threshold: this.enableConfig.calibrationValue * entry[1],
+      active: this.enableConfig.sensitivity === entry[0],
+    }));
+  }
+
+  public async calibrate(): Promise<number> {
     let distanceInLast10Seconds = -1;
     if (this._lastStateReport.value) {
       if (Date.now() - this._lastStateReport.value.startTime > 1000 * 10) {
@@ -169,15 +198,19 @@ export class SleepModeForSleepDetectorAutomationService {
     return distanceInLast10Seconds;
   }
 
-  getThresholdValues(): Array<{
-    sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
-    threshold: number;
-    active: boolean;
-  }> {
-    return Object.entries(this.calibrationFactors).map((entry) => ({
-      sensitivity: entry[0] as 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST',
-      threshold: this.enableConfig.calibrationValue * entry[1],
-      active: this.enableConfig.sensitivity === entry[0],
-    }));
+  private isInActivationWindow(
+    start: [number, number],
+    end: [number, number],
+    now?: [number, number]
+  ): boolean {
+    if (!now) now = [new Date().getHours(), new Date().getMinutes()];
+    const startMinutes = start[0] * 60 + start[1];
+    const endMinutes = end[0] * 60 + end[1];
+    const nowMinutes = now[0] * 60 + now[1];
+
+    if (startMinutes < endMinutes) {
+      return nowMinutes >= startMinutes && nowMinutes <= endMinutes;
+    }
+    return nowMinutes <= endMinutes || nowMinutes >= startMinutes;
   }
 }
