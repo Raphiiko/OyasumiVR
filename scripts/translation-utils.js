@@ -33,8 +33,9 @@ async function handleClean() {
     .forEach((langFile) => {
       let langFileContent = JSON.parse(fs.readFileSync(langFile, 'utf8'));
       const langFileContentFlattened = Object.fromEntries(
-        Object.entries(flattenObj(langFileContent)).filter((entry) =>
-          Object.keys(enFileContentFlattened).includes(entry[0])
+        Object.entries(flattenObj(langFileContent)).filter(
+          (entry) =>
+            Object.keys(enFileContentFlattened).includes(entry[0]) && entry[1] !== '{PLACEHOLDER}'
         )
       );
       let keysCleaned =
