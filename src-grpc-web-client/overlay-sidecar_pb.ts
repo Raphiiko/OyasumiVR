@@ -329,6 +329,18 @@ export interface OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector 
    * @generated from protobuf field: string sensitivity = 2;
    */
   sensitivity: string;
+  /**
+   * @generated from protobuf field: bool activation_window = 3;
+   */
+  activationWindow: boolean;
+  /**
+   * @generated from protobuf field: repeated uint32 activation_window_start = 4;
+   */
+  activationWindowStart: number[];
+  /**
+   * @generated from protobuf field: repeated uint32 activation_window_end = 5;
+   */
+  activationWindowEnd: number[];
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -1893,12 +1905,33 @@ class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extend
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector', [
       { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 2, name: 'sensitivity', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+      { no: 3, name: 'activation_window', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      {
+        no: 4,
+        name: 'activation_window_start',
+        kind: 'scalar',
+        repeat: 1 /*RepeatType.PACKED*/,
+        T: 13 /*ScalarType.UINT32*/,
+      },
+      {
+        no: 5,
+        name: 'activation_window_end',
+        kind: 'scalar',
+        repeat: 1 /*RepeatType.PACKED*/,
+        T: 13 /*ScalarType.UINT32*/,
+      },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector>
   ): OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
-    const message = { enabled: false, sensitivity: '' };
+    const message = {
+      enabled: false,
+      sensitivity: '',
+      activationWindow: false,
+      activationWindowStart: [],
+      activationWindowEnd: [],
+    };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector>(
@@ -1924,6 +1957,21 @@ class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extend
           break;
         case /* string sensitivity */ 2:
           message.sensitivity = reader.string();
+          break;
+        case /* bool activation_window */ 3:
+          message.activationWindow = reader.bool();
+          break;
+        case /* repeated uint32 activation_window_start */ 4:
+          if (wireType === WireType.LengthDelimited)
+            for (let e = reader.int32() + reader.pos; reader.pos < e; )
+              message.activationWindowStart.push(reader.uint32());
+          else message.activationWindowStart.push(reader.uint32());
+          break;
+        case /* repeated uint32 activation_window_end */ 5:
+          if (wireType === WireType.LengthDelimited)
+            for (let e = reader.int32() + reader.pos; reader.pos < e; )
+              message.activationWindowEnd.push(reader.uint32());
+          else message.activationWindowEnd.push(reader.uint32());
           break;
         default:
           let u = options.readUnknownField;
@@ -1954,6 +2002,23 @@ class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extend
     /* string sensitivity = 2; */
     if (message.sensitivity !== '')
       writer.tag(2, WireType.LengthDelimited).string(message.sensitivity);
+    /* bool activation_window = 3; */
+    if (message.activationWindow !== false)
+      writer.tag(3, WireType.Varint).bool(message.activationWindow);
+    /* repeated uint32 activation_window_start = 4; */
+    if (message.activationWindowStart.length) {
+      writer.tag(4, WireType.LengthDelimited).fork();
+      for (let i = 0; i < message.activationWindowStart.length; i++)
+        writer.uint32(message.activationWindowStart[i]);
+      writer.join();
+    }
+    /* repeated uint32 activation_window_end = 5; */
+    if (message.activationWindowEnd.length) {
+      writer.tag(5, WireType.LengthDelimited).fork();
+      for (let i = 0; i < message.activationWindowEnd.length; i++)
+        writer.uint32(message.activationWindowEnd[i]);
+      writer.join();
+    }
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

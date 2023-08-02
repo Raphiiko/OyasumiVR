@@ -11,7 +11,10 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 	automations: {
 		sleepModeEnableForSleepDetector: {
 			enabled: false,
-			sensitivity: 'LOWEST'
+			sensitivity: 'LOWEST',
+			activationWindow: false,
+			activationWindowStart: [23, 0],
+			activationWindowEnd: [7, 0]
 		},
 		autoAcceptInviteRequests: {
 			enabled: false,
@@ -28,7 +31,9 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 		},
 		shutdownAutomations: {
 			sleepTriggerEnabled: false,
-			timeDelay: 0
+			timeDelay: 0,
+			running: false,
+			canStart: false
 		}
 	},
 	locale: 'en',

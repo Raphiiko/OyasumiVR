@@ -129,8 +129,12 @@
 			case 'sleepModeEnableForSleepDetector': {
 				let a = automation as OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
 				let sensitivity = _t(`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`);
+				let subtitleKey = a.activationWindow ? 'withActivationWindow' : 'withoutActivationWindow'
+				
+				let startTime = formatTime(a.activationWindowStart);
+				let endTime = formatTime(a.activationWindowEnd);
 
-				return _t(`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle`, { sensitivity })
+				return _t(`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle.${subtitleKey}`, { sensitivity, startTime, endTime })
 			}
 			default: {
 				return null;
@@ -149,6 +153,15 @@
 			sleepModeEnableForSleepDetector: 'alarm'
 		};
 		return m[automationId] ?? 'question_mark';
+	}
+
+	function formatTime(input: number[]) {
+		let hour = input[0].toString();
+		let minute = input[1].toString();
+
+		while (hour.length < 2) hour = "0" + hour;
+		while (minute.length < 2) minute = "0" + minute;
+		return `${hour}:${minute}`
 	}
 
 	const dispatch = createEventDispatcher();

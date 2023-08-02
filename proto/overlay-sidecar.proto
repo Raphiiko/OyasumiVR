@@ -122,6 +122,9 @@ message OyasumiSidecarAutomationsState_ShutdownAutomations {
 message OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
   bool enabled = 1;
   string sensitivity = 2;
+  bool activation_window = 3;
+  repeated uint32 activation_window_start = 4;
+  repeated uint32 activation_window_end = 5;
 }
 
 enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
