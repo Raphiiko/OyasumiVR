@@ -248,6 +248,10 @@ export interface OyasumiSidecarAutomationsState {
    * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
    */
   shutdownAutomations?: OyasumiSidecarAutomationsState_ShutdownAutomations;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector sleepModeEnableForSleepDetector = 5;
+   */
+  sleepModeEnableForSleepDetector?: OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests
@@ -312,6 +316,19 @@ export interface OyasumiSidecarAutomationsState_ShutdownAutomations {
    * @generated from protobuf field: bool can_start = 4;
    */
   canStart: boolean;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+ */
+export interface OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
+  /**
+   * @generated from protobuf field: bool enabled = 1;
+   */
+  enabled: boolean;
+  /**
+   * @generated from protobuf field: string sensitivity = 2;
+   */
+  sensitivity: string;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -1398,6 +1415,12 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
         kind: 'message',
         T: () => OyasumiSidecarAutomationsState_ShutdownAutomations,
       },
+      {
+        no: 5,
+        name: 'sleepModeEnableForSleepDetector',
+        kind: 'message',
+        T: () => OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
+      },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarAutomationsState>): OyasumiSidecarAutomationsState {
@@ -1454,6 +1477,15 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
               message.shutdownAutomations
             );
           break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector sleepModeEnableForSleepDetector */ 5:
+          message.sleepModeEnableForSleepDetector =
+            OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector.internalBinaryRead(
+              reader,
+              reader.uint32(),
+              options,
+              message.sleepModeEnableForSleepDetector
+            );
+          break;
         default:
           let u = options.readUnknownField;
           if (u === 'throw')
@@ -1504,6 +1536,13 @@ class OyasumiSidecarAutomationsState$Type extends MessageType<OyasumiSidecarAuto
       OyasumiSidecarAutomationsState_ShutdownAutomations.internalBinaryWrite(
         message.shutdownAutomations,
         writer.tag(4, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    /* OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector sleepModeEnableForSleepDetector = 5; */
+    if (message.sleepModeEnableForSleepDetector)
+      OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector.internalBinaryWrite(
+        message.sleepModeEnableForSleepDetector,
+        writer.tag(5, WireType.LengthDelimited).fork(),
         options
       ).join();
     let u = options.writeUnknownFields;
@@ -1848,6 +1887,83 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
  */
 export const OyasumiSidecarAutomationsState_ShutdownAutomations =
   new OyasumiSidecarAutomationsState_ShutdownAutomations$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extends MessageType<OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector', [
+      { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'sensitivity', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
+    ]);
+  }
+  create(
+    value?: PartialMessage<OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector>
+  ): OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
+    const message = { enabled: false, sensitivity: '' };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector>(
+        this,
+        message,
+        value
+      );
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+  ): OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool enabled */ 1:
+          message.enabled = reader.bool();
+          break;
+        case /* string sensitivity */ 2:
+          message.sensitivity = reader.string();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool enabled = 1; */
+    if (message.enabled !== false) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* string sensitivity = 2; */
+    if (message.sensitivity !== '')
+      writer.tag(2, WireType.LengthDelimited).string(message.sensitivity);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+ */
+export const OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector =
+  new OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type();
 /**
  * @generated ServiceType for protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */

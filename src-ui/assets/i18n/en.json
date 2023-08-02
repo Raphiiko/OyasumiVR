@@ -1335,6 +1335,10 @@
             "plural": "{{minutes}} minutes"
           }
         },
+        "sleepModeEnableForSleepDetector": {
+          "title": "Sleep Detection",
+          "subtitle": "With sleep sensitivity {{sensitivity}}"
+        },
         "title": "Automation Settings"
       }
     }

@@ -73,6 +73,10 @@ export class IPCStateSyncService {
         running: false,
         canStart: false,
       },
+      sleepModeEnableForSleepDetector: {
+        enabled: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled,
+        sensitivity: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity
+      }
     },
     locale: APP_SETTINGS_DEFAULT.userLanguage,
     deviceInfo: {
@@ -147,6 +151,7 @@ export class IPCStateSyncService {
             'CHANGE_STATUS_BASED_ON_PLAYER_COUNT',
             'SLEEPING_ANIMATIONS',
             'SHUTDOWN_AUTOMATIONS',
+            'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
         }),
@@ -166,6 +171,11 @@ export class IPCStateSyncService {
           const automation = state.automations!.changeStatusBasedOnPlayerCount!;
           automation.enabled = configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled;
           automation.threshold = configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.limit;
+        }
+        {
+          const automation = state.automations!.sleepModeEnableForSleepDetector!;
+          automation.enabled = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled;
+          automation.sensitivity = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity;
         }
         {
           const automation = state.automations!.sleepingAnimations!;

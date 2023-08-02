@@ -9,6 +9,10 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 	vrcStatus: VrcStatus.Offline,
 	vrcUsername: '',
 	automations: {
+		sleepModeEnableForSleepDetector: {
+			enabled: false,
+			sensitivity: 'LOWEST'
+		},
 		autoAcceptInviteRequests: {
 			enabled: false,
 			mode: OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist,

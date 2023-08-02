@@ -93,6 +93,7 @@ message OyasumiSidecarAutomationsState {
   OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount changeStatusBasedOnPlayerCount = 2;
   OyasumiSidecarAutomationsState_SleepingAnimations sleepingAnimations = 3;
   OyasumiSidecarAutomationsState_ShutdownAutomations shutdownAutomations = 4;
+  OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector sleepModeEnableForSleepDetector = 5;
 }
 
 message OyasumiSidecarAutomationsState_AutoAcceptInviteRequests {
@@ -116,6 +117,11 @@ message OyasumiSidecarAutomationsState_ShutdownAutomations {
   uint32 time_delay = 2;
   bool running = 3;
   bool can_start = 4;
+}
+
+message OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {
+  bool enabled = 1;
+  string sensitivity = 2;
 }
 
 enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {

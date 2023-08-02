@@ -11,6 +11,7 @@
 		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
 		OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
 		OyasumiSidecarAutomationsState_ShutdownAutomations,
+		OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
 		OyasumiSidecarAutomationsState_SleepingAnimations
 	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
 	import { t } from '$lib/translations';
@@ -125,6 +126,12 @@
 				}
 				return _t(`t.overlay.dashboard.automations.shutdownAutomations.subtitle`, { time });
 			}
+			case 'sleepModeEnableForSleepDetector': {
+				let a = automation as OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
+				let sensitivity = _t(`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`);
+
+				return _t(`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle`, { sensitivity })
+			}
 			default: {
 				return null;
 			}
@@ -138,7 +145,8 @@
 			autoAcceptInviteRequests: 'mark_email_read',
 			changeStatusBasedOnPlayerCount: 'circle',
 			sleepingAnimations: 'bedtime',
-			shutdownAutomations: 'settings_power'
+			shutdownAutomations: 'settings_power',
+			sleepModeEnableForSleepDetector: 'alarm'
 		};
 		return m[automationId] ?? 'question_mark';
 	}
