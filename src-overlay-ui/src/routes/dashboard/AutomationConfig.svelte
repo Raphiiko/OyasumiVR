@@ -130,7 +130,7 @@
 				let a = automation as OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
 				let sensitivity = _t(`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`);
 				let subtitleKey = a.activationWindow ? 'withActivationWindow' : 'withoutActivationWindow'
-				
+
 				let startTime = formatTime(a.activationWindowStart);
 				let endTime = formatTime(a.activationWindowEnd);
 
@@ -148,9 +148,9 @@
 		const m: Record<keyof OyasumiSidecarAutomationsState, string> = {
 			autoAcceptInviteRequests: 'mark_email_read',
 			changeStatusBasedOnPlayerCount: 'circle',
-			sleepingAnimations: 'bedtime',
+			sleepingAnimations: 'settings_accessibility',
 			shutdownAutomations: 'settings_power',
-			sleepModeEnableForSleepDetector: 'alarm'
+			sleepModeEnableForSleepDetector: 'bedtime'
 		};
 		return m[automationId] ?? 'question_mark';
 	}

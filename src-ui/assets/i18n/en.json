@@ -1338,8 +1338,8 @@
         "sleepModeEnableForSleepDetector": {
           "title": "Sleep Detection",
           "subtitle": {
-            "withoutActivationWindow": "With sensitivity {{sensitivity}}",
-            "withActivationWindow": "With sensitivity {{sensitivity}} during {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "sensitivity {{sensitivity}} sensivitivy",
+            "withActivationWindow": "{{sensitivity}} sensitivity, {{startTime}} - {{endTime}}"
           }
         },
         "title": "Automation Settings"
