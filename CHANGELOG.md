@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Allow limiting sleep detection to certain hours of the day.
+- Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
 
 ### Changed
 
