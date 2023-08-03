@@ -11,6 +11,7 @@
 		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
 		OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
 		OyasumiSidecarAutomationsState_ShutdownAutomations,
+		OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
 		OyasumiSidecarAutomationsState_SleepingAnimations
 	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
 	import { t } from '$lib/translations';
@@ -125,6 +126,16 @@
 				}
 				return _t(`t.overlay.dashboard.automations.shutdownAutomations.subtitle`, { time });
 			}
+			case 'sleepModeEnableForSleepDetector': {
+				let a = automation as OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
+				let sensitivity = _t(`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`);
+				let subtitleKey = a.activationWindow ? 'withActivationWindow' : 'withoutActivationWindow'
+
+				let startTime = formatTime(a.activationWindowStart);
+				let endTime = formatTime(a.activationWindowEnd);
+
+				return _t(`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle.${subtitleKey}`, { sensitivity, startTime, endTime })
+			}
 			default: {
 				return null;
 			}
@@ -137,10 +148,20 @@
 		const m: Record<keyof OyasumiSidecarAutomationsState, string> = {
 			autoAcceptInviteRequests: 'mark_email_read',
 			changeStatusBasedOnPlayerCount: 'circle',
-			sleepingAnimations: 'bedtime',
-			shutdownAutomations: 'settings_power'
+			sleepingAnimations: 'settings_accessibility',
+			shutdownAutomations: 'settings_power',
+			sleepModeEnableForSleepDetector: 'bedtime'
 		};
 		return m[automationId] ?? 'question_mark';
+	}
+
+	function formatTime(input: number[]) {
+		let hour = input[0].toString();
+		let minute = input[1].toString();
+
+		while (hour.length < 2) hour = "0" + hour;
+		while (minute.length < 2) minute = "0" + minute;
+		return `${hour}:${minute}`
 	}
 
 	const dispatch = createEventDispatcher();
