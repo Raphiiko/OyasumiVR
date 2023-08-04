@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow limiting sleep detection to certain hours of the day.
 - Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
 - OSC address for toggling the sleep detection automation.
+- Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
 
 ### Changed
 

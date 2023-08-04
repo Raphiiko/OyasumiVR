@@ -96,6 +96,7 @@ import localeJP from '@angular/common/locales/ja';
 import localeNL from '@angular/common/locales/nl';
 import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
+import localeES from '@angular/common/locales/es';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -138,7 +139,7 @@ import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 
-[localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP].forEach((locale) =>
+[localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES].forEach((locale) =>
   registerLocaleData(locale)
 );
 
