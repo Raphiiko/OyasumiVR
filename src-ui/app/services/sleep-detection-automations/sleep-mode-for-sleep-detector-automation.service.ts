@@ -6,14 +6,7 @@ import {
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import {
-  BehaviorSubject,
-  distinctUntilChanged,
-  filter,
-  firstValueFrom,
-  Observable,
-  skip,
-} from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable, skip } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';

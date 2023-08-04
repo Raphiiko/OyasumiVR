@@ -84,13 +84,13 @@ export class OscControlService {
         ),
         debounceTime(0)
       )
-      .subscribe(([]) => {
+      .subscribe(() => {
         if (this.settings.oscEnableExternalControl) this.runParameterSync();
         if (this.settings.oscEnableExpressionMenu) this.runParameterSync('/avatar/parameters');
       });
   }
 
-  private runParameterSync(prefix: string = ''): void {
+  private runParameterSync(prefix = ''): void {
     this.osc.send_bool(prefix + ADDRESS_SLEEP_MODE, this.sleepMode);
     this.osc.send_bool(prefix + ADDRESS_SLEEPING_ANIMATIONS, this.sleepingAnimations);
     this.osc.send_bool(prefix + ADDRESS_STATUS_AUTOMATIONS, this.statusAutomations);

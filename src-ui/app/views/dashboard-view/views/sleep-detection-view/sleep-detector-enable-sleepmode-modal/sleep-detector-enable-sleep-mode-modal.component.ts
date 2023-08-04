@@ -6,7 +6,6 @@ import { filter } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,
-  ShutdownAutomationsConfig,
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../../../../models/automations';
 import { SleepDetectorCalibrationModalComponent } from '../sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
