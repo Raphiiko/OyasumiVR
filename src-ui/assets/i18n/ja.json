@@ -587,9 +587,6 @@
           "subtext": "現在、VRChatアカウントでログインしていません",
           "logIn": "ログイン"
         },
-        "errors": {
-          "initError": "VRChatモジュールが初期化されませんでした。インターネットに接続していることを確認し、時間をおいてからOyasumiVRを再起動し、再度お試しください。"
-        },
         "disclaimers": {
           "use": "ログイン情報は保管されず、認証のためにVRChatのサーバーに送信されます。",
           "brand": "OyasumiVRはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",

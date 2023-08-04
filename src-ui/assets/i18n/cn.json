@@ -591,9 +591,6 @@
           "use": "你的登入凭证永远不会储存在任何地方，只会发送到 VRChat 的服务器以进行身份验证",
           "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不表示 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
           "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自己承担！"
-        },
-        "errors": {
-          "initError": "无法初始化 VRChat 模组。 请确保你有连上互联网并稍后重新启动 OyasumiVR 重试"
         }
       },
       "OSC": {
