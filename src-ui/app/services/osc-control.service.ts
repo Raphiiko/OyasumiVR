@@ -13,26 +13,24 @@ import { AppSettingsService } from './app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { cloneDeep } from 'lodash';
 
-const ADDRESS_CMD = '/avatar/parameters/Oyasumi/Cmd';
-const ADDRESS_SLEEP_MODE = '/avatar/parameters/Oyasumi/SleepMode';
-const ADDRESS_SLEEPING_ANIMATIONS = '/avatar/parameters/Oyasumi/SleepingAnimations';
-const ADDRESS_STATUS_AUTOMATIONS = '/avatar/parameters/Oyasumi/StatusAutomations';
-const ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS = '/avatar/parameters/Oyasumi/AutoAcceptInviteRequests';
-const ADDRESS_EXPRESSION_MENU_CMD = '/Oyasumi/Cmd';
-const ADDRESS_EXPRESSION_MENU_SLEEP_MODE = '/Oyasumi/SleepMode';
-const ADDRESS_EXPRESSION_MENU_SLEEPING_ANIMATIONS = '/Oyasumi/SleepingAnimations';
-const ADDRESS_EXPRESSION_MENU_STATUS_AUTOMATIONS = '/Oyasumi/StatusAutomations';
-const ADDRESS_EXPRESSION_MENU_AUTO_ACCEPT_INVITE_REQUESTS = '/Oyasumi/AutoAcceptInviteRequests';
+const ADDRESS_CMD = '/Oyasumi/Cmd';
+const ADDRESS_SLEEP_MODE = '/Oyasumi/SleepMode';
+const ADDRESS_SLEEPING_ANIMATIONS = '/Oyasumi/SleepingAnimations';
+const ADDRESS_STATUS_AUTOMATIONS = '/Oyasumi/StatusAutomations';
+const ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS = '/Oyasumi/AutoAcceptInviteRequests';
+const ADDRESS_SLEEP_DETECTION = '/Oyasumi/SleepDetection';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OscControlService {
-  private syncParameters: Subject<void> = new Subject<void>();
   private sleepingAnimations = false;
   private statusAutomations = false;
   private sleepMode = false;
   private autoAcceptInviteRequests = false;
+  private sleepDetection = false;
+
+  private syncParameters: Subject<void> = new Subject<void>();
   private settings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
 
   constructor(
@@ -63,34 +61,41 @@ export class OscControlService {
       this.automationConfig.configs.pipe(
         map((configs) => configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled)
       ),
+      this.automationConfig.configs.pipe(
+        map((configs) => configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled)
+      ),
       this.syncParameters.pipe(startWith(undefined)),
     ])
       .pipe(
-        tap(([sleepMode, sleepingAnimations, statusAutomations, autoAcceptInviteRequests]) => {
-          this.sleepMode = sleepMode;
-          this.sleepingAnimations = sleepingAnimations;
-          this.statusAutomations = statusAutomations;
-          this.autoAcceptInviteRequests = autoAcceptInviteRequests;
-        }),
+        tap(
+          ([
+            sleepMode,
+            sleepingAnimations,
+            statusAutomations,
+            autoAcceptInviteRequests,
+            sleepDetection,
+          ]) => {
+            this.sleepMode = sleepMode;
+            this.sleepingAnimations = sleepingAnimations;
+            this.statusAutomations = statusAutomations;
+            this.autoAcceptInviteRequests = autoAcceptInviteRequests;
+            this.sleepDetection = sleepDetection;
+          }
+        ),
         debounceTime(0)
       )
-      .subscribe(([sleepMode, sleepingAnimations, statusAutomations, autoAcceptInviteRequests]) => {
-        if (this.settings.oscEnableExternalControl) {
-          this.osc.send_bool(ADDRESS_SLEEP_MODE, sleepMode);
-          this.osc.send_bool(ADDRESS_SLEEPING_ANIMATIONS, sleepingAnimations);
-          this.osc.send_bool(ADDRESS_STATUS_AUTOMATIONS, statusAutomations);
-          this.osc.send_bool(ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS, autoAcceptInviteRequests);
-        }
-        if (this.settings.oscEnableExpressionMenu) {
-          this.osc.send_bool(ADDRESS_EXPRESSION_MENU_SLEEP_MODE, sleepMode);
-          this.osc.send_bool(ADDRESS_EXPRESSION_MENU_SLEEPING_ANIMATIONS, sleepingAnimations);
-          this.osc.send_bool(ADDRESS_EXPRESSION_MENU_STATUS_AUTOMATIONS, statusAutomations);
-          this.osc.send_bool(
-            ADDRESS_EXPRESSION_MENU_AUTO_ACCEPT_INVITE_REQUESTS,
-            autoAcceptInviteRequests
-          );
-        }
+      .subscribe(([]) => {
+        if (this.settings.oscEnableExternalControl) this.runParameterSync();
+        if (this.settings.oscEnableExpressionMenu) this.runParameterSync('/avatar/parameters');
       });
+  }
+
+  private runParameterSync(prefix: string = ''): void {
+    this.osc.send_bool(prefix + ADDRESS_SLEEP_MODE, this.sleepMode);
+    this.osc.send_bool(prefix + ADDRESS_SLEEPING_ANIMATIONS, this.sleepingAnimations);
+    this.osc.send_bool(prefix + ADDRESS_STATUS_AUTOMATIONS, this.statusAutomations);
+    this.osc.send_bool(prefix + ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS, this.autoAcceptInviteRequests);
+    this.osc.send_bool(prefix + ADDRESS_SLEEP_DETECTION, this.sleepDetection);
   }
 
   private async handleOSCMessage(message: OSCMessage) {
@@ -109,19 +114,20 @@ export class OscControlService {
         if (!this.settings.oscEnableExternalControl) return;
         break;
     }
+    // Strip the prefix from the address if needed
+    let address = message.address;
+    if (mode === 'EXPRESSION_MENU') address = message.address.replace('/avatar/parameters', '');
     // Handle the message
-    switch (message.address) {
+    switch (address) {
       case '/avatar/change':
         this.syncParameters.next();
         break;
-      case ADDRESS_CMD:
-      case ADDRESS_EXPRESSION_MENU_CMD: {
+      case ADDRESS_CMD: {
         const { value } = message.values[0] as OSCIntValue;
         await this.handleCommand(value);
         break;
       }
-      case ADDRESS_SLEEP_MODE:
-      case ADDRESS_EXPRESSION_MENU_SLEEP_MODE: {
+      case ADDRESS_SLEEP_MODE: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.sleepMode === enable) return;
         if (enable) {
@@ -133,8 +139,7 @@ export class OscControlService {
         }
         break;
       }
-      case ADDRESS_SLEEPING_ANIMATIONS:
-      case ADDRESS_EXPRESSION_MENU_SLEEPING_ANIMATIONS: {
+      case ADDRESS_SLEEPING_ANIMATIONS: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.sleepingAnimations === enable) return;
         if (enable) info('[OSCControl] Enabling sleeping animation automations');
@@ -144,8 +149,7 @@ export class OscControlService {
         });
         break;
       }
-      case ADDRESS_STATUS_AUTOMATIONS:
-      case ADDRESS_EXPRESSION_MENU_STATUS_AUTOMATIONS: {
+      case ADDRESS_STATUS_AUTOMATIONS: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.statusAutomations === enable) return;
         if (enable) info('[OSCControl] Enabling status automations');
@@ -155,13 +159,22 @@ export class OscControlService {
         });
         break;
       }
-      case ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS:
-      case ADDRESS_EXPRESSION_MENU_AUTO_ACCEPT_INVITE_REQUESTS: {
+      case ADDRESS_AUTO_ACCEPT_INVITE_REQUESTS: {
         const { value: enable } = message.values[0] as OSCBoolValue;
         if (this.autoAcceptInviteRequests === enable) return;
         if (enable) info('[OSCControl] Enabling automatic invite request acceptance');
         else info('[OSCControl] Disabling automatic invite request acceptance');
         await this.automationConfig.updateAutomationConfig('AUTO_ACCEPT_INVITE_REQUESTS', {
+          enabled: enable,
+        });
+        break;
+      }
+      case ADDRESS_SLEEP_DETECTION: {
+        const { value: enable } = message.values[0] as OSCBoolValue;
+        if (this.sleepDetection === enable) return;
+        if (enable) info('[OSCControl] Enabling sleep detection');
+        else info('[OSCControl] Disabling sleep detection');
+        await this.automationConfig.updateAutomationConfig('SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR', {
           enabled: enable,
         });
         break;
