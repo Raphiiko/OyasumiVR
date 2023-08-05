@@ -13,10 +13,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
 - OSC address for toggling the sleep detection automation.
 - Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Support for a release on [Steam](https://store.steampowered.com/)
 
 ### Changed
 
 - Added missing translations for Traditional and Simplified Chinese. (By [狐 Kon](https://github.com/XoF-eLtTiL))
+
+### Fixed
+
+- Upgraded various dependencies
 
 ## [1.8.0]
 
