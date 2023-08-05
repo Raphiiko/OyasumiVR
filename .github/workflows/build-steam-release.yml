@@ -1,21 +1,23 @@
-name: 'Release Build'
+name: 'Steam Release Build'
 on:
   push:
     branches:
-      - master
-      - main
+      - feature/steam-release
+#      - master
+#      - main
 
 jobs:
-  build-release:
+  build-steam-release:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest]
+        platform: [ windows-latest ]
     runs-on: ${{ matrix.platform }}
-
+    outputs:
+      appVersion: ${{ steps.get-package-version.outputs.version }}
     steps:
       - uses: actions/checkout@v2
       - name: Get Package Version
@@ -52,24 +54,38 @@ jobs:
           validation_level: warn
           version: ${{ steps.get-package-version.outputs.version }}
           path: ./CHANGELOG.md
-      - name: Build and release OyasumiVR
-        uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
-          TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
+      - name: Build OyasumiVR
+        run: cargo-tauri build -b none
+      - name: Move artifacts
+        shell: bash
+        run: |
+          mkdir -p build/Win64
+          mv src-core/target/release/OyasumiVR.exe build/Win64/
+          mv src-core/target/release/openvr_api.dll build/Win64/
+          mv src-core/target/release/resources/ build/Win64/
+      - uses: actions/upload-artifact@v3
         with:
-          tagName: oyasumivr-v${{ steps.get-package-version.outputs.version }}
-          releaseName: OyasumiVR v${{ steps.get-package-version.outputs.version }}
-          releaseBody: ${{ steps.changelog_reader.outputs.changes }}
-          releaseDraft: false
-          includeUpdaterJson: true
-          tauriScript: cargo-tauri
-      - name: Update the update manifest
-        uses: Raphiiko/actions-deploy-gist@main
+          name: build
+          path: build
+
+  deploy-to-steam:
+    runs-on: ubuntu-latest
+    needs: build-steam-release
+    steps:
+      - uses: actions/download-artifact@v3
         with:
-          token: ${{ secrets.GH_TOKEN_GIST }}
-          gist_id: 16ed38d8ccd9282675d04478f887f76f
-          file_path: latest.json
-          gist_file_name: 'oyasumi_update_manifest.json'
-          gist_description: OyasumiVR Update Manifest [Release Channel]
+          name: build
+          path: build
+      - uses: geekyeggo/delete-artifact@v2
+        with:
+          name: build
+      - uses: game-ci/steam-deploy@v3
+        with:
+          username: ${{ secrets.STEAM_BUILD_USER }}
+          configVdf: ${{ secrets.STEAM_CONFIG_VDF }}
+          appId: 2538150
+          buildDescription: v${{ needs.build-steam-release.outputs.appVersion }}
+          rootPath: build
+          depot1Path: Win64
+          releaseBranch: prerelease
+
