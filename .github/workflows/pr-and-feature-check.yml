@@ -3,7 +3,8 @@ on:
   pull_request:
   push:
     branches:
-      - feature/*
+      - 'feature/*'
+      - '!feature/steam-release'
 
 jobs:
   check-pr-or-feature:
@@ -19,11 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Setup NodeJS
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: npm
       - name: Initialize the project
-        run: npm run init
+        run: npm run ci
       - name: Lint Angular project
         run: npm run lint
       - name: Set app version to DEV version
