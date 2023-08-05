@@ -13,10 +13,14 @@ mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64
 cp src-core/target/release/OyasumiVR.exe SteamSDK/sdk/tools/ContentBuilder/content/Win64/
 cp src-core/target/release/openvr_api.dll SteamSDK/sdk/tools/ContentBuilder/content/Win64/
 cp -r src-core/target/release/resources/ SteamSDK/sdk/tools/ContentBuilder/content/Win64/
-# Clear default install scripts
+# Include WebView2 Installer
+mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64/WebView2
+curl https://go.microsoft.com/fwlink/p/?LinkId=2124703 --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/WebView2/WebView2RuntimeInstaller.exe
+# Clear default scripts
 rm SteamSDK/sdk/tools/ContentBuilder/scripts/*
-# Copy over install scripts
-cp scripts/steam/install-scripts/*.vdf SteamSDK/sdk/tools/ContentBuilder/scripts/
+# Copy over scripts
+cp scripts/steam/scripts/*.vdf SteamSDK/sdk/tools/ContentBuilder/scripts/
+cp scripts/steam/install-scripts/*.vdf SteamSDK/sdk/tools/ContentBuilder/content/
 # Replace variables
 sed -i "s/APP_VERSION/$APP_VERSION/" SteamSDK/sdk/tools/ContentBuilder/scripts/*.vdf
 sed -i "s/STEAM_APP_ID/$STEAM_APP_ID/" SteamSDK/sdk/tools/ContentBuilder/scripts/*.vdf

@@ -1,12 +1,13 @@
 "DepotBuildConfig"
 {
 	"DepotID" "2538151"
-	"contentroot" "..\content\Win64"
+	"ContentRoot" "..\content\Win64"
 	"FileMapping"
 	{
 		"LocalPath" "*"
 		"DepotPath" "."
 		"recursive" "1"
 	}
+	"InstallScript" "..\webview2_installscript.vdf"
 	"FileExclusion" "*.pdb"
 }
