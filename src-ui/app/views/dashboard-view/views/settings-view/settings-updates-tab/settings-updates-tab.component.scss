@@ -1,6 +1,26 @@
 @import '../settings-tab/settings-tab.component.scss';
 @import 'panes';
 
+.updates-disabled {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  font-weight: 600;
+  white-space: pre-line;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    flex-shrink: 0;
+    width: 4em;
+    height: 4em;
+    margin: 0.5em 1em 0.5em 0.5em;
+  }
+  span {
+    flex: 1;
+  }
+}
+
 .update-checker {
   @extend .pane;
   background: var(--color-surface-1);
@@ -21,6 +41,7 @@
     white-space: nowrap;
   }
 }
+
 
 .pane-changelog {
   @extend .pane;

@@ -30,6 +30,8 @@ jobs:
         run: npm run lint
       - name: Set app version to DEV version
         run: npm run set-version DEV
+      - name: Set flavour to DEV
+        run: npm run set-flavour DEV
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
