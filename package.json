@@ -24,6 +24,7 @@
     "build:sidecar:overlay:core": "cd src-overlay-sidecar && dotnet publish -r win-x64 -c Release && cd ..",
     "build:sidecar:overlay:post": "node scripts/overlay-sidecar-post-build.js",
     "set-version": "node scripts/set-version.js",
+    "set-flavour": "node scripts/set-flavour.js",
     "tauri": "cargo tauri",
     "ng": "ng",
     "lint": "ng lint",

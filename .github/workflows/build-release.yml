@@ -28,6 +28,8 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
+      - name: Set flavour to STANDALONE
+        run: npm run set-flavour STANDALONE
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:

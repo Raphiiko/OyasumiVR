@@ -2,9 +2,9 @@ name: 'Steam Release Build'
 on:
   push:
     branches:
-      - feature/steam-release
-#      - master
-#      - main
+      - develop
+      - master
+      - main
 
 jobs:
   build-steam-release:
@@ -30,6 +30,8 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
+      - name: Set flavour to STEAM
+        run: npm run set-flavour STEAM
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
