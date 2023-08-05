@@ -1,0 +1,14 @@
+"appbuild"
+{
+	"appid" "STEAM_APP_ID"
+	"desc" "APP_VERSION"
+	"buildoutput" "..\output\"
+	"contentroot" "..\content\"
+	"setlive" ""
+	"preview" "0"
+	"local"	""
+	"depots"
+	{
+		"2538151"	"depot_2538151.vdf"
+	}
+}

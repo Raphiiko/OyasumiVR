@@ -1,0 +1,3 @@
+Regarding the SteamWorks SDK:
+
+Copyright © 1996-2020, Valve Corporation, All rights reserved.
