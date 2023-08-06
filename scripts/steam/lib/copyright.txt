@@ -1,5 +1,2 @@
 Regarding the SteamWorks SDK (steamworks_sdk_157.zip):
   Copyright © 1996-2020, Valve Corporation, All rights reserved.
-
-Regarding WebView2 Runtime (MicrosoftEdgeWebView2RuntimeInstallerX64.exe):
-  Copyright (C) Microsoft Corporation. All rights reserved.

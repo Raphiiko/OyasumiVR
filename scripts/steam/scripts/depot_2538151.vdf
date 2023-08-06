@@ -8,6 +8,6 @@
 		"DepotPath" "."
 		"recursive" "1"
 	}
-	"InstallScript" "..\webview2_installscript.vdf"
+	"InstallScript" "dependency_installscript.vdf"
 	"FileExclusion" "*.pdb"
 }

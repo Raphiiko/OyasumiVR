@@ -1,0 +1,33 @@
+"InstallScript"
+{
+  "Run Process"
+  {
+    "WebView2"
+    {
+      "Process 1"     "%INSTALLDIR%\\WebView2\\WebView2RuntimeInstaller.exe"
+      "Command 1"     "/silent /install"
+      "Requirement_OS"
+      {
+        "Is64BitWindows"      "1"
+      }
+    }
+    "DotNet709"
+    {
+      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-runtime-7.0.9-win-x64.exe"
+      "Command 1"     "/install /quiet /norestart"
+      "Requirement_OS"
+      {
+        "Is64BitWindows"      "1"
+      }
+    }
+    "AspNet709"
+    {
+      "Process 1"     "%INSTALLDIR%\\DotNet\\aspnetcore-runtime-7.0.9-win-x64.exe"
+      "Command 1"     "/install /quiet /norestart"
+      "Requirement_OS"
+      {
+        "Is64BitWindows"      "1"
+      }
+    }
+  }
+}
