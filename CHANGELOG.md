@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OSC address for toggling the sleep detection automation.
 - Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Support for a release on [Steam](https://store.steampowered.com/)
+- VR Manifest for registering OyasumiVR with SteamVR.
 
 ### Changed
 

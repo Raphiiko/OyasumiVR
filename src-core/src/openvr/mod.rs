@@ -80,6 +80,20 @@ pub async fn task() {
                 info!("[Core] OpenVR Initialized");
                 ovr_active = true;
                 update_status(OpenVRStatus::Initialized).await;
+                // Register manifest if needed
+                {
+                    let ctx = OVR_CONTEXT.lock().await;
+                    let mut applications = ctx.as_ref().unwrap().applications_mngr();
+                    if let Ok(r) = applications.is_application_installed("steam.overlay.2538150") {
+                        if !r {
+                            info!("[Core] Registering VR Manifest");
+                            let manifest_path_buf =
+                                std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+                            let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
+                            let _ = applications.add_application_manifest(manifest_path, false);
+                        }
+                    }
+                }
             }
             // Process tick
             devices::on_ovr_tick().await;
