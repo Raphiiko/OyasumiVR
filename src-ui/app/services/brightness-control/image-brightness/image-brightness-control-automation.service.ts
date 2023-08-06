@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../../automation-config.service';
 import { SleepService } from '../../sleep.service';
-import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
+import { delay, distinctUntilChanged, firstValueFrom, of, skip, switchMap, take } from 'rxjs';
 import { CancellableTask } from '../../../utils/cancellable-task';
 import { EventLogService } from '../../event-log.service';
 import { ImageBrightnessControlService } from './image-brightness-control.service';
@@ -22,8 +22,16 @@ export class ImageBrightnessControlAutomationService {
 
   async init() {
     this.sleepService.mode
-      .pipe(skip(1), distinctUntilChanged())
+      .pipe(distinctUntilChanged())
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
+    // Apply current mode at startup
+    of(null)
+      .pipe(
+        delay(2000),
+        switchMap(() => this.sleepService.mode),
+        take(1)
+      )
+      .subscribe((sleepMode) => this.onSleepModeChange(sleepMode, true));
   }
 
   public get isSleepEnableTransitionActive() {
@@ -44,13 +52,13 @@ export class ImageBrightnessControlAutomationService {
     );
   }
 
-  private async onSleepModeChange(sleepMode: boolean) {
+  private async onSleepModeChange(sleepMode: boolean, forceInstant = false) {
     const config = await firstValueFrom(this.automationConfigService.configs).then((c) =>
       sleepMode ? c.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE : c.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
     );
     if (!config.enabled) return;
     this.brightnessControl.cancelActiveTransition();
-    if (config.transition) {
+    if (!forceInstant && config.transition) {
       const task = this.brightnessControl.transitionBrightness(
         config.brightness,
         config.transitionTime,
