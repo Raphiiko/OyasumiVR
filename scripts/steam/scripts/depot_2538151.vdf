@@ -8,6 +8,6 @@
 		"DepotPath" "."
 		"recursive" "1"
 	}
-	"InstallScript" "dependency_installscript.vdf"
+	"InstallScript" "runtime_dependencies.vdf"
 	"FileExclusion" "*.pdb"
 }
