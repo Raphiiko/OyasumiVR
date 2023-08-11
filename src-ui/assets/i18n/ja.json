@@ -31,7 +31,7 @@
       "displayBrightness": "ディスプレイの明るさ"
     },
     "displayBrightness": {
-      "description": "ヘッドセットのディスプレイの明るさを自動的に調整します。ディスプレイの明るさは、画像を暗くするのではなく、ヘッドセットのLCDパネルのバックライトの強さに影響します。この機能は Valve Index でのみ利用可能です。",
+      "description": "HMDのディスプレイの明るさを自動的に調整します。ディスプレイの明るさは、画像を暗くするのではなく、LCDパネルのバックライトの強さに影響します。この機能は Valve Index でのみ利用可能です。",
       "indexWarning": "Valve Indexを接続し、SteamVRが起動していることを確認してください。",
       "onSleepEnable": {
         "title": "睡眠時",
@@ -43,7 +43,7 @@
       }
     },
     "imageBrightness": {
-      "description": "ヘッドセットの画像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
+      "description": "ヘッドセットの映像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
       "onSleepEnable": {
         "title": "睡眠時",
         "description": "映像の明るさを調整する"
@@ -58,8 +58,8 @@
       "description": ""
     },
     "transition": {
-      "title": "輝度遷移のスムージング",
-      "description": "設定した輝度に徐々に移行させる"
+      "title": "なめらかな遷移",
+      "description": "輝度を徐々に移行させる"
     },
     "transitionTime": {
       "title": "遷移時間",
@@ -80,40 +80,40 @@
     "enableAutomations": {
       "title": "睡眠モードの有効化",
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
-      "atTime": "指定した時間",
-      "atBatteryPercentage": "機器のバッテリー残量が<strong>{{value}}%</strong>を下回ったとき",
-      "onControllersPoweredOff": "全てのコントローラーの電源が切れたとき",
+      "atTime": "時刻指定",
+      "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{{value}}%</strong>を下回ったとき",
+      "onControllersPoweredOff": "全てのコントローラーがオフになったとき",
       "onMotionDetection": {
-        "title": "HMDの動きから入眠を検知したとき"
+        "title": "寝落ちを検知したとき"
       }
     },
     "disableAutomations": {
       "title": "睡眠モードの無効化",
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
-      "atTime": "指定した時間",
-      "onDevicePowerOn": "機器の電源が入ったとき",
-      "onSteamVRStop": "SteamVRを停止したとき"
+      "atTime": "時刻指定",
+      "onDevicePowerOn": "デバイスの電源がオンになったとき",
+      "onSteamVRStop": "SteamVRを終了したとき"
     },
     "modals": {
       "sleepDetectorCalibration": {
-        "title": "睡眠検知のキャリブレーション",
+        "title": "寝落ち検知のキャリブレーション",
         "currentCalibration": "現在の校正値",
-        "noSteamVR": "HMDをつけた状態でSteamVRを起動している必要があります。",
-        "startCalibration": "キャリブレーションを開始する",
-        "restartCalibration": "キャリブレーションを再開する",
+        "noSteamVR": "HMDを装着した状態でSteamVRを起動している必要があります。",
+        "startCalibration": "キャリブレーション開始",
+        "restartCalibration": "キャリブレーション再開",
         "info": {
           "intro": "HMDの動きから入眠を検知して睡眠モードに移行します。",
           "stepPrefix": "キャリブレーション手順は以下の通りです。",
           "step": {
-            "one": "HMDを装着し、横になる",
-            "two": "オーバーレイでキャリブレーションを開始する",
+            "one": "HMDを装着し、寝る姿勢になる",
+            "two": "オーバーレイからキャリブレーションを開始させる",
             "three": "10秒間、静止する"
           },
-          "stepSuffix": "完了すると、HMDの動きから入眠を検知できるようになるはずです。"
+          "stepSuffix": "完了すると寝落ち検知機能が使用できるようになります。"
         },
         "prepare": {
-          "instruction": "HMDを装着して、横になりましょう。",
-          "note": "準備が整えば、オーバーレイなどで開始ボタンを押します。"
+          "instruction": "HMDを装着して、寝る姿勢になりましょう。",
+          "note": "準備が整えば、オーバーレイなどで開始ボタンを押してください。"
         },
         "countdown": {
           "instruction": "{{counter}}秒後に開始します。",
@@ -137,12 +137,12 @@
         "title": "睡眠モードの有効化",
         "calibration": {
           "title": "キャリブレーション",
-          "description": "少なくとも一度はキャリブレーションを行う必要があります",
+          "description": "一度はキャリブレーションを行う必要があります",
           "action": "設定画面"
         },
         "sensitivity": {
           "title": "検知感度",
-          "description": "感度を上げると睡眠を検出しやすくなります。",
+          "description": "感度を上げると睡眠を検知しやすくなります(HMDの動作検知を鈍くさせます)",
           "presets": {
             "LOWEST": "1(最低)",
             "LOW": "2",
@@ -153,24 +153,28 @@
         },
         "sleepCheck": {
           "title": "有効化の最終確認",
-          "description": "睡眠モードへ移行する前に、本当に眠ったか最終確認します。"
+          "description": "睡眠モードへ移行する直前に、本当に眠ったか通知で最終確認します"
         },
         "detectionWindow": {
-          "title": "検出待機時間",
-          "description": "入眠を検出するまでの時間を設定します",
+          "title": "検知タイマー",
+          "description": "時間内に一定の動作がない場合は寝落ちと判定されます",
           "unit": "分"
         },
-        "description": "動きから寝ていると推測すると、自動的に睡眠モードになります。"
+        "description": "寝落ちを検知して睡眠モードに移行します\nHMDに一定の動作があった場合はタイマーをリセットして再度測定を開始します",
+        "timeWindow": {
+          "title": "有効な時間帯",
+          "description": "特定の時間帯にのみ有効にできます"
+        }
       },
       "enableAtTime": {
         "title": "睡眠モードの有効化",
-        "description": "指定した時間に睡眠モードを有効にします。",
-        "time": "時間"
+        "description": "指定した時刻に睡眠モードを有効にします。",
+        "time": "時刻"
       },
       "disableAtTime": {
         "title": "睡眠モードの無効化",
-        "description": "指定した時間に睡眠モードを無効にします。",
-        "time": "時間"
+        "description": "指定した時刻に睡眠モードを無効にします。",
+        "time": "時刻"
       },
       "disableOnDevicePowerOn": {
         "title": "睡眠モードの無効化",
@@ -201,13 +205,13 @@
       "currentPose": "現在位置",
       "manualControl": "マニュアル操作",
       "presetAuthor": "{{author}}による",
-      "description": "寝返りに合わせてアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nまた、アバターのロコモーションはいくつかのプリセットを用意していますが、自分でアニメーションを指定することも可能です。",
+      "description": "寝相に合わせてアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nいくつかロコモーションのプリセットを用意していますが、独自でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
       "options": {
         "positions": {
-          "title": "寝姿勢",
-          "description": "寝姿勢ごとにアニメーションを有効化させるOSCコマンドを設定します。",
+          "title": "寝相",
+          "description": "寝相ごとにアニメーションを有効化させるOSCコマンドを設定します",
           "SIDE_FRONT": "うつぶせ",
           "SIDE_BACK": "仰向け",
           "SIDE_LEFT": "左向き",
@@ -216,7 +220,7 @@
         },
         "footLock": {
           "title": "フットロック",
-          "description": "フットロックの有効化／無効化を OSC コマンドで設定します。",
+          "description": "フットロックの有効化／無効化を OSC コマンドで設定します",
           "FOOT_LOCK": "フットロックの有効化",
           "FOOT_UNLOCK": "フットロックの無効化"
         },
@@ -227,18 +231,18 @@
           "onlyIfAllTrackersTurnedOff": "すべてのトラッカーがオフのとき",
           "footLock": {
             "title": "フットロック",
-            "description": "フットロック有効時、プレイヤーの動きや寝返りを防ぎます。"
+            "description": "フットロックを有効にするとアバターが回転することを防ぐことができます。"
           },
           "lockFeetOnSleepModeEnable": "睡眠モード有効時にフットロック",
           "unlockFeetOnSleepModeDisable": "睡眠モード無効時にフットロック解除",
           "unlockFeetOnAutomationDisable": "自動睡眠アニメーション無効時にフットロック解除",
-          "releaseFootLockOnPoseChange": "寝姿勢が変わる際にフットロックを瞬時に解除",
+          "releaseFootLockOnPoseChange": "寝相が変わる際にフットロックを瞬時に解除",
           "footLockReleaseWindow": "フットロックの解除時間"
         }
       }
     },
     "general": {
-      "description": "特定のイベントが発生したときに、VRChatにOSCコマンドを送信するための設定です。例えば睡眠時や起床時に、アバターのトグルを変更したい場合に使用できます。",
+      "description": "VRChatにOSCコマンドを送信するための設定です。例えば睡眠時や起床時に、アバターのトグルを変更したい場合に使用できます。",
       "onSleepEnable": {
         "title": "睡眠時",
         "description": "送信コマンド",
@@ -309,7 +313,7 @@
     "lighthouseControlDisabledWarning": "OyasumiVRの設定でベースステーションの電力制御を無効にしているため、これらの自動化を利用することができません。これらの自動化を使用する場合は、これを有効にしてください。",
     "enableLighthouseControl": "有効にする",
     "error": {
-      "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載されているか、また、それが有効になっているかを確認してください。",
+      "noAdapter": "お使いのシステムでBluetoothアダプターが見つかりませんでした。システムにBluetoothアダプターが搭載され、有効になっているかを確認してください。",
       "adapterError": "Bluetoothアダプターとの通信を試みている間にエラーが発生しました。Bluetoothアダプターが有効になっていることを確認し、再度お試しください。"
     }
   },
@@ -380,7 +384,7 @@
           "CHECKING": "有効な <strong>MSIAfterburner.exe</strong> か確認中です。",
           "NOT_FOUND": "<strong>MSIAfterburner.exe</strong>が見つかりませんでした。",
           "INVALID_EXECUTABLE": "この場所にある <strong>MSIAfterburner.exe</strong> が機能していることを確認できませんでした。",
-          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであると確認できませんでした。セキュリティ上の理由から、これは使用できません。MSI Afterburnerが最新バージョンか確認してください。問題が解決しない場合、またはこれが正しいと確信している場合は、OyasumiVR開発者に連絡するか、バグレポートを提出してください。",
+          "INVALID_SIGNATURE": "この場所の <strong>MSIAfterburner.exe</strong> がMSIからのものであると確認できませんでした。セキュリティ上の理由から、これは使用できません。MSI Afterburnerが最新バージョンか確認してください。問題が解決しない場合、またはこれが正しい実行ファイルと確信している場合は、OyasumiVR開発者に連絡するか、バグレポートを提出してください。",
           "UNKNOWN_ERROR": "この場所で<strong>MSIAfterburner.exe</strong> を探そうとした際に、不明なエラーが発生しました。",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong>が見つかり、正常に機能しています！"
         }
@@ -391,7 +395,7 @@
     "title": "ステータス自動化",
     "enable": "ステータス自動化を有効にする",
     "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限することができます。",
-    "exampleUse": "使用例: フレンドがJoinしてきたとき、自動的にステータスをオレンジや赤に切り替え、二人きりになれます。\nフレンドが退出したとき、自動的にステータスを青に戻して、他のフレンドがJoinできるようにします。",
+    "exampleUse": "使用例: 一人で寝ているときは青に切り替え、十分な人数がいるときはオレンジに切り替えることができます！",
     "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
     "playerLimit": "人数制限",
     "playerLimitLabel": {
@@ -407,7 +411,7 @@
       "description": "ステータスの設定"
     },
     "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
-    "behaviourWarning": "OyasumiVRによるステータスの変更は、自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRが修正することはできません。",
+    "behaviourWarning": "OyasumiVRによるステータスの変更は、一見すると自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRが修正することはできません。",
     "moreInfo": "詳細",
     "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。JoinしたいのにJoinできない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
   },
@@ -550,13 +554,13 @@
           "title": "アクティベーションアクション",
           "description": "オーバーレイを起動する方法を選択します",
           "action": {
-            "none": "なし（無効）",
-            "singleA": "Aボタンをプッシュ",
-            "doubleA": "Aボタンをダブルプッシュ",
-            "tripleA": "Aボタンを3プッシュ",
-            "singleB": "Bボタンをトリプルプッシュ",
-            "doubleB": "Bボタンをダブルプッシュ",
-            "tripleB": "Bボタンをトリプルプッシュ"
+            "none": "なし(無効)",
+            "singleA": "Aボタン",
+            "doubleA": "Aボタン(2プッシュ)",
+            "tripleA": "Aボタン(3プッシュ)",
+            "singleB": "Bボタン",
+            "doubleB": "Bボタン(2プッシュ)",
+            "tripleB": "Bボタン(3プッシュ)"
           },
           "controller": {
             "either": "いずれかのコントローラー",
@@ -639,7 +643,7 @@
       "title": "通知の設定",
       "provider": {
         "title": "通知先",
-        "description": "使用したい通知先を選択します。"
+        "description": "使用したい通知先を選択します"
       },
       "notifications": {
         "title": "通知項目",
@@ -654,12 +658,12 @@
             "description": "睡眠モードが無効になったとき"
           },
           "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "title": "VRChatステータス更新（自動）",
+            "title": "VRChatステータスの更新",
             "description": "VRChatステータスを自動更新したとき"
           },
           "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "title": "ReqInviteの承認（自動）",
-            "description": "ReqInviteを自動承認したとき"
+            "title": "Req Inviteの承認",
+            "description": "Req Inviteを自動承認したとき"
           }
         }
       }
@@ -670,11 +674,15 @@
       "install": "v{{version}}をインストール",
       "noUpdate": "現在、最新版であるOyasumiVR v{{version}} を利用しています！",
       "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
-      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です"
+      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です",
+      "updatesDisabled": {
+        "DEV": "新しいバージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
+        "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
+      }
     },
     "advanced": {
       "persistentData": {
-        "title": "永続的なデータ",
+        "title": "保存データ",
         "description": "OyasumiVRがローカルディスクに保存するデータの管理ができます。",
         "dataType": {
           "all": {
@@ -683,45 +691,45 @@
           },
           "appSettings": {
             "title": "アプリケーション設定",
-            "description": "OyasumiVRの一般設定のすべて"
+            "description": "一般設定の全てのデータ"
           },
           "automationSettings": {
             "title": "自動化の設定",
-            "description": "OyasumiVRの1つのオートメーションに固有のすべての設定"
+            "description": "自動化関係の全てのデータ"
           },
           "vrcData": {
             "title": "VRChatデータ",
-            "description": "認証データなど、VRChatに特有のデータ"
+            "description": "認証情報など、VRChat特有のデータ"
           },
           "miscData": {
             "title": "その他のデータ",
-            "description": "OyasumiVRが保管する、他のカテゴリーに含まれないすべてのデータ"
+            "description": "他のカテゴリーに含まれない全てのデータ"
           },
           "appCache": {
             "title": "データキャッシュ",
-            "description": "VRChat APIレスポンスなど、一時的に保存されるすべてのデータ"
+            "description": "VRChat APIレスポンスなど、一時的に保存される全てのデータ"
           },
           "imageCache": {
             "title": "画像キャッシュ",
-            "description": "VRChatのプレイヤーアイコンなど、一時的に保存されるすべての画像"
+            "description": "VRChatのプレイヤーアイコンなど、一時的に保存される全ての画像データ"
           },
           "logs": {
             "title": "ログファイル",
-            "description": "OyasumiVRが作成するログファイル"
+            "description": "ログデータ"
           },
           "eventLog": {
             "title": "イベントログ",
             "description": "概要に記録されるイベント"
           }
         },
-        "clearData": "クリアデータ",
+        "clearData": "データクリア",
         "clearModal": {
           "title": "消去の確認",
           "message": "以下のデータを削除しますか？元に戻せません。\n\n{{items}}"
         },
         "relaunchModal": {
           "title": "OyasumiVRを再起動する",
-          "message": "要求されたデータはクリアされました。この後、OyasumiVRを再起動することをお勧めします。OyasumiVRを再起動しないと、好ましくない影響が出る可能性があります。",
+          "message": "要求されたデータはクリアされました。OyasumiVRを再起動してください。再起動せず使用した場合、不具合の原因になる可能性があります。",
           "relaunch": "OyasumiVRを今すぐ再起動する",
           "later": "あとでやる"
         }
@@ -743,7 +751,7 @@
         "title": "ログファイル",
         "openFolder": {
           "title": "ログフォルダを開く",
-          "description": "エクスプローラーでログファイルの場所を開く",
+          "description": "エクスプローラーでログファイルの場所を開きます",
           "action": "フォルダを開く"
         }
       }
@@ -756,7 +764,7 @@
     "translations": "翻訳",
     "projectLinks": "プロジェクトリンク",
     "sourceLink": "Source Code @ GitHub",
-    "discordInvite": "Discordサーバー",
+    "discordInvite": "Discord",
     "contributions": "貢献"
   },
   "updater": {
@@ -1174,7 +1182,7 @@
   },
   "resolution-automations": {
     "title": "解像度の自動化",
-    "description": "睡眠モードによって、SteamVRのレンダリング解像度を自動的に調整します。",
+    "description": "SteamVRのレンダリング解像度を自動的に調整します。",
     "onSleepEnable": {
       "title": "睡眠時",
       "description": "レンダリング解像度を調整する"
@@ -1191,7 +1199,7 @@
   },
   "chaperone-automations": {
     "title": "ガーディアンの自動化",
-    "description": "睡眠モードの有効・無効時にSteamVRのガーディアンのフェード距離を自動調整します。",
+    "description": "SteamVRのガーディアンのフェード距離を自動的に調整します。",
     "onSleepEnable": {
       "title": "睡眠時",
       "description": "睡眠モード有効時にフェード距離を調整する"
@@ -1201,7 +1209,7 @@
       "description": "睡眠モード無効時にフェード距離を調整する"
     },
     "fadeDistance": {
-      "title": "ガーディアンのフェード距離を変更する"
+      "title": "ガーディアンのフェード距離"
     }
   },
   "sleepAnimations": {
@@ -1229,7 +1237,7 @@
       "title": "シャットダウン設定",
       "quitSteamVR": {
         "title": "SteamVRを終了する",
-        "description": "これにより、実行中のゲームやオーバーレイも終了します"
+        "description": "実行中のゲームやオーバーレイも終了します"
       },
       "turnOffDevices": {
         "title": "デバイスの電源を切る"
@@ -1329,6 +1337,13 @@
           "minutes": {
             "singular": "{{minutes}} 分",
             "plural": "{{minutes}} 分"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "睡眠検出",
+          "subtitle": {
+            "withoutActivationWindow": "検知感度 {{sensitivity}}",
+            "withActivationWindow": "検知感度 {{sensitivity}}, {{startTime}} - {{endTime}}"
           }
         },
         "title": "自動化の設定"
