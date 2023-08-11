@@ -25,13 +25,13 @@ export class DisplayBrightnessControlAutomationService {
       .pipe(skip(1), distinctUntilChanged())
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     // Apply current mode at startup
-    of(null)
-      .pipe(
-        delay(2000),
-        switchMap(() => this.sleepService.mode),
-        take(1)
-      )
-      .subscribe((sleepMode) => this.onSleepModeChange(sleepMode, true));
+    // of(null)
+    //   .pipe(
+    //     delay(2000),
+    //     switchMap(() => this.sleepService.mode),
+    //     take(1)
+    //   )
+    //   .subscribe((sleepMode) => this.onSleepModeChange(sleepMode, true));
   }
 
   public get isSleepEnableTransitionActive() {
