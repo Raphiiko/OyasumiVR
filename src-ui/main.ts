@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { attachConsole, error, info } from 'tauri-plugin-log-api';
 import { getVersion } from './app/utils/app-utils';
+import { FLAVOUR } from './flavour';
 
 if (environment.production) {
   enableProdMode();
@@ -15,7 +16,7 @@ if (isDevMode()) {
 }
 
 getVersion().then((version) => {
-  info('[Oyasumi] Starting OyasumiVR v' + version);
+  info('[Oyasumi] Starting OyasumiVR v' + version + '-' + FLAVOUR);
 });
 
 platformBrowserDynamic()

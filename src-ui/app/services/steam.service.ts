@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 import { FLAVOUR } from '../../flavour';
 import { BehaviorSubject, distinctUntilChanged, filter } from 'rxjs';
-import { error, warn } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
 
 export const SteamAchievements = {
   START_OYASUMIVR: 'START_OYASUMIVR',
@@ -17,6 +17,9 @@ export class SteamService {
   public readonly active = this._active.asObservable();
 
   constructor() {
+    this.active
+      .pipe(distinctUntilChanged(), filter(Boolean))
+      .subscribe(() => info('[Steam] Steamworks SDK initialized'));
     // Set START_OYASUMIVR achievement when Steamworks becomes active
     this.active.pipe(distinctUntilChanged(), filter(Boolean)).subscribe(async () => {
       if (!(await this.getAchievement(SteamAchievements.START_OYASUMIVR))) {
@@ -29,7 +32,7 @@ export class SteamService {
     // Only run in Steam flavoured builds
     if (FLAVOUR !== 'STEAM') return;
     // Keep track of Steamworks status
-    this._active.next(await this.getSteamActive());
+    await this.getSteamActive();
     await listen<boolean>('STEAMWORKS_READY', (data) => this._active.next(data.payload));
     // Check if Steamworks has been initialized.
     setTimeout(() => {
@@ -38,7 +41,7 @@ export class SteamService {
           '[Steam] Steamworks SDK could not be initialized: Steam is likely not running. Steam-related functionality will be unavailable.'
         );
       }
-    }, 3000);
+    }, 5000);
   }
 
   public async getSteamActive(): Promise<boolean> {
@@ -49,6 +52,8 @@ export class SteamService {
 
   public async setAchievement(achievementId: string, unlocked: boolean): Promise<void> {
     if (!this._active) throw 'STEAMWORKS_INACTIVE';
+    if (unlocked) info('[Steam] Unlocking achievement: ' + achievementId);
+    else info('[Steam] Locking achievement: ' + achievementId);
     return invoke('steam_achievement_set', { achievementId, unlocked });
   }
 
