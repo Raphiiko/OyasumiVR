@@ -138,6 +138,7 @@ import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/d
 import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
+import { SteamService } from './services/steam.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES].forEach((locale) =>
   registerLocaleData(locale)
@@ -266,6 +267,7 @@ export class AppModule {
     private fontLoaderService: FontLoaderService,
     private dotnetService: DotnetService,
     private notificationService: NotificationService,
+    private steamService: SteamService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -345,6 +347,8 @@ export class AppModule {
         // Initialize IPC
         await this.ipcService.init();
         await this.ipcAppStateSyncService.init();
+        // Initialize Steam support
+        await this.steamService.init();
         // Initialize automations
         await Promise.all([
           // GPU automations

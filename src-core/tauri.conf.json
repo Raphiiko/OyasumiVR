@@ -61,6 +61,7 @@
       },
       "resources": [
         "./openvr_api.dll",
+        "./steam_api64.dll",
         "./resources/**/*"
       ],
       "icon": [

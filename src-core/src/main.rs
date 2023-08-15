@@ -1,6 +1,6 @@
 #![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
+all(not(debug_assertions), target_os = "windows"),
+windows_subsystem = "windows"
 )]
 
 #[macro_use(lazy_static)]
@@ -21,8 +21,11 @@ mod overlay_sidecar;
 mod system_tray;
 mod utils;
 mod vrc_log_parser;
+mod steam;
+mod flavour;
 
 pub use grpc::models as Models;
+pub use flavour::BUILD_FLAVOUR as BUILD_FLAVOUR;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
@@ -110,6 +113,9 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         lighthouse::commands::lighthouse_get_status,
         lighthouse::commands::lighthouse_get_scanning_status,
         lighthouse::commands::lighthouse_reset,
+        steam::commands::steam_active,
+        steam::commands::steam_achievement_get,
+        steam::commands::steam_achievement_set,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
@@ -126,7 +132,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
             )
-            .unwrap();
+                .unwrap();
             out.finish(format_args!(
                 "{}[{}] {}",
                 time::OffsetDateTime::now_utc().format(&format).unwrap(),
@@ -177,6 +183,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     }
     // Get dependencies
     let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
+    // Initialize Steam module
+    steam::init().await;
     // Initialize HTTP server
     http::init().await;
     // Initialize gRPC server

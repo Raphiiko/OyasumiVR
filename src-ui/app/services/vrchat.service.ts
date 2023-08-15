@@ -675,7 +675,7 @@ export class VRChatService {
         const response = await next<T>(options);
         if (isDev)
           console.log(
-            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url}` +
+            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url} ` +
               response
           );
         return response;

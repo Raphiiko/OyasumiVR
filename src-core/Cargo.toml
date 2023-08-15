@@ -40,16 +40,16 @@ tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", br
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
 windows-sys = { version = "0.36.1", features = [
-  "Win32_UI_Shell",
-  "Win32_Foundation",
+    "Win32_UI_Shell",
+    "Win32_Foundation",
 ] }
 winapi = { version = "0.3.9", features = [
-  "handleapi",
-  "processthreadsapi",
-  "winnt",
-  "securitybaseapi",
-  "impl-default",
-  "powersetting",
+    "handleapi",
+    "processthreadsapi",
+    "winnt",
+    "securitybaseapi",
+    "impl-default",
+    "powersetting",
 ] }
 tokio = { version = "1.28.0", features = ["full"] }
 hyper = { version = "0.14.26", features = ["full"] }
@@ -67,27 +67,28 @@ readonly = "0.2"
 tempfile = "3.6.0"
 strum = "0.25"
 strum_macros = "0.25"
+steamworks = { version = "0.10.0" }
 
 [dependencies.tauri]
 version = "1.4.1"
 features = [
-  "cli",
-  "fs-write-file",
-  "dialog-save",
-  "path-all",
-  "process-relaunch",
-  "system-tray",
-  "dialog-message",
-  "dialog-open",
-  "fs-exists",
-  "fs-read-dir",
-  "fs-read-file",
-  "http-request",
-  "notification-all",
-  "process-exit",
-  "shell-execute",
-  "shell-open",
-  "updater",
+    "cli",
+    "fs-write-file",
+    "dialog-save",
+    "path-all",
+    "process-relaunch",
+    "system-tray",
+    "dialog-message",
+    "dialog-open",
+    "fs-exists",
+    "fs-read-dir",
+    "fs-read-file",
+    "http-request",
+    "notification-all",
+    "process-exit",
+    "shell-execute",
+    "shell-open",
+    "updater",
 ]
 
 [dependencies.ovr_overlay]
