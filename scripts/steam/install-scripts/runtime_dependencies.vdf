@@ -13,7 +13,7 @@
     }
     "DotNet709"
     {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-runtime-7.0.9-win-x64.exe"
+      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-runtime-7.0.10-win-x64.exe"
       "Command 1"     "/install /quiet /norestart"
       "Requirement_OS"
       {
@@ -22,7 +22,7 @@
     }
     "AspNet709"
     {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\aspnetcore-runtime-7.0.9-win-x64.exe"
+      "Process 1"     "%INSTALLDIR%\\DotNet\\aspnetcore-runtime-7.0.10-win-x64.exe"
       "Command 1"     "/install /quiet /norestart"
       "Requirement_OS"
       {

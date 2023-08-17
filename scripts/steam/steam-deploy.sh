@@ -19,9 +19,9 @@ mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64/WebView2
 curl -L https://go.microsoft.com/fwlink/p/?LinkId=2124703 --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/WebView2/WebView2RuntimeInstaller.exe
 # Include DotNet Installer
 mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64/DotNet
-curl -L https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.9/dotnet-runtime-7.0.9-win-x64.exe --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/DotNet/dotnet-runtime-7.0.9-win-x64.exe
+curl -L https://dotnetcli.azureedge.net/dotnet/Runtime/7.0.10/dotnet-runtime-7.0.10-win-x64.exe --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/DotNet/dotnet-runtime-7.0.10-win-x64.exe
 # Include AspNet Installer
-curl -L https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/7.0.9/aspnetcore-runtime-7.0.9-win-x64.exe --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/DotNet/aspnetcore-runtime-7.0.9-win-x64.exe
+curl -L https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/7.0.10/aspnetcore-runtime-7.0.10-win-x64.exe --output SteamSDK/sdk/tools/ContentBuilder/content/Win64/DotNet/aspnetcore-runtime-7.0.10-win-x64.exe
 # Clear default scripts
 rm SteamSDK/sdk/tools/ContentBuilder/scripts/*
 # Copy over scripts
