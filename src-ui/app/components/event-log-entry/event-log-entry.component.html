@@ -5,8 +5,8 @@
       <span [innerHtml]="headerInfoSubTitle"></span>
     </div>
     <div class="header-time">
-      <span>{{ entry.time | localizedDate : 'HH:mm:ss' }}</span>
-      <span>{{ entry.time | localizedDate : 'MMMM d' }}</span>
+      <span>{{ entry.time | localizedDate : 'EVENT_LOG_TIME' }}</span>
+      <span>{{ entry.time | localizedDate : 'EVENT_LOG_DATE' }}</span>
     </div>
   </div>
 </div>

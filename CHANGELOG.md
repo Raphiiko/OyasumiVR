@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed Japanese date formatting
+- Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
 
 ## [1.8.0]

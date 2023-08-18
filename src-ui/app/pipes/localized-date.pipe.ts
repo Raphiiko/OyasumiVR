@@ -14,6 +14,25 @@ export class LocalizedDatePipe implements PipeTransform {
     let currentLang = this.translateService.currentLang;
     if (currentLang === 'DEBUG') currentLang = 'en';
     const datePipe: DatePipe = new DatePipe(NG_LOCALE_MAP[currentLang]);
+    pattern = this.getPatternFromPreset(currentLang, pattern);
     return datePipe.transform(value, pattern);
+  }
+
+  private getPatternFromPreset(currentLang: string, pattern: string): string {
+    switch (pattern) {
+      case 'EVENT_LOG_TIME': {
+        return 'HH:mm:ss';
+      }
+      case 'EVENT_LOG_DATE': {
+        switch (currentLang) {
+          case 'ja':
+            return 'MMMMd日';
+          default:
+            return 'MMMM d';
+        }
+      }
+      default:
+        return pattern;
+    }
   }
 }
