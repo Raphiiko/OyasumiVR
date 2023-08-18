@@ -82,13 +82,13 @@ public class TooltipOverlay : BaseWebOverlay {
       Matrix4x4.CreateTranslation(_targetPosition.Value);
     // Lerp the position
     targetTransform = Matrix4x4.Lerp(currentTransform, targetTransform, 0.2f);
-    // Apply the transformation
-    var transform = targetTransform.ToHmdMatrix34_t();
-    OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
-      ref transform);
     // Set the overlay size based on the distance
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle,
       0.35f * Vector3.Distance(headMatrix.Translation, targetTransform.Translation)
     );
+    // Apply the transformation
+    var transform = targetTransform.ToHmdMatrix34_t();
+    OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle, ETrackingUniverseOrigin.TrackingUniverseStanding,
+      ref transform);
   }
 }
