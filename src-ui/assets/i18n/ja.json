@@ -1325,7 +1325,7 @@
           }
         },
         "sleepingAnimations": {
-          "title": "睡眠の自動化"
+          "title": "アニメーションの自動化"
         },
         "shutdownAutomations": {
           "title": "自動シャットダウン",
