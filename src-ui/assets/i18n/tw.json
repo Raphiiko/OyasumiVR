@@ -160,7 +160,11 @@
           "description": "OyasumiVR應該等待多久才能檢測到你在睡覺",
           "unit": "分鐘"
         },
-        "description": "OyasumiVR在檢測到你睡著之前應等待多長時間啟用該功能後，當OyasumiVR根據你的動作猜測你在睡覺時，它將自動啟用睡眠模式"
+        "description": "OyasumiVR在檢測到你睡著之前應等待多長時間啟用該功能後，當OyasumiVR根據你的動作猜測你在睡覺時，它將自動啟用睡眠模式",
+        "timeWindow": {
+          "title": "啟動視窗",
+          "description": "只允許睡眠檢測在一天中的某些時段啟動睡眠模式"
+        }
       },
       "enableAtTime": {
         "title": "開啟睡眠模式",
@@ -670,7 +674,11 @@
       "install": "安裝版本 {{version}}",
       "noUpdate": "你當前運行的是最新版本的 OyasumiVR 版本 {{version}}！",
       "notChecked": "OyasumiVR 尚未檢查更新",
-      "updateAvailable": "新版本的 OyasumiVR 現已推出！ 你當前正在運行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
+      "updateAvailable": "新版本的 OyasumiVR 現已推出！ 你當前正在運行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。",
+      "updatesDisabled": {
+        "DEV": "如果您想安裝新版本的 OyasumiVR，請下載並手動運行安裝程式。",
+        "STEAM": "您已經安裝了 Steam 版本的《OyasumiVR》。因此，新的《OyasumiVR》更新將通過 Steam 提供！"
+      }
     },
     "advanced": {
       "persistentData": {
@@ -1153,12 +1161,12 @@
     "dotnet-upgrade-modal": {
       "title": "安裝缺失的運行時庫",
       "description": {
-        "text1": "OyasumiVR 需要以下運行時庫，但它們的版本要麼太舊，要麼未安裝在您的系統中：",
+        "text1": "OyasumiVR 需要以下運行時庫，但它們的版本要嘛太舊，要嘛未安裝在您的系統中：",
         "runtimeQueued": "排隊中",
         "text2": "為了繼續使用 OyasumiVR，必須先安裝這些所需的運行時庫。",
         "automaticInstall": "是否要讓 OyasumiVR 嘗試自動為您安裝這些運行時庫？",
         "noAutomaticInstall": "OyasumiVR 無法確定這些運行時庫的最新版本，因此無法自動為您安裝。請手動安裝這些運行時庫，或退出 OyasumiVR，稍後再試。",
-        "moreInfo": "您可以在這裡找到下載和更多信息："
+        "moreInfo": "您可以在這裡找到下載和更多資訊："
       },
       "quit": "退出 OyasumiVR",
       "installAutomatically": "自動安裝",
@@ -1168,7 +1176,7 @@
       },
       "failure": {
         "title": "安裝失敗",
-        "message": "無法自動安裝所需的缺失運行時庫。請嘗試手動安裝它們。您可以查看日誌文件以獲取更多有關安裝失敗的信息。\n\n如果您持續遇到問題，請在 Twitter 上聯繫 @Raphiiko 或加入我們的 Discord 服務器尋求幫助。"
+        "message": "無法自動安裝所需的缺失運行時庫。請嘗試手動安裝它們。您可以查看日誌檔案以獲取更多有關安裝失敗的資訊。\n\n如果您持續遇到問題，請在 Twitter 上聯繫 @Raphiiko 或加入我們的 Discord 伺服器尋求幫助。"
       }
     }
   },
@@ -1329,6 +1337,13 @@
           "minutes": {
             "singular": "{{minutes}} 分鐘",
             "plural": "{{minutes}} 分鐘"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "睡眠檢測",
+          "subtitle": {
+            "withoutActivationWindow": "{{sensitivity}}靈敏度",
+            "withActivationWindow": "{{sensitivity}} 靈敏度, {{startTime}} - {{endTime}}"
           }
         },
         "title": "自動化設定"
