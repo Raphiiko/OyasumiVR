@@ -160,7 +160,11 @@
           "description": "OyasumiVR应该等待多久才能检测到你在睡觉",
           "unit": "分钟"
         },
-        "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式"
+        "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式",
+        "timeWindow": {
+          "title": "启动视窗",
+          "description": "只允许睡眠检测在一天中的某些时段启动睡眠模式"
+        }
       },
       "enableAtTime": {
         "title": "开启睡眠模式",
@@ -670,7 +674,11 @@
       "install": "安装版本 {{version}}",
       "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
       "notChecked": "OyasumiVR 尚未检查更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。",
+      "updatesDisabled": {
+        "DEV": "如果您想安装新版本的 OyasumiVR，请下载并手动运行安装程序。",
+        "STEAM": "您已经安装了 Steam 版本的《OyasumiVR》。因此，新的《OyasumiVR》更新将通过 Steam 提供！"
+      }
     },
     "advanced": {
       "persistentData": {
@@ -1329,6 +1337,13 @@
           "minutes": {
             "singular": "{{minutes}} 分钟",
             "plural": "{{minutes}} 分钟"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "睡眠检测",
+          "subtitle": {
+            "withoutActivationWindow": "{{sensitivity}}灵敏度",
+            "withActivationWindow": "{{sensitivity}} 灵敏度, {{startTime}} - {{endTime}}"
           }
         },
         "title": "自动化设定"
