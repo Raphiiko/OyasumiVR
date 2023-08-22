@@ -222,7 +222,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
       在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地過渡亮度，讓您在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
       <br><br>
       這不僅有助於您在虛擬實境中入睡，還可以避免在醒來時眼睛受到強烈的亮度刺激。
-      <br>如果您使用 Valve Index 頭盔，您還可以調整液晶顯示屏的背光（或稱「顯示亮度」）！
+      <br>如果您使用 Valve Index 頭盔，您還可以調整液晶螢幕的背光（或稱「顯示亮度」）！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1f9bd880-507d-405f-97fb-525b3a9e195b"></td>
   </tr>
@@ -266,7 +266,7 @@ _(\*) 這是社群支援的語言，這意味著翻譯可能不會在每次更�
 
 OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我個人認為多虧了他們的努力，更多的人能夠使用 OyasumiVR，這實在是太棒了。
 
-如果您想支援我們，無論是通過貢獻遺漏的翻譯，還是添加全新的語言，請查閱 [關於添加翻譯的 wiki 頁面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 以獲取入門指南！如果您需要更多信息，請隨時加入我們的 [Discord](https://discord.gg/7MqdPJhYxC) 提問！
+如果您想支援我們，無論是通過貢獻遺漏的翻譯，還是添加全新的語言，請查閱 [關於添加翻譯的 wiki 頁面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 以獲取入門指南！如果您需要更多資訊，請隨時加入我們的 [Discord](https://discord.gg/7MqdPJhYxC) 提問！
 
 ## 支援的硬體
 
@@ -288,7 +288,7 @@ OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我�
 
 _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意味著電池自動化仍將運作，但將非
 
-常延遲（雙位數分鐘），除非 Tundra 在其定位器固件中修復此問題。_
+常延遲（雙位數分鐘），除非 Tundra 在其定位器韌體中修復此問題。_
 
 ### GPU 自動化
 
@@ -317,7 +317,7 @@ OyasumiVR 是使用以下技術構建的：
 
 ## VRChat
 
-OyasumiVR 的某些功能要求您使用 VRChat 帳戶登錄才能使用（例如狀態自動化）。
+OyasumiVR 的某些功能要求您使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
 這僅對依賴此功能的功能是必需的。您可以在不提供憑證的情況下使用不依賴於此的功能。您的登錄憑證永遠不會儲存在任何地方，只會發送到 VRChat 的伺服器進行驗證。
 
@@ -328,7 +328,7 @@ OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（�
 
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
 
-或者，您也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯繫我。我會盡快給您回复！
+或者，您也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯絡我。我會盡快給您回復！
 
 ## 授權條款
 
