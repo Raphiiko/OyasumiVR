@@ -1,0 +1,1353 @@
+{
+  "shared": {
+    "logo": {
+      "tagline": "Utilitas VR Sleeping"
+    },
+    "modals": {
+      "cancel": "Batalkan",
+      "save": "Simpan",
+      "confirm": "Konfirmasi",
+      "ok": "Oke",
+      "open": "Buka",
+      "close": "Tutup",
+      "login": "Masuk"
+    },
+    "common": {
+      "none": "Kosong"
+    },
+    "misc": {
+      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat.",
+      "windowsPowerPolicy": {
+        "BALANCED": "Seimbang",
+        "HIGH_PERFORMANCE": "Performa Penuh",
+        "POWER_SAVING": "Hemat Daya"
+      }
+    }
+  },
+  "brightness-automations": {
+    "title": "Automasi Kecerahan",
+    "tabs": {
+      "imageBrightness": "Kecerahan Gambar",
+      "displayBrightness": "Kecerahan Layar"
+    },
+    "displayBrightness": {
+      "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan layar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan layar mempengaruhi kekuatan cahaya latar panel LCD di headset Anda, dan bukannya menggelapkan gambar. Mengontrol kecerahan layar hanya tersedia pada Valve Index",
+      "indexWarning": "Pastikan Valve Index Anda terhubung dan SteamVR sedang berjalan.",
+      "onSleepEnable": {
+        "title": "Ketika saya mulai tidur",
+        "description": "Atur kecerahan layar"
+      },
+      "onSleepDisable": {
+        "title": "Ketika saya bangun",
+        "description": "Atur kecerahan layar"
+      }
+    },
+    "imageBrightness": {
+      "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan gambar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan gambar akan menggelapkan gambar yang ditampilkan. Tidak seperti kecerahan tampilan, mengontrol kecerahan gambar tersedia untuk setiap headset.",
+      "onSleepEnable": {
+        "title": "Ketika saya mulai tidur",
+        "description": "Atur kecerahan gambar"
+      },
+      "onSleepDisable": {
+        "title": "Ketika saya bangun",
+        "description": "Atur kecerahan gambar"
+      }
+    },
+    "brightness": {
+      "title": "Atur Kecerahan ke",
+      "description": "Mengatur kecerahan ke tingkat tertentu"
+    },
+    "transition": {
+      "title": "Atur kecerahan bertahap",
+      "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan"
+    },
+    "transitionTime": {
+      "title": "Durasi transisi",
+      "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru"
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "label": "Mode tidur",
+      "active": "Aktif",
+      "inactive": "Nonaktif",
+      "activate": "Aktifkan",
+      "deactivate": "Nonaktifkan"
+    }
+  },
+  "sleep-detection": {
+    "title": "Deteksi Tidur",
+    "enableAutomations": {
+      "title": "Mengaktifkan mode tidur",
+      "description": "Mengaktifkan mode tidur secara otomatis berdasarkan berbagai pemicu",
+      "atTime": "Pada waktu tertentu",
+      "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{{value}}%</strong>",
+      "onControllersPoweredOff": "Ketika semua kontroler dimatikan",
+      "onMotionDetection": {
+        "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
+      }
+    },
+    "disableAutomations": {
+      "title": "Menonaktifkan mode tidur",
+      "description": "Secara otomatis menonaktifkan mode tidur berdasarkan berbagai pemicu",
+      "atTime": "Pada waktu tertentu",
+      "onDevicePowerOn": "Saat perangkat dihidupkan",
+      "onSteamVRStop": "Saat SteamVR dihentikan"
+    },
+    "modals": {
+      "sleepDetectorCalibration": {
+        "title": "Mengkalibrasi Deteksi Tidur",
+        "currentCalibration": "Nilai Kalibrasi Anda saat ini:",
+        "noSteamVR": "Anda hanya dapat memulai kalibrasi setelah SteamVR berjalan dengan Headset VR yang terpasang.",
+        "startCalibration": "Mulai kalibrasi",
+        "restartCalibration": "Ulang kalibrasi",
+        "info": {
+          "intro": "OyasumiVR dapat mendeteksi jika Anda tertidur berdasarkan pergerakan headset VR Anda. Agar dapat melakukan hal ini, anda harus terkalibrasi dengan pengaturan VR Anda. Anda harus mengkalibrasi setidaknya sekali sebelum mencoba menggunakan fitur ini.",
+          "stepPrefix": "Kalibrasi bekerja sebagai berikut:",
+          "step": {
+            "one": "Anda memakai headset dan berbaring.",
+            "two": "Anda memulai kalibrasi di OyasumiVR dari overlay Anda.",
+            "three": "Anda berbaring diam selama 10 detik."
+          },
+          "stepSuffix": "Selesai! Setelah kalibrasi, OyasumiVR seharusnya dapat mendeteksi jika Anda tertidur berdasarkan pergerakan headset VR Anda."
+        },
+        "prepare": {
+          "instruction": "Kenakan headset VR Anda dan berbaringlah.",
+          "note": "Setelah Anda siap dan dapat melihat jendela ini dari hamparan Anda, tekan 'Mulai Kalibrasi' untuk memulai."
+        },
+        "countdown": {
+          "instruction": "Mulai dari {{counter}}",
+          "note": "Jangan bergerak sewaktu mengkalibrasi! Berpura-puralah Anda sedang tidur.\nBergerak sewaktu mengkalibrasi akan mencegah fitur ini bekerja dengan benar."
+        },
+        "calibrating": {
+          "instruction": "Mengkalibrasi",
+          "note": "Tetap diam.",
+          "countdown": "{{counter}} detik lagi..."
+        },
+        "done": {
+          "instruction": "Kalibrasi selesai!",
+          "note": "Anda sekarang dapat menggunakan otomatisasi ini."
+        },
+        "failed": {
+          "instruction": "Kalibrasi gagal",
+          "note": "Kalibrasi tidak berhasil dilakukan, kemungkinan karena headset Anda tidak melaporkan data apa pun. Pastikan headset Anda tracking dan coba lagi."
+        }
+      },
+      "enableForSleepDetector": {
+        "title": "Nyalakan mode tidur",
+        "calibration": {
+          "title": "Kalibrasi",
+          "description": "Anda perlu mengkalibrasi setidaknya satu kali sebelum mencoba menggunakan fitur ini.",
+          "action": "Mengkalibrasi"
+        },
+        "sensitivity": {
+          "title": "Sensitivitas",
+          "description": "Semakin tinggi sensitivitasnya, semakin besar kemungkinan OyasumiVR akan mendeteksi Anda sedang tidur.",
+          "presets": {
+            "LOWEST": "Terendah",
+            "LOW": "Rendah",
+            "MEDIUM": "Sedang",
+            "HIGH": "Tinggi",
+            "HIGHEST": "Tertinggi"
+          }
+        },
+        "sleepCheck": {
+          "title": "Sebelum mengaktifkan mode tidur, tanyakan apakah saya masih terjaga",
+          "description": "Mengirimkan notifikasi yang dapat ditindaklanjuti untuk menanyakan apakah Anda masih terjaga sebelum mengaktifkan mode tidur."
+        },
+        "detectionWindow": {
+          "title": "Jendela deteksi",
+          "description": "Berapa lama OyasumiVR harus menunggu sebelum mendeteksi Anda tertidur",
+          "unit": "min"
+        },
+        "description": "Dengan mengaktifkan fitur ini, OyasumiVR akan secara otomatis mengaktifkan mode tidur apabila ia menebak bahwa Anda tertidur berdasarkan gerakan Anda.",
+        "timeWindow": {
+          "title": "Jendela aktivasi",
+          "description": "Hanya izinkan deteksi tidur untuk mengaktifkan mode tidur di antara jam-jam tertentu dalam sehari"
+        }
+      },
+      "enableAtTime": {
+        "title": "Nyalakan mode tidur",
+        "description": "Mengaktifkan mode tidur pada waktu tertentu dalam sehari.",
+        "time": "Waktu"
+      },
+      "disableAtTime": {
+        "title": "Matikan mode tidur",
+        "description": "Menonaktifkan mode tidur pada waktu tertentu dalam sehari.",
+        "time": "Waktu"
+      },
+      "disableOnDevicePowerOn": {
+        "title": "Matikan mode tidur",
+        "whenTurningOn": "Ketika menyalakan",
+        "Controller": "Kontroler",
+        "GenericTracker": "Tracker"
+      },
+      "enableAtBatteryPercentage": {
+        "title": "Nyalakan mode tidur",
+        "whenA": "Ketika",
+        "Controller": "Kontroler",
+        "GenericTracker": "Tracker",
+        "fallsBelow": "Jatuh dibawah",
+        "errors": {
+          "thresholdOutOfRange": "Persentasenya harus antara 0% dan 100%.",
+          "thresholdNotInteger": "Nilai persentase harus berupa angka bulat."
+        }
+      }
+    }
+  },
+  "oscAutomations": {
+    "title": "Otomasi OSC",
+    "tab": {
+      "sleepingAnimations": "Animasi tidur",
+      "general": "Umum"
+    },
+    "sleepingAnimations": {
+      "currentPose": "Posisi saat ini",
+      "manualControl": "Kontrol manual",
+      "presetAuthor": "dari {{author}}",
+      "description": "OyasumiVR dapat secara otomatis mengubah animasi avatar Anda ketika Anda mengubah posisi tidur. Hal ini dapat berguna jika Anda tidak memiliki tracker seluruh tubuh, atau jika Anda (atau Anda memiliki OyasumiVR) mematikan tracker Anda pada malam hari. Lihat contoh seperti apa tampilannya <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPreset tersedia untuk beberapa prefab locomotion avatar yang sudah dibuat sebelumnya, tetapi Anda juga dapat menentukan animasi Anda sendiri.",
+      "enable": "Mengaktifkan animasi tidur otomatis",
+      "customPreset": "Animasi kustom",
+      "options": {
+        "positions": {
+          "title": "Posisi Tidur",
+          "description": "Tetapkan perintah OSC untuk mengaktifkan animasi untuk setiap posisi tidur.",
+          "SIDE_FRONT": "Tegak",
+          "SIDE_BACK": "Sisi belakang",
+          "SIDE_LEFT": "Sisi kiri",
+          "SIDE_RIGHT": "Sisi kanan",
+          "UNKNOWN": "Tidak diketahui"
+        },
+        "footLock": {
+          "title": "Kunci kaki",
+          "description": "Atur perintah OSC untuk mengaktifkan dan menonaktifkan kunci kaki.",
+          "FOOT_LOCK": "Aktifkan kunci kaki",
+          "FOOT_UNLOCK": "Nontaktifkan kunci kaki"
+        },
+        "general": {
+          "title": "Opsi umum",
+          "onlySwitchAnimations": "Hanya mengganti animasi",
+          "onlyIfSleepModeEnabled": "Jika mode tidur diaktifkan",
+          "onlyIfAllTrackersTurnedOff": "Jika semua tracker dimatikan",
+          "footLock": {
+            "title": "Kunci kaki",
+            "description": "Pengunci kaki biasanya mencegah player bergerak atau berputar ketika diaktifkan."
+          },
+          "lockFeetOnSleepModeEnable": "Mengunci kaki saat mode tidur diaktifkan",
+          "unlockFeetOnSleepModeDisable": "Membuka kunci kaki saat mode tidur dinonaktifkan",
+          "unlockFeetOnAutomationDisable": "Membuka kunci kaki saat menonaktifkan animasi tidur otomatis",
+          "releaseFootLockOnPoseChange": "Lepaskan kunci kaki untuk sementara saat berpindah posisi tidur",
+          "footLockReleaseWindow": "Durasi pelepasan kunci kaki"
+        }
+      }
+    },
+    "general": {
+      "description": "Di sini Anda dapat mengonfigurasi OyasumiVR untuk mengirimkan perintah OSC ke VRChat ketika peristiwa tertentu terjadi. Hal ini, misalnya, dapat berguna jika Anda ingin mengubah pergantian avatar saat Anda tidur atau bangun.",
+      "onSleepEnable": {
+        "title": "Ketika saya pergi tidur",
+        "description": "Kirim perintah OSC ini",
+        "script": "Mode tidur diaktifkan"
+      },
+      "onSleepDisable": {
+        "title": "Ketika saya bangun",
+        "description": "Kirim perintah OSC ini",
+        "script": "Mode tidur dimatikan"
+      }
+    }
+  },
+  "power-automations": {
+    "title": "Otomatisasi Daya",
+    "tabs": {
+      "controllersAndTrackers": "Kontroler & Tracker",
+      "baseStations": "Base Station",
+      "windowsPowerPolicy": "Kebijakan daya"
+    },
+    "windowsPowerPolicy": {
+      "description": "OyasumiVR dapat secara otomatis mengubah Kebijakan Daya Windows yang aktif ketika Anda tidur atau bangun. Hal ini dapat berguna untuk mengurangi konsumsi daya saat Anda tidur, dan mengembalikan kebijakan kinerja yang lebih tinggi saat Anda bangun kembali.",
+      "automations": "Otomatisasi",
+      "sleepModeEnable": {
+        "title": "Ketika mode tidur dinyalakan",
+        "description": "Tetapkan Kebijakan Daya Windows berikut ini"
+      },
+      "sleepModeDisable": {
+        "title": "Ketika mode tidur dimatikan",
+        "description": "Tetapkan Kebijakan Daya Windows berikut ini"
+      }
+    },
+    "devicePowerOff": {
+      "onSleepModeEnable": {
+        "title": "Ketika saya pergi tidur",
+        "description": "Matikan perangkat saat mode tidur diaktifkan.",
+        "optionControllers": "Matikan semua kontroler",
+        "optionTrackers": "Matikan semua tracker",
+        "hint": "Anda dapat mengonfigurasi kapan mode tidur diaktifkan di <a class=\"sleepDetectionLink\">Deteksi Tidur</a>"
+      },
+      "onCharge": {
+        "title": "Saat mengisi daya",
+        "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya.",
+        "optionControllers": "Matikan kontroler",
+        "optionTrackers": "Matikan tracker"
+      }
+    },
+    "lighthousePowerOn": {
+      "title": "Nyalakan Base Station",
+      "description": "Minta OyasumiVR secara otomatis menyalakan base station Anda.",
+      "onOyasumiStart": {
+        "title": "Ketika OyasumiVR dimulai",
+        "description": "Secara otomatis menghidupkan base station Anda ketika OyasumiVR dimulai"
+      },
+      "onSteamVRStart": {
+        "title": "Saat SteamVR dimulai",
+        "description": "Secara otomatis menghidupkan base station Anda ketika SteamVR dimulai"
+      }
+    },
+    "lighthousePowerOff": {
+      "title": "Matikan Base Station",
+      "description": "Minta OyasumiVR secara otomatis mematikan stasiun pangkalan Anda.",
+      "onSteamVRStop": {
+        "title": "Ketika SteamVR berhenti",
+        "description": "Secara otomatis mematikan base station Anda ketika SteamVR berhenti"
+      }
+    },
+    "powerManagementWarning": "Ketika memilih untuk menggunakan otomatisasi OyasumiVR untuk menghidupkan atau mematikan base station Anda, Anda disarankan untuk menonaktifkan manajemen daya dalam pengaturan base station SteamVR.",
+    "lighthouseControlDisabledWarning": "Otomatisasi ini tidak tersedia karena Anda telah menonaktifkan kontrol daya base station dalam pengaturan OyasumiVR. Aktifkan ini jika Anda ingin menggunakan otomatisasi ini.",
+    "enableLighthouseControl": "Aktifkan",
+    "error": {
+      "noAdapter": "Tidak ada adaptor Bluetooth yang ditemukan di sistem Anda. Pastikan sistem Anda dilengkapi dengan adaptor Bluetooth dan adaptor tersebut diaktifkan.",
+      "adapterError": "Terjadi kesalahan saat mencoba berkomunikasi dengan adaptor Bluetooth. Pastikan adaptor Bluetooth Anda telah diaktifkan dan coba lagi."
+    }
+  },
+  "gpu-automations": {
+    "title": "Otomatisasi GPU",
+    "disabled": {
+      "disabled": "OyasumiVR memiliki berbagai cara untuk mengubah pengaturan GPU Anda secara otomatis.\nHal ini memungkinkan Anda menghemat daya sewaktu Anda tidur.\n\nKarena ini adalah fitur untuk pengguna tingkat lanjut, fitur ini dinonaktifkan secara default.\nAnda dapat mengaktifkannya dengan mengeklik tombol di bawah ini.",
+      "noSidecar": "Agar OyasumiVR diizinkan untuk mengubah pengaturan GPU Anda, diperlukan hak administrator. Silakan klik tombol di bawah ini untuk memberikan hak administrator kepada OyasumiVR."
+    },
+    "tabs": {
+      "powerLimiting": "Limitasi Daya",
+      "msiAfterburner": "MSI Afterburner"
+    },
+    "requestAdministrator": "Berikan Hak Istimewa Administrator",
+    "disable": "Matikan Otomatisasi GPU",
+    "enable": "Nyalakan Otomatisasi GPU",
+    "automations": "Otomatisasi Tidur",
+    "enableWarning": "Salah mengubah parameter GPU dapat menyebabkan sistem Anda menjadi tidak stabil. Harap ingatlah hal ini dan hanya aktifkan fitur ini jika Anda tahu apa yang Anda lakukan.",
+    "elevationSidecarModal": {
+      "title": "Memberikan hak istimewa kepada administrator",
+      "message": "Apakah Anda ingin selalu memberikan hak administrator OyasumiVR?\n\n",
+      "confirm": "Selalu",
+      "cancel": "Hanya sekali ini saja"
+    },
+    "powerLimiting": {
+      "disabled": {
+        "initializing": "Otomatisasi pembatasan daya sedang diinisialisasi...",
+        "noNvidia": "Otomatisasi pembatasan daya tidak tersedia karena tidak ada driver NVIDIA yang sedang berjalan yang terdeteksi. Otomatisasi pembatasan daya hanya tersedia untuk GPU NVIDIA.\n\nJika Anda memiliki GPU NVIDIA dalam sistem Anda, pastikan bahwa driver yang sesuai telah terinstal.\n\n({{code}})",
+        "noPermission": "Meskipun OyasumiVR memiliki hak istimewa sebagai administrator, ia tidak memiliki izin untuk mengubah pengaturan GPU Anda.\n\nSilakan periksa konfigurasi sistem Anda karena hal ini biasanya tidak pernah terjadi.",
+        "noSidecar": "Untuk alasan yang tidak diketahui, hak istimewa administrator tidak dapat diperoleh.\nIni diperlukan untuk mengontrol batas daya GPU Anda.\n\nSilakan coba mulai ulang OyasumiVR.",
+        "unknown": "Otomatisasi pembatas daya tidak tersedia karena alasan yang tidak diketahui.\n\nSilakan coba mulai ulang OyasumiVR."
+      },
+      "noGPUSelected": "Tidak Ada GPU yang Dipilih",
+      "gpuUnsupported": "GPU tidak didukung",
+      "noGPUs": "Tidak ada GPU NVIDIA yang dapat ditemukan dalam sistem Anda.",
+      "description": "Di sini Anda dapat mengotomatiskan batas daya GPU Anda, untuk menghemat listrik saat Anda tidur. Pembatasan daya hanya tersedia untuk GPU NVIDIA.",
+      "selectGPU": "Pilih GPU yang ingin Anda tetapkan batas dayanya:",
+      "gpuPowerLimitsUnsupported": "GPU yang dipilih tidak mendukung pengaturan batas daya.",
+      "currentPowerLimit": "Batas Daya Saat Ini",
+      "activatingSleepMode": {
+        "title": "Ketika saya pergi tidur",
+        "description": "Menentukan batas daya yang akan ditetapkan saat mode tidur diaktifkan"
+      },
+      "deactivatingSleepMode": {
+        "title": "Ketika saya bangun",
+        "description": "Menentukan batas daya yang akan ditetapkan saat mode tidur dinonaktifkan"
+      },
+      "enabledWarning": "Perlu diketahui bahwa mengatur batas daya terlalu rendah dapat mengakibatkan sistem Anda menjadi tidak stabil. Nonaktifkan fitur ini jika Anda tidak tahu apa yang Anda lakukan.",
+      "inputDefault": "Mengatur ulang ke batas default GPU."
+    },
+    "msiAfterburner": {
+      "description": "OyasumiVR dapat secara otomatis mengubah pengaturan GPU Anda ketika Anda tidur atau bangun, dengan menerapkan profil yang telah Anda buat di MSI Afterburner. Contoh penggunaan fungsi ini adalah untuk menghemat listrik saat Anda tidur, dan mendapatkan kembali daya GPU saat Anda bangun.<br><br>Anda harus menyiapkan profil yang ingin Anda terapkan di MSI Afterburner.<br>Anda dapat mengunduh MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">disini</a>.",
+      "sleepModeEnable": {
+        "title": "Saat mode tidur diaktifkan",
+        "description": "Terapkan profil MSI Afterburner berikut ini"
+      },
+      "sleepModeDisable": {
+        "title": "Saat mode tidur dinonaktifkan",
+        "description": "Terapkan profil MSI Afterburner berikut ini"
+      },
+      "profile": "Profil {{index}}",
+      "none": "kosong",
+      "enabledWarning": "Perlu diketahui bahwa salah mengkonfigurasi GPU Anda di MSI Afterburner dapat mengakibatkan sistem Anda menjadi tidak stabil. Nonaktifkan fitur ini jika Anda tidak tahu apa yang Anda lakukan.",
+      "executable": {
+        "title": "Konfigurasi",
+        "description": "OyasumiVR perlu tahu tentang lokasi executable <strong>MSIAfterburner.exe</strong> anda.\nJika OyasumiVR tidak dapat menemukannya di lokasi default, Anda perlu mengatur di mana ia dapat ditemukan.",
+        "status": {
+          "CHECKING": "Memeriksa validitas <strong>MSIAfterburner.exe</strong>",
+          "NOT_FOUND": "<strong>MSIAfterburner.exe</strong> Tidak dapat ditemukan di lokasi ini.",
+          "INVALID_EXECUTABLE": "<strong>MSIAfterburner.exe</strong> di lokasi ini tidak dapat diverifikasi.",
+          "INVALID_SIGNATURE": "<strong>MSIAfterburner.exe</strong> di lokasi ini tidak dapat diverifikasi berasal dari MSI. Karena alasan keamanan, file tersebut tidak dapat digunakan. Pastikan Anda menggunakan MSI Afterburner versi terbaru. Jika masalah terus berlanjut atau Anda yakin bahwa ini benar, silakan hubungi developer OyasumiVR atau kirimkan laporan bug.",
+          "UNKNOWN_ERROR": "Terjadi kesalahan yang tidak diketahui saat mencoba mencari <strong>MSIAfterburner.exe</strong> di lokasi ini.",
+          "SUCCESS": "telah ditemukan dan berfungsi dengan benar!"
+        }
+      }
+    }
+  },
+  "status-automations": {
+    "title": "Otomatisasi Status",
+    "enable": "Mengaktifkan Otomatisasi Status",
+    "description": "OyasumiVR dapat membatasi jumlah orang yang bergabung dengan Anda, dengan secara otomatis mengatur status Anda\n      berdasarkan jumlah pemain yang ada di dunia Anda.",
+    "exampleUse": "Contoh penggunaan: Ketika seseorang bergabung dengan Anda, secara otomatis mengubah status Anda menjadi oranye atau merah!\nKetika mereka pergi dan Anda sendirian lagi, secara otomatis ubah status Anda kembali menjadi biru sehingga orang lain dapat bergabung dengan Anda.",
+    "disableToEdit": "Harap nonaktifkan otomatisasi status sebelum Anda membuat perubahan apa pun.",
+    "playerLimit": "Limit Player",
+    "playerLimitLabel": {
+      "singular": "{{count}} player (termasuk kamu)",
+      "plural": "{{count}} player (termasuk kamu)"
+    },
+    "belowLimit": {
+      "title": "Dibawah limit",
+      "description": "Ubah statusmu ke"
+    },
+    "atLimitOrAbove": {
+      "title": "Di batas limit atau diatasnya",
+      "description": "Ubah statusmu ke"
+    },
+    "onlyIfSleepModeEnabled": "Hanya jika mode tidur diaktifkan",
+    "behaviourWarning": "Perubahan status oleh OyasumiVR tidak terlihat oleh pemain. Bahkan untuk pemain lain, perlu sedikit waktu untuk menampilkan pembaruan status. Ini adalah keterbatasan VRChat dan tidak dapat diperbaiki oleh OyasumiVR.",
+    "moreInfo": "Info lanjut",
+    "behaviourWarningFAQ": "Di sini Anda dapat menemukan jawaban atas beberapa pertanyaan yang mungkin Anda miliki tentang perilaku perubahan status:\n\nT: Apakah saya masih bisa secara otomatis menerima permintaan undangan, meskipun VRChat tidak menunjukkan bahwa saya berwarna biru?\nJ: Jika Anda mengatur status OyasumiVR menjadi biru (join me), OyasumiVR akan mengambil alih tanggung jawab untuk secara otomatis menerima permintaan undangan yang Anda terima.\n\nT: Orang-orang tidak dapat bergabung dengan saya karena status saya tidak diperbarui untuk mereka.\nJ: Pembaruan status dapat memakan waktu beberapa saat untuk ditampilkan ke pengguna lain. Jika mereka ingin bergabung dengan Anda tetapi tidak bisa, mereka dapat memaksa status Anda untuk disegarkan dengan membuka profil Anda di menu utama."
+  },
+  "auto-invite-request-accept": {
+    "title": "Terima Otomatis Permintaan Undangan",
+    "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
+    "userOnBusyStatus": "Anda tidak dapat menerima permintaan undangan dari pengguna saat status Anda sedang sibuk (merah).",
+    "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru).",
+    "whitelist": "Whitelist Player",
+    "blacklist": "Blacklist Player",
+    "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
+    "addFriends": "Tambahkan teman",
+    "clearPlayers": "Bersihkan player",
+    "removeModal": {
+      "title": "Konfirmasi Penghapusan",
+      "message": "Apakah Anda yakin ingin menghapus '{{name}}' dari daftar Anda?"
+    },
+    "removeModalBulk": {
+      "title": "Konfirmasi penghapusan",
+      "message": "Apakah Anda yakin ingin menghapus semua orang dari daftar Anda?"
+    },
+    "options": {
+      "enable": {
+        "title": "Nyalakan",
+        "description": "Secara otomatis menerima permintaan undangan dari teman."
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "Hanya jika mode tidur diaktifkan"
+      },
+      "listMode": {
+        "title": "Mode Daftar",
+        "description": "Bagaimana daftar pemain beroperasi",
+        "options": {
+          "DISABLED": {
+            "label": "Matikan",
+            "subLabel": "Terima dari semua orang"
+          },
+          "WHITELIST": {
+            "label": "Whitelist",
+            "subLabel": "Menerima dari teman dalam daftar"
+          },
+          "BLACKLIST": {
+            "label": "Blacklist",
+            "subLabel": "Menerima dari teman yang tidak ada dalam daftar"
+          }
+        }
+      }
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "tab": {
+      "general": "Umum",
+      "vrchat": "VRChat",
+      "notifications": "Notifikasi",
+      "updates": "Update",
+      "advanced": "Lanjutan"
+    },
+    "general": {
+      "language": {
+        "title": "Bahasa",
+        "description": "Anda dapat memilih bahasa yang Anda inginkan di sini. Jika ada terjemahan yang belum tersedia, atau Anda ingin menambahkan dukungan untuk bahasa Anda, silakan hubungi kami!"
+      },
+      "lighthouseConsole": {
+        "title": "Konsol Lighthouse",
+        "description": "OyasumiVR perlu mengetahui tentang lokasi instalasi SteamVR Anda <strong>lighthouse_console.exe</strong>.\nJika OyasumiVR tidak dapat menemukannya di lokasi default, Anda perlu mengatur di mana ia dapat ditemukan.",
+        "status": {
+          "NOT_FOUND": "<strong>lighthouse_console.exe</strong> tidak dapat ditemukan di lokasi ini.",
+          "INVALID_EXECUTABLE": "<strong>lighthouse_console.exe</strong> di lokasi ini tidak dapat diverifikasi sebagai berfungsi.",
+          "PERMISSION_DENIED": "OyasumiVR tidak memiliki izin untuk menjalankan <strong>lighthouse_console.exe</strong> di lokasi ini. Coba jalankan OyasumiVR sebagai administrator.",
+          "INVALID_FILENAME": "Lokasi yang ditetapkan bukan merupakan jalur file yang valid.",
+          "UNKNOWN_ERROR": "Terjadi kesalahan yang tidak diketahui saat mencoba mencari <strong>lighthouse_console.exe</strong> di lokasi ini.",
+          "CHECKING": "Memeriksa <strong>lighthouse_console.exe</strong> yang valid",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> telah ditemukan dan berfungsi dengan baik!"
+        }
+      },
+      "adminPrivileges": {
+        "title": "Hak Istimewa Administrator",
+        "label": "Meminta hak istimewa administrator saat memulai",
+        "description": "OyasumiVR membutuhkan hak administrator untuk dapat mengontrol batas daya GPU Anda. Jika Anda mengaktifkannya, OyasumiVR akan meminta hak istimewa administrator saat memulai."
+      },
+      "telemetry": {
+        "title": "Telemetri",
+        "label": "Mengirim data penggunaan anonim",
+        "description": "Data yang akan dikirim terbatas pada versi OyasumiVR yang Anda gunakan, dan bahasa yang telah Anda tetapkan. Tidak ada data lain yang dikirim dan sepenuhnya anonim. Data ini hanya digunakan untuk menyediakan beberapa statistik penggunaan umum."
+      },
+      "systemTray": {
+        "title": "Baki sistem",
+        "close": {
+          "label": "Tutup ke baki sistem",
+          "description": "Menutup OyasumiVR ke baki sistem alih-alih keluar dari program."
+        },
+        "start": {
+          "label": "Mulai di baki sistem",
+          "description": "Memulai OyasumiVR diminimalkan ke baki sistem."
+        }
+      },
+      "lighthousePowerControl": {
+        "title": "Kontrol Daya Base Station SteamVR",
+        "powerOffMode": {
+          "standby": {
+            "title": "Siaga",
+            "description": "Matikan\nlaser"
+          },
+          "sleep": {
+            "title": "Tidur",
+            "description": "Matikan daya\nlaser & motor"
+          },
+          "title": "Status daya mati yang diinginkan",
+          "description": "Tidak seperti mode Siaga, mode Tidur juga mematikan motor, yang mungkin memerlukan waktu lebih lama untuk menghidupkannya kembali."
+        },
+        "enable": {
+          "title": "Mengaktifkan kontrol daya",
+          "description": "Jika diaktifkan, Anda akan dapat mematikan dan menghidupkan base station menggunakan OyasumiVR. Memerlukan bluetooth, dan hanya mendukung base station V2."
+        }
+      },
+      "sleepMode": {
+        "title": "Mode Tidur",
+        "startupBehaviour": {
+          "title": "Status Permulaan",
+          "description": "Bagaimana seharusnya mode tidur ketika Anda memulai OyasumiVR",
+          "option": {
+            "persist": {
+              "title": "Status tersimpan",
+              "description": "Ingat dari terakhir kali"
+            },
+            "enabled": {
+              "title": "Aktif",
+              "description": "Mulai sebagai aktif"
+            },
+            "disabled": {
+              "title": "Tidak Aktif",
+              "description": "Mulai sebagai tidak aktif"
+            }
+          }
+        }
+      },
+      "overlay": {
+        "activation": {
+          "title": "Tindakan aktivasi",
+          "description": "Pilih tindakan mana yang akan membuka dan menutup overlay",
+          "action": {
+            "none": "Kosong (dimatikan)",
+            "singleA": "Sekali tekan A",
+            "doubleA": "Dua-kali tekan A",
+            "tripleA": "Tiga-kali tekan A",
+            "singleB": "Sekali tekan B",
+            "doubleB": "Dua-kali tekan B",
+            "tripleB": "Tiga-kali tekan B"
+          },
+          "controller": {
+            "either": "Salah satu kontroler",
+            "left": "Kontroler kiri",
+            "right": "Kontroler kanan",
+            "title": "Kontroler",
+            "description": "Pilih kontroler mana yang dapat digunakan untuk mengaktifkan overlay"
+          },
+          "triggerFilter": {
+            "title": "Memerlukan trigger",
+            "description": "Hanya aktif jika trigger ditekan saat melakukan tindakan."
+          }
+        },
+        "title": "Overlay"
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "title": "Masuk",
+        "description": "Beberapa fitur OyasumiVR mengharuskan Anda untuk masuk dengan akun VRChat Anda agar fitur-fitur tersebut dapat berfungsi.",
+        "loggedIn": {
+          "title": "Hai {{name}}!",
+          "subtext": "Saat ini Anda sedang masuk dengan akun VRChat Anda.",
+          "logOut": "Keluar"
+        },
+        "loggedOut": {
+          "title": "Keluar",
+          "subtext": "Saat ini Anda belum masuk dengan akun VRChat Anda.",
+          "logIn": "Masuk"
+        },
+        "disclaimers": {
+          "use": "Kredensial login Anda tidak akan pernah disimpan di mana pun dan hanya akan dikirim ke server VRChat untuk tujuan autentikasi.",
+          "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
+        }
+      },
+      "OSC": {
+        "title": "Pengaturan OSC",
+        "description": "Beberapa fitur memerlukan koneksi ke VRChat melalui OSC. Kecuali jika Anda memiliki alasan khusus untuk mengubahnya, Anda harus membiarkannya sebagai default.",
+        "reset": "Mengatur ulang ke default",
+        "receivingHost": {
+          "title": "Host Penerima",
+          "description": "Host OyasumiVR akan mendengarkan pesan OSC yang masuk.\n(VRChat mengirim ke 127.0.0.1 secara default)"
+        },
+        "receivingPort": {
+          "title": "Port Penerima",
+          "description": "Nomor port OyasumiVR akan mendengarkan pesan OSC.\n(VRChat mengirim ke port 9001 secara default)"
+        },
+        "sendingHost": {
+          "title": "Host Pengirim",
+          "description": "Host OyasumiVR akan mengirim pesan OSC.\n(Jika VRChat berjalan pada mesin yang sama, Hostnya adalah 127.0.0.1)"
+        },
+        "sendingPort": {
+          "title": "Port Pengirim",
+          "description": "Nomor port yang akan digunakan OyasumiVR untuk mengirim pesan OSC.\n(VRChat mendengarkan pada port 9000 secara default)"
+        },
+        "errors": {
+          "PORT_IN_USE": "Alamat ini tidak dapat diikat. Bisa jadi ada aplikasi lain yang sudah menggunakannya. Anda dapat mencoba menutup aplikasi tersebut dan mencoba lagi, atau memilih port atau host penerima yang berbeda.",
+          "PORT_INVALID": "Port harus berupa angka yang valid antara 1 dan 65535.",
+          "PORT_IO_IDENTICAL": "Anda tidak dapat menggunakan port yang sama untuk port pengirim dan penerima jika host untuk pengirim dan penerima sama.",
+          "INVALID_HOST": "Host harus berupa nama host, alamat IPv4, atau alamat IPv6 yang valid."
+        },
+        "features": {
+          "all": {
+            "title": "Nyalakan semua fitur",
+            "description": "Menonaktifkan masing-masing fitur ini akan menghentikan OyasumiVR dari mendengarkan pesan OSC"
+          },
+          "expressionMenu": {
+            "title": "Nyalakan menu kontrol VRChat expression",
+            "description": "Kontrol fitur OyasumiVR dari avatar VRChat <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu Anda</a>"
+          },
+          "externalControl": {
+            "title": "Nyalakan kontrol eksternal",
+            "description": "Kontrol fitur OyasumiVR melalui <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
+          }
+        }
+      }
+    },
+    "notifications": {
+      "title": "Pengaturan Notifikasi",
+      "provider": {
+        "title": "Notification Provider",
+        "description": "Pilih penyedia mana yang akan digunakan untuk mengirimkan notifikasi kepada Anda"
+      },
+      "notifications": {
+        "title": "Nyalakan Notifikasi",
+        "description": "Pilih notifikasi mana yang akan dan tidak akan dikirim",
+        "category": {
+          "SLEEP_MODE_ENABLED": {
+            "title": "Mode Tidur Menyala",
+            "description": "Dapatkan notifikasi ketika mode tidur diaktifkan"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "title": "Mode Tidur Dimatikan",
+            "description": "Dapatkan pemberitahuan ketika mode tidur dinonaktifkan"
+          },
+          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
+            "title": "Status VRChat Diperbarui (Otomatisasi Batas Pemain)",
+            "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis memperbarui status VRChat Anda"
+          },
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "title": "Permintaan Undangan yang Diterima Secara Otomatis",
+            "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis menerima permintaan undangan dari seseorang"
+          }
+        }
+      }
+    },
+    "updates": {
+      "checkForUpdates": "Periksa pembaruan",
+      "changelog": "Daftar Perubahan",
+      "install": "Install v{{version}}",
+      "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{{version}} yang merupakan versi terbaru!",
+      "notChecked": "OyasumiVR belum memeriksa pembaruan.",
+      "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{{currentVersion}}.\nVersi terbaru adalah v{{latestVersion}}.",
+      "updatesDisabled": {
+        "DEV": "Karena Anda menjalankan versi pengembangan OyasumiVR, pembaruan telah dinonaktifkan.\nJika Anda ingin menginstal versi baru OyasumiVR, silakan unduh dan jalankan penginstal secara manual.",
+        "STEAM": "Anda telah menginstal OyasumiVR versi Steam.\nOleh karena itu, pembaruan OyasumiVR baru disediakan melalui Steam!"
+      }
+    },
+    "advanced": {
+      "persistentData": {
+        "title": "Data Persisten",
+        "description": "Mengelola data yang disimpan OyasumiVR di disk Anda",
+        "dataType": {
+          "all": {
+            "title": "Semua Data",
+            "description": "Semua data yang disimpan OyasumiVR, termasuk semua pengaturan Anda"
+          },
+          "appSettings": {
+            "title": "Pengaturan Aplikasi",
+            "description": "Semua pengaturan umum OyasumiVR"
+          },
+          "automationSettings": {
+            "title": "Pengaturan Otomasi",
+            "description": "Semua pengaturan khusus untuk salah satu otomatisasi OyasumiVR"
+          },
+          "vrcData": {
+            "title": "Data VRChat",
+            "description": "Data khusus untuk VRChat, seperti data otentikasi"
+          },
+          "miscData": {
+            "title": "Data Lainnya",
+            "description": "Semua data lain yang disimpan OyasumiVR, tidak tercakup dalam kategori lain"
+          },
+          "appCache": {
+            "title": "Cache Data",
+            "description": "Semua data yang disimpan sementara, seperti respons API VRChat"
+          },
+          "imageCache": {
+            "title": "Cache Gambar",
+            "description": "Semua gambar yang disimpan sementara, seperti ikon pemutar VRChat"
+          },
+          "logs": {
+            "title": "File Log",
+            "description": "File log yang dibuat oleh OyasumiVR"
+          },
+          "eventLog": {
+            "title": "Log Event",
+            "description": "Peristiwa yang dicatat dalam ikhtisar"
+          }
+        },
+        "clearData": "Hapus Data",
+        "clearModal": {
+          "title": "Konfirmasi Penghapusan Data",
+          "message": "Apakah Anda yakin ingin menghapus data berikut ini? Ini tidak dapat dikembalikan!\n\n{{items}}"
+        },
+        "relaunchModal": {
+          "title": "Mulai ulang OyasumiVR",
+          "message": "Data yang diminta telah dihapus. Disarankan untuk memulai ulang OyasumiVR setelah melakukan ini.\n\nApakah Anda ingin melakukan ini sekarang? Tidak memulai ulang OyasumiVR dapat menimbulkan efek yang tidak diinginkan.",
+          "relaunch": "Mulai ulang OyasumiVR Sekarang",
+          "later": "Akan kulakukan nanti."
+        }
+      },
+      "translation": {
+        "title": "Bahasa & Terjemahan",
+        "loadFile": {
+          "title": "Muat file terjemahan",
+          "description": "Muat file bahasa khusus. Berguna saat menguji terjemahan baru.",
+          "action": "Muat file"
+        },
+        "contribute": {
+          "docs": "Pelajari Caranya",
+          "title": "Bantu dengan menyumbangkan terjemahan",
+          "description": "Kontribusikan terjemahan yang belum ada, atau bantu tambahkan bahasa baru!"
+        }
+      },
+      "logs": {
+        "title": "File log",
+        "openFolder": {
+          "title": "Buka folder log",
+          "description": "Membuka lokasi file log OyasumiVR di file explorer Anda",
+          "action": "Buka folder log"
+        }
+      }
+    }
+  },
+  "about": {
+    "author": {
+      "role": "Developer"
+    },
+    "translations": "Terjemahan",
+    "projectLinks": "Tautan Proyek",
+    "sourceLink": "Kode Sumber @ GitHub",
+    "discordInvite": "Discord Server",
+    "contributions": "Kontribusi"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "title": "Update Gagal",
+        "message": "Pembaruan gagal diinstal. Silakan coba lagi nanti."
+      }
+    }
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "Preset ini menggunakan solusi yang memiliki beberapa masalah. Harap gunakan preset ini hanya jika Anda tidak dapat menggunakan preset GoGo Loco yang lebih baru. Jika avatar Anda masih menggunakan versi GoGo Loco yang lebih lama, Anda disarankan untuk memperbarui avatar Anda untuk menggunakan versi GoGo Loco terbaru.",
+    "oscScriptEditorErrors": {
+      "noFloatMilliseconds": "Nilai milidetik harus didefinisikan sebagai bilangan bulat.",
+      "durationTooShort": "Durasi tidur harus minimal 1ms.",
+      "durationTooLong": "Durasi tidur tidak boleh lebih dari 5 detik.",
+      "durationRequired": "Diperlukan durasi tidur.",
+      "totalDurationTooLong": "Total durasi naskah tidak boleh lebih dari 10 detik.",
+      "intOutOfBounds": "Nilai harus berupa bilangan bulat yang valid antara 0 dan 255.",
+      "floatOutOfBounds": "Nilai harus berupa nilai float yang valid antara -1,0 dan 1,0.",
+      "floatTooPrecise": "Nilai ini hanya dapat memiliki presisi maksimum 3 desimal.",
+      "invalidSyntax": "Syntax tidak valid.",
+      "tooManyCommands": "Skrip OSC tidak boleh memiliki lebih dari {{value}} aksi.",
+      "addressNoSlash": "Alamat OSC yang valid harus selalu dimulai dengan simbol '/'.",
+      "addressRequired": "Diperlukan alamat OSC.",
+      "addressNotASCII": "Alamat OSC yang valid hanya boleh berisi karakter ASCII."
+    }
+  },
+  "notifications": {
+    "sleepCheck": {
+      "content": "Mode tidur akan diaktifkan dalam 20 detik. Apakah Anda tertidur?\n\n(Gelengkan kepala Anda untuk membatalkan)"
+    },
+    "sleepCheckCancel": {
+      "content": "Pengaktifan otomatis mode tidur telah dibatalkan"
+    },
+    "sleepModeEnabled": {
+      "content": "Mode tidur telah diaktifkan"
+    },
+    "sleepModeDisabled": {
+      "content": "Mode tidur telah dinonaktifkan"
+    },
+    "vrcStatusChangedPlayerCount": {
+      "content": "Status VRChat Anda telah diatur ke '{{newStatus}}'"
+    },
+    "autoAcceptedInviteRequest": {
+      "content": "Permintaan undangan yang diterima secara otomatis dari {{username}}"
+    },
+    "turningOffControllers": {
+      "content": "Mematikan kontroler Anda"
+    },
+    "turningOffTrackers": {
+      "content": "Mematikan tracker Anda"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "Mematikan kontroler dan tracker Anda"
+    }
+  },
+  "comp": {
+    "main-status-bar": {
+      "sleepMode": "Mode Tidur",
+      "active": "Aktif",
+      "inactive": "Tidak aktif",
+      "loggedOut": "Keluar",
+      "steamvr": {
+        "INACTIVE": "Tidak Aktif",
+        "INITIALIZING": "Menunggu",
+        "INITIALIZED": "Aktif"
+      }
+    },
+    "confirm-modal": {
+      "defaultTitle": "Konfirmasi"
+    },
+    "update-modal": {
+      "title": "Update Tersedia",
+      "updateNow": "Install v{{version}}",
+      "updateLater": "Tidak Sekarang",
+      "message": "Pembaruan baru untuk OyasumiVR telah ditemukan: v{{newVersion}}.\n\nAnda saat ini masih menjalankan v{{currentVersion}}.\n\nApakah Anda ingin memperbarui sekarang atau nanti?"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Pilih..."
+    },
+    "dashboard-navbar": {
+      "overview": "Ikhtisar",
+      "sleepDetection": "Deteksi Tidur",
+      "oscAutomations": "Otomatisasi OSC",
+      "gpuAutomations": "Otomatisasi GPU",
+      "powerAutomations": "Otomatisasi Power",
+      "statusAutomations": "Otomatisasi Status",
+      "autoInviteRequestAccept": "Terima Otomatis \nPermintaan Invite",
+      "settings": "Pengaturan",
+      "vrcAutomations": "Otomatisasi VRChat",
+      "brightnessAutomations": "Otomatisasi Kecerahan",
+      "about": "Tentang OyasumiVR",
+      "resolutionAutomations": "Otomatisasi Resolusi",
+      "chaperoneAutomations": "Otomatisasi Chaperone",
+      "sleepAnimations": "Animasi Tidur",
+      "hardwareAutomations": "Otomatisasi Hardware",
+      "shutdownAutomations": "Urutan Shutdown"
+    },
+    "device-list": {
+      "title": "Perangkat",
+      "turnOffAll": "SEMUA",
+      "noDevices": "Tidak ada perangkat ditemukan",
+      "category": {
+        "Controller": "Kontroler",
+        "GenericTracker": "Tracker",
+        "other": "Lainnya",
+        "Lighthouse": "Base Stations"
+      },
+      "deviceName": {
+        "lighthouseV2": "Lighthouse V2"
+      },
+      "lighthouseStatus": {
+        "on": "Aktif",
+        "unknown": "Status tidak diketahui",
+        "sleep": "Tertidur",
+        "standby": "SIaga",
+        "booting": "Booting"
+      },
+      "scanForLighthouses": "Pindai"
+    },
+    "osc-script-modal": {
+      "title": "Skrip OSC",
+      "simple": "Simpel",
+      "script": "Skrip"
+    },
+    "osc-script-code-editor": {
+      "title": "Editor Skrip OSC",
+      "syntaxGuide": "Panduan Syntax",
+      "format": "Format",
+      "test": "Tes"
+    },
+    "osc-script-simple-editor": {
+      "commandCounter": {
+        "singular": "{{value}} Perintah",
+        "plural": "{{value}} Perintah"
+      },
+      "errorCounter": {
+        "singular": "{{value}} Validasi Error",
+        "plural": "{{value}} Validasi Error"
+      },
+      "addCommand": "Tambah",
+      "test": "Tes",
+      "action": {
+        "osc": "OSC",
+        "sleep": "Tidur",
+        "none": "Belum ada tindakan yang ditambahkan!"
+      },
+      "commands": {
+        "COMMAND": {
+          "title": "Perintah OSC",
+          "description": "Menjalankan perintah OSC"
+        },
+        "SLEEP": {
+          "title": "Tidur",
+          "description": "Tunggu selama jangka waktu tertentu"
+        }
+      }
+    },
+    "vrchat-login-modal": {
+      "title": "Masuk ke VRChat",
+      "username": "VRChat Username/E-mail",
+      "password": "Password",
+      "errors": {
+        "CHECK_EMAIL": "Login gagal: Untuk detailnya, periksa kotak surat dari alamat email yang terkait dengan akun VRChat Anda.",
+        "INVALID_CREDENTIALS": "Kredensial yang Anda berikan salah.",
+        "UNEXPECTED_RESPONSE": "Login gagal: terjadi kesalahan yang tidak diketahui. Harap verifikasi koneksi Anda atau coba lagi nanti."
+      }
+    },
+    "vrchat-login-tfa-modal": {
+      "title": "Otentikasi Dua Faktor",
+      "description": "Akun VRChat Anda dilindungi dengan autentikasi dua faktor.\n\nMasukkan kode 2FA:",
+      "errors": {
+        "LAST_CODE_INVALID": "Kode 2FA yang Anda berikan salah.",
+        "INVALID_FORMAT": "Kode 2FA yang valid terdiri dari 6 angka. Mohon verifikasi masukan Anda."
+      }
+    },
+    "friend-selection-modal": {
+      "title": "Pilih Teman",
+      "searchPlaceholder": "Pilih teman dari nama...",
+      "noFriendsSelected": "Tidak ada teman terpilih",
+      "noResultsFor": "Tidak ada hasil untuk '{{query}}'",
+      "noFriends": "Daftar teman Anda kosong"
+    },
+    "event-log": {
+      "title": "Event",
+      "show-more": "Lihat Semua",
+      "no-logs": "Belum ada event yang dicatat.\nLog disimpan paling lama 48 jam.",
+      "clearLog": "Hapus",
+      "clearLogModal": {
+        "title": "Konfirmasi Hapus",
+        "message": "Apakah Anda yakin ingin menghapus log event? Ini tidak dapat dibatalkan."
+      }
+    },
+    "event-log-entry": {
+      "type": {
+        "sleepModeEnabled": {
+          "title": "Mode tidur dinyalakan",
+          "reason": {
+            "manual": "Kamu menyalakan mode tidur secara manual",
+            "osc-control": "Mode tidur dinyalakan via OSC",
+            "automation": {
+              "unknown": "Dari otomatisasi yang tidak diketahui",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Disaat anda tertidur",
+              "SLEEP_MODE_ENABLE_AT_TIME": "Disaat waktu tertentu",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Saat level baterai perangkat memenuhi ambang batas",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Saat semua kontroler Anda dimatikan"
+            }
+          }
+        },
+        "sleepModeDisabled": {
+          "title": "Mode tidur dinyalakan",
+          "reason": {
+            "manual": "Kamu mematikan mode tidur secara manual",
+            "osc-control": "Mode tidur dimatikan via OSC",
+            "automation": {
+              "unknown": "Dari otomatisasi yang tidak diketahui",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Disaat SteamVR keluar",
+              "SLEEP_MODE_DISABLE_AT_TIME": "Disaat waktu tertentu",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Disaat perangkat menyala"
+            }
+          }
+        },
+        "turnedOffOpenVRDevices": {
+          "title": {
+            "CONTROLLER": "Mematikan Kontroler",
+            "CONTROLLERS": "Mematikan beberapa kontroler",
+            "TRACKER": "Mematikan tracker",
+            "TRACKERS": "Mematikan beberapa trackers",
+            "ALL": "Mematikan semua perangkat",
+            "VARIOUS": "Mematikan beberapa perangkat"
+          },
+          "reason": {
+            "MANUAL": "Dimatikan manual",
+            "OSC_CONTROL": "Dimatikan via OSC",
+            "SLEEP_MODE_ENABLED": "Disaat mode tidur menyala",
+            "CHARGING": "Disaat perangkat mengisi ulang"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "SINGLE": {
+            "on": {
+              "title": "Menyalakan Base Station",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            },
+            "sleep": {
+              "title": "Mengatur base station ke mode tidur",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            },
+            "standby": {
+              "title": "Mengatur semua base station ke mode siaga",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            }
+          },
+          "ALL": {
+            "on": {
+              "title": "Nyalakan semua base station",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            },
+            "sleep": {
+              "title": "Atur semua base station ke mode tidur",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            },
+            "standby": {
+              "title": "Atur semua base station ke mode siaga",
+              "reasons": {
+                "MANUAL": "Dinyalakan manual",
+                "STEAMVR_START": "Disaat SteamVR Menyala",
+                "STEAMVR_STOP": "Disaat SteamVR Dimatikan",
+                "OYASUMI_START": "Disaat OyasumiVR dimulai"
+              }
+            }
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "title": {
+            "reset": "Power limit untuk '{{device}}' dikembalikan ke {{limit}}",
+            "set": "Power limit untuk '{{device}}' diatur ke {{limit}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan"
+          }
+        },
+        "imageBrightnessChanged": {
+          "title": {
+            "set": "Kecerahan gambar headset diatur ke {{value}}",
+            "transition": "Kecerahan gambar headset beralih menuju {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan"
+          }
+        },
+        "displayBrightnessChanged": {
+          "title": {
+            "set": "Kecerahan layar headset diatur ke {{value}}",
+            "transition": "Kecerahan layar headset beralih menuju {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan"
+          }
+        },
+        "acceptedInviteRequest": {
+          "title": "Permintaan undangan yang diterima secara otomatis dari '{{displayName}}'",
+          "subtitle": {
+            "whitelist": "Karena player ini masuk whitelist",
+            "blacklist": "Karena player ini tidak masuk blacklist"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "title": "Mengubah status VRChat Anda dari {{oldStatus}} ke {{newStatus}}",
+          "reason": {
+            "BELOW_LIMIT": "Karena jumlah player di world Anda turun di bawah {{threshold}}",
+            "AT_LIMIT_OR_ABOVE": "Saat jumlah player di world Anda mencapai batas {{threshold}}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "title": "Pengaktifan otomatis mode tidur dibatalkan",
+          "subtitle": "Saat pengguna masih terjaga"
+        },
+        "renderResolutionChanged": {
+          "title": {
+            "auto": "Resolusi render SteamVR diatur ke 'auto'",
+            "custom": "Resolusi render SteamVR diatur ke {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "title": "jarak pudar Chaperone diatur ke {{value}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
+          }
+        },
+        "shutdownSequenceStarted": {
+          "title": "Urutan shutdown dimulai",
+          "reason": {
+            "MANUAL": "Dinyalakan manual",
+            "SLEEP_TRIGGER": "Saat Anda tertidur cukup lama"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "title": "The shutdown sequence was cancelled",
+          "reason": {
+            "MANUAL": "Dibatalkan manual"
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "title": "Profil MSI Afterburner's Sudah diatur ke profil {{profile}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "title": "Kebijakan Daya Windows diatur ke paket '{{policy}}'",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
+          }
+        }
+      }
+    },
+    "dotnet-upgrade-modal": {
+      "title": "Instal Runtime yang Hilang",
+      "description": {
+        "text1": "Runtime berikut yang dibutuhkan oleh OyasumiVR sudah terlalu lama, atau tidak terinstal di sistem Anda:",
+        "runtimeQueued": "Diantrikan",
+        "text2": "Untuk terus menggunakan OyasumiVR, runtime yang diperlukan harus diinstal terlebih dahulu.",
+        "automaticInstall": "Apakah Anda ingin OyasumiVR mencoba menginstal runtime ini untuk Anda secara otomatis?",
+        "noAutomaticInstall": "OyasumiVR tidak dapat menentukan versi terbaru dari runtime ini, dan oleh karena itu tidak dapat menginstalnya secara otomatis untuk Anda. Silakan instal runtime ini secara manual, atau keluar dari OyasumiVR dan coba lagi di lain waktu.",
+        "moreInfo": "Anda dapat menemukan unduhan dan informasi lebih lanjut di sini:"
+      },
+      "quit": "Keluar OyasumiVR",
+      "installAutomatically": "Instal Otomatis",
+      "success": {
+        "title": "Instalasi Sukses",
+        "message": "Runtime yang diperlukan telah berhasil diinstal. Silakan keluar dari OyasumiVR, dan mulai lagi untuk melanjutkan."
+      },
+      "failure": {
+        "title": "Instalasi Gagal",
+        "message": "Runtime yang hilang yang diperlukan tidak dapat diinstal secara otomatis. Silakan coba menginstalnya secara manual. Anda dapat memeriksa file log untuk informasi lebih lanjut tentang apa yang salah.\n\nJika Anda terus mengalami masalah, silakan hubungi @Raphiiko di Twitter, atau di server Discord kami."
+      }
+    }
+  },
+  "resolution-automations": {
+    "title": "Otomatisasi Resolusi",
+    "description": "OyasumiVR dapat secara otomatis menyesuaikan resolusi render SteamVR ketika mode tidur diaktifkan atau dinonaktifkan.",
+    "onSleepEnable": {
+      "title": "Ketika saya pergi tidur",
+      "description": "Atur resolusi render saya"
+    },
+    "onSleepDisable": {
+      "title": "Ketika saya bangun",
+      "description": "Atur resolusi render saya"
+    },
+    "renderResolution": {
+      "title": "Ubah resolusi render saya ke",
+      "custom": "Custom",
+      "auto": "Auto"
+    }
+  },
+  "chaperone-automations": {
+    "title": "Otomatisasi Chaperone",
+    "description": "OyasumiVR dapat secara otomatis menyesuaikan jarak pudar SteamVR chaperone ketika mode tidur diaktifkan atau dinonaktifkan.",
+    "onSleepEnable": {
+      "title": "Saat saya pergi tidur",
+      "description": "Menyesuaikan jarak pudar chaperone saya"
+    },
+    "onSleepDisable": {
+      "title": "Ketika saya bangun",
+      "description": "Menyesuaikan jarak pudar chaperone saya"
+    },
+    "fadeDistance": {
+      "title": "Mengubah jarak pudar chaperone ke"
+    }
+  },
+  "sleepAnimations": {
+    "title": "Animasi Tidur"
+  },
+  "shutdown-automations": {
+    "title": "Urutan Shutdown",
+    "description": "Jika Anda menikmati tertidur dalam VR, tetapi tidak ingin tidur dalam VR sepanjang malam, Anda dapat menggunakan urutan shutdown OyasumiVR. Fitur ini secara otomatis mati dengan mulus setelah Anda tertidur, sehingga Anda dapat melanjutkan tidur dengan lancar di luar VR.",
+    "triggers": {
+      "title": "Trigger Otomatis",
+      "whenAsleep": {
+        "title": "Aktifkan jika saya mulai tidur",
+        "description": "Mengaktifkan urutan shutdown ketika mode tidur telah diaktifkan selama jangka waktu tertentu"
+      },
+      "whenAsleepDuration": {
+        "title": "Durasi Tidur",
+        "description": "Berapa lama mode tidur harus aktif sebelum urutan shutdown berjalan"
+      },
+      "whenAsleepTimeWindow": {
+        "title": "Jendela aktivasi",
+        "description": "Hanya izinkan shutdown untuk dipicu di antara jam-jam tertentu dalam sehari"
+      }
+    },
+    "sequence": {
+      "title": "Pengaturan shutdown",
+      "quitSteamVR": {
+        "title": "Keluar SteamVR",
+        "description": "Ini juga akan menghentikan permainan atau overlay yang sedang Anda jalankan"
+      },
+      "turnOffDevices": {
+        "title": "Matikan Perangkat"
+      },
+      "turnOffControllers": {
+        "title": "Matikan Kontroler",
+        "description": "Mematikan kontrolermu"
+      },
+      "turnOffTrackers": {
+        "title": "Matikan tracker",
+        "description": "Mematikan trackermu"
+      },
+      "turnOffBaseStations": {
+        "title": "Matikan base stations",
+        "description": "Mematikan semua base stations yang masih aktif"
+      },
+      "shutDownWindows": {
+        "title": "Shutdown Windows",
+        "description": "Mencoba untuk mematikan windowsmu"
+      },
+      "run": "Jalankan urutan"
+    },
+    "confirm-modal": {
+      "title": "Apa kamu yakin?",
+      "message": "Apakah Anda yakin ingin mengaktifkan urutan shutdown sekarang?"
+    },
+    "noOptionsSelected": "Karena Anda tidak memiliki tindakan yang dipilih untuk dijalankan selama urutan penonaktifan, maka menjalankannya tidak akan memberikan efek apa pun. Agar fitur ini dapat melakukan sesuatu, pilih setidaknya salah satu opsi di bawah ini.",
+    "overlay": {
+      "stage": {
+        "QUITTING_STEAMVR": "Mematikan SteamVR...",
+        "TURNING_OFF_CONTROLLERS": "Mematikan kontroler...",
+        "TURNING_OFF_TRACKERS": "Mematikan tracker...",
+        "TURNING_OFF_BASESTATIONS": "Mematikan base stations...",
+        "SHUTTING_DOWN": "Mematikan Windows..."
+      },
+      "title": "Mematikan",
+      "cancel": "Batalkan"
+    }
+  },
+  "overlay": {
+    "dashboard": {
+      "overview": {
+        "sleepMode": "Mode Tidur",
+        "active": "Aktif",
+        "inactive": "Tidak Aktif",
+        "tooltip": {
+          "automations": "Otomatisasi",
+          "deviceControl": "Kontrol Perangkat",
+          "shutdown": "Urutan Shutdown"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "title": "Urutan Shutdown",
+          "message": "Anda akan memulai urutan shutdown.\nApakah Anda yakin ingin melakukan ini sekarang?\n\nAnda dapat mengonfigurasi tindakan mana yang diambil oleh urutan penonaktifan di jendela utama OyasumiVR.",
+          "start": "Mulai shutdown"
+        }
+      },
+      "deviceControl": {
+        "title": "Kontrol perangkat",
+        "turnOff": {
+          "AllControllers": "Matikan semua\nkontroler",
+          "AllTrackers": "Matikan semua\ntracker",
+          "AllControllersAndTrackers": "Matikan semua\nKontroler dan tracker"
+        }
+      },
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "title": "Terima Otomatis Permintaan Undangan",
+          "subtitle": {
+            "singular": "{{mode}}: {{playerCount}} teman",
+            "plural": "{{mode}}: {{playerCount}} teman"
+          },
+          "mode": {
+            "Disabled": "Untuk semuanya",
+            "Whitelist": "Whitelist",
+            "Blacklist": "Blacklist"
+          }
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "title": "Status Otomatisasi",
+          "subtitle": {
+            "singular": "Maks {{threshold}} player",
+            "plural": "Maks {{threshold}} player"
+          }
+        },
+        "sleepingAnimations": {
+          "title": "Animasi tidur"
+        },
+        "shutdownAutomations": {
+          "title": "Shutdown Otomatis",
+          "subtitle": "Ketika tertidur selama {{time}}",
+          "seconds": {
+            "singular": "{{seconds}} detik",
+            "plural": "{{seconds}} detik"
+          },
+          "minutes": {
+            "singular": "{{minutes}} menit",
+            "plural": "{{minutes}} menit"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "Deteksi tidur",
+          "subtitle": {
+            "withoutActivationWindow": "{{sensitivity}} sensitivitas",
+            "withActivationWindow": "{{sensitivity}} sensitivitas, {{startTime}} - {{endTime}}"
+          }
+        },
+        "title": "Pengaturan Otomatisasi"
+      }
+    }
+  }
+}

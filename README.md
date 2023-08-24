@@ -265,6 +265,7 @@ OyasumiVR currently supports the following languages:
 - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español)\* (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian (Bahasa Indonesia)\* (Community contribution by [a9ito](https://twitter.com/a9ito))
 
 _(\*) This is a community supported language, which means translations might not always be 100% complete with each and every update._
 
