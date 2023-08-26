@@ -26,10 +26,6 @@
   },
   "brightness-automations": {
     "title": "Automasi Kecerahan",
-    "tabs": {
-      "imageBrightness": "Kecerahan Gambar",
-      "displayBrightness": "Kecerahan Layar"
-    },
     "brightnessAutomations": {
       "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan gambar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan gambar akan menggelapkan gambar yang ditampilkan. Tidak seperti kecerahan tampilan, mengontrol kecerahan gambar tersedia untuk setiap headset.",
       "onSleepEnable": {

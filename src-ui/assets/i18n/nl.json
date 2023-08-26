@@ -26,11 +26,7 @@
   },
   "brightness-automations": {
     "title": "Helderheid Automatiseringen",
-    "tabs": {
-      "imageBrightness": "Beeldhelderheid",
-      "displayBrightness": "Schermhelderheid"
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "OyasumiVR kan automatisch de beeldhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nBeeldhelderheid past de helderheid aan van het beeld dat wordt getoont, in plaats van de helderheid van het scherm zelf. In tegenstelling tot het aanpassen van schermhelderheid, is het aanpassen van de beeldhelderheid beschikbaar op elke VR headset. ",
       "onSleepEnable": {
         "title": "Wanneer ik ga slapen",

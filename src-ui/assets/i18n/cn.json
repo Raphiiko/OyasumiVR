@@ -26,10 +26,6 @@
   },
   "brightness-automations": {
     "title": "亮度自动调整",
-    "tabs": {
-      "imageBrightness": "图像亮度",
-      "displayBrightness": "显示器亮度"
-    },
     "brightnessAutomations": {
       "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的图像亮度。\n\n图像亮度会使显示的图像变暗。与显示器亮度不同，图像亮度调整适用于所有头戴式设备。",
       "onSleepEnable": {

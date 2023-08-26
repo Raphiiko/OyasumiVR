@@ -26,9 +26,6 @@
   },
   "brightness-automations": {
     "title": "明るさの自動化",
-    "tabs": {
-      "imageBrightness": "映像の明るさ"
-    },
     "brightnessAutomations": {
       "description": "ヘッドセットの映像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
       "onSleepEnable": {

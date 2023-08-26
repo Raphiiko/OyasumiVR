@@ -26,10 +26,6 @@
   },
   "brightness-automations": {
     "title": "밝기 자동화",
-    "tabs": {
-      "imageBrightness": "이미지 밝기",
-      "displayBrightness": "디스플레이 밝기"
-    },
     "brightnessAutomations": {
       "description": "수면 모드가 활성화 또는 비활성화될 때 OyasumiVR은 헤드셋의 이미지 밝기를 자동으로 조정할 수 있어요.\n\n이미지 밝기가 어두워지면 표시되는 이미지 자체가 어두워집니다. 디스플레이 밝기와 달리 이미지 밝기는 모든 헤드셋에서 제어할 수 있어요.",
       "onSleepEnable": {

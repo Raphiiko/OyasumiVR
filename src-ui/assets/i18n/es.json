@@ -26,10 +26,6 @@
   },
   "brightness-automations": {
     "title": "Automatización del brillo",
-    "tabs": {
-      "imageBrightness": "Brillo de la imagen",
-      "displayBrightness": "Brillo de la pantalla"
-    },
     "brightnessAutomations": {
       "description": "OyasumiVR puede ajustar automáticamente el brillo de la imagen de los auriculares cuando el modo de suspensión está activado o desactivado. A diferencia del brillo de la pantalla, el control del brillo de la imagen está disponible para todos los visores.",
       "onSleepEnable": {
