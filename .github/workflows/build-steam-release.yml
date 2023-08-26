@@ -2,7 +2,7 @@ name: 'Steam Release Build'
 on:
   push:
     branches:
-      - develop
+      - release/1.9.0
       - master
       - main
 
