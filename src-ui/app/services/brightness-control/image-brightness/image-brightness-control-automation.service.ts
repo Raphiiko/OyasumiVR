@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../../automation-config.service';
 import { SleepService } from '../../sleep.service';
-import { delay, distinctUntilChanged, firstValueFrom, of, skip, switchMap, take } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
 import { CancellableTask } from '../../../utils/cancellable-task';
 import { EventLogService } from '../../event-log.service';
 import { ImageBrightnessControlService } from './image-brightness-control.service';
@@ -22,7 +22,7 @@ export class ImageBrightnessControlAutomationService {
 
   async init() {
     this.sleepService.mode
-      .pipe(distinctUntilChanged())
+      .pipe(skip(1), distinctUntilChanged())
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     // Apply current mode at startup
     // of(null)
