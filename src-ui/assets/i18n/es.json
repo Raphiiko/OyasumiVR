@@ -30,19 +30,7 @@
       "imageBrightness": "Brillo de la imagen",
       "displayBrightness": "Brillo de la pantalla"
     },
-    "displayBrightness": {
-      "description": "OyasumiVR puede ajustar automáticamente el brillo de la pantalla de los auriculares cuando el modo de suspensión está activado o desactivado. El brillo de la pantalla afecta a la intensidad de la luz de fondo del panel LCD de los auriculares, en lugar de oscurecer la imagen. El control del brillo de la pantalla sólo está disponible en el Valve Index.",
-      "indexWarning": "Asegúrate de que tu Index de Valve está conectado y de que SteamVR se está ejecutando.",
-      "onSleepEnable": {
-        "title": "Cuando me voy a dormir",
-        "description": "Ajustar el brillo de la pantalla"
-      },
-      "onSleepDisable": {
-        "title": "Cuando me despierto",
-        "description": "Ajustar el brillo de la pantalla"
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "OyasumiVR puede ajustar automáticamente el brillo de la imagen de los auriculares cuando el modo de suspensión está activado o desactivado. A diferencia del brillo de la pantalla, el control del brillo de la imagen está disponible para todos los visores.",
       "onSleepEnable": {
         "title": "Cuando me voy a dormir",
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "Cuando me despierto",
         "description": "Ajustar el brillo de la pantalla"
+      },
+      "brightness": {
+        "title": "Cambia el brillo a",
+        "description": ""
+      },
+      "transition": {
+        "title": "Ajuste el brillo gradualmente",
+        "description": "Transición suave al valor de brillo deseado"
+      },
+      "transitionTime": {
+        "title": "Tiempo de transición",
+        "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo."
       }
-    },
-    "brightness": {
-      "title": "Cambia el brillo a",
-      "description": ""
-    },
-    "transition": {
-      "title": "Ajuste el brillo gradualmente",
-      "description": "Transición suave al valor de brillo deseado"
-    },
-    "transitionTime": {
-      "title": "Tiempo de transición",
-      "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo."
     }
   },
   "overview": {

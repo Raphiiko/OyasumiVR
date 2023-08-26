@@ -27,22 +27,9 @@
   "brightness-automations": {
     "title": "明るさの自動化",
     "tabs": {
-      "imageBrightness": "映像の明るさ",
-      "displayBrightness": "ディスプレイの明るさ"
+      "imageBrightness": "映像の明るさ"
     },
-    "displayBrightness": {
-      "description": "HMDのディスプレイの明るさを自動的に調整します。ディスプレイの明るさは、画像を暗くするのではなく、LCDパネルのバックライトの強さに影響します。この機能は Valve Index でのみ利用可能です。",
-      "indexWarning": "Valve Indexを接続し、SteamVRが起動していることを確認してください。",
-      "onSleepEnable": {
-        "title": "睡眠時",
-        "description": "ディスプレイの明るさを調整する"
-      },
-      "onSleepDisable": {
-        "title": "起床時",
-        "description": "ディスプレイの明るさを調整する"
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "ヘッドセットの映像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
       "onSleepEnable": {
         "title": "睡眠時",
@@ -51,19 +38,19 @@
       "onSleepDisable": {
         "title": "起床時",
         "description": "映像の明るさを調整する"
+      },
+      "brightness": {
+        "title": "輝度を変更",
+        "description": ""
+      },
+      "transition": {
+        "title": "なめらかな遷移",
+        "description": "輝度を徐々に移行させる"
+      },
+      "transitionTime": {
+        "title": "遷移時間",
+        "description": "移行するのにかかる時間"
       }
-    },
-    "brightness": {
-      "title": "輝度を変更",
-      "description": ""
-    },
-    "transition": {
-      "title": "なめらかな遷移",
-      "description": "輝度を徐々に移行させる"
-    },
-    "transitionTime": {
-      "title": "遷移時間",
-      "description": "移行するのにかかる時間"
     }
   },
   "overview": {

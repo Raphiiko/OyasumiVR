@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { ModalService } from '../../../../services/modal.service';
+import {
+  ConfirmModalComponent,
+  ConfirmModalInputModel,
+  ConfirmModalOutputModel,
+} from '../../../../components/confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-brightness-automations-view',
@@ -6,7 +12,20 @@ import { Component } from '@angular/core';
   styleUrls: ['./brightness-automations-view.component.scss'],
 })
 export class BrightnessAutomationsViewComponent {
-  activeTab: 'IMAGE_BRIGHTNESS' | 'DISPLAY_BRIGHTNESS' = 'IMAGE_BRIGHTNESS';
+  activeTab: 'BRIGHTNESS_AUTOMATIONS' = 'BRIGHTNESS_AUTOMATIONS';
 
-  constructor() {}
+  constructor(private modalService: ModalService) {
+    this.showModeInfoModal();
+  }
+
+  showModeInfoModal() {
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: 'brightness-automations.modeInfoModal.title',
+        message: 'brightness-automations.modeInfoModal.message',
+        confirmButtonText: 'shared.modals.ok',
+        showCancel: false,
+      })
+      .subscribe();
+  }
 }

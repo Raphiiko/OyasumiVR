@@ -26,23 +26,11 @@
   },
   "brightness-automations": {
     "title": "Brightness Automations",
-    "tabs": {
-      "imageBrightness": "Image Brightness",
-      "displayBrightness": "Display Brightness"
+    "modeInfoModal": {
+      "title": "Brightness Control Mode",
+      "message": "By default, OyasumiVR will control the brightness of your VR headset by adjusting the brightness of the image. If you're using a headset with a LCD panel that can have its backlight controlled through SteamVR (e.g. the Valve Index), OyasumiVR will control the display brightness instead whenever possible.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling image brightness and display brightness.\n\nIn case this behaviour is undesired, advanced mode allows you to control both image- and display brightness separate from each other, and allows you to set exact brightness values for each.\n\nThis only applies to headsets that support this, which currently only consists of the Valve Index. On other headsets, there is no difference between simple and advanced mode."
     },
-    "displayBrightness": {
-      "description": "OyasumiVR can automatically adjust the display brightness of your headset when sleep mode is enabled or disabled.\n\nDisplay brightness affects the strength of the backlight of the LCD panel in your headset, rather than darkening the image. Controlling display brightness is only available on the Valve Index.",
-      "indexWarning": "Please make sure your Valve Index is connected and that SteamVR is running.",
-      "onSleepEnable": {
-        "title": "When I go to sleep",
-        "description": "Adjust the display brightness"
-      },
-      "onSleepDisable": {
-        "title": "When I wake up",
-        "description": "Adjust the display brightness"
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "OyasumiVR can automatically adjust the image brightness of your headset when sleep mode is enabled or disabled.\n\nImage brightness darkens the image shown. Unlike for display brightness, controlling the image brightness is available for every headset.",
       "onSleepEnable": {
         "title": "When I go to sleep",
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "When I wake up",
         "description": "Adjust the image brightness"
+      },
+      "brightness": {
+        "title": "Change the brightness to",
+        "description": ""
+      },
+      "transition": {
+        "title": "Adjust brightness gradually",
+        "description": "Smoothly transition to your desired brightness value"
+      },
+      "transitionTime": {
+        "title": "Transition time",
+        "description": "How long it should take to transition to the new brightness setting"
       }
-    },
-    "brightness": {
-      "title": "Change the brightness to",
-      "description": ""
-    },
-    "transition": {
-      "title": "Adjust brightness gradually",
-      "description": "Smoothly transition to your desired brightness value"
-    },
-    "transitionTime": {
-      "title": "Transition time",
-      "description": "How long it should take to transition to the new brightness setting"
     }
   },
   "overview": {

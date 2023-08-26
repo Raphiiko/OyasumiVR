@@ -30,19 +30,7 @@
       "imageBrightness": "图像亮度",
       "displayBrightness": "显示器亮度"
     },
-    "displayBrightness": {
-      "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的显示器亮度。\n\n显示器亮度影响头戴式设备液晶面板的背光强度，而不是降低图像亮度。显示器亮度调整仅适用于 Valve Index。",
-      "indexWarning": "请确保您的 Valve Index 已连接且 SteamVR 正在运行。",
-      "onSleepEnable": {
-        "title": "当我进入睡眠模式时",
-        "description": "调整显示器亮度"
-      },
-      "onSleepDisable": {
-        "title": "当我醒来时",
-        "description": "调整显示器亮度"
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的图像亮度。\n\n图像亮度会使显示的图像变暗。与显示器亮度不同，图像亮度调整适用于所有头戴式设备。",
       "onSleepEnable": {
         "title": "当我进入睡眠模式时",
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "当我醒来时",
         "description": "调整图像亮度"
+      },
+      "brightness": {
+        "title": "将亮度改为",
+        "description": ""
+      },
+      "transition": {
+        "title": "逐步调整亮度",
+        "description": "平滑地过渡到所需的亮度值"
+      },
+      "transitionTime": {
+        "title": "过渡时间",
+        "description": "过渡到新亮度设定所需的时间"
       }
-    },
-    "brightness": {
-      "title": "将亮度改为",
-      "description": ""
-    },
-    "transition": {
-      "title": "逐步调整亮度",
-      "description": "平滑地过渡到所需的亮度值"
-    },
-    "transitionTime": {
-      "title": "过渡时间",
-      "description": "过渡到新亮度设定所需的时间"
     }
   },
   "overview": {

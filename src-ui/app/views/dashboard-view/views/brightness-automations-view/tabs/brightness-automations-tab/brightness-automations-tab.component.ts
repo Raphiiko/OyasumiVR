@@ -14,12 +14,12 @@ import { ImageBrightnessControlService } from 'src-ui/app/services/brightness-co
 import { ImageBrightnessControlAutomationService } from 'src-ui/app/services/brightness-control/image-brightness/image-brightness-control-automation.service';
 
 @Component({
-  selector: 'app-image-brightness-automations-tab',
-  templateUrl: './image-brightness-automations-tab.component.html',
+  selector: 'app-brightness-automations-tab',
+  templateUrl: './brightness-automations-tab.component.html',
   styleUrls: ['../../brightness-automations-view.component.scss'],
   animations: [vshrink(), fade(), noop()],
 })
-export class ImageBrightnessAutomationsTabComponent implements OnInit {
+export class BrightnessAutomationsTabComponent implements OnInit {
   protected transitionUnitOptions: SelectBoxItem[] = [
     {
       id: 'SECONDS',

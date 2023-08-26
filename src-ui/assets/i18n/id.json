@@ -30,19 +30,7 @@
       "imageBrightness": "Kecerahan Gambar",
       "displayBrightness": "Kecerahan Layar"
     },
-    "displayBrightness": {
-      "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan layar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan layar mempengaruhi kekuatan cahaya latar panel LCD di headset Anda, dan bukannya menggelapkan gambar. Mengontrol kecerahan layar hanya tersedia pada Valve Index",
-      "indexWarning": "Pastikan Valve Index Anda terhubung dan SteamVR sedang berjalan.",
-      "onSleepEnable": {
-        "title": "Ketika saya mulai tidur",
-        "description": "Atur kecerahan layar"
-      },
-      "onSleepDisable": {
-        "title": "Ketika saya bangun",
-        "description": "Atur kecerahan layar"
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan gambar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan gambar akan menggelapkan gambar yang ditampilkan. Tidak seperti kecerahan tampilan, mengontrol kecerahan gambar tersedia untuk setiap headset.",
       "onSleepEnable": {
         "title": "Ketika saya mulai tidur",
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "Ketika saya bangun",
         "description": "Atur kecerahan gambar"
+      },
+      "brightness": {
+        "title": "Atur Kecerahan ke",
+        "description": "Mengatur kecerahan ke tingkat tertentu"
+      },
+      "transition": {
+        "title": "Atur kecerahan bertahap",
+        "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan"
+      },
+      "transitionTime": {
+        "title": "Durasi transisi",
+        "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru"
       }
-    },
-    "brightness": {
-      "title": "Atur Kecerahan ke",
-      "description": "Mengatur kecerahan ke tingkat tertentu"
-    },
-    "transition": {
-      "title": "Atur kecerahan bertahap",
-      "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan"
-    },
-    "transitionTime": {
-      "title": "Durasi transisi",
-      "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru"
     }
   },
   "overview": {

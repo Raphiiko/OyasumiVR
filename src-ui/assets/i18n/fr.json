@@ -18,17 +18,19 @@
   },
   "brightness-automations": {
     "title": "Automatisation de luminosité",
-    "brightness": {
-      "title": "Changer la luminosité pour",
-      "description": ""
-    },
-    "transition": {
-      "title": "Ajuster la luminosité graduellement",
-      "description": "Transitionne en douceur vers la luminosité paramétrée"
-    },
-    "transitionTime": {
-      "title": "Temps de transition",
-      "description": "En combien de temps la transition de luminosité s'effectue"
+    "brightnessAutomations": {
+      "brightness": {
+        "title": "Changer la luminosité pour",
+        "description": ""
+      },
+      "transition": {
+        "title": "Ajuster la luminosité graduellement",
+        "description": "Transitionne en douceur vers la luminosité paramétrée"
+      },
+      "transitionTime": {
+        "title": "Temps de transition",
+        "description": "En combien de temps la transition de luminosité s'effectue"
+      }
     }
   },
   "overview": {

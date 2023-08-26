@@ -1,25 +1,32 @@
 <div class="pane">
-  <div class="pane-title" translate>brightness-automations.title</div>
-  <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'IMAGE_BRIGHTNESS'"
-      (click)="activeTab = 'IMAGE_BRIGHTNESS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.imageBrightness</div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'DISPLAY_BRIGHTNESS'"
-      (click)="activeTab = 'DISPLAY_BRIGHTNESS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.displayBrightness</div>
+  <div class="pane-title">
+    <span translate>brightness-automations.title</span>
+    <div class="advanced-toggle">
+      <div class="advanced-toggle-clickable">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            disabled
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <span @hshrink>Simple Mode</span>
+        <!--      <span @hshrink>Advanced Mode</span>-->
+      </div>
+      <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>
     </div>
   </div>
-  <app-image-brightness-automations-tab
-    *ngIf="activeTab === 'IMAGE_BRIGHTNESS'"
-  ></app-image-brightness-automations-tab>
-  <app-display-brightness-automations-tab
-    *ngIf="activeTab === 'DISPLAY_BRIGHTNESS'"
-  ></app-display-brightness-automations-tab>
+  <!-- Keeping tab bar in for an upcoming feature -->
+  <!--  <div class="tab-bar">-->
+  <!--    <div-->
+  <!--      class="tab"-->
+  <!--      [class.active]="activeTab === 'BRIGHTNESS_AUTOMATIONS'"-->
+  <!--      (click)="activeTab = 'BRIGHTNESS_AUTOMATIONS'"-->
+  <!--    >-->
+  <!--      <div class="tab-label" translate>brightness-automations.tabs.imageBrightness</div>-->
+  <!--    </div>-->
+  <!--  </div>-->
+  <app-brightness-automations-tab
+    *ngIf="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
+  ></app-brightness-automations-tab>
 </div>

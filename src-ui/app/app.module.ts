@@ -123,8 +123,6 @@ import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/pow
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
-import { DisplayBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/display-brightness-automations-tab/display-brightness-automations-tab.component';
-import { ImageBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/image-brightness-automations-tab/image-brightness-automations-tab.component';
 import { ImageBrightnessControlService } from './services/brightness-control/image-brightness/image-brightness-control.service';
 import { ImageBrightnessControlAutomationService } from './services/brightness-control/image-brightness/image-brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
@@ -140,6 +138,7 @@ import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
+import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -202,8 +201,7 @@ export function createTranslateLoader(http: HttpClient) {
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
     BrightnessAutomationsViewComponent,
-    DisplayBrightnessAutomationsTabComponent,
-    ImageBrightnessAutomationsTabComponent,
+    BrightnessAutomationsTabComponent,
     SliderSettingComponent,
     SliderComponent,
     EventLogComponent,

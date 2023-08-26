@@ -30,18 +30,6 @@
       "imageBrightness": "Beeldhelderheid",
       "displayBrightness": "Schermhelderheid"
     },
-    "displayBrightness": {
-      "description": "OyasumiVR kan automatisch de schermhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nHet aanpassen van de schermhelderheid bestuurt de fysieke helderheid van het LCD paneel in je headset, in plaats van alleen het beeld te verduisteren. Het aanpassen van schermhelderheid is alleen beschikbaar op de Valve Index.",
-      "indexWarning": "Zorg er voor dat je Valve Index is aangesloten en dat SteamVR is opgestart.",
-      "onSleepEnable": {
-        "title": "Wanneer ik ga slapen",
-        "description": "Pas de schermhelderheid aan"
-      },
-      "onSleepDisable": {
-        "title": "Wanneer ik wakker word",
-        "description": "Pas de schermhelderheid aan"
-      }
-    },
     "imageBrightness": {
       "description": "OyasumiVR kan automatisch de beeldhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nBeeldhelderheid past de helderheid aan van het beeld dat wordt getoont, in plaats van de helderheid van het scherm zelf. In tegenstelling tot het aanpassen van schermhelderheid, is het aanpassen van de beeldhelderheid beschikbaar op elke VR headset. ",
       "onSleepEnable": {
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "Wanneer ik wakker word",
         "description": "Pas de beeldhelderheid aan"
+      },
+      "brightness": {
+        "title": "Zet de helderheid naar",
+        "description": ""
+      },
+      "transition": {
+        "title": "Vloeiende overgang",
+        "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid"
+      },
+      "transitionTime": {
+        "title": "Overgangsduur",
+        "description": "Hoe lang de vloeiende overgang zal duren"
       }
-    },
-    "brightness": {
-      "title": "Zet de helderheid naar",
-      "description": ""
-    },
-    "transition": {
-      "title": "Vloeiende overgang",
-      "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid"
-    },
-    "transitionTime": {
-      "title": "Overgangsduur",
-      "description": "Hoe lang de vloeiende overgang zal duren"
     }
   },
   "overview": {

@@ -30,19 +30,7 @@
       "imageBrightness": "이미지 밝기",
       "displayBrightness": "디스플레이 밝기"
     },
-    "displayBrightness": {
-      "description": "수면 모드가 활성화 또는 비활성화될 때 OyasumiVR은 헤드셋의 디스플레이 밝기를 자동으로 조정할 수 있어요.\n\n디스플레이 밝기는 이미지 자체가 어두워지는 것이 아니라 헤드셋의 LCD 패널 백라이트의 강도에 영향을 주어요. 디스플레이 밝기 제어는 Valve Index에서만 사용할 수 있어요.",
-      "indexWarning": "Valve Index가 연결되어 있고 SteamVR이 실행 중인지 확인해주세요.",
-      "onSleepEnable": {
-        "title": "수면 모드 활성화 시",
-        "description": "화면 밝기를 조정해요."
-      },
-      "onSleepDisable": {
-        "title": "수면 모드 비활성화 시",
-        "description": "화면 밝기를 조정해요."
-      }
-    },
-    "imageBrightness": {
+    "brightnessAutomations": {
       "description": "수면 모드가 활성화 또는 비활성화될 때 OyasumiVR은 헤드셋의 이미지 밝기를 자동으로 조정할 수 있어요.\n\n이미지 밝기가 어두워지면 표시되는 이미지 자체가 어두워집니다. 디스플레이 밝기와 달리 이미지 밝기는 모든 헤드셋에서 제어할 수 있어요.",
       "onSleepEnable": {
         "title": "수면 모드 활성화 시",
@@ -51,19 +39,19 @@
       "onSleepDisable": {
         "title": "수면 모드 비활성화 시",
         "description": "화면 밝기를 조정해요."
+      },
+      "brightness": {
+        "title": "조정할 밝기",
+        "description": ""
+      },
+      "transition": {
+        "title": "점진적 밝기 조정",
+        "description": "원하는 밝기까지 조금씩 부드럽게 조정해요."
+      },
+      "transitionTime": {
+        "title": "변화 시간",
+        "description": "원하는 밝기까지 조정될 때까지 걸리는 시간이에요."
       }
-    },
-    "brightness": {
-      "title": "조정할 밝기",
-      "description": ""
-    },
-    "transition": {
-      "title": "점진적 밝기 조정",
-      "description": "원하는 밝기까지 조금씩 부드럽게 조정해요."
-    },
-    "transitionTime": {
-      "title": "변화 시간",
-      "description": "원하는 밝기까지 조정될 때까지 걸리는 시간이에요."
     }
   },
   "overview": {
