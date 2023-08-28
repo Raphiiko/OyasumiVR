@@ -1,5 +1,5 @@
 <div class="pane modal modal-lg" @fadeUp>
-  <div class="pane-title" translate> comp.dotnet-upgrade-modal.title </div>
+  <div class="pane-title" translate> comp.dotnet-upgrade-modal.title</div>
   <div class="pane-content">
     <p translate>comp.dotnet-upgrade-modal.description.text1</p>
     <ul>
@@ -21,18 +21,15 @@
       </li>
     </ul>
     <p translate>comp.dotnet-upgrade-modal.description.text2</p>
-    <p *ngIf="automaticInstallationPossible" translate
-      >comp.dotnet-upgrade-modal.description.automaticInstall</p
-    >
-    <p *ngIf="!automaticInstallationPossible" translate
-      >comp.dotnet-upgrade-modal.description.noAutomaticInstall</p
+    <p translate
+    >comp.dotnet-upgrade-modal.description.automaticInstall</p
     >
     <p color="var(--color-gray-2)"
-      ><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
-        href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0"
-        target="_blank"
-        >https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a
-      >
+    ><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
+      href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0"
+      target="_blank"
+    >https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a
+    >
     </p>
   </div>
   <div class="pane-actions spread">
@@ -42,11 +39,10 @@
     <button
       class="btn btn-primary"
       (click)="installAutomatically()"
-      [disabled]="!automaticInstallationPossible"
     >
       <div class="small-spinner" *ngIf="installing" @hshrink></div>
       <span *ngIf="!installing" @hshrink translate
-        >comp.dotnet-upgrade-modal.installAutomatically</span
+      >comp.dotnet-upgrade-modal.installAutomatically</span
       >
     </button>
   </div>
