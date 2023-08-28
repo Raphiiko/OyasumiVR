@@ -27,14 +27,11 @@
   "brightness-automations": {
     "title": "明るさの自動化",
     "brightnessAutomations": {
-      "description": "ヘッドセットの映像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
       "onSleepEnable": {
-        "title": "睡眠時",
-        "description": "映像の明るさを調整する"
+        "title": "睡眠時"
       },
       "onSleepDisable": {
-        "title": "起床時",
-        "description": "映像の明るさを調整する"
+        "title": "起床時"
       },
       "brightness": {
         "title": "輝度を変更",
@@ -1145,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "不足しているランタイムのインストール",
       "description": {
-        "text1": "OyasumiVRが必要とする次のランタイムは古いかシステムにインストールされていません:",
         "runtimeQueued": "Queued",
         "text2": "OyasumiVR を使用するには、必要なランタイムをインストールする必要があります。",
         "automaticInstall": "自動でインストールしますか？",
-        "noAutomaticInstall": "ランタイムの最新バージョンを特定できなかったため、自動的にインストールできません。手動でインストールするか、OyasumiVRを一旦終了し、後ほど再度インストールしてください。",
         "moreInfo": "ダウンロードと詳細情報はこちら:"
       },
       "quit": "OyasumiVRを終了する",

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DisplayBrightnessControlDriver } from './drivers/display-brightness-control-driver';
-import { ValveIndexDisplayBrightnessControlDriver } from './drivers/valve-index-display-brightness-control-driver';
-import { OpenVRService } from '../../openvr.service';
+import { DisplayBrightnessControlDriver } from './display-brightness-drivers/display-brightness-control-driver';
+import { ValveIndexDisplayBrightnessControlDriver } from './display-brightness-drivers/valve-index-display-brightness-control-driver';
+import { OpenVRService } from '../openvr.service';
 import {
   BehaviorSubject,
   filter,
@@ -14,8 +14,8 @@ import {
 } from 'rxjs';
 import { isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
-import { CancellableTask } from '../../../utils/cancellable-task';
-import { createBrightnessTransitionTask } from '../brightness-transition';
+import { CancellableTask } from '../../utils/cancellable-task';
+import { createBrightnessTransitionTask } from './brightness-transition';
 
 @Injectable({
   providedIn: 'root',

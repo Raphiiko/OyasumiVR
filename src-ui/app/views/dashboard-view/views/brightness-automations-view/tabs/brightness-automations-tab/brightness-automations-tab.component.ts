@@ -1,17 +1,24 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { fade, noop, vshrink } from '../../../../../../utils/animations';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
-  BrightnessOnSleepModeAutomationConfig,
+  SetBrightnessAutomationConfig,
 } from '../../../../../../models/automations';
 import { cloneDeep } from 'lodash';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { clamp } from '../../../../../../utils/number-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ImageBrightnessControlService } from 'src-ui/app/services/brightness-control/image-brightness/image-brightness-control.service';
-import { ImageBrightnessControlAutomationService } from 'src-ui/app/services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { BrightnessControlAutomationService } from 'src-ui/app/services/brightness-control/brightness-control-automation.service';
+import { BrightnessControlService } from '../../../../../../services/brightness-control/brightness-control.service';
+
+interface BrightnessBounds {
+  min: number;
+  max: number;
+}
+
+type BrightnessType = 'SIMPLE' | 'IMAGE' | 'DISPLAY';
 
 @Component({
   selector: 'app-brightness-automations-tab',
@@ -32,24 +39,42 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   ];
   protected transitionUnitOptionOnEnable?: SelectBoxItem = this.transitionUnitOptions[0];
   protected transitionUnitOptionOnDisable?: SelectBoxItem = this.transitionUnitOptions[0];
+  protected transitionUnitOptionOnPreparation?: SelectBoxItem = this.transitionUnitOptions[0];
 
   protected transitionValueOnEnable = 0;
   protected transitionValueOnDisable = 0;
+  protected transitionValueOnPreparation = 0;
 
-  protected onSleepModeEnableConfig: BrightnessOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
+  protected onSleepModeEnableConfig: SetBrightnessAutomationConfig = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
-  protected onSleepModeDisableConfig: BrightnessOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
+  protected onSleepModeDisableConfig: SetBrightnessAutomationConfig = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
   );
-  protected brightnessBounds = { min: 10, max: 100 }; // Enforce minimum 10% brightness
-  protected brightnessSnapValues: number[] = [100];
-  protected brightnessSnapDistance = 8;
+  protected onSleepPreparationConfig: Omit<SetBrightnessAutomationConfig, 'applyOnStart'> =
+    cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION);
+  protected brightnessBounds: Record<BrightnessType, BrightnessBounds> = {
+    SIMPLE: { min: 5, max: 100 },
+    IMAGE: { min: 5, max: 100 },
+    DISPLAY: { min: 20, max: 140 },
+  };
+  protected brightnessSnapValues: Record<BrightnessType, number[]> = {
+    SIMPLE: [],
+    IMAGE: [],
+    DISPLAY: [100],
+  };
+  protected brightnessSnapDistance: Record<BrightnessType, number> = {
+    SIMPLE: 0,
+    IMAGE: 0,
+    DISPLAY: 5,
+  };
+
+  @Input() public advancedMode: boolean = false;
 
   constructor(
     private automationConfigService: AutomationConfigService,
-    protected brightnessControl: ImageBrightnessControlService,
-    protected brightnessAutomation: ImageBrightnessControlAutomationService,
+    protected brightnessControl: BrightnessControlService,
+    protected brightnessAutomation: BrightnessControlAutomationService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -57,11 +82,12 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
-        this.onSleepModeEnableConfig = configs.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
-        this.onSleepModeDisableConfig = configs.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
+        this.onSleepModeEnableConfig = configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
+        this.onSleepModeDisableConfig = configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
+        this.onSleepPreparationConfig = configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION;
         {
           const [transitionValue, transitionUnit] = await this.parseTransitionSetting(
-            'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+            'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
             this.onSleepModeEnableConfig
           );
           this.transitionValueOnEnable = transitionValue;
@@ -69,11 +95,19 @@ export class BrightnessAutomationsTabComponent implements OnInit {
         }
         {
           const [transitionValue, transitionUnit] = await this.parseTransitionSetting(
-            'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+            'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
             this.onSleepModeDisableConfig
           );
           this.transitionValueOnDisable = transitionValue;
           this.transitionUnitOptionOnDisable = transitionUnit;
+        }
+        {
+          const [transitionValue, transitionUnit] = await this.parseTransitionSetting(
+            'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+            this.onSleepPreparationConfig
+          );
+          this.transitionValueOnPreparation = transitionValue;
+          this.transitionUnitOptionOnPreparation = transitionUnit;
         }
       });
   }
@@ -82,13 +116,18 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });
     // Cancel running transitions if disabling
     switch (automation) {
-      case 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
+      case 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
         if (this.brightnessAutomation.isSleepEnableTransitionActive) {
           this.brightnessControl.cancelActiveTransition();
         }
         break;
-      case 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
+      case 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
         if (this.brightnessAutomation.isSleepDisableTransitionActive) {
+          this.brightnessControl.cancelActiveTransition();
+        }
+        break;
+      case 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION':
+        if (this.brightnessAutomation.isSleepPreparationTransitionActive) {
           this.brightnessControl.cancelActiveTransition();
         }
         break;
@@ -96,16 +135,28 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   }
 
   async toggleTransitioning(automation: AutomationType, transition: boolean) {
-    await this.automationConfigService.updateAutomationConfig<BrightnessOnSleepModeAutomationConfig>(
+    await this.automationConfigService.updateAutomationConfig<SetBrightnessAutomationConfig>(
       automation,
       { transition }
     );
   }
 
-  async updateBrightness(automation: AutomationType, brightness: number) {
-    await this.automationConfigService.updateAutomationConfig<BrightnessOnSleepModeAutomationConfig>(
+  async updateBrightness(automation: AutomationType, type: BrightnessType, brightness: number) {
+    const property = {
+      SIMPLE: 'brightness',
+      IMAGE: 'imageBrightness',
+      DISPLAY: 'displayBrightness',
+    }[type];
+    await this.automationConfigService.updateAutomationConfig<SetBrightnessAutomationConfig>(
       automation,
-      { brightness }
+      { [property]: brightness }
+    );
+  }
+
+  async toggleApplyOnStart(automation: AutomationType, applyOnStart: boolean) {
+    await this.automationConfigService.updateAutomationConfig<SetBrightnessAutomationConfig>(
+      automation,
+      { applyOnStart }
     );
   }
 
@@ -115,11 +166,15 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     transitionUnit?: SelectBoxItem
   ) {
     switch (automation) {
-      case 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
+      case 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
         this.transitionValueOnEnable = transitionValue;
         this.transitionUnitOptionOnEnable = transitionUnit;
         break;
-      case 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
+      case 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
+        this.transitionValueOnDisable = transitionValue;
+        this.transitionUnitOptionOnDisable = transitionUnit;
+        break;
+      case 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION':
         this.transitionValueOnDisable = transitionValue;
         this.transitionUnitOptionOnDisable = transitionUnit;
         break;
@@ -133,7 +188,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
         multiplier = 1000;
         break;
     }
-    await this.automationConfigService.updateAutomationConfig<BrightnessOnSleepModeAutomationConfig>(
+    await this.automationConfigService.updateAutomationConfig<SetBrightnessAutomationConfig>(
       automation,
       {
         transitionTime: transitionValue * multiplier,
@@ -143,7 +198,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
 
   private async parseTransitionSetting(
     automation: AutomationType,
-    config: BrightnessOnSleepModeAutomationConfig
+    config: Pick<SetBrightnessAutomationConfig, 'transitionTime'>
   ): Promise<[number, SelectBoxItem]> {
     // Parse the value and unit
     const valueInSeconds = Math.round(config.transitionTime / 1000);
@@ -161,7 +216,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
           ];
     // Update setting if the stored value is not the same as the parsed value
     if (value * factor * 1000 != config.transitionTime) {
-      await this.automationConfigService.updateAutomationConfig<BrightnessOnSleepModeAutomationConfig>(
+      await this.automationConfigService.updateAutomationConfig<SetBrightnessAutomationConfig>(
         automation,
         {
           transitionTime: value * factor * 1000,

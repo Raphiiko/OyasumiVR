@@ -2,16 +2,17 @@
   <div class="pane-title">
     <span translate>brightness-automations.title</span>
     <div class="advanced-toggle">
-      <div class="advanced-toggle-clickable">
+      <div class="advanced-toggle-clickable" (click)="toggleAdvancedMode()">
         <label class="switch-toggle">
           <input
             type="checkbox"
+            [checked]="advancedMode"
             disabled
           />
           <span class="switch-toggle-slider"></span>
         </label>
-        <span @hshrink>Simple Mode</span>
-        <!--      <span @hshrink>Advanced Mode</span>-->
+        <span @hshrink *ngIf="!advancedMode" translate>brightness-automations.mode.simple</span>
+        <span @hshrink *ngIf="advancedMode" translate>brightness-automations.mode.advanced</span>
       </div>
       <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>
     </div>
@@ -27,6 +28,7 @@
   <!--    </div>-->
   <!--  </div>-->
   <app-brightness-automations-tab
+    [advancedMode]="advancedMode"
     *ngIf="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
   ></app-brightness-automations-tab>
 </div>

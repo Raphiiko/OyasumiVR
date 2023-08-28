@@ -27,14 +27,11 @@
   "brightness-automations": {
     "title": "亮度自动调整",
     "brightnessAutomations": {
-      "description": "启用或停用睡眠模式时，OyasumiVR 可以自动调整头戴式设备的图像亮度。\n\n图像亮度会使显示的图像变暗。与显示器亮度不同，图像亮度调整适用于所有头戴式设备。",
       "onSleepEnable": {
-        "title": "当我进入睡眠模式时",
-        "description": "调整图像亮度"
+        "title": "当我进入睡眠模式时"
       },
       "onSleepDisable": {
-        "title": "当我醒来时",
-        "description": "调整图像亮度"
+        "title": "当我醒来时"
       },
       "brightness": {
         "title": "将亮度改为",
@@ -1145,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "安装缺失的运行时库",
       "description": {
-        "text1": "OyasumiVR 需要以下运行时库，但它们的版本要么太旧，要么未安装在您的系统中：",
         "runtimeQueued": "排队中",
         "text2": "为了继续使用 OyasumiVR，必须先安装这些所需的运行时库。",
         "automaticInstall": "是否要让 OyasumiVR 尝试自动为您安装这些运行时库？",
-        "noAutomaticInstall": "OyasumiVR 无法确定这些运行时库的最新版本，因此无法自动为您安装。请手动安装这些运行时库，或退出 OyasumiVR，稍后再试。",
         "moreInfo": "您可以在这里找到下载和更多信息："
       },
       "quit": "退出 OyasumiVR",

@@ -1,6 +1,6 @@
 import { DisplayBrightnessControlDriver } from './display-brightness-control-driver';
-import { clamp, ensurePrecision, lerp } from '../../../../utils/number-utils';
-import { OpenVRService } from '../../../openvr.service';
+import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
+import { OpenVRService } from '../../openvr.service';
 import { combineLatest, map, Observable } from 'rxjs';
 
 export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessControlDriver {

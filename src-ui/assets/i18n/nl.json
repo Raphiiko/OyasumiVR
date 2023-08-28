@@ -27,14 +27,11 @@
   "brightness-automations": {
     "title": "Helderheid Automatiseringen",
     "brightnessAutomations": {
-      "description": "OyasumiVR kan automatisch de beeldhelderheid van je VR bril aanpassen wanneer de slaap modus wordt in- of uitgeschakeld.\n\nBeeldhelderheid past de helderheid aan van het beeld dat wordt getoont, in plaats van de helderheid van het scherm zelf. In tegenstelling tot het aanpassen van schermhelderheid, is het aanpassen van de beeldhelderheid beschikbaar op elke VR headset. ",
       "onSleepEnable": {
-        "title": "Wanneer ik ga slapen",
-        "description": "Pas de beeldhelderheid aan"
+        "title": "Wanneer ik ga slapen"
       },
       "onSleepDisable": {
-        "title": "Wanneer ik wakker word",
-        "description": "Pas de beeldhelderheid aan"
+        "title": "Wanneer ik wakker word"
       },
       "brightness": {
         "title": "Zet de helderheid naar",
@@ -1137,11 +1134,9 @@
     "dotnet-upgrade-modal": {
       "title": "Installeer Vereiste Runtimes",
       "description": {
-        "text1": "De volgende runtimes die OyasumiVR nodig heeft om te draaien, zijn niet geïnstalleerd, of niet up to date genoeg:",
         "runtimeQueued": "In de wachtrij",
         "text2": "Om gebruik te kunnen maken van OyasumiVR moet je deze runtimes eerst installeren.",
         "automaticInstall": "Wil je dat OyasumiVR deze automatisch voor je probeert te installeren?",
-        "noAutomaticInstall": "OyasumiVR kon de meest recente versies van deze runtimes niet bepalen, en kan ze daarom niet automatisch voor je installeren. Installeer ze handmatig, of start OyasumiVR later opnieuw om nog eens te checken.",
         "moreInfo": "Je kunt downloads voor deze runtimes en meer informatie vinden op de volgende pagina:"
       },
       "quit": "Sluit OyasumiVR",

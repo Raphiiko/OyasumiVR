@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { info } from 'tauri-plugin-log-api';
-import { CancellableTask } from '../../../utils/cancellable-task';
-import { createBrightnessTransitionTask } from '../brightness-transition';
+import { CancellableTask } from '../../utils/cancellable-task';
+import { createBrightnessTransitionTask } from './brightness-transition';
 import { invoke } from '@tauri-apps/api';
 
 @Injectable({

@@ -30,10 +30,10 @@ export type AutomationType =
   // INVITE AUTOMATIONS
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   // BRIGHTNESS AUTOMATIONS
-  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
-  | 'DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
-  | 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
-  | 'IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
+  | 'BRIGHTNESS_CONTROL_ADVANCED_MODE'
+  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
+  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
+  | 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION'
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
@@ -47,7 +47,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 8;
+  version: 9;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -72,10 +72,10 @@ export interface AutomationConfigs {
   // INVITE AUTOMATIONS
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   // BRIGHTNESS AUTOMATIONS
-  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: BrightnessOnSleepModeAutomationConfig;
-  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: BrightnessOnSleepModeAutomationConfig;
-  IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: BrightnessOnSleepModeAutomationConfig;
-  IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: BrightnessOnSleepModeAutomationConfig;
+  BRIGHTNESS_CONTROL_ADVANCED_MODE: BrightnessControlAdvancedModeAutomationConfig;
+  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: SetBrightnessAutomationConfig;
+  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: SetBrightnessAutomationConfig;
+  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: Omit<SetBrightnessAutomationConfig, 'applyOnStart'>;
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
@@ -98,10 +98,14 @@ export interface AutomationConfig {
 //
 
 // BRIGHTNESS AUTOMATIONS
-export interface BrightnessOnSleepModeAutomationConfig extends AutomationConfig {
+export interface BrightnessControlAdvancedModeAutomationConfig extends AutomationConfig {}
+export interface SetBrightnessAutomationConfig extends AutomationConfig {
   brightness: number;
+  imageBrightness: number;
+  displayBrightness: number;
   transition: boolean;
   transitionTime: number;
+  applyOnStart: boolean;
 }
 
 // RESOLUTION AUTOMATIONS
@@ -243,31 +247,36 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 8,
+  version: 9,
   // BRIGHTNESS AUTOMATIONS
-  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
+  BRIGHTNESS_CONTROL_ADVANCED_MODE: {
+    enabled: false,
+  },
+  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
     brightness: 20,
+    imageBrightness: 20,
+    displayBrightness: 100,
     transition: true,
     transitionTime: 1000 * 60 * 5,
+    applyOnStart: true,
   },
-  DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
+  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
     brightness: 100,
+    imageBrightness: 100,
+    displayBrightness: 100,
     transition: true,
     transitionTime: 10000,
+    applyOnStart: true,
   },
-  IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
+  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
     enabled: false,
-    brightness: 20,
+    brightness: 50,
+    imageBrightness: 50,
+    displayBrightness: 100,
     transition: true,
-    transitionTime: 1000 * 60 * 5,
-  },
-  IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
-    enabled: false,
-    brightness: 100,
-    transition: true,
-    transitionTime: 10000,
+    transitionTime: 30000,
   },
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: {

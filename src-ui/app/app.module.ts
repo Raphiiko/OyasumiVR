@@ -80,11 +80,10 @@ import { SleepModeForSleepDetectorAutomationService } from './services/sleep-det
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
-import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness/display-brightness-control.service';
+import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
-import { DisplayBrightnessControlAutomationService } from './services/brightness-control/display-brightness/display-brightness-control-automation.service';
 import { EventLogService } from './services/event-log.service';
 import { debug } from 'tauri-plugin-log-api';
 import { EventLogComponent } from './components/event-log/event-log.component';
@@ -123,8 +122,8 @@ import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/pow
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
-import { ImageBrightnessControlService } from './services/brightness-control/image-brightness/image-brightness-control.service';
-import { ImageBrightnessControlAutomationService } from './services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { ImageBrightnessControlService } from './services/brightness-control/image-brightness-control.service';
+import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
@@ -139,6 +138,7 @@ import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/pow
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
 import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
+import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -256,6 +256,7 @@ export class AppModule {
     private imageCacheService: ImageCacheService,
     private displayBrightnessControlService: DisplayBrightnessControlService,
     private imageBrightnessControlService: ImageBrightnessControlService,
+    private brightnessControlService: BrightnessControlService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
@@ -293,8 +294,7 @@ export class AppModule {
     // Shutdown automations
     private shutdownAutomationsService: ShutdownAutomationsService,
     // Brightness control automations
-    private displayBrightnessControlAutomationService: DisplayBrightnessControlAutomationService,
-    private imageBrightnessControlAutomationService: ImageBrightnessControlAutomationService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService,
     // Render resolution automations
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
@@ -343,6 +343,7 @@ export class AppModule {
           this.displayBrightnessControlService.init(),
           this.imageBrightnessControlService.init(),
         ]);
+        await this.brightnessControlService.init();
         // Initialize IPC
         await this.ipcService.init();
         await this.ipcAppStateSyncService.init();
@@ -374,8 +375,7 @@ export class AppModule {
           // Invite automations
           this.inviteAutomationsService.init(),
           // Brightness automations
-          this.displayBrightnessControlAutomationService.init(),
-          this.imageBrightnessControlAutomationService.init(),
+          this.brightnessControlAutomationService.init(),
           // Resolution automations
           this.renderResolutionAutomationService.init(),
           // Fade distance automations
