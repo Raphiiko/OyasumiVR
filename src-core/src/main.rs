@@ -1,6 +1,6 @@
 #![cfg_attr(
-all(not(debug_assertions), target_os = "windows"),
-windows_subsystem = "windows"
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
 )]
 
 #[macro_use(lazy_static)]
@@ -8,6 +8,7 @@ extern crate lazy_static;
 
 mod commands;
 mod elevated_sidecar;
+mod flavour;
 mod globals;
 mod grpc;
 mod http;
@@ -18,14 +19,13 @@ mod openvr;
 mod os;
 mod osc;
 mod overlay_sidecar;
+mod steam;
 mod system_tray;
 mod utils;
 mod vrc_log_parser;
-mod steam;
-mod flavour;
 
+pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
-pub use flavour::BUILD_FLAVOUR as BUILD_FLAVOUR;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
@@ -81,12 +81,12 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
-        os::commands::check_dotnet_upgrades_required,
-        os::commands::get_net_core_version,
-        os::commands::get_asp_net_core_version,
+        os::commands::check_dotnet_install_required,
+        os::commands::get_net_core_versions,
+        os::commands::get_asp_net_core_versions,
         os::commands::is_semver_higher,
-        os::commands::upgrade_net_core,
-        os::commands::upgrade_asp_net_core,
+        os::commands::install_net_core,
+        os::commands::install_asp_net_core,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
         osc::commands::osc_send_bool,
@@ -132,7 +132,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
             )
-                .unwrap();
+            .unwrap();
             out.finish(format_args!(
                 "{}[{}] {}",
                 time::OffsetDateTime::now_utc().format(&format).unwrap(),

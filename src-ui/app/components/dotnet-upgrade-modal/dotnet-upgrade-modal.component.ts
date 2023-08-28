@@ -27,7 +27,6 @@ interface RuntimeStatus {
 })
 export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
   requiredRuntimes: RuntimeStatus[] = [];
-  automaticInstallationPossible = false;
   installing = false;
 
   constructor(private dotnetService: DotnetService, private modalService: ModalService) {
@@ -57,11 +56,6 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
           return runtimes;
         }),
         tap((runtimes) => {
-          if (runtimes.some((r) => r.status === 'INSTALL')) {
-            this.automaticInstallationPossible = !runtimes.some(
-              (r) => r.status === 'INSTALL' && !r.version
-            );
-          }
           this.requiredRuntimes = runtimes;
         })
       )
@@ -80,11 +74,11 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
     for (const runtimeStatus of toInstall) {
       switch (runtimeStatus.type) {
         case 'netCore': {
-          await this.dotnetService.upgradeNetCore(runtimeStatus.version!);
+          await this.dotnetService.installNetCore(runtimeStatus.version!);
           break;
         }
         case 'aspNetCore': {
-          await this.dotnetService.upgradeAspNetCore(runtimeStatus.version!);
+          await this.dotnetService.installAspNetCore(runtimeStatus.version!);
           break;
         }
       }
