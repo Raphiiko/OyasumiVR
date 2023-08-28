@@ -1,109 +1,53 @@
-use std::{fs::File, process::Command};
+use std::{collections::HashMap, fs::File, process::Command};
 
+use crate::globals::{ASPNET_CORE_VERSION, DOTNET_CORE_VERSION};
 use log::{error, info};
 use tempfile::Builder;
 
-// RETURN VALUES:
-// INSTALL_NETCORE, UPGRADE_NETCORE, DOWNGRADE_NETCORE, INSTALL_ASPNETCORE, UPGRADE_ASPNETCORE, DOWNGRADE_ASPNETCORE
-// ERRORS:
-// FAILED_VERSION_CHECK, FAILED_VERSION_LISTING, FAILED_VERSION_PARSING, INVALID_VERSION
-pub fn check_dotnet_upgrades_required() -> Result<Vec<String>, String> {
-    let netcore_version = match get_net_core_version() {
-        Ok(version) => version,
+// Checks if the exact dotnet runtime versions are installed that are required
+// Returns <String, String> where the key is the runtime (DOTNETCORE / ASPNETCORE)
+// and the value is the version required to be installed
+// ERRORS: FAILED_VERSION_CHECK, FAILED_VERSION_LISTING, FAILED_VERSION_PARSING
+pub fn check_dotnet_install_required() -> Result<HashMap<String, String>, String> {
+    let mut result = HashMap::<String, String>::new();
+    let netcore_versions = match get_net_core_versions() {
+        Ok(versions) => versions,
         Err(e) => {
             error!("Failed to get .NET Core version: {}", e);
             return Err("FAILED_VERSION_CHECK".into());
         }
     };
-    let aspnetcore_version = match get_asp_net_core_version() {
-        Ok(version) => version,
+    if !netcore_versions.contains(&DOTNET_CORE_VERSION.to_string()) {
+        result.insert(
+            String::from("DOTNETCORE"),
+            String::from(DOTNET_CORE_VERSION),
+        );
+    }
+    let aspnetcore_versions = match get_asp_net_core_versions() {
+        Ok(versions) => versions,
         Err(e) => {
             error!("Failed to get ASP.NET Core version: {}", e);
             return Err("FAILED_VERSION_CHECK".into());
         }
     };
-    let mut upgrades_required = Vec::<String>::new();
-    // Check if .NET Core is missing entirely (Requires install)
-    if let None = netcore_version.clone() {
-        upgrades_required.push("INSTALL_NETCORE".into());
-    } else if let Some(v) = netcore_version.clone() {
-        // Check if installed version is below 7.0.0 (Requires upgrade)
-        match is_semver_higher(&String::from("7.0.0"), &v) {
-            Ok(below7) => {
-                if below7 {
-                    upgrades_required.push("UPGRADE_NETCORE".into());
-                }
-            }
-            Err(e) => {
-                error!("Failed to compare versions: {} {} {}", "7.0.0", v, e);
-                return Err("FAILED_VERSION_CHECK".into());
-            }
-        };
-        // Check if installed version is above 7.1 (Requires downgrade)
-        match is_semver_higher(&v, &String::from("7.1.0")) {
-            Ok(above71) => {
-                if above71 {
-                    upgrades_required.push("DOWNGRADE_NETCORE".into());
-                }
-            }
-            Err(e) => {
-                error!("Failed to compare versions: {} {} {}", v, "7.1.0", e);
-                return Err("FAILED_VERSION_CHECK".into());
-            }
-        };
+    if !aspnetcore_versions.contains(&ASPNET_CORE_VERSION.to_string()) {
+        result.insert(
+            String::from("ASPNETCORE"),
+            String::from(ASPNET_CORE_VERSION),
+        );
     }
-    if let None = aspnetcore_version.clone() {
-        upgrades_required.push("INSTALL_ASPNETCORE".into());
-    } else if let Some(v) = aspnetcore_version.clone() {
-        // Check if installed version is below 7.0.0 (Requires upgrade)
-        match is_semver_higher(&String::from("7.0.0"), &v) {
-            Ok(below7) => {
-                if below7 {
-                    upgrades_required.push("UPGRADE_ASPNETCORE".into());
-                }
-            }
-            Err(e) => {
-                error!("Failed to compare versions: {} {} {}", "7.0.0", v, e);
-                return Err("FAILED_VERSION_CHECK".into());
-            }
-        };
-        // Check if installed version is above 7.1 (Requires downgrade)
-        match is_semver_higher(&v, &String::from("7.1.0")) {
-            Ok(above71) => {
-                if above71 {
-                    upgrades_required.push("DOWNGRADE_ASPNETCORE".into());
-                }
-            }
-            Err(e) => {
-                error!("Failed to compare versions: {} {} {}", v, "7.1.0", e);
-                return Err("FAILED_VERSION_CHECK".into());
-            }
-        };
-    }
-    // Check if patch versions match
-    if let Some(netcorever) = netcore_version.clone() {
-        if let Some(aspnetcorever) = aspnetcore_version.clone() {
-            let netcorever = netcorever.split(".").collect::<Vec<&str>>();
-            let aspnetcorever = aspnetcorever.split(".").collect::<Vec<&str>>();
-            if netcorever[2] < aspnetcorever[2] {
-                upgrades_required.push("UPGRADE_NETCORE".into());
-            } else if netcorever[2] > aspnetcorever[2] {
-                upgrades_required.push("UPGRADE_ASPNETCORE".into());
-            }
-        }
-    }
-    return Ok(upgrades_required);
+    Ok(result)
 }
 
-pub fn get_net_core_version() -> Result<Option<String>, String> {
-    get_dotnet_version("Microsoft.NETCore.App")
+pub fn get_net_core_versions() -> Result<Vec<String>, String> {
+    get_dotnet_versions("Microsoft.NETCore.App")
 }
 
-pub fn get_asp_net_core_version() -> Result<Option<String>, String> {
-    get_dotnet_version("Microsoft.AspNetCore.App")
+pub fn get_asp_net_core_versions() -> Result<Vec<String>, String> {
+    get_dotnet_versions("Microsoft.AspNetCore.App")
 }
 
-fn get_dotnet_version(runtime: &str) -> Result<Option<String>, String> {
+fn get_dotnet_versions(runtime: &str) -> Result<Vec<String>, String> {
     let output = match std::process::Command::new("dotnet")
         .arg("--list-runtimes")
         .output()
@@ -121,7 +65,7 @@ fn get_dotnet_version(runtime: &str) -> Result<Option<String>, String> {
         Err(_) => String::from(""),
     };
     let output = output.split("\r\n");
-    let mut highest_version: Option<String> = None;
+    let mut versions = Vec::<String>::new();
     for line in output {
         if line.starts_with(runtime) {
             let line = line.split(" ").collect::<Vec<&str>>();
@@ -129,28 +73,13 @@ fn get_dotnet_version(runtime: &str) -> Result<Option<String>, String> {
                 continue;
             }
             let version = line[1].to_string();
-            // if highest_version is None
-            if let None = highest_version {
-                highest_version = Some(version);
-                continue;
+            if !is_semver(&version) {
+                return Err("FAILED_VERSION_PARSING".into());
             }
-            let hversion = highest_version.clone().unwrap();
-            let higher = match is_semver_higher(&version, &hversion) {
-                Ok(higher) => higher,
-                Err(e) => {
-                    error!(
-                        "[Core] Failed to compare versions: {} {} {}",
-                        version, &hversion, e
-                    );
-                    return Err("FAILED_VERSION_PARSING".into());
-                }
-            };
-            if higher {
-                highest_version = Some(version);
-            }
+            versions.push(version);
         }
     }
-    Ok(highest_version)
+    Ok(versions)
 }
 
 fn is_semver(version: &String) -> bool {
@@ -198,10 +127,10 @@ pub fn is_semver_higher(a: &String, b: &String) -> Result<bool, String> {
     Ok(false)
 }
 
-pub async fn upgrade_net_core(version: &String) -> Result<(), String> {
+pub async fn install_net_core(version: &String) -> Result<(), String> {
     if !is_semver(version) {
         error!(
-            "[Core] Tried upgrading .NET Core runtime to invalid version: {}",
+            "[Core] Tried installing invalid .NET Core runtime version: {}",
             version
         );
         return Err("INVALID_VERSION".into());
@@ -217,18 +146,18 @@ pub async fn upgrade_net_core(version: &String) -> Result<(), String> {
     download_and_install(installer_url).await
 }
 
-pub async fn upgrade_asp_net_core(version: &String) -> Result<(), String> {
+pub async fn install_asp_net_core(version: &String) -> Result<(), String> {
     if !is_semver(version) {
         error!(
-            "[Core] Tried upgrading ASP.NET Core runtime to invalid version: {}",
+            "[Core] Tried installing ASP.NET Core runtime version: {}",
             version
         );
         return Err("INVALID_VERSION".into());
     }
     let installer_url = format!(
-      "https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/{}/aspnetcore-runtime-{}-win-x64.exe",
-      version, version
-  );
+        "https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/{}/aspnetcore-runtime-{}-win-x64.exe",
+        version, version
+    );
     info!(
         "[Core] Downloading ASP.NET Core {} installer from ({})",
         version, installer_url
@@ -310,6 +239,6 @@ async fn download_and_install(url: String) -> Result<(), String> {
         );
         return Err("INSTALLER_EXITED_WITH_NONZERO_EXIT_CODE".into());
     }
-    info!("[Core] Installation complete!");
+    info!("[Core] Runtime installation complete!");
     Ok(())
 }

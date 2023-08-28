@@ -1161,7 +1161,7 @@
     "dotnet-upgrade-modal": {
       "title": "Install Missing Runtimes",
       "description": {
-        "text1": "The following runtimes that are needed by OyasumiVR are either too outdated, or not installed on your system:",
+        "text1": "The following runtimes that are needed by OyasumiVR either don't match the required version, or are not installed on your system:",
         "runtimeQueued": "Queued",
         "text2": "To continue using OyasumiVR, the required runtimes have to be installed first.",
         "automaticInstall": "Do you want OyasumiVR to try install these runtimes for you automatically?",
