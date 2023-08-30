@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Indonesian language support (Community contribution by [a9ito](https://twitter.com/a9ito))
 - Support for a release on [Steam](https://store.steampowered.com/)
 - VR Manifest for registering OyasumiVR with SteamVR.
+- Sleeping animations preset for GoGo Loco 1.8.0+
 
 ### Changed
 
@@ -29,6 +30,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Japanese date formatting
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
+ 
+### Removed
+
+- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
 
 ## [1.8.0]
 

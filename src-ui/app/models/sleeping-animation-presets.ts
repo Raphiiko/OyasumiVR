@@ -97,9 +97,15 @@ b false /avatar/parameters/Go/Stationary
 const GOGO_LOCO_LEGACY_1_7_1_PRESET: SleepingAnimationPreset = {
   id: 'GOGO_LOCO_1_7_1',
   name: 'GoGo Loco',
-  versions: '1.7.1+',
+  versions: '1.7.1 - 1.7.91',
   author: 'franada',
   infoLinks: [{ label: 'GoGo Loco (booth.pm)', url: 'https://booth.pm/en/items/3290806' }],
+  notes: [
+    {
+      type: 'WARNING',
+      text: 'misc.GOGO_LOCO_LEGACY_PRESET_WARNING',
+    },
+  ],
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
 i 214 /avatar/parameters/VRCEmote
