@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1]
+
+### Added
+
+- Sleeping animations preset for GoGo Loco 1.8.0+
+
+### Removed
+
+- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
+
 ## [1.8.0]
 
 ### Added
