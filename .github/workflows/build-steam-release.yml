@@ -9,7 +9,7 @@ on:
 jobs:
   build-steam-release:
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-${{ github.ref }}-steam
       cancel-in-progress: true
     strategy:
       fail-fast: false
@@ -28,8 +28,6 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
-      - name: Set flavour to STEAM
-        run: npm run set-flavour STEAM
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -56,13 +54,30 @@ jobs:
           validation_level: warn
           version: ${{ steps.get-package-version.outputs.version }}
           path: ./CHANGELOG.md
-      - name: Build OyasumiVR
-        run: cargo-tauri build -b none
-      - name: Deploy to Steam
+      - name: Prepare Steamworks SDK
         env:
-          STEAM_BUILD_USER: ${{ secrets.STEAM_BUILD_USER }}
           STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
           STEAM_APP_ID: '2538150'
           APP_VERSION: v${{ steps.get-package-version.outputs.version }}
         shell: bash
-        run: chmod +x ./scripts/steam/steam-deploy.sh && ./scripts/steam/steam-deploy.sh
+        run: chmod +x ./scripts/steam/1-prepare-steam-sdk.sh && ./scripts/steam/1-prepare-steam-sdk.sh
+      - name: Set flavour to STEAM
+        run: npm run set-flavour STEAM
+      - name: Build OyasumiVR (STEAM Flavour)
+        run: cargo-tauri build -b none
+      - name: Copy STEAM build
+        shell: bash
+        run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh
+      - name: Set flavour to STEAM_CN
+        run: npm run set-flavour STEAM_CN
+      - name: Build OyasumiVR (STEAM_CN Flavour)
+        run: cargo-tauri build -b none
+      - name: Copy STEAM_CN build
+        shell: bash
+        run: chmod +x ./scripts/steam/3-move-build-steam-cn.sh && ./scripts/steam/3-move-build-steam-cn.sh
+      - name: Deploy to Steam
+        env:
+          STEAM_BUILD_USER: ${{ secrets.STEAM_BUILD_USER }}
+          STEAM_APP_ID: '2538150'
+        shell: bash
+        run: chmod +x ./scripts/steam/4-steam-deploy.sh && ./scripts/steam/4-steam-deploy.sh
