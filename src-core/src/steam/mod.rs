@@ -16,7 +16,7 @@ lazy_static! {
 }
 
 pub async fn init() {
-    if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam {
+    if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::SteamCn {
         return;
     }
     let (client, single) = match Client::init_app(STEAM_APP_ID) {
