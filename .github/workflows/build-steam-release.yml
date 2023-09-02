@@ -83,4 +83,5 @@ jobs:
         run: chmod +x ./scripts/steam/4-steam-deploy.sh && ./scripts/steam/4-steam-deploy.sh
       - name: Log STDERR
         shell: bash
+        if: always()
         run: cat ./SteamSDK/sdk/tools/ContentBuilder/builder/logs/stderr.txt
