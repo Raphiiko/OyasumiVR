@@ -5,7 +5,7 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 import { attachConsole, error, info } from 'tauri-plugin-log-api';
 import { getVersion } from './app/utils/app-utils';
-import { FLAVOUR } from './flavour';
+import { FLAVOUR } from './build';
 
 if (environment.production) {
   enableProdMode();

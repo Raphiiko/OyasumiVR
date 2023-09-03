@@ -12,13 +12,13 @@ if (!['DEV', 'STANDALONE', 'STEAM', 'STEAM_CN'].includes(flavour)) {
 }
 
 {
-  let uiFlavour = readFileSync('src-ui/flavour.ts').toString();
+  let uiFlavour = readFileSync('src-ui/build.ts').toString();
   uiFlavour = uiFlavour.replaceAll(
     /export const FLAVOUR: BuildFlavour = '(DEV|STANDALONE|STEAM|STEAM_CN)';/g,
     `export const FLAVOUR: BuildFlavour = '${flavour}';`
   );
-  writeFileSync('src-ui/flavour.ts', uiFlavour);
-  console.log('Updated src-ui/flavour.ts');
+  writeFileSync('src-ui/build.ts', uiFlavour);
+  console.log('Updated src-ui/build.ts');
 }
 
 {
