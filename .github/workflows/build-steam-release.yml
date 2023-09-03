@@ -81,7 +81,3 @@ jobs:
           STEAM_APP_ID: '2538150'
         shell: bash
         run: chmod +x ./scripts/steam/4-steam-deploy.sh && ./scripts/steam/4-steam-deploy.sh
-      - name: Log STDERR
-        shell: bash
-        if: always()
-        run: cat ./SteamSDK/sdk/tools/ContentBuilder/builder/logs/stderr.txt
