@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ### Script for preparing the Steam SDK for deployment
 ### USED BY build-steam-release.yml GITHUB ACTIONS WORKFLOW.
 ### DO NOT RUN MANUALLY
