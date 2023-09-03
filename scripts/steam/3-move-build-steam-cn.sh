@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ### USED BY build-steam-release.yml GITHUB ACTIONS WORKFLOW.
 ### DO NOT RUN MANUALLY
 
