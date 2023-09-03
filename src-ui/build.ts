@@ -5,4 +5,4 @@
 
 type BuildFlavour = 'DEV' | 'STANDALONE' | 'STEAM' | 'STEAM_CN';
 export const FLAVOUR: BuildFlavour = 'DEV';
-export const BUILD_ID: string = 'devbuild';
+export const BUILD_ID = 'devbuild';
