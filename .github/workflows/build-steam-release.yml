@@ -61,6 +61,8 @@ jobs:
           APP_VERSION: v${{ steps.get-package-version.outputs.version }}
         shell: bash
         run: chmod +x ./scripts/steam/1-prepare-steam-sdk.sh && ./scripts/steam/1-prepare-steam-sdk.sh
+      - name: Set build id
+        run: npm run set-build-id
       - name: Set flavour to STEAM
         run: npm run set-flavour STEAM
       - name: Build OyasumiVR (STEAM Flavour)

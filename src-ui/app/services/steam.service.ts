@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
-import { FLAVOUR } from '../../flavour';
+import { FLAVOUR } from '../../build';
 import { BehaviorSubject, distinctUntilChanged, filter } from 'rxjs';
 import { error, info } from 'tauri-plugin-log-api';
 

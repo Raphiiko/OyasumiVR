@@ -1,4 +1,4 @@
-import { FLAVOUR } from '../flavour';
+import { FLAVOUR } from '../build';
 
 export const SPLASH_MIN_DURATION = 2000;
 export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';

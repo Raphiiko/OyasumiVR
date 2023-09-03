@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { hshrink } from '../../../../../utils/animations';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FLAVOUR } from '../../../../../../flavour';
+import { FLAVOUR } from '../../../../../../build';
 
 @Component({
   selector: 'app-settings-updates-tab',

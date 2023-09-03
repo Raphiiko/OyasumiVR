@@ -30,6 +30,8 @@ jobs:
         run: npm run ci
       - name: Set flavour to STANDALONE
         run: npm run set-flavour STANDALONE
+      - name: Set build id
+        run: npm run set-build-id
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
