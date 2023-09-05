@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class AppComponent implements OnInit {
   constructor(
     public openvr: OpenVRService,
-    private translate: TranslateService,
+    translate: TranslateService,
     private settings: AppSettingsService
   ) {
     this.settings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {

@@ -25,6 +25,7 @@
     "build:sidecar:overlay:post": "node scripts/overlay-sidecar-post-build.js",
     "set-version": "node scripts/set-version.js",
     "set-flavour": "node scripts/set-flavour.js",
+    "set-build-id": "node scripts/set-build-id.js",
     "tauri": "cargo tauri",
     "ng": "ng",
     "lint": "ng lint",

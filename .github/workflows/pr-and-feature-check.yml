@@ -32,6 +32,8 @@ jobs:
         run: npm run set-version DEV
       - name: Set flavour to DEV
         run: npm run set-flavour DEV
+      - name: Set build id
+        run: npm run set-build-id
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:

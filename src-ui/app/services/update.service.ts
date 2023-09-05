@@ -8,7 +8,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { getVersion } from '../utils/app-utils';
 import { info } from 'tauri-plugin-log-api';
-import { FLAVOUR } from '../../flavour';
+import { FLAVOUR } from '../../build';
 
 @Injectable({
   providedIn: 'root',
