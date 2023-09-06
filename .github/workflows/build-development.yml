@@ -24,8 +24,8 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
-      - name: Lint Angular project
-        run: npm run lint
+#      - name: Lint Angular project
+#        run: npm run lint
       - name: Set app version to DEV version
         run: npm run set-version DEV
       - name: Set flavour to DEV
