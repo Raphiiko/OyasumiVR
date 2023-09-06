@@ -1,0 +1,41 @@
+.sleep-detector-debugger {
+  .action-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+
+    > *:not(:last-child) {
+      margin-right: 1em;
+    }
+  }
+
+  .chart-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    .timeseries-chart {
+    }
+  }
+
+  .state-handling-timeline {
+    user-select: all;
+    &-entry {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: flex-start;
+      width: 100%;
+
+      .left {
+        flex: 1;
+      }
+
+      .right {
+        flex-shrink: 0;
+      }
+    }
+  }
+}

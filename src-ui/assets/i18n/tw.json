@@ -26,44 +26,25 @@
   },
   "brightness-automations": {
     "title": "亮度自動調整",
-    "tabs": {
-      "imageBrightness": "圖像亮度",
-      "displayBrightness": "顯示器亮度"
-    },
-    "displayBrightness": {
-      "description": "啟用或停用睡眠模式時，OyasumiVR 可以自動調整頭戴式設備的顯示器亮度。\n\n顯示器亮度影響頭戴式設備液晶面板的背光強度，而不是降低圖像亮度。顯示器亮度調整僅適用於 Valve Index。",
-      "indexWarning": "請確保您的 Valve Index 已連接且 SteamVR 正在運行。",
+    "brightnessAutomations": {
       "onSleepEnable": {
-        "title": "當我進入睡眠模式時",
-        "description": "調整顯示器亮度"
+        "title": "當我進入睡眠模式時"
       },
       "onSleepDisable": {
-        "title": "當我醒來時",
-        "description": "調整顯示器亮度"
-      }
-    },
-    "imageBrightness": {
-      "description": "啟用或停用睡眠模式時，OyasumiVR 可以自動調整頭戴式設備的圖像亮度。\n\n圖像亮度會使顯示的圖像變暗。與顯示器亮度不同，圖像亮度調整適用於所有頭戴式設備。",
-      "onSleepEnable": {
-        "title": "當我進入睡眠模式時",
-        "description": "調整圖像亮度"
+        "title": "當我醒來時"
       },
-      "onSleepDisable": {
-        "title": "當我醒來時",
-        "description": "調整圖像亮度"
+      "brightness": {
+        "title": "將亮度改為",
+        "description": ""
+      },
+      "transition": {
+        "title": "逐步調整亮度",
+        "description": "平滑地過渡到所需的亮度值"
+      },
+      "transitionTime": {
+        "title": "過渡時間",
+        "description": "過渡到新亮度設定所需的時間"
       }
-    },
-    "brightness": {
-      "title": "將亮度改為",
-      "description": ""
-    },
-    "transition": {
-      "title": "逐步調整亮度",
-      "description": "平滑地過渡到所需的亮度值"
-    },
-    "transitionTime": {
-      "title": "過渡時間",
-      "description": "過渡到新亮度設定所需的時間"
     }
   },
   "overview": {
@@ -1161,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "安裝缺失的運行時庫",
       "description": {
-        "text1": "OyasumiVR 需要以下運行時庫，但它們的版本要嘛太舊，要嘛未安裝在您的系統中：",
         "runtimeQueued": "排隊中",
         "text2": "為了繼續使用 OyasumiVR，必須先安裝這些所需的運行時庫。",
         "automaticInstall": "是否要讓 OyasumiVR 嘗試自動為您安裝這些運行時庫？",
-        "noAutomaticInstall": "OyasumiVR 無法確定這些運行時庫的最新版本，因此無法自動為您安裝。請手動安裝這些運行時庫，或退出 OyasumiVR，稍後再試。",
         "moreInfo": "您可以在這裡找到下載和更多資訊："
       },
       "quit": "退出 OyasumiVR",

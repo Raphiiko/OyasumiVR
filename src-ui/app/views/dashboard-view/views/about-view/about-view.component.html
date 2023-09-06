@@ -7,8 +7,7 @@
         <div class="tag-line" translate>shared.logo.tagline</div>
       </div>
     </div>
-    <div class="logo-side">
-    </div>
+    <div class="logo-side"> </div>
   </div>
 
   <div class="row">
@@ -39,7 +38,7 @@
         </div>
       </div>
       <div class="build-info">
-        <div>Oyasumi<b>VR</b> v{{version}}-{{FLAVOUR}} ({{BUILD_ID}})</div>
+        <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
       </div>
     </div>
     <div class="project-info">
@@ -68,7 +67,11 @@
         </div>
         <div class="translation-author-list-entry">
           <span><a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a> | 繁體中文</span>
-          <span class="fi" [class.fi-tw]="FLAVOUR !== 'STEAM_CN'" [class.fi-hk]="FLAVOUR === 'STEAM_CN'"></span>
+          <span
+            class="fi"
+            [class.fi-tw]="FLAVOUR !== 'STEAM_CN'"
+            [class.fi-hk]="FLAVOUR === 'STEAM_CN'"
+          ></span>
         </div>
         <div class="translation-author-list-entry">
           <span><a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a> | 简体中文</span>
@@ -76,19 +79,19 @@
         </div>
         <div class="translation-author-list-entry">
           <span
-          ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> | Français</span
+            ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> | Français</span
           >
           <span class="fi fi-fr"></span>
         </div>
         <div class="translation-author-list-entry">
           <span
-          ><a href="https://twitter.com/aacalde666" target="_blank">aacal666</a> | Español</span
+            ><a href="https://twitter.com/aacalde666" target="_blank">aacal666</a> | Español</span
           >
           <span class="fi fi-es"></span>
         </div>
         <div class="translation-author-list-entry">
           <span
-          ><a href="https://twitter.com/a9ito" target="_blank">a9ito</a> | Bahasa Indonesia</span
+            ><a href="https://twitter.com/a9ito" target="_blank">a9ito</a> | Bahasa Indonesia</span
           >
           <span class="fi fi-id"></span>
         </div>
@@ -104,12 +107,11 @@
       <div class="project-info-title" translate>about.projectLinks</div>
       <div class="project-links">
         <a href="https://github.com/Raphiiko/OyasumiVR" target="_blank" translate
-        >about.sourceLink</a
+          >about.sourceLink</a
         >
         <br />
         <a href="https://discord.gg/7MqdPJhYxC" target="_blank" translate>about.discordInvite</a>
       </div>
     </div>
   </div>
-
 </div>

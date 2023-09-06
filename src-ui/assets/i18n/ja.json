@@ -26,44 +26,25 @@
   },
   "brightness-automations": {
     "title": "明るさの自動化",
-    "tabs": {
-      "imageBrightness": "映像の明るさ",
-      "displayBrightness": "ディスプレイの明るさ"
-    },
-    "displayBrightness": {
-      "description": "HMDのディスプレイの明るさを自動的に調整します。ディスプレイの明るさは、画像を暗くするのではなく、LCDパネルのバックライトの強さに影響します。この機能は Valve Index でのみ利用可能です。",
-      "indexWarning": "Valve Indexを接続し、SteamVRが起動していることを確認してください。",
+    "brightnessAutomations": {
       "onSleepEnable": {
-        "title": "睡眠時",
-        "description": "ディスプレイの明るさを調整する"
+        "title": "睡眠時"
       },
       "onSleepDisable": {
-        "title": "起床時",
-        "description": "ディスプレイの明るさを調整する"
-      }
-    },
-    "imageBrightness": {
-      "description": "ヘッドセットの映像の明るさを自動的に調整します。この機能はすべてのヘッドセットで可能です。",
-      "onSleepEnable": {
-        "title": "睡眠時",
-        "description": "映像の明るさを調整する"
+        "title": "起床時"
       },
-      "onSleepDisable": {
-        "title": "起床時",
-        "description": "映像の明るさを調整する"
+      "brightness": {
+        "title": "輝度を変更",
+        "description": ""
+      },
+      "transition": {
+        "title": "なめらかな遷移",
+        "description": "輝度を徐々に移行させる"
+      },
+      "transitionTime": {
+        "title": "遷移時間",
+        "description": "移行するのにかかる時間"
       }
-    },
-    "brightness": {
-      "title": "輝度を変更",
-      "description": ""
-    },
-    "transition": {
-      "title": "なめらかな遷移",
-      "description": "輝度を徐々に移行させる"
-    },
-    "transitionTime": {
-      "title": "遷移時間",
-      "description": "移行するのにかかる時間"
     }
   },
   "overview": {
@@ -1161,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "不足しているランタイムのインストール",
       "description": {
-        "text1": "OyasumiVRが必要とする次のランタイムは古いかシステムにインストールされていません:",
         "runtimeQueued": "Queued",
         "text2": "OyasumiVR を使用するには、必要なランタイムをインストールする必要があります。",
         "automaticInstall": "自動でインストールしますか？",
-        "noAutomaticInstall": "ランタイムの最新バージョンを特定できなかったため、自動的にインストールできません。手動でインストールするか、OyasumiVRを一旦終了し、後ほど再度インストールしてください。",
         "moreInfo": "ダウンロードと詳細情報はこちら:"
       },
       "quit": "OyasumiVRを終了する",

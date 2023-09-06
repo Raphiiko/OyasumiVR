@@ -1,14 +1,8 @@
-import { AfterViewInit, Component, DestroyRef, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
-import { DeveloperDebugService } from '../../services/developer-debug.service';
-import { SelectBoxItem } from '../select-box/select-box.component';
-import * as uPlot from 'uplot';
-import { AlignedData } from 'uplot';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DeveloperDebugService } from '../../services/developer-debug/developer-debug.service';
 import { AutomationConfigService } from '../../services/automation-config.service';
-import { combineLatest, firstValueFrom, interval, map } from 'rxjs';
-import { relaunch } from '@tauri-apps/api/process';
 
 @Component({
   selector: 'app-debug-modal',
@@ -20,22 +14,7 @@ export class DeveloperDebugModalComponent
   extends BaseModalComponent<any, any>
   implements OnInit, AfterViewInit
 {
-  resolutionItems: ({ interval?: number } & SelectBoxItem)[] = [
-    { id: '24h', label: '24h', interval: 24 * 60 * 60 * 1000 },
-    { id: '18h', label: '18h', interval: 18 * 60 * 60 * 1000 },
-    { id: '12h', label: '12h', interval: 12 * 60 * 60 * 1000 },
-    { id: '6h', label: '6h', interval: 6 * 60 * 60 * 1000 },
-    { id: '2h', label: '2h', interval: 2 * 60 * 60 * 1000 },
-    { id: '1h', label: '1h', interval: 60 * 60 * 1000 },
-    { id: '30m', label: '30m', interval: 30 * 60 * 1000 },
-    { id: '10m', label: '10m', interval: 10 * 60 * 1000 },
-    { id: '5m', label: '5m', interval: 5 * 60 * 1000 },
-    { id: '1m', label: '1m', interval: 60 * 1000 },
-  ];
-  selectedResolution: ({ interval?: number } & SelectBoxItem) | undefined = this.resolutionItems[2];
-  sleepDetectionTimeSeriesPlot?: uPlot;
-
-  @ViewChild('sleepDetectionTimeSeriesChart') sleepDetectionTimeSeriesChart?: ElementRef;
+  protected activeTab = 'BRIGHTNESS_TESTING';
 
   constructor(
     public debug: DeveloperDebugService,
@@ -45,89 +24,7 @@ export class DeveloperDebugModalComponent
     super();
   }
 
-  asSelectBoxItem(item: ({ interval?: number } & SelectBoxItem) | undefined): SelectBoxItem {
-    return item!;
-  }
+  ngOnInit() {}
 
-  ngOnInit() {
-    console.log('Developer debug modal opened');
-    combineLatest([this.debug.sleepDetectionDebugger.update, interval(2000)])
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(async () => {
-        if (!this.sleepDetectionTimeSeriesPlot) return;
-        this.sleepDetectionTimeSeriesPlot.setData(await this.buildSleepData());
-      });
-  }
-
-  ngAfterViewInit() {
-    const data: AlignedData = [[], []];
-    const opts: uPlot.Options = {
-      width: 800,
-      height: 500,
-      axes: [
-        {
-          stroke: '#FFFFFF',
-        },
-        {
-          stroke: '#FFFFFF',
-        },
-      ],
-      series: [
-        {},
-        {
-          // series style
-          stroke: 'red',
-          width: 1,
-          label: 'Sleep Value',
-        },
-      ],
-    };
-    this.sleepDetectionTimeSeriesPlot = new window.uPlot(
-      opts,
-      data,
-      this.sleepDetectionTimeSeriesChart?.nativeElement
-    );
-  }
-
-  async buildSleepData(): Promise<AlignedData> {
-    const sensitivity = await firstValueFrom(
-      this.automationConfigService.configs.pipe(
-        map((c) => c.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity)
-      )
-    );
-    const oldestAllowed = Date.now() - (this.selectedResolution!.interval ?? 0);
-    const xSeries: number[] = [];
-    const ySeries: number[] = [];
-    const sleepDetectionDebugger = this.debug.sleepDetectionDebugger;
-    const sleepDetectionData = sleepDetectionDebugger.timeData;
-    const sleepDetectionDataLength = sleepDetectionData.length;
-    for (let i = 0; i < sleepDetectionDataLength; i++) {
-      if (sleepDetectionData[i].time < oldestAllowed) continue;
-      const sleepDetectionDataItem = sleepDetectionData[i];
-      xSeries.push(sleepDetectionDataItem.time / 1000);
-      ySeries.push(sleepDetectionDataItem.value);
-    }
-    const data: AlignedData = [xSeries, ySeries];
-    // Draw thresholds
-    sleepDetectionDebugger.thresholdValues.forEach((thresholdValue, i) => {
-      const series: (number | null)[] = [];
-      for (let i = 0; i < xSeries.length; i++) {
-        series.push(thresholdValue.threshold);
-      }
-      data.push(series);
-      if (this.sleepDetectionTimeSeriesPlot!.series.length <= 2 + i) {
-        this.sleepDetectionTimeSeriesPlot?.addSeries({
-          width: 1,
-          label: thresholdValue.sensitivity,
-          points: {
-            show: false,
-          },
-          stroke: thresholdValue.sensitivity === sensitivity ? '#FFFF00FF' : '#FFFF0044',
-        });
-      }
-    });
-    return data;
-  }
-
-  protected readonly relaunch = relaunch;
+  ngAfterViewInit() {}
 }

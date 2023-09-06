@@ -26,44 +26,25 @@
   },
   "brightness-automations": {
     "title": "Automasi Kecerahan",
-    "tabs": {
-      "imageBrightness": "Kecerahan Gambar",
-      "displayBrightness": "Kecerahan Layar"
-    },
-    "displayBrightness": {
-      "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan layar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan layar mempengaruhi kekuatan cahaya latar panel LCD di headset Anda, dan bukannya menggelapkan gambar. Mengontrol kecerahan layar hanya tersedia pada Valve Index",
-      "indexWarning": "Pastikan Valve Index Anda terhubung dan SteamVR sedang berjalan.",
+    "brightnessAutomations": {
       "onSleepEnable": {
-        "title": "Ketika saya mulai tidur",
-        "description": "Atur kecerahan layar"
+        "title": "Ketika saya mulai tidur"
       },
       "onSleepDisable": {
-        "title": "Ketika saya bangun",
-        "description": "Atur kecerahan layar"
-      }
-    },
-    "imageBrightness": {
-      "description": "OyasumiVR dapat secara otomatis menyesuaikan kecerahan gambar headset Anda ketika mode tidur diaktifkan atau dinonaktifkan.\n\nKecerahan gambar akan menggelapkan gambar yang ditampilkan. Tidak seperti kecerahan tampilan, mengontrol kecerahan gambar tersedia untuk setiap headset.",
-      "onSleepEnable": {
-        "title": "Ketika saya mulai tidur",
-        "description": "Atur kecerahan gambar"
+        "title": "Ketika saya bangun"
       },
-      "onSleepDisable": {
-        "title": "Ketika saya bangun",
-        "description": "Atur kecerahan gambar"
+      "brightness": {
+        "title": "Atur Kecerahan ke",
+        "description": "Mengatur kecerahan ke tingkat tertentu"
+      },
+      "transition": {
+        "title": "Atur kecerahan bertahap",
+        "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan"
+      },
+      "transitionTime": {
+        "title": "Durasi transisi",
+        "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru"
       }
-    },
-    "brightness": {
-      "title": "Atur Kecerahan ke",
-      "description": "Mengatur kecerahan ke tingkat tertentu"
-    },
-    "transition": {
-      "title": "Atur kecerahan bertahap",
-      "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan"
-    },
-    "transitionTime": {
-      "title": "Durasi transisi",
-      "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru"
     }
   },
   "overview": {
@@ -1161,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "Instal Runtime yang Hilang",
       "description": {
-        "text1": "Runtime berikut yang dibutuhkan oleh OyasumiVR sudah terlalu lama, atau tidak terinstal di sistem Anda:",
         "runtimeQueued": "Diantrikan",
         "text2": "Untuk terus menggunakan OyasumiVR, runtime yang diperlukan harus diinstal terlebih dahulu.",
         "automaticInstall": "Apakah Anda ingin OyasumiVR mencoba menginstal runtime ini untuk Anda secara otomatis?",
-        "noAutomaticInstall": "OyasumiVR tidak dapat menentukan versi terbaru dari runtime ini, dan oleh karena itu tidak dapat menginstalnya secara otomatis untuk Anda. Silakan instal runtime ini secara manual, atau keluar dari OyasumiVR dan coba lagi di lain waktu.",
         "moreInfo": "Anda dapat menemukan unduhan dan informasi lebih lanjut di sini:"
       },
       "quit": "Keluar OyasumiVR",

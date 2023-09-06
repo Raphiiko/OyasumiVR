@@ -26,44 +26,25 @@
   },
   "brightness-automations": {
     "title": "Automatización del brillo",
-    "tabs": {
-      "imageBrightness": "Brillo de la imagen",
-      "displayBrightness": "Brillo de la pantalla"
-    },
-    "displayBrightness": {
-      "description": "OyasumiVR puede ajustar automáticamente el brillo de la pantalla de los auriculares cuando el modo de suspensión está activado o desactivado. El brillo de la pantalla afecta a la intensidad de la luz de fondo del panel LCD de los auriculares, en lugar de oscurecer la imagen. El control del brillo de la pantalla sólo está disponible en el Valve Index.",
-      "indexWarning": "Asegúrate de que tu Index de Valve está conectado y de que SteamVR se está ejecutando.",
+    "brightnessAutomations": {
       "onSleepEnable": {
-        "title": "Cuando me voy a dormir",
-        "description": "Ajustar el brillo de la pantalla"
+        "title": "Cuando me voy a dormir"
       },
       "onSleepDisable": {
-        "title": "Cuando me despierto",
-        "description": "Ajustar el brillo de la pantalla"
-      }
-    },
-    "imageBrightness": {
-      "description": "OyasumiVR puede ajustar automáticamente el brillo de la imagen de los auriculares cuando el modo de suspensión está activado o desactivado. A diferencia del brillo de la pantalla, el control del brillo de la imagen está disponible para todos los visores.",
-      "onSleepEnable": {
-        "title": "Cuando me voy a dormir",
-        "description": "Ajustar el brillo de la pantalla"
+        "title": "Cuando me despierto"
       },
-      "onSleepDisable": {
-        "title": "Cuando me despierto",
-        "description": "Ajustar el brillo de la pantalla"
+      "brightness": {
+        "title": "Cambia el brillo a",
+        "description": ""
+      },
+      "transition": {
+        "title": "Ajuste el brillo gradualmente",
+        "description": "Transición suave al valor de brillo deseado"
+      },
+      "transitionTime": {
+        "title": "Tiempo de transición",
+        "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo."
       }
-    },
-    "brightness": {
-      "title": "Cambia el brillo a",
-      "description": ""
-    },
-    "transition": {
-      "title": "Ajuste el brillo gradualmente",
-      "description": "Transición suave al valor de brillo deseado"
-    },
-    "transitionTime": {
-      "title": "Tiempo de transición",
-      "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo."
     }
   },
   "overview": {
@@ -1161,11 +1142,9 @@
     "dotnet-upgrade-modal": {
       "title": "Instalar los tiempos de ejecución que faltan",
       "description": {
-        "text1": "Los siguientes tiempos de ejecución necesarios para OyasumiVR no están actualizados o no están instalados en su sistema:",
         "runtimeQueued": "En cola",
         "text2": "Para seguir utilizando OyasumiVR, primero hay que instalar los tiempos de ejecución necesarios.",
         "automaticInstall": "¿Quieres que OyasumiVR intente instalar estos tiempos de ejecución para usted automáticamente?",
-        "noAutomaticInstall": "OyasumiVR no pudo determinar las últimas versiones de estos tiempos de ejecución, y por lo tanto no puede instalarlos automáticamente para usted. Por favor, instale manualmente estos tiempos de ejecución, o salga de OyasumiVR y vuelva a intentarlo más tarde.",
         "moreInfo": "Puede encontrar descargas y más información aquí:"
       },
       "quit": "Cerrar OyasumiVR",

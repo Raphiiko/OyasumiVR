@@ -1,6 +1,6 @@
 import { DisplayBrightnessControlDriver } from './display-brightness-control-driver';
-import { clamp, ensurePrecision, lerp } from '../../../../utils/number-utils';
-import { OpenVRService } from '../../../openvr.service';
+import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
+import { OpenVRService } from '../../openvr.service';
 import { combineLatest, map, Observable } from 'rxjs';
 
 export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessControlDriver {
@@ -51,6 +51,8 @@ export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessC
     // I don't understand.
     // Don't make me do this.
     // Show me the inner workings of your number magic ;_;
+    // EDIT: Ok I figured this might have something to do with gamma correction.
+    //       Remind me to look into this some later time when I've got fuck all to do.
     analogGain = clamp(analogGain, 0, 1);
     // Find surrounding samples
     const sampleKeys = Array.from(VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP.keys());
@@ -73,7 +75,7 @@ export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessC
   private percentageToAnalogGain(percentage: number): number {
     // 100 and above are linear
     if (percentage >= 100) return ensurePrecision(clamp(percentage / 100, 1, 1.6), 2);
-    // Valve whyyyyyyyyyyyyyyYYYYYYYY
+    // Valve whyyyyyyyyyyyyyyYYYYYYYY  (edit: ???)
     const sampleMap = new Map(
       [...VALVE_INDEX_BRIGHTNESS_SAMPLE_MAP].map(([key, value]) => [
         value.toString(),

@@ -6,7 +6,7 @@ import { TString } from '../models/translatable-string';
   name: 'tsTranslate',
   pure: false,
 })
-export class TStringTranslatePipePipe implements PipeTransform {
+export class TStringTranslatePipe implements PipeTransform {
   constructor(private translate: TranslateService) {}
 
   transform(value?: TString): unknown {

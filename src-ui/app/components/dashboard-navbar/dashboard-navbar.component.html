@@ -172,10 +172,9 @@
         class="active-effect"
         @fade
         *ngIf="
-          displayBrightnessAutomation.isSleepDisableTransitionActive ||
-          displayBrightnessAutomation.isSleepEnableTransitionActive ||
-          imageBrightnessAutomation.isSleepDisableTransitionActive ||
-          imageBrightnessAutomation.isSleepEnableTransitionActive
+          brightnessAutomation.isSleepEnableTransitionActive ||
+          brightnessAutomation.isSleepDisableTransitionActive ||
+          brightnessAutomation.isSleepPreparationTransitionActive
         "
       ></div>
     </div>

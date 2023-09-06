@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.9.0] - (Upcoming steam release)
+## [1.9.0] - (Upcoming Steam release)
 
 ### Added
 
@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added missing translations for Traditional and Simplified Chinese. (By [狐 Kon](https://github.com/XoF-eLtTiL))
+- Gamma corrected image brightness control (You might have to readjust your brightness settings)
 
 ### Fixed
 
