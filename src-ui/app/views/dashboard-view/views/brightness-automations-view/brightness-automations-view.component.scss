@@ -19,7 +19,7 @@
     flex-direction: row;
     align-items: center;
     padding: 0.5em 0.75em;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     cursor: pointer;
 
     &:active {
@@ -30,7 +30,7 @@
   .help-icon {
     font-size: 1.2em;
     color: var(--color-text-3);
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     line-height: 0;
     padding: 0.5em 0.75em 0.5em 0;
 
@@ -94,5 +94,15 @@
     @include attention-glow(0.15);
     z-index: 20;
     transition: all 0.25s ease;
+  }
+}
+
+.btn-copy {
+  background-color: var(--color-surface-0);
+  width: 2.5em;
+  height: 2.5em;
+  border: transparent 1px solid;
+  &:hover {
+    border-color: var(--color-surface-2);
   }
 }

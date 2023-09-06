@@ -34,7 +34,7 @@ import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/s
 import { OscService } from './services/osc.service';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { SelectBoxComponent } from './components/select-box/select-box.component';
-import { TStringTranslatePipePipe } from './pipes/tstring-translate.pipe';
+import { TStringTranslatePipe } from './pipes/tstring-translate.pipe';
 import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
 import { OscScriptModalComponent } from './components/osc-script-modal/osc-script-modal.component';
 import { OscScriptCodeEditorComponent } from './components/osc-script-code-editor/osc-script-code-editor.component';
@@ -125,7 +125,7 @@ import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence
 import { ImageBrightnessControlService } from './services/brightness-control/image-brightness-control.service';
 import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
-import { DeveloperDebugService } from './services/developer-debug.service';
+import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
 import { IPCStateSyncService } from './services/ipc-state-sync.service';
 import { IPCService } from './services/ipc.service';
@@ -138,7 +138,10 @@ import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/pow
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
 import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
-import { BrightnessControlService } from './services/brightness-control/brightness-control.service';
+import { TooltipDirective } from './directives/tooltip.directive';
+import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
+import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
+import { DebugBrightnessTestingComponent } from './components/developer-debug-modal/debug-brightness-testing/debug-brightness-testing.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -159,6 +162,7 @@ export function createTranslateLoader(http: HttpClient) {
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
+    TooltipDirective,
     ImageFallbackDirective,
     AboutViewComponent,
     OverviewViewComponent,
@@ -175,7 +179,7 @@ export function createTranslateLoader(http: HttpClient) {
     SleepingPoseViewerComponent,
     OscAutomationsViewComponent,
     SelectBoxComponent,
-    TStringTranslatePipePipe,
+    TStringTranslatePipe,
     LocalizedDatePipe,
     ImageCachePipe,
     OscScriptButtonComponent,
@@ -218,6 +222,8 @@ export function createTranslateLoader(http: HttpClient) {
     DeveloperDebugModalComponent,
     DotnetUpgradeModalComponent,
     WindowsPowerPolicyTabComponent,
+    DebugSleepDetectionDebuggerComponent,
+    DebugBrightnessTestingComponent,
   ],
   imports: [
     CommonModule,
@@ -236,7 +242,7 @@ export function createTranslateLoader(http: HttpClient) {
     }),
     NgPipesModule,
   ],
-  providers: [ThemeService],
+  providers: [ThemeService, TStringTranslatePipe],
 })
 export class AppModule {
   constructor(
@@ -256,7 +262,7 @@ export class AppModule {
     private imageCacheService: ImageCacheService,
     private displayBrightnessControlService: DisplayBrightnessControlService,
     private imageBrightnessControlService: ImageBrightnessControlService,
-    private brightnessControlService: BrightnessControlService,
+    private simpleBrightnessControlService: SimpleBrightnessControlService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
@@ -343,7 +349,7 @@ export class AppModule {
           this.displayBrightnessControlService.init(),
           this.imageBrightnessControlService.init(),
         ]);
-        await this.brightnessControlService.init();
+        await this.simpleBrightnessControlService.init();
         // Initialize IPC
         await this.ipcService.init();
         await this.ipcAppStateSyncService.init();

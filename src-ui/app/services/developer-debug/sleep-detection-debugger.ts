@@ -1,25 +1,14 @@
-import { inject, Injectable } from '@angular/core';
+import { inject } from '@angular/core';
+import { AutomationConfigService } from '../automation-config.service';
 import {
   SleepDetectorStateReportHandlingResult,
   SleepModeForSleepDetectorAutomationService,
-} from './sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
+} from '../sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { filter, firstValueFrom, interval, Subject, Subscription } from 'rxjs';
 import { message, save } from '@tauri-apps/api/dialog';
 import { writeTextFile } from '@tauri-apps/api/fs';
-import { AutomationConfigService } from './automation-config.service';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class DeveloperDebugService {
-  public sleepDetectionDebugger = new SleepDetectionDebugger();
-
-  constructor() {}
-
-  async init() {}
-}
-
-class SleepDetectionDebugger {
+export class SleepDetectionDebugger {
   private automationConfig = inject(AutomationConfigService);
   private sleepDetector = inject(SleepModeForSleepDetectorAutomationService);
   timeData: SDDFrame[] = [];

@@ -4,11 +4,7 @@
     <div class="advanced-toggle">
       <div class="advanced-toggle-clickable" (click)="toggleAdvancedMode()">
         <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="advancedMode"
-            disabled
-          />
+          <input type="checkbox" [checked]="advancedMode" disabled />
           <span class="switch-toggle-slider"></span>
         </label>
         <span @hshrink *ngIf="!advancedMode" translate>brightness-automations.mode.simple</span>

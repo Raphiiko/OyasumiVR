@@ -3,7 +3,8 @@ import { clamp } from '../../utils/number-utils';
 import { info, warn } from 'tauri-plugin-log-api';
 
 export function createBrightnessTransitionTask(
-  setBrightness: (percentage: number, reason: 'DIRECT' | 'BRIGHTNESS_AUTOMATION') => Promise<void>,
+  type: 'DISPLAY' | 'IMAGE' | 'SIMPLE',
+  setBrightness: (percentage: number, reason: 'DIRECT' | 'INDIRECT') => Promise<void>,
   getBrightness: () => Promise<number | undefined>,
   getBrightnessBounds: () => Promise<[number, number]>,
   targetBrightness: number,
@@ -11,12 +12,13 @@ export function createBrightnessTransitionTask(
   frequency = 60
 ): CancellableTask {
   return new CancellableTask(async (task) => {
+    const label = type.toLowerCase();
     // Ensure the target brightness is within the bounds of the brightness control
     const [min, max] = await getBrightnessBounds();
     const clampedBrightness = clamp(targetBrightness, min, max);
     if (clampedBrightness != targetBrightness) {
       warn(
-        `[BrightnessControl] Attempted to transition to out-of-bounds brightness (${targetBrightness}%, ${duration}ms)`
+        `[BrightnessControl] Attempted to transition to out-of-bounds ${label} brightness (${targetBrightness}%, ${duration}ms)`
       );
     }
     targetBrightness = clampedBrightness;
@@ -24,7 +26,7 @@ export function createBrightnessTransitionTask(
     const currentBrightness = await getBrightness();
     if (currentBrightness === undefined) {
       warn(
-        `[BrightnessControl] Could not start brightness transition as current brightness was unavailable.`
+        `[BrightnessControl] Could not start ${label} brightness transition as current ${label} brightness was unavailable.`
       );
       throw 'BRIGHTNESS_UNAVAILABLE';
     }
@@ -36,7 +38,7 @@ export function createBrightnessTransitionTask(
       // Stop if the transition was cancelled
       if (task.isCancelled()) {
         info(
-          `[BrightnessControl] Cancelled running display brightness transition (${currentBrightness}%=>${targetBrightness}%, ${duration}ms)`
+          `[BrightnessControl] Cancelled running ${label} brightness transition (${currentBrightness}%=>${targetBrightness}%, ${duration}ms)`
         );
         return;
       }
@@ -45,12 +47,12 @@ export function createBrightnessTransitionTask(
       const progress = clamp(timeExpired / duration, 0, 1);
       const brightness = smoothLerp(currentBrightness, targetBrightness, progress);
       // Set the intermediary brightness
-      await setBrightness(brightness, 'BRIGHTNESS_AUTOMATION');
+      await setBrightness(brightness, 'INDIRECT');
     }
     // Set the final target brightness
-    await setBrightness(targetBrightness, 'BRIGHTNESS_AUTOMATION');
+    await setBrightness(targetBrightness, 'INDIRECT');
     info(
-      `[BrightnessControl] Finished display brightness transition (${currentBrightness}%=>${targetBrightness}%, ${duration}ms)`
+      `[BrightnessControl] Finished ${label} brightness transition (${currentBrightness}%=>${targetBrightness}%, ${duration}ms)`
     );
   });
 }

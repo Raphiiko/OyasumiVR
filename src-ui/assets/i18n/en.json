@@ -39,6 +39,7 @@
       "startupAutomations": "Startup Automations",
       "sleepPreparation": "Sleep Preparation",
       "sleepAutomations": "Sleep Automations",
+      "copyBrightness": "Copy current\nbrightness value",
       "onStartup": {
         "title": "When OyasumiVR or SteamVR starts",
         "description": "Adjust the brightness"

@@ -11,7 +11,9 @@ import { AutomationConfigService } from '../../../../../../services/automation-c
 import { clamp } from '../../../../../../utils/number-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BrightnessControlAutomationService } from 'src-ui/app/services/brightness-control/brightness-control-automation.service';
-import { BrightnessControlService } from '../../../../../../services/brightness-control/brightness-control.service';
+import { DisplayBrightnessControlService } from '../../../../../../services/brightness-control/display-brightness-control.service';
+import { ImageBrightnessControlService } from '../../../../../../services/brightness-control/image-brightness-control.service';
+import { SimpleBrightnessControlService } from '../../../../../../services/brightness-control/simple-brightness-control.service';
 
 interface BrightnessBounds {
   min: number;
@@ -56,7 +58,8 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   protected brightnessBounds: Record<BrightnessType, BrightnessBounds> = {
     SIMPLE: { min: 5, max: 100 },
     IMAGE: { min: 5, max: 100 },
-    DISPLAY: { min: 20, max: 140 },
+    // Overridden later
+    DISPLAY: { min: 100, max: 100 },
   };
   protected brightnessSnapValues: Record<BrightnessType, number[]> = {
     SIMPLE: [],
@@ -73,12 +76,22 @@ export class BrightnessAutomationsTabComponent implements OnInit {
 
   constructor(
     private automationConfigService: AutomationConfigService,
-    protected brightnessControl: BrightnessControlService,
     protected brightnessAutomation: BrightnessControlAutomationService,
+    private simpleBrightnessControl: SimpleBrightnessControlService,
+    private imageBrightnessControl: ImageBrightnessControlService,
+    private displayBrightnessControl: DisplayBrightnessControlService,
     private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
+    this.displayBrightnessControl.onDriverChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(async () => {
+        const bounds = await this.displayBrightnessControl.getBrightnessBounds();
+        this.brightnessBounds.DISPLAY.min = bounds[0];
+        this.brightnessBounds.DISPLAY.max = bounds[1];
+      });
+
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
@@ -115,21 +128,20 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   async setAutomationEnabled(automation: AutomationType, enabled: boolean) {
     await this.automationConfigService.updateAutomationConfig(automation, { enabled });
     // Cancel running transitions if disabling
+    const cancelAllTransitions = () => {
+      this.simpleBrightnessControl.cancelActiveTransition();
+      this.imageBrightnessControl.cancelActiveTransition();
+      this.displayBrightnessControl.cancelActiveTransition();
+    };
     switch (automation) {
       case 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
-        if (this.brightnessAutomation.isSleepEnableTransitionActive) {
-          this.brightnessControl.cancelActiveTransition();
-        }
+        if (this.brightnessAutomation.isSleepEnableTransitionActive) cancelAllTransitions();
         break;
       case 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
-        if (this.brightnessAutomation.isSleepDisableTransitionActive) {
-          this.brightnessControl.cancelActiveTransition();
-        }
+        if (this.brightnessAutomation.isSleepDisableTransitionActive) cancelAllTransitions();
         break;
       case 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION':
-        if (this.brightnessAutomation.isSleepPreparationTransitionActive) {
-          this.brightnessControl.cancelActiveTransition();
-        }
+        if (this.brightnessAutomation.isSleepPreparationTransitionActive) cancelAllTransitions();
         break;
     }
   }

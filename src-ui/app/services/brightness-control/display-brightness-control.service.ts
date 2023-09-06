@@ -4,8 +4,10 @@ import { ValveIndexDisplayBrightnessControlDriver } from './display-brightness-d
 import { OpenVRService } from '../openvr.service';
 import {
   BehaviorSubject,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
+  map,
   Observable,
   of,
   pairwise,
@@ -25,6 +27,13 @@ export class DisplayBrightnessControlService {
     new BehaviorSubject<DisplayBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition?: CancellableTask;
+  public readonly onDriverChange: Observable<void> = this.driver.pipe(
+    distinctUntilChanged(),
+    map(() => void 0)
+  );
+  public readonly driverIsAvailable = this.driver.pipe(
+    switchMap((driver) => driver?.isAvailable() ?? of(false))
+  );
 
   public get activeTransition() {
     return this._activeTransition;
@@ -59,10 +68,11 @@ export class DisplayBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    reason: 'DIRECT' | 'BRIGHTNESS_AUTOMATION'
+    reason: 'DIRECT' | 'INDIRECT'
   ): CancellableTask {
     this._activeTransition?.cancel();
     this._activeTransition = createBrightnessTransitionTask(
+      'DISPLAY',
       this.setBrightness.bind(this),
       this.fetchBrightness.bind(this),
       this.getBrightnessBounds.bind(this),
@@ -85,9 +95,9 @@ export class DisplayBrightnessControlService {
     this._activeTransition = undefined;
   }
 
-  async setBrightness(percentage: number, reason: 'DIRECT' | 'BRIGHTNESS_AUTOMATION') {
-    if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
-    if (reason !== 'BRIGHTNESS_AUTOMATION') this.cancelActiveTransition();
+  async setBrightness(percentage: number, reason: 'DIRECT' | 'INDIRECT') {
+    if (!(await firstValueFrom(this.driverIsAvailable))) throw 'DRIVER_UNAVAILABLE';
+    if (reason === 'DIRECT') this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);
     await this.driver.value!.setBrightnessPercentage(percentage);
@@ -95,18 +105,14 @@ export class DisplayBrightnessControlService {
       case 'DIRECT':
         await info(`[BrightnessControl] Set display brightness to ${percentage}% (${reason})`);
         break;
-      case 'BRIGHTNESS_AUTOMATION':
-        // Would log too often. Automations log by themselves instead.
+      case 'INDIRECT':
+        // Logs are made by whatever triggered the brightness change.
         break;
     }
   }
 
-  driverIsAvailable(): Observable<boolean> {
-    return this.driver.pipe(switchMap((driver) => driver?.isAvailable() ?? of(false)));
-  }
-
   async fetchBrightness(): Promise<number | undefined> {
-    if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
+    if (!(await firstValueFrom(this.driverIsAvailable))) throw 'DRIVER_UNAVAILABLE';
     const brightness = (await this.driver.value?.getBrightnessPercentage()) ?? undefined;
     if (brightness !== undefined) {
       this._brightness.next(brightness);
@@ -116,7 +122,8 @@ export class DisplayBrightnessControlService {
   }
 
   async getBrightnessBounds(): Promise<[number, number]> {
-    if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
+    // For now this check is not needed, but it might be in the future.
+    // if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
     return this.driver.value!.getBrightnessBounds();
   }
 }

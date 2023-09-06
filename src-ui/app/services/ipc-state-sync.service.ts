@@ -76,10 +76,13 @@ export class IPCStateSyncService {
       sleepModeEnableForSleepDetector: {
         enabled: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled,
         sensitivity: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity,
-        activationWindow: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow,
-        activationWindowStart: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart,
-        activationWindowEnd: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd
-      }
+        activationWindow:
+          AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow,
+        activationWindowStart:
+          AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart,
+        activationWindowEnd:
+          AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd,
+      },
     },
     locale: APP_SETTINGS_DEFAULT.userLanguage,
     deviceInfo: {
@@ -154,7 +157,7 @@ export class IPCStateSyncService {
             'CHANGE_STATUS_BASED_ON_PLAYER_COUNT',
             'SLEEPING_ANIMATIONS',
             'SHUTDOWN_AUTOMATIONS',
-            'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR'
+            'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
         }),
@@ -179,9 +182,12 @@ export class IPCStateSyncService {
           const automation = state.automations!.sleepModeEnableForSleepDetector!;
           automation.enabled = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled;
           automation.sensitivity = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity;
-          automation.activationWindow = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow;
-          automation.activationWindowStart = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart;
-          automation.activationWindowEnd = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd;
+          automation.activationWindow =
+            configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow;
+          automation.activationWindowStart =
+            configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart;
+          automation.activationWindowEnd =
+            configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd;
         }
         {
           const automation = state.automations!.sleepingAnimations!;
