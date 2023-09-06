@@ -18,7 +18,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class BrightnessAutomationsViewComponent {
   activeTab: 'BRIGHTNESS_AUTOMATIONS' = 'BRIGHTNESS_AUTOMATIONS';
-  advancedMode: boolean = false;
+  advancedMode = false;
 
   constructor(
     private modalService: ModalService,

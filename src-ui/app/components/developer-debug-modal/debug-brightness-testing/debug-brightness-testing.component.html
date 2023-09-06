@@ -91,7 +91,7 @@
     >
   </div>
   <app-slider
-    [class.disabled]="!(displayBrightnessControl.driverIsAvailable | async)"
+    [class.disabled]="(displayBrightnessControl.driverIsAvailable | async) === false"
     [min]="((displayBrightnessBounds | async) ?? [100, 100])[0]"
     [max]="((displayBrightnessBounds | async) ?? [100, 100])[1]"
     [value]="(displayBrightnessControl.brightnessStream | async) ?? 100"

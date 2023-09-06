@@ -71,7 +71,7 @@ export class BrightnessControlAutomationService {
       .pipe(debounceTime(500))
       .subscribe(async (sleepMode) => {
         const configs = await firstValueFrom(this.automationConfigService.configs);
-        if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.applyOnStart) {
+        if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.applyOnStart && sleepMode) {
           await this.onAutomationTrigger(
             'SLEEP_MODE_ENABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE,
@@ -79,7 +79,7 @@ export class BrightnessControlAutomationService {
             true
           );
         }
-        if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.applyOnStart) {
+        if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.applyOnStart && !sleepMode) {
           await this.onAutomationTrigger(
             'SLEEP_MODE_DISABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE,
@@ -125,7 +125,7 @@ export class BrightnessControlAutomationService {
     this.displayBrightnessControl.cancelActiveTransition();
     this.imageBrightnessControl.cancelActiveTransition();
     if (!forceInstant && config.transition) {
-      let tasks: CancellableTask[] = (() => {
+      const tasks: CancellableTask[] = (() => {
         if (advancedMode) {
           return [
             this.imageBrightnessControl.transitionBrightness(

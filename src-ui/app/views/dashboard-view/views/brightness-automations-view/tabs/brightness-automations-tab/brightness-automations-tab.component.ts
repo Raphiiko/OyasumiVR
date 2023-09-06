@@ -72,7 +72,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     DISPLAY: 5,
   };
 
-  @Input() public advancedMode: boolean = false;
+  @Input() public advancedMode = false;
 
   constructor(
     private automationConfigService: AutomationConfigService,
