@@ -165,6 +165,25 @@ pub async fn install_asp_net_core(version: &String) -> Result<(), String> {
     download_and_install(installer_url).await
 }
 
+pub async fn install_dotnet_hosting_bundle(version: &String) -> Result<(), String> {
+    if !is_semver(version) {
+        error!(
+            "[Core] Tried installing ASP.NET Core runtime version: {}",
+            version
+        );
+        return Err("INVALID_VERSION".into());
+    }
+    let installer_url = format!(
+        "https://dotnetcli.azureedge.net/dotnet/aspnetcore/Runtime/{}/dotnet-hosting-{}-win.exe",
+        version, version
+    );
+    info!(
+        "[Core] Downloading ASP.NET Core {} installer from ({})",
+        version, installer_url
+    );
+    download_and_install(installer_url).await
+}
+
 async fn download_and_install(url: String) -> Result<(), String> {
     let tmp_dir = match Builder::new()
         .prefix("oyasumivr_dotnet_installer_")

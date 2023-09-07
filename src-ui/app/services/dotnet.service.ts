@@ -30,7 +30,6 @@ export class DotnetService {
   constructor(private modalService: ModalService) {}
 
   public async init() {
-    // this.status.pipe(filter(Boolean)).subscribe(async (status) => {});
     this.http = await getClient();
     try {
       const status = await this.checkRuntimes();
@@ -45,7 +44,6 @@ export class DotnetService {
     }
   }
 
-  // V2 requires a specific patch version for each runtime
   private async checkRuntimes(): Promise<CheckResult> {
     const result: CheckResult = {
       netCore: { status: 'OK' },
@@ -67,47 +65,73 @@ export class DotnetService {
     return result;
   }
 
-  public async installNetCore(version: string): Promise<void> {
+  // public async installNetCore(version: string): Promise<void> {
+  //   if (this._status.value) {
+  //     const status = cloneDeep(this._status.value);
+  //     status.netCore = { status: 'INSTALLING', version };
+  //     this._status.next(status);
+  //   }
+  //   try {
+  //     await invoke('install_net_core', { version });
+  //     if (this._status.value) {
+  //       const status = cloneDeep(this._status.value);
+  //       status.netCore = { status: 'SUCCESS', version };
+  //       this._status.next(status);
+  //     }
+  //   } catch (e) {
+  //     error('[DotNet] Could not install .NET Core: ' + e);
+  //     if (this._status.value) {
+  //       const status = cloneDeep(this._status.value);
+  //       status.netCore = { status: 'FAILED', version };
+  //       this._status.next(status);
+  //     }
+  //   }
+  // }
+  //
+  // public async installAspNetCore(version: string): Promise<void> {
+  //   if (this._status.value) {
+  //     const status = cloneDeep(this._status.value);
+  //     status.aspNetCore = { status: 'INSTALLING', version };
+  //     this._status.next(status);
+  //   }
+  //   try {
+  //     await invoke('install_asp_net_core', { version });
+  //     if (this._status.value) {
+  //       const status = cloneDeep(this._status.value);
+  //       status.aspNetCore = { status: 'SUCCESS', version };
+  //       this._status.next(status);
+  //     }
+  //   } catch (e) {
+  //     error('[DotNet] Could not install ASP.NET Core: ' + e);
+  //     if (this._status.value) {
+  //       const status = cloneDeep(this._status.value);
+  //       status.aspNetCore = { status: 'FAILED', version };
+  //       this._status.next(status);
+  //     }
+  //   }
+  // }
+
+  public async installDotNetHostingBundle(version: string): Promise<void> {
     if (this._status.value) {
       const status = cloneDeep(this._status.value);
+      status.aspNetCore = { status: 'INSTALLING', version };
       status.netCore = { status: 'INSTALLING', version };
       this._status.next(status);
     }
     try {
-      await invoke('install_net_core', { version });
+      await invoke('install_dotnet_hosting_bundle', { version });
       if (this._status.value) {
         const status = cloneDeep(this._status.value);
+        status.aspNetCore = { status: 'SUCCESS', version };
         status.netCore = { status: 'SUCCESS', version };
         this._status.next(status);
       }
     } catch (e) {
-      error('[DotNet] Could not install .NET Core: ' + e);
-      if (this._status.value) {
-        const status = cloneDeep(this._status.value);
-        status.netCore = { status: 'FAILED', version };
-        this._status.next(status);
-      }
-    }
-  }
-
-  public async installAspNetCore(version: string): Promise<void> {
-    if (this._status.value) {
-      const status = cloneDeep(this._status.value);
-      status.aspNetCore = { status: 'INSTALLING', version };
-      this._status.next(status);
-    }
-    try {
-      await invoke('install_asp_net_core', { version });
-      if (this._status.value) {
-        const status = cloneDeep(this._status.value);
-        status.aspNetCore = { status: 'SUCCESS', version };
-        this._status.next(status);
-      }
-    } catch (e) {
-      error('[DotNet] Could not install ASP.NET Core: ' + e);
+      error('[DotNet] Could not install ASP.NET Core Hosting Bundle: ' + e);
       if (this._status.value) {
         const status = cloneDeep(this._status.value);
         status.aspNetCore = { status: 'FAILED', version };
+        status.netCore = { status: 'FAILED', version };
         this._status.next(status);
       }
     }

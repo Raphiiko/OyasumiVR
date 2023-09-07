@@ -87,6 +87,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::is_semver_higher,
         os::commands::install_net_core,
         os::commands::install_asp_net_core,
+        os::commands::install_dotnet_hosting_bundle,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
         osc::commands::osc_send_bool,

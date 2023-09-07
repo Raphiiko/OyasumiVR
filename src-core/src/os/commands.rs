@@ -36,6 +36,11 @@ pub async fn install_asp_net_core(version: String) -> Result<(), String> {
 }
 
 #[tauri::command]
+pub async fn install_dotnet_hosting_bundle(version: String) -> Result<(), String> {
+    super::dotnet::install_dotnet_hosting_bundle(&version).await
+}
+
+#[tauri::command]
 pub fn play_sound(name: String) {
     std::thread::spawn(move || {
         let mut wav = audio::Wav::default();
