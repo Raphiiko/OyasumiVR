@@ -11,18 +11,9 @@
         "Is64BitWindows"      "1"
       }
     }
-    "DotNet709"
+    "DotNetHostingBundle7010"
     {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-runtime-7.0.10-win-x64.exe"
-      "Command 1"     "/install /quiet /norestart"
-      "Requirement_OS"
-      {
-        "Is64BitWindows"      "1"
-      }
-    }
-    "AspNet709"
-    {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\aspnetcore-runtime-7.0.10-win-x64.exe"
+      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-hosting-7.0.10-win.exe"
       "Command 1"     "/install /quiet /norestart"
       "Requirement_OS"
       {

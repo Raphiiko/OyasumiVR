@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed issues with detection of missing .NET runtimes
+- Fixed issues with detection and installation of missing .NET runtimes
 - Fixed Japanese date formatting
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies

@@ -71,14 +71,14 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
     this.installing = true;
     const toInstall = this.requiredRuntimes.filter((r) => r.status === 'INSTALL');
     this.dotnetService.markAllQueued();
+    const competedList: string[] = [];
     for (const runtimeStatus of toInstall) {
       switch (runtimeStatus.type) {
-        case 'netCore': {
-          await this.dotnetService.installNetCore(runtimeStatus.version!);
-          break;
-        }
+        case 'netCore':
         case 'aspNetCore': {
-          await this.dotnetService.installAspNetCore(runtimeStatus.version!);
+          if (competedList.includes(runtimeStatus.type)) continue;
+          await this.dotnetService.installDotNetHostingBundle(runtimeStatus.version!);
+          competedList.push('netCore', 'aspNetCore');
           break;
         }
       }
