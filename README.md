@@ -29,6 +29,8 @@
 
 ## Download & Install
 
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
+
 Grab our latest installer from whichever place you prefer:
 
 - Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
