@@ -1,7 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { noop } from '../../../../utils/animations';
 import { SleepService } from '../../../../services/sleep.service';
-import { filter, map, tap } from 'rxjs';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -14,7 +13,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 })
 export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;
-  quaternion: [number, number, number, number] = [0, 0, 0, 0];
+  illustration: 'sleep' | 'peek' | 'awake' | 'awake-hover' | null = null;
+  mouseover = false;
 
   constructor(
     private sleep: SleepService,
@@ -24,17 +24,10 @@ export class OverviewViewComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sleep.mode
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((sleepModeActive) => (this.sleepModeActive = sleepModeActive));
-    this.openvr.devicePoses
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        map((poses) => poses[0]),
-        filter((p) => !!p),
-        tap((pose) => (this.quaternion = pose.quaternion))
-      )
-      .subscribe();
+    this.sleep.mode.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((sleepModeActive) => {
+      this.sleepModeActive = sleepModeActive;
+      this.determineIllustration();
+    });
   }
 
   async setSleepMode(enabled: boolean) {
@@ -42,6 +35,15 @@ export class OverviewViewComponent implements OnInit {
       await this.sleep.enableSleepMode({ type: 'MANUAL' });
     } else {
       await this.sleep.disableSleepMode({ type: 'MANUAL' });
+    }
+  }
+
+  protected determineIllustration(mouseover: boolean | null = null) {
+    if (mouseover !== null) this.mouseover = mouseover;
+    if (this.sleepModeActive) {
+      this.illustration = this.mouseover ? 'peek' : 'sleep';
+    } else {
+      this.illustration = this.mouseover ? 'awake-hover' : 'awake';
     }
   }
 }

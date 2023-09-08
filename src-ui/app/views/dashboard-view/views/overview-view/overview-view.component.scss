@@ -19,51 +19,104 @@ app-event-log {
 }
 
 .sleep-mode {
-  margin-bottom: 1em;
   flex-shrink: 0;
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 2em;
-  background: var(--color-surface-1);
+  flex-direction: column;
+  margin-bottom: 1em;
+  overflow: hidden;
   border-radius: var(--surface-border-radius);
-  transition: all 0.24s ease;
+  background: var(--color-surface-1);
+  border: 3px solid var(--color-surface-1);
+  position: relative;
+  transition: all .15s ease;
 
   &.active {
-    background: var(--color-primary);
+    //background: var(--color-primary);
+    color: var(--color-text-1);
+    //border-color: var(--color-primary);
+
+    .bottom {
+      background: color-mix(in srgb, var(--color-surface-0) 40%, var(--color-primary));
+    }
   }
 
-  &-info {
+  .top {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    padding: 2em 2em 1em 2em;
 
     .label {
       font-size: 1.25em;
       opacity: 0.8;
-      //margin-bottom: 0.5em;
       font-weight: 200;
     }
 
     .status {
       font-size: 2.5em;
-      //font-weight: 600em
     }
   }
 
-  &-actions {
+  .bottom {
+    transition: all .15s ease;
     flex-shrink: 0;
+    background: var(--color-surface-0);
     display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em 15em 1em 1em;
+    border-radius: var(--surface-border-radius);
+  }
 
-    button {
-      &:not(:last-child) {
-        margin-bottom: 1em;
+  .illustration {
+    display: inline-block;
+    position: absolute;
+    height: 100%;
+    padding: 1em 2em;
+    opacity: 0;
+    top: 0;
+    right: 0;
+    transition: all .15s ease-in-out;
+    transform-origin: 75% 50%;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.25));
+    pointer-events: none;
+
+    &.active {
+      pointer-events: all;
+      opacity: 1;
+      animation: pulse 0.15s ease-in-out;
+      animation-fill-mode: forwards;
+      animation-iteration-count: 1;
+    }
+
+    img {
+      height: 100%;
+      transform: translateY(-0.5em);
+      cursor: pointer;
+      transition: all .15s ease-in-out;
+
+      &:active {
+        opacity: 0.8;
+      }
+
+      &:first-child {
+        transform: translate(100%, -0.5em);
+        filter: blur(4px);
+        opacity: 0.5;
       }
     }
   }
+
 }
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
