@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for a release on [Steam](https://store.steampowered.com/)
 - VR Manifest for registering OyasumiVR with SteamVR.
 - Sleeping animations preset for GoGo Loco 1.8.0+
+- Cute drawings (by [Jun](https://twitter.com/JunHakase)) to the sleep toggle card in the overview
 
 ### Changed
 

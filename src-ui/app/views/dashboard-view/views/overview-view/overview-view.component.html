@@ -1,20 +1,47 @@
 <div class="overview">
+  <!--  <div class="sleep-mode" [class.active]="sleepModeActive">-->
+  <!--    <div class="sleep-mode-info">-->
+  <!--      <div class="label" translate>overview.sleep-mode.label</div>-->
+  <!--      <div-->
+  <!--        class="status"-->
+  <!--        [translate]="-->
+  <!--          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'-->
+  <!--        "-->
+  <!--      ></div>-->
+  <!--    </div>-->
+  <!--    <div class="sleep-mode-actions">-->
+  <!--      <button-->
+  <!--        class="btn btn-primary"-->
+  <!--        [class.btn-primary]="!sleepModeActive"-->
+  <!--        [class.btn-secondary]="sleepModeActive"-->
+  <!--        [disabled]="sleepModeActive"-->
+  <!--        (click)="setSleepMode(true)"-->
+  <!--        translate-->
+  <!--      >-->
+  <!--        overview.sleep-mode.activate-->
+  <!--      </button>-->
+  <!--      <button-->
+  <!--        class="btn btn-secondary"-->
+  <!--        [disabled]="!sleepModeActive"-->
+  <!--        (click)="setSleepMode(false)"-->
+  <!--        translate-->
+  <!--      >-->
+  <!--        overview.sleep-mode.deactivate-->
+  <!--      </button>-->
+  <!--    </div>-->
+  <!--  </div>-->
   <div class="sleep-mode" [class.active]="sleepModeActive">
-    <div class="sleep-mode-info">
+    <div class="top">
       <div class="label" translate>overview.sleep-mode.label</div>
       <div
         class="status"
-        [translate]="
-          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'
-        "
+        [translate]="sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'"
       ></div>
     </div>
-    <div class="sleep-mode-actions">
+    <div class="bottom">
       <button
         class="btn btn-primary"
-        [class.btn-primary]="!sleepModeActive"
-        [class.btn-secondary]="sleepModeActive"
-        [disabled]="sleepModeActive"
+        *ngIf="!sleepModeActive"
         (click)="setSleepMode(true)"
         translate
       >
@@ -22,12 +49,20 @@
       </button>
       <button
         class="btn btn-secondary"
-        [disabled]="!sleepModeActive"
+        *ngIf="sleepModeActive"
         (click)="setSleepMode(false)"
         translate
       >
         overview.sleep-mode.deactivate
       </button>
+    </div>
+    <div *ngFor="let i of ['sleep', 'peek', 'awake', 'awake-hover']" class="illustration"
+         [ngClass]="[i, illustration === i ? 'active' : '']"
+    >
+      <img [attr.src]="'assets/img/illustration_'+i+'.png'" class="bg" />
+      <img [attr.src]="'assets/img/illustration_'+i+'.png'" (click)="setSleepMode(!sleepModeActive)"
+           (mouseenter)="determineIllustration(true)" (mouseleave)="determineIllustration(false)"
+      />
     </div>
   </div>
   <app-event-log></app-event-log>
