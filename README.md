@@ -33,10 +33,10 @@
 
 Grab our latest installer from whichever place you prefer:
 
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_The **recommended method**_)
 - Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
 - Our page on [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
 - Our page on [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
-- (Coming Soon!) [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 
 Just run the installer and you should be good to go!
 
