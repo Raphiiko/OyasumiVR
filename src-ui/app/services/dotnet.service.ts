@@ -14,7 +14,7 @@ type CheckResultItem = {
   version?: string;
 };
 
-interface CheckResult {
+export interface RuntimeCheckResult {
   netCore: CheckResultItem;
   aspNetCore: CheckResultItem;
 }
@@ -24,7 +24,7 @@ interface CheckResult {
 })
 export class DotnetService {
   private http!: Client;
-  private _status = new BehaviorSubject<CheckResult | null>(null);
+  private _status = new BehaviorSubject<RuntimeCheckResult | null>(null);
   public status = this._status.asObservable();
 
   constructor(private modalService: ModalService) {}
@@ -38,14 +38,13 @@ export class DotnetService {
           .addModal(DotnetUpgradeModalComponent, {}, { closeOnEscape: false })
           .subscribe();
       }
-      this._status.next(status);
     } catch (e) {
       error('[DotNet] Could not check for .NET runtime issues: ' + e);
     }
   }
 
-  private async checkRuntimes(): Promise<CheckResult> {
-    const result: CheckResult = {
+  public async checkRuntimes(): Promise<RuntimeCheckResult> {
+    const result: RuntimeCheckResult = {
       netCore: { status: 'OK' },
       aspNetCore: { status: 'OK' },
     };
@@ -62,54 +61,55 @@ export class DotnetService {
         version: status.ASPNETCORE,
       };
     }
+    this._status.next(result);
     return result;
   }
 
-  // public async installNetCore(version: string): Promise<void> {
-  //   if (this._status.value) {
-  //     const status = cloneDeep(this._status.value);
-  //     status.netCore = { status: 'INSTALLING', version };
-  //     this._status.next(status);
-  //   }
-  //   try {
-  //     await invoke('install_net_core', { version });
-  //     if (this._status.value) {
-  //       const status = cloneDeep(this._status.value);
-  //       status.netCore = { status: 'SUCCESS', version };
-  //       this._status.next(status);
-  //     }
-  //   } catch (e) {
-  //     error('[DotNet] Could not install .NET Core: ' + e);
-  //     if (this._status.value) {
-  //       const status = cloneDeep(this._status.value);
-  //       status.netCore = { status: 'FAILED', version };
-  //       this._status.next(status);
-  //     }
-  //   }
-  // }
-  //
-  // public async installAspNetCore(version: string): Promise<void> {
-  //   if (this._status.value) {
-  //     const status = cloneDeep(this._status.value);
-  //     status.aspNetCore = { status: 'INSTALLING', version };
-  //     this._status.next(status);
-  //   }
-  //   try {
-  //     await invoke('install_asp_net_core', { version });
-  //     if (this._status.value) {
-  //       const status = cloneDeep(this._status.value);
-  //       status.aspNetCore = { status: 'SUCCESS', version };
-  //       this._status.next(status);
-  //     }
-  //   } catch (e) {
-  //     error('[DotNet] Could not install ASP.NET Core: ' + e);
-  //     if (this._status.value) {
-  //       const status = cloneDeep(this._status.value);
-  //       status.aspNetCore = { status: 'FAILED', version };
-  //       this._status.next(status);
-  //     }
-  //   }
-  // }
+  public async installNetCore(version: string): Promise<void> {
+    if (this._status.value) {
+      const status = cloneDeep(this._status.value);
+      status.netCore = { status: 'INSTALLING', version };
+      this._status.next(status);
+    }
+    try {
+      await invoke('install_net_core', { version });
+      if (this._status.value) {
+        const status = cloneDeep(this._status.value);
+        status.netCore = { status: 'SUCCESS', version };
+        this._status.next(status);
+      }
+    } catch (e) {
+      error('[DotNet] Could not install .NET Core: ' + e);
+      if (this._status.value) {
+        const status = cloneDeep(this._status.value);
+        status.netCore = { status: 'FAILED', version };
+        this._status.next(status);
+      }
+    }
+  }
+
+  public async installAspNetCore(version: string): Promise<void> {
+    if (this._status.value) {
+      const status = cloneDeep(this._status.value);
+      status.aspNetCore = { status: 'INSTALLING', version };
+      this._status.next(status);
+    }
+    try {
+      await invoke('install_asp_net_core', { version });
+      if (this._status.value) {
+        const status = cloneDeep(this._status.value);
+        status.aspNetCore = { status: 'SUCCESS', version };
+        this._status.next(status);
+      }
+    } catch (e) {
+      error('[DotNet] Could not install ASP.NET Core: ' + e);
+      if (this._status.value) {
+        const status = cloneDeep(this._status.value);
+        status.aspNetCore = { status: 'FAILED', version };
+        this._status.next(status);
+      }
+    }
+  }
 
   public async installDotNetHostingBundle(version: string): Promise<void> {
     if (this._status.value) {

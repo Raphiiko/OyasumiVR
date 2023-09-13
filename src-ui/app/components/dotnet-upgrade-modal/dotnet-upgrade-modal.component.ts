@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp, hshrink } from '../../utils/animations';
-import { DotnetService } from '../../services/dotnet.service';
+import { DotnetService, RuntimeCheckResult } from '../../services/dotnet.service';
 import { filter, firstValueFrom, map, tap } from 'rxjs';
 import { exit } from '@tauri-apps/api/process';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -11,6 +11,7 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../confirm-modal/confirm-modal.component';
+import { info } from 'tauri-plugin-log-api';
 
 interface RuntimeStatus {
   type: 'netCore' | 'aspNetCore';
@@ -34,33 +35,33 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
     dotnetService.status
       .pipe(
         filter(Boolean),
-        map((status) => {
-          const runtimes: RuntimeStatus[] = [];
-          if (status.netCore.status !== 'OK') {
-            runtimes.push({
-              type: 'netCore',
-              name: '.NET Runtime',
-              version: status.netCore.version,
-              status: status.netCore.status,
-            });
-          }
-
-          if (status.aspNetCore.status !== 'OK') {
-            runtimes.push({
-              type: 'aspNetCore',
-              name: 'ASP.NET Core Runtime',
-              version: status.aspNetCore.version,
-              status: status.aspNetCore.status,
-            });
-          }
-          return runtimes;
-        }),
-        tap((runtimes) => {
-          this.requiredRuntimes = runtimes;
-        })
+        map((result) => this.mapCheckResultToRuntimeStatus(result)),
+        tap((runtimes) => (this.requiredRuntimes = runtimes))
       )
       .pipe(takeUntilDestroyed())
       .subscribe();
+  }
+
+  private mapCheckResultToRuntimeStatus(result: RuntimeCheckResult): RuntimeStatus[] {
+    const runtimes: RuntimeStatus[] = [];
+    if (result.netCore.status !== 'OK') {
+      runtimes.push({
+        type: 'netCore',
+        name: '.NET Runtime',
+        version: result.netCore.version,
+        status: result.netCore.status,
+      });
+    }
+
+    if (result.aspNetCore.status !== 'OK') {
+      runtimes.push({
+        type: 'aspNetCore',
+        name: 'ASP.NET Core Runtime',
+        version: result.aspNetCore.version,
+        status: result.aspNetCore.status,
+      });
+    }
+    return runtimes;
   }
 
   async quit() {
@@ -69,9 +70,10 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
 
   async installAutomatically() {
     this.installing = true;
-    const toInstall = this.requiredRuntimes.filter((r) => r.status === 'INSTALL');
+    let toInstall = this.requiredRuntimes.filter((r) => r.status === 'INSTALL');
     this.dotnetService.markAllQueued();
     const competedList: string[] = [];
+    // Install all runtimes
     for (const runtimeStatus of toInstall) {
       switch (runtimeStatus.type) {
         case 'netCore':
@@ -83,7 +85,33 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
         }
       }
     }
-    const success = this.requiredRuntimes.every((r) => r.status === 'SUCCESS');
+    let success = this.requiredRuntimes.every((r) => r.status === 'SUCCESS');
+    // If success, check results again.
+    if (success) {
+      const result = await this.dotnetService.checkRuntimes();
+      toInstall = this.mapCheckResultToRuntimeStatus(result).filter((r) => r.status === 'INSTALL');
+      // If we're still missing some runtimes, try install those individually.
+      for (const runtimeStatus of toInstall) {
+        switch (runtimeStatus.type) {
+          case 'netCore': {
+            info(
+              `[DotNet] Still missing .NET Core runtime (${runtimeStatus.version!}) after installing hosting bundle. Installing it individually now.`
+            );
+            await this.dotnetService.installNetCore(runtimeStatus.version!);
+            break;
+          }
+          case 'aspNetCore': {
+            info(
+              `[DotNet] Still missing ASP.NET Core runtime (${runtimeStatus.version!}) after installing hosting bundle. Installing it individually now.`
+            );
+            await this.dotnetService.installAspNetCore(runtimeStatus.version!);
+            break;
+          }
+        }
+      }
+      // Check for success again
+      success = this.requiredRuntimes.every((r) => r.status === 'SUCCESS');
+    }
     const modalInput: ConfirmModalInputModel = success
       ? {
           title: 'comp.dotnet-upgrade-modal.success.title',
