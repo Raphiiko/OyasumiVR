@@ -26,6 +26,7 @@
 
 從你喜歡的地方取得我們的最新安裝程式：
 
+- 我們的 [Steam 上的頁面](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 - 我們的 [發布頁面](https://github.com/Raphiiko/Oyasumi/releases)
 - 我們在 [BOOTH.pm 上的頁面](https://raphiiko.booth.pm/items/4216880)
 - 我們在 [Gumroad 上的頁面](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
