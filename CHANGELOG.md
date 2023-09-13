@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.0]
+
+### Added
+
+- Allow limiting sleep detection to certain hours of the day.
+- Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
+- OSC address for toggling the sleep detection automation.
+- Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian language support (Community contribution by [a9ito](https://twitter.com/a9ito))
+- Support for a release on [Steam](https://store.steampowered.com/)
+- VR Manifest for registering OyasumiVR with SteamVR.
+- Sleeping animations preset for GoGo Loco 1.8.0+
+- Cute drawings (by [Jun](https://twitter.com/JunHakase)) to the sleep toggle card in the overview
+
+### Changed
+
+- Added missing translations for Traditional and Simplified Chinese. (By [狐 Kon](https://github.com/XoF-eLtTiL))
+
+### Fixed
+
+- Fixed issues with detection and installation of missing .NET runtimes
+- Fixed Japanese date formatting
+- Fixed Japanese font rendering in overlay
+- Upgraded various dependencies
+ 
+### Removed
+
+- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
+
 ## [1.8.0]
 
 ### Added

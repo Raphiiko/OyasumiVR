@@ -12,7 +12,7 @@ p {
 
 .options {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   background: var(--color-surface-0);
   border-radius: var(--surface-border-radius);
   margin-top: 2em;
@@ -76,5 +76,7 @@ p {
 
   .label {
     margin-top: 1em;
+    text-align: center;
+    white-space: pre-line;
   }
 }

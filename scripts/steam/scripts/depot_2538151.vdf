@@ -1,0 +1,13 @@
+"DepotBuildConfig"
+{
+	"DepotID" "2538151"
+	"ContentRoot" "..\content\Win64"
+	"FileMapping"
+	{
+		"LocalPath" "*"
+		"DepotPath" "."
+		"recursive" "1"
+	}
+	"InstallScript" "runtime_dependencies.vdf"
+	"FileExclusion" "*.pdb"
+}

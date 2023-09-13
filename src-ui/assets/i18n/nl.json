@@ -587,9 +587,6 @@
           "subtext": "Je bent niet ingelogd met je VRChat account.",
           "logIn": "Log in"
         },
-        "errors": {
-          "initError": "De VRChat module kon niet worden geinitialiseerd. Check of je internet verbinding werkt en herstart OyasumiVR op een later moment om het opnieuw te proberen."
-        },
         "disclaimers": {
           "use": "Je login gegevens zullen nooit ergens opgeslagen worden en worden alleen direct naar VRChat's servers gestuurd om in te kunnen loggen.",
           "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",

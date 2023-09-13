@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { getVersion } from '../../../../utils/app-utils';
 import { BackgroundService } from '../../../../services/background.service';
+import { BUILD_ID, FLAVOUR } from '../../../../../build';
 
 @Component({
   selector: 'app-about-view',
@@ -8,6 +9,8 @@ import { BackgroundService } from '../../../../services/background.service';
   styleUrls: ['./about-view.component.scss'],
 })
 export class AboutViewComponent implements OnInit, OnDestroy {
+  protected readonly FLAVOUR = FLAVOUR;
+
   version?: string;
 
   constructor(private background: BackgroundService) {}
@@ -20,4 +23,6 @@ export class AboutViewComponent implements OnInit, OnDestroy {
   async ngOnDestroy() {
     this.background.setBackground(null);
   }
+
+  protected readonly BUILD_ID = BUILD_ID;
 }

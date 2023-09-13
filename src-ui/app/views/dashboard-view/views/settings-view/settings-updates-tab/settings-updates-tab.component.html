@@ -1,5 +1,11 @@
 <div class="setting-category">
-  <div class="update-checker">
+  <div class="updates-disabled" *ngIf="FLAVOUR !== 'STANDALONE'">
+    <img src="/assets/img/icon_150x150.png" *ngIf="FLAVOUR === 'DEV'">
+    <img src="/assets/img/steam_icon.png" *ngIf="FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN'">
+    <span *ngIf="FLAVOUR === 'DEV'" translate>settings.updates.updatesDisabled.DEV</span>
+    <span *ngIf="FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN'" translate>settings.updates.updatesDisabled.STEAM</span>
+  </div>
+  <div class="update-checker" *ngIf="FLAVOUR === 'STANDALONE'">
     <button
       class="btn"
       [class.btn-secondary]="!updateAvailable.manifest"

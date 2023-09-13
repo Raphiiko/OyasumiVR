@@ -8,6 +8,7 @@ extern crate lazy_static;
 
 mod commands;
 mod elevated_sidecar;
+mod flavour;
 mod globals;
 mod grpc;
 mod http;
@@ -18,10 +19,12 @@ mod openvr;
 mod os;
 mod osc;
 mod overlay_sidecar;
+mod steam;
 mod system_tray;
 mod utils;
 mod vrc_log_parser;
 
+pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
@@ -78,12 +81,13 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
-        os::commands::check_dotnet_upgrades_required,
-        os::commands::get_net_core_version,
-        os::commands::get_asp_net_core_version,
+        os::commands::check_dotnet_install_required,
+        os::commands::get_net_core_versions,
+        os::commands::get_asp_net_core_versions,
         os::commands::is_semver_higher,
-        os::commands::upgrade_net_core,
-        os::commands::upgrade_asp_net_core,
+        os::commands::install_net_core,
+        os::commands::install_asp_net_core,
+        os::commands::install_dotnet_hosting_bundle,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
         osc::commands::osc_send_bool,
@@ -110,6 +114,9 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         lighthouse::commands::lighthouse_get_status,
         lighthouse::commands::lighthouse_get_scanning_status,
         lighthouse::commands::lighthouse_reset,
+        steam::commands::steam_active,
+        steam::commands::steam_achievement_get,
+        steam::commands::steam_achievement_set,
         commands::log_utils::clean_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
@@ -177,6 +184,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     }
     // Get dependencies
     let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
+    // Initialize Steam module
+    steam::init().await;
     // Initialize HTTP server
     http::init().await;
     // Initialize gRPC server

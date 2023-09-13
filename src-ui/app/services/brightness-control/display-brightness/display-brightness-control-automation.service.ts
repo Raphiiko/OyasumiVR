@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../../automation-config.service';
 import { SleepService } from '../../sleep.service';
-import { distinctUntilChanged, firstValueFrom, skip } from 'rxjs';
+import { delay, distinctUntilChanged, firstValueFrom, of, skip, switchMap, take } from 'rxjs';
 import { DisplayBrightnessControlService } from './display-brightness-control.service';
 import { CancellableTask } from '../../../utils/cancellable-task';
 import { EventLogService } from '../../event-log.service';
@@ -24,6 +24,14 @@ export class DisplayBrightnessControlAutomationService {
     this.sleepService.mode
       .pipe(skip(1), distinctUntilChanged())
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
+    // Apply current mode at startup
+    // of(null)
+    //   .pipe(
+    //     delay(2000),
+    //     switchMap(() => this.sleepService.mode),
+    //     take(1)
+    //   )
+    //   .subscribe((sleepMode) => this.onSleepModeChange(sleepMode, true));
   }
 
   public get isSleepEnableTransitionActive() {
@@ -44,7 +52,7 @@ export class DisplayBrightnessControlAutomationService {
     );
   }
 
-  private async onSleepModeChange(sleepMode: boolean) {
+  private async onSleepModeChange(sleepMode: boolean, forceInstant = false) {
     const config = await firstValueFrom(this.automationConfigService.configs).then((c) =>
       sleepMode
         ? c.DISPLAY_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
@@ -53,7 +61,7 @@ export class DisplayBrightnessControlAutomationService {
     if (!config.enabled) return;
     if (!(await firstValueFrom(this.brightnessControl.driverIsAvailable()))) return;
     this.brightnessControl.cancelActiveTransition();
-    if (config.transition) {
+    if (!forceInstant && config.transition) {
       const task = this.brightnessControl.transitionBrightness(
         config.brightness,
         config.transitionTime,

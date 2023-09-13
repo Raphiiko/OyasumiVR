@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 import { hshrink } from '../../../../../utils/animations';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FLAVOUR } from '../../../../../../build';
 
 @Component({
   selector: 'app-settings-updates-tab',
@@ -18,10 +19,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   animations: [hshrink()],
 })
 export class SettingsUpdatesTabComponent extends SettingsTabComponent implements OnInit {
-  updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
-  version = '';
-  changelog: SafeHtml = '';
-  updateOrCheckInProgress = false;
+  protected updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
+  protected version = '';
+  protected changelog: SafeHtml = '';
+  protected updateOrCheckInProgress = false;
+  protected FLAVOUR = FLAVOUR;
 
   constructor(
     settingsService: AppSettingsService,

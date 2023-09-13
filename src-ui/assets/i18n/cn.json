@@ -12,8 +12,16 @@
       "close": "关闭",
       "login": "登入"
     },
+    "common": {
+      "none": "无"
+    },
     "misc": {
-      "vrcLoginRequired": "这个功能需要你登入你的 VRChat 账号"
+      "vrcLoginRequired": "这个功能需要你登入你的 VRChat 账号",
+      "windowsPowerPolicy": {
+        "BALANCED": "平衡模式",
+        "HIGH_PERFORMANCE": "高效能模式",
+        "POWER_SAVING": "省电模式"
+      }
     }
   },
   "brightness-automations": {
@@ -134,6 +142,7 @@
         },
         "sensitivity": {
           "title": "灵敏度",
+          "description": "灵敏度设定越高，OyasumiVR 侦测您进入睡眠状态的概率就越高。",
           "presets": {
             "LOWEST": "最低",
             "LOW": "低",
@@ -151,7 +160,11 @@
           "description": "OyasumiVR应该等待多久才能检测到你在睡觉",
           "unit": "分钟"
         },
-        "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式"
+        "description": "OyasumiVR在检测到你睡着之前应等待多长时间启用该功能后，当OyasumiVR根据你的动作猜测你在睡觉时，它将自动启用睡眠模式",
+        "timeWindow": {
+          "title": "启动视窗",
+          "description": "只允许睡眠检测在一天中的某些时段启动睡眠模式"
+        }
       },
       "enableAtTime": {
         "title": "开启睡眠模式",
@@ -244,6 +257,23 @@
   },
   "power-automations": {
     "title": "电源自动化",
+    "tabs": {
+      "controllersAndTrackers": "控制器和定位器",
+      "baseStations": "基站",
+      "windowsPowerPolicy": "Power Policy"
+    },
+    "windowsPowerPolicy": {
+      "description": "OyasumiVR可以在您进入睡眠或醒来时自动更改Windows的电源策略。这对于在您睡觉时降低能耗并在您醒来后恢复高性能策略非常有用。",
+      "automations": "自动化功能",
+      "sleepModeEnable": {
+        "title": "当睡眠模式启用时",
+        "description": "设定以下Windows电源策略"
+      },
+      "sleepModeDisable": {
+        "title": "当睡眠模式停用时",
+        "description": "设定以下Windows电源策略"
+      }
+    },
     "devicePowerOff": {
       "onSleepModeEnable": {
         "title": "当我入睡时",
@@ -258,10 +288,6 @@
         "optionControllers": "关掉控制器",
         "optionTrackers": "关掉定位器"
       }
-    },
-    "tabs": {
-      "controllersAndTrackers": "控制器和定位器",
-      "baseStations": "基站"
     },
     "lighthousePowerOn": {
       "title": "开启基站",
@@ -522,6 +548,33 @@
             }
           }
         }
+      },
+      "overlay": {
+        "activation": {
+          "title": "启用动作",
+          "description": "选择何时开启或关闭覆盖层",
+          "action": {
+            "none": "无（停用）",
+            "singleA": "单次按A钮",
+            "doubleA": "双次按A钮",
+            "tripleA": "三次按A钮",
+            "singleB": "单次按B钮",
+            "doubleB": "双次按B钮",
+            "tripleB": "三次按B钮"
+          },
+          "controller": {
+            "either": "任意手把",
+            "left": "左手把",
+            "right": "右手把",
+            "title": "手把",
+            "description": "选择哪些手把可以用于启用覆盖层"
+          },
+          "triggerFilter": {
+            "title": "需要扳机",
+            "description": "仅在执行动作时按住扳机时才启用。"
+          }
+        },
+        "title": "覆盖层"
       }
     },
     "vrchat": {
@@ -537,9 +590,6 @@
           "title": "已登出",
           "subtext": "你目前没有使用你的 VRChat 账户登入",
           "logIn": "登入"
-        },
-        "errors": {
-          "initError": "无法初始化 VRChat 模组。 请确保你有连上互联网并稍后重新启动 OyasumiVR 重试"
         },
         "disclaimers": {
           "use": "你的登入凭证永远不会储存在任何地方，只会发送到 VRChat 的服务器以进行身份验证",
@@ -624,7 +674,11 @@
       "install": "安装版本 {{version}}",
       "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
       "notChecked": "OyasumiVR 尚未检查更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。"
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。",
+      "updatesDisabled": {
+        "DEV": "如果您想安装新版本的 OyasumiVR，请下载并手动运行安装程序。",
+        "STEAM": "您已经安装了 Steam 版本的《OyasumiVR》。因此，新的《OyasumiVR》更新将通过 Steam 提供！"
+      }
     },
     "advanced": {
       "persistentData": {
@@ -757,6 +811,15 @@
     },
     "autoAcceptedInviteRequest": {
       "content": "已自动接受来自 {{username}} 的邀请请求"
+    },
+    "turningOffControllers": {
+      "content": "关闭您的手把"
+    },
+    "turningOffTrackers": {
+      "content": "关闭您的定位器"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "关闭您的手把和定位器"
     }
   },
   "comp": {
@@ -1021,6 +1084,16 @@
             "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用"
           }
         },
+        "displayBrightnessChanged": {
+          "title": {
+            "set": "头戴式显示器亮度设置为 {{value}}",
+            "transition": "头戴式显示器亮度正在过渡到 {{value}}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
+          }
+        },
         "acceptedInviteRequest": {
           "title": "自动接受了来自'{{displayName}}的邀请请求",
           "subtitle": {
@@ -1066,9 +1139,44 @@
         "shutdownSequenceCancelled": {
           "title": "关机程序被取消了",
           "reason": {
-            "MANUAL": "Cancelled manually"
+            "MANUAL": "已手动取消"
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "title": "MSI Afterburner 的配置档已设置为配置档 {{profile}}",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "title": "Windows 电源策略已设置为 '{{policy}}' 方案",
+          "reason": {
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
           }
         }
+      }
+    },
+    "dotnet-upgrade-modal": {
+      "title": "安装缺失的运行时库",
+      "description": {
+        "text1": "OyasumiVR 需要以下运行时库，但它们的版本要么太旧，要么未安装在您的系统中：",
+        "runtimeQueued": "排队中",
+        "text2": "为了继续使用 OyasumiVR，必须先安装这些所需的运行时库。",
+        "automaticInstall": "是否要让 OyasumiVR 尝试自动为您安装这些运行时库？",
+        "noAutomaticInstall": "OyasumiVR 无法确定这些运行时库的最新版本，因此无法自动为您安装。请手动安装这些运行时库，或退出 OyasumiVR，稍后再试。",
+        "moreInfo": "您可以在这里找到下载和更多信息："
+      },
+      "quit": "退出 OyasumiVR",
+      "installAutomatically": "自动安装",
+      "success": {
+        "title": "安装成功",
+        "message": "所需的缺失运行时库已经成功安装。请退出 OyasumiVR，然后重新启动以继续使用。"
+      },
+      "failure": {
+        "title": "安装失败",
+        "message": "无法自动安装所需的缺失运行时库。请尝试手动安装它们。您可以查看日志文件以获取更多有关安装失败的信息。\n\n如果您持续遇到问题，请在 Twitter 上联系 @Raphiiko 或加入我们的 Discord 服务器寻求帮助。"
       }
     }
   },
@@ -1167,6 +1275,79 @@
       },
       "title": "正在关闭",
       "cancel": "立即取消"
+    }
+  },
+  "overlay": {
+    "dashboard": {
+      "overview": {
+        "sleepMode": "睡眠模式",
+        "active": "启用中",
+        "inactive": "未启用",
+        "tooltip": {
+          "automations": "自动化",
+          "deviceControl": "装置控制",
+          "shutdown": "关机序列"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "title": "关机序列",
+          "message": "您即将开始关机序列。\n您确定要现在进行吗？\n\n您可以在主要的 OyasumiVR 视窗中配置关机序列的动作。",
+          "start": "开始关机"
+        }
+      },
+      "deviceControl": {
+        "title": "装置控制",
+        "turnOff": {
+          "AllControllers": "关闭所有\n手把",
+          "AllTrackers": "关闭所有\n定位器",
+          "AllControllersAndTrackers": "关闭所有\n手把和定位器"
+        }
+      },
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "title": "自动接受邀请请求",
+          "subtitle": {
+            "singular": "{{mode}}：{{playerCount}} 位朋友",
+            "plural": "{{mode}}：{{playerCount}} 位朋友"
+          },
+          "mode": {
+            "Disabled": "对所有人",
+            "Whitelist": "白名单",
+            "Blacklist": "黑名单"
+          }
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "title": "状态自动化",
+          "subtitle": {
+            "singular": "最多 {{threshold}} 位玩家",
+            "plural": "最多 {{threshold}} 位玩家"
+          }
+        },
+        "sleepingAnimations": {
+          "title": "睡眠动画"
+        },
+        "shutdownAutomations": {
+          "title": "自动关机",
+          "subtitle": "睡眠 {{time}} 后",
+          "seconds": {
+            "singular": "{{seconds}} 秒",
+            "plural": "{{seconds}} 秒"
+          },
+          "minutes": {
+            "singular": "{{minutes}} 分钟",
+            "plural": "{{minutes}} 分钟"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "睡眠检测",
+          "subtitle": {
+            "withoutActivationWindow": "{{sensitivity}}灵敏度",
+            "withActivationWindow": "{{sensitivity}} 灵敏度, {{startTime}} - {{endTime}}"
+          }
+        },
+        "title": "自动化设定"
+      }
     }
   }
 }

@@ -141,6 +141,9 @@ export interface SleepModeEnableForSleepDetectorAutomationConfig extends Automat
   sensitivity: 'LOWEST' | 'LOW' | 'MEDIUM' | 'HIGH' | 'HIGHEST';
   sleepCheck: boolean;
   detectionWindowMinutes: number;
+  activationWindow: boolean;
+  activationWindowStart: [number, number];
+  activationWindowEnd: [number, number];
 }
 
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -310,6 +313,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     sensitivity: 'MEDIUM',
     sleepCheck: false,
     detectionWindowMinutes: 15,
+    activationWindow: false,
+    activationWindowStart: [23, 0],
+    activationWindowEnd: [7, 0],
   },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,

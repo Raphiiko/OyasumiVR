@@ -8,6 +8,7 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
 import { getVersion } from '../utils/app-utils';
 import { info } from 'tauri-plugin-log-api';
+import { FLAVOUR } from '../../build';
 
 @Injectable({
   providedIn: 'root',
@@ -40,22 +41,24 @@ export class UpdateService {
           .subscribe();
       }
     });
-    // Check for updates on start
-    await this.checkForUpdate(true);
-    // Check for updates every 7 days in case Oyasumi is left running for a long time.
-    interval(1000 * 3600 * 24 * 7).subscribe(() => this.checkForUpdate());
-    // Check for updates every 10 minutes until at least one update check has been done successfully.
-    interval(1000 * 60 * 10)
-      .pipe(
-        switchMap(() => this._updateAvailable.pipe(take(1))),
-        filter((info) => !info.checked)
-      )
-      .subscribe(() => this.checkForUpdate());
+    if (FLAVOUR === 'STANDALONE') {
+      // Check for updates on start
+      await this.checkForUpdate(true);
+      // Check for updates every 7 days in case Oyasumi is left running for a long time.
+      interval(1000 * 3600 * 24 * 7).subscribe(() => this.checkForUpdate());
+      // Check for updates every 10 minutes until at least one update check has been done successfully.
+      interval(1000 * 60 * 10)
+        .pipe(
+          switchMap(() => this._updateAvailable.pipe(take(1))),
+          filter((info) => !info.checked)
+        )
+        .subscribe(() => this.checkForUpdate());
+    }
   }
 
   async checkForUpdate(showDialog = false) {
-    // Don't ever update the dev version
-    if ((await getVersion()) === '0.0.0') {
+    // Only ever check for updates in the STANDALONE flavour
+    if (FLAVOUR !== 'STANDALONE') {
       this._updateAvailable.next({
         checked: true,
       });

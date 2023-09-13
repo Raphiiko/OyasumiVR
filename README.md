@@ -21,7 +21,7 @@
     <br>
     If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
-    <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/Readme_TW.md">中文的說明手冊在這裡</a>。
+    <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_TW.md">中文的說明手冊在這裡</a>。
     <br>
     <br>
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
@@ -29,11 +29,14 @@
 
 ## Download & Install
 
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
+
 Grab our latest installer from whichever place you prefer:
 
 - Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
 - Our page on [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
 - Our page on [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
+- (Coming Soon!) [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 
 Just run the installer and you should be good to go!
 
@@ -56,8 +59,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 <table>
   <tr>
     <td>
-      OyasumiVR can detect automatically when you are asleep, based on your movement! 
-      <br>Simply calibrate once, enable the automation, and you're set.
+      OyasumiVR can detect automatically when you are asleep, based on your movement! Simply calibrate once, enable the automation, and you're set.
       <br><br>
       If automatic detection is not what you're looking for, there's various alternative automations you can use, that are based on:
       <br><br>
@@ -133,7 +135,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
     <td>
       <b>MSI Afterburner</b>
       <br>
-      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in [MSI Afterburner](https://www.msi.com/Landing/afterburner/).
+      If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>.
       Tweak your over- or underclocks, power limits and more, and have OyasumiVR call for them when you go to sleep, or wake up!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
@@ -157,7 +159,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
           <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
         </li>
         <li>
-          <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franada">franada</a>
+          <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
         </li>
       </ul>
       <br>
@@ -263,7 +265,9 @@ OyasumiVR currently supports the following languages:
 - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
-- French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack))
+- French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
+- Spanish (Español)\* (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian (Bahasa Indonesia)\* (Community contribution by [a9ito](https://twitter.com/a9ito))
 
 _(\*) This is a community supported language, which means translations might not always be 100% complete with each and every update._
 
@@ -329,6 +333,11 @@ OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of 
 
 The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
 
+## Support
+If you are having trouble with OyasumiVR, say you have a bug, or a feature request, you can join our [Discord server](https://discord.gg/7MqdPJhYxC).
+
+Alternatively, you can reach out to me directly on [Twitter at @Raphiiko](https://twitter.com/Raphiiko). I'll try to get back to you as soon as possible!
+
 ## License
 
-OyasumiVR is available under the [MIT](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE.md) license.
+OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.

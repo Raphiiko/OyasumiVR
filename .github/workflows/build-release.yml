@@ -22,19 +22,26 @@ jobs:
         id: get-package-version
         uses: stevenbenitez/get-package-version-action@v1
       - name: Setup NodeJS
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: npm
       - name: Initialize the project
-        run: npm run init
+        run: npm run ci
+      - name: Set flavour to STANDALONE
+        run: npm run set-flavour STANDALONE
+      - name: Set build id
+        run: npm run set-build-id
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: stable
+          toolchain: 1.70.0
           default: true
           override: true
       - name: Install Protoc
         uses: arduino/setup-protoc@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Configure Rust cache
         uses: Swatinem/rust-cache@v2
         with:
@@ -58,7 +65,7 @@ jobs:
           TAURI_PRIVATE_KEY: ${{ secrets.TAURI_PRIVATE_KEY }}
           TAURI_KEY_PASSWORD: ${{ secrets.TAURI_KEY_PASSWORD }}
         with:
-          tagName: oyasumi-v${{ steps.get-package-version.outputs.version }}
+          tagName: oyasumivr-v${{ steps.get-package-version.outputs.version }}
           releaseName: OyasumiVR v${{ steps.get-package-version.outputs.version }}
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false

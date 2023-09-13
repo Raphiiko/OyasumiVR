@@ -21,7 +21,7 @@ const config: Config<{ [s: string]: any }> = {
     level: "error"
   },
   loaders: [
-    ...["en", "cn", "fr", "ja", "ko", "nl", "tw", "DEBUG"].map((locale) => ({
+    ...["en", "cn", "fr", "ja", "ko", "nl", "tw", "es", "id", "DEBUG"].map((locale) => ({
       locale,
       key: "t",
       loader: getTranslationLoader(locale)

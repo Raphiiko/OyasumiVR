@@ -12,8 +12,16 @@
       "close": "닫기",
       "login": "로그인"
     },
+    "common": {
+      "none": "없음"
+    },
     "misc": {
-      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
+      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요.",
+      "windowsPowerPolicy": {
+        "BALANCED": "균형 조정",
+        "HIGH_PERFORMANCE": "고성능",
+        "POWER_SAVING": "절전"
+      }
     }
   },
   "brightness-automations": {
@@ -112,7 +120,7 @@
           "note": "보정하는 동안 가만히 있어주세요! 보정하는 동안 움직이면 이 기능이 제대로 작동하지 않아요."
         },
         "calibrating": {
-          "instruction": "보정중",
+          "instruction": "보정 중",
           "note": "가만히 있어주세요.",
           "countdown": "{{counter}}초 남았습니다..."
         },
@@ -133,8 +141,8 @@
           "action": "보정하기"
         },
         "sensitivity": {
-          "title": "감도 수준",
-          "description": "감도가 높을수록 OyasumiVR이 사용자가 잠든 것을 감지할 가능성이 늘어나요.",
+          "title": "민감도",
+          "description": "민감도가 높을수록 OyasumiVR이 사용자가 잠든 것을 감지할 가능성이 늘어나요.",
           "presets": {
             "LOWEST": "가장 낮음",
             "LOW": "낮음",
@@ -148,11 +156,15 @@
           "description": "수면 모드를 활성화하기 전에 아직 깨어 있는지 묻는 상호작용 가능한 알림을 보냅니다."
         },
         "detectionWindow": {
-          "title": "감지 창",
+          "title": "감지 기간",
           "description": "OyasumiVR이 사용자가 잠든 것을 감지하기까지 얼마나 기다려야 할까요?",
           "unit": "분"
         },
-        "description": "이 기능을 활성화하면 OyasumiVR은 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요."
+        "description": "이 기능을 활성화하면 OyasumiVR은 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요.",
+        "timeWindow": {
+          "title": "활성화 기간",
+          "description": "하루 중 특정 시간 사이에만 수면 모드를 활성화하도록 수면 감지를 허용합니다."
+        }
       },
       "enableAtTime": {
         "title": "수면 모드 활성화",
@@ -579,9 +591,6 @@
           "subtext": "현재 VRChat 계정으로 로그인 되어있지 않아요.",
           "logIn": "로그인"
         },
-        "errors": {
-          "initError": "VRChat 모듈이 초기화되지 않았어요. 인터넷 접속을 확인하고 잠시 후에 OyasumiVR을 재부팅해 다시 시도해주세요."
-        },
         "disclaimers": {
           "use": "로그인 정보는 보관되지 않고 인증을 위해 VRChat 서버로만 전송되어요.",
           "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
@@ -665,7 +674,11 @@
       "install": "v{version} 설치",
       "noUpdate": "현재 최신 버전의 OyasumiVR v{{version}}을 이용하고 있어요!",
       "notChecked": "OyasumiVR의 업데이트를 확인하지 못했어요.",
-      "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다."
+      "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다.",
+      "updatesDisabled": {
+        "DEV": "OyasumiVR의 개발 빌드를 실행 중이므로 업데이트가 비활성화되었어요.\n새 버전의 OyasumiVR을 설치하려면 설치 프로그램을 수동으로 다운로드하여 실행해주세요.",
+        "STEAM": "스팀 버전의 OyasumiVR이 설치되어 있어요.\n새 버전의 OyasumiVR 업데이트는 스팀을 통해 제공됩니다!"
+      }
     },
     "advanced": {
       "persistentData": {
@@ -1324,6 +1337,13 @@
           "minutes": {
             "singular": "{{minutes}}분",
             "plural": "{{minutes}}분"
+          }
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "수면 감지",
+          "subtitle": {
+            "withoutActivationWindow": "민감도 {{sensitivity}}",
+            "withActivationWindow": "민감도 {{sensitivity}}, {{startTime}} - {{endTime}}"
           }
         },
         "title": "자동화 설정"

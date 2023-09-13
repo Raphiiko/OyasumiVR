@@ -51,3 +51,7 @@ Thumbs.db
 # Oyasumi specific
 src-ui/assets/preload-assets.json
 src-ui/assets/splashscreen/splash-blurhash.css
+
+# Steam
+/SteamSDK/
+/steamsdk.zip

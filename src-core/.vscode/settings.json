@@ -1,3 +1,4 @@
 {
-  "rust-analyzer.cargo.buildScripts.enable": true
+  "rust-analyzer.cargo.buildScripts.enable": true,
+  "rust-analyzer.linkedProjects": [".\\Cargo.toml", ".\\Cargo.toml"]
 }

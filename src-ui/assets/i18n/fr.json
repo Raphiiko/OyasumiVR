@@ -431,9 +431,6 @@
           "subtext": "Vous êtes actuellement déconnecté(e) de votre compte VRChat.",
           "logIn": "Se connecter"
         },
-        "errors": {
-          "initError": "Le module VRChat n'a pas pu être initialisé. Veuillez vérifier votre connexion internet ou réessayer ultérieurement."
-        },
         "disclaimers": {
           "use": "Vos informations de connexion ne sont pas stockées et sont uniquement envoyées à VRChat pour vous identifier.",
           "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",

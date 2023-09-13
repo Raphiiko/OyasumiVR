@@ -15,6 +15,7 @@ import { debounce } from 'typescript-debounce-decorator';
 import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
 import { ModalService } from '../../../../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { cloneDeep } from 'lodash';
 
 export interface SleepDetectorEnableSleepModeModalInputModel {}
 
@@ -33,7 +34,7 @@ export class SleepDetectorEnableSleepModeModalComponent
   >
   implements OnInit, SleepDetectorEnableSleepModeModalInputModel
 {
-  sensitivityOptions: SelectBoxItem[] = [
+  protected sensitivityOptions: SelectBoxItem[] = [
     {
       id: 'LOWEST',
       label: 'sleep-detection.modals.enableForSleepDetector.sensitivity.presets.LOWEST',
@@ -55,11 +56,13 @@ export class SleepDetectorEnableSleepModeModalComponent
       label: 'sleep-detection.modals.enableForSleepDetector.sensitivity.presets.HIGHEST',
     },
   ];
-  sensitivityOption: SelectBoxItem | undefined;
+  protected sensitivityOption: SelectBoxItem | undefined;
+  protected activationWindowStart = '00:00';
+  protected activationWindowEnd = '00:00';
+  protected automationConfigs?: AutomationConfigs;
 
-  automationConfigs?: AutomationConfigs;
-
-  @HostBinding('[@fadeUp]') get fadeUp() {
+  @HostBinding('[@fadeUp]')
+  protected get fadeUp() {
     return;
   }
 
@@ -90,6 +93,13 @@ export class SleepDetectorEnableSleepModeModalComponent
           (o) => o.id === configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity
         );
         if (!this.sensitivityOption) this.setSensitivityOption('MEDIUM');
+        this.activationWindowStart =
+          configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart
+            .map((v) => v.toString().padStart(2, '0'))
+            .join(':');
+        this.activationWindowEnd = configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd
+          .map((v) => v.toString().padStart(2, '0'))
+          .join(':');
       });
   }
 
@@ -151,6 +161,54 @@ export class SleepDetectorEnableSleepModeModalComponent
       {
         detectionWindowMinutes: value,
       }
+    );
+  }
+
+  async onChangeActivationWindowStart(value: string) {
+    const parsedValue = value
+      .split(':')
+      .map((v) => parseInt(v))
+      .slice(0, 2) as [number, number];
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        activationWindowStart: parsedValue,
+      }
+    );
+  }
+
+  async onChangeActivationWindowEnd(value: string) {
+    const parsedValue = value
+      .split(':')
+      .map((v) => parseInt(v))
+      .slice(0, 2) as [number, number];
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        activationWindowEnd: parsedValue,
+      }
+    );
+  }
+
+  async toggleActivationWindow() {
+    // Toggle the activation window
+    const config: Partial<SleepModeEnableForSleepDetectorAutomationConfig> = {
+      activationWindow:
+        !this.automationConfigs?.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR?.activationWindow,
+    };
+    // Reset the window back to default when turning off the activation window
+    if (!config.activationWindow) {
+      config.activationWindowStart = cloneDeep(
+        AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart
+      );
+      config.activationWindowEnd = cloneDeep(
+        AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd
+      );
+    }
+    // Apply & Save
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      config
     );
   }
 }
