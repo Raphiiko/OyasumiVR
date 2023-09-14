@@ -16,7 +16,8 @@
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-BOOTH.PM-red"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam Page" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
