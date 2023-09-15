@@ -62,7 +62,7 @@
       "title": "启动睡眠模式",
       "description": "根据各种触发器自动启用睡眠模式",
       "atTime": "在特定时间",
-      "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
       "onControllersPoweredOff": "当所有控制器都关闭时",
       "onMotionDetection": {
         "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
@@ -97,13 +97,13 @@
           "note": "当你准备好后你会再叠层看到这视窗，点击「开始校准」来进行校准"
         },
         "countdown": {
-          "instruction": "{{counter}} 秒后开始",
+          "instruction": "{counter} 秒后开始",
           "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能运做"
         },
         "calibrating": {
           "instruction": "校准中",
           "note": "继续保持",
-          "countdown": "还剩 {{counter}} 秒"
+          "countdown": "还剩 {counter} 秒"
         },
         "done": {
           "instruction": "ˋ校准完成！",
@@ -185,7 +185,7 @@
     "sleepingAnimations": {
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
-      "presetAuthor": "由于 {{author}} 制作",
+      "presetAuthor": "由于 {author} 制作",
       "description": "OyasumiVR 可以在你改变睡姿时自动改变你的角色动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来看这功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个角色动作预制档，但你也可以指定设定自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自订动画",
@@ -322,7 +322,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "功耗限制自动化正在初始化中.....",
-        "noNvidia": "功耗限制自动化不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制自动化仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({{code}})",
+        "noNvidia": "功耗限制自动化不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制自动化仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({code})",
         "noPermission": "尽管 OyasumiVR 拥有管理员权限，但它似乎没有权限更改你的 GPU 设定\n\n请检查你的系统规格，因为这通常不会发生",
         "noSidecar": "由于未知原因，无法获得管理员权限\n这些是控制 GPU 功耗限制所必需的\n\n请尝试重新启动 OyasumiVR",
         "unknown": "由于未知原因，功耗限制自动化不可用。\n\n请尝试重新启动 OyasumiVR"
@@ -355,7 +355,7 @@
         "title": "当睡眠模式关闭时",
         "description": "使用所选的 MSI Afterburner 设定档"
       },
-      "profile": "设定档 {{index}}",
+      "profile": "设定档 {index}",
       "none": "无",
       "enabledWarning": "请注意，在 MSI Afterburner 中错误的设定 GPU 可能会导致系统变得不稳定。如果你不知道自己在做什么，请关闭此功能",
       "executable": {
@@ -379,10 +379,7 @@
     "exampleUse": "使用示例：当有人加入你时，自动将你的状态切换为橙色或红色！\n当他们离开而你又独自一人时，自动将你的状态切换回蓝色以便其他人可以加入你",
     "disableToEdit": "请在进行任何变更之前关闭状态自动化",
     "playerLimit": "玩家人数限制",
-    "playerLimitLabel": {
-      "singular": "{{count}} 位玩家（包括你）",
-      "plural": "{{count}} 位玩家（包括你）"
-    },
+    "playerLimitLabel": "{count} 位玩家（包括你）",
     "belowLimit": {
       "title": "低于限制人数",
       "description": "将你的状态设定为"
@@ -408,7 +405,7 @@
     "clearPlayers": "清除玩家",
     "removeModal": {
       "title": "确认删除",
-      "message": "你确定要从列表中删除「{{name}}」吗？"
+      "message": "你确定要从列表中删除「{name}」吗？"
     },
     "removeModalBulk": {
       "title": "确认删除",
@@ -563,7 +560,7 @@
         "title": "登入",
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登入才能使用",
         "loggedIn": {
-          "title": "你好 {{name}}!",
+          "title": "你好 {name}!",
           "subtext": "你当前已使用 VRChat 账户登入",
           "logOut": "登出"
         },
@@ -652,10 +649,10 @@
     "updates": {
       "checkForUpdates": "检查更新",
       "changelog": "更新日志",
-      "install": "安装版本 {{version}}",
-      "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {{version}}！",
+      "install": "安装版本 {version}",
+      "noUpdate": "你当前运行的是最新版本的 OyasumiVR 版本 {version}！",
       "notChecked": "OyasumiVR 尚未检查更新",
-      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {{currentVersion}}。\n最新版本是 {{latest Version}}。",
+      "updateAvailable": "新版本的 OyasumiVR 现已推出！ 你当前正在运行版本 {currentVersion}。\n最新版本是 {{latest Version}}。",
       "updatesDisabled": {
         "DEV": "如果您想安装新版本的 OyasumiVR，请下载并手动运行安装程序。",
         "STEAM": "您已经安装了 Steam 版本的《OyasumiVR》。因此，新的《OyasumiVR》更新将通过 Steam 提供！"
@@ -768,7 +765,7 @@
       "floatOutOfBounds": "该值必须是介于 -1.0 和 1.0 之间的有效浮点值",
       "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
       "invalidSyntax": "无效的语法",
-      "tooManyCommands": "OSC 脚本不能有超过 {{value}} 个操作。",
+      "tooManyCommands": "OSC 脚本不能有超过 {value} 个操作。",
       "addressNoSlash": "有效的 OSC 数值必须以“/”符号开头。",
       "addressRequired": "需要 OSC 数值",
       "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字元。"
@@ -788,10 +785,10 @@
       "content": "睡眠模式已停用。"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "您的 VRChat 状态已设置为 '{{newStatus}}'"
+      "content": "您的 VRChat 状态已设置为 ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "已自动接受来自 {{username}} 的邀请请求"
+      "content": "已自动接受来自 {username} 的邀请请求"
     },
     "turningOffControllers": {
       "content": "关闭您的手把"
@@ -820,9 +817,9 @@
     },
     "update-modal": {
       "title": "有新的更新",
-      "updateNow": "安装版本 {{version}}",
+      "updateNow": "安装版本 {version}",
       "updateLater": "稍后",
-      "message": "已找到 OyasumiVR 的新更新：版本 {{newVersion}}\n\n你当前仍在运行版本 {{currentVersion}}\n\n你要立即更新还是稍后更新？"
+      "message": "已找到 OyasumiVR 的新更新：版本 {newVersion}\n\n你当前仍在运行版本 {currentVersion}\n\n你要立即更新还是稍后更新？"
     },
     "select-box": {
       "defaultPlaceholder": "选择..."
@@ -879,14 +876,8 @@
       "test": "测试"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} 个指令",
-        "plural": "{{value}} 个指令"
-      },
-      "errorCounter": {
-        "singular": "{{value}} 个验证错误",
-        "plural": "{{value}} 个验证错误"
-      },
+      "commandCounter": "{value} 个指令",
+      "errorCounter": "{value} 个验证错误",
       "addCommand": "新增",
       "test": "测试",
       "action": {
@@ -927,7 +918,7 @@
       "title": "选择好友",
       "searchPlaceholder": "依名字寻找好友...",
       "noFriendsSelected": "没有任何好友被选择",
-      "noResultsFor": "找不到任何结果 '{{query}}'",
+      "noResultsFor": "找不到任何结果 ''{query}''",
       "noFriends": "你的好友列表是空的"
     },
     "event-log": {
@@ -1047,8 +1038,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "将 '{{device}}' 的功率限制恢复为 {{limit}}",
-            "set": "将 '{{device}}' 的功率限制设置为 {{limit}}"
+            "reset": "将 ''{device}'' 的功率限制恢复为 {limit}",
+            "set": "将 ''{device}'' 的功率限制设置为 {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "因为睡眠模式已启用",
@@ -1057,8 +1048,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "头戴式显示器图像亮度设置为 {{value}}",
-            "transition": "头戴式显示器图像亮度过渡到 {{value}}"
+            "set": "头戴式显示器图像亮度设置为 {value}",
+            "transition": "头戴式显示器图像亮度过渡到 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
@@ -1067,8 +1058,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "头戴式显示器亮度设置为 {{value}}",
-            "transition": "头戴式显示器亮度正在过渡到 {{value}}"
+            "set": "头戴式显示器亮度设置为 {value}",
+            "transition": "头戴式显示器亮度正在过渡到 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
@@ -1076,17 +1067,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "自动接受了来自'{{displayName}}的邀请请求",
+          "title": "自动接受了来自''{displayName}的邀请请求",
           "subtitle": {
             "whitelist": "由于该玩家被列入白名单",
             "blacklist": "由于这名玩家没有被列入黑名单"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "将你的VRChat状态从{{oldStatus}}改为{{newStatus}}列出",
+          "title": "将你的VRChat状态从{oldStatus}改为{newStatus}列出",
           "reason": {
-            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{{threshold}}位以下时",
-            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{{threshold}}位的极限"
+            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{threshold}位以下时",
+            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{threshold}位的极限"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1096,7 +1087,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVR渲染分辨率设置为 '自动'",
-            "custom": "SteamVR的渲染分辨率设置为 {{value}}"
+            "custom": "SteamVR的渲染分辨率设置为 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
@@ -1124,14 +1115,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburner 的配置档已设置为配置档 {{profile}}",
+          "title": "MSI Afterburner 的配置档已设置为配置档 {profile}",
           "reason": {
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Windows 电源策略已设置为 '{{policy}}' 方案",
+          "title": "Windows 电源策略已设置为 ''{policy}'' 方案",
           "reason": {
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
@@ -1286,10 +1277,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "自动接受邀请请求",
-          "subtitle": {
-            "singular": "{{mode}}：{{playerCount}} 位朋友",
-            "plural": "{{mode}}：{{playerCount}} 位朋友"
-          },
+          "subtitle": "{mode}：{playerCount} 位朋友",
           "mode": {
             "Disabled": "对所有人",
             "Whitelist": "白名单",
@@ -1298,31 +1286,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "状态自动化",
-          "subtitle": {
-            "singular": "最多 {{threshold}} 位玩家",
-            "plural": "最多 {{threshold}} 位玩家"
-          }
+          "subtitle": "最多 {threshold} 位玩家"
         },
         "sleepingAnimations": {
           "title": "睡眠动画"
         },
         "shutdownAutomations": {
           "title": "自动关机",
-          "subtitle": "睡眠 {{time}} 后",
-          "seconds": {
-            "singular": "{{seconds}} 秒",
-            "plural": "{{seconds}} 秒"
-          },
-          "minutes": {
-            "singular": "{{minutes}} 分钟",
-            "plural": "{{minutes}} 分钟"
-          }
+          "subtitle": "睡眠 {time} 后",
+          "seconds": "{seconds} 秒",
+          "minutes": "{minutes} 分钟"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "睡眠检测",
           "subtitle": {
-            "withoutActivationWindow": "{{sensitivity}}灵敏度",
-            "withActivationWindow": "{{sensitivity}} 灵敏度, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "{sensitivity}灵敏度",
+            "withActivationWindow": "{sensitivity} 灵敏度, {startTime} - {endTime}"
           }
         },
         "title": "自动化设定"

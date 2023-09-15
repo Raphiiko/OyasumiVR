@@ -62,7 +62,7 @@
       "title": "睡眠モードの有効化",
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "atTime": "時刻指定",
-      "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{{value}}%</strong>を下回ったとき",
+      "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
       "onControllersPoweredOff": "全てのコントローラーがオフになったとき",
       "onMotionDetection": {
         "title": "寝落ちを検知したとき"
@@ -97,13 +97,13 @@
           "note": "準備が整えば、オーバーレイなどで開始ボタンを押してください。"
         },
         "countdown": {
-          "instruction": "{{counter}}秒後に開始します。",
+          "instruction": "{counter}秒後に開始します。",
           "note": "キャリブレーション中は動かないでください。正しく動作しなくなります。"
         },
         "calibrating": {
           "instruction": "キャリブレーション中",
           "note": "じっとしてください。",
-          "countdown": "残り{{counter}}秒…"
+          "countdown": "残り{counter}秒…"
         },
         "done": {
           "instruction": "キャリブレーション完了",
@@ -185,7 +185,7 @@
     "sleepingAnimations": {
       "currentPose": "現在位置",
       "manualControl": "マニュアル操作",
-      "presetAuthor": "{{author}}による",
+      "presetAuthor": "{author}による",
       "description": "寝相に合わせてアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nいくつかロコモーションのプリセットを用意していますが、独自でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
@@ -322,7 +322,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "パワーリミッターを初期化しています...",
-        "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、パワーリミッターは利用できません。パワーリミッターは、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({{code}})",
+        "noNvidia": "実行中のNVIDIAドライバが検出されなかったため、パワーリミッターは利用できません。パワーリミッターは、NVIDIA GPUでのみ利用可能です。\n\nお使いのシステムにNVIDIA GPUがある場合は、適切なドライバがインストールされていることを確認してください。\n\n({code})",
         "noPermission": "管理者権限を取得していますが、GPUの設定を変更する権限がありません。\n\n通常は発生しないはずですので、システム設定をご確認ください。",
         "noSidecar": "不明な理由で、管理者権限を取得できませんでした。\n\nOyasumiVRを再起動してみてください。",
         "unknown": "パワーリミッターは、未知の理由で利用できません。\n\nOyasumiVRを再起動してみてください。"
@@ -355,7 +355,7 @@
         "title": "睡眠モードが無効になっている場合",
         "description": "次のMSI Afterburnerプロファイルを適用します"
       },
-      "profile": "プロフィール {{index}}",
+      "profile": "プロフィール {index}",
       "none": "なし",
       "enabledWarning": "誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "executable": {
@@ -379,10 +379,7 @@
     "exampleUse": "使用例: 一人で寝ているときは青に切り替え、十分な人数がいるときはオレンジに切り替えることができます！",
     "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
     "playerLimit": "人数制限",
-    "playerLimitLabel": {
-      "singular": "{{count}} 人のプレイヤー(自分を含む)",
-      "plural": "{{count}} 人のプレイヤー(自分を含む)"
-    },
+    "playerLimitLabel": "{count} 人のプレイヤー(自分を含む)",
     "belowLimit": {
       "title": "上限未満",
       "description": "ステータスの設定"
@@ -408,7 +405,7 @@
     "clearPlayers": "リスト消去",
     "removeModal": {
       "title": "確認",
-      "message": "'{{name}}'をリストから削除しますか？"
+      "message": "''{name}''をリストから削除しますか？"
     },
     "removeModalBulk": {
       "title": "確認",
@@ -563,7 +560,7 @@
         "title": "ログイン",
         "description": "OyasumiVR機能の中には、VRChatアカウントでログインしないと使用できないものがあります。",
         "loggedIn": {
-          "title": "{{name}}さん、こんにちは！",
+          "title": "{name}さん、こんにちは！",
           "subtext": "現在、VRChatアカウントでログインしています",
           "logOut": "ログアウト"
         },
@@ -652,10 +649,10 @@
     "updates": {
       "checkForUpdates": "アップデートを確認する",
       "changelog": "変更履歴",
-      "install": "v{{version}}をインストール",
-      "noUpdate": "現在、最新版であるOyasumiVR v{{version}} を利用しています！",
+      "install": "v{version}をインストール",
+      "noUpdate": "現在、最新版であるOyasumiVR v{version} を利用しています！",
       "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
-      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{{currentVersion}}を利用しています。\n最新版はv{{latestVersion}}です",
+      "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
       "updatesDisabled": {
         "DEV": "新しいバージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
         "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
@@ -706,7 +703,7 @@
         "clearData": "データクリア",
         "clearModal": {
           "title": "消去の確認",
-          "message": "以下のデータを削除しますか？元に戻せません。\n\n{{items}}"
+          "message": "以下のデータを削除しますか？元に戻せません。\n\n{items}"
         },
         "relaunchModal": {
           "title": "OyasumiVRを再起動する",
@@ -768,7 +765,7 @@
       "floatOutOfBounds": "値は-1.0から1.0までの有効な浮動小数点値である必要があります。",
       "floatTooPrecise": "値の精度は最大で小数点以下3桁までです。",
       "invalidSyntax": "無効な構文です。",
-      "tooManyCommands": "OSCスクリプトは、{{value}}以上のアクションを持つことはできません。",
+      "tooManyCommands": "OSCスクリプトは、{value}以上のアクションを持つことはできません。",
       "addressNoSlash": "有効なOSCアドレスは、常に'/'記号で始まる必要があります。",
       "addressRequired": "OSCアドレスが必要です。",
       "addressNotASCII": "有効なOSCアドレスは、ASCII文字のみ含めることができます。"
@@ -788,10 +785,10 @@
       "content": "睡眠モードが無効化されました。"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "VRChatステータスが'{{newStatus}}'に設定されました。"
+      "content": "VRChatステータスが''{newStatus}''に設定されました。"
     },
     "autoAcceptedInviteRequest": {
-      "content": "{{username}}からのReqInviteを自動承認しました。"
+      "content": "{username}からのReqInviteを自動承認しました。"
     },
     "turningOffControllers": {
       "content": "コントローラーの電源をオフにしました。"
@@ -820,9 +817,9 @@
     },
     "update-modal": {
       "title": "アップデート可能",
-      "updateNow": "v{{version}}をインストール",
+      "updateNow": "v{version}をインストール",
       "updateLater": "後で",
-      "message": "OyasumiVRの新しいアップデートが見つかりました: v{{newVersion}}\n\n現在、v{{currentVersion}}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
+      "message": "OyasumiVRの新しいアップデートが見つかりました: v{newVersion}\n\n現在、v{currentVersion}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
     },
     "select-box": {
       "defaultPlaceholder": "選択する..."
@@ -879,14 +876,8 @@
       "test": "テスト"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} コマンド",
-        "plural": "{{value}} コマンド"
-      },
-      "errorCounter": {
-        "singular": "{{value}} バリデーションエラー",
-        "plural": "{{value}} バリデーションエラー"
-      },
+      "commandCounter": "{value} コマンド",
+      "errorCounter": "{value} バリデーションエラー",
       "addCommand": "追加",
       "test": "テスト",
       "action": {
@@ -927,7 +918,7 @@
       "title": "フレンドを選択する",
       "searchPlaceholder": "名前からフレンドを検索する...",
       "noFriendsSelected": "選択されたフレンドはいません",
-      "noResultsFor": "'{{query}}'の結果が見つかりません",
+      "noResultsFor": "''{query}''の結果が見つかりません",
       "noFriends": "フレンドリストが空です"
     },
     "event-log": {
@@ -1047,8 +1038,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "'{{device}}'の電源制限を{{limit}}にリセット",
-            "set": "'{{device}}'の電源制限を{{limit}}に設定"
+            "reset": "''{device}''の電源制限を{limit}にリセット",
+            "set": "''{device}''の電源制限を{limit}に設定"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
@@ -1057,8 +1048,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "HMDの画像の明るさを{{value}}に設定",
-            "transition": "HMDの画像の明るさを{{value}}へ遷移"
+            "set": "HMDの画像の明るさを{value}に設定",
+            "transition": "HMDの画像の明るさを{value}へ遷移"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
@@ -1067,8 +1058,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "HMDのディスプレイの明るさを{{value}}に設定",
-            "transition": "HMDのディスプレイの明るさを{{value}}へ遷移"
+            "set": "HMDのディスプレイの明るさを{value}に設定",
+            "transition": "HMDのディスプレイの明るさを{value}へ遷移"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
@@ -1076,17 +1067,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "'{{displayName}}'からのRequestInviteを自動的に承認",
+          "title": "''{displayName}''からのRequestInviteを自動的に承認",
           "subtitle": {
             "whitelist": "ホワイトリストに入っていたため",
             "blacklist": "ブラックリストに入っていなかったため"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "VRChatステータスを{{oldStatus}}から{{newStatus}}に変更",
+          "title": "VRChatステータスを{oldStatus}から{newStatus}に変更",
           "reason": {
-            "BELOW_LIMIT": "ワールド人数が{{threshold}}人以下になったため",
-            "AT_LIMIT_OR_ABOVE": "ワールド人数が{{threshold}}人に達したため"
+            "BELOW_LIMIT": "ワールド人数が{threshold}人以下になったため",
+            "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達したため"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1096,7 +1087,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVRのレンダリング解像度を「自動」に設定",
-            "custom": "SteamVRのレンダリング解像度を{{value}}に設定"
+            "custom": "SteamVRのレンダリング解像度を{value}に設定"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
@@ -1104,7 +1095,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "ガーディアンのフェード距離を{{value}}に設定した。",
+          "title": "ガーディアンのフェード距離を{value}に設定した。",
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
@@ -1124,14 +1115,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburnerのプロファイルを{{profile}}に設定",
+          "title": "MSI Afterburnerのプロファイルを{profile}に設定",
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Windowsの電源プランを{{policy}}に設定",
+          "title": "Windowsの電源プランを{policy}に設定",
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
@@ -1286,10 +1277,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "ReqInviteの自動承認",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} 人",
-            "plural": "{{mode}}: {{playerCount}} 人"
-          },
+          "subtitle": "{mode}: {playerCount} 人",
           "mode": {
             "Disabled": "オフ",
             "Whitelist": "ホワイトリスト",
@@ -1298,31 +1286,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "ステータスの自動化",
-          "subtitle": {
-            "singular": "最大 {{threshold}} 人",
-            "plural": "最大 {{threshold}} 人"
-          }
+          "subtitle": "最大 {threshold} 人"
         },
         "sleepingAnimations": {
           "title": "アニメーションの自動化"
         },
         "shutdownAutomations": {
           "title": "自動シャットダウン",
-          "subtitle": "実行までの待機時間 {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} 秒",
-            "plural": "{{seconds}} 秒"
-          },
-          "minutes": {
-            "singular": "{{minutes}} 分",
-            "plural": "{{minutes}} 分"
-          }
+          "subtitle": "実行までの待機時間 {time}",
+          "seconds": "{seconds} 秒",
+          "minutes": "{minutes} 分"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "睡眠検出",
           "subtitle": {
-            "withoutActivationWindow": "検知感度 {{sensitivity}}",
-            "withActivationWindow": "検知感度 {{sensitivity}}, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "検知感度 {sensitivity}",
+            "withActivationWindow": "検知感度 {sensitivity}, {startTime} - {endTime}"
           }
         },
         "title": "自動化の設定"

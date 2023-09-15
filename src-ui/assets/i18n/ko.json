@@ -62,7 +62,7 @@
       "title": "수면 모드 활성화",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "atTime": "지정된 시간에",
-      "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{{value}}%</strong> 이하로 떨어질 때",
+      "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{value}%</strong> 이하로 떨어질 때",
       "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
       "onMotionDetection": {
         "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
@@ -97,13 +97,13 @@
           "note": "준비가 완료되고 오버레이에서 이 창이 보이면 '보정 시작'을 눌러 시작해주세요."
         },
         "countdown": {
-          "instruction": "시작까지 {{counter}}..",
+          "instruction": "시작까지 {counter}..",
           "note": "보정하는 동안 가만히 있어주세요! 보정하는 동안 움직이면 이 기능이 제대로 작동하지 않아요."
         },
         "calibrating": {
           "instruction": "보정 중",
           "note": "가만히 있어주세요.",
-          "countdown": "{{counter}}초 남았습니다..."
+          "countdown": "{counter}초 남았습니다..."
         },
         "done": {
           "instruction": "보정 완료!",
@@ -185,7 +185,7 @@
     "sleepingAnimations": {
       "currentPose": "현재 위치",
       "manualControl": "수동 조작",
-      "presetAuthor": "{{author}} 제작",
+      "presetAuthor": "{author} 제작",
       "description": "OyasumiVR은 수면중 자세가 바뀌는 것을 감지하여 자동으로 아바타의 애니메이션을 변경할 수 있어요. 이것은 풀트레킹을 하지 않는 경우나 야간에 트래커를 끄는 경우 등에 편리해요. 자세한 내용은 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">여기</a>를 참고해주세요. \n\n또, 아바타의 로코모션은 여러 프리셋이 준비되어 있으며 직접 애니메이션을 지정하는 것도 가능해요.",
       "enable": "자동 수면 애니메이션 활성화",
       "customPreset": "커스텀 애니메이션",
@@ -322,7 +322,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "전력 제한 자동화가 초기화되고 있어요...",
-        "noNvidia": "실행 중인 NVIDIA 드라이버가 없기 때문에 전력 제한 자동화를 사용할 수 없어요. 전력 제한 자동화는 NVIDIA GPU에만 사용할 수 있어요. \n\n시스템에 NVIDIA GPU가 있는 경우 해당 GPU에 적합한 드라이버가 설치되어 있는지 확인해주세요. \n\n({{code}})",
+        "noNvidia": "실행 중인 NVIDIA 드라이버가 없기 때문에 전력 제한 자동화를 사용할 수 없어요. 전력 제한 자동화는 NVIDIA GPU에만 사용할 수 있어요. \n\n시스템에 NVIDIA GPU가 있는 경우 해당 GPU에 적합한 드라이버가 설치되어 있는지 확인해주세요. \n\n({code})",
         "noPermission": "OyasumiVR은 관리자 권한이 있지만 GPU 설정을 변경할 수 있는 권한이 없는 것 같아요. \n\n일반적으로 이런 일이 발생해서는 안 되므로 시스템 설정을 확인해주세요.",
         "noSidecar": "알 수 없는 이유로 인해 관리자 권한을 얻을 수 없어요. \n관리자 권한은 GPU의 전력 제한을 제어하는 데 필요해요. \n\nOyasumiVR을 다시 시작해주세요.",
         "unknown": "알 수 없는 이유로 전력 제한 자동화를 사용할 수 없어요. \n\nOyasumiVR을 다시 시작해주세요."
@@ -355,7 +355,7 @@
         "title": "수면 모드 비활성화 시",
         "description": "다음 MSI Afterburner 프로파일을 적용해요"
       },
-      "profile": "{{index}}번 프로파일",
+      "profile": "{index}번 프로파일",
       "none": "없음",
       "enabledWarning": "MSI Afterburner에서 GPU를 잘못 구성하면 시스템이 불안정해질 수 있어요. 작업 내용을 모르는 경우 이 기능을 비활성화해주세요.",
       "executable": {
@@ -379,10 +379,7 @@
     "exampleUse": "사용 예: 누군가가 참여하면 자동으로 상태를 주황색이나 빨간색으로 전환해요!\n 그리고 누군가 나가서 다시 혼자가 되면 자동으로 상태를 파란색으로 되돌려 다른 사람이 참여할 수 있도록 할 수 있어요.",
     "disableToEdit": "설정을 변경하기 전에 기능을 비활성화해주세요.",
     "playerLimit": "플레이어 수 제한",
-    "playerLimitLabel": {
-      "singular": "{{count}}명의 플레이어(자신 포함)",
-      "plural": "{{count}}명의 플레이어(자신 포함)"
-    },
+    "playerLimitLabel": "{count}명의 플레이어(자신 포함)",
     "belowLimit": {
       "title": "상한 미만",
       "description": "스테이터스 설정"
@@ -408,7 +405,7 @@
     "clearPlayers": "목록 비우기",
     "removeModal": {
       "title": "삭제 확인",
-      "message": "'{{name}}'님을 정말로 리스트에서 지울까요?"
+      "message": "''{name}''님을 정말로 리스트에서 지울까요?"
     },
     "removeModalBulk": {
       "title": "삭제 확인",
@@ -563,7 +560,7 @@
         "title": "로그인",
         "description": "OyasumiVR 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
         "loggedIn": {
-          "title": "{{name}}님, 어서오세요!",
+          "title": "{name}님, 어서오세요!",
           "subtext": "현재 VRChat 계정으로 로그인 중이에요.",
           "logOut": "로그아웃"
         },
@@ -653,9 +650,9 @@
       "checkForUpdates": "업데이트 확인하기",
       "changelog": "변경 사항",
       "install": "v{version} 설치",
-      "noUpdate": "현재 최신 버전의 OyasumiVR v{{version}}을 이용하고 있어요!",
+      "noUpdate": "현재 최신 버전의 OyasumiVR v{version}을 이용하고 있어요!",
       "notChecked": "OyasumiVR의 업데이트를 확인하지 못했어요.",
-      "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{{currentVersion}}, \n최신 버전은 v{{latestVersion}}입나다.",
+      "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{currentVersion}, \n최신 버전은 v{latestVersion}입나다.",
       "updatesDisabled": {
         "DEV": "OyasumiVR의 개발 빌드를 실행 중이므로 업데이트가 비활성화되었어요.\n새 버전의 OyasumiVR을 설치하려면 설치 프로그램을 수동으로 다운로드하여 실행해주세요.",
         "STEAM": "스팀 버전의 OyasumiVR이 설치되어 있어요.\n새 버전의 OyasumiVR 업데이트는 스팀을 통해 제공됩니다!"
@@ -706,7 +703,7 @@
         "clearData": "데이터 삭제",
         "clearModal": {
           "title": "데이터 삭제 확인",
-          "message": "다음 데이터를 삭제할까요? 이 데이터는 되돌릴 수 없습니다!\n\n{{items}}"
+          "message": "다음 데이터를 삭제할까요? 이 데이터는 되돌릴 수 없습니다!\n\n{items}"
         },
         "relaunchModal": {
           "title": "OyasumiVR 재시작",
@@ -768,7 +765,7 @@
       "floatOutOfBounds": "값은 -1.0에서 1.0까지의 유효한 부동소수점 값이어야 해요.",
       "floatTooPrecise": "값의 정확도는 최대 소수점 이하 3자리까지에요.",
       "invalidSyntax": "잘못된 구문이에요.",
-      "tooManyCommands": "OSC 스크립트는 {{value}} 이상의 액션을 가질 수 없어요.",
+      "tooManyCommands": "OSC 스크립트는 {value} 이상의 액션을 가질 수 없어요.",
       "addressNoSlash": "유효한 OSC 주소는 항상 '/' 기호로 시작해야 해요.",
       "addressRequired": "OSC 주소가 필요해요.",
       "addressNotASCII": "유효한 OSC 주소는 ASCII 문자만 포함할 수 있어요."
@@ -788,10 +785,10 @@
       "content": "수면 모드가 비활성화되었어요."
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "VRChat 스테이터스가 '{{newStatus}}'로 설정되었어요."
+      "content": "VRChat 스테이터스가 ''{newStatus}''로 설정되었어요."
     },
     "autoAcceptedInviteRequest": {
-      "content": "{{username}}의 초대 요청을 자동으로 수락했어요."
+      "content": "{username}의 초대 요청을 자동으로 수락했어요."
     },
     "turningOffControllers": {
       "content": "컨트롤러를 끄고 있어요."
@@ -820,9 +817,9 @@
     },
     "update-modal": {
       "title": "업데이트 가능",
-      "updateNow": "v{{version}} 설치",
+      "updateNow": "v{version} 설치",
       "updateLater": "나중에",
-      "message": "OyasumiVR의 새로운 업데이트를 찾았어요: v{{newVersion}}\n\n현재 v{{currentVersion}}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
+      "message": "OyasumiVR의 새로운 업데이트를 찾았어요: v{newVersion}\n\n현재 v{currentVersion}을 이용하고 있어요.\n\n지금 바로 업데이트 할까요?"
     },
     "select-box": {
       "defaultPlaceholder": "선택하기..."
@@ -879,14 +876,8 @@
       "test": "테스트"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} 커멘드",
-        "plural": "{{value}} 커멘드"
-      },
-      "errorCounter": {
-        "singular": "{{value}} 검증 오류",
-        "plural": "{{value}} 검증 오류"
-      },
+      "commandCounter": "{value} 커멘드",
+      "errorCounter": "{value} 검증 오류",
       "addCommand": "추가",
       "test": "테스트",
       "action": {
@@ -927,7 +918,7 @@
       "title": "친구 선택",
       "searchPlaceholder": "이름로 검색...",
       "noFriendsSelected": "친구가 선택되지 않았어요",
-      "noResultsFor": "'{{query}}'에 대한 결과가 없어요",
+      "noResultsFor": "''{query}''에 대한 결과가 없어요",
       "noFriends": "친구 목록이 비어있어요"
     },
     "event-log": {
@@ -1047,8 +1038,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "'{{device}}'의 전력 제한을 {{limit}}으로 복원함",
-            "set": "'{{device}}'의 전력 제한을 {{limit}}으로 설정함"
+            "reset": "''{device}''의 전력 제한을 {limit}으로 복원함",
+            "set": "''{device}''의 전력 제한을 {limit}으로 설정함"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 전력 제한을 설정했어요.",
@@ -1057,8 +1048,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "헤드셋의 이미지 밝기를 {{value}}으로 설정함.",
-            "transition": "헤드셋의 이미지 밝기를 {{value}}으로 점차 변화시킴."
+            "set": "헤드셋의 이미지 밝기를 {value}으로 설정함.",
+            "transition": "헤드셋의 이미지 밝기를 {value}으로 점차 변화시킴."
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 바꿨어요.",
@@ -1067,8 +1058,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "헤드셋의 디스플레이 밝기를 {{value}}으로 설정함.",
-            "transition": "헤드셋의 디스플레이 밝기를 {{value}}으로 점차 변화시킴."
+            "set": "헤드셋의 디스플레이 밝기를 {value}으로 설정함.",
+            "transition": "헤드셋의 디스플레이 밝기를 {value}으로 점차 변화시킴."
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 바꿨어요.",
@@ -1076,17 +1067,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "'{{displayName}}'의 인바이트 리퀘스트를 수락함",
+          "title": "''{displayName}''의 인바이트 리퀘스트를 수락함",
           "subtitle": {
             "whitelist": "이 플레이어가 화이트리스트에 있었기에 수락했어요.",
             "blacklist": "이 플레이어가 블랙리스트에 없었기에 수락했어요."
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "VRChat 스테이터스를 {{oldStatus}}에서 {{newStatus}}으로 변경함",
+          "title": "VRChat 스테이터스를 {oldStatus}에서 {newStatus}으로 변경함",
           "reason": {
-            "BELOW_LIMIT": "월드의 플레이어가 {{threshold}}인 미만이기에 스테이터스가 변경되었어요.",
-            "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {{threshold}}인 이상이기에 스테이터스가 변경되었어요."
+            "BELOW_LIMIT": "월드의 플레이어가 {threshold}인 미만이기에 스테이터스가 변경되었어요.",
+            "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {threshold}인 이상이기에 스테이터스가 변경되었어요."
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1096,7 +1087,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVR 렌더 해상도를 'auto'로 변경함",
-            "custom": "SteamVR 렌더 해상도를 {{value}}으로 변경함"
+            "custom": "SteamVR 렌더 해상도를 {value}으로 변경함"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 해상도를 변경했어요.",
@@ -1104,7 +1095,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "Chaperone 경계 표시 거리를 {{value}}으로 변경함",
+          "title": "Chaperone 경계 표시 거리를 {value}으로 변경함",
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
@@ -1124,14 +1115,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburner의 프로파일을 프로파일 {{profile}}으로 변경함",
+          "title": "MSI Afterburner의 프로파일을 프로파일 {profile}으로 변경함",
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Windows의 전원 정책을 '{{policy}}'으로 변경함",
+          "title": "Windows의 전원 정책을 ''{policy}''으로 변경함",
           "reason": {
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요."
@@ -1286,10 +1277,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "인바이트 리퀘스트 자동 수락",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}}명",
-            "plural": "{{mode}}: {{playerCount}}명"
-          },
+          "subtitle": "{mode}: {playerCount}명",
           "mode": {
             "Disabled": "모두",
             "Whitelist": "화이트리스트",
@@ -1298,31 +1286,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "스테이터스 자동화",
-          "subtitle": {
-            "singular": "최대 {{threshold}}명",
-            "plural": "최대 {{threshold}}명"
-          }
+          "subtitle": "최대 {threshold}명"
         },
         "sleepingAnimations": {
           "title": "수면 애니메이션"
         },
         "shutdownAutomations": {
           "title": "자동 종료",
-          "subtitle": "{{time}} 동안 잠들었을 때",
-          "seconds": {
-            "singular": "{{seconds}}초",
-            "plural": "{{seconds}}초"
-          },
-          "minutes": {
-            "singular": "{{minutes}}분",
-            "plural": "{{minutes}}분"
-          }
+          "subtitle": "{time} 동안 잠들었을 때",
+          "seconds": "{seconds}초",
+          "minutes": "{minutes}분"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "수면 감지",
           "subtitle": {
-            "withoutActivationWindow": "민감도 {{sensitivity}}",
-            "withActivationWindow": "민감도 {{sensitivity}}, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "민감도 {sensitivity}",
+            "withActivationWindow": "민감도 {sensitivity}, {startTime} - {endTime}"
           }
         },
         "title": "자동화 설정"

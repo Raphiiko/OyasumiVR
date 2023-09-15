@@ -100,7 +100,7 @@
       "title": "Enabling sleep mode",
       "description": "Automatically enable sleep mode based on various triggers",
       "atTime": "At a specific time",
-      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
       "onControllersPoweredOff": "When all controllers are turned off",
       "onMotionDetection": {
         "title": "When OyasumiVR detects you are asleep based on your movement"
@@ -135,13 +135,13 @@
           "note": "Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started."
         },
         "countdown": {
-          "instruction": "Starting in {{counter}}",
+          "instruction": "Starting in {counter}",
           "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working correctly."
         },
         "calibrating": {
           "instruction": "Calibrating",
           "note": "Keep still.",
-          "countdown": "{{counter}} second(s) remaining..."
+          "countdown": "{counter} second(s) remaining..."
         },
         "done": {
           "instruction": "Calibration complete!",
@@ -223,7 +223,7 @@
     "sleepingAnimations": {
       "currentPose": "Current Position",
       "manualControl": "Manual Control",
-      "presetAuthor": "by {{author}}",
+      "presetAuthor": "by {author}",
       "description": "OyasumiVR can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have OyasumiVR) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
       "enable": "Enable automatic sleeping animations",
       "customPreset": "Custom Animations",
@@ -360,7 +360,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Power limiting automations are being initialized...",
-        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({{code}})",
+        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({code})",
         "noPermission": "Although OyasumiVR has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
         "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
         "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
@@ -393,7 +393,7 @@
         "title": "When sleep mode is disabled",
         "description": "Apply the following MSI Afterburner profile"
       },
-      "profile": "Profile {{index}}",
+      "profile": "Profile {index}",
       "none": "None",
       "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
       "executable": {
@@ -417,10 +417,7 @@
     "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
     "disableToEdit": "Please disable status automations before you make any changes.",
     "playerLimit": "Player Limit",
-    "playerLimitLabel": {
-      "singular": "{{count}} player (including you)",
-      "plural": "{{count}} players (including you)"
-    },
+    "playerLimitLabel": "{count, plural, one {1 player} other {# players}} (including you)",
     "belowLimit": {
       "title": "Below the limit",
       "description": "Set your status to"
@@ -446,7 +443,7 @@
     "clearPlayers": "Clear Players",
     "removeModal": {
       "title": "Confirm Removal",
-      "message": "Are you sure you want to remove '{{name}}' from your list?"
+      "message": "Are you sure you want to remove ''{name}'' from your list?"
     },
     "removeModalBulk": {
       "title": "Confirm Removal",
@@ -601,7 +598,7 @@
         "title": "Log in",
         "description": "Some OyasumiVR features require you to log in with your VRChat account for them to work.",
         "loggedIn": {
-          "title": "Hi {{name}}!",
+          "title": "Hi {name}!",
           "subtext": "You are currently logged in with your VRChat account.",
           "logOut": "Log out"
         },
@@ -690,10 +687,10 @@
     "updates": {
       "checkForUpdates": "Check for updates",
       "changelog": "Changelog",
-      "install": "Install v{{version}}",
-      "noUpdate": "You are currently running OyasumiVR v{{version}} which is the latest version!",
+      "install": "Install v{version}",
+      "noUpdate": "You are currently running OyasumiVR v{version} which is the latest version!",
       "notChecked": "OyasumiVR did not check for updates yet.",
-      "updateAvailable": "A new version of OyasumiVR is available! You are currently running v{{currentVersion}}.\nThe newest version is v{{latestVersion}}.",
+      "updateAvailable": "A new version of OyasumiVR is available! You are currently running v{currentVersion}.\nThe newest version is v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "As you are running a development build of OyasumiVR, updates have been disabled.\nIf you want to install a new(er) version of OyasumiVR, please download and run the installer manually.",
         "STEAM": "You have installed the Steam version of OyasumiVR.\nNew OyasumiVR updates are therefore provided through Steam!"
@@ -744,7 +741,7 @@
         "clearData": "Clear Data",
         "clearModal": {
           "title": "Confirm clearing data",
-          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{{items}}"
+          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{items}"
         },
         "relaunchModal": {
           "title": "Restart OyasumiVR",
@@ -806,7 +803,7 @@
       "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
       "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
       "invalidSyntax": "Invalid syntax.",
-      "tooManyCommands": "An OSC script cannot have more than {{value}} actions.",
+      "tooManyCommands": "An OSC script cannot have more than {value} actions.",
       "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
       "addressRequired": "An OSC address is required.",
       "addressNotASCII": "A valid OSC address must only contain ASCII characters."
@@ -826,10 +823,10 @@
       "content": "Sleep mode has been disabled"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "Your VRChat status has been set to '{{newStatus}}'"
+      "content": "Your VRChat status has been set to ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "Automatically accepted invite request from {{username}}"
+      "content": "Automatically accepted invite request from {username}"
     },
     "turningOffControllers": {
       "content": "Turning off your controllers"
@@ -858,9 +855,9 @@
     },
     "update-modal": {
       "title": "Update Available",
-      "updateNow": "Install v{{version}}",
+      "updateNow": "Install v{version}",
       "updateLater": "Not now",
-      "message": "A new update for OyasumiVR has been found: v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
+      "message": "A new update for OyasumiVR has been found: v{newVersion}.\n\nYou are currently still running v{currentVersion}.\n\nDo you want to update now or later?"
     },
     "select-box": {
       "defaultPlaceholder": "Select..."
@@ -917,14 +914,8 @@
       "test": "Test"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} Command",
-        "plural": "{{value}} Commands"
-      },
-      "errorCounter": {
-        "singular": "{{value}} Validation Error",
-        "plural": "{{value}} Validation Errors"
-      },
+      "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
+      "errorCounter": "{count, plural, one {1 Validation Error} other {# Validation Errors}}",
       "addCommand": "Add",
       "test": "Test",
       "action": {
@@ -965,7 +956,7 @@
       "title": "Select Friends",
       "searchPlaceholder": "Search friend by name...",
       "noFriendsSelected": "No friends selected",
-      "noResultsFor": "No results for '{{query}}'",
+      "noResultsFor": "No results for ''{query}''",
       "noFriends": "Your friends list is empty"
     },
     "event-log": {
@@ -1085,8 +1076,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "Power limit for '{{device}}' restored to {{limit}}",
-            "set": "Power limit for '{{device}}' set to {{limit}}"
+            "reset": "Power limit for ''{device}'' restored to {limit}",
+            "set": "Power limit for ''{device}'' set to {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
@@ -1095,8 +1086,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "Headset image brightness set to {{value}}",
-            "transition": "Headset image brightness transitioning to {{value}}"
+            "set": "Headset image brightness set to {value}",
+            "transition": "Headset image brightness transitioning to {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
@@ -1105,8 +1096,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "Headset display brightness set to {{value}}",
-            "transition": "Headset display brightness transitioning to {{value}}"
+            "set": "Headset display brightness set to {value}",
+            "transition": "Headset display brightness transitioning to {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
@@ -1114,17 +1105,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "Auto-accepted invite request from '{{displayName}}'",
+          "title": "Auto-accepted invite request from ''{displayName}''",
           "subtitle": {
             "whitelist": "As this player was whitelisted",
             "blacklist": "As this player was not blacklisted"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "Changed your VRChat status from {{oldStatus}} to {{newStatus}}",
+          "title": "Changed your VRChat status from {oldStatus} to {newStatus}",
           "reason": {
-            "BELOW_LIMIT": "As the amount of players in your world dropped below {{threshold}}",
-            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {{threshold}}"
+            "BELOW_LIMIT": "As the amount of players in your world dropped below {threshold}",
+            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {threshold}"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1134,7 +1125,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVR render resolution set to 'auto'",
-            "custom": "SteamVR render resolution set to {{value}}"
+            "custom": "SteamVR render resolution set to {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
@@ -1142,7 +1133,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "Chaperone fade distance set to {{value}}",
+          "title": "Chaperone fade distance set to {value}",
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
@@ -1162,14 +1153,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburner's profile was set to profile {{profile}}",
+          "title": "MSI Afterburner's profile was set to profile {profile}",
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Windows Power Policy set to the '{{policy}}' plan",
+          "title": "Windows Power Policy set to the ''{policy}'' plan",
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
@@ -1325,10 +1316,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "Auto Accept Invite Requests",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} friend",
-            "plural": "{{mode}}: {{playerCount}} friends"
-          },
+          "subtitle": "{mode}: {playerCount, plural, one {1 friend} other {# friends}}",
           "mode": {
             "Disabled": "For everyone",
             "Whitelist": "Whitelist",
@@ -1337,31 +1325,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "Status Automations",
-          "subtitle": {
-            "singular": "Max {{threshold}} player",
-            "plural": "Max {{threshold}} players"
-          }
+          "subtitle": "Max {threshold, plural, one {1 player} other {# players}}"
         },
         "sleepingAnimations": {
           "title": "Sleeping Animations"
         },
         "shutdownAutomations": {
           "title": "Automatic Shutdown",
-          "subtitle": "When sleeping for {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} second",
-            "plural": "{{seconds}} seconds"
-          },
-          "minutes": {
-            "singular": "{{minutes}} minute",
-            "plural": "{{minutes}} minutes"
-          }
+          "subtitle": "When sleeping for {time}",
+          "seconds": "{seconds, plural, one {1 second} other {# seconds}}",
+          "minutes": "{minutes, plural, one {1 minute} other {# minutes}}"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "Sleep Detection",
           "subtitle": {
-            "withoutActivationWindow": "{{sensitivity}} sensitivity",
-            "withActivationWindow": "{{sensitivity}} sensitivity, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "{sensitivity} sensitivity",
+            "withActivationWindow": "{sensitivity} sensitivity, {startTime} - {endTime}"
           }
         },
         "title": "Automation Settings"

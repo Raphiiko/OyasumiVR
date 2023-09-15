@@ -1,6 +1,7 @@
-import i18n from "sveltekit-i18n";
-import type { Config } from "sveltekit-i18n";
+import i18n from "@sveltekit-i18n/base";
 import ipc from "$lib/services/ipc.service";
+import type { Config } from "@sveltekit-i18n/parser-icu";
+import parser from "@sveltekit-i18n/parser-icu";
 
 function getTranslationLoader(locale: string): () => Promise<Record<any, any>> {
   if (locale === "DEBUG") {
@@ -15,6 +16,7 @@ function getTranslationLoader(locale: string): () => Promise<Record<any, any>> {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const config: Config<{ [s: string]: any }> = {
+  parser: parser({}),
   fallbackLocale: "en",
   cache: 0,
   log: {

@@ -82,9 +82,7 @@
 				})();
 				if (isDisabled) return mode;
 				return _t(
-					`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle.${
-						a.playerCount === 1 ? 'singular' : 'plural'
-					}`,
+					`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle`,
 					{
 						mode,
 						playerCount: a.playerCount
@@ -94,9 +92,7 @@
 			case 'changeStatusBasedOnPlayerCount': {
 				let a = automation as OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount;
 				return _t(
-					`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle.${
-						a.threshold === 1 ? 'singular' : 'plural'
-					}`,
+					`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle`,
 					{ threshold: a.threshold }
 				);
 			}
@@ -110,17 +106,13 @@
 				let time = '';
 				if (seconds < 60) {
 					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.seconds.${
-							seconds === 1 ? 'singular' : 'plural'
-						}`,
+						`t.overlay.dashboard.automations.shutdownAutomations.seconds`,
 						{ seconds }
 					);
 				} else {
 					let minutes = Math.round(seconds / 60) + '';
 					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.minutes.${
-							minutes === '1' ? 'singular' : 'plural'
-						}`,
+						`t.overlay.dashboard.automations.shutdownAutomations.minutes`,
 						{ minutes }
 					);
 				}

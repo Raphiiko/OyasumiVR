@@ -62,7 +62,7 @@
       "title": "Slaap modus inschakelen",
       "description": "Automatisch de slaap modus inschakelen",
       "atTime": "Om een specifieke tijd",
-      "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{{value}}%</strong> valt",
+      "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{value}%</strong> valt",
       "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
       "onMotionDetection": {
         "title": "Wanneer OyasumiVR detecteert dat je slaapt gebaseerd op je bewegingen"
@@ -97,13 +97,13 @@
           "note": "Als je er klaar voor bent, en je dit venster kunt zien vanuit je overlay, druk je op 'Begin Kalibratie' om te beginnen."
         },
         "countdown": {
-          "instruction": "We beginnen in {{counter}}",
+          "instruction": "We beginnen in {counter}",
           "note": "Blijf stil liggen tijdens het kalibreren! Doe net alsof je slaapt.\nBewegen tijdens het kalibreren kan er voor zorgen dat deze feature niet goed werkt."
         },
         "calibrating": {
           "instruction": "Aan het kalibreren...",
           "note": "Blijf even stil liggen.",
-          "countdown": "Nog {{counter}} seconde(n)..."
+          "countdown": "Nog {counter} seconde(n)..."
         },
         "done": {
           "instruction": "Kalibratie voltooid!",
@@ -181,7 +181,7 @@
     "sleepingAnimations": {
       "currentPose": "Huidige Houding",
       "manualControl": "Handmatige Bediening",
-      "presetAuthor": "van {{author}}",
+      "presetAuthor": "van {author}",
       "description": "OyasumiVR kan automatisch de animaties van je avatar veranderen wanneer je je slaap houding wijzigd. Dit kan handig zijn als je geen full body tracking hebt, of als je je trackers s'nachts uitzet (of door OyasumiVR laat uitzetten). Een voorbeeld hoe dit er uit ziet kan je <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">hier</a> vinden.\n\nEr zijn presets beschikbaar voor verschillende bestaande locomotion prefabs, maar je kan ook je eigen animaties specificeren.",
       "enable": "Automatische slaap animaties inschakelen",
       "customPreset": "Eigen Animaties",
@@ -318,7 +318,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Power limiting automatiseringen zijn nog aan het starten...",
-        "noNvidia": "Power limiting automatiseringen zijn niet beschikbaar omdat er geen draaiende NVIDIA driver kon worden gedetecteerd. Power Limiting automatiseringen zijn alleen beschikbaar op NVIDIA GPUs.\n\nAls je wel een NVIDIA GPU in je systeem hebt, check dan of de correcte driver hier voor is geïnstalleerd.\n\n({{code}})",
+        "noNvidia": "Power limiting automatiseringen zijn niet beschikbaar omdat er geen draaiende NVIDIA driver kon worden gedetecteerd. Power Limiting automatiseringen zijn alleen beschikbaar op NVIDIA GPUs.\n\nAls je wel een NVIDIA GPU in je systeem hebt, check dan of de correcte driver hier voor is geïnstalleerd.\n\n({code})",
         "noPermission": "OyasumiVR heeft geen toestemming om je GPU instellingen aan te passen, ondanks dat OyasumiVR wel beheerders rechten heeft.\n\nCheck je systeem instellingen aangezien dit zou normaal nooit moeten gebeuren.",
         "noSidecar": "Beheerders rechten konden niet worden verkregen om onbekende redenen.\nDeze rechten zijn nodig om je GPU instellingen aan te kunnen passen.\n\nProbeer OyasumiVR te herstarten.",
         "unknown": "Power limiting automatiseringen zijn niet beschikbaar om een onbekende reden.\n\nProbeer OyasumiVR opnieuw te starten."
@@ -351,7 +351,7 @@
         "title": "Wanneer slaap modus deactiveert",
         "description": "Activeer het volgende MSI Afterburner profiel"
       },
-      "profile": "Profiel {{index}}",
+      "profile": "Profiel {index}",
       "none": "Geen",
       "enabledWarning": "Wees er van bewust dat het verkeerd instellen van je GPU in MSI Afterburner kan leiden tot een onstabiel systeem. Deactiveer deze functionaliteit als je niet weet waar je mee bezig bent.",
       "executable": {
@@ -375,10 +375,7 @@
     "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
     "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
     "playerLimit": "Speler limiet",
-    "playerLimitLabel": {
-      "singular": "{{count}} speler (inclusief jezelf)",
-      "plural": "{{count}} spelers (inclusief jezelf)"
-    },
+    "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)",
     "belowLimit": {
       "title": "Onder het limiet",
       "description": "Verander je status naar"
@@ -404,7 +401,7 @@
     "clearPlayers": "Alle spelers verwijderen",
     "removeModal": {
       "title": "Bevestig verwijderen",
-      "message": "Weet je zeker dat je '{{name}}' van de lijst wilt verwijderen?"
+      "message": "Weet je zeker dat je ''{name}'' van de lijst wilt verwijderen?"
     },
     "removeModalBulk": {
       "title": "Bevestig verwijderen",
@@ -559,7 +556,7 @@
         "title": "Log in",
         "description": "Sommige OyasumiVR features vereisen dat je bent ingelogd met je VRChat account om hun ding te kunnen doen.",
         "loggedIn": {
-          "title": "Hey {{name}}!",
+          "title": "Hey {name}!",
           "subtext": "Je bent ingelogd met je VRChat account.",
           "logOut": "Log uit"
         },
@@ -648,10 +645,10 @@
     "updates": {
       "checkForUpdates": "Updates checken",
       "changelog": "Changelog",
-      "install": "Installeer v{{version}}",
-      "noUpdate": "Je draait nu OyasumiVR v{{version}}, en dat is de laatste versie!",
+      "install": "Installeer v{version}",
+      "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
       "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
-      "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{{currentVersion}}.\nDe nieuwste versie is v{{latestVersion}}."
+      "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}."
     },
     "advanced": {
       "persistentData": {
@@ -698,7 +695,7 @@
         "clearData": "Verwijder Gegevens",
         "clearModal": {
           "title": "Bevestig verwijderen",
-          "message": "Weet je zeker dat je de volgende gegevens wilt verwijderen? Dit kan niet ongedaan worden gemaakt!\n\n{{items}}"
+          "message": "Weet je zeker dat je de volgende gegevens wilt verwijderen? Dit kan niet ongedaan worden gemaakt!\n\n{items}"
         },
         "relaunchModal": {
           "title": "Herstart OyasumiVR",
@@ -760,7 +757,7 @@
       "floatOutOfBounds": "Een float moet een waarde hebben tussen -1.0 en 1.0.",
       "floatTooPrecise": "Een float mag niet meer dan 3 decimalen hebben.",
       "invalidSyntax": "Incorrecte syntax.",
-      "tooManyCommands": "Een OSC script mag niet meer dan {{value}} acties bevatten.",
+      "tooManyCommands": "Een OSC script mag niet meer dan {value} acties bevatten.",
       "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
       "addressRequired": "Een OSC adres is vereist.",
       "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten."
@@ -780,10 +777,10 @@
       "content": "De slaap modus is gedeactiveerd"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "Je VRChat status is veranderd naar '{{newStatus}}'"
+      "content": "Je VRChat status is veranderd naar ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "Invite request van '{{username}}' is automatisch geaccepteerd"
+      "content": "Invite request van ''{username}'' is automatisch geaccepteerd"
     },
     "turningOffControllers": {
       "content": "Je controllers worden uitgeschakeld"
@@ -812,9 +809,9 @@
     },
     "update-modal": {
       "title": "Update Beschikbaar",
-      "updateNow": "Installeer v{{version}}",
+      "updateNow": "Installeer v{version}",
       "updateLater": "Niet nu",
-      "message": "Er is een nieuwe update beschikbaar voor OyasumiVR: v{{newVersion}}.\n\nJe draait op dit moment nog v{{currentVersion}}.\n\n.Wil je de update nu installeren?"
+      "message": "Er is een nieuwe update beschikbaar voor OyasumiVR: v{newVersion}.\n\nJe draait op dit moment nog v{currentVersion}.\n\n.Wil je de update nu installeren?"
     },
     "select-box": {
       "defaultPlaceholder": "Selecteer..."
@@ -871,13 +868,10 @@
       "test": "Test"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} Commando",
-        "plural": "{{value}} Commandos"
-      },
+      "commandCounter": "{value, plural, one {1 Commando} other {# Commandos}}",
       "errorCounter": {
-        "singular": "{{value}} Validatie fout",
-        "plural": "{{value}} Validatie fouten"
+        "singular": "{value} Validatie fout",
+        "plural": "{value} Validatie fouten"
       },
       "addCommand": "Voeg Toe",
       "test": "Test",
@@ -919,7 +913,7 @@
       "title": "Selecteer Vrienden",
       "searchPlaceholder": "Zoek vrienden op naam...",
       "noFriendsSelected": "Geen vrienden geselecteerd",
-      "noResultsFor": "Geen resultaten voor '{{query}}'",
+      "noResultsFor": "Geen resultaten voor ''{query}''",
       "noFriends": "Je vriendenlijst is leeg"
     },
     "event-log": {
@@ -1039,8 +1033,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "Stroom limiet voor '{{device}}' herstelt naar {{limit}}",
-            "set": "Stroom limiet voor '{{device}}' ingesteld op {{limit}}"
+            "reset": "Stroom limiet voor ''{device}'' herstelt naar {limit}",
+            "set": "Stroom limiet voor ''{device}'' ingesteld op {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
@@ -1049,8 +1043,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "De beeldhelderheid is ingesteld op {{value}}",
-            "transition": "De beeldhelderheid wordt veranderd naar {{value}}"
+            "set": "De beeldhelderheid is ingesteld op {value}",
+            "transition": "De beeldhelderheid wordt veranderd naar {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
@@ -1059,8 +1053,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "De schermhelderheid is ingesteld op {{value}}",
-            "transition": "De schermhelderheid wordt veranderd naar {{value}}"
+            "set": "De schermhelderheid is ingesteld op {value}",
+            "transition": "De schermhelderheid wordt veranderd naar {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
@@ -1068,14 +1062,14 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "Invite request van '{{displayName}}' automatisch geaccepteerd",
+          "title": "Invite request van ''{displayName}'' automatisch geaccepteerd",
           "subtitle": {
             "whitelist": "Omdat deze speler op de whitelist staat",
             "blacklist": "Omdat deze speler niet op de blacklist staat"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "Status gewijzigd van '{{oldStatus}}' naar '{{newStatus}}'",
+          "title": "Status gewijzigd van ''{oldStatus}'' naar ''{newStatus}''",
           "reason": {
             "BELOW_LIMIT": "Omdat het aantal spelers onder het limiet is gezakt",
             "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers op of boven het limiet is gekomen"
@@ -1088,7 +1082,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVR render resolutie ingesteld op 'auto'",
-            "custom": "SteamVR render resolutie ingesteld op {{value}}"
+            "custom": "SteamVR render resolutie ingesteld op {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
@@ -1096,7 +1090,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "Chaperone activatie afstand ingesteld op {{value}}",
+          "title": "Chaperone activatie afstand ingesteld op {value}",
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
@@ -1116,14 +1110,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburner profiel is ingesteld op profiel '{{profile}}'",
+          "title": "MSI Afterburner profiel is ingesteld op profiel ''{profile}''",
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Het Windows energiebeheerschema is ingesteld op '{{policy}}'",
+          "title": "Het Windows energiebeheerschema is ingesteld op ''{policy}''",
           "reason": {
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld"
@@ -1278,10 +1272,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "Automatisch Invite Requests Accepteren",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} vriend",
-            "plural": "{{mode}}: {{playerCount}} vrienden"
-          },
+          "subtitle": "{mode}: {playerCount, plural, one {1 vriend} other {# vrienden}}",
           "mode": {
             "Disabled": "Van iedereen",
             "Whitelist": "Whitelist",
@@ -1290,25 +1281,16 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "Status Automatiseringen",
-          "subtitle": {
-            "singular": "Max {{threshold}} speler",
-            "plural": "Max {{threshold}} spelers"
-          }
+          "subtitle": "Max {threshold, plural, one {1 speler} other {# spelers}}"
         },
         "sleepingAnimations": {
           "title": "Slaap Animaties"
         },
         "shutdownAutomations": {
           "title": "Automatische Afsluit Procedure",
-          "subtitle": "Wanneer je slaapt voor {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} seconde",
-            "plural": "{{seconds}} seconden"
-          },
-          "minutes": {
-            "singular": "{{minutes}} minuut",
-            "plural": "{{minutes}} minuten"
-          }
+          "subtitle": "Wanneer je slaapt voor {time}",
+          "seconds": "{seconds, plural, one {1 seconde} other {# seconden}}",
+          "minutes": "{minutes, plural, one {1 minuut} other {# minuten}}"
         },
         "title": "Automatiseringen"
       }

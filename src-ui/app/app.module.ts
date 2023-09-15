@@ -9,7 +9,7 @@ import { SettingsViewComponent } from './views/dashboard-view/views/settings-vie
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
@@ -142,6 +142,7 @@ import { TooltipDirective } from './directives/tooltip.directive';
 import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
 import { DebugBrightnessTestingComponent } from './components/developer-debug-modal/debug-brightness-testing/debug-brightness-testing.component';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -238,6 +239,10 @@ export function createTranslateLoader(http: HttpClient) {
         provide: TranslateLoader,
         useFactory: createTranslateLoader,
         deps: [HttpClient],
+      },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler,
       },
     }),
     NgPipesModule,

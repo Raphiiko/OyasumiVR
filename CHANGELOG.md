@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Updated translations to use ICU syntax.
+
 ## [1.9.0]
 
 ### Added

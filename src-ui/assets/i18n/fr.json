@@ -48,7 +48,7 @@
       "title": "Activation du mode sommeil",
       "description": "Active automatiquement le mode sommeil selon plusieurs critères",
       "atTime": "À une heure prédéfinie",
-      "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{value}%</strong>",
       "onControllersPoweredOff": "Lorsque l'un des contrôleurs est éteint",
       "onMotionDetection": {
         "title": "Quand OyasumiVR détecte que vous dormez selon vos mouvements"
@@ -83,13 +83,13 @@
           "note": "Lorsque vous êtes prêt(e) et que cette fenêtre est visible depuis votre overlay, appuyez sur 'Débuter la calibration' pour commencer."
         },
         "countdown": {
-          "instruction": "Début dans {{counter}}",
+          "instruction": "Début dans {counter}",
           "note": "Ne bougez pas pendant la calibration ! Agissez comme si vous dormiez.\nBouger lors de la calibration peut empêcher le bon fonctionnement de la détection."
         },
         "calibrating": {
           "instruction": "Calibration",
           "note": "Restez statique.",
-          "countdown": "Il reste {{counter}} seconde(s)..."
+          "countdown": "Il reste {counter} seconde(s)..."
         },
         "done": {
           "instruction": "Calibration terminée!",
@@ -159,7 +159,7 @@
     "sleepingAnimations": {
       "currentPose": "Position actuelle",
       "manualControl": "Contrôle manuel",
-      "presetAuthor": "par {{author}}",
+      "presetAuthor": "par {author}",
       "description": "OyasumiVR peut automatiquement changer les animations de votre avatar lorsque vous changez de position dans votre sommeil. Cela peut être utile si vous n'avez pas de Full Body Tracking, ou si vos trackers s'éteignent pendant la nuit. Voici un <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">exemple</a> de cette fonctionnalité.\n\nDes presets sont disponibles pour supporter différents prefabs de locomotion de votre avatar, mais vous pouvez également spéficier vos propres animations.",
       "enable": "Activer automatiquement les animations de sommeil",
       "customPreset": "Animations custom",
@@ -251,7 +251,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Initialisation de l'économie d'énergie...",
-        "noNvidia": "L'économie d'énergie est indisponible car nous ne détéctons pas de pilote NVIDIA. L'économie d'énergie n'est disponible que sur les cartes NVIDIA.\n\nSi vous avez un GPU NVIDIA, vérifiez l'installation des derniers pilotes graphiques.\n\n({{code}})",
+        "noNvidia": "L'économie d'énergie est indisponible car nous ne détéctons pas de pilote NVIDIA. L'économie d'énergie n'est disponible que sur les cartes NVIDIA.\n\nSi vous avez un GPU NVIDIA, vérifiez l'installation des derniers pilotes graphiques.\n\n({code})",
         "noPermission": "OyasumiVR a les droits administrateurs mais ne semble pas avoir la permission de changer vos paramètres GPU.\n\nCeci ne devrait pas arriver, merci de vérifier votre configuration système.",
         "noSidecar": "Pour une raison inconnue, les droits administrateur n'ont pas pu être transférés.\n Ils sont nécéssaires pour contrôler la consommation de votre GPU.\n\nMerci de redémarrer OyasumiVR et réessayer.",
         "unknown": "L'économie d'énergie est indisponible pour une raison inconnue.\n\nMerci de redémarrer OyasumiVR et réessayer."
@@ -284,7 +284,7 @@
         "title": "Lorsque de la désactivation du mode sommeil",
         "description": "Appliquer le profil MSI Afterburner suivant"
       },
-      "profile": "Profil {{index}}",
+      "profile": "Profil {index}",
       "none": "Aucun",
       "enabledWarning": "Attention, une mauvaise configuration du GPU peut rendre votre système instable. Désactivez cette fonctionnalité si vous n'êtes pas sûr(e) de ce que vous faites.",
       "executable": {
@@ -308,10 +308,7 @@
     "exampleUse": "Exemple: Lorsque quelqu'un vous rejoint, votre statut sera changé d'orange à rouge.\n Lorsqu'une personne quitte votre instance et vous vous retrouvez seul(e), votre statut sera automatiquement changé en bleu pour que quelqu'un d'autre puisse vous rejoindre.",
     "disableToEdit": "Merci de désactiver les automatisations de statut avant tout changement.",
     "playerLimit": "Limite de joueurs",
-    "playerLimitLabel": {
-      "singular": "{{count}} joueur (vous inclus)",
-      "plural": "{{count}} joueurs (vous inclus)"
-    },
+    "playerLimitLabel": "{count, plural, one {1 jouer} other {# joueurs}}",
     "belowLimit": {
       "title": "Sous la limite",
       "description": "Changer votre statut pour"
@@ -337,7 +334,7 @@
     "clearPlayers": "Vider la liste",
     "removeModal": {
       "title": "Confirmer la suppression",
-      "message": "Voulez vous supprimer '{{name}}' de votre liste?"
+      "message": "Voulez vous supprimer ''{name}'' de votre liste?"
     },
     "removeModalBulk": {
       "title": "Confirmer la suppression",
@@ -424,7 +421,7 @@
         "title": "Connexion",
         "description": "Certaines fonctionnalités d'OyasumiVR nécessitent d'être connecté à votre compte VRChat.",
         "loggedIn": {
-          "title": "Bonjour {{name}}!",
+          "title": "Bonjour {name}!",
           "subtext": "Vous êtes actuellement connecté(e) à votre compte VRChat.",
           "logOut": "Se déconnecter"
         },
@@ -470,10 +467,10 @@
     "updates": {
       "checkForUpdates": "Rechercher des mises à jour",
       "changelog": "Changelog",
-      "install": "Installer v{{version}}",
-      "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{{version}}) !",
+      "install": "Installer v{version}",
+      "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{version}) !",
       "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
-      "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{{currentVersion}}.\nLa nouvelle version est la v{{latestVersion}}."
+      "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{currentVersion}.\nLa nouvelle version est la v{latestVersion}."
     }
   },
   "about": {
@@ -505,7 +502,7 @@
       "floatOutOfBounds": "La valeur doit être un nombre réel valide entre -1 et 1.",
       "floatTooPrecise": "La précision doit être d'au maximum 3 décimales.",
       "invalidSyntax": "Syntaxe invalide",
-      "tooManyCommands": "Un script OSC ne peut avoir plus de {{value}} actions.",
+      "tooManyCommands": "Un script OSC ne peut avoir plus de {value} actions.",
       "addressNoSlash": "Une adresse OSC valide doit commencer par un '/'.",
       "addressRequired": "Une adresse OSC est requise.",
       "addressNotASCII": "Une adresse OSC valide n'est composée que de symboles ASCII."
@@ -542,9 +539,9 @@
     },
     "update-modal": {
       "title": "Mise à jour disponible",
-      "updateNow": "Installer la v{{version}}",
+      "updateNow": "Installer la v{version}",
       "updateLater": "Plus tard",
-      "message": "Une nouvelle mise à jour d'OyasumiVR est disponible : v{{newVersion}}.\n\nVous utilisez actuellement la v{{currentVersion}}.\n\nVoulez-vous effectuer la mise à jour maintenant?"
+      "message": "Une nouvelle mise à jour d'OyasumiVR est disponible : v{newVersion}.\n\nVous utilisez actuellement la v{currentVersion}.\n\nVoulez-vous effectuer la mise à jour maintenant?"
     },
     "select-box": {
       "defaultPlaceholder": "Sélectionner..."
@@ -583,14 +580,8 @@
       "test": "Test"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} commande",
-        "plural": "{{value}} commandes"
-      },
-      "errorCounter": {
-        "singular": "{{value}} Erreur de validation",
-        "plural": "{{value}} Erreurs de validation"
-      },
+      "commandCounter": "{value, plural, one {1 Commande} other {# Commandes}}",
+      "errorCounter": "{value, plural, one {1 Erreur de validation} other {# Erreurs de validation}}",
       "addCommand": "Ajouter",
       "test": "Test",
       "action": {
@@ -631,7 +622,7 @@
       "title": "Sélectionner des amis",
       "searchPlaceholder": "Sélectionner un ami par nom...",
       "noFriendsSelected": "Aucun ami sélectionné",
-      "noResultsFor": "Aucun résultat pour '{{query}}'",
+      "noResultsFor": "Aucun résultat pour ''{query}''",
       "noFriends": "Votre liste d'amis est vide"
     },
     "event-log": {
@@ -691,8 +682,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "Limite de consommation pour '{{device}}' restaurée à {{limit}}",
-            "set": "Limite de consommation pour '{{device}}' définie à {{limit}}"
+            "reset": "Limite de consommation pour ''{device}'' restaurée à {limit}",
+            "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",
@@ -700,17 +691,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "Invitation de '{{displayName}}' acceptée automatiquement",
+          "title": "Invitation de ''{displayName}'' acceptée automatiquement",
           "subtitle": {
             "whitelist": "Car ce joueur est sur liste blanche",
             "blacklist": "Car ce joueur n'est pas sur liste noire"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "Votre statut VRChat a été changé de {{oldStatus}} pour {{newStatus}}",
+          "title": "Votre statut VRChat a été changé de {oldStatus} pour {newStatus}",
           "reason": {
-            "BELOW_LIMIT": "Car le nombre de joueurs dans votre monde est inférieur à {{threshold}}",
-            "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a dépassé {{threshold}}"
+            "BELOW_LIMIT": "Car le nombre de joueurs dans votre monde est inférieur à {threshold}",
+            "AT_LIMIT_OR_ABOVE": "Car le nombre de joueurs dans votre monde a dépassé {threshold}"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -720,7 +711,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
-            "custom": "Résolution d'affichage de SteamVR passée à {{value}}"
+            "custom": "Résolution d'affichage de SteamVR passée à {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé",

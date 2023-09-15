@@ -62,7 +62,7 @@
       "title": "Mengaktifkan mode tidur",
       "description": "Mengaktifkan mode tidur secara otomatis berdasarkan berbagai pemicu",
       "atTime": "Pada waktu tertentu",
-      "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{value}%</strong>",
       "onControllersPoweredOff": "Ketika semua kontroler dimatikan",
       "onMotionDetection": {
         "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
@@ -97,13 +97,13 @@
           "note": "Setelah Anda siap dan dapat melihat jendela ini dari hamparan Anda, tekan 'Mulai Kalibrasi' untuk memulai."
         },
         "countdown": {
-          "instruction": "Mulai dari {{counter}}",
+          "instruction": "Mulai dari {counter}",
           "note": "Jangan bergerak sewaktu mengkalibrasi! Berpura-puralah Anda sedang tidur.\nBergerak sewaktu mengkalibrasi akan mencegah fitur ini bekerja dengan benar."
         },
         "calibrating": {
           "instruction": "Mengkalibrasi",
           "note": "Tetap diam.",
-          "countdown": "{{counter}} detik lagi..."
+          "countdown": "{counter} detik lagi..."
         },
         "done": {
           "instruction": "Kalibrasi selesai!",
@@ -185,7 +185,7 @@
     "sleepingAnimations": {
       "currentPose": "Posisi saat ini",
       "manualControl": "Kontrol manual",
-      "presetAuthor": "dari {{author}}",
+      "presetAuthor": "dari {author}",
       "description": "OyasumiVR dapat secara otomatis mengubah animasi avatar Anda ketika Anda mengubah posisi tidur. Hal ini dapat berguna jika Anda tidak memiliki tracker seluruh tubuh, atau jika Anda (atau Anda memiliki OyasumiVR) mematikan tracker Anda pada malam hari. Lihat contoh seperti apa tampilannya <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPreset tersedia untuk beberapa prefab locomotion avatar yang sudah dibuat sebelumnya, tetapi Anda juga dapat menentukan animasi Anda sendiri.",
       "enable": "Mengaktifkan animasi tidur otomatis",
       "customPreset": "Animasi kustom",
@@ -322,7 +322,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Otomatisasi pembatasan daya sedang diinisialisasi...",
-        "noNvidia": "Otomatisasi pembatasan daya tidak tersedia karena tidak ada driver NVIDIA yang sedang berjalan yang terdeteksi. Otomatisasi pembatasan daya hanya tersedia untuk GPU NVIDIA.\n\nJika Anda memiliki GPU NVIDIA dalam sistem Anda, pastikan bahwa driver yang sesuai telah terinstal.\n\n({{code}})",
+        "noNvidia": "Otomatisasi pembatasan daya tidak tersedia karena tidak ada driver NVIDIA yang sedang berjalan yang terdeteksi. Otomatisasi pembatasan daya hanya tersedia untuk GPU NVIDIA.\n\nJika Anda memiliki GPU NVIDIA dalam sistem Anda, pastikan bahwa driver yang sesuai telah terinstal.\n\n({code})",
         "noPermission": "Meskipun OyasumiVR memiliki hak istimewa sebagai administrator, ia tidak memiliki izin untuk mengubah pengaturan GPU Anda.\n\nSilakan periksa konfigurasi sistem Anda karena hal ini biasanya tidak pernah terjadi.",
         "noSidecar": "Untuk alasan yang tidak diketahui, hak istimewa administrator tidak dapat diperoleh.\nIni diperlukan untuk mengontrol batas daya GPU Anda.\n\nSilakan coba mulai ulang OyasumiVR.",
         "unknown": "Otomatisasi pembatas daya tidak tersedia karena alasan yang tidak diketahui.\n\nSilakan coba mulai ulang OyasumiVR."
@@ -355,7 +355,7 @@
         "title": "Saat mode tidur dinonaktifkan",
         "description": "Terapkan profil MSI Afterburner berikut ini"
       },
-      "profile": "Profil {{index}}",
+      "profile": "Profil {index}",
       "none": "kosong",
       "enabledWarning": "Perlu diketahui bahwa salah mengkonfigurasi GPU Anda di MSI Afterburner dapat mengakibatkan sistem Anda menjadi tidak stabil. Nonaktifkan fitur ini jika Anda tidak tahu apa yang Anda lakukan.",
       "executable": {
@@ -379,10 +379,7 @@
     "exampleUse": "Contoh penggunaan: Ketika seseorang bergabung dengan Anda, secara otomatis mengubah status Anda menjadi oranye atau merah!\nKetika mereka pergi dan Anda sendirian lagi, secara otomatis ubah status Anda kembali menjadi biru sehingga orang lain dapat bergabung dengan Anda.",
     "disableToEdit": "Harap nonaktifkan otomatisasi status sebelum Anda membuat perubahan apa pun.",
     "playerLimit": "Limit Player",
-    "playerLimitLabel": {
-      "singular": "{{count}} player (termasuk kamu)",
-      "plural": "{{count}} player (termasuk kamu)"
-    },
+    "playerLimitLabel": "{count} player (termasuk kamu)",
     "belowLimit": {
       "title": "Dibawah limit",
       "description": "Ubah statusmu ke"
@@ -408,7 +405,7 @@
     "clearPlayers": "Bersihkan player",
     "removeModal": {
       "title": "Konfirmasi Penghapusan",
-      "message": "Apakah Anda yakin ingin menghapus '{{name}}' dari daftar Anda?"
+      "message": "Apakah Anda yakin ingin menghapus ''{name}'' dari daftar Anda?"
     },
     "removeModalBulk": {
       "title": "Konfirmasi penghapusan",
@@ -563,7 +560,7 @@
         "title": "Masuk",
         "description": "Beberapa fitur OyasumiVR mengharuskan Anda untuk masuk dengan akun VRChat Anda agar fitur-fitur tersebut dapat berfungsi.",
         "loggedIn": {
-          "title": "Hai {{name}}!",
+          "title": "Hai {name}!",
           "subtext": "Saat ini Anda sedang masuk dengan akun VRChat Anda.",
           "logOut": "Keluar"
         },
@@ -652,10 +649,10 @@
     "updates": {
       "checkForUpdates": "Periksa pembaruan",
       "changelog": "Daftar Perubahan",
-      "install": "Install v{{version}}",
-      "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{{version}} yang merupakan versi terbaru!",
+      "install": "Install v{version}",
+      "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{version} yang merupakan versi terbaru!",
       "notChecked": "OyasumiVR belum memeriksa pembaruan.",
-      "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{{currentVersion}}.\nVersi terbaru adalah v{{latestVersion}}.",
+      "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{currentVersion}.\nVersi terbaru adalah v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "Karena Anda menjalankan versi pengembangan OyasumiVR, pembaruan telah dinonaktifkan.\nJika Anda ingin menginstal versi baru OyasumiVR, silakan unduh dan jalankan penginstal secara manual.",
         "STEAM": "Anda telah menginstal OyasumiVR versi Steam.\nOleh karena itu, pembaruan OyasumiVR baru disediakan melalui Steam!"
@@ -706,7 +703,7 @@
         "clearData": "Hapus Data",
         "clearModal": {
           "title": "Konfirmasi Penghapusan Data",
-          "message": "Apakah Anda yakin ingin menghapus data berikut ini? Ini tidak dapat dikembalikan!\n\n{{items}}"
+          "message": "Apakah Anda yakin ingin menghapus data berikut ini? Ini tidak dapat dikembalikan!\n\n{items}"
         },
         "relaunchModal": {
           "title": "Mulai ulang OyasumiVR",
@@ -768,7 +765,7 @@
       "floatOutOfBounds": "Nilai harus berupa nilai float yang valid antara -1,0 dan 1,0.",
       "floatTooPrecise": "Nilai ini hanya dapat memiliki presisi maksimum 3 desimal.",
       "invalidSyntax": "Syntax tidak valid.",
-      "tooManyCommands": "Skrip OSC tidak boleh memiliki lebih dari {{value}} aksi.",
+      "tooManyCommands": "Skrip OSC tidak boleh memiliki lebih dari {value} aksi.",
       "addressNoSlash": "Alamat OSC yang valid harus selalu dimulai dengan simbol '/'.",
       "addressRequired": "Diperlukan alamat OSC.",
       "addressNotASCII": "Alamat OSC yang valid hanya boleh berisi karakter ASCII."
@@ -788,10 +785,10 @@
       "content": "Mode tidur telah dinonaktifkan"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "Status VRChat Anda telah diatur ke '{{newStatus}}'"
+      "content": "Status VRChat Anda telah diatur ke ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "Permintaan undangan yang diterima secara otomatis dari {{username}}"
+      "content": "Permintaan undangan yang diterima secara otomatis dari {username}"
     },
     "turningOffControllers": {
       "content": "Mematikan kontroler Anda"
@@ -820,9 +817,9 @@
     },
     "update-modal": {
       "title": "Update Tersedia",
-      "updateNow": "Install v{{version}}",
+      "updateNow": "Install v{version}",
       "updateLater": "Tidak Sekarang",
-      "message": "Pembaruan baru untuk OyasumiVR telah ditemukan: v{{newVersion}}.\n\nAnda saat ini masih menjalankan v{{currentVersion}}.\n\nApakah Anda ingin memperbarui sekarang atau nanti?"
+      "message": "Pembaruan baru untuk OyasumiVR telah ditemukan: v{newVersion}.\n\nAnda saat ini masih menjalankan v{currentVersion}.\n\nApakah Anda ingin memperbarui sekarang atau nanti?"
     },
     "select-box": {
       "defaultPlaceholder": "Pilih..."
@@ -879,14 +876,8 @@
       "test": "Tes"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} Perintah",
-        "plural": "{{value}} Perintah"
-      },
-      "errorCounter": {
-        "singular": "{{value}} Validasi Error",
-        "plural": "{{value}} Validasi Error"
-      },
+      "commandCounter": "{value} Perintah",
+      "errorCounter": "{value} Validasi Error",
       "addCommand": "Tambah",
       "test": "Tes",
       "action": {
@@ -927,7 +918,7 @@
       "title": "Pilih Teman",
       "searchPlaceholder": "Pilih teman dari nama...",
       "noFriendsSelected": "Tidak ada teman terpilih",
-      "noResultsFor": "Tidak ada hasil untuk '{{query}}'",
+      "noResultsFor": "Tidak ada hasil untuk ''{query}''",
       "noFriends": "Daftar teman Anda kosong"
     },
     "event-log": {
@@ -1047,8 +1038,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "Power limit untuk '{{device}}' dikembalikan ke {{limit}}",
-            "set": "Power limit untuk '{{device}}' diatur ke {{limit}}"
+            "reset": "Power limit untuk ''{device}'' dikembalikan ke {limit}",
+            "set": "Power limit untuk ''{device}'' diatur ke {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
@@ -1057,8 +1048,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "Kecerahan gambar headset diatur ke {{value}}",
-            "transition": "Kecerahan gambar headset beralih menuju {{value}}"
+            "set": "Kecerahan gambar headset diatur ke {value}",
+            "transition": "Kecerahan gambar headset beralih menuju {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
@@ -1067,8 +1058,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "Kecerahan layar headset diatur ke {{value}}",
-            "transition": "Kecerahan layar headset beralih menuju {{value}}"
+            "set": "Kecerahan layar headset diatur ke {value}",
+            "transition": "Kecerahan layar headset beralih menuju {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
@@ -1076,17 +1067,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "Permintaan undangan yang diterima secara otomatis dari '{{displayName}}'",
+          "title": "Permintaan undangan yang diterima secara otomatis dari ''{displayName}''",
           "subtitle": {
             "whitelist": "Karena player ini masuk whitelist",
             "blacklist": "Karena player ini tidak masuk blacklist"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "Mengubah status VRChat Anda dari {{oldStatus}} ke {{newStatus}}",
+          "title": "Mengubah status VRChat Anda dari {oldStatus} ke {newStatus}",
           "reason": {
-            "BELOW_LIMIT": "Karena jumlah player di world Anda turun di bawah {{threshold}}",
-            "AT_LIMIT_OR_ABOVE": "Saat jumlah player di world Anda mencapai batas {{threshold}}"
+            "BELOW_LIMIT": "Karena jumlah player di world Anda turun di bawah {threshold}",
+            "AT_LIMIT_OR_ABOVE": "Saat jumlah player di world Anda mencapai batas {threshold}"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1096,7 +1087,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "Resolusi render SteamVR diatur ke 'auto'",
-            "custom": "Resolusi render SteamVR diatur ke {{value}}"
+            "custom": "Resolusi render SteamVR diatur ke {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
@@ -1104,7 +1095,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "jarak pudar Chaperone diatur ke {{value}}",
+          "title": "jarak pudar Chaperone diatur ke {value}",
           "reason": {
             "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
@@ -1124,14 +1115,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "Profil MSI Afterburner's Sudah diatur ke profil {{profile}}",
+          "title": "Profil MSI Afterburner's Sudah diatur ke profil {profile}",
           "reason": {
             "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Kebijakan Daya Windows diatur ke paket '{{policy}}'",
+          "title": "Kebijakan Daya Windows diatur ke paket ''{policy}''",
           "reason": {
             "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan"
@@ -1286,10 +1277,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "Terima Otomatis Permintaan Undangan",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} teman",
-            "plural": "{{mode}}: {{playerCount}} teman"
-          },
+          "subtitle": "{mode}: {playerCount} teman",
           "mode": {
             "Disabled": "Untuk semuanya",
             "Whitelist": "Whitelist",
@@ -1298,31 +1286,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "Status Otomatisasi",
-          "subtitle": {
-            "singular": "Maks {{threshold}} player",
-            "plural": "Maks {{threshold}} player"
-          }
+          "subtitle": "Maks {threshold} player"
         },
         "sleepingAnimations": {
           "title": "Animasi tidur"
         },
         "shutdownAutomations": {
           "title": "Shutdown Otomatis",
-          "subtitle": "Ketika tertidur selama {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} detik",
-            "plural": "{{seconds}} detik"
-          },
-          "minutes": {
-            "singular": "{{minutes}} menit",
-            "plural": "{{minutes}} menit"
-          }
+          "subtitle": "Ketika tertidur selama {time}",
+          "seconds": "{seconds} detik",
+          "minutes": "{minutes} menit"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "Deteksi tidur",
           "subtitle": {
-            "withoutActivationWindow": "{{sensitivity}} sensitivitas",
-            "withActivationWindow": "{{sensitivity}} sensitivitas, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "{sensitivity} sensitivitas",
+            "withActivationWindow": "{sensitivity} sensitivitas, {startTime} - {endTime}"
           }
         },
         "title": "Pengaturan Otomatisasi"

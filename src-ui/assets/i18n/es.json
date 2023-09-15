@@ -62,7 +62,7 @@
       "title": "Activar el modo de suspensión",
       "description": "Activación automática del modo de reposo en función de varios activadores",
       "atTime": "En un momento determinado",
-      "atBatteryPercentage": "Cuando el porcentaje de batería de un dispositivo cae por debajo de <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "Cuando el porcentaje de batería de un dispositivo cae por debajo de <strong>{value}%</strong>",
       "onControllersPoweredOff": "Cuando todos los controladores están apagados",
       "onMotionDetection": {
         "title": "Cuando OyasumiVR detecta que estás dormido basándose en tu movimiento"
@@ -97,13 +97,13 @@
           "note": "Cuando estés listo y puedas ver esta ventana desde tu superposición, pulsa Iniciar calibración para empezar."
         },
         "countdown": {
-          "instruction": "A partir de {{counter}}",
+          "instruction": "A partir de {counter}",
           "note": "No se mueva mientras calibra. Si se mueve mientras calibra, esta función no funcionará correctamente."
         },
         "calibrating": {
           "instruction": "Calibración",
           "note": "No te muevas.",
-          "countdown": "{{counter}} segundos(s) restante..."
+          "countdown": "{counter} segundos(s) restante..."
         },
         "done": {
           "instruction": "Calibración completa!",
@@ -185,7 +185,7 @@
     "sleepingAnimations": {
       "currentPose": "Posición actual",
       "manualControl": "Control manual",
-      "presetAuthor": "by {{author}}",
+      "presetAuthor": "by {author}",
       "description": "OyasumiVR puede cambiar automáticamente las animaciones de tu avatar cuando cambias de posición para dormir. Esto puede ser útil si usted no tiene el seguimiento de todo el cuerpo, o si usted (o tienes OyasumiVR) apagar los rastreadores durante la noche. Vea un ejemplo <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">aqui</a>.\n\nHay preajustes disponibles para varios prefabricados de locomoción de avatares, pero también puedes especificar tus propias animaciones.",
       "enable": "Activar animaciones automáticas para dormir",
       "customPreset": "Animaciones personalizadas",
@@ -322,7 +322,7 @@
     "powerLimiting": {
       "disabled": {
         "initializing": "Se están inicializando los automatismos limitadores de potencia...",
-        "noNvidia": "Las automatizaciones de limitación de potencia no están disponibles porque no se ha detectado ningún controlador NVIDIA en ejecución. Las automatizaciones de limitación de energía sólo están disponibles para las GPU NVIDIA.\n\nSi tienes una GPU NVIDIA en tu sistema, asegúrate de que está instalado el controlador adecuado para ella.\n\n({{code}})",
+        "noNvidia": "Las automatizaciones de limitación de potencia no están disponibles porque no se ha detectado ningún controlador NVIDIA en ejecución. Las automatizaciones de limitación de energía sólo están disponibles para las GPU NVIDIA.\n\nSi tienes una GPU NVIDIA en tu sistema, asegúrate de que está instalado el controlador adecuado para ella.\n\n({code})",
         "noPermission": "Aunque OyasumiVR tiene privilegios de administrador, no tiene permiso para cambiar la configuración de tu GPU.\n\nPor favor, compruebe la configuración de su sistema, ya que normalmente esto no debería ocurrir nunca.",
         "noSidecar": "Por una razón desconocida, no se han podido obtener privilegios de administrador.\nSon necesarios para controlar los límites de potencia de tu GPU.\n\nPor favor, intente reiniciar OyasumiVR.",
         "unknown": "Los automatismos limitadores de potencia no están disponibles por un motivo desconocido.\n\nPor favor, intente reiniciar OyasumiVR."
@@ -355,7 +355,7 @@
         "title": "Cuando el modo dormir está desactivado",
         "description": "Aplique el siguiente perfil MSI Afterburner"
       },
-      "profile": "Perfil {{index}}",
+      "profile": "Perfil {index}",
       "none": "None",
       "enabledWarning": "Tenga en cuenta que una configuración incorrecta de su GPU en MSI Afterburner podría provocar la inestabilidad de su sistema. Desactive esta función si no sabe lo que está haciendo.",
       "executable": {
@@ -379,10 +379,7 @@
     "exampleUse": "Ejemplo de uso: Cuando alguien se una a ti, ¡cambia automáticamente tu estado a naranja o rojo!\nCuando se vayan y vuelvas a estar solo, cambia automáticamente tu estado a azul para que otra persona pueda unirse a ti.",
     "disableToEdit": "Desactive las automatizaciones de estado antes de realizar cualquier cambio.",
     "playerLimit": "Límite de jugadores",
-    "playerLimitLabel": {
-      "singular": "{{count}} jugador (incluido tú)",
-      "plural": "{{count}} jugadores (incluido tú)"
-    },
+    "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)",
     "belowLimit": {
       "title": "Por debajo del límite",
       "description": "Establece tu estado en"
@@ -408,7 +405,7 @@
     "clearPlayers": "Despejar jugadores",
     "removeModal": {
       "title": "Confirmar eliminación",
-      "message": "¿Está seguro de que desea eliminar '{{name}}' de tu lista?"
+      "message": "¿Está seguro de que desea eliminar ''{name}'' de tu lista?"
     },
     "removeModalBulk": {
       "title": "Confirmar eliminación",
@@ -563,7 +560,7 @@
         "title": "Iniciar sesión",
         "description": "Algunas funciones de OyasumiVR requieren que inicies sesión con tu cuenta de VRChat para que funcionen.",
         "loggedIn": {
-          "title": "Hola {{name}}!",
+          "title": "Hola {name}!",
           "subtext": "Actualmente estás conectado con tu cuenta de VRChat.",
           "logOut": "Cerrar sesión"
         },
@@ -652,10 +649,10 @@
     "updates": {
       "checkForUpdates": "Comprobar actualizaciones",
       "changelog": "Registro de cambios",
-      "install": "Instalar v{{version}}",
-      "noUpdate": "Actualmente está ejecutando OyasumiVR v{{version}} que es la última versión!",
+      "install": "Instalar v{version}",
+      "noUpdate": "Actualmente está ejecutando OyasumiVR v{version} que es la última versión!",
       "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones.",
-      "updateAvailable": "¡Una nueva versión de OyasumiVR está disponible! Actualmente está ejecutando v{{currentVersion}}.\nLa versión más reciente es v{{latestVersion}}.",
+      "updateAvailable": "¡Una nueva versión de OyasumiVR está disponible! Actualmente está ejecutando v{currentVersion}.\nLa versión más reciente es v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "Como se está ejecutando una versión de desarrollo de OyasumiVR, las actualizaciones se han desactivado.\nSi desea instalar una nueva versión de OyasumiVR, descargue y ejecute el instalador manualmente.",
         "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
@@ -706,7 +703,7 @@
         "clearData": "Borrar datos",
         "clearModal": {
           "title": "Confirmar borrado de datos",
-          "message": "¿Está seguro de que desea eliminar los siguientes datos? ¡Esto no se puede revertir!\n\n{{items}}"
+          "message": "¿Está seguro de que desea eliminar los siguientes datos? ¡Esto no se puede revertir!\n\n{items}"
         },
         "relaunchModal": {
           "title": "Reiniciar OyasumiVR",
@@ -768,7 +765,7 @@
       "floatOutOfBounds": "El valor debe ser un valor flotante válido entre -1.0 y 1.0.",
       "floatTooPrecise": "El valor sólo puede tener una precisión de 3 decimales como máximo.",
       "invalidSyntax": "Sintaxis inválida.",
-      "tooManyCommands": "Un script OSC no puede tener más de {{value}} acciones.",
+      "tooManyCommands": "Un script OSC no puede tener más de {value} acciones.",
       "addressNoSlash": "Una dirección OSC válida debe empezar siempre por el símbolo '/'.",
       "addressRequired": "Se requiere una dirección OSC.",
       "addressNotASCII": "Una dirección OSC válida sólo debe contener caracteres ASCII."
@@ -788,10 +785,10 @@
       "content": "Se ha desactivado el modo sueño"
     },
     "vrcStatusChangedPlayerCount": {
-      "content": "Tu estado de VRChat se ha establecido en '{{newStatus}}'"
+      "content": "Tu estado de VRChat se ha establecido en ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "Solicitud de invitación aceptada automáticamente de {{username}}"
+      "content": "Solicitud de invitación aceptada automáticamente de {username}"
     },
     "turningOffControllers": {
       "content": "Apagar los mandos"
@@ -820,9 +817,9 @@
     },
     "update-modal": {
       "title": "Actualización disponible",
-      "updateNow": "Instalar v{{version}}",
+      "updateNow": "Instalar v{version}",
       "updateLater": "Ahora no",
-      "message": "Se ha encontrado una nueva actualización para OyasumiVR: v{{newVersion}}.\n\nActualmente sigue ejecutando v{{currentVersion}}.\n\n¿Quiere actualizar ahora o más tarde?"
+      "message": "Se ha encontrado una nueva actualización para OyasumiVR: v{newVersion}.\n\nActualmente sigue ejecutando v{currentVersion}.\n\n¿Quiere actualizar ahora o más tarde?"
     },
     "select-box": {
       "defaultPlaceholder": "Seleccione..."
@@ -879,14 +876,8 @@
       "test": "Prueba"
     },
     "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} Comando",
-        "plural": "{{value}} Comandos"
-      },
-      "errorCounter": {
-        "singular": "{{value}} Error de validación",
-        "plural": "{{value}} Errores de validación"
-      },
+      "commandCounter": "{value, plural, one {1 Comando} other {# Comandos}}",
+      "errorCounter": "{value, plural, one {1 Error de validación} other {# Errores de validación}}",
       "addCommand": "Añadir",
       "test": "Prueba",
       "action": {
@@ -927,7 +918,7 @@
       "title": "Seleccionar amigos",
       "searchPlaceholder": "Buscar amigo por nombre...",
       "noFriendsSelected": "No hay amigos seleccionados",
-      "noResultsFor": "No hay resultados para '{{query}}'",
+      "noResultsFor": "No hay resultados para ''{query}''",
       "noFriends": "Tu lista de amigos está vacía"
     },
     "event-log": {
@@ -1047,8 +1038,8 @@
         },
         "gpuPowerLimitChanged": {
           "title": {
-            "reset": "Límite de potencia para '{{device}}' restaurado a {{limit}}",
-            "set": "Límite de potencia para '{{device}}' ajustado a {{limit}}"
+            "reset": "Límite de potencia para ''{device}'' restaurado a {limit}",
+            "set": "Límite de potencia para ''{device}'' ajustado a {limit}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
@@ -1057,8 +1048,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "Brillo de la imagen del auricular ajustado a {{value}}",
-            "transition": "Brillo de la imagen del auricular pasando a {{value}}"
+            "set": "Brillo de la imagen del auricular ajustado a {value}",
+            "transition": "Brillo de la imagen del auricular pasando a {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
@@ -1067,8 +1058,8 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "Brillo de la pantalla del auricular ajustado a {{value}}",
-            "transition": "Brillo de la pantalla del auricular pasando a {{value}}"
+            "set": "Brillo de la pantalla del auricular ajustado a {value}",
+            "transition": "Brillo de la pantalla del auricular pasando a {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
@@ -1076,17 +1067,17 @@
           }
         },
         "acceptedInviteRequest": {
-          "title": "Solicitud de invitación aceptada automáticamente de '{{displayName}}'",
+          "title": "Solicitud de invitación aceptada automáticamente de ''{displayName}''",
           "subtitle": {
             "whitelist": "Cuando este jugador estaba en la whitelisted",
             "blacklist": "Cuando este jugador no estaba en blacklisted"
           }
         },
         "statusChangedOnPlayerCountChange": {
-          "title": "Has cambiado tu estado de VRChat de {{oldStatus}} a {{newStatus}}",
+          "title": "Has cambiado tu estado de VRChat de {oldStatus} a {newStatus}",
           "reason": {
-            "BELOW_LIMIT": "A medida que la cantidad de jugadores en su mundo cayó por debajo de {{threshold}}",
-            "AT_LIMIT_OR_ABOVE": "Como la cantidad de jugadores en su mundo alcanzó el límite de {{threshold}}"
+            "BELOW_LIMIT": "A medida que la cantidad de jugadores en su mundo cayó por debajo de {threshold}",
+            "AT_LIMIT_OR_ABOVE": "Como la cantidad de jugadores en su mundo alcanzó el límite de {threshold}"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -1096,7 +1087,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "La resolución de renderizado de SteamVR se establece en 'auto'",
-            "custom": "Resolución de renderizado de SteamVR establecida en {{value}}"
+            "custom": "Resolución de renderizado de SteamVR establecida en {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
@@ -1104,7 +1095,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "Distancia de desvanecimiento del chaperón ajustada a {{value}}",
+          "title": "Distancia de desvanecimiento del chaperón ajustada a {value}",
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado"
@@ -1124,14 +1115,14 @@
           }
         },
         "msiAfterburnerProfileSet": {
-          "title": "El perfil de MSI Afterburner se estableció en el perfil {{profile}}",
+          "title": "El perfil de MSI Afterburner se estableció en el perfil {profile}",
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado"
           }
         },
         "windowsPowerPolicySet": {
-          "title": "Política de energía de Windows establecida en '{{policy}}' plan",
+          "title": "Política de energía de Windows establecida en ''{policy}'' plan",
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado"
@@ -1286,10 +1277,7 @@
       "automations": {
         "autoAcceptInviteRequests": {
           "title": "Aceptar automáticamente solicitudes de invitación",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} amigo",
-            "plural": "{{mode}}: {{playerCount}} amigos"
-          },
+          "subtitle": "{mode}: {playerCount, plural, one {1 amigo} other {# amigos}}",
           "mode": {
             "Disabled": "Para todos",
             "Whitelist": "Whitelist",
@@ -1298,31 +1286,22 @@
         },
         "changeStatusBasedOnPlayerCount": {
           "title": "Automatizaciones de estado",
-          "subtitle": {
-            "singular": "Max {{threshold}} jugador",
-            "plural": "Max {{threshold}} jugadores"
-          }
+          "subtitle": "Max {threshold, plural, one {1 jugador} other {# jugadores}}"
         },
         "sleepingAnimations": {
           "title": "Animaciones para dormir"
         },
         "shutdownAutomations": {
           "title": "Apagado automático",
-          "subtitle": "Al dormir durante {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} segundo",
-            "plural": "{{seconds}} segundos"
-          },
-          "minutes": {
-            "singular": "{{minutes}} minuto",
-            "plural": "{{minutes}} minutos"
-          }
+          "subtitle": "Al dormir durante {time}",
+          "seconds": "{seconds, plural, one {1 segundo} other {# segundos}}",
+          "minutes": "{minutes, plural, one {1 minuto} other {# minutos}}"
         },
         "sleepModeEnableForSleepDetector": {
           "title": "Detección de sueño",
           "subtitle": {
-            "withoutActivationWindow": "{{sensitivity}} sensibilidad",
-            "withActivationWindow": "{{sensitivity}} sensibilidad, {{startTime}} - {{endTime}}"
+            "withoutActivationWindow": "{sensitivity} sensibilidad",
+            "withActivationWindow": "{sensitivity} sensibilidad, {startTime} - {endTime}"
           }
         },
         "title": "Ajustes de automatización"
