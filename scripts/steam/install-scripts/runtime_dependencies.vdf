@@ -13,7 +13,7 @@
     }
     "DotNetHostingBundle7010"
     {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-hosting-7.0.10-win.exe"
+      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-hosting-7.0.11-win.exe"
       "Command 1"     "/install /quiet /norestart"
       "Requirement_OS"
       {
