@@ -26,16 +26,47 @@
   },
   "brightness-automations": {
     "title": "Automatización del brillo",
+    "mode": {
+      "simple": "Modo simple",
+      "advanced": "Modo avanzado"
+    },
+    "modeInfoModal": {
+      "title": "Modo de control de brillo",
+      "message": "Por defecto, OyasumiVR controlará el brillo de tu casco de RV ajustando el brillo de la imagen. Si estás usando un casco con un panel LCD que puede tener su retroiluminación controlada a través de SteamVR (e.j, el Valve Index), OyasumiVR controlará el brillo de la pantalla en su lugar siempre que sea posible.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo de la imagen y el brillo de la pantalla.\n\nEn caso de que prefiera el control directo, el modo avanzado le permite controlar tanto el brillo de la imagen como el de la pantalla por separado, y le permite establecer valores exactos de brillo para cada uno de ellos.\n\nEsto sólo se aplica a los cascos que lo admiten, que actualmente sólo son los Valve Index. En otros cascos de RV, no hay diferencia entre el modo simple y el avanzado."
+    },
     "brightnessAutomations": {
+      "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
+      "startupAutomations": "Automatizaciones de arranque",
+      "sleepPreparation": "Preparación del sueño",
+      "sleepAutomations": "Automatizaciones del sueño",
+      "copyBrightness": "Copia actual\nvalor de luminosidad",
+      "onStartup": {
+        "title": "Cuando empiece OyasumiVR o SteamVR",
+        "description": "Ajustar el brillo"
+      },
       "onSleepEnable": {
-        "title": "Cuando me voy a dormir"
+        "title": "Cuando me voy a dormir",
+        "description": "Ajustar el brillo"
       },
       "onSleepDisable": {
-        "title": "Cuando me despierto"
+        "title": "Cuando me despierto",
+        "description": "Ajustar el brillo"
+      },
+      "onSleepPreparation": {
+        "title": "Cuando me preparo para dormir",
+        "description": "Ajustar el brillo"
       },
       "brightness": {
         "title": "Cambia el brillo a",
         "description": ""
+      },
+      "imageBrightness": {
+        "title": "Cambia el brillo de la imagen a",
+        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual"
+      },
+      "displayBrightness": {
+        "title": "Cambia el brillo de la pantalla a",
+        "description": "Ajusta el brillo de la retroiluminación de la pantalla LCD (sólo Valve Index)"
       },
       "transition": {
         "title": "Ajuste el brillo gradualmente",
@@ -44,6 +75,13 @@
       "transitionTime": {
         "title": "Tiempo de transición",
         "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo."
+      },
+      "applyOnStart": {
+        "title": "Aplicar brillo al iniciar",
+        "description": {
+          "onSleepEnable": "Si el modo de suspensión está activo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicien.",
+          "onSleepDisable": "Si el modo de suspensión está inactivo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicie."
+        }
       }
     }
   },
@@ -1133,6 +1171,7 @@
     "dotnet-upgrade-modal": {
       "title": "Instalar los tiempos de ejecución que faltan",
       "description": {
+        "text1": "Los siguientes tiempos de ejecución que son necesarios para OyasumiVR o bien no coinciden con la versión requerida, o no están instalados en su sistema:",
         "runtimeQueued": "En cola",
         "text2": "Para seguir utilizando OyasumiVR, primero hay que instalar los tiempos de ejecución necesarios.",
         "automaticInstall": "¿Quieres que OyasumiVR intente instalar estos tiempos de ejecución para usted automáticamente?",
