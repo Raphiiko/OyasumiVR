@@ -67,7 +67,7 @@
       @include shadow(5, true);
       transition: background-color 0.15s ease;
 
-      &:not(.dragging) {
+      &:not(.dragging):not(.transition-active) {
         transition: background-color 0.15s ease, width 0.3s ease;
       }
     }

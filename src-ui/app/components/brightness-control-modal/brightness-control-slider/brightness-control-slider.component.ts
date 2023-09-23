@@ -22,6 +22,7 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
   @Input() max = 100;
   @Input() value = 50;
   @Input() step = 1;
+  @Input() transitionActive = false;
   @Output() valueChange = new EventEmitter<number>();
 
   @ViewChild('rangeGuideEl') rangeGuideEl?: ElementRef;
