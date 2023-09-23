@@ -16,6 +16,7 @@ import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
 export class TooltipDirective implements AfterViewInit, OnDestroy {
   @Input('tooltip') text?: TString;
   @Input('tooltipMode') mode?: 'top' | 'bottom' | 'left' | 'right' = 'top';
+  @Input('tooltipMargin') margin?: number = 4;
   private initialized = false;
   private tooltipElement?: HTMLElement;
 
@@ -32,9 +33,11 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
   @HostListener('mouseenter', ['$event'])
   onMouseEnter() {
     if (!this.initialized || this.tooltipElement) return;
+    if (!this.text) return;
     const tooltipElement = document.createElement('div');
     tooltipElement.classList.add('ovr-tooltip');
     tooltipElement.classList.add('ovr-tooltip-' + this.mode);
+    tooltipElement.style.setProperty('--offset', this.margin + 'px');
     const container = document.createElement('div');
     container.classList.add('ovr-tooltip-container');
     tooltipElement.appendChild(container);

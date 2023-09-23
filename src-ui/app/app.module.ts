@@ -142,6 +142,8 @@ import { TooltipDirective } from './directives/tooltip.directive';
 import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
 import { DebugBrightnessTestingComponent } from './components/developer-debug-modal/debug-brightness-testing/debug-brightness-testing.component';
+import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
+import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
@@ -225,6 +227,8 @@ export function createTranslateLoader(http: HttpClient) {
     WindowsPowerPolicyTabComponent,
     DebugSleepDetectionDebuggerComponent,
     DebugBrightnessTestingComponent,
+    BrightnessControlModalComponent,
+    BrightnessControlSliderComponent,
   ],
   imports: [
     CommonModule,

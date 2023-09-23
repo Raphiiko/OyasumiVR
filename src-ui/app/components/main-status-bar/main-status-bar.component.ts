@@ -7,6 +7,11 @@ import { firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../services/openvr.service';
 import { BackgroundService } from '../../services/background.service';
 import { OscService } from '../../services/osc.service';
+import { DisplayBrightnessControlService } from '../../services/brightness-control/display-brightness-control.service';
+import { ImageBrightnessControlService } from '../../services/brightness-control/image-brightness-control.service';
+import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
+import { ModalService } from '../../services/modal.service';
+import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -15,15 +20,20 @@ import { OscService } from '../../services/osc.service';
   animations: [hshrink(), noop()],
 })
 export class MainStatusBarComponent implements OnInit {
-  sleepMode = this.sleepService.mode;
-  user = this.vrchat.user;
+  protected sleepMode = this.sleepService.mode;
+  protected user = this.vrchat.user;
+  private brightnessControlModalOpen = false;
 
   constructor(
     private sleepService: SleepService,
     private vrchat: VRChatService,
+    private modalService: ModalService,
     protected openvr: OpenVRService,
     protected background: BackgroundService,
-    protected osc: OscService
+    protected osc: OscService,
+    protected displayBrightnessControl: DisplayBrightnessControlService,
+    protected imageBrightnessControl: ImageBrightnessControlService,
+    protected simpleBrightnessControl: SimpleBrightnessControlService
   ) {}
 
   ngOnInit(): void {}
@@ -49,5 +59,23 @@ export class MainStatusBarComponent implements OnInit {
     } else {
       await this.sleepService.enableSleepMode({ type: 'MANUAL' });
     }
+  }
+
+  async openBrightnessControlModal() {
+    if (this.brightnessControlModalOpen) {
+      this.modalService.closeModal('BrightnessControlModal');
+      return;
+    }
+    this.brightnessControlModalOpen = true;
+    await firstValueFrom(
+      this.modalService.addModal<BrightnessControlModalComponent>(
+        BrightnessControlModalComponent,
+        undefined,
+        {
+          id: 'BrightnessControlModal',
+        }
+      )
+    );
+    this.brightnessControlModalOpen = false;
   }
 }

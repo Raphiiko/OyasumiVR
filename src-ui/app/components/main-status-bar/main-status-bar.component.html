@@ -19,15 +19,55 @@
         <i class="material-icons-round">nights_stay</i>
       </div>
       <span @hshrink *ngIf="state.hover"
-        >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
+      >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="(sleepMode | async) === false" @hshrink translate
-        >comp.main-status-bar.inactive</span
+      >comp.main-status-bar.inactive</span
       >
     </div>
   </div>
   <div class="right">
+    <ng-container
+      *ngIf="(simpleBrightnessControl.advancedMode | async) === false">
+      <div
+        class="pill brightness-simple clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.brightness.tooltip'" [tooltipMode]="'top'" [tooltipMargin]="8"
+        (click)="openBrightnessControlModal()"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">brightness_medium</i>
+        </div>
+        <span @hshrink *ngIf="state.hover">{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span>
+        <span>{{simpleBrightnessControl.brightnessStream | async | number : '1.0-0'}}%</span>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="(simpleBrightnessControl.advancedMode | async) === true">
+      <div
+        class="pill brightness-advanced clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.brightness.tooltip'" [tooltipMode]="'top'" [tooltipMargin]="8"
+        (click)="openBrightnessControlModal()"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">monitor</i>
+        </div>
+        <span [class.inactive]="(displayBrightnessControl.driverIsAvailable | async) === false">{{displayBrightnessControl.brightnessStream | async | number : '1.0-0'}}%</span>
+        <span><b>&nbsp;|&nbsp;</b></span>
+        <span>{{imageBrightnessControl.brightnessStream | async | number : '1.0-0'}}%</span>
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">image</i>
+        </div>
+      </div>
+    </ng-container>
     <div
       class="pill steamvr-status"
       *ngVar="{ hover: false }; let state"
@@ -63,7 +103,7 @@
         </div>
         <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
           <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-            >brightness_1</i
+          >brightness_1</i
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>

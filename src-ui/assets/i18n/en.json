@@ -844,6 +844,10 @@
       "active": "Active",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
+      "brightness": {
+        "tooltip": "Brightness Control",
+        "simple": "Brightness"
+      },
       "steamvr": {
         "INACTIVE": "Inactive",
         "INITIALIZING": "Waiting",

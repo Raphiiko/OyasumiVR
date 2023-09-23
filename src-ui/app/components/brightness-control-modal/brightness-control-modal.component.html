@@ -1,0 +1,39 @@
+<div class="b-modal-container" @fadeUp>
+
+  <div class="brightness-slider" *ngIf="advancedMode" @vshrink [class.disabled]="!driverAvailable">
+    <app-brightness-control-slider
+      [value]="(displayBrightnessControl.brightnessStream | async) ?? 0"
+      [min]="displayBrightnessBounds[0]"
+      [max]="displayBrightnessBounds[1]"
+      (valueChange)="displayBrightnessControl.setBrightness($event)"
+    ></app-brightness-control-slider>
+    <div class="brightness-slider-title">
+      <span>Display Brightness</span>
+    </div>
+  </div>
+
+  <div class="brightness-slider" *ngIf="advancedMode" @vshrink>
+    <app-brightness-control-slider
+      [value]="(imageBrightnessControl.brightnessStream | async) ?? 0"
+      [min]="5"
+      [max]="100"
+      (valueChange)="imageBrightnessControl.setBrightness($event)"
+    ></app-brightness-control-slider>
+    <div class="brightness-slider-title">
+      <span>Image Brightness</span>
+    </div>
+  </div>
+
+  <div class="brightness-slider" *ngIf="!advancedMode" @vshrink>
+    <app-brightness-control-slider
+      [value]="(simpleBrightnessControl.brightnessStream | async) ?? 0"
+      [min]="5"
+      [max]="100"
+      (valueChange)="simpleBrightnessControl.setBrightness($event)"
+    ></app-brightness-control-slider>
+    <div class="brightness-slider-title">
+      <span>Brightness</span>
+    </div>
+  </div>
+
+</div>

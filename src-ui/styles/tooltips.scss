@@ -1,11 +1,11 @@
 @import 'shadows';
 
 .ovr-tooltip {
+  --offset: 4px;
   position: absolute;
   width: 0;
   height: 0;
   z-index: 500;
-  $offset: 4px;
   transition: all 0.3s var(--ease-cubic-custom-1);
   transform: scale(0.9);
 
@@ -22,7 +22,7 @@
     right: 0;
 
     .ovr-tooltip-container {
-      transform: translate(calc(0% + $offset), -50%);
+      transform: translate(calc(0% + var(--offset)), -50%);
     }
   }
 
@@ -31,7 +31,7 @@
     left: 0;
 
     .ovr-tooltip-container {
-      transform: translate(calc(-100% - $offset), -50%);
+      transform: translate(calc(-100% - var(--offset)), -50%);
     }
   }
 
@@ -40,7 +40,7 @@
     top: 0;
 
     .ovr-tooltip-container {
-      transform: translate(-50%, calc(-100% - $offset));
+      transform: translate(-50%, calc(-100% - var(--offset)));
     }
   }
 
@@ -49,7 +49,7 @@
     bottom: 0;
 
     .ovr-tooltip-container {
-      transform: translate(-50%, calc(0% + $offset));
+      transform: translate(-50%, calc(0% + var(--offset)));
     }
   }
 
@@ -67,7 +67,6 @@
     background: color-mix(in srgb, var(--color-surface-1) 25%, transparent);
     padding: 0.75em 1em;
     color: var(--color-text-1);
-    //font-size: 0.95em;
     font-weight: 400;
     white-space: pre;
     text-align: center;

@@ -125,11 +125,19 @@ $background-color: var(--color-surface-2);
   white-space: nowrap;
   transition: all 0.15s ease;
 
+  & > * {
+    transition: all 0.15s ease;
+  }
+
   &.clickable {
     cursor: pointer;
 
     &:active {
-      opacity: 0.6;
+      background: color-mix(in srgb, var(--color-surface-0) 60%, transparent);
+
+      & > * {
+        opacity: 0.6;
+      }
     }
   }
 
@@ -177,8 +185,32 @@ $background-color: var(--color-surface-2);
 
 .sleep-mode,
 .vrc-status,
-.steamvr-status {
+.steamvr-status, .brightness-simple {
   span:not(:last-child) {
+    opacity: 0.5;
+  }
+}
+
+.brightness-simple, .brightness-advanced {
+  &.active {
+    border-color: var(--color-primary);
+  }
+}
+
+.brightness-advanced {
+  span:first-of-type {
+    margin-left: 0.25em;
+  }
+
+  span:not(:first-of-type):not(:last-of-type) {
+    opacity: 0.5;
+  }
+
+  span:last-of-type {
+    margin-right: 0.25em;
+  }
+
+  span.inactive {
     opacity: 0.5;
   }
 }

@@ -19,6 +19,7 @@ import { DisplayBrightnessControlService } from './display-brightness-control.se
 import { ImageBrightnessControlService } from './image-brightness-control.service';
 import { SetBrightnessAutomationConfig } from '../../models/automations';
 import { OpenVRService } from '../openvr.service';
+import { SetBrightnessReason } from './brightness-control-models';
 
 type BrightnessAutomationType = 'SLEEP_MODE_ENABLE' | 'SLEEP_MODE_DISABLE' | 'SLEEP_PREPARATION';
 
@@ -43,9 +44,11 @@ export class BrightnessControlAutomationService {
   ) {}
 
   async init() {
+    // Keep track of the advanced mode being enabled or not
     this.automationConfigService.configs
       .pipe(map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE))
       .subscribe((config) => (this.mode = config.enabled ? 'ADVANCED' : 'SIMPLE'));
+    // Run automations when the sleep mode changes
     this.sleepService.mode
       .pipe(
         skip(1),
@@ -56,35 +59,49 @@ export class BrightnessControlAutomationService {
               ? c.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
               : c.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
           );
-          await this.onAutomationTrigger('SLEEP_MODE_ENABLE', config);
+          console.log('SLEEP MODE CHANGED, TO ', sleepMode);
+          await this.onAutomationTrigger(
+            sleepMode ? 'SLEEP_MODE_ENABLE' : 'SLEEP_MODE_DISABLE',
+            config
+          );
         })
       )
       .subscribe();
+    // Run automations when OyasumiVR starts, or SteamVR is started
     merge(
-      this.sleepService.mode.pipe(debounceTime(500), take(1)),
+      this.sleepService.mode.pipe(
+        debounceTime(500),
+        take(1),
+        map((sleepMode) => ({ reason: 'OYASUMIVR' as 'OYASUMIVR' | 'STEAMVR', sleepMode }))
+      ),
       this.openvr.status.pipe(
-        filter((status) => status === 'INITIALIZED'),
         distinctUntilChanged(),
-        debounceTime(500)
+        filter((status) => status === 'INITIALIZED'),
+        debounceTime(500),
+        switchMap(() => this.sleepService.mode.pipe(take(1))),
+        map((sleepMode) => ({ reason: 'STEAMVR' as 'OYASUMIVR' | 'STEAMVR', sleepMode }))
       )
     )
       .pipe(debounceTime(500))
-      .subscribe(async (sleepMode) => {
+      .subscribe(async ({ sleepMode, reason }) => {
+        console.log('APPLY_ON_START sleepMode: ' + sleepMode);
         const configs = await firstValueFrom(this.automationConfigService.configs);
         if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.applyOnStart && sleepMode) {
+          console.log('APPLYING SLEEP MODE ENABLE ON START');
           await this.onAutomationTrigger(
             'SLEEP_MODE_ENABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE,
-            false,
-            true
+            true,
+            reason
           );
         }
         if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.applyOnStart && !sleepMode) {
+          console.log('APPLYING SLEEP MODE DISABLE ON START');
           await this.onAutomationTrigger(
             'SLEEP_MODE_DISABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE,
-            false,
-            true
+            true,
+            reason
           );
         }
       });
@@ -115,15 +132,31 @@ export class BrightnessControlAutomationService {
     automationType: BrightnessAutomationType,
     config: Omit<SetBrightnessAutomationConfig, 'applyOnStart'>,
     forceInstant = false,
-    onStart = false
+    onStart?: 'OYASUMIVR' | 'STEAMVR'
   ) {
-    const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
-      (c) => c.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled
-    );
+    // Stop if the automation is disabled
     if (!config.enabled) return;
+    // Determine the log reason
+    const logReasonMap: Record<BrightnessAutomationType, SetBrightnessReason> = {
+      SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
+      SLEEP_MODE_DISABLE: 'SLEEP_MODE_DISABLE',
+      SLEEP_PREPARATION: 'SLEEP_PREPARATION',
+    };
+    const onStartLogReasonMap: Record<'OYASUMIVR' | 'STEAMVR', SetBrightnessReason> = {
+      OYASUMIVR: 'OYASUMIVR_START',
+      STEAMVR: 'STEAMVR_START',
+    };
+    const logReason: SetBrightnessReason = onStart
+      ? onStartLogReasonMap[onStart]
+      : logReasonMap[automationType];
+    // Cancel any active transitions
     this.simpleBrightnessControl.cancelActiveTransition();
     this.displayBrightnessControl.cancelActiveTransition();
     this.imageBrightnessControl.cancelActiveTransition();
+    // Apply the brightness changes
+    const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
+      (c) => c.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled
+    );
     if (!forceInstant && config.transition) {
       const tasks: CancellableTask[] = (() => {
         if (advancedMode) {
@@ -131,12 +164,16 @@ export class BrightnessControlAutomationService {
             this.imageBrightnessControl.transitionBrightness(
               config.imageBrightness,
               config.transitionTime,
-              'INDIRECT'
+              {
+                logReason: logReasonMap[automationType],
+              }
             ),
             this.displayBrightnessControl.transitionBrightness(
               config.displayBrightness,
               config.transitionTime,
-              'INDIRECT'
+              {
+                logReason: logReasonMap[automationType],
+              }
             ),
           ];
         } else {
@@ -144,7 +181,9 @@ export class BrightnessControlAutomationService {
             this.simpleBrightnessControl.transitionBrightness(
               config.brightness,
               config.transitionTime,
-              'INDIRECT'
+              {
+                logReason: logReasonMap[automationType],
+              }
             ),
           ];
         }
@@ -155,12 +194,19 @@ export class BrightnessControlAutomationService {
       };
     } else {
       if (advancedMode) {
-        await this.imageBrightnessControl.setBrightness(config.imageBrightness, 'INDIRECT');
-        await this.displayBrightnessControl.setBrightness(config.displayBrightness, 'INDIRECT');
+        await this.imageBrightnessControl.setBrightness(config.imageBrightness, {
+          logReason: logReasonMap[automationType],
+        });
+        await this.displayBrightnessControl.setBrightness(config.displayBrightness, {
+          logReason: logReasonMap[automationType],
+        });
       } else {
-        await this.simpleBrightnessControl.setBrightness(config.brightness, 'INDIRECT');
+        await this.simpleBrightnessControl.setBrightness(config.brightness, {
+          logReason: logReasonMap[automationType],
+        });
       }
     }
+    // We do not log events for onStart type triggers
     if (onStart) return;
     // TODO: LOGGING
     // this.eventLog.logEvent({

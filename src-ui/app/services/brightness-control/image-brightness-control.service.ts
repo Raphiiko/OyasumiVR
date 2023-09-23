@@ -4,6 +4,7 @@ import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { createBrightnessTransitionTask } from './brightness-transition';
 import { invoke } from '@tauri-apps/api';
+import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
 
 export const DEFAULT_IMAGE_BRIGHTNESS_GAMMA = 0.55;
 
@@ -50,8 +51,12 @@ export class ImageBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    reason: 'DIRECT' | 'INDIRECT'
+    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
   ): CancellableTask {
+    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    if (this._brightness.value === percentage) {
+      return new CancellableTask();
+    }
     this._activeTransition?.cancel();
     this._activeTransition = createBrightnessTransitionTask(
       'IMAGE',
@@ -59,7 +64,8 @@ export class ImageBrightnessControlService {
       async () => this.brightness,
       async () => [0, 100],
       percentage,
-      duration
+      duration,
+      { logReason: opt.logReason }
     );
     this._activeTransition.onComplete.subscribe(() => {
       if (this._activeTransition?.isComplete()) this._activeTransition = undefined;
@@ -67,7 +73,9 @@ export class ImageBrightnessControlService {
     this._activeTransition.onError.subscribe(() => {
       if (this._activeTransition?.isError()) this._activeTransition = undefined;
     });
-    info(`[BrightnessControl] Starting image brightness transition (${reason})`);
+    if (opt.logReason) {
+      info(`[BrightnessControl] Starting image brightness transition (Reason: ${opt.logReason})`);
+    }
     this._activeTransition.start();
     return this._activeTransition;
   }
@@ -77,18 +85,19 @@ export class ImageBrightnessControlService {
     this._activeTransition = undefined;
   }
 
-  async setBrightness(percentage: number, reason: 'DIRECT' | 'INDIRECT') {
-    if (reason === 'DIRECT') this.cancelActiveTransition();
+  async setBrightness(
+    percentage: number,
+    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+  ) {
+    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);
     await this.setImageBrightness(percentage);
-    switch (reason) {
-      case 'DIRECT':
-        await info(`[BrightnessControl] Set image brightness to ${percentage}% (${reason})`);
-        break;
-      case 'INDIRECT':
-        // Logs are made by whatever triggered the brightness change.
-        break;
+    if (opt.logReason) {
+      await info(
+        `[BrightnessControl] Set image brightness to ${percentage}% (Reason: ${opt.logReason})`
+      );
     }
   }
 }

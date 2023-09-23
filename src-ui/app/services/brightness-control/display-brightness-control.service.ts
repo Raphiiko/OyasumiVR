@@ -18,6 +18,7 @@ import { isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { createBrightnessTransitionTask } from './brightness-transition';
+import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
 
 @Injectable({
   providedIn: 'root',
@@ -68,8 +69,12 @@ export class DisplayBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    reason: 'DIRECT' | 'INDIRECT'
+    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
   ): CancellableTask {
+    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    if (this._brightness.value === percentage) {
+      return new CancellableTask();
+    }
     this._activeTransition?.cancel();
     this._activeTransition = createBrightnessTransitionTask(
       'DISPLAY',
@@ -77,7 +82,8 @@ export class DisplayBrightnessControlService {
       this.fetchBrightness.bind(this),
       this.getBrightnessBounds.bind(this),
       percentage,
-      duration
+      duration,
+      { logReason: opt.logReason }
     );
     this._activeTransition.onComplete.subscribe(() => {
       if (this._activeTransition?.isComplete()) this._activeTransition = undefined;
@@ -85,7 +91,9 @@ export class DisplayBrightnessControlService {
     this._activeTransition.onError.subscribe(() => {
       if (this._activeTransition?.isError()) this._activeTransition = undefined;
     });
-    info(`[BrightnessControl] Starting display brightness transition (${reason})`);
+    if (opt.logReason) {
+      info(`[BrightnessControl] Starting display brightness transition (Reason: ${opt.logReason})`);
+    }
     this._activeTransition.start();
     return this._activeTransition;
   }
@@ -95,19 +103,20 @@ export class DisplayBrightnessControlService {
     this._activeTransition = undefined;
   }
 
-  async setBrightness(percentage: number, reason: 'DIRECT' | 'INDIRECT') {
+  async setBrightness(
+    percentage: number,
+    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+  ) {
+    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (!(await firstValueFrom(this.driverIsAvailable))) throw 'DRIVER_UNAVAILABLE';
-    if (reason === 'DIRECT') this.cancelActiveTransition();
+    if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);
     await this.driver.value!.setBrightnessPercentage(percentage);
-    switch (reason) {
-      case 'DIRECT':
-        await info(`[BrightnessControl] Set display brightness to ${percentage}% (${reason})`);
-        break;
-      case 'INDIRECT':
-        // Logs are made by whatever triggered the brightness change.
-        break;
+    if (opt.logReason) {
+      await info(
+        `[BrightnessControl] Set display brightness to ${percentage}% (Reason: ${opt.logReason})`
+      );
     }
   }
 

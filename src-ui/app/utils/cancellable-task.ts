@@ -24,7 +24,12 @@ export class CancellableTask<T = unknown, E = unknown> {
     map(() => this.error!)
   );
 
-  constructor(private work: (task: CancellableTask, status: CancellableTaskStatus) => Promise<T>) {}
+  constructor(
+    private work: (
+      task: CancellableTask,
+      status: CancellableTaskStatus
+    ) => Promise<T> = async (): Promise<any> => {}
+  ) {}
 
   public async start(): Promise<T> {
     try {
