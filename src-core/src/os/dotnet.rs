@@ -168,7 +168,7 @@ pub async fn install_asp_net_core(version: &String) -> Result<(), String> {
 pub async fn install_dotnet_hosting_bundle(version: &String) -> Result<(), String> {
     if !is_semver(version) {
         error!(
-            "[Core] Tried installing ASP.NET Core runtime version: {}",
+            "[Core] Tried installing .NET Hosting Bundle version: {}",
             version
         );
         return Err("INVALID_VERSION".into());
@@ -178,7 +178,7 @@ pub async fn install_dotnet_hosting_bundle(version: &String) -> Result<(), Strin
         version, version
     );
     info!(
-        "[Core] Downloading ASP.NET Core {} installer from ({})",
+        "[Core] Downloading .NET Hosting Bundle {} installer from ({})",
         version, installer_url
     );
     download_and_install(installer_url).await

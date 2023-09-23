@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Updated translations to use ICU syntax.
+ 
+### Fixed
+- Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
 
 ## [1.9.0]
 

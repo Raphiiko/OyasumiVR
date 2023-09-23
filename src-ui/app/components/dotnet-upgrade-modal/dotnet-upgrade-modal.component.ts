@@ -79,7 +79,11 @@ export class DotnetUpgradeModalComponent extends BaseModalComponent<any, any> {
         case 'netCore':
         case 'aspNetCore': {
           if (competedList.includes(runtimeStatus.type)) continue;
-          await this.dotnetService.installDotNetHostingBundle(runtimeStatus.version!);
+          try {
+            await this.dotnetService.installDotNetHostingBundle(runtimeStatus.version!);
+          } catch (e) {
+            // Failure here is acceptable. We'll try installing the runtimes individually later.
+          }
           competedList.push('netCore', 'aspNetCore');
           break;
         }
