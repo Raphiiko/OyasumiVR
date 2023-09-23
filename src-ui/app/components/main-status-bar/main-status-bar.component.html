@@ -39,6 +39,7 @@
         [tooltipMargin]="8"
         (click)="openBrightnessControlModal()"
         @hshrink
+        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">brightness_medium</i>
@@ -60,6 +61,7 @@
         [tooltipMargin]="8"
         (click)="openBrightnessControlModal()"
         @hshrink
+        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">monitor</i>

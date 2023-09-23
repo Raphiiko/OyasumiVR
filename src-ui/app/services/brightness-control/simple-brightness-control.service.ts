@@ -15,14 +15,11 @@ import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightn
 })
 export class SimpleBrightnessControlService {
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private _activeTransition?: CancellableTask;
+  private _activeTransition = new BehaviorSubject<CancellableTask | undefined>(undefined);
+  public readonly activeTransition = this._activeTransition.asObservable();
   private _advancedMode = new BehaviorSubject(false);
   private displayBrightnessDriverAvailable = false;
   public readonly advancedMode = this._advancedMode.asObservable();
-
-  public get activeTransition() {
-    return this._activeTransition;
-  }
 
   get brightness(): number {
     return this._brightness.value;
@@ -42,14 +39,18 @@ export class SimpleBrightnessControlService {
       .pipe(
         map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE),
         tap((config) => this._advancedMode.next(config.enabled)),
-        skip(1),
-        filter((config) => !config.enabled)
+        skip(1)
       )
-      .subscribe(async () => {
-        await this.setBrightness(this.brightness, {
-          cancelActiveTransition: true,
-          logReason: undefined,
-        });
+      .subscribe(async (advancedMode) => {
+        this.cancelActiveTransition();
+        this.displayBrightnessControl.cancelActiveTransition();
+        this.imageBrightnessControl.cancelActiveTransition();
+        if (!advancedMode) {
+          await this.setBrightness(this.brightness, {
+            cancelActiveTransition: true,
+            logReason: undefined,
+          });
+        }
       });
     // Set brightness when the display brightness driver availability changes
     this.displayBrightnessControl.driverIsAvailable
@@ -75,8 +76,8 @@ export class SimpleBrightnessControlService {
     if (this._brightness.value === percentage) {
       return new CancellableTask();
     }
-    this._activeTransition?.cancel();
-    this._activeTransition = createBrightnessTransitionTask(
+    this._activeTransition.value?.cancel();
+    const transition = createBrightnessTransitionTask(
       'SIMPLE',
       this.setBrightness.bind(this),
       async () => this.brightness,
@@ -85,22 +86,27 @@ export class SimpleBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    this._activeTransition.onComplete.subscribe(() => {
-      if (this._activeTransition?.isComplete()) this._activeTransition = undefined;
+    transition.onComplete.subscribe(() => {
+      if (transition.isComplete() && this._activeTransition.value === transition)
+        this._activeTransition.next(undefined);
     });
-    this._activeTransition.onError.subscribe(() => {
-      if (this._activeTransition?.isError()) this._activeTransition = undefined;
+    transition.onError.subscribe(() => {
+      if (transition.isError() && this._activeTransition.value === transition)
+        this._activeTransition.next(undefined);
     });
     if (opt.logReason) {
       info(`[BrightnessControl] Starting brightness transition (Reason: ${opt.logReason})`);
     }
-    this._activeTransition.start();
-    return this._activeTransition;
+    this._activeTransition.next(transition);
+    transition.start();
+    return transition;
   }
 
   cancelActiveTransition() {
-    this._activeTransition?.cancel();
-    this._activeTransition = undefined;
+    if (this._activeTransition.value) {
+      this._activeTransition.value.cancel();
+      this._activeTransition.next(undefined);
+    }
   }
 
   async setBrightness(
@@ -143,7 +149,6 @@ export class SimpleBrightnessControlService {
       logReason: null,
     });
     if (this.displayBrightnessDriverAvailable) {
-      this.displayBrightnessControl.cancelActiveTransition();
       await this.displayBrightnessControl.setBrightness(displayBrightness, {
         cancelActiveTransition: true,
         logReason: null,

@@ -15,7 +15,7 @@
           <div
             class="small-spinner"
             @fade
-            *ngIf="brightnessAutomation.isSleepEnableTransitionActive"
+            *ngIf="isSleepModeEnableTransitionActive | async"
           ></div>
           <label class="switch-toggle">
             <input
@@ -34,7 +34,7 @@
         <div
           class="active-effect"
           @fade
-          *ngIf="brightnessAutomation.isSleepEnableTransitionActive"
+          *ngIf="isSleepModeEnableTransitionActive | async"
         ></div>
       </div>
 
@@ -240,7 +240,7 @@
           <div
             class="small-spinner"
             @fade
-            *ngIf="brightnessAutomation.isSleepDisableTransitionActive"
+            *ngIf="isSleepModeDisableTransitionActive | async"
           ></div>
           <label class="switch-toggle">
             <input
@@ -259,7 +259,7 @@
         <div
           class="active-effect"
           @fade
-          *ngIf="brightnessAutomation.isSleepDisableTransitionActive"
+          *ngIf="isSleepModeDisableTransitionActive | async"
         ></div>
       </div>
 
@@ -475,7 +475,7 @@
           <div
             class="small-spinner"
             @fade
-            *ngIf="brightnessAutomation.isSleepPreparationTransitionActive"
+            *ngIf="isSleepPreparationTransitionActive | async"
           ></div>
           <label class="switch-toggle">
             <input
@@ -494,7 +494,7 @@
         <div
           class="active-effect"
           @fade
-          *ngIf="brightnessAutomation.isSleepPreparationTransitionActive"
+          *ngIf="isSleepPreparationTransitionActive | async"
         ></div>
       </div>
 

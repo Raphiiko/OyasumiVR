@@ -11,6 +11,7 @@
         [min]="displayBrightnessBounds[0]"
         [max]="displayBrightnessBounds[1]"
         (valueChange)="displayBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(displayBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
         <span translate>comp.brightness-control-modal.displayBrightness</span>
@@ -23,6 +24,7 @@
         [min]="5"
         [max]="100"
         (valueChange)="imageBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(imageBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
         <span translate>comp.brightness-control-modal.imageBrightness</span>
@@ -35,6 +37,7 @@
         [min]="5"
         [max]="100"
         (valueChange)="simpleBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(simpleBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
         <span translate>comp.brightness-control-modal.brightness</span>

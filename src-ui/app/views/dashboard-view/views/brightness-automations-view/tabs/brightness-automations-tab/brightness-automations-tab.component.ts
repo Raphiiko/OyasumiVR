@@ -14,6 +14,7 @@ import { BrightnessControlAutomationService } from 'src-ui/app/services/brightne
 import { DisplayBrightnessControlService } from '../../../../../../services/brightness-control/display-brightness-control.service';
 import { ImageBrightnessControlService } from '../../../../../../services/brightness-control/image-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../../../../../services/brightness-control/simple-brightness-control.service';
+import { firstValueFrom } from 'rxjs';
 
 interface BrightnessBounds {
   min: number;
@@ -72,6 +73,13 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     DISPLAY: 5,
   };
   protected vshakeElements: string[] = [];
+
+  protected isSleepModeEnableTransitionActive =
+    this.brightnessAutomation.isTransitionActive('SLEEP_MODE_ENABLE');
+  protected isSleepModeDisableTransitionActive =
+    this.brightnessAutomation.isTransitionActive('SLEEP_MODE_DISABLE');
+  protected isSleepPreparationTransitionActive =
+    this.brightnessAutomation.isTransitionActive('SLEEP_PREPARATION');
 
   @Input() public advancedMode = false;
 
@@ -136,13 +144,18 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     };
     switch (automation) {
       case 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE':
-        if (this.brightnessAutomation.isSleepEnableTransitionActive) cancelAllTransitions();
+        if (await firstValueFrom(this.brightnessAutomation.isTransitionActive('SLEEP_MODE_ENABLE')))
+          cancelAllTransitions();
         break;
       case 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE':
-        if (this.brightnessAutomation.isSleepDisableTransitionActive) cancelAllTransitions();
+        if (
+          await firstValueFrom(this.brightnessAutomation.isTransitionActive('SLEEP_MODE_DISABLE'))
+        )
+          cancelAllTransitions();
         break;
       case 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION':
-        if (this.brightnessAutomation.isSleepPreparationTransitionActive) cancelAllTransitions();
+        if (await firstValueFrom(this.brightnessAutomation.isTransitionActive('SLEEP_PREPARATION')))
+          cancelAllTransitions();
         break;
     }
   }
@@ -210,7 +223,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   }
 
   async updateBrightnessWithCurrent(automation: AutomationType, type: BrightnessType) {
-    let brightness: number = await (async () => {
+    const brightness: number = await (async () => {
       switch (type) {
         case 'SIMPLE':
           return this.simpleBrightnessControl.brightness;

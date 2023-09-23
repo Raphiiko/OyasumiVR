@@ -16,15 +16,15 @@
   border: 0.15em solid var(--color-surface-3);
   background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
   background-image: radial-gradient(
-      ellipse at 40% 0%,
-      color-mix(in srgb, var(--a) 6%, transparent) 0,
-      transparent 75%
-    ),
-    radial-gradient(
-      ellipse at 60% 0%,
-      color-mix(in srgb, var(--b) 6%, transparent) 0,
-      transparent 75%
-    );
+                  ellipse at 40% 0%,
+                  color-mix(in srgb, var(--a) 6%, transparent) 0,
+                  transparent 75%
+  ),
+  radial-gradient(
+                  ellipse at 60% 0%,
+                  color-mix(in srgb, var(--b) 6%, transparent) 0,
+                  transparent 75%
+  );
   @include pane-radial-gradient(#fff);
 }
 
@@ -90,5 +90,32 @@
   &.active {
     pointer-events: none;
     opacity: 0;
+  }
+}
+
+@keyframes slider-glow {
+  0% {
+    filter: drop-shadow(0 0 6px rgba(white, 0.5));
+  }
+
+  40% {
+    filter: drop-shadow(0 0 6px rgba(white, 1.0));
+  }
+
+  80% {
+    filter: drop-shadow(0 0 6px rgba(white, 0.5));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 6px rgba(white, 0.5));
+  }
+}
+
+app-brightness-control-slider {
+  transition: all .15s;
+  //filter: drop-shadow(0 0 0 transparent);
+
+  &.transition-active {
+    animation: slider-glow 2s ease-out infinite normal;
   }
 }

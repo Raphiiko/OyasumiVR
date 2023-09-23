@@ -2,13 +2,18 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import {
+  BehaviorSubject,
+  combineLatest,
   debounceTime,
   distinctUntilChanged,
   filter,
   firstValueFrom,
   map,
   merge,
+  Observable,
+  of,
   skip,
+  startWith,
   switchMap,
   take,
 } from 'rxjs';
@@ -32,11 +37,26 @@ type BrightnessAutomationType = 'SLEEP_MODE_ENABLE' | 'SLEEP_MODE_DISABLE' | 'SL
   providedIn: 'root',
 })
 export class BrightnessControlAutomationService {
-  private lastActivatedTransition?: {
+  private lastActivatedTransition = new BehaviorSubject<{
     tasks: CancellableTask[];
     automation: BrightnessAutomationType;
-  };
+  } | null>(null);
   private mode: 'SIMPLE' | 'ADVANCED' = 'SIMPLE';
+
+  public readonly anyTransitionActive = this.lastActivatedTransition.pipe(
+    switchMap((lastActivatedTransition) =>
+      combineLatest(
+        (lastActivatedTransition?.tasks ?? []).map((task) =>
+          merge(task.onCancelled, task.onError, task.onComplete).pipe(
+            take(1),
+            map(() => true),
+            startWith(task.isComplete() || task.isError() || task.isCancelled())
+          )
+        )
+      )
+    ),
+    map((transitions) => transitions.some((t) => !t))
+  );
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -108,25 +128,21 @@ export class BrightnessControlAutomationService {
       });
   }
 
-  public get isSleepEnableTransitionActive() {
-    return this.isTransitionActive('SLEEP_MODE_ENABLE');
-  }
-
-  public get isSleepDisableTransitionActive() {
-    return this.isTransitionActive('SLEEP_MODE_DISABLE');
-  }
-
-  public get isSleepPreparationTransitionActive() {
-    return this.isTransitionActive('SLEEP_PREPARATION');
-  }
-
-  private isTransitionActive(automation: BrightnessAutomationType) {
-    if (this.lastActivatedTransition?.automation !== automation) return false;
-    return [
-      this.displayBrightnessControl.activeTransition,
-      this.imageBrightnessControl.activeTransition,
-      this.simpleBrightnessControl.activeTransition,
-    ].some((t) => !!t && this.lastActivatedTransition?.tasks.includes(t));
+  public isTransitionActive(automation: BrightnessAutomationType): Observable<boolean> {
+    return this.lastActivatedTransition.pipe(
+      switchMap((lastActivatedTransition) => {
+        if (lastActivatedTransition?.automation !== automation) return of(false);
+        return combineLatest([
+          this.displayBrightnessControl.activeTransition,
+          this.imageBrightnessControl.activeTransition,
+          this.simpleBrightnessControl.activeTransition,
+        ]).pipe(
+          map((activeTransitions) => {
+            return activeTransitions.some((t) => !!t && lastActivatedTransition?.tasks.includes(t));
+          })
+        );
+      })
+    );
   }
 
   private async onAutomationTrigger(
@@ -167,51 +183,58 @@ export class BrightnessControlAutomationService {
       (c) => c.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled
     );
     if (!forceInstant && config.transition) {
-      const tasks: CancellableTask[] = (() => {
+      const tasks: CancellableTask[] = await (async () => {
         if (advancedMode) {
-          return [
+          const tasks = [
             this.imageBrightnessControl.transitionBrightness(
               config.imageBrightness,
               config.transitionTime,
               {
-                logReason: logReasonMap[automationType],
-              }
-            ),
-            this.displayBrightnessControl.transitionBrightness(
-              config.displayBrightness,
-              config.transitionTime,
-              {
-                logReason: logReasonMap[automationType],
+                logReason,
               }
             ),
           ];
+          if (await firstValueFrom(this.displayBrightnessControl.driverIsAvailable)) {
+            tasks.push(
+              this.displayBrightnessControl.transitionBrightness(
+                config.displayBrightness,
+                config.transitionTime,
+                {
+                  logReason,
+                }
+              )
+            );
+          }
+          return tasks;
         } else {
           return [
             this.simpleBrightnessControl.transitionBrightness(
               config.brightness,
               config.transitionTime,
               {
-                logReason: logReasonMap[automationType],
+                logReason,
               }
             ),
           ];
         }
       })();
-      this.lastActivatedTransition = {
+      this.lastActivatedTransition.next({
         tasks,
         automation: automationType,
-      };
+      });
     } else {
       if (advancedMode) {
         await this.imageBrightnessControl.setBrightness(config.imageBrightness, {
-          logReason: logReasonMap[automationType],
+          logReason,
         });
-        await this.displayBrightnessControl.setBrightness(config.displayBrightness, {
-          logReason: logReasonMap[automationType],
-        });
+        if (await firstValueFrom(this.displayBrightnessControl.driverIsAvailable)) {
+          await this.displayBrightnessControl.setBrightness(config.displayBrightness, {
+            logReason,
+          });
+        }
       } else {
         await this.simpleBrightnessControl.setBrightness(config.brightness, {
-          logReason: logReasonMap[automationType],
+          logReason,
         });
       }
     }

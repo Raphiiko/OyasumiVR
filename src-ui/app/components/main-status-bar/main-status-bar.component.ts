@@ -12,6 +12,7 @@ import { ImageBrightnessControlService } from '../../services/brightness-control
 import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
 import { ModalService } from '../../services/modal.service';
 import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
+import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -33,7 +34,8 @@ export class MainStatusBarComponent implements OnInit {
     protected osc: OscService,
     protected displayBrightnessControl: DisplayBrightnessControlService,
     protected imageBrightnessControl: ImageBrightnessControlService,
-    protected simpleBrightnessControl: SimpleBrightnessControlService
+    protected simpleBrightnessControl: SimpleBrightnessControlService,
+    protected brightnessAutomations: BrightnessControlAutomationService
   ) {}
 
   ngOnInit(): void {}

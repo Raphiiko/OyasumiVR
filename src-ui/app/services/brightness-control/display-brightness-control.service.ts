@@ -27,7 +27,8 @@ export class DisplayBrightnessControlService {
   private driver: BehaviorSubject<DisplayBrightnessControlDriver | null> =
     new BehaviorSubject<DisplayBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private _activeTransition?: CancellableTask;
+  private _activeTransition = new BehaviorSubject<CancellableTask | undefined>(undefined);
+  public readonly activeTransition = this._activeTransition.asObservable();
   public readonly onDriverChange: Observable<void> = this.driver.pipe(
     distinctUntilChanged(),
     map(() => void 0)
@@ -35,10 +36,6 @@ export class DisplayBrightnessControlService {
   public readonly driverIsAvailable = this.driver.pipe(
     switchMap((driver) => driver?.isAvailable() ?? of(false))
   );
-
-  public get activeTransition() {
-    return this._activeTransition;
-  }
 
   get brightness(): number {
     return this._brightness.value;
@@ -75,8 +72,8 @@ export class DisplayBrightnessControlService {
     if (this._brightness.value === percentage) {
       return new CancellableTask();
     }
-    this._activeTransition?.cancel();
-    this._activeTransition = createBrightnessTransitionTask(
+    this._activeTransition.value?.cancel();
+    const transition = createBrightnessTransitionTask(
       'DISPLAY',
       this.setBrightness.bind(this),
       this.fetchBrightness.bind(this),
@@ -85,22 +82,27 @@ export class DisplayBrightnessControlService {
       duration,
       { logReason: opt.logReason }
     );
-    this._activeTransition.onComplete.subscribe(() => {
-      if (this._activeTransition?.isComplete()) this._activeTransition = undefined;
+    transition.onComplete.subscribe(() => {
+      if (transition.isComplete() && this._activeTransition.value === transition)
+        this._activeTransition.next(undefined);
     });
-    this._activeTransition.onError.subscribe(() => {
-      if (this._activeTransition?.isError()) this._activeTransition = undefined;
+    transition.onError.subscribe(() => {
+      if (transition.isError() && this._activeTransition.value === transition)
+        this._activeTransition.next(undefined);
     });
     if (opt.logReason) {
       info(`[BrightnessControl] Starting display brightness transition (Reason: ${opt.logReason})`);
     }
-    this._activeTransition.start();
-    return this._activeTransition;
+    this._activeTransition.next(transition);
+    transition.start();
+    return transition;
   }
 
   cancelActiveTransition() {
-    this._activeTransition?.cancel();
-    this._activeTransition = undefined;
+    if (this._activeTransition.value) {
+      this._activeTransition.value.cancel();
+      this._activeTransition.next(undefined);
+    }
   }
 
   async setBrightness(
@@ -108,7 +110,10 @@ export class DisplayBrightnessControlService {
     options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
   ) {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (!(await firstValueFrom(this.driverIsAvailable))) throw 'DRIVER_UNAVAILABLE';
+    if (!(await firstValueFrom(this.driverIsAvailable))) {
+      console.trace();
+      throw 'DRIVER_UNAVAILABLE';
+    }
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);

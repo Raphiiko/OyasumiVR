@@ -15,6 +15,7 @@
     opacity: 0.5;
   }
 }
+
 @mixin attention-glow($size) {
   box-shadow: 0 0 ($size * 15px) ($size * 7.5px) rgba(white, 0.8),
     /* inner white */ 0 0 ($size * 100px) ($size * 60px) rgba(#f0f, 0.6),
