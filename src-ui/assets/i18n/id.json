@@ -1141,12 +1141,10 @@
       "quit": "Keluar OyasumiVR",
       "installAutomatically": "Instal Otomatis",
       "success": {
-        "title": "Instalasi Sukses",
-        "message": "Runtime yang diperlukan telah berhasil diinstal. Silakan keluar dari OyasumiVR, dan mulai lagi untuk melanjutkan."
+        "title": "Instalasi Sukses"
       },
       "failure": {
-        "title": "Instalasi Gagal",
-        "message": "Runtime yang hilang yang diperlukan tidak dapat diinstal secara otomatis. Silakan coba menginstalnya secara manual. Anda dapat memeriksa file log untuk informasi lebih lanjut tentang apa yang salah.\n\nJika Anda terus mengalami masalah, silakan hubungi @Raphiiko di Twitter, atau di server Discord kami."
+        "title": "Instalasi Gagal"
       }
     }
   },

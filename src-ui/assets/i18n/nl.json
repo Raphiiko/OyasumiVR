@@ -1136,12 +1136,10 @@
       "quit": "Sluit OyasumiVR",
       "installAutomatically": "Installeer Automatisch",
       "success": {
-        "title": "Installatie Gelukt",
-        "message": "De missende runtimes zijn succesvol geïnstalleerd. Sluit OyasumiVR en start het opnieuw om verder te gaan."
+        "title": "Installatie Gelukt"
       },
       "failure": {
-        "title": "Installatie Mislukt",
-        "message": "De missende runtimes konden niet automatisch worden geinstalleerd. Installeer ze a.u.b. handmatig. Je kunt de logbestanden checken voor meer informatie over wat er mis ging.\n\nAls het je niet lukt om dit te doen en OyasumiVR draaiende te krijgen, neem dan a.u.b. contact op met @Raphiiko op Twitter, of in onze Discord server."
+        "title": "Installatie Mislukt"
       }
     }
   },

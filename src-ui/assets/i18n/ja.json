@@ -1141,12 +1141,10 @@
       "quit": "OyasumiVRを終了する",
       "installAutomatically": "自動インストール",
       "success": {
-        "title": "インストール成功",
-        "message": "インストールが完了しました。続行するにはOyasumiVR を一旦終了し、再度起動してください。"
+        "title": "インストール成功"
       },
       "failure": {
-        "title": "インストール失敗",
-        "message": "インストールできませんでした。手動でインストールしてみてください。原因はログファイルをご確認ください。問題が解決しない場合は、Twitterの @Raphiiko かDiscordサーバーまでご連絡ください。"
+        "title": "インストール失敗"
       }
     }
   },

@@ -1141,12 +1141,10 @@
       "quit": "退出 OyasumiVR",
       "installAutomatically": "自動安裝",
       "success": {
-        "title": "安裝成功",
-        "message": "所需的缺失運行時庫已經成功安裝。請退出 OyasumiVR，然後重新啟動以繼續使用。"
+        "title": "安裝成功"
       },
       "failure": {
-        "title": "安裝失敗",
-        "message": "無法自動安裝所需的缺失運行時庫。請嘗試手動安裝它們。您可以查看日誌檔案以獲取更多有關安裝失敗的資訊。\n\n如果您持續遇到問題，請在 Twitter 上聯繫 @Raphiiko 或加入我們的 Discord 伺服器尋求幫助。"
+        "title": "安裝失敗"
       }
     }
   },

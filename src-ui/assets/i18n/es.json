@@ -1180,12 +1180,10 @@
       "quit": "Cerrar OyasumiVR",
       "installAutomatically": "Instalar automáticamente",
       "success": {
-        "title": "Instalación realizada con éxito",
-        "message": "Los tiempos de ejecución necesarios se han instalado correctamente. Por favor, salga de OyasumiVR e inícielo de nuevo para continuar."
+        "title": "Instalación realizada con éxito"
       },
       "failure": {
-        "title": "Instalación fallida",
-        "message": "No se han podido instalar automáticamente los tiempos de ejecución que faltaban. Por favor, intente instalarlos manualmente. Puede consultar los archivos de registro para obtener más información sobre qué ha fallado.\n\nSi sigues teniendo problemas, ponte en contacto con @Raphiiko en Twitter o en nuestro servidor Discord."
+        "title": "Instalación fallida"
       }
     }
   },
