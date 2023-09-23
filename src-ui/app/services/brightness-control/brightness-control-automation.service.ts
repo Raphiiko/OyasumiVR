@@ -59,7 +59,6 @@ export class BrightnessControlAutomationService {
               ? c.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
               : c.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
           );
-          console.log('SLEEP MODE CHANGED, TO ', sleepMode);
           await this.onAutomationTrigger(
             sleepMode ? 'SLEEP_MODE_ENABLE' : 'SLEEP_MODE_DISABLE',
             config
@@ -84,10 +83,8 @@ export class BrightnessControlAutomationService {
     )
       .pipe(debounceTime(500))
       .subscribe(async ({ sleepMode, reason }) => {
-        console.log('APPLY_ON_START sleepMode: ' + sleepMode);
         const configs = await firstValueFrom(this.automationConfigService.configs);
         if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.applyOnStart && sleepMode) {
-          console.log('APPLYING SLEEP MODE ENABLE ON START');
           await this.onAutomationTrigger(
             'SLEEP_MODE_ENABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE,
@@ -96,7 +93,6 @@ export class BrightnessControlAutomationService {
           );
         }
         if (configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.applyOnStart && !sleepMode) {
-          console.log('APPLYING SLEEP MODE DISABLE ON START');
           await this.onAutomationTrigger(
             'SLEEP_MODE_DISABLE',
             configs.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE,

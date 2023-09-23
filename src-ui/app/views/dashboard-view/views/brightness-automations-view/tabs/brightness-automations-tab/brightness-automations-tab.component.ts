@@ -71,6 +71,7 @@ export class BrightnessAutomationsTabComponent implements OnInit {
     IMAGE: 0,
     DISPLAY: 5,
   };
+  protected vshakeElements: string[] = [];
 
   @Input() public advancedMode = false;
 
@@ -206,6 +207,25 @@ export class BrightnessAutomationsTabComponent implements OnInit {
         transitionTime: transitionValue * multiplier,
       }
     );
+  }
+
+  async updateBrightnessWithCurrent(automation: AutomationType, type: BrightnessType) {
+    let brightness: number = await (async () => {
+      switch (type) {
+        case 'SIMPLE':
+          return this.simpleBrightnessControl.brightness;
+        case 'IMAGE':
+          return this.imageBrightnessControl.brightness;
+        case 'DISPLAY':
+          return this.displayBrightnessControl.brightness;
+      }
+    })();
+    await this.updateBrightness(automation, type, brightness);
+    this.vshakeElements.push(automation + '_' + type);
+    setTimeout(() => {
+      const index = this.vshakeElements.indexOf(automation + '_' + type);
+      if (index >= 0) this.vshakeElements.splice(index, 1);
+    }, 300);
   }
 
   private async parseTransitionSetting(
