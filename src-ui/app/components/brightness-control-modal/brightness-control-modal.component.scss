@@ -15,7 +15,16 @@
   overflow: hidden;
   border: 0.15em solid var(--color-surface-3);
   background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
-  background-image: radial-gradient(ellipse at 40% 0%, color-mix(in srgb, var(--a) 6%, transparent) 0, transparent 75%), radial-gradient(ellipse at 60% 0%, color-mix(in srgb, var(--b) 6%, transparent) 0, transparent 75%);
+  background-image: radial-gradient(
+      ellipse at 40% 0%,
+      color-mix(in srgb, var(--a) 6%, transparent) 0,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse at 60% 0%,
+      color-mix(in srgb, var(--b) 6%, transparent) 0,
+      transparent 75%
+    );
   @include pane-radial-gradient(#fff);
 }
 
@@ -28,7 +37,7 @@
   flex-direction: column;
   align-items: stretch;
   justify-content: center;
-  transition: opacity .15s ease;
+  transition: opacity 0.15s ease;
 
   &:not(:first-child) {
     margin-top: 1.5em;
@@ -65,7 +74,7 @@
 .shortcut-automations {
   color: var(--color-text-3);
   text-decoration: none;
-  transition: all .15s;
+  transition: all 0.15s;
   line-height: 1em;
   vertical-align: middle;
   display: inline-block;

@@ -92,9 +92,7 @@
         </div>
         <div
           class="limit-setting-description"
-          [translate]="
-            'status-automations.playerLimitLabel'
-          "
+          [translate]="'status-automations.playerLimitLabel'"
           [translateParams]="{ count: limit.value }"
         ></div>
       </div>
@@ -153,7 +151,7 @@
       <div class="alert-content">
         <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
         <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em"
-        >status-automations.moreInfo
+          >status-automations.moreInfo
         </button>
       </div>
     </div>

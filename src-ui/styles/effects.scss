@@ -23,7 +23,14 @@
 }
 
 @mixin pane-radial-gradient($colorA, $colorB: $colorA, $opacity: 6%) {
-  background-image: radial-gradient(ellipse at 40% 0%, color-mix(in srgb, $colorA $opacity, transparent) 0, transparent 75%), radial-gradient(ellipse at 60% 0%, color-mix(in srgb, $colorB $opacity, transparent) 0, transparent 75%);
+  background-image: radial-gradient(
+      ellipse at 40% 0%,
+      color-mix(in srgb, $colorA $opacity, transparent) 0,
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse at 60% 0%,
+      color-mix(in srgb, $colorB $opacity, transparent) 0,
+      transparent 75%
+    );
 }
-
-

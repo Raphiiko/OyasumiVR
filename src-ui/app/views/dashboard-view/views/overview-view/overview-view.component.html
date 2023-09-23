@@ -35,7 +35,9 @@
       <div class="label" translate>overview.sleep-mode.label</div>
       <div
         class="status"
-        [translate]="sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'"
+        [translate]="
+          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'
+        "
       ></div>
     </div>
     <div class="bottom">
@@ -56,12 +58,17 @@
         overview.sleep-mode.deactivate
       </button>
     </div>
-    <div *ngFor="let i of ['sleep', 'peek', 'awake', 'awake-hover']" class="illustration"
-         [ngClass]="[i, illustration === i ? 'active' : '']"
+    <div
+      *ngFor="let i of ['sleep', 'peek', 'awake', 'awake-hover']"
+      class="illustration"
+      [ngClass]="[i, illustration === i ? 'active' : '']"
     >
-      <img [attr.src]="'assets/img/illustration_'+i+'.png'" class="bg" />
-      <img [attr.src]="'assets/img/illustration_'+i+'.png'" (click)="setSleepMode(!sleepModeActive)"
-           (mouseenter)="determineIllustration(true)" (mouseleave)="determineIllustration(false)"
+      <img [attr.src]="'assets/img/illustration_' + i + '.png'" class="bg" />
+      <img
+        [attr.src]="'assets/img/illustration_' + i + '.png'"
+        (click)="setSleepMode(!sleepModeActive)"
+        (mouseenter)="determineIllustration(true)"
+        (mouseleave)="determineIllustration(false)"
       />
     </div>
   </div>

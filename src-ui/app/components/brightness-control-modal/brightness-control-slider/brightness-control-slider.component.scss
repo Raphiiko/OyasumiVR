@@ -17,11 +17,9 @@
       opacity: 0.6;
 
       &:first-of-type {
-
       }
 
       &-last-of-type {
-
       }
     }
   }
@@ -42,7 +40,7 @@
     background-color: color-mix(in srgb, var(--color-surface-1) 0%, transparent);
     color: var(--color-text-1);
     @include pane-radial-gradient(#fff, #fff, 3%);
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     --inner-background-color: #ffffff19;
 
     &:not(.disabled) {
@@ -67,10 +65,10 @@
       background-color: var(--inner-background-color);
       border: 0.15em solid color-mix(in srgb, var(--color-surface-5) 50%, var(--color-surface-4));
       @include shadow(5, true);
-      transition: background-color .15s ease;
+      transition: background-color 0.15s ease;
 
       &:not(.dragging) {
-        transition: background-color .15s ease, width .3s ease;
+        transition: background-color 0.15s ease, width 0.3s ease;
       }
     }
 
@@ -96,5 +94,4 @@
       width: calc(100% - 3.75em);
     }
   }
-
 }

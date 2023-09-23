@@ -1,6 +1,11 @@
 <div class="b-modal-container" @fadeUp>
   <div class="sliders-container">
-    <div class="brightness-slider" *ngIf="advancedMode" @vshrink [class.disabled]="!driverAvailable">
+    <div
+      class="brightness-slider"
+      *ngIf="advancedMode"
+      @vshrink
+      [class.disabled]="!driverAvailable"
+    >
       <app-brightness-control-slider
         [value]="(displayBrightnessControl.brightnessStream | async) ?? 0"
         [min]="displayBrightnessBounds[0]"
@@ -38,10 +43,14 @@
   </div>
 
   <div class="footer-row">
-    <a class="shortcut-automations" [routerLink]="['/dashboard/brightnessAutomations']" [routerLinkActive]="'active'"
-       [tooltip]="'comp.brightness-control-modal.automationsTooltip'" [tooltipMode]="'left'">
+    <a
+      class="shortcut-automations"
+      [routerLink]="['/dashboard/brightnessAutomations']"
+      [routerLinkActive]="'active'"
+      [tooltip]="'comp.brightness-control-modal.automationsTooltip'"
+      [tooltipMode]="'left'"
+    >
       <i class="material-icons">settings</i>
     </a>
   </div>
-
 </div>

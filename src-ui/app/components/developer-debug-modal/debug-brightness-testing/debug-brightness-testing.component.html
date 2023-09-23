@@ -3,12 +3,12 @@
   <div>
     <span>Value: </span>
     <span
-    ><code>{{ simpleBrightnessControl.brightnessStream | async }}%</code></span
+      ><code>{{ simpleBrightnessControl.brightnessStream | async }}%</code></span
     >
     <span> | </span>
     <span>Transitioning: </span>
     <span
-    ><code>{{ !!simpleBrightnessControl.activeTransition }}</code></span
+      ><code>{{ !!simpleBrightnessControl.activeTransition }}</code></span
     >
   </div>
   <app-slider
@@ -34,7 +34,7 @@
       </label>
     </div>
     <span [class.disabled]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma === null"
-    >Gamma</span
+      >Gamma</span
     >
     <span [class.disabled]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma === null">
       ({{ imageBrightnessControl.perceivedBrightnessAdjustmentGamma ?? 2.2 }})</span
@@ -51,12 +51,12 @@
   <div>
     <span>Value: </span>
     <span
-    ><code>{{ imageBrightnessControl.brightnessStream | async }}%</code></span
+      ><code>{{ imageBrightnessControl.brightnessStream | async }}%</code></span
     >
     <span> | </span>
     <span>Transitioning: </span>
     <span
-    ><code>{{ !!imageBrightnessControl.activeTransition }}</code></span
+      ><code>{{ !!imageBrightnessControl.activeTransition }}</code></span
     >
   </div>
   <app-slider
@@ -72,22 +72,22 @@
   <div>
     <span>Value: </span>
     <span
-    ><code>{{ displayBrightnessControl.brightnessStream | async }}%</code></span
+      ><code>{{ displayBrightnessControl.brightnessStream | async }}%</code></span
     >
     <span> | </span>
     <span>Range: </span>
     <span
-    ><code>{{ displayBrightnessBounds | async }}</code></span
+      ><code>{{ displayBrightnessBounds | async }}</code></span
     >
     <span> | </span>
     <span>Driver Active: </span>
     <span
-    ><code>{{ displayBrightnessControl.driverIsAvailable | async }}</code></span
+      ><code>{{ displayBrightnessControl.driverIsAvailable | async }}</code></span
     >
     <span> | </span>
     <span>Transitioning: </span>
     <span
-    ><code>{{ !!displayBrightnessControl.activeTransition }}</code></span
+      ><code>{{ !!displayBrightnessControl.activeTransition }}</code></span
     >
   </div>
   <app-slider
@@ -95,7 +95,7 @@
     [min]="((displayBrightnessBounds | async) ?? [100, 100])[0]"
     [max]="((displayBrightnessBounds | async) ?? [100, 100])[1]"
     [value]="(displayBrightnessControl.brightnessStream | async) ?? 100"
-    (valueChange)="displayBrightnessControl.setBrightness($event )"
+    (valueChange)="displayBrightnessControl.setBrightness($event)"
   ></app-slider>
 </div>
 <div>

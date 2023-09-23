@@ -1,17 +1,13 @@
 <div class="header-row" @noop>
   <span
-    [translate]="
-      'comp.osc-script-simple-editor.commandCounter'
-    "
-    [translateParams]="{ value: _script.commands.length }"
+    [translate]="'comp.osc-script-simple-editor.commandCounter'"
+    [translateParams]="{ count: _script.commands.length }"
   ></span>
   <span>&nbsp;|&nbsp;</span>
   <div class="small-spinner" *ngIf="!validated" @hshrink style="margin-right: 0.5em"></div>
   <span
-    [translate]="
-      'comp.osc-script-simple-editor.errorCounter'
-    "
-    [translateParams]="{ value: errors.length }"
+    [translate]="'comp.osc-script-simple-editor.errorCounter'"
+    [translateParams]="{ count: errors.length }"
   ></span>
   <span style="flex: 1"></span>
   <div class="header-row-buttons">
