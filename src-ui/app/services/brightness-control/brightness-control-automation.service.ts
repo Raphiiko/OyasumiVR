@@ -20,6 +20,11 @@ import { ImageBrightnessControlService } from './image-brightness-control.servic
 import { SetBrightnessAutomationConfig } from '../../models/automations';
 import { OpenVRService } from '../openvr.service';
 import { SetBrightnessReason } from './brightness-control-models';
+import {
+  EventLogDisplayBrightnessChanged,
+  EventLogImageBrightnessChanged,
+  EventLogSimpleBrightnessChanged,
+} from '../../models/event-log-entry';
 
 type BrightnessAutomationType = 'SLEEP_MODE_ENABLE' | 'SLEEP_MODE_DISABLE' | 'SLEEP_PREPARATION';
 
@@ -142,6 +147,14 @@ export class BrightnessControlAutomationService {
       OYASUMIVR: 'OYASUMIVR_START',
       STEAMVR: 'STEAMVR_START',
     };
+    const eventLogReasonMap: Record<
+      BrightnessAutomationType,
+      EventLogSimpleBrightnessChanged['reason']
+    > = {
+      SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLED',
+      SLEEP_MODE_DISABLE: 'SLEEP_MODE_DISABLED',
+      SLEEP_PREPARATION: 'SLEEP_PREPARATION',
+    };
     const logReason: SetBrightnessReason = onStart
       ? onStartLogReasonMap[onStart]
       : logReasonMap[automationType];
@@ -202,15 +215,33 @@ export class BrightnessControlAutomationService {
         });
       }
     }
-    // We do not log events for onStart type triggers
+    // We do not log events for onStart type triggers (for now)
     if (onStart) return;
-    // TODO: LOGGING
-    // this.eventLog.logEvent({
-    //   type: 'imageBrightnessChanged',
-    //   reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-    //   value: config.brightness,
-    //   transition: config.transition,
-    //   transitionTime: config.transitionTime,
-    // } as EventLogImageBrightnessChanged);
+    const eventLogReason = eventLogReasonMap[automationType];
+    if (!eventLogReason) return;
+    if (advancedMode) {
+      this.eventLog.logEvent({
+        type: 'imageBrightnessChanged',
+        reason: eventLogReason,
+        value: config.brightness,
+        transition: config.transition,
+        transitionTime: config.transitionTime,
+      } as EventLogImageBrightnessChanged);
+      this.eventLog.logEvent({
+        type: 'displayBrightnessChanged',
+        reason: eventLogReason,
+        value: config.brightness,
+        transition: config.transition,
+        transitionTime: config.transitionTime,
+      } as EventLogDisplayBrightnessChanged);
+    } else {
+      this.eventLog.logEvent({
+        type: 'simpleBrightnessChanged',
+        reason: eventLogReason,
+        value: config.brightness,
+        transition: config.transition,
+        transitionTime: config.transitionTime,
+      } as EventLogSimpleBrightnessChanged);
+    }
   }
 }

@@ -1091,7 +1091,19 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "simpleBrightnessChanged": {
+          "title": {
+            "set": "Headset brightness set to {value}",
+            "transition": "Headset brightness transitioning to {value}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           }
         },
         "imageBrightnessChanged": {
@@ -1101,7 +1113,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           }
         },
         "displayBrightnessChanged": {

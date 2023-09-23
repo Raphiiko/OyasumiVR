@@ -20,6 +20,7 @@ export type EventLogEntry =
   | EventLogTurnedOffOpenVRDevices
   | EventLogLighthouseSetPowerState
   | EventLogGpuPowerLimitChanged
+  | EventLogSimpleBrightnessChanged
   | EventLogDisplayBrightnessChanged
   | EventLogImageBrightnessChanged
   | EventLogAcceptedInviteRequest
@@ -40,6 +41,7 @@ export type EventLogType =
   | 'turnedOffOpenVRDevices'
   | 'lighthouseSetPowerState'
   | 'gpuPowerLimitChanged'
+  | 'simpleBrightnessChanged'
   | 'displayBrightnessChanged'
   | 'imageBrightnessChanged'
   | 'acceptedInviteRequest'
@@ -103,7 +105,7 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 
 export interface EventLogDisplayBrightnessChanged extends EventLogBase {
   type: 'displayBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -111,7 +113,15 @@ export interface EventLogDisplayBrightnessChanged extends EventLogBase {
 
 export interface EventLogImageBrightnessChanged extends EventLogBase {
   type: 'imageBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  transition: boolean;
+  value: number;
+  transitionTime: number;
+}
+
+export interface EventLogSimpleBrightnessChanged extends EventLogBase {
+  type: 'simpleBrightnessChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;
   transitionTime: number;
