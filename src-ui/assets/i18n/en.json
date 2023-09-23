@@ -839,6 +839,12 @@
     }
   },
   "comp": {
+    "brightness-control-modal": {
+      "displayBrightness": "Display Brightness",
+      "imageBrightness": "Image Brightness",
+      "brightness": "Brightness",
+      "automationsTooltip": "Brightness Automations"
+    },
     "main-status-bar": {
       "sleepMode": "Sleep Mode",
       "active": "Active",

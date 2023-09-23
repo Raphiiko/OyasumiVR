@@ -10,7 +10,6 @@
   pointer-events: all;
   width: 35em;
   backdrop-filter: blur(4px);
-  padding: 2em 1.5em;
   border-radius: var(--surface-border-radius);
   @include shadow(5, true);
   overflow: hidden;
@@ -18,6 +17,10 @@
   background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
   background-image: radial-gradient(ellipse at 40% 0%, color-mix(in srgb, var(--a) 6%, transparent) 0, transparent 75%), radial-gradient(ellipse at 60% 0%, color-mix(in srgb, var(--b) 6%, transparent) 0, transparent 75%);
   @include pane-radial-gradient(#fff);
+}
+
+.sliders-container {
+  padding: 2em 1.5em 0 1.5em;
 }
 
 .brightness-slider {
@@ -48,5 +51,35 @@
   &.disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+}
+
+.footer-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 1em 1.5em;
+}
+
+.shortcut-automations {
+  color: var(--color-text-3);
+  text-decoration: none;
+  transition: all .15s;
+  line-height: 1em;
+  vertical-align: middle;
+  display: inline-block;
+
+  &:hover {
+    color: var(--color-text-2);
+  }
+
+  &:active {
+    color: var(--color-text-3);
+  }
+
+  &.active {
+    pointer-events: none;
+    opacity: 0;
   }
 }
