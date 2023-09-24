@@ -30,6 +30,7 @@ import {
   EventLogImageBrightnessChanged,
   EventLogSimpleBrightnessChanged,
 } from '../../models/event-log-entry';
+import { SleepPreparationService } from '../sleep-preparation.service';
 
 type BrightnessAutomationType = 'SLEEP_MODE_ENABLE' | 'SLEEP_MODE_DISABLE' | 'SLEEP_PREPARATION';
 
@@ -65,7 +66,8 @@ export class BrightnessControlAutomationService {
     private displayBrightnessControl: DisplayBrightnessControlService,
     private imageBrightnessControl: ImageBrightnessControlService,
     private eventLog: EventLogService,
-    private openvr: OpenVRService
+    private openvr: OpenVRService,
+    private sleepPreparation: SleepPreparationService
   ) {}
 
   async init() {
@@ -126,6 +128,15 @@ export class BrightnessControlAutomationService {
           );
         }
       });
+    // Run automation when sleep preparation is activated
+    this.sleepPreparation.onSleepPreparation
+      .pipe(
+        switchMap(() => this.automationConfigService.configs),
+        switchMap((configs) =>
+          this.onAutomationTrigger('SLEEP_PREPARATION', configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION)
+        )
+      )
+      .subscribe();
   }
 
   public isTransitionActive(automation: BrightnessAutomationType): Observable<boolean> {

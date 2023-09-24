@@ -1,35 +1,4 @@
 <div class="overview">
-  <!--  <div class="sleep-mode" [class.active]="sleepModeActive">-->
-  <!--    <div class="sleep-mode-info">-->
-  <!--      <div class="label" translate>overview.sleep-mode.label</div>-->
-  <!--      <div-->
-  <!--        class="status"-->
-  <!--        [translate]="-->
-  <!--          sleepModeActive ? 'overview.sleep-mode.active' : 'overview.sleep-mode.inactive'-->
-  <!--        "-->
-  <!--      ></div>-->
-  <!--    </div>-->
-  <!--    <div class="sleep-mode-actions">-->
-  <!--      <button-->
-  <!--        class="btn btn-primary"-->
-  <!--        [class.btn-primary]="!sleepModeActive"-->
-  <!--        [class.btn-secondary]="sleepModeActive"-->
-  <!--        [disabled]="sleepModeActive"-->
-  <!--        (click)="setSleepMode(true)"-->
-  <!--        translate-->
-  <!--      >-->
-  <!--        overview.sleep-mode.activate-->
-  <!--      </button>-->
-  <!--      <button-->
-  <!--        class="btn btn-secondary"-->
-  <!--        [disabled]="!sleepModeActive"-->
-  <!--        (click)="setSleepMode(false)"-->
-  <!--        translate-->
-  <!--      >-->
-  <!--        overview.sleep-mode.deactivate-->
-  <!--      </button>-->
-  <!--    </div>-->
-  <!--  </div>-->
   <div class="sleep-mode" [class.active]="sleepModeActive">
     <div class="top">
       <div class="label" translate>overview.sleep-mode.label</div>
@@ -57,6 +26,26 @@
       >
         overview.sleep-mode.deactivate
       </button>
+      <div
+        *ngIf="!sleepModeActive"
+        [tooltip]="(sleepPreparation.sleepPreparationAvailable | async) === true ? undefined : 'overview.sleep-preparation.disabledTooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="28"
+        @fade
+      >
+        <button
+          class="btn btn-secondary btn-sleep-preparation"
+          [disabled]="!(sleepPreparation.sleepPreparationAvailable | async) || (sleepPreparation.sleepPreparationTimedOut | async)"
+          (click)="sleepPreparation.prepareForSleep()"
+        >
+          <div
+            class="small-spinner"
+            *ngIf="sleepPreparation.sleepPreparationTimedOut | async"
+            @hshrink
+          ></div>
+          <span translate>overview.sleep-preparation.activate</span>
+        </button>
+      </div>
     </div>
     <div
       *ngFor="let i of ['sleep', 'peek', 'awake', 'awake-hover']"

@@ -92,6 +92,10 @@
       "inactive": "Inactive",
       "activate": "Activate",
       "deactivate": "Deactivate"
+    },
+    "sleep-preparation": {
+      "activate": "Prepare for sleep",
+      "disabledTooltip": "Sleep preparation will become available once you've configured sleep preparation for at least one automation"
     }
   },
   "sleep-detection": {

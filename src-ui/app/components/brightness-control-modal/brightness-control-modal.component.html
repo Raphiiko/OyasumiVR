@@ -48,7 +48,9 @@
     </div>
   </div>
 
-  <div class="footer-row">
+  <div class="footer-row"
+       *ngIf="!router.isActive('/dashboard/brightnessAutomations',{paths: 'subset', queryParams: 'subset', fragment: 'ignored', matrixParams: 'ignored'})"
+       @vshrink>
     <a
       class="shortcut-automations"
       [routerLink]="['/dashboard/brightnessAutomations']"

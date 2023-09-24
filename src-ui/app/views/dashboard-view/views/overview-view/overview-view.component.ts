@@ -1,15 +1,16 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { noop } from '../../../../utils/animations';
+import { fade, hshrink, noop } from '../../../../utils/animations';
 import { SleepService } from '../../../../services/sleep.service';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { OscService } from '../../../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SleepPreparationService } from '../../../../services/sleep-preparation.service';
 
 @Component({
   selector: 'app-overview-view',
   templateUrl: './overview-view.component.html',
   styleUrls: ['./overview-view.component.scss'],
-  animations: [noop()],
+  animations: [noop(), fade(), hshrink()],
 })
 export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;
@@ -20,7 +21,8 @@ export class OverviewViewComponent implements OnInit {
     private sleep: SleepService,
     public openvr: OpenVRService,
     public osc: OscService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    protected sleepPreparation: SleepPreparationService
   ) {}
 
   ngOnInit(): void {

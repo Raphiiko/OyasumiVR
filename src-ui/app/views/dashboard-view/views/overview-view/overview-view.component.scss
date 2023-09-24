@@ -62,9 +62,14 @@ app-event-log {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 1em 15em 1em 1em;
     border-radius: var(--surface-border-radius);
+
+    & > *:not(:first-child) {
+      margin-left: 1em;
+    }
+
   }
 
   .illustration {
@@ -81,7 +86,6 @@ app-event-log {
     pointer-events: none;
 
     &.active {
-      pointer-events: all;
       opacity: 1;
       animation: pulse 0.15s ease-in-out;
       animation-fill-mode: forwards;
@@ -89,6 +93,7 @@ app-event-log {
     }
 
     img {
+      pointer-events: all;
       height: 100%;
       transform: translateY(-0.5em);
       cursor: pointer;
@@ -116,5 +121,11 @@ app-event-log {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+.btn-sleep-preparation {
+  .small-spinner {
+    margin-right: 0.5em;
   }
 }

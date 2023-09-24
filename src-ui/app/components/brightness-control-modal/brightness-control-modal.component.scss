@@ -29,7 +29,7 @@
 }
 
 .sliders-container {
-  padding: 2em 1.5em 0 1.5em;
+  padding: 2em 1.5em;
 }
 
 .brightness-slider {
@@ -69,6 +69,8 @@
   align-items: center;
   justify-content: flex-end;
   padding: 1em 1.5em;
+  transition: all .3s ease-in-out;
+  margin-top: -2em;
 }
 
 .shortcut-automations {

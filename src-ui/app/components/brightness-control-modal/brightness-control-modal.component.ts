@@ -8,6 +8,7 @@ import { SimpleBrightnessControlService } from '../../services/brightness-contro
 import { AutomationConfigService } from '../../services/automation-config.service';
 import { filter, map, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-brightness-control-modal',
@@ -27,6 +28,7 @@ export class BrightnessControlModalComponent
     protected displayBrightnessControl: DisplayBrightnessControlService,
     protected imageBrightnessControl: ImageBrightnessControlService,
     protected simpleBrightnessControl: SimpleBrightnessControlService,
+    protected router: Router,
     public automationConfigService: AutomationConfigService
   ) {
     super();
