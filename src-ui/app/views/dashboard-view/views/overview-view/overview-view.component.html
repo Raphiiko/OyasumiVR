@@ -35,7 +35,7 @@
       >
         <button
           class="btn btn-secondary btn-sleep-preparation"
-          [disabled]="!(sleepPreparation.sleepPreparationAvailable | async) || (sleepPreparation.sleepPreparationTimedOut | async)"
+          [disabled]="(sleepPreparation.sleepPreparationAvailable | async) === false || (sleepPreparation.sleepPreparationTimedOut | async)"
           (click)="sleepPreparation.prepareForSleep()"
         >
           <div
