@@ -1,4 +1,4 @@
-<div class="pane modal modal-md" [@fadeUp]>
+<div class="pane modal modal-lg" [@fadeUp]>
   <div class="pane-title">
     {{ 'comp.update-modal.title' | translate }}
   </div>
@@ -7,6 +7,12 @@
       translate="comp.update-modal.message"
       [translateParams]="{ newVersion: manifest?.version, currentVersion: currentVersion }"
     ></p>
+    <div class="steam-ad" *ngIf="FLAVOUR === 'STANDALONE'">
+      <div class="steam-ad-logo">
+        <img src="/assets/img/steam_icon.png" />
+      </div>
+      <div class="steam-ad-text" [innerHtml]="'comp.update-modal.steamAd' | translate"></div>
+    </div>
   </div>
   <div class="pane-actions spread">
     <button class="btn btn-secondary" (click)="updateLater()" [disabled]="installing">
