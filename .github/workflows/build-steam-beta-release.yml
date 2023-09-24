@@ -1,0 +1,83 @@
+name: 'Steam Beta Build'
+on:
+  push:
+    branches:
+      - steam-beta
+
+jobs:
+  build-steam-release:
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}-steam
+      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ windows-latest ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Package Version
+        id: get-package-version
+        uses: stevenbenitez/get-package-version-action@v1
+      - name: Setup NodeJS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: npm
+      - name: Initialize the project
+        run: npm run ci
+      - name: Install Rust stable toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: 1.70.0
+          default: true
+          override: true
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Configure Rust cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            src-shared-rust
+            src-elevated-sidecar
+            src-core
+      - name: Install development Tauri CLI
+        run: cargo install --git https://github.com/tauri-apps/tauri --branch 1.x tauri-cli
+      - name: Get Changelog Entry
+        id: changelog_reader
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_level: warn
+          version: ${{ steps.get-package-version.outputs.version }}
+          path: ./CHANGELOG.md
+      - name: Prepare Steamworks SDK
+        env:
+          STEAM_CONFIG_VDF: ${{ secrets.STEAM_CONFIG_VDF }}
+          STEAM_APP_ID: '2538150'
+          APP_VERSION: v${{ steps.get-package-version.outputs.version }}-beta
+        shell: bash
+        run: chmod +x ./scripts/steam/1-prepare-steam-sdk.sh && ./scripts/steam/1-prepare-steam-sdk.sh
+      - name: Set build id
+        run: npm run set-build-id
+      - name: Set flavour to STEAM
+        run: npm run set-flavour STEAM
+      - name: Build OyasumiVR (STEAM Flavour)
+        run: cargo-tauri build -b none
+      - name: Copy STEAM build
+        shell: bash
+        run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh
+      - name: Set flavour to STEAM_CN
+        run: npm run set-flavour STEAM_CN
+      - name: Build OyasumiVR (STEAM_CN Flavour)
+        run: cargo-tauri build -b none
+      - name: Copy STEAM_CN build
+        shell: bash
+        run: chmod +x ./scripts/steam/3-move-build-steam-cn.sh && ./scripts/steam/3-move-build-steam-cn.sh
+      - name: Deploy to Steam
+        env:
+          STEAM_BUILD_USER: ${{ secrets.STEAM_BUILD_USER }}
+          STEAM_APP_ID: '2538150'
+        shell: bash
+        run: chmod +x ./scripts/steam/4-steam-deploy.sh && ./scripts/steam/4-steam-deploy.sh
