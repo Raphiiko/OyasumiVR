@@ -4,6 +4,7 @@ import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.
 import { UpdateService } from '../../services/update.service';
 import { fadeUp, hshrink } from '../../utils/animations';
 import { getVersion } from '../../utils/app-utils';
+import { FLAVOUR } from '../../../build';
 
 interface UpdateModalInputModel {
   manifest?: UpdateManifest;
@@ -43,4 +44,6 @@ export class UpdateModalComponent
     this.installing = true;
     await this.update.installUpdate();
   }
+
+  protected readonly FLAVOUR = FLAVOUR;
 }

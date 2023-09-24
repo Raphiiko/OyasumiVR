@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, map, Subject, switchMap } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Subject } from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
 
 const SLEEP_PREPARATION_TIMEOUT = 5000;
