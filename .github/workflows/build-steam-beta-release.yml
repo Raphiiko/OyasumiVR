@@ -1,4 +1,4 @@
-name: 'Steam Release Build'
+name: 'Steam Beta Build'
 on:
   push:
     branches:
