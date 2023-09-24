@@ -145,6 +145,7 @@ import { DebugBrightnessTestingComponent } from './components/developer-debug-mo
 import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -229,6 +230,7 @@ export function createTranslateLoader(http: HttpClient) {
     DebugBrightnessTestingComponent,
     BrightnessControlModalComponent,
     BrightnessControlSliderComponent,
+    ClickOutsideDirective,
   ],
   imports: [
     CommonModule,

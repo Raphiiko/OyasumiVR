@@ -45,4 +45,8 @@ export class SelectBoxComponent implements OnInit {
       this.collapsed = true;
     }
   }
+
+  clickOutsideDropdown() {
+    if (!this.collapsed) this.collapsed = true;
+  }
 }
