@@ -1095,8 +1095,7 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
           }
         },
         "simpleBrightnessChanged": {
@@ -1128,7 +1127,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           }
         },
         "acceptedInviteRequest": {
