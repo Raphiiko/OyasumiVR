@@ -40,7 +40,6 @@ class IPCService {
         fontLoader.loadFontsForNewLocale(locale ?? "en"),
         locale === "DEBUG" ? loadDebugTranslations() : loadTranslations(locale ?? "en", "")
       ]);
-
     });
     // Load IPC OUT functions
     if (window.CefSharp) {

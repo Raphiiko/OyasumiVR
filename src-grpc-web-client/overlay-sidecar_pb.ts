@@ -99,6 +99,10 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings settings = 7;
    */
   settings?: OyasumiSidecarOverlaySettings;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state = 8;
+   */
+  brightnessState?: OyasumiSidecarBrightnessState;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
@@ -341,6 +345,55 @@ export interface OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector 
    * @generated from protobuf field: repeated uint32 activation_window_end = 5;
    */
   activationWindowEnd: number[];
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarBrightnessState
+ */
+export interface OyasumiSidecarBrightnessState {
+  /**
+   * @generated from protobuf field: bool advanced_mode = 1;
+   */
+  advancedMode: boolean;
+  /**
+   * @generated from protobuf field: double brightness = 2;
+   */
+  brightness: number;
+  /**
+   * @generated from protobuf field: double display_brightness = 3;
+   */
+  displayBrightness: number;
+  /**
+   * @generated from protobuf field: double image_brightness = 4;
+   */
+  imageBrightness: number;
+  /**
+   * @generated from protobuf field: bool brightness_transitioning = 5;
+   */
+  brightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: bool display_brightness_transitioning = 6;
+   */
+  displayBrightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: bool image_brightness_transitioning = 7;
+   */
+  imageBrightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: double brightness_transition_target = 8;
+   */
+  brightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: double display_brightness_transition_target = 9;
+   */
+  displayBrightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: double image_brightness_transition_target = 10;
+   */
+  imageBrightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: bool display_brightness_available = 11;
+   */
+  displayBrightnessAvailable: boolean;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -803,6 +856,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 5, name: 'locale', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
       { no: 6, name: 'device_info', kind: 'message', T: () => OyasumiSidecarDeviceInfo },
       { no: 7, name: 'settings', kind: 'message', T: () => OyasumiSidecarOverlaySettings },
+      { no: 8, name: 'brightness_state', kind: 'message', T: () => OyasumiSidecarBrightnessState },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -858,6 +912,14 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
             message.settings
           );
           break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state */ 8:
+          message.brightnessState = OyasumiSidecarBrightnessState.internalBinaryRead(
+            reader,
+            reader.uint32(),
+            options,
+            message.brightnessState
+          );
+          break;
         default:
           let u = options.readUnknownField;
           if (u === 'throw')
@@ -910,6 +972,13 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       OyasumiSidecarOverlaySettings.internalBinaryWrite(
         message.settings,
         writer.tag(7, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    /* OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state = 8; */
+    if (message.brightnessState)
+      OyasumiSidecarBrightnessState.internalBinaryWrite(
+        message.brightnessState,
+        writer.tag(8, WireType.LengthDelimited).fork(),
         options
       ).join();
     let u = options.writeUnknownFields;
@@ -2029,6 +2098,160 @@ class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extend
  */
 export const OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector =
   new OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrightnessState> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarBrightnessState', [
+      { no: 1, name: 'advanced_mode', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'display_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 4, name: 'image_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 5, name: 'brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 6, name: 'display_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 7, name: 'image_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 8, name: 'brightness_transition_target', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      {
+        no: 9,
+        name: 'display_brightness_transition_target',
+        kind: 'scalar',
+        T: 1 /*ScalarType.DOUBLE*/,
+      },
+      {
+        no: 10,
+        name: 'image_brightness_transition_target',
+        kind: 'scalar',
+        T: 1 /*ScalarType.DOUBLE*/,
+      },
+      { no: 11, name: 'display_brightness_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarBrightnessState>): OyasumiSidecarBrightnessState {
+    const message = {
+      advancedMode: false,
+      brightness: 0,
+      displayBrightness: 0,
+      imageBrightness: 0,
+      brightnessTransitioning: false,
+      displayBrightnessTransitioning: false,
+      imageBrightnessTransitioning: false,
+      brightnessTransitionTarget: 0,
+      displayBrightnessTransitionTarget: 0,
+      imageBrightnessTransitionTarget: 0,
+      displayBrightnessAvailable: false,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarBrightnessState>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarBrightnessState
+  ): OyasumiSidecarBrightnessState {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool advanced_mode */ 1:
+          message.advancedMode = reader.bool();
+          break;
+        case /* double brightness */ 2:
+          message.brightness = reader.double();
+          break;
+        case /* double display_brightness */ 3:
+          message.displayBrightness = reader.double();
+          break;
+        case /* double image_brightness */ 4:
+          message.imageBrightness = reader.double();
+          break;
+        case /* bool brightness_transitioning */ 5:
+          message.brightnessTransitioning = reader.bool();
+          break;
+        case /* bool display_brightness_transitioning */ 6:
+          message.displayBrightnessTransitioning = reader.bool();
+          break;
+        case /* bool image_brightness_transitioning */ 7:
+          message.imageBrightnessTransitioning = reader.bool();
+          break;
+        case /* double brightness_transition_target */ 8:
+          message.brightnessTransitionTarget = reader.double();
+          break;
+        case /* double display_brightness_transition_target */ 9:
+          message.displayBrightnessTransitionTarget = reader.double();
+          break;
+        case /* double image_brightness_transition_target */ 10:
+          message.imageBrightnessTransitionTarget = reader.double();
+          break;
+        case /* bool display_brightness_available */ 11:
+          message.displayBrightnessAvailable = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarBrightnessState,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool advanced_mode = 1; */
+    if (message.advancedMode !== false) writer.tag(1, WireType.Varint).bool(message.advancedMode);
+    /* double brightness = 2; */
+    if (message.brightness !== 0) writer.tag(2, WireType.Bit64).double(message.brightness);
+    /* double display_brightness = 3; */
+    if (message.displayBrightness !== 0)
+      writer.tag(3, WireType.Bit64).double(message.displayBrightness);
+    /* double image_brightness = 4; */
+    if (message.imageBrightness !== 0)
+      writer.tag(4, WireType.Bit64).double(message.imageBrightness);
+    /* bool brightness_transitioning = 5; */
+    if (message.brightnessTransitioning !== false)
+      writer.tag(5, WireType.Varint).bool(message.brightnessTransitioning);
+    /* bool display_brightness_transitioning = 6; */
+    if (message.displayBrightnessTransitioning !== false)
+      writer.tag(6, WireType.Varint).bool(message.displayBrightnessTransitioning);
+    /* bool image_brightness_transitioning = 7; */
+    if (message.imageBrightnessTransitioning !== false)
+      writer.tag(7, WireType.Varint).bool(message.imageBrightnessTransitioning);
+    /* double brightness_transition_target = 8; */
+    if (message.brightnessTransitionTarget !== 0)
+      writer.tag(8, WireType.Bit64).double(message.brightnessTransitionTarget);
+    /* double display_brightness_transition_target = 9; */
+    if (message.displayBrightnessTransitionTarget !== 0)
+      writer.tag(9, WireType.Bit64).double(message.displayBrightnessTransitionTarget);
+    /* double image_brightness_transition_target = 10; */
+    if (message.imageBrightnessTransitionTarget !== 0)
+      writer.tag(10, WireType.Bit64).double(message.imageBrightnessTransitionTarget);
+    /* bool display_brightness_available = 11; */
+    if (message.displayBrightnessAvailable !== false)
+      writer.tag(11, WireType.Varint).bool(message.displayBrightnessAvailable);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarBrightnessState
+ */
+export const OyasumiSidecarBrightnessState = new OyasumiSidecarBrightnessState$Type();
 /**
  * @generated ServiceType for protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */

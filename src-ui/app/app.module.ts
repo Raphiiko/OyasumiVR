@@ -127,7 +127,7 @@ import { BrightnessControlAutomationService } from './services/brightness-contro
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
-import { IPCStateSyncService } from './services/ipc-state-sync.service';
+import { OverlayStateSyncService } from './services/overlay-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
@@ -279,7 +279,7 @@ export class AppModule {
     private lighthouseService: LighthouseService,
     private developerDebugService: DeveloperDebugService,
     private ipcService: IPCService,
-    private ipcAppStateSyncService: IPCStateSyncService,
+    private ipcAppStateSyncService: OverlayStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
     private dotnetService: DotnetService,
