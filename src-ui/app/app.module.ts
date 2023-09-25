@@ -146,6 +146,7 @@ import { BrightnessControlModalComponent } from './components/brightness-control
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { DeepLinkService } from './services/deep-link.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -285,6 +286,7 @@ export class AppModule {
     private dotnetService: DotnetService,
     private notificationService: NotificationService,
     private steamService: SteamService,
+    private deepLinkService: DeepLinkService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -336,6 +338,7 @@ export class AppModule {
           this.eventLog.init(),
           this.systemTrayService.init(),
           this.automationConfigService.init(),
+          this.deepLinkService.init(),
         ]);
         // Initialize telemetry
         await Promise.all([this.telemetryService.init()]);
