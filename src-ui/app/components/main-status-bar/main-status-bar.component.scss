@@ -186,7 +186,7 @@ $background-color: var(--color-surface-2);
   }
 
   &:after {
-    transition: all .15s ;
+    transition: all .15s;
   }
 
   &.breathing {
@@ -208,7 +208,8 @@ $background-color: var(--color-surface-2);
 .sleep-mode,
 .vrc-status,
 .steamvr-status,
-.brightness-simple {
+.brightness-simple,
+.heartrate, {
   span:not(:last-child) {
     opacity: 0.5;
   }
@@ -270,5 +271,36 @@ $background-color: var(--color-surface-2);
 
   100% {
     opacity: 0.4;
+  }
+}
+
+.heartrate {
+  .heart-icon {
+    width: 16px;
+    height: 16px;
+    will-change: transform;
+    color: rgb(249, 24, 128);
+    opacity: 1;
+    animation: heartbeat infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+}
+
+@keyframes heartbeat {
+  $lowest: 0.8;
+  $highest: 1.1;
+  0%, 100% {
+    transform: scale3d($lowest, $lowest, $lowest);
+  }
+  05% {
+    transform: scale3d($lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33);
+  }
+  10% {
+    transform: scale3d($highest, $highest, $highest);
+  }
+  50% {
+    transform: scale3d($lowest + ($highest - $lowest) * 0.66, $lowest + ($highest - $lowest) * 0.66, $lowest + ($highest - $lowest) * 0.66);
+  }
+  70% {
+    transform: scale3d($lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33);
   }
 }

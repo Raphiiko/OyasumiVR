@@ -854,6 +854,7 @@
       "active": "Active",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
+      "heartrate": "Heart Rate",
       "brightness": {
         "tooltip": "Brightness Control",
         "simple": "Brightness"
@@ -1380,6 +1381,14 @@
       "simple": "Brightness",
       "display": "Display Brightness",
       "image": "Image Brightness"
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "title": "Pulsoid Login Failed",
+        "message": "Logging in with your Pulsoid account was unsuccessful. Please try again later. If this issue persists, please reach out for support!\n\n{errorDetails}"
+      }
     }
   }
 }

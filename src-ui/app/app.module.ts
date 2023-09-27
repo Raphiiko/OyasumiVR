@@ -149,6 +149,7 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { DeepLinkService } from './services/deep-link.service';
 import { DebugPulsoidTestingComponent } from './components/developer-debug-modal/debug-pulsoid-testing/debug-pulsoid-testing.component';
 import { SleepPreparationService } from './services/sleep-preparation.service';
+import { PulsoidService } from './services/integrations/pulsoid.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -291,6 +292,7 @@ export class AppModule {
     private steamService: SteamService,
     private deepLinkService: DeepLinkService,
     private sleepPreparationService: SleepPreparationService,
+    private pulsoidService: PulsoidService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -358,6 +360,7 @@ export class AppModule {
           this.lighthouseService.init(),
           this.notificationService.init(),
           this.sleepPreparationService.init(),
+          this.pulsoidService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {
