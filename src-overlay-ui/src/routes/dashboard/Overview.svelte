@@ -52,7 +52,7 @@
 		}}>
       <Clickable on:click={toggleSleepMode}>
         <Card clickable={true} active={$state.sleepMode} class="w-full h-full">
-          <div class="action-contents">
+          <div class="action-contents sleep-mode">
             <i class="material-icons">nights_stay</i>
             <div class="sleep-mode-info">
               <span>{$t('t.overlay.dashboard.overview.sleepMode')}</span>
@@ -218,20 +218,24 @@
 
     .action-contents {
       @apply flex flex-row items-center justify-center w-full h-full p-6;
+      &.sleep-mode {
+        @apply p-4;
+      }
+
       .material-icons, .material-icons-outlined {
         @apply text-8xl flex-shrink-0;
         line-height: 0;
       }
 
       .sleep-mode-info {
-        @apply flex-1 flex flex-col items-end justify-center pr-2;
+        @apply flex-1 flex flex-col items-center justify-center text-center pl-4;
         span {
           &:first-child {
             @apply opacity-60 text-xl;
           }
 
           &:last-child {
-            @apply text-4xl;
+            @apply text-3xl whitespace-nowrap;
           }
         }
       }
