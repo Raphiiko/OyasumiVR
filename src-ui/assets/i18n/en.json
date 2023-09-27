@@ -1324,7 +1324,8 @@
         "tooltip": {
           "automations": "Automations",
           "deviceControl": "Device Control",
-          "shutdown": "Shutdown Sequence"
+          "shutdown": "Shutdown Sequence",
+          "prepareForSleep": "Prepare for sleep"
         }
       },
       "shutdownSequence": {
@@ -1374,6 +1375,11 @@
         },
         "title": "Automation Settings"
       }
+    },
+    "brightness": {
+      "simple": "Brightness",
+      "display": "Display Brightness",
+      "image": "Image Brightness"
     }
   }
 }

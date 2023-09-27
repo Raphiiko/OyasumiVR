@@ -47,6 +47,9 @@ message OyasumiSidecarState {
   string locale = 5;
   OyasumiSidecarDeviceInfo device_info = 6;
   OyasumiSidecarOverlaySettings settings = 7;
+  OyasumiSidecarBrightnessState brightness_state = 8;
+  bool sleep_preparation_available = 9;
+  bool sleep_preparation_timed_out = 10;
 }
 
 message OyasumiSidecarOverlaySettings {
@@ -131,6 +134,22 @@ enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
   OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Disabled = 0;
   OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Whitelist = 1;
   OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Blacklist = 2;
+}
+
+message OyasumiSidecarBrightnessState {
+  bool advanced_mode = 1;
+  double brightness = 2;
+  double display_brightness = 3;
+  double image_brightness = 4;
+  bool brightness_transitioning = 5;
+  bool display_brightness_transitioning = 6;
+  bool image_brightness_transitioning = 7;
+  double brightness_transition_target = 8;
+  double display_brightness_transition_target = 9;
+  double image_brightness_transition_target = 10;
+  bool display_brightness_available = 11;
+  double display_min_brightness = 12;
+  double display_max_brightness = 13;
 }
 
 enum VrcStatus {

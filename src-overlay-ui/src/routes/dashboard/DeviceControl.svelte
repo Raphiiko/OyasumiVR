@@ -1,15 +1,15 @@
 <script lang="ts">
-	import ipcService from '$lib/services/ipc.service';
-	import { scale, blur } from 'svelte/transition';
-	import Card from '$lib/components/Card.svelte';
-	import { createEventDispatcher } from 'svelte';
-	import controllerIcon from '$lib/images/icon_controller.png';
-	import trackerIcon from '$lib/images/icon_tracker.png';
-	import { get } from 'svelte/store';
-	import { t } from '$lib/translations';
-	import Clickable from '$lib/components/Clickable.svelte';
+  import ipcService from "$lib/services/ipc.service";
+  import { blur, scale } from "svelte/transition";
+  import Card from "$lib/components/Card.svelte";
+  import { createEventDispatcher } from "svelte";
+  import controllerIcon from "$lib/images/icon_controller.png";
+  import trackerIcon from "$lib/images/icon_tracker.png";
+  import { get } from "svelte/store";
+  import { t } from "$lib/translations";
+  import Clickable from "$lib/components/Clickable.svelte";
 
-	const { state } = ipcService;
+  const { state } = ipcService;
 	const dispatch = createEventDispatcher();
 
 	$: _t = $t;

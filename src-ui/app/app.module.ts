@@ -127,7 +127,7 @@ import { BrightnessControlAutomationService } from './services/brightness-contro
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
-import { IPCStateSyncService } from './services/ipc-state-sync.service';
+import { OverlayStateSyncService } from './services/overlay-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
@@ -146,6 +146,9 @@ import { BrightnessControlModalComponent } from './components/brightness-control
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { DeepLinkService } from './services/deep-link.service';
+import { DebugPulsoidTestingComponent } from './components/developer-debug-modal/debug-pulsoid-testing/debug-pulsoid-testing.component';
+import { SleepPreparationService } from './services/sleep-preparation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -231,6 +234,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrightnessControlModalComponent,
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
+    DebugPulsoidTestingComponent,
   ],
   imports: [
     CommonModule,
@@ -279,12 +283,14 @@ export class AppModule {
     private lighthouseService: LighthouseService,
     private developerDebugService: DeveloperDebugService,
     private ipcService: IPCService,
-    private ipcAppStateSyncService: IPCStateSyncService,
+    private ipcAppStateSyncService: OverlayStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
     private dotnetService: DotnetService,
     private notificationService: NotificationService,
     private steamService: SteamService,
+    private deepLinkService: DeepLinkService,
+    private sleepPreparationService: SleepPreparationService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -336,6 +342,7 @@ export class AppModule {
           this.eventLog.init(),
           this.systemTrayService.init(),
           this.automationConfigService.init(),
+          this.deepLinkService.init(),
         ]);
         // Initialize telemetry
         await Promise.all([this.telemetryService.init()]);
@@ -350,6 +357,7 @@ export class AppModule {
           this.fontLoaderService.init(),
           this.lighthouseService.init(),
           this.notificationService.init(),
+          this.sleepPreparationService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {

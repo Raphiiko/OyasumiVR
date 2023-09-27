@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Card from '$lib/components/Card.svelte';
-	import { blur, scale } from 'svelte/transition';
-	import VisualToggle from '$lib/components/VisualToggle.svelte';
-	import ipcService from '$lib/services/ipc.service';
-	import { derived, get } from 'svelte/store';
-	import {
-		OyasumiSidecarAutomationsState,
-		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
-		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
-		OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
-		OyasumiSidecarAutomationsState_ShutdownAutomations,
-		OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
-		OyasumiSidecarAutomationsState_SleepingAnimations
-	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
-	import { t } from '$lib/translations';
-	import Clickable from '$lib/components/Clickable.svelte';
+  import { createEventDispatcher } from "svelte";
+  import Card from "$lib/components/Card.svelte";
+  import { blur, scale } from "svelte/transition";
+  import VisualToggle from "$lib/components/VisualToggle.svelte";
+  import ipcService from "$lib/services/ipc.service";
+  import { derived } from "svelte/store";
+  import {
+    OyasumiSidecarAutomationsState,
+    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
+    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
+    OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
+    OyasumiSidecarAutomationsState_ShutdownAutomations,
+    OyasumiSidecarAutomationsState_SleepingAnimations,
+    OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+  } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
+  import { t } from "$lib/translations";
+  import Clickable from "$lib/components/Clickable.svelte";
 
-	$: _t = $t;
+  $: _t = $t;
 	const { state } = ipcService;
 
 	let viewAutomations = derived(state, (state) =>

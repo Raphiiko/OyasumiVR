@@ -28,7 +28,6 @@ import {
   VrcStatus,
 } from '../../../src-grpc-web-client/overlay-sidecar_pb';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
-import { TranslateService } from '@ngx-translate/core';
 import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
 import { AppSettingsService } from './app-settings.service';
 import {
@@ -42,11 +41,15 @@ import {
   OverlayActivationAction,
   OverlayActivationController,
 } from '../models/settings';
+import { SimpleBrightnessControlService } from './brightness-control/simple-brightness-control.service';
+import { DisplayBrightnessControlService } from './brightness-control/display-brightness-control.service';
+import { ImageBrightnessControlService } from './brightness-control/image-brightness-control.service';
+import { SleepPreparationService } from './sleep-preparation.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class IPCStateSyncService {
+export class OverlayStateSyncService {
   private state = new BehaviorSubject<OyasumiSidecarState>({
     sleepMode: false,
     vrcStatus: VrcStatus.Offline,
@@ -98,6 +101,23 @@ export class IPCStateSyncService {
       ),
       activationTriggerRequired: APP_SETTINGS_DEFAULT.overlayActivationTriggerRequired,
     },
+    brightnessState: {
+      advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
+      brightness: 100,
+      displayBrightness: 100,
+      imageBrightness: 100,
+      brightnessTransitioning: false,
+      displayBrightnessTransitioning: false,
+      imageBrightnessTransitioning: false,
+      brightnessTransitionTarget: 100,
+      displayBrightnessTransitionTarget: 100,
+      imageBrightnessTransitionTarget: 100,
+      displayBrightnessAvailable: false,
+      displayMinBrightness: 20,
+      displayMaxBrightness: 160,
+    },
+    sleepPreparationAvailable: false,
+    sleepPreparationTimedOut: false,
   });
 
   constructor(
@@ -105,14 +125,29 @@ export class IPCStateSyncService {
     private vrchatService: VRChatService,
     private ipcService: IPCService,
     private automationConfig: AutomationConfigService,
-    private translate: TranslateService,
     private appSettings: AppSettingsService,
     private shutdownAutomationsService: ShutdownAutomationsService,
-    private openvr: OpenVRService
+    private openvr: OpenVRService,
+    private simpleBrightness: SimpleBrightnessControlService,
+    private displayBrightness: DisplayBrightnessControlService,
+    private imageBrightness: ImageBrightnessControlService,
+    private sleepPreparation: SleepPreparationService
   ) {}
 
   async init() {
-    // Sync state to overlay sidecar
+    this.syncToSidecar_WhenStateChanges();
+    this.updateState_WhenSleepModeChanges();
+    this.updateState_WhenVRCUserChanges();
+    this.updateState_WhenLocaleChanges();
+    this.updateState_WhenAutomationConfigsChange();
+    this.updateState_WhenShutdownAutomationStateChanges();
+    this.updateState_WhenOVRDevicesChange();
+    this.updateState_WhenAppSettingsChange();
+    this.updateState_WhenBrightnessStateChanges();
+    this.updateState_WhenSleepPreparationStateChanges();
+  }
+
+  private syncToSidecar_WhenStateChanges() {
     combineLatest([
       this.state.pipe(distinctUntilChanged((a, b) => isEqual(a, b))),
       this.ipcService.overlaySidecarClient,
@@ -121,11 +156,15 @@ export class IPCStateSyncService {
       .subscribe(([state, client]) => {
         client!.syncState(state);
       });
-    // Update state when sleep mode changes
+  }
+
+  private updateState_WhenSleepModeChanges() {
     this.sleepService.mode.subscribe((sleepMode) => {
       this.state.next({ ...cloneDeep(this.state.value), sleepMode });
     });
-    // Update the state when the VRChat user or their status changes.
+  }
+
+  private updateState_WhenVRCUserChanges() {
     this.vrchatService.user.subscribe((user) => {
       this.state.next({
         ...cloneDeep(this.state.value),
@@ -133,7 +172,9 @@ export class IPCStateSyncService {
         vrcStatus: this.mapVRCStatus(user?.status),
       });
     });
-    // Update the state when the locale changes
+  }
+
+  private updateState_WhenLocaleChanges() {
     this.appSettings.settings
       .pipe(
         map((settings) => settings.userLanguage),
@@ -145,7 +186,9 @@ export class IPCStateSyncService {
           locale,
         });
       });
-    // Update the state when the automation configs change
+  }
+
+  private updateState_WhenAutomationConfigsChange() {
     this.automationConfig.configs
       .pipe(
         map((configs) => ({ ...configs })),
@@ -158,6 +201,7 @@ export class IPCStateSyncService {
             'SLEEPING_ANIMATIONS',
             'SHUTDOWN_AUTOMATIONS',
             'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+            'BRIGHTNESS_CONTROL_ADVANCED_MODE',
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
         }),
@@ -212,9 +256,14 @@ export class IPCStateSyncService {
             this.shutdownAutomationsService.getApplicableStages(configs.SHUTDOWN_AUTOMATIONS)
               .length > 0;
         }
+        {
+          state.brightnessState!.advancedMode = configs.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+        }
         this.state.next(state);
       });
-    // Update the state when the shutdown automations state changes
+  }
+
+  private updateState_WhenShutdownAutomationStateChanges() {
     this.shutdownAutomationsService.stage.subscribe((stage) => {
       const index = ShutdownSequenceStageOrder.indexOf(stage);
       const active = index > 0;
@@ -225,7 +274,9 @@ export class IPCStateSyncService {
         this.state.next(state);
       }
     });
-    // Update the state when OVR devices change
+  }
+
+  private updateState_WhenOVRDevicesChange() {
     this.openvr.devices
       .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
       .subscribe((devices) => {
@@ -249,7 +300,9 @@ export class IPCStateSyncService {
           this.state.next(state);
         }
       });
-    // Update the state when the app settings change
+  }
+
+  private updateState_WhenAppSettingsChange() {
     this.appSettings.settings.subscribe((settings) => {
       const state = cloneDeep(this.state.value);
       // Update overlay settings
@@ -262,6 +315,89 @@ export class IPCStateSyncService {
       } as OyasumiSidecarOverlaySettings);
       this.state.next(state);
     });
+  }
+
+  private updateState_WhenBrightnessStateChanges() {
+    this.simpleBrightness.brightnessStream
+      .pipe(
+        map((brightness) => Math.round(brightness)),
+        distinctUntilChanged()
+      )
+      .subscribe((brightness) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.brightness = brightness;
+        this.state.next(state);
+      });
+    this.displayBrightness.brightnessStream
+      .pipe(
+        map((brightness) => Math.round(brightness)),
+        distinctUntilChanged()
+      )
+      .subscribe((brightness) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.displayBrightness = brightness;
+        this.state.next(state);
+      });
+    this.imageBrightness.brightnessStream
+      .pipe(
+        map((brightness) => Math.round(brightness)),
+        distinctUntilChanged()
+      )
+      .subscribe((brightness) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.imageBrightness = brightness;
+        this.state.next(state);
+      });
+    this.displayBrightness.driverIsAvailable
+      .pipe(distinctUntilChanged())
+      .subscribe(async (driverIsAvailable) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.displayBrightnessAvailable = driverIsAvailable;
+        if (driverIsAvailable) {
+          const bounds = await this.displayBrightness.getBrightnessBounds();
+          state.brightnessState!.displayMinBrightness = bounds[0];
+          state.brightnessState!.displayMaxBrightness = bounds[1];
+        }
+        this.state.next(state);
+      });
+    this.simpleBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
+      const state = cloneDeep(this.state.value);
+      state.brightnessState!.brightnessTransitioning = !!transition;
+      if (transition)
+        state.brightnessState!.brightnessTransitionTarget = transition.targetBrightness;
+      this.state.next(state);
+    });
+    this.displayBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
+      const state = cloneDeep(this.state.value);
+      state.brightnessState!.displayBrightnessTransitioning = !!transition;
+      if (transition)
+        state.brightnessState!.displayBrightnessTransitionTarget = transition.targetBrightness;
+      this.state.next(state);
+    });
+    this.imageBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
+      const state = cloneDeep(this.state.value);
+      state.brightnessState!.imageBrightnessTransitioning = !!transition;
+      if (transition)
+        state.brightnessState!.imageBrightnessTransitionTarget = transition.targetBrightness;
+      this.state.next(state);
+    });
+  }
+
+  private updateState_WhenSleepPreparationStateChanges() {
+    this.sleepPreparation.sleepPreparationAvailable
+      .pipe(distinctUntilChanged())
+      .subscribe((available) => {
+        const state = cloneDeep(this.state.value);
+        state.sleepPreparationAvailable = available;
+        this.state.next(state);
+      });
+    this.sleepPreparation.sleepPreparationTimedOut
+      .pipe(distinctUntilChanged())
+      .subscribe((timedOut) => {
+        const state = cloneDeep(this.state.value);
+        state.sleepPreparationTimedOut = timedOut;
+        this.state.next(state);
+      });
   }
 
   private mapVRCStatus(vrcStatus: UserStatus | undefined): VrcStatus {

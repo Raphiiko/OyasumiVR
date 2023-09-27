@@ -17,8 +17,9 @@ import {
 import { isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
-import { createBrightnessTransitionTask } from './brightness-transition';
+import { BrightnessTransitionTask } from './brightness-transition';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,7 @@ export class DisplayBrightnessControlService {
   private driver: BehaviorSubject<DisplayBrightnessControlDriver | null> =
     new BehaviorSubject<DisplayBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
-  private _activeTransition = new BehaviorSubject<CancellableTask | undefined>(undefined);
+  private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
   public readonly onDriverChange: Observable<void> = this.driver.pipe(
     distinctUntilChanged(),
@@ -61,6 +62,9 @@ export class DisplayBrightnessControlService {
       .subscribe(async () => {
         await this.fetchBrightness();
       });
+    await listen<number>('setDisplayBrightness', async (event) => {
+      await this.setBrightness(event.payload, { cancelActiveTransition: true });
+    });
   }
 
   transitionBrightness(
@@ -70,10 +74,12 @@ export class DisplayBrightnessControlService {
   ): CancellableTask {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
-      return new CancellableTask();
+      const task = new CancellableTask();
+      task.start();
+      return task;
     }
     this._activeTransition.value?.cancel();
-    const transition = createBrightnessTransitionTask(
+    const transition = new BrightnessTransitionTask(
       'DISPLAY',
       this.setBrightness.bind(this),
       this.fetchBrightness.bind(this),

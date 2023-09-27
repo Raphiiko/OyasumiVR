@@ -29,12 +29,13 @@ pub use grpc::models as Models;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
-use log::{info, LevelFilter};
+use log::{info, LevelFilter, warn};
 use oyasumivr_shared::windows::is_elevated;
-use tauri::{plugin::TauriPlugin, Manager, Wry};
+use tauri::{plugin::TauriPlugin, Manager, Wry, AppHandle};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
+    tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
     // Construct Oyasumi Tauri application
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
@@ -42,6 +43,7 @@ fn main() {
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
         .setup(|app| {
+            configure_tauri_plugin_deep_link(app.handle());
             let matches = app.get_cli_matches().unwrap();
             tauri::async_runtime::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
@@ -65,6 +67,7 @@ fn main() {
     app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
 }
+
 
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
     tauri::generate_handler![
@@ -127,6 +130,17 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
     ]
 }
 
+fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
+    if let Err(e) = tauri_plugin_deep_link::register(
+        "oyasumivr",
+        move |request| {
+            dbg!(&request);
+            app_handle.emit_all("onDeepLinkCall", request).unwrap();
+        },
+    ) {
+           warn!("[Core] Could not register schema for handling deep links. Functionality requiring deep links will not work properly. Error: {:#?}", e);
+    };
+}
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     tauri_plugin_log::Builder::default()
         .format(move |out, message, record| {
