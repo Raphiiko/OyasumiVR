@@ -394,6 +394,14 @@ export interface OyasumiSidecarBrightnessState {
    * @generated from protobuf field: bool display_brightness_available = 11;
    */
   displayBrightnessAvailable: boolean;
+  /**
+   * @generated from protobuf field: double display_min_brightness = 12;
+   */
+  displayMinBrightness: number;
+  /**
+   * @generated from protobuf field: double display_max_brightness = 13;
+   */
+  displayMaxBrightness: number;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -2123,6 +2131,8 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
         T: 1 /*ScalarType.DOUBLE*/,
       },
       { no: 11, name: 'display_brightness_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 12, name: 'display_min_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 13, name: 'display_max_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarBrightnessState>): OyasumiSidecarBrightnessState {
@@ -2138,6 +2148,8 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
       displayBrightnessTransitionTarget: 0,
       imageBrightnessTransitionTarget: 0,
       displayBrightnessAvailable: false,
+      displayMinBrightness: 0,
+      displayMaxBrightness: 0,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
@@ -2187,6 +2199,12 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
           break;
         case /* bool display_brightness_available */ 11:
           message.displayBrightnessAvailable = reader.bool();
+          break;
+        case /* double display_min_brightness */ 12:
+          message.displayMinBrightness = reader.double();
+          break;
+        case /* double display_max_brightness */ 13:
+          message.displayMaxBrightness = reader.double();
           break;
         default:
           let u = options.readUnknownField;
@@ -2243,6 +2261,12 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
     /* bool display_brightness_available = 11; */
     if (message.displayBrightnessAvailable !== false)
       writer.tag(11, WireType.Varint).bool(message.displayBrightnessAvailable);
+    /* double display_min_brightness = 12; */
+    if (message.displayMinBrightness !== 0)
+      writer.tag(12, WireType.Bit64).double(message.displayMinBrightness);
+    /* double display_max_brightness = 13; */
+    if (message.displayMaxBrightness !== 0)
+      writer.tag(13, WireType.Bit64).double(message.displayMaxBrightness);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

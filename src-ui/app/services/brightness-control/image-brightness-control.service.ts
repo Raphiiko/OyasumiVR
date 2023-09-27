@@ -5,6 +5,7 @@ import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { invoke } from '@tauri-apps/api';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import { listen } from '@tauri-apps/api/event';
 
 export const DEFAULT_IMAGE_BRIGHTNESS_GAMMA = 0.55;
 
@@ -36,6 +37,9 @@ export class ImageBrightnessControlService {
 
   async init() {
     await this.setImageBrightness(this.brightness);
+    await listen<number>('setImageBrightness', async (event) => {
+      await this.setBrightness(event.payload, { cancelActiveTransition: true });
+    });
   }
 
   private async setImageBrightness(brightness: number) {

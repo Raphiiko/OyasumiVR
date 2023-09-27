@@ -14,7 +14,7 @@ export class DeveloperDebugModalComponent
   extends BaseModalComponent<any, any>
   implements OnInit, AfterViewInit
 {
-  protected activeTab = 'BRIGHTNESS_TESTING';
+  protected activeTab = 'PULSOID';
 
   constructor(
     public debug: DeveloperDebugService,

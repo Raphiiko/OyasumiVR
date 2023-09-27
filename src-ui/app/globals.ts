@@ -10,6 +10,8 @@ export const SETTINGS_KEY_THEMING_SETTINGS = 'THEMING_SETTINGS';
 export const SETTINGS_FILE = 'settings.dat';
 export const CACHE_FILE = 'cache.dat';
 export const EVENT_LOG_FILE = 'event_log.dat';
+export const PULSOID_CLIENT_ID = '1fd0889e-be0c-4be5-ab68-9f750e3975b4';
+export const PULSOID_REDIRECT_URI = 'oyasumivr://integration/pulsoid/v1/redirect';
 export const NG_LOCALE_MAP: { [s: string]: string } = {
   en: 'en',
   nl: 'nl',

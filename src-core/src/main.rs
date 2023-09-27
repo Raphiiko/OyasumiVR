@@ -31,7 +31,7 @@ use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
 use log::{info, LevelFilter, warn};
 use oyasumivr_shared::windows::is_elevated;
-use tauri::{plugin::TauriPlugin, Manager, Wry, App, AppHandle};
+use tauri::{plugin::TauriPlugin, Manager, Wry, AppHandle};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {

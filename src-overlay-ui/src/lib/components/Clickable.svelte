@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher } from "svelte";
 
-	export let tooltip: string = '';
+  export let tooltip: string = '';
 	let _class = '';
 	export { _class as class };
 

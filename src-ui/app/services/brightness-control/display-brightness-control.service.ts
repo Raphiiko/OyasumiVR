@@ -19,6 +19,7 @@ import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -61,6 +62,9 @@ export class DisplayBrightnessControlService {
       .subscribe(async () => {
         await this.fetchBrightness();
       });
+    await listen<number>('setDisplayBrightness', async (event) => {
+      await this.setBrightness(event.payload, { cancelActiveTransition: true });
+    });
   }
 
   transitionBrightness(

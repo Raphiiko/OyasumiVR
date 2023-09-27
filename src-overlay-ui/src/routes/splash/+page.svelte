@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { t } from '$lib/translations';
-	import { onMount } from 'svelte';
-	import logoIcon from '$lib/images/logo_icon.png';
-	import { fade, fly, blur } from 'svelte/transition';
+  import { t } from "$lib/translations";
+  import { onMount } from "svelte";
+  import logoIcon from "$lib/images/logo_icon.png";
+  import { blur, fade, fly } from "svelte/transition";
 
-	let ready = false;
+  let ready = false;
 	onMount(() => {
 		ready = true;
 		window.OyasumiIPCOut.onUiReady();

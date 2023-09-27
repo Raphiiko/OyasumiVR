@@ -113,6 +113,8 @@ export class OverlayStateSyncService {
       displayBrightnessTransitionTarget: 100,
       imageBrightnessTransitionTarget: 100,
       displayBrightnessAvailable: false,
+      displayMinBrightness: 20,
+      displayMaxBrightness: 160,
     },
   });
 
@@ -345,9 +347,14 @@ export class OverlayStateSyncService {
       });
     this.displayBrightness.driverIsAvailable
       .pipe(distinctUntilChanged())
-      .subscribe((driverIsAvailable) => {
+      .subscribe(async (driverIsAvailable) => {
         const state = cloneDeep(this.state.value);
         state.brightnessState!.displayBrightnessAvailable = driverIsAvailable;
+        if (driverIsAvailable) {
+          const bounds = await this.displayBrightness.getBrightnessBounds();
+          state.brightnessState!.displayMinBrightness = bounds[0];
+          state.brightnessState!.displayMaxBrightness = bounds[1];
+        }
         this.state.next(state);
       });
     this.simpleBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {

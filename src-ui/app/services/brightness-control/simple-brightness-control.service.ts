@@ -9,6 +9,7 @@ import { ImageBrightnessControlService } from './image-brightness-control.servic
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,9 @@ export class SimpleBrightnessControlService {
   ) {}
 
   async init() {
+    await listen<number>('setSimpleBrightness', async (event) => {
+      await this.setBrightness(event.payload, { cancelActiveTransition: true });
+    });
     // Set brightness when switching to simple mode
     this.automationConfigService.configs
       .pipe(

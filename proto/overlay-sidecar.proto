@@ -146,6 +146,9 @@ message OyasumiSidecarBrightnessState {
   double display_brightness_transition_target = 9;
   double image_brightness_transition_target = 10;
   bool display_brightness_available = 11;
+  double display_min_brightness = 12;
+  double display_max_brightness = 13;
+
 }
 
 enum VrcStatus {

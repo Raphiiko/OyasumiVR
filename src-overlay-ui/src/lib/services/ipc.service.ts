@@ -10,7 +10,7 @@ import {
   OyasumiSidecarState,
   VrcStatus
 } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
-import { addTranslations, loadDebugTranslations, loadTranslations } from "$lib/translations";
+import { loadDebugTranslations, loadTranslations } from "$lib/translations";
 import { fontLoader } from "src-shared-ts/src/font-loader";
 import { camelCaseToUpperSnakeCase } from "$lib/utils/string-utils";
 
@@ -143,6 +143,27 @@ class IPCService {
 
   public async turnOffOVRDevices(deviceIds: number[]) {
     await window.OyasumiIPCOut.sendEventJson("turnOffOVRDevices", JSON.stringify(deviceIds));
+  }
+
+  public async setBrightness(type: "SIMPLE" | "IMAGE" | "DISPLAY", value: number): Promise<void> {
+    this.state.update((state) => {
+      state = cloneDeep(state);
+      switch (type) {
+        case "SIMPLE":
+          state.brightnessState!.brightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setSimpleBrightness", value);
+          break;
+        case "IMAGE":
+          state.brightnessState!.imageBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setImageBrightness", value);
+          break;
+        case "DISPLAY":
+          state.brightnessState!.displayBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setDisplayBrightness", value);
+          break;
+      }
+      return state;
+    });
   }
 
   public async getDebugTranslations(): Promise<any> {

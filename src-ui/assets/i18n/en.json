@@ -1374,6 +1374,11 @@
         },
         "title": "Automation Settings"
       }
+    },
+    "brightness": {
+      "simple": "Brightness",
+      "display": "Display Brightness",
+      "image": "Image Brightness"
     }
   }
 }
