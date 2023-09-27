@@ -103,6 +103,14 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state = 8;
    */
   brightnessState?: OyasumiSidecarBrightnessState;
+  /**
+   * @generated from protobuf field: bool sleep_preparation_available = 9;
+   */
+  sleepPreparationAvailable: boolean;
+  /**
+   * @generated from protobuf field: bool sleep_preparation_timed_out = 10;
+   */
+  sleepPreparationTimedOut: boolean;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
@@ -865,10 +873,19 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 6, name: 'device_info', kind: 'message', T: () => OyasumiSidecarDeviceInfo },
       { no: 7, name: 'settings', kind: 'message', T: () => OyasumiSidecarOverlaySettings },
       { no: 8, name: 'brightness_state', kind: 'message', T: () => OyasumiSidecarBrightnessState },
+      { no: 9, name: 'sleep_preparation_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 10, name: 'sleep_preparation_timed_out', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
-    const message = { sleepMode: false, vrcStatus: 0, vrcUsername: '', locale: '' };
+    const message = {
+      sleepMode: false,
+      vrcStatus: 0,
+      vrcUsername: '',
+      locale: '',
+      sleepPreparationAvailable: false,
+      sleepPreparationTimedOut: false,
+    };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
     return message;
@@ -927,6 +944,12 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
             options,
             message.brightnessState
           );
+          break;
+        case /* bool sleep_preparation_available */ 9:
+          message.sleepPreparationAvailable = reader.bool();
+          break;
+        case /* bool sleep_preparation_timed_out */ 10:
+          message.sleepPreparationTimedOut = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -989,6 +1012,12 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
         writer.tag(8, WireType.LengthDelimited).fork(),
         options
       ).join();
+    /* bool sleep_preparation_available = 9; */
+    if (message.sleepPreparationAvailable !== false)
+      writer.tag(9, WireType.Varint).bool(message.sleepPreparationAvailable);
+    /* bool sleep_preparation_timed_out = 10; */
+    if (message.sleepPreparationTimedOut !== false)
+      writer.tag(10, WireType.Varint).bool(message.sleepPreparationTimedOut);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

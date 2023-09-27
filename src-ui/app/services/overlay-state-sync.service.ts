@@ -44,7 +44,7 @@ import {
 import { SimpleBrightnessControlService } from './brightness-control/simple-brightness-control.service';
 import { DisplayBrightnessControlService } from './brightness-control/display-brightness-control.service';
 import { ImageBrightnessControlService } from './brightness-control/image-brightness-control.service';
-import { BrightnessControlAutomationService } from './brightness-control/brightness-control-automation.service';
+import { SleepPreparationService } from './sleep-preparation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -116,6 +116,8 @@ export class OverlayStateSyncService {
       displayMinBrightness: 20,
       displayMaxBrightness: 160,
     },
+    sleepPreparationAvailable: false,
+    sleepPreparationTimedOut: false,
   });
 
   constructor(
@@ -129,7 +131,7 @@ export class OverlayStateSyncService {
     private simpleBrightness: SimpleBrightnessControlService,
     private displayBrightness: DisplayBrightnessControlService,
     private imageBrightness: ImageBrightnessControlService,
-    private brightnessAutomations: BrightnessControlAutomationService
+    private sleepPreparation: SleepPreparationService
   ) {}
 
   async init() {
@@ -142,6 +144,7 @@ export class OverlayStateSyncService {
     this.updateState_WhenOVRDevicesChange();
     this.updateState_WhenAppSettingsChange();
     this.updateState_WhenBrightnessStateChanges();
+    this.updateState_WhenSleepPreparationStateChanges();
   }
 
   private syncToSidecar_WhenStateChanges() {
@@ -378,6 +381,23 @@ export class OverlayStateSyncService {
         state.brightnessState!.imageBrightnessTransitionTarget = transition.targetBrightness;
       this.state.next(state);
     });
+  }
+
+  private updateState_WhenSleepPreparationStateChanges() {
+    this.sleepPreparation.sleepPreparationAvailable
+      .pipe(distinctUntilChanged())
+      .subscribe((available) => {
+        const state = cloneDeep(this.state.value);
+        state.sleepPreparationAvailable = available;
+        this.state.next(state);
+      });
+    this.sleepPreparation.sleepPreparationTimedOut
+      .pipe(distinctUntilChanged())
+      .subscribe((timedOut) => {
+        const state = cloneDeep(this.state.value);
+        state.sleepPreparationTimedOut = timedOut;
+        this.state.next(state);
+      });
   }
 
   private mapVRCStatus(vrcStatus: UserStatus | undefined): VrcStatus {

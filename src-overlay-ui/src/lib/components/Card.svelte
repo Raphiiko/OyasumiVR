@@ -30,7 +30,7 @@
 		}
 	}
 	.card {
-		@apply grid w-full h-full items-start relative rounded-[8px] bg-gray-800 bg-opacity-80 drop-shadow-[0_0_24px_rgba(0,0,0,1)] border border-gray-700 text-white transition-all duration-200;
+		@apply grid w-full h-full items-start relative rounded-[8px] bg-gray-800 bg-opacity-80 drop-shadow-[0_0_24px_rgba(0,0,0,1)] border border-gray-700 text-white transition-all duration-200 overflow-hidden;
 		&::before {
 			content: '';
 			@apply col-span-full row-span-full w-full h-full transition-all duration-200;
@@ -54,7 +54,7 @@
 		}
 
 		&-slot {
-			@apply col-span-full row-span-full w-full h-full;
+			@apply col-span-full row-span-full w-full h-full overflow-hidden;
 		}
 
 		&.clickable:not(.disabled) {

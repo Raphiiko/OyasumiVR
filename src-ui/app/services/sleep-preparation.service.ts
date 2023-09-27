@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, map, Subject } from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
+import { listen } from '@tauri-apps/api/event';
 
 const SLEEP_PREPARATION_TIMEOUT = 5000;
 
@@ -18,6 +19,12 @@ export class SleepPreparationService {
   );
 
   constructor(private automationConfigService: AutomationConfigService) {}
+
+  public async init() {
+    await listen('prepareForSleep', async () => {
+      await this.prepareForSleep();
+    });
+  }
 
   public async prepareForSleep() {
     if (await firstValueFrom(this.sleepPreparationAvailable)) {

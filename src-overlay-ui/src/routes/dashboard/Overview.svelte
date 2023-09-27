@@ -5,7 +5,7 @@
   import deviceControlIcon from "$lib/images/icon_device_control.png";
   import Card from "$lib/components/Card.svelte";
   import BrightnessSliders from "$lib/components/BrightnessSliders.svelte";
-  import ipcService from "$lib/services/ipc.service";
+  import ipc from "$lib/services/ipc.service";
   import { get } from "svelte/store";
   import { createEventDispatcher } from "svelte";
   import { t } from "$lib/translations";
@@ -17,18 +17,20 @@
 
   // Animation settings
   let animationSpeed = 300;
-  let staggerOffset = 60;
+  let staggerOffset = 50;
   let flyYTransform = 30;
 
   $: time = new Date();
   $: timeHours = time.getHours().toString().padStart(2, "0");
   $: timeMinutes = time.getMinutes().toString().padStart(2, "0");
 
-  const { state, vrcLoggedIn } = ipcService;
+  const { state, vrcLoggedIn } = ipc;
+
+  $: sleepPreparationEnabled = $state.sleepPreparationAvailable && !$state.sleepPreparationTimedOut && !$state.sleepMode;
 
   function toggleSleepMode() {
     const mode = !get(state).sleepMode;
-    ipcService.setSleepMode(mode);
+    ipc.setSleepMode(mode);
     if (mode) setTimeout(() => dispatch("closeDashboard"), 500);
   }
 
@@ -41,14 +43,13 @@
   </div>
   <div
     class="action-container"
-    transition:blurFly={{
+  >
+    <!-- SLEEP MODE TOGGLE -->
+    <div class="action-large" transition:blurFly={{
 			duration: animationSpeed,
 			y: flyYTransform,
 			delay: staggerOffset
-		}}
-  >
-    <!-- SLEEP MODE TOGGLE -->
-    <div class="action-large">
+		}}>
       <Clickable on:click={toggleSleepMode}>
         <Card clickable={true} active={$state.sleepMode} class="w-full h-full">
           <div class="action-contents">
@@ -65,12 +66,33 @@
         </Card>
       </Clickable>
     </div>
+    <!-- SLEEP PREPARATION-->
+    <div
+      transition:blurFly={{
+			duration: animationSpeed,
+			y: flyYTransform,
+			delay: staggerOffset * 2
+		}}
+    >
+      <Clickable
+        on:click={() => { if (sleepPreparationEnabled) ipc.prepareForSleep() }}
+        tooltip={$t('t.overlay.dashboard.overview.tooltip.prepareForSleep')}
+      >
+        <Card class="w-full h-full" clickable={true}
+              disabled={!sleepPreparationEnabled}
+              active={$state.sleepPreparationTimedOut}>
+          <div class="action-contents">
+            <i class="material-icons-outlined glow">bedtime</i>
+          </div>
+        </Card>
+      </Clickable>
+    </div>
     <!-- AUTOMATION CONFIG -->
     <div
       transition:blurFly={{
 				duration: animationSpeed,
 				y: flyYTransform,
-				delay: staggerOffset * 2
+				delay: staggerOffset * 3
 			}}
     >
       <Clickable
@@ -91,7 +113,7 @@
       transition:blurFly={{
 				duration: animationSpeed,
 				y: flyYTransform,
-				delay: staggerOffset * 3
+				delay: staggerOffset * 4
 			}}
     >
       <Clickable
@@ -112,7 +134,7 @@
       transition:blurFly={{
 				duration: animationSpeed,
 				y: flyYTransform,
-				delay: staggerOffset * 4
+				delay: staggerOffset * 5
 			}}
     >
       <Clickable
@@ -128,6 +150,7 @@
         </Card>
       </Clickable>
     </div>
+
   </div>
   <!-- STATUS BAR -->
   <div
@@ -135,7 +158,7 @@
     transition:blurFly={{
 			duration: animationSpeed,
 			y: flyYTransform,
-			delay: staggerOffset * 5
+			delay: staggerOffset * 6
 		}}
   >
     <Card class="w-full h-full">
@@ -162,7 +185,7 @@
        transition:blurFly={{
 			duration: animationSpeed,
 			y: flyYTransform,
-			delay: staggerOffset * 6
+			delay: staggerOffset * 7
 		}}
   >
     <BrightnessSliders />
@@ -180,6 +203,7 @@
 
   .action-container {
     @apply grid grid-cols-3 gap-6 w-full auto-rows-fr mt-5;
+
     &::before {
       content: '';
       width: 0;
@@ -189,12 +213,12 @@
     }
 
     .action-large {
-      @apply col-span-3 col-start-1 col-end-4 row-start-1 row-end-1 w-full h-full;
+      @apply col-span-3 col-start-1 col-end-3 row-start-1 row-end-1 w-full h-full;
     }
 
     .action-contents {
       @apply flex flex-row items-center justify-center w-full h-full p-6;
-      .material-icons {
+      .material-icons, .material-icons-outlined {
         @apply text-8xl flex-shrink-0;
         line-height: 0;
       }
@@ -203,11 +227,11 @@
         @apply flex-1 flex flex-col items-end justify-center pr-2;
         span {
           &:first-child {
-            @apply opacity-60 text-2xl;
+            @apply opacity-60 text-xl;
           }
 
           &:last-child {
-            @apply text-5xl;
+            @apply text-4xl;
           }
         }
       }

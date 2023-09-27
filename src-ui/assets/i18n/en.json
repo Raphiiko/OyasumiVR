@@ -1324,7 +1324,8 @@
         "tooltip": {
           "automations": "Automations",
           "deviceControl": "Device Control",
-          "shutdown": "Shutdown Sequence"
+          "shutdown": "Shutdown Sequence",
+          "prepareForSleep": "Prepare for sleep"
         }
       },
       "shutdownSequence": {

@@ -166,6 +166,10 @@ class IPCService {
     });
   }
 
+  public async prepareForSleep() {
+    await window.OyasumiIPCOut.sendEventVoid("prepareForSleep");
+  }
+
   public async getDebugTranslations(): Promise<any> {
     const str = await window.OyasumiIPCOut.getDebugTranslations();
     if (!str) return {};

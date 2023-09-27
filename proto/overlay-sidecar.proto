@@ -48,6 +48,8 @@ message OyasumiSidecarState {
   OyasumiSidecarDeviceInfo device_info = 6;
   OyasumiSidecarOverlaySettings settings = 7;
   OyasumiSidecarBrightnessState brightness_state = 8;
+  bool sleep_preparation_available = 9;
+  bool sleep_preparation_timed_out = 10;
 }
 
 message OyasumiSidecarOverlaySettings {
@@ -148,7 +150,6 @@ message OyasumiSidecarBrightnessState {
   bool display_brightness_available = 11;
   double display_min_brightness = 12;
   double display_max_brightness = 13;
-
 }
 
 enum VrcStatus {

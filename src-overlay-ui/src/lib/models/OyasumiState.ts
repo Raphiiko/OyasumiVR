@@ -55,5 +55,7 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
     displayBrightnessAvailable: false,
     displayMinBrightness: 20,
     displayMaxBrightness: 160,
-  }
+  },
+  sleepPreparationAvailable: false,
+  sleepPreparationTimedOut: false
 };

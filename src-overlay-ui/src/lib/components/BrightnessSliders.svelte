@@ -17,7 +17,6 @@
 <style lang="scss">
   .sliders-container {
     position: relative;
-    height: 14em;
 
     & > div {
       position: absolute;
@@ -28,7 +27,7 @@
   }
 </style>
 
-<div class="sliders-container">
+<div class="sliders-container" style:height={brightnessState?.advancedMode ? '14em' : '7em'}>
   {#if !!brightnessState}
     {#if !brightnessState?.advancedMode}
       <div
