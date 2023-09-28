@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sleep preparation button in the overlay and on the overview, to trigger automations that support this feature.
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
+- Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
 
 ### Changed
 - Updated translations to use ICU syntax.
