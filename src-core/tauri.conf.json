@@ -161,12 +161,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 620,
         "resizable": true,
         "title": "OyasumiVR",
-        "width": 960,
-        "minWidth": 960,
-        "minHeight": 600,
+        "width": 980,
+        "minWidth": 980,
+        "minHeight": 620,
         "visible": false,
         "center": true,
         "theme": "Dark",
