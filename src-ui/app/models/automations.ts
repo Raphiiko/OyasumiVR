@@ -13,6 +13,7 @@ export type AutomationType =
   | 'SLEEP_MODE_ENABLE_AT_TIME'
   | 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE'
   | 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF'
+  | 'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD'
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
@@ -55,6 +56,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
   SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE: SleepModeEnableAtBatteryPercentageAutomationConfig;
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: SleepModeEnableAtControllersPoweredOffAutomationConfig;
+  SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig;
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
@@ -99,6 +101,7 @@ export interface AutomationConfig {
 
 // BRIGHTNESS AUTOMATIONS
 export interface BrightnessControlAdvancedModeAutomationConfig extends AutomationConfig {}
+
 export interface SetBrightnessAutomationConfig extends AutomationConfig {
   brightness: number;
   imageBrightness: number;
@@ -160,6 +163,11 @@ export interface SleepModeEnableAtBatteryPercentageAutomationConfig extends Auto
 }
 
 export type SleepModeEnableAtControllersPoweredOffAutomationConfig = AutomationConfig;
+
+export interface SleepModeEnableOnHeartRateCalmPeriodAutomationConfig extends AutomationConfig {
+  heartRateThreshold: number;
+  periodDuration: number;
+}
 
 export interface SleepModeChangeOnSteamVRStatusAutomationConfig extends AutomationConfig {
   disableOnSteamVRStop: boolean;
@@ -337,6 +345,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   },
   SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF: {
     enabled: false,
+  },
+  SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD: {
+    enabled: false,
+    heartRateThreshold: 60,
+    periodDuration: 120 * 1000,
   },
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: {
     enabled: true,

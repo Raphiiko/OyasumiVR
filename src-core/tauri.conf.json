@@ -45,7 +45,8 @@
           "https://api.vrchat.cloud/api/1/*",
           "https://assets.vrchat.com/*",
           "https://files.vrchat.cloud/*",
-          "https://dotnetcli.azureedge.net/*"
+          "https://dotnetcli.azureedge.net/*",
+          "https://dev.pulsoid.net/*"
         ]
       },
       "notification": {
@@ -160,12 +161,12 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "height": 620,
         "resizable": true,
         "title": "OyasumiVR",
-        "width": 960,
-        "minWidth": 960,
-        "minHeight": 600,
+        "width": 980,
+        "minWidth": 980,
+        "minHeight": 620,
         "visible": false,
         "center": true,
         "theme": "Dark",

@@ -36,7 +36,6 @@ export class ControllersAndTrackersTabComponent implements OnInit {
     event.preventDefault();
     this.router.navigate(['/dashboard/sleepDetection']);
   }
-
   ngOnInit(): void {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))

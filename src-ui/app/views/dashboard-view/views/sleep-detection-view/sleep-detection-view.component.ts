@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, HostListener, OnInit } from '@angular/core';
 import { fade, vshrink } from '../../../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { TimeEnableSleepModeModalComponent } from './time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
@@ -12,6 +12,7 @@ import {
   SleepModeDisableOnDevicePowerOnAutomationConfig,
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
+  SleepModeEnableOnHeartRateCalmPeriodAutomationConfig,
 } from '../../../../models/automations';
 import { cloneDeep, uniq } from 'lodash';
 import { TimeDisableSleepModeModalComponent } from './time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
@@ -21,6 +22,8 @@ import { OVRDeviceClass } from '../../../../models/ovr-device';
 import { TranslateService } from '@ngx-translate/core';
 import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
+import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -35,13 +38,21 @@ export class SleepDetectionViewComponent implements OnInit {
     private modalService: ModalService,
     private automationConfigService: AutomationConfigService,
     private translate: TranslateService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => (this.automationConfigs = configs));
+  }
+
+  @HostListener('click', ['$event'])
+  onClick(event: MouseEvent) {
+    if ((event.target as HTMLElement).className !== 'integrationsPageLink') return;
+    event.preventDefault();
+    this.router.navigate(['/dashboard/settings'], { fragment: 'INTEGRATIONS' });
   }
 
   openModal_EnableSleepModeAtTime() {
@@ -116,6 +127,25 @@ export class SleepDetectionViewComponent implements OnInit {
       .addModal(SleepDetectorEnableSleepModeModalComponent, {})
       .pipe(filter((data) => !!data))
       .subscribe(() => {});
+  }
+
+  openModal_EnableSleepModeOnHeartRateCalmPeriod() {
+    const config = this.automationConfigs.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD;
+    this.modalService
+      .addModal(HeartRateCalmPeriodEnableSleepModeModalComponent, {
+        threshold: config.heartRateThreshold,
+        duration: config.periodDuration,
+      })
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {
+        this.automationConfigService.updateAutomationConfig<SleepModeEnableOnHeartRateCalmPeriodAutomationConfig>(
+          'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD',
+          {
+            heartRateThreshold: data.threshold,
+            periodDuration: data.duration,
+          }
+        );
+      });
   }
 
   toggleAutomation(automation: AutomationType, field = 'enabled') {

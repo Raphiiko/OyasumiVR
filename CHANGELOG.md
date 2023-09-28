@@ -11,10 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
-- Sleep preparation button in the overlay, to trigger automations that support this feature.
 - Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to sleep.
+- Sleep preparation button in the overlay and on the overview, to trigger automations that support this feature.
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
+- Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
 
 ### Changed
 - Updated translations to use ICU syntax.
