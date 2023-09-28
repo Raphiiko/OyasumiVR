@@ -755,6 +755,10 @@
             "title": "VRChat Data",
             "description": "Data specific to VRChat, such as authentication data"
           },
+          "integrations": {
+            "title": "Integration Data",
+            "description": "Data specific to integrations (excluding VRChat), such as authentication data"
+          },
           "miscData": {
             "title": "Other Data",
             "description": "All other data that OyasumiVR stores, not covered by other categories"
