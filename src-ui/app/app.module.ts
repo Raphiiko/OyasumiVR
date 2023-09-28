@@ -147,9 +147,10 @@ import { BrightnessControlSliderComponent } from './components/brightness-contro
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
 import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { DeepLinkService } from './services/deep-link.service';
-import { DebugPulsoidTestingComponent } from './components/developer-debug-modal/debug-pulsoid-testing/debug-pulsoid-testing.component';
 import { SleepPreparationService } from './services/sleep-preparation.service';
 import { PulsoidService } from './services/integrations/pulsoid.service';
+import { SettingsIntegrationsTabComponent } from './views/dashboard-view/views/settings-view/settings-integrations-tab/settings-integrations-tab.component';
+import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -235,7 +236,8 @@ export function createTranslateLoader(http: HttpClient) {
     BrightnessControlModalComponent,
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
-    DebugPulsoidTestingComponent,
+    SettingsIntegrationsTabComponent,
+    ObfuscatedValueDirective,
   ],
   imports: [
     CommonModule,

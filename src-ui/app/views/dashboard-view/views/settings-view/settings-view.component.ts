@@ -8,7 +8,7 @@ import { OscService } from '../../../../services/osc.service';
 import { flatten } from 'lodash';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'ADVANCED';
+type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'INTEGRATIONS' | 'ADVANCED';
 
 @Component({
   selector: 'app-settings-view',
@@ -18,9 +18,8 @@ type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'ADVANCE
 })
 export class SettingsViewComponent implements OnInit {
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
-  activeTab: SettingsTab = 'GENERAL';
+  activeTab: SettingsTab = 'INTEGRATIONS';
   oscError = false;
-
   constructor(
     private update: UpdateService,
     private activatedRoute: ActivatedRoute,

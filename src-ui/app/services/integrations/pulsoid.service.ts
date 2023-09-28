@@ -58,7 +58,7 @@ interface PulsoidMessage {
 })
 export class PulsoidService {
   private store = new Store(SETTINGS_FILE);
-  private csrfTokens: string[] = [];
+  private csrfCache: string[] = [];
   private client?: Client;
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
@@ -81,17 +81,21 @@ export class PulsoidService {
   async init() {
     this.client = await getClient();
     await this.loadSettings();
-    this.manageSocketConnection();
+    await this.manageSocketConnection();
+  }
+
+  public async logout() {
+    await this.setActiveTokenSet(null);
   }
 
   async login() {
     // Generate CSRF token
     const state = Math.random().toString(36).substring(7);
-    this.csrfTokens.push(state);
-    // Remove CSRF token after 1 hour
+    this.csrfCache.push(state);
+    // Remove CSRF token from cache after 1 hour
     setTimeout(() => {
-      const index = this.csrfTokens.indexOf(state);
-      if (index > -1) this.csrfTokens.splice(index, 1);
+      const index = this.csrfCache.indexOf(state);
+      if (index > -1) this.csrfCache.splice(index, 1);
     }, 1000 * 60 * 60);
     // Construct a url with query parameters
     const url = new URL('https://pulsoid.net/oauth2/authorize');
@@ -121,7 +125,7 @@ export class PulsoidService {
       error(
         `[PulsoidService] Pulsoid login failed, received error response: ${errorDescription} (${errorCode})`
       );
-    } else if (!fragmentParams['state'] || !this.csrfTokens.includes(fragmentParams['state'][0])) {
+    } else if (!fragmentParams['state'] || !this.csrfCache.includes(fragmentParams['state'][0])) {
       errorOccurred = true;
       error(`[PulsoidService] Pulsoid login failed, csrf check failed: ${fragmentParams['state']}`);
     } else if (!fragmentParams['access_token']) {
@@ -182,12 +186,12 @@ export class PulsoidService {
       ? Math.floor(Date.now() / 1000) + tokenSet!.expires_in
       : undefined;
     this.settings.next(newSettings);
-    await this.saveSettings();
+    await this.setActiveProfile(null);
   }
 
-  private async setActiveProfile(profile: PulsoidProfile) {
+  private async setActiveProfile(profile: PulsoidProfile | null) {
     const newSettings = cloneDeep(this.settings.value);
-    newSettings.username = profile.username;
+    newSettings.username = profile?.username ?? undefined;
     this.settings.next(newSettings);
     await this.saveSettings();
   }

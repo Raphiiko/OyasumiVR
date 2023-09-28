@@ -488,6 +488,7 @@
       "vrchat": "VRChat",
       "notifications": "Notifications",
       "updates": "Updates",
+      "integrations": "Integrations",
       "advanced": "Advanced"
     },
     "general": {
@@ -698,6 +699,21 @@
       "updatesDisabled": {
         "DEV": "As you are running a development build of OyasumiVR, updates have been disabled.\nIf you want to install a new(er) version of OyasumiVR, please download and run the installer manually.",
         "STEAM": "You have installed the Steam version of OyasumiVR.\nNew OyasumiVR updates are therefore provided through Steam!"
+      }
+    },
+    "integrations": {
+      "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "reveal": "Reveal",
+      "providerLink": "Provider Website",
+      "pulsoid": {
+        "title": "Pulsoid",
+        "description": "Provides your heartrate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>"
+      },
+      "vrchat": {
+        "title": "VRChat",
+        "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations."
       }
     },
     "advanced": {

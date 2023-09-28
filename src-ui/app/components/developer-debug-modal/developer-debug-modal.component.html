@@ -15,13 +15,6 @@
     >
       <div class="tab-label">Sleep Detection Debugger</div>
     </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'PULSOID'"
-      (click)="activeTab = 'PULSOID'"
-    >
-      <div class="tab-label">Pulsoid</div>
-    </div>
   </div>
   <div class="pane-content">
     <app-debug-sleep-detection-debugger
@@ -30,9 +23,5 @@
     <app-debug-brightness-testing
       *ngIf="activeTab === 'BRIGHTNESS_TESTING'"
     ></app-debug-brightness-testing>
-    <app-debug-pulsoid-testing
-      *ngIf="activeTab === 'PULSOID'"
-    >
-    </app-debug-pulsoid-testing>
   </div>
 </div>
