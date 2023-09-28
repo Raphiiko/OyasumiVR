@@ -34,6 +34,8 @@ import {
 } from '../../models/pulsoid-api-settings';
 import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
 
+const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
+
 interface PulsoidTokenSet {
   access_token: string;
   expires_in: number;
@@ -53,6 +55,8 @@ interface PulsoidMessage {
   };
 }
 
+export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
+
 @Injectable({
   providedIn: 'root',
 })
@@ -64,6 +68,8 @@ export class PulsoidService {
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
   private _lastReport = new BehaviorSubject<number>(0);
+  private _heartbeatRecords = new BehaviorSubject<HeartbeatRecord[]>([]);
+  public heartbeatRecords = this._heartbeatRecords.asObservable();
 
   public heartRate = this._heartRate.pipe(
     switchMap(() => this._heartRate.pipe(timeout({ each: 10000, with: () => of(null) })))
@@ -82,6 +88,22 @@ export class PulsoidService {
     this.client = await getClient();
     await this.loadSettings();
     await this.manageSocketConnection();
+    this.heartRate.pipe(filter(Boolean)).subscribe((heartRate) => {
+      const records = this._heartbeatRecords.value;
+      records.push([Date.now(), heartRate]);
+      this._heartbeatRecords.next(records);
+    });
+    interval(1000 * 60 * 60).subscribe(() => {
+      const records = this._heartbeatRecords.value;
+      // Remove all records older than HISTORY_LENGTH
+      const now = Date.now();
+      let modified = false;
+      while (records.length > 0 && records[0][0] < now - HISTORY_LENGTH) {
+        records.shift();
+        modified = true;
+      }
+      if (modified) this._heartbeatRecords.next(records);
+    });
   }
 
   public async logout() {
@@ -215,7 +237,7 @@ export class PulsoidService {
     );
   }
 
-  private getApiUrl(route: string, apiVersion: string = 'v1'): Observable<string> {
+  private getApiUrl(route: string, apiVersion = 'v1'): Observable<string> {
     if (!route.startsWith('/')) route = '/' + route;
     return of(`https://dev.pulsoid.net/api/${apiVersion}${route}`);
   }

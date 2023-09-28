@@ -26,8 +26,8 @@ export class HeartRateCalmPeriodEnableSleepModeModalComponent
   >
   implements OnInit, HeartRateCalmPeriodEnableSleepModeModalInputModel
 {
-  duration: number = 0;
-  threshold: number = 0;
+  duration = 0;
+  threshold = 0;
 
   @HostBinding('[@fadeUp]') get fadeUp() {
     return;

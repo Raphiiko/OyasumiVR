@@ -10,7 +10,7 @@ import { VRChatService } from '../../../../../services/vrchat.service';
   animations: [hshrink()],
 })
 export class SettingsIntegrationsTabComponent {
-  deobfuscatePulsoidUsername: boolean = false;
+  deobfuscatePulsoidUsername = false;
   deobfuscated: string[] = [];
   deobfuscationTimers: { [service: string]: any } = {};
 

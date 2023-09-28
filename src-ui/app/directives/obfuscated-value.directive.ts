@@ -1,21 +1,14 @@
-import {
-  AfterViewInit,
-  Directive,
-  ElementRef,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 @Directive({
   selector: '[obfuscatedValue]',
 })
 export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
   @Input('obfuscatedValue') value?: string;
-  @Input('deobfuscate') deobfuscate?: boolean;
-  @Input('obfuscatedMaxLength') obfuscatedMaxLength?: number;
-  @Input('deobfuscatedMaxLength') deobfuscatedMaxLength?: number;
-  private afterViewInit: boolean = false;
+  @Input() deobfuscate?: boolean;
+  @Input() obfuscatedMaxLength?: number;
+  @Input() deobfuscatedMaxLength?: number;
+  private afterViewInit = false;
 
   constructor(private elementRef: ElementRef) {}
 
@@ -24,7 +17,7 @@ export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
     this.render();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     if (this.afterViewInit) this.render();
   }
 

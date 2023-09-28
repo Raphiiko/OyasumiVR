@@ -56,7 +56,9 @@ export class DeepLinkService {
         if (fragmentParams.hasOwnProperty(key)) fragmentParams[key].push(value);
         else fragmentParams[key] = [value];
       }
-    } catch (e) {}
+    } catch (e) {
+      // It's ok if we can't parse the fragment
+    }
     switch (integration) {
       case 'pulsoid':
         await this.pulsoid.handleDeepLink(path, params, fragmentParams);
