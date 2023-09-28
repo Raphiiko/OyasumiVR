@@ -106,6 +106,10 @@
       "atTime": "At a specific time",
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
       "onControllersPoweredOff": "When all controllers are turned off",
+      "onHeartRateCalmPeriod": {
+        "title": "When my heart rate is calm for a period of time",
+        "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>"
+      },
       "onMotionDetection": {
         "title": "When OyasumiVR detects you are asleep based on your movement"
       }
@@ -214,6 +218,20 @@
         "errors": {
           "thresholdOutOfRange": "The percentage has to be between 0% and 100%.",
           "thresholdNotInteger": "The percentage value has to be a whole number."
+        }
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "title": "Enable sleep mode",
+        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+        "bpm": {
+          "title": "BPM Threshold",
+          "description": "The beats per minute your heart has to stay under for the sleep mode to be enabled.",
+          "unit": "BPM"
+        },
+        "duration": {
+          "title": "Duration",
+          "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
+          "unit": "min"
         }
       }
     }
@@ -1013,7 +1031,8 @@
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "As you were asleep",
               "SLEEP_MODE_ENABLE_AT_TIME": "At scheduled time",
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "As a device battery level met the threshold",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off"
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "As your heart rate was calm for long enough"
             }
           }
         },

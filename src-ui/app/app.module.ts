@@ -151,6 +151,8 @@ import { SleepPreparationService } from './services/sleep-preparation.service';
 import { PulsoidService } from './services/integrations/pulsoid.service';
 import { SettingsIntegrationsTabComponent } from './views/dashboard-view/views/settings-view/settings-integrations-tab/settings-integrations-tab.component';
 import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
+import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
+import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -238,6 +240,7 @@ export function createTranslateLoader(http: HttpClient) {
     ClickOutsideDirective,
     SettingsIntegrationsTabComponent,
     ObfuscatedValueDirective,
+    HeartRateCalmPeriodEnableSleepModeModalComponent,
   ],
   imports: [
     CommonModule,
@@ -302,6 +305,7 @@ export class AppModule {
     private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
     private sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
+    private sleepModeEnableOnHeartRateCalmPeriodAutomationService: SleepModeEnableOnHeartRateCalmPeriodAutomationService,
     private sleepModeChangeOnSteamVRStatusAutomationService: SleepModeChangeOnSteamVRStatusAutomationService,
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
@@ -388,6 +392,7 @@ export class AppModule {
           this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
           this.sleepModeEnableAtBatteryPercentageAutomation.init(),
           this.sleepModeEnableAtTimeAutomationService.init(),
+          this.sleepModeEnableOnHeartRateCalmPeriodAutomationService.init(),
           this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
           this.sleepModeDisableAtTimeAutomationService.init(),
           this.sleepModeDisableOnDevicePowerOnAutomationService.init(),

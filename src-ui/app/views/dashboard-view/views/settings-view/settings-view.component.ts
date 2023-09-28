@@ -18,7 +18,7 @@ type SettingsTab = 'GENERAL' | 'VRCHAT' | 'NOTIFICATIONS' | 'UPDATES' | 'INTEGRA
 })
 export class SettingsViewComponent implements OnInit {
   updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
-  activeTab: SettingsTab = 'INTEGRATIONS';
+  activeTab: SettingsTab = 'GENERAL';
   oscError = false;
   constructor(
     private update: UpdateService,

@@ -18,6 +18,7 @@ export class EventLogSleepModeEnabledEntryParser extends EventLogEntryParser<Eve
           case 'SLEEP_MODE_ENABLE_AT_TIME':
           case 'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE':
           case 'SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF':
+          case 'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD':
             return `comp.event-log-entry.type.sleepModeEnabled.reason.automation.${entry.reason.automation}`;
           default:
             return 'comp.event-log-entry.type.sleepModeEnabled.reason.automation.unknown';
