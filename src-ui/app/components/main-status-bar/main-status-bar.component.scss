@@ -186,7 +186,7 @@ $background-color: var(--color-surface-2);
   }
 
   &:after {
-    transition: all .15s;
+    transition: all 0.15s;
   }
 
   &.breathing {
@@ -209,7 +209,7 @@ $background-color: var(--color-surface-2);
 .vrc-status,
 .steamvr-status,
 .brightness-simple,
-.heartrate, {
+.heartrate {
   span:not(:last-child) {
     opacity: 0.5;
   }
@@ -288,19 +288,32 @@ $background-color: var(--color-surface-2);
 @keyframes heartbeat {
   $lowest: 0.8;
   $highest: 1.1;
-  0%, 100% {
+  0%,
+  100% {
     transform: scale3d($lowest, $lowest, $lowest);
   }
   05% {
-    transform: scale3d($lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33);
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
+    );
   }
   10% {
     transform: scale3d($highest, $highest, $highest);
   }
   50% {
-    transform: scale3d($lowest + ($highest - $lowest) * 0.66, $lowest + ($highest - $lowest) * 0.66, $lowest + ($highest - $lowest) * 0.66);
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66
+    );
   }
   70% {
-    transform: scale3d($lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33, $lowest + ($highest - $lowest) * 0.33);
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
+    );
   }
 }

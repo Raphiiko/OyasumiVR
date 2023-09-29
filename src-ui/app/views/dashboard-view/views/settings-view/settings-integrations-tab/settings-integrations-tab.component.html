@@ -1,7 +1,6 @@
 <p translate>settings.integrations.description</p>
 <div class="setting-category">
   <div class="settings">
-
     <div class="setting-row">
       <div class="setting-row-icon">
         <a href="https://vrchat.com/" target="_blank">
@@ -11,52 +10,78 @@
       <div class="setting-row-label">
         <span [innerHtml]="'settings.integrations.vrchat.title' | translate"></span>
         <span [innerHtml]="'settings.integrations.vrchat.description' | translate"></span>
-        <a target="_blank" href="https://vrchat.com" translate>settings.integrations.providerLink</a>
+        <a target="_blank" href="https://vrchat.com" translate
+          >settings.integrations.providerLink</a
+        >
       </div>
       <div class="setting-row-action">
         <div class="connected" *ngIf="vrchat.user | async" @hshrink>
-          <div class="connected-info"
-          >
+          <div class="connected-info">
             <i class="material-icons-round">check_circle</i>
             <div class="connected-info-account">
-              {{(vrchat.user | async)?.displayName}}
+              {{ (vrchat.user | async)?.displayName }}
             </div>
           </div>
-          <button class="btn btn-secondary connected-disconnect" (click)="vrchat.logout()" translate>
+          <button
+            class="btn btn-secondary connected-disconnect"
+            (click)="vrchat.logout()"
+            translate
+          >
             settings.integrations.disconnect
           </button>
         </div>
-        <button class="btn btn-primary" (click)="vrchat.showLoginModal()" translate
-                *ngIf="(vrchat.user | async) === null" @hshrink>settings.integrations.connect
+        <button
+          class="btn btn-primary"
+          (click)="vrchat.showLoginModal()"
+          translate
+          *ngIf="(vrchat.user | async) === null"
+          @hshrink
+          >settings.integrations.connect
         </button>
       </div>
     </div>
 
     <div class="setting-row">
       <div class="setting-row-icon">
-        <a [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID" target="_blank">
+        <a
+          [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
+          target="_blank"
+        >
           <img class="pulsoid-logo clickable-logo" src="/assets/img/pulsoid-logo.png" />
         </a>
       </div>
       <div class="setting-row-label">
         <span [innerHtml]="'settings.integrations.pulsoid.title' | translate"></span>
         <span [innerHtml]="'settings.integrations.pulsoid.description' | translate"></span>
-        <a target="_blank" [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID" translate>settings.integrations.providerLink</a>
+        <a
+          target="_blank"
+          [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
+          translate
+          >settings.integrations.providerLink</a
+        >
       </div>
       <div class="setting-row-action">
         <div class="connected" *ngIf="pulsoid.loggedInUser | async" @hshrink>
-          <div class="connected-info"
-               [tooltip]="'settings.integrations.reveal'" [tooltipMode]="'top'"
+          <div
+            class="connected-info"
+            [tooltip]="'settings.integrations.reveal'"
+            [tooltipMode]="'top'"
           >
             <i class="material-icons-round">check_circle</i>
-            <div class="connected-info-account obfuscated"
-                 [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
-                 [obfuscatedMaxLength]="16"
-                 [deobfuscatedMaxLength]="32"
-                 [deobfuscate]="deobfuscated.includes('PULSOID')" (click)="deobfuscate('PULSOID')"
+            <div
+              class="connected-info-account obfuscated"
+              [obfuscatedValue]="(pulsoid.loggedInUser | async) ?? ''"
+              [obfuscatedMaxLength]="16"
+              [deobfuscatedMaxLength]="32"
+              [deobfuscate]="deobfuscated.includes('PULSOID')"
+              (click)="deobfuscate('PULSOID')"
             ></div>
           </div>
-          <button class="btn btn-secondary connected-disconnect" (click)="pulsoid.logout()" translate>
+          <button
+            class="btn btn-secondary connected-disconnect"
+            (click)="pulsoid.logout()"
+            translate
+          >
             settings.integrations.disconnect
           </button>
         </div>
@@ -67,8 +92,12 @@
             tooltipMode="left"
             (click)="copyToClipboard('PULSOID')"
           >
-            <i class="material-icons" *ngIf="!copiedToClipboard.includes('PULSOID')" @hshrink>copy_all</i>
-            <i class="material-icons success" *ngIf="copiedToClipboard.includes('PULSOID')" @hshrink>check</i>
+            <i class="material-icons" *ngIf="!copiedToClipboard.includes('PULSOID')" @hshrink
+              >copy_all</i
+            >
+            <i class="material-icons success" *ngIf="copiedToClipboard.includes('PULSOID')" @hshrink
+              >check</i
+            >
           </button>
           <button class="btn btn-primary" (click)="pulsoid.login()" translate>
             settings.integrations.connect
@@ -76,7 +105,5 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </div>

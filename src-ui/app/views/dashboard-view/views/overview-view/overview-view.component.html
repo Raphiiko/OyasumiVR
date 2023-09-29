@@ -28,14 +28,21 @@
       </button>
       <div
         *ngIf="!sleepModeActive"
-        [tooltip]="(sleepPreparation.sleepPreparationAvailable | async) === true ? undefined : 'overview.sleep-preparation.disabledTooltip'"
+        [tooltip]="
+          (sleepPreparation.sleepPreparationAvailable | async) === true
+            ? undefined
+            : 'overview.sleep-preparation.disabledTooltip'
+        "
         [tooltipMode]="'top'"
         [tooltipMargin]="28"
         @fade
       >
         <button
           class="btn btn-secondary btn-sleep-preparation"
-          [disabled]="(sleepPreparation.sleepPreparationAvailable | async) === false || (sleepPreparation.sleepPreparationTimedOut | async)"
+          [disabled]="
+            (sleepPreparation.sleepPreparationAvailable | async) === false ||
+            (sleepPreparation.sleepPreparationTimedOut | async)
+          "
           (click)="sleepPreparation.prepareForSleep()"
         >
           <div

@@ -1,5 +1,5 @@
 .clickable-logo {
-  transition: all .15s;
+  transition: all 0.15s;
   cursor: pointer;
 
   &:hover {
@@ -35,7 +35,7 @@
   border: 0.125em solid var(--color-surface-2);
 
   * {
-    transition: all .15s;
+    transition: all 0.15s;
   }
 
   &-info {
@@ -70,7 +70,6 @@
         }
       }
     }
-
   }
 
   &-disconnect {
@@ -85,7 +84,6 @@
     }
   }
 }
-
 
 .btn-copy {
   width: 2.5em;

@@ -39,10 +39,11 @@ export class SettingsIntegrationsTabComponent {
     }, 1000);
 
     switch (service) {
-      case 'PULSOID':
+      case 'PULSOID': {
         const url = this.pulsoid.getLoginUrl();
         await writeText(url);
         break;
+      }
       default:
         warn('Tried copying link for unknown service');
         break;

@@ -4,10 +4,9 @@ import {
   PulsoidService,
 } from '../../../../../../services/integrations/pulsoid.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter, throttleTime } from 'rxjs';
+import { filter } from 'rxjs';
 import { Chart, TooltipModel } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
-import { asyncScheduler } from 'rxjs/internal/scheduler/async';
 
 @Component({
   selector: 'app-heart-rate-chart',
@@ -21,6 +20,7 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
     timestamp: number;
   }[] = [];
   private chart?: Chart;
+
   get hasEnoughData() {
     const minTimestamp = Math.min(...this.chartData.map((data) => data.timestamp)) ?? 0;
     const maxTimestamp = Math.max(...this.chartData.map((data) => data.timestamp)) ?? 0;
@@ -111,7 +111,7 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
       plugins: [
         {
           id: 'customYRange',
-          beforeUpdate: (chart, options) => {
+          beforeUpdate: (chart) => {
             const yDatasets = chart.data.datasets.map((dataset) => dataset.data as number[]);
             const allYValues = yDatasets.flat();
             const maxYValue = Math.max(...allYValues);
@@ -143,7 +143,6 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
     // Group records by bucket
     const groupedRecords = data.reduce((acc, record) => {
       const bucketStart = Math.floor((record[0] - minTime) / bucketSize) * bucketSize + minTime;
-      const bucketEnd = bucketStart + bucketSize;
       acc[bucketStart] ??= [];
       acc[bucketStart].push(record[1]);
       return acc;
@@ -279,13 +278,14 @@ const roundedFloatingBarsPlugin = {
     chart.data.datasets.forEach((dataset: any, datasetIndex: any) => {
       const meta = chart.getDatasetMeta(datasetIndex);
       meta.data.forEach((bar) => {
-        let { x, y, base } = bar.getProps(['x', 'y', 'base']);
+        const props = bar.getProps(['x', 'y', 'base']);
+        const { x } = props;
+        let { y, base } = props;
         const [min, max] = (bar as any).$context.raw.y;
         if (min == max) {
           y -= 4;
           base += 4;
         }
-        const height = base - y;
         const width = (bar as any).width;
 
         ctx.save();

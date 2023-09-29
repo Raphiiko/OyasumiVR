@@ -22,11 +22,13 @@
     </ul>
     <p translate>comp.dotnet-upgrade-modal.description.text2</p>
     <p translate>comp.dotnet-upgrade-modal.description.automaticInstall</p>
-    <p><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
-      href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0"
-      target="_blank"
-    >https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a
-    ></p>
+    <p
+      ><span translate>comp.dotnet-upgrade-modal.description.moreInfo</span>&nbsp;<a
+        href="https://dotnet.microsoft.com/en-us/download/dotnet/7.0"
+        target="_blank"
+        >https://dotnet.microsoft.com/en-us/download/dotnet/7.0</a
+      ></p
+    >
     <p [innerHtml]="'comp.dotnet-upgrade-modal.description.troubleshooting' | translate"></p>
   </div>
   <div class="pane-actions spread">
@@ -36,7 +38,7 @@
     <button class="btn btn-primary" (click)="installAutomatically()">
       <div class="small-spinner" *ngIf="installing" @hshrink></div>
       <span *ngIf="!installing" @hshrink translate
-      >comp.dotnet-upgrade-modal.installAutomatically</span
+        >comp.dotnet-upgrade-modal.installAutomatically</span
       >
     </button>
   </div>
