@@ -85,3 +85,23 @@
     }
   }
 }
+
+
+.btn-copy {
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.connect-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  > *:first-child {
+    margin-right: 0.5em;
+  }
+}
+
+.material-icons.success {
+  color: var(--color-success);
+}

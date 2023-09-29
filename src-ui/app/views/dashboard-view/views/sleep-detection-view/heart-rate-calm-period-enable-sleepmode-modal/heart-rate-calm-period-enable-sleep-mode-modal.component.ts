@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
+import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
 import { Router } from '@angular/router';
 
 export interface HeartRateCalmPeriodEnableSleepModeModalInputModel {
@@ -17,7 +17,7 @@ export interface HeartRateCalmPeriodEnableSleepModeModalOutputModel {
   selector: 'app-heart-rate-calm-period-enable-sleepmode-modal',
   templateUrl: './heart-rate-calm-period-enable-sleep-mode-modal.component.html',
   styleUrls: ['./heart-rate-calm-period-enable-sleep-mode-modal.component.scss'],
-  animations: [fadeUp(), fade(), triggerChildren()],
+  animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
 })
 export class HeartRateCalmPeriodEnableSleepModeModalComponent
   extends BaseModalComponent<
@@ -28,6 +28,7 @@ export class HeartRateCalmPeriodEnableSleepModeModalComponent
 {
   duration = 0;
   threshold = 0;
+  mode: 'SETTINGS' | 'HISTORY' = 'SETTINGS';
 
   @HostBinding('[@fadeUp]') get fadeUp() {
     return;

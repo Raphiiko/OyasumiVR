@@ -1,0 +1,12 @@
+.pane-content {
+  overflow-y: auto;
+}
+
+app-heart-rate-chart {
+  width: 100%;
+}
+
+
+.pane {
+  max-height: calc(100% - 4em);
+}

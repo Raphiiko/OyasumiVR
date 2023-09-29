@@ -232,7 +232,14 @@
           "title": "Duration",
           "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
           "unit": "min"
-        }
+        },
+        "viewHistory": {
+          "title": "Heart Rate History",
+          "description": "View your heart rate history from the last 12 hours",
+          "actionShow": "View History",
+          "actionHide": "Hide History"
+        },
+        "notEnoughData": "Not enough data available to show your heart rate history."
       }
     }
   },
@@ -725,6 +732,7 @@
       "disconnect": "Disconnect",
       "reveal": "Reveal",
       "providerLink": "Provider Website",
+      "copy": "Copy link to clipboard",
       "pulsoid": {
         "title": "Pulsoid",
         "description": "Provides your heartrate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>"

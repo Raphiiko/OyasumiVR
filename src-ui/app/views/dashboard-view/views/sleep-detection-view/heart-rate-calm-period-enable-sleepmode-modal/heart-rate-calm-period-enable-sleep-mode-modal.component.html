@@ -1,20 +1,22 @@
 <div class="pane modal-lg" @fadeUp>
   <div class="pane-title" translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.title</div>
   <div class="pane-content">
-    <p [innerHtml]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.description' | translate"></p>
+    <p
+      [innerHtml]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.description' | translate"
+    ></p>
     <div class="automation-settings">
       <div class="automation-settings-row">
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
               <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.title</span>
-              <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description</span>
+              <span translate
+              >sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description</span
+              >
             </div>
             <div class="setting-row-action">
               <app-slider-setting
-                [unit]="
-                  'sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.unit' | translate
-                "
+                [unit]="'sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.unit' | translate"
                 [min]="20"
                 [max]="100"
                 [value]="threshold"
@@ -25,8 +27,12 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title</span>
-              <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description</span>
+              <span translate
+              >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title</span
+              >
+              <span translate
+              >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description</span
+              >
             </div>
             <div class="setting-row-action">
               <app-slider-setting
@@ -40,6 +46,27 @@
                 [step]="1"
               ></app-slider-setting>
             </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate
+              >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.title</span
+              >
+              <span translate
+              >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-primary" translate (click)="mode='HISTORY'" *ngIf="mode === 'SETTINGS'">
+                sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow
+              </button>
+              <button class="btn btn-primary" translate (click)="mode='SETTINGS'" *ngIf="mode === 'HISTORY'">
+                sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide
+              </button>
+            </div>
+          </div>
+          <div class="setting-row" @vshrink *ngIf="mode === 'HISTORY'">
+            <app-heart-rate-chart></app-heart-rate-chart>
           </div>
         </div>
       </div>

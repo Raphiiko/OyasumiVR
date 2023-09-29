@@ -1,0 +1,18 @@
+.wrapper {
+  background: var(--color-surface-0);
+  border-radius: var(--surface-border-radius);
+  padding: 1em;
+
+  .not-enough-data {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2em;
+    span {
+      color: var(--color-text-3);
+      text-align: center;
+    }
+  }
+}

@@ -153,6 +153,7 @@ import { SettingsIntegrationsTabComponent } from './views/dashboard-view/views/s
 import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
+import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -241,6 +242,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsIntegrationsTabComponent,
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
+    HeartRateChartComponent,
   ],
   imports: [
     CommonModule,

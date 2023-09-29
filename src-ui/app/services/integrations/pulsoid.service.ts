@@ -110,7 +110,11 @@ export class PulsoidService {
     await this.setActiveTokenSet(null);
   }
 
-  async login() {
+  public async login() {
+    await shell.open(this.getLoginUrl());
+  }
+
+  public getLoginUrl(): string {
     // Generate CSRF token
     const state = Math.random().toString(36).substring(7);
     this.csrfCache.push(state);
@@ -126,7 +130,7 @@ export class PulsoidService {
     url.searchParams.append('response_type', 'token');
     url.searchParams.append('scope', 'data:heart_rate:read,profile:read');
     url.searchParams.append('state', state);
-    await shell.open(url.toString());
+    return url.toString();
   }
 
   public async handleDeepLink(
