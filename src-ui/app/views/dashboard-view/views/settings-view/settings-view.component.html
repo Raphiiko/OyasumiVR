@@ -6,9 +6,9 @@
     </div>
     <div class="tab" [class.active]="activeTab === 'VRCHAT'" (click)="activeTab = 'VRCHAT'">
       <div class="tab-label" translate
-      ><i class="material-icons" style="color: var(--color-caution)" @hshrink *ngIf="oscError">
-        error_outline
-      </i>
+        ><i class="material-icons" style="color: var(--color-caution)" @hshrink *ngIf="oscError">
+          error_outline
+        </i>
         <span translate>settings.tab.vrchat</span></div
       >
     </div>
@@ -32,7 +32,11 @@
         <span translate>settings.tab.updates</span>
       </div>
     </div>
-    <div class="tab" [class.active]="activeTab === 'INTEGRATIONS'" (click)="activeTab = 'INTEGRATIONS'">
+    <div
+      class="tab"
+      [class.active]="activeTab === 'INTEGRATIONS'"
+      (click)="activeTab = 'INTEGRATIONS'"
+    >
       <div class="tab-label" translate>settings.tab.integrations</div>
     </div>
     <div class="tab" [class.active]="activeTab === 'ADVANCED'" (click)="activeTab = 'ADVANCED'">

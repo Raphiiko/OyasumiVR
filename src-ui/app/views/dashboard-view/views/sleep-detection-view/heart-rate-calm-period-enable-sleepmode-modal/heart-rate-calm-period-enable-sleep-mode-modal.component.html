@@ -11,7 +11,7 @@
             <div class="setting-row-label" translate>
               <span translate>sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.title</span>
               <span translate
-              >sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description</span
+                >sleep-detection.modals.enableOnHeartRateCalmPeriod.bpm.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -28,10 +28,10 @@
           <div class="setting-row">
             <div class="setting-row-label" translate>
               <span translate
-              >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title</span
+                >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.title</span
               >
               <span translate
-              >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description</span
+                >sleep-detection.modals.enableOnHeartRateCalmPeriod.duration.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -50,17 +50,27 @@
           <div class="setting-row">
             <div class="setting-row-label" translate>
               <span translate
-              >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.title</span
+                >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.title</span
               >
               <span translate
-              >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.description</span
+                >sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.description</span
               >
             </div>
             <div class="setting-row-action">
-              <button class="btn btn-primary" translate (click)="mode='HISTORY'" *ngIf="mode === 'SETTINGS'">
+              <button
+                class="btn btn-primary"
+                translate
+                (click)="mode = 'HISTORY'"
+                *ngIf="mode === 'SETTINGS'"
+              >
                 sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionShow
               </button>
-              <button class="btn btn-primary" translate (click)="mode='SETTINGS'" *ngIf="mode === 'HISTORY'">
+              <button
+                class="btn btn-primary"
+                translate
+                (click)="mode = 'SETTINGS'"
+                *ngIf="mode === 'HISTORY'"
+              >
                 sleep-detection.modals.enableOnHeartRateCalmPeriod.viewHistory.actionHide
               </button>
             </div>

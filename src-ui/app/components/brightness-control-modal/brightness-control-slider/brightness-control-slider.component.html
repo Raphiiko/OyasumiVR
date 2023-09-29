@@ -1,12 +1,14 @@
 <div class="brightness-slider-bar-row">
   <i class="material-icons brightness-level-icon">brightness_5</i>
   <div class="brightness-slider-bar" (mousedown)="onDragStart($event)">
-    <div class="brightness-slider-bar-inner"
-         [class.dragging]="dragging"
-         [class.transition-active]="transitionActive"
-         [style.width]="innerWidth">
+    <div
+      class="brightness-slider-bar-inner"
+      [class.dragging]="dragging"
+      [class.transition-active]="transitionActive"
+      [style.width]="innerWidth"
+    >
       <div class="brightness-slider-bar-label"
-      ><span>{{ value | number : '1.0-0' }}%</span></div
+        ><span>{{ value | number : '1.0-0' }}%</span></div
       >
     </div>
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
