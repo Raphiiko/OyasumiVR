@@ -72,7 +72,7 @@ steamworks = { version = "0.10.0" }
 
 [dependencies.tauri]
 version = "1.5.0"
-features = [
+features = [ "clipboard-write-text",
   "cli",
   "fs-write-file",
   "dialog-save",
