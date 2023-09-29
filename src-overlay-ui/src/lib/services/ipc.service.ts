@@ -3,7 +3,7 @@ import type { AddNotificationParams } from "$lib/models/AddNotificationParams";
 import { tick } from "svelte";
 import { derived, get, writable } from "svelte/store";
 import { DEFAULT_OYASUMI_STATE } from "$lib/models/OyasumiState";
-import { cloneDeep, mergeWith } from "lodash";
+import { cloneDeep, mergeWith } from "lodash-es";
 import {
   OyasumiSidecarAutomationsState,
   OyasumiSidecarAutomationsState_ShutdownAutomations,
