@@ -154,6 +154,8 @@ import { ObfuscatedValueDirective } from './directives/obfuscated-value.directiv
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
 import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
+import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/confirm-modal/start-with-steamvr-how-to-modal.component';
+import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -243,6 +245,7 @@ export function createTranslateLoader(http: HttpClient) {
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
     HeartRateChartComponent,
+    StartWithSteamVRHowToModalComponent,
   ],
   imports: [
     CommonModule,
@@ -300,6 +303,7 @@ export class AppModule {
     private deepLinkService: DeepLinkService,
     private sleepPreparationService: SleepPreparationService,
     private pulsoidService: PulsoidService,
+    private quitWithSteamVRService: QuitWithSteamVRService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -369,6 +373,7 @@ export class AppModule {
           this.notificationService.init(),
           this.sleepPreparationService.init(),
           this.pulsoidService.init(),
+          this.quitWithSteamVRService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {
