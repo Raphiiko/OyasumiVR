@@ -1,7 +1,7 @@
 {
   "shared": {
     "logo": {
-      "tagline": "一个帮助VR 睡眠的辅助工具"
+      "tagline": "帮助 VR 睡眠的小工具"
     },
     "modals": {
       "cancel": "取消",
@@ -357,7 +357,7 @@
         "description": "当SteamVR停止时，自动关闭你的基站"
       }
     },
-    "powerManagementWarning": "当选择使用OyasumiVR的自动设备来打开或关闭你的基站时，建议你在SteamVR的基站设置中禁用电源管理。",
+    "powerManagementWarning": "当选择使用OyasumiVR的自动化流程来打开或关闭你的基站时，建议你在SteamVR的基站设置中禁用电源管理。",
     "lighthouseControlDisabledWarning": "由于您在OyasumiVR的设置中禁用了基站功率控制，所以这些自动化功能不可用。如果您想使用这些自动化功能，请启用该功能。",
     "enableLighthouseControl": "启用",
     "error": {
