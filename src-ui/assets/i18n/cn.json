@@ -1,7 +1,7 @@
 {
   "shared": {
     "logo": {
-      "tagline": "VR 睡眠辅助功能"
+      "tagline": "一个帮助VR 睡眠的辅助工具"
     },
     "modals": {
       "cancel": "取消",
@@ -38,35 +38,35 @@
       "description": "让 OyasumiVR 在不同的时间自动调节 VR 头显的亮度，比如睡觉或起床时。",
       "startupAutomations": "启动时的自动化操作",
       "sleepPreparation": "睡前的准备工作",
-      "sleepAutomations": "{PLACEHOLDER}",
-      "copyBrightness": "{PLACEHOLDER}",
+      "sleepAutomations": "睡眠时的自动化",
+      "copyBrightness": "复制当前亮度值",
       "onStartup": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "当 OyasumiVR 或 SteamVR 启动时",
+        "description": "调整亮度"
       },
       "onSleepEnable": {
         "title": "当我进入睡眠模式时",
-        "description": "{PLACEHOLDER}"
+        "description": "调整亮度"
       },
       "onSleepDisable": {
         "title": "当我醒来时",
-        "description": "{PLACEHOLDER}"
+        "description": "调整亮度"
       },
       "onSleepPreparation": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "当我准备入睡时",
+        "description": "调整亮度"
       },
       "brightness": {
         "title": "将亮度改为",
-        "description": ""
+        "description": "更改亮度"
       },
       "imageBrightness": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "将图像亮度更改为",
+        "description": "调整 VR 头显图像的亮度"
       },
       "displayBrightness": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "将显示屏亮度更改为",
+        "description": "调整 LCD 背光的亮度（仅Value Index可用）"
       },
       "transition": {
         "title": "逐步调整亮度",
@@ -77,10 +77,10 @@
         "description": "过渡到新亮度设置所需的时间"
       },
       "applyOnStart": {
-        "title": "{PLACEHOLDER}",
+        "title": "启动时应用亮度设置",
         "description": {
-          "onSleepEnable": "{PLACEHOLDER}",
-          "onSleepDisable": "{PLACEHOLDER}"
+          "onSleepEnable": "如果睡眠模式已激活，则会在 SteamVR 或 OyasumiVR 启动时直接设置此亮度值。",
+          "onSleepDisable": "如果睡眠模式未激活，则会在 SteamVR 或 OyasumiVR 启动时直接设置此亮度值。"
         }
       }
     }
@@ -94,8 +94,8 @@
       "deactivate": "关闭"
     },
     "sleep-preparation": {
-      "activate": "{PLACEHOLDER}",
-      "disabledTooltip": "{PLACEHOLDER}"
+      "activate": "为睡眠做准备",
+      "disabledTooltip": "一旦为至少一个自动化配置设置了睡眠准备功能，睡眠准备功能就会启用"
     }
   },
   "sleep-detection": {
@@ -107,8 +107,8 @@
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
       "onControllersPoweredOff": "当所有控制器都关闭时",
       "onHeartRateCalmPeriod": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "当我的心率在一段时间内保持平稳时",
+        "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成"
       },
       "onMotionDetection": {
         "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
@@ -125,7 +125,7 @@
       "sleepDetectorCalibration": {
         "title": "校准睡眠检测",
         "currentCalibration": "你当前的校准值：",
-        "noSteamVR": "你只能在 SteamVR 在插入 VR 头的情况下才能开始校准",
+        "noSteamVR": "你只能在 SteamVR 正确启动并且识别到头显的情况下才能开始校准",
         "startCalibration": "开始校准",
         "restartCalibration": "重新开始校准",
         "info": {
@@ -221,18 +221,25 @@
         }
       },
       "enableOnHeartRateCalmPeriod": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}",
+        "title": "启用睡眠模式",
+        "description": "当心率在一定时间内低于某个阈值时，启用睡眠模式： 设定的心率需要低于每分钟心跳次数的阈值，并且位于睡眠模式的启用时间内。",
         "bpm": {
-          "title": "{PLACEHOLDER}",
-          "description": "{PLACEHOLDER}",
-          "unit": "{PLACEHOLDER}"
+          "title": "BPM 阈值",
+          "description": "要启用睡眠模式，您的心跳需要保持在每分钟多少下。",
+          "unit": "BPM"
         },
         "duration": {
-          "title": "{PLACEHOLDER}",
-          "description": "{PLACEHOLDER}",
-          "unit": "{PLACEHOLDER}"
-        }
+          "title": "持续时间",
+          "description": "您的心率保持在阈值以下多长时间才启用睡眠模式。",
+          "unit": "分钟"
+        },
+        "viewHistory": {
+          "title": "心率历史记录",
+          "description": "查看过去 12 小时的心率记录",
+          "actionShow": "显示历史记录",
+          "actionHide": "隐藏历史记录"
+        },
+        "notEnoughData": "数据不足，无法显示心率历史记录"
       }
     }
   },
@@ -245,7 +252,7 @@
     "sleepingAnimations": {
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
-      "presetAuthor": "由于 {author} 制作",
+      "presetAuthor": "由{{author}} 制作",
       "description": "OyasumiVR 可以在你改变睡姿时自动改变你的模型动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来了解这个功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个模型动作预制档，但你也可以指定设置自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自定义动画",
@@ -301,7 +308,7 @@
     "tabs": {
       "controllersAndTrackers": "控制器和定位器",
       "baseStations": "基站",
-      "windowsPowerPolicy": "Power Policy"
+      "windowsPowerPolicy": "电源计划"
     },
     "windowsPowerPolicy": {
       "description": "OyasumiVR可以在您进入睡眠或醒来时自动更改Windows的电源策略。这对于在您睡觉时降低能耗并在您醒来后恢复高性能策略非常有用。",
@@ -506,7 +513,7 @@
       "vrchat": "VRChat",
       "notifications": "通知",
       "updates": "更新",
-      "integrations": "{PLACEHOLDER}",
+      "integrations": "集成",
       "advanced": "高级"
     },
     "general": {
@@ -1141,13 +1148,13 @@
         },
         "simpleBrightnessChanged": {
           "title": {
-            "set": "{PLACEHOLDER}",
-            "transition": "{PLACEHOLDER}"
+            "set": "耳机亮度已设置为 {value}",
+            "transition": "耳机亮度过渡到 {value}。"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "{PLACEHOLDER}",
-            "SLEEP_MODE_DISABLED": "{PLACEHOLDER}",
-            "SLEEP_PREPARATION": "{PLACEHOLDER}"
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用",
+            "SLEEP_PREPARATION": "当你准备入睡时"
           }
         },
         "imageBrightnessChanged": {
@@ -1158,7 +1165,7 @@
           "reason": {
             "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
             "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用",
-            "SLEEP_PREPARATION": "{PLACEHOLDER}"
+            "SLEEP_PREPARATION": "当你准备入睡时"
           }
         },
         "displayBrightnessChanged": {
@@ -1239,22 +1246,22 @@
     "dotnet-upgrade-modal": {
       "title": "安装缺失的运行时库",
       "description": {
-        "text1": "{PLACEHOLDER}",
+        "text1": "OyasumiVR 需要的下列运行时要么与所需版本不匹配，要么未安装在您的系统上：",
         "runtimeQueued": "排队中",
         "text2": "为了继续使用 OyasumiVR，必须先安装这些所需的运行时库。",
         "automaticInstall": "是否要让 OyasumiVR 尝试自动为您安装这些运行时库？",
         "moreInfo": "您可以在这里找到下载和更多信息：",
-        "troubleshooting": "{PLACEHOLDER}"
+        "troubleshooting": "如果您已经安装了所需的运行时，但仍收到此消息，请查看我们的<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">故障排除指南</a>，了解可能的解决方案。"
       },
       "quit": "退出 OyasumiVR",
       "installAutomatically": "自动安装",
       "success": {
         "title": "安装成功",
-        "message": "{PLACEHOLDER}"
+        "message": "已成功安装所需的运行时！请注意，您可能需要重启电脑。请退出 OyasumiVR，然后重新启动才能继续。"
       },
       "failure": {
         "title": "安装失败",
-        "message": "{PLACEHOLDER}"
+        "message": "无法自动安装所需的运行时，请尝试手动安装。\n\n如果您仍然遇到问题，请查看我们的<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">故障排除指南</a>。"
       }
     }
   },
@@ -1365,7 +1372,7 @@
           "automations": "自动化",
           "deviceControl": "设备控制",
           "shutdown": "关机序列",
-          "prepareForSleep": "{PLACEHOLDER}"
+          "prepareForSleep": "为睡眠做好准备"
         }
       },
       "shutdownSequence": {
@@ -1425,8 +1432,8 @@
   "pulsoid": {
     "login": {
       "error": {
-        "title": "{PLACEHOLDER}",
-        "message": "{PLACEHOLDER}"
+        "title": "Pulsoid 登录失败",
+        "message": "使用 Pulsoid 帐户登录失败。请稍后再试。如果问题仍然存在，请联系我们寻求帮助！\n\n{errorDetails}"
       }
     }
   }
