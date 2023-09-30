@@ -458,13 +458,13 @@
     "onlyIfSleepModeEnabled": "只有在睡眠模式开启的时候",
     "behaviourWarning": "OyasumiVR 的状态变更对玩家是延迟可见的，因此状态更新需要一些时间才能显示出来。对于其他玩家也是同理 这是 VRChat 的限制，OyasumiVR 无法修复",
     "moreInfo": "更多信息",
-    "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受邀请或者加入请求吗？\n答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以透过在主菜单中打开你的个人资料来强制刷新你的状态。"
+    "behaviourWarningFAQ": "在这里，你可以找到关于状态变更行为的一些问题的答案：\n\n问：即使 VRChat 没有显示我处于蓝色状态，我仍然可以自动接受加入请求吗？\n答：如果你使用 OyasumiVR 将你的状态设置为蓝色（加入我），它将接管账户并自动接受你收到的任何邀请加入请求。\n\n问：其他玩家无法加入我，因为我的状态对他们来说没有更新。\n答：状态更新可能需要一段时间才会显示给其他玩家。 如果他们想加入你，但是没法加入，他们可以透过在主菜单中打开你的个人资料来强制刷新你的状态。"
   },
   "auto-invite-request-accept": {
-    "title": "自动接受邀请/加入请求",
-    "description": "OyasumiVR 可以自动接受你收到的加入请求。 透过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的邀请请求",
+    "title": "自动接受加入请求",
+    "description": "OyasumiVR 可以自动接受你收到的加入请求。 透过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
     "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
-    "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有邀请请求，因为你的状态是加入我（蓝色）",
+    "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
     "whitelist": "玩家白名单",
     "blacklist": "玩家黑名单",
     "noPlayersAdded": "目前没有任何玩家在此列表中",
@@ -708,8 +708,8 @@
             "description": "在 Oyasumi 自动更新您的 VRChat 状态时向您发送通知"
           },
           "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "title": "自动接受邀请/加入请求",
-            "description": "在 Oyasumi 自动接受他人的邀请或加入请求时向您发送通知"
+            "title": "自动接受加入请求",
+            "description": "在 Oyasumi 自动接受他人的加入请求时向您发送通知"
           }
         }
       }
@@ -930,7 +930,7 @@
       "gpuAutomations": "GPU 自动化",
       "powerAutomations": "电源自动化",
       "statusAutomations": "状态自动化",
-      "autoInviteRequestAccept": "自动接受加入/邀请请求",
+      "autoInviteRequestAccept": "自动接受加入请求",
       "settings": "设置",
       "vrcAutomations": "VRChat 自动化",
       "brightnessAutomations": "亮度自动化",
@@ -1392,7 +1392,7 @@
       },
       "automations": {
         "autoAcceptInviteRequests": {
-          "title": "自动接受邀请/邀请请求",
+          "title": "自动接受加入请求",
           "subtitle": "{mode}：{playerCount} 位朋友",
           "mode": {
             "Disabled": "对所有人",
