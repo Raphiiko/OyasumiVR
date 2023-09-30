@@ -290,7 +290,7 @@
       }
     },
     "general": {
-      "description": "在这里，你可以配置OyasumiVR在某些事件发生时向VRChat发送OSC命令。例如，如果你想在睡觉或醒来时改变你的模型切换，这可能很有用。",
+      "description": "在这里，你可以配置OyasumiVR在某些事件发生时向VRChat发送OSC命令。例如，如果你想在睡觉或醒来时改变你的模型，这可能很有用。",
       "onSleepEnable": {
         "title": "当我入睡时",
         "description": "发送这些OSC命令",
@@ -311,7 +311,7 @@
       "windowsPowerPolicy": "电源计划"
     },
     "windowsPowerPolicy": {
-      "description": "OyasumiVR可以在您进入睡眠或醒来时自动更改Windows的电源策略。这对于在您睡觉时降低能耗并在您醒来后恢复高性能策略非常有用。",
+      "description": "OyasumiVR可以在您进入睡眠或醒来时自动更改Windows的电源策略。这对于在您睡觉时降低能耗并在您醒来后恢复高性能策略时非常有用。",
       "automations": "自动化功能",
       "sleepModeEnable": {
         "title": "当睡眠模式启用时",
