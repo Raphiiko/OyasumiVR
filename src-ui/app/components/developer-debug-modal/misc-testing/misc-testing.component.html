@@ -1,8 +1,10 @@
 <h3>VRChat microphone muting</h3>
-<p>Muted: {{automation.muted | async}}</p>
-<p>Mode: {{automation.mode | async}}</p>
+<p>Muted: {{ automation.muted | async }}</p>
+<p>Mode: {{ automation.mode | async }}</p>
 <button class="btn btn-primary" (click)="automation.toggleMute()">Toggle</button>
 <button class="btn btn-primary" (click)="automation.setMute(true)">Mute</button>
 <button class="btn btn-primary" (click)="automation.setMute(false)">Unmute</button>
 <button class="btn btn-secondary" (click)="automation.setMode('TOGGLE')">Set Toggle Mode</button>
-<button class="btn btn-secondary" (click)="automation.setMode('PUSH_TO_MUTE')">Set Push To Mute Mode</button>
+<button class="btn btn-secondary" (click)="automation.setMode('PUSH_TO_MUTE')"
+  >Set Push To Mute Mode</button
+>

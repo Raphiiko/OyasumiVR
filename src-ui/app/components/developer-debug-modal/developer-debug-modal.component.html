@@ -29,10 +29,7 @@
     ></app-debug-sleep-detection-debugger>
     <app-debug-brightness-testing
       *ngIf="activeTab === 'BRIGHTNESS_TESTING'"
-    ></app-debug-brightness-testing
-    >
-    <app-misc-testing
-      *ngIf="activeTab === 'MISC_TESTING'"
-    ></app-misc-testing>
+    ></app-debug-brightness-testing>
+    <app-misc-testing *ngIf="activeTab === 'MISC_TESTING'"></app-misc-testing>
   </div>
 </div>

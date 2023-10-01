@@ -7,7 +7,7 @@
     <span>{{ 'power-automations.lighthouseControlDisabledWarning' | translate }}</span>
     <button class="btn btn-secondary" (click)="enableLighthouseControl()" translate>{{
       'power-automations.enableLighthouseControl' | translate
-      }}</button>
+    }}</button>
   </div>
 </div>
 
@@ -15,9 +15,9 @@
   class="alert warning"
   @vshrink
   *ngIf="
-      !lighthousePowerControlDisabled &&
-      (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
-    "
+    !lighthousePowerControlDisabled &&
+    (lighthouseStatus === 'noAdapter' || lighthouseStatus === 'adapterError')
+  "
 >
   <div class="alert-bg"></div>
   <div class="alert-icon">

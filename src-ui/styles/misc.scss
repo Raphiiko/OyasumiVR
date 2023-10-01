@@ -17,8 +17,6 @@
 
     &-label {
       flex: 1;
-
-
     }
   }
 
@@ -97,7 +95,8 @@
     border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
 
     &:not(:last-child) {
-      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) var(--surface-border-radius);
+      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius)
+        var(--surface-border-radius);
     }
   }
 

@@ -6,7 +6,6 @@
   }
 }
 
-
 .action-dropdown {
   min-width: 10em;
 }
@@ -16,7 +15,9 @@
 }
 
 .status-icon {
-  &-muted, &-unmuted, &-unknown {
+  &-muted,
+  &-unmuted,
+  &-unknown {
     font-size: 2em;
   }
   &-muted {
