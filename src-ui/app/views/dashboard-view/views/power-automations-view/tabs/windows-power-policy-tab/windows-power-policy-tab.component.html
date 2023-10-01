@@ -1,40 +1,38 @@
-<div class="pane-content">
-  <div class="setting-category">
-    <div class="description">
-      <p>
-        <span translate>power-automations.windowsPowerPolicy.description</span>
-      </p>
-      <i class="material-icons-outlined description-icon">energy_savings_leaf</i>
-    </div>
-    <h3 translate>power-automations.windowsPowerPolicy.automations</h3>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>power-automations.windowsPowerPolicy.sleepModeEnable.title</span>
-          <span translate>power-automations.windowsPowerPolicy.sleepModeEnable.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            [items]="policyOptions"
-            [selected]="onSleepModeEnablePolicy"
-            (selectedChange)="setPolicy('ON_ENABLE', $event!)"
-          ></app-select-box>
-        </div>
+<div class="setting-category">
+  <div class="description">
+    <p>
+      <span translate>power-automations.windowsPowerPolicy.description</span>
+    </p>
+    <i class="material-icons-outlined description-icon">energy_savings_leaf</i>
+  </div>
+  <h3 translate>power-automations.windowsPowerPolicy.automations</h3>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>power-automations.windowsPowerPolicy.sleepModeEnable.title</span>
+        <span translate>power-automations.windowsPowerPolicy.sleepModeEnable.description</span>
       </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>power-automations.windowsPowerPolicy.sleepModeDisable.title</span>
-          <span translate>power-automations.windowsPowerPolicy.sleepModeDisable.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            [items]="policyOptions"
-            [selected]="onSleepModeDisablePolicy"
-            (selectedChange)="setPolicy('ON_DISABLE', $event!)"
-          ></app-select-box>
-        </div>
+      <div class="setting-row-action">
+        <app-select-box
+          type="SMALL"
+          [items]="policyOptions"
+          [selected]="onSleepModeEnablePolicy"
+          (selectedChange)="setPolicy('ON_ENABLE', $event!)"
+        ></app-select-box>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>power-automations.windowsPowerPolicy.sleepModeDisable.title</span>
+        <span translate>power-automations.windowsPowerPolicy.sleepModeDisable.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          type="SMALL"
+          [items]="policyOptions"
+          [selected]="onSleepModeDisablePolicy"
+          (selectedChange)="setPolicy('ON_DISABLE', $event!)"
+        ></app-select-box>
       </div>
     </div>
   </div>

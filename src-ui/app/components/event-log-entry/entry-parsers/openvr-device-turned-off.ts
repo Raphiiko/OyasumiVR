@@ -13,4 +13,10 @@ export class EventLogTurnedOffOpenVRDevicesEntryParser extends EventLogEntryPars
   override headerInfoSubTitle(entry: EventLogTurnedOffOpenVRDevices): string {
     return 'comp.event-log-entry.type.turnedOffOpenVRDevices.reason.' + entry.reason;
   }
+
+  headerInfoSubTitleParams(entry: EventLogTurnedOffOpenVRDevices): { [p: string]: string } {
+    return {
+      threshold: entry.batteryThreshold?.toString() ?? '',
+    };
+  }
 }

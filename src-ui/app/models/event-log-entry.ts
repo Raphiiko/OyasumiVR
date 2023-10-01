@@ -86,8 +86,9 @@ export interface EventLogSleepModeDisabled extends EventLogBase {
 
 export interface EventLogTurnedOffOpenVRDevices extends EventLogBase {
   type: 'turnedOffOpenVRDevices';
-  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING';
+  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL';
   devices: 'CONTROLLER' | 'CONTROLLERS' | 'TRACKER' | 'TRACKERS' | 'ALL' | 'VARIOUS';
+  batteryThreshold?: number;
 }
 
 export interface EventLogLighthouseSetPowerState extends EventLogBase {

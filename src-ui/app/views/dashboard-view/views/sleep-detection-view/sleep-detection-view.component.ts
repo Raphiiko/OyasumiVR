@@ -157,4 +157,8 @@ export class SleepDetectionViewComponent implements OnInit {
   deviceClassesToString(classes: OVRDeviceClass[], tlkey_prefix: string): string {
     return classes.map((c) => this.translate.instant(tlkey_prefix + c)).join(', ');
   }
+
+  async goToPowerAutomations(fragment: string) {
+    await this.router.navigate(['dashboard', 'powerAutomations'], { fragment });
+  }
 }
