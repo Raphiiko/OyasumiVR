@@ -781,8 +781,8 @@
             "description": "VRChat特有的数据，如OSC设置"
           },
           "integrations": {
-            "title": "{PLACEHOLDER}",
-            "description": "{PLACEHOLDER}"
+            "title": "集成数据",
+            "description": "集成插件们在OyasumiVR存储的数据"
           },
           "miscData": {
             "title": "其他数据",
