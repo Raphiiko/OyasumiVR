@@ -16,6 +16,7 @@ import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
+import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 
 const routes: Routes = [
   {
@@ -50,6 +51,10 @@ const routes: Routes = [
       {
         path: 'statusAutomations',
         component: StatusAutomationsViewComponent,
+      },
+      {
+        path: 'vrchatMicMuteAutomations',
+        component: VRChatMicMuteAutomationsViewComponent,
       },
       {
         path: 'brightnessAutomations',

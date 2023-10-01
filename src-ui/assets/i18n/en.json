@@ -905,6 +905,41 @@
       "content": "Turning off both your controllers and your trackers"
     }
   },
+  "vrchatMicMuteAutomations": {
+    "title": "Microphone Muting",
+    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)",
+    "config": {
+      "title": "Configuration"
+    },
+    "automations": {
+      "title": "Automations"
+    },
+    "mode": {
+      "title": "VRChat Microphone Behaviour",
+      "description": "Select which mic behaviour you're using within VRChat. Note that selecting a different behaviour than the one you're using in VRChat could cause these automations to misbehave."
+    },
+    "onSleepModeEnable": {
+      "title": "When sleep mode is enabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepModeDisable": {
+      "title": "When sleep mode is disabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepPreparation": {
+      "title": "When I prepare to go to sleep",
+      "description": "Change my microphone state to"
+    },
+    "modeOptions": {
+      "TOGGLE": "Toggle",
+      "PUSH_TO_MUTE": "Push to Talk"
+    },
+    "muteOptions": {
+      "NONE": "None",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    }
+  },
   "comp": {
     "brightness-control-modal": {
       "displayBrightness": "Display Brightness",
@@ -946,6 +981,7 @@
       "sleepDetection": "Sleep Detection",
       "oscAutomations": "OSC Automations",
       "gpuAutomations": "GPU Automations",
+      "vrchatMicMuteAutomations": "Microphone Muting",
       "powerAutomations": "Power Automations",
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",

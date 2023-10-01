@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
 - Setting for OyasumiVR to quit alongside SteamVR.
 - Instructions on how to start OyasumiVR alongside SteamVR.
+- Automation for muting and unmuting your microphone in VRChat, when you go to sleep or wake up.
 
 ### Changed
 - Updated translations to use ICU syntax.

@@ -1,0 +1,74 @@
+<div class="pane">
+  <div class="pane-title" translate>vrchatMicMuteAutomations.title</div>
+  <div class="pane-content">
+    <div class="setting-category">
+      <p translate>vrchatMicMuteAutomations.description</p>
+      <h3 translate>vrchatMicMuteAutomations.config.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.mode.title</span>
+            <span translate>vrchatMicMuteAutomations.mode.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="mode-dropdown"
+              [items]="modeOptions"
+              [selected]="modeOption"
+              (selectedChange)="onChangeModeOption($event)"
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+      <h3 translate>vrchatMicMuteAutomations.automations.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepModeEnable.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepModeEnable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepEnableMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepModeDisable.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepModeDisable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepDisableMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepPreparation.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepPreparation.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepPreparationMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
