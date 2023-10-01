@@ -26,7 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 ### Fixed
 - Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
-- Improvements to the translations for Simplified Chinese (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- 
 
 ## [1.9.0]
 
@@ -54,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
  
-### Removed
+### Deprecated
 
 - Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
 
@@ -103,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.2]
 
-### Changed
+### Fixed
 
 - Updated Japanese Translations
 - Updated references to the new GitHub repository, following the rebrand to OyasumiVR
@@ -144,7 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated splash screen.
 - Updated to Angular 16 & Tauri 1.3.
 
-### Removed
+### Deprecated
 
 - Removed experimental flag for sleep detection feature.
 - Removed debug tab in the settings view.
