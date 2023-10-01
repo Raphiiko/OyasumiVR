@@ -172,10 +172,12 @@ export class VRChatMicMuteAutomationService {
     switch (this._mode.value) {
       case 'TOGGLE':
         if (this._muted.value !== state) {
+          if (this._muted.value !== null) this._muted.next(state);
           await this.toggleMute(false);
         }
         break;
       case 'PUSH_TO_MUTE':
+        if (this._muted.value !== null) this._muted.next(state);
         await this.osc.send_int(WRITE_ADDR, state ? 0 : 1);
         await firstValueFrom(of(null).pipe(delay(150)));
         break;
