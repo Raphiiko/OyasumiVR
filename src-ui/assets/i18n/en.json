@@ -100,6 +100,7 @@
   },
   "sleep-detection": {
     "title": "Sleep Detection",
+    "experimentalAutomation": "This automation is experimental and may not yet be reliable.",
     "enableAutomations": {
       "title": "Enabling sleep mode",
       "description": "Automatically enable sleep mode based on various triggers",
@@ -907,7 +908,7 @@
   },
   "vrchatMicMuteAutomations": {
     "title": "Microphone Muting",
-    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)",
+    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat.",
     "config": {
       "title": "Configuration"
     },
@@ -915,7 +916,7 @@
       "title": "Automations"
     },
     "mode": {
-      "title": "VRChat Microphone Behaviour",
+      "title": "VRChat microphone behaviour",
       "description": "Select which mic behaviour you're using within VRChat. Note that selecting a different behaviour than the one you're using in VRChat could cause these automations to misbehave."
     },
     "onSleepModeEnable": {
@@ -940,11 +941,17 @@
       "UNMUTE": "Unmute"
     },
     "status": {
-      "title": "Current VRChat Microphone State",
+      "title": "Current VRChat microphone state",
       "description": "Reflects your current in-game microphone state",
       "unmuted": "Unmuted",
       "muted": "Muted",
       "unknown": "Unknown"
+    },
+    "control": {
+      "title": "Control microphone mute",
+      "description": "You can use this to test if microphone muting is working properly",
+      "mute": "Mute\nmicrophone",
+      "unmute": "Unmute\nmicrophone"
     }
   },
   "comp": {

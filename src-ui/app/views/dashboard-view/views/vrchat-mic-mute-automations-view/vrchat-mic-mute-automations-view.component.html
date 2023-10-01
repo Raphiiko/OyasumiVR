@@ -40,6 +40,20 @@
             </span>
           </div>
         </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.control.title</span>
+            <span translate>vrchatMicMuteAutomations.control.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.mute'" (click)="automation.setMute(true)">
+              <i class="material-icons status-icon-muted" >mic_off</i>
+            </button>
+            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.unmute'" (click)="automation.setMute(false)">
+              <i class="material-icons status-icon-unmuted">mic</i>
+            </button>
+          </div>
+        </div>
       </div>
       <h3 translate>vrchatMicMuteAutomations.automations.title</h3>
       <div class="settings">
