@@ -1283,7 +1283,7 @@
       }
     },
     "start-with-steamvr-how-to-modal": {
-      "description": "您可以在 SteamVR 自己的设置中将 OyasumiVR 配置为与 SteamVR 一起启动。您可以在以下位置找到这些设置：\n\nSteamVR -> 设置 -> 启动/关闭 -> 选择应用程序",
+      "description": "您可以在 SteamVR 自己的设置中将 OyasumiVR 配置为与 SteamVR 一起启动。可以在以下位置找到这些设置：\n\nSteamVR -> 设置 -> 启动/关闭 -> 选择应用程序",
       "title": "通过 SteamVR 启动 OyasumiVR"
     }
   },
@@ -1344,7 +1344,7 @@
       "title": "关机设置",
       "quitSteamVR": {
         "title": "退出SteamVR",
-        "description": "这也应该退出你正在运行的任何游戏或覆盖物。",
+        "description": "这也将会退出你正在运行的任何游戏或叠加层界面。",
         "conflict": {
           "title": "警告： 运行此任务将导致 OyasumiVR 立即退出",
           "description": "您已将 OyasumiVR 配置为在 SteamVR 停止时立即退出。因此，任何后续自动操作都可能无法运行。要解决这个问题，请禁用此任务，或者在设置中将 OyasumiVR 配置为在 SteamVR 停止时不立即退出。",
