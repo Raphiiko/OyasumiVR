@@ -395,7 +395,7 @@
         "unknown": "由于未知原因，功耗限制自动化不可用。\n\n请尝试重新启动 OyasumiVR"
       },
       "noGPUSelected": "没有选择 GPU",
-      "gpuUnsupported": "不支援的 GPU",
+      "gpuUnsupported": "不支持的 GPU",
       "noGPUs": "在你的系统中找不到任何 Nivida 显卡",
       "description": "在这里，你可以自动限制 GPU 的功耗限制，让在你睡觉时节省电力",
       "selectGPU": "选择你希望为其设置功耗限制的 GPU：",
@@ -621,6 +621,23 @@
           }
         },
         "title": "叠加层"
+      },
+      "startStop": {
+        "title": "启动与停止"
+      },
+      "startWithSteamVR": {
+        "label": "与 SteamVR 一起启动",
+        "description": "在 SteamVR 启动时一并启动 OyasumiVR",
+        "howTo": "怎样做"
+      },
+      "stopWithSteamVR": {
+        "label": "与 SteamVR 一起关闭",
+        "description": "在 SteamVR 关闭一段时间后退出 OyasumiVR",
+        "options": {
+          "DISABLED": "禁用",
+          "IMMEDIATELY": "立即退出",
+          "AFTERDELAY": "等待两分钟后"
+        }
       }
     },
     "vrchat": {
@@ -727,18 +744,19 @@
       }
     },
     "integrations": {
-      "description": "{PLACEHOLDER}",
-      "connect": "{PLACEHOLDER}",
-      "disconnect": "{PLACEHOLDER}",
-      "reveal": "{PLACEHOLDER}",
-      "providerLink": "{PLACEHOLDER}",
+      "description": "OyasumiVR 的某些功能可以使用外部服务。如果您想将 OyasumiVR 与外部服务连接起来，那就找对地方了！",
+      "connect": "连接",
+      "disconnect": "断开连接",
+      "reveal": "显示",
+      "providerLink": "提供方网站",
+      "copy": "复制链接到剪贴板",
       "pulsoid": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "Pulsoid",
+        "description": "向 OyasumiVR 提供心率数据，用于触发某些自动操作。<br><i>需要: Pulsoid \"BRO\" 订阅</i>"
       },
       "vrchat": {
-        "title": "{PLACEHOLDER}",
-        "description": "{PLACEHOLDER}"
+        "title": "VRChat",
+        "description": "链接您的VRChat账户,即可访问 OyasumiVR 的一些与 VRChat 相关的自动化功能。"
       }
     },
     "advanced": {
@@ -1263,6 +1281,10 @@
         "title": "安装失败",
         "message": "无法自动安装所需的运行时，请尝试手动安装。\n\n如果您仍然遇到问题，请查看我们的<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">故障排除指南</a>。"
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "您可以在 SteamVR 自己的设置中将 OyasumiVR 配置为与 SteamVR 一起启动。您可以在以下位置找到这些设置：\n\nSteamVR -> 设置 -> 启动/关闭 -> 选择应用程序",
+      "title": "通过 SteamVR 启动 OyasumiVR"
     }
   },
   "resolution-automations": {
@@ -1322,7 +1344,12 @@
       "title": "关机设置",
       "quitSteamVR": {
         "title": "退出SteamVR",
-        "description": "这也应该退出你正在运行的任何游戏或覆盖物。"
+        "description": "这也应该退出你正在运行的任何游戏或覆盖物。",
+        "conflict": {
+          "title": "警告： 运行此任务将导致 OyasumiVR 立即退出",
+          "description": "您已将 OyasumiVR 配置为在 SteamVR 停止时立即退出。因此，任何后续自动操作都可能无法运行。要解决这个问题，请禁用此任务，或者在设置中将 OyasumiVR 配置为在 SteamVR 停止时不立即退出。",
+          "goToSettings": "设置"
+        }
       },
       "turnOffDevices": {
         "title": "关闭设备"
