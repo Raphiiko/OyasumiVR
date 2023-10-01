@@ -32,6 +32,7 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
+import { TranslateService } from '@ngx-translate/core';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
@@ -40,7 +41,7 @@ export const ShutdownSequenceStageOrder = [
   'TURNING_OFF_TRACKERS',
   'TURNING_OFF_BASESTATIONS',
   'QUITTING_STEAMVR',
-  'SHUTTING_DOWN',
+  'POWERING_DOWN',
 ];
 
 @Injectable({
@@ -64,7 +65,8 @@ export class ShutdownAutomationsService {
     private openvr: OpenVRService,
     private lighthouseConsole: LighthouseConsoleService,
     private lighthouse: LighthouseService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private translate: TranslateService
   ) {}
 
   async init() {
@@ -106,7 +108,7 @@ export class ShutdownAutomationsService {
     if (config.turnOffTrackers) stages.push('TURNING_OFF_TRACKERS');
     if (config.turnOffBaseStations) stages.push('TURNING_OFF_BASESTATIONS');
     if (config.quitSteamVR) stages.push('QUITTING_STEAMVR');
-    if (config.shutdownWindows) stages.push('SHUTTING_DOWN');
+    if (config.powerDownWindows) stages.push('POWERING_DOWN');
     return stages;
   }
 
@@ -137,7 +139,7 @@ export class ShutdownAutomationsService {
     if (!(await this.turnOffTrackers())) return;
     if (!(await this.turnOffBaseStations())) return;
     if (!(await this.quitSteamVR())) return;
-    if (!(await this.shutdownWindows())) return;
+    if (!(await this.powerDownWindows())) return;
     this._stage.next('IDLE');
     this.cancelFlag = false;
   }
@@ -329,21 +331,46 @@ export class ShutdownAutomationsService {
     return true;
   }
 
-  private async shutdownWindows(): Promise<boolean> {
+  private async powerDownWindows(): Promise<boolean> {
     if (this.cancelFlag) {
       this.cancelFlag = false;
       this._stage.next('IDLE');
       return false;
     }
-    if (!this.config.shutdownWindows) return true;
-    this._stage.next('SHUTTING_DOWN');
-    // Shutdown windows
-    await invoke('run_command', {
-      command: 'shutdown',
-      args: ['/s', '/t', '10'],
-    });
-    // Wait for 30 seconds, then stop the sequence (if the pc hasn't already shut down)
-    await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
+    if (!this.config.powerDownWindows) return true;
+    this._stage.next('POWERING_DOWN');
+    // Power down windows
+    switch (this.config.powerDownWindowsMode) {
+      case 'SHUTDOWN':
+        await invoke('windows_shutdown', {
+          message: this.translate.instant(
+            'shutdown-automations.sequence.powerDownWindows.shutdownMessage'
+          ),
+          timeout: 20,
+          forceCloseApps: true,
+        });
+        await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
+        break;
+      case 'REBOOT':
+        await invoke('windows_reboot', {
+          message: this.translate.instant(
+            'shutdown-automations.sequence.powerDownWindows.rebootMessage'
+          ),
+          timeout: 20,
+          forceCloseApps: true,
+        });
+        await firstValueFrom(merge(of(null).pipe(delay(30000)), this.cancelEvent));
+        break;
+      case 'SLEEP':
+        setTimeout(() => invoke('windows_sleep'), 500);
+        break;
+      case 'HIBERNATE':
+        setTimeout(() => invoke('windows_hibernate'), 500);
+        break;
+      case 'LOGOUT':
+        setTimeout(() => invoke('windows_logout'), 500);
+        break;
+    }
     return true;
   }
 }

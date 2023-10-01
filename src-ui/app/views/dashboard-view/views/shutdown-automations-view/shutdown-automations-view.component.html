@@ -101,7 +101,7 @@
           translate
           (click)="runSequence()"
           [disabled]="noOptionsSelected"
-          >shutdown-automations.sequence.run
+        >shutdown-automations.sequence.run
         </button>
       </h2>
       <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
@@ -215,15 +215,28 @@
 
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>shutdown-automations.sequence.shutDownWindows.title</span>
-            <span translate>shutdown-automations.sequence.shutDownWindows.description</span>
+            <span translate>shutdown-automations.sequence.powerDownWindows.title</span>
+            <span translate>shutdown-automations.sequence.powerDownWindows.description</span>
           </div>
           <div class="setting-row-action">
+            <div
+              class="power-down-select-box-wrapper"
+              *ngIf="config.powerDownWindows"
+              @fade>
+              <app-select-box
+                type="SMALL"
+                class="power-down-options-select-box"
+                [expandUp]="true"
+                [items]="powerDownOptions"
+                [selected]="powerDownOption"
+                (selectedChange)="onChangePowerDownOption($event)"
+              ></app-select-box>
+            </div>
             <label class="switch-toggle">
               <input
                 type="checkbox"
-                [checked]="config.shutdownWindows"
-                (change)="toggleShutdownWindows()"
+                [checked]="config.powerDownWindows"
+                (change)="togglePowerDownWindows()"
               />
               <span class="switch-toggle-slider"></span>
             </label>

@@ -175,7 +175,6 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
         this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
           (o) => o.id === settings.quitWithSteamVR
         );
-        console.log(this.stopWithSteamVROption, settings.quitWithSteamVR);
       });
   }
 

@@ -1222,10 +1222,6 @@
         "title": "Matikan base stations",
         "description": "Mematikan semua base stations yang masih aktif"
       },
-      "shutDownWindows": {
-        "title": "Shutdown Windows",
-        "description": "Mencoba untuk mematikan windowsmu"
-      },
       "run": "Jalankan urutan"
     },
     "confirm-modal": {
@@ -1238,8 +1234,7 @@
         "QUITTING_STEAMVR": "Mematikan SteamVR...",
         "TURNING_OFF_CONTROLLERS": "Mematikan kontroler...",
         "TURNING_OFF_TRACKERS": "Mematikan tracker...",
-        "TURNING_OFF_BASESTATIONS": "Mematikan base stations...",
-        "SHUTTING_DOWN": "Mematikan Windows..."
+        "TURNING_OFF_BASESTATIONS": "Mematikan base stations..."
       },
       "title": "Mematikan",
       "cancel": "Batalkan"

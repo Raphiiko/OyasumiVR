@@ -48,7 +48,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 9;
+  version: 10;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -232,6 +232,7 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 }
 
 // SHUTDOWN AUTOMATIONS
+export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
 export interface ShutdownAutomationsConfig extends AutomationConfig {
   triggerOnSleep: boolean;
   sleepDuration: number;
@@ -242,7 +243,8 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   turnOffControllers: boolean;
   turnOffTrackers: boolean;
   turnOffBaseStations: boolean;
-  shutdownWindows: boolean;
+  powerDownWindows: boolean;
+  powerDownWindowsMode: PowerDownWindowsMode;
 }
 
 // WINDOWS POWER POLICY AUTOMATIONS
@@ -255,7 +257,7 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 9,
+  version: 10,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -424,7 +426,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     turnOffControllers: true,
     turnOffTrackers: true,
     turnOffBaseStations: true,
-    shutdownWindows: true,
+    powerDownWindows: true,
+    powerDownWindowsMode: 'SHUTDOWN',
   },
   // WINDOWS POWER POLICY AUTOMATIONS
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: {

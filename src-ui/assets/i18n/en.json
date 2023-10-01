@@ -1366,9 +1366,18 @@
         "title": "Turn off base stations",
         "description": "Turns off any base stations that are still active"
       },
-      "shutDownWindows": {
-        "title": "Shut down Windows",
-        "description": "Attempts to shut down your computer"
+      "powerDownWindows": {
+        "title": "Power down Windows",
+        "description": "Attempts to power down your computer",
+        "options": {
+          "SHUTDOWN": "Shut down",
+          "REBOOT": "Restart",
+          "HIBERNATE": "Hibernate",
+          "SLEEP": "Sleep",
+          "LOGOUT": "Log out"
+        },
+        "shutdownMessage": "OyasumiVR is shutting down your PC",
+        "rebootMessage": "OyasumiVR is restarting your PC"
       },
       "run": "Run Sequence"
     },
@@ -1383,7 +1392,7 @@
         "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
         "TURNING_OFF_TRACKERS": "Turning off trackers...",
         "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
-        "SHUTTING_DOWN": "Shutting down Windows..."
+        "POWERING_DOWN": "Powering down Windows..."
       },
       "title": "Shutting Down",
       "cancel": "Cancel Now"

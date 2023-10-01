@@ -1217,10 +1217,6 @@
         "title": "Zet base stations uit",
         "description": "Dit zet alle base stations uit die nog aan staan"
       },
-      "shutDownWindows": {
-        "title": "Windows Afsluiten",
-        "description": "Sluit je computer af."
-      },
       "run": "Start Afsluit Procedure"
     },
     "confirm-modal": {
@@ -1233,8 +1229,7 @@
         "QUITTING_STEAMVR": "Stoppen van SteamVR...",
         "TURNING_OFF_CONTROLLERS": "Uischakelen van controllers...",
         "TURNING_OFF_TRACKERS": "Uitschakelen van trackers...",
-        "TURNING_OFF_BASESTATIONS": "Uitschakelen van basestations...",
-        "SHUTTING_DOWN": "Computer Afsluiten..."
+        "TURNING_OFF_BASESTATIONS": "Uitschakelen van basestations..."
       },
       "title": "Uitschakelen...",
       "cancel": "Annuleer"

@@ -1192,7 +1192,7 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
+            "POWERING_DOWN": "因为已停用睡眠模式"
           }
         },
         "acceptedInviteRequest": {
@@ -1364,10 +1364,6 @@
         "title": "关掉基站",
         "description": "关闭任何仍在活动的基站"
       },
-      "shutDownWindows": {
-        "title": "关闭Windows",
-        "description": "试图关闭你的电脑"
-      },
       "run": "运行序列"
     },
     "confirm-modal": {
@@ -1380,8 +1376,7 @@
         "QUITTING_STEAMVR": "退出SteamVR...",
         "TURNING_OFF_CONTROLLERS": "关掉控制器...",
         "TURNING_OFF_TRACKERS": "关掉定位器...",
-        "TURNING_OFF_BASESTATIONS": "关闭基站...",
-        "SHUTTING_DOWN": "关闭Windows..."
+        "TURNING_OFF_BASESTATIONS": "关闭基站..."
       },
       "title": "正在关闭",
       "cancel": "立即取消"

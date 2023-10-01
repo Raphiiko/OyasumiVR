@@ -12,6 +12,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   7: from6to7,
   8: from7to8,
   9: from8to9,
+  10: from9to10,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -45,6 +46,14 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from9to10(data: any): any {
+  data.version = 10;
+  data.SHUTDOWN_AUTOMATIONS.powerDownWindows = data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
+  data.SHUTDOWN_AUTOMATIONS.powerDownWindowsMode = 'SHUTDOWN';
+  delete data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
   return data;
 }
 

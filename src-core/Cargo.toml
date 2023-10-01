@@ -69,6 +69,7 @@ tempfile = "3.6.0"
 strum = "0.25"
 strum_macros = "0.25"
 steamworks = { version = "0.10.0" }
+system_shutdown = "4.0.1"
 
 [dependencies.tauri]
 version = "1.5.0"
