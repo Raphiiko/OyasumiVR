@@ -351,7 +351,7 @@
         }
       },
       "onBatteryLevel": {
-        "title": "On battery level",
+        "title": "Battery level",
         "description": "Have devices power off when their battery level falls below a certain percentage.",
         "controllers": {
           "title": "Turn off a controller",
