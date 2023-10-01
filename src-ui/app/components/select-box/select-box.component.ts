@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
-import { fadeDown } from '../../utils/animations';
+import { fadeDown, fadeUp } from '../../utils/animations';
 import { SafeHtml } from '@angular/platform-browser';
 
 export interface SelectBoxItem {
@@ -15,7 +15,7 @@ export interface SelectBoxItem {
   selector: 'app-select-box',
   templateUrl: './select-box.component.html',
   styleUrls: ['./select-box.component.scss'],
-  animations: [fadeDown()],
+  animations: [fadeDown(), fadeUp()],
 })
 export class SelectBoxComponent implements OnInit {
   @Input() type: 'SMALL' | 'NORMAL' = 'NORMAL';
@@ -24,6 +24,7 @@ export class SelectBoxComponent implements OnInit {
   @Input() items: SelectBoxItem[] = [];
   @Input() showPlaceholderInDropdown = true;
   @Input() selected?: SelectBoxItem | undefined;
+  @Input() expandUp?: boolean = false;
   @Output() selectedChange: EventEmitter<SelectBoxItem | undefined> = new EventEmitter();
   collapsed = true;
 

@@ -16,12 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
 - Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
+- Setting for OyasumiVR to quit alongside SteamVR.
+- Instructions on how to start OyasumiVR alongside SteamVR.
+- Automation for muting and unmuting your microphone in VRChat, when you go to sleep or wake up.
 
 ### Changed
 - Updated translations to use ICU syntax.
  
 ### Fixed
 - Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
+- Improvements to the translations for Simplified Chinese (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
 
 ## [1.9.0]
 

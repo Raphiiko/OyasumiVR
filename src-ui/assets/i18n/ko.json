@@ -1292,10 +1292,6 @@
         "title": "베이스스테이션 끄기",
         "description": "아직 켜져있는 모든 베이스스테이션을 꺼요."
       },
-      "shutDownWindows": {
-        "title": "Windows 종료",
-        "description": "컴퓨터를 종료하도록 시도해요."
-      },
       "run": "시퀀스 실행"
     },
     "confirm-modal": {
@@ -1308,8 +1304,7 @@
         "QUITTING_STEAMVR": "SteamVR 종료중...",
         "TURNING_OFF_CONTROLLERS": "컨트롤러를 끄는중...",
         "TURNING_OFF_TRACKERS": "트래커를 끄는중...",
-        "TURNING_OFF_BASESTATIONS": "베이스스테이션을 끄는중...",
-        "SHUTTING_DOWN": "Windows 종료중..."
+        "TURNING_OFF_BASESTATIONS": "베이스스테이션을 끄는중..."
       },
       "title": "끄는중",
       "cancel": "취소"

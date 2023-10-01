@@ -1,0 +1,108 @@
+<div class="pane">
+  <div class="pane-title" translate>vrchatMicMuteAutomations.title</div>
+  <div class="pane-content">
+    <div class="setting-category">
+      <p translate>vrchatMicMuteAutomations.description</p>
+      <h3 translate>vrchatMicMuteAutomations.config.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.mode.title</span>
+            <span translate>vrchatMicMuteAutomations.mode.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="mode-dropdown"
+              [items]="modeOptions"
+              [selected]="modeOption"
+              (selectedChange)="onChangeModeOption($event)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.status.title</span>
+            <span translate>vrchatMicMuteAutomations.status.description</span>
+          </div>
+          <div class="setting-row-action">
+            <span *ngIf="(automation.muted | async) === false" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.unmuted</span>
+            <i class="material-icons status-icon-unmuted">mic</i>
+            </span>
+            <span *ngIf="(automation.muted | async) === true" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.muted</span>
+            <i class="material-icons status-icon-muted">mic_off</i>
+            </span>
+            <span *ngIf="(automation.muted | async) === null" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.unknown</span>
+            <i class="material-icons status-icon-unknown">question_mark</i>
+            </span>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.control.title</span>
+            <span translate>vrchatMicMuteAutomations.control.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.mute'" (click)="automation.setMute(true)">
+              <i class="material-icons status-icon-muted" >mic_off</i>
+            </button>
+            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.unmute'" (click)="automation.setMute(false)">
+              <i class="material-icons status-icon-unmuted">mic</i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <h3 translate>vrchatMicMuteAutomations.automations.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepModeEnable.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepModeEnable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepEnableMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepModeDisable.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepModeDisable.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepDisableMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.onSleepPreparation.title</span>
+            <span translate>vrchatMicMuteAutomations.onSleepPreparation.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="muteActionOptions"
+              [selected]="onSleepPreparationMuteOption"
+              (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

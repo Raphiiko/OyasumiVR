@@ -26,3 +26,31 @@
     }
   }
 }
+
+.setting-row {
+  &-label.conflict {
+    i.material-icons {
+      line-height: 0;
+      vertical-align: center;
+      color: var(--color-alert-warning);
+      margin-right: 0.25em;
+    }
+
+    span:first-child {
+      font-weight: bold;
+      vertical-align: center;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
+}
+
+.power-down-select-box-wrapper {
+  display: inline-flex;
+}
+
+.power-down-options-select-box {
+  min-width: 10em;
+}

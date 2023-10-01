@@ -258,7 +258,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
 - 韓文\* (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
+- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 與 [雾雨花精灵](https://twitter.com/u_flower_elf) 提供）
 - 法文 (Français)\*（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)\*（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 

@@ -26,6 +26,7 @@ export type AutomationType =
   // OSC AUTOMATIONS
   | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
+  | 'VRCHAT_MIC_MUTE_AUTOMATIONS'
   // STATUS AUTOMATIONS
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
   // INVITE AUTOMATIONS
@@ -48,7 +49,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE';
 
 export interface AutomationConfigs {
-  version: 9;
+  version: 10;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -69,6 +70,7 @@ export interface AutomationConfigs {
   // OSC AUTOMATIONS
   OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
+  VRCHAT_MIC_MUTE_AUTOMATIONS: VRChatMicMuteAutomationsConfig;
   // STATUS AUTOMATIONS
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   // INVITE AUTOMATIONS
@@ -216,6 +218,15 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   footLockReleaseWindow: number;
 }
 
+export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_MUTE';
+
+export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
+  mode: VRChatVoiceMode;
+  onSleepModeEnable: 'MUTE' | 'UNMUTE' | 'NONE';
+  onSleepModeDisable: 'MUTE' | 'UNMUTE' | 'NONE';
+  onSleepPreparation: 'MUTE' | 'UNMUTE' | 'NONE';
+}
+
 // STATUS AUTOMATIONS
 export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends AutomationConfig {
   limit: number;
@@ -232,6 +243,8 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 }
 
 // SHUTDOWN AUTOMATIONS
+export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
+
 export interface ShutdownAutomationsConfig extends AutomationConfig {
   triggerOnSleep: boolean;
   sleepDuration: number;
@@ -242,7 +255,8 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   turnOffControllers: boolean;
   turnOffTrackers: boolean;
   turnOffBaseStations: boolean;
-  shutdownWindows: boolean;
+  powerDownWindows: boolean;
+  powerDownWindowsMode: PowerDownWindowsMode;
 }
 
 // WINDOWS POWER POLICY AUTOMATIONS
@@ -255,7 +269,7 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 9,
+  version: 10,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -397,6 +411,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     footLockReleaseWindow: 600,
     oscScripts: {},
   },
+  VRCHAT_MIC_MUTE_AUTOMATIONS: {
+    enabled: true,
+    mode: 'TOGGLE',
+    onSleepModeEnable: 'NONE',
+    onSleepModeDisable: 'NONE',
+    onSleepPreparation: 'NONE',
+  },
   // STATUS AUTOMATIONS
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: {
     enabled: false,
@@ -424,7 +445,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     turnOffControllers: true,
     turnOffTrackers: true,
     turnOffBaseStations: true,
-    shutdownWindows: true,
+    powerDownWindows: true,
+    powerDownWindowsMode: 'SHUTDOWN',
   },
   // WINDOWS POWER POLICY AUTOMATIONS
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: {

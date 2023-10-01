@@ -31,6 +31,7 @@ export type EventLogEntry =
   | EventLogShutdownSequenceStarted
   | EventLogShutdownSequenceCancelled
   | EventLogWindowsPowerPolicySet
+  | EventLogChangedVRChatMicMuteState
   | EventLogMsiAfterburnerProfileSet;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
@@ -52,6 +53,7 @@ export type EventLogType =
   | 'shutdownSequenceStarted'
   | 'shutdownSequenceCancelled'
   | 'windowsPowerPolicySet'
+  | 'changedVRChatMicMuteState'
   | 'msiAfterburnerProfileSet';
 
 export interface EventLogBase {
@@ -167,4 +169,10 @@ export interface EventLogMsiAfterburnerProfileSet extends EventLogBase {
   type: 'msiAfterburnerProfileSet';
   profile: number;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+}
+
+export interface EventLogChangedVRChatMicMuteState extends EventLogBase {
+  type: 'changedVRChatMicMuteState';
+  muted: boolean;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

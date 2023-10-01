@@ -100,6 +100,7 @@
   },
   "sleep-detection": {
     "title": "Sleep Detection",
+    "experimentalAutomation": "This automation is experimental and may not yet be reliable.",
     "enableAutomations": {
       "title": "Enabling sleep mode",
       "description": "Automatically enable sleep mode based on various triggers",
@@ -621,6 +622,23 @@
           }
         },
         "title": "Overlay"
+      },
+      "startStop": {
+        "title": "Start & Stop"
+      },
+      "startWithSteamVR": {
+        "label": "Start with SteamVR",
+        "description": "Start OyasumiVR when SteamVR starts",
+        "howTo": "How to"
+      },
+      "stopWithSteamVR": {
+        "label": "Quit with SteamVR",
+        "description": "Quit OyasumiVR when SteamVR is stopped for a certain amount of time",
+        "options": {
+          "DISABLED": "Disabled",
+          "IMMEDIATELY": "Immediately",
+          "AFTERDELAY": "After 2 minutes"
+        }
       }
     },
     "vrchat": {
@@ -888,6 +906,54 @@
       "content": "Turning off both your controllers and your trackers"
     }
   },
+  "vrchatMicMuteAutomations": {
+    "title": "Microphone Muting",
+    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat.",
+    "config": {
+      "title": "Configuration"
+    },
+    "automations": {
+      "title": "Automations"
+    },
+    "mode": {
+      "title": "VRChat microphone behaviour",
+      "description": "Select which mic behaviour you're using within VRChat. Note that selecting a different behaviour than the one you're using in VRChat could cause these automations to misbehave."
+    },
+    "onSleepModeEnable": {
+      "title": "When sleep mode is enabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepModeDisable": {
+      "title": "When sleep mode is disabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepPreparation": {
+      "title": "When I prepare to go to sleep",
+      "description": "Change my microphone state to"
+    },
+    "modeOptions": {
+      "TOGGLE": "Toggle",
+      "PUSH_TO_MUTE": "Push to Talk"
+    },
+    "muteOptions": {
+      "NONE": "None",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "status": {
+      "title": "Current VRChat microphone state",
+      "description": "Reflects your current in-game microphone state",
+      "unmuted": "Unmuted",
+      "muted": "Muted",
+      "unknown": "Unknown"
+    },
+    "control": {
+      "title": "Control microphone mute",
+      "description": "You can use this to test if microphone muting is working properly",
+      "mute": "Mute\nmicrophone",
+      "unmute": "Unmute\nmicrophone"
+    }
+  },
   "comp": {
     "brightness-control-modal": {
       "displayBrightness": "Display Brightness",
@@ -929,6 +995,7 @@
       "sleepDetection": "Sleep Detection",
       "oscAutomations": "OSC Automations",
       "gpuAutomations": "GPU Automations",
+      "vrchatMicMuteAutomations": "Microphone Muting",
       "powerAutomations": "Power Automations",
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
@@ -1033,6 +1100,17 @@
     },
     "event-log-entry": {
       "type": {
+        "changedVRChatMicMuteState": {
+          "title": {
+            "MUTE": "Muted microphone in VRChat",
+            "UNMUTE": "Unmuted microphone in VRChat"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
         "sleepModeEnabled": {
           "title": "Sleep mode enabled",
           "reason": {
@@ -1264,6 +1342,10 @@
         "title": "Installation Failed",
         "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. \n\nIf you continue to experience issues, please check out our <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a>."
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "You can configure OyasumiVR to launch together with SteamVR from within SteamVR's own settings. You can find this in:\n\nSteamVR -> Settings -> Startup / Shutdown -> Choose startup overlay apps",
+      "title": "Starting OyasumiVR with SteamVR"
     }
   },
   "resolution-automations": {
@@ -1323,7 +1405,12 @@
       "title": "Shutdown Settings",
       "quitSteamVR": {
         "title": "Quit SteamVR",
-        "description": "This should also quit any game or overlay you have running"
+        "description": "This should also quit any game or overlay you have running",
+        "conflict": {
+          "title": "Warning: Running this task will cause OyasumiVR to quit immediately",
+          "description": "You have configured OyasumiVR to quit immediately when SteamVR is stopped. Because of this, any subsequent automations might not run. To fix this, either disable this task, or configure OyasumiVR to not quit immediately when SteamVR is stopped, in the general settings.",
+          "goToSettings": "General Settings"
+        }
       },
       "turnOffDevices": {
         "title": "Turn off devices"
@@ -1340,9 +1427,18 @@
         "title": "Turn off base stations",
         "description": "Turns off any base stations that are still active"
       },
-      "shutDownWindows": {
-        "title": "Shut down Windows",
-        "description": "Attempts to shut down your computer"
+      "powerDownWindows": {
+        "title": "Power down Windows",
+        "description": "Attempts to power down your computer",
+        "options": {
+          "SHUTDOWN": "Shut down",
+          "REBOOT": "Restart",
+          "HIBERNATE": "Hibernate",
+          "SLEEP": "Sleep",
+          "LOGOUT": "Log out"
+        },
+        "shutdownMessage": "OyasumiVR is shutting down your PC",
+        "rebootMessage": "OyasumiVR is restarting your PC"
       },
       "run": "Run Sequence"
     },
@@ -1357,7 +1453,7 @@
         "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
         "TURNING_OFF_TRACKERS": "Turning off trackers...",
         "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
-        "SHUTTING_DOWN": "Shutting down Windows..."
+        "POWERING_DOWN": "Powering down Windows..."
       },
       "title": "Shutting Down",
       "cancel": "Cancel Now"

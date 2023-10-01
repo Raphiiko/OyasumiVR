@@ -1222,10 +1222,6 @@
         "title": "ベースステーションをオフにする",
         "description": "アクティブなベースステーションをオフにします"
       },
-      "shutDownWindows": {
-        "title": "Windowsをシャットダウンする",
-        "description": "コンピューターをシャットダウンします"
-      },
       "run": "シーケンス実行"
     },
     "confirm-modal": {
@@ -1238,8 +1234,7 @@
         "QUITTING_STEAMVR": "SteamVRを終了する...",
         "TURNING_OFF_CONTROLLERS": "コントローラーの電源を切る...",
         "TURNING_OFF_TRACKERS": "トラッカーをオフにする...",
-        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする...",
-        "SHUTTING_DOWN": "Windowsをシャットダウンする..."
+        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする..."
       },
       "title": "シャットダウン",
       "cancel": "キャンセル"

@@ -196,3 +196,28 @@ pub async fn active_windows_power_policy() -> Option<String> {
     }
     None
 }
+
+#[tauri::command]
+pub fn windows_shutdown(message: &str, timeout: u32, force_close_apps: bool) {
+    let _ = system_shutdown::shutdown_with_message(message, timeout, force_close_apps);
+}
+
+#[tauri::command]
+pub fn windows_reboot(message: &str, timeout: u32, force_close_apps: bool) {
+    let _ = system_shutdown::reboot_with_message(message, timeout, force_close_apps);
+}
+
+#[tauri::command]
+pub fn windows_sleep() {
+    let _ = system_shutdown::sleep();
+}
+
+#[tauri::command]
+pub fn windows_hibernate() {
+    let _ = system_shutdown::hibernate();
+}
+
+#[tauri::command]
+pub fn windows_logout() {
+    let _ = system_shutdown::logout();
+}

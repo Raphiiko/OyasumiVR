@@ -53,7 +53,7 @@ export class OscService {
   constructor(private sleep: SleepService, private appSettings: AppSettingsService) {}
 
   async init() {
-    listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
+    await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
       this._messages.next(parseOSCMessage(data.payload));
     });
     this.appSettings.settings

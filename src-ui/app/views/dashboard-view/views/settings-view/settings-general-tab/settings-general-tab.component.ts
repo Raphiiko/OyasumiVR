@@ -16,10 +16,13 @@ import {
   ExecutableReferenceStatus,
   OverlayActivationAction,
   OverlayActivationController,
+  QuitWithSteamVRMode,
 } from 'src-ui/app/models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
+import { ModalService } from '../../../../../services/modal.service';
+import { StartWithSteamVRHowToModalComponent } from './confirm-modal/start-with-steamvr-how-to-modal.component';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -114,11 +117,27 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     },
   ];
   overlayActivationControllerOption: SelectBoxItem | undefined;
+  stopWithSteamVROptions: SelectBoxItem[] = [
+    {
+      id: 'DISABLED',
+      label: 'settings.general.stopWithSteamVR.options.DISABLED',
+    },
+    {
+      id: 'IMMEDIATELY',
+      label: 'settings.general.stopWithSteamVR.options.IMMEDIATELY',
+    },
+    {
+      id: 'AFTERDELAY',
+      label: 'settings.general.stopWithSteamVR.options.AFTERDELAY',
+    },
+  ];
+  stopWithSteamVROption: SelectBoxItem | undefined;
 
   constructor(
     settingsService: AppSettingsService,
     private lighthouse: LighthouseConsoleService,
-    private telemetry: TelemetryService
+    private telemetry: TelemetryService,
+    private modalService: ModalService
   ) {
     super(settingsService);
   }
@@ -152,6 +171,9 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
         );
         this.overlayActivationControllerOption = this.overlayActivationControllerOptions.find(
           (o) => o.id === settings.overlayActivationController
+        );
+        this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
+          (o) => o.id === settings.quitWithSteamVR
         );
       });
   }
@@ -248,5 +270,16 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
 
   setOverlayActivationTriggerRequired(required: boolean) {
     this.settingsService.updateSettings({ overlayActivationTriggerRequired: required });
+  }
+
+  onChangeStopWithSteamVROption(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.settingsService.updateSettings({
+      quitWithSteamVR: option!.id as QuitWithSteamVRMode,
+    });
+  }
+
+  showStartWithSteamVRHowToModal() {
+    this.modalService.addModal(StartWithSteamVRHowToModalComponent).subscribe();
   }
 }

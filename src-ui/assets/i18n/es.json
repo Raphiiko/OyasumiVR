@@ -1261,10 +1261,6 @@
         "title": "Apagar las estaciones base",
         "description": "Apaga las estaciones base que siguen activas"
       },
-      "shutDownWindows": {
-        "title": "Apagar Windows",
-        "description": "Intentos de apagar el ordenador"
-      },
       "run": "Secuencia de ejecución"
     },
     "confirm-modal": {
@@ -1277,8 +1273,7 @@
         "QUITTING_STEAMVR": "Dejando SteamVR...",
         "TURNING_OFF_CONTROLLERS": "Apagando controladores...",
         "TURNING_OFF_TRACKERS": "Apagando trackers...",
-        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base...",
-        "SHUTTING_DOWN": "Apagando Windows..."
+        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base..."
       },
       "title": "Apagado",
       "cancel": "Cancelar ahora"

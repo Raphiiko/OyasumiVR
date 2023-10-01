@@ -1222,10 +1222,6 @@
         "title": "關掉基地台",
         "description": "關閉任何仍在活動的基地台"
       },
-      "shutDownWindows": {
-        "title": "關閉Windows",
-        "description": "試圖關閉你的電腦"
-      },
       "run": "運行序列"
     },
     "confirm-modal": {
@@ -1238,8 +1234,7 @@
         "QUITTING_STEAMVR": "退出SteamVR...",
         "TURNING_OFF_CONTROLLERS": "關掉控制器...",
         "TURNING_OFF_TRACKERS": "關掉定位器...",
-        "TURNING_OFF_BASESTATIONS": "關閉基地台...",
-        "SHUTTING_DOWN": "關閉Windows..."
+        "TURNING_OFF_BASESTATIONS": "關閉基地台..."
       },
       "title": "正在關閉",
       "cancel": "立即取消"
