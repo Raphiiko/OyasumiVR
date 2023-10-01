@@ -107,7 +107,12 @@
 
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>sleep-detection.enableAutomations.onHeartRateCalmPeriod.title</span>
+            <span class="row-title">
+              <span translate>sleep-detection.enableAutomations.onHeartRateCalmPeriod.title</span>
+              <span [tooltip]="'sleep-detection.experimentalAutomation'" [tooltipMode]="'right'">
+                <i class="material-icons experimental-flag">warning</i>
+              </span>
+            </span>
             <span
               [innerHtml]="
                 'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | translate
