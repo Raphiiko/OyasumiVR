@@ -1086,6 +1086,17 @@
     },
     "event-log-entry": {
       "type": {
+        "changedVRChatMicMuteState": {
+          "title": {
+            "MUTE": "Muted microphone in VRChat",
+            "UNMUTE": "Unmuted microphone in VRChat"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
         "sleepModeEnabled": {
           "title": "Sleep mode enabled",
           "reason": {

@@ -4,6 +4,7 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import { VRChatMicMuteAutomationsConfig, VRChatVoiceMode } from '../../../../models/automations';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-vrchat-mic-mute-automations-view',
@@ -26,14 +27,23 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
     {
       id: 'NONE',
       label: 'vrchatMicMuteAutomations.muteOptions.NONE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+      ),
     },
     {
       id: 'MUTE',
       label: 'vrchatMicMuteAutomations.muteOptions.MUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+      ),
     },
     {
       id: 'UNMUTE',
       label: 'vrchatMicMuteAutomations.muteOptions.UNMUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+      ),
     },
   ];
   onSleepEnableMuteOption: SelectBoxItem | undefined;
@@ -42,7 +52,8 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
 
   constructor(
     private automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private domSanitizer: DomSanitizer
   ) {}
 
   async ngOnInit() {
