@@ -17,6 +17,8 @@ import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { fade, vshrink } from 'src-ui/app/utils/animations';
+import { Router } from '@angular/router';
+import { QuitWithSteamVRMode } from '../../../../models/settings';
 
 @Component({
   selector: 'app-shutdown-automations-view',
@@ -43,19 +45,24 @@ export class ShutdownAutomationsViewComponent implements OnInit {
   protected activationWindowStart = '00:00';
   protected activationWindowEnd = '00:00';
   protected lighthouseControlDisabled = false;
+  protected quitWithSteamVRMode: QuitWithSteamVRMode = 'DISABLED';
 
   constructor(
     private destroyRef: DestroyRef,
     private automationConfigs: AutomationConfigService,
     private settingsService: AppSettingsService,
     private modalService: ModalService,
-    private shutdownAutomations: ShutdownAutomationsService
+    private shutdownAutomations: ShutdownAutomationsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.settingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((settings) => (this.lighthouseControlDisabled = !settings.lighthousePowerControl));
+      .subscribe((settings) => {
+        this.lighthouseControlDisabled = !settings.lighthousePowerControl;
+        this.quitWithSteamVRMode = settings.quitWithSteamVR;
+      });
     this.automationConfigs.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
@@ -111,6 +118,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
       }
     );
   }
+
   async onChangeActivationWindowEnd(value: string) {
     const parsedValue = value
       .split(':')
@@ -208,5 +216,9 @@ export class ShutdownAutomationsViewComponent implements OnInit {
         shutdownWindows: !this.config.shutdownWindows,
       }
     );
+  }
+
+  goToGeneralSettings() {
+    this.router.navigate(['dashboard', 'settings'], { fragment: 'GENERAL' });
   }
 }

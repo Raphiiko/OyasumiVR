@@ -101,8 +101,8 @@
           translate
           (click)="runSequence()"
           [disabled]="noOptionsSelected"
-          >shutdown-automations.sequence.run</button
-        >
+          >shutdown-automations.sequence.run
+        </button>
       </h2>
       <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
         <div class="alert-bg"></div>
@@ -119,7 +119,7 @@
             <span translate>shutdown-automations.sequence.turnOffDevices.title</span>
             <span></span>
           </div>
-          <div class="setting-row-action"> </div>
+          <div class="setting-row-action"></div>
         </div>
 
         <div class="setting-row-group">
@@ -189,6 +189,27 @@
               />
               <span class="switch-toggle-slider"></span>
             </label>
+          </div>
+        </div>
+
+        <div
+          class="setting-row-group"
+          *ngIf="config.quitSteamVR && quitWithSteamVRMode === 'IMMEDIATELY'"
+          @vshrink
+        >
+          <div class="setting-row">
+            <div class="setting-row-label conflict" translate>
+              <span>
+                <span><i class="material-icons">warning</i></span>
+                <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
+              </span>
+              <span translate>shutdown-automations.sequence.quitSteamVR.conflict.description</span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-secondary" (click)="goToGeneralSettings()" translate>
+                shutdown-automations.sequence.quitSteamVR.conflict.goToSettings
+              </button>
+            </div>
           </div>
         </div>
 

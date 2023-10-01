@@ -1,0 +1,22 @@
+<div class="pane modal" @fadeUp>
+  <div class="pane-title" translate>comp.start-with-steamvr-how-to-modal.title</div>
+  <div class="pane-content">
+    <p translate> comp.start-with-steamvr-how-to-modal.description </p>
+    <div class="video-wrapper">
+      <div class="video-wrapper-inner">
+        <video
+          src="/assets/video/start-with-steamvr.webm"
+          type="video/webm"
+          autoplay
+          loop
+          muted
+        ></video>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-primary" (click)="close()">
+      {{ 'shared.modals.ok' | tsTranslate }}
+    </button>
+  </div>
+</div>

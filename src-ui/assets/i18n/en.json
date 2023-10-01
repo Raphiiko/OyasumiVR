@@ -232,7 +232,14 @@
           "title": "Duration",
           "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
           "unit": "min"
-        }
+        },
+        "viewHistory": {
+          "title": "Heart Rate History",
+          "description": "View your heart rate history from the last 12 hours",
+          "actionShow": "View History",
+          "actionHide": "Hide History"
+        },
+        "notEnoughData": "Not enough data available to show your heart rate history."
       }
     }
   },
@@ -614,6 +621,23 @@
           }
         },
         "title": "Overlay"
+      },
+      "startStop": {
+        "title": "Start & Stop"
+      },
+      "startWithSteamVR": {
+        "label": "Start with SteamVR",
+        "description": "Start OyasumiVR when SteamVR starts",
+        "howTo": "How to"
+      },
+      "stopWithSteamVR": {
+        "label": "Quit with SteamVR",
+        "description": "Quit OyasumiVR when SteamVR is stopped for a certain amount of time",
+        "options": {
+          "DISABLED": "Disabled",
+          "IMMEDIATELY": "Immediately",
+          "AFTERDELAY": "After 2 minutes"
+        }
       }
     },
     "vrchat": {
@@ -725,6 +749,7 @@
       "disconnect": "Disconnect",
       "reveal": "Reveal",
       "providerLink": "Provider Website",
+      "copy": "Copy link to clipboard",
       "pulsoid": {
         "title": "Pulsoid",
         "description": "Provides your heartrate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>"
@@ -1256,6 +1281,10 @@
         "title": "Installation Failed",
         "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. \n\nIf you continue to experience issues, please check out our <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a>."
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "You can configure OyasumiVR to launch together with SteamVR from within SteamVR's own settings. You can find this in:\n\nSteamVR -> Settings -> Startup / Shutdown -> Choose startup overlay apps",
+      "title": "Starting OyasumiVR with SteamVR"
     }
   },
   "resolution-automations": {
@@ -1315,7 +1344,12 @@
       "title": "Shutdown Settings",
       "quitSteamVR": {
         "title": "Quit SteamVR",
-        "description": "This should also quit any game or overlay you have running"
+        "description": "This should also quit any game or overlay you have running",
+        "conflict": {
+          "title": "Warning: Running this task will cause OyasumiVR to quit immediately",
+          "description": "You have configured OyasumiVR to quit immediately when SteamVR is stopped. Because of this, any subsequent automations might not run. To fix this, either disable this task, or configure OyasumiVR to not quit immediately when SteamVR is stopped, in the general settings.",
+          "goToSettings": "General Settings"
+        }
       },
       "turnOffDevices": {
         "title": "Turn off devices"

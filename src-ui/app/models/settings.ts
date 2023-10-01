@@ -22,6 +22,7 @@ export interface AppSettings {
   overlayActivationAction: OverlayActivationAction;
   overlayActivationController: OverlayActivationController;
   overlayActivationTriggerRequired: boolean;
+  quitWithSteamVR: QuitWithSteamVRMode;
 }
 
 export type OverlayActivationAction =
@@ -34,6 +35,8 @@ export type OverlayActivationAction =
   | 'TRIPLE_B';
 
 export type OverlayActivationController = 'EITHER' | 'LEFT' | 'RIGHT';
+
+export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
 
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
@@ -67,6 +70,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   overlayActivationAction: 'DOUBLE_A',
   overlayActivationController: 'RIGHT',
   overlayActivationTriggerRequired: false,
+  quitWithSteamVR: 'DISABLED',
 };
 
 export type ExecutableReferenceStatus =

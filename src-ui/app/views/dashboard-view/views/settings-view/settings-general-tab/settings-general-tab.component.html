@@ -18,6 +18,7 @@
     </label>
   </div>
 </div>
+
 <div class="setting-category">
   <h2 translate>settings.general.lighthouseConsole.title</h2>
   <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
@@ -205,44 +206,76 @@
 </div>
 
 <div class="setting-category">
-  <h2 translate>settings.general.adminPrivileges.title</h2>
+  <h2 translate>settings.general.startStop.title</h2>
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label" translate>
-        <span translate>settings.general.adminPrivileges.label</span>
-        <span translate>settings.general.adminPrivileges.description</span>
+        <span translate>settings.general.startWithSteamVR.label</span>
+        <span translate>settings.general.startWithSteamVR.description</span>
       </div>
       <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="appSettings.askForAdminOnStart"
-            (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
+        <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
+          >settings.general.startWithSteamVR.howTo</button
+        >
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.stopWithSteamVR.label</span>
+        <span translate>settings.general.stopWithSteamVR.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          type="SMALL"
+          class="stop-with-steamvr-dropdown"
+          [items]="stopWithSteamVROptions"
+          [selected]="stopWithSteamVROption"
+          (selectedChange)="onChangeStopWithSteamVROption($event)"
+        ></app-select-box>
       </div>
     </div>
   </div>
-</div>
 
-<div class="setting-category">
-  <h2 translate>settings.general.telemetry.title</h2>
-  <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>settings.general.telemetry.label</span>
-        <span translate>settings.general.telemetry.description</span>
+  <div class="setting-category">
+    <h2 translate>settings.general.adminPrivileges.title</h2>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.general.adminPrivileges.label</span>
+          <span translate>settings.general.adminPrivileges.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="appSettings.askForAdminOnStart"
+              (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
       </div>
-      <div class="setting-row-action">
-        <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="telemetrySettings.enabled"
-            (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
-          />
-          <span class="switch-toggle-slider"></span>
-        </label>
+    </div>
+  </div>
+
+  <div class="setting-category">
+    <h2 translate>settings.general.telemetry.title</h2>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.general.telemetry.label</span>
+          <span translate>settings.general.telemetry.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="telemetrySettings.enabled"
+              (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
       </div>
     </div>
   </div>
