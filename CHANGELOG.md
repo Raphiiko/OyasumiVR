@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
  
 ### Fixed
 - Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
+- Improvements to the translations for Simplified Chinese (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
 
 ## [1.9.0]
 
