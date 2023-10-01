@@ -106,7 +106,14 @@
       "description": "Automatically enable sleep mode based on various triggers",
       "atTime": "At a specific time",
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
-      "onControllersPoweredOff": "When all controllers are turned off",
+      "onControllersPoweredOff": {
+        "title": "When all controllers are turned off",
+        "batteryLevelAutomationConflict": {
+          "title": "Warning: This might be triggered by another automation!",
+          "description": "You have set up controllers to automatically turn off when their battery level falls below a certain percentage. This might cause you to accidentally enable the sleep mode, which might not be what you want. To prevent this, you can turn off this behaviour in the \"Controllers & Trackers\" section of the Power Automation settings.",
+          "action": "Power Automations:\nControllers & Trackers"
+        }
+      },
       "onHeartRateCalmPeriod": {
         "title": "When my heart rate is calm for a period of time",
         "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>"
@@ -332,10 +339,33 @@
         "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>."
       },
       "onCharge": {
-        "title": "When charging them",
+        "title": "When charging",
         "description": "Have devices turn off automatically when you put them on the charger.",
-        "optionControllers": "Turn off controllers",
-        "optionTrackers": "Turn off trackers"
+        "optionControllers": {
+          "title": "Turn off a controller",
+          "description": "When it is charging"
+        },
+        "optionTrackers": {
+          "title": "Turn off a tracker",
+          "description": "When it is charging"
+        }
+      },
+      "onBatteryLevel": {
+        "title": "On battery level",
+        "description": "Have devices power off when their battery level falls below a certain percentage.",
+        "controllers": {
+          "title": "Turn off a controller",
+          "description": "When its battery level falls below"
+        },
+        "trackers": {
+          "title": "Turn off a tracker",
+          "description": "When its battery level falls below"
+        },
+        "controllerPoweroffConflict": {
+          "title": "Warning: This might trigger another automation!",
+          "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
+          "action": "Sleep Detection"
+        }
       }
     },
     "lighthousePowerOn": {
@@ -1152,7 +1182,8 @@
             "MANUAL": "Turned off manually",
             "OSC_CONTROL": "Turned off over OSC",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "CHARGING": "As the device is recharging"
+            "CHARGING": "As the device is recharging",
+            "BATTERY_LEVEL": "As the battery level dropped below {threshold}%"
           }
         },
         "lighthouseSetPowerState": {

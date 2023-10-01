@@ -28,15 +28,15 @@
           <div class="setting-row-action">
             <span *ngIf="(automation.muted | async) === false" @hshrink class="status">
               <span translate>vrchatMicMuteAutomations.status.unmuted</span>
-            <i class="material-icons status-icon-unmuted">mic</i>
+              <i class="material-icons status-icon-unmuted">mic</i>
             </span>
             <span *ngIf="(automation.muted | async) === true" @hshrink class="status">
               <span translate>vrchatMicMuteAutomations.status.muted</span>
-            <i class="material-icons status-icon-muted">mic_off</i>
+              <i class="material-icons status-icon-muted">mic_off</i>
             </span>
             <span *ngIf="(automation.muted | async) === null" @hshrink class="status">
               <span translate>vrchatMicMuteAutomations.status.unknown</span>
-            <i class="material-icons status-icon-unknown">question_mark</i>
+              <i class="material-icons status-icon-unknown">question_mark</i>
             </span>
           </div>
         </div>
@@ -46,10 +46,18 @@
             <span translate>vrchatMicMuteAutomations.control.description</span>
           </div>
           <div class="setting-row-action">
-            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.mute'" (click)="automation.setMute(true)">
-              <i class="material-icons status-icon-muted" >mic_off</i>
+            <button
+              class="btn btn-secondary"
+              [tooltip]="'vrchatMicMuteAutomations.control.mute'"
+              (click)="automation.setMute(true)"
+            >
+              <i class="material-icons status-icon-muted">mic_off</i>
             </button>
-            <button class="btn btn-secondary" [tooltip]="'vrchatMicMuteAutomations.control.unmute'" (click)="automation.setMute(false)">
+            <button
+              class="btn btn-secondary"
+              [tooltip]="'vrchatMicMuteAutomations.control.unmute'"
+              (click)="automation.setMute(false)"
+            >
               <i class="material-icons status-icon-unmuted">mic</i>
             </button>
           </div>

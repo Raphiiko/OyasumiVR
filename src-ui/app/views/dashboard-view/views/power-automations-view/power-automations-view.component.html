@@ -23,11 +23,13 @@
       <div class="tab-label" translate>power-automations.tabs.windowsPowerPolicy</div>
     </div>
   </div>
-  <app-controllers-and-trackers-tab
-    *ngIf="activeTab === 'CONTROLLERS_AND_TRACKERS'"
-  ></app-controllers-and-trackers-tab>
-  <app-base-stations-tab *ngIf="activeTab === 'BASE_STATIONS'"></app-base-stations-tab>
-  <app-windows-power-policy-tab
-    *ngIf="activeTab === 'WINDOWS_POWER_POLICY'"
-  ></app-windows-power-policy-tab>
+  <div class="pane-content">
+    <app-controllers-and-trackers-tab
+      *ngIf="activeTab === 'CONTROLLERS_AND_TRACKERS'"
+    ></app-controllers-and-trackers-tab>
+    <app-base-stations-tab *ngIf="activeTab === 'BASE_STATIONS'"></app-base-stations-tab>
+    <app-windows-power-policy-tab
+      *ngIf="activeTab === 'WINDOWS_POWER_POLICY'"
+    ></app-windows-power-policy-tab>
+  </div>
 </div>

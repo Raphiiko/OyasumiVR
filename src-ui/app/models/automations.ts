@@ -20,6 +20,7 @@ export type AutomationType =
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
+  | 'TURN_OFF_DEVICES_ON_BATTERY_LEVEL'
   | 'TURN_ON_LIGHTHOUSES_ON_OYASUMI_START'
   | 'TURN_ON_LIGHTHOUSES_ON_STEAMVR_START'
   | 'TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP'
@@ -64,6 +65,7 @@ export interface AutomationConfigs {
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
+  TURN_OFF_DEVICES_ON_BATTERY_LEVEL: TurnOffDevicesOnBatteryLevelAutomationConfig;
   TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: TurnOnLighthousesOnOyasumiStartAutomationConfig;
   TURN_ON_LIGHTHOUSES_ON_STEAMVR_START: TurnOnLighthousesOnSteamVRStartAutomationConfig;
   TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP: TurnOffLighthousesOnSteamVRStopAutomationConfig;
@@ -190,6 +192,13 @@ export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends Automat
 
 export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
+}
+
+export interface TurnOffDevicesOnBatteryLevelAutomationConfig extends AutomationConfig {
+  turnOffControllers: boolean;
+  turnOffControllersAtLevel: number;
+  turnOffTrackers: boolean;
+  turnOffTrackersAtLevel: number;
 }
 
 export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
@@ -385,6 +394,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   TURN_OFF_DEVICES_WHEN_CHARGING: {
     enabled: true,
     deviceClasses: [],
+  },
+  TURN_OFF_DEVICES_ON_BATTERY_LEVEL: {
+    enabled: true,
+    turnOffControllers: false,
+    turnOffControllersAtLevel: 50,
+    turnOffTrackers: false,
+    turnOffTrackersAtLevel: 50,
   },
   TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
     enabled: false,

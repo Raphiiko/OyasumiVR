@@ -18,16 +18,16 @@
     &-label {
       flex: 1;
     }
+  }
 
-    &-controls {
-      flex-shrink: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
+  &-controls {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 
-      input {
-        text-align: right;
-      }
+    input {
+      text-align: right;
     }
   }
 }
@@ -164,6 +164,24 @@
 
       > span:last-child {
         color: var(--color-text-3);
+      }
+
+      &.conflict {
+        i.material-icons {
+          line-height: 0;
+          vertical-align: center;
+          color: var(--color-alert-warning);
+          margin-right: 0.25em;
+        }
+
+        span:first-child {
+          font-weight: bold;
+          vertical-align: center;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: flex-start;
+        }
       }
     }
 

@@ -101,7 +101,7 @@
           translate
           (click)="runSequence()"
           [disabled]="noOptionsSelected"
-        >shutdown-automations.sequence.run
+          >shutdown-automations.sequence.run
         </button>
       </h2>
       <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
@@ -219,10 +219,7 @@
             <span translate>shutdown-automations.sequence.powerDownWindows.description</span>
           </div>
           <div class="setting-row-action">
-            <div
-              class="power-down-select-box-wrapper"
-              *ngIf="config.powerDownWindows"
-              @fade>
+            <div class="power-down-select-box-wrapper" *ngIf="config.powerDownWindows" @fade>
               <app-select-box
                 type="SMALL"
                 class="power-down-options-select-box"

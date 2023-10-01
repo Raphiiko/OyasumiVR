@@ -90,7 +90,7 @@
 
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>sleep-detection.enableAutomations.onControllersPoweredOff</span>
+            <span translate>sleep-detection.enableAutomations.onControllersPoweredOff.title</span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -102,6 +102,39 @@
               />
               <span class="switch-toggle-slider"></span>
             </label>
+          </div>
+        </div>
+        <div
+          class="setting-row-group"
+          *ngIf="
+            automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled &&
+            automationConfigs.TURN_OFF_DEVICES_ON_BATTERY_LEVEL.turnOffControllers
+          "
+          @vshrink
+        >
+          <div class="setting-row">
+            <div class="setting-row-label conflict" translate>
+              <span>
+                <span><i class="material-icons">warning</i></span>
+                <span translate
+                  >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title</span
+                >
+              </span>
+              <span translate
+                >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-secondary"
+                style="white-space: pre-line"
+                (click)="goToPowerAutomations('CONTROLLERS_AND_TRACKERS')"
+                [innerHtml]="
+                  'sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.action'
+                    | translate
+                "
+              ></button>
+            </div>
           </div>
         </div>
 

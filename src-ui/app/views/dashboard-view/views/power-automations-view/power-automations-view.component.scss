@@ -1,8 +1,15 @@
 :host {
-  display: block;
   height: 100%;
+  display: flex;
+  overflow: hidden;
+}
 
-  > .pane {
-    height: 100%;
-  }
+.pane {
+  width: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
 }
