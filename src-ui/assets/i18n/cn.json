@@ -104,7 +104,7 @@
       "title": "启动睡眠模式",
       "description": "根据各种触发器自动启用睡眠模式",
       "atTime": "在特定时间",
-      "atBatteryPercentage": "当设备的电池百分比低于 <strong>{{value}}%</strong>",
+      "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
       "onControllersPoweredOff": "当所有控制器都关闭时",
       "onHeartRateCalmPeriod": {
         "title": "当我的心率在一段时间内保持平稳时",
@@ -252,7 +252,7 @@
     "sleepingAnimations": {
       "currentPose": "目前姿势",
       "manualControl": "手动控制",
-      "presetAuthor": "由{{author}} 制作",
+      "presetAuthor": "由{author} 制作",
       "description": "OyasumiVR 可以在你改变睡姿时自动改变你的模型动画。 如果你没有全身追踪，或者如果你（或你有 OyasumiVR）在夜晚时关闭你的追踪器，这将很有用 请查看示例视频来了解这个功能的运作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">这里</a>.\n\n默认可用于多个模型动作预制档，但你也可以指定设置自己的动画。",
       "enable": "开启睡眠动画自动化",
       "customPreset": "自定义动画",
@@ -472,7 +472,7 @@
     "clearPlayers": "清除所有",
     "removeModal": {
       "title": "确认删除",
-      "message": "你确定要从列表中删除“{{name}}”吗？"
+      "message": "你确定要从列表中删除“{name}”吗？"
     },
     "removeModalBulk": {
       "title": "确认删除",
@@ -645,7 +645,7 @@
         "title": "登录",
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
         "loggedIn": {
-          "title": "你好 {{name}}!",
+          "title": "你好 {name}!",
           "subtext": "你当前已使用 VRChat 账户登录",
           "logOut": "退出登录"
         },
@@ -808,7 +808,7 @@
         "clearData": "清除数据",
         "clearModal": {
           "title": "确认清除数据",
-          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{{items}}"
+          "message": "你确定要删除以下数据吗？这是不可能被恢复的! \n\n{items}"
         },
         "relaunchModal": {
           "title": "重新启动 OyasumiVR",
@@ -870,7 +870,7 @@
       "floatOutOfBounds": "该值必须是介于 -1.0 和 1.0 之间的有效浮点值",
       "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
       "invalidSyntax": "无效的语法",
-      "tooManyCommands": "OSC 脚本不能有超过 {{value}} 个操作。",
+      "tooManyCommands": "OSC 脚本不能有超过 {value} 个操作。",
       "addressNoSlash": "有效的 OSC 数值必须以“/”符号开头。",
       "addressRequired": "需要 OSC 数值",
       "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字符。"
@@ -893,7 +893,7 @@
       "content": "您的 VRChat 状态已设置为 ''{newStatus}''"
     },
     "autoAcceptedInviteRequest": {
-      "content": "已自动接受来自 {{username}} 的邀请请求"
+      "content": "已自动接受来自 {username} 的邀请请求"
     },
     "turningOffControllers": {
       "content": "关闭您的手柄"
@@ -993,8 +993,8 @@
       "test": "测试"
     },
     "osc-script-simple-editor": {
-      "commandCounter": "{{value}} 个指令",
-      "errorCounter": "{{value}}” 个验证错误",
+      "commandCounter": "{value} 个指令",
+      "errorCounter": "{value}” 个验证错误",
       "addCommand": "新增",
       "test": "测试",
       "action": {
@@ -1060,8 +1060,7 @@
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "当你睡着的时候",
               "SLEEP_MODE_ENABLE_AT_TIME": "在预定时间",
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "作为一个设备的电量达到了设置值",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了",
-              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "{PLACEHOLDER}"
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了"
             }
           }
         },
@@ -1177,8 +1176,8 @@
         },
         "imageBrightnessChanged": {
           "title": {
-            "set": "头戴式显示器图像亮度设置为 {{value}}",
-            "transition": "头戴式显示器图像亮度过渡到 {{value}}"
+            "set": "头戴式显示器图像亮度设置为 {value}",
+            "transition": "头戴式显示器图像亮度过渡到 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
@@ -1188,13 +1187,12 @@
         },
         "displayBrightnessChanged": {
           "title": {
-            "set": "头戴式显示器亮度设置为 {{value}}",
-            "transition": "头戴式显示器亮度正在过渡到 {{value}}"
+            "set": "头戴式显示器亮度设置为 {value}",
+            "transition": "头戴式显示器亮度正在过渡到 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
-            "SLEEP_PREPARATION": "{PLACEHOLDER}"
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式"
           }
         },
         "acceptedInviteRequest": {
@@ -1218,7 +1216,7 @@
         "renderResolutionChanged": {
           "title": {
             "auto": "SteamVR渲染分辨率设置为 '自动'",
-            "custom": "SteamVR的渲染分辨率设置为 {{value}}"
+            "custom": "SteamVR的渲染分辨率设置为 {value}"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
@@ -1226,7 +1224,7 @@
           }
         },
         "chaperoneFadeDistanceChanged": {
-          "title": "Chaperone淡化距离设置为{{value}}。",
+          "title": "Chaperone淡化距离设置为{value}。",
           "reason": {
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式",
             "SLEEP_MODE_DISABLED": "由于关闭睡眠模式"
