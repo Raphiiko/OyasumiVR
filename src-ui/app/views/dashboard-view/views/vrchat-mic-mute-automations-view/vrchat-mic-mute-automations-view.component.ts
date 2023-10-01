@@ -5,11 +5,14 @@ import { VRChatMicMuteAutomationsConfig, VRChatVoiceMode } from '../../../../mod
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
+import { VRChatMicMuteAutomationService } from '../../../../services/osc-automations/vrchat-mic-mute-automation.service';
+import { hshrink } from 'src-ui/app/utils/animations';
 
 @Component({
   selector: 'app-vrchat-mic-mute-automations-view',
   templateUrl: './vrchat-mic-mute-automations-view.component.html',
   styleUrls: ['./vrchat-mic-mute-automations-view.component.scss'],
+  animations: [hshrink()],
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {
   modeOptions: SelectBoxItem[] = [
@@ -53,7 +56,8 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
   constructor(
     private automationConfigService: AutomationConfigService,
     private destroyRef: DestroyRef,
-    private domSanitizer: DomSanitizer
+    private domSanitizer: DomSanitizer,
+    protected automation: VRChatMicMuteAutomationService
   ) {}
 
   async ngOnInit() {

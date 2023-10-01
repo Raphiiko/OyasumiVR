@@ -20,6 +20,26 @@
             ></app-select-box>
           </div>
         </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>vrchatMicMuteAutomations.status.title</span>
+            <span translate>vrchatMicMuteAutomations.status.description</span>
+          </div>
+          <div class="setting-row-action">
+            <span *ngIf="(automation.muted | async) === false" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.unmuted</span>
+            <i class="material-icons status-icon-unmuted">mic</i>
+            </span>
+            <span *ngIf="(automation.muted | async) === true" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.muted</span>
+            <i class="material-icons status-icon-muted">mic_off</i>
+            </span>
+            <span *ngIf="(automation.muted | async) === null" @hshrink class="status">
+              <span translate>vrchatMicMuteAutomations.status.unknown</span>
+            <i class="material-icons status-icon-unknown">question_mark</i>
+            </span>
+          </div>
+        </div>
       </div>
       <h3 translate>vrchatMicMuteAutomations.automations.title</h3>
       <div class="settings">

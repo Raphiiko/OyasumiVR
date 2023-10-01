@@ -938,6 +938,13 @@
       "NONE": "None",
       "MUTE": "Mute",
       "UNMUTE": "Unmute"
+    },
+    "status": {
+      "title": "Current VRChat Microphone State",
+      "description": "Reflects your current in-game microphone state",
+      "unmuted": "Unmuted",
+      "muted": "Muted",
+      "unknown": "Unknown"
     }
   },
   "comp": {
