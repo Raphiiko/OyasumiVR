@@ -63,7 +63,6 @@
       "description": "Mengaktifkan mode tidur secara otomatis berdasarkan berbagai pemicu",
       "atTime": "Pada waktu tertentu",
       "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{value}%</strong>",
-      "onControllersPoweredOff": "Ketika semua kontroler dimatikan",
       "onMotionDetection": {
         "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
       }
@@ -265,9 +264,7 @@
       },
       "onCharge": {
         "title": "Saat mengisi daya",
-        "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya.",
-        "optionControllers": "Matikan kontroler",
-        "optionTrackers": "Matikan tracker"
+        "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya."
       }
     },
     "lighthousePowerOn": {

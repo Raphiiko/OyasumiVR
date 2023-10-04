@@ -105,7 +105,6 @@
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "atTime": "지정된 시간에",
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{value}%</strong> 이하로 떨어질 때",
-      "onControllersPoweredOff": "모든 컨트롤러의 전원이 꺼졌을 때",
       "onMotionDetection": {
         "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
       }
@@ -307,9 +306,7 @@
       },
       "onCharge": {
         "title": "충전할 때",
-        "description": "충전기에 꽂으면 자동으로 전원이 꺼져요.",
-        "optionControllers": "컨트롤러 끄기",
-        "optionTrackers": "트래커 끄기"
+        "description": "충전기에 꽂으면 자동으로 전원이 꺼져요."
       }
     },
     "lighthousePowerOn": {

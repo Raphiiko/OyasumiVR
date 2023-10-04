@@ -101,7 +101,6 @@
       "description": "Activación automática del modo de reposo en función de varios activadores",
       "atTime": "En un momento determinado",
       "atBatteryPercentage": "Cuando el porcentaje de batería de un dispositivo cae por debajo de <strong>{value}%</strong>",
-      "onControllersPoweredOff": "Cuando todos los controladores están apagados",
       "onMotionDetection": {
         "title": "Cuando OyasumiVR detecta que estás dormido basándose en tu movimiento"
       }
@@ -303,9 +302,7 @@
       },
       "onCharge": {
         "title": "Cuando se cargan",
-        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador.",
-        "optionControllers": "Apagar los controladores",
-        "optionTrackers": "Apagar los trackers"
+        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador."
       }
     },
     "lighthousePowerOn": {

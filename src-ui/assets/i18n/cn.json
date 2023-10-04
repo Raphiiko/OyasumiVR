@@ -105,7 +105,6 @@
       "description": "根据各种触发器自动启用睡眠模式",
       "atTime": "在特定时间",
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
-      "onControllersPoweredOff": "当所有控制器都关闭时",
       "onHeartRateCalmPeriod": {
         "title": "当我的心率在一段时间内保持平稳时",
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成"
@@ -332,9 +331,7 @@
       },
       "onCharge": {
         "title": "给它们充电时",
-        "description": "让设备当你把它们接上充电器时自动关闭。",
-        "optionControllers": "关掉控制器",
-        "optionTrackers": "关掉定位器"
+        "description": "让设备当你把它们接上充电器时自动关闭。"
       }
     },
     "lighthousePowerOn": {
@@ -1191,8 +1188,7 @@
             "transition": "头戴式显示器亮度正在过渡到 {value}"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "POWERING_DOWN": "因为已停用睡眠模式"
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           }
         },
         "acceptedInviteRequest": {

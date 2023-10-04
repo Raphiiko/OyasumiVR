@@ -63,7 +63,6 @@
       "description": "Automatisch de slaap modus inschakelen",
       "atTime": "Om een specifieke tijd",
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{value}%</strong> valt",
-      "onControllersPoweredOff": "Wanneer alle controllers worden uitgezet",
       "onMotionDetection": {
         "title": "Wanneer OyasumiVR detecteert dat je slaapt gebaseerd op je bewegingen"
       }
@@ -261,9 +260,7 @@
       },
       "onCharge": {
         "title": "Wanneer ik ze oplaad",
-        "description": "Zorg dat apparaten worden uitgezet wanneer je ze aan de lader legt.",
-        "optionControllers": "Controllers uitzetten",
-        "optionTrackers": "Trackers uitzetten"
+        "description": "Zorg dat apparaten worden uitgezet wanneer je ze aan de lader legt."
       }
     },
     "lighthousePowerOn": {
@@ -869,10 +866,6 @@
     },
     "osc-script-simple-editor": {
       "commandCounter": "{value, plural, one {1 Commando} other {# Commandos}}",
-      "errorCounter": {
-        "singular": "{value} Validatie fout",
-        "plural": "{value} Validatie fouten"
-      },
       "addCommand": "Voeg Toe",
       "test": "Test",
       "action": {
