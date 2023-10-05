@@ -63,7 +63,6 @@
       "description": "根據各種觸發器自動啟用睡眠模式",
       "atTime": "在特定時間",
       "atBatteryPercentage": "當設備的電池百分比低於 <strong>{value}%</strong>",
-      "onControllersPoweredOff": "當所有控制器都關閉時",
       "onMotionDetection": {
         "title": "OyasumiVR 根據你的睡眠動作檢測你是否睡眠"
       }
@@ -265,9 +264,7 @@
       },
       "onCharge": {
         "title": "給它們充電時",
-        "description": "讓設備當你把它們接上充電器時自動關閉。",
-        "optionControllers": "關掉控制器",
-        "optionTrackers": "關掉定位器"
+        "description": "讓設備當你把它們接上充電器時自動關閉。"
       }
     },
     "lighthousePowerOn": {

@@ -26,16 +26,47 @@
   },
   "brightness-automations": {
     "title": "明るさの自動化",
+    "mode": {
+      "simple": "シンプル",
+      "advanced": "高度"
+    },
+    "modeInfoModal": {
+      "title": "輝度調整モード",
+      "message": "画像の明るさを調整することでHMDの明るさを制御します。バックライトを制御できるLCDパネルを搭載したHMD(Valve Indexなど)を使用している場合、可能な限りディスプレイの輝度を制御します。 \n\n高度なモードでは、映像の明るさとディスプレイの輝度を別々に制御でき、それぞれに正確な値を設定できます。他のVRヘッドセットでは、シンプルモードとアドバンスモードの違いはありません。"
+    },
     "brightnessAutomations": {
+      "description": "様々なタイミングでHMDの明るさを調整します。",
+      "startupAutomations": "起動の自動化",
+      "sleepPreparation": "寝る準備",
+      "sleepAutomations": "睡眠時の自動化",
+      "copyBrightness": "現在の明るさの値をコピーする",
+      "onStartup": {
+        "title": "OyasumiVRやSteamVRが起動したとき",
+        "description": "明るさの調整"
+      },
       "onSleepEnable": {
-        "title": "睡眠時"
+        "title": "睡眠時",
+        "description": "明るさの調整"
       },
       "onSleepDisable": {
-        "title": "起床時"
+        "title": "起床時",
+        "description": "明るさの調整"
+      },
+      "onSleepPreparation": {
+        "title": "寝る前の準備時",
+        "description": "明るさの調整"
       },
       "brightness": {
         "title": "輝度を変更",
         "description": ""
+      },
+      "imageBrightness": {
+        "title": "画像の輝度を変更",
+        "description": "HMDに表示される画像の輝度を調整します"
+      },
+      "displayBrightness": {
+        "title": "ディスプレイの輝度を変更",
+        "description": "LCDバックライトの輝度を調整します（Valve Indexのみ）"
       },
       "transition": {
         "title": "なめらかな遷移",
@@ -44,6 +75,13 @@
       "transitionTime": {
         "title": "遷移時間",
         "description": "移行するのにかかる時間"
+      },
+      "applyOnStart": {
+        "title": "起動時に適用",
+        "description": {
+          "onSleepEnable": "睡眠モードがアクティブな場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します",
+          "onSleepDisable": "睡眠モードが非アクティブな場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します"
+        }
       }
     }
   },
@@ -54,16 +92,20 @@
       "inactive": "非アクティブ",
       "activate": "有効にする",
       "deactivate": "無効にする"
+    },
+    "sleep-preparation": {
+      "activate": "寝る準備",
+      "disabledTooltip": "少なくとも1つの自動化に対して寝る準備を設定すると、利用可能になります"
     }
   },
   "sleep-detection": {
     "title": "睡眠検出",
+    "experimentalAutomation": "この自動化は実験的なものであり、まだ信頼できるものではない可能性があります。",
     "enableAutomations": {
       "title": "睡眠モードの有効化",
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "atTime": "時刻指定",
       "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
-      "onControllersPoweredOff": "全てのコントローラーがオフになったとき",
       "onMotionDetection": {
         "title": "寝落ちを検知したとき"
       }
@@ -265,9 +307,7 @@
       },
       "onCharge": {
         "title": "充電時",
-        "description": "充電器に繋いだとき、電源をオフにする設定です。",
-        "optionControllers": "コントローラーをオフにする",
-        "optionTrackers": "トラッカーをオフにする"
+        "description": "充電器に繋いだとき、電源をオフにする設定です。"
       }
     },
     "lighthousePowerOn": {

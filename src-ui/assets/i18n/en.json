@@ -37,7 +37,6 @@
     "brightnessAutomations": {
       "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
       "startupAutomations": "Startup Automations",
-      "sleepPreparation": "Sleep Preparation",
       "sleepAutomations": "Sleep Automations",
       "copyBrightness": "Copy current\nbrightness value",
       "onStartup": {
@@ -82,6 +81,10 @@
           "onSleepEnable": "If sleep mode is active, set this brightness value directly when SteamVR or OyasumiVR starts.",
           "onSleepDisable": "If sleep mode is inactive, set this brightness value directly when SteamVR or OyasumiVR starts."
         }
+      },
+      "sleepPreparation": {
+        "description": "You can prepare to go to sleep by pressing a button in OyasumiVR's overlay. The button for this will be shown when you have one or more sleep preparation automations active, like this one. Use this to already start dimming the brightness before you fall asleep.",
+        "title": "Sleep Preparation"
       }
     }
   },

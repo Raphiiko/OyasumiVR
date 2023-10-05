@@ -49,7 +49,6 @@
       "description": "Active automatiquement le mode sommeil selon plusieurs critères",
       "atTime": "À une heure prédéfinie",
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{value}%</strong>",
-      "onControllersPoweredOff": "Lorsque l'un des contrôleurs est éteint",
       "onMotionDetection": {
         "title": "Quand OyasumiVR détecte que vous dormez selon vos mouvements"
       }
@@ -221,9 +220,7 @@
       },
       "onCharge": {
         "title": "Lors de la recharge",
-        "description": "Éteindre les appareils lorsqu'ils sont en charge.",
-        "optionControllers": "Éteindre les contrôleurs",
-        "optionTrackers": "Éteindre les trackers"
+        "description": "Éteindre les appareils lorsqu'ils sont en charge."
       }
     }
   },
