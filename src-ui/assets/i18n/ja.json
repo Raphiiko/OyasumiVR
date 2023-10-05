@@ -37,7 +37,6 @@
     "brightnessAutomations": {
       "description": "様々なタイミングでHMDの明るさを調整します。",
       "startupAutomations": "起動の自動化",
-      "sleepPreparation": "寝る準備",
       "sleepAutomations": "睡眠時の自動化",
       "copyBrightness": "現在の明るさの値をコピーする",
       "onStartup": {

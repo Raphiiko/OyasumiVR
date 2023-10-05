@@ -37,7 +37,6 @@
     "brightnessAutomations": {
       "description": "让 OyasumiVR 在不同的时间自动调节 VR 头显的亮度，比如睡觉或起床时。",
       "startupAutomations": "启动时的自动化操作",
-      "sleepPreparation": "睡前的准备工作",
       "sleepAutomations": "睡眠时的自动化",
       "copyBrightness": "复制当前亮度值",
       "onStartup": {

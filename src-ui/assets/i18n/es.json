@@ -37,7 +37,6 @@
     "brightnessAutomations": {
       "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
       "startupAutomations": "Automatizaciones de arranque",
-      "sleepPreparation": "Preparación del sueño",
       "sleepAutomations": "Automatizaciones del sueño",
       "copyBrightness": "Copia actual\nvalor de luminosidad",
       "onStartup": {
@@ -92,15 +91,32 @@
       "inactive": "Inactivo",
       "activate": "Activado",
       "deactivate": "Desactivado"
+    },
+    "sleep-preparation": {
+      "activate": "Prepararse para dormir",
+      "disabledTooltip": "La preparación del sueño estará disponible una vez que hayas configurado la preparación del sueño para al menos una automatización"
     }
   },
   "sleep-detection": {
     "title": "Detección del sueño",
+    "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",
     "enableAutomations": {
       "title": "Activar el modo de suspensión",
       "description": "Activación automática del modo de reposo en función de varios activadores",
       "atTime": "En un momento determinado",
       "atBatteryPercentage": "Cuando el porcentaje de batería de un dispositivo cae por debajo de <strong>{value}%</strong>",
+      "onControllersPoweredOff": {
+        "title": "Cuando todos los controladores están apagados",
+        "batteryLevelAutomationConflict": {
+          "title": "Advertencia: Esto podría ser activado por otra automatización.",
+          "description": "Has configurado los controladores para que se apaguen automáticamente cuando su nivel de batería caiga por debajo de un determinado porcentaje. Esto puede provocar que active accidentalmente el modo de reposo, que puede no ser lo que desea. Para evitarlo, puede desactivar este comportamiento en la sección \"Controladores y Trackers\" de los ajustes de Automatización de la alimentación.",
+          "action": "Automatismos eléctricos:\nControladores y Trackers"
+        }
+      },
+      "onHeartRateCalmPeriod": {
+        "title": "Cuando mi ritmo cardíaco se calma durante un periodo de tiempo",
+        "description": "Requiere <a class=\"integrationsPageLink\">integración con Pulsoid</a>"
+      },
       "onMotionDetection": {
         "title": "Cuando OyasumiVR detecta que estás dormido basándose en tu movimiento"
       }
@@ -210,6 +226,27 @@
           "thresholdOutOfRange": "El porcentaje debe estar comprendido entre el 0% y el 100%.",
           "thresholdNotInteger": "El valor porcentual tiene que ser un número entero."
         }
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "title": "Activar el modo dormir",
+        "description": "Activa el modo de reposo cuando tu frecuencia cardiaca esté por debajo de un determinado umbral durante un periodo de tiempo: Define el umbral de pulsaciones por minuto que tu frecuencia cardiaca debe permanecer por debajo, así como durante qué cantidad de tiempo, para que se active el modo de reposo.\n\nPara ello es necesario activar la integración <a class=\"integrationsPageLink\">Pulsoid</a> y tener una suscripción activa a Pulsoid \"BRO\".",
+        "bpm": {
+          "title": "Umbral de BPM",
+          "description": "Las pulsaciones por minuto que tu corazón tiene que permanecer por debajo para que se active el modo sueño.",
+          "unit": "BPM"
+        },
+        "duration": {
+          "title": "DURACION",
+          "description": "Cuánto tiempo debe permanecer tu frecuencia cardiaca por debajo del umbral para que se active el modo de reposo.",
+          "unit": "min"
+        },
+        "viewHistory": {
+          "title": "Historial de la frecuencia cardíaca",
+          "description": "Consulta tu historial de frecuencia cardiaca de las últimas 12 horas",
+          "actionShow": "Ver historial",
+          "actionHide": "Ocultar historial"
+        },
+        "notEnoughData": "No hay suficientes datos disponibles para mostrar tu historial de frecuencia cardiaca."
       }
     }
   },
@@ -302,7 +339,32 @@
       },
       "onCharge": {
         "title": "Cuando se cargan",
-        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador."
+        "description": "Haz que los dispositivos se apaguen automáticamente al ponerlos en el cargador.",
+        "optionControllers": {
+          "title": "Apagar un mando",
+          "description": "Cuando se está cargando"
+        },
+        "optionTrackers": {
+          "title": "Apagar un tracker",
+          "description": "Cuando se está cargando"
+        }
+      },
+      "onBatteryLevel": {
+        "title": "Nivel de batería",
+        "description": "Haz que los dispositivos se apaguen cuando su nivel de batería descienda por debajo de un determinado porcentaje.",
+        "controllers": {
+          "title": "Apagar un controlador",
+          "description": "Cuando el nivel de batería es inferior a"
+        },
+        "trackers": {
+          "title": "Apagar un tracker",
+          "description": "Cuando el nivel de batería es inferior a"
+        },
+        "controllerPoweroffConflict": {
+          "title": "Atención: Esto podría desencadenar otra automatización!",
+          "description": "Como ha configurado el modo de reposo para que se active cuando todos los controladores estén apagados, encender esta automatización puede hacer que active involuntariamente el modo de reposo. Otras automatizaciones podrían responder a esto, lo que podría no ser lo que usted desea. Puede desactivar este comportamiento en los ajustes de Detección de reposo.",
+          "action": "Detección dormir"
+        }
       }
     },
     "lighthousePowerOn": {
@@ -481,6 +543,7 @@
       "vrchat": "VRChat",
       "notifications": "Notificaciones",
       "updates": "Actualizaciones",
+      "integrations": "Integraciones",
       "advanced": "Avanzado"
     },
     "general": {
@@ -588,6 +651,23 @@
           }
         },
         "title": "Superposición"
+      },
+      "startStop": {
+        "title": "Empezar & Parar"
+      },
+      "startWithSteamVR": {
+        "label": "Empieza con SteamVR",
+        "description": "Iniciar OyasumiVR cuando se inicie SteamVR",
+        "howTo": "Cómo"
+      },
+      "stopWithSteamVR": {
+        "label": "Salir con SteamVR",
+        "description": "Salir de OyasumiVR cuando SteamVR se detiene durante un cierto tiempo",
+        "options": {
+          "DISABLED": "Desactivado",
+          "IMMEDIATELY": "Inmediatamente",
+          "AFTERDELAY": "Después de 2 minutos"
+        }
       }
     },
     "vrchat": {
@@ -693,6 +773,22 @@
         "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
       }
     },
+    "integrations": {
+      "description": "Algunas de las funcionalidades de OyasumiVR pueden hacer uso de servicios externos. Si quieres conectar OyasumiVR a uno de ellos, ¡estás en el lugar adecuado!",
+      "connect": "Conectar",
+      "disconnect": "Desconectar",
+      "reveal": "Revelar",
+      "providerLink": "Sitio web del proveedor",
+      "copy": "Copiar enlace al portapapeles",
+      "pulsoid": {
+        "title": "Pulsoid",
+        "description": "Proporciona tus datos de frecuencia cardíaca a OyasumiVR, que pueden utilizarse para activar ciertas automatizaciones.<br><i>Requiere: Pulsoid \"BRO\" suscripción</i>"
+      },
+      "vrchat": {
+        "title": "VRChat",
+        "description": "Vincular tu cuenta te da acceso a algunas de las automatizaciones de OyasumiVR relacionadas con VRChat."
+      }
+    },
     "advanced": {
       "persistentData": {
         "title": "Datos persistentes",
@@ -713,6 +809,10 @@
           "vrcData": {
             "title": "VRChat Datos",
             "description": "Datos específicos de VRChat, como los de autenticación"
+          },
+          "integrations": {
+            "title": "Datos de integración",
+            "description": "Datos específicos de las integraciones (excepto VRChat), como los datos de autenticación"
           },
           "miscData": {
             "title": "Otros datos",
@@ -835,12 +935,71 @@
       "content": "Apagar los mandos y los trackers"
     }
   },
+  "vrchatMicMuteAutomations": {
+    "title": "Silenciamiento del micrófono",
+    "description": "Silencia o desactiva automáticamente tu micrófono en VRChat cuando te duermas o te despiertes. Esto puede ser útil cuando quieres evitar que otros oigan tus ronquidos ;)\n\nTen en cuenta que para que esto funcione, es necesario que OSC esté activado en VRChat.",
+    "config": {
+      "title": "Configuración"
+    },
+    "automations": {
+      "title": "Automatizaciones"
+    },
+    "mode": {
+      "title": "Comportamiento del micrófono VRChat",
+      "description": "Selecciona el comportamiento de micrófono que utilizas en VRChat. Ten en cuenta que si seleccionas un comportamiento diferente al que utilizas en VRChat, estas automatizaciones podrían no funcionar correctamente."
+    },
+    "onSleepModeEnable": {
+      "title": "Cuando el modo de espera está activado",
+      "description": "Cambiar el estado de mi micrófono a"
+    },
+    "onSleepModeDisable": {
+      "title": "Cuando el modo de espera está desactivado",
+      "description": "Cambiar el estado de mi micrófono a"
+    },
+    "onSleepPreparation": {
+      "title": "Cuando me dispongo a dormir",
+      "description": "Cambiar el estado de mi micrófono a"
+    },
+    "modeOptions": {
+      "TOGGLE": "Toggle",
+      "PUSH_TO_MUTE": "Pulsar para hablar"
+    },
+    "muteOptions": {
+      "NONE": "None",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "status": {
+      "title": "Estado actual del micrófono VRChat",
+      "description": "Refleja el estado actual de tu micrófono en el juego",
+      "unmuted": "Unmute",
+      "muted": "Muted",
+      "unknown": "Unknown"
+    },
+    "control": {
+      "title": "Controlar el silencio del micrófono",
+      "description": "Puede utilizarlo para comprobar si el silenciamiento del micrófono funciona correctamente",
+      "mute": "Mute\nmicrofono",
+      "unmute": "Unmute\nmicrofono"
+    }
+  },
   "comp": {
+    "brightness-control-modal": {
+      "displayBrightness": "Brillo de la pantalla",
+      "imageBrightness": "Brillo de la imagen",
+      "brightness": "Brillo",
+      "automationsTooltip": "Automatización del brillo"
+    },
     "main-status-bar": {
       "sleepMode": "Modo sueño",
       "active": "Activo",
       "inactive": "Inactivo",
       "loggedOut": "Desconectado",
+      "heartrate": "Frecuencia cardiaca",
+      "brightness": {
+        "tooltip": "Control del brillo",
+        "simple": "Brillo"
+      },
       "steamvr": {
         "INACTIVE": "Inactivo",
         "INITIALIZING": "Esperando",
@@ -854,7 +1013,8 @@
       "title": "Actualización disponible",
       "updateNow": "Instalar v{version}",
       "updateLater": "Ahora no",
-      "message": "Se ha encontrado una nueva actualización para OyasumiVR: v{newVersion}.\n\nActualmente sigue ejecutando v{currentVersion}.\n\n¿Quiere actualizar ahora o más tarde?"
+      "message": "Se ha encontrado una nueva actualización para OyasumiVR: v{newVersion}.\n\nActualmente sigue ejecutando v{currentVersion}.\n\n¿Quiere actualizar ahora o más tarde?",
+      "steamAd": "<b>OyasumiVR también está disponible en Steam!</b><br><br>Esta es la nueva forma recomendada para instalar OyasumiVR.<br>Visite la página de la tienda en <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> para saber más."
     },
     "select-box": {
       "defaultPlaceholder": "Seleccione..."
@@ -864,6 +1024,7 @@
       "sleepDetection": "Detección de sueño",
       "oscAutomations": "Automatizaciones OSC",
       "gpuAutomations": "Automatizaciones de GPU",
+      "vrchatMicMuteAutomations": "Silenciamiento del micrófono",
       "powerAutomations": "Automatizaciones de energía",
       "statusAutomations": "Automatizaciones de estado",
       "autoInviteRequestAccept": "Auto Aceptar \nSolicitudes de invitación",
@@ -968,6 +1129,17 @@
     },
     "event-log-entry": {
       "type": {
+        "changedVRChatMicMuteState": {
+          "title": {
+            "MUTE": "Micrófono silenciado en VRChat",
+            "UNMUTE": "Micrófono sin silenciar en VRChat"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
+            "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
+          }
+        },
         "sleepModeEnabled": {
           "title": "Modo de sueño activado",
           "reason": {
@@ -978,7 +1150,8 @@
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Mientras dormías",
               "SLEEP_MODE_ENABLE_AT_TIME": "A la hora prevista",
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Como el nivel de batería de un dispositivo alcanzó el umbral",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Como tus controladores estaban todos apagados"
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Como tus controladores estaban todos apagados",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "Como tu ritmo cardíaco estuvo calmado el tiempo suficiente"
             }
           }
         },
@@ -1008,7 +1181,8 @@
             "MANUAL": "Apagado manual",
             "OSC_CONTROL": "Apagado sobre OSC",
             "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado",
-            "CHARGING": "Mientras el dispositivo se recarga"
+            "CHARGING": "Mientras el dispositivo se recarga",
+            "BATTERY_LEVEL": "Al bajar el nivel de batería por debajo del {threshold}%"
           }
         },
         "lighthouseSetPowerState": {
@@ -1081,6 +1255,17 @@
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado"
           }
         },
+        "simpleBrightnessChanged": {
+          "title": {
+            "set": "Brillo del visor fijado en {value}",
+            "transition": "Brillo del visor pasando a {value}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
+            "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
+          }
+        },
         "imageBrightnessChanged": {
           "title": {
             "set": "Brillo de la imagen del auricular ajustado a {value}",
@@ -1088,7 +1273,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado"
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           }
         },
         "displayBrightnessChanged": {
@@ -1098,7 +1284,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad"
+            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad",
+            "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           }
         },
         "acceptedInviteRequest": {
@@ -1172,16 +1359,23 @@
         "runtimeQueued": "En cola",
         "text2": "Para seguir utilizando OyasumiVR, primero hay que instalar los tiempos de ejecución necesarios.",
         "automaticInstall": "¿Quieres que OyasumiVR intente instalar estos tiempos de ejecución para usted automáticamente?",
-        "moreInfo": "Puede encontrar descargas y más información aquí:"
+        "moreInfo": "Puede encontrar descargas y más información aquí:",
+        "troubleshooting": "Si ya ha instalado los tiempos de ejecución necesarios y sigue recibiendo este mensaje, consulte nuestra sección <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Guía de resolución de problemas</a> para posibles soluciones."
       },
       "quit": "Cerrar OyasumiVR",
       "installAutomatically": "Instalar automáticamente",
       "success": {
-        "title": "Instalación realizada con éxito"
+        "title": "Instalación realizada con éxito",
+        "message": "Los tiempos de ejecución que faltaban se han instalado correctamente. Ten en cuenta que es posible que tengas que reiniciar tu PC. Por favor, salga de OyasumiVR e inícielo de nuevo para continuar."
       },
       "failure": {
-        "title": "Instalación fallida"
+        "title": "Instalación fallida",
+        "message": "No se han podido instalar automáticamente los tiempos de ejecución que faltaban. Intente instalarlos manualmente. \n\nSi sigue teniendo problemas, consulte nuestro <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Guía de resolución de problemas</a>."
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "Puedes configurar OyasumiVR para que se inicie junto con SteamVR desde la propia configuración de SteamVR. Puedes encontrar esto en:\n\nSteamVR -> Ajustes -> Inicio / Apagado -> Elegir aplicaciones superpuestas de inicio",
+      "title": "Iniciar OyasumiVR con SteamVR"
     }
   },
   "resolution-automations": {
@@ -1241,7 +1435,12 @@
       "title": "Ajustes de apagado",
       "quitSteamVR": {
         "title": "Cerrar SteamVR",
-        "description": "Esto también debería salir de cualquier juego o superposición que se está ejecutando"
+        "description": "Esto también debería salir de cualquier juego o superposición que se está ejecutando",
+        "conflict": {
+          "title": "Advertencia: La ejecución de esta tarea hará que OyasumiVR se cierre inmediatamente",
+          "description": "Has configurado OyasumiVR para que se cierre inmediatamente cuando SteamVR se detenga. Debido a esto, cualquier automatización posterior podría no ejecutarse. Para solucionarlo, desactiva esta tarea o configura OyasumiVR para que no se cierre inmediatamente cuando SteamVR se detenga, en la configuración general.",
+          "goToSettings": "Ajustes generales"
+        }
       },
       "turnOffDevices": {
         "title": "Apagar los dispositivos"
@@ -1258,6 +1457,19 @@
         "title": "Apagar las estaciones base",
         "description": "Apaga las estaciones base que siguen activas"
       },
+      "powerDownWindows": {
+        "title": "Windows Desconexión",
+        "description": "Intenta apagar el ordenador",
+        "options": {
+          "SHUTDOWN": "Apagar",
+          "REBOOT": "Reiniciar",
+          "HIBERNATE": "Hibernar",
+          "SLEEP": "Dormir",
+          "LOGOUT": "Cerrar sesión"
+        },
+        "shutdownMessage": "OyasumiVR está apagando tu PC",
+        "rebootMessage": "OyasumiVR está reiniciando tu PC"
+      },
       "run": "Secuencia de ejecución"
     },
     "confirm-modal": {
@@ -1270,7 +1482,8 @@
         "QUITTING_STEAMVR": "Dejando SteamVR...",
         "TURNING_OFF_CONTROLLERS": "Apagando controladores...",
         "TURNING_OFF_TRACKERS": "Apagando trackers...",
-        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base..."
+        "TURNING_OFF_BASESTATIONS": "Apagar las estaciones base...",
+        "POWERING_DOWN": "Apagando Windows..."
       },
       "title": "Apagado",
       "cancel": "Cancelar ahora"
@@ -1285,7 +1498,8 @@
         "tooltip": {
           "automations": "Automatizaciones",
           "deviceControl": "Control de dispositivos",
-          "shutdown": "Secuencia de apagado"
+          "shutdown": "Secuencia de apagado",
+          "prepareForSleep": "Prepárese para dormir"
         }
       },
       "shutdownSequence": {
@@ -1334,6 +1548,19 @@
           }
         },
         "title": "Ajustes de automatización"
+      }
+    },
+    "brightness": {
+      "simple": "Brillo",
+      "display": "Brillo de la pantalla",
+      "image": "Brillo de la imagen"
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "title": "Fallo al iniciar sesión en Pulsoid",
+        "message": "No se ha podido iniciar sesión con su cuenta de Pulsoid. Vuelve a intentarlo más tarde. Si el problema persiste, ponte en contacto con el servicio de asistencia!\n\n{errorDetails}"
       }
     }
   }
