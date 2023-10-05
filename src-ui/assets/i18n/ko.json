@@ -37,7 +37,6 @@
     "brightnessAutomations": {
       "description": "잠들거나 일어날 때와 같이 다양한 시간에 OyasumiVR이 VR 헤드셋의 밝기를 자동으로 조정하도록 설정해요.",
       "startupAutomations": "시작 자동화",
-      "sleepPreparation": "수면 준비",
       "sleepAutomations": "수면 자동화",
       "copyBrightness": "현재\n밝기 값 복사",
       "onStartup": {
