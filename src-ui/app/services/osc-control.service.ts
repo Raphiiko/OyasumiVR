@@ -3,7 +3,16 @@ import { OscService } from './osc.service';
 import { OSCBoolValue, OSCIntValue, OSCMessage } from '../models/osc-message';
 import { SleepService } from './sleep.service';
 import { OpenVRService } from './openvr.service';
-import { combineLatest, debounceTime, firstValueFrom, map, startWith, Subject, tap } from 'rxjs';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  startWith,
+  Subject,
+  tap,
+} from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
 import { info } from 'tauri-plugin-log-api';
 import { LighthouseConsoleService } from './lighthouse-console.service';
@@ -54,15 +63,21 @@ export class OscControlService {
   async setupParameterSync() {
     combineLatest([
       this.sleep.mode,
-      this.automationConfig.configs.pipe(map((configs) => configs.SLEEPING_ANIMATIONS.enabled)),
       this.automationConfig.configs.pipe(
-        map((configs) => configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled)
+        map((configs) => configs.SLEEPING_ANIMATIONS.enabled),
+        distinctUntilChanged()
       ),
       this.automationConfig.configs.pipe(
-        map((configs) => configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled)
+        map((configs) => configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT.enabled),
+        distinctUntilChanged()
       ),
       this.automationConfig.configs.pipe(
-        map((configs) => configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled)
+        map((configs) => configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled),
+        distinctUntilChanged()
+      ),
+      this.automationConfig.configs.pipe(
+        map((configs) => configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled),
+        distinctUntilChanged()
       ),
       this.syncParameters.pipe(startWith(undefined)),
     ])
