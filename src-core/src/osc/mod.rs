@@ -6,7 +6,7 @@ use std::{
     net::{Ipv4Addr, UdpSocket},
 };
 
-use log::{error, info};
+use log::{error, info, warn};
 use models::{OSCMessage, OSCValue};
 use rosc::{OscPacket, OscType};
 use tokio::sync::Mutex;
@@ -48,41 +48,52 @@ async fn spawn_receiver_task() -> CancellationToken {
             let mut buf = [0u8; rosc::decoder::MTU];
             match socket.recv(&mut buf) {
                 Ok(size) => {
-                    let (_, packet) = rosc::decoder::decode_udp(&buf[..size]).unwrap();
-                    if let OscPacket::Message(msg) = packet {
-                        send_event(
-                            "OSC_MESSAGE",
-                            OSCMessage {
-                                address: msg.addr,
-                                values: msg
-                                    .args
-                                    .iter()
-                                    .map(|value| match value {
-                                        OscType::Int(v) => OSCValue {
-                                            kind: "int".into(),
-                                            value: Some(v.to_string()),
-                                        },
-                                        OscType::Float(v) => OSCValue {
-                                            kind: "float".into(),
-                                            value: Some(v.to_string()),
-                                        },
-                                        OscType::String(v) => OSCValue {
-                                            kind: "string".into(),
-                                            value: Some(v.clone()),
-                                        },
-                                        OscType::Bool(v) => OSCValue {
-                                            kind: "bool".into(),
-                                            value: Some(v.to_string()),
-                                        },
-                                        _ => OSCValue {
-                                            kind: "unsupported".into(),
-                                            value: None,
-                                        },
-                                    })
-                                    .collect(),
-                            },
-                        )
-                        .await;
+                    let result = match rosc::decoder::decode_udp(&buf[..size]) {
+                        Ok((_, packet)) => Some(packet),
+                        Err(err) => {
+                            warn!(
+                                "[Core] Expected OSC packet, but UDP packet was malformed: {}",
+                                err
+                            );
+                            None
+                        }
+                    };
+                    if let Some(packet) = result {
+                        if let OscPacket::Message(msg) = packet {
+                            send_event(
+                                "OSC_MESSAGE",
+                                OSCMessage {
+                                    address: msg.addr,
+                                    values: msg
+                                        .args
+                                        .iter()
+                                        .map(|value| match value {
+                                            OscType::Int(v) => OSCValue {
+                                                kind: "int".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            OscType::Float(v) => OSCValue {
+                                                kind: "float".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            OscType::String(v) => OSCValue {
+                                                kind: "string".into(),
+                                                value: Some(v.clone()),
+                                            },
+                                            OscType::Bool(v) => OSCValue {
+                                                kind: "bool".into(),
+                                                value: Some(v.to_string()),
+                                            },
+                                            _ => OSCValue {
+                                                kind: "unsupported".into(),
+                                                value: None,
+                                            },
+                                        })
+                                        .collect(),
+                                },
+                            )
+                            .await;
+                        }
                     }
                 }
                 Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {}

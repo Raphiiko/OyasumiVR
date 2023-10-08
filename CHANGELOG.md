@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
 - Disabling OSC features leading to a crash
 - Config saving loop in status automations view
+- Malformed OSC packets causing a crash
 
 ## [1.9.0]
 
