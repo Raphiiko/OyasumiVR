@@ -41,7 +41,10 @@ async fn spawn_receiver_task() -> CancellationToken {
         while !cancellation_token_internal.is_cancelled() {
             tokio::time::sleep(tokio::time::Duration::from_millis(32)).await;
             let socket_guard = OSC_RECEIVE_SOCKET.lock().await;
-            let socket = socket_guard.as_ref().unwrap();
+            let socket = match socket_guard.as_ref() {
+                Some(s) => s,
+                None => continue,
+            };
             let mut buf = [0u8; rosc::decoder::MTU];
             match socket.recv(&mut buf) {
                 Ok(size) => {

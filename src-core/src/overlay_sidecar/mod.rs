@@ -36,23 +36,26 @@ pub async fn init() {
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }
     });
-    match crate::utils::cli_sidecar_overlay_mode().await {
-        // In release mode, start the sidecar
-        OverlaySidecarMode::Release => {
-            let mut manager_guard = SIDECAR_MANAGER.lock().await;
-            let manager = manager_guard.as_mut().unwrap();
-            manager.start(false).await;
+    // (Optionally) Start the sidecar
+    tokio::spawn(async move {
+        match crate::utils::cli_sidecar_overlay_mode().await {
+            // In release mode, start the sidecar
+            OverlaySidecarMode::Release => {
+                let mut manager_guard = SIDECAR_MANAGER.lock().await;
+                let manager = manager_guard.as_mut().unwrap();
+                manager.start(false).await;
+            }
+            // In development mode, we expect the sidecar to be started in development mode manually
+            OverlaySidecarMode::Dev => {
+                let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
+                    pid: 0,
+                    grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
+                    grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
+                })
+                .await;
+            }
         }
-        // In development mode, we expect the sidecar to be started in development mode manually
-        OverlaySidecarMode::Dev => {
-            let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
-                pid: 0,
-                grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
-                grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
-            })
-            .await;
-        }
-    }
+    });
 }
 
 pub async fn add_notification(message: String, duration: Duration) -> Result<String, String> {
