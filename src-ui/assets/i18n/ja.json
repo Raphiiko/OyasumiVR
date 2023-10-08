@@ -93,8 +93,8 @@
       "deactivate": "無効にする"
     },
     "sleep-preparation": {
-      "activate": "寝る準備",
-      "disabledTooltip": "少なくとも1つの自動化に対して寝る準備を設定すると、利用可能になります"
+      "activate": "就寝準備",
+      "disabledTooltip": "少なくとも1つの自動化に対して就寝準備を設定すると、利用可能になります"
     }
   },
   "sleep-detection": {
@@ -105,8 +105,20 @@
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "atTime": "時刻指定",
       "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
+      "onControllersPoweredOff": {
+        "title": "すべてのコントローラーがオフになったとき",
+        "batteryLevelAutomationConflict": {
+          "title": "警告: これは他の自動化によってトリガーされる可能性があります！",
+          "description": "コントローラーのバッテリー残量が一定の割合以下になると自動的にオフになるように設定されています。これにより、誤ってスリープモードが有効になる可能性があり、お望みの動作とは異なるかもしれません。これを防ぐには、「電源自動化設定」の「コントローラー＆トラッカー」セクションでこの動作を無効にできます。",
+          "action": "電源自動化設定：\nコントローラー＆トラッカー"
+        }
+      },
+      "onHeartRateCalmPeriod": {
+        "title": "心拍数から寝落ちを検知したとき",
+        "description": "<a class=\"integrationsPageLink\">Pulsoid 連携</a>が必要です"
+      },
       "onMotionDetection": {
-        "title": "寝落ちを検知したとき"
+        "title": "動作から寝落ちを検知したとき"
       }
     },
     "disableAutomations": {
@@ -214,6 +226,27 @@
           "thresholdOutOfRange": "0以上100以下の範囲で指定してください。",
           "thresholdNotInteger": "数字で指定してください。"
         }
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "title": "睡眠モードの有効化",
+        "description": "閾値以下の心拍数が一定時間経過すると、睡眠モードを有効にします。\n\nこれには<a class=\"integrationsPageLink\">Pulsoid 連携</a>の有効化と、アクティブなPulsoidの「BRO」サブスクリプションが必要です。",
+        "bpm": {
+          "title": "BPM 閾値",
+          "description": "睡眠モードを有効にするために心拍数が一定の閾値以下になる必要があります。",
+          "unit": "BPM"
+        },
+        "duration": {
+          "title": "期間",
+          "description": "睡眠モードを有効にするために心拍数が閾値以下になる必要がある時間を設定します。",
+          "unit": "分"
+        },
+        "viewHistory": {
+          "title": "心拍数履歴",
+          "description": "過去12時間の心拍数履歴を表示します",
+          "actionShow": "履歴を表示",
+          "actionHide": "履歴を非表示"
+        },
+        "notEnoughData": "心拍数の履歴を表示するためのデータが不足しています。"
       }
     }
   },
@@ -306,7 +339,32 @@
       },
       "onCharge": {
         "title": "充電時",
-        "description": "充電器に繋いだとき、電源をオフにする設定です。"
+        "description": "充電器に繋いだとき、電源をオフにする設定です。",
+        "optionControllers": {
+          "title": "コントローラーをオフにする",
+          "description": "充電中の場合"
+        },
+        "optionTrackers": {
+          "title": "トラッカーをオフにする",
+          "description": "充電中の場合"
+        }
+      },
+      "onBatteryLevel": {
+        "title": "バッテリー残量",
+        "description": "デバイスのバッテリー残量が一定の割合以下になったときにデバイスをオフにする。",
+        "controllers": {
+          "title": "コントローラーをオフにする",
+          "description": "バッテリー残量が一定の割合以下になったとき"
+        },
+        "trackers": {
+          "title": "トラッカーをオフにする",
+          "description": "バッテリー残量が一定の割合以下になったとき"
+        },
+        "controllerPoweroffConflict": {
+          "title": "警告: これは他の自動化をトリガーする可能性があります！",
+          "description": "すべてのコントローラーがオフになったときに睡眠モードを有効にするように設定しているため、この自動化をオンにすると、意図せずに睡眠モードを有効にする可能性があります。他の自動化がこれに反応するかもしれないため、望ましい動作ではないかもしれません。この動作を無効にするには、睡眠検出設定で設定できます。",
+          "action": "睡眠検出"
+        }
       }
     },
     "lighthousePowerOn": {
@@ -394,7 +452,7 @@
         "title": "睡眠モードが無効になっている場合",
         "description": "次のMSI Afterburnerプロファイルを適用します"
       },
-      "profile": "プロフィール {index}",
+      "profile": "プロファイル {index}",
       "none": "なし",
       "enabledWarning": "誤った構成にすると、システムが不安定になる可能性があります。よくわからない場合は、この機能を無効にしてください。",
       "executable": {
@@ -485,6 +543,7 @@
       "vrchat": "VRChat",
       "notifications": "通知",
       "updates": "アップデート",
+      "integrations": "連携",
       "advanced": "高度な機能"
     },
     "general": {
@@ -592,6 +651,23 @@
           }
         },
         "title": "オーバーレイ"
+      },
+      "startStop": {
+        "title": "開始と停止"
+      },
+      "startWithSteamVR": {
+        "label": "SteamVRで起動",
+        "description": "SteamVRが起動したときにOyasumiVRを起動します",
+        "howTo": "方法"
+      },
+      "stopWithSteamVR": {
+        "label": "SteamVRで終了",
+        "description": "SteamVRが一定の時間停止したときにOyasumiVRを終了します",
+        "options": {
+          "DISABLED": "無効",
+          "IMMEDIATELY": "直ちに",
+          "AFTERDELAY": "2分後"
+        }
       }
     },
     "vrchat": {
@@ -697,6 +773,22 @@
         "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
       }
     },
+    "integrations": {
+      "description": "OyasumiVRの一部の機能は外部サービスを利用することができます。OyasumiVRをこれらのサービスと連携させたい場合、ここが正しい場所です！",
+      "connect": "接続",
+      "disconnect": "切断",
+      "reveal": "表示",
+      "providerLink": "公式サイト",
+      "copy": "リンクをクリップボードにコピー",
+      "pulsoid": {
+        "title": "Pulsoid",
+        "description": "Pulsoidの心拍数データをOyasumiVRに提供し、特定の自動化をトリガーするために使用できます。<br><i>必要条件: Pulsoidの「BRO」サブスクリプション</i>"
+      },
+      "vrchat": {
+        "title": "VRChat",
+        "description": "アカウントをリンクさせると、OyasumiVRのVRChat関連の自動化にアクセスできるようになります。"
+      }
+    },
     "advanced": {
       "persistentData": {
         "title": "保存データ",
@@ -717,6 +809,10 @@
           "vrcData": {
             "title": "VRChatデータ",
             "description": "認証情報など、VRChat特有のデータ"
+          },
+          "integrations": {
+            "title": "連携データ",
+            "description": "VRChatを除く連携データ、認証データなど"
           },
           "miscData": {
             "title": "その他のデータ",
@@ -839,12 +935,71 @@
       "content": "コントローラーとトラッカーの電源をオフにしました。"
     }
   },
+  "vrchatMicMuteAutomations": {
+    "title": "マイクミュート",
+    "description": "VRChatのマイクのミュートを切り替えられます。これは、他の人にいびきを聞かせたくない場合などに便利です。 \n\nこれを動作させるには、VRChat内でOSCが有効になっている必要があります。",
+    "config": {
+      "title": "設定"
+    },
+    "automations": {
+      "title": "自動化"
+    },
+    "mode": {
+      "title": "VRChatのマイク動作",
+      "description": "マイク動作を選択します。VRChatで使用しているものと異なる動作を選択すると、誤作動の原因となります"
+    },
+    "onSleepModeEnable": {
+      "title": "睡眠モードが有効になったとき",
+      "description": "マイクの状態を変更"
+    },
+    "onSleepModeDisable": {
+      "title": "睡眠モードが無効になったとき",
+      "description": "マイクの状態を変更"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備をするとき",
+      "description": "マイクの状態を変更"
+    },
+    "modeOptions": {
+      "TOGGLE": "トグル",
+      "PUSH_TO_MUTE": "プッシュトーク"
+    },
+    "muteOptions": {
+      "NONE": "なし",
+      "MUTE": "ミュート",
+      "UNMUTE": "ミュート解除"
+    },
+    "status": {
+      "title": "現在のVRChatのマイク状態",
+      "description": "現在のゲーム内マイクの状態を反映します",
+      "unmuted": "ミュート解除",
+      "muted": "ミュート",
+      "unknown": "不明"
+    },
+    "control": {
+      "title": "マイクミュートの制御",
+      "description": "マイクミュートが正しく動作しているかをテストするために使用できます",
+      "mute": "ミュート",
+      "unmute": "ミュート解除"
+    }
+  },
   "comp": {
+    "brightness-control-modal": {
+      "displayBrightness": "ディスプレイ輝度",
+      "imageBrightness": "画像輝度",
+      "brightness": "輝度",
+      "automationsTooltip": "輝度自動化"
+    },
     "main-status-bar": {
       "sleepMode": "睡眠モード",
       "active": "アクティブ",
       "inactive": "非アクティブ",
       "loggedOut": "ログアウト中",
+      "heartrate": "心拍数",
+      "brightness": {
+        "tooltip": "輝度コントロール",
+        "simple": "輝度"
+      },
       "steamvr": {
         "INACTIVE": "非アクティブ",
         "INITIALIZING": "待機画面",
@@ -858,7 +1013,8 @@
       "title": "アップデート可能",
       "updateNow": "v{version}をインストール",
       "updateLater": "後で",
-      "message": "OyasumiVRの新しいアップデートが見つかりました: v{newVersion}\n\n現在、v{currentVersion}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？"
+      "message": "OyasumiVRの新しいアップデートが見つかりました: v{newVersion}\n\n現在、v{currentVersion}を利用しています。\n\n今すぐアップデートしますか、それとも後ほどアップデートしますか？",
+      "steamAd": "<b>OyasumiVRはSteamでも利用可能です！</b><br><br>これはOyasumiVRをインストールする新しいおすすめ方法です。<br><a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>のストアページをご覧いただき、詳細を確認してください！"
     },
     "select-box": {
       "defaultPlaceholder": "選択する..."
@@ -868,6 +1024,7 @@
       "sleepDetection": "睡眠検出",
       "oscAutomations": "OSC",
       "gpuAutomations": "GPUの電力",
+      "vrchatMicMuteAutomations": "マイクミュート",
       "powerAutomations": "機器の電源",
       "statusAutomations": "ステータス",
       "autoInviteRequestAccept": "Req Inviteの承認",
@@ -972,6 +1129,17 @@
     },
     "event-log-entry": {
       "type": {
+        "changedVRChatMicMuteState": {
+          "title": {
+            "MUTE": "VRChatでマイクをミュートしました",
+            "UNMUTE": "VRChatでマイクのミュートを解除しました"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になったため",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になったため",
+            "SLEEP_PREPARATION": "就寝準備をしたため"
+          }
+        },
         "sleepModeEnabled": {
           "title": "睡眠モードを有効化",
           "reason": {
@@ -1012,7 +1180,8 @@
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
-            "CHARGING": "充電器に接続された"
+            "CHARGING": "充電器に接続された",
+            "BATTERY_LEVEL": "バッテリー残量が{threshold}%未満に低下したため"
           }
         },
         "lighthouseSetPowerState": {
@@ -1085,6 +1254,17 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
           }
         },
+        "simpleBrightnessChanged": {
+          "title": {
+            "set": "HMDの輝度が{value}に設定されました",
+            "transition": "HMDの輝度が{value}に移行中"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になったため",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になったため",
+            "SLEEP_PREPARATION": "就寝準備をしたため"
+          }
+        },
         "imageBrightnessChanged": {
           "title": {
             "set": "HMDの画像の明るさを{value}に設定",
@@ -1092,7 +1272,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           }
         },
         "displayBrightnessChanged": {
@@ -1102,7 +1283,8 @@
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった"
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           }
         },
         "acceptedInviteRequest": {
@@ -1180,11 +1362,17 @@
       "quit": "OyasumiVRを終了する",
       "installAutomatically": "自動インストール",
       "success": {
-        "title": "インストール成功"
+        "title": "インストール成功",
+        "message": "必要なランタイムが正常にインストールされました！注意：PCを再起動する必要があるかもしれません。OyasumiVRを終了し、続行するために再起動してください。"
       },
       "failure": {
-        "title": "インストール失敗"
+        "title": "インストール失敗",
+        "message": "必要なランタイムを自動的にインストールできませんでした。手動でインストールを試みてください。\n\n問題が解決しない場合は、<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">トラブルシューティングガイド</a>を確認してください。"
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "SteamVR -> 設定 -> スタートアップ/シャットダウン -> スタートアップオーバーレイアプリを選択",
+      "title": "SteamVRと一緒にOyasumiVRを起動"
     }
   },
   "resolution-automations": {
@@ -1244,10 +1432,15 @@
       "title": "シャットダウン設定",
       "quitSteamVR": {
         "title": "SteamVRを終了する",
-        "description": "実行中のゲームやオーバーレイも終了します"
+        "description": "実行中のゲームやオーバーレイも終了します",
+        "conflict": {
+          "title": "警告：このタスクを実行すると、OyasumiVRがすぐに終了します",
+          "description": "SteamVRが停止されたときにOyasumiVRがすぐに終了するように設定されています。そのため、その後の自動化が実行されない可能性があります。これを修正するには、このタスクを無効にするか、一般設定でSteamVRが停止されたときにOyasumiVRをすぐに終了しないように設定してください。",
+          "goToSettings": "一般設定へ"
+        }
       },
       "turnOffDevices": {
-        "title": "デバイスの電源を切る"
+        "title": "デバイスをオフにする"
       },
       "turnOffControllers": {
         "title": "コントローラーをオフにする",
@@ -1261,6 +1454,19 @@
         "title": "ベースステーションをオフにする",
         "description": "アクティブなベースステーションをオフにします"
       },
+      "powerDownWindows": {
+        "title": "Windowsをシャットダウンする",
+        "description": "コンピューターの電源をオフにします",
+        "options": {
+          "SHUTDOWN": "シャットダウン",
+          "REBOOT": "再起動",
+          "HIBERNATE": "休止状態",
+          "SLEEP": "スリープ",
+          "LOGOUT": "ログアウト"
+        },
+        "shutdownMessage": "OyasumiVRがPCをシャットダウンしています",
+        "rebootMessage": "OyasumiVRがPCを再起動しています"
+      },
       "run": "シーケンス実行"
     },
     "confirm-modal": {
@@ -1271,9 +1477,10 @@
     "overlay": {
       "stage": {
         "QUITTING_STEAMVR": "SteamVRを終了する...",
-        "TURNING_OFF_CONTROLLERS": "コントローラーの電源を切る...",
+        "TURNING_OFF_CONTROLLERS": "コントローラーをオフにする...",
         "TURNING_OFF_TRACKERS": "トラッカーをオフにする...",
-        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする..."
+        "TURNING_OFF_BASESTATIONS": "ベースステーションをオフにする...",
+        "POWERING_DOWN": "Windowsをシャットダウン中..."
       },
       "title": "シャットダウン",
       "cancel": "キャンセル"
@@ -1288,7 +1495,8 @@
         "tooltip": {
           "automations": "自動化",
           "deviceControl": "デバイス制御",
-          "shutdown": "シャットダウン機能"
+          "shutdown": "シャットダウン機能",
+          "prepareForSleep": "就寝準備"
         }
       },
       "shutdownSequence": {
@@ -1301,9 +1509,9 @@
       "deviceControl": {
         "title": "機器の電源",
         "turnOff": {
-          "AllControllers": "全てのコントローラーの電源を切る",
-          "AllTrackers": "全てのトラッカーの電源を切る",
-          "AllControllersAndTrackers": "全てのコントローラーとトラッカーの電源を切る"
+          "AllControllers": "全てのコントローラーをオフにする",
+          "AllTrackers": "全てのトラッカーをオフにする",
+          "AllControllersAndTrackers": "全てのコントローラーとトラッカーをオフにする"
         }
       },
       "automations": {
@@ -1337,6 +1545,19 @@
           }
         },
         "title": "自動化の設定"
+      }
+    },
+    "brightness": {
+      "simple": "輝度",
+      "display": "ディスプレイ輝度",
+      "image": "イメージ輝度"
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "title": "Pulsoid ログイン失敗",
+        "message": "Pulsoidアカウントでのログインに失敗しました。後でもう一度試してみてください。問題が解決しない場合は、サポートにお問い合わせください。\n\n{errorDetails}"
       }
     }
   }
