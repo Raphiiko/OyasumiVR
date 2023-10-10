@@ -81,6 +81,10 @@
           "onSleepEnable": "睡眠モードがアクティブな場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します",
           "onSleepDisable": "睡眠モードが非アクティブな場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します"
         }
+      },
+      "sleepPreparation": {
+        "description": "オーバーレイのボタンを押すと、就寝の準備をすることができます。就寝準備の自動化が1つ以上アクティブな場合にのみ、このボタンが表示され、眠りにつく前に輝度を徐々に落とし始めることができます。",
+        "title": "就寝準備"
       }
     }
   },
@@ -99,7 +103,7 @@
   },
   "sleep-detection": {
     "title": "睡眠検出",
-    "experimentalAutomation": "この自動化は実験的なものであり、まだ信頼できるものではない可能性があります。",
+    "experimentalAutomation": "実験的機能のため、動作が不安定になる可能性があります。",
     "enableAutomations": {
       "title": "睡眠モードの有効化",
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
@@ -260,13 +264,13 @@
       "currentPose": "現在位置",
       "manualControl": "マニュアル操作",
       "presetAuthor": "{author}による",
-      "description": "寝相に合わせてアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nいくつかロコモーションのプリセットを用意していますが、独自でアニメーションを指定することも可能です。",
+      "description": "寝返りに合わせてアバターのアニメーションを変更します。これは、全身トラッキングをしていない場合や、自分が夜間にトラッカーをオフにする場合(またはOyasumiVRを使用している場合)などに便利です。詳細は<a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">こちら</a>をご覧ください。\n\nいくつかロコモーションのプリセットを用意していますが、独自でアニメーションを指定することも可能です。",
       "enable": "自動睡眠アニメーションの有効化",
       "customPreset": "カスタムアニメーション",
       "options": {
         "positions": {
-          "title": "寝相",
-          "description": "寝相ごとにアニメーションを有効化させるOSCコマンドを設定します",
+          "title": "寝返り",
+          "description": "寝返りごとにアニメーションを有効化させるOSCコマンドを設定します",
           "SIDE_FRONT": "うつぶせ",
           "SIDE_BACK": "仰向け",
           "SIDE_LEFT": "左向き",
@@ -291,7 +295,7 @@
           "lockFeetOnSleepModeEnable": "睡眠モード有効時にフットロック",
           "unlockFeetOnSleepModeDisable": "睡眠モード無効時にフットロック解除",
           "unlockFeetOnAutomationDisable": "自動睡眠アニメーション無効時にフットロック解除",
-          "releaseFootLockOnPoseChange": "寝相が変わる際にフットロックを瞬時に解除",
+          "releaseFootLockOnPoseChange": "寝返りする際にフットロックを瞬時に解除",
           "footLockReleaseWindow": "フットロックの解除時間"
         }
       }
@@ -318,7 +322,7 @@
       "windowsPowerPolicy": "電源オプション"
     },
     "windowsPowerPolicy": {
-      "description": "Windowsの電源プランを自動的に変更することができます。これは、睡眠中の消費電力を削減し、起床時に元のプランへ復元するのに便利です。",
+      "description": "Windowsの電源プランを自動的に変更する設定です。睡眠中の消費電力を削減し、起床時に元のプランへ復元するのに便利です。",
       "automations": "Windows電源プランの自動化",
       "sleepModeEnable": {
         "title": "睡眠モード有効時",
@@ -486,13 +490,13 @@
       "description": "ステータスの設定"
     },
     "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
-    "behaviourWarning": "OyasumiVRによるステータスの変更は、一見すると自分自身には反映されていないように見えます。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRが修正することはできません。",
+    "behaviourWarning": "OyasumiVRによるステータスの変更は、一見すると自分自身には反映されていないように見えることがあります。また、他のプレイヤーから見てステータスの更新が表示されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRが修正することはできません。",
     "moreInfo": "詳細",
     "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。JoinしたいのにJoinできない場合は、メインメニューからプロフィールを開いて、自身のステータスを強制的に更新することも可能です。"
   },
   "auto-invite-request-accept": {
     "title": "Req Inviteの自動承認",
-    "description": "自分が受け取ったReq Inviteを自動的に受け入れることができます。また、ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ、この機能を有効にできます。",
+    "description": "自分が受け取ったReq Inviteを自動的に受け入れることができます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ、この機能を有効にできます。",
     "userOnBusyStatus": "自分のステータスが赤(Do Not Disturb)になっている間は、ユーザーからのReq Inviteを受け入れることができません。",
     "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
     "whitelist": "ホワイトリスト",
@@ -937,7 +941,7 @@
   },
   "vrchatMicMuteAutomations": {
     "title": "マイクミュート",
-    "description": "VRChatのマイクのミュートを切り替えられます。これは、他の人にいびきを聞かせたくない場合などに便利です。 \n\nこれを動作させるには、VRChat内でOSCが有効になっている必要があります。",
+    "description": "VRChatのマイクのミュートを切り替えられます。他の人にいびきを聞かせたくない場合などに便利です。 \n\nこれを動作させるには、VRChat内でOSCが有効になっている必要があります。",
     "config": {
       "title": "設定"
     },
@@ -978,7 +982,7 @@
     },
     "control": {
       "title": "マイクミュートの制御",
-      "description": "マイクミュートが正しく動作しているかをテストするために使用できます",
+      "description": "機能が正しく動作しているかをテストできます",
       "mute": "ミュート",
       "unmute": "ミュート解除"
     }
@@ -1135,8 +1139,8 @@
             "UNMUTE": "VRChatでマイクのミュートを解除しました"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になったため",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になったため",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_PREPARATION": "就寝準備をしたため"
           }
         },
@@ -1260,9 +1264,9 @@
             "transition": "HMDの輝度が{value}に移行中"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になったため",
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になったため",
-            "SLEEP_PREPARATION": "就寝準備をしたため"
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
           }
         },
         "imageBrightnessChanged": {
@@ -1290,20 +1294,20 @@
         "acceptedInviteRequest": {
           "title": "''{displayName}''からのRequestInviteを自動的に承認",
           "subtitle": {
-            "whitelist": "ホワイトリストに入っていたため",
-            "blacklist": "ブラックリストに入っていなかったため"
+            "whitelist": "ホワイトリストに入っていた",
+            "blacklist": "ブラックリストに入っていなかった"
           }
         },
         "statusChangedOnPlayerCountChange": {
           "title": "VRChatステータスを{oldStatus}から{newStatus}に変更",
           "reason": {
-            "BELOW_LIMIT": "ワールド人数が{threshold}人以下になったため",
-            "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達したため"
+            "BELOW_LIMIT": "ワールド人数が{threshold}人以下になった",
+            "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達した"
           }
         },
         "sleepDetectorEnableCancelled": {
           "title": "睡眠モードを有効にする処理をキャンセル",
-          "subtitle": "ユーザーがまだ起きていたため"
+          "subtitle": "ユーザーがまだ起きていた"
         },
         "renderResolutionChanged": {
           "title": {
@@ -1326,7 +1330,7 @@
           "title": "シャットダウン機能を開始した",
           "reason": {
             "MANUAL": "手動で開始した",
-            "SLEEP_TRIGGER": "長い間眠っていたため"
+            "SLEEP_TRIGGER": "指定時間、眠っていた"
           }
         },
         "shutdownSequenceCancelled": {
@@ -1354,16 +1358,18 @@
     "dotnet-upgrade-modal": {
       "title": "不足しているランタイムのインストール",
       "description": {
-        "runtimeQueued": "Queued",
+        "text1": "以下のランタイムは、必要なバージョンと一致しないか、システムにインストールされていません。",
+        "runtimeQueued": "待機中",
         "text2": "OyasumiVR を使用するには、必要なランタイムをインストールする必要があります。",
         "automaticInstall": "自動でインストールしますか？",
-        "moreInfo": "ダウンロードと詳細情報はこちら:"
+        "moreInfo": "ダウンロードと詳細情報はこちら:",
+        "troubleshooting": "必要なランタイムを既にインストールしている状態にも関わらず、このメッセージが表示され続ける場合は、<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">トラブルシューティングガイド</a>をご覧ください。"
       },
       "quit": "OyasumiVRを終了する",
       "installAutomatically": "自動インストール",
       "success": {
         "title": "インストール成功",
-        "message": "必要なランタイムが正常にインストールされました！注意：PCを再起動する必要があるかもしれません。OyasumiVRを終了し、続行するために再起動してください。"
+        "message": "必要なランタイムが正常にインストールされました！注意：PCを再起動する必要があるかもしれません。OyasumiVRを終了し、PCを再起動してください。"
       },
       "failure": {
         "title": "インストール失敗",
@@ -1412,16 +1418,16 @@
   },
   "shutdown-automations": {
     "title": "シャットダウン機能",
-    "description": "一晩中VRで眠りたくないという場合は、OyasumiVRのシャットダウン機能をご利用ください。\n自動で優雅にシャットダウンするので、VRの外でもスムーズに睡眠を継続することができます。",
+    "description": "ずっとVRで眠りたくない場合は、シャットダウン機能をご利用ください。\n自動でシャットダウンするので、VRの外でもスムーズに睡眠を継続することができます。",
     "triggers": {
       "title": "自動トリガー",
       "whenAsleep": {
         "title": "寝ているときに起動する",
-        "description": "睡眠モードが一定時間継続した場合に、シャットダウン機能を起動させる機能"
+        "description": "睡眠モードが一定時間継続した場合に起動させる"
       },
       "whenAsleepDuration": {
         "title": "睡眠時間",
-        "description": "シャットダウン機能が実行されるまでのスリープモードの有効時間"
+        "description": "シャットダウン機能が実行されるまでの睡眠モードの有効時間"
       },
       "whenAsleepTimeWindow": {
         "title": "アクティベーションウィンドウ",
