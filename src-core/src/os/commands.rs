@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::{models::Output, SOLOUD, SOUNDS};
+use super::{audio::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
@@ -220,4 +220,54 @@ pub fn windows_hibernate() {
 #[tauri::command]
 pub fn windows_logout() {
     let _ = system_shutdown::logout();
+}
+
+#[tauri::command]
+pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+                "[Core] Could not get audio devices, as audio device manager was not initialized"
+            );
+            return vec![];
+        }
+    };
+    if refresh {
+        if let Err(e) = manager.refresh_audio_devices().await {
+            error!("[Core] Failed to refresh audio devices: {}", e);
+        }
+    }
+    manager.get_devices().await
+}
+
+#[tauri::command]
+pub async fn set_audio_device_volume(device_id: String, volume: f32) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set audio device volume, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_volume(device_id, volume).await;
+}
+
+#[tauri::command]
+pub async fn set_audio_device_mute(device_id: String, mute: bool) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set audio device mute state, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mute(device_id, mute).await;
 }

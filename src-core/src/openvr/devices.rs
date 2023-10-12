@@ -221,7 +221,7 @@ async fn refresh_device_poses<'a>() {
                     position: pos.v,
                 },
             )
-            .await;
+                .await;
         }
     }
 }

@@ -52,7 +52,7 @@ pub async fn init() {
                     grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
                     grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
                 })
-                .await;
+                    .await;
             }
         }
     });

@@ -107,7 +107,7 @@ async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<
         addr: osc_addr.clone(),
         args: data.clone(),
     }))
-    .unwrap();
+        .unwrap();
     // Send message
     if socket.send_to(&msg_buf, to_addr).is_err() {
         error!(

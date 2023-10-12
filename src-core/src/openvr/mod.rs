@@ -154,5 +154,5 @@ async fn update_status(new_status: OpenVRStatus) {
         "OVR_STATUS_UPDATE",
         status_str.substring(1, status_str.len() - 1).to_string(),
     )
-    .await;
+        .await;
 }

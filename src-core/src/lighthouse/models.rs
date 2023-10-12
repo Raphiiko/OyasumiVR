@@ -45,8 +45,8 @@ pub struct SerializedLighthouseError {
 
 impl Serialize for LighthouseError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
+        where
+            S: Serializer,
     {
         let mut error = serializer.serialize_struct("SerializedLighthouseError", 2)?;
         match self {

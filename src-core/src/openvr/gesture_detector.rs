@@ -74,7 +74,7 @@ impl GestureDetector {
                     gesture: "head_shake".to_string(),
                 },
             )
-            .await;
+                .await;
         }
     }
 

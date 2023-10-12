@@ -14,7 +14,7 @@ export class DeveloperDebugModalComponent
   extends BaseModalComponent<any, any>
   implements OnInit, AfterViewInit
 {
-  protected activeTab = 'MISC_TESTING';
+  protected activeTab = 'AUDIO_DEVICE';
 
   constructor(
     public debug: DeveloperDebugService,

@@ -203,7 +203,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
                         initial_load: true,
                     },
                 )
-                .await;
+                    .await;
                 first_run = false;
             }
         }

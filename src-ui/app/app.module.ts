@@ -160,6 +160,8 @@ import { VRChatMicMuteAutomationService } from './services/osc-automations/vrcha
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
+import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
+import { AudioDeviceService } from './services/audio-device.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -252,6 +254,7 @@ export function createTranslateLoader(http: HttpClient) {
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
+    DebugAudioDeviceDebuggerComponent,
   ],
   imports: [
     CommonModule,
@@ -310,6 +313,7 @@ export class AppModule {
     private sleepPreparationService: SleepPreparationService,
     private pulsoidService: PulsoidService,
     private quitWithSteamVRService: QuitWithSteamVRService,
+    private audioDeviceService: AudioDeviceService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -382,6 +386,7 @@ export class AppModule {
           this.sleepPreparationService.init(),
           this.pulsoidService.init(),
           this.quitWithSteamVRService.init(),
+          this.audioDeviceService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {

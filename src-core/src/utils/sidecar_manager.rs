@@ -122,7 +122,7 @@ impl SidecarManager {
             let current_pid = self.sidecar_pid.lock().await;
             if current_pid.is_some()
                 && (current_pid.unwrap() != pid
-                    && (old_pid.is_some() && current_pid.unwrap() != old_pid.unwrap()))
+                && (old_pid.is_some() && current_pid.unwrap() != old_pid.unwrap()))
             {
                 warn!("Ignoring start signal for {} sidecar with pid {} because another {} sidecar is already running with pid {}", self.sidecar_id, pid, self.sidecar_id, current_pid.unwrap());
                 return false;
