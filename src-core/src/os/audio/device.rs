@@ -11,6 +11,7 @@ use windows::core::{ComInterface, PCWSTR, PWSTR};
 use windows::Win32::Devices::FunctionDiscovery::PKEY_Device_FriendlyName;
 use windows::Win32::Media::Audio::Endpoints::{
     IAudioEndpointVolume, IAudioEndpointVolumeCallback, IAudioEndpointVolumeCallback_Impl,
+    IAudioMeterInformation,
 };
 use windows::Win32::Media::Audio::{
     eCapture, eRender, EDataFlow, IMMDevice, IMMEndpoint, AUDIO_VOLUME_NOTIFICATION_DATA,
@@ -19,7 +20,8 @@ use windows::Win32::System::Com::StructuredStorage::PropVariantToBSTR;
 use windows::Win32::System::Com::{CLSCTX_ALL, STGM_READ};
 
 use super::wrappers::{
-    AudioDeviceIAudioEndpointVolume, AudioDeviceIAudioEndpointVolumeCallback, AudioDeviceIMMDevice,
+    AudioDeviceIAudioEndpointVolume, AudioDeviceIAudioEndpointVolumeCallback,
+    AudioDeviceIAudioMeterInformation, AudioDeviceIMMDevice,
 };
 
 #[derive(Serialize)]
@@ -62,6 +64,8 @@ pub struct AudioDeviceState {
     default_communications: Mutex<bool>,
     mmdevice: Mutex<AudioDeviceIMMDevice>,
     endpoint_volume: Mutex<AudioDeviceIAudioEndpointVolume>,
+    meter_information: Mutex<AudioDeviceIAudioMeterInformation>,
+    metering_enabled: Mutex<bool>,
     notification_client: Mutex<AudioDeviceIAudioEndpointVolumeCallback>,
 }
 
@@ -104,18 +108,25 @@ pub struct AudioDevice {
 impl AudioDevice {
     pub fn new(mmdevice: IMMDevice) -> windows::core::Result<Self> {
         unsafe {
+            // Get basic device info
             let id = AudioDevice::get_id_from_mmdevice(&mmdevice)?;
             let properties = mmdevice.OpenPropertyStore(STGM_READ)?;
             let name = properties.GetValue(&PKEY_Device_FriendlyName)?;
             let name = U16Str::from_slice(PropVariantToBSTR(&name)?.as_wide()).to_string_lossy();
+            // Reference endpoint volume and listen for volume notifications
             let endpoint_volume = mmdevice.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)?;
             let (on_notify_tx, on_notify_rx) = channel::<()>(10);
             let notification_client = AudioDeviceVolumeNotificationClient::new(on_notify_tx);
             endpoint_volume.RegisterControlChangeNotify(&notification_client)?;
+            // Get endpoint specific info
             let endpoint = mmdevice
                 .cast::<IMMEndpoint>()
                 .expect("Could not get IMMEndpoint from IMMDevice");
             let flow = endpoint.GetDataFlow()?;
+            // Reference meter information
+            let meter_information =
+                mmdevice.Activate::<IAudioMeterInformation>(CLSCTX_ALL, None)?;
+            // Construct the device
             let device = Self {
                 state: Arc::new(AudioDeviceState {
                     id,
@@ -127,11 +138,16 @@ impl AudioDevice {
                     default_communications: Mutex::new(false),
                     mmdevice: Mutex::new(AudioDeviceIMMDevice(mmdevice)),
                     endpoint_volume: Mutex::new(AudioDeviceIAudioEndpointVolume(endpoint_volume)),
+                    meter_information: Mutex::new(AudioDeviceIAudioMeterInformation(
+                        meter_information,
+                    )),
+                    metering_enabled: Mutex::new(false),
                     notification_client: Mutex::new(AudioDeviceIAudioEndpointVolumeCallback(
                         notification_client,
                     )),
                 }),
             };
+            // Start listening for notifications
             device.process_notifications(on_notify_rx);
             Ok(device)
         }
@@ -144,18 +160,6 @@ impl AudioDevice {
                 _ = AudioDevice::fetch_state(state.clone()).await
             }
         });
-    }
-
-    pub fn get_id_from_mmdevice(device: &IMMDevice) -> windows::core::Result<String> {
-        unsafe { AudioDevice::get_id_from_pwstr(&device.GetId()?) }
-    }
-
-    pub fn get_id_from_pcwstr(device_id: &PCWSTR) -> windows::core::Result<String> {
-        unsafe { Ok(U16Str::from_slice(device_id.as_wide()).to_string_lossy()) }
-    }
-
-    pub fn get_id_from_pwstr(device_id: &PWSTR) -> windows::core::Result<String> {
-        unsafe { Ok(U16Str::from_slice(device_id.as_wide()).to_string_lossy()) }
     }
 
     pub fn get_id(&self) -> String {
@@ -264,12 +268,67 @@ impl AudioDevice {
             Ok(value)
         }
     }
+
+    pub async fn enable_metering(&self) {
+        let state = self.state.clone();
+        let mut metering_enabled = state.metering_enabled.lock().await;
+        if *metering_enabled {
+            return;
+        }
+        *metering_enabled = true;
+        drop(metering_enabled);
+        tokio::spawn(async move {
+            loop {
+                // Stop if metering has been disabled
+                let metering_enabled = state.metering_enabled.lock().await;
+                if !*metering_enabled {
+                    break;
+                }
+                drop(metering_enabled);
+                // Get the meter value
+                let meter = state.meter_information.lock().await;
+                let value = match unsafe { meter.0.GetPeakValue() } {
+                    Ok(value) => value,
+                    Err(e) => {
+                        continue;
+                    }
+                };
+                drop(meter);
+                // TODO: Do something with the meter value
+                tokio::time::sleep(tokio::time::Duration::from_millis(20)).await;
+            }
+        });
+    }
+
+    pub async fn disable_metering(state: Arc<AudioDeviceState>) {
+        let mut metering_enabled = state.metering_enabled.lock().await;
+        if !*metering_enabled {
+            return;
+        }
+        *metering_enabled = false;
+    }
+
+    pub fn get_id_from_mmdevice(device: &IMMDevice) -> windows::core::Result<String> {
+        unsafe { AudioDevice::get_id_from_pwstr(&device.GetId()?) }
+    }
+
+    pub fn get_id_from_pcwstr(device_id: &PCWSTR) -> windows::core::Result<String> {
+        unsafe { Ok(U16Str::from_slice(device_id.as_wide()).to_string_lossy()) }
+    }
+
+    pub fn get_id_from_pwstr(device_id: &PWSTR) -> windows::core::Result<String> {
+        unsafe { Ok(U16Str::from_slice(device_id.as_wide()).to_string_lossy()) }
+    }
 }
 
 impl Drop for AudioDevice {
     fn drop(&mut self) {
         let state = self.state.clone();
         tokio::spawn(async move {
+            // Disable metering if needed
+            {
+                AudioDevice::disable_metering(state.clone()).await;
+            }
             // Unregister notification client
             {
                 let endpoint_volume = state.endpoint_volume.lock().await;

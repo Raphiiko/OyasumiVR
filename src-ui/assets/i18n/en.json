@@ -939,6 +939,74 @@
       "content": "Turning off both your controllers and your trackers"
     }
   },
+  "systemMicMuteAutomations": {
+    "title": "System Microphone Mute Automations",
+    "description": "Automatically mute or unmute your microphone on the device level when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing you snore ;)",
+    "config": {
+      "title": "Configuration"
+    },
+    "automations": {
+      "title": "Automations"
+    },
+    "onSleepModeEnable": {
+      "title": "When sleep mode is enabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepModeDisable": {
+      "title": "When sleep mode is disabled",
+      "description": "Change my microphone state to"
+    },
+    "onSleepPreparation": {
+      "title": "When I prepare to go to sleep",
+      "description": "Change my microphone state to"
+    },
+    "muteOptions": {
+      "NONE": "None",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "audioDevice": {
+      "title": "Microphone audio device",
+      "description": "Make sure to double check this is the exact same microphone you're using in VRChat!"
+    },
+    "overlayIndicator": {
+      "title": "Overlay mute indicator",
+      "description": "Whether to show a mute indicator in VR"
+    },
+    "overlayIndicatorFade": {
+      "title": "Fade out",
+      "description": "Fade out the indicator after a few seconds. You can show the indicator again by pressing any controller button. This is recommended for VR headsets with OLED displays."
+    },
+    "overlayIndicatorOpacity": {
+      "title": "Opacity",
+      "description": "The indicator icon's maximum opacity"
+    },
+    "controllerButton": {
+      "title": "Controller button",
+      "description": "Use one of your controller buttons to mute or unmute your microphone"
+    },
+    "controllerButtonMode": {
+      "title": "Button behaviour",
+      "description": "How pressing the button should change your microphone state"
+    },
+    "controllerButtonVolume": {
+      "title": "Mute sound volume",
+      "description": "The volume of the sound effects that play when the microphone is muted or unmuted"
+    },
+    "controlButtonBehavior": {
+      "TOGGLE": "Toggle",
+      "PUSH_TO_TALK": "Push to talk"
+    },
+    "controlButton": {
+      "NONE": "None",
+      "LEFT_A": "Left A Button",
+      "LEFT_B": "Left B Button",
+      "RIGHT_A": "Right A Button",
+      "RIGHT_B": "Right B Button",
+      "LEFT_STICK": "Left Stick",
+      "RIGHT_STICK": "Right Stick"
+    }
+  },
   "vrchatMicMuteAutomations": {
     "title": "Microphone Muting",
     "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat.",
@@ -1028,7 +1096,8 @@
       "sleepDetection": "Sleep Detection",
       "oscAutomations": "OSC Automations",
       "gpuAutomations": "GPU Automations",
-      "vrchatMicMuteAutomations": "Microphone Muting",
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
+      "systemMicMuteAutomations": "System Microphone Mute Automations",
       "powerAutomations": "Power Automations",
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",

@@ -1,0 +1,52 @@
+:host > .pane {
+  height: 100%;
+
+  > .pane-content {
+    overflow-y: overlay;
+  }
+}
+
+.action-dropdown {
+  min-width: 10em;
+}
+
+
+.audio-device-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .device-dropdown {
+    min-width: 15em;
+    max-width: 20em;
+  }
+
+  .btn-mute-toggle {
+    margin-right: 0.5em;
+    height: 3em;
+    width: 3em;
+    i.material-icons {
+      &.muted {
+        color: var(--color-alert-error);
+      }
+      &.unmuted {
+        color: var(--color-text-1);
+      }
+    }
+
+    > * {
+      transition: all .15s;
+    }
+
+    &:hover {
+      background: var(--color-surface-0);
+    }
+
+    &:active {
+      background: var(--color-surface-0);
+      > * {
+        opacity: 0.8;
+      }
+    }
+  }
+}

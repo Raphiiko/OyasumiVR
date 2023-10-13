@@ -136,12 +136,12 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.autoInviteRequestAccept</div>
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatMicMuteAutomations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">mic_off</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
-    </div>
+<!--    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatMicMuteAutomations'">-->
+<!--      <div class="menu-item-icon-prefix">-->
+<!--        <i class="material-icons-round">mic_off</i>-->
+<!--      </div>-->
+<!--      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>-->
+<!--    </div>-->
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
       <div class="menu-item-icon-prefix">
@@ -186,6 +186,13 @@
         @fade
         *ngIf="brightnessAutomation.anyTransitionActive | async"
       ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'systemMicMuteAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">mic_off</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.systemMicMuteAutomations</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">

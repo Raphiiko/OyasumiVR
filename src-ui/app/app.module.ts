@@ -162,6 +162,7 @@ import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/vi
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
 import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
 import { AudioDeviceService } from './services/audio-device.service';
+import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -255,6 +256,7 @@ export function createTranslateLoader(http: HttpClient) {
     MiscTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
     DebugAudioDeviceDebuggerComponent,
+    SystemMicMuteAutomationsViewComponent,
   ],
   imports: [
     CommonModule,

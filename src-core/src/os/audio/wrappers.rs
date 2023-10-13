@@ -1,5 +1,7 @@
 use windows::core::PCWSTR;
-use windows::Win32::Media::Audio::Endpoints::IAudioEndpointVolumeCallback;
+use windows::Win32::Media::Audio::Endpoints::{
+    IAudioEndpointVolumeCallback, IAudioMeterInformation,
+};
 use windows::Win32::Media::Audio::{
     Endpoints::IAudioEndpointVolume, IMMDevice, IMMDeviceEnumerator, IMMNotificationClient,
 };
@@ -13,6 +15,11 @@ unsafe impl Send for AudioDeviceIMMDevice {}
 pub struct AudioDeviceIAudioEndpointVolume(pub IAudioEndpointVolume);
 
 unsafe impl Send for AudioDeviceIAudioEndpointVolume {}
+
+#[derive(Debug)]
+pub struct AudioDeviceIAudioMeterInformation(pub IAudioMeterInformation);
+
+unsafe impl Send for AudioDeviceIAudioMeterInformation {}
 
 #[derive(Debug)]
 pub struct AudioDeviceManagerIMMDeviceEnumerator(pub IMMDeviceEnumerator);
