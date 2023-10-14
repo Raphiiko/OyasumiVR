@@ -945,20 +945,20 @@
     "config": {
       "title": "Configuration"
     },
-    "automations": {
-      "title": "Automations"
-    },
-    "onSleepModeEnable": {
-      "title": "When sleep mode is enabled",
-      "description": "Change my microphone state to"
-    },
-    "onSleepModeDisable": {
-      "title": "When sleep mode is disabled",
-      "description": "Change my microphone state to"
-    },
-    "onSleepPreparation": {
-      "title": "When I prepare to go to sleep",
-      "description": "Change my microphone state to"
+    "stateAutomations": {
+      "title": "Mute Automations",
+      "onSleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Change my microphone state to"
+      },
+      "onSleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Change my microphone state to"
+      },
+      "onSleepPreparation": {
+        "title": "When I prepare to go to sleep",
+        "description": "Change my microphone state to"
+      }
     },
     "muteOptions": {
       "NONE": "None",
@@ -970,41 +970,63 @@
       "description": "Make sure to double check this is the exact same microphone you're using in VRChat!"
     },
     "overlayIndicator": {
-      "title": "Overlay mute indicator",
-      "description": "Whether to show a mute indicator in VR"
+      "title": "Overlay Indicator",
+      "description": "Show an indicator in VR when your microphone is muted.",
+      "enabled": {
+        "title": "Overlay mute indicator",
+        "description": "Whether to show a mute indicator in VR"
+      },
+      "fade": {
+        "title": "Fade out",
+        "description": "Fade out the indicator after a few seconds. You can show the indicator again by pressing any controller button. This is recommended for VR headsets with OLED displays to reduce any risk for burn-in."
+      },
+      "opacity": {
+        "title": "Opacity",
+        "description": "The indicator icon's maximum opacity"
+      }
     },
-    "overlayIndicatorFade": {
-      "title": "Fade out",
-      "description": "Fade out the indicator after a few seconds. You can show the indicator again by pressing any controller button. This is recommended for VR headsets with OLED displays."
-    },
-    "overlayIndicatorOpacity": {
-      "title": "Opacity",
-      "description": "The indicator icon's maximum opacity"
-    },
-    "controllerButton": {
-      "title": "Controller button",
-      "description": "Use one of your controller buttons to mute or unmute your microphone"
-    },
-    "controllerButtonMode": {
-      "title": "Button behaviour",
-      "description": "How pressing the button should change your microphone state"
-    },
-    "controllerButtonVolume": {
-      "title": "Mute sound volume",
-      "description": "The volume of the sound effects that play when the microphone is muted or unmuted"
-    },
-    "controlButtonBehavior": {
-      "TOGGLE": "Toggle",
-      "PUSH_TO_TALK": "Push to talk"
-    },
-    "controlButton": {
-      "NONE": "None",
-      "LEFT_A": "Left A Button",
-      "LEFT_B": "Left B Button",
-      "RIGHT_A": "Right A Button",
-      "RIGHT_B": "Right B Button",
-      "LEFT_STICK": "Left Stick",
-      "RIGHT_STICK": "Right Stick"
+    "controllerBinding": {
+      "title": "Controller Binding",
+      "description": "Bind a controller button to control the mute state of your microphone.",
+      "conflictWarning": "If you're using this feature to toggle your microphone mute with VRChat, it is recommended that in VRChat's settings you either unbind your mute button or set your microphone mode to \"Always On\" to prevent any conflicting behaviour.",
+      "enabled": {
+        "title": "Controller button",
+        "description": "Bind one of your controller buttons to mute or unmute your microphone",
+        "options": {
+          "NONE": "Do not bind",
+          "LEFT_A": "Left A Button",
+          "LEFT_B": "Left B Button",
+          "RIGHT_A": "Right A Button",
+          "RIGHT_B": "Right B Button",
+          "LEFT_STICK": "Left Stick",
+          "RIGHT_STICK": "Right Stick"
+        }
+      },
+      "mode": {
+        "title": "Button behaviour",
+        "description": "How pressing the button should change your microphone state",
+        "options": {
+          "NONE": "Do not change",
+          "TOGGLE": "Toggle",
+          "PUSH_TO_TALK": "Push to talk"
+        }
+      },
+      "volume": {
+        "title": "Mute sound volume",
+        "description": "The volume of the sound effects that play when the microphone is muted or unmuted"
+      },
+      "onSleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Change the controller button behaviour to"
+      },
+      "onSleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Change the controller button behaviour to"
+      },
+      "onSleepPreparation": {
+        "title": "When I prepare to go to sleep",
+        "description": "Change the controller button behaviour to"
+      }
     }
   },
   "vrchatMicMuteAutomations": {

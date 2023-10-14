@@ -51,6 +51,7 @@ export class AutomationConfigService {
     automation: AutomationType,
     config: Partial<T>
   ) {
+    console.log('updateAutomationConfig', automation, config);
     const configs: AutomationConfigs = cloneDeep(this._configs.value);
     configs[automation] = Object.assign({}, configs[automation], config) as any;
     this._configs.next(configs);
