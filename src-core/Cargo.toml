@@ -107,7 +107,7 @@ features = [
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "15f874e3b7e447c84990a1af6935892a79812cd4"
+rev = "0ba7cacad62e0944c9ca7b1186067db6c0461533"
 features = ["ovr_system", "ovr_settings"]
 
 [features]

@@ -1004,7 +1004,7 @@
       },
       "mode": {
         "title": "Button behaviour",
-        "description": "How pressing the button should change your microphone state",
+        "description": "How pressing the button should change your microphone state by default",
         "options": {
           "NONE": "Do not change",
           "TOGGLE": "Toggle",

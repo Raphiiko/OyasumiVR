@@ -1,8 +1,10 @@
-use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
+use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent};
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use byteorder::{ByteOrder, LE};
 use chrono::{Duration, NaiveDateTime, Utc};
+use log::error;
+use ovr::input::InputValueHandle;
 use ovr_overlay as ovr;
 use tokio::sync::Mutex;
 
@@ -23,6 +25,8 @@ pub async fn on_ovr_tick() {
     }
     // Update poses
     refresh_device_poses().await;
+    // Detect inputs
+    detect_inputs().await;
 }
 
 pub async fn on_ovr_event(event: ovr::system::VREvent) {
@@ -221,7 +225,47 @@ async fn refresh_device_poses<'a>() {
                     position: pos.v,
                 },
             )
-                .await;
+            .await;
         }
+    }
+}
+
+async fn detect_inputs<'a>() {
+    // Get known actions and action sets
+    let actions = super::OVR_ACTIONS.lock().await;
+    let mut active_sets = super::OVR_ACTIVE_SETS.lock().await;
+    // Get input context
+    let context = OVR_CONTEXT.lock().await;
+    let mut input = match context.as_ref() {
+        Some(context) => context.input_mngr(),
+        None => return,
+    };
+    // Update actions for all sets
+    if let Err(e) = input.update_actions(active_sets.as_mut_slice()) {
+        error!("[Core] Failed to update actions: {:?}", e.description());
+        return;
+    }
+    for action in actions.iter() {
+        match input.get_digital_action_data(
+            action.handle,
+            InputValueHandle(ovr::sys::k_ulInvalidInputValueHandle),
+        ) {
+            Ok(data) => {
+                if data.0.bChanged {
+                    let event = OpenVRInputEvent {
+                        action: action.name.clone(),
+                        pressed: data.0.bState,
+                        time_ago: data.0.fUpdateTime,
+                    };
+                    tokio::spawn(async move {
+                        send_event("OVR_INPUT_EVENT_DIGITAL", event).await;
+                    });
+                }
+            }
+            Err(e) => {
+                error!("[Core] Failed to get action data: {:?}", e.description());
+                return;
+            }
+        };
     }
 }

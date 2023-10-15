@@ -163,6 +163,7 @@ import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-
 import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
 import { AudioDeviceService } from './services/audio-device.service';
 import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
+import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -351,7 +352,9 @@ export class AppModule {
     // Chaperone fade dinstance automations
     private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
     // Windows power policy automations
-    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService
+    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
+    // Miscellaneous automations
+    private systemMicMuteAutomationsService: SystemMicMuteAutomationService
   ) {
     this.init();
   }
@@ -443,6 +446,8 @@ export class AppModule {
           this.shutdownAutomationsService.init(),
           // Windows power policy automations
           this.setWindowsPowerPolicyOnSleepModeAutomationService.init(),
+          // Miscellaneous automations
+          this.systemMicMuteAutomationsService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

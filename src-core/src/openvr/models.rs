@@ -1,4 +1,23 @@
+use ovr_overlay::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
+
+pub struct OpenVRAction {
+    pub name: String,
+    pub handle: ActionHandle,
+}
+
+pub struct OpenVRActionSet {
+    pub name: String,
+    pub handle: ActionSetHandle,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OpenVRInputEvent {
+    pub action: String,
+    pub pressed: bool,
+    pub time_ago: f32,
+}
 
 #[derive(Serialize, Clone)]
 #[serde(rename_all = "UPPERCASE")]

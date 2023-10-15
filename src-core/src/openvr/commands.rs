@@ -1,4 +1,5 @@
-use super::models::OVRDevice;
+use super::{models::OVRDevice, OVR_CONTEXT};
+use log::error;
 use substring::Substring;
 
 #[tauri::command]
@@ -44,6 +45,29 @@ pub async fn openvr_get_fade_distance() -> Result<f32, String> {
 }
 
 #[tauri::command]
-pub async fn openvr_set_image_brightness(brightness: f64, perceived_brightness_adjustment_gamma: Option<f64>) {
-    super::brightness_overlay::set_brightness(brightness, perceived_brightness_adjustment_gamma).await;
+pub async fn openvr_set_image_brightness(
+    brightness: f64,
+    perceived_brightness_adjustment_gamma: Option<f64>,
+) {
+    super::brightness_overlay::set_brightness(brightness, perceived_brightness_adjustment_gamma)
+        .await;
+}
+
+#[tauri::command]
+pub async fn openvr_launch_binding_configuration(show_on_desktop: bool) {
+    let context = OVR_CONTEXT.lock().await;
+    let mut input = match context.as_ref() {
+        Some(context) => context.input_mngr(),
+        None => return,
+    };
+    let input_handle = match input.get_input_source_handle("/user/hand/right") {
+        Ok(handle) => handle,
+        Err(e) => {
+            error!("[Core] Failed to get input source handle: {}", e);
+            return;
+        }
+    };
+    if let Err(e) = input.open_binding_ui(None, None, input_handle, show_on_desktop) {
+        error!("[Core] Failed to open SteamVR binding UI: {}", e);
+    }
 }

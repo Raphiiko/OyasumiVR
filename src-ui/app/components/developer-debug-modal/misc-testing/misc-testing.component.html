@@ -1,3 +1,5 @@
+<h3>Actions</h3>
+<button class="btn btn-secondary" (click)="openBindingConfig()">Open Binding Config</button>
 <h3>VRChat microphone muting</h3>
 <p>Muted: {{ automation.muted | async }}</p>
 <p>Mode: {{ automation.mode | async }}</p>
@@ -6,5 +8,5 @@
 <button class="btn btn-primary" (click)="automation.setMute(false)">Unmute</button>
 <button class="btn btn-secondary" (click)="automation.setMode('TOGGLE')">Set Toggle Mode</button>
 <button class="btn btn-secondary" (click)="automation.setMode('PUSH_TO_MUTE')"
-  >Set Push To Mute Mode</button
->
+>Set Push To Mute Mode
+</button>

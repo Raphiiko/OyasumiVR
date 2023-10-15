@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "minimum_required_version": 1,
+  "default_bindings": [
+    {
+      "controller_type": "knuckles",
+      "binding_url": "default_knuckles.json"
+    },
+    {
+      "controller_type": "vive_controller",
+      "binding_url": "default_vive_controller.json"
+    },
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "default_oculus_touch.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/main/in/OpenOverlay",
+      "requirement": "suggested",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/MuteMicrophone",
+      "requirement": "suggested",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/hidden/in/SleepCheckDecline",
+      "requirement": "mandatory",
+      "type": "boolean"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/main",
+      "usage": "leftright"
+    },
+    {
+      "name": "/actions/hidden",
+      "usage": "hidden"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_us",
+      "/actions/main": "OyasumiVR Actions",
+      "/actions/hidden": "OyasumiVR Hidden Actions",
+      "/actions/main/in/OpenOverlay": "Open Overlay",
+      "/actions/main/in/MuteMicrophone": "Mute Microphone",
+      "/actions/hidden/in/SleepCheckDecline": "Decline Sleep Check"
+    }
+  ]
+}
