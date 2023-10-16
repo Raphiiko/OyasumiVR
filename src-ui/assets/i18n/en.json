@@ -630,29 +630,14 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "Activation action",
-          "description": "Select which action will open and close the overlay",
-          "action": {
-            "none": "None (disabled)",
-            "singleA": "Single press A",
-            "doubleA": "Double press A",
-            "tripleA": "Triple press A",
-            "singleB": "Single press B",
-            "doubleB": "Double press B",
-            "tripleB": "Triple press B"
-          },
-          "controller": {
-            "either": "Either Controller",
-            "left": "Left Controller",
-            "right": "Right Controller",
-            "title": "Controller",
-            "description": "Select which controllers can be used to activate the overlay"
-          },
-          "triggerFilter": {
-            "title": "Require trigger",
-            "description": "Only activate if the trigger is held down while doing the action."
-          }
+        "overlayMenu": {
+          "title": "Enable overlay menu",
+          "description": "This can be turned off if you want to disable OyasumiVR's overlay menu completely."
+        },
+        "binding": {
+          "title": "Controller button binding",
+          "description": "Which button triggers the overlay menu can be configured within SteamVR's binding menu.",
+          "action": "Configure Bindings"
         },
         "title": "Overlay"
       },

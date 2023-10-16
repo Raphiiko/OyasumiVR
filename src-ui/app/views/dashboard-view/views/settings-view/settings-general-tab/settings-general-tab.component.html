@@ -118,52 +118,29 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label" translate>
-        <span translate>settings.general.overlay.activation.title</span>
-        <span translate>settings.general.overlay.activation.description</span>
+        <span translate>settings.general.overlay.overlayMenu.title</span>
+        <span translate>settings.general.overlay.overlayMenu.description</span>
       </div>
       <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          class="overlay-activation-action-dropdown"
-          [items]="overlayActivationActionOptions"
-          [selected]="overlayActivationActionOption"
-          (selectedChange)="onChangeOverlayActivationAction($event)"
-        ></app-select-box>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.overlayMenuEnabled"
+            (change)="
+                setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)
+              "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
       </div>
     </div>
-    <div class="setting-row-group">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.overlay.activation.controller.title</span>
-          <span translate>settings.general.overlay.activation.controller.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            class="overlay-activation-controller-dropdown"
-            [items]="overlayActivationControllerOptions"
-            [selected]="overlayActivationControllerOption"
-            (selectedChange)="onChangeOverlayActivationController($event)"
-          ></app-select-box>
-        </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.overlay.binding.title</span>
+        <span translate>settings.general.overlay.binding.description</span>
       </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.overlay.activation.triggerFilter.title</span>
-          <span translate>settings.general.overlay.activation.triggerFilter.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="appSettings.overlayActivationTriggerRequired"
-              (change)="
-                setOverlayActivationTriggerRequired(!appSettings.overlayActivationTriggerRequired)
-              "
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+      <div class="setting-row-action">
+        <button class="btn btn-primary" (click)="openOpenVRBindings()" translate>settings.general.overlay.binding.action</button>
       </div>
     </div>
   </div>

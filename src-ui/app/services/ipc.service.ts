@@ -39,6 +39,14 @@ export class IPCService {
     });
   }
 
+  public getOverlaySidecarClient(): OyasumiOverlaySidecarClient | null {
+    return this._overlaySidecarClient.value ?? null;
+  }
+
+  public getElevatedSidecarClient(): OyasumiElevatedSidecarClient | null {
+    return this._elevatedSidecarClient.value ?? null;
+  }
+
   private onOverlaySidecarStarted(port: number) {
     this._overlaySidecarClient.next(
       new OyasumiOverlaySidecarClient(

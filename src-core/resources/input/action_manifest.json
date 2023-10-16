@@ -30,6 +30,11 @@
       "name": "/actions/hidden/in/SleepCheckDecline",
       "requirement": "mandatory",
       "type": "boolean"
+    },
+    {
+      "name": "/actions/hidden/in/OverlayInteract",
+      "requirement": "mandatory",
+      "type": "boolean"
     }
   ],
   "action_sets": [
@@ -47,9 +52,10 @@
       "language_tag": "en_us",
       "/actions/main": "OyasumiVR Actions",
       "/actions/hidden": "OyasumiVR Hidden Actions",
-      "/actions/main/in/OpenOverlay": "Open Overlay",
+      "/actions/main/in/OpenOverlay": "Open Overlay Menu",
       "/actions/main/in/MuteMicrophone": "Mute Microphone",
-      "/actions/hidden/in/SleepCheckDecline": "Decline Sleep Check"
+      "/actions/hidden/in/SleepCheckDecline": "Decline Sleep Check",
+      "/actions/hidden/in/OverlayInteract": "Overlay Interact"
     }
   ]
 }

@@ -17,6 +17,7 @@ pub struct OpenVRInputEvent {
     pub action: String,
     pub pressed: bool,
     pub time_ago: f32,
+    pub device: Option<OVRDevice>,
 }
 
 #[derive(Serialize, Clone)]
@@ -25,6 +26,41 @@ pub enum OpenVRStatus {
     Inactive,
     Initializing,
     Initialized,
+}
+
+#[derive(Clone, Serialize, Deserialize, PartialEq)]
+pub enum TrackedControllerRole {
+    Invalid,
+    LeftHand,
+    RightHand,
+    OptOut,
+    Treadmill,
+    Stylus,
+}
+
+impl From<ovr_overlay::sys::ETrackedControllerRole> for TrackedControllerRole {
+    fn from(item: ovr_overlay::sys::ETrackedControllerRole) -> Self {
+        match item {
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Invalid => {
+                TrackedControllerRole::Invalid
+            }
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_LeftHand => {
+                TrackedControllerRole::LeftHand
+            }
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_RightHand => {
+                TrackedControllerRole::RightHand
+            }
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_OptOut => {
+                TrackedControllerRole::OptOut
+            }
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Treadmill => {
+                TrackedControllerRole::Treadmill
+            }
+            ovr_overlay::sys::ETrackedControllerRole::TrackedControllerRole_Stylus => {
+                TrackedControllerRole::Stylus
+            }
+        }
+    }
 }
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
@@ -68,6 +104,7 @@ impl From<ovr_overlay::sys::ETrackedDeviceClass> for TrackedDeviceClass {
 pub struct OVRDevice {
     pub index: u32,
     pub class: TrackedDeviceClass,
+    pub role: TrackedControllerRole,
     pub battery: Option<f32>,
     pub provides_battery_status: Option<bool>,
     pub can_power_off: Option<bool>,

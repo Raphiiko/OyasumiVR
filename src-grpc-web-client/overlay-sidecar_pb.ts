@@ -64,6 +64,15 @@ export interface SetDebugTranslationsRequest {
   translations: string;
 }
 /**
+ * @generated from protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export interface OverlayMenuOpenRequest {
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1;
+   */
+  controllerRole: OyasumiSidecarControllerRole;
+}
+/**
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
  */
 export interface Empty {}
@@ -113,22 +122,11 @@ export interface OyasumiSidecarState {
   sleepPreparationTimedOut: boolean;
 }
 /**
+ * No longer required, but reserved for future settings
+ *
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
  */
-export interface OyasumiSidecarOverlaySettings {
-  /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1;
-   */
-  activationAction: OyasumiSidecarOverlayActivationAction;
-  /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2;
-   */
-  activationController: OyasumiSidecarOverlayActivationController;
-  /**
-   * @generated from protobuf field: bool activation_trigger_required = 3;
-   */
-  activationTriggerRequired: boolean;
-}
+export interface OyasumiSidecarOverlaySettings {}
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
  */
@@ -454,54 +452,17 @@ export enum VrcStatus {
   JoinMe = 4,
 }
 /**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction
+ * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarControllerRole
  */
-export enum OyasumiSidecarOverlayActivationAction {
+export enum OyasumiSidecarControllerRole {
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
    */
-  None = 0,
+  Left = 0,
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
    */
-  Single_A = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
-   */
-  Double_A = 2,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
-   */
-  Triple_A = 3,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
-   */
-  Single_B = 4,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
-   */
-  Double_B = 5,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
-   */
-  Triple_B = 6,
-}
-/**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController
- */
-export enum OyasumiSidecarOverlayActivationController {
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
-   */
-  Either = 0,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
-   */
-  Left = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
-   */
-  Right = 2,
+  Right = 1,
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class PingResponse$Type extends MessageType<PingResponse> {
@@ -824,6 +785,77 @@ class SetDebugTranslationsRequest$Type extends MessageType<SetDebugTranslationsR
  */
 export const SetDebugTranslationsRequest = new SetDebugTranslationsRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class OverlayMenuOpenRequest$Type extends MessageType<OverlayMenuOpenRequest> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OverlayMenuOpenRequest', [
+      {
+        no: 1,
+        name: 'controller_role',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.OyasumiSidecarControllerRole',
+          OyasumiSidecarControllerRole,
+          'OYASUMI_SIDECAR_CONTROLLER_ROLE_',
+        ],
+      },
+    ]);
+  }
+  create(value?: PartialMessage<OverlayMenuOpenRequest>): OverlayMenuOpenRequest {
+    const message = { controllerRole: 0 };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OverlayMenuOpenRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OverlayMenuOpenRequest
+  ): OverlayMenuOpenRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role */ 1:
+          message.controllerRole = reader.int32();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OverlayMenuOpenRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1; */
+    if (message.controllerRole !== 0) writer.tag(1, WireType.Varint).int32(message.controllerRole);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export const OverlayMenuOpenRequest = new OverlayMenuOpenRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
     super('OyasumiOverlaySidecar.Empty', []);
@@ -1030,36 +1062,10 @@ export const OyasumiSidecarState = new OyasumiSidecarState$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverlaySettings> {
   constructor() {
-    super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', [
-      {
-        no: 1,
-        name: 'activation_action',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction',
-          OyasumiSidecarOverlayActivationAction,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_',
-        ],
-      },
-      {
-        no: 2,
-        name: 'activation_controller',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController',
-          OyasumiSidecarOverlayActivationController,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_',
-        ],
-      },
-      { no: 3, name: 'activation_trigger_required', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-    ]);
+    super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', []);
   }
   create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
-    const message = {
-      activationAction: 0,
-      activationController: 0,
-      activationTriggerRequired: false,
-    };
+    const message = {};
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarOverlaySettings>(this, message, value);
@@ -1071,53 +1077,13 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     options: BinaryReadOptions,
     target?: OyasumiSidecarOverlaySettings
   ): OyasumiSidecarOverlaySettings {
-    let message = target ?? this.create(),
-      end = reader.pos + length;
-    while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag();
-      switch (fieldNo) {
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action */ 1:
-          message.activationAction = reader.int32();
-          break;
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller */ 2:
-          message.activationController = reader.int32();
-          break;
-        case /* bool activation_trigger_required */ 3:
-          message.activationTriggerRequired = reader.bool();
-          break;
-        default:
-          let u = options.readUnknownField;
-          if (u === 'throw')
-            throw new globalThis.Error(
-              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
-            );
-          let d = reader.skip(wireType);
-          if (u !== false)
-            (u === true ? UnknownFieldHandler.onRead : u)(
-              this.typeName,
-              message,
-              fieldNo,
-              wireType,
-              d
-            );
-      }
-    }
-    return message;
+    return target ?? this.create();
   }
   internalBinaryWrite(
     message: OyasumiSidecarOverlaySettings,
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1; */
-    if (message.activationAction !== 0)
-      writer.tag(1, WireType.Varint).int32(message.activationAction);
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2; */
-    if (message.activationController !== 0)
-      writer.tag(2, WireType.Varint).int32(message.activationController);
-    /* bool activation_trigger_required = 3; */
-    if (message.activationTriggerRequired !== false)
-      writer.tag(3, WireType.Varint).bool(message.activationTriggerRequired);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -2317,5 +2283,8 @@ export const OyasumiOverlaySidecar = new ServiceType(
     { name: 'ClearNotification', options: {}, I: ClearNotificationRequest, O: Empty },
     { name: 'SyncState', options: {}, I: OyasumiSidecarState, O: Empty },
     { name: 'SetDebugTranslations', options: {}, I: SetDebugTranslationsRequest, O: Empty },
+    { name: 'OpenOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
+    { name: 'CloseOverlayMenu', options: {}, I: Empty, O: Empty },
+    { name: 'ToggleOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
   ]
 );

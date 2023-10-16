@@ -12,17 +12,13 @@ import {
 import { cloneDeep } from 'lodash';
 import { LANGUAGES } from '../../../../../globals';
 import { vshrink } from '../../../../../utils/animations';
-import {
-  ExecutableReferenceStatus,
-  OverlayActivationAction,
-  OverlayActivationController,
-  QuitWithSteamVRMode,
-} from 'src-ui/app/models/settings';
+import { ExecutableReferenceStatus, QuitWithSteamVRMode } from 'src-ui/app/models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { ModalService } from '../../../../../services/modal.service';
 import { StartWithSteamVRHowToModalComponent } from './confirm-modal/start-with-steamvr-how-to-modal.component';
+import { OpenVRInputService } from '../../../../../services/openvr-input.service';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -71,52 +67,6 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     },
   ];
   sleepModeStartupBehaviourOption: SelectBoxItem | undefined;
-  overlayActivationActionOptions: SelectBoxItem[] = [
-    {
-      id: 'NONE',
-      label: 'settings.general.overlay.activation.action.none',
-    },
-    {
-      id: 'SINGLE_A',
-      label: 'settings.general.overlay.activation.action.singleA',
-    },
-    {
-      id: 'DOUBLE_A',
-      label: 'settings.general.overlay.activation.action.doubleA',
-    },
-    {
-      id: 'TRIPLE_A',
-      label: 'settings.general.overlay.activation.action.tripleA',
-    },
-    {
-      id: 'SINGLE_B',
-      label: 'settings.general.overlay.activation.action.singleB',
-    },
-    {
-      id: 'DOUBLE_B',
-      label: 'settings.general.overlay.activation.action.doubleB',
-    },
-    {
-      id: 'TRIPLE_B',
-      label: 'settings.general.overlay.activation.action.tripleB',
-    },
-  ];
-  overlayActivationActionOption: SelectBoxItem | undefined;
-  overlayActivationControllerOptions: SelectBoxItem[] = [
-    {
-      id: 'EITHER',
-      label: 'settings.general.overlay.activation.controller.either',
-    },
-    {
-      id: 'RIGHT',
-      label: 'settings.general.overlay.activation.controller.right',
-    },
-    {
-      id: 'LEFT',
-      label: 'settings.general.overlay.activation.controller.left',
-    },
-  ];
-  overlayActivationControllerOption: SelectBoxItem | undefined;
   stopWithSteamVROptions: SelectBoxItem[] = [
     {
       id: 'DISABLED',
@@ -137,7 +87,8 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     settingsService: AppSettingsService,
     private lighthouse: LighthouseConsoleService,
     private telemetry: TelemetryService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private openvrInput: OpenVRInputService
   ) {
     super(settingsService);
   }
@@ -165,12 +116,6 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
         );
         this.sleepModeStartupBehaviourOption = this.sleepModeStartupBehaviourOptions.find(
           (o) => o.id === settings.sleepModeStartupBehaviour
-        );
-        this.overlayActivationActionOption = this.overlayActivationActionOptions.find(
-          (o) => o.id === settings.overlayActivationAction
-        );
-        this.overlayActivationControllerOption = this.overlayActivationControllerOptions.find(
-          (o) => o.id === settings.overlayActivationController
         );
         this.stopWithSteamVROption = this.stopWithSteamVROptions.find(
           (o) => o.id === settings.quitWithSteamVR
@@ -254,22 +199,8 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     });
   }
 
-  onChangeOverlayActivationAction(option: SelectBoxItem | undefined) {
-    if (!option) return;
-    this.settingsService.updateSettings({
-      overlayActivationAction: option.id as OverlayActivationAction,
-    });
-  }
-
-  onChangeOverlayActivationController(option: SelectBoxItem | undefined) {
-    if (!option) return;
-    this.settingsService.updateSettings({
-      overlayActivationController: option.id as OverlayActivationController,
-    });
-  }
-
-  setOverlayActivationTriggerRequired(required: boolean) {
-    this.settingsService.updateSettings({ overlayActivationTriggerRequired: required });
+  setOverlayMenuEnabled(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayMenuEnabled: enabled });
   }
 
   onChangeStopWithSteamVROption(option: SelectBoxItem | undefined) {
@@ -281,5 +212,9 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
 
   showStartWithSteamVRHowToModal() {
     this.modalService.addModal(StartWithSteamVRHowToModalComponent).subscribe();
+  }
+
+  async openOpenVRBindings() {
+    await this.openvrInput.launchBindingConfiguration();
   }
 }

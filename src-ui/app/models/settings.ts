@@ -1,7 +1,7 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 
 export interface AppSettings {
-  version: 6;
+  version: 7;
   userLanguage: string;
   userLanguagePicked: boolean;
   lighthouseConsolePath: string;
@@ -19,22 +19,9 @@ export interface AppSettings {
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
   notificationProvider: NotificationProvider;
   notificationsEnabled: { types: NotificationType[] };
-  overlayActivationAction: OverlayActivationAction;
-  overlayActivationController: OverlayActivationController;
-  overlayActivationTriggerRequired: boolean;
+  overlayMenuEnabled: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
 }
-
-export type OverlayActivationAction =
-  | 'NONE'
-  | 'SINGLE_A'
-  | 'DOUBLE_A'
-  | 'TRIPLE_A'
-  | 'SINGLE_B'
-  | 'DOUBLE_B'
-  | 'TRIPLE_B';
-
-export type OverlayActivationController = 'EITHER' | 'LEFT' | 'RIGHT';
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
 
@@ -48,7 +35,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 6,
+  version: 7,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
@@ -67,10 +54,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   sleepModeStartupBehaviour: 'PERSIST',
   notificationProvider: 'OYASUMIVR',
   notificationsEnabled: { types: [...NotificationTypes] as NotificationType[] },
-  overlayActivationAction: 'DOUBLE_A',
-  overlayActivationController: 'RIGHT',
-  overlayActivationTriggerRequired: false,
   quitWithSteamVR: 'DISABLED',
+  overlayMenuEnabled: true,
 };
 
 export type ExecutableReferenceStatus =

@@ -131,6 +131,9 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let device = OVRDevice {
         index: device_index.0,
         class: system.get_tracked_device_class(device_index).into(),
+        role: system
+            .get_controller_role_for_tracked_device_index(device_index)
+            .into(),
         battery,
         provides_battery_status,
         can_power_off,
@@ -231,7 +234,8 @@ async fn refresh_device_poses<'a>() {
 }
 
 async fn detect_inputs<'a>() {
-    // Get known actions and action sets
+    // Get known devices, actions and action sets
+    let devices = OVR_DEVICES.lock().await;
     let actions = super::OVR_ACTIONS.lock().await;
     let mut active_sets = super::OVR_ACTIVE_SETS.lock().await;
     // Get input context
@@ -252,10 +256,25 @@ async fn detect_inputs<'a>() {
         ) {
             Ok(data) => {
                 if data.0.bChanged {
+                    let handle = InputValueHandle(data.0.activeOrigin);
+                    let device = match input.get_origin_tracked_device_info(handle) {
+                        Ok(r) => devices
+                            .iter()
+                            .find(|d| d.index == r.0.trackedDeviceIndex)
+                            .cloned(),
+                        Err(e) => {
+                            error!(
+                                "[Core] Failed to get origin tracked device info: {:?}",
+                                e.description()
+                            );
+                            return;
+                        }
+                    };
                     let event = OpenVRInputEvent {
                         action: action.name.clone(),
                         pressed: data.0.bState,
                         time_ago: data.0.fUpdateTime,
+                        device,
                     };
                     tokio::spawn(async move {
                         send_event("OVR_INPUT_EVENT_DIGITAL", event).await;

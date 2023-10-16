@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { SleepService } from './sleep.service';
-import { VRChatService } from './vrchat.service';
+import { SleepService } from '../sleep.service';
+import { VRChatService } from '../vrchat.service';
 import {
   asyncScheduler,
   BehaviorSubject,
@@ -14,37 +14,30 @@ import {
 } from 'rxjs';
 import { cloneDeep, isEqual } from 'lodash';
 import { UserStatus } from 'vrchat';
-import { IPCService } from './ipc.service';
-import { AutomationConfigService } from './automation-config.service';
+import { IPCService } from '../ipc.service';
+import { AutomationConfigService } from '../automation-config.service';
 import {
   OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
   OyasumiSidecarDeviceInfo,
   OyasumiSidecarDeviceInfo_Controller,
   OyasumiSidecarDeviceInfo_Tracker,
-  OyasumiSidecarOverlayActivationAction,
-  OyasumiSidecarOverlayActivationController,
-  OyasumiSidecarOverlaySettings,
   OyasumiSidecarState,
   VrcStatus,
-} from '../../../src-grpc-web-client/overlay-sidecar_pb';
-import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
-import { SLEEPING_ANIMATION_PRESETS } from '../models/sleeping-animation-presets';
-import { AppSettingsService } from './app-settings.service';
+} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
+import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../../models/automations';
+import { SLEEPING_ANIMATION_PRESETS } from '../../models/sleeping-animation-presets';
+import { AppSettingsService } from '../app-settings.service';
 import {
   ShutdownAutomationsService,
   ShutdownSequenceStageOrder,
-} from './shutdown-automations.service';
-import { OpenVRService } from './openvr.service';
-import { OVRDevice } from '../models/ovr-device';
-import {
-  APP_SETTINGS_DEFAULT,
-  OverlayActivationAction,
-  OverlayActivationController,
-} from '../models/settings';
-import { SimpleBrightnessControlService } from './brightness-control/simple-brightness-control.service';
-import { DisplayBrightnessControlService } from './brightness-control/display-brightness-control.service';
-import { ImageBrightnessControlService } from './brightness-control/image-brightness-control.service';
-import { SleepPreparationService } from './sleep-preparation.service';
+} from '../shutdown-automations.service';
+import { OpenVRService } from '../openvr.service';
+import { OVRDevice } from '../../models/ovr-device';
+import { APP_SETTINGS_DEFAULT } from '../../models/settings';
+import { SimpleBrightnessControlService } from '../brightness-control/simple-brightness-control.service';
+import { DisplayBrightnessControlService } from '../brightness-control/display-brightness-control.service';
+import { ImageBrightnessControlService } from '../brightness-control/image-brightness-control.service';
+import { SleepPreparationService } from '../sleep-preparation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -92,15 +85,7 @@ export class OverlayStateSyncService {
       controllers: [],
       trackers: [],
     },
-    settings: {
-      activationAction: this.mapOverlayActivationAction(
-        APP_SETTINGS_DEFAULT.overlayActivationAction
-      ),
-      activationController: this.mapOverlayActivationController(
-        APP_SETTINGS_DEFAULT.overlayActivationController
-      ),
-      activationTriggerRequired: APP_SETTINGS_DEFAULT.overlayActivationTriggerRequired,
-    },
+    settings: {},
     brightnessState: {
       advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
       brightness: 100,
@@ -303,18 +288,11 @@ export class OverlayStateSyncService {
   }
 
   private updateState_WhenAppSettingsChange() {
-    this.appSettings.settings.subscribe((settings) => {
-      const state = cloneDeep(this.state.value);
-      // Update overlay settings
-      state.settings = Object.assign(state.settings ?? {}, {
-        activationAction: this.mapOverlayActivationAction(settings.overlayActivationAction),
-        activationController: this.mapOverlayActivationController(
-          settings.overlayActivationController
-        ),
-        activationTriggerRequired: settings.overlayActivationTriggerRequired,
-      } as OyasumiSidecarOverlaySettings);
-      this.state.next(state);
-    });
+    // Reserved for future use when adding more overlay preferences
+    // this.appSettings.settings.subscribe((settings) => {
+    //   const state = cloneDeep(this.state.value);
+    //   this.state.next(state);
+    // });
   }
 
   private updateState_WhenBrightnessStateChanges() {
@@ -462,40 +440,6 @@ export class OverlayStateSyncService {
         } as OyasumiSidecarDeviceInfo_Tracker;
       default:
         throw 'Received unsupported device class';
-    }
-  }
-
-  private mapOverlayActivationAction(
-    action: OverlayActivationAction
-  ): OyasumiSidecarOverlayActivationAction {
-    switch (action) {
-      case 'NONE':
-        return OyasumiSidecarOverlayActivationAction.None;
-      case 'SINGLE_A':
-        return OyasumiSidecarOverlayActivationAction.Single_A;
-      case 'SINGLE_B':
-        return OyasumiSidecarOverlayActivationAction.Single_B;
-      case 'DOUBLE_A':
-        return OyasumiSidecarOverlayActivationAction.Double_A;
-      case 'DOUBLE_B':
-        return OyasumiSidecarOverlayActivationAction.Double_B;
-      case 'TRIPLE_A':
-        return OyasumiSidecarOverlayActivationAction.Triple_A;
-      case 'TRIPLE_B':
-        return OyasumiSidecarOverlayActivationAction.Triple_B;
-    }
-  }
-
-  private mapOverlayActivationController(
-    controller: OverlayActivationController
-  ): OyasumiSidecarOverlayActivationController {
-    switch (controller) {
-      case 'EITHER':
-        return OyasumiSidecarOverlayActivationController.Either;
-      case 'LEFT':
-        return OyasumiSidecarOverlayActivationController.Left;
-      case 'RIGHT':
-        return OyasumiSidecarOverlayActivationController.Right;
     }
   }
 }

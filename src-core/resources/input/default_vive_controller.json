@@ -29,6 +29,24 @@
     "/actions/hidden": {
       "sources": [
         {
+          "path": "/user/hand/right/input/trigger",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/hidden/in/overlayinteract"
+            }
+          }
+        },
+        {
+          "path": "/user/hand/left/input/trigger",
+          "mode": "button",
+          "inputs": {
+            "click": {
+              "output": "/actions/hidden/in/overlayinteract"
+            }
+          }
+        },
+        {
           "path": "/user/hand/right/input/application_menu",
           "mode": "button",
           "inputs": {
