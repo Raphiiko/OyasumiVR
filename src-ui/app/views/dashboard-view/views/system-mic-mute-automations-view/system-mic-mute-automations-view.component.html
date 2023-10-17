@@ -185,6 +185,15 @@
           </div>
           <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
+              <span translate>systemMicMuteAutomations.controllerBinding.currentMode.title</span>
+              <span translate>systemMicMuteAutomations.controllerBinding.currentMode.description</span>
+            </div>
+            <div class="setting-row-action">
+              <span><b>{{'systemMicMuteAutomations.controllerBinding.currentMode.' + (systemMicMuteAutomationService.effectiveControllerBehaviour | async) | translate}}</b></span>
+            </div>
+          </div>
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
+            <div class="setting-row-label" translate>
               <span translate>systemMicMuteAutomations.controllerBinding.volume.title</span>
               <span translate>systemMicMuteAutomations.controllerBinding.volume.description</span>
             </div>
@@ -196,6 +205,7 @@
           </div>
         </div>
       </div>
+      <h3 @fade *ngIf="config.controllerBinding" translate>systemMicMuteAutomations.controllerBinding.automations</h3>
       <div class="settings" @fade *ngIf="config.controllerBinding">
         <div class="setting-row" [class.disabled]="!config.controllerBinding">
           <div class="setting-row-label" translate>

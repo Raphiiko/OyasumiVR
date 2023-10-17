@@ -945,7 +945,7 @@
       }
     },
     "muteOptions": {
-      "NONE": "None",
+      "NONE": "Do not change",
       "MUTE": "Mute",
       "UNMUTE": "Unmute"
     },
@@ -985,7 +985,7 @@
         "description": "Configure which controller button(s) should be used to control your microphone's mute state."
       },
       "mode": {
-        "title": "Button behaviour",
+        "title": "Default button behaviour",
         "description": "How pressing the button should change your microphone state by default",
         "options": {
           "NONE": "Do not change",
@@ -1008,7 +1008,14 @@
       "onSleepPreparation": {
         "title": "When I prepare to go to sleep",
         "description": "Change the controller button behaviour to"
-      }
+      },
+      "currentMode": {
+        "title": "Active button behaviour",
+        "description": "Reflects the current mode of the controller button",
+        "TOGGLE": "Toggle",
+        "PUSH_TO_TALK": "Push to talk"
+      },
+      "automations": "Controller Binding Automations"
     }
   },
   "vrchatMicMuteAutomations": {

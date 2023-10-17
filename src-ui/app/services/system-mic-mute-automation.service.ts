@@ -3,7 +3,9 @@ import { AudioDeviceService } from './audio-device.service';
 import { OpenVRInputService } from './openvr-input.service';
 import { AutomationConfigService } from './automation-config.service';
 import {
+  BehaviorSubject,
   combineLatest,
+  delay,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -16,11 +18,18 @@ import {
 } from 'rxjs';
 import { AudioDevice } from '../models/audio-device';
 import { SleepService } from './sleep.service';
-import { AUTOMATION_CONFIGS_DEFAULT, SystemMicMuteAutomationsConfig } from '../models/automations';
+import {
+  AUTOMATION_CONFIGS_DEFAULT,
+  SystemMicMuteAutomationsConfig,
+  SystemMicMuteControllerBindingBehavior,
+} from '../models/automations';
 import { cloneDeep, isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { OVRInputEventAction } from '../models/ovr-input-event';
+
+const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
+const PERSISTENT_ID_TRAIL = ']';
 
 @Injectable({
   providedIn: 'root',
@@ -39,6 +48,11 @@ export class SystemMicMuteAutomationService {
       this.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
     )
   );
+  private readonly _effectiveControllerBehaviour =
+    new BehaviorSubject<SystemMicMuteControllerBindingBehavior>(
+      AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBindingBehavior
+    );
+  public readonly effectiveControllerBehaviour = this._effectiveControllerBehaviour.asObservable();
 
   public readonly isMicMuted = this.captureDevice.pipe(map((device) => device?.mute ?? null));
 
@@ -51,18 +65,21 @@ export class SystemMicMuteAutomationService {
   ) {}
 
   async init() {
+    // Keep the local configuration copy up to date
     this.automationConfigService.configs
       .pipe(map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS))
       .subscribe((config) => {
         this.config = config;
       });
+    // Handle automations
     this.changeMuteOnSleepEnable();
     this.changeMuteOnSleepDisable();
     this.changeMuteOnSleepPreparation();
-    this.handleControllerBinding();
     this.changeControllerBindingBehaviorOnSleepEnable();
     this.changeControllerBindingBehaviorOnSleepDisable();
     this.changeControllerBindingBehaviorOnSleepPreparation();
+    // Handle controller binding
+    this.handleControllerBinding();
   }
 
   private changeMuteOnSleepEnable() {
@@ -73,6 +90,7 @@ export class SystemMicMuteAutomationService {
         map(() => this.config.onSleepModeEnableState),
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
+        delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
         switchMap((state) => this.setMute(state)),
         tap((stateSet) => {
           if (stateSet !== null) {
@@ -94,6 +112,7 @@ export class SystemMicMuteAutomationService {
         map(() => this.config.onSleepModeDisableState),
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
+        delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
         switchMap((state) => this.setMute(state)),
         tap((stateSet) => {
           if (stateSet !== null) {
@@ -113,6 +132,7 @@ export class SystemMicMuteAutomationService {
         map(() => this.config.onSleepPreparationState),
         filter((state) => state !== 'NONE'),
         map((state) => state === 'MUTE'),
+        delay(16), // To ensure this fires _after_ any reevaluation for the controller binding behaviour
         switchMap((state) => this.setMute(state)),
         tap((stateSet) => {
           if (stateSet !== null) {
@@ -140,7 +160,7 @@ export class SystemMicMuteAutomationService {
     // Respond to button presses
     buttonPressed$.subscribe(async (pressed) => {
       buttonPressed = pressed;
-      switch (this.config.controllerBindingBehavior) {
+      switch (this._effectiveControllerBehaviour.value) {
         case 'TOGGLE':
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
@@ -152,21 +172,23 @@ export class SystemMicMuteAutomationService {
       }
     });
     // Reevaluate mute state when the behavior changes
-    this.automationConfigService.configs
+    this._effectiveControllerBehaviour
       .pipe(
-        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBindingBehavior),
         distinctUntilChanged(),
         switchMap(async (behavior) => {
-          console.log(1);
           if (behavior === 'PUSH_TO_TALK') {
-            console.log(2);
             await this.setMute(!buttonPressed);
-            console.log(3);
           }
-          console.log(4);
         })
       )
       .subscribe();
+    // Change the effective mute state when the default behavior is changed
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBindingBehavior),
+        distinctUntilChanged()
+      )
+      .subscribe((behaviour) => this._effectiveControllerBehaviour.next(behaviour));
   }
 
   private changeControllerBindingBehaviorOnSleepEnable() {
@@ -176,20 +198,59 @@ export class SystemMicMuteAutomationService {
         filter((mode) => mode),
         map(() => this.config.onSleepModeEnableControllerBindingBehavior),
         filter((state) => state !== 'NONE'),
-        // TODO: CHANGE MODE
+        filter((state) => state !== this._effectiveControllerBehaviour.value),
         tap((modeSet) => {
-          if (modeSet !== null) {
-            // TODO: LOG
-            // TODO: LOG EVENT
-          }
+          this._effectiveControllerBehaviour.next(
+            modeSet as SystemMicMuteControllerBindingBehavior
+          );
+          info(
+            `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the sleep mode was enabled`
+          );
+          // TODO: LOG EVENT
         })
       )
       .subscribe();
   }
 
-  private changeControllerBindingBehaviorOnSleepDisable() {}
+  private changeControllerBindingBehaviorOnSleepDisable() {
+    this.sleepService.mode
+      .pipe(
+        skip(1),
+        filter((mode) => !mode),
+        map(() => this.config.onSleepModeDisableControllerBindingBehavior),
+        filter((state) => state !== 'NONE'),
+        filter((state) => state !== this._effectiveControllerBehaviour.value),
+        tap((modeSet) => {
+          this._effectiveControllerBehaviour.next(
+            modeSet as SystemMicMuteControllerBindingBehavior
+          );
+          info(
+            `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the sleep mode was disabled`
+          );
+          // TODO: LOG EVENT
+        })
+      )
+      .subscribe();
+  }
 
-  private changeControllerBindingBehaviorOnSleepPreparation() {}
+  private changeControllerBindingBehaviorOnSleepPreparation() {
+    this.sleepPreparationService.onSleepPreparation
+      .pipe(
+        map(() => this.config.onSleepPreparationControllerBindingBehavior),
+        filter((state) => state !== 'NONE'),
+        filter((state) => state !== this._effectiveControllerBehaviour.value),
+        tap((modeSet) => {
+          this._effectiveControllerBehaviour.next(
+            modeSet as SystemMicMuteControllerBindingBehavior
+          );
+          info(
+            `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the user prepared to go to sleep`
+          );
+          // TODO: LOG EVENT
+        })
+      )
+      .subscribe();
+  }
 
   private async setMute(mute: boolean) {
     const device = await firstValueFrom(this.captureDevice);
@@ -209,16 +270,14 @@ export class SystemMicMuteAutomationService {
   }
 
   public getPersistentIdForAudioDevice(device: AudioDevice): string {
-    return 'CAPTURE_DEVICE_[' + device.name + ']';
+    return PERSISTENT_ID_LEAD + device.name + PERSISTENT_ID_TRAIL;
   }
 
   public async getAudioDeviceNameForPersistentId(id: string): Promise<string | null> {
     let devices = await firstValueFrom(this.audioDeviceService.activeDevices);
     if (id === 'DEFAULT') return devices.find((d) => d.default)?.name ?? null;
-    const lead = 'CAPTURE_DEVICE_[';
-    const trail = ']';
-    if (!id.startsWith(lead) || !id.endsWith(trail)) return null;
-    return id.substring(lead.length, id.length - trail.length);
+    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
+    return id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
   }
 
   public async getAudioDeviceForPersistentId(
@@ -227,10 +286,8 @@ export class SystemMicMuteAutomationService {
     if (!id) return null;
     let devices = await firstValueFrom(this.audioDeviceService.activeDevices);
     if (id === 'DEFAULT') return devices.find((d) => d.default) ?? null;
-    const lead = 'CAPTURE_DEVICE_[';
-    const trail = ']';
-    if (!id.startsWith(lead) || !id.endsWith(trail)) return null;
-    const name = id.substring(lead.length, id.length - trail.length);
+    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
+    const name = id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
     return devices.find((d) => d.name === name) ?? null;
   }
 }
