@@ -1087,6 +1087,13 @@
         "INACTIVE": "Inactive",
         "INITIALIZING": "Waiting",
         "INITIALIZED": "Active"
+      },
+      "systemMicMuted": {
+        "label": "Muted",
+        "tooltip": {
+          "NAVIGATE": "System Microphone:\nAutomations",
+          "TOGGLE_MUTE": "System Microphone:\nUnmute"
+        }
       }
     },
     "confirm-modal": {

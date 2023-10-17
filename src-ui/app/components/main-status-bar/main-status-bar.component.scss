@@ -157,14 +157,23 @@ $background-color: var(--color-surface-2);
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-right: 0.25em;
     overflow: hidden;
+
+    &:not(.nomargin) {
+      margin-right: 0.25em;
+    }
 
     i {
       font-size: 1.25em;
       transition: all 0.15s ease;
       opacity: 0.5;
+
+      &.mic-muted {
+        color: var(--color-alert-error);
+        opacity: 1;
+      }
     }
+
 
     img {
       height: 1.5em;
@@ -294,9 +303,9 @@ $background-color: var(--color-surface-2);
   }
   05% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33
     );
   }
   10% {
@@ -304,16 +313,17 @@ $background-color: var(--color-surface-2);
   }
   50% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.66,
-      $lowest + ($highest - $lowest) * 0.66,
-      $lowest + ($highest - $lowest) * 0.66
+        $lowest + ($highest - $lowest) * 0.66,
+        $lowest + ($highest - $lowest) * 0.66,
+        $lowest + ($highest - $lowest) * 0.66
     );
   }
   70% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33
     );
   }
 }
+

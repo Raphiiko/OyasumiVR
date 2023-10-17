@@ -199,11 +199,8 @@ export class SystemMicMuteAutomationsViewComponent {
 
   async onChangeControlButtonBehaviorOption($event: SelectBoxItem | undefined) {
     if (!$event) return;
-    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
-      'SYSTEM_MIC_MUTE_AUTOMATIONS',
-      {
-        controllerBindingBehavior: $event.id as SystemMicMuteControllerBindingBehavior,
-      }
+    this.systemMicMuteAutomationService.setDefaultControlButtonBehavior(
+      $event.id as SystemMicMuteControllerBindingBehavior
     );
   }
 

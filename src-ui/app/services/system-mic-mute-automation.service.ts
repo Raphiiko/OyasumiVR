@@ -290,4 +290,16 @@ export class SystemMicMuteAutomationService {
     const name = id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
     return devices.find((d) => d.name === name) ?? null;
   }
+
+  async setDefaultControlButtonBehavior(
+    controllerBindingBehavior: SystemMicMuteControllerBindingBehavior
+  ) {
+    this._effectiveControllerBehaviour.next(controllerBindingBehavior);
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        controllerBindingBehavior,
+      }
+    );
+  }
 }
