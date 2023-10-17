@@ -45,9 +45,10 @@ export class AudioDeviceService {
   }
 
   async setMute(deviceId: string, mute: boolean) {
-    if (!this.isActiveDevice(deviceId)) return;
+    if (!this.isActiveDevice(deviceId)) return null;
     this.patchDevice(deviceId, { mute });
     await invoke('set_audio_device_mute', { deviceId, mute });
+    return mute;
   }
 
   isActiveDevice(deviceId: string) {

@@ -251,33 +251,24 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 
 // MISCELLANEOUS AUTOMATIONS
 
-export type SystemMicMuteControllerBinding =
-  | 'NONE'
-  | 'LEFT_A'
-  | 'RIGHT_A'
-  | 'LEFT_B'
-  | 'RIGHT_B'
-  | 'LEFT_STICK'
-  | 'RIGHT_STICK';
-
 export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
 export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
 export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
-  audioDeviceNameId: string | null;
+  audioDevicePersistentId: string | null;
   onSleepModeEnableState: SystemMicMuteStateOption;
   onSleepModeDisableState: SystemMicMuteStateOption;
   onSleepPreparationState: SystemMicMuteStateOption;
   overlayMuteIndicator: boolean;
   overlayMuteIndicatorOpacity: number;
   overlayMuteIndicatorFade: boolean;
-  controllerBinding: SystemMicMuteControllerBinding;
+  controllerBinding: boolean;
   controllerBindingBehavior: SystemMicMuteControllerBindingBehavior;
   muteSoundVolume: number;
-  onSleepModeEnableControllerBindingBehavior: SystemMicMuteStateOption;
-  onSleepModeDisableControllerBindingBehavior: SystemMicMuteStateOption;
-  onSleepPreparationControllerBindingBehavior: SystemMicMuteStateOption;
+  onSleepModeEnableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  onSleepModeDisableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -503,14 +494,14 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   // MISCELLANEOUS AUTOMATIONS
   SYSTEM_MIC_MUTE_AUTOMATIONS: {
     enabled: false,
-    audioDeviceNameId: null,
+    audioDevicePersistentId: null,
     onSleepModeEnableState: 'NONE',
     onSleepModeDisableState: 'NONE',
     onSleepPreparationState: 'NONE',
     overlayMuteIndicator: true,
     overlayMuteIndicatorOpacity: 80,
     overlayMuteIndicatorFade: true,
-    controllerBinding: 'NONE',
+    controllerBinding: false,
     controllerBindingBehavior: 'TOGGLE',
     muteSoundVolume: 100,
     onSleepModeEnableControllerBindingBehavior: 'NONE',

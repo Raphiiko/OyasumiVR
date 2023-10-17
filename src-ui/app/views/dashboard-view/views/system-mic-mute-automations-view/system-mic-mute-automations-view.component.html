@@ -11,10 +11,13 @@
           </div>
           <div class="setting-row-action">
             <div class="audio-device-row">
-              <!--<button class="btn btn-mute-toggle">-->
-              <!--<i class="material-icons muted">mic_off</i>-->
-              <!--<i class="material-icons unmuted">mic</i>-->
-              <!--</button>-->
+              <ng-container *ngVar="systemMicMuteAutomationService.isMicMuted | async as muted">
+                <button class="btn btn-mute-toggle" *ngIf="muted !== null" @fade
+                        (click)="systemMicMuteAutomationService.toggleMute()">
+                  <i class="material-icons muted" *ngIf="muted === true">mic_off</i>
+                  <i class="material-icons unmuted" *ngIf="muted === false">mic</i>
+                </button>
+              </ng-container>
               <app-select-box
                 class="device-dropdown"
                 [items]="audioDeviceOptions"
@@ -95,8 +98,8 @@
             </label>
           </div>
         </div>
-        <div class="setting-row-group">
-          <div class="setting-row">
+        <div class="setting-row-group" @vshrink *ngIf="config.overlayMuteIndicator">
+          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
             <div class="setting-row-label" translate>
               <span translate>systemMicMuteAutomations.overlayIndicator.opacity.title</span>
               <span translate>systemMicMuteAutomations.overlayIndicator.opacity.description</span>
@@ -107,7 +110,7 @@
               </app-slider-setting>
             </div>
           </div>
-          <div class="setting-row">
+          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
             <div class="setting-row-label" translate>
               <span translate>systemMicMuteAutomations.overlayIndicator.fade.title</span>
               <span translate>systemMicMuteAutomations.overlayIndicator.fade.description</span>
@@ -145,18 +148,27 @@
             <span translate>systemMicMuteAutomations.controllerBinding.enabled.description</span>
           </div>
           <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="action-dropdown"
-              [items]="controlButtonOptions"
-              [selected]="controlButtonOption"
-              (selectedChange)="onChangeControlButtonOption($event)"
-              [expandUp]="true"
-            ></app-select-box>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.controllerBinding"
+                (change)="onChangeControllerBinding()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
-        <div class="setting-row-group">
-          <div class="setting-row">
+        <div class="setting-row-group" @vshrink *ngIf="config.controllerBinding">
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
+            <div class="setting-row-label" translate>
+              <span translate>systemMicMuteAutomations.controllerBinding.binding.title</span>
+              <span translate>systemMicMuteAutomations.controllerBinding.binding.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-controller-binding [actionKey]="OVRInputEventAction.MuteMicrophone"></app-controller-binding>
+            </div>
+          </div>
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
               <span translate>systemMicMuteAutomations.controllerBinding.mode.title</span>
               <span translate>systemMicMuteAutomations.controllerBinding.mode.description</span>
@@ -171,7 +183,7 @@
               ></app-select-box>
             </div>
           </div>
-          <div class="setting-row">
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
               <span translate>systemMicMuteAutomations.controllerBinding.volume.title</span>
               <span translate>systemMicMuteAutomations.controllerBinding.volume.description</span>
@@ -182,12 +194,10 @@
               </app-slider-setting>
             </div>
           </div>
-
         </div>
-
       </div>
-      <div class="settings">
-        <div class="setting-row">
+      <div class="settings" @fade *ngIf="config.controllerBinding">
+        <div class="setting-row" [class.disabled]="!config.controllerBinding">
           <div class="setting-row-label" translate>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title</span>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description</span>
@@ -202,7 +212,7 @@
             ></app-select-box>
           </div>
         </div>
-        <div class="setting-row">
+        <div class="setting-row" [class.disabled]="!config.controllerBinding">
           <div class="setting-row-label" translate>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title</span>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description</span>
@@ -218,7 +228,7 @@
             ></app-select-box>
           </div>
         </div>
-        <div class="setting-row">
+        <div class="setting-row" [class.disabled]="!config.controllerBinding">
           <div class="setting-row-label" translate>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepPreparation.title</span>
             <span translate>systemMicMuteAutomations.controllerBinding.onSleepPreparation.description</span>

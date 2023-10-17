@@ -977,17 +977,12 @@
       "description": "Bind a controller button to control the mute state of your microphone.",
       "conflictWarning": "If you're using this feature to toggle your microphone mute with VRChat, it is recommended that in VRChat's settings you either unbind your mute button or set your microphone mode to \"Always On\" to prevent any conflicting behaviour.",
       "enabled": {
-        "title": "Controller button",
-        "description": "Bind one of your controller buttons to mute or unmute your microphone",
-        "options": {
-          "NONE": "Do not bind",
-          "LEFT_A": "Left A Button",
-          "LEFT_B": "Left B Button",
-          "RIGHT_A": "Right A Button",
-          "RIGHT_B": "Right B Button",
-          "LEFT_STICK": "Left Stick",
-          "RIGHT_STICK": "Right Stick"
-        }
+        "title": "Controller binding",
+        "description": "Whether to enable controller binding for toggling the mute state of your microphone"
+      },
+      "binding": {
+        "title": "Button binding",
+        "description": "Configure which controller button(s) should be used to control your microphone's mute state."
       },
       "mode": {
         "title": "Button behaviour",

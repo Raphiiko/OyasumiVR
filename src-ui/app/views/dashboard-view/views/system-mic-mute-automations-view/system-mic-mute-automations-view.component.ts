@@ -8,16 +8,19 @@ import { AudioDeviceService } from '../../../../services/audio-device.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SystemMicMuteAutomationsConfig,
-  SystemMicMuteControllerBinding,
   SystemMicMuteControllerBindingBehavior,
   SystemMicMuteStateOption,
 } from '../../../../models/automations';
 import { cloneDeep, isEqual } from 'lodash';
+import { OVRInputEventAction } from '../../../../models/ovr-input-event';
+import { fade, vshrink } from '../../../../utils/animations';
+import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 
 @Component({
   selector: 'app-system-mic-mute-automations-view',
   templateUrl: './system-mic-mute-automations-view.component.html',
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
+  animations: [vshrink(), fade()],
 })
 export class SystemMicMuteAutomationsViewComponent {
   config: SystemMicMuteAutomationsConfig = cloneDeep(
@@ -62,37 +65,6 @@ export class SystemMicMuteAutomationsViewComponent {
   controlButtonBehaviorOption: SelectBoxItem | undefined;
   audioDeviceOptions: SelectBoxItem[] = [];
   audioDeviceOption: SelectBoxItem | undefined;
-  controlButtonOptions: SelectBoxItem[] = [
-    {
-      id: 'NONE',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.NONE',
-    },
-    {
-      id: 'LEFT_A',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.LEFT_A',
-    },
-    {
-      id: 'RIGHT_A',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.RIGHT_A',
-    },
-    {
-      id: 'LEFT_B',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.LEFT_B',
-    },
-    {
-      id: 'RIGHT_B',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.RIGHT_B',
-    },
-    {
-      id: 'LEFT_STICK',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.LEFT_STICK',
-    },
-    {
-      id: 'RIGHT_STICK',
-      label: 'systemMicMuteAutomations.controllerBinding.enabled.options.RIGHT_STICK',
-    },
-  ];
-  controlButtonOption: SelectBoxItem | undefined;
   controlButtonBehaviorAutomationOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -108,7 +80,8 @@ export class SystemMicMuteAutomationsViewComponent {
     private automationConfigService: AutomationConfigService,
     private destroyRef: DestroyRef,
     private domSanitizer: DomSanitizer,
-    private audioDeviceService: AudioDeviceService
+    private audioDeviceService: AudioDeviceService,
+    protected systemMicMuteAutomationService: SystemMicMuteAutomationService
   ) {}
 
   async ngOnInit() {
@@ -142,9 +115,6 @@ export class SystemMicMuteAutomationsViewComponent {
         this.controlButtonBehaviorAutomationOptions.find(
           (o) => o.id === config.onSleepPreparationControllerBindingBehavior
         );
-      this.controlButtonOption = this.controlButtonOptions.find(
-        (o) => o.id === config.controllerBinding
-      );
       this.controlButtonBehaviorOption = this.controlButtonBehaviorOptions.find(
         (o) => o.id === config.controllerBindingBehavior
       );
@@ -152,10 +122,10 @@ export class SystemMicMuteAutomationsViewComponent {
     // Process audio devices and config related to audio devices
     combineLatest([
       this.audioDeviceService.activeDevices,
-      $config.pipe(map((c) => c.audioDeviceNameId)),
+      $config.pipe(map((c) => c.audioDevicePersistentId)),
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([devices, audioDeviceNameId]) => {
+      .subscribe(async ([devices, audioDevicePersistedId]) => {
         let options: SelectBoxItem[] = devices
           .filter((d) => d.deviceType === 'Capture')
           .map((d) => {
@@ -166,7 +136,7 @@ export class SystemMicMuteAutomationsViewComponent {
                 label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
             }
             return {
-              id: 'CAPTURE_DEVICE_[' + d.name + ']',
+              id: this.systemMicMuteAutomationService.getPersistentIdForAudioDevice(d),
               label,
             };
           });
@@ -190,22 +160,22 @@ export class SystemMicMuteAutomationsViewComponent {
         }
         // Match the current config to an audio device
         let option = null;
-        if (audioDeviceNameId) {
-          option = options.find((o) => o.id === audioDeviceNameId);
+        if (audioDevicePersistedId) {
+          option = options.find((o) => o.id === audioDevicePersistedId);
           // If we cannot find the option, we'll insert it.
           // This is in case the user has previously a configured a device that is currently not active.
           if (!option) {
-            let label = audioDeviceNameId.substring(
-              'CAPTURE_DEVICE_['.length,
-              audioDeviceNameId.length - 1
-            );
+            let label =
+              (await this.systemMicMuteAutomationService.getAudioDeviceNameForPersistentId(
+                audioDevicePersistedId
+              )) ?? 'Unknown Device';
             let breakIndex = label.indexOf('(');
             if (breakIndex > -1) {
               label =
                 label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
             }
             option = {
-              id: audioDeviceNameId,
+              id: audioDevicePersistedId,
               label,
             };
             options = [option, ...options];
@@ -222,7 +192,7 @@ export class SystemMicMuteAutomationsViewComponent {
     await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
       {
-        audioDeviceNameId: $event.id,
+        audioDevicePersistentId: $event.id,
       }
     );
   }
@@ -233,16 +203,6 @@ export class SystemMicMuteAutomationsViewComponent {
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
       {
         controllerBindingBehavior: $event.id as SystemMicMuteControllerBindingBehavior,
-      }
-    );
-  }
-
-  async onChangeControlButtonOption($event: SelectBoxItem | undefined) {
-    if (!$event) return;
-    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
-      'SYSTEM_MIC_MUTE_AUTOMATIONS',
-      {
-        controllerBinding: $event.id as SystemMicMuteControllerBinding,
       }
     );
   }
@@ -280,7 +240,7 @@ export class SystemMicMuteAutomationsViewComponent {
     await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
       {
-        [key]: option!.id as SystemMicMuteControllerBindingBehavior,
+        [key]: option!.id as SystemMicMuteControllerBindingBehavior | 'NONE',
       }
     );
   }
@@ -303,6 +263,15 @@ export class SystemMicMuteAutomationsViewComponent {
     );
   }
 
+  async onChangeControllerBinding() {
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        controllerBinding: !this.config.controllerBinding,
+      }
+    );
+  }
+
   async onChangeMuteSoundVolume(volume: number) {
     await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
@@ -320,4 +289,6 @@ export class SystemMicMuteAutomationsViewComponent {
       }
     );
   }
+
+  protected readonly OVRInputEventAction = OVRInputEventAction;
 }
