@@ -13,6 +13,19 @@ pub struct OpenVRActionSet {
 
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct BindingOriginData {
+    pub localized_controller_type: String,
+    pub localized_hand: String,
+    pub localized_input_source: String,
+    pub device_path_name: String,
+    pub input_path_name: String,
+    pub mode_name: String,
+    pub slot_name: String,
+    pub input_source_type: String,
+}
+
+#[derive(Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OpenVRInputEvent {
     pub action: String,
     pub pressed: bool,

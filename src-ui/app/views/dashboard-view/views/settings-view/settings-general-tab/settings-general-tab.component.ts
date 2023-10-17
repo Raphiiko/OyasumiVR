@@ -19,6 +19,7 @@ import { LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device'
 import { ModalService } from '../../../../../services/modal.service';
 import { StartWithSteamVRHowToModalComponent } from './confirm-modal/start-with-steamvr-how-to-modal.component';
 import { OpenVRInputService } from '../../../../../services/openvr-input.service';
+import { OVRInputEventAction } from '../../../../../models/ovr-input-event';
 
 @Component({
   selector: 'app-settings-general-tab',
@@ -214,7 +215,5 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     this.modalService.addModal(StartWithSteamVRHowToModalComponent).subscribe();
   }
 
-  async openOpenVRBindings() {
-    await this.openvrInput.launchBindingConfiguration();
-  }
+  protected readonly OVRInputEventAction = OVRInputEventAction;
 }

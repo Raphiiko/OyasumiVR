@@ -1,5 +1,7 @@
 <h3>Actions</h3>
 <button class="btn btn-secondary" (click)="openBindingConfig()">Open Binding Config</button>
+<button class="btn btn-secondary" (click)="getActionBindings()">Get Action Bindings</button>
+<pre *ngIf="bindings">{{bindings | json}}</pre>
 <h3>VRChat microphone muting</h3>
 <p>Muted: {{ automation.muted | async }}</p>
 <p>Mode: {{ automation.mode | async }}</p>

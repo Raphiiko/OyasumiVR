@@ -1,5 +1,10 @@
 import { OVRDevice } from './ovr-device';
 
+export enum OVRInputEventActionSet {
+  Main = '/actions/main',
+  Hidden = '/actions/hidden',
+}
+
 export enum OVRInputEventAction {
   OpenOverlay = '/actions/main/in/OpenOverlay',
   MuteMicrophone = '/actions/main/in/MuteMicrophone',

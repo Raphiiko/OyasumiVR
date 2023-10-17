@@ -1254,9 +1254,9 @@ dependencies = [
 
 [[package]]
 name = "enumset"
-version = "1.1.2"
+version = "1.1.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e875f1719c16de097dee81ed675e2d9bb63096823ed3f0ca827b7dea3028bbbb"
+checksum = "226c0da7462c13fb57e5cc9e0dc8f0635e7d27f276a3a7fd30054647f669007d"
 dependencies = [
  "enumset_derive",
 ]
@@ -2973,7 +2973,7 @@ checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 [[package]]
 name = "ovr_overlay"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=12b210069d30ede7831350122e3c81b9f05b9cac#12b210069d30ede7831350122e3c81b9f05b9cac"
+source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=7f2fcc1059e5ca8d586d2a46d2751769f779713d#7f2fcc1059e5ca8d586d2a46d2751769f779713d"
 dependencies = [
  "byteorder",
  "derive_more",
@@ -2988,7 +2988,7 @@ dependencies = [
 [[package]]
 name = "ovr_overlay_sys"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=12b210069d30ede7831350122e3c81b9f05b9cac#12b210069d30ede7831350122e3c81b9f05b9cac"
+source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=7f2fcc1059e5ca8d586d2a46d2751769f779713d#7f2fcc1059e5ca8d586d2a46d2751769f779713d"
 dependencies = [
  "autocxx",
  "autocxx-build",
@@ -3006,6 +3006,7 @@ dependencies = [
  "bytes",
  "chrono",
  "cronjob",
+ "enumset",
  "futures",
  "futures-util",
  "hyper",
@@ -5181,9 +5182,9 @@ checksum = "3528ecfd12c466c6f163363caf2d02a71161dd5e1cc6ae7b34207ea2d42d81ed"
 
 [[package]]
 name = "typenum"
-version = "1.16.0"
+version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "497961ef93d974e23eb6f433eb5fe1b7930b659f06d12dec6fc44a8f554c0bba"
+checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
 
 [[package]]
 name = "uds_windows"

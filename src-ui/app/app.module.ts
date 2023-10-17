@@ -166,6 +166,7 @@ import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/vi
 import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
 import { OpenVRInputService } from './services/openvr-input.service';
 import { OverlayService } from './services/overlay/overlay.service';
+import { ControllerBindingComponent } from './components/controller-binding/controller-binding.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -260,6 +261,7 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatMicMuteAutomationsViewComponent,
     DebugAudioDeviceDebuggerComponent,
     SystemMicMuteAutomationsViewComponent,
+    ControllerBindingComponent,
   ],
   imports: [
     CommonModule,

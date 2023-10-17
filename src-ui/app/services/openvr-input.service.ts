@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { OVRInputEvent, OVRInputEventAction } from '../models/ovr-input-event';
+import {
+  OVRInputEvent,
+  OVRInputEventAction,
+  OVRInputEventActionSet,
+} from '../models/ovr-input-event';
 import { listen } from '@tauri-apps/api/event';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { cloneDeep, isEqual } from 'lodash';
 import { OVRDevice } from '../models/ovr-device';
+import { OVRActionBinding } from '../models/ovr-action-binding';
+import { OpenVRService } from './openvr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +25,7 @@ export class OpenVRInputService {
 
   public state = this._state.asObservable();
 
-  constructor() {}
+  constructor(private openvr: OpenVRService) {}
 
   async init() {
     await listen<OVRInputEvent>('OVR_INPUT_EVENT_DIGITAL', (event) => {
@@ -39,8 +45,16 @@ export class OpenVRInputService {
     });
   }
 
-  async launchBindingConfiguration() {
-    await invoke('openvr_launch_binding_configuration', { showOnDesktop: true });
-    await invoke('openvr_launch_binding_configuration', { showOnDesktop: false });
+  async launchBindingConfiguration(showOnDesktop: boolean) {
+    await invoke('openvr_launch_binding_configuration', { showOnDesktop });
+  }
+
+  async getActionBindings(actionSet: OVRInputEventActionSet, action: OVRInputEventAction) {
+    const status = await firstValueFrom(this.openvr.status);
+    if (status !== 'INITIALIZED') return [];
+    return await invoke<OVRActionBinding[]>('openvr_get_binding_origins', {
+      actionSetKey: actionSet,
+      actionKey: action,
+    });
   }
 }
