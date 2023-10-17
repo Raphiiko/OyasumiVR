@@ -156,7 +156,7 @@ export class SystemMicMuteAutomationsViewComponent {
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(([devices, audioDeviceNameId]) => {
-        let options = devices
+        let options: SelectBoxItem[] = devices
           .filter((d) => d.deviceType === 'Capture')
           .map((d) => {
             let label = d.name;
@@ -170,6 +170,24 @@ export class SystemMicMuteAutomationsViewComponent {
               label,
             };
           });
+        // Add default option
+        const device = devices.find((d) => d.default);
+        if (device) {
+          let label = device.name;
+          let breakIndex = label.indexOf('(');
+          if (breakIndex > -1) {
+            label =
+              label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
+          }
+          const defaultOption: SelectBoxItem = {
+            id: 'DEFAULT',
+            label: {
+              string: 'systemMicMuteAutomations.audioDevice.options.DEFAULT',
+              values: { deviceName: label },
+            },
+          };
+          options = [defaultOption, ...options];
+        }
         // Match the current config to an audio device
         let option = null;
         if (audioDeviceNameId) {
