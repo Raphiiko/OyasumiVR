@@ -1,7 +1,7 @@
 import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { OVRInputEventAction, OVRInputEventActionSet } from '../../models/ovr-input-event';
 import { OpenVRInputService } from 'src-ui/app/services/openvr-input.service';
-import { firstValueFrom, interval, startWith, switchMap } from 'rxjs';
+import { filter, firstValueFrom, interval, pairwise, startWith, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { OVRActionBinding } from '../../models/ovr-action-binding';
 import { OpenVRService, OpenVRStatus } from '../../services/openvr.service';
@@ -57,6 +57,14 @@ export class ControllerBindingComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.openvr.status
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        pairwise(),
+        filter(([prev, current]) => current !== 'INITIALIZED' && prev === 'INITIALIZED'),
+        tap(() => (this.dropdownOpen = false))
+      )
+      .subscribe();
     interval(1000)
       .pipe(
         startWith(void 0),
@@ -132,8 +140,8 @@ export class ControllerBindingComponent implements OnInit {
 
   toggleDropdown() {
     if (this.dropdownOpen) {
-      this.dropdownOpen = !this.dropdownOpen;
-    } else {
+      this.dropdownOpen = false;
+    } else if (this.steamVRActive) {
       setTimeout(() => {
         this.dropdownOpen = !this.dropdownOpen;
       }, 0);
@@ -142,6 +150,6 @@ export class ControllerBindingComponent implements OnInit {
 
   async launchBindingConfiguration(showOnDesktop: boolean) {
     this.dropdownOpen = false;
-    await this.openvrInputService.launchBindingConfiguration(showOnDesktop);
+    if (this.steamVRActive) await this.openvrInputService.launchBindingConfiguration(showOnDesktop);
   }
 }

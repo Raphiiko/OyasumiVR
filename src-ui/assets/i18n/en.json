@@ -951,7 +951,10 @@
     },
     "audioDevice": {
       "title": "Microphone audio device",
-      "description": "Make sure to double check this is the exact same microphone you're using in VRChat!"
+      "description": "Make sure to double check this is the exact same microphone you're using in VRChat!",
+      "options": {
+        "DEFAULT": "Default Device:\n{deviceName}"
+      }
     },
     "overlayIndicator": {
       "title": "Overlay Indicator",
@@ -1200,14 +1203,14 @@
       "errors": {
         "STEAMVR_INACTIVE": {
           "message": "SteamVR Inactive",
-          "tooltip": "To view or set controller bindings\nSteamVR must be running"
+          "tooltip": "To view or change controller bindings\nSteamVR must be running"
         },
         "MISSING_CONTROLLER": {
-          "tooltip": "Both left and right controllers must be connected to view bindings"
+          "tooltip": "Make sure both left and right controllers are connected"
         },
         "DASHBOARD_OPEN": {
           "message": "SteamVR\nDashboard Open",
-          "tooltip": "Please close the SteamVR dashboard to view bindings"
+          "tooltip": "Close the SteamVR dashboard to view bindings"
         },
         "UNKNOWN": {
           "message": "Configure Binding"
