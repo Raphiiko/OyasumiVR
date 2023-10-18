@@ -1,6 +1,6 @@
 #![cfg_attr(
-all(not(debug_assertions), target_os = "windows"),
-windows_subsystem = "windows"
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
 )]
 
 #[macro_use(lazy_static)]
@@ -79,6 +79,9 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_fade_distance,
         openvr::commands::openvr_set_fade_distance,
         openvr::commands::openvr_set_image_brightness,
+        openvr::commands::openvr_launch_binding_configuration,
+        openvr::commands::openvr_get_binding_origins,
+        openvr::commands::openvr_is_dashboard_visible,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
@@ -152,7 +155,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
             )
-                .unwrap();
+            .unwrap();
             out.finish(format_args!(
                 "{}[{}] {}",
                 time::OffsetDateTime::now_utc().format(&format).unwrap(),

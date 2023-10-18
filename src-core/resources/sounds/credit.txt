@@ -1,2 +1,5 @@
 Notification sounds by Aarni Koskela (akx).
 https://github.com/akx/Notifications
+Files:
+notification_bell.ogg
+notification_block.ogg

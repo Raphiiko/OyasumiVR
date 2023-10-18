@@ -1,6 +1,9 @@
 use log::error;
 use serde::Serialize;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    os::raw::c_char,
+    time::{SystemTime, UNIX_EPOCH},
+};
 use sysinfo::{ProcessExt, Signal, System, SystemExt};
 use tauri::Manager;
 use tokio::sync::Mutex;
@@ -94,4 +97,14 @@ pub async fn cli_sidecar_overlay_mode() -> models::OverlaySidecarMode {
             models::OverlaySidecarMode::Release
         }
     }
+}
+
+pub fn convert_char_array_to_string(slice: &[c_char]) -> Option<String> {
+    let trimmed_array: Vec<u8> = slice
+        .iter()
+        .map(|&c| c as u8)
+        .take_while(|&x| x != 0)
+        .collect();
+
+    String::from_utf8(trimmed_array).ok()
 }

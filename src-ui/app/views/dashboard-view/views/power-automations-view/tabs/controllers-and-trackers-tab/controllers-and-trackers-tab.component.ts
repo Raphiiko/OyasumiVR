@@ -128,4 +128,27 @@ export class ControllersAndTrackersTabComponent implements OnInit {
   protected async goToSleepDetection() {
     await this.router.navigate(['dashboard', 'sleepDetection']);
   }
+
+  protected async toggleOnBatteryLevelOnlyDuringSleepMode(devices: OVRDeviceClass) {
+    switch (devices) {
+      case 'Controller':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffControllersOnlyDuringSleepMode:
+              !this.onBatteryLevelConfig.turnOffControllersOnlyDuringSleepMode,
+          }
+        );
+        break;
+      case 'GenericTracker':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffTrackersOnlyDuringSleepMode:
+              !this.onBatteryLevelConfig.turnOffTrackersOnlyDuringSleepMode,
+          }
+        );
+        break;
+    }
+  }
 }

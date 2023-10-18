@@ -6,11 +6,20 @@ export type OVRDeviceClass =
   | 'TrackingReference'
   | 'DisplayRedirect';
 
+export type OVRDeviceRole =
+  | 'Invalid'
+  | 'LeftHand'
+  | 'RightHand'
+  | 'OptOut'
+  | 'Treadmill'
+  | 'Stylus';
+
 export interface OVRDevice {
   // Native properties
   battery: number;
   canPowerOff: boolean;
   class: OVRDeviceClass;
+  role: OVRDeviceRole;
   dongleId: string;
   hardwareRevision: string;
   index: number;

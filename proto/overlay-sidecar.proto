@@ -11,6 +11,9 @@ service OyasumiOverlaySidecar {
   rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
   rpc SyncState (OyasumiSidecarState) returns (Empty) {}
   rpc SetDebugTranslations(SetDebugTranslationsRequest) returns (Empty) {}
+  rpc OpenOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
+  rpc CloseOverlayMenu(Empty) returns (Empty) {}
+  rpc ToggleOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
 }
 
 // Requests & Responses
@@ -35,6 +38,10 @@ message SetDebugTranslationsRequest {
   string translations = 1;
 }
 
+message OverlayMenuOpenRequest {
+  OyasumiSidecarControllerRole controller_role = 1;
+}
+
 message Empty {
 
 }
@@ -50,12 +57,14 @@ message OyasumiSidecarState {
   OyasumiSidecarBrightnessState brightness_state = 8;
   bool sleep_preparation_available = 9;
   bool sleep_preparation_timed_out = 10;
+  bool system_mic_muted = 11;
 }
 
+// No longer required, but reserved for future settings
 message OyasumiSidecarOverlaySettings {
-  OyasumiSidecarOverlayActivationAction activation_action = 1;
-  OyasumiSidecarOverlayActivationController activation_controller = 2;
-  bool activation_trigger_required = 3;
+  bool system_mic_indicator_enabled = 1;
+  double system_mic_indicator_opacity = 2;
+  bool system_mic_indicator_fadeout = 3;
 }
 
 message OyasumiSidecarDeviceInfo {
@@ -160,19 +169,8 @@ enum VrcStatus {
   VRC_STATUS_JoinMe = 4;
 }
 
-enum OyasumiSidecarOverlayActivationAction {
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
-}
-
-enum OyasumiSidecarOverlayActivationController {
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
+enum OyasumiSidecarControllerRole {
+  OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
+  OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
 }
 

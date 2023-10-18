@@ -41,7 +41,10 @@ pub async fn install_dotnet_hosting_bundle(version: String) -> Result<(), String
 }
 
 #[tauri::command]
-pub fn play_sound(name: String) {
+pub fn play_sound(name: String, volume: f32) {
+    if volume == 0.0 {
+        return;
+    }
     std::thread::spawn(move || {
         let mut wav = audio::Wav::default();
         {
@@ -51,7 +54,9 @@ pub fn play_sound(name: String) {
         }
         {
             let sl = SOLOUD.lock().unwrap();
-            sl.play(&wav);
+            sl.play_ex(&wav, volume, 0.0, false, unsafe {
+                soloud::Handle::from_raw(0)
+            });
         }
         loop {
             std::thread::sleep(std::time::Duration::from_millis(100));

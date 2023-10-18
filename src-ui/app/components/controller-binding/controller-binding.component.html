@@ -1,0 +1,65 @@
+<button
+  class="binding-btn"
+  [tooltip]="(tooltipText() ?? '' | translate) ?? undefined"
+  [tooltipMode]="'left'"
+  (click)="toggleDropdown()"
+>
+  <div class="icon-wrapper">
+    <img src="/assets/img/icon_controller.png" />
+  </div>
+  <div class="text-wrapper" *ngIf="error && error !== 'MISSING_CONTROLLER' && error !=='NO_CONTROLLERS'">
+    <ng-container *ngIf="error === 'MISSING_KEY'">
+      <div class="line1" translate>
+        No Action Set
+      </div>
+    </ng-container>
+    <ng-container *ngIf="error === 'STEAMVR_INACTIVE'">
+      <div class="line1" translate>
+        comp.controller-binding.errors.STEAMVR_INACTIVE.message
+      </div>
+    </ng-container>
+    <ng-container *ngIf="error === 'DASHBOARD_OPEN'">
+      <div class="line1" translate>
+        comp.controller-binding.errors.DASHBOARD_OPEN.message
+      </div>
+    </ng-container>
+    <ng-container *ngIf="error === 'UNKNOWN'">
+      <div class="line1" translate>
+        comp.controller-binding.errors.UNKNOWN.message
+      </div>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="error === 'MISSING_CONTROLLER' || error === 'NO_CONTROLLERS'">
+    <div class="missing-controller-row">
+      <div class="missing-controller missing-controller-left" [class.connected]="hasLeftHand">
+        <span>L</span>
+        <img src="/assets/img/icon_controller.png" />
+
+      </div>
+      <div class="missing-controller missing-controller-right" [class.connected]="hasRightHand">
+        <img src="/assets/img/icon_controller.png" />
+        <span>R</span>
+      </div>
+    </div>
+  </ng-container>
+  <div class="text-wrapper" *ngIf="!error">
+    <div class="line0">{{ activeBinding?.localizedControllerType }}</div>
+    <div class="line1"
+    >{{ activeBinding?.localizedHand }} {{ activeBinding?.localizedInputSource }}</div
+    >
+    <div class="line2">{{
+      'comp.controller-binding.slot.' + activeBinding?.slotName | translate
+      }}</div>
+  </div>
+</button>
+<div class="dropdown-container">
+  <div class="dropdown" @fadeDown *ngIf="dropdownOpen" (clickOutside)="clickOutsideDropdown()">
+    <div class="dropdown-description" translate>comp.controller-binding.dropdown.description</div>
+    <button class="config-button" (click)="launchBindingConfiguration(true)" translate>
+      comp.controller-binding.dropdown.desktop
+    </button>
+    <button class="config-button" (click)="launchBindingConfiguration(false)" translate>
+      comp.controller-binding.dropdown.vr
+    </button>
+  </div>
+</div>

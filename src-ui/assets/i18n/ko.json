@@ -566,30 +566,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "활성화 동작",
-          "description": "오버레이를 열고 닫을 동작을 선택해요.",
-          "action": {
-            "none": "없음 (비활성화)",
-            "singleA": "A 누름",
-            "doubleA": "A 두번 누름",
-            "tripleA": "A 세번 누름",
-            "singleB": "B 누름",
-            "doubleB": "B 두번 누름",
-            "tripleB": "B 세번 누름"
-          },
-          "controller": {
-            "either": "양쪽 컨트롤러",
-            "left": "왼쪽 컨트롤러",
-            "right": "오른쪽 컨트롤러",
-            "title": "컨트롤러",
-            "description": "오버레이를 활성화하는 데 사용할 수 있는 컨트롤러를 선택해요."
-          },
-          "triggerFilter": {
-            "title": "트리거 필터",
-            "description": "동작을 수행하는 동안 트리거를 누르고 있는 경우에만 활성화되어요."
-          }
-        },
         "title": "오버레이"
       }
     },

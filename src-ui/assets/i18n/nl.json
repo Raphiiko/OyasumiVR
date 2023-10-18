@@ -521,30 +521,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "Activatie actie",
-          "description": "Selecteer welke actie de overlay zal openen en sluiten",
-          "action": {
-            "none": "Geen (uitgeschakeld)",
-            "singleA": "A (Enkel)",
-            "doubleA": "A (Dubbel)",
-            "tripleA": "A (Driedubbel)",
-            "singleB": "B (Enkel)",
-            "doubleB": "B (Dubbel)",
-            "tripleB": "B (Driedubbel)"
-          },
-          "controller": {
-            "either": "Beide Controllers",
-            "left": "Linker COntroller",
-            "right": "Rechter Controller",
-            "title": "Controller",
-            "description": "Selecteer welke controllers gebruikt kunnen worden om de overlay te openen"
-          },
-          "triggerFilter": {
-            "title": "Vereis trigger",
-            "description": "Vereis dat de trigger ingedrukt is om de overlay te openen"
-          }
-        },
         "title": "Overlay"
       }
     },

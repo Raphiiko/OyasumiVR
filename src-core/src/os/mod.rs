@@ -40,14 +40,19 @@ pub async fn init_audio_device_manager() {
 
 pub async fn load_sounds() {
     let mut sounds = SOUNDS.lock().unwrap();
-    sounds.insert(
-        String::from("notification_bell"),
-        std::fs::read("resources/sounds/notification_bell.ogg").unwrap(),
-    );
-    sounds.insert(
-        String::from("notification_block"),
-        std::fs::read("resources/sounds/notification_block.ogg").unwrap(),
-    );
+    vec![
+        "notification_bell",
+        "notification_block",
+        "mic_mute",
+        "mic_unmute",
+    ]
+    .iter()
+    .for_each(|sound| {
+        sounds.insert(
+            String::from(*sound),
+            std::fs::read(format!("resources/sounds/{}.ogg", sound)).unwrap(),
+        );
+    });
 }
 
 DEFINE_GUID! {GUID_POWER_POLICY_POWER_SAVING,

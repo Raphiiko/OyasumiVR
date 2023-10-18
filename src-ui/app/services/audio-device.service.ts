@@ -44,10 +44,18 @@ export class AudioDeviceService {
     await invoke('set_audio_device_volume', { deviceId, volume });
   }
 
-  async setMute(deviceId: string, mute: boolean) {
-    if (!this.isActiveDevice(deviceId)) return;
+  async setMute(
+    deviceId: string,
+    mute: boolean
+  ): Promise<{
+    muted: boolean;
+    device: AudioDevice;
+  } | null> {
+    const device = this._activeDevices.value.find((d) => d.id === deviceId);
+    if (!device) return null;
     this.patchDevice(deviceId, { mute });
     await invoke('set_audio_device_mute', { deviceId, mute });
+    return { muted: mute, device };
   }
 
   isActiveDevice(deviceId: string) {

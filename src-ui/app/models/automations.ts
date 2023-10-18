@@ -28,10 +28,6 @@ export type AutomationType =
   | 'OSC_GENERAL'
   | 'SLEEPING_ANIMATIONS'
   | 'VRCHAT_MIC_MUTE_AUTOMATIONS'
-  // STATUS AUTOMATIONS
-  | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
-  // INVITE AUTOMATIONS
-  | 'AUTO_ACCEPT_INVITE_REQUESTS'
   // BRIGHTNESS AUTOMATIONS
   | 'BRIGHTNESS_CONTROL_ADVANCED_MODE'
   | 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
@@ -43,11 +39,14 @@ export type AutomationType =
   // CHAPERONE AUTOMATIONS
   | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE'
   | 'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE'
-  // SHUTDOWN AUTOMATIONS
-  | 'SHUTDOWN_AUTOMATIONS'
   // WINDOWS POWER POLICY AUTOMATIONS
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
-  | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE';
+  | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
+  // MISCELLANEOUS
+  | 'SHUTDOWN_AUTOMATIONS'
+  | 'AUTO_ACCEPT_INVITE_REQUESTS'
+  | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
+  | 'SYSTEM_MIC_MUTE_AUTOMATIONS';
 
 export interface AutomationConfigs {
   version: 10;
@@ -73,10 +72,6 @@ export interface AutomationConfigs {
   OSC_GENERAL: OscGeneralAutomationConfig;
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   VRCHAT_MIC_MUTE_AUTOMATIONS: VRChatMicMuteAutomationsConfig;
-  // STATUS AUTOMATIONS
-  CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
-  // INVITE AUTOMATIONS
-  AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: BrightnessControlAdvancedModeAutomationConfig;
   SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: SetBrightnessAutomationConfig;
@@ -89,10 +84,14 @@ export interface AutomationConfigs {
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   // SHUTDOWN AUTOMATIONS
-  SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   // WINDOWS POWER POLICY AUTOMATIONS
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
+  // MISCELLANEOUS AUTOMATIONS
+  SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
+  SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
+  CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
+  AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
 }
 
 export interface AutomationConfig {
@@ -197,8 +196,10 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 export interface TurnOffDevicesOnBatteryLevelAutomationConfig extends AutomationConfig {
   turnOffControllers: boolean;
   turnOffControllersAtLevel: number;
+  turnOffControllersOnlyDuringSleepMode: boolean;
   turnOffTrackers: boolean;
   turnOffTrackersAtLevel: number;
+  turnOffTrackersOnlyDuringSleepMode: boolean;
 }
 
 export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
@@ -228,12 +229,13 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
 }
 
 export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_MUTE';
+export type VRChatMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
 export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
   mode: VRChatVoiceMode;
-  onSleepModeEnable: 'MUTE' | 'UNMUTE' | 'NONE';
-  onSleepModeDisable: 'MUTE' | 'UNMUTE' | 'NONE';
-  onSleepPreparation: 'MUTE' | 'UNMUTE' | 'NONE';
+  onSleepModeEnable: VRChatMicMuteStateOption;
+  onSleepModeDisable: VRChatMicMuteStateOption;
+  onSleepPreparation: VRChatMicMuteStateOption;
 }
 
 // STATUS AUTOMATIONS
@@ -244,14 +246,39 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
   onlyIfSleepModeEnabled: boolean;
 }
 
-// INVITE AUTOMATIONS
+// WINDOWS POWER POLICY AUTOMATIONS
+export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
+  powerPolicy?: WindowsPowerPolicy;
+}
+
+// MISCELLANEOUS AUTOMATIONS
+
+export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
+
+export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
+
+export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
+  audioDevicePersistentId: string | null;
+  onSleepModeEnableState: SystemMicMuteStateOption;
+  onSleepModeDisableState: SystemMicMuteStateOption;
+  onSleepPreparationState: SystemMicMuteStateOption;
+  overlayMuteIndicator: boolean;
+  overlayMuteIndicatorOpacity: number;
+  overlayMuteIndicatorFade: boolean;
+  controllerBinding: boolean;
+  controllerBindingBehavior: SystemMicMuteControllerBindingBehavior;
+  muteSoundVolume: number;
+  onSleepModeEnableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  onSleepModeDisableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+}
+
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
   onlyIfSleepModeEnabled: boolean;
   listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
   playerIds: string[];
 }
 
-// SHUTDOWN AUTOMATIONS
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
 
 export interface ShutdownAutomationsConfig extends AutomationConfig {
@@ -266,11 +293,6 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   turnOffBaseStations: boolean;
   powerDownWindows: boolean;
   powerDownWindowsMode: PowerDownWindowsMode;
-}
-
-// WINDOWS POWER POLICY AUTOMATIONS
-export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
-  powerPolicy?: WindowsPowerPolicy;
 }
 
 //
@@ -399,8 +421,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: true,
     turnOffControllers: false,
     turnOffControllersAtLevel: 50,
+    turnOffControllersOnlyDuringSleepMode: false,
     turnOffTrackers: false,
     turnOffTrackersAtLevel: 50,
+    turnOffTrackersOnlyDuringSleepMode: false,
   },
   TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
     enabled: false,
@@ -470,5 +494,22 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   },
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
+  },
+  // MISCELLANEOUS AUTOMATIONS
+  SYSTEM_MIC_MUTE_AUTOMATIONS: {
+    enabled: false,
+    audioDevicePersistentId: null,
+    onSleepModeEnableState: 'NONE',
+    onSleepModeDisableState: 'NONE',
+    onSleepPreparationState: 'NONE',
+    overlayMuteIndicator: true,
+    overlayMuteIndicatorOpacity: 80,
+    overlayMuteIndicatorFade: true,
+    controllerBinding: false,
+    controllerBindingBehavior: 'TOGGLE',
+    muteSoundVolume: 100,
+    onSleepModeEnableControllerBindingBehavior: 'NONE',
+    onSleepModeDisableControllerBindingBehavior: 'NONE',
+    onSleepPreparationControllerBindingBehavior: 'NONE',
   },
 };

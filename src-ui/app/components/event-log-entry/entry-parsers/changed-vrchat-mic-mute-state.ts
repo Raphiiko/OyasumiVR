@@ -7,7 +7,7 @@ import {
 
 export class EventLogChangedVRChatMicMuteStateEntryParser extends EventLogEntryParser<EventLogBase> {
   entryType(): EventLogType {
-    return 'changedVRChatMicMuteState'; // TODO
+    return 'changedVRChatMicMuteState';
   }
 
   override headerInfoTitle(entry: EventLogChangedVRChatMicMuteState): string {

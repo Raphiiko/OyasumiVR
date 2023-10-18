@@ -4,7 +4,9 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
+  SimpleChanges,
 } from '@angular/core';
 import { TString } from '../models/translatable-string';
 import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
@@ -13,7 +15,7 @@ import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[tooltip]',
 })
-export class TooltipDirective implements AfterViewInit, OnDestroy {
+export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   @Input('tooltip') text?: TString;
   @Input('tooltipMode') mode?: 'top' | 'bottom' | 'left' | 'right' = 'top';
   @Input('tooltipMargin') margin?: number = 4;
@@ -28,6 +30,16 @@ export class TooltipDirective implements AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.onMouseLeave();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['text'].currentValue !== changes['text'].previousValue) {
+      const open = !!this.tooltipElement;
+      this.onMouseLeave();
+      if (open) {
+        this.onMouseEnter();
+      }
+    }
   }
 
   @HostListener('mouseenter', ['$event'])

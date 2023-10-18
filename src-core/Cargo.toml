@@ -81,6 +81,7 @@ strum_macros = "0.25"
 steamworks = { version = "0.10.0" }
 system_shutdown = "4.0.1"
 async-recursion = "1.0.5"
+enumset = "1.1.3"
 
 [dependencies.tauri]
 version = "1.4.1"
@@ -107,7 +108,8 @@ features = [
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "15f874e3b7e447c84990a1af6935892a79812cd4"
+rev = "7f2fcc1059e5ca8d586d2a46d2751769f779713d"
+# path = "../../ovr_overlay_oyasumi"
 features = ["ovr_system", "ovr_settings"]
 
 [features]

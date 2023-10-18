@@ -3,6 +3,13 @@
   <div class="tab-bar">
     <div
       class="tab"
+      [class.active]="activeTab === 'MISC_TESTING'"
+      (click)="activeTab = 'MISC_TESTING'"
+    >
+      <div class="tab-label">Miscellaneous Testing</div>
+    </div>
+    <div
+      class="tab"
       [class.active]="activeTab === 'BRIGHTNESS_TESTING'"
       (click)="activeTab = 'BRIGHTNESS_TESTING'"
     >
@@ -21,13 +28,6 @@
       (click)="activeTab = 'AUDIO_DEVICE'"
     >
       <div class="tab-label">Audio Device Testing</div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'MISC_TESTING'"
-      (click)="activeTab = 'MISC_TESTING'"
-    >
-      <div class="tab-label">Miscellaneous Testing</div>
     </div>
   </div>
   <div class="pane-content">

@@ -6,12 +6,22 @@ import {
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { BehaviorSubject, distinctUntilChanged, firstValueFrom, Observable, skip } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  Observable,
+  pairwise,
+  skip,
+} from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepDetectorStateReport } from '../../models/events';
 import { NotificationService } from '../notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from '../event-log.service';
+import { OpenVRInputService } from '../openvr-input.service';
+import { OVRInputEventAction } from '../../models/ovr-input-event';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -61,7 +71,8 @@ export class SleepModeForSleepDetectorAutomationService {
     private sleep: SleepService,
     private notifications: NotificationService,
     private translate: TranslateService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private openvrInputService: OpenVRInputService
   ) {}
 
   async init() {
@@ -77,26 +88,44 @@ export class SleepModeForSleepDetectorAutomationService {
         const result = await this.handleStateReportForEnable(event.payload);
         this._lastStateReportHandlingResult.next(result);
       });
-      await listen<{ gesture: string }>('GESTURE_DETECTED', async (event) => {
+      // Dismiss sleep check for head shake
+      await listen<{ gesture: string }>('GESTURE_DETECTED', (event) => {
         if (event.payload.gesture !== 'head_shake') return;
-        if (this.sleepEnableTimeoutId) {
-          clearTimeout(this.sleepEnableTimeoutId);
-          this.sleepEnableTimeoutId = null;
-          this.eventLog.logEvent({
-            type: 'sleepDetectorEnableCancelled',
-          });
-          this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_AWAKE');
-          await this.notifications.play_sound('bell');
-          await this.notifications.send(
-            this.translate.instant('notifications.sleepCheckCancel.content')
-          );
-          if (this.sleepCheckNotificationId) {
-            await this.notifications.clearNotification(this.sleepCheckNotificationId);
-            this.sleepCheckNotificationId = null;
-          }
-        }
+        this.dismissSleepCheck();
       });
+      // Dismiss sleep check for controller button presence indication
+      this.openvrInputService.state
+        .pipe(
+          map((s) => s[OVRInputEventAction.IndicatePresence]),
+          pairwise(),
+          map(([previous, current]) =>
+            current.some(
+              (currentDevice) =>
+                !previous.some((previousDevice) => previousDevice.index === currentDevice.index)
+            )
+          )
+        )
+        .subscribe(() => this.dismissSleepCheck());
     });
+  }
+
+  async dismissSleepCheck() {
+    if (this.sleepEnableTimeoutId) {
+      clearTimeout(this.sleepEnableTimeoutId);
+      this.sleepEnableTimeoutId = null;
+      this.eventLog.logEvent({
+        type: 'sleepDetectorEnableCancelled',
+      });
+      this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_AWAKE');
+      await this.notifications.playSound('notification_block');
+      await this.notifications.send(
+        this.translate.instant('notifications.sleepCheckCancel.content')
+      );
+      if (this.sleepCheckNotificationId) {
+        await this.notifications.clearNotification(this.sleepCheckNotificationId);
+        this.sleepCheckNotificationId = null;
+      }
+    }
   }
 
   async handleStateReportForEnable(

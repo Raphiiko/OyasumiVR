@@ -64,6 +64,15 @@ export interface SetDebugTranslationsRequest {
   translations: string;
 }
 /**
+ * @generated from protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export interface OverlayMenuOpenRequest {
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1;
+   */
+  controllerRole: OyasumiSidecarControllerRole;
+}
+/**
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
  */
 export interface Empty {}
@@ -111,23 +120,29 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: bool sleep_preparation_timed_out = 10;
    */
   sleepPreparationTimedOut: boolean;
+  /**
+   * @generated from protobuf field: bool system_mic_muted = 11;
+   */
+  systemMicMuted: boolean;
 }
 /**
+ * No longer required, but reserved for future settings
+ *
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
  */
 export interface OyasumiSidecarOverlaySettings {
   /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1;
+   * @generated from protobuf field: bool system_mic_indicator_enabled = 1;
    */
-  activationAction: OyasumiSidecarOverlayActivationAction;
+  systemMicIndicatorEnabled: boolean;
   /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2;
+   * @generated from protobuf field: double system_mic_indicator_opacity = 2;
    */
-  activationController: OyasumiSidecarOverlayActivationController;
+  systemMicIndicatorOpacity: number;
   /**
-   * @generated from protobuf field: bool activation_trigger_required = 3;
+   * @generated from protobuf field: bool system_mic_indicator_fadeout = 3;
    */
-  activationTriggerRequired: boolean;
+  systemMicIndicatorFadeout: boolean;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
@@ -454,54 +469,17 @@ export enum VrcStatus {
   JoinMe = 4,
 }
 /**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction
+ * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarControllerRole
  */
-export enum OyasumiSidecarOverlayActivationAction {
+export enum OyasumiSidecarControllerRole {
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
    */
-  None = 0,
+  Left = 0,
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
    */
-  Single_A = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
-   */
-  Double_A = 2,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
-   */
-  Triple_A = 3,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
-   */
-  Single_B = 4,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
-   */
-  Double_B = 5,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
-   */
-  Triple_B = 6,
-}
-/**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController
- */
-export enum OyasumiSidecarOverlayActivationController {
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
-   */
-  Either = 0,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
-   */
-  Left = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
-   */
-  Right = 2,
+  Right = 1,
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class PingResponse$Type extends MessageType<PingResponse> {
@@ -824,6 +802,77 @@ class SetDebugTranslationsRequest$Type extends MessageType<SetDebugTranslationsR
  */
 export const SetDebugTranslationsRequest = new SetDebugTranslationsRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class OverlayMenuOpenRequest$Type extends MessageType<OverlayMenuOpenRequest> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OverlayMenuOpenRequest', [
+      {
+        no: 1,
+        name: 'controller_role',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.OyasumiSidecarControllerRole',
+          OyasumiSidecarControllerRole,
+          'OYASUMI_SIDECAR_CONTROLLER_ROLE_',
+        ],
+      },
+    ]);
+  }
+  create(value?: PartialMessage<OverlayMenuOpenRequest>): OverlayMenuOpenRequest {
+    const message = { controllerRole: 0 };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OverlayMenuOpenRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OverlayMenuOpenRequest
+  ): OverlayMenuOpenRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role */ 1:
+          message.controllerRole = reader.int32();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OverlayMenuOpenRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1; */
+    if (message.controllerRole !== 0) writer.tag(1, WireType.Varint).int32(message.controllerRole);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export const OverlayMenuOpenRequest = new OverlayMenuOpenRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
     super('OyasumiOverlaySidecar.Empty', []);
@@ -875,6 +924,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 8, name: 'brightness_state', kind: 'message', T: () => OyasumiSidecarBrightnessState },
       { no: 9, name: 'sleep_preparation_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 10, name: 'sleep_preparation_timed_out', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 11, name: 'system_mic_muted', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -885,6 +935,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       locale: '',
       sleepPreparationAvailable: false,
       sleepPreparationTimedOut: false,
+      systemMicMuted: false,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
@@ -950,6 +1001,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
           break;
         case /* bool sleep_preparation_timed_out */ 10:
           message.sleepPreparationTimedOut = reader.bool();
+          break;
+        case /* bool system_mic_muted */ 11:
+          message.systemMicMuted = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -1018,6 +1072,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     /* bool sleep_preparation_timed_out = 10; */
     if (message.sleepPreparationTimedOut !== false)
       writer.tag(10, WireType.Varint).bool(message.sleepPreparationTimedOut);
+    /* bool system_mic_muted = 11; */
+    if (message.systemMicMuted !== false)
+      writer.tag(11, WireType.Varint).bool(message.systemMicMuted);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -1031,34 +1088,16 @@ export const OyasumiSidecarState = new OyasumiSidecarState$Type();
 class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverlaySettings> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', [
-      {
-        no: 1,
-        name: 'activation_action',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction',
-          OyasumiSidecarOverlayActivationAction,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_',
-        ],
-      },
-      {
-        no: 2,
-        name: 'activation_controller',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController',
-          OyasumiSidecarOverlayActivationController,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_',
-        ],
-      },
-      { no: 3, name: 'activation_trigger_required', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'system_mic_indicator_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'system_mic_indicator_opacity', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'system_mic_indicator_fadeout', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
     const message = {
-      activationAction: 0,
-      activationController: 0,
-      activationTriggerRequired: false,
+      systemMicIndicatorEnabled: false,
+      systemMicIndicatorOpacity: 0,
+      systemMicIndicatorFadeout: false,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
@@ -1076,14 +1115,14 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action */ 1:
-          message.activationAction = reader.int32();
+        case /* bool system_mic_indicator_enabled */ 1:
+          message.systemMicIndicatorEnabled = reader.bool();
           break;
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller */ 2:
-          message.activationController = reader.int32();
+        case /* double system_mic_indicator_opacity */ 2:
+          message.systemMicIndicatorOpacity = reader.double();
           break;
-        case /* bool activation_trigger_required */ 3:
-          message.activationTriggerRequired = reader.bool();
+        case /* bool system_mic_indicator_fadeout */ 3:
+          message.systemMicIndicatorFadeout = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -1109,15 +1148,15 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1; */
-    if (message.activationAction !== 0)
-      writer.tag(1, WireType.Varint).int32(message.activationAction);
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2; */
-    if (message.activationController !== 0)
-      writer.tag(2, WireType.Varint).int32(message.activationController);
-    /* bool activation_trigger_required = 3; */
-    if (message.activationTriggerRequired !== false)
-      writer.tag(3, WireType.Varint).bool(message.activationTriggerRequired);
+    /* bool system_mic_indicator_enabled = 1; */
+    if (message.systemMicIndicatorEnabled !== false)
+      writer.tag(1, WireType.Varint).bool(message.systemMicIndicatorEnabled);
+    /* double system_mic_indicator_opacity = 2; */
+    if (message.systemMicIndicatorOpacity !== 0)
+      writer.tag(2, WireType.Bit64).double(message.systemMicIndicatorOpacity);
+    /* bool system_mic_indicator_fadeout = 3; */
+    if (message.systemMicIndicatorFadeout !== false)
+      writer.tag(3, WireType.Varint).bool(message.systemMicIndicatorFadeout);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -2317,5 +2356,8 @@ export const OyasumiOverlaySidecar = new ServiceType(
     { name: 'ClearNotification', options: {}, I: ClearNotificationRequest, O: Empty },
     { name: 'SyncState', options: {}, I: OyasumiSidecarState, O: Empty },
     { name: 'SetDebugTranslations', options: {}, I: SetDebugTranslationsRequest, O: Empty },
+    { name: 'OpenOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
+    { name: 'CloseOverlayMenu', options: {}, I: Empty, O: Empty },
+    { name: 'ToggleOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
   ]
 );

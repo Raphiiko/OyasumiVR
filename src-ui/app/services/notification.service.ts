@@ -26,6 +26,12 @@ interface XSOMessage {
   sourceApp: string;
 }
 
+export type NotificationSound =
+  | 'notification_bell'
+  | 'notification_block'
+  | 'mic_mute'
+  | 'mic_unmute';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -40,10 +46,17 @@ export class NotificationService {
     });
   }
 
-  public async play_sound(sound: 'bell' | 'block') {
-    await invoke('play_sound', {
-      name: 'notification_' + sound,
-    });
+  public async playSound(sound: NotificationSound, volume: number | null = null) {
+    if (volume === null) {
+      const settings = await firstValueFrom(this.appSettingsService.settings);
+      volume = settings.generalNotificationVolume / 100.0;
+    }
+    if (volume > 0) {
+      await invoke('play_sound', {
+        name: sound,
+        volume,
+      });
+    }
   }
 
   public async send(content: string, duration = 3000): Promise<string | null> {

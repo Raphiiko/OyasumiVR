@@ -525,30 +525,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "啟用動作",
-          "description": "選擇何時開啟或關閉覆蓋層",
-          "action": {
-            "none": "無（停用）",
-            "singleA": "單次按A鈕",
-            "doubleA": "雙次按A鈕",
-            "tripleA": "三次按A鈕",
-            "singleB": "單次按B鈕",
-            "doubleB": "雙次按B鈕",
-            "tripleB": "三次按B鈕"
-          },
-          "controller": {
-            "either": "任意手把",
-            "left": "左手把",
-            "right": "右手把",
-            "title": "手把",
-            "description": "選擇哪些手把可以用於啟用覆蓋層"
-          },
-          "triggerFilter": {
-            "title": "需要扳機",
-            "description": "僅在執行動作時按住扳機時才啟用。"
-          }
-        },
         "title": "覆蓋層"
       }
     },

@@ -630,30 +630,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "アクティベーションアクション",
-          "description": "オーバーレイを起動する方法を選択します",
-          "action": {
-            "none": "なし(無効)",
-            "singleA": "Aボタン",
-            "doubleA": "Aボタン(2プッシュ)",
-            "tripleA": "Aボタン(3プッシュ)",
-            "singleB": "Bボタン",
-            "doubleB": "Bボタン(2プッシュ)",
-            "tripleB": "Bボタン(3プッシュ)"
-          },
-          "controller": {
-            "either": "いずれかのコントローラー",
-            "left": "左のコントローラー",
-            "right": "右のコントローラー",
-            "title": "コントローラー",
-            "description": "どのコントローラーを使用するか選択します"
-          },
-          "triggerFilter": {
-            "title": "トリガーと同時に操作",
-            "description": "トリガーを引きながらボタンを押した場合のみ起動するようにします"
-          }
-        },
         "title": "オーバーレイ"
       },
       "startStop": {
