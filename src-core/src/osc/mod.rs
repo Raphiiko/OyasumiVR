@@ -92,7 +92,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                                         .collect(),
                                 },
                             )
-                            .await;
+                                .await;
                         }
                     }
                 }

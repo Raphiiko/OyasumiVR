@@ -169,7 +169,7 @@ pub async fn get_device_power_state(
                 power_state: state.clone(),
             },
         )
-        .await;
+            .await;
     }
     Ok(state)
 }
@@ -279,7 +279,7 @@ async fn handle_discovered_device(device: Device) {
             device: map_device_to_lighthouse_device(device.clone()).await,
         },
     )
-    .await;
+        .await;
     info!("[Core] Discovered lighthouse device: {}", device_name);
 }
 
@@ -291,7 +291,7 @@ async fn set_lighthouse_status(status: LighthouseStatus) {
             status: status.clone(),
         },
     )
-    .await;
+        .await;
 }
 
 async fn set_scanning_status(scanning: bool) {
@@ -300,7 +300,7 @@ async fn set_scanning_status(scanning: bool) {
         EVENT_SCANNING_STATUS_CHANGED,
         LighthouseScanningStatusChangedEvent { scanning },
     )
-    .await;
+        .await;
 }
 
 async fn get_device(device_id: String) -> Option<Arc<Device>> {

@@ -286,7 +286,7 @@
         "general": {
           "title": "General Options",
           "onlySwitchAnimations": "Only switch animations",
-          "onlyIfSleepModeEnabled": "If sleep mode is enabled",
+          "onlyIfSleepModeEnabled": "While sleep mode is enabled",
           "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
           "footLock": {
             "title": "Foot Lock",
@@ -358,16 +358,24 @@
         "description": "Have devices power off when their battery level falls below a certain percentage.",
         "controllers": {
           "title": "Turn off a controller",
-          "description": "When its battery level falls below"
+          "description": "When its battery level falls below",
+          "onlyDuringSleepMode": {
+            "title": "Only while sleep mode is enabled",
+            "description": "Only turn off controllers this way while sleep mode is enabled"
+          },
+          "powerOffConflict": {
+            "title": "Warning: This might trigger another automation!",
+            "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
+            "action": "Sleep Detection"
+          }
         },
         "trackers": {
           "title": "Turn off a tracker",
-          "description": "When its battery level falls below"
-        },
-        "controllerPoweroffConflict": {
-          "title": "Warning: This might trigger another automation!",
-          "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
-          "action": "Sleep Detection"
+          "description": "When its battery level falls below",
+          "onlyDuringSleepMode": {
+            "title": "Only while sleep mode is enabled",
+            "description": "Only turn off trackers this way while sleep mode is enabled"
+          }
         }
       }
     },
@@ -630,29 +638,13 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "Activation action",
-          "description": "Select which action will open and close the overlay",
-          "action": {
-            "none": "None (disabled)",
-            "singleA": "Single press A",
-            "doubleA": "Double press A",
-            "tripleA": "Triple press A",
-            "singleB": "Single press B",
-            "doubleB": "Double press B",
-            "tripleB": "Triple press B"
-          },
-          "controller": {
-            "either": "Either Controller",
-            "left": "Left Controller",
-            "right": "Right Controller",
-            "title": "Controller",
-            "description": "Select which controllers can be used to activate the overlay"
-          },
-          "triggerFilter": {
-            "title": "Require trigger",
-            "description": "Only activate if the trigger is held down while doing the action."
-          }
+        "overlayMenu": {
+          "title": "Enable overlay menu",
+          "description": "This can be turned off if you want to disable OyasumiVR's overlay menu completely."
+        },
+        "binding": {
+          "title": "Controller button binding",
+          "description": "Which button triggers the overlay menu can be configured within SteamVR's binding menu."
         },
         "title": "Overlay"
       },
@@ -763,6 +755,11 @@
             "description": "Get a notification when OyasumiVR has automatically accepted someones invite request"
           }
         }
+      },
+      "volume": {
+        "title": "General Notification Volume",
+        "description": "Set the volume level at which some notification types play their sound",
+        "test": "Test"
       }
     },
     "updates": {
@@ -912,7 +909,7 @@
   },
   "notifications": {
     "sleepCheck": {
-      "content": "Sleep mode will be enabled in 20 seconds. Are you asleep?\n\n(Shake your head to cancel)"
+      "content": "Sleep mode will be enabled in 20 seconds.\nAre you asleep?\n\nTo cancel:\nShake your head or press any controller button"
     },
     "sleepCheckCancel": {
       "content": "Automatic enabling of sleep mode has been cancelled"
@@ -937,6 +934,101 @@
     },
     "turningOffControllersAndTrackers": {
       "content": "Turning off both your controllers and your trackers"
+    }
+  },
+  "systemMicMuteAutomations": {
+    "title": "System Microphone Mute Automations",
+    "description": "Automatically mute or unmute your microphone on the device level when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing you snore ;)",
+    "config": {
+      "title": "Configuration"
+    },
+    "stateAutomations": {
+      "title": "Mute Automations",
+      "onSleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Change my microphone state to"
+      },
+      "onSleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Change my microphone state to"
+      },
+      "onSleepPreparation": {
+        "title": "When I prepare to go to sleep",
+        "description": "Change my microphone state to"
+      }
+    },
+    "muteOptions": {
+      "NONE": "Do not change",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "audioDevice": {
+      "title": "Microphone audio device",
+      "description": "Make sure to double check this is the exact same microphone you're using in VRChat!",
+      "options": {
+        "DEFAULT": "Default Device:\n{deviceName}"
+      }
+    },
+    "overlayIndicator": {
+      "title": "Overlay Indicator",
+      "description": "Show an indicator in VR when your microphone is muted.",
+      "enabled": {
+        "title": "Overlay mute indicator",
+        "description": "Whether to show a mute indicator in VR"
+      },
+      "fade": {
+        "title": "Fade out",
+        "description": "Fade out the indicator after a few seconds. You can show the indicator again by pressing any controller button. This is recommended for VR headsets with OLED displays to reduce any risk for burn-in."
+      },
+      "opacity": {
+        "title": "Opacity",
+        "description": "The indicator icon's maximum opacity"
+      }
+    },
+    "controllerBinding": {
+      "title": "Controller Binding",
+      "description": "Bind a controller button to control the mute state of your microphone.",
+      "conflictWarning": "If you're using this feature to toggle your microphone mute with VRChat, it is recommended that in VRChat's settings you either unbind your mute button or set your microphone mode to \"Always On\" to prevent any conflicting behaviour.",
+      "enabled": {
+        "title": "Controller binding",
+        "description": "Whether to enable controller binding for toggling the mute state of your microphone"
+      },
+      "binding": {
+        "title": "Button binding",
+        "description": "Configure which controller button(s) should be used to control your microphone's mute state."
+      },
+      "mode": {
+        "title": "Default button behaviour",
+        "description": "How pressing the button should change your microphone state by default",
+        "options": {
+          "NONE": "Do not change",
+          "TOGGLE": "Toggle",
+          "PUSH_TO_TALK": "Push to talk"
+        }
+      },
+      "volume": {
+        "title": "Mute sound volume",
+        "description": "The volume of the sound effects that play when the microphone is muted or unmuted"
+      },
+      "onSleepModeEnable": {
+        "title": "When sleep mode is enabled",
+        "description": "Change the controller button behaviour to"
+      },
+      "onSleepModeDisable": {
+        "title": "When sleep mode is disabled",
+        "description": "Change the controller button behaviour to"
+      },
+      "onSleepPreparation": {
+        "title": "When I prepare to go to sleep",
+        "description": "Change the controller button behaviour to"
+      },
+      "currentMode": {
+        "title": "Active button behaviour",
+        "description": "Reflects the current mode of the controller button",
+        "TOGGLE": "Toggle",
+        "PUSH_TO_TALK": "Push to talk"
+      },
+      "automations": "Controller Binding Automations"
     }
   },
   "vrchatMicMuteAutomations": {
@@ -1000,6 +1092,9 @@
       "inactive": "Inactive",
       "loggedOut": "Logged out",
       "heartrate": "Heart Rate",
+      "vrchat": {
+        "tooltip": "Settings: VRChat"
+      },
       "brightness": {
         "tooltip": "Brightness Control",
         "simple": "Brightness"
@@ -1008,6 +1103,13 @@
         "INACTIVE": "Inactive",
         "INITIALIZING": "Waiting",
         "INITIALIZED": "Active"
+      },
+      "systemMicMuted": {
+        "label": "Muted",
+        "tooltip": {
+          "NAVIGATE": "System Microphone:\nAutomations",
+          "TOGGLE_MUTE": "System Microphone:\nUnmute"
+        }
       }
     },
     "confirm-modal": {
@@ -1028,7 +1130,8 @@
       "sleepDetection": "Sleep Detection",
       "oscAutomations": "OSC Automations",
       "gpuAutomations": "GPU Automations",
-      "vrchatMicMuteAutomations": "Microphone Muting",
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
+      "systemMicMuteAutomations": "System Microphone Mute Automations",
       "powerAutomations": "Power Automations",
       "statusAutomations": "Status Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
@@ -1114,6 +1217,36 @@
         "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input."
       }
     },
+    "controller-binding": {
+      "slot": {
+        "click": "Click",
+        "double": "Double Press",
+        "long": "Long Press",
+        "held": "Held Down",
+        "touch": "Touch Button"
+      },
+      "errors": {
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR Inactive",
+          "tooltip": "To view or change controller bindings\nSteamVR must be running"
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "Make sure both left and right controllers are connected"
+        },
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\nDashboard Open",
+          "tooltip": "Close the SteamVR dashboard to view bindings"
+        },
+        "UNKNOWN": {
+          "message": "Configure Binding"
+        }
+      },
+      "dropdown": {
+        "desktop": "Desktop Mode",
+        "vr": "SteamVR Mode",
+        "description": "Open Binding Configuration"
+      }
+    },
     "friend-selection-modal": {
       "title": "Select Friends",
       "searchPlaceholder": "Search friend by name...",
@@ -1137,6 +1270,28 @@
           "title": {
             "MUTE": "Muted microphone in VRChat",
             "UNMUTE": "Unmuted microphone in VRChat"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "title": {
+            "MUTE": "Muted microphone: {deviceName}",
+            "UNMUTE": "Unmuted microphone: {deviceName}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "title": {
+            "TOGGLE": "Changed microphone controller button behavior to 'Toggle'",
+            "PUSH_TO_TALK": "Changed microphone controller button behavior to 'Push to Talk'"
           },
           "reason": {
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",

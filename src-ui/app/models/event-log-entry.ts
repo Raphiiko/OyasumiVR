@@ -32,6 +32,8 @@ export type EventLogEntry =
   | EventLogShutdownSequenceCancelled
   | EventLogWindowsPowerPolicySet
   | EventLogChangedVRChatMicMuteState
+  | EventLogChangedSystemMicMuteState
+  | EventLogChangedSystemMicControllerButtonBehavior
   | EventLogMsiAfterburnerProfileSet;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
@@ -54,6 +56,8 @@ export type EventLogType =
   | 'shutdownSequenceCancelled'
   | 'windowsPowerPolicySet'
   | 'changedVRChatMicMuteState'
+  | 'changedSystemMicMuteState'
+  | 'changedSystemMicControllerButtonBehavior'
   | 'msiAfterburnerProfileSet';
 
 export interface EventLogBase {
@@ -175,5 +179,18 @@ export interface EventLogMsiAfterburnerProfileSet extends EventLogBase {
 export interface EventLogChangedVRChatMicMuteState extends EventLogBase {
   type: 'changedVRChatMicMuteState';
   muted: boolean;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogChangedSystemMicMuteState extends EventLogBase {
+  type: 'changedSystemMicMuteState';
+  muted: boolean;
+  deviceName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogChangedSystemMicControllerButtonBehavior extends EventLogBase {
+  type: 'changedSystemMicControllerButtonBehavior';
+  behavior: 'TOGGLE' | 'PUSH_TO_TALK';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

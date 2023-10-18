@@ -16,7 +16,15 @@ export class SleepPreparationService {
   public readonly onSleepPreparation = this._onSleepPreparation.asObservable();
 
   public readonly sleepPreparationAvailable = this.automationConfigService.configs.pipe(
-    map((configs) => [configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled].some(Boolean))
+    map((configs) =>
+      [
+        configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
+        configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationState !== 'NONE',
+        configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBinding &&
+          configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationControllerBindingBehavior !==
+            'NONE',
+      ].some(Boolean)
+    )
   );
 
   constructor(private automationConfigService: AutomationConfigService) {}

@@ -17,6 +17,7 @@ import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
+import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
 
 const routes: Routes = [
   {
@@ -47,6 +48,10 @@ const routes: Routes = [
       {
         path: 'gpuAutomations',
         component: GpuAutomationsViewComponent,
+      },
+      {
+        path: 'systemMicMuteAutomations',
+        component: SystemMicMuteAutomationsViewComponent,
       },
       {
         path: 'statusAutomations',

@@ -422,6 +422,7 @@ export class VRChatService {
       } catch (e) {
         switch (e) {
           case 'INVALID_CREDENTIALS':
+          case 'MISSING_CREDENTIALS':
           case 'CHECK_EMAIL':
           case '2FA_TOTP_REQUIRED':
           case '2FA_EMAILOTP_REQUIRED':
@@ -557,6 +558,8 @@ export class VRChatService {
         case '"Invalid Username/Email or Password"':
           error(`[VRChat] Login failed: Invalid credentials`);
           throw 'INVALID_CREDENTIALS';
+        case '"Missing Credentials"':
+          throw 'MISSING_CREDENTIALS';
         default:
           error(
             `[VRChat] Received unexpected response from /auth/user: ${JSON.stringify(response)}`

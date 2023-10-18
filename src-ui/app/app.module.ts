@@ -127,7 +127,7 @@ import { BrightnessControlAutomationService } from './services/brightness-contro
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
-import { OverlayStateSyncService } from './services/overlay-state-sync.service';
+import { OverlayStateSyncService } from './services/overlay/overlay-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
@@ -160,6 +160,13 @@ import { VRChatMicMuteAutomationService } from './services/osc-automations/vrcha
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
+import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
+import { AudioDeviceService } from './services/audio-device.service';
+import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
+import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
+import { OpenVRInputService } from './services/openvr-input.service';
+import { OverlayService } from './services/overlay/overlay.service';
+import { ControllerBindingComponent } from './components/controller-binding/controller-binding.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -252,6 +259,9 @@ export function createTranslateLoader(http: HttpClient) {
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
+    DebugAudioDeviceDebuggerComponent,
+    SystemMicMuteAutomationsViewComponent,
+    ControllerBindingComponent,
   ],
   imports: [
     CommonModule,
@@ -300,7 +310,7 @@ export class AppModule {
     private lighthouseService: LighthouseService,
     private developerDebugService: DeveloperDebugService,
     private ipcService: IPCService,
-    private ipcAppStateSyncService: OverlayStateSyncService,
+    private overlayAppStateSyncService: OverlayStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
     private dotnetService: DotnetService,
@@ -310,6 +320,9 @@ export class AppModule {
     private sleepPreparationService: SleepPreparationService,
     private pulsoidService: PulsoidService,
     private quitWithSteamVRService: QuitWithSteamVRService,
+    private audioDeviceService: AudioDeviceService,
+    private openvrInputService: OpenVRInputService,
+    private overlayService: OverlayService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -345,7 +358,9 @@ export class AppModule {
     // Chaperone fade dinstance automations
     private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
     // Windows power policy automations
-    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService
+    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
+    // Miscellaneous automations
+    private systemMicMuteAutomationsService: SystemMicMuteAutomationService
   ) {
     this.init();
   }
@@ -382,6 +397,8 @@ export class AppModule {
           this.sleepPreparationService.init(),
           this.pulsoidService.init(),
           this.quitWithSteamVRService.init(),
+          this.audioDeviceService.init(),
+          this.openvrInputService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {
@@ -395,7 +412,8 @@ export class AppModule {
         await this.simpleBrightnessControlService.init();
         // Initialize IPC
         await this.ipcService.init();
-        await this.ipcAppStateSyncService.init();
+        await this.overlayService.init();
+        await this.overlayAppStateSyncService.init();
         // Initialize Steam support
         await this.steamService.init();
         // Initialize automations
@@ -436,6 +454,8 @@ export class AppModule {
           this.shutdownAutomationsService.init(),
           // Windows power policy automations
           this.setWindowsPowerPolicyOnSleepModeAutomationService.init(),
+          // Miscellaneous automations
+          this.systemMicMuteAutomationsService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION

@@ -8,11 +8,15 @@ mod models;
 mod sleep_detector;
 mod supersampling;
 
-use crate::utils::send_event;
+use crate::{
+    openvr::models::{OpenVRAction, OpenVRActionSet},
+    utils::send_event,
+};
 use chrono::{naive::NaiveDateTime, Utc};
 use gesture_detector::GestureDetector;
-use log::info;
+use log::{error, info};
 use models::OpenVRStatus;
+use ovr::input::ActiveActionSet;
 use ovr_overlay as ovr;
 use sleep_detector::SleepDetector;
 use std::time::Duration;
@@ -23,6 +27,9 @@ lazy_static! {
     static ref OVR_CONTEXT: Mutex<Option<ovr::Context>> = Default::default();
     static ref OVR_STATUS: Mutex<OpenVRStatus> = Mutex::new(OpenVRStatus::Inactive);
     static ref OVR_ACTIVE: Mutex<bool> = Mutex::new(false);
+    static ref OVR_ACTIONS: Mutex<Vec<OpenVRAction>> = Mutex::new(vec![]);
+    static ref OVR_ACTION_SETS: Mutex<Vec<OpenVRActionSet>> = Mutex::new(vec![]);
+    static ref OVR_ACTIVE_SETS: Mutex<Vec<ActiveActionSet>> = Mutex::new(vec![]);
 }
 
 pub async fn init() {
@@ -84,16 +91,88 @@ pub async fn task() {
                 {
                     let ctx = OVR_CONTEXT.lock().await;
                     let mut applications = ctx.as_ref().unwrap().applications_mngr();
-                    if let Ok(r) = applications.is_application_installed("steam.overlay.2538150") {
-                        if !r {
-                            info!("[Core] Registering VR Manifest");
-                            let manifest_path_buf =
-                                std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
-                            let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
-                            let _ = applications.add_application_manifest(manifest_path, false);
+                    info!("[Core] Registering VR Manifest");
+                    let manifest_path_buf =
+                        std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+                    let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
+                    if let Err(e) = applications.add_application_manifest(manifest_path, false) {
+                        error!(
+                            "[Core] Failed to register VR manifest: {:#?}",
+                            e.description()
+                        );
+                    }
+                }
+                // Set up SteamVR Input
+                let mut actions = vec![];
+                let mut action_sets = vec![];
+                let mut active_sets = vec![];
+                {
+                    let ctx = OVR_CONTEXT.lock().await;
+                    let mut input = ctx.as_ref().unwrap().input_mngr();
+                    // Register action manifest
+                    info!("[Core] Registering Action Manifest");
+                    let manifest_path_buf =
+                        std::fs::canonicalize("resources/input/action_manifest.json").unwrap();
+                    let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
+                    if let Err(e) = input.set_action_manifest(manifest_path) {
+                        error!(
+                            "[Core] Failed to register action manifest: {:#?}",
+                            e.description()
+                        );
+                    } else {
+                        // Get action handles
+                        for action in vec![
+                            "/actions/main/in/OpenOverlay",
+                            "/actions/main/in/MuteMicrophone",
+                            "/actions/hidden/in/IndicatePresence",
+                            "/actions/hidden/in/OverlayInteract",
+                        ]
+                        .into_iter()
+                        {
+                            let handle = match input.get_action_handle(action) {
+                                Ok(value) => value,
+                                Err(error) => {
+                                    error!(
+                                        "[Core] Failed get action handle: {:?}",
+                                        error.description()
+                                    );
+                                    continue;
+                                }
+                            };
+                            actions.push(OpenVRAction {
+                                name: action.to_string(),
+                                handle,
+                            });
+                        }
+                        // Get action set handles
+                        for action_set in vec!["/actions/main", "/actions/hidden"].into_iter() {
+                            let handle = match input.get_action_set_handle(action_set) {
+                                Ok(value) => value,
+                                Err(error) => {
+                                    error!(
+                                        "[Core] Failed get action set handle: {:?}",
+                                        error.description()
+                                    );
+                                    continue;
+                                }
+                            };
+                            active_sets.push(ActiveActionSet(ovr::sys::VRActiveActionSet_t {
+                                ulActionSet: handle.0,
+                                ulRestrictedToDevice: ovr::sys::k_ulInvalidInputValueHandle,
+                                ulSecondaryActionSet: 0,
+                                unPadding: 0,
+                                nPriority: 0,
+                            }));
+                            action_sets.push(OpenVRActionSet {
+                                name: action_set.to_string(),
+                                handle,
+                            });
                         }
                     }
                 }
+                *OVR_ACTIONS.lock().await = actions;
+                *OVR_ACTION_SETS.lock().await = action_sets;
+                *OVR_ACTIVE_SETS.lock().await = active_sets;
             }
             // Process tick
             devices::on_ovr_tick().await;

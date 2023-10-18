@@ -97,6 +97,10 @@ export class OpenVRService {
     return invoke<number>('openvr_get_fade_distance');
   }
 
+  public async isDashboardVisible(): Promise<boolean> {
+    return invoke<boolean>('openvr_is_dashboard_visible');
+  }
+
   private onStatusUpdate(status: OpenVRStatus) {
     this._status.next(status);
     switch (status) {

@@ -12,6 +12,8 @@ public class OverlayPointer {
   private bool _disposed;
   private readonly PointerData _rightPointer;
   private readonly PointerData _leftPointer;
+  private bool rightInteractPressed = false;
+  private bool leftInteractPressed = false;
 
   public OverlayPointer()
   {
@@ -43,8 +45,7 @@ public class OverlayPointer {
       (uint)pointerImage.Item3, 4);
     Marshal.FreeHGlobal(intPtr);
     // Handle trigger events
-    OvrManager.Instance.ButtonDetector!.OnTriggerPress += OnTriggerPress;
-    OvrManager.Instance.ButtonDetector!.OnTriggerRelease += OnTriggerRelease;
+    OvrManager.Instance.OnInputActionsChanged += OnInputAction;
     // Start tasks
     new Thread(Start).Start();
   }
@@ -54,8 +55,7 @@ public class OverlayPointer {
   {
     if (_disposed) return;
     _disposed = true;
-    OvrManager.Instance.ButtonDetector!.OnTriggerPress -= OnTriggerPress;
-    OvrManager.Instance.ButtonDetector!.OnTriggerRelease -= OnTriggerRelease;
+    OvrManager.Instance.OnInputActionsChanged -= OnInputAction;
     lock (_leftPointer)
     {
       OpenVR.Overlay.DestroyOverlay(_leftPointer.OverlayHandle);
@@ -211,7 +211,37 @@ public class OverlayPointer {
     }
   }
 
-  private void OnTriggerRelease(object? sender, ETrackedControllerRole e)
+  private void OnInputAction(object? sender, Dictionary<string, List<OvrManager.OvrInputDevice>> inputActions)
+  {
+    var leftPressed = inputActions["/actions/hidden/in/OverlayInteract"].Any(
+      device => device.Role == ETrackedControllerRole.LeftHand
+    );
+    if (leftPressed && !leftInteractPressed)
+    {
+      leftInteractPressed = true;
+      OnInteractPress(ETrackedControllerRole.LeftHand);
+    }
+    else if (!leftPressed && leftInteractPressed)
+    {
+      leftInteractPressed = false;
+      OnInteractRelease(ETrackedControllerRole.LeftHand);
+    }
+    var rightPressed = inputActions["/actions/hidden/in/OverlayInteract"].Any(
+      device => device.Role == ETrackedControllerRole.RightHand
+    );
+    if (rightPressed && !rightInteractPressed)
+    {
+      rightInteractPressed = true;
+      OnInteractPress(ETrackedControllerRole.RightHand);
+    }
+    else if (!rightPressed && rightInteractPressed)
+    {
+      rightInteractPressed = false;
+      OnInteractRelease(ETrackedControllerRole.RightHand);
+    }
+  }
+
+  private void OnInteractRelease(ETrackedControllerRole e)
   {
     lock (_leftPointer)
     lock (_rightPointer)
@@ -235,7 +265,7 @@ public class OverlayPointer {
     }
   }
 
-  private void OnTriggerPress(object? sender, ETrackedControllerRole e)
+  private void OnInteractPress(ETrackedControllerRole e)
   {
     lock (_leftPointer)
     lock (_rightPointer)

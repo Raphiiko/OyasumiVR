@@ -525,30 +525,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "Tindakan aktivasi",
-          "description": "Pilih tindakan mana yang akan membuka dan menutup overlay",
-          "action": {
-            "none": "Kosong (dimatikan)",
-            "singleA": "Sekali tekan A",
-            "doubleA": "Dua-kali tekan A",
-            "tripleA": "Tiga-kali tekan A",
-            "singleB": "Sekali tekan B",
-            "doubleB": "Dua-kali tekan B",
-            "tripleB": "Tiga-kali tekan B"
-          },
-          "controller": {
-            "either": "Salah satu kontroler",
-            "left": "Kontroler kiri",
-            "right": "Kontroler kanan",
-            "title": "Kontroler",
-            "description": "Pilih kontroler mana yang dapat digunakan untuk mengaktifkan overlay"
-          },
-          "triggerFilter": {
-            "title": "Memerlukan trigger",
-            "description": "Hanya aktif jika trigger ditekan saat melakukan tindakan."
-          }
-        },
         "title": "Overlay"
       }
     },

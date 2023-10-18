@@ -29,9 +29,9 @@ pub use grpc::models as Models;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
-use log::{info, LevelFilter, warn};
+use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
-use tauri::{plugin::TauriPlugin, Manager, Wry, AppHandle};
+use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
@@ -68,7 +68,6 @@ fn main() {
         .expect("An error occurred while running the application");
 }
 
-
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
     tauri::generate_handler![
         openvr::commands::openvr_get_devices,
@@ -80,6 +79,9 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_fade_distance,
         openvr::commands::openvr_set_fade_distance,
         openvr::commands::openvr_set_image_brightness,
+        openvr::commands::openvr_launch_binding_configuration,
+        openvr::commands::openvr_get_binding_origins,
+        openvr::commands::openvr_is_dashboard_visible,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
@@ -98,6 +100,9 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::windows_sleep,
         os::commands::windows_logout,
         os::commands::windows_hibernate,
+        os::commands::get_audio_devices,
+        os::commands::set_audio_device_volume,
+        os::commands::set_audio_device_mute,
         osc::commands::osc_send_bool,
         osc::commands::osc_send_float,
         osc::commands::osc_send_int,
@@ -136,16 +141,14 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
 }
 
 fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
-    if let Err(e) = tauri_plugin_deep_link::register(
-        "oyasumivr",
-        move |request| {
-            dbg!(&request);
-            app_handle.emit_all("onDeepLinkCall", request).unwrap();
-        },
-    ) {
-           warn!("[Core] Could not register schema for handling deep links. Functionality requiring deep links will not work properly. Error: {:#?}", e);
+    if let Err(e) = tauri_plugin_deep_link::register("oyasumivr", move |request| {
+        dbg!(&request);
+        app_handle.emit_all("onDeepLinkCall", request).unwrap();
+    }) {
+        warn!("[Core] Could not register schema for handling deep links. Functionality requiring deep links will not work properly. Error: {:#?}", e);
     };
 }
+
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     tauri_plugin_log::Builder::default()
         .format(move |out, message, record| {
@@ -219,7 +222,9 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Initialize Image Cache
     image_cache::init(cache_dir).await;
     // Load sounds
-    os::load_sounds();
+    os::load_sounds().await;
+    // Initialize audio device manager
+    os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth
     lighthouse::init().await;
     // Initialize log commands
