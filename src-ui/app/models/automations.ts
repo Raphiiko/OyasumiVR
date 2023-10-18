@@ -502,7 +502,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepModeEnableState: 'NONE',
     onSleepModeDisableState: 'NONE',
     onSleepPreparationState: 'NONE',
-    overlayMuteIndicator: true,
+    overlayMuteIndicator: false,
     overlayMuteIndicatorOpacity: 80,
     overlayMuteIndicatorFade: true,
     controllerBinding: false,

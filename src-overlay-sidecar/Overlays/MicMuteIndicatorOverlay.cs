@@ -63,18 +63,19 @@ public class MicMuteIndicatorOverlay {
       }
 
       // Update opacity
+      var maxOpacity = _maxOpacity * (_muteState ? 1.0f : 0.1f);
       if (_fadeOut)
       {
         var timeSinceLastPresenceIndication = (DateTime.UtcNow - _lastPresenceIndication).TotalMilliseconds;
         var timeSince = Math.Min(timeSinceLastPresenceIndication, timeSinceLastStateChange);
         // Console.WriteLine(timeSinceLastPresenceIndication);
         var opacityFactor = EasingFunctions.InQuad(MathUtils.InvLerpClamped(3000, 4000, (float)timeSince));
-        var opacity = (float)(_maxOpacity / 100f * (1.0 - opacityFactor));
+        var opacity = (float)(maxOpacity / 100f * (1.0 - opacityFactor));
         OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, opacity);
       }
       else
       {
-        OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, (float)(_maxOpacity / 100f));
+        OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, (float)(maxOpacity / 100f));
       }
 
       timer.SleepUntilNextTick();
