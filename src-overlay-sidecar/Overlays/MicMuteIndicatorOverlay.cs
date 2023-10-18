@@ -6,10 +6,11 @@ using Valve.VR;
 namespace overlay_sidecar;
 
 public class MicMuteIndicatorOverlay {
+  public static readonly Matrix4x4 VRC_MIC_ICON_TRANSLATION = Matrix4x4.CreateTranslation(-0.48f, -0.405f, -1.15f);
   private readonly ulong _overlayHandle;
   private readonly (byte[], int, int) _muteImage;
   private readonly (byte[], int, int) _unmuteImage;
-  private readonly float _baseScale = 0.1f;
+  private readonly float _baseScale = 0.088f;
   private bool _muteState = true;
   private double _maxOpacity = 100;
   private bool _disposed;
@@ -29,7 +30,9 @@ public class MicMuteIndicatorOverlay {
     OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, 0f);
     OpenVR.Overlay.SetOverlayWidthInMeters(_overlayHandle, 0.1f);
     // Position the overlay
-    var target = Matrix4x4.CreateTranslation(0, 0, -0.55f).ToHmdMatrix34_t();
+    var target =
+      (VRC_MIC_ICON_TRANSLATION * Matrix4x4.CreateTranslation(-0.08f, 0, 0)).ToHmdMatrix34_t();
+
     OpenVR.Overlay.SetOverlayTransformTrackedDeviceRelative(_overlayHandle, 0, ref target);
     // Update with state changes
     StateManager.Instance.StateChanged += OnStateChanged;
