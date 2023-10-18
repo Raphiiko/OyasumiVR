@@ -132,7 +132,7 @@ export class ControllerBindingComponent implements OnInit {
     }
   }
 
-  clickOutsideDropdown($event: MouseEvent) {
+  clickOutsideDropdown() {
     if (this.dropdownOpen) {
       this.dropdownOpen = false;
     }

@@ -53,7 +53,7 @@
   </div>
 </button>
 <div class="dropdown-container">
-  <div class="dropdown" @fadeDown *ngIf="dropdownOpen" (clickOutside)="clickOutsideDropdown($event)">
+  <div class="dropdown" @fadeDown *ngIf="dropdownOpen" (clickOutside)="clickOutsideDropdown()">
     <div class="dropdown-description" translate>comp.controller-binding.dropdown.description</div>
     <button class="config-button" (click)="launchBindingConfiguration(true)" translate>
       comp.controller-binding.dropdown.desktop

@@ -99,7 +99,6 @@ export class MainStatusBarComponent implements OnInit {
   }
 
   systemMicrophoneMuteAction() {
-    const url = window.location.pathname;
     if (window.location.pathname !== '/dashboard/systemMicMuteAutomations') {
       return 'NAVIGATE';
     } else {

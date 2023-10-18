@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -22,7 +22,7 @@ import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-m
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
   animations: [vshrink(), fade()],
 })
-export class SystemMicMuteAutomationsViewComponent {
+export class SystemMicMuteAutomationsViewComponent implements OnInit {
   config: SystemMicMuteAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
@@ -130,7 +130,7 @@ export class SystemMicMuteAutomationsViewComponent {
           .filter((d) => d.deviceType === 'Capture')
           .map((d) => {
             let label = d.name;
-            let breakIndex = label.indexOf('(');
+            const breakIndex = label.indexOf('(');
             if (breakIndex > -1) {
               label =
                 label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
@@ -144,7 +144,7 @@ export class SystemMicMuteAutomationsViewComponent {
         const device = devices.find((d) => d.default);
         if (device) {
           let label = device.name;
-          let breakIndex = label.indexOf('(');
+          const breakIndex = label.indexOf('(');
           if (breakIndex > -1) {
             label =
               label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
@@ -169,7 +169,7 @@ export class SystemMicMuteAutomationsViewComponent {
               (await this.systemMicMuteAutomationService.getAudioDeviceNameForPersistentId(
                 audioDevicePersistedId
               )) ?? 'Unknown Device';
-            let breakIndex = label.indexOf('(');
+            const breakIndex = label.indexOf('(');
             if (breakIndex > -1) {
               label =
                 label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);

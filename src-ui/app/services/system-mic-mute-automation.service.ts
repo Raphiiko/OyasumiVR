@@ -50,7 +50,7 @@ export class SystemMicMuteAutomationService {
     ),
     this.audioDeviceService.activeDevices,
   ]).pipe(
-    switchMap(async ([config, activeDevices]) =>
+    switchMap(async ([config]) =>
       this.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
     )
   );
@@ -185,7 +185,7 @@ export class SystemMicMuteAutomationService {
     buttonPressed$.subscribe(async (pressed) => {
       buttonPressed = pressed;
       switch (this._effectiveControllerBehaviour.value) {
-        case 'TOGGLE':
+        case 'TOGGLE': {
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
           if (pressed) {
@@ -196,6 +196,7 @@ export class SystemMicMuteAutomationService {
             await this.setMute(!isMuted);
           }
           break;
+        }
         case 'PUSH_TO_TALK':
           await this.notificationService.playSound(
             pressed ? 'mic_unmute' : 'mic_mute',
@@ -323,7 +324,7 @@ export class SystemMicMuteAutomationService {
   }
 
   public async getAudioDeviceNameForPersistentId(id: string): Promise<string | null> {
-    let devices = await firstValueFrom(this.audioDeviceService.activeDevices);
+    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
     if (id === 'DEFAULT') return devices.find((d) => d.default)?.name ?? null;
     if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
     return id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
@@ -333,7 +334,7 @@ export class SystemMicMuteAutomationService {
     id: string | undefined | null
   ): Promise<AudioDevice | null> {
     if (!id) return null;
-    let devices = await firstValueFrom(this.audioDeviceService.activeDevices);
+    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
     if (id === 'DEFAULT') return devices.find((d) => d.default) ?? null;
     if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
     const name = id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);

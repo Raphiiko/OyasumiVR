@@ -3,7 +3,6 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
 import { WindowsPowerPolicy } from './windows-power-policy';
-import { SystemMicMuteControllerBindingBehavior } from './automations';
 
 export type EventLog = {
   version: 3;
