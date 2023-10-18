@@ -140,10 +140,12 @@
       <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
     </div>
     <div
-      class="pill vrc-status"
+      class="pill vrc-status clickable"
       *ngVar="{ hover: false } as state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
+      (click)="navigateToVRChatSettings()"
+      [tooltip]="'comp.main-status-bar.vrchat.tooltip'"
     >
       <ng-container *ngVar="user | async as user">
         <div class="pill-icon" *ngIf="!user || user.status === 'offline'" @hshrink>

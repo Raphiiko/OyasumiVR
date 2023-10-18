@@ -57,10 +57,14 @@ message OyasumiSidecarState {
   OyasumiSidecarBrightnessState brightness_state = 8;
   bool sleep_preparation_available = 9;
   bool sleep_preparation_timed_out = 10;
+  bool system_mic_muted = 11;
 }
 
 // No longer required, but reserved for future settings
 message OyasumiSidecarOverlaySettings {
+  bool system_mic_indicator_enabled = 1;
+  double system_mic_indicator_opacity = 2;
+  bool system_mic_indicator_fadeout = 3;
 }
 
 message OyasumiSidecarDeviceInfo {

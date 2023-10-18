@@ -51,7 +51,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         },
@@ -60,7 +60,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         },
@@ -69,7 +69,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         },
@@ -78,7 +78,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         },
@@ -87,7 +87,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         },
@@ -96,7 +96,7 @@
           "mode": "button",
           "inputs": {
             "click": {
-              "output": "/actions/hidden/in/sleepcheckdecline"
+              "output": "/actions/hidden/in/indicatepresence"
             }
           }
         }

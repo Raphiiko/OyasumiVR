@@ -592,30 +592,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "启用动作",
-          "description": "选择何时开启或关闭叠加层",
-          "action": {
-            "none": "无（停用）",
-            "singleA": "单击A键",
-            "doubleA": "双击A键",
-            "tripleA": "三击A键",
-            "singleB": "单击B键",
-            "doubleB": "双击B键",
-            "tripleB": "三击B键"
-          },
-          "controller": {
-            "either": "任意手柄",
-            "left": "左手柄",
-            "right": "右手柄",
-            "title": "手柄",
-            "description": "选择哪些手柄可以用于启用叠加层"
-          },
-          "triggerFilter": {
-            "title": "需要扳机",
-            "description": "仅在执行动作时按住扳机时才启用。"
-          }
-        },
         "title": "叠加层"
       },
       "startStop": {

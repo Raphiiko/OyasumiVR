@@ -124,7 +124,7 @@ pub async fn task() {
                         for action in vec![
                             "/actions/main/in/OpenOverlay",
                             "/actions/main/in/MuteMicrophone",
-                            "/actions/hidden/in/SleepCheckDecline",
+                            "/actions/hidden/in/IndicatePresence",
                             "/actions/hidden/in/OverlayInteract",
                         ]
                         .into_iter()

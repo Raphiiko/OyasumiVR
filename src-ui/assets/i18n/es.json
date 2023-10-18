@@ -626,30 +626,6 @@
         }
       },
       "overlay": {
-        "activation": {
-          "title": "Acción de activación",
-          "description": "Seleccione qué acción abrirá y cerrará la superposición",
-          "action": {
-            "none": "Ninguno (desactivado)",
-            "singleA": "Una pulsación A",
-            "doubleA": "Doble pulsación A",
-            "tripleA": "Triple pulsación A",
-            "singleB": "Una pulsación B",
-            "doubleB": "Doble pulsación B",
-            "tripleB": "Triple pulsación B"
-          },
-          "controller": {
-            "either": "Cualquiera de los controladores",
-            "left": "Mando izquierdo",
-            "right": "Mando derecho",
-            "title": "Controlador",
-            "description": "Seleccione los controladores que pueden utilizarse para activar la superposición"
-          },
-          "triggerFilter": {
-            "title": "Requiere gatillo",
-            "description": "Sólo se activa si se mantiene pulsado el gatillo mientras se realiza la acción."
-          }
-        },
         "title": "Superposición"
       },
       "startStop": {

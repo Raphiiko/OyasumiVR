@@ -2,8 +2,8 @@
   <h2 translate>power-automations.devicePowerOff.onSleepModeEnable.title</h2>
   <p>
     <span translate>power-automations.devicePowerOff.onSleepModeEnable.description</span><br /><span
-      [innerHTML]="'power-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
-    ></span>
+    [innerHTML]="'power-automations.devicePowerOff.onSleepModeEnable.hint' | translate"
+  ></span>
   </p>
   <div class="settings">
     <div class="setting-row">
@@ -48,7 +48,7 @@
       <div class="setting-row-label" translate>
         <span translate>power-automations.devicePowerOff.onCharge.optionControllers.title</span>
         <span translate
-          >power-automations.devicePowerOff.onCharge.optionControllers.description</span
+        >power-automations.devicePowerOff.onCharge.optionControllers.description</span
         >
       </div>
       <div class="setting-row-action">
@@ -88,7 +88,7 @@
       <div class="setting-row-label" translate>
         <span translate>power-automations.devicePowerOff.onBatteryLevel.controllers.title</span>
         <span translate
-          >power-automations.devicePowerOff.onBatteryLevel.controllers.description</span
+        >power-automations.devicePowerOff.onBatteryLevel.controllers.description</span
         >
       </div>
       <div class="setting-row-action">
@@ -111,25 +111,43 @@
     </div>
     <div
       class="setting-row-group"
-      *ngIf="onBatteryLevelConfig.turnOffControllers && activateSleepWhenControllersTurnedOff"
+      *ngIf="onBatteryLevelConfig.turnOffControllers"
       @vshrink
     >
-      <div class="setting-row">
+      <div class="setting-row" *ngIf="activateSleepWhenControllersTurnedOff" @vshrink>
         <div class="setting-row-label conflict" translate>
           <span>
             <span><i class="material-icons">warning</i></span>
             <span translate
-              >power-automations.devicePowerOff.onBatteryLevel.controllerPoweroffConflict.title</span
+            >power-automations.devicePowerOff.onBatteryLevel.controllers.powerOffConflict.title</span
             >
           </span>
           <span translate
-            >power-automations.devicePowerOff.onBatteryLevel.controllerPoweroffConflict.description</span
+          >power-automations.devicePowerOff.onBatteryLevel.controllers.powerOffConflict.description</span
           >
         </div>
         <div class="setting-row-action">
           <button class="btn btn-secondary" (click)="goToSleepDetection()" translate>
-            power-automations.devicePowerOff.onBatteryLevel.controllerPoweroffConflict.action
+            power-automations.devicePowerOff.onBatteryLevel.controllers.powerOffConflict.action
           </button>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.devicePowerOff.onBatteryLevel.controllers.onlyDuringSleepMode.title</span>
+          <span translate
+          >power-automations.devicePowerOff.onBatteryLevel.controllers.onlyDuringSleepMode.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onBatteryLevelConfig.turnOffControllersOnlyDuringSleepMode"
+              (change)="toggleOnBatteryLevelOnlyDuringSleepMode('Controller')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
         </div>
       </div>
     </div>
@@ -154,6 +172,29 @@
           />
           <span class="switch-toggle-slider"></span>
         </label>
+      </div>
+    </div>
+    <div class="setting-row-group"
+         *ngIf="onBatteryLevelConfig.turnOffTrackers"
+         @vshrink
+    >
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>power-automations.devicePowerOff.onBatteryLevel.trackers.onlyDuringSleepMode.title</span>
+          <span translate
+          >power-automations.devicePowerOff.onBatteryLevel.trackers.onlyDuringSleepMode.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onBatteryLevelConfig.turnOffTrackersOnlyDuringSleepMode"
+              (change)="toggleOnBatteryLevelOnlyDuringSleepMode('GenericTracker')"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
       </div>
     </div>
   </div>

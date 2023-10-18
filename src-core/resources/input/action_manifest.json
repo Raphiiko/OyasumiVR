@@ -27,7 +27,7 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/hidden/in/SleepCheckDecline",
+      "name": "/actions/hidden/in/IndicatePresence",
       "requirement": "mandatory",
       "type": "boolean"
     },
@@ -44,7 +44,7 @@
     },
     {
       "name": "/actions/hidden",
-      "usage": "hidden"
+      "usage": "leftright"
     }
   ],
   "localization": [
@@ -54,7 +54,7 @@
       "/actions/hidden": "OyasumiVR Hidden Actions",
       "/actions/main/in/OpenOverlay": "Open Overlay Menu",
       "/actions/main/in/MuteMicrophone": "Mute Microphone",
-      "/actions/hidden/in/SleepCheckDecline": "Decline Sleep Check",
+      "/actions/hidden/in/IndicatePresence": "Indicate Presence",
       "/actions/hidden/in/OverlayInteract": "Overlay Interact"
     }
   ]

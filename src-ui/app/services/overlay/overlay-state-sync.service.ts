@@ -38,6 +38,7 @@ import { SimpleBrightnessControlService } from '../brightness-control/simple-bri
 import { DisplayBrightnessControlService } from '../brightness-control/display-brightness-control.service';
 import { ImageBrightnessControlService } from '../brightness-control/image-brightness-control.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
+import { SystemMicMuteAutomationService } from '../system-mic-mute-automation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -85,7 +86,14 @@ export class OverlayStateSyncService {
       controllers: [],
       trackers: [],
     },
-    settings: {},
+    settings: {
+      systemMicIndicatorEnabled:
+        AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicator,
+      systemMicIndicatorOpacity:
+        AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorOpacity,
+      systemMicIndicatorFadeout:
+        AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorFade,
+    },
     brightnessState: {
       advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
       brightness: 100,
@@ -103,6 +111,7 @@ export class OverlayStateSyncService {
     },
     sleepPreparationAvailable: false,
     sleepPreparationTimedOut: false,
+    systemMicMuted: false,
   });
 
   constructor(
@@ -116,7 +125,8 @@ export class OverlayStateSyncService {
     private simpleBrightness: SimpleBrightnessControlService,
     private displayBrightness: DisplayBrightnessControlService,
     private imageBrightness: ImageBrightnessControlService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private systemMicMuteAutomationService: SystemMicMuteAutomationService
   ) {}
 
   async init() {
@@ -130,6 +140,7 @@ export class OverlayStateSyncService {
     this.updateState_WhenAppSettingsChange();
     this.updateState_WhenBrightnessStateChanges();
     this.updateState_WhenSleepPreparationStateChanges();
+    this.updateState_WhenSystemMicMuteStateChanges();
   }
 
   private syncToSidecar_WhenStateChanges() {
@@ -187,6 +198,7 @@ export class OverlayStateSyncService {
             'SHUTDOWN_AUTOMATIONS',
             'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
             'BRIGHTNESS_CONTROL_ADVANCED_MODE',
+            'SYSTEM_MIC_MUTE_AUTOMATIONS',
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
         }),
@@ -243,6 +255,14 @@ export class OverlayStateSyncService {
         }
         {
           state.brightnessState!.advancedMode = configs.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+        }
+        {
+          state.settings!.systemMicIndicatorEnabled =
+            configs.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicator;
+          state.settings!.systemMicIndicatorOpacity =
+            configs.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorOpacity;
+          state.settings!.systemMicIndicatorFadeout =
+            configs.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorFade;
         }
         this.state.next(state);
       });
@@ -374,6 +394,16 @@ export class OverlayStateSyncService {
       .subscribe((timedOut) => {
         const state = cloneDeep(this.state.value);
         state.sleepPreparationTimedOut = timedOut;
+        this.state.next(state);
+      });
+  }
+
+  private updateState_WhenSystemMicMuteStateChanges() {
+    this.systemMicMuteAutomationService.isMicMuted
+      .pipe(distinctUntilChanged())
+      .subscribe((muted) => {
+        const state = cloneDeep(this.state.value);
+        state.systemMicMuted = muted ?? false;
         this.state.next(state);
       });
   }

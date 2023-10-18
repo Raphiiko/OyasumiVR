@@ -8,7 +8,7 @@ export enum OVRInputEventActionSet {
 export enum OVRInputEventAction {
   OpenOverlay = '/actions/main/in/OpenOverlay',
   MuteMicrophone = '/actions/main/in/MuteMicrophone',
-  SleepCheckDecline = '/actions/hidden/in/SleepCheckDecline',
+  IndicatePresence = '/actions/hidden/in/IndicatePresence',
   OverlayInteract = '/actions/hidden/in/OverlayInteract',
 }
 

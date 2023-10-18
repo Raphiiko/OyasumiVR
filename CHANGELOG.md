@@ -20,6 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Instructions on how to start OyasumiVR alongside SteamVR.
 - Automation for muting and unmuting your microphone in VRChat, when you go to sleep or wake up.
 - Automations for turning off devices when their battery levels reach below a threshold.
+- Shortcut to VRChat related settings from the status bar pill.
+- Option for dismissing the sleep check by pressing controller buttons.
+- Option for changing the volume of general notification sounds.
 
 ### Changed
 - Updated translations to use ICU syntax.

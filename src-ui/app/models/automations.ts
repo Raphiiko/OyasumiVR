@@ -196,8 +196,10 @@ export interface TurnOffDevicesWhenChargingAutomationConfig extends AutomationCo
 export interface TurnOffDevicesOnBatteryLevelAutomationConfig extends AutomationConfig {
   turnOffControllers: boolean;
   turnOffControllersAtLevel: number;
+  turnOffControllersOnlyDuringSleepMode: boolean;
   turnOffTrackers: boolean;
   turnOffTrackersAtLevel: number;
+  turnOffTrackersOnlyDuringSleepMode: boolean;
 }
 
 export interface TurnOnLighthousesOnOyasumiStartAutomationConfig extends AutomationConfig {}
@@ -419,8 +421,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: true,
     turnOffControllers: false,
     turnOffControllersAtLevel: 50,
+    turnOffControllersOnlyDuringSleepMode: false,
     turnOffTrackers: false,
     turnOffTrackersAtLevel: 50,
+    turnOffTrackersOnlyDuringSleepMode: false,
   },
   TURN_ON_LIGHTHOUSES_ON_OYASUMI_START: {
     enabled: false,

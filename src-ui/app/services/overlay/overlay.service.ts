@@ -11,6 +11,7 @@ import { info } from 'tauri-plugin-log-api';
 import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { cloneDeep } from 'lodash';
+import { OVRInputEventAction } from '../../models/ovr-input-event';
 
 @Injectable({
   providedIn: 'root',
@@ -43,7 +44,7 @@ export class OverlayService {
       .pipe(
         pairwise(),
         filter(() => this.appSettings.overlayMenuEnabled),
-        map((states) => states.map((state) => state['/actions/main/in/OpenOverlay'])),
+        map((states) => states.map((state) => state[OVRInputEventAction.OpenOverlay])),
         map(([previous, current]) =>
           current.find(
             (currentDevice) =>

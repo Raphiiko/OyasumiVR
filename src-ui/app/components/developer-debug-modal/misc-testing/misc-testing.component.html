@@ -2,6 +2,14 @@
 <button class="btn btn-secondary" (click)="openBindingConfig()">Open Binding Config</button>
 <button class="btn btn-secondary" (click)="getActionBindings()">Get Action Bindings</button>
 <pre *ngIf="bindings">{{bindings | json}}</pre>
+<h3>Notification Sounds</h3>
+<div class="row">
+  <button class="btn btn-secondary" (click)="playSound('notification_bell')">notification_bell</button>
+  <button class="btn btn-secondary" (click)="playSound('notification_block')">notification_block</button>
+  <button class="btn btn-secondary" (click)="playSound('mic_mute')">mic_mute</button>
+  <button class="btn btn-secondary" (click)="playSound('mic_unmute')">mic_unmute</button>
+  <app-slider-setting [(value)]="soundVolume" [max]="200"></app-slider-setting>
+</div>
 <h3>VRChat microphone muting</h3>
 <p>Muted: {{ automation.muted | async }}</p>
 <p>Mode: {{ automation.mode | async }}</p>

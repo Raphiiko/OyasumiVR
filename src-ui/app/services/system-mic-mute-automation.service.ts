@@ -27,6 +27,12 @@ import { cloneDeep, isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { OVRInputEventAction } from '../models/ovr-input-event';
+import { NotificationService } from './notification.service';
+import {
+  EventLogChangedSystemMicControllerButtonBehavior,
+  EventLogChangedSystemMicMuteState,
+} from '../models/event-log-entry';
+import { EventLogService } from './event-log.service';
 
 const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
 const PERSISTENT_ID_TRAIL = ']';
@@ -61,7 +67,9 @@ export class SystemMicMuteAutomationService {
     private audioDeviceService: AudioDeviceService,
     private openvrInputService: OpenVRInputService,
     private sleepService: SleepService,
-    private sleepPreparationService: SleepPreparationService
+    private sleepPreparationService: SleepPreparationService,
+    private notificationService: NotificationService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -97,7 +105,12 @@ export class SystemMicMuteAutomationService {
             info(
               `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the sleep mode was enabled`
             );
-            // TODO: LOG EVENT
+            this.eventLog.logEvent({
+              type: 'changedSystemMicMuteState',
+              muted: stateSet.muted,
+              deviceName: stateSet.device?.name ?? 'Unknown',
+              reason: 'SLEEP_MODE_ENABLED',
+            } as EventLogChangedSystemMicMuteState);
           }
         })
       )
@@ -119,7 +132,12 @@ export class SystemMicMuteAutomationService {
             info(
               `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the sleep mode was disabled`
             );
-            // TODO: LOG EVENT
+            this.eventLog.logEvent({
+              type: 'changedSystemMicMuteState',
+              muted: stateSet.muted,
+              deviceName: stateSet.device?.name ?? 'Unknown',
+              reason: 'SLEEP_MODE_DISABLED',
+            } as EventLogChangedSystemMicMuteState);
           }
         })
       )
@@ -139,7 +157,12 @@ export class SystemMicMuteAutomationService {
             info(
               `[SystemMicMuteAutomation] Setting mic mute to ${stateSet} as the user prepared to go to sleep`
             );
-            // TODO: LOG EVENT
+            this.eventLog.logEvent({
+              type: 'changedSystemMicMuteState',
+              muted: stateSet.muted,
+              deviceName: stateSet.device?.name ?? 'Unknown',
+              reason: 'SLEEP_PREPARATION',
+            } as EventLogChangedSystemMicMuteState);
           }
         })
       )
@@ -154,7 +177,8 @@ export class SystemMicMuteAutomationService {
       pairwise(),
       map(([oldState, newState]) => {
         return newState.some((d) => !oldState.includes(d));
-      })
+      }),
+      filter(() => this.config.controllerBinding)
     );
 
     // Respond to button presses
@@ -164,9 +188,19 @@ export class SystemMicMuteAutomationService {
         case 'TOGGLE':
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
-          if (pressed) await this.setMute(!isMuted);
+          if (pressed) {
+            await this.notificationService.playSound(
+              isMuted ? 'mic_unmute' : 'mic_mute',
+              this.config.muteSoundVolume / 100
+            );
+            await this.setMute(!isMuted);
+          }
           break;
         case 'PUSH_TO_TALK':
+          await this.notificationService.playSound(
+            pressed ? 'mic_unmute' : 'mic_mute',
+            this.config.muteSoundVolume / 100
+          );
           await this.setMute(!pressed);
           break;
       }
@@ -206,7 +240,11 @@ export class SystemMicMuteAutomationService {
           info(
             `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the sleep mode was enabled`
           );
-          // TODO: LOG EVENT
+          this.eventLog.logEvent({
+            type: 'changedSystemMicControllerButtonBehavior',
+            behavior: modeSet,
+            reason: 'SLEEP_MODE_ENABLED',
+          } as EventLogChangedSystemMicControllerButtonBehavior);
         })
       )
       .subscribe();
@@ -227,7 +265,11 @@ export class SystemMicMuteAutomationService {
           info(
             `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the sleep mode was disabled`
           );
-          // TODO: LOG EVENT
+          this.eventLog.logEvent({
+            type: 'changedSystemMicControllerButtonBehavior',
+            behavior: modeSet,
+            reason: 'SLEEP_MODE_DISABLED',
+          } as EventLogChangedSystemMicControllerButtonBehavior);
         })
       )
       .subscribe();
@@ -246,13 +288,20 @@ export class SystemMicMuteAutomationService {
           info(
             `[SystemMicMuteAutomation] Setting effective controller button behaviour to ${modeSet} as the user prepared to go to sleep`
           );
-          // TODO: LOG EVENT
+          this.eventLog.logEvent({
+            type: 'changedSystemMicControllerButtonBehavior',
+            behavior: modeSet,
+            reason: 'SLEEP_PREPARATION',
+          } as EventLogChangedSystemMicControllerButtonBehavior);
         })
       )
       .subscribe();
   }
 
-  private async setMute(mute: boolean) {
+  private async setMute(mute: boolean): Promise<{
+    muted: boolean;
+    device: AudioDevice;
+  } | null> {
     const device = await firstValueFrom(this.captureDevice);
     if (!device) return null;
     return await this.audioDeviceService.setMute(device.id, mute);

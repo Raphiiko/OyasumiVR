@@ -19,7 +19,7 @@ export class OpenVRInputService {
   private _state = new BehaviorSubject<Record<OVRInputEventAction, OVRDevice[]>>({
     [OVRInputEventAction.OpenOverlay]: [],
     [OVRInputEventAction.MuteMicrophone]: [],
-    [OVRInputEventAction.SleepCheckDecline]: [],
+    [OVRInputEventAction.IndicatePresence]: [],
     [OVRInputEventAction.OverlayInteract]: [],
   });
 

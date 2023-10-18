@@ -117,7 +117,6 @@ export class DisplayBrightnessControlService {
   ) {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (!(await firstValueFrom(this.driverIsAvailable))) {
-      console.trace();
       throw 'DRIVER_UNAVAILABLE';
     }
     if (opt.cancelActiveTransition) this.cancelActiveTransition();

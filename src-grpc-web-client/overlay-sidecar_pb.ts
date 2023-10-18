@@ -120,13 +120,30 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: bool sleep_preparation_timed_out = 10;
    */
   sleepPreparationTimedOut: boolean;
+  /**
+   * @generated from protobuf field: bool system_mic_muted = 11;
+   */
+  systemMicMuted: boolean;
 }
 /**
  * No longer required, but reserved for future settings
  *
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
  */
-export interface OyasumiSidecarOverlaySettings {}
+export interface OyasumiSidecarOverlaySettings {
+  /**
+   * @generated from protobuf field: bool system_mic_indicator_enabled = 1;
+   */
+  systemMicIndicatorEnabled: boolean;
+  /**
+   * @generated from protobuf field: double system_mic_indicator_opacity = 2;
+   */
+  systemMicIndicatorOpacity: number;
+  /**
+   * @generated from protobuf field: bool system_mic_indicator_fadeout = 3;
+   */
+  systemMicIndicatorFadeout: boolean;
+}
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
  */
@@ -907,6 +924,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 8, name: 'brightness_state', kind: 'message', T: () => OyasumiSidecarBrightnessState },
       { no: 9, name: 'sleep_preparation_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 10, name: 'sleep_preparation_timed_out', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 11, name: 'system_mic_muted', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -917,6 +935,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       locale: '',
       sleepPreparationAvailable: false,
       sleepPreparationTimedOut: false,
+      systemMicMuted: false,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
@@ -982,6 +1001,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
           break;
         case /* bool sleep_preparation_timed_out */ 10:
           message.sleepPreparationTimedOut = reader.bool();
+          break;
+        case /* bool system_mic_muted */ 11:
+          message.systemMicMuted = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -1050,6 +1072,9 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     /* bool sleep_preparation_timed_out = 10; */
     if (message.sleepPreparationTimedOut !== false)
       writer.tag(10, WireType.Varint).bool(message.sleepPreparationTimedOut);
+    /* bool system_mic_muted = 11; */
+    if (message.systemMicMuted !== false)
+      writer.tag(11, WireType.Varint).bool(message.systemMicMuted);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -1062,10 +1087,18 @@ export const OyasumiSidecarState = new OyasumiSidecarState$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverlaySettings> {
   constructor() {
-    super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', []);
+    super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', [
+      { no: 1, name: 'system_mic_indicator_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'system_mic_indicator_opacity', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'system_mic_indicator_fadeout', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
   }
   create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
-    const message = {};
+    const message = {
+      systemMicIndicatorEnabled: false,
+      systemMicIndicatorOpacity: 0,
+      systemMicIndicatorFadeout: false,
+    };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarOverlaySettings>(this, message, value);
@@ -1077,13 +1110,53 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     options: BinaryReadOptions,
     target?: OyasumiSidecarOverlaySettings
   ): OyasumiSidecarOverlaySettings {
-    return target ?? this.create();
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool system_mic_indicator_enabled */ 1:
+          message.systemMicIndicatorEnabled = reader.bool();
+          break;
+        case /* double system_mic_indicator_opacity */ 2:
+          message.systemMicIndicatorOpacity = reader.double();
+          break;
+        case /* bool system_mic_indicator_fadeout */ 3:
+          message.systemMicIndicatorFadeout = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
   }
   internalBinaryWrite(
     message: OyasumiSidecarOverlaySettings,
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
+    /* bool system_mic_indicator_enabled = 1; */
+    if (message.systemMicIndicatorEnabled !== false)
+      writer.tag(1, WireType.Varint).bool(message.systemMicIndicatorEnabled);
+    /* double system_mic_indicator_opacity = 2; */
+    if (message.systemMicIndicatorOpacity !== 0)
+      writer.tag(2, WireType.Bit64).double(message.systemMicIndicatorOpacity);
+    /* bool system_mic_indicator_fadeout = 3; */
+    if (message.systemMicIndicatorFadeout !== false)
+      writer.tag(3, WireType.Varint).bool(message.systemMicIndicatorFadeout);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

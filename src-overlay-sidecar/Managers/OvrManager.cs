@@ -21,6 +21,7 @@ public class OvrManager {
   private CVRSystem? _system;
   private CVRInput? _input;
   private OverlayPointer? _overlayPointer;
+  private MicMuteIndicatorOverlay? _micMuteIndicatorOverlay;
   private bool _active;
   private Device? _device;
   private Dictionary<string, List<OvrInputDevice>> inputActions = new();
@@ -166,10 +167,8 @@ public class OvrManager {
           inputActions.Clear();
           foreach (var actionKey in new[]
                    {
-                     "/actions/main/in/OpenOverlay",
-                     "/actions/main/in/MuteMicrophone",
-                     "/actions/hidden/in/SleepCheckDecline",
                      "/actions/hidden/in/OverlayInteract",
+                     "/actions/hidden/in/IndicatePresence",
                    })
           {
             ulong handle = 0;
@@ -187,6 +186,7 @@ public class OvrManager {
           _active = true;
           Log.Information("OpenVR Manager Started");
           _overlayPointer = new OverlayPointer();
+          _micMuteIndicatorOverlay = new MicMuteIndicatorOverlay();
           _notificationOverlay = new NotificationOverlay();
           BrowserManager.Instance.PreInitializeBrowser(1024, 1024);
           StartSplash();
@@ -227,6 +227,8 @@ public class OvrManager {
   {
     _overlayPointer?.Dispose();
     _overlayPointer = null;
+    _micMuteIndicatorOverlay?.Dispose();
+    _micMuteIndicatorOverlay = null;
     _notificationOverlay?.Dispose();
     _notificationOverlay = null;
     _dashboardOverlay?.Dispose();

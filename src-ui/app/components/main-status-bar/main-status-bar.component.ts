@@ -14,7 +14,7 @@ import { ModalService } from '../../services/modal.service';
 import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 import { PulsoidService } from '../../services/integrations/pulsoid.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 
 @Component({
@@ -87,10 +87,10 @@ export class MainStatusBarComponent implements OnInit {
     this.brightnessControlModalOpen = false;
   }
 
-  doSystemMicrophoneMuteAction() {
+  async doSystemMicrophoneMuteAction() {
     switch (this.systemMicrophoneMuteAction()) {
       case 'NAVIGATE':
-        this.router.navigate(['dashboard', 'systemMicMuteAutomations']);
+        await this.router.navigate(['dashboard', 'systemMicMuteAutomations']);
         break;
       case 'TOGGLE_MUTE':
         this.systemMicMuteAutomation.toggleMute();
@@ -107,7 +107,8 @@ export class MainStatusBarComponent implements OnInit {
     }
   }
 
-  navigateToVRChatSettings() {
-    // this.router.navigate(['dashboard', 'systemMicMuteAutomations']);
+  async navigateToVRChatSettings() {
+    await this.router.navigateByUrl('/', { skipLocationChange: true });
+    await this.router.navigate(['dashboard', 'settings'], { fragment: 'VRCHAT' });
   }
 }
