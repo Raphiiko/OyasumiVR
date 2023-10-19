@@ -2,8 +2,6 @@ pub mod commands;
 
 use std::time::Duration;
 
-use crate::globals::{OVERLAY_SIDECAR_GRPC_DEV_PORT, OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT};
-use crate::utils::models::OverlaySidecarMode;
 use crate::utils::sidecar_manager::SidecarManager;
 use crate::{
     utils::send_event,
@@ -28,32 +26,13 @@ pub async fn init() {
         "overlay-sidecar.exe".to_string(),
         tx,
         true,
+        vec![],
     ));
     // Listen for sidecar stop signals
     tokio::spawn(async move {
         while let Some(_) = rx.recv().await {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
-        }
-    });
-    // (Optionally) Start the sidecar
-    tokio::spawn(async move {
-        match crate::utils::cli_sidecar_overlay_mode().await {
-            // In release mode, start the sidecar
-            OverlaySidecarMode::Release => {
-                let mut manager_guard = SIDECAR_MANAGER.lock().await;
-                let manager = manager_guard.as_mut().unwrap();
-                manager.start(false).await;
-            }
-            // In development mode, we expect the sidecar to be started in development mode manually
-            OverlaySidecarMode::Dev => {
-                let _ = handle_overlay_sidecar_start(&OverlaySidecarStartArgs {
-                    pid: 0,
-                    grpc_port: OVERLAY_SIDECAR_GRPC_DEV_PORT as u32,
-                    grpc_web_port: OVERLAY_SIDECAR_GRPC_WEB_DEV_PORT as u32,
-                })
-                    .await;
-            }
         }
     });
 }

@@ -8,9 +8,8 @@ using Serilog;
 namespace overlay_sidecar;
 
 public static class Program {
-  public static readonly bool GpuFix = false;
+  public static bool GpuFix = false;
   public static SidecarMode Mode = SidecarMode.Release;
-
 
   public static void Main(string[] args)
   {
@@ -24,22 +23,28 @@ public static class Program {
       Mode = SidecarMode.Dev;
     }
 
-    Console.WriteLine("Starting OyasumiVR overlay sidecar in " + (Mode == SidecarMode.Dev ? "dev" : "release") +
+    Log.Information("Starting OyasumiVR overlay sidecar in " + (Mode == SidecarMode.Dev ? "dev" : "release") +
                       " mode.");
 
     if (Mode == SidecarMode.Release)
     {
       if (args.Length < 1 || !int.TryParse(args[0], out coreGrpcPort))
       {
-        Console.Error.WriteLine("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
 
       if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
       {
-        Console.Error.WriteLine("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
+    }
+
+    if (args.Any(arg => arg == "--gpu-fix"))
+    {
+      Log.Information("Launching with GPU fix enabled");
+      GpuFix = true;
     }
 
     // Initialize

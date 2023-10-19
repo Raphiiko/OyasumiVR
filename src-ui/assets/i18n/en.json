@@ -664,6 +664,13 @@
           "IMMEDIATELY": "Immediately",
           "AFTERDELAY": "After 2 minutes"
         }
+      },
+      "miscellaneous": {
+        "title": "Miscellaneous",
+        "overlayGpuFix": {
+          "title": "Graphics fix for SteamVR Overlay",
+          "description": "If you are experiencing issues with opening the SteamVR overlay, enabling this option could fix the issue on some systems (e.g. those with hybrid graphics). Changing this option will restart the overlay."
+        }
       }
     },
     "vrchat": {

@@ -19,41 +19,6 @@
   </div>
 </div>
 
-<div class="setting-category">
-  <h2 translate>settings.general.lighthouseConsole.title</h2>
-  <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
-  <div class="settings-lighthouse-console">
-    <div class="file-path-bar">
-      <div class="file-path-bar-path">
-        <input
-          type="text"
-          [value]="appSettings.lighthouseConsolePath"
-          (keyup)="lighthouseConsolePathInputChange.next(lighthouseConsolePathInput.value)"
-          #lighthouseConsolePathInput
-        />
-      </div>
-      <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
-        <i class="material-icons">folder</i>
-      </button>
-    </div>
-    <div
-      class="alert"
-      [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
-      [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
-      *ngIf="lighthouseConsolePathAlert"
-      [@vshrink]
-    >
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
-          check_circle_outline
-        </i>
-        <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
-      </div>
-      <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
-    </div>
-  </div>
-</div>
 
 <div class="setting-category">
   <h2 translate>settings.general.sleepMode.title</h2>
@@ -192,7 +157,8 @@
       </div>
       <div class="setting-row-action">
         <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-          >settings.general.startWithSteamVR.howTo</button
+        >settings.general.startWithSteamVR.howTo
+        </button
         >
       </div>
     </div>
@@ -212,47 +178,104 @@
       </div>
     </div>
   </div>
+</div>
 
-  <div class="setting-category">
-    <h2 translate>settings.general.adminPrivileges.title</h2>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.adminPrivileges.label</span>
-          <span translate>settings.general.adminPrivileges.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="appSettings.askForAdminOnStart"
-              (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+<div class="setting-category">
+  <h2 translate>settings.general.miscellaneous.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.miscellaneous.overlayGpuFix.title</span>
+        <span translate>settings.general.miscellaneous.overlayGpuFix.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.overlayGpuFix"
+            (change)="setOverlayGpuFix(!appSettings.overlayGpuFix)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
       </div>
     </div>
   </div>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.general.lighthouseConsole.title</h2>
+  <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
+  <div class="settings-lighthouse-console">
+    <div class="file-path-bar">
+      <div class="file-path-bar-path">
+        <input
+          type="text"
+          [value]="appSettings.lighthouseConsolePath"
+          (keyup)="lighthouseConsolePathInputChange.next(lighthouseConsolePathInput.value)"
+          #lighthouseConsolePathInput
+        />
+      </div>
+      <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
+        <i class="material-icons">folder</i>
+      </button>
+    </div>
+    <div
+      class="alert"
+      [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
+      [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
+      *ngIf="lighthouseConsolePathAlert"
+      [@vshrink]
+    >
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
+          check_circle_outline
+        </i>
+        <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
+      </div>
+      <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
+    </div>
+  </div>
+</div>
 
-  <div class="setting-category">
-    <h2 translate>settings.general.telemetry.title</h2>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.telemetry.label</span>
-          <span translate>settings.general.telemetry.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="telemetrySettings.enabled"
-              (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+<div class="setting-category">
+  <h2 translate>settings.general.adminPrivileges.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.adminPrivileges.label</span>
+        <span translate>settings.general.adminPrivileges.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.askForAdminOnStart"
+            (change)="setAskForAdminOnStart(!appSettings.askForAdminOnStart)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2 translate>settings.general.telemetry.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.telemetry.label</span>
+        <span translate>settings.general.telemetry.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="telemetrySettings.enabled"
+            (change)="setTelemetryEnabled(!telemetrySettings.enabled)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
       </div>
     </div>
   </div>

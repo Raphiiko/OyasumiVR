@@ -115,6 +115,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::add_notification,
+        overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::clear_notification,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         vrc_log_parser::commands::init_vrc_log_watcher,

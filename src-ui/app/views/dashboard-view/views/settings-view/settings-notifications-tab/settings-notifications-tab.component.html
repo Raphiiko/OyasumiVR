@@ -27,7 +27,7 @@
           <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
         </button>
         <app-slider-setting
-          [value]="generalNotificationVolume ?? 100"
+          [value]="generalNotificationVolume"
           [max]="200"
           [snapValues]="[50,100,150]"
           (valueChange)="setGeneralNotificationVolume($event)"
