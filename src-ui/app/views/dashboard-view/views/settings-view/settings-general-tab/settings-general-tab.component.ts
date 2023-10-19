@@ -174,6 +174,10 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
     this.telemetry.updateSettings({ enabled });
   }
 
+  setOverlayGpuFix(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayGpuFix: enabled });
+  }
+
   setExitInSystemTray(exitInSystemTray: boolean) {
     this.settingsService.updateSettings({ exitInSystemTray });
   }

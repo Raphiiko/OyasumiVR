@@ -20,6 +20,7 @@ export interface AppSettings {
   notificationProvider: NotificationProvider;
   notificationsEnabled: { types: NotificationType[] };
   overlayMenuEnabled: boolean;
+  overlayGpuFix: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
 }
@@ -57,6 +58,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   notificationsEnabled: { types: [...NotificationTypes] as NotificationType[] },
   quitWithSteamVR: 'DISABLED',
   overlayMenuEnabled: true,
+  overlayGpuFix: false,
   generalNotificationVolume: 100,
 };
 

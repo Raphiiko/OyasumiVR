@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPCService } from '../ipc.service';
-import { filter, map, pairwise, tap } from 'rxjs';
+import { filter, map, pairwise, switchMap, take, tap } from 'rxjs';
 import { OpenVRInputService } from '../openvr-input.service';
 import {
   Empty,
@@ -12,6 +12,8 @@ import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { cloneDeep } from 'lodash';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
+import { invoke } from '@tauri-apps/api';
+import { skip } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -27,15 +29,29 @@ export class OverlayService {
   ) {}
 
   async init() {
+    // Start the sidecar on launch
+    this.appSettingsService.settings
+      .pipe(
+        take(1),
+        map((config) => config.overlayGpuFix),
+        switchMap((gpuFix) => this.startOrRestartSidecar(gpuFix))
+      )
+      .subscribe();
+    // Respond to settings changes
     this.appSettingsService.settings
       .pipe(
         // Store the settings on the service
         tap((settings) => (this.appSettings = settings)),
-        // When disabling the overlay menu, close it if it's currently open
         pairwise(),
-        filter(([previous, current]) => !current.overlayMenuEnabled && previous.overlayMenuEnabled),
-        tap(() => {
-          this.ipcService.getOverlaySidecarClient()?.closeOverlayMenu({} as Empty);
+        tap(([previous, current]) => {
+          // When disabling the overlay menu, close it if it's currently open
+          if (!current.overlayMenuEnabled && previous.overlayMenuEnabled) {
+            this.ipcService.getOverlaySidecarClient()?.closeOverlayMenu({} as Empty);
+          }
+          // When changing the GPU fix setting, restart the sidecar
+          if (current.overlayGpuFix !== previous.overlayGpuFix) {
+            this.startOrRestartSidecar(current.overlayGpuFix);
+          }
         })
       )
       .subscribe();
@@ -64,5 +80,9 @@ export class OverlayService {
           controllerRole,
         } as OverlayMenuOpenRequest);
       });
+  }
+
+  private async startOrRestartSidecar(gpuFix: boolean) {
+    await invoke('start_overlay_sidecar', { gpuFix });
   }
 }

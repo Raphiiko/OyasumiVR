@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shortcut to VRChat related settings from the status bar pill.
 - Option for dismissing the sleep check by pressing controller buttons.
 - Option for changing the volume of general notification sounds.
+- Optional fix for running the SteamVR overlay on systems with hybrid graphics.
 
 ### Changed
 - Updated translations to use ICU syntax.
