@@ -13,7 +13,6 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { cloneDeep } from 'lodash';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { invoke } from '@tauri-apps/api';
-import { skip } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
