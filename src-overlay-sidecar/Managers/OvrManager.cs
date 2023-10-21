@@ -13,7 +13,7 @@ public class OvrManager {
   public static OvrManager Instance { get; } = new();
 
   private bool _initialized;
-  private readonly List<BaseWebOverlay> _overlays = new();
+  private readonly List<RenderableOverlay> _overlays = new();
   private Thread? _mainThread;
   private Thread? _renderThread;
   private NotificationOverlay? _notificationOverlay;
@@ -278,7 +278,7 @@ public class OvrManager {
     }
   }
 
-  public void RegisterWebOverlay(BaseWebOverlay overlay)
+  public void RegisterOverlay(RenderableOverlay overlay)
   {
     lock (_overlays)
     {
@@ -286,7 +286,7 @@ public class OvrManager {
     }
   }
 
-  public void UnregisterWebOverlay(BaseWebOverlay overlay)
+  public void UnregisterOverlay(RenderableOverlay overlay)
   {
     lock (_overlays)
     {

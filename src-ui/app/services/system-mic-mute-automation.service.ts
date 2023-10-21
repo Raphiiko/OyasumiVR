@@ -9,8 +9,10 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
+  interval,
   map,
   pairwise,
+  shareReplay,
   skip,
   switchMap,
   take,
@@ -52,7 +54,8 @@ export class SystemMicMuteAutomationService {
   ]).pipe(
     switchMap(async ([config]) =>
       this.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
-    )
+    ),
+    shareReplay(1)
   );
   private readonly _effectiveControllerBehaviour =
     new BehaviorSubject<SystemMicMuteControllerBindingBehavior>(
@@ -60,7 +63,10 @@ export class SystemMicMuteAutomationService {
     );
   public readonly effectiveControllerBehaviour = this._effectiveControllerBehaviour.asObservable();
 
-  public readonly isMicMuted = this.captureDevice.pipe(map((device) => device?.mute ?? null));
+  public readonly isMicMuted = this.captureDevice.pipe(
+    map((device) => device?.mute ?? null),
+    distinctUntilChanged()
+  );
 
   constructor(
     private automationConfigService: AutomationConfigService,
