@@ -12,7 +12,7 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class BaseWebOverlay {
+public class BaseWebOverlay : RenderableOverlay {
   public static string DebugTranslations = "";
   public OffScreenBrowser? Browser;
   protected bool UiReady;
@@ -51,7 +51,7 @@ public class BaseWebOverlay {
     // Initialize remaining asynchronous actions
     Init(resolution);
     // Start frame updates
-    OvrManager.Instance.RegisterWebOverlay(this);
+    OvrManager.Instance.RegisterOverlay(this);
   }
 
   private async void Init(int resolution)
@@ -98,7 +98,7 @@ public class BaseWebOverlay {
   {
     if (Disposed) return;
     Disposed = true;
-    OvrManager.Instance.UnregisterWebOverlay(this);
+    OvrManager.Instance.UnregisterOverlay(this);
     StateManager.Instance.StateChanged -= OnStateChanged;
     if (_overlayHandle.HasValue) OpenVR.Overlay.DestroyOverlay(_overlayHandle!.Value);
     if (Browser != null)

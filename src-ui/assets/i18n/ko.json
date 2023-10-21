@@ -52,7 +52,7 @@
         "description": "밝기를 조절해요"
       },
       "onSleepPreparation": {
-        "title": "수면 준비를 시작 시",
+        "title": "수면 준비 시작 시",
         "description": "밝기를 조절해요"
       },
       "brightness": {
@@ -81,6 +81,10 @@
           "onSleepEnable": "수면 모드가 활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요.",
           "onSleepDisable": "수면 모드가 비활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요."
         }
+      },
+      "sleepPreparation": {
+        "description": "OyasumiVR의 오버레이에서 버튼을 눌러 수면 준비를 할 수 있어요. 이 버튼은 잠자기 전에 미리 밝기를 낮추는 등 수면 준비 자동화 기능이 하나 이상 활성화되어 있을 때 표시됩니다.",
+        "title": "수면 준비"
       }
     }
   },
@@ -99,11 +103,24 @@
   },
   "sleep-detection": {
     "title": "수면 감지",
+    "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",
     "enableAutomations": {
       "title": "수면 모드 활성화",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "atTime": "지정된 시간에",
       "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{value}%</strong> 이하로 떨어질 때",
+      "onControllersPoweredOff": {
+        "title": "모든 컨트롤러가 꺼졌을 때",
+        "batteryLevelAutomationConflict": {
+          "title": "경고: 다른 자동화 기능에 의해 의도치 않게 실행될 수 있어요!",
+          "description": "배터리 잔량이 특정 비율 이하로 떨어지면 컨트롤러가 자동으로 꺼지도록 설정되어 있어, 실수로 원하지 않는 수면 모드가 활성화될 수 있어요. 이를 방지하려면 전원 자동화 설정의 \"컨트롤러 및 트래커\" 섹션에서 이 동작을 끌 수 있습니다.",
+          "action": "전원 자동화:\n컨트롤러 및 트래커"
+        }
+      },
+      "onHeartRateCalmPeriod": {
+        "title": "심박수가 일정 시간 동안 안정될 때",
+        "description": "<a class=\"integrationsPageLink\">Pulsoid 연동</a>이 필요해요."
+      },
       "onMotionDetection": {
         "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
       }
@@ -184,7 +201,7 @@
         "description": "이 기능을 활성화하면 OyasumiVR은 사용자의 움직임을 기반으로 사용자가 잠든 것으로 판단하면 자동으로 수면 모드를 활성화해요.",
         "timeWindow": {
           "title": "활성화 기간",
-          "description": "하루 중 특정 시간 사이에만 수면 모드를 활성화하도록 수면 감지를 허용합니다."
+          "description": "하루 중 특정 시간 사이에만 수면 모드를 활성화하도록 수면 감지를 허용해요."
         }
       },
       "enableAtTime": {
@@ -213,6 +230,27 @@
           "thresholdOutOfRange": "조건 값은 0%에서 100% 사이여야 해요.",
           "thresholdNotInteger": "조건 값은 숫자이여야 해요."
         }
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "title": "수면 모드 활성화",
+        "description": "심박수가 일정 시간 동안 특정 기준치 미만이면 수면 모드를 활성화해요: 수면 모드를 활성화하기 위해 일정 시간 동안 유지되어야 하는 분당 심박수의 기준치를 설정합니다.\n\n이 기능을 사용하려면 <a class=\"integrationsPageLink\">Pulsoid 연동</a> 설정과 Pulsoid \"BRO\" 구독이 활성화되어 있어야 합니다. ",
+        "bpm": {
+          "title": "심박수(BPM) 기준치",
+          "description": "수면 모드가 활성화되기 위해  심박수가 이 아래로 유지되어야 하는 기준치에요.",
+          "unit": "BPM"
+        },
+        "duration": {
+          "title": "지속 기간",
+          "description": "수면 모드가 활성화되기 위해 심박수가 기준치 미만으로 유지되어야 하는 시간이에요.",
+          "unit": "분"
+        },
+        "viewHistory": {
+          "title": "심박수 기록",
+          "description": "지난 12시간 동안의 심박수 기록을 확인해요.",
+          "actionShow": "기록 보기",
+          "actionHide": "기록 숨기기"
+        },
+        "notEnoughData": "심박수 기록을 표시할 수 있는 데이터가 충분하지 않아요."
       }
     }
   },
@@ -234,7 +272,7 @@
           "title": "수면 자세",
           "description": "자는 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
           "SIDE_FRONT": "엎드리기",
-          "SIDE_BACK": "반듯이 눕기",
+          "SIDE_BACK": "반듯하게 눕기",
           "SIDE_LEFT": "왼쪽으로 눕기",
           "SIDE_RIGHT": "오른쪽으로 눕기",
           "UNKNOWN": "알수없음"
@@ -279,7 +317,7 @@
   "power-automations": {
     "title": "전원 자동화",
     "tabs": {
-      "controllersAndTrackers": "컨트롤러 & 트래커",
+      "controllersAndTrackers": "컨트롤러 및 트래커",
       "baseStations": "베이스스테이션",
       "windowsPowerPolicy": "전원 정책"
     },
@@ -305,7 +343,40 @@
       },
       "onCharge": {
         "title": "충전할 때",
-        "description": "충전기에 꽂으면 자동으로 전원이 꺼져요."
+        "description": "기기를 충전기에 꽂으면 자동으로 전원이 꺼지도록 설정해요.",
+        "optionControllers": {
+          "title": "컨트롤러 끄기",
+          "description": "충전중일 때"
+        },
+        "optionTrackers": {
+          "title": "트래커 끄기",
+          "description": "충전중일 때"
+        }
+      },
+      "onBatteryLevel": {
+        "title": "배터리 잔량",
+        "description": "기기의 배터리 잔량이 일정 비율 이하로 떨어지면 자동으로 전원이 꺼지도록 설정해요.",
+        "controllers": {
+          "title": "컨트롤러 끄기",
+          "description": "배터리 잔량이 기준 아래로 떨어질 때",
+          "onlyDuringSleepMode": {
+            "title": "수면 모드가 활성화된 상태에서만",
+            "description": "수면 모드가 활성화된 상태에서만 이 방법으로 컨트롤러를 끄도록 설정해요."
+          },
+          "powerOffConflict": {
+            "title": "경고: 다른 자동화 기능이 의도치 않게 실행될 수 있어요!",
+            "description": "모든 컨트롤러가 꺼져 있을 때 수면 모드가 활성화되도록 설정한 경우, 이 자동화를 켜면 의도치 않게 수면 모드가 활성화될 수 있어요. 다른 자동화 기능이 이에 반응할 수 있으며, 이는 사용자가 원하는 것이 아닐 수도 있습니다. 수면 감지 설정에서 이 동작을 끌 수 있습니다.",
+            "action": "수면 감지"
+          }
+        },
+        "trackers": {
+          "title": "트래커 끄기",
+          "description": "배터리 잔량이 기준 아래로 떨어질 때",
+          "onlyDuringSleepMode": {
+            "title": "수면 모드가 활성화된 상태에서만",
+            "description": "수면 모드가 활성화된 상태에서만 이 방법으로 트래커를 끄도록 설정해요."
+          }
+        }
       }
     },
     "lighthousePowerOn": {
@@ -484,6 +555,7 @@
       "vrchat": "VRChat",
       "notifications": "알림",
       "updates": "업데이트",
+      "integrations": "연동",
       "advanced": "고급"
     },
     "general": {
@@ -566,7 +638,39 @@
         }
       },
       "overlay": {
+        "overlayMenu": {
+          "title": "오버레이 메뉴 활성화",
+          "description": "이 기능은 OyasumiVR의 오버레이 메뉴를 완전히 비활성화하고자 하는 경우 해제할 수 있어요."
+        },
+        "binding": {
+          "title": "컨트롤러 버튼 바인딩",
+          "description": "오버레이 메뉴를 실행하는 버튼은 SteamVR의 바인딩 메뉴에서 설정할 수 있어요."
+        },
         "title": "오버레이"
+      },
+      "startStop": {
+        "title": "시작 및 종료"
+      },
+      "startWithSteamVR": {
+        "label": "SteamVR과 함께 시작",
+        "description": "SteamVR이 시작될 때 OyasumiVR을 같이 실행해요.",
+        "howTo": "방법"
+      },
+      "stopWithSteamVR": {
+        "label": "SteamVR과 함께 종료",
+        "description": "SteamVR이 일정 시간 동안 종료되어 있을 때 OyasumiVR을 같이 종료해요.",
+        "options": {
+          "DISABLED": "비활성화",
+          "IMMEDIATELY": "즉시",
+          "AFTERDELAY": "2분 뒤"
+        }
+      },
+      "miscellaneous": {
+        "title": "기타",
+        "overlayGpuFix": {
+          "title": "SteamVR 오버레이의 그래픽 문제 해결",
+          "description": "SteamVR 오버레이를 열 때 문제가 발생하는 경우, 이 옵션을 활성화하면 일부 시스템(예: 하이브리드 그래픽)에서 문제가 해결될 수 있어요. 이 옵션을 변경하면 오버레이가 다시 시작됩니다."
+        }
       }
     },
     "vrchat": {
@@ -658,6 +762,11 @@
             "description": "OyasumiVR이 자동으로 누군가의 인바이트 리퀘스트를 수락했을 때 알림을 받아요."
           }
         }
+      },
+      "volume": {
+        "title": "일반 알림 음량",
+        "description": "일부 알림 유형이 소리를 재생하는 음량을 설정해요.",
+        "test": "테스트"
       }
     },
     "updates": {
@@ -670,6 +779,22 @@
       "updatesDisabled": {
         "DEV": "OyasumiVR의 개발 빌드를 실행 중이므로 업데이트가 비활성화되었어요.\n새 버전의 OyasumiVR을 설치하려면 설치 프로그램을 수동으로 다운로드하여 실행해주세요.",
         "STEAM": "스팀 버전의 OyasumiVR이 설치되어 있어요.\n새 버전의 OyasumiVR 업데이트는 스팀을 통해 제공됩니다!"
+      }
+    },
+    "integrations": {
+      "description": "OyasumiVR의 일부 기능은 외부 서비스를 활용할 수 있어요. OyasumiVR을 이러한 서비스 중 하나에 연결하고 싶으시다면 잘 찾아오셨습니다!",
+      "connect": "연결",
+      "disconnect": "연결 해제",
+      "reveal": "표시",
+      "providerLink": "제공자 웹사이트",
+      "copy": "클립보드에 복사",
+      "pulsoid": {
+        "title": "Pulsoid",
+        "description": "특정 자동화를 트리거하는 데 사용할 수 있는 심박수 데이터를 OyasumiVR에 제공해요.<br><i>필요: 펄소이드 \"BRO\" 구독</i>"
+      },
+      "vrchat": {
+        "title": "VRChat",
+        "description": "계정을 연결하면 OyasumiVR의 VRChat 관련 자동화 기능을 이용할 수 있어요."
       }
     },
     "advanced": {
@@ -692,6 +817,10 @@
           "vrcData": {
             "title": "VRChat 데이터",
             "description": "인증 데이터와 같은 VRChat 관련 데이터"
+          },
+          "integrations": {
+            "title": "연동 데이터",
+            "description": "인증 데이터 등 연동과 관련된 데이터(VRChat 제외)"
           },
           "miscData": {
             "title": "기타 데이터",
@@ -814,6 +943,149 @@
       "content": "컨트롤러와 트래커를 끄고 있어요."
     }
   },
+  "systemMicMuteAutomations": {
+    "title": "시스템 마이크 음소거 자동화",
+    "description": "잠들거나 깨어날 때 장치 단에서 자동으로 마이크를 음소거하거나 음소거 해제할 수 있어요! 다른 사람에게 코 고는 소리가 들리지 않도록 하고 싶을 때 유용하게 사용할 수 있습니다 ;)",
+    "config": {
+      "title": "설정"
+    },
+    "stateAutomations": {
+      "title": "음소거 자동화",
+      "onSleepModeEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "마이크 상태를 다음과 같이 변경해요"
+      },
+      "onSleepModeDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "마이크 상태를 다음과 같이 변경해요"
+      },
+      "onSleepPreparation": {
+        "title": "수면 준비 시작 시",
+        "description": "마이크 상태를 다음과 같이 변경해요"
+      }
+    },
+    "muteOptions": {
+      "NONE": "바꾸지 않음",
+      "MUTE": "음소거",
+      "UNMUTE": "음소거 해제"
+    },
+    "audioDevice": {
+      "title": "마이크 오디오 장치",
+      "description": "VRChat에서 사용 중인 마이크와 동일한 마이크인지 다시 한 번 확인해주세요!",
+      "options": {
+        "DEFAULT": "기본 장치:\n{deviceName}"
+      }
+    },
+    "overlayIndicator": {
+      "title": "오버레이 인디케이터",
+      "description": "마이크가 음소거된 경우 VR에 인디케이터가 표시되어요.",
+      "enabled": {
+        "title": "오버레이 음소거 인디케이터",
+        "description": "VR 상 음소거 인디케이터 표시 여부를 설정해요."
+      },
+      "fade": {
+        "title": "페이드 아웃",
+        "description": "인디케이터가 몇 초 후 사라지도록 설정해요. 컨트롤러 버튼을 눌러 인디케이터를 다시 표시할 수 있습니다. OLED 디스플레이가 장착된 VR 헤드셋의 경우 번인 위험을 줄이기 위해 이 방법을 권장합니다."
+      },
+      "opacity": {
+        "title": "불투명도",
+        "description": "인디케이터 아이콘의 최대 불투명도를 설정해요."
+      }
+    },
+    "controllerBinding": {
+      "title": "컨트롤러 바인딩",
+      "description": "컨트롤러 버튼을 바인딩하여 마이크의 음소거 상태를 제어할 수 있어요.",
+      "conflictWarning": "이 기능을 사용하여 VRChat에서 마이크 음소거를 전환하는 경우, 충돌하는 동작을 방지하기 위해 VRChat 설정에서 음소거 버튼의 바인딩을 해제하거나 마이크 모드를 \'항상 켜기\'로 설정하는 것을 권장해요.",
+      "enabled": {
+        "title": "컨트롤러 바인딩",
+        "description": "마이크 음소거 상태 전환을 위한 컨트롤러 바인딩 활성화 여부를 설정해요."
+      },
+      "binding": {
+        "title": "버튼 바인딩",
+        "description": "마이크의 음소거 상태를 제어하는 데 사용할 컨트롤러 버튼을 설정해요."
+      },
+      "mode": {
+        "title": "기본 버튼 동작",
+        "description": "버튼을 누를 때 기본적으로 마이크 상태가 변경되는 방식을 설정해요.",
+        "options": {
+          "NONE": "바꾸지 않음",
+          "TOGGLE": "토글",
+          "PUSH_TO_TALK": "눌러서 말하기"
+        }
+      },
+      "volume": {
+        "title": "음소거 효과음 음량",
+        "description": "마이크가 음소거되거나 음소거 해제되었을 때 재생되는 효과음의 음량을 설정해요.."
+      },
+      "onSleepModeEnable": {
+        "title": "수면 모드 활성화 시",
+        "description": "컨트롤러 버튼 동작을 다음과 같이 변경해요"
+      },
+      "onSleepModeDisable": {
+        "title": "수면 모드 비활성화 시",
+        "description": "컨트롤러 버튼 동작을 다음과 같이 변경해요"
+      },
+      "onSleepPreparation": {
+        "title": "수면 준비 시작 시",
+        "description": "컨트롤러 버튼 동작을 다음과 같이 변경해요"
+      },
+      "currentMode": {
+        "title": "활성화된 버튼 동작",
+        "description": "컨트롤러 버튼의 현재 모드를 나타내요.",
+        "TOGGLE": "토글",
+        "PUSH_TO_TALK": "눌러서 말하기"
+      },
+      "automations": "컨트롤러 바인딩 자동화"
+    }
+  },
+  "vrchatMicMuteAutomations": {
+    "title": "마이크 음소거",
+    "description": "잠들거나 깨어날 때 VRChat에서 자동으로 마이크를 음소거하거나 음소거 해제할 수 있어요! 다른 사람에게 코 고는 소리가 들리지 않도록 하고 싶을 때 유용하게 사용할 수 있습니다 ;)\n\n이 기능을 사용하려면 VRChat 내에서 OSC가 활성화되어 있어야 한다는 점에 유의하세요.",
+    "config": {
+      "title": "설정"
+    },
+    "automations": {
+      "title": "자동화"
+    },
+    "mode": {
+      "title": "VRChat 마이크 동작 방식",
+      "description": "VRChat 내에서 사용 중인 마이크 동작 방식을 선택해주세요. VRChat에서 사용 중인 동작 방식과 다른 방식을 선택하면 이러한 자동화가 오작동할 수 있다는 점에 유의하세요."
+    },
+    "onSleepModeEnable": {
+      "title": "수면 모드 활성화 시",
+      "description": "마이크 상태를 다음과 같이 변경해요"
+    },
+    "onSleepModeDisable": {
+      "title": "수면 모드 비활성화 시",
+      "description": "마이크 상태를 다음과 같이 변경해요"
+    },
+    "onSleepPreparation": {
+      "title": "수면 준비 시작 시",
+      "description": "마이크 상태를 다음과 같이 변경해요"
+    },
+    "modeOptions": {
+      "TOGGLE": "토글",
+      "PUSH_TO_MUTE": "눌러서 말하기"
+    },
+    "muteOptions": {
+      "NONE": "없음",
+      "MUTE": "음소거",
+      "UNMUTE": "음소거 해제"
+    },
+    "status": {
+      "title": "현재 VRChat 마이크 상태",
+      "description": "VRChat의 인게임 마이크 상태를 표시해요.",
+      "unmuted": "음소거",
+      "muted": "음소거 해제",
+      "unknown": "알 수 없음"
+    },
+    "control": {
+      "title": "마이크 음소거 제어",
+      "description": "이 기능을 사용하여 마이크 음소거가 제대로 작동하는지 테스트할 수 있어요.",
+      "mute": "마이크\n음소거",
+      "unmute": "마이크\n음소거 해제"
+    }
+  },
   "comp": {
     "brightness-control-modal": {
       "displayBrightness": "디스플레이 밝기",
@@ -826,6 +1098,10 @@
       "active": "활성화 됨",
       "inactive": "비활성화 됨",
       "loggedOut": "로그아웃 중",
+      "heartrate": "심박수",
+      "vrchat": {
+        "tooltip": "설정: VRChat"
+      },
       "brightness": {
         "tooltip": "밝기 제어",
         "simple": "밝기"
@@ -834,6 +1110,13 @@
         "INACTIVE": "비활성화 됨",
         "INITIALIZING": "대기중",
         "INITIALIZED": "활성화 됨"
+      },
+      "systemMicMuted": {
+        "label": "음소거 됨",
+        "tooltip": {
+          "NAVIGATE": "시스템 마이크:\n자동화",
+          "TOGGLE_MUTE": "시스템 마이크:\n음소거 해제"
+        }
       }
     },
     "confirm-modal": {
@@ -854,6 +1137,8 @@
       "sleepDetection": "수면 감지",
       "oscAutomations": "OSC 자동화",
       "gpuAutomations": "GPU 자동화",
+      "vrchatMicMuteAutomations": "VRChat 마이크 음소거 자동화",
+      "systemMicMuteAutomations": "시스템 마이크 음소거 자동화",
       "powerAutomations": "전원 자동화",
       "statusAutomations": "스테이터스 자동화",
       "autoInviteRequestAccept": "인바이트 리퀘스트 \n자동 수락",
@@ -939,6 +1224,36 @@
         "INVALID_FORMAT": "유효한 2단계 인증 코드는 6자리 숫자에요. 입력 내용을 확인해주세요."
       }
     },
+    "controller-binding": {
+      "slot": {
+        "click": "한 번 누름",
+        "double": "두 번 누름",
+        "long": "길게 누름",
+        "held": "누른 상태 유지",
+        "touch": "터치 버튼"
+      },
+      "errors": {
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR 비활성화 됨",
+          "tooltip": "컨트롤러 바인딩을 보거나 변경하려면\nSteamVR이 실행 중이어야 해요."
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "왼쪽 및 오른쪽 컨트롤러가 모두 연결되어 있는지 확인해주세요."
+        },
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\n대시보드 열림",
+          "tooltip": "바인딩을 보려면 SteamVR 대시보드를 닫아야해요."
+        },
+        "UNKNOWN": {
+          "message": "바인딩 설정"
+        }
+      },
+      "dropdown": {
+        "desktop": "데스크톱 모드",
+        "vr": "SteamVR 모드",
+        "description": "바인딩 설정 실행"
+      }
+    },
     "friend-selection-modal": {
       "title": "친구 선택",
       "searchPlaceholder": "이름으로 검색...",
@@ -958,6 +1273,39 @@
     },
     "event-log-entry": {
       "type": {
+        "changedVRChatMicMuteState": {
+          "title": {
+            "MUTE": "VRChat에서 마이크를 음소거 함",
+            "UNMUTE": "VRChat에서 마이크를 음소거 해제 함"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          }
+        },
+        "changedSystemMicMuteState": {
+          "title": {
+            "MUTE": "마이크를 음소거 함: {deviceName}",
+            "UNMUTE": "마이크를 음소거 해제 함: {deviceName}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          }
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "title": {
+            "TOGGLE": "마이크 컨트롤러 버튼 동작을 '토글'으로 변경함",
+            "PUSH_TO_TALK": "마이크 컨트롤러 버튼 동작을 '눌러서 말하기'로 변경함"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          }
+        },
         "sleepModeEnabled": {
           "title": "수면 모드가 활성화됨",
           "reason": {
@@ -968,7 +1316,8 @@
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "수면 감지에 의해 수면 모드가 활성화되었어요.",
               "SLEEP_MODE_ENABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 활성화되었어요.",
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "장치의 배터리 잔량이 설정 값이 되어서 수면 모드가 활성화되었어요.",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "컨트롤러의 전원이 꺼져서 수면 모드가 활성화되었어요."
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "컨트롤러의 전원이 꺼져서 수면 모드가 활성화되었어요.",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "심박수가 충분한 시간 동안 안정되어 수면 모드가 활성화되었어요."
             }
           }
         },
@@ -998,7 +1347,8 @@
             "MANUAL": "수동으로 기기를 껐어요.",
             "OSC_CONTROL": "OSC를 통해 기기를 껐어요.",
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 기기를 껐어요.",
-            "CHARGING": "기기가 충전중으로 기기를 껐어요."
+            "CHARGING": "기기가 충전중으로 기기를 껐어요.",
+            "BATTERY_LEVEL": "배터리 잔량이 {threshold}% 아래로 내려가 기기를 껐어요."
           }
         },
         "lighthouseSetPowerState": {
@@ -1015,19 +1365,19 @@
             "sleep": {
               "title": "베이스스테이션을 슬립 모드로 변경함",
               "reasons": {
-                "MANUAL": "수동으로 모드를 바꿨어요.",
-                "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
-                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 바꿨어요."
+                "MANUAL": "수동으로 모드를 변경했어요.",
+                "STEAMVR_START": "SteamVR이 시작되어 모드를 변경했어요.",
+                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 변경했어요.",
+                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 변경했어요."
               }
             },
             "standby": {
               "title": "베이스스테이션을 대기 모드로 변경함",
               "reasons": {
-                "MANUAL": "수동으로 모드를 바꿨어요.",
-                "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
-                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 바꿨어요."
+                "MANUAL": "수동으로 모드를 변경했어요.",
+                "STEAMVR_START": "SteamVR이 시작되어 모드를 변경했어요.",
+                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 변경했어요.",
+                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 변경했어요."
               }
             }
           },
@@ -1044,19 +1394,19 @@
             "sleep": {
               "title": "모든 베이스스테이션을 슬립 모드로 변경함",
               "reasons": {
-                "MANUAL": "수동으로 모드를 바꿨어요.",
-                "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
-                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 바꿨어요."
+                "MANUAL": "수동으로 모드를 변경했어요.",
+                "STEAMVR_START": "SteamVR이 시작되어 모드를 변경했어요.",
+                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 변경했어요.",
+                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 변경했어요."
               }
             },
             "standby": {
               "title": "모든 베이스스테이션을 대기 모드로 변경함",
               "reasons": {
-                "MANUAL": "수동으로 모드를 바꿨어요.",
-                "STEAMVR_START": "SteamVR이 시작되어 모드를 바꿨어요.",
-                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 바꿨어요.",
-                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 바꿨어요."
+                "MANUAL": "수동으로 모드를 변경했어요.",
+                "STEAMVR_START": "SteamVR이 시작되어 모드를 변경했어요.",
+                "STEAMVR_STOP": "SteamVR이 종료되어 모드를 변경했어요.",
+                "OYASUMI_START": "OyasumiVR이 시작되어 모드를 변경했어요."
               }
             }
           }
@@ -1077,9 +1427,9 @@
             "transition": "헤드셋의 밝기를 {value}으로 점차 변화시킴"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 바꿨어요.",
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 바꿨어요.",
-            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 바꿨어요."
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           }
         },
         "imageBrightnessChanged": {
@@ -1088,9 +1438,9 @@
             "transition": "헤드셋의 이미지 밝기를 {value}으로 점차 변화시킴"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 바꿨어요.",
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 바꿨어요.",
-            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 바꿨어요."
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           }
         },
         "displayBrightnessChanged": {
@@ -1099,9 +1449,9 @@
             "transition": "헤드셋의 디스플레이 밝기를 {value}으로 점차 변화시킴"
           },
           "reason": {
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 바꿨어요.",
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 바꿨어요.",
-            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 바꿨어요."
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           }
         },
         "acceptedInviteRequest": {
@@ -1188,6 +1538,10 @@
         "title": "설치 실패",
         "message": "누락된 필수 런타임을 자동으로 설치할 수 없어요. 수동으로 설치해 보세요. \n\n문제가 계속 발생하면 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">문제 해결 가이드</a>를 확인해 주세요."
       }
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "SteamVR의 자체 설정에서 SteamVR과 함께 OyasumiVR이 실행되도록 설정할 수 있어요. 해당 설정은 SteamVR -> Settings -> Startup / Shutdown -> Choose startup overlay apps에서 찾을 수 있습니다. ",
+      "title": "SteamVR과 함께 오야스미VR 시작"
     }
   },
   "resolution-automations": {
@@ -1247,7 +1601,12 @@
       "title": "종료 설정",
       "quitSteamVR": {
         "title": "SteamVR 종료",
-        "description": "실행 중인 게임이나 오버레이도 종료되어요."
+        "description": "실행 중인 게임이나 오버레이도 종료되어요.",
+        "conflict": {
+          "title": "경고: 이 작업을 실행하면 OyasumiVR이 즉시 종료되어요.",
+          "description": "SteamVR이 중지되면 OyasumiVR이 즉시 종료되도록 설정되어 있어서 후속 자동화 기능이 실행되지 않을 수 있어요. 이 문제를 해결하려면 이 작업을 비활성화하거나 일반 설정에서 SteamVR이 중지될 때 즉시 종료되지 않도록 OyasumiVR을 설정해야 합니다.",
+          "goToSettings": "일반 설정"
+        }
       },
       "turnOffDevices": {
         "title": "기기 끄기"
@@ -1264,6 +1623,19 @@
         "title": "베이스스테이션 끄기",
         "description": "아직 켜져있는 모든 베이스스테이션을 꺼요."
       },
+      "powerDownWindows": {
+        "title": "Windows 종료",
+        "description": "컴퓨터의 전원을 끄려고 시도해요.",
+        "options": {
+          "SHUTDOWN": "종료",
+          "REBOOT": "재시작",
+          "HIBERNATE": "최대 절전",
+          "SLEEP": "절전",
+          "LOGOUT": "로그아웃"
+        },
+        "shutdownMessage": "OyasumiVR이 PC를 종료하고 있어요",
+        "rebootMessage": "OyasumiVR이 PC를 재시작하고 있어요"
+      },
       "run": "시퀀스 실행"
     },
     "confirm-modal": {
@@ -1273,12 +1645,13 @@
     "noOptionsSelected": "종료 시퀀스 중에 실행하도록 선택한 동작이 없으므로 이 기능을 실행해도 아무런 효과가 나타나지 않을 거예요. 이 기능으로 동작을 수행하려면 아래 옵션 중 하나 이상을 선택하세요.",
     "overlay": {
       "stage": {
-        "QUITTING_STEAMVR": "SteamVR 종료중...",
-        "TURNING_OFF_CONTROLLERS": "컨트롤러를 끄는중...",
-        "TURNING_OFF_TRACKERS": "트래커를 끄는중...",
-        "TURNING_OFF_BASESTATIONS": "베이스스테이션을 끄는중..."
+        "QUITTING_STEAMVR": "SteamVR 종료 중...",
+        "TURNING_OFF_CONTROLLERS": "컨트롤러를 끄는 중...",
+        "TURNING_OFF_TRACKERS": "트래커를 끄는 중...",
+        "TURNING_OFF_BASESTATIONS": "베이스스테이션을 끄는 중...",
+        "POWERING_DOWN": "Windows를 종료하는 중..."
       },
-      "title": "끄는중",
+      "title": "끄는 중",
       "cancel": "취소"
     }
   },
@@ -1291,7 +1664,8 @@
         "tooltip": {
           "automations": "자동화",
           "deviceControl": "장치 제어",
-          "shutdown": "종료 시퀀스"
+          "shutdown": "종료 시퀀스",
+          "prepareForSleep": "수면 준비"
         }
       },
       "shutdownSequence": {
@@ -1340,6 +1714,19 @@
           }
         },
         "title": "자동화 설정"
+      }
+    },
+    "brightness": {
+      "simple": "밝기",
+      "display": "디스플레이 밝기",
+      "image": "이미지 밝기"
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "title": "Pulsoid 로그인 실패",
+        "message": "Pulsoid 계정으로 로그인하지 못했습니다. 나중에 다시 시도하세요. 이 문제가 지속되면 문의해 주세요!\n\n{errorDetails}"
       }
     }
   }
