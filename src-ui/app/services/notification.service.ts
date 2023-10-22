@@ -124,7 +124,7 @@ export class NotificationService {
   private async clearOyasumiNotification(notificationId: string) {
     const client = await firstValueFrom(this.ipcService.overlaySidecarClient);
     if (!client) return;
-    const result = await client.clearNotification({
+    await client.clearNotification({
       notificationId,
     });
   }

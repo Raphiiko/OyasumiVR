@@ -52,9 +52,11 @@ export class OpenVRInputService {
   async getActionBindings(actionSet: OVRInputEventActionSet, action: OVRInputEventAction) {
     const status = await firstValueFrom(this.openvr.status);
     if (status !== 'INITIALIZED') return [];
-    return await invoke<OVRActionBinding[]>('openvr_get_binding_origins', {
+    let bindings = await invoke<OVRActionBinding[]>('openvr_get_binding_origins', {
       actionSetKey: actionSet,
       actionKey: action,
     });
+    bindings = bindings.filter((b) => b.slotName && b.slotName.trim() && b.slotName !== 'null');
+    return bindings;
   }
 }

@@ -88,25 +88,25 @@ export class ControllerBindingComponent implements OnInit {
         error = 'STEAMVR_INACTIVE';
         return;
       }
-      const controllers = await firstValueFrom(this.openvr.devices).then((devices) =>
-        devices.filter((d) => d.class === 'Controller')
-      );
-      if (controllers.length === 0) {
-        error = 'NO_CONTROLLERS';
-        return;
-      }
-      this.hasLeftHand = controllers.some((d) => d.role === 'LeftHand');
-      this.hasRightHand = controllers.some((d) => d.role === 'RightHand');
-      if (!this.hasLeftHand || !this.hasRightHand) {
-        error = 'MISSING_CONTROLLER';
-        return;
-      }
-      if (await this.openvr.isDashboardVisible()) {
-        error = 'DASHBOARD_OPEN';
-        return;
-      }
       bindings = await this.openvrInputService.getActionBindings(this.actionSetKey, this.actionKey);
-      if (!bindings.length) {
+      if (bindings.length === 0) {
+        const controllers = await firstValueFrom(this.openvr.devices).then((devices) =>
+          devices.filter((d) => d.class === 'Controller')
+        );
+        if (controllers.length === 0) {
+          error = 'NO_CONTROLLERS';
+          return;
+        }
+        this.hasLeftHand = controllers.some((d) => d.role === 'LeftHand');
+        this.hasRightHand = controllers.some((d) => d.role === 'RightHand');
+        if (!this.hasLeftHand || !this.hasRightHand) {
+          error = 'MISSING_CONTROLLER';
+          return;
+        }
+        if (await this.openvr.isDashboardVisible()) {
+          error = 'DASHBOARD_OPEN';
+          return;
+        }
         error = 'UNKNOWN';
       }
     })();
