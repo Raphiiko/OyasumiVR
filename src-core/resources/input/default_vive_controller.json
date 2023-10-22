@@ -3,6 +3,10 @@
   "controller_type": "vive_controller",
   "description": "OyasumiVR's default bindings for Vive controllers",
   "name": "OyasumiVR Default Bindings",
+  "options": {},
+  "category": "steamvr_input",
+  "alias_info": {},
+  "app_key": "steam.overlay.2538150-DEV",
   "bindings": {
     "/actions/main": {
       "sources": [

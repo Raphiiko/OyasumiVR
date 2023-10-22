@@ -7,16 +7,15 @@ pub mod commands;
 pub const STEAM_APP_ID: AppId = AppId(2538150);
 
 lazy_static! {
-    pub static ref STEAMWORKS_CLIENT: Mutex<Option<Client>> =
-        Mutex::default();
-    pub static ref STEAMWORKS_SINGLE_CLIENT: Mutex<Option<SingleClient>> =
-        Mutex::default();
-    pub static ref STEAMWORKS_USER_STATS_FETCHED: Mutex<bool> =
-        Mutex::new(false);
+    pub static ref STEAMWORKS_CLIENT: Mutex<Option<Client>> = Mutex::default();
+    pub static ref STEAMWORKS_SINGLE_CLIENT: Mutex<Option<SingleClient>> = Mutex::default();
+    pub static ref STEAMWORKS_USER_STATS_FETCHED: Mutex<bool> = Mutex::new(false);
 }
 
 pub async fn init() {
-    if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::SteamCn {
+    if crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::Steam
+        && crate::BUILD_FLAVOUR != crate::flavour::BuildFlavour::SteamCn
+    {
         return;
     }
     let (client, single) = match Client::init_app(STEAM_APP_ID) {
@@ -43,17 +42,17 @@ pub async fn init() {
                     return;
                 }
             };
-            let _cb = client.register_callback(|stats: UserStatsReceived| {
-                match stats.result {
-                    Ok(_) => {
-                        println!("USER STATS: {:?}", stats.result.unwrap());
-                        tokio::spawn(async {
-                            *STEAMWORKS_USER_STATS_FETCHED.lock().await = true;
-                        });
-                    }
-                    Err(e) => {
-                        println!("USER STATS ERROR: {:?}", e);
-                    }
+            let _cb = client.register_callback(|stats: UserStatsReceived| match stats.result {
+                Ok(_) => {
+                    tokio::spawn(async {
+                        *STEAMWORKS_USER_STATS_FETCHED.lock().await = true;
+                    });
+                }
+                Err(e) => {
+                    error!(
+                        "[Core] Failed to fetch user stats from Steamworks: {:#?}",
+                        e
+                    );
                 }
             });
             client.user_stats().request_current_stats();
