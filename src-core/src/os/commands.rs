@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use super::{audio::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
+use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
@@ -275,4 +275,34 @@ pub async fn set_audio_device_mute(device_id: String, mute: bool) {
         }
     };
     manager.set_mute(device_id, mute).await;
+}
+
+#[tauri::command]
+pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activity_enabled(enabled).await;
+}
+
+#[tauri::command]
+pub async fn set_mic_activity_device_id(device_id: Option<String>) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activity_device_id(device_id).await;
 }

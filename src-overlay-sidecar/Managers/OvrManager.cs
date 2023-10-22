@@ -314,6 +314,11 @@ public class OvrManager {
     return Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../input/action_manifest.json"));
   }
 
+  public void SetMicrophoneActive(bool active)
+  {
+    _micMuteIndicatorOverlay?.SetMicrophoneActive(active);
+  }
+
   private void DetectInput(Dictionary<string, ulong> actionSetHandles, Dictionary<string, ulong> actionHandles)
   {
     // Get active action sets
@@ -399,4 +404,5 @@ public class OvrManager {
       Role = role;
     }
   }
+
 }

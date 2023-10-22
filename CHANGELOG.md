@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
 - Malformed OSC packets causing a crash
+- OSC message processing being slower than necessary
 
 ## [1.9.0]
 

@@ -43,6 +43,9 @@ enum DeviceNotification {
 pub struct AudioDeviceManagerState {
     devices: Mutex<Vec<AudioDevice>>,
     enumerator: Mutex<AudioDeviceManagerIMMDeviceEnumerator>,
+    mic_activity_device_id: Mutex<Option<String>>,
+    mic_activity_enabled: Mutex<bool>,
+    mic_activation_threshold: Mutex<f32>,
     _notification_client: Mutex<AudioDeviceManagerIMMNotificationClient>,
 }
 
@@ -56,6 +59,32 @@ impl AudioDeviceManagerState {
         let devices = self.devices.lock().await;
         let futures: Vec<_> = devices.iter().map(AudioDeviceDto::from).collect();
         join_all(futures).await
+    }
+
+    pub async fn evaluate_capture_device_metering(&self) {
+        let mic_activity_enabled = self.mic_activity_enabled.lock().await.clone();
+        let device_id = match self.mic_activity_device_id.lock().await.as_ref() {
+            Some(device_id) => device_id.clone(),
+            None => String::from(""),
+        };
+        let devices = self.devices.lock().await;
+        for device in devices.iter() {
+            if !mic_activity_enabled {
+                device.disable_metering().await;
+            } else if device_id == String::from("DEFAULT") {
+                if device.get_device_type() == AudioDeviceType::Capture {
+                    if device.is_default().await {
+                        device.enable_metering().await;
+                    } else {
+                        device.disable_metering().await;
+                    }
+                }
+            } else if device.get_id() == device_id {
+                device.enable_metering().await;
+            } else {
+                device.disable_metering().await;
+            }
+        }
     }
 }
 
@@ -80,6 +109,9 @@ impl AudioDeviceManager {
                 state: Arc::new(AudioDeviceManagerState {
                     enumerator: Mutex::new(AudioDeviceManagerIMMDeviceEnumerator(enumerator)),
                     devices: Mutex::default(),
+                    mic_activity_enabled: Mutex::new(false),
+                    mic_activation_threshold: Mutex::new(0.04),
+                    mic_activity_device_id: Mutex::default(),
                     _notification_client: Mutex::new(AudioDeviceManagerIMMNotificationClient(
                         notification_client,
                     )),
@@ -94,6 +126,20 @@ impl AudioDeviceManager {
         self.state.get_devices().await
     }
 
+    pub async fn set_mic_activity_device_id(&self, device_id: Option<String>) {
+        *self.state.mic_activity_device_id.lock().await = device_id.clone();
+        self.state.evaluate_capture_device_metering().await;
+    }
+
+    pub async fn get_mic_activation_threshold(&self) -> f32 {
+        *self.state.mic_activation_threshold.lock().await
+    }
+
+    pub async fn set_mic_activity_enabled(&self, enabled: bool) {
+        *self.state.mic_activity_enabled.lock().await = enabled;
+        self.state.evaluate_capture_device_metering().await;
+    }
+
     #[async_recursion]
     async fn process_event(state: Arc<AudioDeviceManagerState>, notification: DeviceNotification) {
         match notification {
@@ -103,6 +149,7 @@ impl AudioDeviceManager {
                     error!("[Core] Could not refresh audio devices: {:?}", e);
                 }
                 state.notify_devices_changed().await;
+                state.evaluate_capture_device_metering().await;
             }
             DeviceNotification::Removed { device_id } => {
                 let device_id = match AudioDevice::get_id_from_pcwstr(&device_id.0) {
@@ -125,6 +172,7 @@ impl AudioDeviceManager {
                 drop(devices);
                 // Redetermine default devices
                 AudioDeviceManager::determine_all_default_devices(&state).await;
+                state.evaluate_capture_device_metering().await;
             }
             DeviceNotification::StateChanged {
                 device_id: pcw_device_id,
@@ -155,7 +203,7 @@ impl AudioDeviceManager {
                             device_id: pcw_device_id,
                         },
                     )
-                        .await;
+                    .await;
                 }
                 // Otherwise, we might need to remove it.
                 else if !is_active && known_device {
@@ -165,7 +213,7 @@ impl AudioDeviceManager {
                             device_id: pcw_device_id,
                         },
                     )
-                        .await;
+                    .await;
                 }
             }
             DeviceNotification::DefaultDeviceChanged { device_id: _, flow } => {
@@ -176,7 +224,7 @@ impl AudioDeviceManager {
                         AudioDeviceType::Render,
                         false,
                     )
-                        .await
+                    .await
                     {
                         error!("[Core] Could not determine default render devices: {:?}", e);
                     }
@@ -188,7 +236,7 @@ impl AudioDeviceManager {
                         AudioDeviceType::Capture,
                         false,
                     )
-                        .await
+                    .await
                     {
                         error!(
                             "[Core] Could not determine default capture devices: {:?}",
@@ -197,6 +245,7 @@ impl AudioDeviceManager {
                     }
                 }
                 state.notify_devices_changed().await;
+                state.evaluate_capture_device_metering().await;
             }
             DeviceNotification::PropertyValueChanged { device_id } => {
                 let device_id = match AudioDevice::get_id_from_pcwstr(&device_id.0) {

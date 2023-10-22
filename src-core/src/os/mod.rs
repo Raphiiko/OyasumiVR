@@ -1,4 +1,4 @@
-mod audio;
+mod audio_devices;
 pub mod commands;
 pub mod dotnet;
 mod models;
@@ -11,7 +11,7 @@ use winapi::shared::guiddef::GUID;
 use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
 use winapi::DEFINE_GUID;
 
-use self::audio::manager::AudioDeviceManager;
+use self::audio_devices::manager::AudioDeviceManager;
 
 lazy_static! {
     static ref SOUNDS: std::sync::Mutex<HashMap<String, Vec<u8>>> =

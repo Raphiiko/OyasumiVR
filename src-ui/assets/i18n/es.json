@@ -81,6 +81,10 @@
           "onSleepEnable": "Si el modo de suspensión está activo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicien.",
           "onSleepDisable": "Si el modo de suspensión está inactivo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicie."
         }
+      },
+      "sleepPreparation": {
+        "description": "Puedes prepararte para irte a dormir pulsando un botón en la superposición de OyasumiVR. El botón para esto se mostrará cuando tengas una o más automatizaciones de preparación para dormir activas, como esta. Utilízalo para empezar a atenuar el brillo antes de quedarte dormido.",
+        "title": "Preparación para dormir"
       }
     }
   },
@@ -354,11 +358,24 @@
         "description": "Haz que los dispositivos se apaguen cuando su nivel de batería descienda por debajo de un determinado porcentaje.",
         "controllers": {
           "title": "Apagar un controlador",
-          "description": "Cuando el nivel de batería es inferior a"
+          "description": "Cuando el nivel de batería es inferior a",
+          "onlyDuringSleepMode": {
+            "title": "Sólo mientras el modo dormir está activado",
+            "description": "Sólo apague los controladores de esta manera mientras el modo de dormir está activado"
+          },
+          "powerOffConflict": {
+            "title": "Atención: Esto podría desencadenar otra automatización!",
+            "description": "Como ha configurado el modo de dormir para que se active cuando todos los controladores estén apagados, encender esta automatización puede hacer que active involuntariamente el modo de dormir. Otras automatizaciones podrían responder a esto, lo que podría no ser lo que usted desea. Puede desactivar este comportamiento en los ajustes de Detección de dormir.",
+            "action": "Detección de dormir"
+          }
         },
         "trackers": {
           "title": "Apagar un tracker",
-          "description": "Cuando el nivel de batería es inferior a"
+          "description": "Cuando el nivel de batería es inferior a",
+          "onlyDuringSleepMode": {
+            "title": "Sólo mientras el modo dormir está activado",
+            "description": "Sólo apaga los rastreadores de esta manera mientras el modo de dormir está activado"
+          }
         },
         "controllerPoweroffConflict": {
           "title": "Atención: Esto podría desencadenar otra automatización!",
@@ -626,6 +643,14 @@
         }
       },
       "overlay": {
+        "overlayMenu": {
+          "title": "Activar menú superpuesto",
+          "description": "Esto se puede desactivar si desea desactivar completamente el menú de superposición de OyasumiVR."
+        },
+        "binding": {
+          "title": "Vinculación de los botones del mando",
+          "description": "El botón que activa el menú de superposición se puede configurar en el menú de vinculación de SteamVR."
+        },
         "title": "Superposición"
       },
       "startStop": {
@@ -643,6 +668,13 @@
           "DISABLED": "Desactivado",
           "IMMEDIATELY": "Inmediatamente",
           "AFTERDELAY": "Después de 2 minutos"
+        }
+      },
+      "miscellaneous": {
+        "title": "Miscellaneous",
+        "overlayGpuFix": {
+          "title": "Corrección de gráficos para SteamVR Overlay",
+          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición."
         }
       }
     },
@@ -735,6 +767,11 @@
             "description": "Recibe una notificación cuando OyasumiVR acepte automáticamente la solicitud de invitación de alguien."
           }
         }
+      },
+      "volume": {
+        "title": "Volumen general de notificaciones",
+        "description": "Ajustar el nivel de volumen al que suenan algunos tipos de notificaciones",
+        "test": "Test"
       }
     },
     "updates": {
@@ -911,6 +948,101 @@
       "content": "Apagar los mandos y los trackers"
     }
   },
+  "systemMicMuteAutomations": {
+    "title": "Sistema de silenciamiento automático del micrófono",
+    "description": "Silencia o desactiva automáticamente el micrófono del dispositivo cuando te duermas o te despiertes. Esto puede resultar útil cuando quieras evitar que los demás te oigan roncar ;)",
+    "config": {
+      "title": "Configuración"
+    },
+    "stateAutomations": {
+      "title": "Automatizaciones de silencio",
+      "onSleepModeEnable": {
+        "title": "Cuando el modo de dormir está activado",
+        "description": "Cambiar el estado de mi micrófono a"
+      },
+      "onSleepModeDisable": {
+        "title": "Cuando el modo de dormir está desactivado",
+        "description": "Cambiar el estado de mi micrófono a"
+      },
+      "onSleepPreparation": {
+        "title": "Cuando me dispongo a dormir",
+        "description": "Cambiar el estado de mi micrófono a"
+      }
+    },
+    "muteOptions": {
+      "NONE": "No cambiar",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "audioDevice": {
+      "title": "Dispositivo de audio del micrófono",
+      "description": "Asegúrate de que es exactamente el mismo micrófono que utilizas en VRChat.",
+      "options": {
+        "DEFAULT": "Dispositivo predeterminado:\n{deviceName}"
+      }
+    },
+    "overlayIndicator": {
+      "title": "Indicador de superposición",
+      "description": "Muestra un indicador en VR cuando tu micrófono está silenciado.",
+      "enabled": {
+        "title": "Superposición indicador de silencio",
+        "description": "Si se muestra un indicador de silencio en VR"
+      },
+      "fade": {
+        "title": "Desvanecimiento",
+        "description": "El indicador se apaga pasados unos segundos. Puedes volver a mostrar el indicador pulsando cualquier botón del mando. Esto se recomienda en los cascos de realidad virtual con pantallas OLED para reducir el riesgo de quemaduras."
+      },
+      "opacity": {
+        "title": "Opacidad",
+        "description": "Opacidad máxima del icono indicador"
+      }
+    },
+    "controllerBinding": {
+      "title": "Vinculación del controlador",
+      "description": "Vincula un botón del controlador para controlar el estado de silencio del micrófono.",
+      "conflictWarning": "Si utilizas esta función para silenciar el micrófono con VRChat, te recomendamos que desvincules el botón de silencio de la configuración de VRChat o que configures el modo del micrófono como \"Siempre activado\" para evitar conflictos.",
+      "enabled": {
+        "title": "Vinculación del controlador",
+        "description": "Si desea activar la vinculación del controlador para cambiar el estado de silencio de su micrófono"
+      },
+      "binding": {
+        "title": "Vinculación con botones",
+        "description": "Configure qué botón o botones del controlador deben utilizarse para controlar el estado de silencio del micrófono."
+      },
+      "mode": {
+        "title": "Comportamiento de los botones por defecto",
+        "description": "Cómo pulsar el botón debería cambiar el estado del micrófono por defecto",
+        "options": {
+          "NONE": "No cambiar",
+          "TOGGLE": "alternar",
+          "PUSH_TO_TALK": "Pulsar para hablar"
+        }
+      },
+      "volume": {
+        "title": "Silenciar volumen de sonido",
+        "description": "El volumen de los efectos de sonido que se reproducen cuando el micrófono está silenciado o sin silenciar"
+      },
+      "onSleepModeEnable": {
+        "title": "Cuando el modo de dormir está activado",
+        "description": "Cambiar el comportamiento del botón del controlador a"
+      },
+      "onSleepModeDisable": {
+        "title": "Cuando el modo de dormir está desactivado",
+        "description": "Cambiar el comportamiento del botón del controlador a"
+      },
+      "onSleepPreparation": {
+        "title": "Cuando me dispongo a dormir",
+        "description": "Cambiar el comportamiento del botón del controlador a"
+      },
+      "currentMode": {
+        "title": "Comportamiento del botón activo",
+        "description": "Refleja el modo actual del botón del controlador",
+        "TOGGLE": "Alternar",
+        "PUSH_TO_TALK": "Pulsar para hablar"
+      },
+      "automations": "Automatizaciones de enlace del controlador"
+    }
+  },
   "vrchatMicMuteAutomations": {
     "title": "Silenciamiento del micrófono",
     "description": "Silencia o desactiva automáticamente tu micrófono en VRChat cuando te duermas o te despiertes. Esto puede ser útil cuando quieres evitar que otros oigan tus ronquidos ;)\n\nTen en cuenta que para que esto funcione, es necesario que OSC esté activado en VRChat.",
@@ -972,6 +1104,9 @@
       "inactive": "Inactivo",
       "loggedOut": "Desconectado",
       "heartrate": "Frecuencia cardiaca",
+      "vrchat": {
+        "tooltip": "Configuración: VRChat"
+      },
       "brightness": {
         "tooltip": "Control del brillo",
         "simple": "Brillo"
@@ -980,6 +1115,13 @@
         "INACTIVE": "Inactivo",
         "INITIALIZING": "Esperando",
         "INITIALIZED": "Activo"
+      },
+      "systemMicMuted": {
+        "label": "Muted",
+        "tooltip": {
+          "NAVIGATE": "Micrófono de sistema:\nAutomatizaciones",
+          "TOGGLE_MUTE": "Micrófono de sistema:\nUnmute"
+        }
       }
     },
     "confirm-modal": {
@@ -1000,7 +1142,8 @@
       "sleepDetection": "Detección de sueño",
       "oscAutomations": "Automatizaciones OSC",
       "gpuAutomations": "Automatizaciones de GPU",
-      "vrchatMicMuteAutomations": "Silenciamiento del micrófono",
+      "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRCHAT",
+      "systemMicMuteAutomations": "Automatizaciones del sistema de silenciamiento del micrófono",
       "powerAutomations": "Automatizaciones de energía",
       "statusAutomations": "Automatizaciones de estado",
       "autoInviteRequestAccept": "Auto Aceptar \nSolicitudes de invitación",
@@ -1086,6 +1229,36 @@
         "INVALID_FORMAT": "Un código 2FA válido es una secuencia de 6 números. Por favor, verifique su entrada."
       }
     },
+    "controller-binding": {
+      "slot": {
+        "click": "Click",
+        "double": "Presión doble",
+        "long": "Presión de larga duración",
+        "held": "Sujetado",
+        "touch": "Botón táctil"
+      },
+      "errors": {
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR Inactivo",
+          "tooltip": "Para ver o cambiar las vinculaciones de los controladores\nSteamVR debe estar ejecutándose"
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "Asegúrate de que tanto el mando izquierdo como el derecho están conectados"
+        },
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\nPanel abierto",
+          "tooltip": "Cierra el panel de SteamVR para ver las fijaciones"
+        },
+        "UNKNOWN": {
+          "message": "Configurar vinculación"
+        }
+      },
+      "dropdown": {
+        "desktop": "Modo Escritorio",
+        "vr": "Modo SteamVR",
+        "description": "Abierto configuracion de las vinculaciones"
+      }
+    },
     "friend-selection-modal": {
       "title": "Seleccionar amigos",
       "searchPlaceholder": "Buscar amigo por nombre...",
@@ -1114,6 +1287,28 @@
             "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
             "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "title": {
+            "MUTE": "Micrófono silenciado: {deviceName}",
+            "UNMUTE": "Micrófono desilenciado: {deviceName}"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Como el modo dormir estaba activado",
+            "SLEEP_MODE_DISABLED": "Como el modo dormir estaba desactivado",
+            "SLEEP_PREPARATION": "Cuando te preparabas para dormir"
+          }
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "title": {
+            "TOGGLE": "Cambiado el comportamiento del botón del controlador del micrófono a 'Toggle'",
+            "PUSH_TO_TALK": "Cambiado el comportamiento del botón del controlador del micrófono a 'Pulsar para hablar'"
+          },
+          "reason": {
+            "SLEEP_MODE_ENABLED": "Como el modo dormir estaba activado",
+            "SLEEP_MODE_DISABLED": "Como el modo dormir estaba desactivado",
+            "SLEEP_PREPARATION": "Cuando te preparabas para dormir"
           }
         },
         "sleepModeEnabled": {
