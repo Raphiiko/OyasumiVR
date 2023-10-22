@@ -1,4 +1,4 @@
-export type OVRActionBindingSlotName = 'double' | 'click' | 'long' | 'held' | 'touch';
+export type OVRActionBindingSlotName = 'double' | 'click' | 'long' | 'held' | 'touch' | 'null';
 export type OVRActionBindingInputSourceType = 'button' | 'joystick' | 'trigger';
 export type OVRActionBindingModeName = OVRActionBindingInputSourceType;
 
