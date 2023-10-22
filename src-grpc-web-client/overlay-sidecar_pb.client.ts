@@ -4,6 +4,7 @@
 import type { RpcTransport } from '@protobuf-ts/runtime-rpc';
 import type { ServiceInfo } from '@protobuf-ts/runtime-rpc';
 import { OyasumiOverlaySidecar } from './overlay-sidecar_pb';
+import type { SetMicrophoneActiveRequest } from './overlay-sidecar_pb';
 import type { OverlayMenuOpenRequest } from './overlay-sidecar_pb';
 import type { SetDebugTranslationsRequest } from './overlay-sidecar_pb';
 import type { OyasumiSidecarState } from './overlay-sidecar_pb';
@@ -73,6 +74,13 @@ export interface IOyasumiOverlaySidecarClient {
     input: OverlayMenuOpenRequest,
     options?: RpcOptions
   ): UnaryCall<OverlayMenuOpenRequest, Empty>;
+  /**
+   * @generated from protobuf rpc: SetMicrophoneActive(OyasumiOverlaySidecar.SetMicrophoneActiveRequest) returns (OyasumiOverlaySidecar.Empty);
+   */
+  setMicrophoneActive(
+    input: SetMicrophoneActiveRequest,
+    options?: RpcOptions
+  ): UnaryCall<SetMicrophoneActiveRequest, Empty>;
 }
 /**
  * @generated from protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
@@ -195,6 +203,23 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     const method = this.methods[8],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<OverlayMenuOpenRequest, Empty>(
+      'unary',
+      this._transport,
+      method,
+      opt,
+      input
+    );
+  }
+  /**
+   * @generated from protobuf rpc: SetMicrophoneActive(OyasumiOverlaySidecar.SetMicrophoneActiveRequest) returns (OyasumiOverlaySidecar.Empty);
+   */
+  setMicrophoneActive(
+    input: SetMicrophoneActiveRequest,
+    options?: RpcOptions
+  ): UnaryCall<SetMicrophoneActiveRequest, Empty> {
+    const method = this.methods[9],
+      opt = this._transport.mergeOptions(options);
+    return stackIntercept<SetMicrophoneActiveRequest, Empty>(
       'unary',
       this._transport,
       method,

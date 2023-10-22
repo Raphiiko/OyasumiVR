@@ -9,7 +9,6 @@ import {
   distinctUntilChanged,
   filter,
   firstValueFrom,
-  interval,
   map,
   pairwise,
   shareReplay,
@@ -35,6 +34,7 @@ import {
   EventLogChangedSystemMicMuteState,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
+import { invoke } from '@tauri-apps/api';
 
 const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
 const PERSISTENT_ID_TRAIL = ']';
@@ -94,6 +94,8 @@ export class SystemMicMuteAutomationService {
     this.changeControllerBindingBehaviorOnSleepPreparation();
     // Handle controller binding
     this.handleControllerBinding();
+    // Handle audio metering
+    this.handleHardwareAudioMetering();
   }
 
   private changeMuteOnSleepEnable() {
@@ -301,6 +303,16 @@ export class SystemMicMuteAutomationService {
             reason: 'SLEEP_PREPARATION',
           } as EventLogChangedSystemMicControllerButtonBehavior);
         })
+      )
+      .subscribe();
+  }
+
+  private async handleHardwareAudioMetering() {
+    this.captureDevice
+      .pipe(
+        map((device) => device?.id ?? null),
+        distinctUntilChanged(),
+        switchMap((deviceId) => invoke('set_mic_activity_device_id', { deviceId }))
       )
       .subscribe();
   }

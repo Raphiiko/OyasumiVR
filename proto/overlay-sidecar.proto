@@ -5,8 +5,6 @@ option csharp_namespace = "GrcpOverlaySidecar";
 package OyasumiOverlaySidecar;
 
 service OyasumiOverlaySidecar {
-  rpc Ping (Empty) returns (PingResponse) {}
-  rpc RequestStop (Empty) returns (Empty) {}
   rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
   rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
   rpc SyncState (OyasumiSidecarState) returns (Empty) {}
@@ -14,13 +12,10 @@ service OyasumiOverlaySidecar {
   rpc OpenOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
   rpc CloseOverlayMenu(Empty) returns (Empty) {}
   rpc ToggleOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
+  rpc SetMicrophoneActive(SetMicrophoneActiveRequest) returns (Empty) {}
 }
 
 // Requests & Responses
-message PingResponse {
-  uint32 pid = 1;
-}
-
 message AddNotificationRequest {
   string message = 1;
   uint32 duration = 2;
@@ -40,6 +35,11 @@ message SetDebugTranslationsRequest {
 
 message OverlayMenuOpenRequest {
   OyasumiSidecarControllerRole controller_role = 1;
+}
+
+message SetMicrophoneActiveRequest {
+  bool active = 1;
+  MicrophoneActivityMode mode = 2;
 }
 
 message Empty {
@@ -172,5 +172,10 @@ enum VrcStatus {
 enum OyasumiSidecarControllerRole {
   OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
   OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
+}
+
+enum MicrophoneActivityMode {
+  MICROPHONE_ACTIVITY_MODE_Hardware = 0;
+  MICROPHONE_ACTIVITY_MODE_VRChat = 1;
 }
 

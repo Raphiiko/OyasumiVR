@@ -73,6 +73,15 @@ export interface OverlayMenuOpenRequest {
   controllerRole: OyasumiSidecarControllerRole;
 }
 /**
+ * @generated from protobuf message OyasumiOverlaySidecar.SetMicrophoneActiveRequest
+ */
+export interface SetMicrophoneActiveRequest {
+  /**
+   * @generated from protobuf field: bool active = 1;
+   */
+  active: boolean;
+}
+/**
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
  */
 export interface Empty {}
@@ -872,6 +881,69 @@ class OverlayMenuOpenRequest$Type extends MessageType<OverlayMenuOpenRequest> {
  * @generated MessageType for protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
  */
 export const OverlayMenuOpenRequest = new OverlayMenuOpenRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SetMicrophoneActiveRequest$Type extends MessageType<SetMicrophoneActiveRequest> {
+  constructor() {
+    super('OyasumiOverlaySidecar.SetMicrophoneActiveRequest', [
+      { no: 1, name: 'active', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(value?: PartialMessage<SetMicrophoneActiveRequest>): SetMicrophoneActiveRequest {
+    const message = { active: false };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<SetMicrophoneActiveRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: SetMicrophoneActiveRequest
+  ): SetMicrophoneActiveRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool active */ 1:
+          message.active = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: SetMicrophoneActiveRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool active = 1; */
+    if (message.active !== false) writer.tag(1, WireType.Varint).bool(message.active);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.SetMicrophoneActiveRequest
+ */
+export const SetMicrophoneActiveRequest = new SetMicrophoneActiveRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
@@ -2359,5 +2431,6 @@ export const OyasumiOverlaySidecar = new ServiceType(
     { name: 'OpenOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
     { name: 'CloseOverlayMenu', options: {}, I: Empty, O: Empty },
     { name: 'ToggleOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
+    { name: 'SetMicrophoneActive', options: {}, I: SetMicrophoneActiveRequest, O: Empty },
   ]
 );

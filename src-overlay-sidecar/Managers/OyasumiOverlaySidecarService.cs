@@ -73,4 +73,13 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
     OvrManager.Instance.ToggleDashboard(role);
     return Task.FromResult(new Empty());
   }
+
+  public override Task<Empty> SetMicrophoneActive(SetMicrophoneActiveRequest request, ServerCallContext context)
+  {
+    if (request.Mode == MicrophoneActivityMode.Vrchat)
+    {
+      OvrManager.Instance.SetMicrophoneActive(request.Active);
+    }
+    return Task.FromResult(new Empty());
+  }
 }

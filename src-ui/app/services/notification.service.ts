@@ -122,7 +122,11 @@ export class NotificationService {
   }
 
   private async clearOyasumiNotification(notificationId: string) {
-    await invoke('clear_notification', { notificationId });
+    const client = await firstValueFrom(this.ipcService.overlaySidecarClient);
+    if (!client) return;
+    const result = await client.clearNotification({
+      notificationId,
+    });
   }
 
   private async sendOyasumiNotification(content: string, duration: number): Promise<string | null> {

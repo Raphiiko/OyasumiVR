@@ -1,7 +1,8 @@
 use std::ptr::null_mut;
 use std::sync::Arc;
 
-use log::error;
+use chrono::{NaiveDateTime, Utc};
+use log::{error, info};
 use serde::Serialize;
 use tokio::runtime::Handle;
 use tokio::sync::mpsc::{channel, Receiver, Sender};
@@ -18,6 +19,8 @@ use windows::Win32::Media::Audio::{
 };
 use windows::Win32::System::Com::StructuredStorage::PropVariantToBSTR;
 use windows::Win32::System::Com::{CLSCTX_ALL, STGM_READ};
+
+use crate::Models::overlay_sidecar::MicrophoneActivityMode;
 
 use super::wrappers::{
     AudioDeviceIAudioEndpointVolume, AudioDeviceIAudioEndpointVolumeCallback,
@@ -276,8 +279,12 @@ impl AudioDevice {
             return;
         }
         *metering_enabled = true;
+        info!("[Core] Enabling audio metering for device '{}'", state.name);
         drop(metering_enabled);
         tokio::spawn(async move {
+            const ACTIVATION_TIMEOUT: i64 = 1000;
+            let mut last_activation = NaiveDateTime::from_timestamp_millis(0).unwrap();
+            let mut previously_active = false;
             loop {
                 // Stop if metering has been disabled
                 let metering_enabled = state.metering_enabled.lock().await;
@@ -294,17 +301,50 @@ impl AudioDevice {
                     }
                 };
                 drop(meter);
-                // TODO: Do something with the meter value
+                // Get the threshold
+                let threshold = super::super::AUDIO_DEVICE_MANAGER
+                    .lock()
+                    .await
+                    .as_ref()
+                    .unwrap()
+                    .get_mic_activation_threshold()
+                    .await;
+                // Determine if the mic is considered "active"
+                let currently_active = if value >= threshold {
+                    last_activation = Utc::now().naive_utc();
+                    true
+                } else {
+                    let now = Utc::now().naive_utc();
+                    let duration = now - last_activation;
+                    duration.num_milliseconds() < ACTIVATION_TIMEOUT
+                };
+                if currently_active != previously_active {
+                    previously_active = currently_active;
+                    crate::overlay_sidecar::set_microphone_active(
+                        currently_active,
+                        MicrophoneActivityMode::Hardware,
+                    )
+                    .await;
+                }
                 tokio::time::sleep(tokio::time::Duration::from_millis(20)).await;
             }
         });
     }
 
-    pub async fn disable_metering(state: Arc<AudioDeviceState>) {
+    pub async fn disable_metering(&self) {
+        let state = self.state.clone();
+        AudioDevice::_disable_metering(state).await;
+    }
+
+    async fn _disable_metering(state: Arc<AudioDeviceState>) {
         let mut metering_enabled = state.metering_enabled.lock().await;
         if !*metering_enabled {
             return;
         }
+        info!(
+            "[Core] Disabling audio metering for device '{}'",
+            state.name
+        );
         *metering_enabled = false;
     }
 
@@ -327,7 +367,7 @@ impl Drop for AudioDevice {
         tokio::spawn(async move {
             // Disable metering if needed
             {
-                AudioDevice::disable_metering(state.clone()).await;
+                AudioDevice::_disable_metering(state.clone()).await;
             }
             // Unregister notification client
             {

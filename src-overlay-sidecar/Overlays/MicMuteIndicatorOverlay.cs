@@ -1,6 +1,7 @@
 using System.Numerics;
 using GrcpOverlaySidecar;
 using Serilog;
+using SharpDX.Direct3D;
 using Valve.VR;
 
 namespace overlay_sidecar;
@@ -10,6 +11,7 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
   private readonly ulong _overlayHandle;
   private readonly (byte[], uint, uint) _muteImage;
   private readonly (byte[], uint, uint) _unmuteImage;
+  private bool _micActive = false;
   private TextureWriter _textureWriter;
   private readonly float _baseScale = 0.088f;
   private bool _muteState = true;
@@ -20,6 +22,7 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
   private bool _fadeOut;
   private DateTime _lastStateChange = DateTime.MinValue;
   private DateTime _lastPresenceIndication = DateTime.MinValue;
+  private DateTime _lastMicActivityChange = DateTime.MinValue;
   private float _lastSetScale = 0;
 
   public MicMuteIndicatorOverlay()
@@ -58,22 +61,17 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
     // Update with state changes
     StateManager.Instance.StateChanged += OnStateChanged;
     OvrManager.Instance.OnInputActionsChanged += OnInputActionsChanged;
-    // Set the initial state
-    var state = StateManager.Instance.GetAppState();
-    setMuteState(state.SystemMicMuted);
-    _maxOpacity = state.Settings.SystemMicIndicatorOpacity;
-    _fadeOut = state.Settings.SystemMicIndicatorFadeout;
-    setEnabled(state.Settings.SystemMicIndicatorEnabled);
+    OnStateChanged(null, StateManager.Instance.GetAppState());
     // Start frame updates
     OvrManager.Instance.RegisterOverlay(this);
   }
 
-  private void OnStateChanged(object? sender, OyasumiSidecarState e)
+  private void OnStateChanged(object? sender, OyasumiSidecarState state)
   {
-    if (e.SystemMicMuted != _muteState) setMuteState(e.SystemMicMuted);
-    _maxOpacity = e.Settings.SystemMicIndicatorOpacity;
-    _fadeOut = e.Settings.SystemMicIndicatorFadeout;
-    setEnabled(e.Settings.SystemMicIndicatorEnabled);
+    if (state.SystemMicMuted != _muteState) setMuteState(state.SystemMicMuted);
+    _maxOpacity = state.Settings.SystemMicIndicatorOpacity;
+    _fadeOut = state.Settings.SystemMicIndicatorFadeout;
+    setEnabled(state.Settings.SystemMicIndicatorEnabled);
   }
 
   public void Dispose()
@@ -81,11 +79,21 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
     _disposed = true;
     OvrManager.Instance.UnregisterOverlay(this);
     OpenVR.Overlay.DestroyOverlay(_overlayHandle);
-    _textureWriter?.Dispose();
+    _textureWriter.Dispose();
     _textureWriter = null;
     GC.Collect();
     StateManager.Instance.StateChanged -= OnStateChanged;
     OvrManager.Instance.OnInputActionsChanged -= OnInputActionsChanged;
+  }
+
+  public void SetMicrophoneActive(bool active)
+  {
+    if (active != _micActive)
+    {
+      _lastMicActivityChange = DateTime.UtcNow;
+    }
+
+    _micActive = active;
   }
 
   private List<uint> _lastPresenceIndicationDevices = new();
@@ -128,6 +136,7 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
 
     var timeSinceLastStateChange = (DateTime.UtcNow - _lastStateChange).TotalMilliseconds;
     var timeSinceLastPresenceIndication = (DateTime.UtcNow - _lastPresenceIndication).TotalMilliseconds;
+    var timeSinceLastMicActivityChange = (DateTime.UtcNow - _lastMicActivityChange).TotalMilliseconds;
 
     // Update icon if the mute state has changed
     if (_muteImageState != _muteState)
@@ -139,14 +148,19 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
     // Update overlay texture
     _textureWriter.WriteBufferToTexture();
     var texture = _textureWriter.AsTextureT();
-    var res = OpenVR.Overlay.SetOverlayTexture(_overlayHandle, ref texture);
+    OpenVR.Overlay.SetOverlayTexture(_overlayHandle, ref texture);
 
     // Update opacity
     var maxOpacity = _maxOpacity * (_muteImageState == true ? 1.0f : 0.1f);
-    if (_fadeOut)
+    if (_micActive && !_muteState)
     {
-      var timeSince = Math.Min(timeSinceLastPresenceIndication, timeSinceLastStateChange);
-      var opacityFactor = EasingFunctions.InQuad(MathUtils.InvLerpClamped(3000, 4000, (float)timeSince));
+      OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, (float)(_maxOpacity / 100f));
+    }
+    else if (_fadeOut)
+    {
+      var timeSince = new[]
+        { timeSinceLastPresenceIndication, timeSinceLastStateChange, timeSinceLastMicActivityChange }.Min();
+      var opacityFactor = EasingFunctions.InQuad(MathUtils.InvLerpClamped(3500, 6000, (float)timeSince));
       var opacity = (float)(maxOpacity / 100f * (1.0 - opacityFactor));
       OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, opacity);
     }
@@ -155,8 +169,19 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
       OpenVR.Overlay.SetOverlayAlpha(_overlayHandle, (float)(maxOpacity / 100f));
     }
 
+    // Temporarily increase size when the mute state changes
+    float scaleStateChangeFactor =
+      EasingFunctions.InQuad(MathUtils.InvLerpClamped(200, 350, (float)timeSinceLastStateChange));
+    // Temporarily increase the size when the mic is active
+    float scaleActivityChangeFactor = 1;
+    if (!_muteState)
+    {
+      var factor = EasingFunctions.InQuad(MathUtils.InvLerpClamped(0, 100, (float)timeSinceLastMicActivityChange));
+      scaleActivityChangeFactor = _micActive ? 1.0f - factor : scaleActivityChangeFactor;
+    }
+
     // Update scale
-    var scaleFactor = EasingFunctions.InQuad(MathUtils.InvLerpClamped(200, 350, (float)timeSinceLastStateChange));
+    float scaleFactor = Math.Min(scaleStateChangeFactor, scaleActivityChangeFactor);
     var scale = ((1 - scaleFactor) * 0.25f + 1.0f) * _baseScale;
     if (Math.Abs(_lastSetScale - scale) > 0.001)
     {
