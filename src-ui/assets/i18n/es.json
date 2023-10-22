@@ -1143,7 +1143,7 @@
       "oscAutomations": "Automatizaciones OSC",
       "gpuAutomations": "Automatizaciones de GPU",
       "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRCHAT",
-      "systemMicMuteAutomations": "Automatizaciones del sistema de silenciamiento del micrófono",
+      "systemMicMuteAutomations": "Automatizacion de silencio del micrófono",
       "powerAutomations": "Automatizaciones de energía",
       "statusAutomations": "Automatizaciones de estado",
       "autoInviteRequestAccept": "Auto Aceptar \nSolicitudes de invitación",
