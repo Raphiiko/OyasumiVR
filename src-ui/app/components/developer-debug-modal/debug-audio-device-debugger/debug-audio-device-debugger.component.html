@@ -1,9 +1,11 @@
-<button class="btn btn-secondary" (click)="audioDeviceService.getAudioDevices()">Refresh Devices</button>
+<button class="btn btn-secondary" (click)="audioDeviceService.getAudioDevices()"
+  >Refresh Devices</button
+>
 <div class="device-lists">
   <div class="device-list">
     <h3>Render Devices</h3>
     <div class="device" *ngFor="let device of renderDevices | async">
-      <h4>{{device.name}}</h4>
+      <h4>{{ device.name }}</h4>
       <div>
         <span *ngIf="device.mute">Muted</span>
         <span *ngIf="!device.mute">Unmuted</span>
@@ -11,18 +13,26 @@
         <span *ngIf="device.default">&nbsp;(Default Communications Device)</span>
       </div>
       <div class="row">
-        <span>{{device.volume * 100 | number: '1.1-1'}}%</span>
-        <app-slider [min]="0" [max]="1" [step]="0.001" [value]="device.volume"
-                    (valueChange)="audioDeviceService.setVolume(device.id, $event)"></app-slider>
+        <span>{{ device.volume * 100 | number : '1.1-1' }}%</span>
+        <app-slider
+          [min]="0"
+          [max]="1"
+          [step]="0.001"
+          [value]="device.volume"
+          (valueChange)="audioDeviceService.setVolume(device.id, $event)"
+        ></app-slider>
       </div>
-      <button class="btn btn-secondary" (click)="audioDeviceService.setMute(device.id, !device.mute)">Toggle Mute
+      <button
+        class="btn btn-secondary"
+        (click)="audioDeviceService.setMute(device.id, !device.mute)"
+        >Toggle Mute
       </button>
     </div>
   </div>
   <div class="device-list">
     <h3>Capture Devices</h3>
     <div class="device" *ngFor="let device of captureDevices | async">
-      <h4>{{device.name}}</h4>
+      <h4>{{ device.name }}</h4>
       <div>
         <span *ngIf="device.mute">Muted</span>
         <span *ngIf="!device.mute">Unmuted</span>
@@ -30,11 +40,19 @@
         <span *ngIf="device.default">&nbsp;(Default Communications Device)</span>
       </div>
       <div class="row">
-        <span>{{device.volume * 100 | number: '1.1-1'}}%</span>
-        <app-slider [min]="0" [max]="1" [step]="0.001" [value]="device.volume"
-                    (valueChange)="audioDeviceService.setVolume(device.id, $event)"></app-slider>
+        <span>{{ device.volume * 100 | number : '1.1-1' }}%</span>
+        <app-slider
+          [min]="0"
+          [max]="1"
+          [step]="0.001"
+          [value]="device.volume"
+          (valueChange)="audioDeviceService.setVolume(device.id, $event)"
+        ></app-slider>
       </div>
-      <button class="btn btn-secondary" (click)="audioDeviceService.setMute(device.id, !device.mute)">Toggle Mute
+      <button
+        class="btn btn-secondary"
+        (click)="audioDeviceService.setMute(device.id, !device.mute)"
+        >Toggle Mute
       </button>
     </div>
   </div>

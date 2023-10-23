@@ -167,6 +167,10 @@ import { SystemMicMuteAutomationService } from './services/system-mic-mute-autom
 import { OpenVRInputService } from './services/openvr-input.service';
 import { OverlayService } from './services/overlay/overlay.service';
 import { ControllerBindingComponent } from './components/controller-binding/controller-binding.component';
+import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
+import { FormsModule } from '@angular/forms';
+import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
+import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -262,6 +266,9 @@ export function createTranslateLoader(http: HttpClient) {
     DebugAudioDeviceDebuggerComponent,
     SystemMicMuteAutomationsViewComponent,
     ControllerBindingComponent,
+    TranslationLoaderViewComponent,
+    TranslationEditorViewComponent,
+    TextareaAutoResizeDirective,
   ],
   imports: [
     CommonModule,
@@ -283,8 +290,10 @@ export function createTranslateLoader(http: HttpClient) {
       },
     }),
     NgPipesModule,
+    FormsModule,
   ],
   providers: [ThemeService, TStringTranslatePipe],
+  exports: [SelectBoxComponent],
 })
 export class AppModule {
   constructor(

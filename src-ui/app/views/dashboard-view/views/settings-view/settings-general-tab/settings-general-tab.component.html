@@ -19,7 +19,6 @@
   </div>
 </div>
 
-
 <div class="setting-category">
   <h2 translate>settings.general.sleepMode.title</h2>
   <div class="settings">
@@ -91,9 +90,7 @@
           <input
             type="checkbox"
             [checked]="appSettings.overlayMenuEnabled"
-            (change)="
-                setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)
-              "
+            (change)="setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)"
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -105,7 +102,9 @@
         <span translate>settings.general.overlay.binding.description</span>
       </div>
       <div class="setting-row-action">
-        <app-controller-binding [actionKey]="OVRInputEventAction.OpenOverlay"></app-controller-binding>
+        <app-controller-binding
+          [actionKey]="OVRInputEventAction.OpenOverlay"
+        ></app-controller-binding>
       </div>
     </div>
   </div>
@@ -157,9 +156,8 @@
       </div>
       <div class="setting-row-action">
         <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-        >settings.general.startWithSteamVR.howTo
-        </button
-        >
+          >settings.general.startWithSteamVR.howTo
+        </button>
       </div>
     </div>
     <div class="setting-row">

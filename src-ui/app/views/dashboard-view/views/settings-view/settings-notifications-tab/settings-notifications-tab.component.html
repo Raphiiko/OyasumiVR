@@ -23,13 +23,15 @@
       </div>
       <div class="setting-row-action">
         <button class="btn btn-secondary" (click)="testSound()">
-          <span translate @hshrink *ngIf="!playingTestSound">settings.notifications.volume.test</span>
+          <span translate @hshrink *ngIf="!playingTestSound"
+            >settings.notifications.volume.test</span
+          >
           <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
         </button>
         <app-slider-setting
           [value]="generalNotificationVolume"
           [max]="200"
-          [snapValues]="[50,100,150]"
+          [snapValues]="[50, 100, 150]"
           (valueChange)="setGeneralNotificationVolume($event)"
           [unit]="'%'"
         ></app-slider-setting>
@@ -48,11 +50,11 @@
           <span>{{
             'settings.notifications.notifications.category.' + notificationType + '.title'
               | translate
-            }}</span>
+          }}</span>
           <span>{{
             'settings.notifications.notifications.category.' + notificationType + '.description'
               | translate
-            }}</span>
+          }}</span>
         </div>
         <div class="setting-row-action">
           <label class="check-toggle">

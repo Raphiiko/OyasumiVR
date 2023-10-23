@@ -10,7 +10,7 @@
   border-radius: 0.5em;
   cursor: pointer;
   font-size: 12px;
-  transition: all .15s;
+  transition: all 0.15s;
   padding: 0;
   min-width: 13em;
 
@@ -30,7 +30,8 @@
       width: 1.5em;
       height: 1.5em;
       vertical-align: middle;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+        contrast(100%);
     }
   }
 
@@ -41,7 +42,8 @@
     padding: 0.5em 1em 0.5em 0.25em;
     white-space: pre-line;
 
-    .line0, .line2 {
+    .line0,
+    .line2 {
       color: var(--color-text-3);
     }
   }
@@ -78,16 +80,14 @@
       width: 1.5em;
       height: 1.5em;
       vertical-align: middle;
-      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+      filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%)
+        contrast(100%);
     }
 
     &-left {
-
-
     }
 
     &-right {
-
     }
   }
 }
@@ -126,7 +126,7 @@
     border: 1px solid;
     border-color: var(--color-surface-2);
     border-radius: 0.5em;
-    transition: all .15s;
+    transition: all 0.15s;
     @include shadow(5, true);
     overflow: hidden;
 
@@ -148,7 +148,7 @@
       padding: 0.5em;
       color: var(--color-text-2);
       cursor: pointer;
-      transition: all .15s;
+      transition: all 0.15s;
       &:hover {
         background: var(--color-surface-1);
       }
@@ -158,4 +158,3 @@
     }
   }
 }
-
