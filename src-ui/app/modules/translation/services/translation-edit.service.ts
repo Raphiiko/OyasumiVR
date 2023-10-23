@@ -39,7 +39,7 @@ export class TranslationEditService {
   async openEditor(locale: string, enTranslations: any, langTranslations: any) {
     const flatEn = TranslationEditUtils.flatten(enTranslations);
     const flatLang = TranslationEditUtils.flatten(langTranslations);
-    const entries = Object.keys(flatEn).map(
+    let entries = Object.keys(flatEn).map(
       (key) =>
         ({
           key,
@@ -56,6 +56,11 @@ export class TranslationEditService {
         `Discarded ${discarded} translation(s) because they were not present in the English translation file.`
       );
     }
+    // Remove empty and placeholder entries
+    entries = entries.filter((e) => {
+      let trimmed = (e.values[locale] ?? '').trim();
+      return trimmed && trimmed !== '{PLACEHOLDER}';
+    });
     entries.sort((a, b) => a.key.localeCompare(b.key));
     this._editLocale.next(locale);
     this._entries.next(entries);
