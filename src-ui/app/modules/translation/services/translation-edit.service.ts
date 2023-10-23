@@ -58,7 +58,7 @@ export class TranslationEditService {
     }
     // Remove empty and placeholder entries
     entries = entries.filter((e) => {
-      let trimmed = (e.values[locale] ?? '').trim();
+      const trimmed = (e.values[locale] ?? '').trim();
       return trimmed && trimmed !== '{PLACEHOLDER}';
     });
     entries.sort((a, b) => a.key.localeCompare(b.key));
