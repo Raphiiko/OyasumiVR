@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A configuration saving loop in status automations view
 - Malformed OSC packets causing a crash
 - OSC message processing being slower than necessary
+- Date formatting for Korean language
 
 ## [1.9.0]
 

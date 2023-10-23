@@ -18,6 +18,8 @@ import { PowerAutomationsViewComponent } from './views/dashboard-view/views/powe
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
+import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
+import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
 
 const routes: Routes = [
   {
@@ -92,6 +94,17 @@ const routes: Routes = [
       {
         path: '**',
         redirectTo: 'overview',
+      },
+    ],
+  },
+  {
+    path: 'translation',
+    children: [
+      { path: 'loader', component: TranslationLoaderViewComponent },
+      { path: 'editor', component: TranslationEditorViewComponent },
+      {
+        path: '**',
+        redirectTo: 'loader',
       },
     ],
   },

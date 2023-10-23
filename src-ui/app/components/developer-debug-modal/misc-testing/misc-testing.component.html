@@ -1,11 +1,21 @@
+<h3>Navigation</h3>
+<div class="row">
+  <button class="btn btn-secondary" (click)="navigateTo(['translation'])"
+    >Translation Module</button
+  >
+</div>
 <h3>Actions</h3>
 <button class="btn btn-secondary" (click)="openBindingConfig()">Open Binding Config</button>
 <button class="btn btn-secondary" (click)="getActionBindings()">Get Action Bindings</button>
-<pre *ngIf="bindings">{{bindings | json}}</pre>
+<pre *ngIf="bindings">{{ bindings | json }}</pre>
 <h3>Notification Sounds</h3>
 <div class="row">
-  <button class="btn btn-secondary" (click)="playSound('notification_bell')">notification_bell</button>
-  <button class="btn btn-secondary" (click)="playSound('notification_block')">notification_block</button>
+  <button class="btn btn-secondary" (click)="playSound('notification_bell')"
+    >notification_bell</button
+  >
+  <button class="btn btn-secondary" (click)="playSound('notification_block')"
+    >notification_block</button
+  >
   <button class="btn btn-secondary" (click)="playSound('mic_mute')">mic_mute</button>
   <button class="btn btn-secondary" (click)="playSound('mic_unmute')">mic_unmute</button>
   <app-slider-setting [(value)]="soundVolume" [max]="200"></app-slider-setting>
@@ -18,5 +28,5 @@
 <button class="btn btn-primary" (click)="automation.setMute(false)">Unmute</button>
 <button class="btn btn-secondary" (click)="automation.setMode('TOGGLE')">Set Toggle Mode</button>
 <button class="btn btn-secondary" (click)="automation.setMode('PUSH_TO_MUTE')"
->Set Push To Mute Mode
+  >Set Push To Mute Mode
 </button>
