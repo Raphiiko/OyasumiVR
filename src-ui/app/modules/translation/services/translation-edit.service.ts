@@ -49,7 +49,6 @@ export class TranslationEditService {
           },
         } as TranslationEntry)
     );
-    console.log('ENTRIES', entries.length);
     const importCount = entries.filter((e) => e.values[locale] !== undefined).length;
     const discarded = Object.keys(flatLang).length - importCount;
     if (discarded > 0) {
@@ -149,7 +148,6 @@ export class TranslationEditService {
 
   async updateTranslations(): Promise<{
     added: number;
-    removed: number;
     keysRemoved: number;
   } | null> {
     if (!this._entries.value) return null;
@@ -196,18 +194,6 @@ export class TranslationEditService {
         translations.push(translation);
       }
     });
-    // Remove translations that are not present in the new translations
-    let removed = 0;
-    translations.forEach((translation) => {
-      Object.entries(translation.values)
-        .filter(([, value]) => value)
-        .forEach(([locale]) => {
-          if (!newTranslations[locale]?.[translation.key]) {
-            delete translation.values[locale];
-            removed++;
-          }
-        });
-    });
     // Remove translations that have no EN translation anymore
     let keysRemoved = 0;
     const t = translations.filter((t) => {
@@ -219,7 +205,6 @@ export class TranslationEditService {
 
     return {
       added,
-      removed,
       keysRemoved,
     };
   }

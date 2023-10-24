@@ -157,11 +157,9 @@ export class TranslationEditorViewComponent {
     await message(
       'Your translations have been updated!\n\nIn total, ' +
         result.added +
-        ' translation(s) were added, ' +
-        result.removed +
-        ' translation(s) were removed, and ' +
+        ' translation(s) were added and ' +
         result.keysRemoved +
-        ' translation key(s) were removed entirely.'
+        ' translation(s) were removed.'
     );
   }
 
