@@ -39,7 +39,7 @@ export class TranslationEditService {
   async openEditor(locale: string, enTranslations: any, langTranslations: any) {
     const flatEn = TranslationEditUtils.flatten(enTranslations);
     const flatLang = TranslationEditUtils.flatten(langTranslations);
-    let entries = Object.keys(flatEn).map(
+    const entries = Object.keys(flatEn).map(
       (key) =>
         ({
           key,
