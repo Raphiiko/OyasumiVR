@@ -50,25 +50,30 @@
   "localization": [
     {
       "language_tag": "en_us",
-
       "/actions/main": "OyasumiVR Actions",
       "/actions/main/in/OpenOverlay": "Open Overlay Menu",
       "/actions/main/in/MuteMicrophone": "Mute Microphone",
-
       "/actions/hidden": "OyasumiVR Hidden Actions",
       "/actions/hidden/in/IndicatePresence": "Indicate Presence",
       "/actions/hidden/in/OverlayInteract": "Overlay Interact"
     },
     {
       "language_tag": "ko_kr",
-      
       "/actions/main": "OyasumiVR 액션",
       "/actions/main/in/OpenOverlay": "오버레이 메뉴 열기",
       "/actions/main/in/MuteMicrophone": "마이크 음소거",
-
       "/actions/hidden": "OyasumiVR Hidden Actions",
       "/actions/hidden/in/IndicatePresence": "Indicate Presence",
       "/actions/hidden/in/OverlayInteract": "Overlay Interact"
+    },
+    {
+      "language_tag": "nl_nl",
+      "/actions/main": "OyasumiVR Acties",
+      "/actions/main/in/OpenOverlay": "Open Overlay Menu",
+      "/actions/main/in/MuteMicrophone": "Demp Microfoon",
+      "/actions/hidden": "OyasumiVR Verborgen Acties",
+      "/actions/hidden/in/IndicatePresence": "Aanwezigheid Aanduiden",
+      "/actions/hidden/in/OverlayInteract": "Overlay Interactie"
     }
   ]
 }
