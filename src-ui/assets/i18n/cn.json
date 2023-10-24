@@ -209,6 +209,27 @@
           },
           "title": "自动接受了来自''{displayName}的邀请请求"
         },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_PREPARATION": "当你准备入睡时"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_PREPARATION": "当你准备入睡时"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
+            "SLEEP_PREPARATION": "当你准备入睡时"
+          }
+        },
         "chaperoneFadeDistanceChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
@@ -218,7 +239,9 @@
         },
         "displayBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
+            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "当你准备入睡时"
           },
           "title": {
             "set": "头戴式显示器亮度设置为 {value}",
@@ -1435,6 +1458,33 @@
     "playerLimitLabel": "{count} 位玩家（包括你）",
     "title": "状态 自动化"
   },
+  "systemMicMuteAutomations": {
+    "config": {
+      "title": "设置"
+    },
+    "controllerBinding": {
+      "onSleepModeDisable": {
+        "title": "当睡眠模式关闭时"
+      },
+      "onSleepModeEnable": {
+        "title": "当睡眠模式启动时"
+      },
+      "onSleepPreparation": {
+        "title": "当我准备入睡时"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "title": "当睡眠模式关闭时"
+      },
+      "onSleepModeEnable": {
+        "title": "当睡眠模式启动时"
+      },
+      "onSleepPreparation": {
+        "title": "当我准备入睡时"
+      }
+    }
+  },
   "updater": {
     "modals": {
       "error": {
@@ -1447,8 +1497,20 @@
     "automations": {
       "title": "自动化"
     },
+    "config": {
+      "title": "设置"
+    },
     "muteOptions": {
       "NONE": "无"
+    },
+    "onSleepModeDisable": {
+      "title": "当睡眠模式关闭时"
+    },
+    "onSleepModeEnable": {
+      "title": "当睡眠模式启动时"
+    },
+    "onSleepPreparation": {
+      "title": "当我准备入睡时"
     },
     "status": {
       "unknown": "未知"

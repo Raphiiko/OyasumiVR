@@ -66,6 +66,7 @@
       "onSleepEnable": {
         "title": "Ketika saya mulai tidur"
       },
+      "sleepAutomations": "Otomatisasi Tidur",
       "transition": {
         "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan",
         "title": "Atur kecerahan bertahap"
@@ -93,6 +94,9 @@
     "title": "Otomatisasi Chaperone"
   },
   "comp": {
+    "brightness-control-modal": {
+      "automationsTooltip": "Automasi Kecerahan"
+    },
     "confirm-modal": {
       "defaultTitle": "Konfirmasi"
     },
@@ -161,6 +165,24 @@
             "whitelist": "Karena player ini masuk whitelist"
           },
           "title": "Permintaan undangan yang diterima secara otomatis dari ''{displayName}''"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan"
+          }
         },
         "chaperoneFadeDistanceChanged": {
           "reason": {
@@ -288,6 +310,12 @@
             "SLEEP_TRIGGER": "Saat Anda tertidur cukup lama"
           },
           "title": "Urutan shutdown dimulai"
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
+            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan"
+          }
         },
         "sleepDetectorEnableCancelled": {
           "subtitle": "Saat pengguna masih terjaga",
@@ -693,6 +721,13 @@
   },
   "power-automations": {
     "devicePowerOff": {
+      "onBatteryLevel": {
+        "controllers": {
+          "powerOffConflict": {
+            "action": "Deteksi Tidur"
+          }
+        }
+      },
       "onCharge": {
         "description": "Mematikan perangkat secara otomatis saat Anda meletakkannya di pengisi daya.",
         "title": "Saat mengisi daya"
@@ -911,6 +946,11 @@
         },
         "title": "Mode Tidur"
       },
+      "stopWithSteamVR": {
+        "options": {
+          "DISABLED": "Matikan"
+        }
+      },
       "systemTray": {
         "close": {
           "description": "Menutup OyasumiVR ke baki sistem alih-alih keluar dari program.",
@@ -926,6 +966,11 @@
         "description": "Data yang akan dikirim terbatas pada versi OyasumiVR yang Anda gunakan, dan bahasa yang telah Anda tetapkan. Tidak ada data lain yang dikirim dan sepenuhnya anonim. Data ini hanya digunakan untuk menyediakan beberapa statistik penggunaan umum.",
         "label": "Mengirim data penggunaan anonim",
         "title": "Telemetri"
+      }
+    },
+    "integrations": {
+      "vrchat": {
+        "title": "VRChat"
       }
     },
     "notifications": {
@@ -955,7 +1000,10 @@
         "description": "Pilih penyedia mana yang akan digunakan untuk mengirimkan notifikasi kepada Anda",
         "title": "Notification Provider"
       },
-      "title": "Pengaturan Notifikasi"
+      "title": "Pengaturan Notifikasi",
+      "volume": {
+        "test": "Tes"
+      }
     },
     "tab": {
       "advanced": "Lanjutan",
@@ -1083,6 +1131,12 @@
       "title": "Mematikan"
     },
     "sequence": {
+      "powerDownWindows": {
+        "options": {
+          "LOGOUT": "Keluar",
+          "SLEEP": "Tidur"
+        }
+      },
       "quitSteamVR": {
         "description": "Ini juga akan menghentikan permainan atau overlay yang sedang Anda jalankan",
         "title": "Keluar SteamVR"
@@ -1200,6 +1254,12 @@
         },
         "title": "Nyalakan mode tidur"
       },
+      "enableOnHeartRateCalmPeriod": {
+        "duration": {
+          "unit": "min"
+        },
+        "title": "Nyalakan mode tidur"
+      },
       "sleepDetectorCalibration": {
         "calibrating": {
           "countdown": "{counter} detik lagi...",
@@ -1265,12 +1325,53 @@
     "playerLimitLabel": "{count} player (termasuk kamu)",
     "title": "Otomatisasi Status"
   },
+  "systemMicMuteAutomations": {
+    "config": {
+      "title": "Konfigurasi"
+    },
+    "controllerBinding": {
+      "onSleepModeDisable": {
+        "title": "Saat mode tidur dinonaktifkan"
+      },
+      "onSleepModeEnable": {
+        "title": "Saat mode tidur diaktifkan"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "title": "Saat mode tidur dinonaktifkan"
+      },
+      "onSleepModeEnable": {
+        "title": "Saat mode tidur diaktifkan"
+      }
+    }
+  },
   "updater": {
     "modals": {
       "error": {
         "message": "Pembaruan gagal diinstal. Silakan coba lagi nanti.",
         "title": "Update Gagal"
       }
+    }
+  },
+  "vrchatMicMuteAutomations": {
+    "automations": {
+      "title": "Otomatisasi"
+    },
+    "config": {
+      "title": "Konfigurasi"
+    },
+    "muteOptions": {
+      "NONE": "kosong"
+    },
+    "onSleepModeDisable": {
+      "title": "Saat mode tidur dinonaktifkan"
+    },
+    "onSleepModeEnable": {
+      "title": "Saat mode tidur diaktifkan"
+    },
+    "status": {
+      "unknown": "Tidak diketahui"
     }
   }
 }
