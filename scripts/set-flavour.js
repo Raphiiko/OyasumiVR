@@ -55,7 +55,7 @@ let appKey = (() => {
   console.log('Updated ' + path);
 }
 
-// Set flavour of vr manifest
+// Set app key of vr manifest
 {
   const path = 'src-core/resources/manifest.vrmanifest';
   let manifest = JSON.parse(readFileSync(path).toString());
@@ -66,7 +66,7 @@ let appKey = (() => {
   console.log('Updated ' + path);
 }
 
-// Set flavour of default input profiles
+// Set app key of default input profiles
 {
   const basePath = 'src-core/resources/input';
   readdirSync(basePath).forEach((file) => {
@@ -77,4 +77,16 @@ let appKey = (() => {
     writeFileSync(path, JSON.stringify(contents, null, 2));
     console.log('Updated ' + path);
   });
+}
+
+// Set app key in core
+{
+  const path = 'src-core/src/globals.rs';
+  let coreFlavour = readFileSync(path).toString();
+  coreFlavour = coreFlavour.replaceAll(
+    /pub const STEAM_APP_KEY: &str = "[a-zA-Z0-9.-]*";/g,
+    `pub const STEAM_APP_KEY: &str = "${appKey}";`
+  );
+  writeFileSync(path, coreFlavour);
+  console.log('Updated ' + path);
 }

@@ -9,6 +9,7 @@ mod sleep_detector;
 mod supersampling;
 
 use crate::{
+    globals::STEAM_APP_KEY,
     openvr::models::{OpenVRAction, OpenVRActionSet},
     utils::send_event,
 };
@@ -92,14 +93,39 @@ pub async fn task() {
                     let ctx = OVR_CONTEXT.lock().await;
                     let mut applications = ctx.as_ref().unwrap().applications_mngr();
                     info!("[Core] Registering VR Manifest");
+
                     let manifest_path_buf =
                         std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
                     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
-                    if let Err(e) = applications.add_application_manifest(manifest_path, false) {
-                        error!(
-                            "[Core] Failed to register VR manifest: {:#?}",
-                            e.description()
-                        );
+                    match applications.is_application_installed(STEAM_APP_KEY) {
+                        Ok(value) => {
+                            if !value {
+                                if let Err(e) =
+                                    applications.add_application_manifest(manifest_path, false)
+                                {
+                                    error!(
+                                        "[Core] Failed to register VR manifest: {:#?}",
+                                        e.description()
+                                    );
+                                } else {
+                                    info!(
+                                        "[Core] Steam app manifest registered ({})",
+                                        STEAM_APP_KEY
+                                    )
+                                }
+                            } else {
+                                info!(
+                                    "[Core] Steam app manifest already registered ({})",
+                                    STEAM_APP_KEY
+                                )
+                            }
+                        }
+                        Err(e) => {
+                            error!(
+                                "[Core] Failed to check if VR manifest is registered: {:#?}",
+                                e.description()
+                            );
+                        }
                     }
                 }
                 // Set up SteamVR Input
