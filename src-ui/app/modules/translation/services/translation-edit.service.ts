@@ -98,7 +98,7 @@ export class TranslationEditService {
   ): TranslationSuggestion | null {
     const enValue = entry.values['en'];
     const similarEntries = entries.filter((e) => e.values['en'] === enValue);
-    const similarValues = similarEntries.map((e) => e.values[locale]);
+    const similarValues = similarEntries.map((e) => e.values[locale]).filter((l) => l && l.trim());
     const stringCount: Record<string, number> = {};
     let mostFrequentValue: string | null = null;
     let maxCount = 0;
