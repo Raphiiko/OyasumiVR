@@ -59,6 +59,13 @@
       "brightness": {
         "title": "Changer la luminosité pour"
       },
+      "onSleepDisable": {
+        "title": "Quand je me réveille"
+      },
+      "onSleepEnable": {
+        "title": "Quand je vais dormir"
+      },
+      "sleepAutomations": "Automatisations de sommeil",
       "transition": {
         "description": "Transitionne en douceur vers la luminosité paramétrée",
         "title": "Ajuster la luminosité graduellement"
@@ -69,6 +76,14 @@
       }
     },
     "title": "Automatisation de luminosité"
+  },
+  "chaperone-automations": {
+    "onSleepDisable": {
+      "title": "Quand je me réveille"
+    },
+    "onSleepEnable": {
+      "title": "Quand je vais dormir"
+    }
   },
   "comp": {
     "brightness-control-modal": {
@@ -111,6 +126,36 @@
           },
           "title": "Invitation de ''{displayName}'' acceptée automatiquement"
         },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "displayBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -121,6 +166,18 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
+        "imageBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
+        },
         "renderResolutionChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -129,6 +186,12 @@
           "title": {
             "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
             "custom": "Résolution d'affichage de SteamVR passée à {value}"
+          }
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -183,6 +246,12 @@
             "TRACKER": "Un tracker a été éteint",
             "TRACKERS": "Plusieurs trackers ont été éteints",
             "VARIOUS": "Divers appareils ont été éteints"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         }
       }
@@ -456,6 +525,9 @@
         },
         "sleepingAnimations": {
           "title": "Animations de sommeil"
+        },
+        "sleepModeEnableForSleepDetector": {
+          "title": "Détection de sommeil"
         }
       },
       "overview": {
@@ -476,6 +548,13 @@
   },
   "power-automations": {
     "devicePowerOff": {
+      "onBatteryLevel": {
+        "controllers": {
+          "powerOffConflict": {
+            "action": "Détection de sommeil"
+          }
+        }
+      },
       "onCharge": {
         "description": "Éteindre les appareils lorsqu'ils sont en charge.",
         "title": "Lors de la recharge"
@@ -488,7 +567,15 @@
         "title": "Quand je vais dormir"
       }
     },
-    "enableLighthouseControl": "Activer"
+    "enableLighthouseControl": "Activer",
+    "windowsPowerPolicy": {
+      "sleepModeDisable": {
+        "title": "Lorsque de la désactivation du mode sommeil"
+      },
+      "sleepModeEnable": {
+        "title": "Lors de l'activation du mode sommeil"
+      }
+    }
   },
   "resolution-automations": {
     "description": "OyasumiVR peut automatiquement ajuster la résolution d'affichage de votre casque lors de l'activation ou la désactivation du mode sommeil.",
@@ -573,6 +660,11 @@
         "title": "Télémétrie"
       }
     },
+    "integrations": {
+      "vrchat": {
+        "title": "VRChat"
+      }
+    },
     "notifications": {
       "notifications": {
         "category": {
@@ -653,6 +745,9 @@
     }
   },
   "shared": {
+    "common": {
+      "none": "Aucun"
+    },
     "logo": {
       "tagline": "Outils de sommeil VR"
     },
@@ -810,6 +905,27 @@
     "playerLimitLabel": "{count, plural, one {1 jouer} other {# joueurs}}",
     "title": "Automatisations de statut"
   },
+  "systemMicMuteAutomations": {
+    "config": {
+      "title": "Configuration"
+    },
+    "controllerBinding": {
+      "onSleepModeDisable": {
+        "title": "Lorsque de la désactivation du mode sommeil"
+      },
+      "onSleepModeEnable": {
+        "title": "Lors de l'activation du mode sommeil"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "title": "Lorsque de la désactivation du mode sommeil"
+      },
+      "onSleepModeEnable": {
+        "title": "Lors de l'activation du mode sommeil"
+      }
+    }
+  },
   "updater": {
     "modals": {
       "error": {
@@ -819,6 +935,18 @@
     }
   },
   "vrchatMicMuteAutomations": {
+    "config": {
+      "title": "Configuration"
+    },
+    "muteOptions": {
+      "NONE": "Aucun"
+    },
+    "onSleepModeDisable": {
+      "title": "Lorsque de la désactivation du mode sommeil"
+    },
+    "onSleepModeEnable": {
+      "title": "Lors de l'activation du mode sommeil"
+    },
     "status": {
       "unknown": "Inconnu"
     }

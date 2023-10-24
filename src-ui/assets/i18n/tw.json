@@ -66,6 +66,7 @@
       "onSleepEnable": {
         "title": "當我進入睡眠模式時"
       },
+      "sleepAutomations": "睡眠自動化",
       "transition": {
         "description": "平滑地過渡到所需的亮度值",
         "title": "逐步調整亮度"
@@ -164,6 +165,24 @@
             "whitelist": "由於該玩家被列入白名單"
           },
           "title": "自動接受了來自''{displayName}的邀請請求"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式"
+          }
         },
         "chaperoneFadeDistanceChanged": {
           "reason": {
@@ -291,6 +310,12 @@
             "SLEEP_TRIGGER": "因為你已經睡了足夠長的時間"
           },
           "title": "關機程序已經開始"
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式"
+          }
         },
         "sleepDetectorEnableCancelled": {
           "subtitle": "由於用戶仍處於清醒狀態",
@@ -943,6 +968,11 @@
         "title": "匿名數據"
       }
     },
+    "integrations": {
+      "vrchat": {
+        "title": "VRChat"
+      }
+    },
     "notifications": {
       "notifications": {
         "category": {
@@ -1295,6 +1325,27 @@
     "playerLimitLabel": "{count} 位玩家（包括你）",
     "title": "狀態 自動化"
   },
+  "systemMicMuteAutomations": {
+    "config": {
+      "title": "設定"
+    },
+    "controllerBinding": {
+      "onSleepModeDisable": {
+        "title": "當睡眠模式關閉時"
+      },
+      "onSleepModeEnable": {
+        "title": "當睡眠模式啟動時"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "title": "當睡眠模式關閉時"
+      },
+      "onSleepModeEnable": {
+        "title": "當睡眠模式啟動時"
+      }
+    }
+  },
   "updater": {
     "modals": {
       "error": {
@@ -1307,8 +1358,17 @@
     "automations": {
       "title": "自動化"
     },
+    "config": {
+      "title": "設定"
+    },
     "muteOptions": {
       "NONE": "無"
+    },
+    "onSleepModeDisable": {
+      "title": "當睡眠模式關閉時"
+    },
+    "onSleepModeEnable": {
+      "title": "當睡眠模式啟動時"
     },
     "status": {
       "unknown": "未知"

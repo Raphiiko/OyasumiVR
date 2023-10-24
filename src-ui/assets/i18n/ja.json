@@ -474,6 +474,9 @@
         "INACTIVE": "非アクティブ",
         "INITIALIZED": "アクティブ",
         "INITIALIZING": "待機画面"
+      },
+      "systemMicMuted": {
+        "label": "ミュート"
       }
     },
     "osc-script-code-editor": {
@@ -1504,6 +1507,43 @@
   "systemMicMuteAutomations": {
     "config": {
       "title": "構成"
+    },
+    "controllerBinding": {
+      "currentMode": {
+        "TOGGLE": "トグル"
+      },
+      "mode": {
+        "options": {
+          "TOGGLE": "トグル"
+        }
+      },
+      "onSleepModeDisable": {
+        "title": "睡眠モードが無効になっている場合"
+      },
+      "onSleepModeEnable": {
+        "title": "睡眠モードが有効になっている場合"
+      },
+      "onSleepPreparation": {
+        "title": "寝る前の準備時"
+      }
+    },
+    "muteOptions": {
+      "MUTE": "ミュート",
+      "UNMUTE": "ミュート解除"
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "description": "マイクの状態を変更",
+        "title": "睡眠モードが無効になっている場合"
+      },
+      "onSleepModeEnable": {
+        "description": "マイクの状態を変更",
+        "title": "睡眠モードが有効になっている場合"
+      },
+      "onSleepPreparation": {
+        "description": "マイクの状態を変更",
+        "title": "寝る前の準備時"
+      }
     }
   },
   "updater": {
