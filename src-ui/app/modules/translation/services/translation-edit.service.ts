@@ -65,6 +65,7 @@ export class TranslationEditService {
     entries.sort((a, b) => a.key.localeCompare(b.key));
     this._editLocale.next(locale);
     this._entries.next(entries);
+    await this.determineSuggestions(locale);
     await this.router.navigate(['translation', 'editor']);
   }
 
