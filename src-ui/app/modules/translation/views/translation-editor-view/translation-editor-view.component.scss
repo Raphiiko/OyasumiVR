@@ -123,6 +123,7 @@
       overflow: hidden;
       overflow-wrap: break-word;
       user-select: text;
+      white-space: pre-line;
 
       &.key {
         color: var(--color-text-3);
