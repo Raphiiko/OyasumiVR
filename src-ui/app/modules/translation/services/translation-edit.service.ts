@@ -49,6 +49,7 @@ export class TranslationEditService {
           },
         } as TranslationEntry)
     );
+    console.log('ENTRIES', entries.length);
     const importCount = entries.filter((e) => e.values[locale] !== undefined).length;
     const discarded = Object.keys(flatLang).length - importCount;
     if (discarded > 0) {
@@ -57,9 +58,10 @@ export class TranslationEditService {
       );
     }
     // Remove empty and placeholder entries
-    entries = entries.filter((e) => {
-      const trimmed = (e.values[locale] ?? '').trim();
-      return trimmed && trimmed !== '{PLACEHOLDER}';
+    entries.forEach((entry) => {
+      if (!(entry.values[locale] ?? '').trim() || entry.values[locale] === '{PLACEHOLDER}') {
+        delete entry.values[locale];
+      }
     });
     entries.sort((a, b) => a.key.localeCompare(b.key));
     this._editLocale.next(locale);
