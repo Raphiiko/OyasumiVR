@@ -226,6 +226,7 @@ public class OverlayPointer {
       leftInteractPressed = false;
       OnInteractRelease(ETrackedControllerRole.LeftHand);
     }
+
     var rightPressed = inputActions["/actions/hidden/in/OverlayInteract"].Any(
       device => device.Role == ETrackedControllerRole.RightHand
     );
@@ -253,6 +254,7 @@ public class OverlayPointer {
         _ => null
       };
       if (pointer == null) return;
+      pointer.Pressed = false;
       if (pointer.LastActiveOverlay == null || pointer.LastUvPosition == null) return;
       var browser = pointer.LastActiveOverlay.Browser;
       if (browser != null)
