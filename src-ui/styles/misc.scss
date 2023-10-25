@@ -95,8 +95,7 @@
     border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
 
     &:not(:last-child) {
-      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius)
-        var(--surface-border-radius);
+      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) var(--surface-border-radius);
     }
   }
 
@@ -160,10 +159,24 @@
       > span:first-child {
         color: var(--color-text-1);
         margin-bottom: 0.25em;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
       }
 
       > span:last-child {
         color: var(--color-text-3);
+      }
+
+      .experimental-flag {
+        i.material-icons {
+          line-height: 0;
+          vertical-align: middle;
+          margin-left: 0.25em;
+          font-size: 1em;
+        }
+
+        color: var(--color-alert-warning);
       }
 
       &.conflict {
