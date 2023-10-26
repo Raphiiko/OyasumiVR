@@ -59,6 +59,7 @@ export class SimpleBrightnessControlService {
     // Set brightness when the display brightness driver availability changes
     this.displayBrightnessControl.driverIsAvailable
       .pipe(
+        skip(1),
         distinctUntilChanged(),
         tap((available) => (this.displayBrightnessDriverAvailable = available)),
         filter(() => !this._advancedMode.value)
@@ -122,7 +123,6 @@ export class SimpleBrightnessControlService {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (percentage == this.brightness) return;
     this._brightness.next(percentage);
     if (opt.logReason) {
       await info(`[BrightnessControl] Set brightness to ${percentage}% (Reason: ${opt.logReason})`);
