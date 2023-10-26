@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.10.0]
 
 ### Added
+
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
@@ -28,10 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional fix for running the SteamVR overlay on systems with hybrid graphics.
 
 ### Changed
+
 - Updated translations to use ICU syntax.
 - Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in SteamVR!)
- 
+- Upgraded to .NET Core and ASP.NET Core 7.0.13
+
 ### Fixed
+
 - Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
 - Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
 - Disabling OSC features leading to a crash
@@ -39,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Malformed OSC packets causing a crash
 - OSC message processing being slower than necessary
 - Date formatting for Korean language
+- Long VRChat usernames sometimes overflowing on the player list for automatic invite request accepts
 
 ## [1.9.0]
 
@@ -65,7 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Japanese date formatting
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
- 
+
 ### Deprecated
 
 - Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
