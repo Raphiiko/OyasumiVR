@@ -1,8 +1,6 @@
 use tokio::sync::Mutex;
 
 pub const STEAM_APP_KEY: &str = "steam.overlay.2538150-DEV";
-pub const DOTNET_CORE_VERSION: &str = "7.0.13";
-pub const ASPNET_CORE_VERSION: &str = "7.0.13";
 pub const CORE_GRPC_DEV_PORT: u16 = 5176;
 pub const CORE_HTTP_DEV_PORT: u16 = 5177;
 pub const OVERLAY_SIDECAR_GRPC_DEV_PORT: u16 = 5174;

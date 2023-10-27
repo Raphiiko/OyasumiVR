@@ -184,27 +184,6 @@
       "title": "機器",
       "turnOffAll": "すべて"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "自動でインストールしますか？",
-        "moreInfo": "ダウンロードと詳細情報はこちら:",
-        "runtimeQueued": "待機中",
-        "text1": "以下のランタイムは、必要なバージョンと一致しないか、システムにインストールされていません。",
-        "text2": "OyasumiVR を使用するには、必要なランタイムをインストールする必要があります。",
-        "troubleshooting": "必要なランタイムを既にインストールしている状態にも関わらず、このメッセージが表示され続ける場合は、<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">トラブルシューティングガイド</a>をご覧ください。"
-      },
-      "failure": {
-        "message": "必要なランタイムを自動的にインストールできませんでした。手動でインストールを試みてください。\n\n問題が解決しない場合は、<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">トラブルシューティングガイド</a>を確認してください。",
-        "title": "インストール失敗"
-      },
-      "installAutomatically": "自動インストール",
-      "quit": "OyasumiVRを終了する",
-      "success": {
-        "message": "必要なランタイムが正常にインストールされました！注意：PCを再起動する必要があるかもしれません。OyasumiVRを終了し、PCを再起動してください。",
-        "title": "インストール成功"
-      },
-      "title": "不足しているランタイムのインストール"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

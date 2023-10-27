@@ -219,27 +219,6 @@
       "title": "Apparaten",
       "turnOffAll": "ALLE"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "Wil je dat OyasumiVR deze automatisch voor je probeert te installeren?",
-        "moreInfo": "Je kunt downloads voor deze runtimes en meer informatie vinden op de volgende pagina:",
-        "runtimeQueued": "In de wachtrij",
-        "text1": "De volgende runtimes die OyasumiVR nodig heeft hebben of niet de benodigde versie, of zijn niet geinstalleerd op je systeem:",
-        "text2": "Om gebruik te kunnen maken van OyasumiVR moet je deze runtimes eerst installeren.",
-        "troubleshooting": "Als je al de benodigde runtimes hebt geinstalleerd en je dit bericht nog steeds krijgt, bekijk dan even onze <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a> voor mogelijke oplossingen."
-      },
-      "failure": {
-        "message": "De benodigde runtimes die nog missen konden niet automatisch worden geinstalleerd. Probeer ze a.u.b. handmatig te installeren. Als het niet lukt en je problemen blijft ervaren, bekijkedan even onze <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a>.",
-        "title": "Installatie Mislukt"
-      },
-      "installAutomatically": "Installeer Automatisch",
-      "quit": "Sluit OyasumiVR",
-      "success": {
-        "message": "De benodigde runtimes zijn nu geinstalleerd! Let er op dat je misschien je PC moet herstartten. Sluit OyasumiVR, en start het opnieuw om door te gaan.",
-        "title": "Installatie Gelukt"
-      },
-      "title": "Installeer Vereiste Runtimes"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

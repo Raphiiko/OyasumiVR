@@ -219,27 +219,6 @@
       "title": "Devices",
       "turnOffAll": "ALL"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "Do you want OyasumiVR to try install these runtimes for you automatically?",
-        "moreInfo": "You can find downloads and more information here:",
-        "runtimeQueued": "Queued",
-        "text1": "The following runtimes that are needed by OyasumiVR either don't match the required version, or are not installed on your system:",
-        "text2": "To continue using OyasumiVR, the required runtimes have to be installed first.",
-        "troubleshooting": "In case you have already installed the required runtimes and you are still getting this message, please check out our <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a> for possible solutions."
-      },
-      "failure": {
-        "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. \n\nIf you continue to experience issues, please check out our <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Troubleshooting Guide</a>.",
-        "title": "Installation Failed"
-      },
-      "installAutomatically": "Install Automatically",
-      "quit": "Quit OyasumiVR",
-      "success": {
-        "message": "The required missing runtimes have been installed successfully! Please note that you might have reboot your PC. Please quit OyasumiVR, and start it again in order to continue.",
-        "title": "Installation Successful"
-      },
-      "title": "Install Missing Runtimes"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

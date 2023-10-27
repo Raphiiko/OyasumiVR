@@ -32,11 +32,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated translations to use ICU syntax.
 - Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in SteamVR!)
-- Upgraded to .NET Core and ASP.NET Core 7.0.13
+- Bundled dotnet runtime requirements with overlay sidecar module. (Separate installation no longer required)
 
 ### Fixed
 
-- Fixed failed installation of dotnet hosting bundle preventing retry installation of individual runtimes.
 - Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
@@ -44,6 +43,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OSC message processing being slower than necessary
 - Date formatting for Korean language
 - Long VRChat usernames sometimes overflowing on the player list for automatic invite request accepts
+
+### Removed
+- Dotnet version checking and installation.
 
 ## [1.9.0]
 
@@ -71,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
 
-### Deprecated
+### Removed
 
 - Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
 
@@ -161,7 +163,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated splash screen.
 - Updated to Angular 16 & Tauri 1.3.
 
-### Deprecated
+### Removed
 
 - Removed experimental flag for sleep detection feature.
 - Removed debug tab in the settings view.

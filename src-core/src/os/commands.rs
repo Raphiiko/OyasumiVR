@@ -1,44 +1,7 @@
-use std::collections::HashMap;
-
 use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
-
-#[tauri::command]
-pub fn check_dotnet_install_required() -> Result<HashMap<String, String>, String> {
-    super::dotnet::check_dotnet_install_required()
-}
-
-#[tauri::command]
-pub fn get_net_core_versions() -> Result<Vec<String>, String> {
-    super::dotnet::get_net_core_versions()
-}
-
-#[tauri::command]
-pub fn get_asp_net_core_versions() -> Result<Vec<String>, String> {
-    super::dotnet::get_asp_net_core_versions()
-}
-
-#[tauri::command]
-pub fn is_semver_higher(a: String, b: String) -> Result<bool, String> {
-    super::dotnet::is_semver_higher(&a, &b)
-}
-
-#[tauri::command]
-pub async fn install_net_core(version: String) -> Result<(), String> {
-    super::dotnet::install_net_core(&version).await
-}
-
-#[tauri::command]
-pub async fn install_asp_net_core(version: String) -> Result<(), String> {
-    super::dotnet::install_asp_net_core(&version).await
-}
-
-#[tauri::command]
-pub async fn install_dotnet_hosting_bundle(version: String) -> Result<(), String> {
-    super::dotnet::install_dotnet_hosting_bundle(&version).await
-}
 
 #[tauri::command]
 pub fn play_sound(name: String, volume: f32) {

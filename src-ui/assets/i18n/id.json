@@ -140,23 +140,6 @@
       "title": "Perangkat",
       "turnOffAll": "SEMUA"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "Apakah Anda ingin OyasumiVR mencoba menginstal runtime ini untuk Anda secara otomatis?",
-        "moreInfo": "Anda dapat menemukan unduhan dan informasi lebih lanjut di sini:",
-        "runtimeQueued": "Diantrikan",
-        "text2": "Untuk terus menggunakan OyasumiVR, runtime yang diperlukan harus diinstal terlebih dahulu."
-      },
-      "failure": {
-        "title": "Instalasi Gagal"
-      },
-      "installAutomatically": "Instal Otomatis",
-      "quit": "Keluar OyasumiVR",
-      "success": {
-        "title": "Instalasi Sukses"
-      },
-      "title": "Instal Runtime yang Hilang"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

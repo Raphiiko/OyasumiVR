@@ -140,23 +140,6 @@
       "title": "裝置",
       "turnOffAll": "全部"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "是否要讓 OyasumiVR 嘗試自動為您安裝這些運行時庫？",
-        "moreInfo": "您可以在這裡找到下載和更多資訊：",
-        "runtimeQueued": "排隊中",
-        "text2": "為了繼續使用 OyasumiVR，必須先安裝這些所需的運行時庫。"
-      },
-      "failure": {
-        "title": "安裝失敗"
-      },
-      "installAutomatically": "自動安裝",
-      "quit": "退出 OyasumiVR",
-      "success": {
-        "title": "安裝成功"
-      },
-      "title": "安裝缺失的運行時庫"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

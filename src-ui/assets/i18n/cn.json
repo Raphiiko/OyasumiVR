@@ -179,27 +179,6 @@
       "title": "设备",
       "turnOffAll": "全部"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "是否要让 OyasumiVR 尝试自动为您安装这些运行时库？",
-        "moreInfo": "您可以在这里找到下载和更多信息：",
-        "runtimeQueued": "排队中",
-        "text1": "OyasumiVR 需要的下列运行时要么与所需版本不匹配，要么未安装在您的系统上：",
-        "text2": "为了继续使用 OyasumiVR，必须先安装这些所需的运行时库。",
-        "troubleshooting": "如果您已经安装了所需的运行时，但仍收到此消息，请查看我们的<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">故障排除指南</a>，了解可能的解决方案。"
-      },
-      "failure": {
-        "message": "无法自动安装所需的运行时，请尝试手动安装。\n\n如果您仍然遇到问题，请查看我们的<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">故障排除指南</a>。",
-        "title": "安装失败"
-      },
-      "installAutomatically": "自动安装",
-      "quit": "退出 OyasumiVR",
-      "success": {
-        "message": "已成功安装所需的运行时！请注意，您可能需要重启电脑。请退出 OyasumiVR，然后重新启动才能继续。",
-        "title": "安装成功"
-      },
-      "title": "安装缺失的运行时库"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {

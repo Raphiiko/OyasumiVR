@@ -1,6 +1,5 @@
 mod audio_devices;
 pub mod commands;
-pub mod dotnet;
 mod models;
 
 use log::error;
