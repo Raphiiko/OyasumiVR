@@ -382,20 +382,16 @@ export class OverlayStateSyncService {
   }
 
   private updateState_WhenSleepPreparationStateChanges() {
-    this.sleepPreparation.sleepPreparationAvailable
-      .pipe(distinctUntilChanged())
-      .subscribe((available) => {
-        const state = cloneDeep(this.state.value);
-        state.sleepPreparationAvailable = available;
-        this.state.next(state);
-      });
-    this.sleepPreparation.sleepPreparationTimedOut
-      .pipe(distinctUntilChanged())
-      .subscribe((timedOut) => {
-        const state = cloneDeep(this.state.value);
-        state.sleepPreparationTimedOut = timedOut;
-        this.state.next(state);
-      });
+    this.sleepPreparation.sleepPreparationAvailable.subscribe((available) => {
+      const state = cloneDeep(this.state.value);
+      state.sleepPreparationAvailable = available;
+      this.state.next(state);
+    });
+    this.sleepPreparation.sleepPreparationTimedOut.subscribe((timedOut) => {
+      const state = cloneDeep(this.state.value);
+      state.sleepPreparationTimedOut = timedOut;
+      this.state.next(state);
+    });
   }
 
   private updateState_WhenSystemMicMuteStateChanges() {

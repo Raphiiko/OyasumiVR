@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom, map, Subject } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, shareReplay, Subject } from 'rxjs';
 import { AutomationConfigService } from './automation-config.service';
 import { listen } from '@tauri-apps/api/event';
 import { info } from 'tauri-plugin-log-api';
@@ -24,7 +24,8 @@ export class SleepPreparationService {
           configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationControllerBindingBehavior !==
             'NONE',
       ].some(Boolean)
-    )
+    ),
+    shareReplay(1)
   );
 
   constructor(private automationConfigService: AutomationConfigService) {}
