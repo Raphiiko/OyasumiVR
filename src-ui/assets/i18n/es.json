@@ -215,27 +215,6 @@
       "title": "Dispositivos",
       "turnOffAll": "TODO"
     },
-    "dotnet-upgrade-modal": {
-      "description": {
-        "automaticInstall": "¿Quieres que OyasumiVR intente instalar estos tiempos de ejecución para usted automáticamente?",
-        "moreInfo": "Puede encontrar descargas y más información aquí:",
-        "runtimeQueued": "En cola",
-        "text1": "Los siguientes tiempos de ejecución que son necesarios para OyasumiVR o bien no coinciden con la versión requerida, o no están instalados en su sistema:",
-        "text2": "Para seguir utilizando OyasumiVR, primero hay que instalar los tiempos de ejecución necesarios.",
-        "troubleshooting": "Si ya ha instalado los tiempos de ejecución necesarios y sigue recibiendo este mensaje, consulte nuestra sección <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Guía de resolución de problemas</a> para posibles soluciones."
-      },
-      "failure": {
-        "message": "No se han podido instalar automáticamente los tiempos de ejecución que faltaban. Intente instalarlos manualmente. \n\nSi sigue teniendo problemas, consulte nuestro <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Missing-.NET-Runtime-Issues\" target=\"_blank\">Guía de resolución de problemas</a>.",
-        "title": "Instalación fallida"
-      },
-      "installAutomatically": "Instalar automáticamente",
-      "quit": "Cerrar OyasumiVR",
-      "success": {
-        "message": "Los tiempos de ejecución que faltaban se han instalado correctamente. Ten en cuenta que es posible que tengas que reiniciar tu PC. Por favor, salga de OyasumiVR e inícielo de nuevo para continuar.",
-        "title": "Instalación realizada con éxito"
-      },
-      "title": "Instalar los tiempos de ejecución que faltan"
-    },
     "event-log-entry": {
       "type": {
         "acceptedInviteRequest": {
