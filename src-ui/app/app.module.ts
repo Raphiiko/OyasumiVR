@@ -131,8 +131,6 @@ import { OverlayStateSyncService } from './services/overlay/overlay-state-sync.s
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
-import { DotnetService } from './services/dotnet.service';
-import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
 import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
@@ -249,7 +247,6 @@ export function createTranslateLoader(http: HttpClient) {
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
     DeveloperDebugModalComponent,
-    DotnetUpgradeModalComponent,
     WindowsPowerPolicyTabComponent,
     DebugSleepDetectionDebuggerComponent,
     DebugBrightnessTestingComponent,
@@ -322,7 +319,6 @@ export class AppModule {
     private overlayAppStateSyncService: OverlayStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
-    private dotnetService: DotnetService,
     private notificationService: NotificationService,
     private steamService: SteamService,
     private deepLinkService: DeepLinkService,
@@ -480,8 +476,7 @@ export class AppModule {
         })
       );
     }
-    // Only initialize update- and dotnet services after language selection
-    await this.dotnetService.init();
+    // Only initialize updatee service after language selection
     await this.updateService.init();
   }
 
