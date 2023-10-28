@@ -195,7 +195,9 @@
       "statusAutomations": "Status Automations",
       "systemMicMuteAutomations": "System Microphone Mute Automations",
       "vrcAutomations": "VRChat Automations",
-      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
+      "miscAutomations": "Miscellaneous Automations",
+      "nightmareDetection": "Nightmare Detection"
     },
     "device-list": {
       "category": {
@@ -411,6 +413,7 @@
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
+              "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
               "unknown": "By an unknown automation"
             },
             "manual": "You disabled sleep mode manually",
@@ -1156,7 +1159,7 @@
       "disconnect": "Disconnect",
       "providerLink": "Provider Website",
       "pulsoid": {
-        "description": "Provides your heartrate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>",
+        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>",
         "title": "Pulsoid"
       },
       "reveal": "Reveal",
@@ -1306,6 +1309,10 @@
       "ok": "Ok",
       "open": "Open",
       "save": "Save"
+    },
+    "time": {
+      "minutes": "Minutes",
+      "seconds": "Seconds"
     }
   },
   "shutdown-automations": {
@@ -1711,5 +1718,36 @@
       "unmuted": "Unmuted"
     },
     "title": "Microphone Muting"
+  },
+  "nightmare-detection": {
+    "title": "Nightmare Detection",
+    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+    "bpmThreshold": {
+      "unit": "BPM",
+      "title": "Minimum heart rate",
+      "description": "The threshold your heart rate has to reach for OyasumiVR to consider the possibility of you having a nightmare"
+    },
+    "duration": {
+      "title": "Duration",
+      "description": "How long your heart rate has to stay above the threshold before OyasumiVR will trigger its nightmare detection"
+    },
+    "automations": {
+      "title": "Automations",
+      "description": "Automations to run when OyasumiVR detects you possibly having a nightmare"
+    },
+    "disableSleepMode": {
+      "title": "Disable sleep mode",
+      "description": "Disables the sleep mode when you're possibly having a nightmare"
+    },
+    "playSound": {
+      "title": "Play a sound",
+      "description": "Have OyasumiVR wake you up with a sound when you're possibly having a nightmare",
+      "volume": {
+        "title": "Sound volume",
+        "description": "Configure the volume at which the sound effect plays",
+        "test": "Test"
+      }
+    },
+    "notification": "Detecting a possible nightmare, as you've had a prolonged elevated heart rate."
   }
 }

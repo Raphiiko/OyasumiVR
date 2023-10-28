@@ -42,6 +42,7 @@ pub async fn load_sounds() {
     vec![
         "notification_bell",
         "notification_block",
+        "notification_reverie",
         "mic_mute",
         "mic_unmute",
     ]
@@ -49,7 +50,13 @@ pub async fn load_sounds() {
     .for_each(|sound| {
         sounds.insert(
             String::from(*sound),
-            std::fs::read(format!("resources/sounds/{}.ogg", sound)).unwrap(),
+            std::fs::read(format!("resources/sounds/{}.ogg", sound)).expect(
+                format!(
+                    "Could not find sound file at path: {}",
+                    format!("resources/sounds/{}.ogg", sound).as_str()
+                )
+                .as_str(),
+            ),
         );
     });
 }

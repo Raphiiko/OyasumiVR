@@ -20,6 +20,7 @@ import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/vi
 import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
 import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
 import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
+import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 
 const routes: Routes = [
   {
@@ -82,6 +83,10 @@ const routes: Routes = [
       {
         path: 'shutdownAutomations',
         component: ShutdownAutomationsViewComponent,
+      },
+      {
+        path: 'nightmareDetection',
+        component: NightmareDetectionViewComponent,
       },
       {
         path: 'settings',

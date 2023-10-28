@@ -29,6 +29,7 @@ interface XSOMessage {
 export type NotificationSound =
   | 'notification_bell'
   | 'notification_block'
+  | 'notification_reverie'
   | 'mic_mute'
   | 'mic_unmute';
 
