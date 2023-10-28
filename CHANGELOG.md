@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OSC message processing being slower than necessary
 - Date formatting for Korean language
 - Long VRChat usernames sometimes overflowing on the player list for automatic invite request accepts
+- Added workaround for bug in SteamVR 2.0 regarding IVROverlay::ComputeOverlayIntersection.
 
 ### Removed
 - Dotnet version checking and installation.

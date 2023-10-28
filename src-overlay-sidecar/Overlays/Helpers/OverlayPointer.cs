@@ -1,6 +1,8 @@
 using System.Numerics;
 using System.Runtime.InteropServices;
 using CefSharp;
+using Microsoft.VisualBasic;
+using Serilog;
 using Valve.VR;
 using CefEventFlags = CefSharp.CefEventFlags;
 using MouseButtonType = CefSharp.MouseButtonType;
@@ -12,8 +14,6 @@ public class OverlayPointer {
   private bool _disposed;
   private readonly PointerData _rightPointer;
   private readonly PointerData _leftPointer;
-  private bool rightInteractPressed = false;
-  private bool leftInteractPressed = false;
 
   public OverlayPointer()
   {
@@ -136,6 +136,8 @@ public class OverlayPointer {
             intersectionParams.vDirection = controllerTransform.GetDirectionNormal().ToHmdVector3_t();
             if (!OpenVR.Overlay.ComputeOverlayIntersection(overlay.OverlayHandle, ref intersectionParams,
                   ref intersectionResults)) continue;
+            if (intersectionResults.vUVs.v0 < 0 || intersectionResults.vUVs.v0 > 1 ||
+                intersectionResults.vUVs.v1 < 0 || intersectionResults.vUVs.v1 > 1) continue;
             intersections.Add((intersectionResults, controllerRole, overlay));
           }
         }
@@ -162,6 +164,7 @@ public class OverlayPointer {
         foreach (var (intersection, pointer) in new[]
                    { (closestIntersections[0], _leftPointer), (closestIntersections[1], _rightPointer), })
         {
+
           if (intersection.HasValue)
           {
             var position = intersection.Value.Item1.vPoint.ToVector3();
@@ -213,31 +216,36 @@ public class OverlayPointer {
 
   private void OnInputAction(object? sender, Dictionary<string, List<OvrManager.OvrInputDevice>> inputActions)
   {
+    bool leftPointerPressed;
+    bool rightPointerPressed;
+    lock (_leftPointer)
+    lock (_rightPointer)
+    {
+      leftPointerPressed = _leftPointer.Pressed;
+      rightPointerPressed = _rightPointer.Pressed;
+    }
+
     var leftPressed = inputActions["/actions/hidden/in/OverlayInteract"].Any(
       device => device.Role == ETrackedControllerRole.LeftHand
     );
-    if (leftPressed && !leftInteractPressed)
+    if (leftPressed && !leftPointerPressed)
     {
-      leftInteractPressed = true;
       OnInteractPress(ETrackedControllerRole.LeftHand);
     }
-    else if (!leftPressed && leftInteractPressed)
+    else if (!leftPressed && leftPointerPressed)
     {
-      leftInteractPressed = false;
       OnInteractRelease(ETrackedControllerRole.LeftHand);
     }
 
     var rightPressed = inputActions["/actions/hidden/in/OverlayInteract"].Any(
       device => device.Role == ETrackedControllerRole.RightHand
     );
-    if (rightPressed && !rightInteractPressed)
+    if (rightPressed && !rightPointerPressed)
     {
-      rightInteractPressed = true;
       OnInteractPress(ETrackedControllerRole.RightHand);
     }
-    else if (!rightPressed && rightInteractPressed)
+    else if (!rightPressed && rightPointerPressed)
     {
-      rightInteractPressed = false;
       OnInteractRelease(ETrackedControllerRole.RightHand);
     }
   }
@@ -279,8 +287,11 @@ public class OverlayPointer {
         _ => null
       };
       if (pointer == null) return;
+
       pointer.Pressed = true;
-      if (pointer.LastActiveOverlay == null || pointer.LastUvPosition == null) return;
+      if (pointer.LastActiveOverlay == null || pointer.LastUvPosition == null)
+        return;
+
       var browser = pointer.LastActiveOverlay.Browser;
       if (browser != null)
       {
