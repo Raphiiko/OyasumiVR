@@ -46,7 +46,8 @@ export type AutomationType =
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
-  | 'SYSTEM_MIC_MUTE_AUTOMATIONS';
+  | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
+  | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
   version: 10;
@@ -92,6 +93,7 @@ export interface AutomationConfigs {
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
+  NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -293,6 +295,14 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   turnOffBaseStations: boolean;
   powerDownWindows: boolean;
   powerDownWindowsMode: PowerDownWindowsMode;
+}
+
+export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
+  heartRateThreshold: number;
+  periodDuration: number;
+  disableSleepMode: boolean;
+  playSound: boolean;
+  soundVolume: number;
 }
 
 //
@@ -511,5 +521,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepModeEnableControllerBindingBehavior: 'NONE',
     onSleepModeDisableControllerBindingBehavior: 'NONE',
     onSleepPreparationControllerBindingBehavior: 'NONE',
+  },
+  NIGHTMARE_DETECTION: {
+    enabled: false,
+    heartRateThreshold: 130,
+    periodDuration: 60 * 1000,
+    disableSleepMode: false,
+    playSound: false,
+    soundVolume: 100,
   },
 };

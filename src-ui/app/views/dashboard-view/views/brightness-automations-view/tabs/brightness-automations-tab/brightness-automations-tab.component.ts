@@ -33,11 +33,11 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   protected transitionUnitOptions: SelectBoxItem[] = [
     {
       id: 'SECONDS',
-      label: 'Seconds',
+      label: 'shared.time.seconds',
     },
     {
       id: 'MINUTES',
-      label: 'Minutes',
+      label: 'shared.time.minutes',
     },
   ];
   protected transitionUnitOptionOnEnable?: SelectBoxItem = this.transitionUnitOptions[0];

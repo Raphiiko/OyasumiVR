@@ -169,6 +169,8 @@ import { TranslationLoaderViewComponent } from './modules/translation/views/tran
 import { FormsModule } from '@angular/forms';
 import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
 import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
+import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
+import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -266,6 +268,7 @@ export function createTranslateLoader(http: HttpClient) {
     TranslationLoaderViewComponent,
     TranslationEditorViewComponent,
     TextareaAutoResizeDirective,
+    NightmareDetectionViewComponent,
   ],
   imports: [
     CommonModule,
@@ -365,7 +368,8 @@ export class AppModule {
     // Windows power policy automations
     private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
-    private systemMicMuteAutomationsService: SystemMicMuteAutomationService
+    private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
+    private nightmareDetectionAutomationService: NightmareDetectionAutomationService
   ) {
     this.init();
   }
@@ -461,6 +465,7 @@ export class AppModule {
           this.setWindowsPowerPolicyOnSleepModeAutomationService.init(),
           // Miscellaneous automations
           this.systemMicMuteAutomationsService.init(),
+          this.nightmareDetectionAutomationService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION
