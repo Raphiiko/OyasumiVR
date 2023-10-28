@@ -19,9 +19,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
 - Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
+- Automation for detecting possible nightmares based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
 - Setting for OyasumiVR to quit alongside SteamVR.
 - Instructions on how to start OyasumiVR alongside SteamVR.
-- Automation for muting and unmuting your microphone in VRChat, when you go to sleep or wake up.
 - Automations for turning off devices when their battery levels reach below a threshold.
 - Shortcut to VRChat related settings from the status bar pill.
 - Option for dismissing the sleep check by pressing controller buttons.

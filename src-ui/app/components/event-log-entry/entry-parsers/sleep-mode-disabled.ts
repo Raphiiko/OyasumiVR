@@ -17,6 +17,7 @@ export class EventLogSleepModeDisabledEntryParser extends EventLogEntryParser<Ev
           case 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS':
           case 'SLEEP_MODE_DISABLE_AT_TIME':
           case 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON':
+          case 'NIGHTMARE_DETECTION':
             return `comp.event-log-entry.type.sleepModeDisabled.reason.automation.${entry.reason.automation}`;
           default:
             return 'comp.event-log-entry.type.sleepModeDisabled.reason.automation.unknown';
