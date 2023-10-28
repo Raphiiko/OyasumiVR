@@ -3,14 +3,14 @@ import type { AddNotificationParams } from "$lib/models/AddNotificationParams";
 import { tick } from "svelte";
 import { derived, get, writable } from "svelte/store";
 import { DEFAULT_OYASUMI_STATE } from "$lib/models/OyasumiState";
-import { cloneDeep, mergeWith } from "lodash";
+import { cloneDeep, mergeWith } from "lodash-es";
 import {
   OyasumiSidecarAutomationsState,
   OyasumiSidecarAutomationsState_ShutdownAutomations,
   OyasumiSidecarState,
   VrcStatus
 } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
-import { addTranslations, loadDebugTranslations, loadTranslations } from "$lib/translations";
+import { loadDebugTranslations, loadTranslations } from "$lib/translations";
 import { fontLoader } from "src-shared-ts/src/font-loader";
 import { camelCaseToUpperSnakeCase } from "$lib/utils/string-utils";
 
@@ -40,7 +40,6 @@ class IPCService {
         fontLoader.loadFontsForNewLocale(locale ?? "en"),
         locale === "DEBUG" ? loadDebugTranslations() : loadTranslations(locale ?? "en", "")
       ]);
-
     });
     // Load IPC OUT functions
     if (window.CefSharp) {
@@ -144,6 +143,31 @@ class IPCService {
 
   public async turnOffOVRDevices(deviceIds: number[]) {
     await window.OyasumiIPCOut.sendEventJson("turnOffOVRDevices", JSON.stringify(deviceIds));
+  }
+
+  public async setBrightness(type: "SIMPLE" | "IMAGE" | "DISPLAY", value: number): Promise<void> {
+    this.state.update((state) => {
+      state = cloneDeep(state);
+      switch (type) {
+        case "SIMPLE":
+          state.brightnessState!.brightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setSimpleBrightness", value);
+          break;
+        case "IMAGE":
+          state.brightnessState!.imageBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setImageBrightness", value);
+          break;
+        case "DISPLAY":
+          state.brightnessState!.displayBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setDisplayBrightness", value);
+          break;
+      }
+      return state;
+    });
+  }
+
+  public async prepareForSleep() {
+    await window.OyasumiIPCOut.sendEventVoid("prepareForSleep");
   }
 
   public async getDebugTranslations(): Promise<any> {

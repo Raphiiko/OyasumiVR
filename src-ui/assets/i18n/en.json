@@ -1,19 +1,1297 @@
 {
+  "about": {
+    "author": {
+      "role": "Developer"
+    },
+    "contributions": "Contributions",
+    "contributionType": {
+      "feature": "Feature",
+      "soundFx": "Sound FX"
+    },
+    "discordInvite": "Discord Server",
+    "projectLinks": "Project Links",
+    "sourceLink": "Source Code @ GitHub",
+    "translations": "Translations"
+  },
+  "auto-invite-request-accept": {
+    "addFriends": "Add Friends",
+    "blacklist": "Player Blacklist",
+    "clearPlayers": "Clear Players",
+    "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
+    "noPlayersAdded": "No players are currently added to the list.",
+    "options": {
+      "enable": {
+        "description": "Automatically accept invite requests from friends.",
+        "title": "Enable"
+      },
+      "listMode": {
+        "description": "How the player list operates",
+        "options": {
+          "BLACKLIST": {
+            "label": "Blacklist",
+            "subLabel": "Accept from friends not on the list"
+          },
+          "DISABLED": {
+            "label": "Disabled",
+            "subLabel": "Accept from everyone"
+          },
+          "WHITELIST": {
+            "label": "Whitelist",
+            "subLabel": "Accept from friends on the list"
+          }
+        },
+        "title": "List Mode"
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "Only when sleep mode is enabled"
+      }
+    },
+    "removeModal": {
+      "message": "Are you sure you want to remove ''{name}'' from your list?",
+      "title": "Confirm Removal"
+    },
+    "removeModalBulk": {
+      "message": "Are you sure you want to remove everyone from your list?",
+      "title": "Confirm Removal"
+    },
+    "title": "Auto Accept Invite Requests",
+    "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
+    "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
+    "whitelist": "Player Whitelist"
+  },
+  "brightness-automations": {
+    "brightnessAutomations": {
+      "applyOnStart": {
+        "description": {
+          "onSleepDisable": "If sleep mode is inactive, set this brightness value directly when SteamVR or OyasumiVR starts.",
+          "onSleepEnable": "If sleep mode is active, set this brightness value directly when SteamVR or OyasumiVR starts."
+        },
+        "title": "Apply brightness on startup"
+      },
+      "brightness": {
+        "title": "Change the brightness to"
+      },
+      "copyBrightness": "Copy current\nbrightness value",
+      "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
+      "displayBrightness": {
+        "description": "Adjusts the brightness of the LCD backlight (Valve Index only)",
+        "title": "Change the display brightness to"
+      },
+      "imageBrightness": {
+        "description": "Adjusts the brightness of the image shown in your VR headset",
+        "title": "Change the image brightness to"
+      },
+      "onSleepDisable": {
+        "description": "Adjust the brightness",
+        "title": "When I wake up"
+      },
+      "onSleepEnable": {
+        "description": "Adjust the brightness",
+        "title": "When I go to sleep"
+      },
+      "onSleepPreparation": {
+        "description": "Adjust the brightness",
+        "title": "When I prepare to go to sleep"
+      },
+      "onStartup": {
+        "description": "Adjust the brightness",
+        "title": "When OyasumiVR or SteamVR starts"
+      },
+      "sleepAutomations": "Sleep Automations",
+      "sleepPreparation": {
+        "description": "You can prepare to go to sleep by pressing a button in OyasumiVR's overlay. The button for this will be shown when you have one or more sleep preparation automations active, like this one. Use this to already start dimming the brightness before you fall asleep.",
+        "title": "Sleep Preparation"
+      },
+      "startupAutomations": "Startup Automations",
+      "transition": {
+        "description": "Smoothly transition to your desired brightness value",
+        "title": "Adjust brightness gradually"
+      },
+      "transitionTime": {
+        "description": "How long it should take to transition to the new brightness setting",
+        "title": "Transition time"
+      }
+    },
+    "mode": {
+      "advanced": "Advanced Mode",
+      "simple": "Simple Mode"
+    },
+    "modeInfoModal": {
+      "message": "By default, OyasumiVR will control the brightness of your VR headset by adjusting the brightness of the image. If you're using a headset with a LCD panel that can have its backlight controlled through SteamVR (e.g. the Valve Index), OyasumiVR will control the display brightness instead whenever possible.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling image brightness and display brightness.\n\nIn case you prefer direct control, advanced mode allows you to control both image- and display brightness separate from each other, and allows you to set exact brightness values for each.\n\nThis only applies to headsets that support this, which currently only consists of the Valve Index. On other VR headsets, there is no difference between simple and advanced mode.",
+      "title": "Brightness Control Mode"
+    },
+    "title": "Brightness Automations"
+  },
+  "chaperone-automations": {
+    "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
+    "fadeDistance": {
+      "title": "Change the chaperone's fade distance to"
+    },
+    "onSleepDisable": {
+      "description": "Adjust my chaperone's fade distance",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Adjust my chaperone's fade distance",
+      "title": "When I go to sleep"
+    },
+    "title": "Chaperone Automations"
+  },
+  "comp": {
+    "brightness-control-modal": {
+      "automationsTooltip": "Brightness Automations",
+      "brightness": "Brightness",
+      "displayBrightness": "Display Brightness",
+      "imageBrightness": "Image Brightness"
+    },
+    "confirm-modal": {
+      "defaultTitle": "Confirm"
+    },
+    "controller-binding": {
+      "dropdown": {
+        "description": "Open Binding Configuration",
+        "desktop": "Desktop Mode",
+        "vr": "SteamVR Mode"
+      },
+      "errors": {
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\nDashboard Open",
+          "tooltip": "Close the SteamVR dashboard to view bindings"
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "Make sure both left and right controllers are connected"
+        },
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR Inactive",
+          "tooltip": "To view or change controller bindings\nSteamVR must be running"
+        },
+        "UNKNOWN": {
+          "message": "Configure Binding"
+        }
+      },
+      "slot": {
+        "click": "Click",
+        "double": "Double Press",
+        "held": "Held Down",
+        "long": "Long Press",
+        "touch": "Touch Button"
+      }
+    },
+    "dashboard-navbar": {
+      "about": "About OyasumiVR",
+      "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
+      "brightnessAutomations": "Brightness Automations",
+      "chaperoneAutomations": "Chaperone Automations",
+      "gpuAutomations": "GPU Automations",
+      "hardwareAutomations": "Hardware Automations",
+      "oscAutomations": "OSC Automations",
+      "overview": "Overview",
+      "powerAutomations": "Power Automations",
+      "resolutionAutomations": "Resolution Automations",
+      "settings": "Settings",
+      "shutdownAutomations": "Shutdown Sequence",
+      "sleepAnimations": "Sleep Animations",
+      "sleepDetection": "Sleep Detection",
+      "statusAutomations": "Status Automations",
+      "systemMicMuteAutomations": "System Microphone Mute Automations",
+      "vrcAutomations": "VRChat Automations",
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
+      "miscAutomations": "Miscellaneous Automations",
+      "nightmareDetection": "Nightmare Detection"
+    },
+    "device-list": {
+      "category": {
+        "Controller": "Controllers",
+        "GenericTracker": "Trackers",
+        "Lighthouse": "Base Stations",
+        "other": "Others"
+      },
+      "deviceName": {
+        "lighthouseV2": "V2 Lighthouse"
+      },
+      "lighthouseStatus": {
+        "booting": "Booting",
+        "on": "Active",
+        "sleep": "Sleeping",
+        "standby": "Standby",
+        "unknown": "Unknown Status"
+      },
+      "noDevices": "No devices detected",
+      "scanForLighthouses": "Scan",
+      "title": "Devices",
+      "turnOffAll": "ALL"
+    },
+    "event-log-entry": {
+      "type": {
+        "acceptedInviteRequest": {
+          "subtitle": {
+            "blacklist": "As this player was not blacklisted",
+            "whitelist": "As this player was whitelisted"
+          },
+          "title": "Auto-accepted invite request from ''{displayName}''"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "PUSH_TO_TALK": "Changed microphone controller button behavior to 'Push to Talk'",
+            "TOGGLE": "Changed microphone controller button behavior to 'Toggle'"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "MUTE": "Muted microphone: {deviceName}",
+            "UNMUTE": "Unmuted microphone: {deviceName}"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "MUTE": "Muted microphone in VRChat",
+            "UNMUTE": "Unmuted microphone in VRChat"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": "Chaperone fade distance set to {value}"
+        },
+        "displayBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset display brightness set to {value}",
+            "transition": "Headset display brightness transitioning to {value}"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": {
+            "reset": "Power limit for ''{device}'' restored to {limit}",
+            "set": "Power limit for ''{device}'' set to {limit}"
+          }
+        },
+        "imageBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset image brightness set to {value}",
+            "transition": "Headset image brightness transitioning to {value}"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "ALL": {
+            "on": {
+              "reasons": {
+                "MANUAL": "Turned on manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Turned on all base stations"
+            },
+            "sleep": {
+              "reasons": {
+                "MANUAL": "Set manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Set all base stations to sleep mode"
+            },
+            "standby": {
+              "reasons": {
+                "MANUAL": "Set manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Set all base stations to standby mode"
+            }
+          },
+          "SINGLE": {
+            "on": {
+              "reasons": {
+                "MANUAL": "Turned on manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Turned on a base station"
+            },
+            "sleep": {
+              "reasons": {
+                "MANUAL": "Set manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Set a base station to sleep mode"
+            },
+            "standby": {
+              "reasons": {
+                "MANUAL": "Set manually",
+                "OYASUMI_START": "As OyasumiVR started",
+                "STEAMVR_START": "As SteamVR started",
+                "STEAMVR_STOP": "As SteamVR stopped"
+              },
+              "title": "Set a base station to standby mode"
+            }
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": "MSI Afterburner's profile was set to profile {profile}"
+        },
+        "renderResolutionChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": {
+            "auto": "SteamVR render resolution set to 'auto'",
+            "custom": "SteamVR render resolution set to {value}"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "reason": {
+            "MANUAL": "Cancelled manually"
+          },
+          "title": "The shutdown sequence was cancelled"
+        },
+        "shutdownSequenceStarted": {
+          "reason": {
+            "MANUAL": "Triggered manually",
+            "SLEEP_TRIGGER": "As you were asleep for long enough"
+          },
+          "title": "The shutdown sequence was started"
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset brightness set to {value}",
+            "transition": "Headset brightness transitioning to {value}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "subtitle": "As the user was still awake",
+          "title": "Automatic enabling of sleep mode cancelled"
+        },
+        "sleepModeDisabled": {
+          "reason": {
+            "automation": {
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
+              "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
+              "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
+              "unknown": "By an unknown automation"
+            },
+            "manual": "You disabled sleep mode manually",
+            "osc-control": "Sleep mode was disabled over OSC"
+          },
+          "title": "Sleep mode disabled"
+        },
+        "sleepModeEnabled": {
+          "reason": {
+            "automation": {
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "As a device battery level met the threshold",
+              "SLEEP_MODE_ENABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "As you were asleep",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "As your heart rate was calm for long enough",
+              "unknown": "By an unknown automation"
+            },
+            "manual": "You enabled sleep mode manually",
+            "osc-control": "Sleep mode was enabled over OSC"
+          },
+          "title": "Sleep mode enabled"
+        },
+        "statusChangedOnPlayerCountChange": {
+          "reason": {
+            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {threshold}",
+            "BELOW_LIMIT": "As the amount of players in your world dropped below {threshold}"
+          },
+          "title": "Changed your VRChat status from {oldStatus} to {newStatus}"
+        },
+        "turnedOffOpenVRDevices": {
+          "reason": {
+            "BATTERY_LEVEL": "As the battery level dropped below {threshold}%",
+            "CHARGING": "As the device is recharging",
+            "MANUAL": "Turned off manually",
+            "OSC_CONTROL": "Turned off over OSC",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": {
+            "ALL": "Turned off all devices",
+            "CONTROLLER": "Turned off a controller",
+            "CONTROLLERS": "Turned off multiple controllers",
+            "TRACKER": "Turned off a tracker",
+            "TRACKERS": "Turned off multiple trackers",
+            "VARIOUS": "Turned off various devices"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+          },
+          "title": "Windows Power Policy set to the ''{policy}'' plan"
+        }
+      }
+    },
+    "event-log": {
+      "clearLog": "Clear",
+      "clearLogModal": {
+        "message": "Are you sure you want to clear the event log? This cannot be undone.",
+        "title": "Confirm clear"
+      },
+      "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "show-more": "Show More",
+      "title": "Events"
+    },
+    "friend-selection-modal": {
+      "noFriends": "Your friends list is empty",
+      "noFriendsSelected": "No friends selected",
+      "noResultsFor": "No results for ''{query}''",
+      "searchPlaceholder": "Search friend by name...",
+      "title": "Select Friends"
+    },
+    "main-status-bar": {
+      "active": "Active",
+      "brightness": {
+        "simple": "Brightness",
+        "tooltip": "Brightness Control"
+      },
+      "heartrate": "Heart Rate",
+      "inactive": "Inactive",
+      "loggedOut": "Logged out",
+      "sleepMode": "Sleep Mode",
+      "steamvr": {
+        "INACTIVE": "Inactive",
+        "INITIALIZED": "Active",
+        "INITIALIZING": "Waiting"
+      },
+      "systemMicMuted": {
+        "label": "Muted",
+        "tooltip": {
+          "NAVIGATE": "System Microphone:\nAutomations",
+          "TOGGLE_MUTE": "System Microphone:\nUnmute"
+        }
+      },
+      "vrchat": {
+        "tooltip": "Settings: VRChat"
+      }
+    },
+    "osc-script-code-editor": {
+      "format": "Format",
+      "syntaxGuide": "Syntax Guide",
+      "test": "Test",
+      "title": "OSC Script Editor"
+    },
+    "osc-script-modal": {
+      "script": "Script",
+      "simple": "Simple",
+      "title": "OSC Script"
+    },
+    "osc-script-simple-editor": {
+      "action": {
+        "none": "No actions have been added yet!",
+        "osc": "OSC",
+        "sleep": "Sleep"
+      },
+      "addCommand": "Add",
+      "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
+      "commands": {
+        "COMMAND": {
+          "description": "Execute an OSC command",
+          "title": "OSC Command"
+        },
+        "SLEEP": {
+          "description": "Wait for a specified amount of time",
+          "title": "Sleep"
+        }
+      },
+      "errorCounter": "{count, plural, one {1 Validation Error} other {# Validation Errors}}",
+      "test": "Test"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Select..."
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "You can configure OyasumiVR to launch together with SteamVR from within SteamVR's own settings. You can find this in:\n\nSteamVR -> Settings -> Startup / Shutdown -> Choose startup overlay apps",
+      "title": "Starting OyasumiVR with SteamVR"
+    },
+    "update-modal": {
+      "message": "A new update for OyasumiVR has been found: v{newVersion}.\n\nYou are currently still running v{currentVersion}.\n\nDo you want to update now or later?",
+      "steamAd": "<b>OyasumiVR is also available on Steam!</b><br><br>This is the new recommended way to install OyasumiVR.<br>Visit the store page over on <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a> to find out more!",
+      "title": "Update Available",
+      "updateLater": "Not now",
+      "updateNow": "Install v{version}"
+    },
+    "vrchat-login-modal": {
+      "errors": {
+        "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
+        "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
+        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
+      },
+      "password": "Password",
+      "title": "Log in to VRChat",
+      "username": "VRChat Username/E-mail"
+    },
+    "vrchat-login-tfa-modal": {
+      "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
+      "errors": {
+        "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input.",
+        "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect."
+      },
+      "title": "Two Factor Authentication"
+    }
+  },
+  "gpu-automations": {
+    "automations": "Sleep Automations",
+    "disable": "Disable GPU Automations",
+    "disabled": {
+      "disabled": "OyasumiVR has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
+      "noSidecar": "In order for OyasumiVR to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give OyasumiVR administrator privileges."
+    },
+    "elevationSidecarModal": {
+      "cancel": "Only this once",
+      "confirm": "Always",
+      "message": "Do you want to always give OyasumiVR administrator privileges?\n\nIf you enable this, OyasumiVR will immediately ask for them when starting. You can disable this later at any time in the settings.",
+      "title": "Give administrator privileges"
+    },
+    "enable": "Enable GPU Automations",
+    "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
+    "msiAfterburner": {
+      "description": "OyasumiVR can automatically tweak your GPU settings when you go to sleep or wake up, by applying profiles you've created in MSI Afterburner. A use case for this functionality is to save electricity while you are asleep, and regain GPU power when you wake up.<br><br>You have to set up the profiles you want to apply in MSI Afterburner.<br>You can download MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">here</a>.",
+      "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+      "executable": {
+        "description": "OyasumiVR needs to know about the location of your <strong>MSIAfterburner.exe</strong> executable.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
+        "status": {
+          "CHECKING": "Checking for valid <strong>MSIAfterburner.exe</strong>",
+          "INVALID_EXECUTABLE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified as working.",
+          "INVALID_SIGNATURE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified to come from MSI. For security reasons it cannot be used. Please make sure you are using the latest version of MSI Afterburner. If the problem persists or you are sure this is correct, please contact OyasumiVR's developer or submit a bug report.",
+          "NOT_FOUND": "The <strong>MSIAfterburner.exe</strong> could not be found at this location.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> has been found and is working correctly!",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>MSIAfterburner.exe</strong> at this location."
+        },
+        "title": "Configuration"
+      },
+      "none": "None",
+      "profile": "Profile {index}",
+      "sleepModeDisable": {
+        "description": "Apply the following MSI Afterburner profile",
+        "title": "When sleep mode is disabled"
+      },
+      "sleepModeEnable": {
+        "description": "Apply the following MSI Afterburner profile",
+        "title": "When sleep mode is enabled"
+      }
+    },
+    "powerLimiting": {
+      "activatingSleepMode": {
+        "description": "Specify the power limit to set when sleep mode activates",
+        "title": "When I go to sleep"
+      },
+      "currentPowerLimit": "Current Power Limit",
+      "deactivatingSleepMode": {
+        "description": "Specify the power limit to set when sleep mode deactivates",
+        "title": "When I wake up"
+      },
+      "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
+      "disabled": {
+        "initializing": "Power limiting automations are being initialized...",
+        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({code})",
+        "noPermission": "Although OyasumiVR has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
+        "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
+        "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
+      },
+      "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
+      "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
+      "gpuUnsupported": "GPU Unsupported",
+      "inputDefault": "Reset to the GPU's default limit.",
+      "noGPUs": "No NVIDIA GPUs could be found in your system.",
+      "noGPUSelected": "No GPU Selected",
+      "selectGPU": "Select the GPU you wish to set the power limit for:"
+    },
+    "requestAdministrator": "Give Administrator Privileges",
+    "tabs": {
+      "msiAfterburner": "MSI Afterburner",
+      "powerLimiting": "Power Limiting"
+    },
+    "title": "GPU Automations"
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
+    "oscScriptEditorErrors": {
+      "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
+      "addressNotASCII": "A valid OSC address must only contain ASCII characters.",
+      "addressRequired": "An OSC address is required.",
+      "durationRequired": "Sleep duration is required.",
+      "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
+      "durationTooShort": "Sleep duration must be at least 1ms.",
+      "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
+      "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
+      "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
+      "invalidSyntax": "Invalid syntax.",
+      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
+      "tooManyCommands": "An OSC script cannot have more than {value} actions.",
+      "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
+    }
+  },
+  "notifications": {
+    "autoAcceptedInviteRequest": {
+      "content": "Automatically accepted invite request from {username}"
+    },
+    "sleepCheck": {
+      "content": "Sleep mode will be enabled in 20 seconds.\nAre you asleep?\n\nTo cancel:\nShake your head or press any controller button"
+    },
+    "sleepCheckCancel": {
+      "content": "Automatic enabling of sleep mode has been cancelled"
+    },
+    "sleepModeDisabled": {
+      "content": "Sleep mode has been disabled"
+    },
+    "sleepModeEnabled": {
+      "content": "Sleep mode has been enabled"
+    },
+    "turningOffControllers": {
+      "content": "Turning off your controllers"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "Turning off both your controllers and your trackers"
+    },
+    "turningOffTrackers": {
+      "content": "Turning off your trackers"
+    },
+    "vrcStatusChangedPlayerCount": {
+      "content": "Your VRChat status has been set to ''{newStatus}''"
+    }
+  },
+  "oscAutomations": {
+    "general": {
+      "description": "Here you can configure OyasumiVR to send out OSC commands to VRChat when certain events happen. This can, for example, be useful if you want to change your avatar toggles when you go to sleep or wake up.",
+      "onSleepDisable": {
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Disabled",
+        "title": "When I wake up"
+      },
+      "onSleepEnable": {
+        "description": "Send these OSC commands",
+        "script": "Sleep Mode Enabled",
+        "title": "When I go to sleep"
+      }
+    },
+    "sleepingAnimations": {
+      "currentPose": "Current Position",
+      "customPreset": "Custom Animations",
+      "description": "OyasumiVR can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have OyasumiVR) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
+      "enable": "Enable automatic sleeping animations",
+      "manualControl": "Manual Control",
+      "options": {
+        "footLock": {
+          "description": "Set the OSC commands to enable and disable the foot lock.",
+          "FOOT_LOCK": "Enable Foot Lock",
+          "FOOT_UNLOCK": "Disable Foot Lock",
+          "title": "Foot Lock"
+        },
+        "general": {
+          "footLock": {
+            "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled.",
+            "title": "Foot Lock"
+          },
+          "footLockReleaseWindow": "Foot lock release duration",
+          "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
+          "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
+          "onlyIfSleepModeEnabled": "While sleep mode is enabled",
+          "onlySwitchAnimations": "Only switch animations",
+          "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
+          "title": "General Options",
+          "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
+          "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled"
+        },
+        "positions": {
+          "description": "Set the OSC commands to activate the animation for each sleeping position.",
+          "SIDE_BACK": "Back Side",
+          "SIDE_FRONT": "Upright",
+          "SIDE_LEFT": "Left Side",
+          "SIDE_RIGHT": "Right Side",
+          "title": "Sleeping Positions",
+          "UNKNOWN": "Unknown"
+        }
+      },
+      "presetAuthor": "by {author}"
+    },
+    "tab": {
+      "general": "General",
+      "sleepingAnimations": "Sleeping Animations"
+    },
+    "title": "OSC Automations"
+  },
+  "overlay": {
+    "brightness": {
+      "display": "Display Brightness",
+      "image": "Image Brightness",
+      "simple": "Brightness"
+    },
+    "dashboard": {
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "mode": {
+            "Blacklist": "Blacklist",
+            "Disabled": "For everyone",
+            "Whitelist": "Whitelist"
+          },
+          "subtitle": "{mode}: {playerCount, plural, one {1 friend} other {# friends}}",
+          "title": "Auto Accept Invite Requests"
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "subtitle": "Max {threshold, plural, one {1 player} other {# players}}",
+          "title": "Status Automations"
+        },
+        "shutdownAutomations": {
+          "minutes": "{minutes, plural, one {1 minute} other {# minutes}}",
+          "seconds": "{seconds, plural, one {1 second} other {# seconds}}",
+          "subtitle": "When sleeping for {time}",
+          "title": "Automatic Shutdown"
+        },
+        "sleepingAnimations": {
+          "title": "Sleeping Animations"
+        },
+        "sleepModeEnableForSleepDetector": {
+          "subtitle": {
+            "withActivationWindow": "{sensitivity} sensitivity, {startTime} - {endTime}",
+            "withoutActivationWindow": "{sensitivity} sensitivity"
+          },
+          "title": "Sleep Detection"
+        },
+        "title": "Automation Settings"
+      },
+      "deviceControl": {
+        "title": "Device Control",
+        "turnOff": {
+          "AllControllers": "Turn off all\ncontrollers",
+          "AllControllersAndTrackers": "Turn off all\ncontrollers and trackers",
+          "AllTrackers": "Turn off all\ntrackers"
+        }
+      },
+      "overview": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "sleepMode": "Sleep Mode",
+        "tooltip": {
+          "automations": "Automations",
+          "deviceControl": "Device Control",
+          "prepareForSleep": "Prepare for sleep",
+          "shutdown": "Shutdown Sequence"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "message": "You are about to start the shutdown sequence.\nAre you sure you want to do this now?\n\nYou can configure which actions the shutdown sequence takes in the main OyasumiVR window.",
+          "start": "Start Shutdown",
+          "title": "Shutdown Sequence"
+        }
+      }
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "activate": "Activate",
+      "active": "Active",
+      "deactivate": "Deactivate",
+      "inactive": "Inactive",
+      "label": "Sleep Mode"
+    },
+    "sleep-preparation": {
+      "activate": "Prepare for sleep",
+      "disabledTooltip": "Sleep preparation will become available once you've configured sleep preparation for at least one automation"
+    }
+  },
+  "power-automations": {
+    "devicePowerOff": {
+      "onBatteryLevel": {
+        "controllers": {
+          "description": "When its battery level falls below",
+          "onlyDuringSleepMode": {
+            "description": "Only turn off controllers this way while sleep mode is enabled",
+            "title": "Only while sleep mode is enabled"
+          },
+          "powerOffConflict": {
+            "action": "Sleep Detection",
+            "description": "As you have set up the sleep mode to activate when all controllers are turned off, turning this automation on might cause you to unintentionally enable the sleep mode. Other automations might respond to this, which might not be what you want. You can turn off this behaviour in the Sleep Detection settings.",
+            "title": "Warning: This might trigger another automation!"
+          },
+          "title": "Turn off a controller"
+        },
+        "description": "Have devices power off when their battery level falls below a certain percentage.",
+        "title": "Battery level",
+        "trackers": {
+          "description": "When its battery level falls below",
+          "onlyDuringSleepMode": {
+            "description": "Only turn off trackers this way while sleep mode is enabled",
+            "title": "Only while sleep mode is enabled"
+          },
+          "title": "Turn off a tracker"
+        }
+      },
+      "onCharge": {
+        "description": "Have devices turn off automatically when you put them on the charger.",
+        "optionControllers": {
+          "description": "When it is charging",
+          "title": "Turn off a controller"
+        },
+        "optionTrackers": {
+          "description": "When it is charging",
+          "title": "Turn off a tracker"
+        },
+        "title": "When charging"
+      },
+      "onSleepModeEnable": {
+        "description": "Turn off devices when sleep mode is enabled.",
+        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>.",
+        "optionControllers": "Turn off all controllers",
+        "optionTrackers": "Turn off all trackers",
+        "title": "When I go to sleep"
+      }
+    },
+    "enableLighthouseControl": "Enable",
+    "error": {
+      "adapterError": "An error occurred while trying to communicate with your Bluetooth adapter. Please make sure your Bluetooth adapter is enabled and try again.",
+      "noAdapter": "No Bluetooth adapter could be found in your system. Please make sure your system is equipped with a Bluetooth adapter and that it is enabled."
+    },
+    "lighthouseControlDisabledWarning": "These automations are unavailable because you have disabled base station power control in OyasumiVR's settings. Enable this if you want to use these automations.",
+    "lighthousePowerOff": {
+      "description": "Have OyasumiVR automatically turn off your base stations.",
+      "onSteamVRStop": {
+        "description": "Automatically turn off your base stations when SteamVR stops",
+        "title": "When SteamVR stops"
+      },
+      "title": "Turn off base stations"
+    },
+    "lighthousePowerOn": {
+      "description": "Have OyasumiVR automatically turn on your base stations.",
+      "onOyasumiStart": {
+        "description": "Automatically turn on your base stations when OyasumiVR starts",
+        "title": "When OyasumiVR starts"
+      },
+      "onSteamVRStart": {
+        "description": "Automatically turn on your base stations when SteamVR starts",
+        "title": "When SteamVR starts"
+      },
+      "title": "Turn on base stations"
+    },
+    "powerManagementWarning": "When choosing to use OyasumiVR's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
+    "tabs": {
+      "baseStations": "Base Stations",
+      "controllersAndTrackers": "Controllers & Trackers",
+      "windowsPowerPolicy": "Power Policy"
+    },
+    "title": "Power Automations",
+    "windowsPowerPolicy": {
+      "automations": "Automations",
+      "description": "OyasumiVR can automatically change the active Windows Power Policy when you go to sleep or wake up. This can be useful to reduce your power consumption while you are asleep, and restore a higher performance policy when you wake up again.",
+      "sleepModeDisable": {
+        "description": "Set the following Windows Power Policy",
+        "title": "When sleep mode is disabled"
+      },
+      "sleepModeEnable": {
+        "description": "Set the following Windows Power Policy",
+        "title": "When sleep mode is enabled"
+      }
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "message": "Logging in with your Pulsoid account was unsuccessful. Please try again later. If this issue persists, please reach out for support!\n\n{errorDetails}",
+        "title": "Pulsoid Login Failed"
+      }
+    }
+  },
+  "resolution-automations": {
+    "description": "OyasumiVR can automatically adjust the render resolution of SteamVR when sleep mode is enabled or disabled.",
+    "onSleepDisable": {
+      "description": "Adjust my render resolution",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Adjust my render resolution",
+      "title": "When I go to sleep"
+    },
+    "renderResolution": {
+      "auto": "Auto",
+      "custom": "Custom",
+      "title": "Change the render resolution to"
+    },
+    "title": "Resolution Automations"
+  },
+  "settings": {
+    "advanced": {
+      "logs": {
+        "openFolder": {
+          "action": "Open Log Folder",
+          "description": "Opens the location of OyasumiVR's log files in your file explorer",
+          "title": "Open log folder"
+        },
+        "title": "Log Files"
+      },
+      "persistentData": {
+        "clearData": "Clear Data",
+        "clearModal": {
+          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{items}",
+          "title": "Confirm clearing data"
+        },
+        "dataType": {
+          "all": {
+            "description": "All data that OyasumiVR stores, including all your settings",
+            "title": "All Data"
+          },
+          "appCache": {
+            "description": "All data that is stored temporarily, such as VRChat API responses",
+            "title": "Data Cache"
+          },
+          "appSettings": {
+            "description": "All of OyasumiVR's general settings",
+            "title": "Application Settings"
+          },
+          "automationSettings": {
+            "description": "All settings specific to one of OyasumiVR's automations",
+            "title": "Automation Settings"
+          },
+          "eventLog": {
+            "description": "The events that are logged in the overview",
+            "title": "Event Log"
+          },
+          "imageCache": {
+            "description": "All images that are stored temporarily, such as VRChat player icons",
+            "title": "Image Cache"
+          },
+          "integrations": {
+            "description": "Data specific to integrations (excluding VRChat), such as authentication data",
+            "title": "Integration Data"
+          },
+          "logs": {
+            "description": "The log files that OyasumiVR creates",
+            "title": "Log Files"
+          },
+          "miscData": {
+            "description": "All other data that OyasumiVR stores, not covered by other categories",
+            "title": "Other Data"
+          },
+          "vrcData": {
+            "description": "Data specific to VRChat, such as authentication data",
+            "title": "VRChat Data"
+          }
+        },
+        "description": "Manage the data that OyasumiVR stores on your disk",
+        "relaunchModal": {
+          "later": "I'll do it later",
+          "message": "The requested data has been cleared. It is recommended to restart OyasumiVR after doing this.\n\nDo you want to do this now? Not restarting OyasumiVR could have unwanted effects.",
+          "relaunch": "Restart OyasumiVR now",
+          "title": "Restart OyasumiVR"
+        },
+        "title": "Persistent Data"
+      },
+      "translation": {
+        "contribute": {
+          "description": "Contribute missing translations, or help add new languages!",
+          "docs": "Learn How",
+          "title": "Help out by contributing translations"
+        },
+        "loadFile": {
+          "action": "Load File",
+          "description": "Load a custom language file. Useful when testing new translations.",
+          "title": "Load translation file"
+        },
+        "title": "Language & Translation"
+      }
+    },
+    "general": {
+      "adminPrivileges": {
+        "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up.",
+        "label": "Ask for administrator privileges on startup",
+        "title": "Administrator Privileges"
+      },
+      "language": {
+        "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!",
+        "title": "Language"
+      },
+      "lighthouseConsole": {
+        "description": "OyasumiVR needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
+        "status": {
+          "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
+          "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
+          "INVALID_FILENAME": "The set location is not a valid file path.",
+          "NOT_FOUND": "The <strong>lighthouse_console.exe</strong> could not be found at this location.",
+          "PERMISSION_DENIED": "OyasumiVR does not have permission to run the <strong>lighthouse_console.exe</strong> at this location. Try running OyasumiVR as administrator.",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> has been found and is working correctly!",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>lighthouse_console.exe</strong> at this location."
+        },
+        "title": "Lighthouse Console"
+      },
+      "lighthousePowerControl": {
+        "enable": {
+          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires bluetooth, and supports V2 base stations only.",
+          "title": "Enable power control"
+        },
+        "powerOffMode": {
+          "description": "Unlike Standby mode, Sleep mode also turns off the motors, which can take longer to turn back on.",
+          "sleep": {
+            "description": "Power off\nlasers & motors",
+            "title": "Sleep"
+          },
+          "standby": {
+            "description": "Power off\nlasers",
+            "title": "Standby"
+          },
+          "title": "Preferred power off state"
+        },
+        "title": "SteamVR Base Station Power Control"
+      },
+      "miscellaneous": {
+        "overlayGpuFix": {
+          "description": "If you are experiencing issues with opening the SteamVR overlay, enabling this option could fix the issue on some systems (e.g. those with hybrid graphics). Changing this option will restart the overlay.",
+          "title": "Graphics fix for SteamVR Overlay"
+        },
+        "title": "Miscellaneous"
+      },
+      "overlay": {
+        "binding": {
+          "description": "Which button triggers the overlay menu can be configured within SteamVR's binding menu.",
+          "title": "Controller button binding"
+        },
+        "overlayMenu": {
+          "description": "This can be turned off if you want to disable OyasumiVR's overlay menu completely.",
+          "title": "Enable overlay menu"
+        },
+        "title": "Overlay"
+      },
+      "sleepMode": {
+        "startupBehaviour": {
+          "description": "What the sleep mode should be when you start OyasumiVR",
+          "option": {
+            "disabled": {
+              "description": "Start as inactive",
+              "title": "Inactive"
+            },
+            "enabled": {
+              "description": "Start as active",
+              "title": "Active"
+            },
+            "persist": {
+              "description": "Remember from last time",
+              "title": "Saved State"
+            }
+          },
+          "title": "Startup State"
+        },
+        "title": "Sleep Mode"
+      },
+      "startStop": {
+        "title": "Start & Stop"
+      },
+      "startWithSteamVR": {
+        "description": "Start OyasumiVR when SteamVR starts",
+        "howTo": "How to",
+        "label": "Start with SteamVR"
+      },
+      "stopWithSteamVR": {
+        "description": "Quit OyasumiVR when SteamVR is stopped for a certain amount of time",
+        "label": "Quit with SteamVR",
+        "options": {
+          "AFTERDELAY": "After 2 minutes",
+          "DISABLED": "Disabled",
+          "IMMEDIATELY": "Immediately"
+        }
+      },
+      "systemTray": {
+        "close": {
+          "description": "Closes OyasumiVR to the system tray instead of exiting the program.",
+          "label": "Close to the system tray"
+        },
+        "start": {
+          "description": "Starts OyasumiVR minimized to the system tray.",
+          "label": "Start in the system tray"
+        },
+        "title": "System Tray"
+      },
+      "telemetry": {
+        "description": "The data that will be sent is limited to the version of OyasumiVR that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics.",
+        "label": "Send anonymous usage data",
+        "title": "Telemetry"
+      }
+    },
+    "integrations": {
+      "connect": "Connect",
+      "copy": "Copy link to clipboard",
+      "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
+      "disconnect": "Disconnect",
+      "providerLink": "Provider Website",
+      "pulsoid": {
+        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>",
+        "title": "Pulsoid"
+      },
+      "reveal": "Reveal",
+      "vrchat": {
+        "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
+        "title": "VRChat"
+      }
+    },
+    "notifications": {
+      "notifications": {
+        "category": {
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "description": "Get a notification when OyasumiVR has automatically accepted someones invite request",
+            "title": "Automatically Accepted Invite-Request"
+          },
+          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
+            "description": "Get a notification when OyasumiVR has automatically updated your VRChat status",
+            "title": "VRChat Status Updated (Player Limit Automation)"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "description": "Get a notification when the sleep mode is deactivated",
+            "title": "Sleep Mode Disabled"
+          },
+          "SLEEP_MODE_ENABLED": {
+            "description": "Get a notification when the sleep mode is activated",
+            "title": "Sleep Mode Enabled"
+          }
+        },
+        "description": "Select which notifications will and won't be sent",
+        "title": "Enabled Notifications"
+      },
+      "provider": {
+        "description": "Select which provider should be used to deliver notifications to you",
+        "title": "Notification Provider"
+      },
+      "title": "Notification Settings",
+      "volume": {
+        "description": "Set the volume level at which some notification types play their sound",
+        "test": "Test",
+        "title": "General Notification Volume"
+      }
+    },
+    "tab": {
+      "advanced": "Advanced",
+      "general": "General",
+      "integrations": "Integrations",
+      "notifications": "Notifications",
+      "updates": "Updates",
+      "vrchat": "VRChat"
+    },
+    "title": "Settings",
+    "updates": {
+      "changelog": "Changelog",
+      "checkForUpdates": "Check for updates",
+      "install": "Install v{version}",
+      "notChecked": "OyasumiVR did not check for updates yet.",
+      "noUpdate": "You are currently running OyasumiVR v{version} which is the latest version!",
+      "updateAvailable": "A new version of OyasumiVR is available! You are currently running v{currentVersion}.\nThe newest version is v{latestVersion}.",
+      "updatesDisabled": {
+        "DEV": "As you are running a development build of OyasumiVR, updates have been disabled.\nIf you want to install a new(er) version of OyasumiVR, please download and run the installer manually.",
+        "STEAM": "You have installed the Steam version of OyasumiVR.\nNew OyasumiVR updates are therefore provided through Steam!"
+      }
+    },
+    "vrchat": {
+      "logIn": {
+        "description": "Some OyasumiVR features require you to log in with your VRChat account for them to work.",
+        "disclaimers": {
+          "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
+          "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
+          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes."
+        },
+        "loggedIn": {
+          "logOut": "Log out",
+          "subtext": "You are currently logged in with your VRChat account.",
+          "title": "Hi {name}!"
+        },
+        "loggedOut": {
+          "logIn": "Log in",
+          "subtext": "You are currently not logged in with your VRChat account.",
+          "title": "Logged Out"
+        },
+        "title": "Log in"
+      },
+      "OSC": {
+        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.",
+        "errors": {
+          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address.",
+          "PORT_IN_USE": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
+          "PORT_INVALID": "A port has to be a valid number between 1 and 65535.",
+          "PORT_IO_IDENTICAL": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same."
+        },
+        "features": {
+          "all": {
+            "description": "Disabling each of these features will stop OyasumiVR from listening for OSC messages",
+            "title": "Enable all features"
+          },
+          "expressionMenu": {
+            "description": "Control OyasumiVR features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu</a>",
+            "title": "Enable VRChat expression menu control"
+          },
+          "externalControl": {
+            "description": "Control OyasumiVR features over <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
+            "title": "Enable external control"
+          }
+        },
+        "receivingHost": {
+          "description": "The host OyasumiVR will listen for OSC messages on.\n(VRChat sends to 127.0.0.1 by default)",
+          "title": "Receiving Host"
+        },
+        "receivingPort": {
+          "description": "The port number OyasumiVR will listen for OSC messages on.\n(VRChat sends to port 9001 by default)",
+          "title": "Receiving Port"
+        },
+        "reset": "Reset to defaults",
+        "sendingHost": {
+          "description": "The host OyasumiVR will send OSC messages to.\n(If VRChat runs on the same machine, this is 127.0.0.1)",
+          "title": "Sending Host"
+        },
+        "sendingPort": {
+          "description": "The port number OyasumiVR will send OSC messages to.\n(VRChat listens on port 9000 by default)",
+          "title": "Sending Port"
+        },
+        "title": "OSC Settings"
+      }
+    }
+  },
   "shared": {
-    "logo": {
-      "tagline": "VR Sleeping Utilities"
-    },
-    "modals": {
-      "cancel": "Cancel",
-      "save": "Save",
-      "confirm": "Confirm",
-      "ok": "Ok",
-      "open": "Open",
-      "close": "Close",
-      "login": "Log in"
-    },
     "common": {
       "none": "None"
+    },
+    "logo": {
+      "tagline": "VR Sleeping Utilities"
     },
     "misc": {
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account.",
@@ -22,108 +1300,220 @@
         "HIGH_PERFORMANCE": "High performance",
         "POWER_SAVING": "Power saver"
       }
+    },
+    "modals": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "login": "Log in",
+      "ok": "Ok",
+      "open": "Open",
+      "save": "Save"
+    },
+    "time": {
+      "minutes": "Minutes",
+      "seconds": "Seconds"
     }
   },
-  "brightness-automations": {
-    "title": "Brightness Automations",
-    "tabs": {
-      "imageBrightness": "Image Brightness",
-      "displayBrightness": "Display Brightness"
+  "shutdown-automations": {
+    "confirm-modal": {
+      "message": "Are you sure you want to activate the shutdown sequence right now?",
+      "title": "Are you sure?"
     },
-    "displayBrightness": {
-      "description": "OyasumiVR can automatically adjust the display brightness of your headset when sleep mode is enabled or disabled.\n\nDisplay brightness affects the strength of the backlight of the LCD panel in your headset, rather than darkening the image. Controlling display brightness is only available on the Valve Index.",
-      "indexWarning": "Please make sure your Valve Index is connected and that SteamVR is running.",
-      "onSleepEnable": {
-        "title": "When I go to sleep",
-        "description": "Adjust the display brightness"
+    "description": "If enjoy falling asleep in VR, but don't want to sleep in VR for the entire night, you can use OyasumiVR's shutdown sequence. This feature automatically shuts down gracefully once you've dozed off, so that you can smoothly continue your sleep outside of VR.",
+    "noOptionsSelected": "As you have no actions selected to run during the shutdown sequence, running it will have no effects. In order for this feature to do something, choose at least one of the options below.",
+    "overlay": {
+      "cancel": "Cancel Now",
+      "stage": {
+        "POWERING_DOWN": "Powering down Windows...",
+        "QUITTING_STEAMVR": "Quitting SteamVR...",
+        "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
+        "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
+        "TURNING_OFF_TRACKERS": "Turning off trackers..."
       },
-      "onSleepDisable": {
-        "title": "When I wake up",
-        "description": "Adjust the display brightness"
+      "title": "Shutting Down"
+    },
+    "sequence": {
+      "powerDownWindows": {
+        "description": "Attempts to power down your computer",
+        "options": {
+          "HIBERNATE": "Hibernate",
+          "LOGOUT": "Log out",
+          "REBOOT": "Restart",
+          "SHUTDOWN": "Shut down",
+          "SLEEP": "Sleep"
+        },
+        "rebootMessage": "OyasumiVR is restarting your PC",
+        "shutdownMessage": "OyasumiVR is shutting down your PC",
+        "title": "Power down Windows"
+      },
+      "quitSteamVR": {
+        "conflict": {
+          "description": "You have configured OyasumiVR to quit immediately when SteamVR is stopped. Because of this, any subsequent automations might not run. To fix this, either disable this task, or configure OyasumiVR to not quit immediately when SteamVR is stopped, in the general settings.",
+          "goToSettings": "General Settings",
+          "title": "Warning: Running this task will cause OyasumiVR to quit immediately"
+        },
+        "description": "This should also quit any game or overlay you have running",
+        "title": "Quit SteamVR"
+      },
+      "run": "Run Sequence",
+      "title": "Shutdown Settings",
+      "turnOffBaseStations": {
+        "description": "Turns off any base stations that are still active",
+        "title": "Turn off base stations"
+      },
+      "turnOffControllers": {
+        "description": "Turns off your controllers",
+        "title": "Turn off controllers"
+      },
+      "turnOffDevices": {
+        "title": "Turn off devices"
+      },
+      "turnOffTrackers": {
+        "description": "Turns off your trackers",
+        "title": "Turn off trackers"
       }
     },
-    "imageBrightness": {
-      "description": "OyasumiVR can automatically adjust the image brightness of your headset when sleep mode is enabled or disabled.\n\nImage brightness darkens the image shown. Unlike for display brightness, controlling the image brightness is available for every headset.",
-      "onSleepEnable": {
-        "title": "When I go to sleep",
-        "description": "Adjust the image brightness"
+    "title": "Shutdown Sequence",
+    "triggers": {
+      "title": "Automatic Triggers",
+      "whenAsleep": {
+        "description": "Activate the shutdown sequence when sleep mode has been activated for a certain amount of time",
+        "title": "Activate when I am asleep"
       },
-      "onSleepDisable": {
-        "title": "When I wake up",
-        "description": "Adjust the image brightness"
+      "whenAsleepDuration": {
+        "description": "How long sleep mode should be active before the shutdown sequence runs",
+        "title": "Sleep duration"
+      },
+      "whenAsleepTimeWindow": {
+        "description": "Only allow shutdown to trigger between certain hours of day",
+        "title": "Activation Window"
       }
-    },
-    "brightness": {
-      "title": "Change the brightness to",
-      "description": ""
-    },
-    "transition": {
-      "title": "Adjust brightness gradually",
-      "description": "Smoothly transition to your desired brightness value"
-    },
-    "transitionTime": {
-      "title": "Transition time",
-      "description": "How long it should take to transition to the new brightness setting"
-    }
-  },
-  "overview": {
-    "sleep-mode": {
-      "label": "Sleep Mode",
-      "active": "Active",
-      "inactive": "Inactive",
-      "activate": "Activate",
-      "deactivate": "Deactivate"
     }
   },
   "sleep-detection": {
-    "title": "Sleep Detection",
-    "enableAutomations": {
-      "title": "Enabling sleep mode",
-      "description": "Automatically enable sleep mode based on various triggers",
+    "disableAutomations": {
       "atTime": "At a specific time",
-      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{{value}}%</strong>",
-      "onControllersPoweredOff": "When all controllers are turned off",
+      "description": "Automatically disable sleep mode based on various triggers",
+      "onDevicePowerOn": "When a device is turned on",
+      "onSteamVRStop": "When SteamVR is stopped",
+      "title": "Disabling sleep mode"
+    },
+    "enableAutomations": {
+      "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
+      "atTime": "At a specific time",
+      "description": "Automatically enable sleep mode based on various triggers",
+      "onControllersPoweredOff": {
+        "batteryLevelAutomationConflict": {
+          "action": "Power Automations:\nControllers & Trackers",
+          "description": "You have set up controllers to automatically turn off when their battery level falls below a certain percentage. This might cause you to accidentally enable the sleep mode, which might not be what you want. To prevent this, you can turn off this behaviour in the \"Controllers & Trackers\" section of the Power Automation settings.",
+          "title": "Warning: This might be triggered by another automation!"
+        },
+        "title": "When all controllers are turned off"
+      },
+      "onHeartRateCalmPeriod": {
+        "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>",
+        "title": "When my heart rate is calm for a period of time"
+      },
       "onMotionDetection": {
         "title": "When OyasumiVR detects you are asleep based on your movement"
-      }
+      },
+      "title": "Enabling sleep mode"
     },
-    "disableAutomations": {
-      "title": "Disabling sleep mode",
-      "description": "Automatically disable sleep mode based on various triggers",
-      "atTime": "At a specific time",
-      "onDevicePowerOn": "When a device is turned on",
-      "onSteamVRStop": "When SteamVR is stopped"
-    },
+    "experimentalAutomation": "This automation is experimental and may not yet be reliable.",
     "modals": {
-      "sleepDetectorCalibration": {
-        "title": "Calibrate Sleep Detection",
-        "currentCalibration": "Your Current Calibration Value:",
-        "noSteamVR": "You can only start calibration once SteamVR is running with your VR Headset plugged in.",
-        "startCalibration": "Start Calibration",
-        "restartCalibration": "Restart Calibration",
-        "info": {
-          "intro": "OyasumiVR can detect if you've fallen asleep based on the movement of your VR headset. For it to be able to do this, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
-          "stepPrefix": "Calibration works as follows:",
-          "step": {
-            "one": "You put on your headset and lie down.",
-            "two": "You start the calibration in OyasumiVR from your overlay.",
-            "three": "You lay still for 10 seconds."
-          },
-          "stepSuffix": "That's it! After calibration, OyasumiVR should be able to detect if you've fallen asleep based on the movement of your VR headset."
+      "disableAtTime": {
+        "description": "Disable sleep mode at a specific time of day.",
+        "time": "Time",
+        "title": "Disable sleep mode"
+      },
+      "disableOnDevicePowerOn": {
+        "Controller": "Controller",
+        "GenericTracker": "Tracker",
+        "title": "Disable sleep mode",
+        "whenTurningOn": "When turning on a"
+      },
+      "enableAtBatteryPercentage": {
+        "Controller": "Controller",
+        "errors": {
+          "thresholdNotInteger": "The percentage value has to be a whole number.",
+          "thresholdOutOfRange": "The percentage has to be between 0% and 100%."
         },
-        "prepare": {
-          "instruction": "Put on your VR headset and lie down.",
-          "note": "Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started."
+        "fallsBelow": "Falls below",
+        "GenericTracker": "Tracker",
+        "title": "Enable sleep mode",
+        "whenA": "When a"
+      },
+      "enableAtTime": {
+        "description": "Enable sleep mode at a specific time of day.",
+        "time": "Time",
+        "title": "Enable sleep mode"
+      },
+      "enableForSleepDetector": {
+        "calibration": {
+          "action": "Calibrate",
+          "description": "You need to calibrate at least once before you should try to use this feature.",
+          "title": "Calibration"
+        },
+        "description": "With this feature enabled, OyasumiVR will automatically enable sleep mode when it guesses you're asleep based on your movement.",
+        "detectionWindow": {
+          "description": "How long OyasumiVR should wait before it detects you being asleep",
+          "title": "Detection window",
+          "unit": "min"
+        },
+        "sensitivity": {
+          "description": "The higher the sensitivity, the more likely that OyasumiVR will detect you being asleep.",
+          "presets": {
+            "HIGH": "High",
+            "HIGHEST": "Highest",
+            "LOW": "Low",
+            "LOWEST": "Lowest",
+            "MEDIUM": "Medium"
+          },
+          "title": "Sensitivity"
+        },
+        "sleepCheck": {
+          "description": "Sends you an actionable notification to ask if you are still awake before enabling sleep mode.",
+          "title": "Before enabling sleep mode, ask if I am still awake"
+        },
+        "timeWindow": {
+          "description": "Only allow sleep detection to activate the sleep mode between certain hours of day",
+          "title": "Activation Window"
+        },
+        "title": "Enable sleep mode"
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "bpm": {
+          "description": "The beats per minute your heart has to stay under for the sleep mode to be enabled.",
+          "title": "BPM Threshold",
+          "unit": "BPM"
+        },
+        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+        "duration": {
+          "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
+          "title": "Duration",
+          "unit": "min"
+        },
+        "notEnoughData": "Not enough data available to show your heart rate history.",
+        "title": "Enable sleep mode",
+        "viewHistory": {
+          "actionHide": "Hide History",
+          "actionShow": "View History",
+          "description": "View your heart rate history from the last 12 hours",
+          "title": "Heart Rate History"
+        }
+      },
+      "sleepDetectorCalibration": {
+        "calibrating": {
+          "countdown": "{counter} second(s) remaining...",
+          "instruction": "Calibrating",
+          "note": "Keep still."
         },
         "countdown": {
-          "instruction": "Starting in {{counter}}",
+          "instruction": "Starting in {counter}",
           "note": "Keep still while calibrating! Pretend you are asleep.\nMoving while calibrating will prevent this feature from working correctly."
         },
-        "calibrating": {
-          "instruction": "Calibrating",
-          "note": "Keep still.",
-          "countdown": "{{counter}} second(s) remaining..."
-        },
+        "currentCalibration": "Your Current Calibration Value:",
         "done": {
           "instruction": "Calibration complete!",
           "note": "You can now use this automation."
@@ -131,1223 +1521,233 @@
         "failed": {
           "instruction": "Calibration failed",
           "note": "Calibration could not complete successfully, likely due to your headset not reporting any data. Please make sure your headset is tracking and try again."
-        }
-      },
-      "enableForSleepDetector": {
-        "title": "Enable sleep mode",
-        "calibration": {
-          "title": "Calibration",
-          "description": "You need to calibrate at least once before you should try to use this feature.",
-          "action": "Calibrate"
         },
-        "sensitivity": {
-          "title": "Sensitivity",
-          "description": "The higher the sensitivity, the more likely that OyasumiVR will detect you being asleep.",
-          "presets": {
-            "LOWEST": "Lowest",
-            "LOW": "Low",
-            "MEDIUM": "Medium",
-            "HIGH": "High",
-            "HIGHEST": "Highest"
-          }
-        },
-        "sleepCheck": {
-          "title": "Before enabling sleep mode, ask if I am still awake",
-          "description": "Sends you an actionable notification to ask if you are still awake before enabling sleep mode."
-        },
-        "detectionWindow": {
-          "title": "Detection window",
-          "description": "How long OyasumiVR should wait before it detects you being asleep",
-          "unit": "min"
-        },
-        "description": "With this feature enabled, OyasumiVR will automatically enable sleep mode when it guesses you're asleep based on your movement.",
-        "timeWindow": {
-          "title": "Activation Window",
-          "description": "Only allow sleep detection to activate the sleep mode between certain hours of day"
-        }
-      },
-      "enableAtTime": {
-        "title": "Enable sleep mode",
-        "description": "Enable sleep mode at a specific time of day.",
-        "time": "Time"
-      },
-      "disableAtTime": {
-        "title": "Disable sleep mode",
-        "description": "Disable sleep mode at a specific time of day.",
-        "time": "Time"
-      },
-      "disableOnDevicePowerOn": {
-        "title": "Disable sleep mode",
-        "whenTurningOn": "When turning on a",
-        "Controller": "Controller",
-        "GenericTracker": "Tracker"
-      },
-      "enableAtBatteryPercentage": {
-        "title": "Enable sleep mode",
-        "whenA": "When a",
-        "Controller": "Controller",
-        "GenericTracker": "Tracker",
-        "fallsBelow": "Falls below",
-        "errors": {
-          "thresholdOutOfRange": "The percentage has to be between 0% and 100%.",
-          "thresholdNotInteger": "The percentage value has to be a whole number."
-        }
-      }
-    }
-  },
-  "oscAutomations": {
-    "title": "OSC Automations",
-    "tab": {
-      "sleepingAnimations": "Sleeping Animations",
-      "general": "General"
-    },
-    "sleepingAnimations": {
-      "currentPose": "Current Position",
-      "manualControl": "Manual Control",
-      "presetAuthor": "by {{author}}",
-      "description": "OyasumiVR can automatically change your avatar animations when you change sleeping position. This can be useful if you don't have full body tracking, or if you (or you have OyasumiVR) turn off your trackers during the night. See an example of what this could look like <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">here</a>.\n\nPresets are available for several pre-made avatar locomotion prefabs, but you can specify your own animations as well.",
-      "enable": "Enable automatic sleeping animations",
-      "customPreset": "Custom Animations",
-      "options": {
-        "positions": {
-          "title": "Sleeping Positions",
-          "description": "Set the OSC commands to activate the animation for each sleeping position.",
-          "SIDE_FRONT": "Upright",
-          "SIDE_BACK": "Back Side",
-          "SIDE_LEFT": "Left Side",
-          "SIDE_RIGHT": "Right Side",
-          "UNKNOWN": "Unknown"
-        },
-        "footLock": {
-          "title": "Foot Lock",
-          "description": "Set the OSC commands to enable and disable the foot lock.",
-          "FOOT_LOCK": "Enable Foot Lock",
-          "FOOT_UNLOCK": "Disable Foot Lock"
-        },
-        "general": {
-          "title": "General Options",
-          "onlySwitchAnimations": "Only switch animations",
-          "onlyIfSleepModeEnabled": "If sleep mode is enabled",
-          "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
-          "footLock": {
-            "title": "Foot Lock",
-            "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled."
+        "info": {
+          "intro": "OyasumiVR can detect if you've fallen asleep based on the movement of your VR headset. For it to be able to do this, it has to be calibrated to your VR setup. You need to calibrate at least once before you should try to use this feature.",
+          "step": {
+            "one": "You put on your headset and lie down.",
+            "three": "You lay still for 10 seconds.",
+            "two": "You start the calibration in OyasumiVR from your overlay."
           },
-          "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
-          "unlockFeetOnSleepModeDisable": "Unlock feet when sleep mode is disabled",
-          "unlockFeetOnAutomationDisable": "Unlock feet when disabling automatic sleeping animations",
-          "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
-          "footLockReleaseWindow": "Foot lock release duration"
-        }
+          "stepPrefix": "Calibration works as follows:",
+          "stepSuffix": "That's it! After calibration, OyasumiVR should be able to detect if you've fallen asleep based on the movement of your VR headset."
+        },
+        "noSteamVR": "You can only start calibration once SteamVR is running with your VR Headset plugged in.",
+        "prepare": {
+          "instruction": "Put on your VR headset and lie down.",
+          "note": "Once you're ready and you can see this window from your overlay, press 'Start Calibration' to get started."
+        },
+        "restartCalibration": "Restart Calibration",
+        "startCalibration": "Start Calibration",
+        "title": "Calibrate Sleep Detection"
       }
     },
-    "general": {
-      "description": "Here you can configure OyasumiVR to send out OSC commands to VRChat when certain events happen. This can, for example, be useful if you want to change your avatar toggles when you go to sleep or wake up.",
-      "onSleepEnable": {
-        "title": "When I go to sleep",
-        "description": "Send these OSC commands",
-        "script": "Sleep Mode Enabled"
-      },
-      "onSleepDisable": {
-        "title": "When I wake up",
-        "description": "Send these OSC commands",
-        "script": "Sleep Mode Disabled"
-      }
-    }
-  },
-  "power-automations": {
-    "title": "Power Automations",
-    "tabs": {
-      "controllersAndTrackers": "Controllers & Trackers",
-      "baseStations": "Base Stations",
-      "windowsPowerPolicy": "Power Policy"
-    },
-    "windowsPowerPolicy": {
-      "description": "OyasumiVR can automatically change the active Windows Power Policy when you go to sleep or wake up. This can be useful to reduce your power consumption while you are asleep, and restore a higher performance policy when you wake up again.",
-      "automations": "Automations",
-      "sleepModeEnable": {
-        "title": "When sleep mode is enabled",
-        "description": "Set the following Windows Power Policy"
-      },
-      "sleepModeDisable": {
-        "title": "When sleep mode is disabled",
-        "description": "Set the following Windows Power Policy"
-      }
-    },
-    "devicePowerOff": {
-      "onSleepModeEnable": {
-        "title": "When I go to sleep",
-        "description": "Turn off devices when sleep mode is enabled.",
-        "optionControllers": "Turn off all controllers",
-        "optionTrackers": "Turn off all trackers",
-        "hint": "You can configure when sleep mode is enabled in <a class=\"sleepDetectionLink\">Sleep Detection</a>."
-      },
-      "onCharge": {
-        "title": "When charging them",
-        "description": "Have devices turn off automatically when you put them on the charger.",
-        "optionControllers": "Turn off controllers",
-        "optionTrackers": "Turn off trackers"
-      }
-    },
-    "lighthousePowerOn": {
-      "title": "Turn on base stations",
-      "description": "Have OyasumiVR automatically turn on your base stations.",
-      "onOyasumiStart": {
-        "title": "When OyasumiVR starts",
-        "description": "Automatically turn on your base stations when OyasumiVR starts"
-      },
-      "onSteamVRStart": {
-        "title": "When SteamVR starts",
-        "description": "Automatically turn on your base stations when SteamVR starts"
-      }
-    },
-    "lighthousePowerOff": {
-      "title": "Turn off base stations",
-      "description": "Have OyasumiVR automatically turn off your base stations.",
-      "onSteamVRStop": {
-        "title": "When SteamVR stops",
-        "description": "Automatically turn off your base stations when SteamVR stops"
-      }
-    },
-    "powerManagementWarning": "When choosing to use OyasumiVR's automations for turning your base stations on or off, it is recommended that you disable power management in SteamVR's base station settings.",
-    "lighthouseControlDisabledWarning": "These automations are unavailable because you have disabled base station power control in OyasumiVR's settings. Enable this if you want to use these automations.",
-    "enableLighthouseControl": "Enable",
-    "error": {
-      "noAdapter": "No Bluetooth adapter could be found in your system. Please make sure your system is equipped with a Bluetooth adapter and that it is enabled.",
-      "adapterError": "An error occurred while trying to communicate with your Bluetooth adapter. Please make sure your Bluetooth adapter is enabled and try again."
-    }
-  },
-  "gpu-automations": {
-    "title": "GPU Automations",
-    "disabled": {
-      "disabled": "OyasumiVR has various ways to automatically tweak your GPU settings.\nThis allows you to save power while you are asleep.\n\nAs this is a feature for advanced users, it is disabled by default.\nYou can enable it by clicking the button below.",
-      "noSidecar": "In order for OyasumiVR to be allowed to change your GPU settings, it requires administrator privileges. Please click the button below to give OyasumiVR administrator privileges."
-    },
-    "tabs": {
-      "powerLimiting": "Power Limiting",
-      "msiAfterburner": "MSI Afterburner"
-    },
-    "requestAdministrator": "Give Administrator Privileges",
-    "disable": "Disable GPU Automations",
-    "enable": "Enable GPU Automations",
-    "automations": "Sleep Automations",
-    "enableWarning": "Incorrectly tweaking your GPU parameters could lead to your system becoming unstable. Please keep this in mind and only enable this feature if you know what you are doing.",
-    "elevationSidecarModal": {
-      "title": "Give administrator privileges",
-      "message": "Do you want to always give OyasumiVR administrator privileges?\n\nIf you enable this, OyasumiVR will immediately ask for them when starting. You can disable this later at any time in the settings.",
-      "confirm": "Always",
-      "cancel": "Only this once"
-    },
-    "powerLimiting": {
-      "disabled": {
-        "initializing": "Power limiting automations are being initialized...",
-        "noNvidia": "Power limiting automations are unavailable as no running NVIDIA driver was detected. Power limiting automations are only available for NVIDIA GPUs.\n\nIf you have an NVIDIA GPU in your system, please ensure that the appropriate driver for it is installed.\n\n({{code}})",
-        "noPermission": "Although OyasumiVR has administrator privileges, it does not have permission to change your GPU settings.\n\nPlease check your system configuration as this should normally never occur.",
-        "noSidecar": "For an unknown reason, administrator privileges could not be obtained.\nThese are required for controlling your GPU's power limits.\n\nPlease try restarting OyasumiVR.",
-        "unknown": "Power limiting automations are unavailable for an unknown reason.\n\nPlease try restarting OyasumiVR."
-      },
-      "noGPUSelected": "No GPU Selected",
-      "gpuUnsupported": "GPU Unsupported",
-      "noGPUs": "No NVIDIA GPUs could be found in your system.",
-      "description": "Here you can automate the power limits of your GPU, to save on electricity while you are asleep. Power limiting is only available for NVIDIA GPUs.",
-      "selectGPU": "Select the GPU you wish to set the power limit for:",
-      "gpuPowerLimitsUnsupported": "The selected GPU does not support setting power limits.",
-      "currentPowerLimit": "Current Power Limit",
-      "activatingSleepMode": {
-        "title": "When I go to sleep",
-        "description": "Specify the power limit to set when sleep mode activates"
-      },
-      "deactivatingSleepMode": {
-        "title": "When I wake up",
-        "description": "Specify the power limit to set when sleep mode deactivates"
-      },
-      "enabledWarning": "Please be aware that setting your power limits too low could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
-      "inputDefault": "Reset to the GPU's default limit."
-    },
-    "msiAfterburner": {
-      "description": "OyasumiVR can automatically tweak your GPU settings when you go to sleep or wake up, by applying profiles you've created in MSI Afterburner. A use case for this functionality is to save electricity while you are asleep, and regain GPU power when you wake up.<br><br>You have to set up the profiles you want to apply in MSI Afterburner.<br>You can download MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">here</a>.",
-      "sleepModeEnable": {
-        "title": "When sleep mode is enabled",
-        "description": "Apply the following MSI Afterburner profile"
-      },
-      "sleepModeDisable": {
-        "title": "When sleep mode is disabled",
-        "description": "Apply the following MSI Afterburner profile"
-      },
-      "profile": "Profile {{index}}",
-      "none": "None",
-      "enabledWarning": "Please be aware that incorrectly configuring your GPU in MSI Afterburner could result in your system becoming unstable. Disable this feature if you do not know what you are doing.",
-      "executable": {
-        "title": "Configuration",
-        "description": "OyasumiVR needs to know about the location of your <strong>MSIAfterburner.exe</strong> executable.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
-        "status": {
-          "CHECKING": "Checking for valid <strong>MSIAfterburner.exe</strong>",
-          "NOT_FOUND": "The <strong>MSIAfterburner.exe</strong> could not be found at this location.",
-          "INVALID_EXECUTABLE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified as working.",
-          "INVALID_SIGNATURE": "The <strong>MSIAfterburner.exe</strong> at this location could not be verified to come from MSI. For security reasons it cannot be used. Please make sure you are using the latest version of MSI Afterburner. If the problem persists or you are sure this is correct, please contact OyasumiVR's developer or submit a bug report.",
-          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>MSIAfterburner.exe</strong> at this location.",
-          "SUCCESS": "<strong>MSIAfterburner.exe</strong> has been found and is working correctly!"
-        }
-      }
-    }
-  },
-  "status-automations": {
-    "title": "Status Automations",
-    "enable": "Enable Status Automations",
-    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
-    "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
-    "disableToEdit": "Please disable status automations before you make any changes.",
-    "playerLimit": "Player Limit",
-    "playerLimitLabel": {
-      "singular": "{{count}} player (including you)",
-      "plural": "{{count}} players (including you)"
-    },
-    "belowLimit": {
-      "title": "Below the limit",
-      "description": "Set your status to"
-    },
-    "atLimitOrAbove": {
-      "title": "At the limit or above",
-      "description": "Set your status to"
-    },
-    "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
-    "behaviourWarning": "Status changes by OyasumiVR are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by OyasumiVR.",
-    "moreInfo": "More info",
-    "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have OyasumiVR set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu."
-  },
-  "auto-invite-request-accept": {
-    "title": "Auto Accept Invite Requests",
-    "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
-    "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
-    "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-    "whitelist": "Player Whitelist",
-    "blacklist": "Player Blacklist",
-    "noPlayersAdded": "No players are currently added to the list.",
-    "addFriends": "Add Friends",
-    "clearPlayers": "Clear Players",
-    "removeModal": {
-      "title": "Confirm Removal",
-      "message": "Are you sure you want to remove '{{name}}' from your list?"
-    },
-    "removeModalBulk": {
-      "title": "Confirm Removal",
-      "message": "Are you sure you want to remove everyone from your list?"
-    },
-    "options": {
-      "enable": {
-        "title": "Enable",
-        "description": "Automatically accept invite requests from friends."
-      },
-      "onlyIfSleepModeEnabled": {
-        "title": "Only when sleep mode is enabled"
-      },
-      "listMode": {
-        "title": "List Mode",
-        "description": "How the player list operates",
-        "options": {
-          "DISABLED": {
-            "label": "Disabled",
-            "subLabel": "Accept from everyone"
-          },
-          "WHITELIST": {
-            "label": "Whitelist",
-            "subLabel": "Accept from friends on the list"
-          },
-          "BLACKLIST": {
-            "label": "Blacklist",
-            "subLabel": "Accept from friends not on the list"
-          }
-        }
-      }
-    }
-  },
-  "settings": {
-    "title": "Settings",
-    "tab": {
-      "general": "General",
-      "vrchat": "VRChat",
-      "notifications": "Notifications",
-      "updates": "Updates",
-      "advanced": "Advanced"
-    },
-    "general": {
-      "language": {
-        "title": "Language",
-        "description": "You can select your desired language here. If there are any missing translations, or you would like like to add support for your language, please get in contact!"
-      },
-      "lighthouseConsole": {
-        "title": "Lighthouse Console",
-        "description": "OyasumiVR needs to know about the location of your SteamVR installation's <strong>lighthouse_console.exe</strong>.\nIf OyasumiVR cannot find it in the default location, you need to set where it can be found.",
-        "status": {
-          "NOT_FOUND": "The <strong>lighthouse_console.exe</strong> could not be found at this location.",
-          "INVALID_EXECUTABLE": "The <strong>lighthouse_console.exe</strong> at this location could not be verified as working.",
-          "PERMISSION_DENIED": "OyasumiVR does not have permission to run the <strong>lighthouse_console.exe</strong> at this location. Try running OyasumiVR as administrator.",
-          "INVALID_FILENAME": "The set location is not a valid file path.",
-          "UNKNOWN_ERROR": "An unknown error occurred while trying to look for <strong>lighthouse_console.exe</strong> at this location.",
-          "CHECKING": "Checking for valid <strong>lighthouse_console.exe</strong>",
-          "SUCCESS": "<strong>lighthouse_console.exe</strong> has been found and is working correctly!"
-        }
-      },
-      "adminPrivileges": {
-        "title": "Administrator Privileges",
-        "label": "Ask for administrator privileges on startup",
-        "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up."
-      },
-      "telemetry": {
-        "title": "Telemetry",
-        "label": "Send anonymous usage data",
-        "description": "The data that will be sent is limited to the version of OyasumiVR that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics."
-      },
-      "systemTray": {
-        "title": "System Tray",
-        "close": {
-          "label": "Close to the system tray",
-          "description": "Closes OyasumiVR to the system tray instead of exiting the program."
-        },
-        "start": {
-          "label": "Start in the system tray",
-          "description": "Starts OyasumiVR minimized to the system tray."
-        }
-      },
-      "lighthousePowerControl": {
-        "title": "SteamVR Base Station Power Control",
-        "powerOffMode": {
-          "standby": {
-            "title": "Standby",
-            "description": "Power off\nlasers"
-          },
-          "sleep": {
-            "title": "Sleep",
-            "description": "Power off\nlasers & motors"
-          },
-          "title": "Preferred power off state",
-          "description": "Unlike Standby mode, Sleep mode also turns off the motors, which can take longer to turn back on."
-        },
-        "enable": {
-          "title": "Enable power control",
-          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires bluetooth, and supports V2 base stations only."
-        }
-      },
-      "sleepMode": {
-        "title": "Sleep Mode",
-        "startupBehaviour": {
-          "title": "Startup State",
-          "description": "What the sleep mode should be when you start OyasumiVR",
-          "option": {
-            "persist": {
-              "title": "Saved State",
-              "description": "Remember from last time"
-            },
-            "enabled": {
-              "title": "Active",
-              "description": "Start as active"
-            },
-            "disabled": {
-              "title": "Inactive",
-              "description": "Start as inactive"
-            }
-          }
-        }
-      },
-      "overlay": {
-        "activation": {
-          "title": "Activation action",
-          "description": "Select which action will open and close the overlay",
-          "action": {
-            "none": "None (disabled)",
-            "singleA": "Single press A",
-            "doubleA": "Double press A",
-            "tripleA": "Triple press A",
-            "singleB": "Single press B",
-            "doubleB": "Double press B",
-            "tripleB": "Triple press B"
-          },
-          "controller": {
-            "either": "Either Controller",
-            "left": "Left Controller",
-            "right": "Right Controller",
-            "title": "Controller",
-            "description": "Select which controllers can be used to activate the overlay"
-          },
-          "triggerFilter": {
-            "title": "Require trigger",
-            "description": "Only activate if the trigger is held down while doing the action."
-          }
-        },
-        "title": "Overlay"
-      }
-    },
-    "vrchat": {
-      "logIn": {
-        "title": "Log in",
-        "description": "Some OyasumiVR features require you to log in with your VRChat account for them to work.",
-        "loggedIn": {
-          "title": "Hi {{name}}!",
-          "subtext": "You are currently logged in with your VRChat account.",
-          "logOut": "Log out"
-        },
-        "loggedOut": {
-          "title": "Logged Out",
-          "subtext": "You are currently not logged in with your VRChat account.",
-          "logIn": "Log in"
-        },
-        "disclaimers": {
-          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.",
-          "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!"
-        }
-      },
-      "OSC": {
-        "title": "OSC Settings",
-        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.",
-        "reset": "Reset to defaults",
-        "receivingHost": {
-          "title": "Receiving Host",
-          "description": "The host OyasumiVR will listen for OSC messages on.\n(VRChat sends to 127.0.0.1 by default)"
-        },
-        "receivingPort": {
-          "title": "Receiving Port",
-          "description": "The port number OyasumiVR will listen for OSC messages on.\n(VRChat sends to port 9001 by default)"
-        },
-        "sendingHost": {
-          "title": "Sending Host",
-          "description": "The host OyasumiVR will send OSC messages to.\n(If VRChat runs on the same machine, this is 127.0.0.1)"
-        },
-        "sendingPort": {
-          "title": "Sending Port",
-          "description": "The port number OyasumiVR will send OSC messages to.\n(VRChat listens on port 9000 by default)"
-        },
-        "errors": {
-          "PORT_IN_USE": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
-          "PORT_INVALID": "A port has to be a valid number between 1 and 65535.",
-          "PORT_IO_IDENTICAL": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same.",
-          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address."
-        },
-        "features": {
-          "all": {
-            "title": "Enable all features",
-            "description": "Disabling each of these features will stop OyasumiVR from listening for OSC messages"
-          },
-          "expressionMenu": {
-            "title": "Enable VRChat expression menu control",
-            "description": "Control OyasumiVR features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu</a>"
-          },
-          "externalControl": {
-            "title": "Enable external control",
-            "description": "Control OyasumiVR features over <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>"
-          }
-        }
-      }
-    },
-    "notifications": {
-      "title": "Notification Settings",
-      "provider": {
-        "title": "Notification Provider",
-        "description": "Select which provider should be used to deliver notifications to you"
-      },
-      "notifications": {
-        "title": "Enabled Notifications",
-        "description": "Select which notifications will and won't be sent",
-        "category": {
-          "SLEEP_MODE_ENABLED": {
-            "title": "Sleep Mode Enabled",
-            "description": "Get a notification when the sleep mode is activated"
-          },
-          "SLEEP_MODE_DISABLED": {
-            "title": "Sleep Mode Disabled",
-            "description": "Get a notification when the sleep mode is deactivated"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "title": "VRChat Status Updated (Player Limit Automation)",
-            "description": "Get a notification when OyasumiVR has automatically updated your VRChat status"
-          },
-          "AUTO_ACCEPTED_INVITE_REQUEST": {
-            "title": "Automatically Accepted Invite-Request",
-            "description": "Get a notification when OyasumiVR has automatically accepted someones invite request"
-          }
-        }
-      }
-    },
-    "updates": {
-      "checkForUpdates": "Check for updates",
-      "changelog": "Changelog",
-      "install": "Install v{{version}}",
-      "noUpdate": "You are currently running OyasumiVR v{{version}} which is the latest version!",
-      "notChecked": "OyasumiVR did not check for updates yet.",
-      "updateAvailable": "A new version of OyasumiVR is available! You are currently running v{{currentVersion}}.\nThe newest version is v{{latestVersion}}.",
-      "updatesDisabled": {
-        "DEV": "As you are running a development build of OyasumiVR, updates have been disabled.\nIf you want to install a new(er) version of OyasumiVR, please download and run the installer manually.",
-        "STEAM": "You have installed the Steam version of OyasumiVR.\nNew OyasumiVR updates are therefore provided through Steam!"
-      }
-    },
-    "advanced": {
-      "persistentData": {
-        "title": "Persistent Data",
-        "description": "Manage the data that OyasumiVR stores on your disk",
-        "dataType": {
-          "all": {
-            "title": "All Data",
-            "description": "All data that OyasumiVR stores, including all your settings"
-          },
-          "appSettings": {
-            "title": "Application Settings",
-            "description": "All of OyasumiVR's general settings"
-          },
-          "automationSettings": {
-            "title": "Automation Settings",
-            "description": "All settings specific to one of OyasumiVR's automations"
-          },
-          "vrcData": {
-            "title": "VRChat Data",
-            "description": "Data specific to VRChat, such as authentication data"
-          },
-          "miscData": {
-            "title": "Other Data",
-            "description": "All other data that OyasumiVR stores, not covered by other categories"
-          },
-          "appCache": {
-            "title": "Data Cache",
-            "description": "All data that is stored temporarily, such as VRChat API responses"
-          },
-          "imageCache": {
-            "title": "Image Cache",
-            "description": "All images that are stored temporarily, such as VRChat player icons"
-          },
-          "logs": {
-            "title": "Log Files",
-            "description": "The log files that OyasumiVR creates"
-          },
-          "eventLog": {
-            "title": "Event Log",
-            "description": "The events that are logged in the overview"
-          }
-        },
-        "clearData": "Clear Data",
-        "clearModal": {
-          "title": "Confirm clearing data",
-          "message": "Are you sure you want to delete the following data? This cannot be reverted!\n\n{{items}}"
-        },
-        "relaunchModal": {
-          "title": "Restart OyasumiVR",
-          "message": "The requested data has been cleared. It is recommended to restart OyasumiVR after doing this.\n\nDo you want to do this now? Not restarting OyasumiVR could have unwanted effects.",
-          "relaunch": "Restart OyasumiVR now",
-          "later": "I'll do it later"
-        }
-      },
-      "translation": {
-        "title": "Language & Translation",
-        "loadFile": {
-          "title": "Load translation file",
-          "description": "Load a custom language file. Useful when testing new translations.",
-          "action": "Load File"
-        },
-        "contribute": {
-          "docs": "Learn How",
-          "title": "Help out by contributing translations",
-          "description": "Contribute missing translations, or help add new languages!"
-        }
-      },
-      "logs": {
-        "title": "Log Files",
-        "openFolder": {
-          "title": "Open log folder",
-          "description": "Opens the location of OyasumiVR's log files in your file explorer",
-          "action": "Open Log Folder"
-        }
-      }
-    }
-  },
-  "about": {
-    "author": {
-      "role": "Developer"
-    },
-    "translations": "Translations",
-    "projectLinks": "Project Links",
-    "sourceLink": "Source Code @ GitHub",
-    "discordInvite": "Discord Server",
-    "contributions": "Contributions"
-  },
-  "updater": {
-    "modals": {
-      "error": {
-        "title": "Update Failed",
-        "message": "The update failed to install. Please try again later."
-      }
-    }
-  },
-  "misc": {
-    "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
-    "oscScriptEditorErrors": {
-      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
-      "durationTooShort": "Sleep duration must be at least 1ms.",
-      "durationTooLong": "Sleep duration cannot exceed 5 seconds.",
-      "durationRequired": "Sleep duration is required.",
-      "totalDurationTooLong": "The total script duration cannot exceed 10 seconds.",
-      "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
-      "floatOutOfBounds": "The value must be a valid float value between -1.0 and 1.0.",
-      "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
-      "invalidSyntax": "Invalid syntax.",
-      "tooManyCommands": "An OSC script cannot have more than {{value}} actions.",
-      "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
-      "addressRequired": "An OSC address is required.",
-      "addressNotASCII": "A valid OSC address must only contain ASCII characters."
-    }
-  },
-  "notifications": {
-    "sleepCheck": {
-      "content": "Sleep mode will be enabled in 20 seconds. Are you asleep?\n\n(Shake your head to cancel)"
-    },
-    "sleepCheckCancel": {
-      "content": "Automatic enabling of sleep mode has been cancelled"
-    },
-    "sleepModeEnabled": {
-      "content": "Sleep mode has been enabled"
-    },
-    "sleepModeDisabled": {
-      "content": "Sleep mode has been disabled"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Your VRChat status has been set to '{{newStatus}}'"
-    },
-    "autoAcceptedInviteRequest": {
-      "content": "Automatically accepted invite request from {{username}}"
-    },
-    "turningOffControllers": {
-      "content": "Turning off your controllers"
-    },
-    "turningOffTrackers": {
-      "content": "Turning off your trackers"
-    },
-    "turningOffControllersAndTrackers": {
-      "content": "Turning off both your controllers and your trackers"
-    }
-  },
-  "comp": {
-    "main-status-bar": {
-      "sleepMode": "Sleep Mode",
-      "active": "Active",
-      "inactive": "Inactive",
-      "loggedOut": "Logged out",
-      "steamvr": {
-        "INACTIVE": "Inactive",
-        "INITIALIZING": "Waiting",
-        "INITIALIZED": "Active"
-      }
-    },
-    "confirm-modal": {
-      "defaultTitle": "Confirm"
-    },
-    "update-modal": {
-      "title": "Update Available",
-      "updateNow": "Install v{{version}}",
-      "updateLater": "Not now",
-      "message": "A new update for OyasumiVR has been found: v{{newVersion}}.\n\nYou are currently still running v{{currentVersion}}.\n\nDo you want to update now or later?"
-    },
-    "select-box": {
-      "defaultPlaceholder": "Select..."
-    },
-    "dashboard-navbar": {
-      "overview": "Overview",
-      "sleepDetection": "Sleep Detection",
-      "oscAutomations": "OSC Automations",
-      "gpuAutomations": "GPU Automations",
-      "powerAutomations": "Power Automations",
-      "statusAutomations": "Status Automations",
-      "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
-      "settings": "Settings",
-      "vrcAutomations": "VRChat Automations",
-      "brightnessAutomations": "Brightness Automations",
-      "about": "About OyasumiVR",
-      "resolutionAutomations": "Resolution Automations",
-      "chaperoneAutomations": "Chaperone Automations",
-      "sleepAnimations": "Sleep Animations",
-      "hardwareAutomations": "Hardware Automations",
-      "shutdownAutomations": "Shutdown Sequence"
-    },
-    "device-list": {
-      "title": "Devices",
-      "turnOffAll": "ALL",
-      "noDevices": "No devices detected",
-      "category": {
-        "Controller": "Controllers",
-        "GenericTracker": "Trackers",
-        "other": "Others",
-        "Lighthouse": "Base Stations"
-      },
-      "deviceName": {
-        "lighthouseV2": "V2 Lighthouse"
-      },
-      "lighthouseStatus": {
-        "on": "Active",
-        "unknown": "Unknown Status",
-        "sleep": "Sleeping",
-        "standby": "Standby",
-        "booting": "Booting"
-      },
-      "scanForLighthouses": "Scan"
-    },
-    "osc-script-modal": {
-      "title": "OSC Script",
-      "simple": "Simple",
-      "script": "Script"
-    },
-    "osc-script-code-editor": {
-      "title": "OSC Script Editor",
-      "syntaxGuide": "Syntax Guide",
-      "format": "Format",
-      "test": "Test"
-    },
-    "osc-script-simple-editor": {
-      "commandCounter": {
-        "singular": "{{value}} Command",
-        "plural": "{{value}} Commands"
-      },
-      "errorCounter": {
-        "singular": "{{value}} Validation Error",
-        "plural": "{{value}} Validation Errors"
-      },
-      "addCommand": "Add",
-      "test": "Test",
-      "action": {
-        "osc": "OSC",
-        "sleep": "Sleep",
-        "none": "No actions have been added yet!"
-      },
-      "commands": {
-        "COMMAND": {
-          "title": "OSC Command",
-          "description": "Execute an OSC command"
-        },
-        "SLEEP": {
-          "title": "Sleep",
-          "description": "Wait for a specified amount of time"
-        }
-      }
-    },
-    "vrchat-login-modal": {
-      "title": "Log in to VRChat",
-      "username": "VRChat Username/E-mail",
-      "password": "Password",
-      "errors": {
-        "CHECK_EMAIL": "Login failed: For details, check the mailbox of the e-mail address that is tied to your VRChat account.",
-        "INVALID_CREDENTIALS": "The credentials you have provided are incorrect.",
-        "UNEXPECTED_RESPONSE": "Login failed: an unknown error occurred. Please verify your connection or try again later."
-      }
-    },
-    "vrchat-login-tfa-modal": {
-      "title": "Two Factor Authentication",
-      "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
-      "errors": {
-        "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect.",
-        "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input."
-      }
-    },
-    "friend-selection-modal": {
-      "title": "Select Friends",
-      "searchPlaceholder": "Search friend by name...",
-      "noFriendsSelected": "No friends selected",
-      "noResultsFor": "No results for '{{query}}'",
-      "noFriends": "Your friends list is empty"
-    },
-    "event-log": {
-      "title": "Events",
-      "show-more": "Show More",
-      "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
-      "clearLog": "Clear",
-      "clearLogModal": {
-        "title": "Confirm clear",
-        "message": "Are you sure you want to clear the event log? This cannot be undone."
-      }
-    },
-    "event-log-entry": {
-      "type": {
-        "sleepModeEnabled": {
-          "title": "Sleep mode enabled",
-          "reason": {
-            "manual": "You enabled sleep mode manually",
-            "osc-control": "Sleep mode was enabled over OSC",
-            "automation": {
-              "unknown": "By an unknown automation",
-              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "As you were asleep",
-              "SLEEP_MODE_ENABLE_AT_TIME": "At scheduled time",
-              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "As a device battery level met the threshold",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "As your controllers were all powered off"
-            }
-          }
-        },
-        "sleepModeDisabled": {
-          "title": "Sleep mode disabled",
-          "reason": {
-            "manual": "You disabled sleep mode manually",
-            "osc-control": "Sleep mode was disabled over OSC",
-            "automation": {
-              "unknown": "By an unknown automation",
-              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
-              "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
-              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on"
-            }
-          }
-        },
-        "turnedOffOpenVRDevices": {
-          "title": {
-            "CONTROLLER": "Turned off a controller",
-            "CONTROLLERS": "Turned off multiple controllers",
-            "TRACKER": "Turned off a tracker",
-            "TRACKERS": "Turned off multiple trackers",
-            "ALL": "Turned off all devices",
-            "VARIOUS": "Turned off various devices"
-          },
-          "reason": {
-            "MANUAL": "Turned off manually",
-            "OSC_CONTROL": "Turned off over OSC",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "CHARGING": "As the device is recharging"
-          }
-        },
-        "lighthouseSetPowerState": {
-          "SINGLE": {
-            "on": {
-              "title": "Turned on a base station",
-              "reasons": {
-                "MANUAL": "Turned on manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            },
-            "sleep": {
-              "title": "Set a base station to sleep mode",
-              "reasons": {
-                "MANUAL": "Set manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            },
-            "standby": {
-              "title": "Set a base station to standby mode",
-              "reasons": {
-                "MANUAL": "Set manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            }
-          },
-          "ALL": {
-            "on": {
-              "title": "Turned on all base stations",
-              "reasons": {
-                "MANUAL": "Turned on manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            },
-            "sleep": {
-              "title": "Set all base stations to sleep mode",
-              "reasons": {
-                "MANUAL": "Set manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            },
-            "standby": {
-              "title": "Set all base stations to standby mode",
-              "reasons": {
-                "MANUAL": "Set manually",
-                "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped",
-                "OYASUMI_START": "As OyasumiVR started"
-              }
-            }
-          }
-        },
-        "gpuPowerLimitChanged": {
-          "title": {
-            "reset": "Power limit for '{{device}}' restored to {{limit}}",
-            "set": "Power limit for '{{device}}' set to {{limit}}"
-          },
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "imageBrightnessChanged": {
-          "title": {
-            "set": "Headset image brightness set to {{value}}",
-            "transition": "Headset image brightness transitioning to {{value}}"
-          },
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "displayBrightnessChanged": {
-          "title": {
-            "set": "Headset display brightness set to {{value}}",
-            "transition": "Headset display brightness transitioning to {{value}}"
-          },
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "acceptedInviteRequest": {
-          "title": "Auto-accepted invite request from '{{displayName}}'",
-          "subtitle": {
-            "whitelist": "As this player was whitelisted",
-            "blacklist": "As this player was not blacklisted"
-          }
-        },
-        "statusChangedOnPlayerCountChange": {
-          "title": "Changed your VRChat status from {{oldStatus}} to {{newStatus}}",
-          "reason": {
-            "BELOW_LIMIT": "As the amount of players in your world dropped below {{threshold}}",
-            "AT_LIMIT_OR_ABOVE": "As the amount of players in your world reached the limit of {{threshold}}"
-          }
-        },
-        "sleepDetectorEnableCancelled": {
-          "title": "Automatic enabling of sleep mode cancelled",
-          "subtitle": "As the user was still awake"
-        },
-        "renderResolutionChanged": {
-          "title": {
-            "auto": "SteamVR render resolution set to 'auto'",
-            "custom": "SteamVR render resolution set to {{value}}"
-          },
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "chaperoneFadeDistanceChanged": {
-          "title": "Chaperone fade distance set to {{value}}",
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "shutdownSequenceStarted": {
-          "title": "The shutdown sequence was started",
-          "reason": {
-            "MANUAL": "Triggered manually",
-            "SLEEP_TRIGGER": "As you were asleep for long enough"
-          }
-        },
-        "shutdownSequenceCancelled": {
-          "title": "The shutdown sequence was cancelled",
-          "reason": {
-            "MANUAL": "Cancelled manually"
-          }
-        },
-        "msiAfterburnerProfileSet": {
-          "title": "MSI Afterburner's profile was set to profile {{profile}}",
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        },
-        "windowsPowerPolicySet": {
-          "title": "Windows Power Policy set to the '{{policy}}' plan",
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled"
-          }
-        }
-      }
-    },
-    "dotnet-upgrade-modal": {
-      "title": "Install Missing Runtimes",
-      "description": {
-        "text1": "The following runtimes that are needed by OyasumiVR either don't match the required version, or are not installed on your system:",
-        "runtimeQueued": "Queued",
-        "text2": "To continue using OyasumiVR, the required runtimes have to be installed first.",
-        "automaticInstall": "Do you want OyasumiVR to try install these runtimes for you automatically?",
-        "noAutomaticInstall": "OyasumiVR was unable to determine the latest versions of these runtimes, and can therefore not install them automatically for you. Please either manually install these runtimes, or quit OyasumiVR and try again at a later time.",
-        "moreInfo": "You can find downloads and more information here:"
-      },
-      "quit": "Quit OyasumiVR",
-      "installAutomatically": "Install Automatically",
-      "success": {
-        "title": "Installation Successful",
-        "message": "The required missing runtimes have been installed successfully. Please quit OyasumiVR, and start it again in order to continue."
-      },
-      "failure": {
-        "title": "Installation Failed",
-        "message": "The required missing runtimes could not be installed automatically. Please try to install them manually. You can check the log files for more information on what went wrong.\n\nIf you continue to experience issues, please reach out to @Raphiiko on Twitter, or in our Discord server."
-      }
-    }
-  },
-  "resolution-automations": {
-    "title": "Resolution Automations",
-    "description": "OyasumiVR can automatically adjust the render resolution of SteamVR when sleep mode is enabled or disabled.",
-    "onSleepEnable": {
-      "title": "When I go to sleep",
-      "description": "Adjust my render resolution"
-    },
-    "onSleepDisable": {
-      "title": "When I wake up",
-      "description": "Adjust my render resolution"
-    },
-    "renderResolution": {
-      "title": "Change the render resolution to",
-      "custom": "Custom",
-      "auto": "Auto"
-    }
-  },
-  "chaperone-automations": {
-    "title": "Chaperone Automations",
-    "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
-    "onSleepEnable": {
-      "title": "When I go to sleep",
-      "description": "Adjust my chaperone's fade distance"
-    },
-    "onSleepDisable": {
-      "title": "When I wake up",
-      "description": "Adjust my chaperone's fade distance"
-    },
-    "fadeDistance": {
-      "title": "Change the chaperone's fade distance to"
-    }
+    "title": "Sleep Detection"
   },
   "sleepAnimations": {
     "title": "Sleep Animations"
   },
-  "shutdown-automations": {
-    "title": "Shutdown Sequence",
-    "description": "If enjoy falling asleep in VR, but don't want to sleep in VR for the entire night, you can use OyasumiVR's shutdown sequence. This feature automatically shuts down gracefully once you've dozed off, so that you can smoothly continue your sleep outside of VR.",
-    "triggers": {
-      "title": "Automatic Triggers",
-      "whenAsleep": {
-        "title": "Activate when I am asleep",
-        "description": "Activate the shutdown sequence when sleep mode has been activated for a certain amount of time"
+  "status-automations": {
+    "atLimitOrAbove": {
+      "description": "Set your status to",
+      "title": "At the limit or above"
+    },
+    "behaviourWarning": "Status changes by OyasumiVR are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by OyasumiVR.",
+    "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have OyasumiVR set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu.",
+    "belowLimit": {
+      "description": "Set your status to",
+      "title": "Below the limit"
+    },
+    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
+    "disableToEdit": "Please disable status automations before you make any changes.",
+    "enable": "Enable Status Automations",
+    "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
+    "moreInfo": "More info",
+    "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
+    "playerLimit": "Player Limit",
+    "playerLimitLabel": "{count, plural, one {1 player} other {# players}} (including you)",
+    "title": "Status Automations"
+  },
+  "systemMicMuteAutomations": {
+    "audioDevice": {
+      "description": "Make sure to double check this is the exact same microphone you're using in VRChat!",
+      "options": {
+        "DEFAULT": "Default Device:\n{deviceName}"
       },
-      "whenAsleepDuration": {
-        "title": "Sleep duration",
-        "description": "How long sleep mode should be active before the shutdown sequence runs"
+      "title": "Microphone audio device"
+    },
+    "config": {
+      "title": "Configuration"
+    },
+    "controllerBinding": {
+      "automations": "Controller Binding Automations",
+      "binding": {
+        "description": "Configure which controller button(s) should be used to control your microphone's mute state.",
+        "title": "Button binding"
       },
-      "whenAsleepTimeWindow": {
-        "title": "Activation Window",
-        "description": "Only allow shutdown to trigger between certain hours of day"
+      "conflictWarning": "If you're using this feature to toggle your microphone mute with VRChat, it is recommended that in VRChat's settings you either unbind your mute button or set your microphone mode to \"Always On\" to prevent any conflicting behaviour.",
+      "currentMode": {
+        "description": "Reflects the current mode of the controller button",
+        "PUSH_TO_TALK": "Push to talk",
+        "title": "Active button behaviour",
+        "TOGGLE": "Toggle"
+      },
+      "description": "Bind a controller button to control the mute state of your microphone.",
+      "enabled": {
+        "description": "Whether to enable controller binding for toggling the mute state of your microphone",
+        "title": "Controller binding"
+      },
+      "mode": {
+        "description": "How pressing the button should change your microphone state by default",
+        "options": {
+          "NONE": "Do not change",
+          "PUSH_TO_TALK": "Push to talk",
+          "TOGGLE": "Toggle"
+        },
+        "title": "Default button behaviour"
+      },
+      "onSleepModeDisable": {
+        "description": "Change the controller button behaviour to",
+        "title": "When sleep mode is disabled"
+      },
+      "onSleepModeEnable": {
+        "description": "Change the controller button behaviour to",
+        "title": "When sleep mode is enabled"
+      },
+      "onSleepPreparation": {
+        "description": "Change the controller button behaviour to",
+        "title": "When I prepare to go to sleep"
+      },
+      "title": "Controller Binding",
+      "volume": {
+        "description": "The volume of the sound effects that play when the microphone is muted or unmuted",
+        "title": "Mute sound volume"
       }
     },
-    "sequence": {
-      "title": "Shutdown Settings",
-      "quitSteamVR": {
-        "title": "Quit SteamVR",
-        "description": "This should also quit any game or overlay you have running"
-      },
-      "turnOffDevices": {
-        "title": "Turn off devices"
-      },
-      "turnOffControllers": {
-        "title": "Turn off controllers",
-        "description": "Turns off your controllers"
-      },
-      "turnOffTrackers": {
-        "title": "Turn off trackers",
-        "description": "Turns off your trackers"
-      },
-      "turnOffBaseStations": {
-        "title": "Turn off base stations",
-        "description": "Turns off any base stations that are still active"
-      },
-      "shutDownWindows": {
-        "title": "Shut down Windows",
-        "description": "Attempts to shut down your computer"
-      },
-      "run": "Run Sequence"
+    "description": "Automatically mute or unmute your microphone on the device level when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing you snore ;)",
+    "muteOptions": {
+      "MUTE": "Mute",
+      "NONE": "Do not change",
+      "UNMUTE": "Unmute"
     },
-    "confirm-modal": {
-      "title": "Are you sure?",
-      "message": "Are you sure you want to activate the shutdown sequence right now?"
-    },
-    "noOptionsSelected": "As you have no actions selected to run during the shutdown sequence, running it will have no effects. In order for this feature to do something, choose at least one of the options below.",
-    "overlay": {
-      "stage": {
-        "QUITTING_STEAMVR": "Quitting SteamVR...",
-        "TURNING_OFF_CONTROLLERS": "Turning off controllers...",
-        "TURNING_OFF_TRACKERS": "Turning off trackers...",
-        "TURNING_OFF_BASESTATIONS": "Turning off base stations...",
-        "SHUTTING_DOWN": "Shutting down Windows..."
+    "overlayIndicator": {
+      "description": "Show an indicator in VR when your microphone is muted.",
+      "enabled": {
+        "description": "Whether to show a mute indicator in VR",
+        "title": "Overlay mute indicator"
       },
-      "title": "Shutting Down",
-      "cancel": "Cancel Now"
+      "fade": {
+        "description": "Fade out the indicator after a few seconds. You can show the indicator again by pressing any controller button. This is recommended for VR headsets with OLED displays to reduce any risk for burn-in.",
+        "title": "Fade out"
+      },
+      "opacity": {
+        "description": "The indicator icon's maximum opacity",
+        "title": "Opacity"
+      },
+      "title": "Overlay Indicator"
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "description": "Change my microphone state to",
+        "title": "When sleep mode is disabled"
+      },
+      "onSleepModeEnable": {
+        "description": "Change my microphone state to",
+        "title": "When sleep mode is enabled"
+      },
+      "onSleepPreparation": {
+        "description": "Change my microphone state to",
+        "title": "When I prepare to go to sleep"
+      },
+      "title": "Mute Automations"
+    },
+    "title": "System Microphone Mute Automations"
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "message": "The update failed to install. Please try again later.",
+        "title": "Update Failed"
+      }
     }
   },
-  "overlay": {
-    "dashboard": {
-      "overview": {
-        "sleepMode": "Sleep Mode",
-        "active": "Active",
-        "inactive": "Inactive",
-        "tooltip": {
-          "automations": "Automations",
-          "deviceControl": "Device Control",
-          "shutdown": "Shutdown Sequence"
-        }
-      },
-      "shutdownSequence": {
-        "dialog": {
-          "title": "Shutdown Sequence",
-          "message": "You are about to start the shutdown sequence.\nAre you sure you want to do this now?\n\nYou can configure which actions the shutdown sequence takes in the main OyasumiVR window.",
-          "start": "Start Shutdown"
-        }
-      },
-      "deviceControl": {
-        "title": "Device Control",
-        "turnOff": {
-          "AllControllers": "Turn off all\ncontrollers",
-          "AllTrackers": "Turn off all\ntrackers",
-          "AllControllersAndTrackers": "Turn off all\ncontrollers and trackers"
-        }
-      },
-      "automations": {
-        "autoAcceptInviteRequests": {
-          "title": "Auto Accept Invite Requests",
-          "subtitle": {
-            "singular": "{{mode}}: {{playerCount}} friend",
-            "plural": "{{mode}}: {{playerCount}} friends"
-          },
-          "mode": {
-            "Disabled": "For everyone",
-            "Whitelist": "Whitelist",
-            "Blacklist": "Blacklist"
-          }
-        },
-        "changeStatusBasedOnPlayerCount": {
-          "title": "Status Automations",
-          "subtitle": {
-            "singular": "Max {{threshold}} player",
-            "plural": "Max {{threshold}} players"
-          }
-        },
-        "sleepingAnimations": {
-          "title": "Sleeping Animations"
-        },
-        "shutdownAutomations": {
-          "title": "Automatic Shutdown",
-          "subtitle": "When sleeping for {{time}}",
-          "seconds": {
-            "singular": "{{seconds}} second",
-            "plural": "{{seconds}} seconds"
-          },
-          "minutes": {
-            "singular": "{{minutes}} minute",
-            "plural": "{{minutes}} minutes"
-          }
-        },
-        "sleepModeEnableForSleepDetector": {
-          "title": "Sleep Detection",
-          "subtitle": {
-            "withoutActivationWindow": "{{sensitivity}} sensitivity",
-            "withActivationWindow": "{{sensitivity}} sensitivity, {{startTime}} - {{endTime}}"
-          }
-        },
-        "title": "Automation Settings"
+  "vrchatMicMuteAutomations": {
+    "automations": {
+      "title": "Automations"
+    },
+    "config": {
+      "title": "Configuration"
+    },
+    "control": {
+      "description": "You can use this to test if microphone muting is working properly",
+      "mute": "Mute\nmicrophone",
+      "title": "Control microphone mute",
+      "unmute": "Unmute\nmicrophone"
+    },
+    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat.",
+    "mode": {
+      "description": "Select which mic behaviour you're using within VRChat. Note that selecting a different behaviour than the one you're using in VRChat could cause these automations to misbehave.",
+      "title": "VRChat microphone behaviour"
+    },
+    "modeOptions": {
+      "PUSH_TO_MUTE": "Push to Talk",
+      "TOGGLE": "Toggle"
+    },
+    "muteOptions": {
+      "MUTE": "Mute",
+      "NONE": "None",
+      "UNMUTE": "Unmute"
+    },
+    "onSleepModeDisable": {
+      "description": "Change my microphone state to",
+      "title": "When sleep mode is disabled"
+    },
+    "onSleepModeEnable": {
+      "description": "Change my microphone state to",
+      "title": "When sleep mode is enabled"
+    },
+    "onSleepPreparation": {
+      "description": "Change my microphone state to",
+      "title": "When I prepare to go to sleep"
+    },
+    "status": {
+      "description": "Reflects your current in-game microphone state",
+      "muted": "Muted",
+      "title": "Current VRChat microphone state",
+      "unknown": "Unknown",
+      "unmuted": "Unmuted"
+    },
+    "title": "Microphone Muting"
+  },
+  "nightmare-detection": {
+    "title": "Nightmare Detection",
+    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+    "bpmThreshold": {
+      "unit": "BPM",
+      "title": "Minimum heart rate",
+      "description": "The threshold your heart rate has to reach for OyasumiVR to consider the possibility of you having a nightmare"
+    },
+    "duration": {
+      "title": "Duration",
+      "description": "How long your heart rate has to stay above the threshold before OyasumiVR will trigger its nightmare detection"
+    },
+    "automations": {
+      "title": "Automations",
+      "description": "Automations to run when OyasumiVR detects you possibly having a nightmare"
+    },
+    "disableSleepMode": {
+      "title": "Disable sleep mode",
+      "description": "Disables the sleep mode when you're possibly having a nightmare"
+    },
+    "playSound": {
+      "title": "Play a sound",
+      "description": "Have OyasumiVR wake you up with a sound when you're possibly having a nightmare",
+      "volume": {
+        "title": "Sound volume",
+        "description": "Configure the volume at which the sound effect plays",
+        "test": "Test"
       }
-    }
+    },
+    "notification": "Detecting a possible nightmare, as you've had a prolonged elevated heart rate."
   }
 }

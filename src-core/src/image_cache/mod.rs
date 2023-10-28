@@ -256,7 +256,7 @@ impl ImageCache {
                 return Ok(Response::builder()
                     .status(400)
                     .body("Missing 'url' query parameter".into())
-                    .unwrap())
+                    .unwrap());
             }
         };
         // Get ttl parameter
@@ -267,14 +267,14 @@ impl ImageCache {
                     return Ok(Response::builder()
                         .status(400)
                         .body("Invalid 'ttl' query parameter".into())
-                        .unwrap())
+                        .unwrap());
                 }
             },
             None => {
                 return Ok(Response::builder()
                     .status(400)
                     .body("Missing 'ttl' query parameter".into())
-                    .unwrap())
+                    .unwrap());
             }
         };
         // Return cached data if present
@@ -309,7 +309,7 @@ impl ImageCache {
                                 return Ok(Response::builder()
                                     .status(500)
                                     .body("Failed to get image content type (1)".into())
-                                    .unwrap())
+                                    .unwrap());
                             }
                             Some(content_type) => {
                                 let content_type_str = match content_type.to_str() {
@@ -318,7 +318,7 @@ impl ImageCache {
                                         return Ok(Response::builder()
                                             .status(500)
                                             .body("Failed to get image content type (2)".into())
-                                            .unwrap())
+                                            .unwrap());
                                     }
                                 };
                                 match Mime::from_str(content_type_str) {
@@ -327,7 +327,7 @@ impl ImageCache {
                                         return Ok(Response::builder()
                                             .status(500)
                                             .body("Failed to get image content type (3)".into())
-                                            .unwrap())
+                                            .unwrap());
                                     }
                                 }
                             }
@@ -338,7 +338,7 @@ impl ImageCache {
                         return Ok(Response::builder()
                             .status(500)
                             .body("Failed to get image data".into())
-                            .unwrap())
+                            .unwrap());
                     }
                 }
             }
@@ -346,7 +346,7 @@ impl ImageCache {
                 return Ok(Response::builder()
                     .status(500)
                     .body("Failed to get image".into())
-                    .unwrap())
+                    .unwrap());
             }
         };
         // Cache image

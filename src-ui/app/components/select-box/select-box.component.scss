@@ -1,5 +1,14 @@
 @import 'shadows';
 
+.select-box-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  &.expand-up {
+    flex-direction: column-reverse;
+  }
+}
+
 .select-box {
   display: flex;
   flex-direction: row;
@@ -86,6 +95,13 @@
 
 .dropdown-container {
   position: relative;
+
+  &.expand-up {
+    .select-box-dropdown {
+      bottom: 0;
+      top: auto;
+    }
+  }
 }
 
 .select-item {

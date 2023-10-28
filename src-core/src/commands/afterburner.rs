@@ -39,5 +39,4 @@ pub async fn msi_afterburner_set_profile(
             Some(e) => Err(SetMsiAfterburnerProfileError::from_i32(e).unwrap()),
         }
     }
-
 }

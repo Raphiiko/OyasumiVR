@@ -29,12 +29,13 @@ pub use grpc::models as Models;
 
 use cronjob::CronJob;
 use globals::TAURI_APP_HANDLE;
-use log::{info, LevelFilter};
+use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
-use tauri::{plugin::TauriPlugin, Manager, Wry};
+use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
+    tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
     // Construct Oyasumi Tauri application
     let app = tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
@@ -42,6 +43,7 @@ fn main() {
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
         .setup(|app| {
+            configure_tauri_plugin_deep_link(app.handle());
             let matches = app.get_cli_matches().unwrap();
             tauri::async_runtime::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
@@ -77,19 +79,25 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_fade_distance,
         openvr::commands::openvr_set_fade_distance,
         openvr::commands::openvr_set_image_brightness,
+        openvr::commands::openvr_launch_binding_configuration,
+        openvr::commands::openvr_get_binding_origins,
+        openvr::commands::openvr_is_dashboard_visible,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
-        os::commands::check_dotnet_install_required,
-        os::commands::get_net_core_versions,
-        os::commands::get_asp_net_core_versions,
-        os::commands::is_semver_higher,
-        os::commands::install_net_core,
-        os::commands::install_asp_net_core,
-        os::commands::install_dotnet_hosting_bundle,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
+        os::commands::windows_shutdown,
+        os::commands::windows_reboot,
+        os::commands::windows_sleep,
+        os::commands::windows_logout,
+        os::commands::windows_hibernate,
+        os::commands::get_audio_devices,
+        os::commands::set_audio_device_volume,
+        os::commands::set_audio_device_mute,
+        os::commands::set_mic_activity_device_id,
+        os::commands::set_hardware_mic_activity_enabled,
         osc::commands::osc_send_bool,
         osc::commands::osc_send_float,
         osc::commands::osc_send_int,
@@ -101,8 +109,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
-        overlay_sidecar::commands::add_notification,
-        overlay_sidecar::commands::clear_notification,
+        overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
         http::commands::get_http_server_port,
@@ -125,6 +132,15 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
     ]
+}
+
+fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
+    if let Err(e) = tauri_plugin_deep_link::register("oyasumivr", move |request| {
+        dbg!(&request);
+        app_handle.emit_all("onDeepLinkCall", request).unwrap();
+    }) {
+        warn!("[Core] Could not register schema for handling deep links. Functionality requiring deep links will not work properly. Error: {:#?}", e);
+    };
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
@@ -200,7 +216,9 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Initialize Image Cache
     image_cache::init(cache_dir).await;
     // Load sounds
-    os::load_sounds();
+    os::load_sounds().await;
+    // Initialize audio device manager
+    os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth
     lighthouse::init().await;
     // Initialize log commands

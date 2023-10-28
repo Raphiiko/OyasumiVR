@@ -5,6 +5,47 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0]
+
+### Added
+
+- Simple mode for brightness control that consolidates image- and display brightness.
+- Brightness control dialog to directly control brightness from the main window.
+- Brightness control sliders to directly control brightness from the overlay.
+- Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to sleep.
+- Sleep preparation button in the overlay and on the overview, to trigger automations that support this feature.
+- Copy buttons to the brightness automation configuration for copying current brightness levels.
+- Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
+- Automation for enabling the sleep mode based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
+- Automation for detecting possible nightmares based on your heart rate. ([Pulsoid](https://pulsoid.net) integration)
+- Setting for OyasumiVR to quit alongside SteamVR.
+- Instructions on how to start OyasumiVR alongside SteamVR.
+- Automations for turning off devices when their battery levels reach below a threshold.
+- Shortcut to VRChat related settings from the status bar pill.
+- Option for dismissing the sleep check by pressing controller buttons.
+- Option for changing the volume of general notification sounds.
+- Optional fix for running the SteamVR overlay on systems with hybrid graphics.
+
+### Changed
+
+- Updated translations to use ICU syntax.
+- Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in SteamVR!)
+- Bundled dotnet runtime requirements with overlay sidecar module. (Separate installation no longer required)
+
+### Fixed
+
+- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- Disabling OSC features leading to a crash
+- A configuration saving loop in status automations view
+- Malformed OSC packets causing a crash
+- OSC message processing being slower than necessary
+- Date formatting for Korean language
+- Long VRChat usernames sometimes overflowing on the player list for automatic invite request accepts
+- Added workaround for bug in SteamVR 2.0 regarding IVROverlay::ComputeOverlayIntersection.
+
+### Removed
+- Dotnet version checking and installation.
+
 ## [1.9.0]
 
 ### Added
@@ -22,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Added missing translations for Traditional and Simplified Chinese. (By [狐 Kon](https://github.com/XoF-eLtTiL))
+- Gamma corrected image brightness control (You might have to readjust your brightness settings)
 
 ### Fixed
 
@@ -29,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed Japanese date formatting
 - Fixed Japanese font rendering in overlay
 - Upgraded various dependencies
- 
+
 ### Removed
 
 - Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
@@ -79,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.2]
 
-### Changed
+### Fixed
 
 - Updated Japanese Translations
 - Updated references to the new GitHub repository, following the rebrand to OyasumiVR

@@ -90,7 +90,7 @@
 
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>sleep-detection.enableAutomations.onControllersPoweredOff</span>
+            <span translate>sleep-detection.enableAutomations.onControllersPoweredOff.title</span>
             <span></span>
           </div>
           <div class="setting-row-action">
@@ -99,6 +99,71 @@
                 type="checkbox"
                 [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled"
                 (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="setting-row-group"
+          *ngIf="
+            automationConfigs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled &&
+            automationConfigs.TURN_OFF_DEVICES_ON_BATTERY_LEVEL.turnOffControllers
+          "
+          @vshrink
+        >
+          <div class="setting-row">
+            <div class="setting-row-label conflict" translate>
+              <span>
+                <span><i class="material-icons">warning</i></span>
+                <span translate
+                  >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.title</span
+                >
+              </span>
+              <span translate
+                >sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <button
+                class="btn btn-secondary"
+                style="white-space: pre-line"
+                (click)="goToPowerAutomations('CONTROLLERS_AND_TRACKERS')"
+                [innerHtml]="
+                  'sleep-detection.enableAutomations.onControllersPoweredOff.batteryLevelAutomationConflict.action'
+                    | translate
+                "
+              ></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span class="row-title">
+              <span translate>sleep-detection.enableAutomations.onHeartRateCalmPeriod.title</span>
+              <span [tooltip]="'sleep-detection.experimentalAutomation'" [tooltipMode]="'right'">
+                <i class="material-icons experimental-flag">warning</i>
+              </span>
+            </span>
+            <span
+              [innerHtml]="
+                'sleep-detection.enableAutomations.onHeartRateCalmPeriod.description' | translate
+              "
+            ></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_EnableSleepModeOnHeartRateCalmPeriod()"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD')"
               />
               <span class="switch-toggle-slider"></span>
             </label>

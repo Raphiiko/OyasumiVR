@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-	import Card from '$lib/components/Card.svelte';
-	import { blur, scale } from 'svelte/transition';
-	import VisualToggle from '$lib/components/VisualToggle.svelte';
-	import ipcService from '$lib/services/ipc.service';
-	import { derived, get } from 'svelte/store';
-	import {
-		OyasumiSidecarAutomationsState,
-		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
-		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
-		OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
-		OyasumiSidecarAutomationsState_ShutdownAutomations,
-		OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector,
-		OyasumiSidecarAutomationsState_SleepingAnimations
-	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
-	import { t } from '$lib/translations';
-	import Clickable from '$lib/components/Clickable.svelte';
+  import { createEventDispatcher } from "svelte";
+  import Card from "$lib/components/Card.svelte";
+  import { blur, scale } from "svelte/transition";
+  import VisualToggle from "$lib/components/VisualToggle.svelte";
+  import ipcService from "$lib/services/ipc.service";
+  import { derived } from "svelte/store";
+  import {
+    OyasumiSidecarAutomationsState,
+    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
+    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
+    OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
+    OyasumiSidecarAutomationsState_ShutdownAutomations,
+    OyasumiSidecarAutomationsState_SleepingAnimations,
+    OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+  } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
+  import { t } from "$lib/translations";
+  import Clickable from "$lib/components/Clickable.svelte";
 
-	$: _t = $t;
+  $: _t = $t;
 	const { state } = ipcService;
 
 	let viewAutomations = derived(state, (state) =>
@@ -82,9 +82,7 @@
 				})();
 				if (isDisabled) return mode;
 				return _t(
-					`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle.${
-						a.playerCount === 1 ? 'singular' : 'plural'
-					}`,
+					`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle`,
 					{
 						mode,
 						playerCount: a.playerCount
@@ -94,9 +92,7 @@
 			case 'changeStatusBasedOnPlayerCount': {
 				let a = automation as OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount;
 				return _t(
-					`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle.${
-						a.threshold === 1 ? 'singular' : 'plural'
-					}`,
+					`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle`,
 					{ threshold: a.threshold }
 				);
 			}
@@ -110,17 +106,13 @@
 				let time = '';
 				if (seconds < 60) {
 					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.seconds.${
-							seconds === 1 ? 'singular' : 'plural'
-						}`,
+						`t.overlay.dashboard.automations.shutdownAutomations.seconds`,
 						{ seconds }
 					);
 				} else {
 					let minutes = Math.round(seconds / 60) + '';
 					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.minutes.${
-							minutes === '1' ? 'singular' : 'plural'
-						}`,
+						`t.overlay.dashboard.automations.shutdownAutomations.minutes`,
 						{ minutes }
 					);
 				}

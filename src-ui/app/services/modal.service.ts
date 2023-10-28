@@ -15,6 +15,7 @@ export interface ModalOptions {
   animationDuration: number;
   wrapperDefaultClass: string;
   wrapperClass: string;
+  id?: string;
 }
 
 const DEFAULT_MODAL_OPTIONS = {
@@ -52,6 +53,12 @@ export class ModalService {
     topModal.componentRef.instance.close();
   }
 
+  closeModal(id: string) {
+    const modalRef = this.modalStack.find((m) => m.options.id === id);
+    if (!modalRef) return;
+    modalRef.componentRef.instance.close();
+  }
+
   addModal<ModalInput extends { [k: string]: any } | void = any, ModalOutput = any>(
     modalComponent: Type<BaseModalComponent<ModalInput, ModalOutput>>,
     input?: ModalInput,
@@ -65,6 +72,8 @@ export class ModalService {
     this.appRef.attachView(componentRef.hostView);
     const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
     document.body.appendChild(domElem);
+    // Update options
+    Object.assign(options, componentRef.instance?.getOptionsOverride() ?? {});
     // Add to stack
     const modalRef = { componentRef, options };
     this.modalStack.push(modalRef);

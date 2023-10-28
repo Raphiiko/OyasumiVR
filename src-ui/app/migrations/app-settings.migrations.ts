@@ -9,6 +9,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   4: from3to4,
   5: from4to5,
   6: from5to6,
+  7: from6to7,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -38,6 +39,14 @@ export function migrateAppSettings(data: any): AppSettings {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from6to7(data: any): any {
+  data.version = 7;
+  delete data.overlayActivationAction;
+  delete data.overlayActivationController;
+  delete data.overlayActivationTriggerRequired;
   return data;
 }
 

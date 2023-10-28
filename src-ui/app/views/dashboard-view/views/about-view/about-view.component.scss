@@ -37,16 +37,41 @@
 }
 
 .row {
-  padding: 1em 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+
+  & > div {
+    flex: 1;
+  }
+
+  .left, .right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .left {
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .right {
+    align-items: flex-end;
+    text-align: right;
+  }
 }
+
 
 .logo-row {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   border-bottom: 1px solid var(--color-surface-4);
-  padding-bottom: 1em;
-  margin-bottom: 2em;
 
   .logo-side {
     width: 8em;
@@ -90,28 +115,11 @@
   }
 }
 
-.row {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-
-  & > div {
-    flex: 1;
-  }
-}
-
-.col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .author {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 4em;
   flex: 1;
 
   &-avatar {
@@ -179,6 +187,9 @@
   &-title {
     font-size: 1.5em;
     padding-bottom: 0.25em;
+    &:not(:first-child) {
+      margin-top: 1em;
+    }
   }
 
   .translation-author-list,

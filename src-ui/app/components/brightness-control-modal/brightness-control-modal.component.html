@@ -1,0 +1,74 @@
+<div class="b-modal-container" @fadeUp (clickOutside)="close()">
+  <div class="sliders-container">
+    <div
+      class="brightness-slider"
+      *ngIf="advancedMode"
+      @vshrink
+      [class.disabled]="!driverAvailable"
+    >
+      <app-brightness-control-slider
+        [value]="(displayBrightnessControl.brightnessStream | async) ?? 0"
+        [min]="displayBrightnessBounds[0]"
+        [max]="displayBrightnessBounds[1]"
+        (valueChange)="displayBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(displayBrightnessControl.activeTransition | async)"
+        [transitionActive]="!!(displayBrightnessControl.activeTransition | async)"
+      ></app-brightness-control-slider>
+      <div class="brightness-slider-title">
+        <span translate>comp.brightness-control-modal.displayBrightness</span>
+      </div>
+    </div>
+
+    <div class="brightness-slider" *ngIf="advancedMode" @vshrink>
+      <app-brightness-control-slider
+        [value]="(imageBrightnessControl.brightnessStream | async) ?? 0"
+        [min]="5"
+        [max]="100"
+        (valueChange)="imageBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(imageBrightnessControl.activeTransition | async)"
+        [transitionActive]="!!(imageBrightnessControl.activeTransition | async)"
+      ></app-brightness-control-slider>
+      <div class="brightness-slider-title">
+        <span translate>comp.brightness-control-modal.imageBrightness</span>
+      </div>
+    </div>
+
+    <div class="brightness-slider" *ngIf="!advancedMode" @vshrink>
+      <app-brightness-control-slider
+        [value]="(simpleBrightnessControl.brightnessStream | async) ?? 0"
+        [min]="5"
+        [max]="100"
+        (valueChange)="simpleBrightnessControl.setBrightness($event)"
+        [class.transition-active]="!!(simpleBrightnessControl.activeTransition | async)"
+        [transitionActive]="!!(simpleBrightnessControl.activeTransition | async)"
+      ></app-brightness-control-slider>
+      <div class="brightness-slider-title">
+        <span translate>comp.brightness-control-modal.brightness</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="footer-row"
+    *ngIf="
+      !router.isActive('/dashboard/brightnessAutomations', {
+        paths: 'subset',
+        queryParams: 'subset',
+        fragment: 'ignored',
+        matrixParams: 'ignored'
+      })
+    "
+    @vshrink
+  >
+    <a
+      class="shortcut-automations"
+      [routerLink]="['/dashboard/brightnessAutomations']"
+      [routerLinkActive]="'active'"
+      [tooltip]="'comp.brightness-control-modal.automationsTooltip'"
+      [tooltipMode]="'left'"
+      (click)="close()"
+    >
+      <i class="material-icons">settings</i>
+    </a>
+  </div>
+</div>

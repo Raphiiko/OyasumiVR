@@ -1,3 +1,5 @@
+@import 'effects';
+
 $decoration-top: 1em;
 $background-color: var(--color-surface-2);
 
@@ -124,12 +126,21 @@ $background-color: var(--color-surface-2);
   height: 2em;
   white-space: nowrap;
   transition: all 0.15s ease;
+  position: relative;
+
+  & > * {
+    transition: all 0.15s ease;
+  }
 
   &.clickable {
     cursor: pointer;
 
     &:active {
-      opacity: 0.6;
+      background: color-mix(in srgb, var(--color-surface-0) 60%, transparent);
+
+      & > * {
+        opacity: 0.6;
+      }
     }
   }
 
@@ -146,13 +157,21 @@ $background-color: var(--color-surface-2);
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-right: 0.25em;
     overflow: hidden;
+
+    &:not(.nomargin) {
+      margin-right: 0.25em;
+    }
 
     i {
       font-size: 1.25em;
       transition: all 0.15s ease;
       opacity: 0.5;
+
+      &.mic-muted {
+        color: var(--color-alert-error);
+        opacity: 1;
+      }
     }
 
     img {
@@ -173,12 +192,58 @@ $background-color: var(--color-surface-2);
       }
     }
   }
+
+  &:after {
+    transition: all 0.15s;
+  }
+
+  &.breathing {
+    &:after {
+      border-radius: 0.25em;
+      width: calc(100% - 2px);
+      height: calc(100% - 2px);
+      top: 0;
+      left: 0;
+      position: absolute;
+      content: '';
+      border: 1px solid color-mix(in srgb, var(--color-primary) 100%, transparent);
+      animation: pill-breathe 3s ease-out infinite normal;
+      box-shadow: inset 0 0 5px 0 color-mix(in srgb, var(--color-primary) 70%, transparent);
+    }
+  }
 }
 
 .sleep-mode,
 .vrc-status,
-.steamvr-status {
+.steamvr-status,
+.brightness-simple,
+.heartrate {
   span:not(:last-child) {
+    opacity: 0.5;
+  }
+}
+
+.brightness-simple,
+.brightness-advanced {
+  &.active {
+    border-color: var(--color-primary);
+  }
+}
+
+.brightness-advanced {
+  span:first-of-type {
+    margin-left: 0.25em;
+  }
+
+  span:not(:first-of-type):not(:last-of-type) {
+    opacity: 0.5;
+  }
+
+  span:last-of-type {
+    margin-right: 0.25em;
+  }
+
+  span.inactive {
     opacity: 0.5;
   }
 }
@@ -196,5 +261,67 @@ $background-color: var(--color-surface-2);
 
   &.active {
     border-color: var(--color-primary);
+  }
+}
+
+@keyframes pill-breathe {
+  0% {
+    opacity: 0.4;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 0.4;
+  }
+
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.heartrate {
+  .heart-icon {
+    width: 16px;
+    height: 16px;
+    will-change: transform;
+    color: rgb(249, 24, 128);
+    opacity: 1;
+    animation: heartbeat infinite cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+}
+
+@keyframes heartbeat {
+  $lowest: 0.8;
+  $highest: 1.1;
+  0%,
+  100% {
+    transform: scale3d($lowest, $lowest, $lowest);
+  }
+  05% {
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
+    );
+  }
+  10% {
+    transform: scale3d($highest, $highest, $highest);
+  }
+  50% {
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66
+    );
+  }
+  70% {
+    transform: scale3d(
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
+    );
   }
 }

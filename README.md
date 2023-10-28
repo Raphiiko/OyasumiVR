@@ -11,12 +11,12 @@
 
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
-    <a><img alt="Production Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-release.yml/badge.svg"/></a>
     <a><img alt="Development Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-BOOTH.PM-red"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam Page" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
@@ -24,7 +24,7 @@
     <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_TW.md">中文的說明手冊在這裡</a>。
     <br>
     <br>
-    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
+    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
 ## Download & Install
@@ -33,10 +33,10 @@
 
 Grab our latest installer from whichever place you prefer:
 
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_The **recommended method**_)
 - Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
 - Our page on [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
 - Our page on [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
-- (Coming Soon!) [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 
 Just run the installer and you should be good to go!
 
@@ -264,7 +264,7 @@ OyasumiVR currently supports the following languages:
 - Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
 - Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 - Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
-- Simplified Chinese\* (简体中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+- Simplified Chinese\* (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL) and [雾雨花精灵](https://twitter.com/u_flower_elf))
 - French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español)\* (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia)\* (Community contribution by [a9ito](https://twitter.com/a9ito))

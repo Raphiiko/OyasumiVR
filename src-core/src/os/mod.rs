@@ -1,29 +1,64 @@
+mod audio_devices;
 pub mod commands;
-pub mod dotnet;
 mod models;
 
 use log::error;
 use soloud::*;
-use std::{collections::HashMap, sync::Mutex};
+use std::collections::HashMap;
+use tokio::sync::Mutex;
 use winapi::shared::guiddef::GUID;
 use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
 use winapi::DEFINE_GUID;
 
+use self::audio_devices::manager::AudioDeviceManager;
+
 lazy_static! {
-    static ref SOUNDS: Mutex<HashMap<String, Vec<u8>>> = Mutex::new(HashMap::new());
-    static ref SOLOUD: Mutex<Soloud> = Mutex::new(Soloud::default().unwrap());
+    static ref SOUNDS: std::sync::Mutex<HashMap<String, Vec<u8>>> =
+        std::sync::Mutex::new(HashMap::new());
+    static ref SOLOUD: std::sync::Mutex<Soloud> = std::sync::Mutex::new(Soloud::default().unwrap());
+    static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
 }
 
-pub fn load_sounds() {
+pub async fn init_audio_device_manager() {
+    let mut manager = AUDIO_DEVICE_MANAGER.lock().await;
+    if manager.is_some() {
+        return;
+    }
+    let m = match AudioDeviceManager::create().await {
+        Ok(m) => m,
+        Err(e) => {
+            error!("[Core] Failed to create audio device manager: {}", e);
+            return;
+        }
+    };
+    *manager = Some(m);
+    if let Err(e) = manager.as_ref().unwrap().refresh_audio_devices().await {
+        error!("[Core] Failed to refresh audio devices: {}", e);
+    }
+}
+
+pub async fn load_sounds() {
     let mut sounds = SOUNDS.lock().unwrap();
-    sounds.insert(
-        String::from("notification_bell"),
-        std::fs::read("resources/sounds/notification_bell.ogg").unwrap(),
-    );
-    sounds.insert(
-        String::from("notification_block"),
-        std::fs::read("resources/sounds/notification_block.ogg").unwrap(),
-    );
+    vec![
+        "notification_bell",
+        "notification_block",
+        "notification_reverie",
+        "mic_mute",
+        "mic_unmute",
+    ]
+    .iter()
+    .for_each(|sound| {
+        sounds.insert(
+            String::from(*sound),
+            std::fs::read(format!("resources/sounds/{}.ogg", sound)).expect(
+                format!(
+                    "Could not find sound file at path: {}",
+                    format!("resources/sounds/{}.ogg", sound).as_str()
+                )
+                .as_str(),
+            ),
+        );
+    });
 }
 
 DEFINE_GUID! {GUID_POWER_POLICY_POWER_SAVING,

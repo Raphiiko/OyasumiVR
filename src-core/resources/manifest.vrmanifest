@@ -1,15 +1,18 @@
 {
-	"source" : "builtin",
-	"applications": [{
-		"app_key": "steam.overlay.2538150",
-		"launch_type": "binary",
-		"binary_path_windows": "..\\OyasumiVR.exe",
-		"is_dashboard_overlay": true,
-		"strings": {
-			"en_us": {
-				"name": "OyasumiVR",
-				"description": "OyasumiVR - VR Sleeping Utilities"
-			}
-		}
-	}]
+  "source": "builtin",
+  "applications": [
+    {
+      "app_key": "steam.overlay.2538150-DEV",
+      "launch_type": "binary",
+      "binary_path_windows": "..\\OyasumiVR.exe",
+      "action_manifest_path": ".\\input\\action_manifest.json",
+      "is_dashboard_overlay": true,
+      "strings": {
+        "en_us": {
+          "name": "OyasumiVR",
+          "description": "OyasumiVR - VR Sleeping Utilities"
+        }
+      }
+    }
+  ]
 }

@@ -16,6 +16,11 @@ import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
+import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
+import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
+import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
+import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
+import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 
 const routes: Routes = [
   {
@@ -48,8 +53,16 @@ const routes: Routes = [
         component: GpuAutomationsViewComponent,
       },
       {
+        path: 'systemMicMuteAutomations',
+        component: SystemMicMuteAutomationsViewComponent,
+      },
+      {
         path: 'statusAutomations',
         component: StatusAutomationsViewComponent,
+      },
+      {
+        path: 'vrchatMicMuteAutomations',
+        component: VRChatMicMuteAutomationsViewComponent,
       },
       {
         path: 'brightnessAutomations',
@@ -72,6 +85,10 @@ const routes: Routes = [
         component: ShutdownAutomationsViewComponent,
       },
       {
+        path: 'nightmareDetection',
+        component: NightmareDetectionViewComponent,
+      },
+      {
         path: 'settings',
         component: SettingsViewComponent,
       },
@@ -82,6 +99,17 @@ const routes: Routes = [
       {
         path: '**',
         redirectTo: 'overview',
+      },
+    ],
+  },
+  {
+    path: 'translation',
+    children: [
+      { path: 'loader', component: TranslationLoaderViewComponent },
+      { path: 'editor', component: TranslationEditorViewComponent },
+      {
+        path: '**',
+        redirectTo: 'loader',
       },
     ],
   },

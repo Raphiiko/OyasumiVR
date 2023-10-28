@@ -18,41 +18,6 @@
     </label>
   </div>
 </div>
-<div class="setting-category">
-  <h2 translate>settings.general.lighthouseConsole.title</h2>
-  <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
-  <div class="settings-lighthouse-console">
-    <div class="file-path-bar">
-      <div class="file-path-bar-path">
-        <input
-          type="text"
-          [value]="appSettings.lighthouseConsolePath"
-          (keyup)="lighthouseConsolePathInputChange.next(lighthouseConsolePathInput.value)"
-          #lighthouseConsolePathInput
-        />
-      </div>
-      <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
-        <i class="material-icons">folder</i>
-      </button>
-    </div>
-    <div
-      class="alert"
-      [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
-      [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
-      *ngIf="lighthouseConsolePathAlert"
-      [@vshrink]
-    >
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
-          check_circle_outline
-        </i>
-        <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
-      </div>
-      <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
-    </div>
-  </div>
-</div>
 
 <div class="setting-category">
   <h2 translate>settings.general.sleepMode.title</h2>
@@ -117,52 +82,29 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label" translate>
-        <span translate>settings.general.overlay.activation.title</span>
-        <span translate>settings.general.overlay.activation.description</span>
+        <span translate>settings.general.overlay.overlayMenu.title</span>
+        <span translate>settings.general.overlay.overlayMenu.description</span>
       </div>
       <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          class="overlay-activation-action-dropdown"
-          [items]="overlayActivationActionOptions"
-          [selected]="overlayActivationActionOption"
-          (selectedChange)="onChangeOverlayActivationAction($event)"
-        ></app-select-box>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.overlayMenuEnabled"
+            (change)="setOverlayMenuEnabled(!appSettings.overlayMenuEnabled)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
       </div>
     </div>
-    <div class="setting-row-group">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.overlay.activation.controller.title</span>
-          <span translate>settings.general.overlay.activation.controller.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            type="SMALL"
-            class="overlay-activation-controller-dropdown"
-            [items]="overlayActivationControllerOptions"
-            [selected]="overlayActivationControllerOption"
-            (selectedChange)="onChangeOverlayActivationController($event)"
-          ></app-select-box>
-        </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.overlay.binding.title</span>
+        <span translate>settings.general.overlay.binding.description</span>
       </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>settings.general.overlay.activation.triggerFilter.title</span>
-          <span translate>settings.general.overlay.activation.triggerFilter.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="appSettings.overlayActivationTriggerRequired"
-              (change)="
-                setOverlayActivationTriggerRequired(!appSettings.overlayActivationTriggerRequired)
-              "
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
+      <div class="setting-row-action">
+        <app-controller-binding
+          [actionKey]="OVRInputEventAction.OpenOverlay"
+        ></app-controller-binding>
       </div>
     </div>
   </div>
@@ -200,6 +142,95 @@
           (selectedChange)="onChangeLighthousePowerOffMode($event)"
         ></app-select-box>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2 translate>settings.general.startStop.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.startWithSteamVR.label</span>
+        <span translate>settings.general.startWithSteamVR.description</span>
+      </div>
+      <div class="setting-row-action">
+        <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
+          >settings.general.startWithSteamVR.howTo
+        </button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.stopWithSteamVR.label</span>
+        <span translate>settings.general.stopWithSteamVR.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-select-box
+          type="SMALL"
+          class="stop-with-steamvr-dropdown"
+          [items]="stopWithSteamVROptions"
+          [selected]="stopWithSteamVROption"
+          (selectedChange)="onChangeStopWithSteamVROption($event)"
+        ></app-select-box>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2 translate>settings.general.miscellaneous.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.miscellaneous.overlayGpuFix.title</span>
+        <span translate>settings.general.miscellaneous.overlayGpuFix.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.overlayGpuFix"
+            (change)="setOverlayGpuFix(!appSettings.overlayGpuFix)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.general.lighthouseConsole.title</h2>
+  <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
+  <div class="settings-lighthouse-console">
+    <div class="file-path-bar">
+      <div class="file-path-bar-path">
+        <input
+          type="text"
+          [value]="appSettings.lighthouseConsolePath"
+          (keyup)="lighthouseConsolePathInputChange.next(lighthouseConsolePathInput.value)"
+          #lighthouseConsolePathInput
+        />
+      </div>
+      <button class="file-path-bar-btn-browse" (click)="browseForLighthouseConsole()">
+        <i class="material-icons">folder</i>
+      </button>
+    </div>
+    <div
+      class="alert"
+      [class.success]="lighthouseConsolePathAlert.type === 'SUCCESS'"
+      [class.error]="lighthouseConsolePathAlert.type === 'ERROR'"
+      *ngIf="lighthouseConsolePathAlert"
+      [@vshrink]
+    >
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons" *ngIf="!lighthouseConsolePathAlert.loadingIndicator">
+          check_circle_outline
+        </i>
+        <div class="small-spinner" *ngIf="lighthouseConsolePathAlert.loadingIndicator"></div>
+      </div>
+      <div class="alert-content" [innerHTML]="lighthouseConsolePathAlert.text | translate"></div>
     </div>
   </div>
 </div>

@@ -26,6 +26,13 @@ interface XSOMessage {
   sourceApp: string;
 }
 
+export type NotificationSound =
+  | 'notification_bell'
+  | 'notification_block'
+  | 'notification_reverie'
+  | 'mic_mute'
+  | 'mic_unmute';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -40,10 +47,17 @@ export class NotificationService {
     });
   }
 
-  public async play_sound(sound: 'bell' | 'block') {
-    await invoke('play_sound', {
-      name: 'notification_' + sound,
-    });
+  public async playSound(sound: NotificationSound, volume: number | null = null) {
+    if (volume === null) {
+      const settings = await firstValueFrom(this.appSettingsService.settings);
+      volume = settings.generalNotificationVolume / 100.0;
+    }
+    if (volume > 0) {
+      await invoke('play_sound', {
+        name: sound,
+        volume,
+      });
+    }
   }
 
   public async send(content: string, duration = 3000): Promise<string | null> {
@@ -109,7 +123,11 @@ export class NotificationService {
   }
 
   private async clearOyasumiNotification(notificationId: string) {
-    await invoke('clear_notification', { notificationId });
+    const client = await firstValueFrom(this.ipcService.overlaySidecarClient);
+    if (!client) return;
+    await client.clearNotification({
+      notificationId,
+    });
   }
 
   private async sendOyasumiNotification(content: string, duration: number): Promise<string | null> {

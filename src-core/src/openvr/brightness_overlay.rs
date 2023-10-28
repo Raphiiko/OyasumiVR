@@ -6,7 +6,7 @@ use tokio::sync::Mutex;
 lazy_static! {
     static ref OVERLAY_HANDLE: Mutex<Option<ovr_overlay::overlay::OverlayHandle>> =
         Default::default();
-    static ref BRIGHTNESS: Mutex<f32> = Mutex::new(1.0);
+    static ref BRIGHTNESS: Mutex<f64> = Mutex::new(1.0);
 }
 
 pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
@@ -26,9 +26,14 @@ pub async fn on_ovr_quit() {
     *OVERLAY_HANDLE.lock().await = None;
 }
 
-pub async fn set_brightness(brightness: f32) {
+pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gamma: Option<f64>) {
     // Clamp brightness between 0.0 and 1.0
-    let brightness = brightness.max(0.0).min(1.0);
+    let mut brightness = brightness.max(0.0).min(1.0);
+    // Adjust the brightness value for perceived brightness
+    if let Some(gamma) = perceived_brightness_adjustment_gamma {
+        brightness = adjust_for_perceived_brightness(brightness, gamma);
+    }
+    // Convert to alpha value
     let alpha = 1.0 - brightness;
     // Store the brightness
     *BRIGHTNESS.lock().await = brightness;
@@ -47,7 +52,7 @@ pub async fn set_brightness(brightness: f32) {
         None => return,
     };
     // Set the brightness
-    if let Err(e) = manager.set_opacity(*overlay_handle, alpha) {
+    if let Err(e) = manager.set_opacity(*overlay_handle, alpha as f32) {
         error!("[Core] Failed to set overlay opacity: {}", e);
     };
 }
@@ -58,7 +63,10 @@ async fn create_overlay(
     // Get the manager
     let mut manager = context.overlay_mngr();
     // Create the overlay
-    let result = manager.create_overlay("co.raphii.oyasumi:BrightnessOverlay", "OyasumiVR Brightness Overlay");
+    let result = manager.create_overlay(
+        "co.raphii.oyasumi:BrightnessOverlay",
+        "OyasumiVR Brightness Overlay",
+    );
     let overlay: ovr_overlay::overlay::OverlayHandle = match result {
         Ok(handle) => handle,
         Err(_) => return Err(()),
@@ -94,7 +102,7 @@ async fn create_overlay(
     }
     let brightness = BRIGHTNESS.lock().await;
     let alpha = 1.0 - *brightness;
-    if let Err(e) = manager.set_opacity(overlay, alpha) {
+    if let Err(e) = manager.set_opacity(overlay, alpha as f32) {
         error!("[Core] Failed to set overlay opacity: {}", e);
         return Err(());
     }
@@ -105,4 +113,8 @@ async fn create_overlay(
     }
     // Return overlay
     Ok(overlay)
+}
+
+fn adjust_for_perceived_brightness(linear_percent: f64, gamma: f64) -> f64 {
+    linear_percent.powf(1.0 / gamma)
 }

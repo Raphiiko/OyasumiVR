@@ -11,12 +11,15 @@ import {
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
+  PowerDownWindowsMode,
   ShutdownAutomationsConfig,
 } from 'src-ui/app/models/automations';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { AutomationConfigService } from 'src-ui/app/services/automation-config.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { fade, vshrink } from 'src-ui/app/utils/animations';
+import { Router } from '@angular/router';
+import { QuitWithSteamVRMode } from '../../../../models/settings';
 
 @Component({
   selector: 'app-shutdown-automations-view',
@@ -28,6 +31,12 @@ export class ShutdownAutomationsViewComponent implements OnInit {
   protected config: ShutdownAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
+
+  protected duration = 0;
+  protected activationWindowStart = '00:00';
+  protected activationWindowEnd = '00:00';
+  protected lighthouseControlDisabled = false;
+  protected quitWithSteamVRMode: QuitWithSteamVRMode = 'DISABLED';
   protected durationUnitOptions: SelectBoxItem[] = [
     {
       id: 'SECONDS',
@@ -39,23 +48,46 @@ export class ShutdownAutomationsViewComponent implements OnInit {
     },
   ];
   protected onSleepTriggerDurationUnit?: SelectBoxItem = this.durationUnitOptions[0];
-  protected duration = 0;
-  protected activationWindowStart = '00:00';
-  protected activationWindowEnd = '00:00';
-  protected lighthouseControlDisabled = false;
+  protected powerDownOptions: SelectBoxItem[] = [
+    {
+      id: 'SHUTDOWN',
+      label: 'shutdown-automations.sequence.powerDownWindows.options.SHUTDOWN',
+    },
+    {
+      id: 'SLEEP',
+      label: 'shutdown-automations.sequence.powerDownWindows.options.SLEEP',
+    },
+    {
+      id: 'HIBERNATE',
+      label: 'shutdown-automations.sequence.powerDownWindows.options.HIBERNATE',
+    },
+    {
+      id: 'REBOOT',
+      label: 'shutdown-automations.sequence.powerDownWindows.options.REBOOT',
+    },
+    {
+      id: 'LOGOUT',
+      label: 'shutdown-automations.sequence.powerDownWindows.options.LOGOUT',
+    },
+  ];
+  powerDownOption: SelectBoxItem | undefined;
 
   constructor(
     private destroyRef: DestroyRef,
     private automationConfigs: AutomationConfigService,
     private settingsService: AppSettingsService,
     private modalService: ModalService,
-    private shutdownAutomations: ShutdownAutomationsService
+    private shutdownAutomations: ShutdownAutomationsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.settingsService.settings
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((settings) => (this.lighthouseControlDisabled = !settings.lighthousePowerControl));
+      .subscribe((settings) => {
+        this.lighthouseControlDisabled = !settings.lighthousePowerControl;
+        this.quitWithSteamVRMode = settings.quitWithSteamVR;
+      });
     this.automationConfigs.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
@@ -76,6 +108,9 @@ export class ShutdownAutomationsViewComponent implements OnInit {
         this.activationWindowEnd = this.config.activationWindowEnd
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
+        this.powerDownOption = this.powerDownOptions.find(
+          (o) => o.id === configs.SHUTDOWN_AUTOMATIONS.powerDownWindowsMode
+        );
       });
   }
 
@@ -95,7 +130,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
       !this.config.turnOffControllers &&
       !this.config.turnOffTrackers &&
       (!this.config.turnOffBaseStations || this.lighthouseControlDisabled) &&
-      !this.config.shutdownWindows
+      !this.config.powerDownWindows
     );
   }
 
@@ -111,6 +146,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
       }
     );
   }
+
   async onChangeActivationWindowEnd(value: string) {
     const parsedValue = value
       .split(':')
@@ -201,12 +237,26 @@ export class ShutdownAutomationsViewComponent implements OnInit {
     );
   }
 
-  async toggleShutdownWindows() {
+  async togglePowerDownWindows() {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
-        shutdownWindows: !this.config.shutdownWindows,
+        powerDownWindows: !this.config.powerDownWindows,
       }
     );
+  }
+
+  onChangePowerDownOption(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      {
+        powerDownWindowsMode: option!.id as PowerDownWindowsMode,
+      }
+    );
+  }
+
+  goToGeneralSettings() {
+    this.router.navigate(['dashboard', 'settings'], { fragment: 'GENERAL' });
   }
 }

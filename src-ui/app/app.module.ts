@@ -9,7 +9,7 @@ import { SettingsViewComponent } from './views/dashboard-view/views/settings-vie
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
@@ -34,7 +34,7 @@ import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/s
 import { OscService } from './services/osc.service';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { SelectBoxComponent } from './components/select-box/select-box.component';
-import { TStringTranslatePipePipe } from './pipes/tstring-translate.pipe';
+import { TStringTranslatePipe } from './pipes/tstring-translate.pipe';
 import { OscScriptButtonComponent } from './components/osc-script-button/osc-script-button.component';
 import { OscScriptModalComponent } from './components/osc-script-modal/osc-script-modal.component';
 import { OscScriptCodeEditorComponent } from './components/osc-script-code-editor/osc-script-code-editor.component';
@@ -80,11 +80,10 @@ import { SleepModeForSleepDetectorAutomationService } from './services/sleep-det
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
-import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness/display-brightness-control.service';
+import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
-import { DisplayBrightnessControlAutomationService } from './services/brightness-control/display-brightness/display-brightness-control-automation.service';
 import { EventLogService } from './services/event-log.service';
 import { debug } from 'tauri-plugin-log-api';
 import { EventLogComponent } from './components/event-log/event-log.component';
@@ -123,23 +122,55 @@ import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/pow
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
-import { DisplayBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/display-brightness-automations-tab/display-brightness-automations-tab.component';
-import { ImageBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/image-brightness-automations-tab/image-brightness-automations-tab.component';
-import { ImageBrightnessControlService } from './services/brightness-control/image-brightness/image-brightness-control.service';
-import { ImageBrightnessControlAutomationService } from './services/brightness-control/image-brightness/image-brightness-control-automation.service';
+import { ImageBrightnessControlService } from './services/brightness-control/image-brightness-control.service';
+import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
-import { DeveloperDebugService } from './services/developer-debug.service';
+import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
-import { IPCStateSyncService } from './services/ipc-state-sync.service';
+import { OverlayStateSyncService } from './services/overlay/overlay-state-sync.service';
 import { IPCService } from './services/ipc.service';
 import { AutomationConfigService } from './services/automation-config.service';
 import { FontLoaderService } from './services/font-loader.service';
-import { DotnetService } from './services/dotnet.service';
-import { DotnetUpgradeModalComponent } from './components/dotnet-upgrade-modal/dotnet-upgrade-modal.component';
 import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
+import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
+import { TooltipDirective } from './directives/tooltip.directive';
+import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
+import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
+import { DebugBrightnessTestingComponent } from './components/developer-debug-modal/debug-brightness-testing/debug-brightness-testing.component';
+import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
+import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
+import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
+import { ClickOutsideDirective } from './directives/click-outside.directive';
+import { DeepLinkService } from './services/deep-link.service';
+import { SleepPreparationService } from './services/sleep-preparation.service';
+import { PulsoidService } from './services/integrations/pulsoid.service';
+import { SettingsIntegrationsTabComponent } from './views/dashboard-view/views/settings-view/settings-integrations-tab/settings-integrations-tab.component';
+import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
+import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
+import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
+import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
+import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/confirm-modal/start-with-steamvr-how-to-modal.component';
+import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
+import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
+import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
+import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
+import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
+import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
+import { AudioDeviceService } from './services/audio-device.service';
+import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
+import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
+import { OpenVRInputService } from './services/openvr-input.service';
+import { OverlayService } from './services/overlay/overlay.service';
+import { ControllerBindingComponent } from './components/controller-binding/controller-binding.component';
+import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
+import { FormsModule } from '@angular/forms';
+import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
+import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
+import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
+import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -160,6 +191,7 @@ export function createTranslateLoader(http: HttpClient) {
     DeviceListComponent,
     DeviceListItemComponent,
     VarDirective,
+    TooltipDirective,
     ImageFallbackDirective,
     AboutViewComponent,
     OverviewViewComponent,
@@ -176,7 +208,7 @@ export function createTranslateLoader(http: HttpClient) {
     SleepingPoseViewerComponent,
     OscAutomationsViewComponent,
     SelectBoxComponent,
-    TStringTranslatePipePipe,
+    TStringTranslatePipe,
     LocalizedDatePipe,
     ImageCachePipe,
     OscScriptButtonComponent,
@@ -202,8 +234,7 @@ export function createTranslateLoader(http: HttpClient) {
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
     BrightnessAutomationsViewComponent,
-    DisplayBrightnessAutomationsTabComponent,
-    ImageBrightnessAutomationsTabComponent,
+    BrightnessAutomationsTabComponent,
     SliderSettingComponent,
     SliderComponent,
     EventLogComponent,
@@ -218,8 +249,26 @@ export function createTranslateLoader(http: HttpClient) {
     ShutdownAutomationsViewComponent,
     ShutdownSequenceOverlayComponent,
     DeveloperDebugModalComponent,
-    DotnetUpgradeModalComponent,
     WindowsPowerPolicyTabComponent,
+    DebugSleepDetectionDebuggerComponent,
+    DebugBrightnessTestingComponent,
+    BrightnessControlModalComponent,
+    BrightnessControlSliderComponent,
+    ClickOutsideDirective,
+    SettingsIntegrationsTabComponent,
+    ObfuscatedValueDirective,
+    HeartRateCalmPeriodEnableSleepModeModalComponent,
+    HeartRateChartComponent,
+    StartWithSteamVRHowToModalComponent,
+    MiscTestingComponent,
+    VRChatMicMuteAutomationsViewComponent,
+    DebugAudioDeviceDebuggerComponent,
+    SystemMicMuteAutomationsViewComponent,
+    ControllerBindingComponent,
+    TranslationLoaderViewComponent,
+    TranslationEditorViewComponent,
+    TextareaAutoResizeDirective,
+    NightmareDetectionViewComponent,
   ],
   imports: [
     CommonModule,
@@ -235,10 +284,16 @@ export function createTranslateLoader(http: HttpClient) {
         useFactory: createTranslateLoader,
         deps: [HttpClient],
       },
+      compiler: {
+        provide: TranslateCompiler,
+        useClass: TranslateMessageFormatCompiler,
+      },
     }),
     NgPipesModule,
+    FormsModule,
   ],
-  providers: [ThemeService],
+  providers: [ThemeService, TStringTranslatePipe],
+  exports: [SelectBoxComponent],
 })
 export class AppModule {
   constructor(
@@ -258,17 +313,24 @@ export class AppModule {
     private imageCacheService: ImageCacheService,
     private displayBrightnessControlService: DisplayBrightnessControlService,
     private imageBrightnessControlService: ImageBrightnessControlService,
+    private simpleBrightnessControlService: SimpleBrightnessControlService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
     private lighthouseService: LighthouseService,
     private developerDebugService: DeveloperDebugService,
     private ipcService: IPCService,
-    private ipcAppStateSyncService: IPCStateSyncService,
+    private overlayAppStateSyncService: OverlayStateSyncService,
     private automationConfigService: AutomationConfigService,
     private fontLoaderService: FontLoaderService,
-    private dotnetService: DotnetService,
     private notificationService: NotificationService,
     private steamService: SteamService,
+    private deepLinkService: DeepLinkService,
+    private sleepPreparationService: SleepPreparationService,
+    private pulsoidService: PulsoidService,
+    private quitWithSteamVRService: QuitWithSteamVRService,
+    private audioDeviceService: AudioDeviceService,
+    private openvrInputService: OpenVRInputService,
+    private overlayService: OverlayService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -276,18 +338,21 @@ export class AppModule {
     private sleepModeEnableOnControllersPoweredOffAutomation: SleepModeEnableOnControllersPoweredOffAutomationService,
     private sleepModeEnableAtBatteryPercentageAutomation: SleepModeEnableAtBatteryPercentageAutomationService,
     private sleepModeEnableAtTimeAutomationService: SleepModeEnableAtTimeAutomationService,
+    private sleepModeEnableOnHeartRateCalmPeriodAutomationService: SleepModeEnableOnHeartRateCalmPeriodAutomationService,
     private sleepModeChangeOnSteamVRStatusAutomationService: SleepModeChangeOnSteamVRStatusAutomationService,
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
+    private turnOffDevicesOnBatteryLevelAutomationService: TurnOffDevicesOnBatteryLevelAutomationService,
     private turnOnLighthousesOnOyasumiStartAutomationService: TurnOnLighthousesOnOyasumiStartAutomationService,
     private turnOnLighthousesOnSteamVRStartAutomationService: TurnOnLighthousesOnSteamVRStartAutomationService,
     private turnOffLighthousesOnSteamVRStopAutomationService: TurnOffLighthousesOnSteamVRStopAutomationService,
     // OSC automations
     private oscGeneralAutomationsService: OscGeneralAutomationsService,
     private sleepingAnimationsAutomationService: SleepingAnimationsAutomationService,
+    private vrchatMicMuteAutomationService: VRChatMicMuteAutomationService,
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
     // Invite automations
@@ -295,14 +360,16 @@ export class AppModule {
     // Shutdown automations
     private shutdownAutomationsService: ShutdownAutomationsService,
     // Brightness control automations
-    private displayBrightnessControlAutomationService: DisplayBrightnessControlAutomationService,
-    private imageBrightnessControlAutomationService: ImageBrightnessControlAutomationService,
+    private brightnessControlAutomationService: BrightnessControlAutomationService,
     // Render resolution automations
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
     private chaperoneFadeDistanceAutomationService: ChaperoneFadeDistanceAutomationService,
     // Windows power policy automations
-    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService
+    private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
+    // Miscellaneous automations
+    private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
+    private nightmareDetectionAutomationService: NightmareDetectionAutomationService
   ) {
     this.init();
   }
@@ -321,6 +388,7 @@ export class AppModule {
           this.eventLog.init(),
           this.systemTrayService.init(),
           this.automationConfigService.init(),
+          this.deepLinkService.init(),
         ]);
         // Initialize telemetry
         await Promise.all([this.telemetryService.init()]);
@@ -335,6 +403,11 @@ export class AppModule {
           this.fontLoaderService.init(),
           this.lighthouseService.init(),
           this.notificationService.init(),
+          this.sleepPreparationService.init(),
+          this.pulsoidService.init(),
+          this.quitWithSteamVRService.init(),
+          this.audioDeviceService.init(),
+          this.openvrInputService.init(),
         ]);
         // Initialize GPU control services
         await this.sidecarService.init().then(async () => {
@@ -345,9 +418,11 @@ export class AppModule {
           this.displayBrightnessControlService.init(),
           this.imageBrightnessControlService.init(),
         ]);
+        await this.simpleBrightnessControlService.init();
         // Initialize IPC
         await this.ipcService.init();
-        await this.ipcAppStateSyncService.init();
+        await this.overlayService.init();
+        await this.overlayAppStateSyncService.init();
         // Initialize Steam support
         await this.steamService.init();
         // Initialize automations
@@ -359,25 +434,27 @@ export class AppModule {
           this.sleepModeEnableOnControllersPoweredOffAutomation.init(),
           this.sleepModeEnableAtBatteryPercentageAutomation.init(),
           this.sleepModeEnableAtTimeAutomationService.init(),
+          this.sleepModeEnableOnHeartRateCalmPeriodAutomationService.init(),
           this.sleepModeChangeOnSteamVRStatusAutomationService.init(),
           this.sleepModeDisableAtTimeAutomationService.init(),
           this.sleepModeDisableOnDevicePowerOnAutomationService.init(),
           // Power automations
           this.turnOffDevicesOnSleepModeEnableAutomationService.init(),
           this.turnOffDevicesWhenChargingAutomationService.init(),
+          this.turnOffDevicesOnBatteryLevelAutomationService.init(),
           this.turnOnLighthousesOnOyasumiStartAutomationService.init(),
           this.turnOnLighthousesOnSteamVRStartAutomationService.init(),
           this.turnOffLighthousesOnSteamVRStopAutomationService.init(),
           // OSC automations
           this.oscGeneralAutomationsService.init(),
           this.sleepingAnimationsAutomationService.init(),
+          this.vrchatMicMuteAutomationService.init(),
           // Status automations
           this.statusChangeForPlayerCountAutomationService.init(),
           // Invite automations
           this.inviteAutomationsService.init(),
           // Brightness automations
-          this.displayBrightnessControlAutomationService.init(),
-          this.imageBrightnessControlAutomationService.init(),
+          this.brightnessControlAutomationService.init(),
           // Resolution automations
           this.renderResolutionAutomationService.init(),
           // Fade distance automations
@@ -386,6 +463,9 @@ export class AppModule {
           this.shutdownAutomationsService.init(),
           // Windows power policy automations
           this.setWindowsPowerPolicyOnSleepModeAutomationService.init(),
+          // Miscellaneous automations
+          this.systemMicMuteAutomationsService.init(),
+          this.nightmareDetectionAutomationService.init(),
         ]);
       })(),
       SPLASH_MIN_DURATION
@@ -401,8 +481,7 @@ export class AppModule {
         })
       );
     }
-    // Only initialize update- and dotnet services after language selection
-    await this.dotnetService.init();
+    // Only initialize updatee service after language selection
     await this.updateService.init();
   }
 

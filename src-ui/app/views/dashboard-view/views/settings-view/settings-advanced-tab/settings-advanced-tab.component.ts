@@ -8,6 +8,7 @@ import {
   SETTINGS_FILE,
   SETTINGS_KEY_APP_SETTINGS,
   SETTINGS_KEY_AUTOMATION_CONFIGS,
+  SETTINGS_KEY_PULSOID_API,
   SETTINGS_KEY_SLEEP_MODE,
   SETTINGS_KEY_TELEMETRY_SETTINGS,
   SETTINGS_KEY_THEMING_SETTINGS,
@@ -42,6 +43,7 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
     { key: 'appSettings' },
     { key: 'automationSettings' },
     { key: 'vrcData' },
+    { key: 'integrations' },
     { key: 'appCache' },
     { key: 'imageCache' },
     { key: 'eventLog' },
@@ -184,6 +186,11 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
                 await this.settingsStore.delete(SETTINGS_KEY_VRCHAT_API);
+                askForRelaunch = true;
+                break;
+              case 'integrations':
+                info('[Settings] Clearing integration data');
+                await this.settingsStore.delete(SETTINGS_KEY_PULSOID_API);
                 askForRelaunch = true;
                 break;
               case 'appCache':

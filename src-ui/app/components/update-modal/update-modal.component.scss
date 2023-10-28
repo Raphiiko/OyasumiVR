@@ -1,3 +1,25 @@
 .pane-content {
   white-space: pre-wrap;
 }
+
+.steam-ad {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1em;
+  background: var(--color-surface-1);
+  border-radius: var(--surface-border-radius);
+
+  &-logo {
+    flex-shrink: 0;
+    padding: 0 2em 0 1em;
+    img {
+      width: 4em;
+      height: 4em;
+    }
+  }
+
+  &-text {
+    flex: 1;
+  }
+}

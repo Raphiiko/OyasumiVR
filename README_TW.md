@@ -13,7 +13,8 @@
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="授權條款" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord 徽章" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm 頁面" src="https://img.shields.io/badge/商店-BOOTH.PM-red"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam 頁面" src="https://img.shields.io/badge/商店-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm 頁面" src="https://img.shields.io/badge/商店-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad 頁面" src="https://img.shields.io/badge/商店-Gumroad-important"/></a>
     <br>
     如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
@@ -26,6 +27,7 @@
 
 從你喜歡的地方取得我們的最新安裝程式：
 
+- 我們的 [Steam 上的頁面](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 - 我們的 [發布頁面](https://github.com/Raphiiko/Oyasumi/releases)
 - 我們在 [BOOTH.pm 上的頁面](https://raphiiko.booth.pm/items/4216880)
 - 我們在 [Gumroad 上的頁面](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
@@ -256,7 +258,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
 - 韓文\* (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
+- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 與 [雾雨花精灵](https://twitter.com/u_flower_elf) 提供）
 - 法文 (Français)\*（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)\*（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 

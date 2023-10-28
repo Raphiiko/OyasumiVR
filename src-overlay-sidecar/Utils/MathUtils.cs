@@ -125,4 +125,26 @@ public static class MathUtils {
     var offset = Matrix4x4.CreateTranslation(0, 0, -1f);
     return Vector3.Normalize((offset * rotation).Translation);
   }
+
+  public static float Lerp(float v1, float v2, float t)
+  {
+    return v1 + ((v2 - v1) * t);
+  }
+
+  public static float LerpClamped(float v1, float v2, float t)
+  {
+    t = Math.Clamp(t, 0f, 1f);
+    return v1 + ((v2 - v1) * t);
+  }
+
+  public static float InvLerp(float v1, float v2, float v)
+  {
+    return (v - v1) / (v2 - v1);
+  }
+
+  public static float InvLerpClamped(float v1, float v2, float v)
+  {
+    v = Math.Clamp(v, v1, v2);
+    return (v - v1) / (v2 - v1);
+  }
 }

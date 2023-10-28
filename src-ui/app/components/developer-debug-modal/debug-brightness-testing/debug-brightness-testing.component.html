@@ -1,0 +1,104 @@
+<div>
+  <h2>Simple Brightness</h2>
+  <div>
+    <span>Value: </span>
+    <span
+      ><code>{{ simpleBrightnessControl.brightnessStream | async }}%</code></span
+    >
+    <span> | </span>
+    <span>Transitioning: </span>
+    <span
+      ><code>{{ !!simpleBrightnessControl.activeTransition }}</code></span
+    >
+  </div>
+  <app-slider
+    [min]="0"
+    [max]="100"
+    [step]="0.01"
+    [value]="(simpleBrightnessControl.brightnessStream | async) ?? 100"
+    (valueChange)="simpleBrightnessControl.setBrightness($event)"
+  ></app-slider>
+</div>
+<div>
+  <h2>Image Brightness</h2>
+  <div style="display: flex; flex-direction: row; align-items: center">
+    <span style="white-space: nowrap">Perceived Brightness Adjustment</span>
+    <div style="flex-shrink: 0; padding: 0 1em">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma !== null"
+          (change)="togglePerceivedBrightnessAdjustment()"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+    <span [class.disabled]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma === null"
+      >Gamma</span
+    >
+    <span [class.disabled]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma === null">
+      ({{ imageBrightnessControl.perceivedBrightnessAdjustmentGamma ?? 2.2 }})</span
+    >
+    <app-slider
+      [class.disabled]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma === null"
+      [min]="0"
+      [max]="4"
+      [step]="0.01"
+      [value]="imageBrightnessControl.perceivedBrightnessAdjustmentGamma ?? 2.2"
+      (valueChange)="imageBrightnessControl.perceivedBrightnessAdjustmentGamma = $event"
+    ></app-slider>
+  </div>
+  <div>
+    <span>Value: </span>
+    <span
+      ><code>{{ imageBrightnessControl.brightnessStream | async }}%</code></span
+    >
+    <span> | </span>
+    <span>Transitioning: </span>
+    <span
+      ><code>{{ !!imageBrightnessControl.activeTransition }}</code></span
+    >
+  </div>
+  <app-slider
+    [min]="0"
+    [max]="100"
+    [step]="0.01"
+    [value]="(imageBrightnessControl.brightnessStream | async) ?? 100"
+    (valueChange)="imageBrightnessControl.setBrightness($event)"
+  ></app-slider>
+</div>
+<div>
+  <h2>Display Brightness</h2>
+  <div>
+    <span>Value: </span>
+    <span
+      ><code>{{ displayBrightnessControl.brightnessStream | async }}%</code></span
+    >
+    <span> | </span>
+    <span>Range: </span>
+    <span
+      ><code>{{ displayBrightnessBounds | async }}</code></span
+    >
+    <span> | </span>
+    <span>Driver Active: </span>
+    <span
+      ><code>{{ displayBrightnessControl.driverIsAvailable | async }}</code></span
+    >
+    <span> | </span>
+    <span>Transitioning: </span>
+    <span
+      ><code>{{ !!displayBrightnessControl.activeTransition }}</code></span
+    >
+  </div>
+  <app-slider
+    [class.disabled]="(displayBrightnessControl.driverIsAvailable | async) === false"
+    [min]="((displayBrightnessBounds | async) ?? [100, 100])[0]"
+    [max]="((displayBrightnessBounds | async) ?? [100, 100])[1]"
+    [value]="(displayBrightnessControl.brightnessStream | async) ?? 100"
+    (valueChange)="displayBrightnessControl.setBrightness($event)"
+  ></app-slider>
+</div>
+<div>
+  <h2>Other</h2>
+  <button class="btn btn-secondary" (click)="toggleSleepMode()">Toggle Sleep Mode</button>
+</div>

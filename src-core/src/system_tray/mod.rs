@@ -43,8 +43,7 @@ pub fn init_system_tray() -> SystemTray {
     SystemTray::new().with_menu(tray_menu)
 }
 
-pub fn handle_system_tray_events<R: Runtime>(
-) -> impl Fn(&AppHandle<R>, SystemTrayEvent) + Send + Sync + 'static {
+pub fn handle_system_tray_events<R: Runtime>() -> impl Fn(&AppHandle<R>, SystemTrayEvent) + Send + Sync + 'static {
     |app, event| {
         match event {
             SystemTrayEvent::MenuItemClick { id, .. } => {

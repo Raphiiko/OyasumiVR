@@ -27,6 +27,8 @@ export class LocalizedDatePipe implements PipeTransform {
         switch (currentLang) {
           case 'ja':
             return 'MMMMd日';
+          case 'ko':
+            return 'MMMMd일';
           default:
             return 'MMMM d';
         }

@@ -7,12 +7,11 @@
         <div class="tag-line" translate>shared.logo.tagline</div>
       </div>
     </div>
-    <div class="logo-side">
-    </div>
+    <div class="logo-side"></div>
   </div>
 
-  <div class="row">
-    <div class="col">
+  <div class="row" style="margin-top: 5em; margin-bottom: 1em;">
+    <div class="left">
       <div class="author">
         <div class="author-avatar">
           <img
@@ -38,67 +37,24 @@
           </div>
         </div>
       </div>
-      <div class="build-info">
-        <div>Oyasumi<b>VR</b> v{{version}}-{{FLAVOUR}} ({{BUILD_ID}})</div>
-      </div>
     </div>
-    <div class="project-info">
+    <div class="right">
       <div class="project-info-title" translate>about.contributions</div>
       <div class="contributor-list">
         <div class="contributor-list-entry">
-          <span><a href="https://github.com/neuroblack" target="_blank">neuroblack</a></span>
+          <span
+          ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
+            <span translate>about.contributionType.feature</span></span
+          >
         </div>
         <div class="contributor-list-entry">
-          <span><a href="https://github.com/TheMrGong" target="_blank">góngo</a></span>
-        </div>
-      </div>
-      <div class="project-info-title" translate>about.translations</div>
-      <div class="translation-author-list">
-        <div class="translation-author-list-entry">
-          <span><a href="https://twitter.com/NoYu_idea" target="_blank">なき</a> | 日本語</span>
-          <span class="fi fi-jp"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span>Outsourced | 日本語</span>
-          <span class="fi fi-jp"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span><a href="https://github.com/soumt-r" target="_blank">Soumt</a> | 한국어</span>
-          <span class="fi fi-kr"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span><a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a> | 繁體中文</span>
-          <span class="fi" [class.fi-tw]="FLAVOUR !== 'STEAM_CN'" [class.fi-hk]="FLAVOUR === 'STEAM_CN'"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span><a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a> | 简体中文</span>
-          <span class="fi fi-cn"></span>
-        </div>
-        <div class="translation-author-list-entry">
           <span
-          ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> | Français</span
+          ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
+            <span translate>about.contributionType.feature</span></span
           >
-          <span class="fi fi-fr"></span>
         </div>
-        <div class="translation-author-list-entry">
-          <span
-          ><a href="https://twitter.com/aacalde666" target="_blank">aacal666</a> | Español</span
-          >
-          <span class="fi fi-es"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span
-          ><a href="https://twitter.com/a9ito" target="_blank">a9ito</a> | Bahasa Indonesia</span
-          >
-          <span class="fi fi-id"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span><a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | English</span>
-          <span class="fi fi-gb"></span>
-        </div>
-        <div class="translation-author-list-entry">
-          <span><a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | Nederlands</span>
-          <span class="fi fi-nl"></span>
+        <div class="contributor-list-entry">
+          <span>spaecd | <span translate>about.contributionType.soundFx</span></span>
         </div>
       </div>
       <div class="project-info-title" translate>about.projectLinks</div>
@@ -111,5 +67,72 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="left">
+    </div>
+    <div class="right">
+      <div class="project-info-title" translate>about.translations</div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <div class="translation-author-list-entry">
+        <span class="fi fi-jp"></span>
+        日本語 | <a href="https://twitter.com/NoYu_idea" target="_blank">なき</a>
+      </div>
+      <div class="translation-author-list-entry">
+        <span class="fi fi-kr"></span>
+        한국어 | <a href="https://github.com/soumt-r" target="_blank">Soumt</a>
+      </div>
+      <div class="translation-author-list-entry">
+        <span class="fi fi-tw fi-hk"></span>
+        繁體中文 | <a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a>
+      </div>
+      <div class="translation-author-list-entry">
+        <span class="fi fi-cn"></span>
+        简体中文 | <a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a>
+      </div>
+      <div class="translation-author-list-entry">
+        <span class="fi fi-cn"></span>
+        简体中文 | <a href="https://twitter.com/u_flower_elf" target="_blank">雾雨花精灵</a>
+      </div>
 
+    </div>
+    <div class="right">
+      <div class="translation-author-list-entry">
+        <a href="https://github.com/neuroblack" target="_blank">neuroblack</a> | Français
+        <span class="fi fi-fr"></span>
+      </div>
+      <div class="translation-author-list-entry">
+        <a href="https://twitter.com/aacalde666" target="_blank">aacal666</a> | Español
+        <span class="fi fi-es"></span>
+      </div>
+      <div class="translation-author-list-entry">
+        <a href="https://twitter.com/a9ito" target="_blank">a9ito</a> | Bahasa Indonesia
+        <span class="fi fi-id"></span>
+      </div>
+      <div class="translation-author-list-entry">
+        <a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | English
+        <span class="fi fi-gb"></span>
+      </div>
+      <div class="translation-author-list-entry">
+        <a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | Nederlands
+        <span class="fi fi-nl"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 2em">
+    <div class="left">
+    </div>
+    <div class="right"></div>
+  </div>
+  <div class="row">
+    <div class="left">
+      <div class="build-info">
+        <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>
+      </div>
+    </div>
+    <div class="right"></div>
+  </div>
 </div>

@@ -46,7 +46,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -54,7 +54,13 @@
       class="menu-item"
       (click)="openSubMenu('VRCHAT')"
       [class.active]="
-        pathIsActive(['oscAutomations', 'statusAutomations', 'autoInviteRequestAccept'])
+        pathIsActive([
+          'sleepAnimations',
+          'oscAutomations',
+          'statusAutomations',
+          'autoInviteRequestAccept',
+          'vrchatMicMuteAutomations'
+        ])
       "
     >
       <div class="menu-item-icon-prefix">
@@ -62,15 +68,25 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
+    <div
+      class="menu-item"
+      (click)="openSubMenu('MISCELLANEOUS')"
+      [class.active]="
+        pathIsActive([
+          'chaperoneAutomations',
+          'nightmareDetection',
+        ])
+      "
+    >
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">view_in_ar</i>
+        <i class="material-icons-round">build</i>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.miscAutomations</div>
+      <div class="menu-item-submenu-icon"><i class="material-icons-round">arrow_forward_ios</i></div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'shutdownAutomations'">
@@ -130,6 +146,13 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.autoInviteRequestAccept</div>
     </div>
 
+    <!--    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatMicMuteAutomations'">-->
+    <!--      <div class="menu-item-icon-prefix">-->
+    <!--        <i class="material-icons-round">mic_off</i>-->
+    <!--      </div>-->
+    <!--      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>-->
+    <!--    </div>-->
+
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">terminal</i>
@@ -171,13 +194,15 @@
       <div
         class="active-effect"
         @fade
-        *ngIf="
-          displayBrightnessAutomation.isSleepDisableTransitionActive ||
-          displayBrightnessAutomation.isSleepEnableTransitionActive ||
-          imageBrightnessAutomation.isSleepDisableTransitionActive ||
-          imageBrightnessAutomation.isSleepEnableTransitionActive
-        "
+        *ngIf="brightnessAutomation.anyTransitionActive | async"
       ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'systemMicMuteAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">mic_off</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.systemMicMuteAutomations</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'resolutionAutomations'">
@@ -186,5 +211,30 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.resolutionAutomations</div>
     </div>
+  </div>
+
+  <!-- Miscellaneous Automations Submenu -->
+  <div class="submenu" *ngIf="subMenu === 'MISCELLANEOUS'" @subMenu>
+    <div class="menu-header">
+      <button class="btn" (click)="openSubMenu('GENERAL')">
+        <i class="material-icons-round">arrow_back_ios_new</i>
+        <div class="menu-header-label" translate>comp.dashboard-navbar.miscAutomations</div>
+      </button>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">view_in_ar</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'nightmareDetection'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
+    </div>
+
   </div>
 </div>

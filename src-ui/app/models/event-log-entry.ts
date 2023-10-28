@@ -20,6 +20,7 @@ export type EventLogEntry =
   | EventLogTurnedOffOpenVRDevices
   | EventLogLighthouseSetPowerState
   | EventLogGpuPowerLimitChanged
+  | EventLogSimpleBrightnessChanged
   | EventLogDisplayBrightnessChanged
   | EventLogImageBrightnessChanged
   | EventLogAcceptedInviteRequest
@@ -30,6 +31,9 @@ export type EventLogEntry =
   | EventLogShutdownSequenceStarted
   | EventLogShutdownSequenceCancelled
   | EventLogWindowsPowerPolicySet
+  | EventLogChangedVRChatMicMuteState
+  | EventLogChangedSystemMicMuteState
+  | EventLogChangedSystemMicControllerButtonBehavior
   | EventLogMsiAfterburnerProfileSet;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
@@ -40,6 +44,7 @@ export type EventLogType =
   | 'turnedOffOpenVRDevices'
   | 'lighthouseSetPowerState'
   | 'gpuPowerLimitChanged'
+  | 'simpleBrightnessChanged'
   | 'displayBrightnessChanged'
   | 'imageBrightnessChanged'
   | 'acceptedInviteRequest'
@@ -50,6 +55,9 @@ export type EventLogType =
   | 'shutdownSequenceStarted'
   | 'shutdownSequenceCancelled'
   | 'windowsPowerPolicySet'
+  | 'changedVRChatMicMuteState'
+  | 'changedSystemMicMuteState'
+  | 'changedSystemMicControllerButtonBehavior'
   | 'msiAfterburnerProfileSet';
 
 export interface EventLogBase {
@@ -82,8 +90,9 @@ export interface EventLogSleepModeDisabled extends EventLogBase {
 
 export interface EventLogTurnedOffOpenVRDevices extends EventLogBase {
   type: 'turnedOffOpenVRDevices';
-  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING';
+  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL';
   devices: 'CONTROLLER' | 'CONTROLLERS' | 'TRACKER' | 'TRACKERS' | 'ALL' | 'VARIOUS';
+  batteryThreshold?: number;
 }
 
 export interface EventLogLighthouseSetPowerState extends EventLogBase {
@@ -103,7 +112,7 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 
 export interface EventLogDisplayBrightnessChanged extends EventLogBase {
   type: 'displayBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -111,7 +120,15 @@ export interface EventLogDisplayBrightnessChanged extends EventLogBase {
 
 export interface EventLogImageBrightnessChanged extends EventLogBase {
   type: 'imageBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  transition: boolean;
+  value: number;
+  transitionTime: number;
+}
+
+export interface EventLogSimpleBrightnessChanged extends EventLogBase {
+  type: 'simpleBrightnessChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -157,4 +174,23 @@ export interface EventLogMsiAfterburnerProfileSet extends EventLogBase {
   type: 'msiAfterburnerProfileSet';
   profile: number;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
+}
+
+export interface EventLogChangedVRChatMicMuteState extends EventLogBase {
+  type: 'changedVRChatMicMuteState';
+  muted: boolean;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogChangedSystemMicMuteState extends EventLogBase {
+  type: 'changedSystemMicMuteState';
+  muted: boolean;
+  deviceName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogChangedSystemMicControllerButtonBehavior extends EventLogBase {
+  type: 'changedSystemMicControllerButtonBehavior';
+  behavior: 'TOGGLE' | 'PUSH_TO_TALK';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

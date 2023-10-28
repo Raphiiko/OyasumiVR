@@ -3,6 +3,7 @@ import { AutomationConfigService } from '../../../../../../services/automation-c
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationType,
+  TurnOffDevicesOnBatteryLevelAutomationConfig,
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../../../../../models/automations';
@@ -10,11 +11,13 @@ import { cloneDeep } from 'lodash';
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { vshrink } from '../../../../../../utils/animations';
 
 @Component({
   selector: 'app-controllers-and-trackers-tab',
   templateUrl: './controllers-and-trackers-tab.component.html',
   styleUrls: ['./controllers-and-trackers-tab.component.scss'],
+  animations: [vshrink()],
 })
 export class ControllersAndTrackersTabComponent implements OnInit {
   protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
@@ -23,6 +26,10 @@ export class ControllersAndTrackersTabComponent implements OnInit {
   protected onChargeConfig: TurnOffDevicesWhenChargingAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
+  protected onBatteryLevelConfig: TurnOffDevicesOnBatteryLevelAutomationConfig = cloneDeep(
+    AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL
+  );
+  protected activateSleepWhenControllersTurnedOff = false;
 
   constructor(
     private router: Router,
@@ -43,6 +50,9 @@ export class ControllersAndTrackersTabComponent implements OnInit {
       .subscribe((configs) => {
         this.onSleepModeConfig = configs.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE;
         this.onChargeConfig = configs.TURN_OFF_DEVICES_WHEN_CHARGING;
+        this.onBatteryLevelConfig = configs.TURN_OFF_DEVICES_ON_BATTERY_LEVEL;
+        this.activateSleepWhenControllersTurnedOff =
+          configs.SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF.enabled;
       });
   }
 
@@ -64,5 +74,81 @@ export class ControllersAndTrackersTabComponent implements OnInit {
     >(automation, {
       deviceClasses,
     });
+  }
+
+  protected async changeOnBatteryLevelValue(devices: OVRDeviceClass, level: number) {
+    switch (devices) {
+      case 'Controller':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffControllersAtLevel: level,
+          }
+        );
+        break;
+      case 'GenericTracker':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffTrackersAtLevel: level,
+          }
+        );
+        break;
+    }
+  }
+
+  protected async toggleOnBatteryLevel(devices: OVRDeviceClass) {
+    switch (devices) {
+      case 'Controller':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffControllers: !this.onBatteryLevelConfig.turnOffControllers,
+            turnOffControllersAtLevel: this.onBatteryLevelConfig.turnOffControllers
+              ? AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL
+                  .turnOffControllersAtLevel
+              : this.onBatteryLevelConfig.turnOffControllersAtLevel,
+          }
+        );
+        break;
+      case 'GenericTracker':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffTrackers: !this.onBatteryLevelConfig.turnOffTrackers,
+            turnOffTrackersAtLevel: this.onBatteryLevelConfig.turnOffTrackers
+              ? AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL.turnOffTrackersAtLevel
+              : this.onBatteryLevelConfig.turnOffTrackersAtLevel,
+          }
+        );
+        break;
+    }
+  }
+
+  protected async goToSleepDetection() {
+    await this.router.navigate(['dashboard', 'sleepDetection']);
+  }
+
+  protected async toggleOnBatteryLevelOnlyDuringSleepMode(devices: OVRDeviceClass) {
+    switch (devices) {
+      case 'Controller':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffControllersOnlyDuringSleepMode:
+              !this.onBatteryLevelConfig.turnOffControllersOnlyDuringSleepMode,
+          }
+        );
+        break;
+      case 'GenericTracker':
+        await this.automationConfigService.updateAutomationConfig<TurnOffDevicesOnBatteryLevelAutomationConfig>(
+          'TURN_OFF_DEVICES_ON_BATTERY_LEVEL',
+          {
+            turnOffTrackersOnlyDuringSleepMode:
+              !this.onBatteryLevelConfig.turnOffTrackersOnlyDuringSleepMode,
+          }
+        );
+        break;
+    }
   }
 }

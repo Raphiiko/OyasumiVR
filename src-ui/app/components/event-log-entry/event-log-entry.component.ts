@@ -20,6 +20,10 @@ import { EventLogDisplayBrightnessChangedEntryParser } from './entry-parsers/dis
 import { EventLogImageBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
 import { EventLogWindowsPowerPolicySetEntryParser } from './entry-parsers/windows-power-policy-set';
 import { EventLogMsiAfterburnerProfileSetEntryParser } from './entry-parsers/msi-afterburner-profile-set';
+import { EventLogSimpleBrightnessChangedEntryParser } from './entry-parsers/simple-brightness-changed';
+import { EventLogChangedVRChatMicMuteStateEntryParser } from './entry-parsers/changed-vrchat-mic-mute-state';
+import { EventLogChangedSystemMicControllerButtonBehaviorEntryParser } from './entry-parsers/changed-system-mic-controller-button-behavior';
+import { EventLogChangedSystemMicMuteStateEntryParser } from './entry-parsers/changed-system-mic-mute-state';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -37,6 +41,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogTurnedOffOpenVRDevicesEntryParser(),
     new EventLogLighthouseSetPowerStateEntryParser(),
     new EventLogGpuPowerLimitChangedEntryParser(),
+    new EventLogSimpleBrightnessChangedEntryParser(),
     new EventLogDisplayBrightnessChangedEntryParser(),
     new EventLogImageBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
@@ -48,6 +53,9 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogShutdownSequenceCancelledEntryParser(),
     new EventLogWindowsPowerPolicySetEntryParser(),
     new EventLogMsiAfterburnerProfileSetEntryParser(),
+    new EventLogChangedVRChatMicMuteStateEntryParser(),
+    new EventLogChangedSystemMicMuteStateEntryParser(),
+    new EventLogChangedSystemMicControllerButtonBehaviorEntryParser(),
   ];
 
   constructor(

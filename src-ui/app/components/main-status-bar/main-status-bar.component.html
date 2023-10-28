@@ -28,6 +28,95 @@
     </div>
   </div>
   <div class="right">
+    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
+      <div
+        class="pill system-mic-mute clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.systemMicMuted.tooltip.' + systemMicrophoneMuteAction()"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="doSystemMicrophoneMuteAction()"
+        @hshrink
+      >
+        <div class="pill-icon nomargin" @hshrink>
+          <i class="material-icons-round mic-muted">mic_off</i>
+        </div>
+        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
+          >comp.main-status-bar.systemMicMuted.label</span
+        >
+      </div>
+    </ng-container>
+    <ng-container *ngIf="pulsoid.heartRate | async">
+      <div
+        class="pill heartrate"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <i
+            class="material-icons-round heart-icon"
+            [style.animation-duration]="60 / ((pulsoid.heartRate | async) ?? 1) + 's'"
+            >favorite</i
+          >
+        </div>
+        <span @hshrink *ngIf="state.hover"
+          >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
+        >
+        <span>{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === false">
+      <div
+        class="pill brightness-simple clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.brightness.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openBrightnessControlModal()"
+        @hshrink
+        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">brightness_medium</i>
+        </div>
+        <span @hshrink *ngIf="state.hover"
+          >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
+        >
+        <span>{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === true">
+      <div
+        class="pill brightness-advanced clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.brightness.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openBrightnessControlModal()"
+        @hshrink
+        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">monitor</i>
+        </div>
+        <span [class.inactive]="(displayBrightnessControl.driverIsAvailable | async) === false"
+          >{{ displayBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+        >
+        <span><b>&nbsp;|&nbsp;</b></span>
+        <span>{{ imageBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        <div class="pill-icon" @hshrink>
+          <i class="material-icons-round">image</i>
+        </div>
+      </div>
+    </ng-container>
     <div
       class="pill steamvr-status"
       *ngVar="{ hover: false }; let state"
@@ -52,10 +141,12 @@
       <span>{{ 'comp.main-status-bar.steamvr.' + (openvr.status | async) | translate }}</span>
     </div>
     <div
-      class="pill vrc-status"
+      class="pill vrc-status clickable"
       *ngVar="{ hover: false } as state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
+      (click)="navigateToVRChatSettings()"
+      [tooltip]="'comp.main-status-bar.vrchat.tooltip'"
     >
       <ng-container *ngVar="user | async as user">
         <div class="pill-icon" *ngIf="!user || user.status === 'offline'" @hshrink>

@@ -1,0 +1,24 @@
+.device-lists {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  .device-list {
+    flex: 1;
+    &:not(:first-child) {
+      margin-left: 1em;
+    }
+    .device {
+      margin-bottom: 1em;
+      background: var(--color-surface-1);
+      padding: 1em;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      .row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+  }
+}

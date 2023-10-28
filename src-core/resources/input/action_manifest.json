@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "minimum_required_version": 1,
+  "default_bindings": [
+    {
+      "controller_type": "knuckles",
+      "binding_url": "default_knuckles.json"
+    },
+    {
+      "controller_type": "vive_controller",
+      "binding_url": "default_vive_controller.json"
+    },
+    {
+      "controller_type": "oculus_touch",
+      "binding_url": "default_oculus_touch.json"
+    }
+  ],
+  "actions": [
+    {
+      "name": "/actions/main/in/OpenOverlay",
+      "requirement": "suggested",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/main/in/MuteMicrophone",
+      "requirement": "suggested",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/hidden/in/IndicatePresence",
+      "requirement": "mandatory",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/hidden/in/OverlayInteract",
+      "requirement": "mandatory",
+      "type": "boolean"
+    }
+  ],
+  "action_sets": [
+    {
+      "name": "/actions/main",
+      "usage": "leftright"
+    },
+    {
+      "name": "/actions/hidden",
+      "usage": "hidden"
+    }
+  ],
+  "localization": [
+    {
+      "language_tag": "en_us",
+      "/actions/main": "OyasumiVR Actions",
+      "/actions/main/in/OpenOverlay": "Open Overlay Menu",
+      "/actions/main/in/MuteMicrophone": "Mute Microphone",
+      "/actions/hidden": "OyasumiVR Hidden Actions",
+      "/actions/hidden/in/IndicatePresence": "Indicate Presence",
+      "/actions/hidden/in/OverlayInteract": "Overlay Interact"
+    },
+    {
+      "language_tag": "ko_kr",
+      "/actions/main": "OyasumiVR 액션",
+      "/actions/main/in/OpenOverlay": "오버레이 메뉴 열기",
+      "/actions/main/in/MuteMicrophone": "마이크 음소거",
+      "/actions/hidden": "OyasumiVR Hidden Actions",
+      "/actions/hidden/in/IndicatePresence": "Indicate Presence",
+      "/actions/hidden/in/OverlayInteract": "Overlay Interact"
+    },
+    {
+      "language_tag": "nl_nl",
+      "/actions/main": "OyasumiVR Acties",
+      "/actions/main/in/OpenOverlay": "Open Overlay Menu",
+      "/actions/main/in/MuteMicrophone": "Demp Microfoon",
+      "/actions/hidden": "OyasumiVR Verborgen Acties",
+      "/actions/hidden/in/IndicatePresence": "Aanwezigheid Aanduiden",
+      "/actions/hidden/in/OverlayInteract": "Overlay Interactie"
+    }
+  ]
+}

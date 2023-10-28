@@ -5,6 +5,7 @@ import { hshrink, vshrink } from '../../../../../utils/animations';
 import { NotificationService } from '../../../../../services/notification.service';
 import { SelectBoxItem } from 'src-ui/app/components/select-box/select-box.component';
 import {
+  APP_SETTINGS_DEFAULT,
   NotificationProvider,
   NotificationType,
   NotificationTypes,
@@ -35,6 +36,9 @@ export class SettingsNotificationsTabComponent extends SettingsTabComponent impl
   ];
   protected providerOption: SelectBoxItem = this.providerOptions[0];
   private notificationsEnabled: NotificationType[] = [];
+  protected generalNotificationVolume = APP_SETTINGS_DEFAULT.generalNotificationVolume;
+  protected playingTestSound = false;
+  private playingTestSoundTimeout: any;
 
   constructor(settingsService: AppSettingsService, protected notifications: NotificationService) {
     super(settingsService);
@@ -49,6 +53,7 @@ export class SettingsNotificationsTabComponent extends SettingsTabComponent impl
           this.providerOptions.find((o) => o.id === settings.notificationProvider) ??
           this.providerOptions[0];
         this.notificationsEnabled = [...settings.notificationsEnabled.types];
+        this.generalNotificationVolume = settings.generalNotificationVolume;
       });
   }
 
@@ -61,6 +66,7 @@ export class SettingsNotificationsTabComponent extends SettingsTabComponent impl
   protected isNotificationTypeChecked(type: NotificationType): boolean {
     return this.notificationsEnabled.includes(type);
   }
+
   protected toggleNotificationType(type: NotificationType) {
     if (this.isNotificationTypeChecked(type)) {
       this.notificationsEnabled = this.notificationsEnabled.filter((t) => t !== type);
@@ -70,5 +76,21 @@ export class SettingsNotificationsTabComponent extends SettingsTabComponent impl
     this.settingsService.updateSettings({
       notificationsEnabled: { types: [...this.notificationsEnabled] },
     });
+  }
+
+  protected setGeneralNotificationVolume(volume: number) {
+    this.settingsService.updateSettings({
+      generalNotificationVolume: volume,
+    });
+  }
+
+  protected async testSound() {
+    await this.notifications.playSound('notification_block');
+    this.playingTestSound = true;
+    if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
+    this.playingTestSoundTimeout = setTimeout(() => {
+      this.playingTestSound = false;
+      this.playingTestSoundTimeout = undefined;
+    }, 1000);
   }
 }

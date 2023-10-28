@@ -169,7 +169,7 @@ impl SleepDetector {
                 last_log: self.last_log,
             },
         )
-        .await;
+            .await;
         // self.send_influxdb_report();
     }
 

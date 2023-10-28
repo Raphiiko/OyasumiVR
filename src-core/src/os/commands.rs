@@ -1,47 +1,13 @@
-use std::collections::HashMap;
-
-use super::{models::Output, SOLOUD, SOUNDS};
+use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
 
 #[tauri::command]
-pub fn check_dotnet_install_required() -> Result<HashMap<String, String>, String> {
-    super::dotnet::check_dotnet_install_required()
-}
-
-#[tauri::command]
-pub fn get_net_core_versions() -> Result<Vec<String>, String> {
-    super::dotnet::get_net_core_versions()
-}
-
-#[tauri::command]
-pub fn get_asp_net_core_versions() -> Result<Vec<String>, String> {
-    super::dotnet::get_asp_net_core_versions()
-}
-
-#[tauri::command]
-pub fn is_semver_higher(a: String, b: String) -> Result<bool, String> {
-    super::dotnet::is_semver_higher(&a, &b)
-}
-
-#[tauri::command]
-pub async fn install_net_core(version: String) -> Result<(), String> {
-    super::dotnet::install_net_core(&version).await
-}
-
-#[tauri::command]
-pub async fn install_asp_net_core(version: String) -> Result<(), String> {
-    super::dotnet::install_asp_net_core(&version).await
-}
-
-#[tauri::command]
-pub async fn install_dotnet_hosting_bundle(version: String) -> Result<(), String> {
-    super::dotnet::install_dotnet_hosting_bundle(&version).await
-}
-
-#[tauri::command]
-pub fn play_sound(name: String) {
+pub fn play_sound(name: String, volume: f32) {
+    if volume == 0.0 {
+        return;
+    }
     std::thread::spawn(move || {
         let mut wav = audio::Wav::default();
         {
@@ -51,7 +17,9 @@ pub fn play_sound(name: String) {
         }
         {
             let sl = SOLOUD.lock().unwrap();
-            sl.play(&wav);
+            sl.play_ex(&wav, volume, 0.0, false, unsafe {
+                soloud::Handle::from_raw(0)
+            });
         }
         loop {
             std::thread::sleep(std::time::Duration::from_millis(100));
@@ -195,4 +163,109 @@ pub async fn active_windows_power_policy() -> Option<String> {
         return Some(String::from("HIGH_PERFORMANCE"));
     }
     None
+}
+
+#[tauri::command]
+pub fn windows_shutdown(message: &str, timeout: u32, force_close_apps: bool) {
+    let _ = system_shutdown::shutdown_with_message(message, timeout, force_close_apps);
+}
+
+#[tauri::command]
+pub fn windows_reboot(message: &str, timeout: u32, force_close_apps: bool) {
+    let _ = system_shutdown::reboot_with_message(message, timeout, force_close_apps);
+}
+
+#[tauri::command]
+pub fn windows_sleep() {
+    let _ = system_shutdown::sleep();
+}
+
+#[tauri::command]
+pub fn windows_hibernate() {
+    let _ = system_shutdown::hibernate();
+}
+
+#[tauri::command]
+pub fn windows_logout() {
+    let _ = system_shutdown::logout();
+}
+
+#[tauri::command]
+pub async fn get_audio_devices(refresh: bool) -> Vec<AudioDeviceDto> {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+                "[Core] Could not get audio devices, as audio device manager was not initialized"
+            );
+            return vec![];
+        }
+    };
+    if refresh {
+        if let Err(e) = manager.refresh_audio_devices().await {
+            error!("[Core] Failed to refresh audio devices: {}", e);
+        }
+    }
+    manager.get_devices().await
+}
+
+#[tauri::command]
+pub async fn set_audio_device_volume(device_id: String, volume: f32) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set audio device volume, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_volume(device_id, volume).await;
+}
+
+#[tauri::command]
+pub async fn set_audio_device_mute(device_id: String, mute: bool) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set audio device mute state, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mute(device_id, mute).await;
+}
+
+#[tauri::command]
+pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activity_enabled(enabled).await;
+}
+
+#[tauri::command]
+pub async fn set_mic_activity_device_id(device_id: Option<String>) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activity_device_id(device_id).await;
 }

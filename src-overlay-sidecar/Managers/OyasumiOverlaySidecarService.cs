@@ -53,4 +53,33 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
     BaseWebOverlay.DebugTranslations = request.Translations;
     return Task.FromResult(new Empty());
   }
+
+  public override Task<Empty> OpenOverlayMenu(OverlayMenuOpenRequest request, ServerCallContext context)
+  {
+    var role = OvrUtils.MapControllerRole(request.ControllerRole);
+    OvrManager.Instance.OpenDashboard(role);
+    return Task.FromResult(new Empty());
+  }
+
+  public override Task<Empty> CloseOverlayMenu(Empty request, ServerCallContext context)
+  {
+    OvrManager.Instance.CloseDashboard();
+    return Task.FromResult(new Empty());
+  }
+
+  public override Task<Empty> ToggleOverlayMenu(OverlayMenuOpenRequest request, ServerCallContext context)
+  {
+    var role = OvrUtils.MapControllerRole(request.ControllerRole);
+    OvrManager.Instance.ToggleDashboard(role);
+    return Task.FromResult(new Empty());
+  }
+
+  public override Task<Empty> SetMicrophoneActive(SetMicrophoneActiveRequest request, ServerCallContext context)
+  {
+    if (request.Mode == MicrophoneActivityMode.Vrchat)
+    {
+      OvrManager.Instance.SetMicrophoneActive(request.Active);
+    }
+    return Task.FromResult(new Empty());
+  }
 }

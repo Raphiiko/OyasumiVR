@@ -32,6 +32,13 @@
         <span translate>settings.tab.updates</span>
       </div>
     </div>
+    <div
+      class="tab"
+      [class.active]="activeTab === 'INTEGRATIONS'"
+      (click)="activeTab = 'INTEGRATIONS'"
+    >
+      <div class="tab-label" translate>settings.tab.integrations</div>
+    </div>
     <div class="tab" [class.active]="activeTab === 'ADVANCED'" (click)="activeTab = 'ADVANCED'">
       <div class="tab-label" translate>settings.tab.advanced</div>
     </div>
@@ -56,6 +63,11 @@
     *ngIf="activeTab === 'UPDATES'"
     @noop
   ></app-settings-updates-tab>
+  <app-settings-integrations-tab
+    class="pane-content"
+    *ngIf="activeTab === 'INTEGRATIONS'"
+    @noop
+  ></app-settings-integrations-tab>
   <app-settings-advanced-tab
     class="pane-content"
     *ngIf="activeTab === 'ADVANCED'"

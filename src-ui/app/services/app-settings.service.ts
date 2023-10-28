@@ -58,7 +58,7 @@ export class AppSettingsService {
     await this.store.save();
   }
 
-  updateSettings(settings: Partial<AppSettings>) {
+  public updateSettings(settings: Partial<AppSettings>) {
     const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
     if (isEqual(newSettings, this._settings.value)) return;
     this._settings.next(newSettings);

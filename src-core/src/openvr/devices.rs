@@ -1,8 +1,10 @@
-use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose};
+use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent};
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use byteorder::{ByteOrder, LE};
 use chrono::{Duration, NaiveDateTime, Utc};
+use log::error;
+use ovr::input::InputValueHandle;
 use ovr_overlay as ovr;
 use tokio::sync::Mutex;
 
@@ -23,6 +25,8 @@ pub async fn on_ovr_tick() {
     }
     // Update poses
     refresh_device_poses().await;
+    // Detect inputs
+    detect_inputs().await;
 }
 
 pub async fn on_ovr_event(event: ovr::system::VREvent) {
@@ -127,6 +131,9 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let device = OVRDevice {
         index: device_index.0,
         class: system.get_tracked_device_class(device_index).into(),
+        role: system
+            .get_controller_role_for_tracked_device_index(device_index)
+            .into(),
         battery,
         provides_battery_status,
         can_power_off,
@@ -223,5 +230,61 @@ async fn refresh_device_poses<'a>() {
             )
             .await;
         }
+    }
+}
+
+async fn detect_inputs<'a>() {
+    // Get known devices, actions and action sets
+    let devices = OVR_DEVICES.lock().await;
+    let actions = super::OVR_ACTIONS.lock().await;
+    let mut active_sets = super::OVR_ACTIVE_SETS.lock().await;
+    // Get input context
+    let context = OVR_CONTEXT.lock().await;
+    let mut input = match context.as_ref() {
+        Some(context) => context.input_mngr(),
+        None => return,
+    };
+    // Update actions for all sets
+    if let Err(e) = input.update_actions(active_sets.as_mut_slice()) {
+        error!("[Core] Failed to update actions: {:?}", e.description());
+        return;
+    }
+    for action in actions.iter() {
+        match input.get_digital_action_data(
+            action.handle,
+            InputValueHandle(ovr::sys::k_ulInvalidInputValueHandle),
+        ) {
+            Ok(data) => {
+                if data.0.bChanged {
+                    let handle = InputValueHandle(data.0.activeOrigin);
+                    let device = match input.get_origin_tracked_device_info(handle) {
+                        Ok(r) => devices
+                            .iter()
+                            .find(|d| d.index == r.0.trackedDeviceIndex)
+                            .cloned(),
+                        Err(e) => {
+                            error!(
+                                "[Core] Failed to get origin tracked device info: {:?}",
+                                e.description()
+                            );
+                            return;
+                        }
+                    };
+                    let event = OpenVRInputEvent {
+                        action: action.name.clone(),
+                        pressed: data.0.bState,
+                        time_ago: data.0.fUpdateTime,
+                        device,
+                    };
+                    tokio::spawn(async move {
+                        send_event("OVR_INPUT_EVENT_DIGITAL", event).await;
+                    });
+                }
+            }
+            Err(e) => {
+                error!("[Core] Failed to get action data: {:?}", e.description());
+                return;
+            }
+        };
     }
 }

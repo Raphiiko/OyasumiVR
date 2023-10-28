@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { VRChatService } from '../../../../services/vrchat.service';
-import { BehaviorSubject, debounceTime, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UserStatus } from 'vrchat/dist';
@@ -100,6 +100,8 @@ export class StatusAutomationsViewComponent implements OnInit {
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         tap((limit) => (this.bedLimit = Math.min(limit, 10))),
+        distinctUntilChanged(),
+        filter((limit) => limit !== this.config.limit),
         debounceTime(300),
         switchMap((limit) => this.updateConfig({ limit }))
       )

@@ -1,3 +1,4 @@
+using GrcpOverlaySidecar;
 using Valve.VR;
 
 namespace overlay_sidecar;
@@ -18,6 +19,16 @@ public class OvrUtils {
     if (index is < 1 or >= OpenVR.k_unMaxTrackedDeviceCount) return null;
     OpenVR.System.GetDeviceToAbsoluteTrackingPose(ETrackingUniverseOrigin.TrackingUniverseStanding, 0, poseBuffer);
     return poseBuffer[index];
+  }
+
+  public static ETrackedControllerRole MapControllerRole(OyasumiSidecarControllerRole role)
+  {
+    return role switch
+    {
+      OyasumiSidecarControllerRole.Left => ETrackedControllerRole.LeftHand,
+      OyasumiSidecarControllerRole.Right => ETrackedControllerRole.RightHand,
+      _ => ETrackedControllerRole.Invalid
+    };
   }
 
   public static float GetRefreshRate(bool force = false)

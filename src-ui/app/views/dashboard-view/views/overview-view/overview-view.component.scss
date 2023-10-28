@@ -28,7 +28,7 @@ app-event-log {
   background: var(--color-surface-1);
   border: 3px solid var(--color-surface-1);
   position: relative;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
 
   &.active {
     //background: var(--color-primary);
@@ -56,15 +56,19 @@ app-event-log {
   }
 
   .bottom {
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     flex-shrink: 0;
     background: var(--color-surface-0);
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 1em 15em 1em 1em;
     border-radius: var(--surface-border-radius);
+
+    & > *:not(:first-child) {
+      margin-left: 1em;
+    }
   }
 
   .illustration {
@@ -75,13 +79,12 @@ app-event-log {
     opacity: 0;
     top: 0;
     right: 0;
-    transition: all .15s ease-in-out;
+    transition: all 0.15s ease-in-out;
     transform-origin: 75% 50%;
     filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.25));
     pointer-events: none;
 
     &.active {
-      pointer-events: all;
       opacity: 1;
       animation: pulse 0.15s ease-in-out;
       animation-fill-mode: forwards;
@@ -89,10 +92,11 @@ app-event-log {
     }
 
     img {
+      pointer-events: all;
       height: 100%;
       transform: translateY(-0.5em);
       cursor: pointer;
-      transition: all .15s ease-in-out;
+      transition: all 0.15s ease-in-out;
 
       &:active {
         opacity: 0.8;
@@ -105,7 +109,6 @@ app-event-log {
       }
     }
   }
-
 }
 
 @keyframes pulse {
@@ -120,3 +123,8 @@ app-event-log {
   }
 }
 
+.btn-sleep-preparation {
+  .small-spinner {
+    margin-right: 0.5em;
+  }
+}

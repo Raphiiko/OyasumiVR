@@ -236,7 +236,7 @@
       margin-bottom: 0.25em;
     }
 
-    > span:last-child {
+    > span:not(:first-child) {
       color: var(--color-text-3);
     }
   }

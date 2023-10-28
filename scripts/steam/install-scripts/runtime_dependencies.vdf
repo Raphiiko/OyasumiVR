@@ -11,14 +11,5 @@
         "Is64BitWindows"      "1"
       }
     }
-    "DotNetHostingBundle7010"
-    {
-      "Process 1"     "%INSTALLDIR%\\DotNet\\dotnet-hosting-7.0.10-win.exe"
-      "Command 1"     "/install /quiet /norestart"
-      "Requirement_OS"
-      {
-        "Is64BitWindows"      "1"
-      }
-    }
   }
 }

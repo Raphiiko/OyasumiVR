@@ -1,69 +1,81 @@
 <div
-  class="select-box"
-  [class.small]="type === 'SMALL'"
-  (click)="clickBox()"
-  [class.disabled]="disabled"
-  [class.active]="!collapsed"
+  class="select-box-wrapper"
+  (clickOutside)="clickOutsideDropdown()"
+  [class.expand-up]="expandUp"
 >
   <div
-    class="select-item selected"
-    *ngIf="selected"
-    [class.has-subtitle]="selected.subLabel"
+    class="select-box"
     [class.small]="type === 'SMALL'"
+    (click)="clickBox()"
+    [class.disabled]="disabled"
+    [class.active]="!collapsed"
   >
     <div
-      class="select-item-html-prefix"
-      *ngIf="selected.htmlPrefix"
-      [innerHtml]="selected.htmlPrefix"
+      class="select-item selected"
+      *ngIf="selected"
+      [class.has-subtitle]="selected.subLabel"
+      [class.small]="type === 'SMALL'"
     >
-    </div>
-    <div class="select-item-content">
-      <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
-      <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
-        {{ selected.subLabel | tsTranslate }}
+      <div
+        class="select-item-html-prefix"
+        *ngIf="selected.htmlPrefix"
+        [innerHtml]="selected.htmlPrefix"
+      >
+      </div>
+      <div class="select-item-content">
+        <div class="select-item-title">{{ selected.label | tsTranslate }}</div>
+        <div class="select-item-subtitle" *ngIf="selected.subLabel && type !== 'SMALL'">
+          {{ selected.subLabel | tsTranslate }}
+        </div>
       </div>
     </div>
-  </div>
-  <div class="select-item placeholder" *ngIf="!selected" [class.small]="type === 'SMALL'">
-    <div class="select-item-title">
-      {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
-    </div>
-  </div>
-  <div class="select-box-arrow">
-    <i class="material-icons">expand_more</i>
-  </div>
-</div>
-<div class="dropdown-container">
-  <div class="select-box-dropdown" *ngIf="!collapsed" [@fadeDown]>
-    <div class="select-item placeholder" *ngIf="showPlaceholderInDropdown">
+    <div class="select-item placeholder" *ngIf="!selected" [class.small]="type === 'SMALL'">
       <div class="select-item-title">
         {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
       </div>
     </div>
-    <div
-      class="select-item"
-      *ngFor="let item of items"
-      (click)="select(item, $event)"
-      [class.has-subtitle]="item.subLabel"
-      [class.small]="type === 'SMALL'"
-    >
-      <div class="select-item-html-prefix" *ngIf="item.htmlPrefix" [innerHtml]="item.htmlPrefix">
-      </div>
-      <div class="select-item-content">
-        <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
-          {{ item.label | tsTranslate }}
-        </div>
-        <div
-          class="select-item-subtitle"
-          *ngIf="item.subLabel && type !== 'SMALL'"
-          [innerHtml]="item.subLabel | tsTranslate"
-        >
-          {{ item.subLabel | tsTranslate }}
+    <div class="select-box-arrow">
+      <i class="material-icons">expand_more</i>
+    </div>
+  </div>
+  <div class="dropdown-container" [class.expand-up]="expandUp">
+    <ng-template #dropdownContent>
+      <div class="select-item placeholder" *ngIf="showPlaceholderInDropdown">
+        <div class="select-item-title">
+          {{ placeholder || 'comp.select-box.defaultPlaceholder' | translate }}
         </div>
       </div>
-      <a class="select-item-info noselect" *ngIf="item.infoAction" (click)="item.infoAction()">
-        <i class="material-icons-round noselect">info</i>
-      </a>
+      <div
+        class="select-item"
+        *ngFor="let item of items"
+        (click)="select(item, $event)"
+        [class.has-subtitle]="item.subLabel"
+        [class.small]="type === 'SMALL'"
+      >
+        <div class="select-item-html-prefix" *ngIf="item.htmlPrefix" [innerHtml]="item.htmlPrefix">
+        </div>
+        <div class="select-item-content">
+          <div class="select-item-title" [innerHtml]="item.label | tsTranslate">
+            {{ item.label | tsTranslate }}
+          </div>
+          <div
+            class="select-item-subtitle"
+            *ngIf="item.subLabel && type !== 'SMALL'"
+            [innerHtml]="item.subLabel | tsTranslate"
+          >
+            {{ item.subLabel | tsTranslate }}
+          </div>
+        </div>
+        <a class="select-item-info noselect" *ngIf="item.infoAction" (click)="item.infoAction()">
+          <i class="material-icons-round noselect">info</i>
+        </a>
+      </div>
+    </ng-template>
+    <div class="select-box-dropdown" *ngIf="!collapsed && !expandUp" @fadeDown>
+      <ng-container *ngTemplateOutlet="dropdownContent"></ng-container>
+    </div>
+    <div class="select-box-dropdown" *ngIf="!collapsed && expandUp" @fadeUp>
+      <ng-container *ngTemplateOutlet="dropdownContent"></ng-container>
     </div>
   </div>
 </div>

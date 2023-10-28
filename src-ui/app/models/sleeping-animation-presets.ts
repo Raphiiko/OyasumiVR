@@ -74,7 +74,7 @@ i 214 /avatar/parameters/Go/VRCEmote
 f -1.0 /avatar/parameters/Go/Float
     `).script,
     SIDE_FRONT: parseOscScriptFromCode(`
-i 214 /avatar/parameters/Go/RCEmote
+i 214 /avatar/parameters/Go/VRCEmote
 f -0.75 /avatar/parameters/Go/Float
     `).script,
     SIDE_LEFT: parseOscScriptFromCode(`

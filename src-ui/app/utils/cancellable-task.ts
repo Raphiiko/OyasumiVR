@@ -1,6 +1,6 @@
 import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 
-type CancellableTaskStatus = 'waiting' | 'running' | 'completed' | 'cancelled' | 'error';
+export type CancellableTaskStatus = 'waiting' | 'running' | 'completed' | 'cancelled' | 'error';
 
 export class CancellableTask<T = unknown, E = unknown> {
   private error?: E;
@@ -24,7 +24,12 @@ export class CancellableTask<T = unknown, E = unknown> {
     map(() => this.error!)
   );
 
-  constructor(private work: (task: CancellableTask, status: CancellableTaskStatus) => Promise<T>) {}
+  constructor(
+    protected work: (
+      task: CancellableTask,
+      status: CancellableTaskStatus
+    ) => Promise<T> = async (): Promise<any> => {}
+  ) {}
 
   public async start(): Promise<T> {
     try {

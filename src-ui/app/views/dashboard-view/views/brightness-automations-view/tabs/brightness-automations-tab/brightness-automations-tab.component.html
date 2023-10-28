@@ -1,0 +1,664 @@
+<div class="pane-content" @noop>
+  <div class="setting-category">
+    <p translate>brightness-automations.brightnessAutomations.description</p>
+
+    <h3 translate>brightness-automations.brightnessAutomations.sleepAutomations</h3>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>brightness-automations.brightnessAutomations.onSleepEnable.title</span>
+          <span translate
+            >brightness-automations.brightnessAutomations.onSleepEnable.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <div class="small-spinner" @fade *ngIf="isSleepModeEnableTransitionActive | async"></div>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeEnableConfig.enabled"
+              (change)="
+                setAutomationEnabled(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                  !onSleepModeEnableConfig.enabled
+                )
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="active-effect" @fade *ngIf="isSleepModeEnableTransitionActive | async"></div>
+      </div>
+
+      <div class="setting-row-group">
+        <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled && !advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.brightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'SIMPLE')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.SIMPLE.min"
+              [max]="brightnessBounds.SIMPLE.max"
+              [value]="onSleepModeEnableConfig.brightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'SIMPLE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.SIMPLE"
+              [snapDistance]="brightnessSnapDistance.SIMPLE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE_SIMPLE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'IMAGE')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.IMAGE.min"
+              [max]="brightnessBounds.IMAGE.max"
+              [value]="onSleepModeEnableConfig.imageBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'IMAGE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.IMAGE"
+              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE_IMAGE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'DISPLAY')
+              "
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.DISPLAY.min"
+              [max]="brightnessBounds.DISPLAY.max"
+              [value]="onSleepModeEnableConfig.displayBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'DISPLAY', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.DISPLAY"
+              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE_DISPLAY')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transition.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transition.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeEnableConfig.transition"
+                (change)="
+                  toggleTransitioning(
+                    'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    !onSleepModeEnableConfig.transition
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="setting-row"
+          *ngIf="onSleepModeEnableConfig.enabled && onSleepModeEnableConfig.transition"
+          @vshrink
+        >
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transitionTime.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transitionTime.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <app-slider-setting
+              [min]="1"
+              [value]="transitionValueOnEnable"
+              (valueChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                  $event,
+                  transitionUnitOptionOnEnable
+                )
+              "
+              [snapValues]="[15, 30, 45]"
+              [snapDistance]="5"
+              [max]="59"
+              [step]="1"
+            ></app-slider-setting>
+            <app-select-box
+              class="status-dropdown"
+              [type]="'SMALL'"
+              [items]="transitionUnitOptions"
+              [selected]="transitionUnitOptionOnEnable"
+              (selectedChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                  transitionValueOnEnable,
+                  $event
+                )
+              "
+              #transitionUnitOnEnable
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.applyOnStart.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.applyOnStart.description.onSleepEnable</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeEnableConfig.applyOnStart"
+                (change)="
+                  toggleApplyOnStart(
+                    'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+                    !onSleepModeEnableConfig.applyOnStart
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>brightness-automations.brightnessAutomations.onSleepDisable.title</span>
+          <span translate
+            >brightness-automations.brightnessAutomations.onSleepDisable.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <div class="small-spinner" @fade *ngIf="isSleepModeDisableTransitionActive | async"></div>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepModeDisableConfig.enabled"
+              (change)="
+                setAutomationEnabled(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                  !onSleepModeDisableConfig.enabled
+                )
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="active-effect" @fade *ngIf="isSleepModeDisableTransitionActive | async"></div>
+      </div>
+
+      <div class="setting-row-group">
+        <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled && !advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.brightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'SIMPLE')
+              "
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.SIMPLE.min"
+              [max]="brightnessBounds.SIMPLE.max"
+              [value]="onSleepModeDisableConfig.brightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'SIMPLE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.SIMPLE"
+              [snapDistance]="brightnessSnapDistance.SIMPLE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE_SIMPLE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'IMAGE')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.IMAGE.min"
+              [max]="brightnessBounds.IMAGE.max"
+              [value]="onSleepModeDisableConfig.imageBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'IMAGE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.IMAGE"
+              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE_IMAGE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'DISPLAY')
+              "
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.DISPLAY.min"
+              [max]="brightnessBounds.DISPLAY.max"
+              [value]="onSleepModeDisableConfig.displayBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'DISPLAY', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.DISPLAY"
+              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE_DISPLAY')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transition.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transition.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeDisableConfig.transition"
+                (change)="
+                  toggleTransitioning(
+                    'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    !onSleepModeDisableConfig.transition
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="setting-row"
+          *ngIf="onSleepModeDisableConfig.enabled && onSleepModeDisableConfig.transition"
+          @vshrink
+        >
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transitionTime.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transitionTime.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <app-slider-setting
+              [min]="1"
+              [snapValues]="[15, 30, 45]"
+              [value]="transitionValueOnDisable"
+              (valueChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                  $event,
+                  transitionUnitOptionOnDisable
+                )
+              "
+              [snapDistance]="5"
+              [max]="59"
+              [step]="1"
+            ></app-slider-setting>
+            <app-select-box
+              class="status-dropdown"
+              [type]="'SMALL'"
+              [items]="transitionUnitOptions"
+              [selected]="transitionUnitOptionOnDisable"
+              (selectedChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                  transitionValueOnDisable,
+                  $event
+                )
+              "
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.applyOnStart.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.applyOnStart.description.onSleepDisable</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepModeDisableConfig.applyOnStart"
+                (change)="
+                  toggleApplyOnStart(
+                    'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+                    !onSleepModeDisableConfig.applyOnStart
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 translate>brightness-automations.brightnessAutomations.sleepPreparation.title</h3>
+    <p translate>brightness-automations.brightnessAutomations.sleepPreparation.description</p>
+
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate
+            >brightness-automations.brightnessAutomations.onSleepPreparation.title</span
+          >
+          <span translate
+            >brightness-automations.brightnessAutomations.onSleepPreparation.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <div class="small-spinner" @fade *ngIf="isSleepPreparationTransitionActive | async"></div>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="onSleepPreparationConfig.enabled"
+              (change)="
+                setAutomationEnabled(
+                  'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+                  !onSleepPreparationConfig.enabled
+                )
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+        <div class="active-effect" @fade *ngIf="isSleepPreparationTransitionActive | async"></div>
+      </div>
+
+      <div class="setting-row-group">
+        <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled && !advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.brightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'SIMPLE')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.SIMPLE.min"
+              [max]="brightnessBounds.SIMPLE.max"
+              [value]="onSleepPreparationConfig.brightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'SIMPLE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.SIMPLE"
+              [snapDistance]="brightnessSnapDistance.SIMPLE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_PREPARATION_SIMPLE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'IMAGE')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.IMAGE.min"
+              [max]="brightnessBounds.IMAGE.max"
+              [value]="onSleepPreparationConfig.imageBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'IMAGE', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.IMAGE"
+              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_PREPARATION_IMAGE')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled && advancedMode" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+            >
+            <span translate
+              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'DISPLAY')
+              "
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.DISPLAY.min"
+              [max]="brightnessBounds.DISPLAY.max"
+              [value]="onSleepPreparationConfig.displayBrightness"
+              (valueChange)="
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'DISPLAY', $event)
+              "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.DISPLAY"
+              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [class.anim-vshake]="
+                vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_PREPARATION_DISPLAY')
+              "
+            ></app-slider-setting>
+          </div>
+        </div>
+
+        <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled" @vshrink>
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transition.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transition.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepPreparationConfig.transition"
+                (change)="
+                  toggleTransitioning(
+                    'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+                    !onSleepPreparationConfig.transition
+                  )
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div
+          class="setting-row"
+          *ngIf="onSleepPreparationConfig.enabled && onSleepPreparationConfig.transition"
+          @vshrink
+        >
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transitionTime.title</span>
+            <span translate
+              >brightness-automations.brightnessAutomations.transitionTime.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <app-slider-setting
+              [min]="1"
+              [value]="transitionValueOnPreparation"
+              (valueChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+                  $event,
+                  transitionUnitOptionOnPreparation
+                )
+              "
+              [snapValues]="[15, 30, 45]"
+              [snapDistance]="5"
+              [max]="59"
+              [step]="1"
+            ></app-slider-setting>
+            <app-select-box
+              class="status-dropdown"
+              [type]="'SMALL'"
+              [items]="transitionUnitOptions"
+              [selected]="transitionUnitOptionOnPreparation"
+              (selectedChange)="
+                onChangeTransition(
+                  'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+                  transitionValueOnPreparation,
+                  $event
+                )
+              "
+              #transitionUnitOnPreparation
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

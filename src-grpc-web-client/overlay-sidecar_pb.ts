@@ -64,6 +64,24 @@ export interface SetDebugTranslationsRequest {
   translations: string;
 }
 /**
+ * @generated from protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export interface OverlayMenuOpenRequest {
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1;
+   */
+  controllerRole: OyasumiSidecarControllerRole;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.SetMicrophoneActiveRequest
+ */
+export interface SetMicrophoneActiveRequest {
+  /**
+   * @generated from protobuf field: bool active = 1;
+   */
+  active: boolean;
+}
+/**
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
  */
 export interface Empty {}
@@ -99,23 +117,41 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings settings = 7;
    */
   settings?: OyasumiSidecarOverlaySettings;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state = 8;
+   */
+  brightnessState?: OyasumiSidecarBrightnessState;
+  /**
+   * @generated from protobuf field: bool sleep_preparation_available = 9;
+   */
+  sleepPreparationAvailable: boolean;
+  /**
+   * @generated from protobuf field: bool sleep_preparation_timed_out = 10;
+   */
+  sleepPreparationTimedOut: boolean;
+  /**
+   * @generated from protobuf field: bool system_mic_muted = 11;
+   */
+  systemMicMuted: boolean;
 }
 /**
+ * No longer required, but reserved for future settings
+ *
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings
  */
 export interface OyasumiSidecarOverlaySettings {
   /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1;
+   * @generated from protobuf field: bool system_mic_indicator_enabled = 1;
    */
-  activationAction: OyasumiSidecarOverlayActivationAction;
+  systemMicIndicatorEnabled: boolean;
   /**
-   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2;
+   * @generated from protobuf field: double system_mic_indicator_opacity = 2;
    */
-  activationController: OyasumiSidecarOverlayActivationController;
+  systemMicIndicatorOpacity: number;
   /**
-   * @generated from protobuf field: bool activation_trigger_required = 3;
+   * @generated from protobuf field: bool system_mic_indicator_fadeout = 3;
    */
-  activationTriggerRequired: boolean;
+  systemMicIndicatorFadeout: boolean;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
@@ -343,6 +379,63 @@ export interface OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector 
   activationWindowEnd: number[];
 }
 /**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarBrightnessState
+ */
+export interface OyasumiSidecarBrightnessState {
+  /**
+   * @generated from protobuf field: bool advanced_mode = 1;
+   */
+  advancedMode: boolean;
+  /**
+   * @generated from protobuf field: double brightness = 2;
+   */
+  brightness: number;
+  /**
+   * @generated from protobuf field: double display_brightness = 3;
+   */
+  displayBrightness: number;
+  /**
+   * @generated from protobuf field: double image_brightness = 4;
+   */
+  imageBrightness: number;
+  /**
+   * @generated from protobuf field: bool brightness_transitioning = 5;
+   */
+  brightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: bool display_brightness_transitioning = 6;
+   */
+  displayBrightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: bool image_brightness_transitioning = 7;
+   */
+  imageBrightnessTransitioning: boolean;
+  /**
+   * @generated from protobuf field: double brightness_transition_target = 8;
+   */
+  brightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: double display_brightness_transition_target = 9;
+   */
+  displayBrightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: double image_brightness_transition_target = 10;
+   */
+  imageBrightnessTransitionTarget: number;
+  /**
+   * @generated from protobuf field: bool display_brightness_available = 11;
+   */
+  displayBrightnessAvailable: boolean;
+  /**
+   * @generated from protobuf field: double display_min_brightness = 12;
+   */
+  displayMinBrightness: number;
+  /**
+   * @generated from protobuf field: double display_max_brightness = 13;
+   */
+  displayMaxBrightness: number;
+}
+/**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
  */
 export enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
@@ -385,54 +478,17 @@ export enum VrcStatus {
   JoinMe = 4,
 }
 /**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction
+ * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarControllerRole
  */
-export enum OyasumiSidecarOverlayActivationAction {
+export enum OyasumiSidecarControllerRole {
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
    */
-  None = 0,
+  Left = 0,
   /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
+   * @generated from protobuf enum value: OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
    */
-  Single_A = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
-   */
-  Double_A = 2,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
-   */
-  Triple_A = 3,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
-   */
-  Single_B = 4,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
-   */
-  Double_B = 5,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
-   */
-  Triple_B = 6,
-}
-/**
- * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController
- */
-export enum OyasumiSidecarOverlayActivationController {
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
-   */
-  Either = 0,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
-   */
-  Left = 1,
-  /**
-   * @generated from protobuf enum value: OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
-   */
-  Right = 2,
+  Right = 1,
 }
 // @generated message type with reflection information, may provide speed optimized methods
 class PingResponse$Type extends MessageType<PingResponse> {
@@ -755,6 +811,140 @@ class SetDebugTranslationsRequest$Type extends MessageType<SetDebugTranslationsR
  */
 export const SetDebugTranslationsRequest = new SetDebugTranslationsRequest$Type();
 // @generated message type with reflection information, may provide speed optimized methods
+class OverlayMenuOpenRequest$Type extends MessageType<OverlayMenuOpenRequest> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OverlayMenuOpenRequest', [
+      {
+        no: 1,
+        name: 'controller_role',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.OyasumiSidecarControllerRole',
+          OyasumiSidecarControllerRole,
+          'OYASUMI_SIDECAR_CONTROLLER_ROLE_',
+        ],
+      },
+    ]);
+  }
+  create(value?: PartialMessage<OverlayMenuOpenRequest>): OverlayMenuOpenRequest {
+    const message = { controllerRole: 0 };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OverlayMenuOpenRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OverlayMenuOpenRequest
+  ): OverlayMenuOpenRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role */ 1:
+          message.controllerRole = reader.int32();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OverlayMenuOpenRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* OyasumiOverlaySidecar.OyasumiSidecarControllerRole controller_role = 1; */
+    if (message.controllerRole !== 0) writer.tag(1, WireType.Varint).int32(message.controllerRole);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OverlayMenuOpenRequest
+ */
+export const OverlayMenuOpenRequest = new OverlayMenuOpenRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class SetMicrophoneActiveRequest$Type extends MessageType<SetMicrophoneActiveRequest> {
+  constructor() {
+    super('OyasumiOverlaySidecar.SetMicrophoneActiveRequest', [
+      { no: 1, name: 'active', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+    ]);
+  }
+  create(value?: PartialMessage<SetMicrophoneActiveRequest>): SetMicrophoneActiveRequest {
+    const message = { active: false };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<SetMicrophoneActiveRequest>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: SetMicrophoneActiveRequest
+  ): SetMicrophoneActiveRequest {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool active */ 1:
+          message.active = reader.bool();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: SetMicrophoneActiveRequest,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool active = 1; */
+    if (message.active !== false) writer.tag(1, WireType.Varint).bool(message.active);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.SetMicrophoneActiveRequest
+ */
+export const SetMicrophoneActiveRequest = new SetMicrophoneActiveRequest$Type();
+// @generated message type with reflection information, may provide speed optimized methods
 class Empty$Type extends MessageType<Empty> {
   constructor() {
     super('OyasumiOverlaySidecar.Empty', []);
@@ -803,10 +993,22 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 5, name: 'locale', kind: 'scalar', T: 9 /*ScalarType.STRING*/ },
       { no: 6, name: 'device_info', kind: 'message', T: () => OyasumiSidecarDeviceInfo },
       { no: 7, name: 'settings', kind: 'message', T: () => OyasumiSidecarOverlaySettings },
+      { no: 8, name: 'brightness_state', kind: 'message', T: () => OyasumiSidecarBrightnessState },
+      { no: 9, name: 'sleep_preparation_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 10, name: 'sleep_preparation_timed_out', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 11, name: 'system_mic_muted', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
-    const message = { sleepMode: false, vrcStatus: 0, vrcUsername: '', locale: '' };
+    const message = {
+      sleepMode: false,
+      vrcStatus: 0,
+      vrcUsername: '',
+      locale: '',
+      sleepPreparationAvailable: false,
+      sleepPreparationTimedOut: false,
+      systemMicMuted: false,
+    };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined) reflectionMergePartial<OyasumiSidecarState>(this, message, value);
     return message;
@@ -857,6 +1059,23 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
             options,
             message.settings
           );
+          break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state */ 8:
+          message.brightnessState = OyasumiSidecarBrightnessState.internalBinaryRead(
+            reader,
+            reader.uint32(),
+            options,
+            message.brightnessState
+          );
+          break;
+        case /* bool sleep_preparation_available */ 9:
+          message.sleepPreparationAvailable = reader.bool();
+          break;
+        case /* bool sleep_preparation_timed_out */ 10:
+          message.sleepPreparationTimedOut = reader.bool();
+          break;
+        case /* bool system_mic_muted */ 11:
+          message.systemMicMuted = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -912,6 +1131,22 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
         writer.tag(7, WireType.LengthDelimited).fork(),
         options
       ).join();
+    /* OyasumiOverlaySidecar.OyasumiSidecarBrightnessState brightness_state = 8; */
+    if (message.brightnessState)
+      OyasumiSidecarBrightnessState.internalBinaryWrite(
+        message.brightnessState,
+        writer.tag(8, WireType.LengthDelimited).fork(),
+        options
+      ).join();
+    /* bool sleep_preparation_available = 9; */
+    if (message.sleepPreparationAvailable !== false)
+      writer.tag(9, WireType.Varint).bool(message.sleepPreparationAvailable);
+    /* bool sleep_preparation_timed_out = 10; */
+    if (message.sleepPreparationTimedOut !== false)
+      writer.tag(10, WireType.Varint).bool(message.sleepPreparationTimedOut);
+    /* bool system_mic_muted = 11; */
+    if (message.systemMicMuted !== false)
+      writer.tag(11, WireType.Varint).bool(message.systemMicMuted);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -925,34 +1160,16 @@ export const OyasumiSidecarState = new OyasumiSidecarState$Type();
 class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverlaySettings> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarOverlaySettings', [
-      {
-        no: 1,
-        name: 'activation_action',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction',
-          OyasumiSidecarOverlayActivationAction,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_',
-        ],
-      },
-      {
-        no: 2,
-        name: 'activation_controller',
-        kind: 'enum',
-        T: () => [
-          'OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController',
-          OyasumiSidecarOverlayActivationController,
-          'OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_',
-        ],
-      },
-      { no: 3, name: 'activation_trigger_required', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'system_mic_indicator_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'system_mic_indicator_opacity', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'system_mic_indicator_fadeout', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
     const message = {
-      activationAction: 0,
-      activationController: 0,
-      activationTriggerRequired: false,
+      systemMicIndicatorEnabled: false,
+      systemMicIndicatorOpacity: 0,
+      systemMicIndicatorFadeout: false,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
@@ -970,14 +1187,14 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action */ 1:
-          message.activationAction = reader.int32();
+        case /* bool system_mic_indicator_enabled */ 1:
+          message.systemMicIndicatorEnabled = reader.bool();
           break;
-        case /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller */ 2:
-          message.activationController = reader.int32();
+        case /* double system_mic_indicator_opacity */ 2:
+          message.systemMicIndicatorOpacity = reader.double();
           break;
-        case /* bool activation_trigger_required */ 3:
-          message.activationTriggerRequired = reader.bool();
+        case /* bool system_mic_indicator_fadeout */ 3:
+          message.systemMicIndicatorFadeout = reader.bool();
           break;
         default:
           let u = options.readUnknownField;
@@ -1003,15 +1220,15 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationAction activation_action = 1; */
-    if (message.activationAction !== 0)
-      writer.tag(1, WireType.Varint).int32(message.activationAction);
-    /* OyasumiOverlaySidecar.OyasumiSidecarOverlayActivationController activation_controller = 2; */
-    if (message.activationController !== 0)
-      writer.tag(2, WireType.Varint).int32(message.activationController);
-    /* bool activation_trigger_required = 3; */
-    if (message.activationTriggerRequired !== false)
-      writer.tag(3, WireType.Varint).bool(message.activationTriggerRequired);
+    /* bool system_mic_indicator_enabled = 1; */
+    if (message.systemMicIndicatorEnabled !== false)
+      writer.tag(1, WireType.Varint).bool(message.systemMicIndicatorEnabled);
+    /* double system_mic_indicator_opacity = 2; */
+    if (message.systemMicIndicatorOpacity !== 0)
+      writer.tag(2, WireType.Bit64).double(message.systemMicIndicatorOpacity);
+    /* bool system_mic_indicator_fadeout = 3; */
+    if (message.systemMicIndicatorFadeout !== false)
+      writer.tag(3, WireType.Varint).bool(message.systemMicIndicatorFadeout);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -2029,6 +2246,176 @@ class OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type extend
  */
 export const OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector =
   new OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrightnessState> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarBrightnessState', [
+      { no: 1, name: 'advanced_mode', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'display_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 4, name: 'image_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 5, name: 'brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 6, name: 'display_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 7, name: 'image_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 8, name: 'brightness_transition_target', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      {
+        no: 9,
+        name: 'display_brightness_transition_target',
+        kind: 'scalar',
+        T: 1 /*ScalarType.DOUBLE*/,
+      },
+      {
+        no: 10,
+        name: 'image_brightness_transition_target',
+        kind: 'scalar',
+        T: 1 /*ScalarType.DOUBLE*/,
+      },
+      { no: 11, name: 'display_brightness_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 12, name: 'display_min_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 13, name: 'display_max_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarBrightnessState>): OyasumiSidecarBrightnessState {
+    const message = {
+      advancedMode: false,
+      brightness: 0,
+      displayBrightness: 0,
+      imageBrightness: 0,
+      brightnessTransitioning: false,
+      displayBrightnessTransitioning: false,
+      imageBrightnessTransitioning: false,
+      brightnessTransitionTarget: 0,
+      displayBrightnessTransitionTarget: 0,
+      imageBrightnessTransitionTarget: 0,
+      displayBrightnessAvailable: false,
+      displayMinBrightness: 0,
+      displayMaxBrightness: 0,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined)
+      reflectionMergePartial<OyasumiSidecarBrightnessState>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarBrightnessState
+  ): OyasumiSidecarBrightnessState {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool advanced_mode */ 1:
+          message.advancedMode = reader.bool();
+          break;
+        case /* double brightness */ 2:
+          message.brightness = reader.double();
+          break;
+        case /* double display_brightness */ 3:
+          message.displayBrightness = reader.double();
+          break;
+        case /* double image_brightness */ 4:
+          message.imageBrightness = reader.double();
+          break;
+        case /* bool brightness_transitioning */ 5:
+          message.brightnessTransitioning = reader.bool();
+          break;
+        case /* bool display_brightness_transitioning */ 6:
+          message.displayBrightnessTransitioning = reader.bool();
+          break;
+        case /* bool image_brightness_transitioning */ 7:
+          message.imageBrightnessTransitioning = reader.bool();
+          break;
+        case /* double brightness_transition_target */ 8:
+          message.brightnessTransitionTarget = reader.double();
+          break;
+        case /* double display_brightness_transition_target */ 9:
+          message.displayBrightnessTransitionTarget = reader.double();
+          break;
+        case /* double image_brightness_transition_target */ 10:
+          message.imageBrightnessTransitionTarget = reader.double();
+          break;
+        case /* bool display_brightness_available */ 11:
+          message.displayBrightnessAvailable = reader.bool();
+          break;
+        case /* double display_min_brightness */ 12:
+          message.displayMinBrightness = reader.double();
+          break;
+        case /* double display_max_brightness */ 13:
+          message.displayMaxBrightness = reader.double();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarBrightnessState,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool advanced_mode = 1; */
+    if (message.advancedMode !== false) writer.tag(1, WireType.Varint).bool(message.advancedMode);
+    /* double brightness = 2; */
+    if (message.brightness !== 0) writer.tag(2, WireType.Bit64).double(message.brightness);
+    /* double display_brightness = 3; */
+    if (message.displayBrightness !== 0)
+      writer.tag(3, WireType.Bit64).double(message.displayBrightness);
+    /* double image_brightness = 4; */
+    if (message.imageBrightness !== 0)
+      writer.tag(4, WireType.Bit64).double(message.imageBrightness);
+    /* bool brightness_transitioning = 5; */
+    if (message.brightnessTransitioning !== false)
+      writer.tag(5, WireType.Varint).bool(message.brightnessTransitioning);
+    /* bool display_brightness_transitioning = 6; */
+    if (message.displayBrightnessTransitioning !== false)
+      writer.tag(6, WireType.Varint).bool(message.displayBrightnessTransitioning);
+    /* bool image_brightness_transitioning = 7; */
+    if (message.imageBrightnessTransitioning !== false)
+      writer.tag(7, WireType.Varint).bool(message.imageBrightnessTransitioning);
+    /* double brightness_transition_target = 8; */
+    if (message.brightnessTransitionTarget !== 0)
+      writer.tag(8, WireType.Bit64).double(message.brightnessTransitionTarget);
+    /* double display_brightness_transition_target = 9; */
+    if (message.displayBrightnessTransitionTarget !== 0)
+      writer.tag(9, WireType.Bit64).double(message.displayBrightnessTransitionTarget);
+    /* double image_brightness_transition_target = 10; */
+    if (message.imageBrightnessTransitionTarget !== 0)
+      writer.tag(10, WireType.Bit64).double(message.imageBrightnessTransitionTarget);
+    /* bool display_brightness_available = 11; */
+    if (message.displayBrightnessAvailable !== false)
+      writer.tag(11, WireType.Varint).bool(message.displayBrightnessAvailable);
+    /* double display_min_brightness = 12; */
+    if (message.displayMinBrightness !== 0)
+      writer.tag(12, WireType.Bit64).double(message.displayMinBrightness);
+    /* double display_max_brightness = 13; */
+    if (message.displayMaxBrightness !== 0)
+      writer.tag(13, WireType.Bit64).double(message.displayMaxBrightness);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarBrightnessState
+ */
+export const OyasumiSidecarBrightnessState = new OyasumiSidecarBrightnessState$Type();
 /**
  * @generated ServiceType for protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */
@@ -2041,5 +2428,9 @@ export const OyasumiOverlaySidecar = new ServiceType(
     { name: 'ClearNotification', options: {}, I: ClearNotificationRequest, O: Empty },
     { name: 'SyncState', options: {}, I: OyasumiSidecarState, O: Empty },
     { name: 'SetDebugTranslations', options: {}, I: SetDebugTranslationsRequest, O: Empty },
+    { name: 'OpenOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
+    { name: 'CloseOverlayMenu', options: {}, I: Empty, O: Empty },
+    { name: 'ToggleOverlayMenu', options: {}, I: OverlayMenuOpenRequest, O: Empty },
+    { name: 'SetMicrophoneActive', options: {}, I: SetMicrophoneActiveRequest, O: Empty },
   ]
 );

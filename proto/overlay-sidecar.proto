@@ -5,19 +5,17 @@ option csharp_namespace = "GrcpOverlaySidecar";
 package OyasumiOverlaySidecar;
 
 service OyasumiOverlaySidecar {
-  rpc Ping (Empty) returns (PingResponse) {}
-  rpc RequestStop (Empty) returns (Empty) {}
   rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
   rpc ClearNotification (ClearNotificationRequest) returns (Empty) {}
   rpc SyncState (OyasumiSidecarState) returns (Empty) {}
   rpc SetDebugTranslations(SetDebugTranslationsRequest) returns (Empty) {}
+  rpc OpenOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
+  rpc CloseOverlayMenu(Empty) returns (Empty) {}
+  rpc ToggleOverlayMenu(OverlayMenuOpenRequest) returns (Empty) {}
+  rpc SetMicrophoneActive(SetMicrophoneActiveRequest) returns (Empty) {}
 }
 
 // Requests & Responses
-message PingResponse {
-  uint32 pid = 1;
-}
-
 message AddNotificationRequest {
   string message = 1;
   uint32 duration = 2;
@@ -35,6 +33,15 @@ message SetDebugTranslationsRequest {
   string translations = 1;
 }
 
+message OverlayMenuOpenRequest {
+  OyasumiSidecarControllerRole controller_role = 1;
+}
+
+message SetMicrophoneActiveRequest {
+  bool active = 1;
+  MicrophoneActivityMode mode = 2;
+}
+
 message Empty {
 
 }
@@ -47,12 +54,17 @@ message OyasumiSidecarState {
   string locale = 5;
   OyasumiSidecarDeviceInfo device_info = 6;
   OyasumiSidecarOverlaySettings settings = 7;
+  OyasumiSidecarBrightnessState brightness_state = 8;
+  bool sleep_preparation_available = 9;
+  bool sleep_preparation_timed_out = 10;
+  bool system_mic_muted = 11;
 }
 
+// No longer required, but reserved for future settings
 message OyasumiSidecarOverlaySettings {
-  OyasumiSidecarOverlayActivationAction activation_action = 1;
-  OyasumiSidecarOverlayActivationController activation_controller = 2;
-  bool activation_trigger_required = 3;
+  bool system_mic_indicator_enabled = 1;
+  double system_mic_indicator_opacity = 2;
+  bool system_mic_indicator_fadeout = 3;
 }
 
 message OyasumiSidecarDeviceInfo {
@@ -133,6 +145,22 @@ enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
   OYASUMI_SIDECAR_AUTOMATIONS_STATE__AUTO_ACCEPT_INVITE_REQUESTS__MODE_Blacklist = 2;
 }
 
+message OyasumiSidecarBrightnessState {
+  bool advanced_mode = 1;
+  double brightness = 2;
+  double display_brightness = 3;
+  double image_brightness = 4;
+  bool brightness_transitioning = 5;
+  bool display_brightness_transitioning = 6;
+  bool image_brightness_transitioning = 7;
+  double brightness_transition_target = 8;
+  double display_brightness_transition_target = 9;
+  double image_brightness_transition_target = 10;
+  bool display_brightness_available = 11;
+  double display_min_brightness = 12;
+  double display_max_brightness = 13;
+}
+
 enum VrcStatus {
   VRC_STATUS_Offline = 0;
   VRC_STATUS_Busy = 1;
@@ -141,19 +169,13 @@ enum VrcStatus {
   VRC_STATUS_JoinMe = 4;
 }
 
-enum OyasumiSidecarOverlayActivationAction {
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_None = 0;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_A = 1;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_A = 2;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_A = 3;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Single_B = 4;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Double_B = 5;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_ACTION_Triple_B = 6;
+enum OyasumiSidecarControllerRole {
+  OYASUMI_SIDECAR_CONTROLLER_ROLE_Left = 0;
+  OYASUMI_SIDECAR_CONTROLLER_ROLE_Right = 1;
 }
 
-enum OyasumiSidecarOverlayActivationController {
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Either = 0;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Left = 1;
-  OYASUMI_SIDECAR_OVERLAY_ACTIVATION_CONTROLLER_Right = 2;
+enum MicrophoneActivityMode {
+  MICROPHONE_ACTIVITY_MODE_Hardware = 0;
+  MICROPHONE_ACTIVITY_MODE_VRChat = 1;
 }
 
