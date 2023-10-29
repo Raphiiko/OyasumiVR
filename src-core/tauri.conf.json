@@ -95,7 +95,6 @@
         "digestAlgorithm": "sha256",
         "timestampUrl": "",
         "nsis": {
-          "template": "installer/installer.nsi",
           "license": "../LICENSE.md",
           "installerIcon": "icons/icon.ico",
           "headerImage": "images/installer_header.bmp",
@@ -109,7 +108,9 @@
             "Dutch",
             "Korean",
             "SimpChinese",
-            "TradChinese"
+            "TradChinese",
+            "Indonesian",
+            "Spanish"
           ]
         }
       }

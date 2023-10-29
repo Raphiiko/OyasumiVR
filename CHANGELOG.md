@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Spanish & Indonesian language support to the NSIS installer.
+
+### Removed
+
+- .NET Core & ASP.NET Core runtime installation from NSIS installer.
+
 ## [1.10.0]
 
 ### Added
@@ -47,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added workaround for bug in SteamVR 2.0 regarding IVROverlay::ComputeOverlayIntersection.
 
 ### Removed
+
 - Dotnet version checking and installation.
 
 ## [1.9.0]
