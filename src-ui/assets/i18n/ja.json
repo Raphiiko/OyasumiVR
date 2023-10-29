@@ -184,6 +184,8 @@
       "chaperoneAutomations": "ガーディアンの自動化",
       "gpuAutomations": "GPUの電力",
       "hardwareAutomations": "ハードウェアの自動化",
+      "miscAutomations": "その他の自動化",
+      "nightmareDetection": "悪夢の検知",
       "oscAutomations": "OSC",
       "overview": "概要",
       "powerAutomations": "機器の電源",
@@ -195,9 +197,7 @@
       "statusAutomations": "ステータス",
       "systemMicMuteAutomations": "マイクミュート",
       "vrcAutomations": "VRChat関係の自動化",
-      "vrchatMicMuteAutomations": "マイクミュート",
-      "miscAutomations": "その他の自動化",
-      "nightmareDetection": "悪夢の検知"
+      "vrchatMicMuteAutomations": "マイクミュート"
     },
     "device-list": {
       "category": {
@@ -410,10 +410,10 @@
         "sleepModeDisabled": {
           "reason": {
             "automation": {
+              "NIGHTMARE_DETECTION": "悪夢を見ていると判断された",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVRの終了による",
               "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入った",
-              "NIGHTMARE_DETECTION": "悪夢を見ていると判断された",
               "unknown": "不明な自動機能"
             },
             "manual": "手動で無効化",
@@ -545,7 +545,7 @@
       "test": "テスト"
     },
     "select-box": {
-      "defaultPlaceholder": ""
+      "defaultPlaceholder": "選択する"
     },
     "start-with-steamvr-how-to-modal": {
       "description": "SteamVR -> 設定 -> スタートアップ/シャットダウン -> スタートアップオーバーレイアプリを選択",
@@ -668,6 +668,37 @@
       "tooManyCommands": "OSCスクリプトは、{value}以上のアクションを持つことはできません。",
       "totalDurationTooLong": "スクリプトの総時間は10秒を超えてはなりません。"
     }
+  },
+  "nightmare-detection": {
+    "automations": {
+      "description": "悪夢を見ている判断したときに実行される自動化",
+      "title": "自動化"
+    },
+    "bpmThreshold": {
+      "description": "悪夢を検知するために心拍数が達成しなければならない閾値",
+      "title": "最低心拍数",
+      "unit": "BPM"
+    },
+    "description": "睡眠中の高い心拍数をチェックして、悪夢を見ているか検知しようとします。悪夢を見ていると判断された場合、OyasumiVRによる起床を試みるオプションがあります。悪夢の検知は、睡眠モードがアクティブな場合のみ実行されます。\n\n<b>注意:</b> この機能を使用するには、<a class=\"integrationsPageLink\">Pulsoidの統合</a>を有効にし、アクティブなPulsoid \"BRO\" サブスクリプションが必要です。",
+    "disableSleepMode": {
+      "description": "悪夢の可能性があるときに睡眠モードを無効にします",
+      "title": "睡眠モードの無効化"
+    },
+    "duration": {
+      "description": "OyasumiVRが悪夢を見ている判断する前に、心拍数が閾値を超え続ける必要がある期間",
+      "title": "期間"
+    },
+    "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。",
+    "playSound": {
+      "description": "悪夢の可能性があるときにOyasumiVRによって音を鳴らして目を覚ましましょう",
+      "title": "音を再生",
+      "volume": {
+        "description": "効果音が再生される音量を設定",
+        "test": "テスト",
+        "title": "音量"
+      }
+    },
+    "title": "悪夢の検知"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1029,18 +1060,18 @@
           "docs": "もっと詳しく",
           "title": "翻訳に貢献できます！"
         },
+        "editor": {
+          "action": "エディタを起動",
+          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
+          "experimental": "このモジュールはまだ実験的な段階にあり、英語のみ利用可能です。現時点では問題や機能不足の可能性があります。",
+          "title": "翻訳エディタ"
+        },
         "loadFile": {
           "action": "ファイルを読み込む",
           "description": "カスタム言語ファイルを読み込みます。新しい翻訳をテストするときに便利です。",
           "title": "翻訳ファイルを読み込む"
         },
-        "title": "言語・翻訳",
-        "editor": {
-          "title": "翻訳エディタ",
-          "action": "エディタを起動",
-          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
-          "experimental": "このモジュールはまだ実験的な段階にあり、英語のみ利用可能です。現時点では問題や機能不足の可能性があります。"
-        }
+        "title": "言語・翻訳"
       }
     },
     "general": {
@@ -1724,36 +1755,5 @@
       "unmuted": "ミュート解除"
     },
     "title": "マイクミュート"
-  },
-  "nightmare-detection": {
-    "title": "悪夢の検知",
-    "description": "睡眠中の高い心拍数をチェックして、悪夢を見ているか検知しようとします。悪夢を見ていると判断された場合、OyasumiVRによる起床を試みるオプションがあります。悪夢の検知は、睡眠モードがアクティブな場合のみ実行されます。\n\n<b>注意:</b> この機能を使用するには、<a class=\"integrationsPageLink\">Pulsoidの統合</a>を有効にし、アクティブなPulsoid \"BRO\" サブスクリプションが必要です。",
-    "bpmThreshold": {
-      "unit": "BPM",
-      "title": "最低心拍数",
-      "description": "悪夢を検知するために心拍数が達成しなければならない閾値"
-    },
-    "duration": {
-      "title": "期間",
-      "description": "OyasumiVRが悪夢を見ている判断する前に、心拍数が閾値を超え続ける必要がある期間"
-    },
-    "automations": {
-      "title": "自動化",
-      "description": "悪夢を見ている判断したときに実行される自動化"
-    },
-    "disableSleepMode": {
-      "title": "睡眠モードの無効化",
-      "description": "悪夢の可能性があるときに睡眠モードを無効にします"
-    },
-    "playSound": {
-      "title": "音を再生",
-      "description": "悪夢の可能性があるときにOyasumiVRによって音を鳴らして目を覚ましましょう",
-      "volume": {
-        "title": "音量",
-        "description": "効果音が再生される音量を設定",
-        "test": "テスト"
-      }
-    },
-    "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。"
   }
 }

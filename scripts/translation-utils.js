@@ -35,7 +35,9 @@ async function handleClean() {
       const langFileContentFlattened = Object.fromEntries(
         Object.entries(flattenObj(langFileContent)).filter(
           (entry) =>
-            Object.keys(enFileContentFlattened).includes(entry[0]) && entry[1] !== '{PLACEHOLDER}'
+            Object.keys(enFileContentFlattened).includes(entry[0]) &&
+            entry[1] !== '{PLACEHOLDER}' &&
+            entry[1]?.trim() !== ''
         )
       );
       let keysCleaned =
