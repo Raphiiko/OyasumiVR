@@ -28,6 +28,27 @@
         </a>
       </div>
     </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span>
+          <span translate>settings.advanced.translation.editor.title</span>
+          <span class="experimental-flag" [tooltip]="'settings.advanced.translation.editor.experimental'"
+                [tooltipMode]="'right'">
+                <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate>settings.advanced.translation.editor.description</span>
+      </div>
+      <div class="setting-row-action">
+        <button
+          class="btn btn-primary"
+          [routerLink]="['/translation', 'loader']"
+          translate
+        >
+          <span translate>settings.advanced.translation.editor.action</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="setting-category">
@@ -82,10 +103,10 @@
         <div class="setting-row-label" translate>
           <span translate>{{
             'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
-          }}</span>
+            }}</span>
           <span translate>{{
             'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
-          }}</span>
+            }}</span>
         </div>
         <div class="setting-row-action">
           <label class="check-toggle">

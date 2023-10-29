@@ -5,10 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.1]
+
+### Added
+
+- Spanish & Indonesian language support to the standalone NSIS installer.
+
+### Changed
+
+- Switched to the default Tauri script for the NSIS installer.
+
+### Fixed
+
+- Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Dutch translations.
+- UI issues with some duration unit selectors.
+
+### Removed
+
+- .NET Core & ASP.NET Core runtime installation from the standalone NSIS installer.
+
 ## [1.10.0]
 
 ### Added
 
+- Various automations for controlling the mute state of the system microphone.
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
@@ -44,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added workaround for bug in SteamVR 2.0 regarding IVROverlay::ComputeOverlayIntersection.
 
 ### Removed
+
 - Dotnet version checking and installation.
 
 ## [1.9.0]

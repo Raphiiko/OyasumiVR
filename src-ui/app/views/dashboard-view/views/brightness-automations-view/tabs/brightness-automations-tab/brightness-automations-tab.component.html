@@ -192,6 +192,7 @@
               [type]="'SMALL'"
               [items]="transitionUnitOptions"
               [selected]="transitionUnitOptionOnEnable"
+              [showPlaceholderInDropdown]="false"
               (selectedChange)="
                 onChangeTransition(
                   'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
@@ -416,6 +417,7 @@
               class="status-dropdown"
               [type]="'SMALL'"
               [items]="transitionUnitOptions"
+              [showPlaceholderInDropdown]="false"
               [selected]="transitionUnitOptionOnDisable"
               (selectedChange)="
                 onChangeTransition(
@@ -646,6 +648,7 @@
               class="status-dropdown"
               [type]="'SMALL'"
               [items]="transitionUnitOptions"
+              [showPlaceholderInDropdown]="false"
               [selected]="transitionUnitOptionOnPreparation"
               (selectedChange)="
                 onChangeTransition(

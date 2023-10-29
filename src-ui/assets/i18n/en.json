@@ -1034,7 +1034,13 @@
           "description": "Load a custom language file. Useful when testing new translations.",
           "title": "Load translation file"
         },
-        "title": "Language & Translation"
+        "title": "Language & Translation",
+        "editor": {
+          "title": "Translation Editor",
+          "action": "Launch Editor",
+          "description": "Launch OyasumiVR's translation editor for editing and creating translations",
+          "experimental": "This module is still in an experimental stage, and is available in English only. While you can try it out, it is very much still in development. For now, you can still expect to find issues and missing functionality."
+        }
       }
     },
     "general": {
