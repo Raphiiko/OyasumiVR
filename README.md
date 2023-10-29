@@ -251,7 +251,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
   </tr>
 </table>
 
-### ♥️ Heart rate Automations (Pulsoid Integration)
+### ♥️ Heart Rate Automations (Pulsoid Integration)
 <table>
   <tr>
     <td colspan="2">
