@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Increased maximum volume for nightmare detection sound effect to 200%.
+
 ## [1.10.1]
 
 ### Added
