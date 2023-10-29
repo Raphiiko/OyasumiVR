@@ -68,7 +68,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="left"> </div>
+    <div class="left"></div>
     <div class="right">
       <div class="project-info-title" translate>about.translations</div>
     </div>
@@ -84,7 +84,11 @@
         한국어 | <a href="https://github.com/soumt-r" target="_blank">Soumt</a>
       </div>
       <div class="translation-author-list-entry">
-        <span class="fi fi-tw fi-hk"></span>
+        <span
+          class="fi"
+          [class.fi-tw]="FLAVOUR !== 'STEAM_CN'"
+          [class.fi-hk]="FLAVOUR === 'STEAM_CN'"
+        ></span>
         繁體中文 | <a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a>
       </div>
       <div class="translation-author-list-entry">
@@ -121,7 +125,7 @@
   </div>
 
   <div class="row" style="margin-top: 2em">
-    <div class="left"> </div>
+    <div class="left"></div>
     <div class="right"></div>
   </div>
   <div class="row">
