@@ -7,19 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1]
+
 ### Added
 
-- Spanish & Indonesian language support to the NSIS installer.
+- Spanish & Indonesian language support to the standalone NSIS installer.
+
+### Changed
+
+- Switched to the default Tauri script for the NSIS installer.
 
 ### Fixed
 
 - Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
-- Missing Dutch translations
-- UI issues with some duration unit selectors
+- Missing Dutch translations.
+- UI issues with some duration unit selectors.
 
 ### Removed
 
-- .NET Core & ASP.NET Core runtime installation from NSIS installer.
+- .NET Core & ASP.NET Core runtime installation from the standalone NSIS installer.
 
 ## [1.10.0]
 
