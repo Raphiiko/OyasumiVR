@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Updated missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Dutch translations
 - UI issues with some duration unit selectors
 
 ### Removed
