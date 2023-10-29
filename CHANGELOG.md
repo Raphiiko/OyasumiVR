@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Spanish & Indonesian language support to the NSIS installer.
 
+### Fixed
+
+- Updated missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+
 ### Removed
 
 - .NET Core & ASP.NET Core runtime installation from NSIS installer.
