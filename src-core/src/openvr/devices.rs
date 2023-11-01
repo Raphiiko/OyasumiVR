@@ -234,10 +234,9 @@ async fn refresh_device_poses<'a>() {
 }
 
 async fn detect_inputs<'a>() {
-    // Get known devices, actions and action sets
+    // Get known devices, and input
     let devices = OVR_DEVICES.lock().await;
-    let actions = super::OVR_ACTIONS.lock().await;
-    let mut active_sets = super::OVR_ACTIVE_SETS.lock().await;
+    let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;
     // Get input context
     let context = OVR_CONTEXT.lock().await;
     let mut input = match context.as_ref() {
@@ -245,11 +244,11 @@ async fn detect_inputs<'a>() {
         None => return,
     };
     // Update actions for all sets
-    if let Err(e) = input.update_actions(active_sets.as_mut_slice()) {
+    if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
         error!("[Core] Failed to update actions: {:?}", e.description());
         return;
     }
-    for action in actions.iter() {
+    for action in input_ctx.actions.iter() {
         match input.get_digital_action_data(
             action.handle,
             InputValueHandle(ovr::sys::k_ulInvalidInputValueHandle),
