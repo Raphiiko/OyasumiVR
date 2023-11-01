@@ -102,10 +102,10 @@
         <div class="setting-row-label" translate>
           <span translate>{{
             'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
-          }}</span>
+            }}</span>
           <span translate>{{
             'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
-          }}</span>
+            }}</span>
         </div>
         <div class="setting-row-action">
           <label class="check-toggle">
@@ -117,6 +117,23 @@
             <span class="check-toggle-checkmark"></span>
           </label>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.advanced.fixes.title</h2>
+  <p translate>settings.advanced.fixes.description</p>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.advanced.fixes.vrManifestReregister.title</span>
+        <span translate>settings.advanced.fixes.vrManifestReregister.description</span>
+      </div>
+      <div class="setting-row-action">
+        <button class="btn btn-primary" (click)="reregisterVRManifest()" [disabled]="(openvr.status | async) !== 'INITIALIZED'">
+          <span translate>settings.advanced.fixes.vrManifestReregister.action</span>
+        </button>
       </div>
     </div>
   </div>

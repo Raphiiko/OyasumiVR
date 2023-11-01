@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Troubleshooting fix for reregistering OyasumiVR's VR application manifest with SteamVR.
+
 ### Changed
 - Increased maximum volume for nightmare detection sound effect to 200%.
 - Limited simple- and image brightness sliders in overlay to a minimum of 5%.

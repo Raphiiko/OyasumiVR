@@ -1,3 +1,5 @@
+use crate::globals::STEAM_APP_KEY;
+
 use super::{
     models::{BindingOriginData, OVRDevice},
     OVR_CONTEXT,
@@ -86,6 +88,44 @@ pub async fn openvr_is_dashboard_visible() -> bool {
         None => return false,
     };
     manager.is_dashboard_visible()
+}
+
+#[tauri::command]
+pub async fn openvr_reregister_manifest() -> Result<(), String> {
+    let ctx = OVR_CONTEXT.lock().await;
+    let mut applications = ctx.as_ref().unwrap().applications_mngr();
+    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+    let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
+    match applications.is_application_installed(STEAM_APP_KEY) {
+        Ok(value) => {
+            if !value {
+                return Err(String::from("MANIFEST_NOT_REGISTERED"));
+            } else {
+                match applications.remove_application_manifest(manifest_path) {
+                    Ok(_) => match applications.add_application_manifest(manifest_path, false) {
+                        Ok(_) => {
+                            return Ok(());
+                        }
+                        Err(e) => {
+                            error!("[Core] Failed to add VR manifest: {}", e);
+                            return Err(String::from("MANIFEST_ADD_FAILED"));
+                        }
+                    },
+                    Err(e) => {
+                        error!("[Core] Failed to remove VR manifest: {}", e);
+                        return Err(String::from("MANIFEST_REMOVE_FAILED"));
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            error!(
+                "[Core] Failed to check if VR manifest is registered: {:#?}",
+                e.description()
+            );
+            return Err(String::from("MANIFEST_CHECK_FAILED"));
+        }
+    }
 }
 
 #[tauri::command]

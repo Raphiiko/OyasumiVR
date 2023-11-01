@@ -1041,6 +1041,41 @@
           "description": "Launch OyasumiVR's translation editor for editing and creating translations",
           "experimental": "This module is still in an experimental stage, and is available in English only. While you can try it out, it is very much still in development. For now, you can still expect to find issues and missing functionality."
         }
+      },
+      "fixes": {
+        "title": "Fixes & Troubleshooting",
+        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support.",
+        "vrManifestReregister": {
+          "title": "Reregister SteamVR application manifest",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR.",
+          "action": "Reregister Manifest",
+          "modal": {
+            "success": {
+              "title": "VR Application Manifest Reregistered",
+              "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR."
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs."
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "The manifest could not be removed. Please check the logs."
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "OyasumiVR's had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR."
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs."
+            },
+            "UNKNOWN": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs."
+            }
+          }
+        }
       }
     },
     "general": {

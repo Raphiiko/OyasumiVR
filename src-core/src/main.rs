@@ -82,6 +82,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_launch_binding_configuration,
         openvr::commands::openvr_get_binding_origins,
         openvr::commands::openvr_is_dashboard_visible,
+        openvr::commands::openvr_reregister_manifest,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
