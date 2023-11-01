@@ -4,6 +4,10 @@
       "role": "Desarrollador"
     },
     "contributions": "Contribuciones",
+    "contributionType": {
+      "feature": "Característica",
+      "soundFx": "Sonido FX"
+    },
     "discordInvite": "Discord Server",
     "projectLinks": "Enlaces de proyectos",
     "sourceLink": "Código fuente @ GitHub",
@@ -191,7 +195,9 @@
       "statusAutomations": "Automatizaciones de estado",
       "systemMicMuteAutomations": "Automatizacion de silencio del micrófono",
       "vrcAutomations": "Automatizaciones VRChat",
-      "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRCHAT"
+      "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRChat",
+      "miscAutomations": "Automacaciones misceláneas",
+      "nightmareDetection": "Detección de pesadilla"
     },
     "device-list": {
       "category": {
@@ -407,6 +413,7 @@
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Como SteamVR cerro",
               "SLEEP_MODE_DISABLE_AT_TIME": "A la hora prevista",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Al encender un dispositivo",
+              "NIGHTMARE_DETECTION": "Como se detectó, posiblemente podrías estar teniendo una pesadilla",
               "unknown": "Por un automatismo desconocido"
             },
             "manual": "Ha desactivado el modo sueño manualmente",
@@ -1027,7 +1034,13 @@
           "description": "Carga un archivo de idioma personalizado. Útil para probar nuevas traducciones.",
           "title": "Cargar archivo de traducción"
         },
-        "title": "Idiomas y traducción"
+        "title": "Idiomas y traducción",
+        "editor": {
+          "title": "Editor de traducción",
+          "action": "Editor de lanzamiento",
+          "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
+          "experimental": "Este módulo todavía está en una etapa experimental y está disponible solo en inglés. Si bien puede probarlo, todavía está en desarrollo. Por ahora, aún puede esperar encontrar problemas y faltar funcionalidad."
+        }
       }
     },
     "general": {
@@ -1302,6 +1315,10 @@
       "ok": "Ok",
       "open": "Abrir",
       "save": "Guardar"
+    },
+    "time": {
+      "minutes": "Minutos",
+      "seconds": "Segundos"
     }
   },
   "shutdown-automations": {
@@ -1707,5 +1724,36 @@
       "unmuted": "Unmute"
     },
     "title": "Silenciamiento del micrófono"
+  },
+  "nightmare-detection": {
+    "title": "Detección de pesadilla",
+    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que Oyasumivr intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo de suspensión está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración pulsoide</a> y que tengaUna suscripción activa de pulsoide \"Bro\".",
+    "bpmThreshold": {
+      "unit": "bpm",
+      "title": "Frecuencia cardíaca mínima",
+      "description": "El umbral de su frecuencia cardíaca debe llegar a Oyasumivr para considerar la posibilidad de que tenga una pesadilla"
+    },
+    "duration": {
+      "title": "Duración",
+      "description": "¿Cuánto tiempo tiene que permanecer su frecuencia cardíaca por encima del umbral antes de que Oyasumivr desencadene su detección de pesadilla?"
+    },
+    "automations": {
+      "title": "Automatización",
+      "description": "Automacaciones para funcionar cuando Oyasumivr detecta que posiblemente tengas una pesadilla"
+    },
+    "disableSleepMode": {
+      "title": "Desactivar el modo sueño",
+      "description": "Deshabilita el modo sueño cuando posiblemente tengas una pesadilla"
+    },
+    "playSound": {
+      "title": "Reproducir un sonido",
+      "description": "Haz que Oyasumivr te despierte con un sonido cuando posiblemente tengas una pesadilla",
+      "volume": {
+        "title": "Volumen de sonido",
+        "description": "Configure el volumen en el que se reproduce el efecto de sonido",
+        "test": "Test"
+      }
+    },
+    "notification": "Detección de una posible pesadilla, ya que ha tenido una frecuencia cardíaca elevada prolongada."
   }
 }

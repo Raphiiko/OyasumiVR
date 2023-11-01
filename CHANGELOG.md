@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Deadlock in logic for reading possible input bindings.
+- Updated missing Spanish translations (by [aacal666](https://twitter.com/aacalde666))
 
 ## [1.10.1]
 
