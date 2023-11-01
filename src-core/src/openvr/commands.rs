@@ -1,3 +1,5 @@
+use crate::globals::STEAM_APP_KEY;
+
 use super::{
     models::{BindingOriginData, OVRDevice},
     OVR_CONTEXT,
@@ -89,20 +91,60 @@ pub async fn openvr_is_dashboard_visible() -> bool {
 }
 
 #[tauri::command]
+pub async fn openvr_reregister_manifest() -> Result<(), String> {
+    let ctx = OVR_CONTEXT.lock().await;
+    let mut applications = ctx.as_ref().unwrap().applications_mngr();
+    let manifest_path_buf = std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
+    let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
+    match applications.is_application_installed(STEAM_APP_KEY) {
+        Ok(value) => {
+            if !value {
+                return Err(String::from("MANIFEST_NOT_REGISTERED"));
+            } else {
+                match applications.remove_application_manifest(manifest_path) {
+                    Ok(_) => match applications.add_application_manifest(manifest_path, false) {
+                        Ok(_) => {
+                            return Ok(());
+                        }
+                        Err(e) => {
+                            error!("[Core] Failed to add VR manifest: {}", e);
+                            return Err(String::from("MANIFEST_ADD_FAILED"));
+                        }
+                    },
+                    Err(e) => {
+                        error!("[Core] Failed to remove VR manifest: {}", e);
+                        return Err(String::from("MANIFEST_REMOVE_FAILED"));
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            error!(
+                "[Core] Failed to check if VR manifest is registered: {:#?}",
+                e.description()
+            );
+            return Err(String::from("MANIFEST_CHECK_FAILED"));
+        }
+    }
+}
+
+#[tauri::command]
 pub async fn openvr_get_binding_origins(
     action_set_key: String,
     action_key: String,
 ) -> Option<Vec<BindingOriginData>> {
-    let mut active_sets = super::OVR_ACTIVE_SETS.lock().await;
-    let action_sets = super::OVR_ACTION_SETS.lock().await;
+    let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;
     // Get action set by name
-    let action_set = match action_sets.iter().find(|a| a.name == action_set_key) {
+    let action_set = match input_ctx
+        .action_sets
+        .iter()
+        .find(|a| a.name == action_set_key)
+    {
         Some(action_set) => action_set.handle,
         None => return None,
     };
-    let actions = super::OVR_ACTIONS.lock().await;
     // Get action by name
-    let action = match actions.iter().find(|a| a.name == action_key) {
+    let action = match input_ctx.actions.iter().find(|a| a.name == action_key) {
         Some(action) => action.handle,
         None => return None,
     };
@@ -112,7 +154,7 @@ pub async fn openvr_get_binding_origins(
         Some(context) => context.input_mngr(),
         None => return None,
     };
-    if let Err(e) = input.update_actions(active_sets.as_mut_slice()) {
+    if let Err(e) = input.update_actions(input_ctx.active_sets.as_mut_slice()) {
         error!("[Core] Failed to update actions: {}", e);
         return None;
     }
@@ -128,7 +170,6 @@ pub async fn openvr_get_binding_origins(
             return None;
         }
     };
-
     // Get the localized controller types for each origin
     let localized_controller_types: Vec<String> = origins
         .iter()
@@ -148,7 +189,6 @@ pub async fn openvr_get_binding_origins(
             }
         })
         .collect();
-
     // Get the localized hands for each origin
     let localized_hands: Vec<String> = origins
         .iter()
@@ -168,7 +208,6 @@ pub async fn openvr_get_binding_origins(
             }
         })
         .collect();
-
     // Get the localized input sources for each origin
     let localized_input_sources: Vec<String> = origins
         .iter()

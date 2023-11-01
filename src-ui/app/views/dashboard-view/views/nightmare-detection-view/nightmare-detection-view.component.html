@@ -95,6 +95,7 @@
               </button>
               <app-slider-setting
                 [unit]="'%'"
+                [max]="200"
                 [value]="config.soundVolume"
                 (valueChange)="setSoundVolume($event)"
               ></app-slider-setting>

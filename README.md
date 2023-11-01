@@ -49,6 +49,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 - :low_brightness: Dimming your headset brightness
 - :sparkles: Triggering avatar animations based on your sleeping pose
 - :envelope_with_arrow: Automatically handling invite requests
+- :microphone: Muting your microphone when you fall asleep
 - :hammer_and_wrench: Automating various SteamVR settings
   
 ...and many more! Please see the upcoming "Features" section to read more about what functionality OyasumiVR has to offer.
@@ -95,7 +96,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
       Automatically have your controllers and/or trackers turn off when you sleep, and save their battery! You'll be happy when you wake up in the morning and find they'll still have some juice left in them!
       <br>
       <br>
-      Additionally, you can have your controllers and/or trackers turn off when you put them on the charger. Ideal for hotswapping controllers!
+      Additionally, you can have your controllers and/or trackers turn off at certain battery levels, or when you put them on the charger. Ideal for hotswapping controllers!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/aff14677-c2fe-4309-8b96-950dff59e3b9"></td>
   </tr>
@@ -229,12 +230,55 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
     <td>
       Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
       <br><br>
-      Adjusting the image brightness is available for any VR headset. This works especially well on OLED-based headsets.
-      <br>If you're on the Valve Index, you can have it adjust your LCD backlight (or "display brightness") as well!
+      It allows you to control both image brightness, as well as display brightness (the LCD backlight) if your headset supports it (e.g. Valve Index). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1f9bd880-507d-405f-97fb-525b3a9e195b"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
+  </tr>
+
+</table>
+
+### 🎤 System Microphone Mute Automations
+<table>
+  <tr>
+    <td>
+      You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
+      <br><br>Perfect if you'd like to prevent others from hearing you snore!
+      <br><br>
+      This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+
   </tr>
 </table>
+
+### ♥️ Heart Rate Automations (Pulsoid Integration)
+<table>
+  <tr>
+    <td colspan="2">
+      <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
+      To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+      <br><br>
+      <b>Subscribers of their "BRO" plan</b> have the option of connecting their Pulsoid account to provide OyasumiVR with their heart rate data. 
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <b>Sleep Detection</b>
+      <br>
+      You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bcdbb83f-b7b7-49d8-b3f1-39a67b9b619e"></td>
+  </tr>
+  <tr>
+    <td>
+      <b>Nightmare Detection</b>
+      <br>
+      OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up. 
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
 
 ### 👓 Resolution Automations
 <table>
@@ -262,14 +306,12 @@ OyasumiVR currently supports the following languages:
 - English
 - Dutch (Nederlands)
 - Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
-- Korean\* (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
-- Traditional Chinese\* (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
-- Simplified Chinese\* (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL) and [雾雨花精灵](https://twitter.com/u_flower_elf))
-- French (Français)\* (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
-- Spanish (Español)\* (Community contribution by [aacal666](https://twitter.com/aacalde666))
-- Indonesian (Bahasa Indonesia)\* (Community contribution by [a9ito](https://twitter.com/a9ito))
-
-_(\*) This is a community supported language, which means translations might not always be 100% complete with each and every update._
+- Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+- Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+- Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL) and [雾雨花精灵](https://twitter.com/u_flower_elf))
+- French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
+- Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
 
 ### Help out with translation
 
