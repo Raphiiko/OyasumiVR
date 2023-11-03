@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Improved initialization logging for debugging purposes
 
+### Fixed
+
+- Migration bug for automation configurations.
+
 ## [1.10.2]
 
 ### Added

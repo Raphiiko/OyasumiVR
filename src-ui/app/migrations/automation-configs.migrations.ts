@@ -51,9 +51,11 @@ function resetToLatest(data: any): any {
 
 function from9to10(data: any): any {
   data.version = 10;
-  data.SHUTDOWN_AUTOMATIONS.powerDownWindows = data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
-  data.SHUTDOWN_AUTOMATIONS.powerDownWindowsMode = 'SHUTDOWN';
-  delete data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
+  if (data.SHUTDOWN_AUTOMATIONS) {
+    data.SHUTDOWN_AUTOMATIONS.powerDownWindows = data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
+    data.SHUTDOWN_AUTOMATIONS.powerDownWindowsMode = 'SHUTDOWN';
+    delete data.SHUTDOWN_AUTOMATIONS.shutdownWindows;
+  }
   return data;
 }
 
@@ -80,7 +82,7 @@ function from8to9(data: any): any {
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION
   );
   // Attempt to migrate old on sleep enable automations
-  if (displayBrightnessOnEnableConfig.enabled) {
+  if (displayBrightnessOnEnableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.brightness =
       displayBrightnessOnEnableConfig.brightness;
@@ -91,7 +93,7 @@ function from8to9(data: any): any {
       displayBrightnessOnEnableConfig.transition;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transitionTime =
       displayBrightnessOnEnableConfig.transitionTime;
-  } else if (imageBrightnessOnEnableConfig.enabled) {
+  } else if (imageBrightnessOnEnableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.brightness = imageBrightnessOnEnableConfig.brightness;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.imageBrightness =
@@ -102,7 +104,7 @@ function from8to9(data: any): any {
       imageBrightnessOnEnableConfig.transitionTime;
   }
   // Attempt to migrate old on sleep disable automations
-  if (displayBrightnessOnDisableConfig.enabled) {
+  if (displayBrightnessOnDisableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness =
       displayBrightnessOnDisableConfig.brightness;
@@ -113,7 +115,7 @@ function from8to9(data: any): any {
       displayBrightnessOnDisableConfig.transition;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transitionTime =
       displayBrightnessOnDisableConfig.transitionTime;
-  } else if (imageBrightnessOnDisableConfig.enabled) {
+  } else if (imageBrightnessOnDisableConfig?.enabled) {
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled = true;
     data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness =
       imageBrightnessOnDisableConfig.brightness;
