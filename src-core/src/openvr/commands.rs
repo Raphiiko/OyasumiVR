@@ -102,15 +102,27 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
                 return Err(String::from("MANIFEST_NOT_REGISTERED"));
             } else {
                 match applications.remove_application_manifest(manifest_path) {
-                    Ok(_) => match applications.add_application_manifest(manifest_path, false) {
-                        Ok(_) => {
-                            return Ok(());
+                    Ok(_) => {
+                        let install_for_flavours = vec![
+                            crate::flavour::BuildFlavour::Standalone,
+                            crate::flavour::BuildFlavour::Dev,
+                        ];
+                        let should_install_for_flavour =
+                            install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
+                        if should_install_for_flavour {
+                            match applications.add_application_manifest(manifest_path, false) {
+                                Ok(_) => {
+                                    return Ok(());
+                                }
+                                Err(e) => {
+                                    error!("[Core] Failed to add VR manifest: {}", e);
+                                    return Err(String::from("MANIFEST_ADD_FAILED"));
+                                }
+                            };
+                        } else {
+                            return Err(String::from("FLAVOUR_NOT_ELIGIBLE"));
                         }
-                        Err(e) => {
-                            error!("[Core] Failed to add VR manifest: {}", e);
-                            return Err(String::from("MANIFEST_ADD_FAILED"));
-                        }
-                    },
+                    }
                     Err(e) => {
                         error!("[Core] Failed to remove VR manifest: {}", e);
                         return Err(String::from("MANIFEST_REMOVE_FAILED"));

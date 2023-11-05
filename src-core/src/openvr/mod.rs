@@ -102,43 +102,61 @@ pub async fn task() {
                 info!("[Core] OpenVR Initialized");
                 ovr_active = true;
                 update_status(OpenVRStatus::Initialized).await;
-                // Register manifest if needed
+                // (Un)register manifest if needed
                 {
                     let ctx = OVR_CONTEXT.lock().await;
                     let mut applications = ctx.as_ref().unwrap().applications_mngr();
-                    info!("[Core] Registering VR Manifest");
 
                     let manifest_path_buf =
                         std::fs::canonicalize("resources/manifest.vrmanifest").unwrap();
                     let manifest_path: &std::path::Path = manifest_path_buf.as_ref();
-                    match applications.is_application_installed(STEAM_APP_KEY) {
-                        Ok(value) => {
-                            if !value {
-                                if let Err(e) =
-                                    applications.add_application_manifest(manifest_path, false)
-                                {
-                                    error!(
-                                        "[Core] Failed to register VR manifest: {:#?}",
-                                        e.description()
-                                    );
-                                } else {
-                                    info!(
-                                        "[Core] Steam app manifest registered ({})",
-                                        STEAM_APP_KEY
-                                    )
-                                }
-                            } else {
-                                info!(
-                                    "[Core] Steam app manifest already registered ({})",
-                                    STEAM_APP_KEY
-                                )
-                            }
-                        }
+
+                    let is_installed = match applications.is_application_installed(STEAM_APP_KEY) {
+                        Ok(value) => Some(value),
                         Err(e) => {
                             error!(
                                 "[Core] Failed to check if VR manifest is registered: {:#?}",
                                 e.description()
                             );
+                            None
+                        }
+                    };
+                    let install_for_flavours = vec![
+                        crate::flavour::BuildFlavour::Standalone,
+                        crate::flavour::BuildFlavour::Dev,
+                    ];
+                    let should_install_for_flavour =
+                        install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
+
+                    // Unregister if needed
+                    if is_installed.is_some_and(|v| v == true) && !should_install_for_flavour {
+                        match applications.remove_application_manifest(&manifest_path) {
+                            Ok(_) => {
+                                info!(
+                                    "[Core] Steam app manifest unregistered, as it's not required for this build flavour ({}) ({})",
+                                    STEAM_APP_KEY,
+                                    manifest_path.display()
+                                );
+                            }
+                            Err(e) => {
+                                error!(
+                                    "[Core] Failed to unregister VR manifest: {:#?}",
+                                    e.description()
+                                );
+                            }
+                        };
+                    };
+
+                    // Register if needed
+                    if is_installed.is_some_and(|v| v == false) && should_install_for_flavour {
+                        if let Err(e) = applications.add_application_manifest(manifest_path, false)
+                        {
+                            error!(
+                                "[Core] Failed to register VR manifest: {:#?}",
+                                e.description()
+                            );
+                        } else {
+                            info!("[Core] Steam app manifest registered ({})", STEAM_APP_KEY)
                         }
                     }
                 }

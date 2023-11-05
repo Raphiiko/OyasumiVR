@@ -1070,6 +1070,10 @@
               "title": "Reregistration of VR Application Manifest Failed",
               "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs."
             },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "Application manifest unregistered",
+              "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR."
+            },
             "UNKNOWN": {
               "title": "Reregistration of VR Application Manifest Failed",
               "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs."

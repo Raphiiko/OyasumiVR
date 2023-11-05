@@ -261,6 +261,7 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
         case 'MANIFEST_REMOVE_FAILED':
         case 'MANIFEST_CHECK_FAILED':
         case 'MANIFEST_NOT_REGISTERED':
+        case 'FLAVOUR_NOT_ELIGIBLE':
           this.modalService
             .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
               title: `settings.advanced.fixes.vrManifestReregister.modal.${e}.title`,

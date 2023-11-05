@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Migration bug for automation configurations.
+- Do not register the application manifest in Steam builds.
 
 ## [1.10.2]
 
