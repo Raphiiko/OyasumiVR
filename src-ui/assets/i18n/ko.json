@@ -725,7 +725,6 @@
           },
           "footLockReleaseWindow": "다리 잠금 해제 조건",
           "lockFeetOnSleepModeEnable": "수면 모드 활성화 시 다리 잠금 활성화",
-          "onlyIfAllTrackersTurnedOff": "모든 트래커가 꺼질 때",
           "onlyIfSleepModeEnabled": "수면 모드 활성화 시",
           "onlySwitchAnimations": "애니메이션 바꾸기",
           "releaseFootLockOnPoseChange": "수면 자세가 바뀔 때 다리 잠금을 바로 해제",

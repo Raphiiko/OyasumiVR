@@ -606,7 +606,6 @@
           },
           "footLockReleaseWindow": "腳部鎖定釋放持續時間",
           "lockFeetOnSleepModeEnable": "當睡眠模式啟動時開啟腳部鎖定",
-          "onlyIfAllTrackersTurnedOff": "當所有追蹤器關閉時",
           "onlyIfSleepModeEnabled": "當睡眠模式啟動時",
           "onlySwitchAnimations": "只用於切換睡眠動畫",
           "releaseFootLockOnPoseChange": "切換睡眠姿勢時暫時釋放腳部鎖定",

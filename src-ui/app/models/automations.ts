@@ -50,7 +50,7 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
-  version: 10;
+  version: 11;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -222,7 +222,6 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
     [key in SleepingPose | 'FOOT_LOCK' | 'FOOT_UNLOCK']?: OscScript;
   };
   onlyIfSleepModeEnabled: boolean;
-  onlyIfAllTrackersTurnedOff: boolean;
   lockFeetOnSleepModeEnable: boolean;
   unlockFeetOnSleepModeDisable: boolean;
   unlockFeetOnAutomationDisable: boolean;
@@ -310,7 +309,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 10,
+  version: 11,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -453,7 +452,6 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     preset: null,
     onlyIfSleepModeEnabled: true,
-    onlyIfAllTrackersTurnedOff: true,
     lockFeetOnSleepModeEnable: true,
     unlockFeetOnSleepModeDisable: true,
     unlockFeetOnAutomationDisable: true,

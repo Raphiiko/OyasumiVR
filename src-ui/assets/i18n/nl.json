@@ -763,7 +763,6 @@
           },
           "footLockReleaseWindow": "Duur van het tijdelijk losmaken van de voeten",
           "lockFeetOnSleepModeEnable": "Voeten vastzetten wanneer slaap modus wordt ingeschakeld",
-          "onlyIfAllTrackersTurnedOff": "Wanneer alle trackers uit staan",
           "onlyIfSleepModeEnabled": "Wanneer slaap modus actief is",
           "onlySwitchAnimations": "Alleen animaties wisselen",
           "releaseFootLockOnPoseChange": "Voeten tijdelijk losmaken wanneer je van slaap houding veranderd",

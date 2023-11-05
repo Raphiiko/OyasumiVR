@@ -13,6 +13,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   8: from7to8,
   9: from8to9,
   10: from9to10,
+  11: from10to11,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -46,6 +47,14 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from10to11(data: any): any {
+  data.version = 11;
+  if (data.SLEEPING_ANIMATIONS) {
+    delete data.SLEEPING_ANIMATIONS.onlyIfAllTrackersTurnedOff;
+  }
   return data;
 }
 

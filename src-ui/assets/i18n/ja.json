@@ -763,7 +763,6 @@
           },
           "footLockReleaseWindow": "フットロックの解除時間",
           "lockFeetOnSleepModeEnable": "睡眠モード有効時にフットロック",
-          "onlyIfAllTrackersTurnedOff": "すべてのトラッカーがオフのとき",
           "onlyIfSleepModeEnabled": "睡眠モード有効時",
           "onlySwitchAnimations": "アニメーションを切り替える",
           "releaseFootLockOnPoseChange": "寝返りする際にフットロックを瞬時に解除",

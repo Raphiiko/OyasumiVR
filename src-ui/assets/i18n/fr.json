@@ -484,7 +484,6 @@
           },
           "footLockReleaseWindow": "Durée de dévérouillage",
           "lockFeetOnSleepModeEnable": "Verrouiller les pieds lorsque le mode sommeil est activé",
-          "onlyIfAllTrackersTurnedOff": "Si tous les trackers sont hors tension",
           "onlyIfSleepModeEnabled": "Si le mode sommeil est activé",
           "onlySwitchAnimations": "Ne changer les animations seulement",
           "releaseFootLockOnPoseChange": "Dévérrouiller temporairement le pied lors du changement de l'animation de sommeil",

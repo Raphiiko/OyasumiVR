@@ -732,7 +732,6 @@
           },
           "footLockReleaseWindow": "Foot lock release duration",
           "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
-          "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
           "onlyIfSleepModeEnabled": "While sleep mode is enabled",
           "onlySwitchAnimations": "Only switch animations",
           "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
