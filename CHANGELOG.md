@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.3]
+
 ### Added
 
 - Improved initialization logging for debugging purposes
 
 ### Removed
+
 - Option for sleep animations to only trigger while all trackers are turned off
 
 ### Fixed
