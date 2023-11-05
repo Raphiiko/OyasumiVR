@@ -665,7 +665,6 @@
           },
           "footLockReleaseWindow": "脚部锁定释放持续时间",
           "lockFeetOnSleepModeEnable": "当睡眠模式启动时开启脚部锁定",
-          "onlyIfAllTrackersTurnedOff": "当所有追踪器关闭时",
           "onlyIfSleepModeEnabled": "当睡眠模式启动时",
           "onlySwitchAnimations": "只用于切换睡眠动画",
           "releaseFootLockOnPoseChange": "切换睡眠姿势时暂时释放脚部锁定",

@@ -763,7 +763,6 @@
           },
           "footLockReleaseWindow": "Durasi pelepasan kunci kaki",
           "lockFeetOnSleepModeEnable": "Mengunci kaki saat mode tidur diaktifkan",
-          "onlyIfAllTrackersTurnedOff": "Jika semua tracker dimatikan",
           "onlyIfSleepModeEnabled": "Jika mode tidur diaktifkan",
           "onlySwitchAnimations": "Hanya mengganti animasi",
           "releaseFootLockOnPoseChange": "Lepaskan kunci kaki untuk sementara saat berpindah posisi tidur",

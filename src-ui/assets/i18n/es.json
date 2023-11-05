@@ -732,7 +732,6 @@
           },
           "footLockReleaseWindow": "Duración del desbloqueo del pie",
           "lockFeetOnSleepModeEnable": "Bloqueo de los pies cuando se activa el modo de suspensión",
-          "onlyIfAllTrackersTurnedOff": "Si todos los rastreadores están apagados",
           "onlyIfSleepModeEnabled": "Si el modo sueño está activado",
           "onlySwitchAnimations": "Sólo animaciones de cambio",
           "releaseFootLockOnPoseChange": "Libere momentáneamente el bloqueo de los pies al cambiar de posición para dormir",
