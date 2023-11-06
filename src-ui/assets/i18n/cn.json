@@ -345,8 +345,8 @@
             "SLEEP_PREPARATION": "当你准备入睡时"
           },
           "title": {
-            "set": "耳机亮度已设置为 {value}",
-            "transition": "耳机亮度过渡到 {value}。"
+            "set": "头戴显示器亮度已设置为 {value}",
+            "transition": "头戴显示器亮度过渡到 {value}。"
           }
         },
         "sleepDetectorEnableCancelled": {
