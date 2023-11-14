@@ -13,13 +13,16 @@
       *ngVar="{ hover: false }; let state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
+      [tooltip]="'comp.main-status-bar.sleepMode.tooltip'"
+      [tooltipMode]="'top'"
+      [tooltipMargin]="8"
       (click)="toggleSleepMode()"
     >
       <div class="pill-icon">
         <i class="material-icons-round">nights_stay</i>
       </div>
       <span @hshrink *ngIf="state.hover"
-        >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="(sleepMode | async) === false" @hshrink translate

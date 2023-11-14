@@ -384,7 +384,6 @@
       "active": "啟動",
       "inactive": "未啟動",
       "loggedOut": "已登出",
-      "sleepMode": "睡眠模式",
       "steamvr": {
         "INACTIVE": "未啟動",
         "INITIALIZED": "啟動",

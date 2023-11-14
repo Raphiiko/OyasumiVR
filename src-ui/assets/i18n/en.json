@@ -495,7 +495,10 @@
       "heartrate": "Heart Rate",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
-      "sleepMode": "Sleep Mode",
+      "sleepMode": {
+        "label": "Sleep Mode",
+        "tooltip": "Toggle Sleep Mode"
+      },
       "steamvr": {
         "INACTIVE": "Inactive",
         "INITIALIZED": "Active",
