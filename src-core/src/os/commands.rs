@@ -247,13 +247,29 @@ pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
         Some(m) => m,
         None => {
             error!(
-              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+              "[Core] Could not enable/disable hardware mic activation, as audio device manager was not initialized"
           );
             return;
         }
     };
     manager.set_mic_activity_enabled(enabled).await;
 }
+
+#[tauri::command]
+pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set the hardware mic activation threshold, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activation_threshold(threshold).await;
+}
+
 
 #[tauri::command]
 pub async fn set_mic_activity_device_id(device_id: Option<String>) {

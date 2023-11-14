@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
+
 ### Fixed
 - Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf) and [i0nTempest](https://twitter.com/i0ntempest)).
 

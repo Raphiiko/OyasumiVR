@@ -272,6 +272,8 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   onSleepModeEnableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepModeDisableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  voiceActivationMode: 'VRCHAT' | 'HARDWARE';
+  hardwareVoiceActivationThreshold: number;
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -519,6 +521,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepModeEnableControllerBindingBehavior: 'NONE',
     onSleepModeDisableControllerBindingBehavior: 'NONE',
     onSleepPreparationControllerBindingBehavior: 'NONE',
+    voiceActivationMode: 'VRCHAT',
+    hardwareVoiceActivationThreshold: 4,
   },
   NIGHTMARE_DETECTION: {
     enabled: false,

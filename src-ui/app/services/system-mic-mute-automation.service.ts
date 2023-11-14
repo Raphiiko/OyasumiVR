@@ -85,6 +85,7 @@ export class SystemMicMuteAutomationService {
       .subscribe((config) => {
         this.config = config;
       });
+
     // Handle automations
     this.changeMuteOnSleepEnable();
     this.changeMuteOnSleepDisable();
@@ -92,10 +93,39 @@ export class SystemMicMuteAutomationService {
     this.changeControllerBindingBehaviorOnSleepEnable();
     this.changeControllerBindingBehaviorOnSleepDisable();
     this.changeControllerBindingBehaviorOnSleepPreparation();
+    // Handle voice activity mode
+    this.handleVoiceActivitySettingChanges();
     // Handle controller binding
     this.handleControllerBinding();
     // Handle audio metering
     this.handleHardwareAudioMetering();
+  }
+
+  private handleVoiceActivitySettingChanges() {
+    // Update the hardware mic activity depending on the voice activation mode
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.voiceActivationMode),
+        distinctUntilChanged(),
+        switchMap((mode) =>
+          invoke('set_hardware_mic_activity_enabled', {
+            enabled: mode === 'HARDWARE',
+          })
+        )
+      )
+      .subscribe();
+    // Update the hardware mic activity threshold based on the config
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.hardwareVoiceActivationThreshold),
+        distinctUntilChanged(),
+        switchMap((threshold) =>
+          invoke('set_hardware_mic_activivation_threshold', {
+            threshold: threshold / 100,
+          })
+        )
+      )
+      .subscribe();
   }
 
   private changeMuteOnSleepEnable() {

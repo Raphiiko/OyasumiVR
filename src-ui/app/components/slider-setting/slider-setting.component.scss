@@ -4,6 +4,7 @@
   display: block;
   position: relative;
   width: 6em;
+  --overlay-width: 16em;
 }
 
 $unit-width: 2em;
@@ -54,7 +55,6 @@ $unit-width: 2em;
   }
 }
 
-$overlay-width: 16em;
 $overlay-padding: 0.5em;
 $overlay-border: 0.15em;
 
@@ -64,8 +64,8 @@ $overlay-border: 0.15em;
   top: 0;
   left: 0;
   height: calc(100% + $overlay-padding * 2);
-  width: calc(100% + $overlay-width + $overlay-padding * 2);
-  transform: translate(calc(calc($overlay-width + $overlay-padding) * -1), 0 - $overlay-padding);
+  width: calc(100% + var(--overlay-width) + $overlay-padding * 2);
+  transform: translate(calc(calc(var(--overlay-width) + $overlay-padding) * -1), 0 - $overlay-padding);
   border-radius: var(--surface-border-radius);
   @include shadow(5, true);
   overflow: hidden;
@@ -87,13 +87,13 @@ $overlay-border: 0.15em;
     top: 0;
     left: 0;
     transform: translate(
-      calc($overlay-width + $overlay-padding) - $overlay-border * 0.5,
+      calc(var(--overlay-width) + $overlay-padding - $overlay-border * 0.5),
       $overlay-padding - $overlay-border * 0.5
     );
   }
 
   .slider-container {
-    width: calc($overlay-width + $overlay-padding);
+    width: calc(var(--overlay-width) + $overlay-padding);
     height: 100%;
     padding: 0.5em;
     display: flex;

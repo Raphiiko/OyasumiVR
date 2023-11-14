@@ -7,8 +7,10 @@
       [step]="step"
       [snapDistance]="snapDistance"
       [snapValues]="snapValues"
-      [value]="value"
+      [value]="value ?? 0"
       (valueChange)="onSliderChange($event)"
+      [style]="style"
+      #slider
     ></app-slider>
   </div>
 </div>

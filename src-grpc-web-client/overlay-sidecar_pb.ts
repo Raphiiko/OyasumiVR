@@ -15,15 +15,6 @@ import { MessageType } from '@protobuf-ts/runtime';
 /**
  * Requests & Responses
  *
- * @generated from protobuf message OyasumiOverlaySidecar.PingResponse
- */
-export interface PingResponse {
-  /**
-   * @generated from protobuf field: uint32 pid = 1;
-   */
-  pid: number;
-}
-/**
  * @generated from protobuf message OyasumiOverlaySidecar.AddNotificationRequest
  */
 export interface AddNotificationRequest {
@@ -80,6 +71,10 @@ export interface SetMicrophoneActiveRequest {
    * @generated from protobuf field: bool active = 1;
    */
   active: boolean;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.MicrophoneActivityMode mode = 2;
+   */
+  mode: MicrophoneActivityMode;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.Empty
@@ -152,6 +147,10 @@ export interface OyasumiSidecarOverlaySettings {
    * @generated from protobuf field: bool system_mic_indicator_fadeout = 3;
    */
   systemMicIndicatorFadeout: boolean;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.MicrophoneActivityMode system_mic_indicator_voice_activation_mode = 12;
+   */
+  systemMicIndicatorVoiceActivationMode: MicrophoneActivityMode;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarDeviceInfo
@@ -490,68 +489,19 @@ export enum OyasumiSidecarControllerRole {
    */
   Right = 1,
 }
-// @generated message type with reflection information, may provide speed optimized methods
-class PingResponse$Type extends MessageType<PingResponse> {
-  constructor() {
-    super('OyasumiOverlaySidecar.PingResponse', [
-      { no: 1, name: 'pid', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
-    ]);
-  }
-  create(value?: PartialMessage<PingResponse>): PingResponse {
-    const message = { pid: 0 };
-    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-    if (value !== undefined) reflectionMergePartial<PingResponse>(this, message, value);
-    return message;
-  }
-  internalBinaryRead(
-    reader: IBinaryReader,
-    length: number,
-    options: BinaryReadOptions,
-    target?: PingResponse
-  ): PingResponse {
-    let message = target ?? this.create(),
-      end = reader.pos + length;
-    while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag();
-      switch (fieldNo) {
-        case /* uint32 pid */ 1:
-          message.pid = reader.uint32();
-          break;
-        default:
-          let u = options.readUnknownField;
-          if (u === 'throw')
-            throw new globalThis.Error(
-              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
-            );
-          let d = reader.skip(wireType);
-          if (u !== false)
-            (u === true ? UnknownFieldHandler.onRead : u)(
-              this.typeName,
-              message,
-              fieldNo,
-              wireType,
-              d
-            );
-      }
-    }
-    return message;
-  }
-  internalBinaryWrite(
-    message: PingResponse,
-    writer: IBinaryWriter,
-    options: BinaryWriteOptions
-  ): IBinaryWriter {
-    /* uint32 pid = 1; */
-    if (message.pid !== 0) writer.tag(1, WireType.Varint).uint32(message.pid);
-    let u = options.writeUnknownFields;
-    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-    return writer;
-  }
-}
 /**
- * @generated MessageType for protobuf message OyasumiOverlaySidecar.PingResponse
+ * @generated from protobuf enum OyasumiOverlaySidecar.MicrophoneActivityMode
  */
-export const PingResponse = new PingResponse$Type();
+export enum MicrophoneActivityMode {
+  /**
+   * @generated from protobuf enum value: MICROPHONE_ACTIVITY_MODE_Hardware = 0;
+   */
+  Hardware = 0,
+  /**
+   * @generated from protobuf enum value: MICROPHONE_ACTIVITY_MODE_VRChat = 1;
+   */
+  VRChat = 1,
+}
 // @generated message type with reflection information, may provide speed optimized methods
 class AddNotificationRequest$Type extends MessageType<AddNotificationRequest> {
   constructor() {
@@ -886,10 +836,20 @@ class SetMicrophoneActiveRequest$Type extends MessageType<SetMicrophoneActiveReq
   constructor() {
     super('OyasumiOverlaySidecar.SetMicrophoneActiveRequest', [
       { no: 1, name: 'active', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      {
+        no: 2,
+        name: 'mode',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.MicrophoneActivityMode',
+          MicrophoneActivityMode,
+          'MICROPHONE_ACTIVITY_MODE_',
+        ],
+      },
     ]);
   }
   create(value?: PartialMessage<SetMicrophoneActiveRequest>): SetMicrophoneActiveRequest {
-    const message = { active: false };
+    const message = { active: false, mode: 0 };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<SetMicrophoneActiveRequest>(this, message, value);
@@ -908,6 +868,9 @@ class SetMicrophoneActiveRequest$Type extends MessageType<SetMicrophoneActiveReq
       switch (fieldNo) {
         case /* bool active */ 1:
           message.active = reader.bool();
+          break;
+        case /* OyasumiOverlaySidecar.MicrophoneActivityMode mode */ 2:
+          message.mode = reader.int32();
           break;
         default:
           let u = options.readUnknownField;
@@ -935,6 +898,8 @@ class SetMicrophoneActiveRequest$Type extends MessageType<SetMicrophoneActiveReq
   ): IBinaryWriter {
     /* bool active = 1; */
     if (message.active !== false) writer.tag(1, WireType.Varint).bool(message.active);
+    /* OyasumiOverlaySidecar.MicrophoneActivityMode mode = 2; */
+    if (message.mode !== 0) writer.tag(2, WireType.Varint).int32(message.mode);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -1163,6 +1128,16 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
       { no: 1, name: 'system_mic_indicator_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 2, name: 'system_mic_indicator_opacity', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
       { no: 3, name: 'system_mic_indicator_fadeout', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      {
+        no: 12,
+        name: 'system_mic_indicator_voice_activation_mode',
+        kind: 'enum',
+        T: () => [
+          'OyasumiOverlaySidecar.MicrophoneActivityMode',
+          MicrophoneActivityMode,
+          'MICROPHONE_ACTIVITY_MODE_',
+        ],
+      },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarOverlaySettings>): OyasumiSidecarOverlaySettings {
@@ -1170,6 +1145,7 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
       systemMicIndicatorEnabled: false,
       systemMicIndicatorOpacity: 0,
       systemMicIndicatorFadeout: false,
+      systemMicIndicatorVoiceActivationMode: 0,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
@@ -1195,6 +1171,9 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
           break;
         case /* bool system_mic_indicator_fadeout */ 3:
           message.systemMicIndicatorFadeout = reader.bool();
+          break;
+        case /* OyasumiOverlaySidecar.MicrophoneActivityMode system_mic_indicator_voice_activation_mode */ 12:
+          message.systemMicIndicatorVoiceActivationMode = reader.int32();
           break;
         default:
           let u = options.readUnknownField;
@@ -1229,6 +1208,9 @@ class OyasumiSidecarOverlaySettings$Type extends MessageType<OyasumiSidecarOverl
     /* bool system_mic_indicator_fadeout = 3; */
     if (message.systemMicIndicatorFadeout !== false)
       writer.tag(3, WireType.Varint).bool(message.systemMicIndicatorFadeout);
+    /* OyasumiOverlaySidecar.MicrophoneActivityMode system_mic_indicator_voice_activation_mode = 12; */
+    if (message.systemMicIndicatorVoiceActivationMode !== 0)
+      writer.tag(12, WireType.Varint).int32(message.systemMicIndicatorVoiceActivationMode);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -2422,8 +2404,6 @@ export const OyasumiSidecarBrightnessState = new OyasumiSidecarBrightnessState$T
 export const OyasumiOverlaySidecar = new ServiceType(
   'OyasumiOverlaySidecar.OyasumiOverlaySidecar',
   [
-    { name: 'Ping', options: {}, I: Empty, O: PingResponse },
-    { name: 'RequestStop', options: {}, I: Empty, O: Empty },
     { name: 'AddNotification', options: {}, I: AddNotificationRequest, O: AddNotificationResponse },
     { name: 'ClearNotification', options: {}, I: ClearNotificationRequest, O: Empty },
     { name: 'SyncState', options: {}, I: OyasumiSidecarState, O: Empty },

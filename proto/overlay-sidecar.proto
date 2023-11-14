@@ -65,6 +65,7 @@ message OyasumiSidecarOverlaySettings {
   bool system_mic_indicator_enabled = 1;
   double system_mic_indicator_opacity = 2;
   bool system_mic_indicator_fadeout = 3;
+  MicrophoneActivityMode system_mic_indicator_voice_activation_mode = 12;
 }
 
 message OyasumiSidecarDeviceInfo {
