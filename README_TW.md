@@ -19,7 +19,7 @@
     <br>
     如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
     <br>
-          <a href="https://raphiiko.booth.pm/items/42168880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br>你已經在看繁體中文的説明了！(*/ω＼*)<br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
+          <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br>你已經在看繁體中文的説明了！(*/ω＼*)<br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
     <br>
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
 </p>
