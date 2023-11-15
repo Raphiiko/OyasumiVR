@@ -135,6 +135,10 @@ impl AudioDeviceManager {
         *self.state.mic_activation_threshold.lock().await
     }
 
+    pub async fn set_mic_activation_threshold(&self, value: f32) {
+        *self.state.mic_activation_threshold.lock().await = value;
+    }
+
     pub async fn set_mic_activity_enabled(&self, enabled: bool) {
         *self.state.mic_activity_enabled.lock().await = enabled;
         self.state.evaluate_capture_device_metering().await;

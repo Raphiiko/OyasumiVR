@@ -495,7 +495,10 @@
       "heartrate": "Heart Rate",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
-      "sleepMode": "Sleep Mode",
+      "sleepMode": {
+        "label": "Sleep Mode",
+        "tooltip": "Toggle Sleep Mode"
+      },
       "steamvr": {
         "INACTIVE": "Inactive",
         "INITIALIZED": "Active",
@@ -1688,7 +1691,19 @@
         "description": "The indicator icon's maximum opacity",
         "title": "Opacity"
       },
-      "title": "Overlay Indicator"
+      "title": "Overlay Indicator",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "By VRChat",
+          "HARDWARE": "By Mic Volume"
+        },
+        "title": "Voice activation mode",
+        "description": "Determines in what mode voice activation (the indicator lighting up) is determined."
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "Voice activation threshold",
+        "description": "Set the volume threshold at which the mic indicator should light up"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {

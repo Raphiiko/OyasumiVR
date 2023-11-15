@@ -1,6 +1,11 @@
-<div class="track-container" (mousedown)="onDragStart($event)">
-  <div class="track">
-    <div class="track-fill" [style.width]="trackFillStyleWidth"></div>
+<div class="track-container" [class.style-audio-level]="style === 'AUDIO_LEVEL'" (mousedown)="onDragStart($event)">
+  <div class="track" [class.style-audio-level]="style === 'AUDIO_LEVEL'">
+    <div class="track-fill" [style.width]="trackFillStyleWidth"
+         [class.style-audio-level]="style === 'AUDIO_LEVEL'"></div>
+    <div class="track-fill-audio-level"
+         *ngIf="style === 'AUDIO_LEVEL'"
+         #audioLevelTrackFill
+    ></div>
     <div
       class="track-stop"
       *ngFor="let snapValue of snapValues; let i = index"
@@ -10,6 +15,7 @@
   </div>
   <div
     class="thumb"
+    [class.style-audio-level]="style === 'AUDIO_LEVEL'"
     #thumbEl
     [style.left]="thumbStyleLeft"
     [class.dragging]="dragging"

@@ -8,26 +8,17 @@ import type { SetMicrophoneActiveRequest } from './overlay-sidecar_pb';
 import type { OverlayMenuOpenRequest } from './overlay-sidecar_pb';
 import type { SetDebugTranslationsRequest } from './overlay-sidecar_pb';
 import type { OyasumiSidecarState } from './overlay-sidecar_pb';
+import type { Empty } from './overlay-sidecar_pb';
 import type { ClearNotificationRequest } from './overlay-sidecar_pb';
+import { stackIntercept } from '@protobuf-ts/runtime-rpc';
 import type { AddNotificationResponse } from './overlay-sidecar_pb';
 import type { AddNotificationRequest } from './overlay-sidecar_pb';
-import { stackIntercept } from '@protobuf-ts/runtime-rpc';
-import type { PingResponse } from './overlay-sidecar_pb';
-import type { Empty } from './overlay-sidecar_pb';
 import type { UnaryCall } from '@protobuf-ts/runtime-rpc';
 import type { RpcOptions } from '@protobuf-ts/runtime-rpc';
 /**
  * @generated from protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */
 export interface IOyasumiOverlaySidecarClient {
-  /**
-   * @generated from protobuf rpc: Ping(OyasumiOverlaySidecar.Empty) returns (OyasumiOverlaySidecar.PingResponse);
-   */
-  ping(input: Empty, options?: RpcOptions): UnaryCall<Empty, PingResponse>;
-  /**
-   * @generated from protobuf rpc: RequestStop(OyasumiOverlaySidecar.Empty) returns (OyasumiOverlaySidecar.Empty);
-   */
-  requestStop(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty>;
   /**
    * @generated from protobuf rpc: AddNotification(OyasumiOverlaySidecar.AddNotificationRequest) returns (OyasumiOverlaySidecar.AddNotificationResponse);
    */
@@ -91,29 +82,13 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
   options = OyasumiOverlaySidecar.options;
   constructor(private readonly _transport: RpcTransport) {}
   /**
-   * @generated from protobuf rpc: Ping(OyasumiOverlaySidecar.Empty) returns (OyasumiOverlaySidecar.PingResponse);
-   */
-  ping(input: Empty, options?: RpcOptions): UnaryCall<Empty, PingResponse> {
-    const method = this.methods[0],
-      opt = this._transport.mergeOptions(options);
-    return stackIntercept<Empty, PingResponse>('unary', this._transport, method, opt, input);
-  }
-  /**
-   * @generated from protobuf rpc: RequestStop(OyasumiOverlaySidecar.Empty) returns (OyasumiOverlaySidecar.Empty);
-   */
-  requestStop(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty> {
-    const method = this.methods[1],
-      opt = this._transport.mergeOptions(options);
-    return stackIntercept<Empty, Empty>('unary', this._transport, method, opt, input);
-  }
-  /**
    * @generated from protobuf rpc: AddNotification(OyasumiOverlaySidecar.AddNotificationRequest) returns (OyasumiOverlaySidecar.AddNotificationResponse);
    */
   addNotification(
     input: AddNotificationRequest,
     options?: RpcOptions
   ): UnaryCall<AddNotificationRequest, AddNotificationResponse> {
-    const method = this.methods[2],
+    const method = this.methods[0],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<AddNotificationRequest, AddNotificationResponse>(
       'unary',
@@ -130,7 +105,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: ClearNotificationRequest,
     options?: RpcOptions
   ): UnaryCall<ClearNotificationRequest, Empty> {
-    const method = this.methods[3],
+    const method = this.methods[1],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<ClearNotificationRequest, Empty>(
       'unary',
@@ -147,7 +122,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: OyasumiSidecarState,
     options?: RpcOptions
   ): UnaryCall<OyasumiSidecarState, Empty> {
-    const method = this.methods[4],
+    const method = this.methods[2],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<OyasumiSidecarState, Empty>('unary', this._transport, method, opt, input);
   }
@@ -158,7 +133,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: SetDebugTranslationsRequest,
     options?: RpcOptions
   ): UnaryCall<SetDebugTranslationsRequest, Empty> {
-    const method = this.methods[5],
+    const method = this.methods[3],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetDebugTranslationsRequest, Empty>(
       'unary',
@@ -175,7 +150,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: OverlayMenuOpenRequest,
     options?: RpcOptions
   ): UnaryCall<OverlayMenuOpenRequest, Empty> {
-    const method = this.methods[6],
+    const method = this.methods[4],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<OverlayMenuOpenRequest, Empty>(
       'unary',
@@ -189,7 +164,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
    * @generated from protobuf rpc: CloseOverlayMenu(OyasumiOverlaySidecar.Empty) returns (OyasumiOverlaySidecar.Empty);
    */
   closeOverlayMenu(input: Empty, options?: RpcOptions): UnaryCall<Empty, Empty> {
-    const method = this.methods[7],
+    const method = this.methods[5],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<Empty, Empty>('unary', this._transport, method, opt, input);
   }
@@ -200,7 +175,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: OverlayMenuOpenRequest,
     options?: RpcOptions
   ): UnaryCall<OverlayMenuOpenRequest, Empty> {
-    const method = this.methods[8],
+    const method = this.methods[6],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<OverlayMenuOpenRequest, Empty>(
       'unary',
@@ -217,7 +192,7 @@ export class OyasumiOverlaySidecarClient implements IOyasumiOverlaySidecarClient
     input: SetMicrophoneActiveRequest,
     options?: RpcOptions
   ): UnaryCall<SetMicrophoneActiveRequest, Empty> {
-    const method = this.methods[9],
+    const method = this.methods[7],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetMicrophoneActiveRequest, Empty>(
       'unary',

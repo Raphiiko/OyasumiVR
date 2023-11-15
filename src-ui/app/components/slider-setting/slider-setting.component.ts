@@ -13,6 +13,8 @@ import {
 import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SliderComponent, SliderStyle } from '../slider/slider.component';
+import { clamp } from '../../utils/number-utils';
 
 @Component({
   selector: 'app-slider-setting',
@@ -23,6 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class SliderSettingComponent implements OnInit, OnChanges {
   @Input() min = 0;
   @Input() max = 100;
+  @Input() style: SliderStyle = 'DEFAULT';
 
   _value = 50;
   @Input() set value(value: number | null) {
@@ -43,7 +46,13 @@ export class SliderSettingComponent implements OnInit, OnChanges {
   protected showOverlay = false;
   protected input$ = new Subject<string>();
 
+  set audioLevel(value: number) {
+    if (!this.sliderEl) return;
+    this.sliderEl.audioLevel = value;
+  }
+
   @ViewChild('inputValue') inputEl?: ElementRef;
+  @ViewChild('slider') sliderEl?: SliderComponent;
 
   constructor(private destroyRef: DestroyRef) {}
 

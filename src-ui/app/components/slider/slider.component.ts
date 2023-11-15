@@ -15,6 +15,8 @@ import {
 import { orderBy } from 'lodash';
 import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils';
 
+export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
+
 @Component({
   selector: 'app-slider',
   templateUrl: './slider.component.html',
@@ -28,6 +30,7 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   @Input() unit?: string;
   @Input() snapValues: number[] = [];
   @Input() snapDistance = 5;
+  @Input() style: SliderStyle = 'DEFAULT';
   @Output() valueChange = new EventEmitter<number>();
   protected dragging = false;
   protected thumbStyleLeft = '0px';
@@ -35,7 +38,15 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   protected trackStopStyleLeft: string[] = [];
   protected snapIndicatorStyleLeft: string[] = [];
 
+  set audioLevel(value: number) {
+    if (!this.audioLevelTrackFillEl) return;
+    value = clamp(value, 0, 1);
+    value = Math.round(value * 10000) / 100;
+    this.audioLevelTrackFillEl.nativeElement.style.width = `${value}%`;
+  }
+
   @ViewChild('thumbEl') thumbEl?: ElementRef;
+  @ViewChild('audioLevelTrackFill') audioLevelTrackFillEl?: ElementRef;
 
   constructor(private el: ElementRef, private cdr: ChangeDetectorRef) {}
 

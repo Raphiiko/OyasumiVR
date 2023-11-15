@@ -495,7 +495,6 @@
       "heartrate": "心率",
       "inactive": "未启动",
       "loggedOut": "未登录",
-      "sleepMode": "睡眠模式",
       "steamvr": {
         "INACTIVE": "未启动",
         "INITIALIZED": "启动",
@@ -732,7 +731,6 @@
           },
           "footLockReleaseWindow": "脚部锁定释放持续时间",
           "lockFeetOnSleepModeEnable": "当睡眠模式启动时启用脚部锁定",
-          "onlyIfAllTrackersTurnedOff": "当所有追踪器关闭时",
           "onlyIfSleepModeEnabled": "当睡眠模式启动时",
           "onlySwitchAnimations": "仅切换睡眠动画",
           "releaseFootLockOnPoseChange": "切换睡眠姿势时暂时释放脚部锁定",
@@ -1042,45 +1040,45 @@
           "experimental": "该模块仍处于试验阶段，暂时仅提供英文版。虽然你现在已经可以使用它了，但它在很大程度上仍处于开发阶段。目前，你仍可能会发现一些问题和功能缺失。"
         }
       },
-          "fixes": {
-            "title": "问题修复与故障排除",
-            "description": "本节包含一些与解决问题和故障排除有关的操作。除非你知道自己在做什么，或者在获得支持时被要求使用这些操作，否则一般不应该使用这些操作。",
-            "vrManifestReregister": {
-              "title": "重新注册 SteamVR 的应用程序清单",
-              "description": "在 SteamVR 上重新注册程序的清单数据",
-              "action": "重新注册清单",
-              "modal": {
-                "success": {
-                  "title": "已重新注册程序的清单数据",
-                  "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。"
-                },
-                "MANIFEST_ADD_FAILED": {
-                  "title": "未能成功注册程序的清单数据",
-                  "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。"
-                },
-                "MANIFEST_REMOVE_FAILED": {
-                  "title": "未能成功注册程序的清单数据",
-                  "message": "无法删除清单，请查看日志以了解详情。"
-                },
-                "MANIFEST_NOT_REGISTERED": {
-                  "title": "未能成功注册程序的清单数据",
-                  "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。"
-                },
-                "MANIFEST_CHECK_FAILED": {
-                  "title": "未能成功注册程序的清单数据",
-                  "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。"
-                },
-                "FLAVOUR_NOT_ELIGIBLE": {
-                  "title": "未注册的清单数据",
-                  "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这不是错误！请重启 OyasumiVR。"
-                },
-                "UNKNOWN": {
-                  "title": "未能成功注册程序的清单数据",
-                  "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。"
-                }
-              }
+      "fixes": {
+        "title": "问题修复与故障排除",
+        "description": "本节包含一些与解决问题和故障排除有关的操作。除非你知道自己在做什么，或者在获得支持时被要求使用这些操作，否则一般不应该使用这些操作。",
+        "vrManifestReregister": {
+          "title": "重新注册 SteamVR 的应用程序清单",
+          "description": "在 SteamVR 上重新注册程序的清单数据",
+          "action": "重新注册清单",
+          "modal": {
+            "success": {
+              "title": "已重新注册程序的清单数据",
+              "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "未能成功注册程序的清单数据",
+              "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "未能成功注册程序的清单数据",
+              "message": "无法删除清单，请查看日志以了解详情。"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "未能成功注册程序的清单数据",
+              "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "未能成功注册程序的清单数据",
+              "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。"
+            },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "未注册的清单数据",
+              "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这不是错误！请重启 OyasumiVR。"
+            },
+            "UNKNOWN": {
+              "title": "未能成功注册程序的清单数据",
+              "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。"
             }
+          }
         }
+      }
     },
     "general": {
       "adminPrivileges": {
