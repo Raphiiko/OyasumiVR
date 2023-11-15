@@ -17,7 +17,7 @@
     "addFriends": "添加朋友",
     "blacklist": "玩家黑名单",
     "clearPlayers": "清除所有",
-    "description": "OyasumiVR 可以自动接受你收到的加入请求。 通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
+    "description": "OyasumiVR 可以自动处理你收到的加入请求。通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
     "noPlayersAdded": "目前没有任何玩家在此列表中",
     "options": {
       "enable": {
@@ -189,7 +189,7 @@
       "powerAutomations": "电源",
       "resolutionAutomations": "分辨率",
       "settings": "设置",
-      "shutdownAutomations": "自动关机",
+      "shutdownAutomations": "关机序列",
       "sleepAnimations": "睡眠动画",
       "sleepDetection": "睡眠检测",
       "statusAutomations": "状态",
@@ -383,14 +383,14 @@
           "reason": {
             "MANUAL": "已手动取消"
           },
-          "title": "自动关机被取消了"
+          "title": "关机序列的执行被取消了"
         },
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "手动触发",
             "SLEEP_TRIGGER": "因为你已经睡了足够长的时间"
           },
-          "title": "自动关机已经开始"
+          "title": "关机序列开始执行了"
         },
         "simpleBrightnessChanged": {
           "reason": {
@@ -501,10 +501,10 @@
         "INITIALIZING": "等待启动"
       },
       "systemMicMuted": {
-        "label": "静音状态",
+        "label": "开关状态",
         "tooltip": {
           "NAVIGATE": "系统麦克风：\n自动",
-          "TOGGLE_MUTE": "系统麦克风：\n静音"
+          "TOGGLE_MUTE": "系统麦克风：\n关闭"
         }
       },
       "vrchat": {
@@ -630,7 +630,7 @@
       "description": "在这里，你可以设置 GPU 的功耗限制，让它在你睡觉时节省电力",
       "disabled": {
         "initializing": "功耗限制功能正在初始化.....",
-        "noNvidia": "功耗限制不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制功能仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({code})",
+        "noNvidia": "功耗限制功能不可用，因为未检测到正在运行的 NVIDIA 驱动程序。 功耗限制功能仅适用于 NVIDIA GPU。\n\n如果你的系统中有 NVIDIA GPU，请确保为其安装了适合的驱动程序。\n\n({code})",
         "noPermission": "尽管 OyasumiVR 拥有管理员权限，但它似乎没有权限更改你的 GPU 设置\n\n请检查你的系统规格，因为这通常不会发生",
         "noSidecar": "由于未知原因，无法获得管理员权限\n这些是控制 GPU 功耗限制所必需的\n\n请尝试重新启动 OyasumiVR",
         "unknown": "由于未知原因，功耗限制功能不可用。\n\n请尝试重新启动 OyasumiVR"
@@ -663,14 +663,14 @@
       "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
       "intOutOfBounds": "该值必须是 0 到 255 之间的有效整数",
       "invalidSyntax": "无效的语法",
-      "noFloatMilliseconds": "毫秒值必须定义为整数",
+      "noFloatMilliseconds": "毫秒值必须为整数",
       "tooManyCommands": "OSC 脚本不能有超过 {value} 个操作。",
-      "totalDurationTooLong": "总脚本持续时间不能超过 10 秒。"
+      "totalDurationTooLong": "脚本操作总持续时间不能超过 10 秒。"
     }
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
-      "content": "已自动接受来自 {username} 的邀请请求"
+      "content": "已自动接受来自 {username} 的加入请求"
     },
     "sleepCheck": {
       "content": "20秒后将启用睡眠模式。你睡了吗？\n\n（摇头取消）"
@@ -781,7 +781,7 @@
           "minutes": "{minutes} 分钟",
           "seconds": "{seconds} 秒",
           "subtitle": "睡眠 {time} 后",
-          "title": "自动关机"
+          "title": "执行关机序列"
         },
         "sleepingAnimations": {
           "title": "睡眠动画"
@@ -811,14 +811,14 @@
           "automations": "自动化",
           "deviceControl": "设备控制",
           "prepareForSleep": "为睡眠做好准备",
-          "shutdown": "自动关机流程"
+          "shutdown": "执行关机序列"
         }
       },
       "shutdownSequence": {
         "dialog": {
-          "message": "即将开始自动关机流程。\n你确定要现在进行吗？\n\n你可以在 OyasumiVR 的主窗口中配置自动关机时的动作。",
-          "start": "开始关机",
-          "title": "自动关机流程"
+          "message": "即将开始执行关机序列。\n你确定要现在进行吗？\n\n你可以在 OyasumiVR 的主窗口中配置关机序列所执行的动作。",
+          "start": "开始执行",
+          "title": "执行关机序列"
         }
       }
     }
@@ -959,7 +959,7 @@
       "logs": {
         "openFolder": {
           "action": "打开日志文件夹",
-          "description": "在你的资源管理器中打开OyasumiVR日志文件的位置",
+          "description": "在你的资源管理器中打开OyasumiVR日志文件所在的位置",
           "title": "打开日志文件夹"
         },
         "title": "日志文件"
@@ -1220,7 +1220,7 @@
           },
           "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
             "description": "在 Oyasumi 自动更新你的 VRChat 状态时向你发送通知",
-            "title": "VRChat 状态更新（自动化玩家数量限制）"
+            "title": "VRChat 状态更新（用于玩家数量限制的自动化操作）"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "在睡眠模式被停用时向你发送通知",
@@ -1362,8 +1362,8 @@
       "message": "你确定现在就想关闭你的设备吗？",
       "title": "你确定吗？"
     },
-    "description": "如果喜欢在VR中入睡，但又不想在VR中睡一整晚，你可以使用OyasumiVR的自动关闭功能。一旦你打瞌睡了，这个功能就会自动优雅地关闭你的VR，这样你就可以顺利地在VR之外继续你的睡眠。",
-    "noOptionsSelected": "由于你没有选择在关闭序列中运行的操作，运行它不会有任何影响。为了让这个功能有所作为，请至少选择下面的一个选项。",
+    "description": "如果喜欢在VR中入睡，但又不想在VR中睡一整晚，你可以使用OyasumiVR的关机序列功能。一旦你打瞌睡了，这个功能就会自动优雅地关闭你的VR，这样你就可以顺利地在VR之外继续你的睡眠。",
+    "noOptionsSelected": "由于你没有选择在关机序列中运行的操作，运行它不会有任何影响。为了让这个功能有所作为，请至少选择下面的一个选项。",
     "overlay": {
       "cancel": "立即取消",
       "stage": {
@@ -1416,15 +1416,15 @@
         "title": "关掉追踪器"
       }
     },
-    "title": "自动关机",
+    "title": "关机序列",
     "triggers": {
       "title": "触发设置",
       "whenAsleep": {
-        "description": "当睡眠模式被开启一定时间后，执行自动关机流程",
+        "description": "当睡眠模式被开启一定时间后，执行关机序列",
         "title": "在我睡觉时启动"
       },
       "whenAsleepDuration": {
-        "description": "睡眠模式开启后，到执行自动关机流程前应该等待多久",
+        "description": "睡眠模式开启后，到开始执行关机序列前应该等待多久",
         "title": "睡眠时间"
       },
       "whenAsleepTimeWindow": {
@@ -1721,12 +1721,12 @@
       "title": "设置"
     },
     "control": {
-      "description": "你可以用它来测试麦克风静音的功能是否正常工作",
+      "description": "你可以用它来测试麦克风的功能是否正常工作",
       "mute": "将麦克风\n关闭",
       "title": "麦克风状态设置",
       "unmute": "打开\n麦克风"
     },
-    "description": "当你睡着或醒来时，在 VRChat 中自动将麦克风静音或取消静音！当你想防止别人听到你的鼾声时，这个功能就派上用场了；）\n\n注意：为了使这个功能生效，需要在 VRChat 中启用 OSC。",
+    "description": "当你睡着时，在 VRChat 中自动关闭麦克风！（反之亦然）当你想防止别人听到你的鼾声时，这个功能就派上用场了；）\n\n注意：为了使这个功能生效，需要在 VRChat 中启用 OSC。",
     "mode": {
       "description": "选择你在 VRChat 中使用的麦克风行为。请注意，选择与你在 VRChat 中使用的行为不同的行为可能会导致这些自动操作出现异常。",
       "title": "VRChat 麦克风行为"
@@ -1759,7 +1759,7 @@
       "unknown": "未知",
       "unmuted": "已开麦"
     },
-    "title": "麦克风静音"
+    "title": "麦克风设置"
   },
   "nightmare-detection": {
     "title": "噩梦检测",
