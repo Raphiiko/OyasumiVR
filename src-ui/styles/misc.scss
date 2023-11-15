@@ -66,9 +66,12 @@
 
 .settings {
   display: flow-root;
-  margin-bottom: 1em;
   background: var(--color-surface-1);
   border-radius: var(--surface-border-radius);
+
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
 
   & > * {
     transition: all 0.15s ease;

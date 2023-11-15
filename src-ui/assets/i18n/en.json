@@ -412,6 +412,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
               "unknown": "By an unknown automation"
@@ -1435,7 +1436,7 @@
         "title": "Sleep duration"
       },
       "whenAsleepTimeWindow": {
-        "description": "Only allow shutdown to trigger between certain hours of day",
+        "description": "On/ly allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
       }
     }
@@ -1443,6 +1444,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "At a specific time",
+      "afterTime": {
+        "title": "After a specific amount of time",
+        "description": {
+          "minutes": "After {minutes, plural, one {1 minute} other {# minutes}}",
+          "hours": "After {hours, plural, one {1 hour} other {# hours}}",
+          "hoursAndMinutes": "After {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}"
+        }
+      },
       "description": "Automatically disable sleep mode based on various triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
@@ -1474,6 +1483,11 @@
       "disableAtTime": {
         "description": "Disable sleep mode at a specific time of day.",
         "time": "Time",
+        "title": "Disable sleep mode"
+      },
+      "disableAfterTime": {
+        "description": "Disable the sleep mode after it has been enabled for a certain amount of time.",
+        "time": "Duration",
         "title": "Disable sleep mode"
       },
       "disableOnDevicePowerOn": {
