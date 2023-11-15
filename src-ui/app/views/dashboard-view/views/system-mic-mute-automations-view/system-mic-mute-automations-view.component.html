@@ -94,6 +94,26 @@
       </div>
     </div>
     <div class="setting-category">
+      <h3 translate>systemMicMuteAutomations.vrchat.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.title</span>
+            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="worldJoinBehaviourOptions"
+              [selected]="worldJoinBehaviourOption"
+              (selectedChange)="onChangeWorldJoinBehaviourOption($event)"
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
       <h3 translate>systemMicMuteAutomations.overlayIndicator.title</h3>
       <p translate>systemMicMuteAutomations.overlayIndicator.description</p>
       <div class="settings">

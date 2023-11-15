@@ -1736,7 +1736,21 @@
       },
       "title": "Mute Automations"
     },
-    "title": "System Microphone Mute Automations"
+    "title": "System Microphone Mute Automations",
+    "worldJoinBehaviour": {
+      "options": {
+        "MUTE": "Default Off",
+        "UNMUTE": "Default On",
+        "KEEP": "Keep Last State"
+      }
+    },
+    "vrchat": {
+      "title": "VRChat Options",
+      "worldJoinBehaviour": {
+        "title": "World Join Behaviour",
+        "description": "How your microphone should behave when changing worlds in VRChat"
+      }
+    }
   },
   "updater": {
     "modals": {

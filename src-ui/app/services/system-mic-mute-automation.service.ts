@@ -35,6 +35,7 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api';
+import { VRChatService } from './vrchat.service';
 
 const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
 const PERSISTENT_ID_TRAIL = ']';
@@ -75,7 +76,8 @@ export class SystemMicMuteAutomationService {
     private sleepService: SleepService,
     private sleepPreparationService: SleepPreparationService,
     private notificationService: NotificationService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private vrchat: VRChatService
   ) {}
 
   async init() {
@@ -93,6 +95,7 @@ export class SystemMicMuteAutomationService {
     this.changeControllerBindingBehaviorOnSleepEnable();
     this.changeControllerBindingBehaviorOnSleepDisable();
     this.changeControllerBindingBehaviorOnSleepPreparation();
+    this.changeMuteOnVRChatWorldChange();
     // Handle voice activity mode
     this.handleVoiceActivitySettingChanges();
     // Handle controller binding
@@ -335,6 +338,28 @@ export class SystemMicMuteAutomationService {
         })
       )
       .subscribe();
+  }
+
+  private changeMuteOnVRChatWorldChange() {
+    this.vrchat.world
+      .pipe(
+        map((w) => w.instanceId),
+        skip(1),
+        filter(Boolean),
+        distinctUntilChanged()
+      )
+      .subscribe(async () => {
+        switch (this.config.vrchatWorldJoinBehaviour) {
+          case 'MUTE':
+            await this.setMute(true);
+            break;
+          case 'UNMUTE':
+            await this.setMute(false);
+            break;
+          case 'KEEP':
+            break;
+        }
+      });
   }
 
   private async handleHardwareAudioMetering() {

@@ -10,6 +10,7 @@ import {
   SystemMicMuteAutomationsConfig,
   SystemMicMuteControllerBindingBehavior,
   SystemMicMuteStateOption,
+  VRChatMicrophoneWorldJoinBehaviour,
 } from '../../../../models/automations';
 import { cloneDeep, isEqual } from 'lodash';
 import { OVRInputEventAction } from '../../../../models/ovr-input-event';
@@ -28,6 +29,30 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
   config: SystemMicMuteAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
+  worldJoinBehaviourOptions: SelectBoxItem[] = [
+    {
+      id: 'KEEP',
+      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.KEEP',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+      ),
+    },
+    {
+      id: 'MUTE',
+      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.MUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+      ),
+    },
+    {
+      id: 'UNMUTE',
+      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.UNMUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+      ),
+    },
+  ];
+  worldJoinBehaviourOption: SelectBoxItem | undefined;
   muteActionOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -137,6 +162,9 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
       );
       this.voiceActivationModeOption = this.voiceActivationModeOptions.find(
         (o) => o.id === config.voiceActivationMode
+      );
+      this.worldJoinBehaviourOption = this.worldJoinBehaviourOptions.find(
+        (o) => o.id === config.vrchatWorldJoinBehaviour
       );
     });
     // Process audio devices and config related to audio devices
@@ -332,6 +360,16 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
       {
         voiceActivationMode: option!.id as 'VRCHAT' | 'HARDWARE',
+      }
+    );
+  }
+
+  async onChangeWorldJoinBehaviourOption(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        vrchatWorldJoinBehaviour: option!.id as VRChatMicrophoneWorldJoinBehaviour,
       }
     );
   }

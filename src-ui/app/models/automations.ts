@@ -264,6 +264,8 @@ export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
 export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
+export type VRChatMicrophoneWorldJoinBehaviour = 'MUTE' | 'UNMUTE' | 'KEEP';
+
 export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   audioDevicePersistentId: string | null;
   onSleepModeEnableState: SystemMicMuteStateOption;
@@ -280,6 +282,7 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   voiceActivationMode: 'VRCHAT' | 'HARDWARE';
   hardwareVoiceActivationThreshold: number;
+  vrchatWorldJoinBehaviour: VRChatMicrophoneWorldJoinBehaviour;
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -533,6 +536,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepPreparationControllerBindingBehavior: 'NONE',
     voiceActivationMode: 'VRCHAT',
     hardwareVoiceActivationThreshold: 4,
+    vrchatWorldJoinBehaviour: 'KEEP',
   },
   NIGHTMARE_DETECTION: {
     enabled: false,
