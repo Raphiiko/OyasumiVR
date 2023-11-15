@@ -1263,8 +1263,7 @@
         "description": "Beberapa fitur OyasumiVR mengharuskan Anda untuk masuk dengan akun VRChat Anda agar fitur-fitur tersebut dapat berfungsi.",
         "disclaimers": {
           "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!",
-          "use": "Kredensial login Anda tidak akan pernah disimpan di mana pun dan hanya akan dikirim ke server VRChat untuk tujuan autentikasi."
+          "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
         },
         "loggedIn": {
           "logOut": "Keluar",

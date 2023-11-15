@@ -569,7 +569,8 @@
       },
       "password": "Password",
       "title": "Log in to VRChat",
-      "username": "VRChat Username/E-mail"
+      "username": "VRChat Username/E-mail",
+      "rememberCredentials": "Remember Credentials"
     },
     "vrchat-login-tfa-modal": {
       "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
@@ -577,7 +578,8 @@
         "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input.",
         "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect."
       },
-      "title": "Two Factor Authentication"
+      "title": "Two Factor Authentication",
+      "logginInAs": "You're logging into VRChat as:"
     }
   },
   "gpu-automations": {
@@ -1276,7 +1278,7 @@
         "disclaimers": {
           "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
           "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
-          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes."
+          "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
         },
         "loggedIn": {
           "logOut": "Log out",

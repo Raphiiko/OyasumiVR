@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 interface VRChatLoginTFAModalInputModel {
   lastCodeInvalid: boolean;
+  username?: string;
 }
 
 interface VRChatLoginTFAModalOutputModel {
@@ -26,6 +27,7 @@ export class VRChatLoginTFAModalComponent
   code: BehaviorSubject<string> = new BehaviorSubject<string>('');
   codeValid = false;
   error = '';
+  username?: string;
 
   constructor(private destroyRef: DestroyRef) {
     super();

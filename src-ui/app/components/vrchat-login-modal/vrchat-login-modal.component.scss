@@ -16,3 +16,20 @@ p,
     white-space: nowrap;
   }
 }
+
+
+.remember-row {
+  margin-top: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 1em;
+  border-radius: var(--surface-border-radius);
+  background-color: var(--color-surface-1);
+  .left {
+    flex: 1;
+  }
+  .right {
+    flex-shrink: 0;
+  }
+}

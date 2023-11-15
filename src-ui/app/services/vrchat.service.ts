@@ -27,6 +27,13 @@ import { WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
 import { CachedValue } from '../utils/cached-value';
 import { error, info, warn } from 'tauri-plugin-log-api';
+import {
+  decryptStorageData,
+  deserializeStorageCryptoKey,
+  encryptStorageData,
+  generateStorageCryptoKey,
+  serializeStorageCryptoKey,
+} from '../utils/crypto';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const MAX_VRCHAT_FRIENDS = 65536;
@@ -38,9 +45,8 @@ export type VRChatServiceStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 export class VRChatService {
   private http!: Client;
   private store = new Store(SETTINGS_FILE);
-  private settings: BehaviorSubject<VRChatApiSettings> = new BehaviorSubject<VRChatApiSettings>(
-    VRCHAT_API_SETTINGS_DEFAULT
-  );
+  private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
+  public settings = this._settings.asObservable();
   private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(
     'PRE_INIT'
   );
@@ -109,7 +115,7 @@ export class VRChatService {
     if (this.loginExpired) {
       info(`[VRChat] Login expired. Logging out.`);
       await this.logout();
-      this.showLoginModal();
+      this.showLoginModal(true);
     }
     // Process VRChat log events
     await this.subscribeToLogEvents();
@@ -167,7 +173,7 @@ export class VRChatService {
       error(`[VRChat] Tried calling verify2FA() while already logged in`);
       throw new Error('Tried calling verify2FA() while already logged in');
     }
-    const { authCookie, authCookieExpiry } = this.settings.value;
+    const { authCookie, authCookieExpiry } = this._settings.value;
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
@@ -235,11 +241,11 @@ export class VRChatService {
     }
   }
 
-  public showLoginModal() {
+  public showLoginModal(autoLogin = false) {
     this.modalService
       .addModal(
         VRChatLoginModalComponent,
-        {},
+        { autoLogin },
         {
           closeOnEscape: false,
         }
@@ -364,6 +370,67 @@ export class VRChatService {
     return friends;
   }
 
+  public async rememberCredentials(username: string, password: string) {
+    if (!this._settings.value.credentialCryptoKey) return;
+    // Obtain the storage crypto key
+    let key: CryptoKey;
+    try {
+      key = await deserializeStorageCryptoKey(this._settings.value.credentialCryptoKey);
+    } catch (e) {
+      error('[VRChat] Failed to deserialize storage crypto key: ' + JSON.stringify(e));
+      this.cycleCredentialCryptoKey();
+      return;
+    }
+    // Store credentials
+    const credentials = btoa(username) + ':' + btoa(password);
+    const encryptedCredentials = await encryptStorageData(credentials, key);
+    await this.updateSettings({
+      rememberedCredentials: encryptedCredentials,
+      rememberCredentials: true,
+    });
+  }
+
+  public async forgetCredentials() {
+    await this.updateSettings({
+      rememberedCredentials: null,
+      rememberCredentials: false,
+    });
+  }
+
+  public async loadCredentials(): Promise<{ username: string; password: string } | null> {
+    if (!this._settings.value.credentialCryptoKey || !this._settings.value.rememberedCredentials)
+      return null;
+    // Obtain the storage crypto key
+    let key: CryptoKey;
+    try {
+      key = await deserializeStorageCryptoKey(this._settings.value.credentialCryptoKey);
+    } catch (e) {
+      error('[VRChat] Failed to deserialize storage crypto key: ' + JSON.stringify(e));
+      this.cycleCredentialCryptoKey();
+      return null;
+    }
+    // Decrypt credentials
+    let credentials: string;
+    try {
+      credentials = await decryptStorageData(this._settings.value.rememberedCredentials, key);
+      const [username, password] = credentials.split(':').map((c) => atob(c));
+      return { username, password };
+    } catch (e) {
+      error('[VRChat] Failed to decrypt remembered credentials: ' + JSON.stringify(e));
+      this.cycleCredentialCryptoKey();
+      return null;
+    }
+  }
+
+  public async cycleCredentialCryptoKey() {
+    info('[VRChat] Cycling the storage crypto key');
+    await this.updateSettings({
+      rememberedCredentials: null,
+      rememberCredentials: false,
+      credentialCryptoKey: await serializeStorageCryptoKey(await generateStorageCryptoKey()),
+    });
+  }
+
   //
   // INTERNALS
   //
@@ -415,7 +482,7 @@ export class VRChatService {
 
   private async loadSession() {
     // If we already have an auth cookie, get the current user for it
-    if (this.settings.value.authCookie) {
+    if (this._settings.value.authCookie) {
       try {
         this._user.next(await this.getCurrentUser());
         info(`[VRChat] Restored existing session`);
@@ -454,7 +521,7 @@ export class VRChatService {
         this.socket = undefined;
       }
       this.socket = new WebSocket(
-        'wss://pipeline.vrchat.cloud/?authToken=' + this.settings.value.authCookie
+        'wss://pipeline.vrchat.cloud/?authToken=' + this._settings.value.authCookie
       );
       this.socket.onopen = () => this.onSocketEvent('OPEN');
       this.socket.onerror = () => this.onSocketEvent('ERROR');
@@ -599,7 +666,7 @@ export class VRChatService {
   }
 
   private getDefaultHeaders(allow2FACookie = true): Record<string, string> {
-    const settings = this.settings.value;
+    const settings = this._settings.value;
     const cookies = [];
     if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
     if (settings.twoFactorCookie && allow2FACookie)
@@ -636,7 +703,7 @@ export class VRChatService {
     let settings: VRChatApiSettings | null = await this.store.get<VRChatApiSettings>(
       SETTINGS_KEY_VRCHAT_API
     );
-    settings = settings ? migrateVRChatApiSettings(settings) : this.settings.value;
+    settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
     // Handle cookie expiry
     this.loginExpired = false;
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
@@ -651,19 +718,24 @@ export class VRChatService {
       settings.twoFactorCookieExpiry = undefined;
       this.loginExpired = true;
     }
+    // Generate storage crypto key if needed
+    if (!settings.credentialCryptoKey) {
+      const key = await generateStorageCryptoKey();
+      settings.credentialCryptoKey = await serializeStorageCryptoKey(key);
+    }
     // Finish loading settings & write changes to disk
-    this.settings.next(settings);
+    this._settings.next(settings);
     await this.saveSettings();
   }
 
   private async updateSettings(settings: Partial<VRChatApiSettings>) {
-    const newSettings = Object.assign(cloneDeep(this.settings.value), settings);
-    this.settings.next(newSettings);
+    const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    this._settings.next(newSettings);
     await this.saveSettings();
   }
 
   private async saveSettings() {
-    await this.store.set(SETTINGS_KEY_VRCHAT_API, this.settings.value);
+    await this.store.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
     await this.store.save();
   }
 
