@@ -546,12 +546,4 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     playSound: false,
     soundVolume: 100,
   },
-  NIGHTMARE_DETECTION: {
-    enabled: false,
-    heartRateThreshold: 130,
-    periodDuration: 60 * 1000,
-    disableSleepMode: false,
-    playSound: false,
-    soundVolume: 100,
-  },
 };
