@@ -1710,10 +1710,10 @@
       "title": "叠加层指示器",
       "voiceActivityMode": {
         "modes": {
-          "VRCHAT": "跟随 VRChat 报告的状态",
-          "HARDWARE": "跟随硬件报告的状态"
+          "VRCHAT": "VRChat 报告的状态",
+          "HARDWARE": "硬件报告的状态"
         },
-        "title": "触发模式",
+        "title": "麦克风状态来源",
         "description": "确定指示器要根据哪个程序报告的麦克风状态来切换显示。"
       },
       "hardwareVoiceActivityThreshold": {
