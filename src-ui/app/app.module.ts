@@ -172,6 +172,8 @@ import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.d
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
 import { FLAVOUR } from '../build';
+import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
+import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -201,6 +203,7 @@ export function createTranslateLoader(http: HttpClient) {
     SleepDetectorEnableSleepModeModalComponent,
     TimeEnableSleepModeModalComponent,
     TimeDisableSleepModeModalComponent,
+    DurationDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
@@ -342,6 +345,7 @@ export class AppModule {
     private sleepModeEnableOnHeartRateCalmPeriodAutomationService: SleepModeEnableOnHeartRateCalmPeriodAutomationService,
     private sleepModeChangeOnSteamVRStatusAutomationService: SleepModeChangeOnSteamVRStatusAutomationService,
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
+    private sleepModeDisableAfterTimeAutomationService: SleepModeDisableAfterTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
@@ -497,6 +501,10 @@ export class AppModule {
           this.logInit(
             'SleepModeDisableAtTimeAutomationService initialization',
             this.sleepModeDisableAtTimeAutomationService.init()
+          ),
+          this.logInit(
+            'SleepModeDisableAfterTimeAutomationService initialization',
+            this.sleepModeDisableAfterTimeAutomationService.init()
           ),
           this.logInit(
             'SleepModeDisableOnDevicePowerOnAutomationService initialization',

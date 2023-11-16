@@ -16,6 +16,7 @@ export type AutomationType =
   | 'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD'
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
+  | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
@@ -61,6 +62,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig;
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
+  SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
@@ -182,6 +184,10 @@ export interface SleepModeDisableAtTimeAutomationConfig extends AutomationConfig
   time: string | null;
 }
 
+export interface SleepModeDisableAfterTimeAutomationConfig extends AutomationConfig {
+  duration: string | null;
+}
+
 export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends AutomationConfig {
   triggerClasses: OVRDeviceClass[];
 }
@@ -258,6 +264,8 @@ export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
 export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
+export type VRChatMicrophoneWorldJoinBehaviour = 'MUTE' | 'UNMUTE' | 'KEEP';
+
 export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   audioDevicePersistentId: string | null;
   onSleepModeEnableState: SystemMicMuteStateOption;
@@ -274,6 +282,7 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   voiceActivationMode: 'VRCHAT' | 'HARDWARE';
   hardwareVoiceActivationThreshold: number;
+  vrchatWorldJoinBehaviour: VRChatMicrophoneWorldJoinBehaviour;
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -415,6 +424,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     time: null,
   },
+  SLEEP_MODE_DISABLE_AFTER_TIME: {
+    enabled: false,
+    duration: null,
+  },
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
@@ -523,6 +536,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepPreparationControllerBindingBehavior: 'NONE',
     voiceActivationMode: 'VRCHAT',
     hardwareVoiceActivationThreshold: 4,
+    vrchatWorldJoinBehaviour: 'KEEP',
   },
   NIGHTMARE_DETECTION: {
     enabled: false,

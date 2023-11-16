@@ -124,7 +124,7 @@ export class SleepService {
     info(`[Sleep] Sleep mode disabled (reason=${reason.type})`);
     this.eventLog.logEvent({
       type: 'sleepModeDisabled',
-      reason: reason,
+      reason,
     } as EventLogSleepModeDisabled);
     this._mode.next(false);
     await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);

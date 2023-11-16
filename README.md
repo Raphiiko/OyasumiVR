@@ -369,7 +369,7 @@ Please see our wiki page on [Starting Development](https://github.com/Raphiiko/O
 Some features of OyasumiVR require you to log in with your VRChat account for them to work. (E.g. status automations)
 
 This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
-Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes.
+Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
 
 OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRChat inc. VRChat © VRChat Inc.
 

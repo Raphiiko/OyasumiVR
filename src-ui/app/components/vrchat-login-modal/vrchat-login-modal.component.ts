@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { VRChatService } from '../../services/vrchat.service';
-import { firstValueFrom, map } from 'rxjs';
+import { firstValueFrom, map, take } from 'rxjs';
 import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalService } from '../../services/modal.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-interface VRChatLoginModalInputModel {}
+interface VRChatLoginModalInputModel {
+  autoLogin?: boolean;
+}
 
 interface VRChatLoginModalOutputModel {}
 
@@ -24,12 +27,34 @@ export class VRChatLoginModalComponent
   password = '';
   loggingIn = false;
   error = '';
+  rememberCredentials = false;
+  autoLogin = false;
 
-  constructor(private vrchat: VRChatService, private modalService: ModalService) {
+  constructor(
+    private vrchat: VRChatService,
+    private modalService: ModalService,
+    private destroyRef: DestroyRef
+  ) {
     super();
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    this.vrchat.settings
+      .pipe(
+        map((settings) => settings.rememberCredentials),
+        takeUntilDestroyed(this.destroyRef),
+        take(1)
+      )
+      .subscribe(async (rememberCredentials) => {
+        this.rememberCredentials = rememberCredentials;
+        const credentials = await this.vrchat.loadCredentials();
+        if (credentials) {
+          this.username = credentials.username;
+          this.password = credentials.password;
+          if (this.autoLogin) this.login();
+        }
+      });
+  }
 
   get2FACode(lastCodeInvalid: boolean): Promise<string | null> {
     return firstValueFrom(
@@ -38,6 +63,7 @@ export class VRChatLoginModalComponent
           VRChatLoginTFAModalComponent,
           {
             lastCodeInvalid,
+            username: this.username,
           },
           {
             closeOnEscape: false,
@@ -54,6 +80,8 @@ export class VRChatLoginModalComponent
     try {
       await this.vrchat.login(this.username, this.password);
       this.loggingIn = false;
+      if (this.rememberCredentials)
+        await this.vrchat.rememberCredentials(this.username, this.password);
       await this.close();
     } catch (e) {
       switch (e) {
@@ -64,10 +92,7 @@ export class VRChatLoginModalComponent
           while (true) {
             this.error = '';
             const code = await this.get2FACode(lastCodeInvalid);
-            if (!code) {
-              await this.close();
-              return;
-            }
+            if (!code) break;
             const method: 'totp' | 'otp' | 'emailotp' = {
               '2FA_TOTP_REQUIRED': 'totp',
               '2FA_EMAILOTP_REQUIRED': 'emailotp',
@@ -76,6 +101,8 @@ export class VRChatLoginModalComponent
             try {
               await this.vrchat.verify2FA(code, method);
               this.loggingIn = false;
+              if (this.rememberCredentials)
+                await this.vrchat.rememberCredentials(this.username, this.password);
               await this.close();
             } catch (e) {
               switch (e) {
@@ -105,5 +132,12 @@ export class VRChatLoginModalComponent
       }
     }
     this.loggingIn = false;
+  }
+
+  async toggleRememberCredentials() {
+    this.rememberCredentials = !this.rememberCredentials;
+    if (!this.rememberCredentials) {
+      await this.vrchat.forgetCredentials();
+    }
   }
 }

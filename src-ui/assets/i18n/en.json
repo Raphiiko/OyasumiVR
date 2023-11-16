@@ -412,6 +412,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
               "unknown": "By an unknown automation"
@@ -569,7 +570,8 @@
       },
       "password": "Password",
       "title": "Log in to VRChat",
-      "username": "VRChat Username/E-mail"
+      "username": "VRChat Username/E-mail",
+      "rememberCredentials": "Remember Credentials"
     },
     "vrchat-login-tfa-modal": {
       "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
@@ -577,7 +579,8 @@
         "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input.",
         "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect."
       },
-      "title": "Two Factor Authentication"
+      "title": "Two Factor Authentication",
+      "logginInAs": "You're logging into VRChat as:"
     }
   },
   "gpu-automations": {
@@ -1276,7 +1279,7 @@
         "disclaimers": {
           "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
           "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
-          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes."
+          "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
         },
         "loggedIn": {
           "logOut": "Log out",
@@ -1433,7 +1436,7 @@
         "title": "Sleep duration"
       },
       "whenAsleepTimeWindow": {
-        "description": "Only allow shutdown to trigger between certain hours of day",
+        "description": "On/ly allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
       }
     }
@@ -1441,6 +1444,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "At a specific time",
+      "afterTime": {
+        "title": "After a specific amount of time",
+        "description": {
+          "minutes": "After {minutes, plural, one {1 minute} other {# minutes}}",
+          "hours": "After {hours, plural, one {1 hour} other {# hours}}",
+          "hoursAndMinutes": "After {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}"
+        }
+      },
       "description": "Automatically disable sleep mode based on various triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
@@ -1472,6 +1483,11 @@
       "disableAtTime": {
         "description": "Disable sleep mode at a specific time of day.",
         "time": "Time",
+        "title": "Disable sleep mode"
+      },
+      "disableAfterTime": {
+        "description": "Disable the sleep mode after it has been enabled for a certain amount of time.",
+        "time": "Duration",
         "title": "Disable sleep mode"
       },
       "disableOnDevicePowerOn": {
@@ -1720,7 +1736,21 @@
       },
       "title": "Mute Automations"
     },
-    "title": "System Microphone Mute Automations"
+    "title": "System Microphone Mute Automations",
+    "worldJoinBehaviour": {
+      "options": {
+        "MUTE": "Default Off",
+        "UNMUTE": "Default On",
+        "KEEP": "Keep Last State"
+      }
+    },
+    "vrchat": {
+      "title": "VRChat Options",
+      "worldJoinBehaviour": {
+        "title": "World Join Behaviour",
+        "description": "How your microphone should behave when changing worlds in VRChat"
+      }
+    }
   },
   "updater": {
     "modals": {

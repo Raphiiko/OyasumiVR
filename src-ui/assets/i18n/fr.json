@@ -698,8 +698,7 @@
         "description": "Certaines fonctionnalités d'OyasumiVR nécessitent d'être connecté à votre compte VRChat.",
         "disclaimers": {
           "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!",
-          "use": "Vos informations de connexion ne sont pas stockées et sont uniquement envoyées à VRChat pour vous identifier."
+          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
         },
         "loggedIn": {
           "logOut": "Se déconnecter",
