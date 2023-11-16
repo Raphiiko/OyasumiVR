@@ -54,7 +54,7 @@
       "message": "你确定要把所有人从列表中删除吗？",
       "title": "确认删除"
     },
-    "title": "自动接受加入请求",
+    "title": "自动处理加入请求",
     "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
     "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
     "whitelist": "玩家白名单"
@@ -135,7 +135,7 @@
       "description": "调整我的保护墙的淡化距离",
       "title": "当我入睡时"
     },
-    "title": "守护范围自动化"
+    "title": "保护墙自动化"
   },
   "comp": {
     "brightness-control-modal": {
@@ -179,9 +179,9 @@
     },
     "dashboard-navbar": {
       "about": "关于 OyasumiVR",
-      "autoInviteRequestAccept": "自动接受加入请求",
+      "autoInviteRequestAccept": "自动处理加入请求",
       "brightnessAutomations": "亮度",
-      "chaperoneAutomations": "守护范围",
+      "chaperoneAutomations": "SteamVR 保护墙",
       "gpuAutomations": "显卡",
       "hardwareAutomations": "硬件自动化",
       "oscAutomations": "OSC",
@@ -268,7 +268,7 @@
             "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式"
           },
-          "title": "Chaperone淡化距离设置为{value}。"
+          "title": "保护墙的淡化距离已设置为{value}。"
         },
         "displayBrightnessChanged": {
           "reason": {
@@ -411,10 +411,11 @@
           "reason": {
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR退出了",
-              "SLEEP_MODE_DISABLE_AT_TIME": "在预定时间退出",
+              "SLEEP_MODE_DISABLE_AT_TIME": "由于到达预定时间，睡眠模式已关闭",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "睡眠模式启用的时间已经足够长了",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "一个设备被打开了",
               "NIGHTMARE_DETECTION": "检测到你可能正在做噩梦",
-              "unknown": "一个未知的自动化导致了此操作"
+              "unknown": "一个未知的自动化操作导致了睡眠模式被关闭"
             },
             "manual": "你手动关闭了睡眠模式",
             "osc-control": "睡眠模式通过OSC被禁用"
@@ -495,6 +496,10 @@
       "heartrate": "心率",
       "inactive": "未启动",
       "loggedOut": "未登录",
+      "sleepMode": {
+        "label": "睡眠模式",
+        "tooltip": "切换睡眠模式开关状态"
+      },
       "steamvr": {
         "INACTIVE": "未启动",
         "INITIALIZED": "启动",
@@ -519,28 +524,28 @@
     },
     "osc-script-modal": {
       "script": "脚本",
-      "simple": "范本",
+      "simple": "范例",
       "title": "OSC 脚本"
     },
     "osc-script-simple-editor": {
       "action": {
-        "none": "目前没有任何动作新增",
+        "none": "目前没有任何动作",
         "osc": "OSC",
-        "sleep": "睡觉"
+        "sleep": "等待"
       },
       "addCommand": "新增",
-      "commandCounter": "{value} 个指令",
+      "commandCounter": "{count, plural, one {1 条指令} other {# 条指令}}",
       "commands": {
         "COMMAND": {
-          "description": "执行一个 OSC 指令",
+          "description": "新增一条 OSC 指令",
           "title": "OSC 指令"
         },
         "SLEEP": {
           "description": "等待指定的时间",
-          "title": "睡觉"
+          "title": "等待"
         }
       },
-      "errorCounter": "{value}” 个验证错误",
+      "errorCounter": "{count, plural, one {1 个错误} other {# 个错误}}",
       "test": "测试"
     },
     "select-box": {
@@ -551,21 +556,22 @@
       "title": "通过 SteamVR 启动 OyasumiVR"
     },
     "update-modal": {
-      "message": "已找到 OyasumiVR 的新更新：版本 {newVersion}\n\n你当前仍在运行版本 {currentVersion}\n\n你要立即更新还是稍后更新？",
+      "message": "已找到 OyasumiVR 的新更新：版本 v{newVersion}\n\n你当前仍在运行版本 v{currentVersion}\n\n你要立即更新还是稍后更新？",
       "steamAd": "<b>OyasumiVR 还可以在 Steam 上下载！</b><br><br>这是安装 OyasumiVR 的推荐方法。<br>访问我们的Steam商店页面 <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\"></a> 以了解更多！",
       "title": "有新的更新",
       "updateLater": "稍后",
-      "updateNow": "安装版本 {version}"
+      "updateNow": "安装版本 v{version}"
     },
     "vrchat-login-modal": {
       "errors": {
-        "CHECK_EMAIL": "登录失败：详情请查看你的 VRChat 账号绑定的邮箱地址",
+        "CHECK_EMAIL": "登录失败：请检查你的 VRChat 账号绑定邮箱了解详情",
         "INVALID_CREDENTIALS": "你提供的用户名或密码不正确",
         "UNEXPECTED_RESPONSE": "登录失败：发生未知错误。请检查你的网络连接或稍后重试"
       },
       "password": "密码",
       "title": "登录到 VRChat",
-      "username": "VRChat 用户名/电子邮件"
+      "username": "VRChat 用户名/电子邮件",
+       "rememberCredentials": "在本地保存登录信息"
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
@@ -573,7 +579,8 @@
         "INVALID_FORMAT": "有效的 2FA 代码是由 6 个数字组成的，请确认你的输入正确",
         "LAST_CODE_INVALID": "你提供的 2FA 代码不正确"
       },
-      "title": "两步验证"
+      "title": "两步验证",
+      "logginInAs": "当前正在尝试登录的账户:"
     }
   },
   "gpu-automations": {
@@ -707,7 +714,7 @@
       },
       "onSleepEnable": {
         "description": "发送这些OSC命令",
-        "script": "睡眠模式启用",
+        "script": "启用睡眠模式",
         "title": "当我入睡时"
       }
     },
@@ -1271,7 +1278,8 @@
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
         "disclaimers": {
           "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
-          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！"
+          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！",
+          "use": "你的登录凭据不会存储在除你自己的计算机以外的任何地方，并且仅会发送到 VRChat 服务器进行身份验证。"
         },
         "loggedIn": {
           "logOut": "退出登录",
@@ -1435,7 +1443,15 @@
   },
   "sleep-detection": {
     "disableAutomations": {
-      "atTime": "在特定时间段",
+      "atTime": "在特定时间",
+      "afterTime": {
+        "title": "在一定时间后",
+        "description": {
+          "minutes": "在 {minutes, plural, one {1 分钟} other {# 分钟}}之后关闭",
+          "hours": "在 {hours, plural, one {1 小时} other {# 小时}}之后关闭",
+          "hoursAndMinutes": "在 {hours, plural, one {1 小时} other {# 小时}} {minutes, plural, one {1 分钟} other {# 分钟}}之后关闭"
+        }
+      },
       "description": "根据各种触发器自动禁用睡眠模式",
       "onDevicePowerOn": "当设备启动时",
       "onSteamVRStop": "当 SteamVR 停止时",
@@ -1443,7 +1459,7 @@
     },
     "enableAutomations": {
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
-      "atTime": "在特定时间段",
+      "atTime": "在特定时间",
       "description": "根据各种触发器自动启用睡眠模式",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
@@ -1458,15 +1474,20 @@
         "title": "当我的心率在一段时间内保持平稳时"
       },
       "onMotionDetection": {
-        "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
+        "title": "启用动作检测"
       },
-      "title": "启动睡眠模式"
+      "title": "开启睡眠模式"
     },
     "experimentalAutomation": "这个自动化目前是实验性的，可能还不可靠。",
     "modals": {
       "disableAtTime": {
         "description": "在特定时间关闭睡眠模式",
         "time": "时间",
+        "title": "关闭睡眠模式"
+      },
+      "disableAfterTime": {
+        "description": "在睡眠模式启用一定时间后禁用它",
+        "time": "持续时间",
         "title": "关闭睡眠模式"
       },
       "disableOnDevicePowerOn": {
@@ -1662,11 +1683,11 @@
       },
       "title": "按键控制",
       "volume": {
-        "description": "当麦克风被关闭或者打开时，声音的音量",
-        "title": "静音音量"
+        "description": "当麦克风被关闭（或打开）时，音效的音量",
+        "title": "音效音量"
       }
     },
-    "description": "睡着的时候想让麦克风自动关掉防止呼噜声太大导致社死? 来这里就对了",
+    "description": "睡着的时候想让麦克风自动关掉，防止因为震天响的呼噜声社死? 恭喜你找对了地方！",
     "muteOptions": {
       "MUTE": "关闭",
       "NONE": "保持当前状态",
@@ -1680,13 +1701,25 @@
       },
       "fade": {
         "description": "让指示器在设置的秒数后淡出。你可以按下控制器上的任何按钮来重新显示指示器。建议使用 OLED 显示屏的 VR 头显采用这种方法，以降低烧屏的风险。",
-        "title": "淡出"
+        "title": "淡出延迟"
       },
       "opacity": {
         "description": "指示器图标的最大不透明度",
         "title": "不透明度"
       },
-      "title": "叠加层指示器"
+      "title": "叠加层指示器",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "VRChat 的状态",
+          "HARDWARE": "硬件状态"
+        },
+        "title": "麦克风状态来源",
+        "description": "确定指示器要根据哪个程序报告的麦克风状态来切换显示。"
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "麦克风激活阈值",
+        "description": "设置麦克风指示器亮起的最低音量阈值，只有当说话音量高于此阈值时，指示器才会亮起。"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1703,7 +1736,21 @@
       },
       "title": "自动静音"
     },
-    "title": "麦克风状态自动化"
+    "title": "麦克风状态自动化",
+    "worldJoinBehaviour": {
+      "options": {
+        "MUTE": "默认关闭",
+        "UNMUTE": "默认开启",
+        "KEEP": "保持当前状态"
+      }
+    },
+    "vrchat": {
+      "title": "VRChat 选项",
+      "worldJoinBehaviour": {
+        "title": "加入房间时的麦克风状态",
+        "description": "当你加入一个房间时，你的麦克风应该是什么状态"
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1722,7 +1769,7 @@
     },
     "control": {
       "description": "你可以用它来测试麦克风的功能是否正常工作",
-      "mute": "将麦克风\n关闭",
+      "mute": "关闭\n麦克风",
       "title": "麦克风状态设置",
       "unmute": "打开\n麦克风"
     },
