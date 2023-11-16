@@ -54,7 +54,7 @@
       "message": "你确定要把所有人从列表中删除吗？",
       "title": "确认删除"
     },
-    "title": "自动接受加入请求",
+    "title": "自动处理加入请求",
     "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
     "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
     "whitelist": "玩家白名单"
@@ -135,7 +135,7 @@
       "description": "调整我的保护墙的淡化距离",
       "title": "当我入睡时"
     },
-    "title": "守护范围自动化"
+    "title": "保护墙自动化"
   },
   "comp": {
     "brightness-control-modal": {
@@ -179,9 +179,9 @@
     },
     "dashboard-navbar": {
       "about": "关于 OyasumiVR",
-      "autoInviteRequestAccept": "自动接受加入请求",
+      "autoInviteRequestAccept": "自动处理加入请求",
       "brightnessAutomations": "亮度",
-      "chaperoneAutomations": "守护范围",
+      "chaperoneAutomations": "SteamVR 保护墙",
       "gpuAutomations": "显卡",
       "hardwareAutomations": "硬件自动化",
       "oscAutomations": "OSC",
@@ -1474,9 +1474,9 @@
         "title": "当我的心率在一段时间内保持平稳时"
       },
       "onMotionDetection": {
-        "title": "OyasumiVR 根据你的睡眠动作检测你是否睡眠"
+        "title": "启用动作检测"
       },
-      "title": "启动睡眠模式"
+      "title": "开启睡眠模式"
     },
     "experimentalAutomation": "这个自动化目前是实验性的，可能还不可靠。",
     "modals": {
@@ -1683,11 +1683,11 @@
       },
       "title": "按键控制",
       "volume": {
-        "description": "当麦克风被关闭或者打开时，声音的音量",
-        "title": "静音音量"
+        "description": "当麦克风被关闭（或打开）时，音效的音量",
+        "title": "音效音量"
       }
     },
-    "description": "睡着的时候想让麦克风自动关掉防止呼噜声太大导致社死? 来这里就对了",
+    "description": "睡着的时候想让麦克风自动关掉，防止因为震天响的呼噜声社死? 恭喜你找对了地方！",
     "muteOptions": {
       "MUTE": "关闭",
       "NONE": "保持当前状态",
@@ -1701,7 +1701,7 @@
       },
       "fade": {
         "description": "让指示器在设置的秒数后淡出。你可以按下控制器上的任何按钮来重新显示指示器。建议使用 OLED 显示屏的 VR 头显采用这种方法，以降低烧屏的风险。",
-        "title": "淡出"
+        "title": "淡出延迟"
       },
       "opacity": {
         "description": "指示器图标的最大不透明度",
@@ -1710,8 +1710,8 @@
       "title": "叠加层指示器",
       "voiceActivityMode": {
         "modes": {
-          "VRCHAT": "VRChat 报告的状态",
-          "HARDWARE": "硬件报告的状态"
+          "VRCHAT": "VRChat 的状态",
+          "HARDWARE": "硬件状态"
         },
         "title": "麦克风状态来源",
         "description": "确定指示器要根据哪个程序报告的麦克风状态来切换显示。"
@@ -1736,7 +1736,21 @@
       },
       "title": "自动静音"
     },
-    "title": "麦克风状态自动化"
+    "title": "麦克风状态自动化",
+    "worldJoinBehaviour": {
+      "options": {
+        "MUTE": "默认关闭",
+        "UNMUTE": "默认开启",
+        "KEEP": "保持当前状态"
+      }
+    },
+    "vrchat": {
+      "title": "VRChat 选项",
+      "worldJoinBehaviour": {
+        "title": "加入房间时的麦克风状态",
+        "description": "当你加入一个房间时，你的麦克风应该是什么状态"
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1755,7 +1769,7 @@
     },
     "control": {
       "description": "你可以用它来测试麦克风的功能是否正常工作",
-      "mute": "将麦克风\n关闭",
+      "mute": "关闭\n麦克风",
       "title": "麦克风状态设置",
       "unmute": "打开\n麦克风"
     },
