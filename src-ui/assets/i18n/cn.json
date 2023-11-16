@@ -534,7 +534,7 @@
         "sleep": "睡觉"
       },
       "addCommand": "新增",
-      "commandCounter": "{value} 个指令",
+      "commandCounter": "{count, plural, one {1 条指令} other {# 条指令}}",
       "commands": {
         "COMMAND": {
           "description": "执行一个 OSC 指令",
