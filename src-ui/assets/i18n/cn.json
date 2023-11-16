@@ -524,12 +524,12 @@
     },
     "osc-script-modal": {
       "script": "脚本",
-      "simple": "范本",
+      "simple": "范例",
       "title": "OSC 脚本"
     },
     "osc-script-simple-editor": {
       "action": {
-        "none": "目前没有任何动作新增",
+        "none": "目前没有任何新增动作",
         "osc": "OSC",
         "sleep": "睡觉"
       },
@@ -537,7 +537,7 @@
       "commandCounter": "{count, plural, one {1 条指令} other {# 条指令}}",
       "commands": {
         "COMMAND": {
-          "description": "执行一个 OSC 指令",
+          "description": "执行一条 OSC 指令",
           "title": "OSC 指令"
         },
         "SLEEP": {
@@ -556,15 +556,15 @@
       "title": "通过 SteamVR 启动 OyasumiVR"
     },
     "update-modal": {
-      "message": "已找到 OyasumiVR 的新更新：版本 {newVersion}\n\n你当前仍在运行版本 {currentVersion}\n\n你要立即更新还是稍后更新？",
+      "message": "已找到 OyasumiVR 的新更新：版本 v{newVersion}\n\n你当前仍在运行版本 v{currentVersion}\n\n你要立即更新还是稍后更新？",
       "steamAd": "<b>OyasumiVR 还可以在 Steam 上下载！</b><br><br>这是安装 OyasumiVR 的推荐方法。<br>访问我们的Steam商店页面 <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\"></a> 以了解更多！",
       "title": "有新的更新",
       "updateLater": "稍后",
-      "updateNow": "安装版本 {version}"
+      "updateNow": "安装版本 v{version}"
     },
     "vrchat-login-modal": {
       "errors": {
-        "CHECK_EMAIL": "登录失败：详情请查看你的 VRChat 账号绑定的邮箱地址",
+        "CHECK_EMAIL": "登录失败：请检查你的 VRChat 账号绑定邮箱了解详情",
         "INVALID_CREDENTIALS": "你提供的用户名或密码不正确",
         "UNEXPECTED_RESPONSE": "登录失败：发生未知错误。请检查你的网络连接或稍后重试"
       },
@@ -714,7 +714,7 @@
       },
       "onSleepEnable": {
         "description": "发送这些OSC命令",
-        "script": "睡眠模式启用",
+        "script": "启用睡眠模式",
         "title": "当我入睡时"
       }
     },
