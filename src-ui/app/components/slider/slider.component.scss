@@ -17,7 +17,6 @@ $thumb-size: 1.25em;
 .track-container {
   height: $thumb-size;
   width: 100%;
-
 }
 
 .track {
@@ -39,7 +38,8 @@ $thumb-size: 1.25em;
 
   &-fill {
     border-radius: 0.125em;
-    &, &-audio-level {
+    &,
+    &-audio-level {
       height: 100%;
       width: 0;
       background: var(--color-primary);
@@ -85,7 +85,7 @@ $thumb-size: 1.25em;
   transform: translate(math.div($thumb-size, -2), math.div($thumb-size, -2));
   @include shadow(1, true);
   transition: box-shadow 0.1s ease, opacity 0.1s ease, background-color 0.1s ease,
-  border-color 0.1s ease;
+    border-color 0.1s ease;
 
   &:not(.disabled) {
     cursor: pointer;

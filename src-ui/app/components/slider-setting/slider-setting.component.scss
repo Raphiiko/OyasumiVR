@@ -65,7 +65,10 @@ $overlay-border: 0.15em;
   left: 0;
   height: calc(100% + $overlay-padding * 2);
   width: calc(100% + var(--overlay-width) + $overlay-padding * 2);
-  transform: translate(calc(calc(var(--overlay-width) + $overlay-padding) * -1), 0 - $overlay-padding);
+  transform: translate(
+    calc(calc(var(--overlay-width) + $overlay-padding) * -1),
+    0 - $overlay-padding
+  );
   border-radius: var(--surface-border-radius);
   @include shadow(5, true);
   overflow: hidden;
