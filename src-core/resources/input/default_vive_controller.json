@@ -2,6 +2,7 @@
   "action_manifest_version": 1,
   "controller_type": "vive_controller",
   "description": "OyasumiVR's default bindings for Vive controllers",
+  "interaction_profile": "",
   "name": "OyasumiVR Default Bindings",
   "options": {},
   "category": "steamvr_input",
@@ -13,6 +14,9 @@
         {
           "path": "/user/hand/right/input/application_menu",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "double": {
               "output": "/actions/main/in/openoverlay"
@@ -22,6 +26,9 @@
         {
           "path": "/user/hand/left/input/application_menu",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/main/in/mutemicrophone"
@@ -35,6 +42,9 @@
         {
           "path": "/user/hand/right/input/trigger",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/overlayinteract"
@@ -44,6 +54,9 @@
         {
           "path": "/user/hand/left/input/trigger",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/overlayinteract"
@@ -53,6 +66,9 @@
         {
           "path": "/user/hand/right/input/application_menu",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
@@ -62,6 +78,9 @@
         {
           "path": "/user/hand/left/input/application_menu",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
@@ -71,6 +90,9 @@
         {
           "path": "/user/hand/left/input/trackpad",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
@@ -80,6 +102,9 @@
         {
           "path": "/user/hand/right/input/trackpad",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
@@ -89,6 +114,9 @@
         {
           "path": "/user/hand/right/input/trigger",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
@@ -98,6 +126,9 @@
         {
           "path": "/user/hand/left/input/trigger",
           "mode": "button",
+          "parameters": {
+            "haptic_amplitude": "0"
+          },
           "inputs": {
             "click": {
               "output": "/actions/hidden/in/indicatepresence"
