@@ -1145,7 +1145,11 @@
           "description": "This can be turned off if you want to disable OyasumiVR's overlay menu completely.",
           "title": "Enable overlay menu"
         },
-        "title": "Overlay"
+        "title": "Overlay",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "Only open menu while VRChat is running",
+          "description": "Enable this to prevent the menu from opening while VRChat is not running"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {

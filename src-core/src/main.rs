@@ -100,6 +100,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::set_mic_activity_device_id,
         os::commands::set_hardware_mic_activity_enabled,
         os::commands::set_hardware_mic_activivation_threshold,
+        os::commands::is_vrchat_active,
         osc::commands::osc_send_bool,
         osc::commands::osc_send_float,
         osc::commands::osc_send_int,

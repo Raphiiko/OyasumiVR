@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IPCService } from '../ipc.service';
-import { filter, map, pairwise, switchMap, take, tap } from 'rxjs';
+import { filter, firstValueFrom, map, pairwise, switchMap, take, tap } from 'rxjs';
 import { OpenVRInputService } from '../openvr-input.service';
 import {
   Empty,
@@ -13,6 +13,7 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { cloneDeep } from 'lodash';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { invoke } from '@tauri-apps/api';
+import { VRChatService } from '../vrchat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,8 @@ export class OverlayService {
   constructor(
     private ipcService: IPCService,
     private openvrInput: OpenVRInputService,
-    private appSettingsService: AppSettingsService
+    private appSettingsService: AppSettingsService,
+    private vrchat: VRChatService
   ) {}
 
   async init() {
@@ -51,9 +53,24 @@ export class OverlayService {
           if (current.overlayGpuFix !== previous.overlayGpuFix) {
             this.startOrRestartSidecar(current.overlayGpuFix);
           }
+          // When enabling the overlay menu only open when VRChat is running setting, close the overlay menu if it's open
+          if (
+            current.overlayMenuOnlyOpenWhenVRChatIsRunning &&
+            current.overlayMenuOnlyOpenWhenVRChatIsRunning !==
+              previous.overlayMenuOnlyOpenWhenVRChatIsRunning
+          ) {
+            this.ipcService.getOverlaySidecarClient()?.closeOverlayMenu({} as Empty);
+          }
         })
       )
       .subscribe();
+    // Respond to VRChat process state changes
+    this.vrchat.vrchatProcessActive.subscribe((active) => {
+      // Close the overlay menu if it's open and VRChat is no longer active
+      if (!active && this.appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning) {
+        this.ipcService.getOverlaySidecarClient()?.closeOverlayMenu({} as Empty);
+      }
+    });
     // Detect action for toggling the overlay
     this.openvrInput.state
       .pipe(
@@ -73,7 +90,13 @@ export class OverlayService {
             : OyasumiSidecarControllerRole.Right
         )
       )
-      .subscribe((controllerRole) => {
+      .subscribe(async (controllerRole) => {
+        // Block opening if VRChat is not active (and the setting for that is enabled)
+        if (this.appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning) {
+          const active = await firstValueFrom(this.vrchat.vrchatProcessActive);
+          if (!active) return;
+        }
+        // Toggle the overlay
         info('[Overlay] Toggling overlay menu (controller action)');
         this.ipcService.getOverlaySidecarClient()?.toggleOverlayMenu({
           controllerRole,

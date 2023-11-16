@@ -207,6 +207,9 @@ export class SettingsGeneralTabComponent extends SettingsTabComponent implements
   setOverlayMenuEnabled(enabled: boolean) {
     this.settingsService.updateSettings({ overlayMenuEnabled: enabled });
   }
+  setOverlayMenuOnlyOpenWhenVRChatIsRunning(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayMenuOnlyOpenWhenVRChatIsRunning: enabled });
+  }
 
   onChangeStopWithSteamVROption(option: SelectBoxItem | undefined) {
     if (!option) return;
