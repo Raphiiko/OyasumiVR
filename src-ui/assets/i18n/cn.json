@@ -545,7 +545,7 @@
           "title": "睡觉"
         }
       },
-      "errorCounter": "{count, plural, one {1 个指令错误} other {# 个指令错误}}",
+      "errorCounter": "{count, plural, one {1 个错误} other {# 个错误}}",
       "test": "测试"
     },
     "select-box": {
