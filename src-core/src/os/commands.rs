@@ -1,4 +1,4 @@
-use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
+use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS, VRCHAT_ACTIVE};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
@@ -34,6 +34,12 @@ pub fn play_sound(name: String, volume: f32) {
 #[tauri::command]
 pub async fn quit_steamvr(kill: bool) {
     crate::utils::stop_process("vrmonitor.exe", kill).await;
+}
+
+#[tauri::command]
+pub async fn is_vrchat_active() -> bool {
+    let vrc_active_guard = VRCHAT_ACTIVE.lock().await;
+    *vrc_active_guard
 }
 
 #[tauri::command]
@@ -269,7 +275,6 @@ pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
     };
     manager.set_mic_activation_threshold(threshold).await;
 }
-
 
 #[tauri::command]
 pub async fn set_mic_activity_device_id(device_id: Option<String>) {

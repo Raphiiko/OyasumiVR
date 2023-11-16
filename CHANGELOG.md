@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A credential saving option for remembering your VRChat credentials.
 - Automation for disabling the sleep mode after its been enabled for a specified amount of time.
 - An option for your system microphone to change its mute state when joining a world in VRChat.
+- Option for preventing the overlay from opening when VRChat is not running.
 
 ### Changed
 - When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.

@@ -17,10 +17,10 @@ lazy_static! {
 pub mod models;
 pub mod sidecar_manager;
 
-pub async fn is_process_active(process_name: &str) -> bool {
+pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> bool {
     let mut sysinfo_guard = SYSINFO.lock().await;
     let sysinfo = &mut *sysinfo_guard;
-    sysinfo.refresh_processes();
+    if refresh_processes { sysinfo.refresh_processes(); }
     let processes = sysinfo.processes_by_exact_name(process_name);
     processes.count() > 0
 }

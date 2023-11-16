@@ -107,6 +107,22 @@
         ></app-controller-binding>
       </div>
     </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title</span>
+        <span translate>settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
+            (change)="setOverlayMenuOnlyOpenWhenVRChatIsRunning(!appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -156,7 +172,7 @@
       </div>
       <div class="setting-row-action">
         <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-          >settings.general.startWithSteamVR.howTo
+        >settings.general.startWithSteamVR.howTo
         </button>
       </div>
     </div>

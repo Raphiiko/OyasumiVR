@@ -2,9 +2,10 @@ mod audio_devices;
 pub mod commands;
 mod models;
 
-use log::error;
+use log::{error, info};
 use soloud::*;
 use std::collections::HashMap;
+use std::time::Duration;
 use tokio::sync::Mutex;
 use winapi::shared::guiddef::GUID;
 use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
@@ -17,6 +18,7 @@ lazy_static! {
         std::sync::Mutex::new(HashMap::new());
     static ref SOLOUD: std::sync::Mutex<Soloud> = std::sync::Mutex::new(Soloud::default().unwrap());
     static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
+    static ref VRCHAT_ACTIVE: Mutex<bool> = Mutex::new(false);
 }
 
 pub async fn init_audio_device_manager() {
@@ -34,6 +36,26 @@ pub async fn init_audio_device_manager() {
     *manager = Some(m);
     if let Err(e) = manager.as_ref().unwrap().refresh_audio_devices().await {
         error!("[Core] Failed to refresh audio devices: {}", e);
+    }
+    tokio::task::spawn(watch_processes());
+}
+
+async fn watch_processes() {
+    loop {
+        {
+            let res = crate::utils::is_process_active("VRChat.exe", true).await;
+            let mut vrc_active = VRCHAT_ACTIVE.lock().await;
+            if *vrc_active != res {
+                *vrc_active = res;
+                crate::utils::send_event("VRCHAT_PROCESS_ACTIVE", res).await;
+                if res {
+                    info!("[Core] Detected VRChat process has started");
+                } else {
+                    info!("[Core] Detected VRChat process has stopped");
+                }
+            }
+        }
+        tokio::time::sleep(Duration::from_secs(1)).await;
     }
 }
 
