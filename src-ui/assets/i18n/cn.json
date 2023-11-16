@@ -542,7 +542,7 @@
         },
         "SLEEP": {
           "description": "等待指定的时间",
-          "title": "睡觉"
+          "title": "等待"
         }
       },
       "errorCounter": "{count, plural, one {1 个错误} other {# 个错误}}",
