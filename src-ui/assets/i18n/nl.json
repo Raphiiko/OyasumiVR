@@ -184,6 +184,8 @@
       "chaperoneAutomations": "Chaperone Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "hardwareAutomations": "Hardware Automatiseringen",
+      "miscAutomations": "Overige Automatiseringen",
+      "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
       "overview": "Overzicht",
       "powerAutomations": "Energie Automatiseringen",
@@ -408,6 +410,7 @@
         "sleepModeDisabled": {
           "reason": {
             "automation": {
+              "NIGHTMARE_DETECTION": "Omdat er een mogelijke nachtmerrie werd gedetecteerd",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Omdat SteamVR is gestopt",
               "SLEEP_MODE_DISABLE_AT_TIME": "Op de ingestelde tijd",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Omdat een controller of tracker is ingeschakeld",
@@ -492,7 +495,6 @@
       "heartrate": "Hartslag",
       "inactive": "Inactief",
       "loggedOut": "Uitgelogd",
-      "sleepMode": "Slaap Modus",
       "steamvr": {
         "INACTIVE": "Inactief",
         "INITIALIZED": "Actief",
@@ -666,6 +668,37 @@
       "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden."
     }
   },
+  "nightmare-detection": {
+    "automations": {
+      "description": "Taken om uit te voeren wanneer OyasumiVR detecteert dat je mogelijk een nachtmerrie hebt",
+      "title": "Automatiseringen"
+    },
+    "bpmThreshold": {
+      "description": "De grens die je hartslag minimaal moet bereiken voordat OyasumiVR zal overwegen of je mogelijk een nachtmerrie hebt",
+      "title": "Minimale hartslag",
+      "unit": "BPM"
+    },
+    "description": "Deze feature probeert te detecteren of je een nachtmerrie hebt, door te kijken of terwijl je slaapt je een verhoogde hartslag aanhoud voor een bepaalde tijd. Wanneer er een mogelijke nachtmerrie wordt gedetecteerd, heb je de optie om OyasumiVR je wakker te laten maken. Nachtmerrie detectie is alleen actief terwijl de slaap modus actief is.\n\n<b>Let op:</b> Voor deze functie moet je de <a class=\"integrationsPageLink\">Pulsoid integratie</a> actieveren, en in bezit zijn van een actief Pulsoid \"BRO\" abbonnement.",
+    "disableSleepMode": {
+      "description": "Deactiveert de slaap modus wanneer je mogelijk een nachtmerrie hebt",
+      "title": "Slaap modus uitschakelen"
+    },
+    "duration": {
+      "description": "Hoe lang je hartslag boven de grens moet blijven voordat OyasumiVR het zal detecteren dat je mogelijk een nachtmerrie hebt.",
+      "title": "Tijdsduur"
+    },
+    "notification": "Vanwege een doorzettende verhoogde hartslag wordt dit gedetecteerd als een mogelijke nachtmerrie.",
+    "playSound": {
+      "description": "Laat OyasumiVR je wakker proberen te maken met een geluid wanneer je mogelijk een nachtmerrie hebt.",
+      "title": "Speel een geluid",
+      "volume": {
+        "description": "Configureer het volume waarop het geluid wordt gespeeld",
+        "test": "Test",
+        "title": "Geluid volume"
+      }
+    },
+    "title": "Nachtmerrie Detectie"
+  },
   "notifications": {
     "autoAcceptedInviteRequest": {
       "content": "Invite request van ''{username}'' is automatisch geaccepteerd"
@@ -729,7 +762,6 @@
           },
           "footLockReleaseWindow": "Duur van het tijdelijk losmaken van de voeten",
           "lockFeetOnSleepModeEnable": "Voeten vastzetten wanneer slaap modus wordt ingeschakeld",
-          "onlyIfAllTrackersTurnedOff": "Wanneer alle trackers uit staan",
           "onlyIfSleepModeEnabled": "Wanneer slaap modus actief is",
           "onlySwitchAnimations": "Alleen animaties wisselen",
           "releaseFootLockOnPoseChange": "Voeten tijdelijk losmaken wanneer je van slaap houding veranderd",
@@ -1026,6 +1058,12 @@
           "docs": "Leer Hoe",
           "title": "Help mee met vertalen"
         },
+        "editor": {
+          "action": "Start Editor",
+          "description": "Start OyasumiVR's vertalingseditor voor het bewerken en maken van vertalingen",
+          "experimental": "Deze module is nog in een experimentele fase, en alleen beschikbaar in het Engels. Hoewel je hem kan uitproberen, is hij nog in ontwikkeling. Je kunt dus nog wat problemen en missende functionaliteiten verwachten.",
+          "title": "Vertalingseditor"
+        },
         "loadFile": {
           "action": "Laad Bestand",
           "description": "Laad een eigen vertalingsbestand. Dit is handig wanneer je je eigen vertalingen wilt testen.",
@@ -1225,8 +1263,7 @@
         "description": "Sommige OyasumiVR features vereisen dat je bent ingelogd met je VRChat account om hun ding te kunnen doen.",
         "disclaimers": {
           "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico.",
-          "use": "Je login gegevens zullen nooit ergens opgeslagen worden en worden alleen direct naar VRChat's servers gestuurd om in te kunnen loggen."
+          "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico."
         },
         "loggedIn": {
           "logOut": "Log uit",
@@ -1306,6 +1343,10 @@
       "ok": "Ok",
       "open": "Open",
       "save": "Opslaan"
+    },
+    "time": {
+      "minutes": "Minuten",
+      "seconds": "Seconden"
     }
   },
   "shutdown-automations": {

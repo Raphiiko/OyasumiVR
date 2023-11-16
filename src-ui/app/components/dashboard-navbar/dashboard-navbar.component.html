@@ -75,18 +75,15 @@
     <div
       class="menu-item"
       (click)="openSubMenu('MISCELLANEOUS')"
-      [class.active]="
-        pathIsActive([
-          'chaperoneAutomations',
-          'nightmareDetection',
-        ])
-      "
+      [class.active]="pathIsActive(['chaperoneAutomations', 'nightmareDetection'])"
     >
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">build</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.miscAutomations</div>
-      <div class="menu-item-submenu-icon"><i class="material-icons-round">arrow_forward_ios</i></div>
+      <div class="menu-item-submenu-icon"
+        ><i class="material-icons-round">arrow_forward_ios</i></div
+      >
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'shutdownAutomations'">
@@ -235,6 +232,5 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
     </div>
-
   </div>
 </div>

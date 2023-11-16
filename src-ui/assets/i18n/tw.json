@@ -384,7 +384,6 @@
       "active": "啟動",
       "inactive": "未啟動",
       "loggedOut": "已登出",
-      "sleepMode": "睡眠模式",
       "steamvr": {
         "INACTIVE": "未啟動",
         "INITIALIZED": "啟動",
@@ -606,7 +605,6 @@
           },
           "footLockReleaseWindow": "腳部鎖定釋放持續時間",
           "lockFeetOnSleepModeEnable": "當睡眠模式啟動時開啟腳部鎖定",
-          "onlyIfAllTrackersTurnedOff": "當所有追蹤器關閉時",
           "onlyIfSleepModeEnabled": "當睡眠模式啟動時",
           "onlySwitchAnimations": "只用於切換睡眠動畫",
           "releaseFootLockOnPoseChange": "切換睡眠姿勢時暫時釋放腳部鎖定",
@@ -1013,8 +1011,7 @@
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 帳戶登入才能使用",
         "disclaimers": {
           "brand": "OyasumiVR 沒有得到 VRChat 的官方認可，也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 VRChat 是 VRChat Inc. 的商標 VRChat © VRChat Inc.",
-          "liability": "Raphiiko 對 OyasumiVR 引起的任何問題概不負責。 使用風險請自己承擔！",
-          "use": "你的登入憑證永遠不會儲存在任何地方，只會發送到 VRChat 的伺服器以進行身份驗證"
+          "liability": "Raphiiko 對 OyasumiVR 引起的任何問題概不負責。 使用風險請自己承擔！"
         },
         "loggedIn": {
           "logOut": "登出",

@@ -18,7 +18,11 @@ import { Store } from 'tauri-plugin-store-api';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error, info } from 'tauri-plugin-log-api';
-import { ConfirmModalComponent } from '../../../../../components/confirm-modal/confirm-modal.component';
+import {
+  ConfirmModalComponent,
+  ConfirmModalInputModel,
+  ConfirmModalOutputModel,
+} from '../../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { invoke } from '@tauri-apps/api';
 import { relaunch } from '@tauri-apps/api/process';
@@ -27,6 +31,7 @@ import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../../services/ipc.service';
 import { firstValueFrom } from 'rxjs';
 import { SetDebugTranslationsRequest } from '../../../../../../../src-grpc-web-client/overlay-sidecar_pb';
+import { OpenVRService } from 'src-ui/app/services/openvr.service';
 
 @Component({
   selector: 'app-settings-advanced-tab',
@@ -58,7 +63,8 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
     private translate: TranslateService,
     private modalService: ModalService,
     private eventLogService: EventLogService,
-    private ipcService: IPCService
+    private ipcService: IPCService,
+    protected openvr: OpenVRService
   ) {
     super(settingsService);
   }
@@ -243,4 +249,47 @@ export class SettingsAdvancedTabComponent extends SettingsTabComponent implement
       path: await appLogDir().then((dir) => dir + 'OyasumiVR.log'),
     });
   }
+
+  async reregisterVRManifest() {
+    if ((await firstValueFrom(this.openvr.status)) !== 'INITIALIZED') return;
+    try {
+      await invoke('openvr_reregister_manifest');
+    } catch (e) {
+      error(`[Settings] Could not re-register VR manifest: ${JSON.stringify(e)}`);
+      switch (e) {
+        case 'MANIFEST_ADD_FAILED':
+        case 'MANIFEST_REMOVE_FAILED':
+        case 'MANIFEST_CHECK_FAILED':
+        case 'MANIFEST_NOT_REGISTERED':
+        case 'FLAVOUR_NOT_ELIGIBLE':
+          this.modalService
+            .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+              title: `settings.advanced.fixes.vrManifestReregister.modal.${e}.title`,
+              message: `settings.advanced.fixes.vrManifestReregister.modal.${e}.message`,
+              showCancel: false,
+            })
+            .subscribe();
+          break;
+        default:
+          this.modalService
+            .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+              title: `settings.advanced.fixes.vrManifestReregister.modal.UNKNOWN.title`,
+              message: `settings.advanced.fixes.vrManifestReregister.modal.UNKNOWN.message`,
+              showCancel: false,
+            })
+            .subscribe();
+          break;
+      }
+      return;
+    }
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: 'settings.advanced.fixes.vrManifestReregister.modal.success.title',
+        message: 'settings.advanced.fixes.vrManifestReregister.modal.success.message',
+        showCancel: false,
+      })
+      .subscribe();
+  }
+
+  protected readonly open = open;
 }

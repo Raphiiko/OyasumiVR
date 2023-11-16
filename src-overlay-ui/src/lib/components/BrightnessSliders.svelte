@@ -37,6 +37,7 @@
         			}}>
         <BrightnessSlider label={$t('t.overlay.brightness.simple')}
                           value={brightnessState.brightness}
+                          min={5}
                           isTransitioning={brightnessState.brightnessTransitioning}
                           transitionTarget="{brightnessState.brightnessTransitionTarget}"
                           onValueChange={throttle((value) => ipc.setBrightness('SIMPLE', value), 16, {leading: true, trailing: true})}
@@ -49,6 +50,7 @@
         				y: flyYTransform,
         			}}>
         <BrightnessSlider label={$t('t.overlay.brightness.image')}
+                          min={5}
                           value={brightnessState.imageBrightness}
                           isTransitioning={brightnessState.imageBrightnessTransitioning}
                           transitionTarget="{brightnessState.imageBrightnessTransitionTarget}"

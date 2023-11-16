@@ -1,16 +1,21 @@
 <div class="pane modal-md" [@fadeUp]>
-  <div class="pane-title" translate>sleep-detection.modals.disableAtTime.title</div>
+  <div class="pane-title" translate>sleep-detection.modals.disableAfterTime.title</div>
   <div class="pane-content">
-    <p translate>sleep-detection.modals.disableAtTime.description</p>
+    <p translate>sleep-detection.modals.disableAfterTime.description</p>
     <div class="settings">
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>sleep-detection.modals.disableAtTime.time</span>
-          <span></span>
+          <span translate>sleep-detection.modals.disableAfterTime.time</span>
+          <span>{{ getStringForDuration(duration) }}</span>
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
+            <input
+              type="time"
+              (change)="duration = timeInput.value"
+              [value]="duration"
+              #timeInput
+            />
           </div>
         </div>
       </div>

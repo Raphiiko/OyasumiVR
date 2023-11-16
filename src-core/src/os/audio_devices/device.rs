@@ -20,6 +20,7 @@ use windows::Win32::Media::Audio::{
 use windows::Win32::System::Com::StructuredStorage::PropVariantToBSTR;
 use windows::Win32::System::Com::{CLSCTX_ALL, STGM_READ};
 
+use crate::utils::send_event;
 use crate::Models::overlay_sidecar::MicrophoneActivityMode;
 
 use super::wrappers::{
@@ -37,6 +38,14 @@ pub struct AudioDeviceDto {
     pub mute: bool,
     pub default: bool,
     pub default_communications: bool,
+}
+
+#[derive(Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
+pub struct MicLevelReport {
+    pub device_id: String,
+    pub level: f32,
+    pub active: bool,
 }
 
 impl AudioDeviceDto {
@@ -318,6 +327,7 @@ impl AudioDevice {
                     let duration = now - last_activation;
                     duration.num_milliseconds() < ACTIVATION_TIMEOUT
                 };
+                // Report the activity state if needed
                 if currently_active != previously_active {
                     previously_active = currently_active;
                     crate::overlay_sidecar::set_microphone_active(
@@ -326,6 +336,16 @@ impl AudioDevice {
                     )
                     .await;
                 }
+                // Report the peak value
+                send_event(
+                    "mic_level",
+                    MicLevelReport {
+                        device_id: state.id.clone(),
+                        level: value,
+                        active: currently_active,
+                    },
+                )
+                .await;
                 tokio::time::sleep(tokio::time::Duration::from_millis(20)).await;
             }
         });

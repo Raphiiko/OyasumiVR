@@ -85,13 +85,6 @@ export class SleepingAnimationsAutomationService {
       .subscribe(async ([pose]) => {
         if (!this.config.enabled) return;
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
-        if (this.config.onlyIfAllTrackersTurnedOff) {
-          const devices = await firstValueFrom(this.openvr.devices);
-          const trackersFound = !!devices.find(
-            (d) => d.class === 'GenericTracker' && d.canPowerOff
-          );
-          if (trackersFound) return;
-        }
         // Combine OSC scripts
         const script: OscScript = { version: 1, commands: [] };
         const enableFootUnlock = !!(

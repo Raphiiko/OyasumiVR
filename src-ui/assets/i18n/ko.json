@@ -488,7 +488,6 @@
       "heartrate": "심박수",
       "inactive": "비활성화 됨",
       "loggedOut": "로그아웃 중",
-      "sleepMode": "수면 모드",
       "steamvr": {
         "INACTIVE": "비활성화 됨",
         "INITIALIZED": "활성화 됨",
@@ -725,7 +724,6 @@
           },
           "footLockReleaseWindow": "다리 잠금 해제 조건",
           "lockFeetOnSleepModeEnable": "수면 모드 활성화 시 다리 잠금 활성화",
-          "onlyIfAllTrackersTurnedOff": "모든 트래커가 꺼질 때",
           "onlyIfSleepModeEnabled": "수면 모드 활성화 시",
           "onlySwitchAnimations": "애니메이션 바꾸기",
           "releaseFootLockOnPoseChange": "수면 자세가 바뀔 때 다리 잠금을 바로 해제",
@@ -1221,8 +1219,7 @@
         "description": "OyasumiVR 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
         "disclaimers": {
           "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
-          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요.",
-          "use": "로그인 정보는 보관되지 않고 인증을 위해 VRChat 서버로만 전송되어요."
+          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
         },
         "loggedIn": {
           "logOut": "로그아웃",

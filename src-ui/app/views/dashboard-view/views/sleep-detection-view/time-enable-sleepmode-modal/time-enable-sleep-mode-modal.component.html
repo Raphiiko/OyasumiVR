@@ -2,12 +2,13 @@
   <div class="pane-title" translate>sleep-detection.modals.enableAtTime.title</div>
   <div class="pane-content">
     <p translate>sleep-detection.modals.enableAtTime.description</p>
-    <div class="automation-settings">
-      <div class="automation-settings-row">
-        <div class="automation-settings-row-label" translate>
-          sleep-detection.modals.enableAtTime.time
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.enableAtTime.time</span>
+          <span></span>
         </div>
-        <div class="automation-settings-row-controls">
+        <div class="setting-row-action">
           <div class="input-wrapper">
             <input type="time" (change)="time = timeInput.value" [value]="time" #timeInput />
           </div>

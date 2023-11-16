@@ -277,7 +277,6 @@
       "active": "Actif",
       "inactive": "Inactif",
       "loggedOut": "Déconnecté",
-      "sleepMode": "Mode sommeil",
       "steamvr": {
         "INACTIVE": "Inactif",
         "INITIALIZED": "Actif",
@@ -484,7 +483,6 @@
           },
           "footLockReleaseWindow": "Durée de dévérouillage",
           "lockFeetOnSleepModeEnable": "Verrouiller les pieds lorsque le mode sommeil est activé",
-          "onlyIfAllTrackersTurnedOff": "Si tous les trackers sont hors tension",
           "onlyIfSleepModeEnabled": "Si le mode sommeil est activé",
           "onlySwitchAnimations": "Ne changer les animations seulement",
           "releaseFootLockOnPoseChange": "Dévérrouiller temporairement le pied lors du changement de l'animation de sommeil",
@@ -700,8 +698,7 @@
         "description": "Certaines fonctionnalités d'OyasumiVR nécessitent d'être connecté à votre compte VRChat.",
         "disclaimers": {
           "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!",
-          "use": "Vos informations de connexion ne sont pas stockées et sont uniquement envoyées à VRChat pour vous identifier."
+          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
         },
         "loggedIn": {
           "logOut": "Se déconnecter",

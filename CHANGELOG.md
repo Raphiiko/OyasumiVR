@@ -7,10 +7,75 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
+- A credential saving option for remembering your VRChat credentials.
+- Automation for disabling the sleep mode after its been enabled for a specified amount of time.
+- An option for your system microphone to change its mute state when joining a world in VRChat.
+
+### Changed
+- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
+
+### Fixed
+- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
+
+## [1.10.3]
+
+### Added
+
+- Improved initialization logging for debugging purposes
+
+### Removed
+
+- Option for sleep animations to only trigger while all trackers are turned off
+
+### Fixed
+
+- Migration bug for automation configurations.
+- Do not register the application manifest in Steam builds.
+
+## [1.10.2]
+
+### Added
+
+- Troubleshooting fix for reregistering OyasumiVR's VR application manifest with SteamVR.
+
+### Changed
+
+- Increased maximum volume for nightmare detection sound effect to 200%.
+- Limited simple- and image brightness sliders in overlay to a minimum of 5%.
+
+### Fixed
+
+- Deadlock in logic for reading possible input bindings.
+- Updated missing Spanish translations (by [aacal666](https://twitter.com/aacalde666))
+- Updated missing Indonesian translations (by [a9ito](https://twitter.com/a9ito))
+
+## [1.10.1]
+
+### Added
+
+- Spanish & Indonesian language support to the standalone NSIS installer.
+
+### Changed
+
+- Switched to the default Tauri script for the NSIS installer.
+
+### Fixed
+
+- Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Dutch translations.
+- UI issues with some duration unit selectors.
+
+### Removed
+
+- .NET Core & ASP.NET Core runtime installation from the standalone NSIS installer.
+
 ## [1.10.0]
 
 ### Added
 
+- Various automations for controlling the mute state of the system microphone.
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
@@ -36,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)).
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
 - Malformed OSC packets causing a crash
@@ -46,6 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added workaround for bug in SteamVR 2.0 regarding IVROverlay::ComputeOverlayIntersection.
 
 ### Removed
+
 - Dotnet version checking and installation.
 
 ## [1.9.0]

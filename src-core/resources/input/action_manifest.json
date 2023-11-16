@@ -44,7 +44,7 @@
     },
     {
       "name": "/actions/hidden",
-      "usage": "hidden"
+      "usage": "leftright"
     }
   ],
   "localization": [

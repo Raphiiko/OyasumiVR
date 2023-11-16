@@ -153,52 +153,19 @@
             <span translate
               >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
             >
-            <span></span>
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
+            >
           </div>
-          <div class="setting-row-action"></div>
-        </div>
-        <div class="setting-row-group">
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
-              >
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onlyIfSleepModeEnabled"
-                  (change)="
-                    updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >oscAutomations.sleepingAnimations.options.general.onlyIfAllTrackersTurnedOff</span
-              >
-              <span></span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="config.onlyIfAllTrackersTurnedOff"
-                  (change)="
-                    updateConfig({
-                      onlyIfAllTrackersTurnedOff: !config.onlyIfAllTrackersTurnedOff
-                    })
-                  "
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyIfSleepModeEnabled"
+                (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
       </div>

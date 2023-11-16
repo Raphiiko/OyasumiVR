@@ -30,13 +30,33 @@ $thumb-size: 1.25em;
   left: 0;
   transform: translate($thumb-size * 0.5, -0.125em);
 
+  &.style-audio-level {
+    height: 0.75em;
+    border-radius: 0.375em;
+    transform: translate($thumb-size * 0.5, -0.375em);
+  }
+
   &-fill {
-    height: 100%;
-    width: 0;
-    background: var(--color-primary);
-    position: absolute;
-    top: 0;
-    left: 0;
+    border-radius: 0.125em;
+    &,
+    &-audio-level {
+      height: 100%;
+      width: 0;
+      background: var(--color-primary);
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    &.style-audio-level {
+      opacity: 0.5;
+    }
+
+    &-audio-level {
+      opacity: 0.5;
+      border-radius: 0.375em;
+      transition: width 0.06s ease;
+    }
   }
 
   &-stop {

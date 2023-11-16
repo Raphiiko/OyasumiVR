@@ -17,6 +17,7 @@ import { UserStatus } from 'vrchat';
 import { IPCService } from '../ipc.service';
 import { AutomationConfigService } from '../automation-config.service';
 import {
+  MicrophoneActivityMode,
   OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
   OyasumiSidecarDeviceInfo,
   OyasumiSidecarDeviceInfo_Controller,
@@ -93,6 +94,9 @@ export class OverlayStateSyncService {
         AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorOpacity,
       systemMicIndicatorFadeout:
         AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorFade,
+      systemMicIndicatorVoiceActivationMode: this.mapMicrophoneActivityMode(
+        AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS.voiceActivationMode
+      ),
     },
     brightnessState: {
       advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
@@ -263,6 +267,9 @@ export class OverlayStateSyncService {
             configs.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorOpacity;
           state.settings!.systemMicIndicatorFadeout =
             configs.SYSTEM_MIC_MUTE_AUTOMATIONS.overlayMuteIndicatorFade;
+          state.settings!.systemMicIndicatorVoiceActivationMode = this.mapMicrophoneActivityMode(
+            configs.SYSTEM_MIC_MUTE_AUTOMATIONS.voiceActivationMode
+          );
         }
         this.state.next(state);
       });
@@ -429,6 +436,15 @@ export class OverlayStateSyncService {
         return OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Whitelist;
       case 'BLACKLIST':
         return OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode.Blacklist;
+    }
+  }
+
+  private mapMicrophoneActivityMode(mode: 'VRCHAT' | 'HARDWARE'): MicrophoneActivityMode {
+    switch (mode) {
+      case 'VRCHAT':
+        return MicrophoneActivityMode.VRChat;
+      case 'HARDWARE':
+        return MicrophoneActivityMode.Hardware;
     }
   }
 

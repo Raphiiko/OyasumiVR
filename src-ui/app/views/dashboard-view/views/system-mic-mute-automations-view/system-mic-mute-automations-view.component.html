@@ -94,6 +94,26 @@
       </div>
     </div>
     <div class="setting-category">
+      <h3 translate>systemMicMuteAutomations.vrchat.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.title</span>
+            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              type="SMALL"
+              class="action-dropdown"
+              [items]="worldJoinBehaviourOptions"
+              [selected]="worldJoinBehaviourOption"
+              (selectedChange)="onChangeWorldJoinBehaviourOption($event)"
+            ></app-select-box>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
       <h3 translate>systemMicMuteAutomations.overlayIndicator.title</h3>
       <p translate>systemMicMuteAutomations.overlayIndicator.description</p>
       <div class="settings">
@@ -144,6 +164,51 @@
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
+            </div>
+          </div>
+          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+            <div class="setting-row-label" translate>
+              <span translate
+                >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                type="SMALL"
+                class="action-dropdown"
+                [items]="voiceActivationModeOptions"
+                [selected]="voiceActivationModeOption"
+                (selectedChange)="onChangeVoiceActivationMode($event)"
+              ></app-select-box>
+            </div>
+          </div>
+          <div
+            class="setting-row"
+            [class.disabled]="!config.overlayMuteIndicator"
+            @vshrink
+            *ngIf="config.voiceActivationMode === 'HARDWARE'"
+          >
+            <div class="setting-row-label" translate>
+              <span translate
+                >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [unit]="'%'"
+                [style.--overlay-width]="'32em'"
+                [style]="'AUDIO_LEVEL'"
+                [value]="config.hardwareVoiceActivationThreshold"
+                (valueChange)="onChangeHardwareVoiceActivationThreshold($event)"
+                #voiceActivationThresholdSlider
+              >
+              </app-slider-setting>
             </div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 using GrcpOverlaySidecar;
 using Grpc.Core;
+using Serilog;
 
 namespace overlay_sidecar;
 
@@ -76,10 +77,11 @@ public class OyasumiOverlaySidecarService : OyasumiOverlaySidecar.OyasumiOverlay
 
   public override Task<Empty> SetMicrophoneActive(SetMicrophoneActiveRequest request, ServerCallContext context)
   {
-    if (request.Mode == MicrophoneActivityMode.Vrchat)
+    if (request.Mode == StateManager.Instance.GetAppState().Settings.SystemMicIndicatorVoiceActivationMode)
     {
       OvrManager.Instance.SetMicrophoneActive(request.Active);
     }
+
     return Task.FromResult(new Empty());
   }
 }

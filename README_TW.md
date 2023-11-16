@@ -19,6 +19,7 @@
     <br>
     如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
     <br>
+          <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br>你已經在看繁體中文的説明了！(*/ω＼*)<br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
     <br>
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
 </p>
@@ -258,7 +259,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
 - 韓文\* (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 與 [雾雨花精灵](https://twitter.com/u_flower_elf) 提供）
+- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 與 [雾雨花精灵](https://github.com/flower-elf) 提供）
 - 法文 (Français)\*（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)\*（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 
@@ -321,7 +322,7 @@ OyasumiVR 是使用以下技術構建的：
 
 OyasumiVR 的某些功能要求您使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
-這僅對依賴此功能的功能是必需的。您可以在不提供憑證的情況下使用不依賴於此的功能。您的登錄憑證永遠不會儲存在任何地方，只會發送到 VRChat 的伺服器進行驗證。
+這僅對依賴此功能的功能是必需的。您可以在不提供憑證的情況下使用不依賴於此的功能。您的登錄憑證只會儲存在你自己的機器上，並且只會發送到 VRChat 的伺服器進行驗證。絕不會發送/储存在任何其他地方。
 
 OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRChat 生產或管理的人士的觀點或意見。VRChat 是 VRChat Inc. 的商標。VRChat © VRChat Inc.
 

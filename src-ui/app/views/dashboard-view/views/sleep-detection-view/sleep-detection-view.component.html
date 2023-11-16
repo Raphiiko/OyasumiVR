@@ -142,8 +142,12 @@
           <div class="setting-row-label" translate>
             <span class="row-title">
               <span translate>sleep-detection.enableAutomations.onHeartRateCalmPeriod.title</span>
-              <span [tooltip]="'sleep-detection.experimentalAutomation'" [tooltipMode]="'right'">
-                <i class="material-icons experimental-flag">warning</i>
+              <span
+                class="experimental-flag"
+                [tooltip]="'sleep-detection.experimentalAutomation'"
+                [tooltipMode]="'right'"
+              >
+                <i class="material-icons">warning</i>
               </span>
             </span>
             <span
@@ -196,6 +200,33 @@
                 type="checkbox"
                 [checked]="automationConfigs.SLEEP_MODE_DISABLE_AT_TIME.enabled"
                 (change)="toggleAutomation('SLEEP_MODE_DISABLE_AT_TIME')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.afterTime.title</span>
+            <span>
+              <span *ngIf="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration" @fade>
+                {{ getStringForDuration(automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration) }}
+              </span>
+            </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeAfterTime()"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_AFTER_TIME')"
               />
               <span class="switch-toggle-slider"></span>
             </label>

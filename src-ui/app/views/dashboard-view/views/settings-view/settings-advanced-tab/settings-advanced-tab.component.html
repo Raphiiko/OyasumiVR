@@ -28,6 +28,26 @@
         </a>
       </div>
     </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span>
+          <span translate>settings.advanced.translation.editor.title</span>
+          <span
+            class="experimental-flag"
+            [tooltip]="'settings.advanced.translation.editor.experimental'"
+            [tooltipMode]="'right'"
+          >
+            <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate>settings.advanced.translation.editor.description</span>
+      </div>
+      <div class="setting-row-action">
+        <button class="btn btn-primary" [routerLink]="['/translation', 'loader']" translate>
+          <span translate>settings.advanced.translation.editor.action</span>
+        </button>
+      </div>
+    </div>
   </div>
 </div>
 <div class="setting-category">
@@ -97,6 +117,27 @@
             <span class="check-toggle-checkmark"></span>
           </label>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="setting-category">
+  <h2 translate>settings.advanced.fixes.title</h2>
+  <p translate>settings.advanced.fixes.description</p>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>settings.advanced.fixes.vrManifestReregister.title</span>
+        <span translate>settings.advanced.fixes.vrManifestReregister.description</span>
+      </div>
+      <div class="setting-row-action">
+        <button
+          class="btn btn-primary"
+          (click)="reregisterVRManifest()"
+          [disabled]="(openvr.status | async) !== 'INITIALIZED'"
+        >
+          <span translate>settings.advanced.fixes.vrManifestReregister.action</span>
+        </button>
       </div>
     </div>
   </div>

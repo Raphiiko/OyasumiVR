@@ -16,6 +16,7 @@ export type AutomationType =
   | 'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD'
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
+  | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
@@ -50,7 +51,7 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
-  version: 10;
+  version: 11;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -61,6 +62,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig;
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
+  SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
@@ -182,6 +184,10 @@ export interface SleepModeDisableAtTimeAutomationConfig extends AutomationConfig
   time: string | null;
 }
 
+export interface SleepModeDisableAfterTimeAutomationConfig extends AutomationConfig {
+  duration: string | null;
+}
+
 export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends AutomationConfig {
   triggerClasses: OVRDeviceClass[];
 }
@@ -222,7 +228,6 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
     [key in SleepingPose | 'FOOT_LOCK' | 'FOOT_UNLOCK']?: OscScript;
   };
   onlyIfSleepModeEnabled: boolean;
-  onlyIfAllTrackersTurnedOff: boolean;
   lockFeetOnSleepModeEnable: boolean;
   unlockFeetOnSleepModeDisable: boolean;
   unlockFeetOnAutomationDisable: boolean;
@@ -259,6 +264,8 @@ export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
 export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
+export type VRChatMicrophoneWorldJoinBehaviour = 'MUTE' | 'UNMUTE' | 'KEEP';
+
 export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   audioDevicePersistentId: string | null;
   onSleepModeEnableState: SystemMicMuteStateOption;
@@ -273,6 +280,9 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   onSleepModeEnableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepModeDisableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  voiceActivationMode: 'VRCHAT' | 'HARDWARE';
+  hardwareVoiceActivationThreshold: number;
+  vrchatWorldJoinBehaviour: VRChatMicrophoneWorldJoinBehaviour;
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -310,7 +320,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 10,
+  version: 11,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -414,6 +424,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     time: null,
   },
+  SLEEP_MODE_DISABLE_AFTER_TIME: {
+    enabled: false,
+    duration: null,
+  },
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
@@ -453,7 +467,6 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     preset: null,
     onlyIfSleepModeEnabled: true,
-    onlyIfAllTrackersTurnedOff: true,
     lockFeetOnSleepModeEnable: true,
     unlockFeetOnSleepModeDisable: true,
     unlockFeetOnAutomationDisable: true,
@@ -521,6 +534,17 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepModeEnableControllerBindingBehavior: 'NONE',
     onSleepModeDisableControllerBindingBehavior: 'NONE',
     onSleepPreparationControllerBindingBehavior: 'NONE',
+    voiceActivationMode: 'VRCHAT',
+    hardwareVoiceActivationThreshold: 4,
+    vrchatWorldJoinBehaviour: 'KEEP',
+  },
+  NIGHTMARE_DETECTION: {
+    enabled: false,
+    heartRateThreshold: 130,
+    periodDuration: 60 * 1000,
+    disableSleepMode: false,
+    playSound: false,
+    soundVolume: 100,
   },
   NIGHTMARE_DETECTION: {
     enabled: false,

@@ -412,6 +412,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
               "unknown": "By an unknown automation"
@@ -495,7 +496,10 @@
       "heartrate": "Heart Rate",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
-      "sleepMode": "Sleep Mode",
+      "sleepMode": {
+        "label": "Sleep Mode",
+        "tooltip": "Toggle Sleep Mode"
+      },
       "steamvr": {
         "INACTIVE": "Inactive",
         "INITIALIZED": "Active",
@@ -566,7 +570,8 @@
       },
       "password": "Password",
       "title": "Log in to VRChat",
-      "username": "VRChat Username/E-mail"
+      "username": "VRChat Username/E-mail",
+      "rememberCredentials": "Remember Credentials"
     },
     "vrchat-login-tfa-modal": {
       "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",
@@ -574,7 +579,8 @@
         "INVALID_FORMAT": "A valid 2FA code is a sequence of 6 numbers. Please verify your input.",
         "LAST_CODE_INVALID": "The 2FA code you have provided was incorrect."
       },
-      "title": "Two Factor Authentication"
+      "title": "Two Factor Authentication",
+      "logginInAs": "You're logging into VRChat as:"
     }
   },
   "gpu-automations": {
@@ -732,7 +738,6 @@
           },
           "footLockReleaseWindow": "Foot lock release duration",
           "lockFeetOnSleepModeEnable": "Lock feet when sleep mode is enabled",
-          "onlyIfAllTrackersTurnedOff": "If all trackers are turned off",
           "onlyIfSleepModeEnabled": "While sleep mode is enabled",
           "onlySwitchAnimations": "Only switch animations",
           "releaseFootLockOnPoseChange": "Momentarily release foot lock when switching sleeping positions",
@@ -1034,7 +1039,52 @@
           "description": "Load a custom language file. Useful when testing new translations.",
           "title": "Load translation file"
         },
-        "title": "Language & Translation"
+        "title": "Language & Translation",
+        "editor": {
+          "title": "Translation Editor",
+          "action": "Launch Editor",
+          "description": "Launch OyasumiVR's translation editor for editing and creating translations",
+          "experimental": "This module is still in an experimental stage, and is available in English only. While you can try it out, it is very much still in development. For now, you can still expect to find issues and missing functionality."
+        }
+      },
+      "fixes": {
+        "title": "Fixes & Troubleshooting",
+        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support.",
+        "vrManifestReregister": {
+          "title": "Reregister SteamVR application manifest",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR.",
+          "action": "Reregister Manifest",
+          "modal": {
+            "success": {
+              "title": "VR Application Manifest Reregistered",
+              "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR."
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs."
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "The manifest could not be removed. Please check the logs."
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "OyasumiVR's had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR."
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs."
+            },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "Application manifest unregistered",
+              "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR."
+            },
+            "UNKNOWN": {
+              "title": "Reregistration of VR Application Manifest Failed",
+              "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs."
+            }
+          }
+        }
       }
     },
     "general": {
@@ -1229,7 +1279,7 @@
         "disclaimers": {
           "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
           "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
-          "use": "Your login credentials will never be stored anywhere and are only ever sent to VRChat's servers for authentication purposes."
+          "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
         },
         "loggedIn": {
           "logOut": "Log out",
@@ -1386,7 +1436,7 @@
         "title": "Sleep duration"
       },
       "whenAsleepTimeWindow": {
-        "description": "Only allow shutdown to trigger between certain hours of day",
+        "description": "On/ly allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
       }
     }
@@ -1394,6 +1444,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "At a specific time",
+      "afterTime": {
+        "title": "After a specific amount of time",
+        "description": {
+          "minutes": "After {minutes, plural, one {1 minute} other {# minutes}}",
+          "hours": "After {hours, plural, one {1 hour} other {# hours}}",
+          "hoursAndMinutes": "After {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}"
+        }
+      },
       "description": "Automatically disable sleep mode based on various triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
@@ -1425,6 +1483,11 @@
       "disableAtTime": {
         "description": "Disable sleep mode at a specific time of day.",
         "time": "Time",
+        "title": "Disable sleep mode"
+      },
+      "disableAfterTime": {
+        "description": "Disable the sleep mode after it has been enabled for a certain amount of time.",
+        "time": "Duration",
         "title": "Disable sleep mode"
       },
       "disableOnDevicePowerOn": {
@@ -1644,7 +1707,19 @@
         "description": "The indicator icon's maximum opacity",
         "title": "Opacity"
       },
-      "title": "Overlay Indicator"
+      "title": "Overlay Indicator",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "By VRChat",
+          "HARDWARE": "By Mic Volume"
+        },
+        "title": "Voice activation mode",
+        "description": "Determines in what mode voice activation (the indicator lighting up) is determined."
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "Voice activation threshold",
+        "description": "Set the volume threshold at which the mic indicator should light up"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1661,7 +1736,19 @@
       },
       "title": "Mute Automations"
     },
-    "title": "System Microphone Mute Automations"
+    "title": "System Microphone Mute Automations",
+    "vrchat": {
+      "title": "VRChat Options",
+      "worldJoinBehaviour": {
+        "title": "World Join Behaviour",
+        "description": "How your microphone should behave when changing worlds in VRChat",
+        "options": {
+          "MUTE": "Default Off",
+          "UNMUTE": "Default On",
+          "KEEP": "Keep Last State"
+        }
+      }
+    }
   },
   "updater": {
     "modals": {

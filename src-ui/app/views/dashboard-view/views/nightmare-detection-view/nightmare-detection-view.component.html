@@ -33,24 +33,15 @@
               [max]="59"
               [step]="1"
               [value]="durationValue"
-              (valueChange)="
-                onChangeDuration(
-                  $event,
-                  durationUnitOption
-                )
-              "
+              (valueChange)="onChangeDuration($event, durationUnitOption)"
             ></app-slider-setting>
             <app-select-box
               class="status-dropdown"
               [type]="'SMALL'"
               [items]="durationUnitOptions"
               [selected]="durationUnitOption"
-              (selectedChange)="
-                onChangeDuration(
-                  durationValue,
-                  $event
-                )
-              "
+              [showPlaceholderInDropdown]="false"
+              (selectedChange)="onChangeDuration(durationValue, $event)"
               #transitionUnitOnEnable
             ></app-select-box>
           </div>
@@ -68,7 +59,11 @@
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">
-              <input type="checkbox" [checked]="config.disableSleepMode" (change)="toggleDisableSleepMode()" />
+              <input
+                type="checkbox"
+                [checked]="config.disableSleepMode"
+                (change)="toggleDisableSleepMode()"
+              />
               <span class="switch-toggle-slider"></span>
             </label>
           </div>
@@ -94,12 +89,16 @@
             <div class="setting-row-action">
               <button class="btn btn-secondary" (click)="testSound()">
                 <span translate @hshrink *ngIf="!playingTestSound"
-                >nightmare-detection.playSound.volume.test</span
+                  >nightmare-detection.playSound.volume.test</span
                 >
                 <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
               </button>
-              <app-slider-setting [unit]="'%'" [value]="config.soundVolume"
-                                  (valueChange)="setSoundVolume($event)"></app-slider-setting>
+              <app-slider-setting
+                [unit]="'%'"
+                [max]="200"
+                [value]="config.soundVolume"
+                (valueChange)="setSoundVolume($event)"
+              ></app-slider-setting>
             </div>
           </div>
         </div>

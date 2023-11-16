@@ -12,16 +12,16 @@
     *ngIf="error && error !== 'MISSING_CONTROLLER' && error !== 'NO_CONTROLLERS'"
   >
     <ng-container *ngIf="error === 'MISSING_KEY'">
-      <div class="line1" translate> No Action Set </div>
+      <div class="line1" translate> No Action Set</div>
     </ng-container>
     <ng-container *ngIf="error === 'STEAMVR_INACTIVE'">
-      <div class="line1" translate> comp.controller-binding.errors.STEAMVR_INACTIVE.message </div>
+      <div class="line1" translate> comp.controller-binding.errors.STEAMVR_INACTIVE.message</div>
     </ng-container>
     <ng-container *ngIf="error === 'DASHBOARD_OPEN'">
-      <div class="line1" translate> comp.controller-binding.errors.DASHBOARD_OPEN.message </div>
+      <div class="line1" translate> comp.controller-binding.errors.DASHBOARD_OPEN.message</div>
     </ng-container>
     <ng-container *ngIf="error === 'UNKNOWN'">
-      <div class="line1" translate> comp.controller-binding.errors.UNKNOWN.message </div>
+      <div class="line1" translate> comp.controller-binding.errors.UNKNOWN.message</div>
     </ng-container>
   </div>
   <ng-container *ngIf="error === 'MISSING_CONTROLLER' || error === 'NO_CONTROLLERS'">
