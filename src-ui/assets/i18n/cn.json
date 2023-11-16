@@ -1443,7 +1443,7 @@
   },
   "sleep-detection": {
     "disableAutomations": {
-      "atTime": "在特定时间段",
+      "atTime": "在特定时间",
       "afterTime": {
         "title": "在一定时间后",
         "description": {
@@ -1459,7 +1459,7 @@
     },
     "enableAutomations": {
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
-      "atTime": "在特定时间段",
+      "atTime": "在特定时间",
       "description": "根据各种触发器自动启用睡眠模式",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
