@@ -531,13 +531,13 @@
       "action": {
         "none": "目前没有任何新增动作",
         "osc": "OSC",
-        "sleep": "睡觉"
+        "sleep": "等待"
       },
       "addCommand": "新增",
       "commandCounter": "{count, plural, one {1 条指令} other {# 条指令}}",
       "commands": {
         "COMMAND": {
-          "description": "执行一条 OSC 指令",
+          "description": "新增一条 OSC 指令",
           "title": "OSC 指令"
         },
         "SLEEP": {
