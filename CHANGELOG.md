@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
 
 ### Fixed
-- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf) and [i0nTempest](https://twitter.com/i0ntempest)).
+- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
 
 ## [1.10.3]
 
@@ -101,7 +101,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)).
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
 - Malformed OSC packets causing a crash
