@@ -1447,9 +1447,9 @@
       "afterTime": {
         "title": "在一定时间后",
         "description": {
-          "minutes": "在 {minutes, plural, one {1 minute} other {# minutes}}之后",
-          "hours": "在 {hours, plural, one {1 hour} other {# hours}}之后",
-          "hoursAndMinutes": "在 {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}之后"
+          "minutes": "在 {minutes, plural, one {1 分钟} other {# 分钟}}之后关闭",
+          "hours": "在 {hours, plural, one {1 小时} other {# 小时}}之后关闭",
+          "hoursAndMinutes": "在 {hours, plural, one {1 小时} other {# 小时}} {minutes, plural, one {1 分钟} other {# 分钟}}之后关闭"
         }
       },
       "description": "根据各种触发器自动禁用睡眠模式",
@@ -1487,7 +1487,7 @@
       },
       "disableAfterTime": {
         "description": "在睡眠模式启用一定时间后禁用它",
-        "time": "持续",
+        "time": "持续时间",
         "title": "关闭睡眠模式"
       },
       "disableOnDevicePowerOn": {
