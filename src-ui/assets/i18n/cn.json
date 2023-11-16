@@ -268,7 +268,7 @@
             "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
             "SLEEP_MODE_ENABLED": "由于开启睡眠模式"
           },
-          "title": "Chaperone淡化距离设置为{value}。"
+          "title": "保护墙的淡化距离已设置为{value}。"
         },
         "displayBrightnessChanged": {
           "reason": {
@@ -411,10 +411,11 @@
           "reason": {
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR退出了",
-              "SLEEP_MODE_DISABLE_AT_TIME": "在预定时间退出",
+              "SLEEP_MODE_DISABLE_AT_TIME": "由于到达预定时间，睡眠模式已关闭",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "睡眠模式启用的时间已经足够长了",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "一个设备被打开了",
               "NIGHTMARE_DETECTION": "检测到你可能正在做噩梦",
-              "unknown": "一个未知的自动化导致了此操作"
+              "unknown": "一个未知的自动化操作导致了睡眠模式被关闭"
             },
             "manual": "你手动关闭了睡眠模式",
             "osc-control": "睡眠模式通过OSC被禁用"
@@ -495,6 +496,10 @@
       "heartrate": "心率",
       "inactive": "未启动",
       "loggedOut": "未登录",
+      "sleepMode": {
+        "label": "睡眠模式",
+        "tooltip": "切换睡眠模式开关状态"
+      },
       "steamvr": {
         "INACTIVE": "未启动",
         "INITIALIZED": "启动",
@@ -565,7 +570,8 @@
       },
       "password": "密码",
       "title": "登录到 VRChat",
-      "username": "VRChat 用户名/电子邮件"
+      "username": "VRChat 用户名/电子邮件",
+       "rememberCredentials": "在本地保存登录信息"
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
@@ -573,7 +579,8 @@
         "INVALID_FORMAT": "有效的 2FA 代码是由 6 个数字组成的，请确认你的输入正确",
         "LAST_CODE_INVALID": "你提供的 2FA 代码不正确"
       },
-      "title": "两步验证"
+      "title": "两步验证",
+      "logginInAs": "当前正在尝试登录的账户:"
     }
   },
   "gpu-automations": {
@@ -1271,7 +1278,8 @@
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
         "disclaimers": {
           "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
-          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！"
+          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！",
+          "use": "你的登录凭据不会存储在除你自己的计算机以外的任何地方，并且仅会发送到 VRChat 服务器进行身份验证。"
         },
         "loggedIn": {
           "logOut": "退出登录",
@@ -1436,6 +1444,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "在特定时间段",
+      "afterTime": {
+        "title": "在一定时间后",
+        "description": {
+          "minutes": "在 {minutes, plural, one {1 minute} other {# minutes}}之后",
+          "hours": "在 {hours, plural, one {1 hour} other {# hours}}之后",
+          "hoursAndMinutes": "在 {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}之后"
+        }
+      },
       "description": "根据各种触发器自动禁用睡眠模式",
       "onDevicePowerOn": "当设备启动时",
       "onSteamVRStop": "当 SteamVR 停止时",
@@ -1467,6 +1483,11 @@
       "disableAtTime": {
         "description": "在特定时间关闭睡眠模式",
         "time": "时间",
+        "title": "关闭睡眠模式"
+      },
+      "disableAfterTime": {
+        "description": "在睡眠模式启用一定时间后禁用它",
+        "time": "持续",
         "title": "关闭睡眠模式"
       },
       "disableOnDevicePowerOn": {
@@ -1686,7 +1707,19 @@
         "description": "指示器图标的最大不透明度",
         "title": "不透明度"
       },
-      "title": "叠加层指示器"
+      "title": "叠加层指示器",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "跟随 VRChat 报告的状态",
+          "HARDWARE": "跟随硬件报告的状态"
+        },
+        "title": "触发模式",
+        "description": "确定指示器要根据哪个程序报告的麦克风状态来切换显示。"
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "麦克风激活阈值",
+        "description": "设置麦克风指示器亮起的最低音量阈值，只有当说话音量高于此阈值时，指示器才会亮起。"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
