@@ -529,7 +529,7 @@
     },
     "osc-script-simple-editor": {
       "action": {
-        "none": "目前没有任何新增动作",
+        "none": "目前没有任何动作",
         "osc": "OSC",
         "sleep": "等待"
       },
