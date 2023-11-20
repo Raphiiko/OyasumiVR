@@ -412,6 +412,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Como SteamVR cerro",
               "SLEEP_MODE_DISABLE_AT_TIME": "A la hora prevista",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "Como el modo de suspensión se habilitó durante el tiempo suficiente",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Al encender un dispositivo",
               "NIGHTMARE_DETECTION": "Como se detectó, posiblemente podrías estar teniendo una pesadilla",
               "unknown": "Por un automatismo desconocido"
@@ -495,6 +496,10 @@
       "heartrate": "Frecuencia cardiaca",
       "inactive": "Inactivo",
       "loggedOut": "Desconectado",
+      "sleepMode": {
+        "label": "Modo de dormir",
+        "tooltip": "Alternar el modo de dormir"
+      },
       "steamvr": {
         "INACTIVE": "Inactivo",
         "INITIALIZED": "Activo",
@@ -565,7 +570,8 @@
       },
       "password": "Contraseña",
       "title": "Iniciar sesión en VRChat",
-      "username": "VRChat Usuario/E-mail"
+      "username": "VRChat Usuario/E-mail",
+      "rememberCredentials": "Recuerda credenciales"
     },
     "vrchat-login-tfa-modal": {
       "description": "Tu cuenta de VRChat está protegida con autenticación de dos factores.\n\nPor favor, introduzca un código 2FA:",
@@ -573,7 +579,8 @@
         "INVALID_FORMAT": "Un código 2FA válido es una secuencia de 6 números. Por favor, verifique su entrada.",
         "LAST_CODE_INVALID": "El código 2FA que has proporcionado era incorrecto."
       },
-      "title": "Autenticación de dos factores"
+      "title": "Autenticación de dos factores",
+      "logginInAs": "Estás iniciando sesión en VRCHAT como:"
     }
   },
   "gpu-automations": {
@@ -1039,6 +1046,45 @@
           "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
           "experimental": "Este módulo todavía está en una etapa experimental y está disponible solo en inglés. Si bien puede probarlo, todavía está en desarrollo. Por ahora, aún puede esperar encontrar problemas y faltar funcionalidad."
         }
+      },
+      "fixes": {
+        "title": "Correcciones y solución de problemas",
+        "description": "Esta sección contiene algunas opciones y acciones relacionadas con la reparación de problemas y la solución de problemas.En general, no debe usarlos a menos que sepa lo que está haciendo, o si se le pide que los use al obtener apoyo.",
+        "vrManifestReregister": {
+          "title": "Reiniciar el manifiesto de la aplicación SteamVR",
+          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
+          "action": "Retregistro manifiesto",
+          "modal": {
+            "success": {
+              "title": "VR Aplicación Manifiesta reregistrado",
+              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR."
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros."
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto no pudo ser retirado.Por favor revise los registros."
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR."
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros."
+            },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "Aplicación Manifiestas no registradas",
+              "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR."
+            },
+            "UNKNOWN": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros."
+            }
+          }
+        }
       }
     },
     "general": {
@@ -1099,7 +1145,11 @@
           "description": "Esto se puede desactivar si desea desactivar completamente el menú de superposición de OyasumiVR.",
           "title": "Activar menú superpuesto"
         },
-        "title": "Superposición"
+        "title": "Superposición",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "Solo abra el menú mientras se ejecuta VRChat",
+          "description": "Habilite esto para evitar que el menú se abra mientras VRChat no se ejecuta"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -1163,6 +1213,7 @@
       "disconnect": "Desconectar",
       "providerLink": "Sitio web del proveedor",
       "pulsoid": {
+        "description": "Proporciona sus datos de frecuencia cardíaca a OyasumiVR, que se pueden utilizar para desencadenar ciertas automatizaciones.<br><i>Esta integración requiere una compra única de la integración OyasumiVR de pulsoide, o para tener una suscripción activa de pulsoide \"BRO\".Asegúrese de tener un dispositivo compatible antes de realizar una compra. </i>",
         "title": "Pulsoid"
       },
       "reveal": "Revelar",
@@ -1231,7 +1282,8 @@
         "description": "Algunas funciones de OyasumiVR requieren que inicies sesión con tu cuenta de VRChat para que funcionen.",
         "disclaimers": {
           "brand": "OyasumiVR no está respaldado por VRChat y no refleja los puntos de vista u opiniones de VRChat ni de nadie que participe oficialmente en la producción o gestión de VRChat. VRChat es una marca comercial de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!"
+          "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!",
+          "use": "Sus credenciales de inicio de sesión nunca se almacenarán en ningún lugar que no sea su propia máquina y solo se envían a los servidores de VRChat para fines de autenticación."
         },
         "loggedIn": {
           "logOut": "Cerrar sesión",
@@ -1396,6 +1448,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "En un momento determinado",
+      "afterTime": {
+        "title": "Después de una cantidad específica de tiempo",
+        "description": {
+          "minutes": "Después de {minutos, plural, uno {1 minuto} otro {# minutos}}",
+          "hours": "Después de {horas, plural, uno {1 hora} otro {# horas}}",
+          "hoursAndMinutes": "Después de {horas, plural, uno {1 hora} otro {# horas}} y {minutos, plural, uno {1 minuto} otro {# minutos}}"
+        }
+      },
       "description": "Desactivación automática del modo sueño en función de varios activadores",
       "onDevicePowerOn": "Cuando se enciende un dispositivo",
       "onSteamVRStop": "Cuando SteamVR está parado",
@@ -1425,9 +1485,14 @@
     "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",
     "modals": {
       "disableAtTime": {
-        "description": "Desactiva el modo  a una hora determinada del día.",
+        "description": "Desactiva el modo dormir a una hora determinada del día.",
         "time": "Tiempo",
         "title": "Desactivar el modo sueño"
+      },
+      "disableAfterTime": {
+        "description": "Deshabilite el modo dormir después de haber sido habilitado durante un cierto período de tiempo.",
+        "time": "Duración",
+        "title": "Desactivar el modo dormir"
       },
       "disableOnDevicePowerOn": {
         "Controller": "Controlador",
@@ -1490,6 +1555,7 @@
           "title": "Umbral de BPM",
           "unit": "BPM"
         },
+        "description": "Habilite el modo dormir cuando su frecuencia cardíaca esté por debajo de un cierto umbral por un período de tiempo: defina los ritmos por minuto umbral de que su frecuencia cardíaca debe permanecer bajo, así como por la cantidad de tiempo, para que el modo dormir esté habilitado.\n\nEsta requiere que habilite la <a class=\"ingrationspagelink\">integración pulsoid</a>",
         "duration": {
           "description": "Cuánto tiempo debe permanecer tu frecuencia cardiaca por debajo del umbral para que se active el modo de reposo.",
           "title": "DURACION",
@@ -1645,7 +1711,19 @@
         "description": "Opacidad máxima del icono indicador",
         "title": "Opacidad"
       },
-      "title": "Indicador de superposición"
+      "title": "Indicador de superposición",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "Por VRChat",
+          "HARDWARE": "Por volumen de micrófono"
+        },
+        "title": "Modo de activación de voz",
+        "description": "Determina en qué modo se determina la activación de voz (la iluminación del indicador)."
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "Umbral de activación de voz",
+        "description": "Establezca el umbral de volumen en el que el indicador de micrófono debe iluminarse"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1662,7 +1740,19 @@
       },
       "title": "Automatizaciones de silencio"
     },
-    "title": "Sistema de silenciamiento automático del micrófono"
+    "title": "Sistema de silenciamiento automático del micrófono",
+    "vrchat": {
+      "title": "Opciones VRChat",
+      "worldJoinBehaviour": {
+        "title": "Comportamiento de unión mundial",
+        "description": "Cómo debe comportarse su micrófono al cambiar los mundos en VRChat",
+        "options": {
+          "MUTE": "Predeterminado Off",
+          "UNMUTE": "Predeterminado ON",
+          "KEEP": "Mantener el último estado"
+        }
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1722,6 +1812,7 @@
   },
   "nightmare-detection": {
     "title": "Detección de pesadilla",
+    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que OyasumiVR intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo dormir está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración pulsoid </a>.",
     "bpmThreshold": {
       "unit": "bpm",
       "title": "Frecuencia cardíaca mínima",
