@@ -65,6 +65,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - :low_brightness: 調暗你的頭戴式顯示器亮度
 - :sparkles: 根據你的睡姿觸發頭像動畫
 - :envelope_with_arrow: 自動處理好友邀請
+- :microphone: Muting your microphone when you fall asleep
 - :hammer_and_wrench: 自動化各種 SteamVR 設定
 
 ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
@@ -252,6 +253,48 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
   </tr>
 </table>
 
+### 🎤 System Microphone Mute Automations
+<table>
+  <tr>
+    <td>
+      You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
+      <br><br>Perfect if you'd like to prevent others from hearing you snore!
+      <br><br>
+      This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+
+  </tr>
+</table>
+
+### ♥️ Heart Rate Automations (Pulsoid Integration)
+<table>
+  <tr>
+    <td colspan="2">
+      <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
+      To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+      <br><br>
+      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <b>Sleep Detection</b>
+      <br>
+      You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bcdbb83f-b7b7-49d8-b3f1-39a67b9b619e"></td>
+  </tr>
+  <tr>
+    <td>
+      <b>Nightmare Detection</b>
+      <br>
+      OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up. 
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
 ### 👓 解析度自動化
 <table>
   <tr>
@@ -343,11 +386,13 @@ OyasumiVR 是使用以下技術構建的：
 
 OyasumiVR 的某些功能要求你使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
-這僅對依賴此功能的功能是必需的。你可以在不提供憑證的情況下使用不依賴於此的功能。你的登錄憑證只會儲存在你自己的機器上，並且只會發送到 VRChat 的伺服器進行驗證。絕不會發送/儲存在任何其他地方。
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
 
 OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRChat 生產或管理的人士的觀點或意見。VRChat 是 VRChat Inc. 的商標。VRChat © VRChat Inc.
 
 OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對你的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
+
 ## 支援
 
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
