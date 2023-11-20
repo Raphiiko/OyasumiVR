@@ -22,18 +22,18 @@
     If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <table align="center">
-      <tr>
-        <td align="center">Japanese<br>日本語</td>
-        <td align="center">Simplified Chinese<br>简体中文</td>
-        <td align="center">Traditional Chinese<br>繁體中文</td>
-        <td align="center">Korean<br>한국어</td>
-      </tr>
-      <tr>
-        <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a></td>
-        <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a></td>
-        <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a></td>
-        <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a></td>
-      </tr>
+        <tr>
+            <td align="center">Japanese<br>日本語</td>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Korean<br>한국어</td>
+        </tr>
+        <tr>
+            <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a></td>
+            <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a></td>
+            <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a></td>
+            <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a></td>
+        </tr>
     </table>
     <br>
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">

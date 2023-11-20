@@ -18,10 +18,22 @@
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad 頁面" src="https://img.shields.io/badge/商店-Gumroad-important"/></a>
     <br>
     如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
-    <br>
-          <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br>你已經在看繁體中文的説明了！(*/ω＼*)<br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
-    <br>
-    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
+    <table align="center">
+    <tr>
+      <td align="center">Japanese<br>日本語</td>
+      <td align="center">Simplified Chinese<br>简体中文</td>
+      <td align="center">Traditional Chinese<br>繁體中文</td>
+      <td align="center">Korean<br>한국어</td>
+    </tr>
+    <tr>
+      <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a></td>
+      <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a></td>
+      <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a></td>
+      <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a></td>
+    </tr>
+    </table>
+  <br>
+  <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
 </p>
 
 ## 下載與安裝
@@ -40,6 +52,7 @@
 OyasumiVR 是一個桌面應用程式，包含各種工具和自動化功能，**協助你在虛擬實境頭戴裝置上入睡**。其中大部分的工具是專為在社交虛擬實境平台 [VRChat](https://vrchat.com) 中使用而開發的。
 
 OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，例如：
+
 - :battery: 在夜間節省電力和電池
 - :low_brightness: 調暗你的頭戴式顯示器亮度
 - :sparkles: 根據你的睡姿觸發頭像動畫
@@ -51,6 +64,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 ## 功能
 
 ### 💤 入睡偵測
+
 <table>
   <tr>
     <td>
@@ -70,6 +84,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 📲 SteamVR 疊層畫面
+
 <table>
   <tr>
     <td>
@@ -82,6 +97,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 🔋 電源自動化
+
 <table>
   <tr>
     <td>
@@ -115,6 +131,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 🔌 GPU 自動化
+
 <table>
   <tr>
     <td>
@@ -138,6 +155,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 💫 VRChat 自動化
+
 <table>
   <tr>
     <td>
@@ -198,6 +216,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### ⛔ 關機序列
+
 <table>
   <tr>
     <td>
@@ -219,6 +238,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 🔅 亮度自動化
+
 <table>
   <tr>
     <td>
@@ -232,6 +252,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 👓 解析度自動化
+
 <table>
   <tr>
     <td>
@@ -242,6 +263,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 </table>
 
 ### 🔳 Chaperone 自動化
+
 <table>
   <tr>
     <td>
@@ -254,6 +276,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 ## 翻譯與本地化
 
 目前 OyasumiVR 支援以下語言：
+
 - 英文
 - 荷蘭文 (Nederlands)
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
@@ -327,6 +350,7 @@ OyasumiVR 的某些功能要求您使用 VRChat 帳戶登入才能使用（例�
 OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRChat 生產或管理的人士的觀點或意見。VRChat 是 VRChat Inc. 的商標。VRChat © VRChat Inc.
 
 OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對您的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
+
 ## 支援
 
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
