@@ -37,7 +37,7 @@
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
-## 다운로드 및및 설치
+## 다운로드 및 설치
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
 
@@ -114,7 +114,7 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
     <td>
       <b>Windows 전력 정책</b>
       <br>
-      Save some electricity by automatically setting Windows' Power Policy when you go to sleep and wake up! Simply have it set a more conservative policy (like "Power Saver") when you go to sleep, and then restore a higher performance policy when you wake up again.
+      잠을 자거나 깨어날 때 Windows의 전원 정책을 자동으로 설정하여 전기를 절약하세요! 잠을 잘 때는 더 엄격한 정책(예: "절전")을 설정했다가 다시 깨어나면 더 높은 성능의 정책으로 복원하기만 하면 됩니다.
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/05398894-a058-4715-b66a-067857b90e43"></td>
   </tr>
@@ -385,7 +385,7 @@ OyasumiVR은 VRChat이 보증하지 않으며, VRChat 또는 VRChat의 제작 �
 
 OyasumiVR 개발자 및 이 프로젝트의 기여자는 OyasumiVR로 인해 발생한 문제(귀하의 VRChat 계정 또는 기타)에 대해 책임을 지지 않습니다. 사용자 책임하에 사용하시기 바랍니다.
 
-## 지원원
+## 지원
 OyasumiVR에 문제가 있거나 버그 또는 기능 요청이 있는 경우, [Discord 서버](https://discord.gg/7MqdPJhYxC)에 가입하실 수 있어요.
 
 또는 [트위터 @Raphiiko](https://twitter.com/Raphiiko)에서 저에게 직접 연락하실 수도 있습니다. 최대한 빨리 답변을 드리도록 노력하겠습니다!
