@@ -678,7 +678,6 @@
       "title": "最低心拍数",
       "unit": "BPM"
     },
-    "description": "睡眠中の高い心拍数をチェックして、悪夢を見ているか検知しようとします。悪夢を見ていると判断された場合、OyasumiVRによる起床を試みるオプションがあります。悪夢の検知は、睡眠モードがアクティブな場合のみ実行されます。\n\n<b>注意:</b> この機能を使用するには、<a class=\"integrationsPageLink\">Pulsoidの統合</a>を有効にし、アクティブなPulsoid \"BRO\" サブスクリプションが必要です。",
     "disableSleepMode": {
       "description": "悪夢の可能性があるときに睡眠モードを無効にします",
       "title": "睡眠モードの無効化"
@@ -1194,7 +1193,6 @@
       "disconnect": "切断",
       "providerLink": "公式サイト",
       "pulsoid": {
-        "description": "Pulsoidの心拍数データをOyasumiVRに提供し、特定の自動化をトリガーするために使用できます。<br><i>必要条件: Pulsoidの「BRO」サブスクリプション</i>",
         "title": "Pulsoid"
       },
       "reveal": "表示",
@@ -1522,7 +1520,6 @@
           "title": "BPM 閾値",
           "unit": "BPM"
         },
-        "description": "閾値以下の心拍数が一定時間経過すると、睡眠モードを有効にします。\n\nこれには<a class=\"integrationsPageLink\">Pulsoid 連携</a>の有効化と、アクティブなPulsoidの「BRO」サブスクリプションが必要です。",
         "duration": {
           "description": "睡眠モードを有効にするために心拍数が閾値以下になる必要がある時間を設定します。",
           "title": "期間",

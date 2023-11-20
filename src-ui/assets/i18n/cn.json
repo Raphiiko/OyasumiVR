@@ -571,7 +571,7 @@
       "password": "密码",
       "title": "登录到 VRChat",
       "username": "VRChat 用户名/电子邮件",
-       "rememberCredentials": "在本地保存登录信息"
+      "rememberCredentials": "在本地保存登录信息"
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
@@ -1209,7 +1209,6 @@
       "disconnect": "断开连接",
       "providerLink": "提供方网站",
       "pulsoid": {
-        "description": "向 OyasumiVR 提供心率数据，用于触发某些自动操作。<br><i>需要: Pulsoid \"BRO\" 订阅</i>",
         "title": "Pulsoid"
       },
       "reveal": "显示",
@@ -1551,7 +1550,6 @@
           "title": "BPM 阈值",
           "unit": "BPM"
         },
-        "description": "当心率在一定时间内低于某个阈值时，启用睡眠模式： 设定的心率需要低于每分钟心跳次数的阈值，并且位于睡眠模式的启用时间内。",
         "duration": {
           "description": "你的心率保持在阈值以下多长时间才启用睡眠模式。",
           "title": "持续时间",
@@ -1810,7 +1808,6 @@
   },
   "nightmare-detection": {
     "title": "噩梦检测",
-    "description": "当启用任何一项自动化功能时，该功能都会通过检查你睡眠时是否有长时间的心率升高来判断你是否做了噩梦。当检测到可能做噩梦时，你可以选择让 OyasumiVR 去尝试叫醒你。",
     "bpmThreshold": {
       "unit": "BPM",
       "title": "最低心率",

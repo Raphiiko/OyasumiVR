@@ -1145,7 +1145,11 @@
           "description": "This can be turned off if you want to disable OyasumiVR's overlay menu completely.",
           "title": "Enable overlay menu"
         },
-        "title": "Overlay"
+        "title": "Overlay",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "Only open menu while VRChat is running",
+          "description": "Enable this to prevent the menu from opening while VRChat is not running"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -1209,7 +1213,7 @@
       "disconnect": "Disconnect",
       "providerLink": "Provider Website",
       "pulsoid": {
-        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>",
+        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>This integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid \"BRO\" subscription. Please ensure you have a compatible device before making a purchase.</i>",
         "title": "Pulsoid"
       },
       "reveal": "Reveal",
@@ -1551,7 +1555,7 @@
           "title": "BPM Threshold",
           "unit": "BPM"
         },
-        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
         "duration": {
           "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
           "title": "Duration",
@@ -1737,18 +1741,16 @@
       "title": "Mute Automations"
     },
     "title": "System Microphone Mute Automations",
-    "worldJoinBehaviour": {
-      "options": {
-        "MUTE": "Default Off",
-        "UNMUTE": "Default On",
-        "KEEP": "Keep Last State"
-      }
-    },
     "vrchat": {
       "title": "VRChat Options",
       "worldJoinBehaviour": {
         "title": "World Join Behaviour",
-        "description": "How your microphone should behave when changing worlds in VRChat"
+        "description": "How your microphone should behave when changing worlds in VRChat",
+        "options": {
+          "MUTE": "Default Off",
+          "UNMUTE": "Default On",
+          "KEEP": "Keep Last State"
+        }
       }
     }
   },
@@ -1810,7 +1812,7 @@
   },
   "nightmare-detection": {
     "title": "Nightmare Detection",
-    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
     "bpmThreshold": {
       "unit": "BPM",
       "title": "Minimum heart rate",

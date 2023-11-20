@@ -1163,7 +1163,6 @@
       "disconnect": "Desconectar",
       "providerLink": "Sitio web del proveedor",
       "pulsoid": {
-        "description": "Proporciona tus datos de frecuencia cardíaca a OyasumiVR, que pueden utilizarse para activar ciertas automatizaciones.<br><i>Requiere: Pulsoid \"BRO\" suscripción</i>",
         "title": "Pulsoid"
       },
       "reveal": "Revelar",
@@ -1491,7 +1490,6 @@
           "title": "Umbral de BPM",
           "unit": "BPM"
         },
-        "description": "Activa el modo de reposo cuando tu frecuencia cardiaca esté por debajo de un determinado umbral durante un periodo de tiempo: Define el umbral de pulsaciones por minuto que tu frecuencia cardiaca debe permanecer por debajo, así como durante qué cantidad de tiempo, para que se active el modo de reposo.\n\nPara ello es necesario activar la integración <a class=\"integrationsPageLink\">Pulsoid</a> y tener una suscripción activa a Pulsoid \"BRO\".",
         "duration": {
           "description": "Cuánto tiempo debe permanecer tu frecuencia cardiaca por debajo del umbral para que se active el modo de reposo.",
           "title": "DURACION",
@@ -1724,7 +1722,6 @@
   },
   "nightmare-detection": {
     "title": "Detección de pesadilla",
-    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que Oyasumivr intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo de suspensión está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración pulsoide</a> y que tengaUna suscripción activa de pulsoide \"Bro\".",
     "bpmThreshold": {
       "unit": "bpm",
       "title": "Frecuencia cardíaca mínima",

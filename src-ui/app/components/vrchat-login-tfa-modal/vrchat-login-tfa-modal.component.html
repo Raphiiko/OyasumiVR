@@ -1,7 +1,9 @@
 <div class="pane modal" @fadeUp>
   <div class="pane-title" translate>comp.vrchat-login-tfa-modal.title</div>
   <div class="pane-content">
-    <p class="label"><span translate>comp.vrchat-login-tfa-modal.logginInAs</span>&nbsp;<b>{{username}}</b></p>
+    <p class="label"
+      ><span translate>comp.vrchat-login-tfa-modal.logginInAs</span>&nbsp;<b>{{ username }}</b></p
+    >
     <p class="label" translate>comp.vrchat-login-tfa-modal.description</p>
     <input type="text" (input)="code.next(codeInput.value)" maxlength="6" #codeInput />
     <div class="alert error" @vshrink *ngIf="error">

@@ -21,9 +21,22 @@
     <br>
     If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
-      <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_TW.md">繁體中文説明手冊在這裏( •̀ ω •́ )✧</a><br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
-    <br>
-    <br>
+    <table align="center">
+        <tr>
+            <td align="center">Japanese<br>日本語</td>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Korean<br>한국어</td>
+        </tr>
+        <tr>
+            <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a></td>
+            <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a></td>
+            <td align="center"><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a></td>
+            <td align="center"><a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a></td>
+        </tr>
+    </table>
+</p>
+<p align="center">
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
@@ -258,7 +271,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
       To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
       <br><br>
-      <b>Subscribers of their "BRO" plan</b> have the option of connecting their Pulsoid account to provide OyasumiVR with their heart rate data. 
+      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
     </td>
   </tr>
   <tr>

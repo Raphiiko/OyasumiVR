@@ -4,6 +4,10 @@
       "role": "개발자"
     },
     "contributions": "기여",
+    "contributionType": {
+      "feature": "기능",
+      "soundFx": "효과음"
+    },
     "discordInvite": "Discord 서버",
     "projectLinks": "프로젝트 링크",
     "sourceLink": "소스코드 @ GitHub",
@@ -180,6 +184,8 @@
       "chaperoneAutomations": "경계 표시 자동화",
       "gpuAutomations": "GPU 자동화",
       "hardwareAutomations": "하드웨어 자동화",
+      "miscAutomations": "기타 자동화",
+      "nightmareDetection": "악몽 감지",
       "oscAutomations": "OSC 자동화",
       "overview": "개요",
       "powerAutomations": "전원 자동화",
@@ -404,7 +410,9 @@
         "sleepModeDisabled": {
           "reason": {
             "automation": {
+              "NIGHTMARE_DETECTION": "악몽을 꾸고 있을 수도 있다는 것이 감지되었기 때문에",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR이 꺼져서 수면 모드가 비활성화되었어요.",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "수면 모드가 충분히 길게 활성화되어 있었기 때문에",
               "SLEEP_MODE_DISABLE_AT_TIME": "지정된 시간에 의해 수면 모드가 비활성화되었어요.",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "컨트롤러의 전원이 켜져서 수면 모드가 비활성화되었어요.",
               "unknown": "알 수 없는 자동화에 의해 수면 모드가 활성화되었어요."
@@ -412,7 +420,7 @@
             "manual": "수동으로 수면 모드를 비활성화했어요.",
             "osc-control": "OSC를 통해 수면 모드가 비활성화되었어요."
           },
-          "title": "수면 모드가 비활성화됨"
+          "title": "수면 모드가 비활성화 됨"
         },
         "sleepModeEnabled": {
           "reason": {
@@ -427,7 +435,7 @@
             "manual": "수동으로 수면 모드를 활성화했어요.",
             "osc-control": "OSC를 통해 수면 모드가 활성화되었어요."
           },
-          "title": "수면 모드가 활성화됨"
+          "title": "수면 모드가 활성화 됨"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
@@ -488,6 +496,10 @@
       "heartrate": "심박수",
       "inactive": "비활성화 됨",
       "loggedOut": "로그아웃 중",
+      "sleepMode": {
+        "label": "수면 모드",
+        "tooltip": "수면 모드 전환"
+      },
       "steamvr": {
         "INACTIVE": "비활성화 됨",
         "INITIALIZED": "활성화 됨",
@@ -557,6 +569,7 @@
         "UNEXPECTED_RESPONSE": "로그인 실패: 알 수 없는 오류가 발생했어요. 연결을 확인하시거나 나중에 다시 시도해보세요."
       },
       "password": "비밀번호",
+      "rememberCredentials": "계정 기억",
       "title": "VRChat 로그인",
       "username": "VRChat 사용자명 / 이메일"
     },
@@ -566,6 +579,7 @@
         "INVALID_FORMAT": "유효한 2단계 인증 코드는 6자리 숫자에요. 입력 내용을 확인해주세요.",
         "LAST_CODE_INVALID": "입력된 2단계 인증 코드가 잘못되었어요."
       },
+      "logginInAs": "다음과 같이 VRChat에 로그인하고 있어요:",
       "title": "2단계 인증"
     }
   },
@@ -660,6 +674,37 @@
       "tooManyCommands": "OSC 스크립트는 {value} 이상의 액션을 가질 수 없어요.",
       "totalDurationTooLong": "스크립트의 총 시간은 10초를 초과할 수 없어요."
     }
+  },
+  "nightmare-detection": {
+    "automations": {
+      "description": "OyasumiVR이 악몽을 꾸는 것을 감지할 때 실행되는 자동화에요.",
+      "title": "자동화"
+    },
+    "bpmThreshold": {
+      "description": "OyasumiVR이 악몽을 꿀 가능성을 고려하기 위해 심박수가 도달해야 하는 임계값",
+      "title": "최저 심박수",
+      "unit": "BPM"
+    },
+    "description": "자동화가 활성화되면, 이 기능은 당신이 잠든 동안 심박수가 계속 상승하는지 확인함으로써 당신이 악몽을 꾸고 있을 때를 감지하려고 시도해요. 악몽이 감지되면, 당신은 OyasumiVR이 당신을 깨우려고 시도하도록 하는 옵션이 있어요. 악몽 감지는 수면 모드가 활성화된 동안에만 실행됩니다.\n\n<b>참고:</b> 이 기능을 사용하려면 <a class=\"integrations PageLink\"> Pulsoid 통합을 활성화해야 해요.",
+    "disableSleepMode": {
+      "description": "악몽을 꾸고 있을 때 수면 모드를 비활성화",
+      "title": "수면 모드 비활성화"
+    },
+    "duration": {
+      "description": "OyasumiVR이 악몽을 감지하기 위해 심박수가 임계값 이상으로 유지되는 시간",
+      "title": "지속 기간"
+    },
+    "notification": "심박수가 장기간 상승했기 때문에 악몽을 탐지해요.",
+    "playSound": {
+      "description": "OyasumiVR이 악몽을 꾸고 있을 때 소리로 깨우도록 해요.",
+      "title": "사운드 재생",
+      "volume": {
+        "description": "효과음이 재생되는 볼륨",
+        "test": "테스트",
+        "title": "사운드 볼륨"
+      }
+    },
+    "title": "악몽 감지"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -798,7 +843,7 @@
       },
       "overview": {
         "active": "활성",
-        "inactive": "비활성",
+        "inactive": "비활성화 됨",
         "sleepMode": "수면 모드",
         "tooltip": {
           "automations": "자동화",
@@ -949,6 +994,45 @@
   },
   "settings": {
     "advanced": {
+      "fixes": {
+        "description": "이 섹션에서는 문제 해결 및 문제 해결과 관련된 몇 가지 옵션과 조치를 설명해요. 일반적으로 자신이 무엇을 하고 있는지 모르거나 지원을 받을 때 이러한 조치를 사용하라는 요청을 받지 않는 한 이러한 조치를 사용해서는 안 됩니다.",
+        "title": "수정 및 문제 해결",
+        "vrManifestReregister": {
+          "action": "매니페스트 재등록",
+          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "OyasumiVR(예: Steam 버전)의 부적격 빌드를 사용 중이므로 응용 프로그램 매니페스트가 등록 취소되었지만 재등록되지 않았어요. 오류가 아닙니다! OyasumiVR을 다시 시작해 주세요.",
+              "title": "응용프로그램 매니페스트가 등록 해제됨"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "매니페스트가 제거되었지만 다시 추가할 수 없어요. 오야스미VR을 다시 시작하고 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "OyasumiVR의 매니페스트가 이미 스팀VR에 등록되어 있는지 확인할 수 없어요. 오야스미VR을 다시 시작하고 로그를 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "스팀VR에 등록된 OyasumiVR의 매니페스트가 없어요. (재)등록되지 않았습니다. OyasumiVR을 다시 시작해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "success": {
+              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 됨"
+            },
+            "UNKNOWN": {
+              "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            }
+          },
+          "title": "SteamVR 애플리케이션 매니페스트 재등록"
+        }
+      },
       "logs": {
         "openFolder": {
           "action": "로그 폴더 열기",
@@ -1020,6 +1104,12 @@
           "docs": "방법 알아보기",
           "title": "번역 기여를 통해 도움 주기"
         },
+        "editor": {
+          "action": "에디터 실행",
+          "description": "OyasumiVR의 번역 에디터를 실행하여 번역 파일을 편집하거나 생성해요.",
+          "experimental": "이 모듈은 아직 실험 단계에 있고, 영어로만 제공되어요. 시험해 볼 수 있지만, 아직 개발 중에 있습니다. 현재로서는 아직 문제와 누락된 기능이 있을 수 있어요.",
+          "title": "번역 에디터"
+        },
         "loadFile": {
           "action": "파일 불러오기",
           "description": "사용자 지정 언어 파일을 불러와요. 새 번역을 테스트할 때 유용합니다.",
@@ -1081,6 +1171,10 @@
         "binding": {
           "description": "오버레이 메뉴를 실행하는 버튼은 SteamVR의 바인딩 메뉴에서 설정할 수 있어요.",
           "title": "컨트롤러 버튼 바인딩"
+        },
+        "onlyOpenMenuWhenVRChatRunning": {
+          "description": "VRChat이 실행되지 않는 동안 메뉴가 열리지 않도록 해요.",
+          "title": "VRChat이 실행 중인 동안만 메뉴 열기"
         },
         "overlayMenu": {
           "description": "이 기능은 OyasumiVR의 오버레이 메뉴를 완전히 비활성화하고자 하는 경우 해제할 수 있어요.",
@@ -1150,7 +1244,7 @@
       "disconnect": "연결 해제",
       "providerLink": "제공자 웹사이트",
       "pulsoid": {
-        "description": "특정 자동화를 트리거하는 데 사용할 수 있는 심박수 데이터를 OyasumiVR에 제공해요.<br><i>필요: 펄소이드 \"BRO\" 구독</i>",
+        "description": "OyasumiVR에 심박수 데이터를 제공하여 특정 자동화 기능을 트리거하는 데 사용할 수 있어요.<br><i>이 통합을 하려면 Pulsoid의 OyasumiVR 통합을 한 번 구매하거나 Pulsoid \"BRO\" 가입을 활성화해야 해요. 구매하기 전에 호환되는 장치가 있는지 확인해주세요.</i>",
         "title": "Pulsoid"
       },
       "reveal": "표시",
@@ -1219,7 +1313,8 @@
         "description": "OyasumiVR 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
         "disclaimers": {
           "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
-          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요."
+          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요.",
+          "use": "로그인 정보는 사용자의 컴퓨터 외에는 다른 곳에 저장되지 않으며 인증 목적으로만 VRChat의 서버로 전송되어요."
         },
         "loggedIn": {
           "logOut": "로그아웃",
@@ -1299,6 +1394,10 @@
       "ok": "OK",
       "open": "열기",
       "save": "저장"
+    },
+    "time": {
+      "minutes": "분",
+      "seconds": "초"
     }
   },
   "shutdown-automations": {
@@ -1379,6 +1478,14 @@
   },
   "sleep-detection": {
     "disableAutomations": {
+      "afterTime": {
+        "description": {
+          "hours": "{hours, plural, one {1시간} other {#시간}} 뒤에",
+          "hoursAndMinutes": "{hours, plural, one {1시간} other {#시간}} {minutes, plural, one {1분} other {#분}} 뒤에",
+          "minutes": "{minutes, plural, one {1분} other {#분}} 뒤에"
+        },
+        "title": "특정 시간이 지난 후"
+      },
       "atTime": "지정된 시간에",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요.",
       "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
@@ -1386,7 +1493,7 @@
       "title": "수면 모드 비활성화"
     },
     "enableAutomations": {
-      "atBatteryPercentage": "기기의 배터리 잔량이 <strong>{value}%</strong> 이하로 떨어질 때",
+      "atBatteryPercentage": "기기의 배터리 잔량이  <strong>{value}%</strong>  이하로 떨어질 때",
       "atTime": "지정된 시간에",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 활성화해요.",
       "onControllersPoweredOff": {
@@ -1408,6 +1515,11 @@
     },
     "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",
     "modals": {
+      "disableAfterTime": {
+        "description": "일정 시간 동안 활성화된 후 수면 모드를 비활성화하여요.",
+        "time": "지속 기간",
+        "title": "수면 모드 비활성화"
+      },
       "disableAtTime": {
         "description": "지정한 시간에 수면 모드를 비활성화해요.",
         "time": "시간",
@@ -1474,7 +1586,7 @@
           "title": "심박수(BPM) 기준치",
           "unit": "BPM"
         },
-        "description": "심박수가 일정 시간 동안 특정 기준치 미만이면 수면 모드를 활성화해요: 수면 모드를 활성화하기 위해 일정 시간 동안 유지되어야 하는 분당 심박수의 기준치를 설정합니다.\n\n이 기능을 사용하려면 <a class=\"integrationsPageLink\">Pulsoid 연동</a> 설정과 Pulsoid \"BRO\" 구독이 활성화되어 있어야 합니다.",
+        "description": "일정 시간 동안 심박수가 특정 임계값 미만일 때 수면 모드 활성화: 심박수가 일정 시간 동안 유지되어야 하는 분당 박동 임계값과 수면 모드가 활성화될 시간을 정의해요.\n\n이를 위해서는 <a class=\"integrations PageLink\">Pulsoid 통합을 활성화해야 합니다.",
         "duration": {
           "description": "수면 모드가 활성화되기 위해 심박수가 기준치 미만으로 유지되어야 하는 시간이에요.",
           "title": "지속 기간",
@@ -1626,11 +1738,23 @@
         "description": "인디케이터가 몇 초 후 사라지도록 설정해요. 컨트롤러 버튼을 눌러 인디케이터를 다시 표시할 수 있습니다. OLED 디스플레이가 장착된 VR 헤드셋의 경우 번인 위험을 줄이기 위해 이 방법을 권장합니다.",
         "title": "페이드 아웃"
       },
+      "hardwareVoiceActivityThreshold": {
+        "description": "마이크 표시기가 켜지는 볼륨 임계값",
+        "title": "음성 활성화 임계값"
+      },
       "opacity": {
         "description": "인디케이터 아이콘의 최대 불투명도를 설정해요.",
         "title": "불투명도"
       },
-      "title": "오버레이 인디케이터"
+      "title": "오버레이 인디케이터",
+      "voiceActivityMode": {
+        "description": "음성 활성화(표시등 점등)가 어떤 모드로 결정되는지 결정해요.",
+        "modes": {
+          "HARDWARE": "마이크 볼륨으로",
+          "VRCHAT": "VRChat으로"
+        },
+        "title": "마이크 활성화 모드"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1647,7 +1771,19 @@
       },
       "title": "음소거 자동화"
     },
-    "title": "시스템 마이크 음소거 자동화"
+    "title": "시스템 마이크 음소거 자동화",
+    "vrchat": {
+      "title": "VRChat 설정",
+      "worldJoinBehaviour": {
+        "description": "VRChat에서 월드를 이동할 때 마이크의 동작 방식",
+        "options": {
+          "KEEP": "마지막 상태 기억",
+          "MUTE": "기본 Off",
+          "UNMUTE": "기본 On"
+        },
+        "title": "월드 조인 동작 (World Join Behaviour)"
+      }
+    }
   },
   "updater": {
     "modals": {

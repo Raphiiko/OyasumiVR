@@ -14,7 +14,6 @@ import { fade } from '../../utils/animations';
 import { debounceTime, Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SliderComponent, SliderStyle } from '../slider/slider.component';
-import { clamp } from '../../utils/number-utils';
 
 @Component({
   selector: 'app-slider-setting',

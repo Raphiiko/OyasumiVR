@@ -34,6 +34,8 @@ import {
   generateStorageCryptoKey,
   serializeStorageCryptoKey,
 } from '../utils/crypto';
+import { invoke } from '@tauri-apps/api';
+import { listen } from '@tauri-apps/api/event';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const MAX_VRCHAT_FRIENDS = 65536;
@@ -85,6 +87,7 @@ export class VRChatService {
   private _notifications: Subject<Notification> = new Subject<Notification>();
   private _userStatusLastUpdated = new BehaviorSubject<number>(0);
   private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
+  private _vrchatProcessActive = new BehaviorSubject(false);
 
   public user: Observable<CurrentUser | null> = this._user.asObservable();
   public status: Observable<VRChatServiceStatus> = this._status.asObservable();
@@ -93,6 +96,7 @@ export class VRChatService {
     this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
   ]).pipe(map(([world]) => world));
   public notifications = this._notifications.asObservable();
+  public vrchatProcessActive = this._vrchatProcessActive.asObservable();
 
   constructor(private modalService: ModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
@@ -121,6 +125,11 @@ export class VRChatService {
     await this.subscribeToLogEvents();
     // Poll user for updating status
     await this.pollUserForStatus();
+    // Set the VRChat process active state
+    await listen<boolean>('VRCHAT_PROCESS_ACTIVE', (event) =>
+      this._vrchatProcessActive.next(event.payload)
+    );
+    this._vrchatProcessActive.next(await invoke<boolean>('is_vrchat_active'));
   }
 
   //
