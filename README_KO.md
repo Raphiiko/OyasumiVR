@@ -268,7 +268,7 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
       심박수 기반 자동화 기능을 지원하기 위해 OyasumiVR은 온라인 심박수 서비스인 <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">pulsoid</a>와 연동되어요. 이를 위해 블루투스 심박수 모니터, WearOS 스마트워치, Apple Watch 등 Pulsoid가 지원하는 모든 하드웨어를 사용할 수 있습니다.
       <br><br>
-      <b>"BRO" 요금제</b> 가입자는 Pulsoid 계정을 연결하여 OyasumiVR에 심박수 데이터를 제공하는 옵션을 선택할 수 있습니다. 
+      <b>"BRO" 요금제</b> 가입자는 Pulsoid 계정을 연결하여 OyasumiVR에 심박수 데이터를 제공하는 옵션을 선택할 수 있습니다. 결제하기 전 호환되는 장치가 있는지 확인해주세요.
     </td>
   </tr>
   <tr>
@@ -379,7 +379,7 @@ OyasumiVR은 다음을 기반으로 만들어졌어요:
 OyasumiVR의 일부 기능을 사용하려면 VRChat 계정으로 로그인하셔야 해요. (예: 스테이터스 자동화)
 
 이는 로그인에 의존하는 기능에만 필요합니다. 로그인 정보가 필요하지 않은 기능은 별도의 로그인 정보 제공 없이 사용할 수 있습니다.
-로그인 정보는 어디에도 저장되지 않으며 인증 목적으로만 VRChat 서버로 전송됩니다.
+로그인 정보는 사용자 본인의 컴퓨터 이외의 그 어디에도 저장되지 않으며 인증 목적으로만 VRChat 서버로 전송됩니다.
 
 OyasumiVR은 VRChat이 보증하지 않으며, VRChat 또는 VRChat의 제작 또는 관리에 공식적으로 관여하는 사람의 견해나 의견을 반영하지 않습니다. VRChat은 VRChat Inc의 상표입니다. VRChat © VRChat Inc.
 
