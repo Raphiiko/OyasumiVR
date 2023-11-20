@@ -271,7 +271,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
       To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
       <br><br>
-      <b>Subscribers of their "BRO" plan</b> have the option of connecting their Pulsoid account to provide OyasumiVR with their heart rate data. 
+      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
     </td>
   </tr>
   <tr>
