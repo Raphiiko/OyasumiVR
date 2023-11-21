@@ -27,6 +27,7 @@
             <td align="center">Simplified Chinese<br>简体中文</td>
             <td align="center">Traditional Chinese<br>繁體中文</td>
             <td align="center">Korean<br>한국어</td>
+            <td align="center">Bahasa Indonesia</td>
         </tr>
         <tr>
             <td align="center">
@@ -40,6 +41,9 @@
             </td>
             <td align="center">
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_ID.md">Readme</a>
             </td>
         </tr>
     </table>
