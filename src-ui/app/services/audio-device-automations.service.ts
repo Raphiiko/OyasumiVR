@@ -42,10 +42,10 @@ export class AudioDeviceAutomationsService {
     });
     // Run automations on sleep mode change
     this.sleepService.mode.pipe(skip(1), distinctUntilChanged()).subscribe(async (sleepMode) => {
-      let automations = sleepMode
+      const automations = sleepMode
         ? this.config.onSleepEnableAutomations
         : this.config.onSleepDisableAutomations;
-      for (let automation of automations) {
+      for (const automation of automations) {
         await this.runAutomation(
           automation,
           sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED'
@@ -54,7 +54,7 @@ export class AudioDeviceAutomationsService {
     });
     // Run automations on sleep preparation
     this.sleepPreparationService.onSleepPreparation.subscribe(async () => {
-      for (let automation of this.config.onSleepPreparationAutomations) {
+      for (const automation of this.config.onSleepPreparationAutomations) {
         await this.runAutomation(automation, 'SLEEP_PREPARATION');
       }
     });
@@ -72,7 +72,7 @@ export class AudioDeviceAutomationsService {
         }),
         distinctUntilChanged((previous, current) => isEqual(previous, current))
       )
-      .subscribe(async (devices) => {
+      .subscribe(async () => {
         const config = cloneDeep(
           (await firstValueFrom(this.automationConfigService.configs)).AUDIO_DEVICE_AUTOMATIONS
         );
@@ -82,13 +82,13 @@ export class AudioDeviceAutomationsService {
           ...config.onSleepPreparationAutomations,
         ];
         let automationModified = false;
-        for (let automation of automations) {
+        for (const automation of automations) {
           if (
             automation.audioDeviceRef.persistentId === 'DEFAULT_CAPTURE' ||
             automation.audioDeviceRef.persistentId === 'DEFAULT_RENDER'
           ) {
-            let currentDeviceName = automation.audioDeviceRef.name;
-            let supposedDeviceName: AudioDeviceParsedName | null =
+            const currentDeviceName = automation.audioDeviceRef.name;
+            const supposedDeviceName: AudioDeviceParsedName | null =
               this.audioDeviceService.getAudioDeviceNameForPersistentId(
                 automation.audioDeviceRef.persistentId
               );
@@ -116,7 +116,7 @@ export class AudioDeviceAutomationsService {
       automation.audioDeviceRef.persistentId
     );
     if (device) {
-      let deviceName = device.parsedName!.driver
+      const deviceName = device.parsedName!.driver
         ? `${device.parsedName?.display} (${device.parsedName?.driver})`
         : device.parsedName!.display;
       switch (automation.type) {

@@ -71,13 +71,13 @@ export class AudioVolumeEntriesComponent implements OnInit {
 
   setAutomationType(automation: AudioVolumeAutomation, type?: string) {
     if (!type) return;
-    const previousType = automation.type;
     automation.type = type as AudioVolumeAutomationType;
     switch (type) {
-      case 'SET_VOLUME':
+      case 'SET_VOLUME': {
         const setVolumeAutomation = automation as SetAudioVolumeAutomation;
         setVolumeAutomation.volume = 100;
         break;
+      }
       case 'MUTE':
       case 'UNMUTE':
         if (automation.type === 'SET_VOLUME') {
