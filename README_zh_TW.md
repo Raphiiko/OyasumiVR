@@ -70,7 +70,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - :low_brightness: 調暗你的頭戴式顯示器亮度
 - :sparkles: 根據你的睡姿觸發頭像動畫
 - :envelope_with_arrow: 自動處理好友邀請
-- :microphone: Muting your microphone when you fall asleep
+- :microphone: 當你睡着時自動關閉麥克風
 - :hammer_and_wrench: 自動化各種 SteamVR 設定
 
 ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
@@ -262,8 +262,8 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
-      <br><br>Perfect if you'd like to prevent others from hearing you snore!
+      OyasumiVR 可以在你睡着和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或者持續按住説話模式。
+      <br><br>這樣你的鼾聲就不會吵到別人啦！
       <br><br>
       This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
     </td>
