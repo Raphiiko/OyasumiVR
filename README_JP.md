@@ -52,18 +52,18 @@
     <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
-## Download & Install
+## ダウンロード&インストール
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
 
-Grab our latest installer from whichever place you prefer:
+任意の場所から最新のインストーラーを入手できます。
 
-- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_The **recommended method**_)
-- Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
-- Our page on [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
-- Our page on [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**推奨**_)
+- [releases page](https://github.com/Raphiiko/Oyasumi/releases)
+- [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
+- [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
 
-Just run the installer and you should be good to go!
+インストーラーを実行するだけでOKです！
 
 ## OyasumiVRとは?
 
@@ -74,7 +74,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
 - :low_brightness: 明るさの調整
 - :sparkles: 寝相に合わせたアバターポーズの変更
 - :envelope_with_arrow: Request Inviteの自動承認
-- :microphone: Muting your microphone when you fall asleep
+- :microphone: マイクミュート
 - :hammer_and_wrench: SteamVRの設定の自動化
 
 …他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。  
@@ -118,7 +118,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
     <td>
       <b>コントローラー & トラッカー</b>
       <br>
-      機器の電源を切ることでバッテリーを節約します。朝起きたときにバッテリーが残っていれば嬉しいこと間違いなし！
+      機器の電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
       <br>
       <br>
       他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！
@@ -153,7 +153,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
       <br>
       GPUの電力を制限してPCの消費電力を節約します。希望の消費電力を指定するだけで設定完了です。
       <br><br>
-      <i>この機能はNvidia GPUでのみ利用可能です。AMDユーザーはMSI Afterburnerを介して自動化を利用できます</i>
+      <i>この機能はNvidia GPUでのみ利用可能です。AMDユーザーはMSI Afterburnerを介して自動化を利用できます。</i>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ad20df81-ebb7-48f3-927d-afa007131e6c"></td>
   </tr>
@@ -175,7 +175,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
       <br>
       寝相に合わせて適切なアニメーションやポーズを設定できます。
       <br><br>
-      人気のlocomotionアセットに対応しており、プリセットを用意しています。
+      人気のlocomotionアセットに対応しており、専用のプリセットを用意しています。
       <br><br>
       <ul>
         <li>
@@ -210,7 +210,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
       <br>
       ワールドにいる人数に応じてステータスを変更できます。
       <br><br>
-      一人で寝ているときは青に切り替え、十分な人数がいるときはオレンジに切り替えるなど、活用方法は様々です！
+      一人のときは青に、人数を満たすとオレンジに切り替えるなど、活用方法は様々です！
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
@@ -230,7 +230,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
 <table>
   <tr>
     <td>
-      VRの中で眠りにつきたいけど一晩中VRの中にいるのは嫌だと思ったことはありませんか？この機能がそれを解決します！
+      一晩中VRの中にいるのは嫌だと思ったことはありませんか？この機能がそれを解決します！
       <br><br>
       この機能を有効にすると、一定時間眠った場合に以下の任意のアクションを実行できます。
       <br><br>
@@ -241,7 +241,7 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
         <li>Windowsのシャットダウン</li>
       </ul>
       <br>
-      「眠ったらVR内に意識はないし、PCをつけていてもな…」と思っていた人には朗報ですね。
+      「PCつけっぱなしは嫌だな…」と思っていた人には朗報かも？
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
@@ -253,50 +253,50 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
     <td>
       HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
       <br><br>
-      映像の明るさの調整は全てのHMDでできます。これはOLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
+      映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 System Microphone Mute Automations
+### 🎤 マイクミュートの自動化
 <table>
   <tr>
     <td>
-      You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
-      <br><br>Perfect if you'd like to prevent others from hearing you snore!
+      ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
+      <br><br>いびきを聞かれたくない場合に最適です！
       <br><br>
-      This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+      新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
 
   </tr>
 </table>
 
-### ♥️ Heart Rate Automations (Pulsoid Integration)
+### ♥️ 心拍数による自動化 (Pulsoid Integration)
 <table>
   <tr>
     <td colspan="2">
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
-      To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+      この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。このため、Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
       <br><br>
-      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
+      <i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの「BRO」サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。</i>
     </td>
   </tr>
   <tr>
     <td>
-      <b>Sleep Detection</b>
+      <b>睡眠検出</b>
       <br>
-      You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+      一定以下の心拍数が続くと睡眠モードを有効にします。BPM閾値と、その継続時間を設定するだけでOKです。分析により、おすすめの設定時間を見ることもできます。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bcdbb83f-b7b7-49d8-b3f1-39a67b9b619e"></td>
   </tr>
   <tr>
     <td>
-      <b>Nightmare Detection</b>
+      <b>悪夢の検知</b>
       <br>
-      OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up. 
+      睡眠中の高い心拍数をチェックして悪夢を見ていないか確認します。自動的に睡眠モードを解除したり(明るさを上げたり)、アラームを鳴らしたりすることで悪夢からの目覚めをサポートします。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
   </tr>
@@ -343,66 +343,66 @@ OyasumiVRは現在、以下の言語に対応しています。
 不足している翻訳の提供や、新しい言語の追加にご協力いただける場合は、翻訳に関する[wiki](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)をご確認ください。
 さらに詳しい情報をお探しの場合はお気軽にDiscordまでよろしくお願いします。
 
-## Supported Hardware
+## 対応ハードウェア
 
-### Battery Automations
+### 電源の自動化
 
-Currently OyasumiVR supports turning off devices using its battery automations for all SteamVR devices that:
+現在、以下の機能をサポートしています。
 
-1. Support reporting for battery levels and charging status
-2. Support being turned off via SteamVR.
+1. バッテリー残量と充電状況のレポート
+2. SteamVRによる電源オフ
 
-This includes, but is not limited to the following devices:
+これには以下のデバイスが含まれますが、これらに限定されるものではありません。
 
 - HTC Vive Controllers/Wands
 - Index Controllers/Knuckles
 - Vive Trackers (1.0/2.0/3.0)
 - Tundra Trackers\*
 
-This means that any Oculus controller is unlikely to work, and SlimeVR trackers are unsupported unless they implement this functionality in their [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
+これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) を実装しない限りサポートされることはありません。
 
-_(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while battery automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware._
+_(\*) Tundra trackersは、バッテリーレベルと充電ステータスの通信が非常に遅れています。これはファームウェアに起因するものであり、自動化は機能しますが十数分の遅延があります。_
 
-### GPU Automations
+### GPUの自動化
 
-Any NVIDIA or AMD graphics card that is supported by MSI Afterburner can be automated by having OyasumiVR activate the profiles you've set up within MSI Afterburner.
+MSI AfterburnerでサポートされているNVIDIA, AMDのグラフィックカードであればMSI Afterburnerで設定したプロファイルを用いて自動化することができます。
 
-Directly controlling the power limits of your graphics card with OyasumiVR is only supported with NVIDIA cards. AMD users will have to use the MSI Afterburner profile automations to be able to control their power limits with OyasumiVR.
+OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみです。AMDユーザーはMSI Afterburnerを経由する必要があります。
 
-### Brightness Automations
+### 明るさの自動化
 
-Controlling the display brightness (read 'LCD backlight') of the VR headset's display is only supported on the Valve Index. 
+HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
 
-Image brightness control is available on all headsets.
+映像の明るさの自動化はすべてのHMDで利用可能です。
 
-## Built With
+## ビルド
 
-OyasumiVR's has been built with:
+OyasumiVRは以下により構築されています。
 
 - [Angular](https://angular.io/) (TypeScript, Main UI)
 - [Tauri](https://tauri.app/) (Rust, Desktop Framework)
 - [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
-## Development
+## 開発
 
-Please see our wiki page on [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development).
+Wikiの [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development) をご覧ください。
 
 ## VRChat
 
 いくつかの機能にはVRChatでのログインが必要です。（ステータスの自動化など）
 
-This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
-Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
+ログイン認証に依存しない機能は、認証情報を入力することなく利用できます。
+ログイン情報は自身のPC以外に保存されることはなく、認証のためだけにVRChatのサーバーに送信されます。
 
 OyasumiVRはVRChatによって承認されたものではなく、VRChatまたはVRChatの制作や管理に公式に関与している人物の見解や意見を反映するものではありません。 VRChatはVRChat incの商標です。VRChat © VRChat Inc.
 
 OyasumiVRの開発者及びこのプロジェクトの貢献者は、OyasumiVRに起因するいかなる問題にも責任を負いません。自己責任でご利用ください。
 
 ## サポート
-OyasumiVRでお困りのことがありましたら[Discord](https://discord.gg/7MqdPJhYxC)までお願いします。
+OyasumiVRでお困りのことがありましたら [Discord](https://discord.gg/7MqdPJhYxC) までお願いします。
 
-もしくは[Twitterの @Raphiiko](https://twitter.com/Raphiiko)まで直接ご連絡ください。なるべく早くお返事します！
+もしくはX(旧Twitter) [@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
 
 ## ライセンス
 
