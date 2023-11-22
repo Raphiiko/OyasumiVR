@@ -291,7 +291,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
         <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
         为了支持基于心率的自动化，OyasumiVR集成了在线心率服务<a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。对于此功能，你可以使用任何Pulsoid支持的硬件，如蓝牙心率监测器，WearOS智能手表，或Apple Watch。
         <br><br>
-        <b>"BRO"计划的订阅者</b>可以选择连接他们的Pulsoid账户，以使用账户里的高级功能，并给OyasumiVR提供更多维度的心率数据。
+        <i>此功能需要购买一次性付费的 OyasumiVR Pulsoid 服务，或者订阅 Pulsoid "BRO" 服务。在购买前请务必确保您拥有兼容的心率测量设备。 </i>
       </td>
   </tr>
   <tr>
