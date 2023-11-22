@@ -43,7 +43,7 @@
         "title": "列表模式"
       },
       "onlyIfSleepModeEnabled": {
-        "title": "当睡眠模式启动时"
+        "title": "仅当睡眠模式启动时"
       }
     },
     "removeModal": {
@@ -571,7 +571,7 @@
       "password": "密码",
       "title": "登录到 VRChat",
       "username": "VRChat 用户名/电子邮件",
-       "rememberCredentials": "在本地保存登录信息"
+      "rememberCredentials": "在本地保存登录信息"
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
@@ -738,7 +738,7 @@
           },
           "footLockReleaseWindow": "脚部锁定释放持续时间",
           "lockFeetOnSleepModeEnable": "当睡眠模式启动时启用脚部锁定",
-          "onlyIfSleepModeEnabled": "当睡眠模式启动时",
+          "onlyIfSleepModeEnabled": "仅当睡眠模式启动时",
           "onlySwitchAnimations": "仅切换睡眠动画",
           "releaseFootLockOnPoseChange": "切换睡眠姿势时暂时释放脚部锁定",
           "title": "一般设置",
@@ -1145,7 +1145,11 @@
           "description": "如果想完全禁用 OyasumiVR 的叠加菜单，可以将其关闭",
           "title": "启用叠加层菜单"
         },
-        "title": "叠加层"
+        "title": "叠加层",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "仅当VRChat运行时打开菜单",
+          "description": "打开此开关可避免在VRChat未启动时显示菜单"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -1209,7 +1213,7 @@
       "disconnect": "断开连接",
       "providerLink": "提供方网站",
       "pulsoid": {
-        "description": "向 OyasumiVR 提供心率数据，用于触发某些自动操作。<br><i>需要: Pulsoid \"BRO\" 订阅</i>",
+        "description": "将你的心率数据提供给OyasumiVR，便可以使用它来触发一些自动化功能。<br><i>本功能需要支付一笔购买一次性费用，或者订阅Pulsoid \"BRO\"。请务必在购买前确认您有兼容的心率测量设备</i>",
         "title": "Pulsoid"
       },
       "reveal": "显示",
@@ -1551,7 +1555,7 @@
           "title": "BPM 阈值",
           "unit": "BPM"
         },
-        "description": "当心率在一定时间内低于某个阈值时，启用睡眠模式： 设定的心率需要低于每分钟心跳次数的阈值，并且位于睡眠模式的启用时间内。",
+        "description": "当心率持续低于阈值一段时间后开启睡眠模式: 输入心率阈值以及等待时间\n\n必须启用<a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "duration": {
           "description": "你的心率保持在阈值以下多长时间才启用睡眠模式。",
           "title": "持续时间",
@@ -1737,18 +1741,23 @@
       "title": "自动静音"
     },
     "title": "麦克风状态自动化",
+    "vrchat": {
+      "title": "VRChat 选项",
+      "worldJoinBehaviour": {
+        "title": "加入房间时的麦克风状态",
+        "description": "当你加入一个房间时，你的麦克风应该是什么状态",
+        "options": {
+          "MUTE": "默认静音",
+          "UNMUTE": "默认开启",
+          "KEEP": "保持上次状态"
+        }
+      }
+    },
     "worldJoinBehaviour": {
       "options": {
         "MUTE": "默认关闭",
         "UNMUTE": "默认开启",
         "KEEP": "保持当前状态"
-      }
-    },
-    "vrchat": {
-      "title": "VRChat 选项",
-      "worldJoinBehaviour": {
-        "title": "加入房间时的麦克风状态",
-        "description": "当你加入一个房间时，你的麦克风应该是什么状态"
       }
     }
   },
@@ -1810,7 +1819,7 @@
   },
   "nightmare-detection": {
     "title": "噩梦检测",
-    "description": "当启用任何一项自动化功能时，该功能都会通过检查你睡眠时是否有长时间的心率升高来判断你是否做了噩梦。当检测到可能做噩梦时，你可以选择让 OyasumiVR 去尝试叫醒你。",
+    "description": "启用这里的任何功能后，将会检测您是否在睡眠时心率持续增高。如果检测到噩梦的可能性，您可以在此处设置让OyasumiVR叫醒您。噩梦检测仅在睡眠模式下运行。\n\n<b>注意:</b> 要使用本功能，必须先开启 <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
     "bpmThreshold": {
       "unit": "BPM",
       "title": "最低心率",

@@ -197,7 +197,8 @@
       "vrcAutomations": "VRChat Automations",
       "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
       "miscAutomations": "Miscellaneous Automations",
-      "nightmareDetection": "Nightmare Detection"
+      "nightmareDetection": "Nightmare Detection",
+      "audioVolumeAutomations": "Audio Volume Automations"
     },
     "device-list": {
       "category": {
@@ -467,6 +468,30 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
           "title": "Windows Power Policy set to the ''{policy}'' plan"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "Volume for audio device ''{deviceName}'' set to {percentage}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "Muted audio device ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "Unmuted audio device ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
         }
       }
     },
@@ -1213,7 +1238,7 @@
       "disconnect": "Disconnect",
       "providerLink": "Provider Website",
       "pulsoid": {
-        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>Requires: Pulsoid \"BRO\" subscription</i>",
+        "description": "Provides your heart rate data to OyasumiVR, which can be used to trigger certain automations.<br><i>This integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid \"BRO\" subscription. Please ensure you have a compatible device before making a purchase.</i>",
         "title": "Pulsoid"
       },
       "reveal": "Reveal",
@@ -1555,7 +1580,7 @@
           "title": "BPM Threshold",
           "unit": "BPM"
         },
-        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+        "description": "Enable sleep mode when your heart rate is under a certain threshold for a period of time: Define the beats per minute threshold that your heart rate has to stay under, as well as for what amount of time, for the sleep mode to be enabled.\n\nThis requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
         "duration": {
           "description": "How long your heart rate has to stay under the threshold for the sleep mode to be enabled.",
           "title": "Duration",
@@ -1812,7 +1837,7 @@
   },
   "nightmare-detection": {
     "title": "Nightmare Detection",
-    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a> and to have an active Pulsoid \"BRO\" subscription.",
+    "description": "When any of its automations are enabled, this feature attempts to detect when you are having a nightmare by checking for a prolonged elevated heart rate while you are asleep. When a possible nightmare is detected, you have the option of having OyasumiVR try to wake you up. Nightmare detection only runs while the sleep mode is active.\n\n<b>Note:</b> This feature requires you to enable the <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
     "bpmThreshold": {
       "unit": "BPM",
       "title": "Minimum heart rate",
@@ -1840,5 +1865,48 @@
       }
     },
     "notification": "Detecting a possible nightmare, as you've had a prolonged elevated heart rate."
+  },
+  "audio-volume-automations": {
+    "title": "Audio Volume Automations",
+    "description": "Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent others from disturbing your sleep.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Change the volume of your audio devices when the sleep mode is enabled"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Change the volume of your audio devices when the sleep mode is disabled"
+    },
+    "onSleepPreparation": {
+      "title": "When I prepare to go to sleep",
+      "description": "Change the volume of your audio devices when I activate sleep preparation"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "No audio devices selected",
+        "hasDevices": "Add audio devices"
+      },
+      "description": "Select an audio device to automate its volume level"
+    },
+    "selectDevice": "Select Audio Device",
+    "removeDevice": "Remove",
+    "actionOptions": {
+      "SET_VOLUME": "Change Volume",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "picker": {
+      "title": "Select a device",
+      "noCaptureDevices": "No capture devices have been found",
+      "noPlaybackDevices": "No playback devices have been found",
+      "defaultDevice": "Default Device"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Automation} other {# Automations}}"
+    },
+    "volume": {
+      "title": "Volume",
+      "description": "What volume level to set for the audio device when this automation runs"
+    }
   }
 }

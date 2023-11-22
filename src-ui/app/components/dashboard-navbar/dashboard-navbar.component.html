@@ -37,7 +37,8 @@
           'brightnessAutomations',
           'powerAutomations',
           'gpuAutomations',
-          'resolutionAutomations'
+          'resolutionAutomations',
+          'audioVolumeAutomations'
         ])
       "
     >
@@ -46,7 +47,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
       <div class="menu-item-submenu-icon"
-      ><i class="material-icons-round">arrow_forward_ios</i></div
+        ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -68,7 +69,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
       <div class="menu-item-submenu-icon"
-      ><i class="material-icons-round">arrow_forward_ios</i></div
+        ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -193,6 +194,13 @@
         @fade
         *ngIf="brightnessAutomation.anyTransitionActive | async"
       ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">volume_up</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.audioVolumeAutomations</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'systemMicMuteAutomations'">

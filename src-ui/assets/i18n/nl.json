@@ -678,7 +678,6 @@
       "title": "Minimale hartslag",
       "unit": "BPM"
     },
-    "description": "Deze feature probeert te detecteren of je een nachtmerrie hebt, door te kijken of terwijl je slaapt je een verhoogde hartslag aanhoud voor een bepaalde tijd. Wanneer er een mogelijke nachtmerrie wordt gedetecteerd, heb je de optie om OyasumiVR je wakker te laten maken. Nachtmerrie detectie is alleen actief terwijl de slaap modus actief is.\n\n<b>Let op:</b> Voor deze functie moet je de <a class=\"integrationsPageLink\">Pulsoid integratie</a> actieveren, en in bezit zijn van een actief Pulsoid \"BRO\" abbonnement.",
     "disableSleepMode": {
       "description": "Deactiveert de slaap modus wanneer je mogelijk een nachtmerrie hebt",
       "title": "Slaap modus uitschakelen"
@@ -1194,7 +1193,6 @@
       "disconnect": "Loskoppelen",
       "providerLink": "Provider Website",
       "pulsoid": {
-        "description": "Voorziet OyasumiVR van je hartslag data, wat gebruikt kan worden om sommige automatiseringen te activeren.<br><i>Benodigd: Pulsoid \"BRO\" abonnement</i>",
         "title": "Pulsoid"
       },
       "reveal": "Toon",
@@ -1522,7 +1520,6 @@
           "title": "BPM Grens",
           "unit": "BPM"
         },
-        "description": "Schakel de slaapmodus in wanneer je hartslag onder een grens blijft voor een bepaalde tijd. Bepaal de maximale slagen per minuut, en voor hoe lang dit zo moet blijven voordat de slaapmodus wordt geactiveert. \n\nDit vereist dat je de <a class=\"integrationsPageLink\">Pulsoid integratie</a> activeert, en dat je een actief Pulsoid \"BRO\" abonnement hebt.",
         "duration": {
           "description": "Hoe lang je hartslag onder de grens moet blijven om de slaap modus te activeren.",
           "title": "Tijdsduur",

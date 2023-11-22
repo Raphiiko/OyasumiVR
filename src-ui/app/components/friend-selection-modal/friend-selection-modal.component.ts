@@ -50,6 +50,7 @@ export class FriendSelectionModalComponent
   results: LimitedUser[] = [];
   query: BehaviorSubject<string> = new BehaviorSubject<string>('');
   activeQuery: string = this.query.value;
+  fuse?: Fuse<LimitedUser>;
 
   constructor(protected vrchat: VRChatService, private destroyRef: DestroyRef) {
     super();
@@ -60,10 +61,15 @@ export class FriendSelectionModalComponent
     this.initialSelection = [...this.selection];
     await firstValueFrom(this.vrchat.user.pipe(filter(Boolean)));
     this.friends = await this.vrchat.listFriends();
+    this.fuse = new Fuse(this.friends, {
+      keys: ['displayName'],
+      findAllMatches: true,
+      threshold: 0.3,
+    });
     this.query
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        debounceTime(300),
+        debounceTime(200),
         startWith(this.query.value),
         distinctUntilChanged()
       )
@@ -87,12 +93,7 @@ export class FriendSelectionModalComponent
       this.results = this.friends;
       return;
     }
-    const fuse = new Fuse(this.friends, {
-      keys: ['displayName'],
-      findAllMatches: true,
-      threshold: 0.3,
-    });
-    this.results = fuse.search(this.activeQuery).map((r) => r.item);
+    this.results = this.fuse!.search(this.activeQuery).map((r) => r.item);
   }
 
   removeItem(item: SelectedFriendGroup | SelectedFriendPlayer) {

@@ -678,7 +678,6 @@
       "title": "Detak jantung minimal",
       "unit": "BPM"
     },
-    "description": "Ketika salah satu otomatisasinya diaktifkan, fitur ini mencoba mendeteksi saat Anda mengalami mimpi buruk dengan memeriksa peningkatan detak jantung yang berkepanjangan saat Anda tidur. Ketika kemungkinan mimpi buruk terdeteksi, Anda memiliki pilihan untuk meminta OyasumiVR mencoba membangunkan Anda. Deteksi mimpi buruk hanya berjalan saat mode tidur aktif.\n\n<b>Note:</b> Fitur ini mengharuskan Anda untuk mengaktifkan <a class=\"integrationsPageLink\">Pulsoid integration</a> dan memiliki Langganan aktif Pulsoid \"BRO\".",
     "disableSleepMode": {
       "description": "Menonaktifkan mode tidur saat Anda mungkin mengalami mimpi buruk",
       "title": "Matikan mode tidur"
@@ -1194,7 +1193,6 @@
       "disconnect": "Putus",
       "providerLink": "Situs Web Penyedia",
       "pulsoid": {
-        "description": "Memberikan data detak jantung Anda ke OyasumiVR, yang dapat digunakan untuk memicu otomatisasi tertentu.<br><i>Memerlukan: Langganan Pulsoid \"BRO\"</i>",
         "title": "Pulsoid"
       },
       "reveal": "Lihat",
@@ -1522,7 +1520,6 @@
           "title": "Ambang BPM",
           "unit": "BPM"
         },
-        "description": "Aktifkan mode tidur ketika detak jantung Anda berada di bawah ambang batas tertentu selama jangka waktu tertentu: Tentukan ambang batas denyut per menit yang harus dipertahankan oleh detak jantung Anda, serta berapa lama, agar mode tidur dapat diaktifkan.\n\nIni mengharuskan Anda untuk mengaktifkan <a class=\"integrationsPageLink\">Integrasi Pulsoid</a> dan memiliki langganan Pulsoid \"BRO\" yang aktif.",
         "duration": {
           "description": "Berapa lama detak jantung Anda harus tetap berada di bawah ambang batas agar mode tidur dapat diaktifkan.",
           "title": "Durasi",

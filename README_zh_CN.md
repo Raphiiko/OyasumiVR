@@ -5,26 +5,48 @@
 <h3 align="center">
   :zzz: 一个帮助你在VR中睡眠的小工具 :zzz:
 </h3>
-<h5 align="center">
-  :zzz: 让你在VR中也能享受婴儿般的睡眠 :zzz:
-</h5>
 
 <p align="center">
-  <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
-  <a><img alt="开发构建状态" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
-  <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="许可证" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
-  <br>
-  <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord徽章" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-  <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam页面" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
-  <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm页面" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
-  <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad页面" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
-  <br>
-  如果你想一起聊天的话，就来加入我们的<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord服务器吧！</a>
-  <br>
-  <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br><a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_TW.md">繁體中文説明手冊在這裏( •̀ ω •́ )✧</a><br> 你现在已经在看简体中文的说明了！(*/ω＼*)
-  <br>
-  <br>
-  <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
+    <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
+    <a><img alt="开发构建状态" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
+    <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="许可证" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
+    <br>
+    <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord徽章" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam页面" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Booth.pm页面" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
+    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad页面" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
+    <br>
+    如果你想一起聊天的话，就来加入我们的<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord服务器吧！</a>
+    <br>
+    <table align="center">
+        <tr>
+            <td align="center">Japanese<br>日本語</td>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Korean<br>한국어</td>
+            <td align="center">Bahasa Indonesia</td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_JP.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=schinese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_ID.md">Readme</a>
+            </td>
+        </tr>
+    </table>
+</p>
+<p align="center">
+    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
 ## 下载与安装
@@ -45,18 +67,20 @@
 OyasumiVR是一个小巧的APP，**可以帮助你在戴着VR的时候入睡**。同时它也包含许多的实用工具和自动化操作，这些实用工具大多是专为大型~~男同~~虚拟社交平台[VRChat](https://vrchat.com)制作的。
 
 OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如：
+
 - :battery: 节省你的电费，同时保护你的电池
 - :low_brightness: 调暗你头显的亮度
 - :sparkles: 根据你的睡姿触发模型的不同动画
 - :envelope_with_arrow: 自动处理加入请求
 - :microphone: 当你睡着时关闭你的麦克风
 - :hammer_and_wrench: 自动化各种各样的操作，例如关闭你的设备，或者调整你的GPU功耗限制
-  
+
 除此之外，还可以看看"功能"部分，了解更多由OyasumiVR提供的功能。
-  
+
 ## 功能
 
 ### 💤 睡眠检测
+
 <table>
   <tr>
     <td>
@@ -76,6 +100,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 📲 SteamVR叠加层
+
 <table>
   <tr>
     <td>
@@ -88,6 +113,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 🔋 电源自动化
+
 <table>
 <tr>
     <td>
@@ -121,6 +147,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 🔌 GPU自动化
+
 <table>
   <tr>
     <td>
@@ -144,6 +171,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 💫 VRChat 自动化
+
 <table>
   <tr>
     <td>
@@ -204,6 +232,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
     </table>
 
 ### ⛔ 关机序列
+
 <table>
   <tr>
     <td>
@@ -225,6 +254,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 🔅 亮度自动化
+
 <table>
   <tr>
     <td>
@@ -237,6 +267,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 🎤 麦克风自动化
+
 <table>
   <tr>
     <td>
@@ -250,13 +281,14 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### ♥️ 心率自动化（依赖Pulsoid服务）
+
 <table>
   <tr>
       <td colspan="2">
         <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
         为了支持基于心率的自动化，OyasumiVR集成了在线心率服务<a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。对于此功能，你可以使用任何Pulsoid支持的硬件，如蓝牙心率监测器，WearOS智能手表，或Apple Watch。
         <br><br>
-        <b>"BRO"计划的订阅者</b>可以选择连接他们的Pulsoid账户，以使用账户里的高级功能，并给OyasumiVR提供更多维度的心率数据。
+        <i>此功能需要购买一次性付费的 OyasumiVR Pulsoid 服务，或者订阅 Pulsoid "BRO" 服务。在购买前请务必确保您拥有兼容的心率测量设备。 </i>
       </td>
   </tr>
   <tr>
@@ -277,8 +309,8 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
     </tr>
 </table>
 
-
 ### 👓 分辨率自动化
+
 <table>
   <tr>
     <td>
@@ -289,6 +321,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 </table>
 
 ### 🔳 保护墙自动化
+
 <table>
   <tr>
     <td>
@@ -301,12 +334,13 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 ## 翻译和本地化
 
 OyasumiVR目前支持以下语言：
+
 - 英语
 - 荷兰语（Nederlands）
 - 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)外包+贡献）
 - 韩语（한국어）（由社区成员[Soumt](https://github.com/soumt-r)贡献）
 - 繁体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)贡献）
-- 简体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)和[雾雨花精灵](https://github.com/flower-elf)贡献）
+- 简体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)、[雾雨花精灵](https://github.com/flower-elf)和[いんく](https://twitter.com/sayonara_natsu)贡献）
 - 法语（Français）（由社区成员[neuroblack](https://github.com/neuroblack)贡献）（**招纳贤士！需要额外的维护人员！**）
 - 西班牙语（Español）（由社区成员[aacal666](https://twitter.com/aacalde666)贡献）
 - 印度尼西亚语（Bahasa Indonesia）（由社区成员[a9ito](https://twitter.com/a9ito)贡献）
@@ -316,6 +350,7 @@ OyasumiVR目前支持以下语言：
 如果没有我们出色的社区的帮助，OyasumiVR不可能支持如此多的语言。我（作者）个人认为，由于他们的努力，更多的人开始使用OyasumiVR，这真是太棒了。
 
 如果你想帮忙翻译这个项目，无论是贡献缺失的翻译，还是添加全新的语言，请查看[Adding Translation页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，了解如何开始翻译！如果你需要更多的信息，请随时加入我们的[Discord](https://discord.gg/7MqdPJhYxC)进行提问！
+
 ## 支持的硬件相关功能
 
 ### 电池自动化
@@ -330,6 +365,7 @@ OyasumiVR目前支持以下语言：
 这意味着，除非SlimeVR在他们的[OpenVR驱动程序](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver)中实现这个功能，否则任何Oculus的控制器都不太可能正确工作，而对于SlimeVR追踪器，它们完全不支持这个。
 
 _(*) Tundra追踪器报告电池电量和充电状态的时间延迟非常大。这意味着，除非Tundra在他们的追踪器固件中修复这个问题。否则，虽然电池自动化功能仍然可以工作，但是它的延迟会非常大（可能会高达十多分钟）。_
+
 ### GPU自动化
 
 任何被MSI Afterburner支持的NVIDIA和AMD显卡，都可以通过OyasumiVR调用你在MSI Afterburner中设置的配置文件来进行自动化处理。
@@ -341,6 +377,7 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 只有Valve Index支持控制头显屏幕的背光亮度。
 
 不过，所有头显都支持基于图像的亮度控制。
+
 ## 使用的技术和工具
 
 OyasumiVR的使用技术与工具包括：
@@ -364,7 +401,9 @@ OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。�
 OyasumiVR并未得到VRChat的认可，也不反映VRChat官方或任何参与制作或管理VRChat的人的观点或意见。VRChat是VRChat inc的商标。VRChat © VRChat Inc。
 
 OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。
+
 ## 支持
+
 如果你在使用OyasumiVR时遇到问题，比如遇到了bug，或者想要一个新的功能，你可以加入我们的[Discord服务器](https://discord.gg/7MqdPJhYxC)直接反馈。
 
 或者，你可以直接在[Twitter上联系我 （@Raphiiko）](https://twitter.com/Raphiiko)。我会尽快回复你！

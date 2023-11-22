@@ -19,9 +19,35 @@
     <br>
     如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
     <br>
-          <a href="https://raphiiko.booth.pm/items/4216880">booth.pmのストアページ</a>には、日本語の説明文が掲載されています。<br>你已經在看繁體中文的説明了！(*/ω＼*)<br> <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">简体中文说明手册在这里( •̀ ω •́ )✧
-    <br>
-    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88e23f9b-9c28-45e3-b2fb-2f420095affe" width="640">
+    <table align="center">
+        <tr>
+            <td align="center">Japanese<br>日本語</td>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Korean<br>한국어</td>
+            <td align="center">Bahasa Indonesia</td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_JP.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=schinese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_CN.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_zh_TW.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_KO.md">Readme</a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/README_ID.md">Readme</a>
+            </td>
+        </tr>
+    </table>
+</p>
+<p align="center">
+    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
 </p>
 
 ## 下載與安裝
@@ -40,10 +66,11 @@
 OyasumiVR 是一個桌面應用程式，包含各種工具和自動化功能，**協助你在虛擬實境頭戴裝置上入睡**。其中大部分的工具是專為在社交虛擬實境平台 [VRChat](https://vrchat.com) 中使用而開發的。
 
 OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，例如：
-- :battery: 在夜間節省電力和電池
+- :battery: 在夜間節省電力
 - :low_brightness: 調暗你的頭戴式顯示器亮度
 - :sparkles: 根據你的睡姿觸發頭像動畫
 - :envelope_with_arrow: 自動處理好友邀請
+- :microphone: 當你睡着時自動關閉麥克風
 - :hammer_and_wrench: 自動化各種 SteamVR 設定
 
 ...還有更多！請查看即將推出的「功能」部分，深入了解 OyasumiVR 所提供的功能。
@@ -60,8 +87,8 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
       <br><br>
       <ul>
         <li>時間表</li>
-        <li>控制器和追蹤器的電池電量</li>
-        <li>控制器和追蹤器的電源狀態</li>
+        <li>控制器和定位器的電量</li>
+        <li>控制器和定位器的電源狀態</li>
         <li>SteamVR 狀態</li>
       </ul>
     </td>
@@ -75,7 +102,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
     <td>
       OyasumiVR 配備了自己的 SteamVR 疊層畫面，允許你在虛擬實境中控制部分功能！
       <br><br>
-      默認情況下，你只需在右手控制器上快速按下 A 鈕，它就會在你面前彈出。
+      預設情況下，你只需在右手控制器上快速按下 A 鈕，它就會在你面前彈出。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1fc76470-fbea-43de-af80-38ee38a927ba"></td>
   </tr>
@@ -85,12 +112,12 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      <b>控制器和追蹤器</b>
+      <b>控制器和定位器</b>
       <br>
-      入睡時自動關閉控制器和/或追蹤器，並節省電池！早上醒來時，你會發現它們還有一些電量！
+      入睡時自動關閉控制器和/或定位器，並節省電池！早上醒來時，你會發現它們還有一些電量！
       <br>
       <br>
-      此外，你還可以在將控制器和/或追蹤器放在充電器上時自動關閉它們。這對於熱插拔控制器非常有用！
+      此外，你還可以在將控制器和/或定位器放在充電器上時自動關閉它們。這對於熱插拔控制器非常有用！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/aff14677-c2fe-4309-8b96-950dff59e3b9"></td>
   </tr>
@@ -98,7 +125,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
     <td>
       <b>Windows 電源策略</b>
       <br>
-      入睡時自動設置 Windows 的電源策略，並在醒來時恢復到更高性能的策略！
+      入睡時自動設定 Windows 的電源策略，並在醒來時恢復到更高性能的策略！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/05398894-a058-4715-b66a-067857b90e43"></td>
   </tr>
@@ -118,9 +145,9 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      <b>GPU 功率限制</b>
+      <b>GPU 功耗限制</b>
       <br>
-      入睡時自動限制 GPU 的功率，並在醒來時恢復其全功率！只需設置所需的瓦特限制，OyasumiVR 會在需要時設置它們。
+      入睡時自動限制 GPU 的功耗，並在醒來時恢復其全功耗！只需設定所需的瓦數限制，OyasumiVR 會在需要時設定它們。
       <br><br>
       <i>僅 Nvidia GPU 可用此功能。AMD 用戶可以使用 MSI Afterburner 自動化功能代替。</i>
     </td>
@@ -130,8 +157,8 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
     <td>
       <b>MSI Afterburner</b>
       <br>
-      如果你想對 GPU 進行更多控制，而不僅僅是設置功率限制，你可以讓 OyasumiVR 自動啟用你在 <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a> 中設置的配置文件。
-      調整超頻或降頻、功率限制等，讓 OyasumiVR 在入睡或醒來時呼叫它們！
+      如果你想對 GPU 進行更多控制，而不僅僅是設定功耗限制，你可以讓 OyasumiVR 自動啟用你在 <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a> 中設定的設定檔。
+      調整超頻或降頻、功耗限制等，讓 OyasumiVR 在入睡或醒來時呼叫它們！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
   </tr>
@@ -145,7 +172,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
       <br>
       OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應的動畫或姿勢。
       <br><br>
-      內建了熱門動力學資產的預設值，包括：
+      內建了目前較熱門的移動動畫預設檔，包括：
       <br><br>
       <ul>
         <li>
@@ -171,7 +198,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
     <td>
       📧 <b>自動接受邀請請求</b>
       <br>
-      自動接受在你入睡時來自特定朋友的邀請請求！你可以將想要接受請求的朋友添加到白名單中，也可以將特定朋友添加到黑名單，不允許自動接受他們的請求。
+      自動接受在你入睡時來自特定好友的邀請請求！你可以將想要接受請求的好友新增到白名單中，也可以將特定好友新增到黑名單，不允許自動接受他們的請求。
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/a3778498-b3e4-464a-af91-1f9b74bf134e"></td>
   </tr>
@@ -181,7 +208,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
       <br>
       根據你所在世界中的玩家數量自動更改你的狀態：
       <br><br>
-      當你獨自睡覺時，將狀態設置為藍色，這樣你的朋友可以加入你，而當有足夠多的人在附近時，將狀態設置為橙色！
+      當你獨自睡覺時，將狀態設定為藍色，這樣你的好友可以加入你，而當有足夠多的人在附近時，將狀態設定為橙色！
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
@@ -197,18 +224,18 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
   </tr>
 </table>
 
-### ⛔ 關機序列
+### ⛔ 關機程序
 <table>
   <tr>
     <td>
-      是否曾經想在 VR 中入睡，但不想整晚待在 VR 中？關機序列可以幫你解決這個問題！
+      是否曾經想在 VR 中入睡，但不想整晚待在 VR 中？關機程序可以幫你解決這個問題！
       <br><br>
-      當你入睡一段時間後，關機序列可以自動觸發。根據你配置的動作，它會執行以下任務之一：
+      當你入睡一段時間後，關機程序可以自動觸發。根據你配置的動作，它會執行以下任務之一：
       <br><br>
       <ul>
-        <li>關閉控制器和/或追蹤器</li>
+        <li>關閉控制器和/或定位器</li>
         <li>關閉基地台</li>
-        <li>退出 SteamVR <i>（以及其中運行的任何遊戲或疊加畫面）</i></li>
+        <li>退出 SteamVR <i>（以及其中運行的任何遊戲或疊層畫面）</i></li>
         <li>關閉 Windows</li>
       </ul>
       <br>
@@ -222,12 +249,54 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地過渡亮度，讓您在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
+      在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地調整亮度，讓你在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
       <br><br>
-      這不僅有助於您在虛擬實境中入睡，還可以避免在醒來時眼睛受到強烈的亮度刺激。
-      <br>如果您使用 Valve Index 頭盔，您還可以調整液晶螢幕的背光（或稱「顯示亮度」）！
+      這不僅有助於你在虛擬實境中入睡，還可以避免在醒來時眼睛受到強烈的亮度刺激。
+      <br>如果你使用 Valve Index 頭盔，你還可以調整液晶螢幕的背光（或稱「顯示亮度」）！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1f9bd880-507d-405f-97fb-525b3a9e195b"></td>
+  </tr>
+</table>
+
+### 🎤 System Microphone Mute Automations
+<table>
+  <tr>
+    <td>
+      OyasumiVR 可以在你睡着和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或者持續按住説話模式。
+      <br><br>這樣你的鼾聲就不會吵到別人啦！
+      <br><br>
+      This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+
+  </tr>
+</table>
+
+### ♥️ Heart Rate Automations (Pulsoid Integration)
+<table>
+  <tr>
+    <td colspan="2">
+      <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
+      To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+      <br><br>
+      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <b>Sleep Detection</b>
+      <br>
+      You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bcdbb83f-b7b7-49d8-b3f1-39a67b9b619e"></td>
+  </tr>
+  <tr>
+    <td>
+      <b>Nightmare Detection</b>
+      <br>
+      OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up. 
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
   </tr>
 </table>
 
@@ -235,7 +304,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      在進入睡眠和醒來時，自動調整 SteamVR 渲染解析度！讓 OyasumiVR 在您不需要時降低渲染解析度，有助於減輕硬體負擔。
+      在進入睡眠和醒來時，自動調整 SteamVR 渲染解析度！讓 OyasumiVR 在你不需要時降低渲染解析度，有助於減輕硬體負擔。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/fd6a29e2-54fd-428d-8358-63ab9aa73d10"></td>
   </tr>
@@ -245,7 +314,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      在進入睡眠時，自動調整 SteamVR Chaperone 的淡入淡出距離。如果您的遊玩區域較小，您可以使用此功能確保在入睡時 Chaperone 保持隱藏，在醒來時重新啟用！
+      在進入睡眠時，自動調整 SteamVR Chaperone 的淡入淡出距離。如果你的遊玩區域較小，你可以使用此功能確保在入睡時 Chaperone 保持隱藏，在醒來時重新啟用！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
   </tr>
@@ -259,7 +328,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
 - 韓文\* (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 與 [雾雨花精灵](https://github.com/flower-elf) 提供）
+- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
 - 法文 (Français)\*（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)\*（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 
@@ -269,18 +338,18 @@ _(\*) 這是社群支援的語言，這意味著翻譯可能不會在每次更�
 
 OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我個人認為多虧了他們的努力，更多的人能夠使用 OyasumiVR，這實在是太棒了。
 
-如果您想支援我們，無論是通過貢獻遺漏的翻譯，還是添加全新的語言，請查閱 [關於添加翻譯的 wiki 頁面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 以獲取入門指南！如果您需要更多資訊，請隨時加入我們的 [Discord](https://discord.gg/7MqdPJhYxC) 提問！
+如果你想支援我們，無論是通過貢獻遺漏的翻譯，還是新增全新的語言，請查閱 [關於新增翻譯的 wiki 頁面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 以獲取入門指南！如果你需要更多資訊，請隨時加入我們的 [Discord](https://discord.gg/7MqdPJhYxC) 提問！
 
 ## 支援的硬體
 
 ### 電池自動化
 
-目前，OyasumiVR 支援使用其電池自動化關閉以下所有支援的 SteamVR 設備：
+目前，OyasumiVR 支援使用其電池自動化關閉以下所有支援的 SteamVR 設定：
 
-1. 支援報告電池水平和充電狀態
-2. 支援通過 SteamVR 關閉的設備。
+1. 支援回報電量和充電狀態
+2. 支援通過 SteamVR 關閉的設定。
 
-這包括但不限於以下設備：
+這包括但不限於以下設定：
 
 - HTC Vive 控制器/Wands
 - Index 控制器/Knuckles
@@ -295,9 +364,9 @@ _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意�
 
 ### GPU 自動化
 
-支援由 MSI Afterburner 支援的任何 NVIDIA 或 AMD 圖形卡，可以通過 OyasumiVR 啟動您在 MSI Afterburner 中設置的配置文件，以實現自動化。
+支援由 MSI Afterburner 支援的任何 NVIDIA 或 AMD 顯示卡，可以通過 OyasumiVR 啟動你在 MSI Afterburner 中設定的設定檔，以實現自動化。
 
-僅支援使用 NVIDIA 卡直接控制顯示卡的功率限制。AMD 用戶將需要使用 MSI Afterburner 配置文件自動化，以便能夠使用 OyasumiVR 控制其功率限制。
+僅支援使用 NVIDIA 卡直接控制顯示卡的功耗限制。AMD 用戶將需要使用 MSI Afterburner 設定檔自動化，以便能夠使用 OyasumiVR 控制其功耗限制。
 
 ### 亮度自動化
 
@@ -311,8 +380,8 @@ OyasumiVR 是使用以下技術構建的：
 
 - [Angular](https://angular.io/)（TypeScript，主要 UI）
 - [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript，覆蓋層 UI）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，覆蓋層）
+- [SvelteKit](https://kit.svelte.dev/)（TypeScript，疊加層 UI）
+- [.NET](https://dotnet.microsoft.com/en-us/)（C#，疊加層）
 
 ## 開發
 
@@ -320,18 +389,20 @@ OyasumiVR 是使用以下技術構建的：
 
 ## VRChat
 
-OyasumiVR 的某些功能要求您使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
+OyasumiVR 的某些功能要求你使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
-這僅對依賴此功能的功能是必需的。您可以在不提供憑證的情況下使用不依賴於此的功能。您的登錄憑證只會儲存在你自己的機器上，並且只會發送到 VRChat 的伺服器進行驗證。絕不會發送/储存在任何其他地方。
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
 
 OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRChat 生產或管理的人士的觀點或意見。VRChat 是 VRChat Inc. 的商標。VRChat © VRChat Inc.
 
-OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對您的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
+OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對你的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
+
 ## 支援
 
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
 
-或者，您也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯絡我。我會盡快給您回復！
+或者，你也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯絡我。我會盡快給你回復！
 
 ## 授權條款
 

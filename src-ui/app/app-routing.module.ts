@@ -21,6 +21,7 @@ import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/vi
 import { TranslationLoaderViewComponent } from './modules/translation/views/translation-loader-view/translation-loader-view.component';
 import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
+import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
       {
         path: 'systemMicMuteAutomations',
         component: SystemMicMuteAutomationsViewComponent,
+      },
+      {
+        path: 'audioVolumeAutomations',
+        component: AudioVolumeAutomationsViewComponent,
       },
       {
         path: 'statusAutomations',
