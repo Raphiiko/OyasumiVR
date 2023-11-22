@@ -32,21 +32,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
   worldJoinBehaviourOptions: SelectBoxItem[] = [
     {
       id: 'KEEP',
-      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.KEEP',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.KEEP',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
       ),
     },
     {
       id: 'MUTE',
-      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.MUTE',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.MUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
       ),
     },
     {
       id: 'UNMUTE',
-      label: 'systemMicMuteAutomations.worldJoinBehaviour.options.UNMUTE',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.UNMUTE',
       htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
         '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
       ),
@@ -177,31 +177,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
         let options: SelectBoxItem[] = devices
           .filter((d) => d.deviceType === 'Capture')
           .map((d) => {
-            let label = d.name;
-            const breakIndex = label.indexOf('(');
-            if (breakIndex > -1) {
-              label =
-                label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-            }
             return {
-              id: this.systemMicMuteAutomationService.getPersistentIdForAudioDevice(d),
-              label,
+              id: d.persistentId!,
+              label: (d.parsedName!.display + '\n' + d.parsedName!.driver).trim(),
             };
           });
         // Add default option
-        const device = devices.find((d) => d.default);
+        const device = devices.find((d) => d.default && d.deviceType === 'Capture');
         if (device) {
-          let label = device.name;
-          const breakIndex = label.indexOf('(');
-          if (breakIndex > -1) {
-            label =
-              label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-          }
           const defaultOption: SelectBoxItem = {
-            id: 'DEFAULT',
+            id: 'DEFAULT_CAPTURE',
             label: {
               string: 'systemMicMuteAutomations.audioDevice.options.DEFAULT',
-              values: { deviceName: label },
+              values: {
+                deviceName: (device.parsedName!.display + '\n' + device.parsedName!.driver).trim(),
+              },
             },
           };
           options = [defaultOption, ...options];
@@ -213,18 +203,11 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy 
           // If we cannot find the option, we'll insert it.
           // This is in case the user has previously a configured a device that is currently not active.
           if (!option) {
-            let label =
-              (await this.systemMicMuteAutomationService.getAudioDeviceNameForPersistentId(
-                audioDevicePersistedId
-              )) ?? 'Unknown Device';
-            const breakIndex = label.indexOf('(');
-            if (breakIndex > -1) {
-              label =
-                label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-            }
+            const name =
+              this.audioDeviceService.getAudioDeviceNameForPersistentId(audioDevicePersistedId);
             option = {
               id: audioDevicePersistedId,
-              label,
+              label: name ? (name.display + '\n' + name.driver).trim() : 'Unknown Device',
             };
             options = [option, ...options];
           }

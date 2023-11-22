@@ -8,4 +8,11 @@ export interface AudioDevice {
   mute: boolean;
   default: boolean;
   defaultCommunications: boolean;
+  parsedName?: AudioDeviceParsedName;
+  persistentId?: string;
+}
+
+export interface AudioDeviceParsedName {
+  display: string;
+  driver: string;
 }

@@ -23,6 +23,31 @@
   }
 }
 
+.modal-wrapper-audio-device-picker {
+  background-color: #00000088;
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  outline: 0;
+  overflow: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.15s ease-in-out;
+  will-change: opacity;
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  backdrop-filter: blur(5px);
+
+  &.in {
+    opacity: 1;
+  }
+}
+
 .modal-wrapper-brightness-control {
   bottom: 0;
   height: 100%;
