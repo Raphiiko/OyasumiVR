@@ -426,11 +426,11 @@
         "sleepModeEnabled": {
           "reason": {
             "automation": {
-              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "作为一个设备的电量达到了设置值",
-              "SLEEP_MODE_ENABLE_AT_TIME": "在预定时间",
-              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "当你睡着的时候",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了",
-              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "当你的心率保持了长时间的平静",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "某个设备的电量达到了设置值",
+              "SLEEP_MODE_ENABLE_AT_TIME": "因为预定的时间到了",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "因为你可能已经睡着了",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "检测到你的控制器都被关闭了",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "因为你的心率保持了长时间的平静",
               "unknown": "通过一个未知的自动化"
             },
             "manual": "你手动开启了睡眠模式",
@@ -440,10 +440,10 @@
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
-            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{threshold}位的极限",
-            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{threshold}位以下时"
+            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{threshold}人的设置极限",
+            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{threshold}人以下时"
           },
-          "title": "将你的VRChat状态从{oldStatus}改为{newStatus}列出"
+          "title": "将你的VRChat状态从{oldStatus}改为{newStatus}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
