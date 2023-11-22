@@ -3,6 +3,7 @@ import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { WindowsPowerPolicy } from './windows-power-policy';
+import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -44,6 +45,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
   // MISCELLANEOUS
+  | 'AUDIO_DEVICE_AUTOMATIONS'
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
@@ -86,11 +88,11 @@ export interface AutomationConfigs {
   // CHAPERONE AUTOMATIONS
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
-  // SHUTDOWN AUTOMATIONS
   // WINDOWS POWER POLICY AUTOMATIONS
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   // MISCELLANEOUS AUTOMATIONS
+  AUDIO_DEVICE_AUTOMATIONS: AudioDeviceAutomationsConfig;
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
@@ -259,6 +261,40 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 }
 
 // MISCELLANEOUS AUTOMATIONS
+
+export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
+export type AudioVolumeAutomation =
+  | MuteAudioVolumeAutomation
+  | UnmuteAudioVolumeAutomation
+  | SetAudioVolumeAutomation;
+
+export interface BaseAudioVolumeAutomation {
+  type: AudioVolumeAutomationType;
+  audioDeviceRef: {
+    persistentId: string;
+    type: AudioDeviceType;
+    name: AudioDeviceParsedName;
+  };
+}
+
+export interface MuteAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'MUTE';
+}
+
+export interface UnmuteAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'UNMUTE';
+}
+
+export interface SetAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'SET_VOLUME';
+  volume: number;
+}
+
+export interface AudioDeviceAutomationsConfig extends AutomationConfig {
+  onSleepEnableAutomations: AudioVolumeAutomation[];
+  onSleepDisableAutomations: AudioVolumeAutomation[];
+  onSleepPreparationAutomations: AudioVolumeAutomation[];
+}
 
 export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
@@ -519,6 +555,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
   },
   // MISCELLANEOUS AUTOMATIONS
+  AUDIO_DEVICE_AUTOMATIONS: {
+    enabled: false,
+    onSleepEnableAutomations: [],
+    onSleepDisableAutomations: [],
+    onSleepPreparationAutomations: [],
+  },
   SYSTEM_MIC_MUTE_AUTOMATIONS: {
     enabled: false,
     audioDevicePersistentId: null,

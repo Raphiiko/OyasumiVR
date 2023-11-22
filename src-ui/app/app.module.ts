@@ -174,6 +174,10 @@ import { NightmareDetectionAutomationService } from './services/nightmare-detect
 import { FLAVOUR } from '../build';
 import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
+import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
+import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-entries/audio-volume-entries.component';
+import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
+import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -273,6 +277,9 @@ export function createTranslateLoader(http: HttpClient) {
     TranslationEditorViewComponent,
     TextareaAutoResizeDirective,
     NightmareDetectionViewComponent,
+    AudioVolumeAutomationsViewComponent,
+    AudioVolumeEntriesComponent,
+    AudioDevicePickerComponent,
   ],
   imports: [
     CommonModule,
@@ -373,6 +380,7 @@ export class AppModule {
     // Windows power policy automations
     private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
+    private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService
   ) {
@@ -584,6 +592,10 @@ export class AppModule {
             this.setWindowsPowerPolicyOnSleepModeAutomationService.init()
           ),
           // Miscellaneous automations
+          this.logInit(
+            'AudioDeviceAutomationsService initialization',
+            this.audioDeviceAutomationsService.init()
+          ),
           this.logInit(
             'SystemMicMuteAutomationsService initialization',
             this.systemMicMuteAutomationsService.init()

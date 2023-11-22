@@ -5,7 +5,7 @@ import {
   EventLogType,
 } from '../../../models/event-log-entry';
 
-export class EventLogChangedVRChatMicMuteStateEntryParser extends EventLogEntryParser<EventLogBase> {
+export class EventLogChangedVRChatMicMuteStateEntryParser extends EventLogEntryParser<EventLogChangedVRChatMicMuteState> {
   entryType(): EventLogType {
     return 'changedVRChatMicMuteState';
   }

@@ -197,7 +197,8 @@
       "vrcAutomations": "VRChat Automations",
       "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
       "miscAutomations": "Miscellaneous Automations",
-      "nightmareDetection": "Nightmare Detection"
+      "nightmareDetection": "Nightmare Detection",
+      "audioVolumeAutomations": "Audio Volume Automations"
     },
     "device-list": {
       "category": {
@@ -467,6 +468,30 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
           "title": "Windows Power Policy set to the ''{policy}'' plan"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "Volume for audio device ''{deviceName}'' set to {percentage}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "Muted audio device ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "Unmuted audio device ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          }
         }
       }
     },
@@ -1840,5 +1865,48 @@
       }
     },
     "notification": "Detecting a possible nightmare, as you've had a prolonged elevated heart rate."
+  },
+  "audio-volume-automations": {
+    "title": "Audio Volume Automations",
+    "description": "Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent others from disturbing your sleep.",
+    "onSleepEnable": {
+      "title": "When I go to sleep",
+      "description": "Change the volume of your audio devices when the sleep mode is enabled"
+    },
+    "onSleepDisable": {
+      "title": "When I wake up",
+      "description": "Change the volume of your audio devices when the sleep mode is disabled"
+    },
+    "onSleepPreparation": {
+      "title": "When I prepare to go to sleep",
+      "description": "Change the volume of your audio devices when I activate sleep preparation"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "No audio devices selected",
+        "hasDevices": "Add audio devices"
+      },
+      "description": "Select an audio device to automate its volume level"
+    },
+    "selectDevice": "Select Audio Device",
+    "removeDevice": "Remove",
+    "actionOptions": {
+      "SET_VOLUME": "Change Volume",
+      "MUTE": "Mute",
+      "UNMUTE": "Unmute"
+    },
+    "picker": {
+      "title": "Select a device",
+      "noCaptureDevices": "No capture devices have been found",
+      "noPlaybackDevices": "No playback devices have been found",
+      "defaultDevice": "Default Device"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Automation} other {# Automations}}"
+    },
+    "volume": {
+      "title": "Volume",
+      "description": "What volume level to set for the audio device when this automation runs"
+    }
   }
 }

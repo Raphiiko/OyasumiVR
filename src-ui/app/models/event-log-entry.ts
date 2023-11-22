@@ -3,6 +3,7 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
 import { WindowsPowerPolicy } from './windows-power-policy';
+import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {
   version: 3;
@@ -34,7 +35,10 @@ export type EventLogEntry =
   | EventLogChangedVRChatMicMuteState
   | EventLogChangedSystemMicMuteState
   | EventLogChangedSystemMicControllerButtonBehavior
-  | EventLogMsiAfterburnerProfileSet;
+  | EventLogMsiAfterburnerProfileSet
+  | EventLogChangedAudioDeviceVolume
+  | EventLogMutedAudioDevice
+  | EventLogUnmutedAudioDevice;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -58,7 +62,10 @@ export type EventLogType =
   | 'changedVRChatMicMuteState'
   | 'changedSystemMicMuteState'
   | 'changedSystemMicControllerButtonBehavior'
-  | 'msiAfterburnerProfileSet';
+  | 'msiAfterburnerProfileSet'
+  | 'changedAudioDeviceVolume'
+  | 'mutedAudioDevice'
+  | 'unmutedAudioDevice';
 
 export interface EventLogBase {
   id: string;
@@ -192,5 +199,27 @@ export interface EventLogChangedSystemMicMuteState extends EventLogBase {
 export interface EventLogChangedSystemMicControllerButtonBehavior extends EventLogBase {
   type: 'changedSystemMicControllerButtonBehavior';
   behavior: 'TOGGLE' | 'PUSH_TO_TALK';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogChangedAudioDeviceVolume extends EventLogBase {
+  type: 'changedAudioDeviceVolume';
+  volume: number;
+  deviceName: AudioDeviceParsedName;
+  deviceType: AudioDeviceType;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogMutedAudioDevice extends EventLogBase {
+  type: 'mutedAudioDevice';
+  deviceName: AudioDeviceParsedName;
+  deviceType: AudioDeviceType;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogUnmutedAudioDevice extends EventLogBase {
+  type: 'unmutedAudioDevice';
+  deviceName: AudioDeviceParsedName;
+  deviceType: AudioDeviceType;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

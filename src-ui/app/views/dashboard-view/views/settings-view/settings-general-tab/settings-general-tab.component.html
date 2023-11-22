@@ -117,7 +117,11 @@
           <input
             type="checkbox"
             [checked]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
-            (change)="setOverlayMenuOnlyOpenWhenVRChatIsRunning(!appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning)"
+            (change)="
+              setOverlayMenuOnlyOpenWhenVRChatIsRunning(
+                !appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning
+              )
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -172,7 +176,7 @@
       </div>
       <div class="setting-row-action">
         <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-        >settings.general.startWithSteamVR.howTo
+          >settings.general.startWithSteamVR.howTo
         </button>
       </div>
     </div>
