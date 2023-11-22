@@ -2,9 +2,6 @@
   <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/53f56237-9cde-48df-a446-8eaad76c8206">
 </h1>
 
-<h3 align="center">
-    :zzz: A utility to assist with sleeping in virtual reality. :zzz:
-</h3>
 <h5 align="center">
     :zzz: バーチャルリアリティの中で睡眠をアシストするソフトウェアです :zzz:
 </h5>

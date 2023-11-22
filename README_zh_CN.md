@@ -5,9 +5,6 @@
 <h3 align="center">
   :zzz: 一个帮助你在VR中睡眠的小工具 :zzz:
 </h3>
-<h5 align="center">
-  :zzz: 让你在VR中也能享受婴儿般的睡眠 :zzz:
-</h5>
 
 <p align="center">
     <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>

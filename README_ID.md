@@ -5,9 +5,6 @@
 <h3 align="center">
     :zzz: Utilitas untuk membantu tidur dalam virtual reality. :zzz:
 </h3>
-<h5 align="center">
-    :zzz: バーチャルリアリティの中で睡眠をアシストするソフトウェアです :zzz:
-</h5>
 
 <p align="center">
     <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
