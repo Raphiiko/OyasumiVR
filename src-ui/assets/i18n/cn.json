@@ -197,7 +197,8 @@
       "vrcAutomations": "VRChat 自动化",
       "vrchatMicMuteAutomations": "VRChat麦克风",
       "miscAutomations": "其他自动化操作",
-      "nightmareDetection": "噩梦检测"
+      "nightmareDetection": "噩梦检测",
+      "audioVolumeAutomations": "音量"
     },
     "device-list": {
       "category": {
@@ -225,16 +226,16 @@
       "type": {
         "acceptedInviteRequest": {
           "subtitle": {
-            "blacklist": "由于这名玩家没有被列入黑名单",
+            "blacklist": "由于该玩家没有被列入黑名单",
             "whitelist": "由于该玩家被列入白名单"
           },
-          "title": "自动接受了来自''{displayName}的邀请请求"
+          "title": "自动接受了来自''{displayName}的加入请求"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "由于开启了睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "PUSH_TO_TALK": "将麦克风按钮的触发行为改为 “按下开启”",
@@ -243,9 +244,9 @@
         },
         "changedSystemMicMuteState": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "由于开启了睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "MUTE": "已静音麦克风:{devicename}",
@@ -254,9 +255,9 @@
         },
         "changedVRChatMicMuteState": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "由于开启了睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "MUTE": "将 VRChat 中的麦克风静音",
@@ -265,16 +266,16 @@
         },
         "chaperoneFadeDistanceChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "由于开启睡眠模式"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": "保护墙的淡化距离已设置为{value}。"
         },
         "displayBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "set": "头显屏幕亮度设置为 {value}",
@@ -283,8 +284,8 @@
         },
         "gpuPowerLimitChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因为睡眠模式已禁用",
-            "SLEEP_MODE_ENABLED": "因为睡眠模式已启用"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": {
             "reset": "将 ''{device}'' 的功率限制恢复为 {limit}",
@@ -293,9 +294,9 @@
         },
         "imageBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用",
-            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "set": "头显亮度设置为 {value}",
@@ -367,12 +368,12 @@
             "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
-          "title": "MSI Afterburner 的配置已设置为配置档 {profile}"
+          "title": "MSI Afterburner 的配置已设置为配置文件 {profile}"
         },
         "renderResolutionChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "由于开启睡眠模式"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": {
             "auto": "SteamVR渲染分辨率设置为 '自动'",
@@ -394,9 +395,9 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由于睡眠模式被禁用",
-            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式",
-            "SLEEP_PREPARATION": "当你准备入睡时"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "set": "头显亮度已设置为 {value}",
@@ -425,11 +426,11 @@
         "sleepModeEnabled": {
           "reason": {
             "automation": {
-              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "作为一个设备的电量达到了设置值",
-              "SLEEP_MODE_ENABLE_AT_TIME": "在预定时间",
-              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "当你睡着的时候",
-              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "由于你的控制器都被关闭了",
-              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "当你的心率保持了长时间的平静",
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "某个设备的电量达到了设置值",
+              "SLEEP_MODE_ENABLE_AT_TIME": "因为预定的时间到了",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "因为你可能已经睡着了",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "检测到你的控制器都被关闭了",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "因为你的心率保持了长时间的平静",
               "unknown": "通过一个未知的自动化"
             },
             "manual": "你手动开启了睡眠模式",
@@ -439,10 +440,10 @@
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
-            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{threshold}位的极限",
-            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{threshold}位以下时"
+            "AT_LIMIT_OR_ABOVE": "由于你的房间中的玩家数量达到了{threshold}人的设置极限",
+            "BELOW_LIMIT": "当你的房间中的玩家数量下降到{threshold}人以下时"
           },
-          "title": "将你的VRChat状态从{oldStatus}改为{newStatus}列出"
+          "title": "将你的VRChat状态从{oldStatus}改为{newStatus}"
         },
         "turnedOffOpenVRDevices": {
           "reason": {
@@ -450,7 +451,7 @@
             "CHARGING": "当设备正在充电的时候",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
-            "SLEEP_MODE_ENABLED": "由于启用了睡眠模式"
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": {
             "ALL": "关闭全部设备",
@@ -467,6 +468,30 @@
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": "Windows 电源策略已设置为 ''{policy}'' 方案"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "音频设备''{deviceName}''的音量已被设置为{percentage}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "已关闭音频设备 ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "已打开音频设备 ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"          
+          }
         }
       }
     },
@@ -988,7 +1013,7 @@
           },
           "appSettings": {
             "description": "OyasumiVR的所有一般设置",
-            "title": "应用程序设置"
+            "title": "程序设置"
           },
           "automationSettings": {
             "description": "OyasumiVR自动化功能的所有设置",
@@ -1053,7 +1078,7 @@
         "vrManifestReregister": {
           "title": "重新注册 SteamVR 的应用程序清单",
           "description": "在 SteamVR 上重新注册程序的清单数据",
-          "action": "重新注册清单",
+          "action": "重新注册",
           "modal": {
             "success": {
               "title": "已重新注册程序的清单数据",
@@ -1112,7 +1137,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "如果启用，你将能够使用OyasumiVR关闭和开启你的基站电源。需要使用蓝牙，并且只支持V2基站。",
+          "description": "如果启用，你将能够使用OyasumiVR关闭和开启你的基站。需要使用蓝牙，并且只支持V2基站。",
           "title": "启用电源控制"
         },
         "powerOffMode": {
@@ -1138,17 +1163,17 @@
       },
       "overlay": {
         "binding": {
-          "description": "叠加层菜单的触发按钮，可以在 SteamVR 的按键绑定菜单中进行配置。",
+          "description": "叠加层界面的触发按钮，可以在 SteamVR 的按键绑定菜单中进行配置。",
           "title": "控制器按键绑定"
         },
         "overlayMenu": {
-          "description": "如果想完全禁用 OyasumiVR 的叠加菜单，可以将其关闭",
-          "title": "启用叠加层菜单"
+          "description": "如果想完全禁用 OyasumiVR 的叠加层界面，可以将其关闭",
+          "title": "启用叠加层界面"
         },
         "title": "叠加层",
         "onlyOpenMenuWhenVRChatRunning": {
-          "title": "仅当VRChat运行时打开菜单",
-          "description": "打开此开关可避免在VRChat未启动时显示菜单"
+          "title": "仅当VRChat运行时显示叠加层界面",
+          "description": "打开此开关可避免在VRChat未启动时显示叠加层界面"
         }
       },
       "sleepMode": {
@@ -1213,7 +1238,7 @@
       "disconnect": "断开连接",
       "providerLink": "提供方网站",
       "pulsoid": {
-        "description": "将你的心率数据提供给OyasumiVR，便可以使用它来触发一些自动化功能。<br><i>本功能需要支付一笔购买一次性费用，或者订阅Pulsoid \"BRO\"。请务必在购买前确认您有兼容的心率测量设备</i>",
+        "description": "这个集成插件可以将你的心率数据提供给OyasumiVR，以便用它来触发一些自动化功能。<br><i>本功能需要在Pulsoid支付一笔一次性费用，或者购买其 \"BRO\"订阅。请务必在购买前确认你有兼容的心率测量设备</i>",
         "title": "Pulsoid"
       },
       "reveal": "显示",
@@ -1281,7 +1306,7 @@
       "logIn": {
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
         "disclaimers": {
-          "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
+          "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的任何观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
           "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！",
           "use": "你的登录凭据不会存储在除你自己的计算机以外的任何地方，并且仅会发送到 VRChat 服务器进行身份验证。"
         },
@@ -1312,7 +1337,7 @@
           },
           "expressionMenu": {
             "description": "从你的VRChat模型的 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">功能菜单</a> 控制OyasumiVR的功能",
-            "title": "启用VRChat功能菜单控制"
+            "title": "通过模型功能菜单控制"
           },
           "externalControl": {
             "description": "通过 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC </a>控制OyasumiVR的功能",
@@ -1482,7 +1507,7 @@
       },
       "title": "开启睡眠模式"
     },
-    "experimentalAutomation": "这个自动化目前是实验性的，可能还不可靠。",
+    "experimentalAutomation": "这个自动化操作目前是实验性的，目前并不稳定。",
     "modals": {
       "disableAtTime": {
         "description": "在特定时间关闭睡眠模式",
@@ -1555,7 +1580,7 @@
           "title": "BPM 阈值",
           "unit": "BPM"
         },
-        "description": "当心率持续低于阈值一段时间后开启睡眠模式: 输入心率阈值以及等待时间\n\n必须启用<a class=\"integrationsPageLink\">Pulsoid integration</a>",
+        "description": "当心率持续低于阈值一段时间后开启睡眠模式: 输入心率阈值以及等待时间\n\n必须启用<a class=\"integrationsPageLink\">Pulsoid 集成</a>以使用此功能",
         "duration": {
           "description": "你的心率保持在阈值以下多长时间才启用睡眠模式。",
           "title": "持续时间",
@@ -1578,7 +1603,7 @@
         },
         "countdown": {
           "instruction": "{counter} 秒后开始",
-          "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能运作"
+          "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能正常运作"
         },
         "currentCalibration": "你当前的校准值：",
         "done": {
@@ -1606,7 +1631,7 @@
         },
         "restartCalibration": "重新开始校准",
         "startCalibration": "开始校准",
-        "title": "校准睡眠检测"
+        "title": "校准睡眠检测数据"
       }
     },
     "title": "睡眠检测"
@@ -1819,7 +1844,7 @@
   },
   "nightmare-detection": {
     "title": "噩梦检测",
-    "description": "启用这里的任何功能后，将会检测您是否在睡眠时心率持续增高。如果检测到噩梦的可能性，您可以在此处设置让OyasumiVR叫醒您。噩梦检测仅在睡眠模式下运行。\n\n<b>注意:</b> 要使用本功能，必须先开启 <a class=\"integrationsPageLink\">Pulsoid integration</a>.",
+    "description": "启用这里的任何功能后，OyasumiVR将会检测您在睡眠时心率是否持续增高。如果有比较充分的数据证明可能发生了噩梦，你可以在此处设置让OyasumiVR叫醒你。噩梦检测功能仅在睡眠模式开启时工作。\n\n<b>注意:</b> 要使用本功能，必须先启用 <a class=\"integrationsPageLink\">Pulsoid 集成</a>.",
     "bpmThreshold": {
       "unit": "BPM",
       "title": "最低心率",
@@ -1847,5 +1872,48 @@
       }
     },
     "notification": "检测到你可能做噩梦了，因为你的心率长期升高。"
+  },
+  "audio-volume-automations": {
+    "title": "音量自动化",
+    "description": "当你入睡（或醒来）时，自动改变相关音频设备的音量大小！如果你不想别人打扰你的睡眠，这会很有用。",
+    "onSleepEnable": {
+      "title": "当我入睡时",
+      "description": "启用睡眠模式时，更改音频设备的音量"
+    },
+    "onSleepDisable": {
+      "title": "当我醒来时",
+      "description": "禁用睡眠模式时，更改音频设备的音量"
+    },
+    "onSleepPreparation": {
+      "title": "当我准备去睡觉时",
+      "description": "进入睡眠准备阶段时，更改音频设备的音量"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "当前未选择音频设备",
+        "hasDevices": "添加音频设备"
+      },
+      "description": "选择音频设备以根据状态来自动调节其音量大小"
+    },
+    "selectDevice": "选择设备",
+    "removeDevice": "移除设备",
+    "actionOptions": {
+      "SET_VOLUME": "更改音量",
+      "MUTE": "关闭",
+      "UNMUTE": "打开"
+    },
+    "picker": {
+      "title": "选择一个设备",
+      "noCaptureDevices": "未找到录音设备",
+      "noPlaybackDevices": "未找到播放设备",
+      "defaultDevice": "默认设备"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 个自动化操作} other {# 个自动化操作}}"
+    },
+    "volume": {
+      "title": "音量",
+      "description": "运行此自动化操作时，为音频设备设置的音量大小"
+    }
   }
 }
