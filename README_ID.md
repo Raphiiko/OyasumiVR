@@ -333,7 +333,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - Jepang (日本語) (Outsourcing + Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea))
 - Korea (한국어) (Kontribusi komunitas dari [Soumt](https://github.com/soumt-r))
 - Mandarin Tradisional (繁體中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL))
-- Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL) dan [雾雨花精灵](https://github.com/flower-elf))
+- Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) dan [いんく](https://twitter.com/sayonara_natsu))
 - Perancis (Français) (Kontribusi komunitas dari [neuroblack](https://github.com/neuroblack)) (**Mencari pengelola tambahan!**)
 - Spanyol (Español) (Kontribusi komunitas dari [aacal666](https://twitter.com/aacalde666))
 - Indonesia (Bahasa Indonesia) (Kontribusi komunitas dari [a9ito](https://twitter.com/a9ito))

@@ -330,7 +330,7 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 - 일본어 (日本語) (외주 + 커뮤니티 번역 기여: [なき](https://twitter.com/NoYu_idea))
 - 한국어 (커뮤니티 번역 기여: [Soumt](https://github.com/soumt-r))
 - 중국어 번체 (繁體中文) (커뮤니티 번역 기여: [狐 Kon](https://github.com/XoF-eLtTiL))
-- 중국어 간체 (简体中文) (커뮤니티 번역 기여: [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://twitter.com/u_flower_elf))
+- 중국어 간체 (简体中文) (커뮤니티 번역 기여: [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://twitter.com/u_flower_elf), [いんく](https://twitter.com/sayonara_natsu))
 - 프랑스어 (Français) (커뮤니티 번역 기여: [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - 스페인어 (Español) (커뮤니티 번역 기여: [aacal666](https://twitter.com/aacalde666))
 - 인도네시아어 (Bahasa Indonesia) (커뮤니티 번역 기여: [a9ito](https://twitter.com/a9ito))
