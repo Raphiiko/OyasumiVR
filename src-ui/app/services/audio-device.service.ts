@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { AudioDevice, AudioDeviceParsedName, AudioDeviceType } from '../models/audio-device';
+import { AudioDevice, AudioDeviceParsedName } from '../models/audio-device';
 import { BehaviorSubject } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import { clamp } from '../utils/number-utils';

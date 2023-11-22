@@ -1,9 +1,5 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import {
-  EventLogBase, EventLogChangedAudioDeviceVolume,
-  EventLogMutedAudioDevice,
-  EventLogType
-} from "../../../models/event-log-entry";
+import { EventLogMutedAudioDevice, EventLogType } from '../../../models/event-log-entry';
 
 export class EventLogMutedAudioDeviceEntryParser extends EventLogEntryParser<EventLogMutedAudioDevice> {
   entryType(): EventLogType {
