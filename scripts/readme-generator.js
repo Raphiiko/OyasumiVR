@@ -51,7 +51,7 @@ function generateMarkdownReadmes(langData) {
   for (const { lang, tokens, texts } of langData) {
     let localized = template;
     Object.entries(texts).forEach(([key, value]) => {
-      localized = localized.replaceAll(key, value);
+      localized = localized.replaceAll(key, value).replaceAll('<MARKDOWN-BR>', '<br>');
     });
     Object.entries(tokens).forEach(([key, value]) => {
       localized = localized.replaceAll(`{{token.${key}}}`, value);
@@ -60,5 +60,58 @@ function generateMarkdownReadmes(langData) {
   }
 }
 
+function generateSteamStoreDescriptions(langData) {
+  const descriptionTemplate = fs
+    .readFileSync('./docs/readmes/src/steam_description_template.txt')
+    .toString();
+  const outputTemplate = JSON.parse(
+    fs.readFileSync('./docs/readmes/src/steam_output_template.json').toString()
+  );
+  for (const { lang, tokens, texts } of langData) {
+    let localizedDescription = descriptionTemplate;
+    Object.entries(texts).forEach(([key, value]) => {
+      let sanitizedValue = value;
+      // Remove HTML links
+      sanitizedValue = sanitizedValue.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
+      // Remove markdown links
+      sanitizedValue = sanitizedValue.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+      // Replace html and markdown formatting
+      sanitizedValue = sanitizedValue
+        .replaceAll(/\*\*(.+)\*\*/g, '[b]$1[/b]')
+        .replaceAll(/_(.+)_/g, '[i]$1[/i]')
+        .replaceAll('<MARKDOWN-BR>', ' ')
+        .replaceAll('<br>', '\n')
+        .replaceAll('<ul>', '[list]')
+        .replaceAll('</ul>', '[/list]')
+        .replaceAll(/\s*<li>\s*/g, '\n[*]')
+        .replaceAll('</li>', '')
+        .replaceAll('<b>', '[b]')
+        .replaceAll('</b>', '[/b]')
+        .replaceAll('<i>', '[i]')
+        .replaceAll('</i>', '[/i]')
+        .replaceAll(/(\r\n|\r|\n){3,}/g, '\n\n')
+        .replaceAll('\r', '');
+      localizedDescription = localizedDescription.replaceAll(key, sanitizedValue);
+    });
+    Object.entries(tokens).forEach(([key, value]) => {
+      localizedDescription = localizedDescription.replaceAll(`{{token.${key}}}`, value);
+    });
+    const output = JSON.parse(JSON.stringify(outputTemplate));
+    output['app[content][about]'] = localizedDescription;
+    output['language'] = tokens['steamLang'];
+    output['app[content][sysreqs][windows][min][osversion]'] = tokens['steamMinOSVersion'];
+    output['app[content][sysreqs][windows][min][processor]'] = tokens['steamMinProcessor'];
+    output['app[content][sysreqs][windows][min][graphics]'] = tokens['steamMinGraphics'];
+    output['app[content][sysreqs][windows][min][notes]'] = tokens['steamNotes'];
+    output['app[content][short_description]'] = tokens['steamShortDescription'];
+    output['app[content][legal]'] = '[h2]VRChat[/h2]\n' + texts['{{VRCHAT_BODY}}'];
+    fs.writeFileSync(
+      `./docs/readmes/generated/STEAM_STORE_${lang.toUpperCase()}.json`,
+      JSON.stringify(output, null, 2)
+    );
+  }
+}
+
 const langData = loadLanguageData();
 generateMarkdownReadmes(langData);
+generateSteamStoreDescriptions(langData);

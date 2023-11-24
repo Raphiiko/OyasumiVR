@@ -111,8 +111,8 @@ There are built-in presets for popular locomotion assets, including:
 <ul>
   <li>
     <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
-    <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
+    <MARKDOWN-BR>(Sleep System v2.2 - 2.3 by minminmiin)
+    <MARKDOWN-BR><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>
     <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
