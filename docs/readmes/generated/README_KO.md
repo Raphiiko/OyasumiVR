@@ -22,9 +22,9 @@
         <tr>
             <td align="center">English</td>
             <td align="center">Japanese<br>日本語</td>
+            <td align="center">Korean<br>한국어</td>
             <td align="center">Simplified Chinese<br>简体中文</td>
             <td align="center">Traditional Chinese<br>繁體中文</td>
-            <td align="center">Korean<br>한국어</td>
             <td align="center">Bahasa Indonesia</td>
         </tr>
         <tr>
@@ -35,13 +35,20 @@
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JP.md">Readme</a>
             </td>
             <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Bahasa Indonesia</td>
+        </tr>
+        <tr>
+            <td align="center">
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=schinese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_CN.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_TW.md">Readme</a>
-            </td>
-            <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
@@ -66,6 +73,7 @@
 설치 프로그램을 실행하기만 하면 바로 사용할 수 있습니다!
 
 ## OyasumiVR이 뭔가요?
+
 OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 도와주는** 다양한 유틸리티와 자동화 기능이이 포함된 데스크톱 애플리케이션이에요. 이러한 유틸리티의 대부분은 소셜 가상현실 플랫폼인 [VRChat](https://vrchat.com) 내에서 사용하기 위해 특별히 제작되었습니다.
 
 오야스미VR은 **잠든 것을 감지**하여 다음과 같은 다양한 방법으로 사용자를 도와줄 수 있어요:
@@ -282,7 +290,7 @@ VR 오버레이에 음소거 표시기가 옵션으로 제공되며, 컨트롤�
   </tr>
 </table>
 
-### ♥️ 심박수 자동화 (Pulsoid 연동) 
+### ♥️ 심박수 자동화 (Pulsoid 연동)
 
 <table>
   <tr>
@@ -322,7 +330,7 @@ OyasumiVR은 악몽을 꾸고 있다는 신호일 수 있는 심박수가 장시
   </tr>
 </table>
 
-### 
+###   
 
 <table>
   <tr>
@@ -334,6 +342,7 @@ OyasumiVR은 악몽을 꾸고 있다는 신호일 수 있는 심박수가 장시
 </table>
 
 ## 번역 및 현지화
+
 OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 
 - 영어 (English)
@@ -346,14 +355,16 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 - 스페인어 (Español) (커뮤니티 번역 기여: [aacal666](https://twitter.com/aacalde666))
 - 인도네시아어 (Bahasa Indonesia) (커뮤니티 번역 기여: [a9ito](https://twitter.com/a9ito))
 
-### 번역 지원하기 
+### 번역 지원하기
+
 환상적인 지원자 분들이 없었다면 오야스미VR은 지금처럼 많은 언어를 지원하지 못했을 것이에요. 그들의 노력 덕분에 더 많은 사람들이 OyasumiVR을 사용할 수 있게 된 것이 개인적으로 놀랍다고 생각해요.
 
 누락된 번역에 기여하거나 완전히 새로운 언어를 추가하는 등 저희를 돕고 싶으시다면, [번역 추가에 관한 위키 페이지](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)에서 시작 방법을 확인하세요! 더 자세한 정보가 필요하신 경우, 주저하지 마시고 [디스코드](https://discord.gg/7MqdPJhYxC)에 접속하여 문의해 주세요!
 
-## 지원 하드웨어 
+## 지원 하드웨어
 
-### 배터리 자동화 
+### 배터리 자동화
+
 현재 OyasumiVR은 다음 기능을 지원하는 모든 SteamVR 기기에서 배터리 자동화를 사용하여 기기를 끄는 기능을 지원하고 있어요:
 
 1. 배터리 잔량 및 충전 상태 보고
@@ -370,17 +381,20 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 
 _(\*) Tundra 트래커는 배터리 잔량 및 충전 상태 보고가 매우 늦어지는 문제가 있어요. 즉, 배터리 자동화 기능은 계속 작동되지만 Tundra에서 트래커 펌웨어의 이 문제를 수정하지 않는 한 이 기능은 매우 느려질 수 있습니다(두 자릿수 분 단위로)._
 
-### GPU 자동화 
+### GPU 자동화
+
 MSI Afterburner가 지원하는 모든 NVIDIA 또는 AMD 그래픽 카드는 MSI Afterburner 내에서 설정한 프로필을 OyasumiVR이 활성화하도록 하여 자동화할 수 있어요.
 
 OyasumiVR로 그래픽 카드의 전력 제한을 직접 제어하는 것은 NVIDIA 카드에서만 지원되어요. AMD 사용자는 MSI Afterburner 프로파일 자동화를 사용해야 OyasumiVR로 전력 제한을 제어할 수 있습니다.
 
 ### 밝기 자동화
+
 VR 헤드셋 디스플레이의 디스플레이 밝기(LCD 백라이트 밝기)를 제어하는 기능은 Valve Index에서만 지원되어요.
 
 이미지 밝기 제어는 모든 헤드셋에서 사용할 수 있습니다.
 
 ## 기반 기술
+
 OyasumiVR은 다음을 기반으로 만들어졌어요:
 
 - [Angular](https://angular.io/) (TypeScript, Main UI)
@@ -389,9 +403,11 @@ OyasumiVR은 다음을 기반으로 만들어졌어요:
 - [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
 
 ## 개발
+
 [개발 시작](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)의 위키 페이지를 참조해주세요.
 
 ## VRChat
+
 OyasumiVR의 일부 기능을 사용하려면 VRChat 계정으로 로그인하셔야 해요. (예: 스테이터스 자동화)
 
 이는 로그인에 의존하는 기능에만 필요합니다. 로그인 정보가 필요하지 않은 기능은 별도의 로그인 정보 제공 없이 사용할 수 있습니다.
@@ -402,10 +418,12 @@ OyasumiVR은 VRChat이 보증하지 않으며, VRChat 또는 VRChat의 제작 �
 OyasumiVR 개발자 및 이 프로젝트의 기여자는 OyasumiVR로 인해 발생한 문제(귀하의 VRChat 계정 또는 기타)에 대해 책임을 지지 않습니다. 사용자 책임하에 사용하시기 바랍니다.
 
 ## 지원
+
 OyasumiVR에 문제가 있거나 버그 또는 기능 요청이 있는 경우, [Discord 서버](https://discord.gg/7MqdPJhYxC)에 가입하실 수 있어요.
 
 또는 [트위터 @Raphiiko](https://twitter.com/Raphiiko)에서 저에게 직접 연락하실 수도 있습니다. 최대한 빨리 답변을 드리도록 노력하겠습니다!
 
 ## 라이센스
+
 OyasumiVR은 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 라이센스에 따라 이용하실 수 있습니다.
 

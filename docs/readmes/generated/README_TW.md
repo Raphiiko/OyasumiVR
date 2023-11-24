@@ -22,9 +22,9 @@
         <tr>
             <td align="center">English</td>
             <td align="center">Japanese<br>日本語</td>
+            <td align="center">Korean<br>한국어</td>
             <td align="center">Simplified Chinese<br>简体中文</td>
             <td align="center">Traditional Chinese<br>繁體中文</td>
-            <td align="center">Korean<br>한국어</td>
             <td align="center">Bahasa Indonesia</td>
         </tr>
         <tr>
@@ -35,13 +35,20 @@
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=japanese">Steam</a>&nbsp;|&nbsp;<a href="https://raphiiko.booth.pm/items/4216880">Booth</a> | <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_JP.md">Readme</a>
             </td>
             <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Simplified Chinese<br>简体中文</td>
+            <td align="center">Traditional Chinese<br>繁體中文</td>
+            <td align="center">Bahasa Indonesia</td>
+        </tr>
+        <tr>
+            <td align="center">
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=schinese">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_CN.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_TW.md">Readme</a>
-            </td>
-            <td align="center">
-                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=korean">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_KO.md">Readme</a>
             </td>
             <td align="center">
                 <a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
@@ -66,6 +73,7 @@
 執行安裝程式，你就可以開始使用了！
 
 ## 什麼是 OyasumiVR？
+
 OyasumiVR 是一個桌面應用程式，包含各種工具和自動化功能，**協助你在虛擬實境頭戴裝置上入睡**。其中大部分的工具是專為在社交虛擬實境平台 [VRChat](https://vrchat.com) 中使用而開發的。
 
 OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，例如：
@@ -282,7 +290,7 @@ OyasumiVR 可以在你睡著和醒來時自動關閉和打開麥克風，也可�
   </tr>
 </table>
 
-### ♥️ 心跳率自動化 (Pulsoid 整合) 
+### ♥️ 心跳率自動化 (Pulsoid 整合)
 
 <table>
   <tr>
@@ -322,7 +330,7 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
   </tr>
 </table>
 
-### 
+###   
 
 <table>
   <tr>
@@ -334,6 +342,7 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
 </table>
 
 ## 翻譯與本地化
+
 目前 OyasumiVR 支援以下語言：
 
 - 英文
@@ -346,14 +355,16 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
 - 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 - 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito))
 
-### 協助翻譯 
+### 協助翻譯
+
 OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我個人認為多虧了他們的努力，更多的人能夠使用 OyasumiVR，這實在是太棒了。
 
 如果你想支援我們，無論是通過貢獻遺漏的翻譯，還是新增全新的語言，請查閱 [關於新增翻譯的 wiki 頁面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 以獲取入門指南！如果你需要更多資訊，請隨時加入我們的 [Discord](https://discord.gg/7MqdPJhYxC) 提問！
 
-## 支援的硬體 
+## 支援的硬體
 
-### 電池自動化 
+### 電池自動化
+
 目前，OyasumiVR 支援使用其電池自動化關閉以下所有支援的 SteamVR 設定：
 
 1. 支援回報電量和充電狀態
@@ -370,17 +381,20 @@ OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我�
 
 _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意味著電池自動化仍將運作，但將非常延遲（雙位數分鐘），除非 Tundra 在其定位器韌體中修復此問題。_
 
-### GPU 自動化 
+### GPU 自動化
+
 支援由 MSI Afterburner 支援的任何 NVIDIA 或 AMD 顯示卡，可以通過 OyasumiVR 啟動你在 MSI Afterburner 中設定的設定檔，以實現自動化。
 
 僅支援使用 NVIDIA 卡直接控制顯示卡的功耗限制。AMD 用戶將需要使用 MSI Afterburner 設定檔自動化，以便能夠使用 OyasumiVR 控制其功耗限制。
 
 ### 亮度自動化
+
 僅支援 Valve Index 頭盔的顯示亮度（即「LCD 背光」）控制。
 
 所有頭盔都支援影像亮度控制。
 
 ## 使用的技術
+
 OyasumiVR 是使用以下技術構建的：
 
 - [Angular](https://angular.io/)（TypeScript，主要 UI）
@@ -389,9 +403,11 @@ OyasumiVR 是使用以下技術構建的：
 - [.NET](https://dotnet.microsoft.com/en-us/)（C#，疊層）
 
 ## 開發
+
 請參閱我們的 [開發入門頁面](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
 
 ## VRChat
+
 OyasumiVR 的某些功能要求你使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
 這僅適用於依賴此功能的特性。你可以使用不依賴此功能的特性，而無需提供憑證。
@@ -402,10 +418,12 @@ OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRCha
 OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對你的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
 
 ## 支援
+
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
 
 或者，你也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯絡我。我會盡快給你回復！
 
 ## 授權條款
+
 OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE)進行發布。這意味著你可以自由地使用、修改和分發它，只要你遵從授權條款。
 
