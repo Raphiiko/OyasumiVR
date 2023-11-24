@@ -23,9 +23,6 @@ Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/
             <td align="center">English</td>
             <td align="center">Japanese<br>日本語</td>
             <td align="center">Korean<br>한국어</td>
-            <td align="center">Simplified Chinese<br>简体中文</td>
-            <td align="center">Traditional Chinese<br>繁體中文</td>
-            <td align="center">Bahasa Indonesia</td>
         </tr>
         <tr>
             <td align="center">
