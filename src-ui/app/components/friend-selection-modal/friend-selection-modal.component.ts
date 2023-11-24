@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { fade, fadeUp, hshrink, noop, vshrink } from '../../utils/animations';
-import { LimitedUser } from 'vrchat/dist';
+import { LimitedUser, UserStatus } from 'vrchat/dist';
 import { VRChatService } from '../../services/vrchat.service';
 import {
   BehaviorSubject,
@@ -14,6 +14,7 @@ import {
 import Fuse from 'fuse.js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { error } from 'tauri-plugin-log-api';
+import { sortBy } from 'lodash';
 
 export type SelectedFriend = SelectedFriendGroup | SelectedFriendPlayer;
 
@@ -35,6 +36,15 @@ export interface FriendSelectionOutputModel {
   selection?: SelectedFriend[];
 }
 
+const MAX_RESULTS = 50;
+const STATUS_SORT_ORDER: Record<UserStatus, number> = {
+  [UserStatus.JoinMe]: 1,
+  [UserStatus.Active]: 2,
+  [UserStatus.AskMe]: 3,
+  [UserStatus.Busy]: 4,
+  [UserStatus.Offline]: 5,
+};
+
 @Component({
   selector: 'app-friend-selection-modal',
   templateUrl: './friend-selection-modal.component.html',
@@ -53,6 +63,7 @@ export class FriendSelectionModalComponent
   activeQuery: string = this.query.value;
   fuse?: Fuse<LimitedUser>;
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
+  moreResults = false;
 
   constructor(protected vrchat: VRChatService, private destroyRef: DestroyRef) {
     super();
@@ -77,6 +88,10 @@ export class FriendSelectionModalComponent
     this.loadingState = 'LOADING';
     try {
       this.friends = await this.vrchat.listFriends();
+      this.friends = sortBy(this.friends, [
+        (friend) => STATUS_SORT_ORDER[friend.status] ?? 6,
+        'displayName',
+      ]);
     } catch (e) {
       this.loadingState = 'ERROR';
       error('[FriendSelectionModal] Failed to load friends: ' + e);
@@ -84,13 +99,14 @@ export class FriendSelectionModalComponent
     }
     const fuseOptions = {
       keys: ['displayName'],
-      findAllMatches: true,
+      findAllMatches: false,
       threshold: 0.3,
     };
     const fuseIndex = Fuse.createIndex(fuseOptions.keys, this.friends);
     this.fuse = new Fuse(this.friends, fuseOptions, fuseIndex);
     if (!this.query.value.trim()) {
-      this.results = this.friends;
+      this.moreResults = this.friends.length > MAX_RESULTS;
+      this.results = this.friends.slice(0, MAX_RESULTS);
     }
     this.loadingState = 'LOADED';
   }
@@ -108,10 +124,13 @@ export class FriendSelectionModalComponent
     if (!this.fuse || this.loadingState !== 'LOADED') return;
     this.activeQuery = query.trim();
     if (!this.activeQuery) {
-      this.results = this.friends;
+      this.moreResults = this.friends.length > MAX_RESULTS;
+      this.results = this.friends.slice(0, MAX_RESULTS);
       return;
     }
-    this.results = this.fuse!.search(this.activeQuery).map((r) => r.item);
+    const results = this.fuse!.search(this.activeQuery);
+    this.moreResults = results.length > MAX_RESULTS;
+    this.results = results.slice(0, MAX_RESULTS).map((r) => r.item);
   }
 
   removeItem(item: SelectedFriendGroup | SelectedFriendPlayer) {

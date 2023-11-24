@@ -512,7 +512,8 @@
       "searchPlaceholder": "Search friend by name...",
       "title": "Select Friends",
       "loading": "Loading Friends...",
-      "loadingError": "Your friends list could not be loaded. Please try again later."
+      "loadingError": "Your friends list could not be loaded. Please try again later.",
+      "moreResultsAvailable": "There are more friends to find than are currently being shown. Please narrow down your search."
     },
     "main-status-bar": {
       "active": "Active",
