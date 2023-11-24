@@ -7,7 +7,8 @@ import {
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
-import { WindowsPowerPolicy } from '../../../../../../models/windows-power-policy';
+import { WindowsService } from '../../../../../../services/windows.service';
+import { combineLatest, tap } from 'rxjs';
 
 @Component({
   selector: 'app-windows-power-policy-tab',
@@ -15,22 +16,10 @@ import { WindowsPowerPolicy } from '../../../../../../models/windows-power-polic
   styleUrls: ['./windows-power-policy-tab.component.scss'],
 })
 export class WindowsPowerPolicyTabComponent implements OnInit {
-  protected readonly policyOptions: SelectBoxItem[] = [
+  protected policyOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
       label: 'shared.common.none',
-    },
-    {
-      id: 'POWER_SAVING',
-      label: 'shared.misc.windowsPowerPolicy.POWER_SAVING',
-    },
-    {
-      id: 'BALANCED',
-      label: 'shared.misc.windowsPowerPolicy.BALANCED',
-    },
-    {
-      id: 'HIGH_PERFORMANCE',
-      label: 'shared.misc.windowsPowerPolicy.HIGH_PERFORMANCE',
     },
   ];
 
@@ -49,13 +38,34 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
   constructor(
     private router: Router,
     private automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private windowsService: WindowsService
   ) {}
 
-  ngOnInit(): void {
-    this.automationConfigService.configs
+  async ngOnInit() {
+    combineLatest([
+      this.automationConfigService.configs,
+      // Update options when the windows power policies are updated
+      this.windowsService.policies.pipe(
+        tap((policies) => {
+          this.policyOptions = [
+            {
+              id: 'NONE',
+              label: 'shared.common.none',
+            },
+          ];
+          policies.forEach((policy) => {
+            this.policyOptions.push({
+              id: policy.guid,
+              label: policy.name,
+            });
+          });
+        })
+      ),
+    ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((configs) => {
+      .subscribe(([configs, policies]) => {
+        // Update options when the windows power policies are updated
         this.onSleepModeEnablePolicy =
           this.policyOptions.find(
             (p) => p.id === configs.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy
@@ -65,6 +75,8 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
             (p) => p.id === configs.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy
           ) ?? this.policyOptions[0];
       });
+    // Fetch the current windows power policies when loading this view
+    await this.windowsService.getWindowsPowerPolicies();
   }
 
   async setPolicy(automation: 'ON_ENABLE' | 'ON_DISABLE', selectBoxItem: SelectBoxItem) {
@@ -74,8 +86,7 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
           'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE',
           {
             enabled: selectBoxItem.id !== 'NONE',
-            powerPolicy:
-              selectBoxItem.id === 'NONE' ? undefined : (selectBoxItem.id as WindowsPowerPolicy),
+            powerPolicy: selectBoxItem.id === 'NONE' ? undefined : selectBoxItem.id,
           }
         );
         break;
@@ -84,8 +95,7 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
           'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE',
           {
             enabled: selectBoxItem.id !== 'NONE',
-            powerPolicy:
-              selectBoxItem.id === 'NONE' ? undefined : (selectBoxItem.id as WindowsPowerPolicy),
+            powerPolicy: selectBoxItem.id === 'NONE' ? undefined : selectBoxItem.id,
           }
         );
         break;

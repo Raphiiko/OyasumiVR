@@ -1326,12 +1326,7 @@
       "tagline": "VR睡眠ソフトウェア"
     },
     "misc": {
-      "vrcLoginRequired": "VRChatアカウントでログインする必要があります。",
-      "windowsPowerPolicy": {
-        "BALANCED": "バランス",
-        "HIGH_PERFORMANCE": "高パフォーマンス",
-        "POWER_SAVING": "省電力"
-      }
+      "vrcLoginRequired": "VRChatアカウントでログインする必要があります。"
     },
     "modals": {
       "cancel": "キャンセル",

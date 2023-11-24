@@ -1373,12 +1373,7 @@
       "tagline": "VR Sleeping Utilities"
     },
     "misc": {
-      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Balanced",
-        "HIGH_PERFORMANCE": "High performance",
-        "POWER_SAVING": "Power saver"
-      }
+      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
       "cancel": "Cancel",

@@ -6,6 +6,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
   2: from1to2,
   3: from2to3,
+  4: from3to4,
 };
 
 export function migrateEventLog(log: EventLog): EventLog {
@@ -25,6 +26,30 @@ export function migrateEventLog(log: EventLog): EventLog {
     info(`[event-log-migrations] Migrated event log to version ${currentVersion + ''}`);
   }
   return log as EventLog;
+}
+function from3to4(data: any): any {
+  data.version = 4;
+  data.logs = data.logs.map((log: any) => {
+    if (log.type === 'windowsPowerPolicySet') {
+      log.type = 'displayBrightnessChanged';
+      switch (log.policy) {
+        case 'HIGH_PERFORMANCE':
+          log.policyName = 'High Performance';
+          break;
+        case 'BALANCED':
+          log.policyName = 'Balanced';
+          break;
+        case 'POWER_SAVING':
+          log.policyName = 'Power Saving';
+          break;
+        default:
+          log.policyName = 'Unknown Policy';
+          break;
+      }
+    }
+    return log;
+  });
+  return data;
 }
 
 function from2to3(data: any): any {

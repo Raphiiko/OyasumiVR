@@ -178,6 +178,7 @@ import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/view
 import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-entries/audio-volume-entries.component';
 import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
+import { WindowsService } from './services/windows.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -342,6 +343,7 @@ export class AppModule {
     private audioDeviceService: AudioDeviceService,
     private openvrInputService: OpenVRInputService,
     private overlayService: OverlayService,
+    private windowsService: WindowsService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -446,6 +448,7 @@ export class AppModule {
           this.logInit('QuitWithSteamVRService initialization', this.quitWithSteamVRService.init()),
           this.logInit('AudioDeviceService initialization', this.audioDeviceService.init()),
           this.logInit('OpenVRInputService initialization', this.openvrInputService.init()),
+          this.logInit('WindowsService initialization', this.windowsService.init()),
         ]);
         // Initialize GPU control services
         await this.logInit('SidecarService initialization', this.sidecarService.init()).then(

@@ -1375,12 +1375,7 @@
       "tagline": "VR 睡眠輔助功能"
     },
     "misc": {
-      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號",
-      "windowsPowerPolicy": {
-        "BALANCED": "平衡模式",
-        "HIGH_PERFORMANCE": "高效能模式",
-        "POWER_SAVING": "省電模式"
-      }
+      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "modals": {
       "cancel": "取消",
@@ -1773,13 +1768,6 @@
       "worldJoinBehaviour": {
         "description": "在 VRChat 中更換世界時，你的麥克風應該如何行為",
         "title": "進入世界行為"
-      }
-    },
-    "worldJoinBehaviour": {
-      "options": {
-        "KEEP": "保留上次狀態",
-        "MUTE": "預設關閉",
-        "UNMUTE": "預設開啟"
       }
     }
   },

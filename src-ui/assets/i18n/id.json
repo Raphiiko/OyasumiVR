@@ -1326,12 +1326,7 @@
       "tagline": "Utilitas VR Sleeping"
     },
     "misc": {
-      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Seimbang",
-        "HIGH_PERFORMANCE": "Performa Penuh",
-        "POWER_SAVING": "Hemat Daya"
-      }
+      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "modals": {
       "cancel": "Batalkan",

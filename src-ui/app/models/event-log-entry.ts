@@ -2,7 +2,6 @@ import { ShutdownSequenceStage } from '../services/shutdown-automations.service'
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
-import { WindowsPowerPolicy } from './windows-power-policy';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {
@@ -173,7 +172,7 @@ export interface EventLogChaperoneFadeDistanceChanged extends EventLogBase {
 
 export interface EventLogWindowsPowerPolicySet extends EventLogBase {
   type: 'windowsPowerPolicySet';
-  policy: WindowsPowerPolicy;
+  policyName: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
 }
 

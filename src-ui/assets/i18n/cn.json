@@ -1348,12 +1348,7 @@
       "tagline": "帮助 VR 睡眠的小工具"
     },
     "misc": {
-      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号",
-      "windowsPowerPolicy": {
-        "BALANCED": "平衡模式",
-        "HIGH_PERFORMANCE": "高性能模式",
-        "POWER_SAVING": "省电模式"
-      }
+      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号"
     },
     "modals": {
       "cancel": "取消",
@@ -1751,13 +1746,6 @@
           "UNMUTE": "默认开启",
           "KEEP": "保持上次状态"
         }
-      }
-    },
-    "worldJoinBehaviour": {
-      "options": {
-        "MUTE": "默认关闭",
-        "UNMUTE": "默认开启",
-        "KEEP": "保持当前状态"
       }
     }
   },
