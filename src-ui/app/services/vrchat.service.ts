@@ -9,6 +9,7 @@ import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migr
 import {
   BehaviorSubject,
   combineLatest,
+  debounceTime,
   distinctUntilChanged,
   filter,
   interval,
@@ -130,6 +131,8 @@ export class VRChatService {
       this._vrchatProcessActive.next(event.payload)
     );
     this._vrchatProcessActive.next(await invoke<boolean>('is_vrchat_active'));
+    // Handle login side effects
+    await this.handleLoginSideEffects();
   }
 
   //
@@ -443,6 +446,15 @@ export class VRChatService {
   //
   // INTERNALS
   //
+
+  private async handleLoginSideEffects() {
+    this._status.pipe(distinctUntilChanged(), debounceTime(500)).subscribe((loggedIn) => {
+      if (loggedIn) {
+        // List friends on login to make sure they are cached
+        this.listFriends();
+      }
+    });
+  }
 
   private async pollUserForStatus() {
     interval(5000).subscribe(async () => {
