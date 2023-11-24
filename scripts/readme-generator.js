@@ -10,7 +10,7 @@ function parseTexts(raw) {
         texts[currentKey] = texts[currentKey].trim();
       }
       currentKey = line.trim();
-      texts[currentKey] ??= '';
+      if (!texts[currentKey]) texts[currentKey] = '';
       continue;
     }
     if (!currentKey) continue;
