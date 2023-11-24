@@ -64,7 +64,7 @@ export class WindowsPowerPolicyTabComponent implements OnInit {
       ),
     ])
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(([configs, policies]) => {
+      .subscribe(([configs]) => {
         // Update options when the windows power policies are updated
         this.onSleepModeEnablePolicy =
           this.policyOptions.find(

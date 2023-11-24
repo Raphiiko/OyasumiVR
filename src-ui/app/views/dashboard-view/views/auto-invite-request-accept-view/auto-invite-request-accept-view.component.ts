@@ -110,7 +110,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
         ),
       })
       .subscribe(async (result) => {
-        if (!result) return;
+        if (!result || result.selection === undefined) return;
         const friends = await this.vrchat.listFriends();
         this.playerList = result.selection
           .filter((r) => r.type === 'player')

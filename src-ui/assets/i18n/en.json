@@ -510,7 +510,9 @@
       "noFriendsSelected": "No friends selected",
       "noResultsFor": "No results for ''{query}''",
       "searchPlaceholder": "Search friend by name...",
-      "title": "Select Friends"
+      "title": "Select Friends",
+      "loading": "Loading Friends...",
+      "loadingError": "Your friends list could not be loaded. Please try again later."
     },
     "main-status-bar": {
       "active": "Active",
