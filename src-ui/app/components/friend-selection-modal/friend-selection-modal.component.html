@@ -51,6 +51,9 @@
         ><i class="material-icons-round">check</i></button
         >
       </div>
+      <div class="more-results-available" *ngIf="moreResults">
+        <span translate>comp.friend-selection-modal.moreResultsAvailable</span>
+      </div>
     </div>
     <div class="no-results" *ngIf="!results.length" @vshrink>
       <span

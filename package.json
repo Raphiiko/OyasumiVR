@@ -26,6 +26,7 @@
     "set-version": "node scripts/set-version.js",
     "set-flavour": "node scripts/set-flavour.js",
     "set-build-id": "node scripts/set-build-id.js",
+    "generate-readmes": "node scripts/readme-generator.js",
     "tauri": "cargo tauri",
     "ng": "ng",
     "lint": "ng lint",

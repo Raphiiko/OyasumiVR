@@ -10,13 +10,10 @@ import { EventLogService } from '../event-log.service';
 import {
   asyncScheduler,
   debounceTime,
-  delay,
   filter,
   firstValueFrom,
   map,
-  of,
   pairwise,
-  skipUntil,
   startWith,
   tap,
   throttleTime,
@@ -52,8 +49,8 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
       .pipe(
         // Get the previous as and current status
         pairwise(),
-        // Ignore status changes for the first 5 seconds
-        skipUntil(of(null).pipe(delay(5000))),
+        // Debounce so we don't accidentally turn off all the base stations
+        debounceTime(5000),
         // Stop if it's not a SteamVR stop
         filter(([oldStatus, newStatus]) => oldStatus === 'INITIALIZED' && newStatus === 'INACTIVE'),
         // Stop if the automation is disabled

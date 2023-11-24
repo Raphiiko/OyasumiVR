@@ -1,0 +1,312 @@
+{{HEADER_TAGLINE}}
+💤 A utility to assist with sleeping in virtual reality. 💤
+
+{{DISCORD_INVITE}}
+If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+
+{{DOWNLOAD_AND_INSTALL_HEADER}}
+Download & Install
+
+{{DOWNLOAD_AND_INSTALL_BODY}}
+Grab our latest installer from whichever place you prefer:
+
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_The **recommended method**_)
+- Our [releases page](https://github.com/Raphiiko/Oyasumi/releases)
+- Our page on [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
+- Our page on [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
+
+Just run the installer and you should be good to go!
+
+{{WHAT_IS_OYASUMIVR_HEADER}}
+What is OyasumiVR?
+
+{{WHAT_IS_OYASUMIVR_BODY}}
+OyasumiVR is a desktop application containing various utilities and automations to **help you sleep with a virtual reality headset on**. Most of these utilities are built specifically for use within the social vr-platform [VRChat](https://vrchat.com).
+
+OyasumiVR can **detect when you are asleep**, and help you in various ways such as:
+- 🔋 Saving electricity and battery overnight
+- 🔅 Dimming your headset brightness
+- ✨ Triggering avatar animations based on your sleeping pose
+- 📩 Automatically handling invite requests
+- 🎤 Muting your microphone when you fall asleep
+- 🛠️ Automating various SteamVR settings
+
+...and many more! Please see the upcoming "Features" section to read more about what functionality OyasumiVR has to offer.
+
+{{FEATURES}}
+Features
+
+{{SLEEP_DETECTION_HEADER}}
+💤 Sleep Detection
+
+{{SLEEP_DETECTION_BODY}}
+OyasumiVR can detect automatically when you are asleep, based on your movement! Simply calibrate once, enable the automation, and you're set.
+<br><br>
+If automatic detection is not what you're looking for, there's various alternative automations you can use, that are based on:
+<br><br>
+<ul>
+  <li>A time schedule</li>
+  <li>Controller & tracker battery levels</li>
+  <li>Controller & tracker power states</li>
+  <li>SteamVR status</li>
+</ul>
+
+{{STEAMVR_OVERLAY_HEADER}}
+📲 SteamVR Overlay
+
+{{STEAMVR_OVERLAY_BODY}}
+OyasumiVR comes with its own SteamVR overlay, which allows you control some of its features from within VR!
+<br><br>
+By default, double press the A button on your right controller, and it should pop up in front of you.
+
+{{POWER_AUTOMATIONS_HEADER}}
+🔋 Power Automations
+
+{{POWER_AUTOMATIONS_BODY_CONTROLLERS_AND_TRACKERS}}
+<b>Controllers & Trackers</b>
+<br>
+Automatically have your controllers and/or trackers turn off when you sleep, and save their battery! You'll be happy when you wake up in the morning and find they'll still have some juice left in them!
+<br>
+<br>
+Additionally, you can have your controllers and/or trackers turn off at certain battery levels, or when you put them on the charger. Ideal for hotswapping controllers!
+
+{{POWER_AUTOMATIONS_BODY_WINDOWS_POWER_POLICY}}
+<b>Windows Power Policy</b>
+<br>
+Save some electricity by automatically setting Windows' Power Policy when you go to sleep and wake up! Simply have it set a more conservative policy (like "Power Saver") when you go to sleep, and then restore a higher performance policy when you wake up again.
+
+{{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
+<b>Base Stations</b>
+<br>
+Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go.
+<br><br>
+<i>Currently only V2 Lighthouses are supported.</i>
+
+{{GPU_AUTOMATIONS_HEADER}}
+🔌 GPU Automations
+
+{{GPU_AUTOMATIONS_BODY_POWER_LIMITING}}
+<b>GPU Power Limiting</b>
+<br>
+Save electricity by automatically power limiting your GPU when you go to sleep, and restoring its full power when you wake up! Simply set the desired watt limits and OyasumiVR will set them when needed.
+<br><br>
+<i>Power limiting is only available on Nvidia GPUs. AMD users can instead make use of the MSI Afterburner automations.</i>
+
+{{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
+<b>MSI Afterburner</b>
+<br>
+If you want more control over your GPU than just setting the power limit, you can have OyasumiVR automatically activate the profiles you've set up in <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>.
+Tweak your over- or underclocks, power limits and more, and have OyasumiVR call for them when you go to sleep, or wake up!
+
+{{VRCHAT_AUTOMATIONS_HEADER}}
+💫 VRChat Automations
+
+{{VRCHAT_AUTOMATIONS_BODY_SLEEPING_ANIMATIONS}}
+🌜 <b>Sleeping Animations</b>
+<br>
+OyasumiVR can detect what sleeping pose you are in, and use it to trigger the right animation or pose on your avatar.
+<br><br>
+There are built-in presets for popular locomotion assets, including:
+<br><br>
+<ul>
+  <li>
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <MARKDOWN-BR>(Sleep System v2.2 - 2.3 by minminmiin)
+    <MARKDOWN-BR><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
+  </li>
+  <li>
+    <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
+  </li>
+</ul>
+<br>
+Alternatively, trigger your own animations with the included OSC script editors!
+
+{{VRCHAT_AUTOMATIONS_BODY_AUTO_ACCEPT_INVITE_REQUESTS}}
+📧 <b>Auto Accept Invite Requests</b>
+<br>
+Automatically accept invite requests from specific friends while you are asleep! You can add the friends you want to let in to the whitelist, or even block certain friends from having their requests automatically accepted with a blacklist.
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+🔵 <b>Status Automations</b>
+<br>
+Automatically change your status based on the number of players in your world:
+<br><br>
+Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+
+{{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
+🔧 <b>OSC Automations</b>
+<br>
+You can send certain OSC messages to VRChat when sleep mode is enabled, or disabled. You can use the built-in OSC script editor to compose the exact messages you want to send.
+<br><br>
+This is a more advanced feature that you can use use to trigger certain features on your avatar. For example: Show a sleepy expression on your face while sleep mode is enabled!
+
+{{SHUTDOWN_SEQUENCE_HEADER}}
+⛔ Shutdown Sequence
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
+<br><br>
+The shutdown sequence can trigger automatically when you've been asleep for a certain amount of time. Depending on which actions you configure, it will do any of the following:
+<br><br>
+<ul>
+  <li>Turn off your controllers and/or Trackers</li>
+  <li>Turn off your Base Stations</li>
+  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
+  <li>Shut down Windows</li>
+</ul>
+<br>
+Now you can fall asleep soundly in VR, knowing that everything will shut down after you've dozed off!
+
+{{BRIGHTNESS_AUTOMATIONS_HEADER}}
+🔅 Brightness Automations
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+<br><br>
+It allows you to control both image brightness, as well as display brightness (the LCD backlight) if your headset supports it (e.g. Valve Index). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+🎤 System Microphone Mute Automations
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<br><br>
+This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+
+{{HEART_RATE_AUTOMATIONS_HEADER}}
+♥️ Heart Rate Automations (Pulsoid Integration)
+
+{{HEART_RATE_AUTOMATIONS_INTRO}}
+To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+<br><br>
+<i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
+
+{{HEART_RATE_AUTOMATIONS_BODY_SLEEP_DETECTION}}
+<b>Sleep Detection</b>
+<br>
+You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+
+{{HEART_RATE_AUTOMATIONS_BODY_NIGHTMARE_DETECTION}}
+<b>Nightmare Detection</b>
+<br>
+OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up.
+
+{{RESOLUTION_AUTOMATIONS_HEADER}}
+👓 Resolution Automations
+
+{{RESOLUTION_AUTOMATIONS_BODY}}
+Automatically adjust your SteamVR render resolution when you sleep and wake up! Having OyasumiVR lower your render resolution helps you reduce the load on your hardware at times when you don't need it.
+
+{{CHAPERONE_AUTOMATIONS_HEADER}}
+🔳 Chaperone Automations
+
+{{CHAPERONE_AUTOMATIONS_BODY}}
+Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
+
+{{TRANSLATION_AND_LOCALIZATION_HEADER}}
+Translation & Localisation
+
+{{TRANSLATION_AND_LOCALIZATION_BODY}}
+OyasumiVR currently supports the following languages:
+
+- English
+- Dutch (Nederlands)
+- Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
+- Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+- Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+- Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
+- French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
+- Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
+
+{{TRANSLATION_HELP_HEADER}}
+Help out with translation
+
+{{TRANSLATION_HELP_BODY}}
+OyasumiVR would not have supported as many languages as it does without the help of our fantastic volunteers. I personally think it's amazing that thanks to their efforts, more people get to use OyasumiVR than would otherwise have been possible.
+
+If you want to support us, either by contributing missing translations, or by adding an entirely new language, please check out [the wiki page on adding translations](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) for instructions on how to get started! In case you're looking for more information, please don't hesitate to hop in our [Discord](https://discord.gg/7MqdPJhYxC) and ask!
+
+{{SUPPORTED_HARDWARE_HEADER}}
+Supported Hardware
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_HEADER}}
+Battery Automations
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_BODY}}
+Currently OyasumiVR supports turning off devices using its battery automations for all SteamVR devices that:
+
+1. Support reporting for battery levels and charging status
+2. Support being turned off via SteamVR.
+
+This includes, but is not limited to the following devices:
+
+- HTC Vive Controllers/Wands
+- Index Controllers/Knuckles
+- Vive Trackers (1.0/2.0/3.0)
+- Tundra Trackers\*
+
+This means that any Oculus controller is unlikely to work, and SlimeVR trackers are unsupported unless they implement this functionality in their [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
+
+_(\*) Tundra trackers have very delayed reporting of battery levels and charging status. This means that while battery automations will still work, they will be very delayed (minutes in the double digits), unless Tundra fixes this in their tracker firmware._
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_HEADER}}
+GPU Automations
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_BODY}}
+Any NVIDIA or AMD graphics card that is supported by MSI Afterburner can be automated by having OyasumiVR activate the profiles you've set up within MSI Afterburner.
+
+Directly controlling the power limits of your graphics card with OyasumiVR is only supported with NVIDIA cards. AMD users will have to use the MSI Afterburner profile automations to be able to control their power limits with OyasumiVR.
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
+Brightness Automations
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+Controlling the display brightness (read 'LCD backlight') of the VR headset's display is only supported on the Valve Index.
+
+Image brightness control is available on all headsets.
+
+{{BUILT_WITH_HEADER}}
+Built With
+
+{{BUILT_WITH_BODY}}
+OyasumiVR's has been built with:
+
+- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Tauri](https://tauri.app/) (Rust, Desktop Framework)
+- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
+
+{{DEVELOPMENT_HEADER}}
+Development
+
+{{DEVELOPMENT_BODY}}
+Please see our wiki page on [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development).
+
+{{VRCHAT_HEADER}}
+VRChat
+
+{{VRCHAT_BODY}}
+Some features of OyasumiVR require you to log in with your VRChat account for them to work. (E.g. status automations)
+
+This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
+Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
+
+OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRChat inc. VRChat © VRChat Inc.
+
+The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
+
+{{SUPPORT_HEADER}}
+Support
+
+{{SUPPORT_BODY}}
+If you are having trouble with OyasumiVR, say you have a bug, or a feature request, you can join our [Discord server](https://discord.gg/7MqdPJhYxC).
+
+Alternatively, you can reach out to me directly on [Twitter at @Raphiiko](https://twitter.com/Raphiiko). I'll try to get back to you as soon as possible!
+
+{{LICENSE_HEADER}}
+License
+
+{{LICENSE_BODY}}
+OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.
