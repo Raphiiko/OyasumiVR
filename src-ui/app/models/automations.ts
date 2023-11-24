@@ -2,7 +2,6 @@ import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
-import { WindowsPowerPolicy } from './windows-power-policy';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type AutomationType =
@@ -257,7 +256,7 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
 
 // WINDOWS POWER POLICY AUTOMATIONS
 export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
-  powerPolicy?: WindowsPowerPolicy;
+  powerPolicy?: string;
 }
 
 // MISCELLANEOUS AUTOMATIONS

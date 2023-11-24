@@ -87,6 +87,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
+        os::commands::get_windows_power_policies,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
         os::commands::windows_shutdown,

@@ -1326,12 +1326,7 @@
       "tagline": "VR Slaap Tools"
     },
     "misc": {
-      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Gebalanceerd",
-        "HIGH_PERFORMANCE": "Hoge prestaties",
-        "POWER_SAVING": "Energiebesparing"
-      }
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "modals": {
       "cancel": "Annuleren",

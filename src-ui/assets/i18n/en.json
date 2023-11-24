@@ -510,7 +510,9 @@
       "noFriendsSelected": "No friends selected",
       "noResultsFor": "No results for ''{query}''",
       "searchPlaceholder": "Search friend by name...",
-      "title": "Select Friends"
+      "title": "Select Friends",
+      "loading": "Loading Friends...",
+      "loadingError": "Your friends list could not be loaded. Please try again later."
     },
     "main-status-bar": {
       "active": "Active",
@@ -1373,12 +1375,7 @@
       "tagline": "VR Sleeping Utilities"
     },
     "misc": {
-      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Balanced",
-        "HIGH_PERFORMANCE": "High performance",
-        "POWER_SAVING": "Power saver"
-      }
+      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
       "cancel": "Cancel",
