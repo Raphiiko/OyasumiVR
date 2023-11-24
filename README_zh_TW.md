@@ -3,12 +3,11 @@
 </h1>
 
 <h3 align="center">
-    :zzz: 一個在虛擬實境中協助入睡的實用程式 :zzz:
+     :zzz: 一個在虛擬實境中協助入睡的實用程式 :zzz:
 </h3>
 
 <p align="center">
     <a><img alt="最新版本" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=%E7%89%88%E6%9C%AC&sort=semver"></a>
-    <a><img alt="正式版建置狀態" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-release.yml/badge.svg"/></a>
     <a><img alt="開發版建置狀態" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="授權條款" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
@@ -52,7 +51,9 @@
 
 ## 下載與安裝
 
-從你喜歡的地方取得我們的最新安裝程式：
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8a18be5c-6698-420e-847a-a5b6f533c8ed" width="180">
+
+選擇你喜歡的方式安裝我們的最新程式：
 
 - 我們的 [Steam 上的頁面](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/)
 - 我們的 [發布頁面](https://github.com/Raphiiko/Oyasumi/releases)
@@ -77,7 +78,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 
 ## 功能
 
-### 💤 入睡偵測
+### 💤 睡眠偵測
 <table>
   <tr>
     <td>
@@ -168,7 +169,7 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 <table>
   <tr>
     <td>
-      🌜 <b>入睡動畫</b>
+      🌜 <b>睡眠動畫</b>
       <br>
       OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應的動畫或姿勢。
       <br><br>
@@ -251,54 +252,55 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
     <td>
       在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地調整亮度，讓你在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
       <br><br>
-      這不僅有助於你在虛擬實境中入睡，還可以避免在醒來時眼睛受到強烈的亮度刺激。
-      <br>如果你使用 Valve Index 頭盔，你還可以調整液晶螢幕的背光（或稱「顯示亮度」）！
+	這允許你控制影像亮度，以及如果您的頭戴式顯示器支援的話（例如 Valve Index），還可以控制顯示器亮度（LCD 背光）。除了為您提供多種自動化選項外，你還可以直接從 SteamVR 疊層選單輕鬆控制亮度等級！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1f9bd880-507d-405f-97fb-525b3a9e195b"></td>
   </tr>
+  
 </table>
 
-### 🎤 System Microphone Mute Automations
+### 🎤 系統麥克風靜音自動化
 <table>
   <tr>
     <td>
-      OyasumiVR 可以在你睡着和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或者持續按住説話模式。
-      <br><br>這樣你的鼾聲就不會吵到別人啦！
+      OyasumiVR 可以在你睡著和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或持續按住說話模式。
+      <br><br>這樣你的鼾聲就不會吵到別人了！
       <br><br>
-      This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+      在 VR 疊層畫面中提供了一個可開關的靜音指示器，還可以綁定一個控制器按鈕，這樣就可以完全取代 VRChat 或其他 VR 遊戲的麥克風靜音功能。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
 
   </tr>
 </table>
 
-### ♥️ Heart Rate Automations (Pulsoid Integration)
+### ♥️ 心跳率自動化 (Pulsoid 整合)
 <table>
   <tr>
     <td colspan="2">
       <img width="60" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e6e73a94-b9c0-4a4b-a3ec-2859e5c01179" />
-      To support heart rate based automations, OyasumiVR integrates with the online heart rate service <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. For this you can use any hardware that Pulsoid supports, like bluetooth heartrate monitors, WearOS smartwatches, or Apple Watches.
+      為了支援基於心跳率的自動化，OyasumiVR 整合了在線心跳率服務 <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。你可以使用 Pulsoid 支援的任何硬件，如藍牙心跳率監測器、WearOS 智能手錶，或 Apple Watches。
       <br><br>
-      <i>Note that this integration requires a one-time purchase of Pulsoid's OyasumiVR integration, or to have an active Pulsoid "BRO" subscription. Please ensure you have a compatible device before making a purchase.</i>
+      <i>請注意，此整合需要一次性購買 Pulsoid 的 OyasumiVR 整合，或擁有活躍的 Pulsoid 「BRO」 訂閱。請在購買前確保你有可用的設備。</i>
     </td>
   </tr>
   <tr>
     <td>
-      <b>Sleep Detection</b>
+      <b>睡眠檢測</b>
       <br>
-      You can set up OyasumiVR to automatically enable the sleep mode when your heart rate has been low enough for a certain duration. Just set the BPM threshold and for how long your heart rate should stay under it, and you're set! If you're not sure, you can get some simple insights to determine the right values for your body.
+      你可以設定 OyasumiVR 在你的心跳率足夠低且持續一定時間時，自動啟用睡眠模式。只需設定心跳每分鐘次數及心跳率應低於此數值的時間長度即可！如果你不確定，可以獲得一些簡單的見解以確定適合你身體的正確數值。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bcdbb83f-b7b7-49d8-b3f1-39a67b9b619e"></td>
   </tr>
   <tr>
     <td>
-      <b>Nightmare Detection</b>
+      <b>惡夢檢測</b>
       <br>
-      OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up. 
+      OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你正在做惡夢。透過這項功能，你可以嘗試通過自動停用睡眠模式（例如，增加亮度），或播放聲音以嘗試喚醒你，從而縮短惡夢時間。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
   </tr>
 </table>
+
 
 ### 👓 解析度自動化
 <table>
@@ -326,13 +328,12 @@ OyasumiVR 可以**自動偵測你何時入睡**，並以多種方式協助你，
 - 英文
 - 荷蘭文 (Nederlands)
 - 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
-- 韓文\* (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
-- 繁體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文\*（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
-- 法文 (Français)\*（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
-- 西班牙文 (Español)\*（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
-
-_(\*) 這是社群支援的語言，這意味著翻譯可能不會在每次更新中都完全完成。_
+- 韓文 (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
+- 繁體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
+- 簡體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
+- 法文 (Français)（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
+- 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
+- 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito))
 
 ### 協助翻譯
 
@@ -358,9 +359,7 @@ OyasumiVR 能夠支援這麼多語言，得益於我們出色的志願者。我�
 
 這意味著任何 Oculus 控制器可能無法正常工作，而 SlimeVR 定位器則不受支援，除非他們在其 [OpenVR 驅動程式](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) 中實現了此功能。
 
-_(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意味著電池自動化仍將運作，但將非
-
-常延遲（雙位數分鐘），除非 Tundra 在其定位器韌體中修復此問題。_
+_(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意味著電池自動化仍將運作，但將非常延遲（雙位數分鐘），除非 Tundra 在其定位器韌體中修復此問題。_
 
 ### GPU 自動化
 
@@ -372,7 +371,7 @@ _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意�
 
 僅支援 Valve Index 頭盔的顯示亮度（即「LCD 背光」）控制。
 
-所有頭盔都支援圖像亮度控制。
+所有頭盔都支援影像亮度控制。
 
 ## 使用的技術
 
@@ -380,8 +379,8 @@ OyasumiVR 是使用以下技術構建的：
 
 - [Angular](https://angular.io/)（TypeScript，主要 UI）
 - [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript，疊加層 UI）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，疊加層）
+- [SvelteKit](https://kit.svelte.dev/)（TypeScript，疊層 UI）
+- [.NET](https://dotnet.microsoft.com/en-us/)（C#，疊層）
 
 ## 開發
 
@@ -391,15 +390,14 @@ OyasumiVR 是使用以下技術構建的：
 
 OyasumiVR 的某些功能要求你使用 VRChat 帳戶登入才能使用（例如狀態自動化）。
 
-This is only required for features that rely on this. You can use features that don't rely on this without having to provide credentials.
-Your login credentials will never be stored anywhere but your own machine, and are only ever sent to VRChat's servers for authentication purposes.
+這僅適用於依賴此功能的特性。你可以使用不依賴此功能的特性，而無需提供憑證。
+你的登入憑證將永遠不會被儲存在你自己的機器以外的任何地方，並且僅用於向 VRChat 伺服器進行身份驗證目的時才會發送。
 
 OyasumiVR 不受 VRChat 贊助，也不反映 VRChat 或任何官方參與 VRChat 生產或管理的人士的觀點或意見。VRChat 是 VRChat Inc. 的商標。VRChat © VRChat Inc.
 
 OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（對你的 VRChat 帳戶或其他方面的問題）不承擔任何責任。請自行承擔風險。
 
 ## 支援
-
 如果你在使用 OyasumiVR 遇到問題，或者有任何疑問，歡迎到 <a href="https://discord.gg/7MqdPJhYxC">Discord 伺服器</a>尋求幫助！我們的社群非常樂意提供協助。
 
 或者，你也可以直接在 [Twitter 上 @Raphiiko](https://twitter.com/Raphiiko) 聯絡我。我會盡快給你回復！
