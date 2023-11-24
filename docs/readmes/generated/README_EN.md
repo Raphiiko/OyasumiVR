@@ -327,7 +327,7 @@ Automatically adjust your SteamVR render resolution when you sleep and wake up! 
   </tr>
 </table>
 
-###   
+### 🔳 Chaperone Automations
 
 <table>
   <tr>

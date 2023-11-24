@@ -327,7 +327,7 @@ Secara otomatis menyesuaikan resolusi render SteamVR Anda saat Anda tidur dan ba
   </tr>
 </table>
 
-###   
+### 🔳 Otomatisasi Chaperone
 
 <table>
   <tr>

@@ -327,7 +327,7 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
   </tr>
 </table>
 
-###   
+### 🔳 Chaperone 自動化
 
 <table>
   <tr>

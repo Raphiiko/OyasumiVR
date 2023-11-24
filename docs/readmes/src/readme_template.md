@@ -232,7 +232,7 @@
   </tr>
 </table>
 
-###   
+### {{CHAPERONE_AUTOMATIONS_HEADER}}
 
 <table>
   <tr>
