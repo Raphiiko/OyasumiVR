@@ -45,6 +45,7 @@
       "http": {
         "request": true,
         "scope": [
+          "https://europe-west1-oyasumivr.cloudfunctions.net/*",
           "https://api.vrchat.cloud/api/1/*",
           "https://assets.vrchat.com/*",
           "https://files.vrchat.cloud/*",
