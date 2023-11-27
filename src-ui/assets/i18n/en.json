@@ -57,7 +57,8 @@
     "title": "Auto Accept Invite Requests",
     "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
     "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-    "whitelist": "Player Whitelist"
+    "whitelist": "Player Whitelist",
+    "loadingFriends": "Loading friends..."
   },
   "brightness-automations": {
     "brightnessAutomations": {
