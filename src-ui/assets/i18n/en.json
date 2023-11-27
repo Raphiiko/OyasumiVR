@@ -11,7 +11,8 @@
     "discordInvite": "Discord Server",
     "projectLinks": "Project Links",
     "sourceLink": "Source Code @ GitHub",
-    "translations": "Translations"
+    "translations": "Translations",
+    "supporters": "Supporters"
   },
   "auto-invite-request-accept": {
     "addFriends": "Add Friends",
@@ -57,7 +58,8 @@
     "title": "Auto Accept Invite Requests",
     "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
     "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
-    "whitelist": "Player Whitelist"
+    "whitelist": "Player Whitelist",
+    "loadingFriends": "Loading friends..."
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -609,6 +611,17 @@
       },
       "title": "Two Factor Authentication",
       "logginInAs": "You're logging into VRChat as:"
+    },
+    "device-edit-modal": {
+      "title": "Edit Device: {deviceId}",
+      "deviceNickname": {
+        "title": "Nickname",
+        "description": "Optionally set a custom name for this device"
+      },
+      "ignoreLighthouse": {
+        "title": "Ignore Basestation",
+        "description": "Ignored basestations will be hidden and are not affected by any automations"
+      }
     }
   },
   "gpu-automations": {

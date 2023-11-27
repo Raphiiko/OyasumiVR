@@ -91,7 +91,7 @@
       },
       "onSleepPreparation": {
         "description": "明るさの調整",
-        "title": "寝る前の準備時"
+        "title": "就寝準備時"
       },
       "onStartup": {
         "description": "明るさの調整",
@@ -184,8 +184,6 @@
       "chaperoneAutomations": "ガーディアンの自動化",
       "gpuAutomations": "GPUの電力",
       "hardwareAutomations": "ハードウェアの自動化",
-      "miscAutomations": "その他の自動化",
-      "nightmareDetection": "悪夢の検知",
       "oscAutomations": "OSC",
       "overview": "概要",
       "powerAutomations": "機器の電源",
@@ -197,7 +195,10 @@
       "statusAutomations": "ステータス",
       "systemMicMuteAutomations": "マイクミュート",
       "vrcAutomations": "VRChat関係の自動化",
-      "vrchatMicMuteAutomations": "マイクミュート"
+      "vrchatMicMuteAutomations": "マイクミュート",
+      "miscAutomations": "その他の自動化",
+      "nightmareDetection": "悪夢の検知",
+      "audioVolumeAutomations": "音量の自動化"
     },
     "device-list": {
       "category": {
@@ -212,7 +213,7 @@
       "lighthouseStatus": {
         "booting": "起動中",
         "on": "アクティブ",
-        "sleep": "スリーピング",
+        "sleep": "スリープ",
         "standby": "スタンバイ",
         "unknown": "不明な状態"
       },
@@ -410,10 +411,11 @@
         "sleepModeDisabled": {
           "reason": {
             "automation": {
-              "NIGHTMARE_DETECTION": "悪夢を見ていると判断された",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVRの終了による",
               "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "時間経過による",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入った",
+              "NIGHTMARE_DETECTION": "悪夢を見ていると判断された",
               "unknown": "不明な自動機能"
             },
             "manual": "手動で無効化",
@@ -466,6 +468,30 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
           "title": "Windowsの電源プランを{policy}に設定"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "オーディオデバイス ''{deviceName}'' の音量を {percentage} に設定",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "ミュートされたオーディオデバイス ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "ミュート解除されたオーディオデバイス ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          }
         }
       }
     },
@@ -480,11 +506,14 @@
       "title": "イベント"
     },
     "friend-selection-modal": {
-      "noFriends": "フレンドリストが空です",
+      "noFriends": "フレンドリストがありません",
       "noFriendsSelected": "選択されたフレンドはいません",
       "noResultsFor": "''{query}''の結果が見つかりません",
-      "searchPlaceholder": "名前からフレンドを検索する...",
-      "title": "フレンドを選択する"
+      "searchPlaceholder": "名前からフレンドを検索する…",
+      "title": "フレンドを選択する",
+      "loading": "フレンドを読み込んでいます",
+      "loadingError": "フレンドリストを読み込めませんでした。後ほどお試しください。",
+      "moreResultsAvailable": "表示上限を超えています。もっと絞り込んで検索してください。"
     },
     "main-status-bar": {
       "active": "アクティブ",
@@ -495,6 +524,10 @@
       "heartrate": "心拍数",
       "inactive": "非アクティブ",
       "loggedOut": "ログアウト中",
+      "sleepMode": {
+        "label": "睡眠モード",
+        "tooltip": "手動睡眠モード"
+      },
       "steamvr": {
         "INACTIVE": "非アクティブ",
         "INITIALIZED": "アクティブ",
@@ -565,7 +598,8 @@
       },
       "password": "パスワード",
       "title": "VRChatにログイン",
-      "username": "VRChatユーザー名/Eメール"
+      "username": "VRChatユーザー名/Eメール",
+      "rememberCredentials": "ログイン情報を保存する"
     },
     "vrchat-login-tfa-modal": {
       "description": "VRChatアカウントは二要素認証で保護されています。\r\n\r\n2FAコードを入力してください:",
@@ -573,7 +607,8 @@
         "INVALID_FORMAT": "有効な2要素認証コードは6桁の数字です。入力内容をご確認ください。",
         "LAST_CODE_INVALID": "入力された2要素認証コードが正しくありません。"
       },
-      "title": "二要素認証"
+      "title": "二要素認証",
+      "logginInAs": "You're logging into VRChat as:"
     }
   },
   "gpu-automations": {
@@ -667,36 +702,6 @@
       "tooManyCommands": "OSCスクリプトは、{value}以上のアクションを持つことはできません。",
       "totalDurationTooLong": "スクリプトの総時間は10秒を超えてはなりません。"
     }
-  },
-  "nightmare-detection": {
-    "automations": {
-      "description": "悪夢を見ている判断したときに実行される自動化",
-      "title": "自動化"
-    },
-    "bpmThreshold": {
-      "description": "悪夢を検知するために心拍数が達成しなければならない閾値",
-      "title": "最低心拍数",
-      "unit": "BPM"
-    },
-    "disableSleepMode": {
-      "description": "悪夢の可能性があるときに睡眠モードを無効にします",
-      "title": "睡眠モードの無効化"
-    },
-    "duration": {
-      "description": "OyasumiVRが悪夢を見ている判断する前に、心拍数が閾値を超え続ける必要がある期間",
-      "title": "期間"
-    },
-    "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。",
-    "playSound": {
-      "description": "悪夢の可能性があるときにOyasumiVRによって音を鳴らして目を覚ましましょう",
-      "title": "音を再生",
-      "volume": {
-        "description": "効果音が再生される音量を設定",
-        "test": "テスト",
-        "title": "音量"
-      }
-    },
-    "title": "悪夢の検知"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -1057,18 +1062,57 @@
           "docs": "もっと詳しく",
           "title": "翻訳に貢献できます！"
         },
-        "editor": {
-          "action": "エディタを起動",
-          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
-          "experimental": "このモジュールはまだ実験的な段階にあり、英語のみ利用可能です。現時点では問題や機能不足の可能性があります。",
-          "title": "翻訳エディタ"
-        },
         "loadFile": {
           "action": "ファイルを読み込む",
           "description": "カスタム言語ファイルを読み込みます。新しい翻訳をテストするときに便利です。",
           "title": "翻訳ファイルを読み込む"
         },
-        "title": "言語・翻訳"
+        "title": "言語・翻訳",
+        "editor": {
+          "title": "翻訳エディタ",
+          "action": "エディタを起動",
+          "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
+          "experimental": "このモジュールはまだ実験的な段階にあり、英語のみ利用可能です。現時点では問題や機能不足の可能性があります。"
+        }
+      },
+      "fixes": {
+        "title": "修正とトラブルシューティング",
+        "description": "このセクションには問題を修正し、トラブルシューティングに関連するいくつかのオプションとアクションが含まれています。通常時に利用するものではありません。",
+        "vrManifestReregister": {
+          "title": "SteamVRアプリケーションマニフェストの再登録",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します。",
+          "action": "マニフェストの再登録",
+          "modal": {
+            "success": {
+              "title": "VRアプリケーションマニフェストの再登録成功",
+              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "VRアプリケーションマニフェストの再登録失敗",
+              "message": "マニフェストは削除されましたが、新たに追加できませんでした。OyasumiVRを再起動してログを確認してください。"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "VRアプリケーションマニフェストの再登録失敗",
+              "message": "マニフェストを削除できませんでした。ログを確認してください。"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "VRアプリケーションマニフェストの再登録失敗",
+              "message": "マニフェストが登録されていませんでした。OyasumiVRを再起動してください。"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "VRアプリケーションマニフェストの再登録失敗",
+              "message": "マニフェストがすでに登録されているか確認できませんでした。OyasumiVRを再起動してログを確認してください。"
+            },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "アプリケーションマニフェストの登録解除",
+              "message": "OyasumiVRの非対応ビルド（たとえば、Steam版）を使用しているため、アプリケーションマニフェストは登録解除されましたが、再登録されませんでした。これはエラーではありません。OyasumiVRを再起動してください。"
+            },
+            "UNKNOWN": {
+              "title": "VRアプリケーションマニフェストの再登録失敗",
+              "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。"
+            }
+          }
+        }
       }
     },
     "general": {
@@ -1129,7 +1173,11 @@
           "description": "OyasumiVRのオーバーレイメニューを完全に無効にしたい場合、このオプションをオフにできます。",
           "title": "オーバーレイメニューを有効にする"
         },
-        "title": "オーバーレイ"
+        "title": "オーバーレイ",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "VRChatが実行中の場合のみメニューを開く",
+          "description": "VRChatが実行されていない間にメニューが開かないようになります。"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -1193,6 +1241,7 @@
       "disconnect": "切断",
       "providerLink": "公式サイト",
       "pulsoid": {
+        "description": "心拍数データを共有し、特定の自動化を有効にできます。<br><i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの\"BRO\"サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。",
         "title": "Pulsoid"
       },
       "reveal": "表示",
@@ -1261,7 +1310,8 @@
         "description": "OyasumiVR機能の中には、VRChatアカウントでログインしないと使用できないものがあります。",
         "disclaimers": {
           "brand": "OyasumiVRはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
-          "liability": "Raphiiko はOyasumiVRに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。"
+          "liability": "Raphiiko はOyasumiVRに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。",
+          "use": "ログイン情報は自身のPC以外に保存されることはなく、認証のためだけにVRChatのサーバーに送信されます。"
         },
         "loggedIn": {
           "logOut": "ログアウト",
@@ -1421,6 +1471,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "時刻指定",
+      "afterTime": {
+        "title": "指定時間の経過後",
+        "description": {
+          "minutes": "{minutes, plural, one {1分} other {#分}}後",
+          "hours": "{hours, plural, one {1時間} other {#時間}}後",
+          "hoursAndMinutes": "{hours, plural, one {1時間} other {#時間}} {minutes, plural, one {1分} other {#分}}後"
+        }
+      },
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
       "onSteamVRStop": "SteamVRを終了したとき",
@@ -1452,6 +1510,11 @@
       "disableAtTime": {
         "description": "指定した時刻に睡眠モードを無効にします。",
         "time": "時刻",
+        "title": "睡眠モードの無効化"
+      },
+      "disableAfterTime": {
+        "description": "一定時間の経過後に睡眠モードを無効化にします",
+        "time": "期間",
         "title": "睡眠モードの無効化"
       },
       "disableOnDevicePowerOn": {
@@ -1515,6 +1578,7 @@
           "title": "BPM 閾値",
           "unit": "BPM"
         },
+        "description": "一定の閾値以下の心拍数が一定の時間継続した場合に睡眠モードを有効にします。心拍数の閾値と、睡眠モードが有効になるための時間を定義します\n\nこれには<a class=\"integrationsPageLink\">Pulsoid連携</a>を有効にする必要があります",
         "duration": {
           "description": "睡眠モードを有効にするために心拍数が閾値以下になる必要がある時間を設定します。",
           "title": "期間",
@@ -1670,7 +1734,19 @@
         "description": "インジケーターアイコンの最大不透明度",
         "title": "不透明度"
       },
-      "title": "オーバーレイインジケーター"
+      "title": "オーバーレイインジケーター",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "VRChatによる",
+          "HARDWARE": "マイク音量による"
+        },
+        "title": "音声アクティベーションモード",
+        "description": "音声アクティベーション（インジケータの点灯）がどのモードで判断されるかを決定します。"
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "音声アクティベーション閾値",
+        "description": "マイクのインジケータが点灯する音量の閾値を設定します。"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1687,7 +1763,19 @@
       },
       "title": "ミュート自動化"
     },
-    "title": "マイクミュートの自動化"
+    "title": "マイクミュートの自動化",
+    "vrchat": {
+      "title": "VRChat オプション",
+      "worldJoinBehaviour": {
+        "title": "ワールド移動での動作",
+        "description": "VRChatでワールドを移動する際にマイクがどのように動作するか",
+        "options": {
+          "MUTE": "デフォルトオフ",
+          "UNMUTE": "デフォルトオン",
+          "KEEP": "前回の状態を保持"
+        }
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1744,5 +1832,79 @@
       "unmuted": "ミュート解除"
     },
     "title": "マイクミュート"
+  },
+  "nightmare-detection": {
+    "title": "悪夢の検知",
+    "description": "睡眠中の高い心拍数をチェックして悪夢を見ていないか確認します。悪夢を検出することで目覚めをサポートすることができます。悪夢の検出は、睡眠モードがアクティブな間だけ実行されます。\n\n<b>注意:</b> この機能を使用するには、<a class=\"integrationsPageLink\">Pulsoid連携</a>を有効にする必要があります。",
+    "bpmThreshold": {
+      "unit": "BPM",
+      "title": "最低心拍数",
+      "description": "悪夢を検知するために心拍数が達成しなければならない閾値"
+    },
+    "duration": {
+      "title": "期間",
+      "description": "OyasumiVRが悪夢を見ている判断する前に、心拍数が閾値を超え続ける必要がある期間"
+    },
+    "automations": {
+      "title": "自動化",
+      "description": "悪夢を見ている判断したときに実行される自動化"
+    },
+    "disableSleepMode": {
+      "title": "睡眠モードの無効化",
+      "description": "悪夢の可能性があるときに睡眠モードを無効にします"
+    },
+    "playSound": {
+      "title": "音を再生",
+      "description": "悪夢の可能性があるときにOyasumiVRによって音を鳴らして目を覚ましましょう",
+      "volume": {
+        "title": "音量",
+        "description": "効果音が再生される音量を設定",
+        "test": "テスト"
+      }
+    },
+    "notification": "心拍数が持続的に高いため、悪夢を見ていると判断しました。"
+  },
+  "audio-volume-automations": {
+    "title": "音量の自動化",
+    "description": "オーディオデバイスの音量を自動的に変更します。他の人に起こされないようにするのに便利です。",
+    "onSleepEnable": {
+      "title": "睡眠時",
+      "description": "睡眠モードが有効になったとき、オーディオデバイスの音量を変更します"
+    },
+    "onSleepDisable": {
+      "title": "起床時",
+      "description": "睡眠モードが無効になったとき、オーディオデバイスの音量を変更します"
+    },
+    "onSleepPreparation": {
+      "title": "就寝準備時",
+      "description": "スリープの準備をアクティブにしたとき、オーディオデバイスの音量を変更します"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "選択されたオーディオデバイスはありません",
+        "hasDevices": "オーディオデバイスを追加"
+      },
+      "description": "音量を自動化するオーディオデバイスを選択します"
+    },
+    "selectDevice": "オーディオデバイスを選択",
+    "removeDevice": "削除",
+    "actionOptions": {
+      "SET_VOLUME": "音量変更",
+      "MUTE": "ミュート",
+      "UNMUTE": "ミュート解除"
+    },
+    "picker": {
+      "title": "デバイスを選択",
+      "noCaptureDevices": "録音デバイスが見つかりません",
+      "noPlaybackDevices": "再生デバイスが見つかりません",
+      "defaultDevice": "デフォルトデバイス"
+    },
+    "automations": {
+      "label": "{count, plural, one {1つの自動化} other {#つの自動化}}"
+    },
+    "volume": {
+      "title": "音量",
+      "description": "オーディオデバイスの音量を設定するレベル"
+    }
   }
 }

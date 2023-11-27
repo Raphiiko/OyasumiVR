@@ -12,6 +12,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   filter,
+  firstValueFrom,
   interval,
   map,
   Observable,
@@ -85,6 +86,7 @@ export class VRChatService {
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_FRIENDS'
   );
+  private _friendFetcher = new BehaviorSubject<Observable<'SUCCESS' | 'FAILED'> | null>(null);
   private _notifications: Subject<Notification> = new Subject<Notification>();
   private _userStatusLastUpdated = new BehaviorSubject<number>(0);
   private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
@@ -98,6 +100,7 @@ export class VRChatService {
   ]).pipe(map(([world]) => world));
   public notifications = this._notifications.asObservable();
   public vrchatProcessActive = this._vrchatProcessActive.asObservable();
+  public isFetchingFriends = this._friendFetcher.asObservable().pipe(map(Boolean));
 
   constructor(private modalService: ModalService, private logService: VRChatLogService) {
     this.eventHandler = new VRChatEventHandlerManager(this);
@@ -345,9 +348,17 @@ export class VRChatService {
       error('[VRChat] Tried listing friends while not logged in');
       throw new Error('Tried listing friends while not logged in');
     }
+    // If we are already listing friends, just await that result
+    if (this._friendFetcher.value) {
+      await firstValueFrom(this._friendFetcher); // We don't care about the result, just that it completes
+      return this._friendsCache.get() ?? [];
+    }
     // Fetch friends
+    const friendFetchCompletion = new Subject<'SUCCESS' | 'FAILED'>();
+    this._friendFetcher.next(friendFetchCompletion.asObservable());
     const friends: LimitedUser[] = [];
     // Fetch online and active friends
+    let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
     for (const offline of ['false', 'true']) {
       try {
         for (let offset = 0; offset < MAX_VRCHAT_FRIENDS; offset += 100) {
@@ -366,6 +377,7 @@ export class VRChatService {
             },
           });
           if (response.result && response.result.ok) {
+            fetchResult = 'SUCCESS';
             // Add friends to list
             friends.push(...response.result.data);
             // If we got some friends, continue fetching
@@ -375,10 +387,13 @@ export class VRChatService {
         }
       } catch (e) {
         error('[VRChat] Failed to list friends: ' + JSON.stringify(e));
+        fetchResult = 'FAILED';
         break;
       }
     }
     this._friendsCache.set(friends);
+    friendFetchCompletion.next(fetchResult);
+    this._friendFetcher.next(null);
     return friends;
   }
 

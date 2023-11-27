@@ -54,6 +54,7 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
       .subscribe((lighthouses) => {
         const devices = lighthouses.filter(
           (lighthouse) =>
+            !this.lighthouse.isDeviceIgnored(lighthouse) &&
             !this.seenDevices.includes(lighthouse.id) &&
             (lighthouse.powerState === 'sleep' ||
               lighthouse.powerState === 'standby' ||

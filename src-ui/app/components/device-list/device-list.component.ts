@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, DestroyRef, OnInit } from '@angular/core';
-import { flatten, groupBy, uniq } from 'lodash';
+import { flatten, groupBy, isEqual, uniq } from 'lodash';
 import { fade, hshrink, triggerChildren, vshrink } from 'src-ui/app/utils/animations';
 import { OVRDevice, OVRDeviceClass } from 'src-ui/app/models/ovr-device';
 import { LighthouseConsoleService } from '../../services/lighthouse-console.service';
@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { filterInPlace } from 'src-ui/app/utils/arrays';
-import { combineLatest, debounceTime, firstValueFrom, tap } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, firstValueFrom, map, tap } from 'rxjs';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 
 type DisplayCategory = OpenVRDisplayCategory | LighthouseDisplayCategory;
@@ -67,9 +67,15 @@ export class DeviceListComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef),
         tap((devices) => this.processOpenVRDevices(devices))
       ),
-      this.lighthouse.devices.pipe(
+      combineLatest([
+        this.lighthouse.devices,
+        this.appSettings.settings.pipe(
+          map((s) => s.ignoredLighthouses),
+          distinctUntilChanged((prev, curr) => isEqual(prev, curr))
+        ),
+      ]).pipe(
         takeUntilDestroyed(this.destroyRef),
-        tap((devices) => this.processLighthouseDevices(devices))
+        tap(([devices, ignored]) => this.processLighthouseDevices(devices, ignored))
       ),
     ])
       .pipe(tap(() => this.sortDeviceCategories()))
@@ -152,7 +158,7 @@ export class DeviceListComponent implements OnInit {
     }
   }
 
-  processLighthouseDevices(devices: LighthouseDevice[]) {
+  processLighthouseDevices(devices: LighthouseDevice[], ignoredDevices: string[]) {
     // Add missing device category
     if (devices.length && !this.deviceCategories.some((c) => c.type === 'Lighthouse')) {
       this.deviceCategories.push({
@@ -188,7 +194,17 @@ export class DeviceListComponent implements OnInit {
     // Remove obsolete devices
     filterInPlace(category.devices, (d) => devices.some((device) => device.id === d.id));
     // Sort devices in place
-    category.devices.sort((a, b) => a.id.localeCompare(b.id));
+    category.devices.sort((a, b) => {
+      const aIgnored = ignoredDevices.includes(a.id);
+      const bIgnored = ignoredDevices.includes(b.id);
+      if (aIgnored && !bIgnored) {
+        return 1;
+      } else if (!aIgnored && bIgnored) {
+        return -1;
+      } else {
+        return a.id.localeCompare(b.id);
+      }
+    });
     // Update category power state
     category.canBulkPowerOn = category.devices.some(
       (d) => d.powerState === 'standby' || d.powerState === 'sleep'
@@ -251,7 +267,9 @@ export class DeviceListComponent implements OnInit {
   async bulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
     if (category.canBulkPowerOn) {
       const devices = category.devices.filter(
-        (d) => d.powerState === 'standby' || d.powerState === 'sleep'
+        (d) =>
+          (d.powerState === 'standby' || d.powerState === 'sleep') &&
+          !this.lighthouse.isDeviceIgnored(d)
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -263,7 +281,9 @@ export class DeviceListComponent implements OnInit {
     } else if (category.canBulkPowerOff) {
       const powerOffState = (await firstValueFrom(this.appSettings.settings))
         .lighthousePowerOffState;
-      const devices = category.devices.filter((d) => d.powerState === 'on');
+      const devices = category.devices.filter(
+        (d) => d.powerState === 'on' && !this.lighthouse.isDeviceIgnored(d)
+      );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
         reason: 'MANUAL',
