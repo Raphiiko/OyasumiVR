@@ -63,7 +63,7 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
           this.appSettings.settings.pipe(map((s) => s.lighthousePowerOffState))
         );
         const devices = (await firstValueFrom(this.lighthouse.devices)).filter(
-          (d) => d.powerState === 'on'
+          (d) => d.powerState === 'on' && !this.lighthouse.isDeviceIgnored(d)
         );
         if (devices.length) {
           this.eventLog.logEvent({
@@ -85,7 +85,9 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
         filter(() => this.config.enabled),
         // Get the newly discovered devices
         map(([oldDevices, newDevices]) =>
-          newDevices.filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+          newDevices
+            .filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+            .filter((d) => !this.lighthouse.isDeviceIgnored(d))
         ),
         // Handle the new devices
         tap((newDevices) => {

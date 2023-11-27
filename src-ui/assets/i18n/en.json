@@ -611,6 +611,17 @@
       },
       "title": "Two Factor Authentication",
       "logginInAs": "You're logging into VRChat as:"
+    },
+    "device-edit-modal": {
+      "title": "Edit Device: {deviceId}",
+      "deviceNickname": {
+        "title": "Nickname",
+        "description": "Optionally set a custom name for this device"
+      },
+      "ignoreLighthouse": {
+        "title": "Ignore Basestation",
+        "description": "Ignored basestations will be hidden and are not affected by any automations"
+      }
     }
   },
   "gpu-automations": {

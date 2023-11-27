@@ -179,6 +179,7 @@ import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-
 import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-device-picker/audio-device-picker.component';
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 import { WindowsService } from './services/windows.service';
+import { DeviceEditModalComponent } from './components/device-list/device-edit-modal/device-edit-modal.component';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -281,6 +282,7 @@ export function createTranslateLoader(http: HttpClient) {
     AudioVolumeAutomationsViewComponent,
     AudioVolumeEntriesComponent,
     AudioDevicePickerComponent,
+    DeviceEditModalComponent,
   ],
   imports: [
     CommonModule,

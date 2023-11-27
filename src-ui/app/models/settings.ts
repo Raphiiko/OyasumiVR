@@ -24,6 +24,10 @@ export interface AppSettings {
   overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
+  deviceNicknames: {
+    [deviceId: string]: string;
+  };
+  ignoredLighthouses: string[];
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
@@ -62,6 +66,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   overlayGpuFix: false,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
+  deviceNicknames: {},
+  ignoredLighthouses: [],
 };
 
 export type ExecutableReferenceStatus =

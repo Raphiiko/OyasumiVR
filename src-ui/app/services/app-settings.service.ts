@@ -25,6 +25,7 @@ export class AppSettingsService {
 
   async init() {
     await this.loadSettings();
+    console.log('SETTINGS', this._settings.value);
     this.settings
       .pipe(
         skip(1),
