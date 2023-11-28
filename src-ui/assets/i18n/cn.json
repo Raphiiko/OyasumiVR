@@ -490,7 +490,7 @@
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"          
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           }
         }
       }
