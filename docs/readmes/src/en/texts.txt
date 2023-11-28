@@ -33,10 +33,10 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 
 ...and many more! Please see the upcoming "Features" section to read more about what functionality OyasumiVR has to offer.
 
-{{WHAT_IS_OYASUMIVR_HEADER}}
+{{SUPPORT_OYASUMIVR_HEADER}}
 Support OyasumiVR
 
-{{WHAT_IS_OYASUMIVR_BODY}}
+{{SUPPORT_OYASUMIVR_BODY}}
 OyasumiVR itself is completely free, and always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>

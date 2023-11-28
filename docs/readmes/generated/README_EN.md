@@ -72,7 +72,7 @@ Grab our latest installer from whichever place you prefer:
 
 Just run the installer and you should be good to go!
 
-## What is OyasumiVR?Support OyasumiVR
+## What is OyasumiVR?
 
 OyasumiVR is a desktop application containing various utilities and automations to **help you sleep with a virtual reality headset on**. Most of these utilities are built specifically for use within the social vr-platform [VRChat](https://vrchat.com).
 
@@ -84,7 +84,11 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 - 🎤 Muting your microphone when you fall asleep
 - 🛠️ Automating various SteamVR settings
 
-...and many more! Please see the upcoming "Features" section to read more about what functionality OyasumiVR has to offer.OyasumiVR itself is completely free, and always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+...and many more! Please see the upcoming "Features" section to read more about what functionality OyasumiVR has to offer.
+
+## Support OyasumiVR
+
+OyasumiVR itself is completely free, and always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
@@ -92,10 +96,6 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 By supporting me, you help me dedicate more time for developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
 
 I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
-
-## {{SUPPORT_OYASUMIVR_HEADER}}
-
-{{SUPPORT_OYASUMIVR_BODY}}
 
 ## Features
 

@@ -86,9 +86,16 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
 
 ...그리고 더 많은 기능을 제공하죠! OyasumiVR이 제공하는 기능에 대해 자세히 알아보려면 아래 '기능' 섹션을 참조하세요.
 
-## {{SUPPORT_OYASUMIVR_HEADER}}
+## Support OyasumiVR
 
-{{SUPPORT_OYASUMIVR_BODY}}
+OyasumiVR itself is completely free, and always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+
+By supporting me, you help me dedicate more time for developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+
+I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
 
 ## 기능
 
