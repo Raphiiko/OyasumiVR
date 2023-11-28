@@ -16,6 +16,9 @@
     <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
+    <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+    <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+    <br>
 이야기를 나누고 싶으시면, 우리 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> 디스코드 서버</a>에 들러주세요!
     <br>
     <table align="center">
@@ -82,6 +85,10 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
 - 🛠️ 다양한 SteamVR 설정을 자동화하기
 
 ...그리고 더 많은 기능을 제공하죠! OyasumiVR이 제공하는 기능에 대해 자세히 알아보려면 아래 '기능' 섹션을 참조하세요.
+
+## {{SUPPORT_OYASUMIVR_HEADER}}
+
+{{SUPPORT_OYASUMIVR_BODY}}
 
 ## 기능
 

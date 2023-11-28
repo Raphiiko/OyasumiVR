@@ -16,6 +16,9 @@
     <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
+    <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+    <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+    <br>
 如果你想一起聊天的话，就来加入我们的<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord服务器吧！</a>
     <br>
     <table align="center">
@@ -83,6 +86,10 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 - 🛠️ 自动化各种各样的操作，例如关闭你的设备，或者调整你的GPU功耗限制
 
 除此之外，还可以看看"功能"部分，了解更多由OyasumiVR提供的功能。
+
+## {{SUPPORT_OYASUMIVR_HEADER}}
+
+{{SUPPORT_OYASUMIVR_BODY}}
 
 ## 功能
 
