@@ -16,6 +16,9 @@
     <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
     <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
+    <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+    <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+    <br>
 Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <table align="center">
@@ -82,6 +85,10 @@ OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berba
 - 🛠 Mengotomatiskan berbagai pengaturan SteamVR
 
 ...dan masih banyak lagi! Silakan lihat bagian "Fitur" yang akan datang untuk membaca lebih lanjut tentang fungsionalitas yang ditawarkan OyasumiVR.
+
+## {{SUPPORT_OYASUMIVR_HEADER}}
+
+{{SUPPORT_OYASUMIVR_BODY}}
 
 ## Fitur
 
