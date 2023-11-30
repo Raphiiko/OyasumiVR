@@ -28,9 +28,17 @@ export interface AppSettings {
     [deviceId: string]: string;
   };
   ignoredLighthouses: string[];
+  hotkeys: { [hotkeyId: string]: string[] };
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
+
+export type HotkeyId =
+  | 'HOTKEY_TOGGLE_SLEEP_MODE'
+  | 'HOTKEY_ENABLE_SLEEP_MODE'
+  | 'HOTKEY_DISABLE_SLEEP_MODE'
+  | 'HOTKEY_RUN_SLEEP_PREPARATION'
+  | 'HOTKEY_RUN_SHUTDOWN_SEQUENCE';
 
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
@@ -68,6 +76,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   generalNotificationVolume: 100,
   deviceNicknames: {},
   ignoredLighthouses: [],
+  hotkeys: {},
 };
 
 export type ExecutableReferenceStatus =

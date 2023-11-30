@@ -5,9 +5,11 @@ import {
   BehaviorSubject,
   debounceTime,
   delay,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
   interval,
+  map,
   merge,
   Observable,
   of,
@@ -73,19 +75,25 @@ export class LighthouseService {
       this.deviceNicknames = settings.deviceNicknames;
       this.ignoredDevices = settings.ignoredLighthouses;
     });
-    this.appSettings.settings.pipe(debounceTime(100)).subscribe(async (settings) => {
-      if (settings.lighthousePowerControl) {
-        const status = await invoke<LighthouseStatus>('lighthouse_get_status');
-        this._status.next(status);
-        this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
-        if (status === 'ready') {
-          await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
+    this.appSettings.settings
+      .pipe(
+        debounceTime(100),
+        map((settings) => settings.lighthousePowerControl),
+        distinctUntilChanged()
+      )
+      .subscribe(async (lighthousePowerControl) => {
+        if (lighthousePowerControl) {
+          const status = await invoke<LighthouseStatus>('lighthouse_get_status');
+          this._status.next(status);
+          this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
+          if (status === 'ready') {
+            await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
+          }
+        } else {
+          this._devices.next([]);
+          await invoke('lighthouse_reset');
         }
-      } else {
-        this._devices.next([]);
-        await invoke('lighthouse_reset');
-      }
-    });
+      });
   }
 
   async scan() {

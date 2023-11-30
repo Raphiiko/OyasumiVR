@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { trigger } from '@angular/animations';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
-import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
@@ -22,6 +21,13 @@ import { TranslationLoaderViewComponent } from './modules/translation/views/tran
 import { TranslationEditorViewComponent } from './modules/translation/views/translation-editor-view/translation-editor-view.component';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
+import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
+import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
+import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
+import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
+import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
+import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
+import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
 
 const routes: Routes = [
   {
@@ -95,7 +101,40 @@ const routes: Routes = [
       },
       {
         path: 'settings',
-        component: SettingsViewComponent,
+        children: [
+          {
+            path: 'general',
+            component: SettingsGeneralViewComponent,
+          },
+          {
+            path: 'vrchat',
+            component: SettingsVRChatViewComponent,
+          },
+          {
+            path: 'notifications',
+            component: SettingsNotificationsViewComponent,
+          },
+          {
+            path: 'hotkeys',
+            component: SettingsHotkeyViewComponent,
+          },
+          {
+            path: 'updates',
+            component: SettingsUpdatesViewComponent,
+          },
+          {
+            path: 'integrations',
+            component: SettingsIntegrationsViewComponent,
+          },
+          {
+            path: 'advanced',
+            component: SettingsAdvancedViewComponent,
+          },
+          {
+            path: '**',
+            redirectTo: 'general',
+          },
+        ],
       },
       {
         path: 'about',

@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for custom Windows power policies
 - Custom nicknames for controller, tracker, and base station devices.
 - Option for ignoring specific basestations in automations.
+- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, and running the shutdown sequence)
 
 ### Changed
 - When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.

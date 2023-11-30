@@ -1,0 +1,149 @@
+<div class="pane">
+  <div class="pane-title" translate>settings.advanced.title</div>
+  <div class="pane-content">
+    <div class="setting-category">
+      <h2 translate>settings.advanced.translation.title</h2>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.translation.loadFile.title</span>
+            <span translate>settings.advanced.translation.loadFile.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-primary" (click)="loadLanguageFile()">
+              <i class="material-icons-round">file_open</i>
+              <span translate>settings.advanced.translation.loadFile.action</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.translation.contribute.title</span>
+            <span translate>settings.advanced.translation.contribute.description</span>
+          </div>
+          <div class="setting-row-action">
+            <a
+              class="btn btn-primary"
+              target="_blank"
+              href="https://github.com/Raphiiko/OyasumiVR/wiki/Adding-Translations"
+            >
+              <span translate>settings.advanced.translation.contribute.docs</span>
+            </a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span>
+              <span translate>settings.advanced.translation.editor.title</span>
+              <span
+                class="experimental-flag"
+                [tooltip]="'settings.advanced.translation.editor.experimental'"
+                [tooltipMode]="'right'"
+              >
+                <i class="material-icons">warning</i>
+              </span>
+            </span>
+            <span translate>settings.advanced.translation.editor.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-primary" [routerLink]="['/translation', 'loader']" translate>
+              <span translate>settings.advanced.translation.editor.action</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>settings.advanced.logs.title</h2>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.logs.openFolder.title</span>
+            <span translate>settings.advanced.logs.openFolder.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-primary" (click)="openLogsFolder()">
+              <i class="material-icons-round">folder</i>
+              <span translate>settings.advanced.logs.openFolder.action</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>settings.advanced.persistentData.title</h2>
+      <div class="action-row">
+        <p translate>settings.advanced.persistentData.description</p>
+        <button
+          class="btn btn-secondary"
+          [disabled]="checkedPersistentStorageItems.length === 0"
+          (click)="clearPersistentStorage()"
+        >
+          <i class="material-icons-round">delete_forever</i>
+          <span translate>settings.advanced.persistentData.clearData</span>
+        </button>
+      </div>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.persistentData.dataType.all.title</span>
+            <span translate>settings.advanced.persistentData.dataType.all.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="check-toggle">
+              <input
+                [checked]="isPersistentStorageItemChecked('ALL')"
+                (change)="togglePersistentStorageItem('ALL')"
+                type="checkbox"
+              />
+              <span class="check-toggle-checkmark"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row-group">
+          <div class="setting-row compact" *ngFor="let item of persistentStorageItems">
+            <div class="setting-row-label" translate>
+              <span translate>{{
+                'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
+              }}</span>
+              <span translate>{{
+                'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
+              }}</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="check-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="isPersistentStorageItemChecked(item.key)"
+                  (change)="togglePersistentStorageItem(item.key)"
+                />
+                <span class="check-toggle-checkmark"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="setting-category">
+      <h2 translate>settings.advanced.fixes.title</h2>
+      <p translate>settings.advanced.fixes.description</p>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.fixes.vrManifestReregister.title</span>
+            <span translate>settings.advanced.fixes.vrManifestReregister.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-primary"
+              (click)="reregisterVRManifest()"
+              [disabled]="(openvr.status | async) !== 'INITIALIZED'"
+            >
+              <span translate>settings.advanced.fixes.vrManifestReregister.action</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

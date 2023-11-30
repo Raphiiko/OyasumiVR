@@ -190,7 +190,6 @@
       "overview": "Overview",
       "powerAutomations": "Power Automations",
       "resolutionAutomations": "Resolution Automations",
-      "settings": "Settings",
       "shutdownAutomations": "Shutdown Sequence",
       "sleepAnimations": "Sleep Animations",
       "sleepDetection": "Sleep Detection",
@@ -200,7 +199,17 @@
       "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
       "miscAutomations": "Miscellaneous Automations",
       "nightmareDetection": "Nightmare Detection",
-      "audioVolumeAutomations": "Audio Volume Automations"
+      "audioVolumeAutomations": "Audio Volume Automations",
+      "settings": {
+        "subMenu": "Settings",
+        "general": "General Settings",
+        "vrchat": "VRChat Settings",
+        "notifications": "Notification Settings",
+        "updates": "Updates",
+        "integrations": "Integrations",
+        "advanced": "Advanced Settings",
+        "hotkeys": "Hotkey Settings"
+      }
     },
     "device-list": {
       "category": {
@@ -391,6 +400,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "Triggered manually",
+            "HOTKEY": "Triggered by hotkey",
             "SLEEP_TRIGGER": "As you were asleep for long enough"
           },
           "title": "The shutdown sequence was started"
@@ -421,6 +431,7 @@
               "unknown": "By an unknown automation"
             },
             "manual": "You disabled sleep mode manually",
+            "hotkey": "You disabled sleep mode by pressing the hotkey",
             "osc-control": "Sleep mode was disabled over OSC"
           },
           "title": "Sleep mode disabled"
@@ -436,6 +447,7 @@
               "unknown": "By an unknown automation"
             },
             "manual": "You enabled sleep mode manually",
+            "hotkey": "You enabled sleep mode by pressing the hotkey",
             "osc-control": "Sleep mode was enabled over OSC"
           },
           "title": "Sleep mode enabled"
@@ -622,6 +634,13 @@
         "title": "Ignore Basestation",
         "description": "Ignored basestations will be hidden and are not affected by any automations"
       }
+    },
+    "hotkey-selector": {
+      "select": "Set Hotkey"
+    },
+    "hotkey-selector-modal": {
+      "title": "Set Hotkey",
+      "description": "To set a hotkey, press any modifier keys, followed by the key you want to combine them with."
     }
   },
   "gpu-automations": {
@@ -1004,6 +1023,7 @@
   },
   "settings": {
     "advanced": {
+      "title": "Advanced Settings",
       "logs": {
         "openFolder": {
           "action": "Open Log Folder",
@@ -1129,6 +1149,7 @@
       }
     },
     "general": {
+      "title": "General Settings",
       "adminPrivileges": {
         "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up.",
         "label": "Ask for administrator privileges on startup",
@@ -1248,6 +1269,7 @@
       }
     },
     "integrations": {
+      "title": "Integrations",
       "connect": "Connect",
       "copy": "Copy link to clipboard",
       "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
@@ -1264,6 +1286,7 @@
       }
     },
     "notifications": {
+      "title": "Notification Settings",
       "notifications": {
         "category": {
           "AUTO_ACCEPTED_INVITE_REQUEST": {
@@ -1290,23 +1313,14 @@
         "description": "Select which provider should be used to deliver notifications to you",
         "title": "Notification Provider"
       },
-      "title": "Notification Settings",
       "volume": {
         "description": "Set the volume level at which some notification types play their sound",
         "test": "Test",
         "title": "General Notification Volume"
       }
     },
-    "tab": {
-      "advanced": "Advanced",
-      "general": "General",
-      "integrations": "Integrations",
-      "notifications": "Notifications",
-      "updates": "Updates",
-      "vrchat": "VRChat"
-    },
-    "title": "Settings",
     "updates": {
+      "title": "Updates",
       "changelog": "Changelog",
       "checkForUpdates": "Check for updates",
       "install": "Install v{version}",
@@ -1319,6 +1333,7 @@
       }
     },
     "vrchat": {
+      "title": "VRChat Settings",
       "logIn": {
         "description": "Some OyasumiVR features require you to log in with your VRChat account for them to work.",
         "disclaimers": {
@@ -1379,6 +1394,19 @@
         },
         "title": "OSC Settings"
       }
+    },
+    "hotkeys": {
+      "title": "Hotkey Settings",
+      "description": "Here you can bind system-wide hotkeys to certain actions within OyasumiVR.",
+      "actionDescription": "Set which hotkey should trigger this action",
+      "action": {
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Toggle Sleep Mode",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Enable Sleep Mode",
+        "HOTKEY_DISABLE_SLEEP_MODE": "Disable Sleep Mode",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Prepare For Sleep",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Run Shutdown Sequence"
+      },
+      "actions": "Hotkey Actions"
     }
   },
   "shared": {

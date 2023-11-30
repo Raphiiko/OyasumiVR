@@ -80,7 +80,7 @@ export class SleepDetectorEnableSleepModeModalComponent
   async onClick(event: MouseEvent) {
     if ((event.target as HTMLElement).className !== 'notificationSettingsLink') return;
     event.preventDefault();
-    await this.router.navigate(['/dashboard/settings'], { fragment: 'NOTIFICATIONS' });
+    await this.router.navigate(['/dashboard/settings/notifications']);
     await this.close();
   }
 

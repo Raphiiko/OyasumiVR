@@ -37,7 +37,10 @@ export class SleepPreparationService {
   }
 
   public async prepareForSleep() {
-    if (await firstValueFrom(this.sleepPreparationAvailable)) {
+    if (
+      (await firstValueFrom(this.sleepPreparationAvailable)) &&
+      !this._sleepPreparationTimedOut.value
+    ) {
       this._sleepPreparationTimedOut.next(true);
       this._onSleepPreparation.next();
       setTimeout(() => this._sleepPreparationTimedOut.next(false), SLEEP_PREPARATION_TIMEOUT);

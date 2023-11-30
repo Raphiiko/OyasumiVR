@@ -75,7 +75,7 @@ export interface EventLogBase {
 
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
-  reason: 'MANUAL' | 'SLEEP_TRIGGER';
+  reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER';
   stages: ShutdownSequenceStage[];
 }
 

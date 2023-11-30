@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ThemeService } from './services/theme.service';
 import { DashboardViewComponent } from './views/dashboard-view/dashboard-view.component';
-import { SettingsViewComponent } from './views/dashboard-view/views/settings-view/settings-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
@@ -53,10 +52,6 @@ import { LanguageSelectModalComponent } from './components/language-select-modal
 import { AppSettingsService } from './services/app-settings.service';
 import { firstValueFrom } from 'rxjs';
 import { VRChatService } from './services/vrchat.service';
-import { SettingsGeneralTabComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/settings-general-tab.component';
-import { SettingsUpdatesTabComponent } from './views/dashboard-view/views/settings-view/settings-updates-tab/settings-updates-tab.component';
-import { SettingsAdvancedTabComponent } from './views/dashboard-view/views/settings-view/settings-advanced-tab/settings-advanced-tab.component';
-import { SettingsVRChatTabComponent } from './views/dashboard-view/views/settings-view/settings-vrchat-tab/settings-vrchat-tab.component';
 import { VRChatLoginModalComponent } from './components/vrchat-login-modal/vrchat-login-modal.component';
 import { VRChatLoginTFAModalComponent } from './components/vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 import { StatusAutomationsViewComponent } from './views/dashboard-view/views/status-automations-view/status-automations-view.component';
@@ -79,7 +74,6 @@ import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
-import { SettingsNotificationsTabComponent } from './views/dashboard-view/views/settings-view/settings-notifications-tab/settings-notifications-tab.component';
 import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
@@ -108,7 +102,6 @@ import { ModalService } from './services/modal.service';
 import { BaseModalComponent } from './components/base-modal/base-modal.component';
 import { SleepAnimationsViewComponent } from './views/dashboard-view/views/sleep-animations-view/sleep-animations-view.component';
 import { ImgSmoothLoaderDirective } from './directives/img-smooth-loader.directive';
-import { SettingsTabComponent } from './views/dashboard-view/views/settings-view/settings-tab/settings-tab.component';
 import { LighthouseService } from './services/lighthouse.service';
 import { ChaperoneAutomationsViewComponent } from './views/dashboard-view/views/chaperone-automations-view/chaperone-automations-view.component';
 import { PowerAutomationsViewComponent } from './views/dashboard-view/views/power-automations-view/power-automations-view.component';
@@ -147,12 +140,10 @@ import { ClickOutsideDirective } from './directives/click-outside.directive';
 import { DeepLinkService } from './services/deep-link.service';
 import { SleepPreparationService } from './services/sleep-preparation.service';
 import { PulsoidService } from './services/integrations/pulsoid.service';
-import { SettingsIntegrationsTabComponent } from './views/dashboard-view/views/settings-view/settings-integrations-tab/settings-integrations-tab.component';
 import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
 import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
-import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-view/settings-general-tab/confirm-modal/start-with-steamvr-how-to-modal.component';
 import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
@@ -180,6 +171,18 @@ import { AudioDevicePickerComponent } from './views/dashboard-view/views/audio-v
 import { AudioDeviceAutomationsService } from './services/audio-device-automations.service';
 import { WindowsService } from './services/windows.service';
 import { DeviceEditModalComponent } from './components/device-list/device-edit-modal/device-edit-modal.component';
+import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
+import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
+import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
+import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
+import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
+import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
+import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
+import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
+import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-selector.component';
+import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
+import { HotkeyService } from './services/hotkey.service';
+import { HotkeyHandlerService } from './services/hotkey-handler.service';
 
 [localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
   (locale) => registerLocaleData(locale)
@@ -195,7 +198,6 @@ export function createTranslateLoader(http: HttpClient) {
     AppComponent,
     DashboardViewComponent,
     PowerAutomationsViewComponent,
-    SettingsViewComponent,
     DashboardNavbarComponent,
     DeviceListComponent,
     DeviceListItemComponent,
@@ -213,7 +215,6 @@ export function createTranslateLoader(http: HttpClient) {
     BatteryPercentageEnableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
-    SettingsTabComponent,
     PowerLimitInputComponent,
     SleepingPoseViewerComponent,
     OscAutomationsViewComponent,
@@ -229,11 +230,11 @@ export function createTranslateLoader(http: HttpClient) {
     ConfirmModalComponent,
     UpdateModalComponent,
     LanguageSelectModalComponent,
-    SettingsGeneralTabComponent,
-    SettingsNotificationsTabComponent,
-    SettingsUpdatesTabComponent,
-    SettingsAdvancedTabComponent,
-    SettingsVRChatTabComponent,
+    SettingsGeneralViewComponent,
+    SettingsNotificationsViewComponent,
+    SettingsUpdatesViewComponent,
+    SettingsAdvancedViewComponent,
+    SettingsVRChatViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     StatusAutomationsViewComponent,
@@ -265,7 +266,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrightnessControlModalComponent,
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
-    SettingsIntegrationsTabComponent,
+    SettingsIntegrationsViewComponent,
     ObfuscatedValueDirective,
     HeartRateCalmPeriodEnableSleepModeModalComponent,
     HeartRateChartComponent,
@@ -283,6 +284,9 @@ export function createTranslateLoader(http: HttpClient) {
     AudioVolumeEntriesComponent,
     AudioDevicePickerComponent,
     DeviceEditModalComponent,
+    SettingsHotkeyViewComponent,
+    HotkeySelectorComponent,
+    HotkeySelectorModalComponent,
   ],
   imports: [
     CommonModule,
@@ -346,6 +350,8 @@ export class AppModule {
     private openvrInputService: OpenVRInputService,
     private overlayService: OverlayService,
     private windowsService: WindowsService,
+    private hotkeyService: HotkeyService,
+    private hotkeyHandlerService: HotkeyHandlerService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -451,6 +457,8 @@ export class AppModule {
           this.logInit('AudioDeviceService initialization', this.audioDeviceService.init()),
           this.logInit('OpenVRInputService initialization', this.openvrInputService.init()),
           this.logInit('WindowsService initialization', this.windowsService.init()),
+          this.logInit('HotkeyService initialization', this.hotkeyService.init()),
+          this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
         ]);
         // Initialize GPU control services
         await this.logInit('SidecarService initialization', this.sidecarService.init()).then(
