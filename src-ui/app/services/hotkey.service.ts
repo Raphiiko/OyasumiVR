@@ -217,7 +217,6 @@ export class HotkeyService {
   }
 
   public isValidKey(key: string): boolean {
-    console.log('IS VALID KEY', key);
     return validKeys.includes(key.toUpperCase());
   }
 

@@ -321,7 +321,8 @@
                 "MANUAL": "Turned on manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Turned on all base stations"
             },
@@ -330,7 +331,8 @@
                 "MANUAL": "Set manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Set all base stations to sleep mode"
             },
@@ -339,7 +341,8 @@
                 "MANUAL": "Set manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Set all base stations to standby mode"
             }
@@ -350,7 +353,8 @@
                 "MANUAL": "Turned on manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Turned on a base station"
             },
@@ -359,7 +363,8 @@
                 "MANUAL": "Set manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Set a base station to sleep mode"
             },
@@ -368,7 +373,8 @@
                 "MANUAL": "Set manually",
                 "OYASUMI_START": "As OyasumiVR started",
                 "STEAMVR_START": "As SteamVR started",
-                "STEAMVR_STOP": "As SteamVR stopped"
+                "STEAMVR_STOP": "As SteamVR stopped",
+                "HOTKEY": "As a hotkey was pressed"
               },
               "title": "Set a base station to standby mode"
             }
@@ -465,7 +471,8 @@
             "CHARGING": "As the device is recharging",
             "MANUAL": "Turned off manually",
             "OSC_CONTROL": "Turned off over OSC",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "HOTKEY": "As a hotkey was pressed"
           },
           "title": {
             "ALL": "Turned off all devices",
@@ -1404,7 +1411,12 @@
         "HOTKEY_ENABLE_SLEEP_MODE": "Enable Sleep Mode",
         "HOTKEY_DISABLE_SLEEP_MODE": "Disable Sleep Mode",
         "HOTKEY_RUN_SLEEP_PREPARATION": "Prepare For Sleep",
-        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Run Shutdown Sequence"
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Run Shutdown Sequence",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Turn Off Controllers",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Turn Off Trackers",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Toggle Basestations",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Turn On Basestations",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Turn Off Basestations"
       },
       "actions": "Hotkey Actions"
     }

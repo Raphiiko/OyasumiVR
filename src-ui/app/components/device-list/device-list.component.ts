@@ -207,9 +207,17 @@ export class DeviceListComponent implements OnInit {
     });
     // Update category power state
     category.canBulkPowerOn = category.devices.some(
-      (d) => d.powerState === 'standby' || d.powerState === 'sleep'
+      (d) =>
+        !this.lighthouse.isDeviceIgnored(d) &&
+        (d.powerState === 'standby' || d.powerState === 'sleep')
     );
-    category.canBulkPowerOff = !category.devices.filter((d) => d.powerState !== 'on').length;
+    category.canBulkPowerOff =
+      !category.canBulkPowerOn &&
+      category.devices.some(
+        (d) =>
+          !this.lighthouse.isDeviceIgnored(d) &&
+          (d.powerState === 'on' || d.powerState === 'booting')
+      );
   }
 
   sortDeviceCategories() {
