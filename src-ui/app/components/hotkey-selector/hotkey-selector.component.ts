@@ -1,11 +1,9 @@
-import { Component, DestroyRef, Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { hshrink, noop } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { HotkeySelectorModalComponent } from '../hotkey-selector-modal/hotkey-selector-modal.component';
 import { HotkeyService } from 'src-ui/app/services/hotkey.service';
-import { AppSettingsService } from '../../services/app-settings.service';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-hotkey-selector',
@@ -13,7 +11,7 @@ import { delay, Subscription } from 'rxjs';
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
 })
-export class HotkeySelectorComponent implements OnChanges, OnDestroy {
+export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
   @Input() action?: string;
   hotkey?: string;
   private hotkeySub?: Subscription;

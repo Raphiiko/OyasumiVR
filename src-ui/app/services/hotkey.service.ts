@@ -208,7 +208,7 @@ export class HotkeyService {
     this.appSettings.settings.pipe(take(1)).subscribe(async (settings) => {
       await unregisterAll();
       this.hotkeys = cloneDeep(settings.hotkeys);
-      for (let hotkeyString of Object.keys(this.hotkeys)) {
+      for (const hotkeyString of Object.keys(this.hotkeys)) {
         await register(hotkeyString, () => {
           this.onHotkeyPressed(hotkeyString);
         });
@@ -223,7 +223,7 @@ export class HotkeyService {
   public async pause() {
     if (this.paused) return;
     this.paused = true;
-    for (let hotkeyString of Object.keys(this.hotkeys)) {
+    for (const hotkeyString of Object.keys(this.hotkeys)) {
       await unregister(hotkeyString);
     }
   }
@@ -231,7 +231,7 @@ export class HotkeyService {
   public async resume() {
     if (!this.paused) return;
     this.paused = false;
-    for (let hotkeyString of Object.keys(this.hotkeys)) {
+    for (const hotkeyString of Object.keys(this.hotkeys)) {
       await register(hotkeyString, () => {
         this.onHotkeyPressed(hotkeyString);
       });
