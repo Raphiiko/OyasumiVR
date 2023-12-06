@@ -672,7 +672,12 @@ export class AppModule {
                   error: _error,
                 })}`
               );
-              reject({ event, source, lineno, colno, error: _error });
+              if (imageUrl.startsWith('http')) {
+                // Preloading of remote assets is allowed to fail
+                resolve(void 0);
+              } else {
+                reject({ event, source, lineno, colno, error: _error });
+              }
             };
             img.src = imageUrl;
           });
