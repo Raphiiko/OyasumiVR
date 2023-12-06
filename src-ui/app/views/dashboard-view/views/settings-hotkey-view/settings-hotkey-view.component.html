@@ -1,0 +1,18 @@
+<div class="pane">
+  <div class="pane-title" translate>settings.hotkeys.title</div>
+  <div class="pane-content">
+    <p translate>settings.hotkeys.description</p>
+    <h2 translate>settings.hotkeys.actions</h2>
+    <div class="settings">
+      <div class="setting-row" *ngFor="let action of actions">
+        <div class="setting-row-label">
+          <span translate>{{ 'settings.hotkeys.action.' + action.id }}</span>
+          <span translate>settings.hotkeys.actionDescription</span>
+        </div>
+        <div class="setting-row-action">
+          <app-hotkey-selector [action]="action.id"></app-hotkey-selector>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

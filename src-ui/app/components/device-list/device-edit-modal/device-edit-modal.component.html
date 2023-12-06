@@ -11,10 +11,11 @@
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input type="text"
-                   [placeholder]="lighthouseDevice?.deviceName ?? ovrDevice?.serialNumber ?? ''"
-                   [(ngModel)]="nickname"
-                   [maxlength]="32"
+            <input
+              type="text"
+              [placeholder]="lighthouseDevice?.deviceName ?? ovrDevice?.serialNumber ?? ''"
+              [(ngModel)]="nickname"
+              [maxlength]="32"
             />
           </div>
         </div>
@@ -26,10 +27,7 @@
         </div>
         <div class="setting-row-action">
           <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [(ngModel)]="ignoreLighthouse"
-            />
+            <input type="checkbox" [(ngModel)]="ignoreLighthouse" />
             <span class="switch-toggle-slider"></span>
           </label>
         </div>

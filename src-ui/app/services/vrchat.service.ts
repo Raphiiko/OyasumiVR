@@ -463,12 +463,18 @@ export class VRChatService {
   //
 
   private async handleLoginSideEffects() {
-    this._status.pipe(distinctUntilChanged(), debounceTime(500)).subscribe((loggedIn) => {
-      if (loggedIn) {
-        // List friends on login to make sure they are cached
-        this.listFriends();
-      }
-    });
+    this._user
+      .pipe(
+        distinctUntilChanged(),
+        debounceTime(500),
+        distinctUntilChanged((prev, curr) => prev?.id !== curr?.id)
+      )
+      .subscribe((user) => {
+        if (user) {
+          // List friends on login to make sure they are cached
+          this.listFriends();
+        }
+      });
   }
 
   private async pollUserForStatus() {

@@ -75,7 +75,7 @@ export interface EventLogBase {
 
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
-  reason: 'MANUAL' | 'SLEEP_TRIGGER';
+  reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER';
   stages: ShutdownSequenceStage[];
 }
 
@@ -96,14 +96,14 @@ export interface EventLogSleepModeDisabled extends EventLogBase {
 
 export interface EventLogTurnedOffOpenVRDevices extends EventLogBase {
   type: 'turnedOffOpenVRDevices';
-  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL';
+  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL' | 'HOTKEY';
   devices: 'CONTROLLER' | 'CONTROLLERS' | 'TRACKER' | 'TRACKERS' | 'ALL' | 'VARIOUS';
   batteryThreshold?: number;
 }
 
 export interface EventLogLighthouseSetPowerState extends EventLogBase {
   type: 'lighthouseSetPowerState';
-  reason: 'MANUAL' | 'OYASUMI_START' | 'STEAMVR_START' | 'STEAMVR_STOP';
+  reason: 'MANUAL' | 'OYASUMI_START' | 'STEAMVR_START' | 'STEAMVR_STOP' | 'HOTKEY';
   devices: 'ALL' | 'SINGLE';
   state: LighthouseDevicePowerState;
 }

@@ -82,17 +82,17 @@
 <div class="player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>
   <div class="pane player-list">
     <div class="pane-title" *ngIf="config.listMode === 'WHITELIST'" translate
-    >auto-invite-request-accept.whitelist
+      >auto-invite-request-accept.whitelist
     </div>
     <div class="pane-title" *ngIf="config.listMode === 'BLACKLIST'" translate
-    >auto-invite-request-accept.blacklist
+      >auto-invite-request-accept.blacklist
     </div>
     <div class="pane-content">
       <div class="players-loading" *ngIf="vrchat.isFetchingFriends | async">
         <div class="large-spinner"></div>
         <span translate>auto-invite-request-accept.loadingFriends</span>
       </div>
-      <ng-container *ngIf="!(vrchat.isFetchingFriends | async)">
+      <ng-container *ngIf="(vrchat.isFetchingFriends | async) === false">
         <div class="players-list" @noop>
           <div class="player" *ngFor="let player of playerList" @vshrink>
             <div class="player-left">
@@ -122,7 +122,12 @@
             <i class="material-icons">add</i>
             <span translate>auto-invite-request-accept.addFriends</span>
           </button>
-          <button class="btn btn-secondary" translate (click)="clearPlayers()" [disabled]="!loggedIn">
+          <button
+            class="btn btn-secondary"
+            translate
+            (click)="clearPlayers()"
+            [disabled]="!loggedIn"
+          >
             <i class="material-icons">clear</i>
             <span translate>auto-invite-request-accept.clearPlayers</span>
           </button>

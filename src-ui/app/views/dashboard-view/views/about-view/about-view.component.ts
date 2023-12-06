@@ -15,6 +15,8 @@ import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
+import { cloneDeep, shuffle } from 'lodash';
+import { warn } from 'tauri-plugin-log-api';
 
 interface SupporterTier {
   name: string;
@@ -48,24 +50,30 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.background.setBackground('/assets/img/about_bg.jpg');
     await this.supporterCache.waitForInitialisation();
     // Fetch supporters list if we don't have it yet (or if the cache expired)
-    if (this.supporterCache.get() === undefined) {
+    let supporters = this.supporterCache.get();
+    if (supporters === undefined) {
       try {
         const client = await getClient();
         const response = await client.get<{ [tier: string]: string[] }>(
           'https://europe-west1-oyasumivr.cloudfunctions.net/getSupporters'
         );
         if (response.ok) {
-          const supporters = response.data;
           await this.supporterCache.set(
-            Object.entries(supporters).map((entry) => ({
+            Object.entries(response.data).map((entry) => ({
               name: entry[0],
-              supporters: entry[1],
+              supporters: shuffle(entry[1]),
             }))
           );
+        } else {
+          warn('Could not fetch supporters list: ' + JSON.stringify(response));
         }
       } catch (e) {
         // Ignore failure, we'll just not show the list.
       }
+    } else {
+      supporters = cloneDeep(supporters);
+      supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
+      await this.supporterCache.set(supporters);
     }
   }
 

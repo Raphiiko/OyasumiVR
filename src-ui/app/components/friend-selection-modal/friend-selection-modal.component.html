@@ -26,7 +26,7 @@
     </div>
     <div class="pills">
       <span class="none-selected" @fade *ngIf="!selection.length" translate
-      >comp.friend-selection-modal.noFriendsSelected</span
+        >comp.friend-selection-modal.noFriendsSelected</span
       >
       <div class="pill" *ngFor="let item of selection" (click)="removeItem(item)" @hshrink>
         <div class="pill-label">{{ item.type === 'player' ? item.playerName : 'GROUP' }}</div>
@@ -45,10 +45,10 @@
         </div>
         <div class="friend-label">{{ result.displayName }}</div>
         <button class="btn" *ngIf="!isSelected(result)" (click)="addFriend(result)" @hshrink
-        ><i class="material-icons-round">add</i></button
+          ><i class="material-icons-round">add</i></button
         >
         <button class="btn" *ngIf="isSelected(result)" disabled @hshrink
-        ><i class="material-icons-round">check</i></button
+          ><i class="material-icons-round">check</i></button
         >
       </div>
       <div class="more-results-available" *ngIf="moreResults">

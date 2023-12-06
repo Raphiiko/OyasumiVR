@@ -94,16 +94,34 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.shutdownAutomations</div>
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
+    <div
+      class="menu-item"
+      (click)="openSubMenu('SETTINGS')"
+      [class.active]="
+        pathIsActive([
+          'settings/general',
+          'settings/vrchat',
+          'settings/notifications',
+          'settings/hotkeys',
+          'settings/updates',
+          'settings/integrations',
+          'settings/advanced'
+        ])
+      "
+    >
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">settings</i>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings</div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.subMenu</div>
+      <!-- TODO: SET SETTING ERROR ICON ON SPECIFIC SUB MENU ITEM-->
       <div class="menu-item-icon-suffix" @fade *ngIf="settingErrors | async">
         <i class="material-icons-round">error_outline</i>
       </div>
       <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
         <i class="material-icons-round">notification_important</i>
+      </div>
+      <div class="menu-item-submenu-icon">
+        <i class="material-icons-round">arrow_forward_ios</i>
       </div>
     </div>
 
@@ -239,6 +257,82 @@
         <i class="material-icons-round">notification_important</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
+    </div>
+  </div>
+
+  <!--Settings Submenu-->
+  <div class="submenu" *ngIf="subMenu === 'SETTINGS'" @subMenu>
+    <div class="menu-header">
+      <button class="btn" (click)="openSubMenu('GENERAL')">
+        <i class="material-icons-round">arrow_back_ios_new</i>
+        <div class="menu-header-label" translate>comp.dashboard-navbar.settings.subMenu</div>
+      </button>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'general']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">settings</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
+      <div class="menu-item-icon-suffix" @fade *ngIf="lighthouseConsoleErrors | async">
+        <i class="material-icons-round">error_outline</i>
+      </div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'vrchat']">
+      <div class="menu-item-icon-prefix">
+        <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat-icon" />
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.vrchat</div>
+      <div class="menu-item-icon-suffix" @fade *ngIf="oscErrors | async">
+        <i class="material-icons-round">error_outline</i>
+      </div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'notifications']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">keyboard</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.hotkeys</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">update</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
+      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'integrations']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">power</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.integrations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">build</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.advanced</div>
     </div>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { ApplicationRef, DestroyRef, Injectable } from '@angular/core';
+import { ApplicationRef, Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
@@ -7,7 +7,6 @@ import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error } from 'tauri-plugin-log-api';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 

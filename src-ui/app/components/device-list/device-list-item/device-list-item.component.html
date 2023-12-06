@@ -13,7 +13,9 @@
       <div class="header-bar-action" *ngIf="!isDeviceIgnored()">
         <button
           class="btn-power"
-          [class.power-off]="powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'"
+          [class.power-off]="
+            powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'
+          "
           [class.power-on]="powerButtonState === 'turn_on' || powerButtonState === 'turn_on_busy'"
           *ngIf="powerButtonState !== 'hide'"
           [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
@@ -23,7 +25,7 @@
           <i
             class="material-icons"
             *ngIf="powerButtonState === 'turn_off' || powerButtonState === 'turn_on'"
-          >power_settings_new</i
+            >power_settings_new</i
           >
           <div
             class="small-spinner"
@@ -47,9 +49,9 @@
         ></div>
       </div>
       <div class="battery-info-label">
-      <span *ngIf="showBattery" @fade>
-        {{ batteryPercentageString }}
-      </span>
+        <span *ngIf="showBattery" @fade>
+          {{ batteryPercentageString }}
+        </span>
         <i class="material-icons">
           {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
         </i>
