@@ -79,7 +79,7 @@ import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { EventLogService } from './services/event-log.service';
-import { debug, error, info } from 'tauri-plugin-log-api';
+import { debug, error, info, warn } from 'tauri-plugin-log-api';
 import { EventLogComponent } from './components/event-log/event-log.component';
 import { EventLogEntryComponent } from './components/event-log-entry/event-log-entry.component';
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
@@ -663,7 +663,7 @@ export class AppModule {
               colno?: number,
               _error?: Error
             ) => {
-              error(
+              warn(
                 `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
                   event,
                   source,
