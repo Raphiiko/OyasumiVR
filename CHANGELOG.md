@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.4]
+
+### Fixed
+- Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
+- Fixed telemetry settings not always being saved properly.
+
 ## [1.10.3]
 
 ### Added
