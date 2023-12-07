@@ -8,20 +8,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Automations for controlling the volume and mute state of all system audio devices.
 - Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
 - A credential saving option for remembering your VRChat credentials.
 - Automation for disabling the sleep mode after its been enabled for a specified amount of time.
 - An option for your system microphone to change its mute state when joining a world in VRChat.
 - Option for preventing the overlay from opening when VRChat is not running.
+- Support for custom Windows power policies
+- Custom nicknames for controller, tracker, and base station devices.
+- Option for ignoring specific basestations in automations.
+- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
+- Detection for initialization failures and error handling.
 
 ### Changed
+
 - When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
+- Improved reliability of base station power management
+- Brightness automations no longer apply on start as a default setting
 
 ### Fixed
+
 - Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
+
+## [1.10.4]
+
+### Fixed
+
+- Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
+- Fixed telemetry settings not always being saved properly.
 
 ## [1.10.3]
 

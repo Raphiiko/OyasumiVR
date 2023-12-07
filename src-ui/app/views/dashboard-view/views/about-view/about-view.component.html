@@ -10,7 +10,7 @@
     <div class="logo-side"></div>
   </div>
 
-  <div class="row" style="margin-top: 5em; margin-bottom: 1em">
+  <div class="row" style="margin-top: 1em; margin-bottom: 1em">
     <div class="left">
       <div class="author">
         <div class="author-avatar">
@@ -67,6 +67,25 @@
       </div>
     </div>
   </div>
+
+  <div class="row" @vshrink *ngIf="supporterCache.get()?.length">
+    <div class="supporters-row">
+      <div class="supporters-list" #supportersList>
+        <div class="supporters-tier" *ngFor="let tier of supporterCache.get() ?? []">
+          <div class="supporters-tier-label">
+            {{ tier.name }}
+          </div>
+          <div class="supporters-tier-members">
+            <div class="supporters-tier-member" *ngFor="let supporter of tier.supporters">
+              {{ supporter }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="supporters-label" translate>about.supporters</div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="left"></div>
     <div class="right">
@@ -128,11 +147,7 @@
     </div>
   </div>
 
-  <div class="row" style="margin-top: 2em">
-    <div class="left"></div>
-    <div class="right"></div>
-  </div>
-  <div class="row">
+  <div class="row" style="margin-top: 1em">
     <div class="left">
       <div class="build-info">
         <div>Oyasumi<b>VR</b> v{{ version }}-{{ FLAVOUR }} ({{ BUILD_ID }})</div>

@@ -16,7 +16,7 @@ export class EventLogWindowsPowerPolicySetEntryParser extends EventLogEntryParse
 
   override headerInfoTitleParams(entry: EventLogWindowsPowerPolicySet): { [s: string]: string } {
     return {
-      policy: this.translate.instant('shared.misc.windowsPowerPolicy.' + entry.policy),
+      policy: entry.policyName,
     };
   }
 

@@ -190,7 +190,6 @@
       "overview": "개요",
       "powerAutomations": "전원 자동화",
       "resolutionAutomations": "해상도 자동화",
-      "settings": "설정",
       "shutdownAutomations": "종료 시퀀스",
       "sleepAnimations": "수면 애니메이션",
       "sleepDetection": "수면 감지",
@@ -1379,12 +1378,7 @@
       "tagline": "VR수면 유틸리티"
     },
     "misc": {
-      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요.",
-      "windowsPowerPolicy": {
-        "BALANCED": "균형 조정",
-        "HIGH_PERFORMANCE": "고성능",
-        "POWER_SAVING": "절전"
-      }
+      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "modals": {
       "cancel": "취소",

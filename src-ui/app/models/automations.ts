@@ -2,7 +2,6 @@ import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
-import { WindowsPowerPolicy } from './windows-power-policy';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type AutomationType =
@@ -257,7 +256,7 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
 
 // WINDOWS POWER POLICY AUTOMATIONS
 export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
-  powerPolicy?: WindowsPowerPolicy;
+  powerPolicy?: string;
 }
 
 // MISCELLANEOUS AUTOMATIONS
@@ -368,7 +367,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     displayBrightness: 100,
     transition: true,
     transitionTime: 1000 * 60 * 5,
-    applyOnStart: true,
+    applyOnStart: false,
   },
   SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
@@ -377,7 +376,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     displayBrightness: 100,
     transition: true,
     transitionTime: 10000,
-    applyOnStart: true,
+    applyOnStart: false,
   },
   SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
     enabled: false,

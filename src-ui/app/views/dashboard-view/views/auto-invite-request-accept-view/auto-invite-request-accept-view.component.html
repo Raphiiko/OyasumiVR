@@ -88,40 +88,51 @@
       >auto-invite-request-accept.blacklist
     </div>
     <div class="pane-content">
-      <div class="players-list" @noop>
-        <div class="player" *ngFor="let player of playerList" @vshrink>
-          <div class="player-left">
-            <div class="player-icon">
-              <img
-                draggable="false"
-                onerror="this.style.display='none'"
-                loading="lazy"
-                [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
-              />
+      <div class="players-loading" *ngIf="vrchat.isFetchingFriends | async">
+        <div class="large-spinner"></div>
+        <span translate>auto-invite-request-accept.loadingFriends</span>
+      </div>
+      <ng-container *ngIf="(vrchat.isFetchingFriends | async) === false">
+        <div class="players-list" @noop>
+          <div class="player" *ngFor="let player of playerList" @vshrink>
+            <div class="player-left">
+              <div class="player-icon">
+                <img
+                  draggable="false"
+                  onerror="this.style.display='none'"
+                  loading="lazy"
+                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
+                />
+              </div>
+              <div class="player-name">{{ player.displayName }}</div>
             </div>
-            <div class="player-name">{{ player.displayName }}</div>
+            <div class="player-right">
+              <button class="btn" (click)="removePlayer(player)">
+                <i class="material-icons">clear</i>
+              </button>
+            </div>
           </div>
-          <div class="player-right">
-            <button class="btn" (click)="removePlayer(player)">
-              <i class="material-icons">clear</i>
-            </button>
+          <div class="no-players" *ngIf="!playerList?.length">
+            <span translate>auto-invite-request-accept.noPlayersAdded</span>
           </div>
         </div>
-        <div class="no-players" *ngIf="!playerList?.length">
-          <span translate>auto-invite-request-accept.noPlayersAdded</span>
-        </div>
-      </div>
 
-      <div class="player-list-actions">
-        <button class="btn btn-secondary" translate (click)="addPlayer()" [disabled]="!loggedIn">
-          <i class="material-icons">add</i>
-          <span translate>auto-invite-request-accept.addFriends</span>
-        </button>
-        <button class="btn btn-secondary" translate (click)="clearPlayers()" [disabled]="!loggedIn">
-          <i class="material-icons">clear</i>
-          <span translate>auto-invite-request-accept.clearPlayers</span>
-        </button>
-      </div>
+        <div class="player-list-actions">
+          <button class="btn btn-secondary" translate (click)="addPlayer()" [disabled]="!loggedIn">
+            <i class="material-icons">add</i>
+            <span translate>auto-invite-request-accept.addFriends</span>
+          </button>
+          <button
+            class="btn btn-secondary"
+            translate
+            (click)="clearPlayers()"
+            [disabled]="!loggedIn"
+          >
+            <i class="material-icons">clear</i>
+            <span translate>auto-invite-request-accept.clearPlayers</span>
+          </button>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

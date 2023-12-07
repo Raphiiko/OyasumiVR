@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "1.10.3"
+version = "1.11.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -35,10 +35,10 @@ bytes = "1.4.0"
 nalgebra = "0.32.2"
 soloud = "1.0.2"
 time = "0.3.15"
-tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "dev" }
+tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-deep-link = "0.1.2"
 windows-sys = { version = "0.36.1", features = [
   "Win32_UI_Shell",
@@ -51,6 +51,7 @@ winapi = { version = "0.3.9", features = [
   "securitybaseapi",
   "impl-default",
   "powersetting",
+  "powrprof",
 ] }
 windows = { version = "0.51.1", features = [
   "implement",
@@ -85,7 +86,7 @@ enumset = "1.1.3"
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [
+features = [ "global-shortcut-all",
   "clipboard-write-text",
   "cli",
   "fs-write-file",

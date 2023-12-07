@@ -188,7 +188,6 @@
       "overview": "Visión general",
       "powerAutomations": "Automatizaciones de energía",
       "resolutionAutomations": "Automatizaciones de resolución",
-      "settings": "Ajustes",
       "shutdownAutomations": "Secuencia de apagado",
       "sleepAnimations": "Animaciones para dormir",
       "sleepDetection": "Detección de sueño",
@@ -1348,12 +1347,7 @@
       "tagline": "Utiles VR para dormir"
     },
     "misc": {
-      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Equilibrado",
-        "HIGH_PERFORMANCE": "Alto rendimiento",
-        "POWER_SAVING": "Ahorro de energía"
-      }
+      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat."
     },
     "modals": {
       "cancel": "Cancelar",

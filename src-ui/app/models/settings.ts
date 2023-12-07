@@ -24,9 +24,26 @@ export interface AppSettings {
   overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
+  deviceNicknames: {
+    [deviceId: string]: string;
+  };
+  ignoredLighthouses: string[];
+  hotkeys: { [hotkeyId: string]: string[] };
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
+
+export type HotkeyId =
+  | 'HOTKEY_TOGGLE_SLEEP_MODE'
+  | 'HOTKEY_ENABLE_SLEEP_MODE'
+  | 'HOTKEY_DISABLE_SLEEP_MODE'
+  | 'HOTKEY_RUN_SLEEP_PREPARATION'
+  | 'HOTKEY_RUN_SHUTDOWN_SEQUENCE'
+  | 'HOTKEY_TURN_OFF_CONTROLLER_DEVICES'
+  | 'HOTKEY_TURN_OFF_TRACKER_DEVICES'
+  | 'HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES'
+  | 'HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES'
+  | 'HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES';
 
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
@@ -62,6 +79,9 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   overlayGpuFix: false,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
+  deviceNicknames: {},
+  ignoredLighthouses: [],
+  hotkeys: {},
 };
 
 export type ExecutableReferenceStatus =

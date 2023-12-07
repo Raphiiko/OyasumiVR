@@ -2,7 +2,6 @@ import { ShutdownSequenceStage } from '../services/shutdown-automations.service'
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
 import { UserStatus } from 'vrchat/dist';
-import { WindowsPowerPolicy } from './windows-power-policy';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {
@@ -76,7 +75,7 @@ export interface EventLogBase {
 
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
-  reason: 'MANUAL' | 'SLEEP_TRIGGER';
+  reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER';
   stages: ShutdownSequenceStage[];
 }
 
@@ -97,14 +96,14 @@ export interface EventLogSleepModeDisabled extends EventLogBase {
 
 export interface EventLogTurnedOffOpenVRDevices extends EventLogBase {
   type: 'turnedOffOpenVRDevices';
-  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL';
+  reason: 'MANUAL' | 'OSC_CONTROL' | 'SLEEP_MODE_ENABLED' | 'CHARGING' | 'BATTERY_LEVEL' | 'HOTKEY';
   devices: 'CONTROLLER' | 'CONTROLLERS' | 'TRACKER' | 'TRACKERS' | 'ALL' | 'VARIOUS';
   batteryThreshold?: number;
 }
 
 export interface EventLogLighthouseSetPowerState extends EventLogBase {
   type: 'lighthouseSetPowerState';
-  reason: 'MANUAL' | 'OYASUMI_START' | 'STEAMVR_START' | 'STEAMVR_STOP';
+  reason: 'MANUAL' | 'OYASUMI_START' | 'STEAMVR_START' | 'STEAMVR_STOP' | 'HOTKEY';
   devices: 'ALL' | 'SINGLE';
   state: LighthouseDevicePowerState;
 }
@@ -173,7 +172,7 @@ export interface EventLogChaperoneFadeDistanceChanged extends EventLogBase {
 
 export interface EventLogWindowsPowerPolicySet extends EventLogBase {
   type: 'windowsPowerPolicySet';
-  policy: WindowsPowerPolicy;
+  policyName: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED';
 }
 

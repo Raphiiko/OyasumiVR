@@ -10,6 +10,8 @@ export class EventLogSleepModeDisabledEntryParser extends EventLogEntryParser<Ev
     switch (entry.reason.type) {
       case 'MANUAL':
         return 'comp.event-log-entry.type.sleepModeDisabled.reason.manual';
+      case 'HOTKEY':
+        return 'comp.event-log-entry.type.sleepModeDisabled.reason.hotkey';
       case 'OSC_CONTROL':
         return 'comp.event-log-entry.type.sleepModeDisabled.reason.osc-control';
       case 'AUTOMATION':

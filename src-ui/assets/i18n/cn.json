@@ -188,7 +188,6 @@
       "overview": "首页",
       "powerAutomations": "电源",
       "resolutionAutomations": "分辨率",
-      "settings": "设置",
       "shutdownAutomations": "关机序列",
       "sleepAnimations": "睡眠动画",
       "sleepDetection": "睡眠检测",
@@ -197,6 +196,8 @@
       "vrcAutomations": "VRChat 自动化",
       "vrchatMicMuteAutomations": "VRChat麦克风",
       "miscAutomations": "其他自动化操作",
+      "nightmareDetection": "噩梦检测",
+      "audioVolumeAutomations": "音量"
       "nightmareDetection": "噩梦检测",
       "audioVolumeAutomations": "音量"
     },
@@ -468,30 +469,6 @@
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": "Windows 电源策略已设置为 ''{policy}'' 方案"
-        },
-        "changedAudioDeviceVolume": {
-          "title": "音频设备''{deviceName}''的音量已被设置为{percentage}",
-          "reason": {
-            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-          }
-        },
-        "mutedAudioDevice": {
-          "title": "已关闭音频设备 ''{deviceName}''",
-          "reason": {
-            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-          }
-        },
-        "unmutedAudioDevice": {
-          "title": "已打开音频设备 ''{deviceName}''",
-          "reason": {
-            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
-            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"          
-          }
         }
       }
     },
@@ -1373,12 +1350,7 @@
       "tagline": "帮助 VR 睡眠的小工具"
     },
     "misc": {
-      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号",
-      "windowsPowerPolicy": {
-        "BALANCED": "平衡模式",
-        "HIGH_PERFORMANCE": "高性能模式",
-        "POWER_SAVING": "省电模式"
-      }
+      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号"
     },
     "modals": {
       "cancel": "取消",
@@ -1776,13 +1748,6 @@
           "UNMUTE": "默认开启",
           "KEEP": "保持上次状态"
         }
-      }
-    },
-    "worldJoinBehaviour": {
-      "options": {
-        "MUTE": "默认关闭",
-        "UNMUTE": "默认开启",
-        "KEEP": "保持当前状态"
       }
     }
   },
