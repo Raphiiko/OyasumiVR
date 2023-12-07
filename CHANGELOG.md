@@ -29,6 +29,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Default bindings sometimes triggering haptics for some users.
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
 
+## [1.10.4]
+
+### Fixed
+- Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
+- Fixed telemetry settings not always being saved properly.
+
 ## [1.10.3]
 
 ### Added
