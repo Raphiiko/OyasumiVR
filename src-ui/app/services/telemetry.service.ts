@@ -65,9 +65,10 @@ export class TelemetryService {
     await this.store.save();
   }
 
-  updateSettings(settings: Partial<TelemetrySettings>) {
+  async updateSettings(settings: Partial<TelemetrySettings>) {
     const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
     this._settings.next(newSettings);
+    await this.saveSettings();
   }
 
   async scheduleTelemetry() {
@@ -84,13 +85,13 @@ export class TelemetryService {
   async sendTelemetry(): Promise<boolean> {
     try {
       const settings = this._settings.value;
+      // Stop if telemetry is not enabled
+      if (!settings.enabled) return false;
       // Fetch manifest if needed
       if (!this.manifest) {
         await this.fetchManifest();
         if (!this.manifest) return false;
       }
-      // Stop if telemetry is not enabled
-      if (!settings.enabled) return false;
       // Determine version and language to send
       const version = await getVersion();
       const lang = await firstValueFrom(this.appSettings.settings).then(
