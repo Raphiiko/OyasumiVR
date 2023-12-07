@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom nicknames for controller, tracker, and base station devices.
 - Option for ignoring specific basestations in automations.
 - Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
+- Detection for initialization failures and error handling.
 
 ### Changed
 
