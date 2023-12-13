@@ -91,6 +91,7 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import localeES from '@angular/common/locales/es';
 import localeID from '@angular/common/locales/id';
+import localeRU from '@angular/common/locales/ru';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -187,9 +188,17 @@ import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { open } from '@tauri-apps/api/shell';
 
-[localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
-  (locale) => registerLocaleData(locale)
-);
+[
+  localeEN,
+  localeFR,
+  localeCN_TW,
+  localeNL,
+  localeKO,
+  localeJP,
+  localeES,
+  localeID,
+  localeRU,
+].forEach((locale) => registerLocaleData(locale));
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');

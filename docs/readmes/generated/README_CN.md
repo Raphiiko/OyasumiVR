@@ -366,6 +366,7 @@ OyasumiVR目前支持以下语言：
 - 法语（Français）（由社区成员[neuroblack](https://github.com/neuroblack)贡献）（**招纳贤士！需要额外的维护人员！**）
 - 西班牙语（Español）（由社区成员[aacal666](https://twitter.com/aacalde666)贡献）
 - 印度尼西亚语（Bahasa Indonesia）（由社区成员[a9ito](https://twitter.com/a9ito)贡献）
+- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)贡献）
 
 ### 帮助翻译
 
