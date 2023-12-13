@@ -3,7 +3,7 @@
     "author": {
       "role": "Разработчик"
     },
-    "contributions": "Пожертвования",
+    "contributions": "Поддержка",
     "contributionType": {
       "feature": "Особая благодарность",
       "soundFx": "Звуковые эффекты"
@@ -19,6 +19,9 @@
       "MUTE": "Беззвучный",
       "SET_VOLUME": "Измените громкость",
       "UNMUTE": "Включить звук"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Автоматизация} other {# Автоматизации}}"
     },
     "description": "Автоматически изменяйте громкость ваших аудиоустройств, когда вы засыпаете или просыпаетесь! Это может быть полезно, если вы не хотите, чтобы кто-то нарушил ваш сон.",
     "devices": {
@@ -96,7 +99,7 @@
       "message": "Вы уверены, что хотите удалить всех из списка?",
       "title": "Подтвердите удаление"
     },
-    "title": "Авто-принятие запросов на присоединение",
+    "title": "Автопринятие запросов на присоединение",
     "userOnBusyStatus": "Вы не можете принимать запросы на присоединение от пользователей, пока ваш статус — «Занят» (красный).",
     "userOnJoinMeStatus": "VRChat автоматически примет все запросы на присоединение независимо от ваших настроек, поскольку ваш статус — «Присоединяйтесь ко мне» (синий).",
     "whitelist": "Белый список игроков"
@@ -147,7 +150,7 @@
       "startupAutomations": "Автоматизация запуска",
       "transition": {
         "description": "Плавный переход к желаемому значению яркости",
-        "title": "Постепенно регулируйте яркость"
+        "title": "Постепенно регулировать яркость"
       },
       "transitionTime": {
         "description": "Сколько времени потребуется для перехода к новой настройке яркости",
@@ -187,7 +190,7 @@
       "imageBrightness": "Яркость изображения"
     },
     "confirm-modal": {
-      "defaultTitle": "Подтвердить"
+      "defaultTitle": "Confirm"
     },
     "controller-binding": {
       "dropdown": {
@@ -473,7 +476,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "HOTKEY": "Запускается по горячей клавише",
-            "MANUAL": "Запускается вручную",
+            "MANUAL": "Запущена вручную",
             "SLEEP_TRIGGER": "Поскольку ты спал достаточно долго"
           },
           "title": "Последовательность выключения запущена"
@@ -641,6 +644,7 @@
         "sleep": "Сон"
       },
       "addCommand": "Добавить",
+      "commandCounter": "{count, plural, one {1 Команда} other {# Команд}}",
       "commands": {
         "COMMAND": {
           "description": "Выполнить команду OSC",
@@ -651,6 +655,7 @@
           "title": "Сон"
         }
       },
+      "errorCounter": "{count, plural, one {1 Ошибка проверки} other {# Ошибок проверки}}",
       "test": "Проверить"
     },
     "select-box": {
@@ -663,6 +668,8 @@
     "update-modal": {
       "message": "Обнаружено новое обновление для OyasumiVR: v{newVersion}.\n\nВ настоящее время вы используете v{currentVersion}.\n\nХотите обновить сейчас или позже?",
       "steamAd": "<b>OyasumiVR также доступен в Steam!</b><br><br>Это новый рекомендуемый способ установки OyasumiVR.<br>Посетите страницу магазина <a href=\"https://store. Steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>, чтобы узнать больше!",
+      "title": "Доступно обновление",
+      "updateLater": "Не сейчас",
       "updateNow": "Установить v{version}"
     },
     "vrchat-login-modal": {
@@ -682,7 +689,8 @@
         "INVALID_FORMAT": "Действительный код 2FA состоит из 6 цифр. Пожалуйста, проверьте введенные данные.",
         "LAST_CODE_INVALID": "Предоставленный вами код 2FA неверный."
       },
-      "logginInAs": "Вы входите в VRChat как:"
+      "logginInAs": "Вы входите в VRChat как:",
+      "title": "Двухфакторная аутентификация"
     }
   },
   "gpu-automations": {
@@ -696,7 +704,7 @@
       "cancel": "Только в этот раз",
       "confirm": "Всегда",
       "message": "Хотите всегда давать OyasumiVR права администратора?\n\nЕсли вы включите это, OyasumiVR немедленно запросит их при запуске. Вы можете отключить это позже в любое время в настройках.",
-      "title": "Дайте права администратора"
+      "title": "Дать права администратора"
     },
     "enable": "Включить автоматизацию GPU",
     "enableWarning": "Неправильная настройка параметров вашей видеокарты может привести к нестабильной работе системы. Пожалуйста, имейте это в виду и включайте эту функцию только в том случае, если вы знаете, что делаете.",
@@ -755,7 +763,7 @@
     "requestAdministrator": "Дайте права администратора",
     "tabs": {
       "msiAfterburner": "MSI Afterburner",
-      "powerLimiting": "Ограничение эл-питания"
+      "powerLimiting": "Ограничение электропитания"
     },
     "title": "Автоматизация GPU"
   },
@@ -910,12 +918,16 @@
             "Disabled": "Для всех",
             "Whitelist": "Белый список"
           },
+          "subtitle": "{mode}: {playerCount, plural, one {1 друг} other {# друзей}}",
           "title": "Автоматическое принятие запросов на присоединение"
         },
         "changeStatusBasedOnPlayerCount": {
+          "subtitle": "Макс {threshold, plural, one {1 игрок} other {# игроков}}",
           "title": "Статус автоматизации"
         },
         "shutdownAutomations": {
+          "minutes": "{minutes, plural, one {1 минута} other {# минуты}}",
+          "seconds": "{seconds, plural, one {1 секунда} other {# секунды}}",
           "subtitle": "Когда сплю {time}",
           "title": "Автоматическое отключение"
         },
@@ -946,7 +958,7 @@
         "tooltip": {
           "automations": "Автоматизация",
           "deviceControl": "Управление устройствами",
-          "prepareForSleep": "Готовьтесь ко сну",
+          "prepareForSleep": "Готовлюсь ко сну",
           "shutdown": "Последовательность выключения"
         }
       },
@@ -968,7 +980,7 @@
       "label": "Спящий режим"
     },
     "sleep-preparation": {
-      "activate": "Готовьтесь ко сну",
+      "activate": "Готовлюсь ко сну",
       "disabledTooltip": "Подготовка ко сну станет доступна после того, как вы настроите подготовку ко сну хотя бы для одной автоматизации"
     }
   },
@@ -1342,7 +1354,7 @@
         "HOTKEY_DISABLE_SLEEP_MODE": "Выключить режим сна",
         "HOTKEY_ENABLE_SLEEP_MODE": "Включить режим сна",
         "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Запустить последовательность выключения",
-        "HOTKEY_RUN_SLEEP_PREPARATION": "Готовьтесь ко сну",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Готовлюсь ко сну",
         "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Переключение базовых станций",
         "HOTKEY_TOGGLE_SLEEP_MODE": "Переключить режим сна",
         "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Выключить контроллеры",
@@ -1487,7 +1499,7 @@
       "none": "Ничего"
     },
     "logo": {
-      "tagline": "Утилиты для сна в VR"
+      "tagline": "Утилита для сна в VR"
     },
     "misc": {
       "vrcLoginRequired": "Эта функция требует, чтобы вы вошли в свой аккаунт VRChat."
@@ -1551,14 +1563,14 @@
       "title": "Настройки выключения",
       "turnOffBaseStations": {
         "description": "Отключает все базовые станции, которые еще активны",
-        "title": "Выкл. базовые станции"
+        "title": "Выключить базовые станции"
       },
       "turnOffControllers": {
         "description": "Выкл. ваши контроллеры",
-        "title": "Выкл. контроллеры"
+        "title": "Выключить контроллеры"
       },
       "turnOffDevices": {
-        "title": "Выкл. устройства"
+        "title": "Выключить устройства"
       },
       "turnOffTrackers": {
         "description": "Выкл. ваши трекеры",
@@ -1585,6 +1597,11 @@
   "sleep-detection": {
     "disableAutomations": {
       "afterTime": {
+        "description": {
+          "hours": "Через {hours, plural, one {1 час} other {# часов}}",
+          "hoursAndMinutes": "Через {hours, plural, one {1 час} other {# часов}} и {minutes, plural, one {1 минуту} other {# минут}}",
+          "minutes": "Через {minutes, plural, one {1 минуту} other {# минут}}"
+        },
         "title": "Через определенное время"
       },
       "atTime": "В определенное время",
@@ -1614,7 +1631,7 @@
       },
       "title": "Включение спящего режима"
     },
-    "experimentalAutomation": "Отключить режим сна после его включения в течение определенного времени.",
+    "experimentalAutomation": "Отключит режим сна после его включения в течение определенного времени.",
     "modals": {
       "disableAfterTime": {
         "description": "Отключить режим сна после того, как он был включен в течение определенного времени.",
@@ -1764,6 +1781,7 @@
     "moreInfo": "Больше информации",
     "onlyIfSleepModeEnabled": "Только при включенном спящем режиме",
     "playerLimit": "Лимит игроков",
+    "playerLimitLabel": "{count, plural, one {1 игрок} other {# игроков}} (включая вас)",
     "title": "Автоматизация статуса"
   },
   "systemMicMuteAutomations": {
@@ -1824,9 +1842,9 @@
     },
     "description": "Автоматически выкл/вкл микрофон на уровне устройства, когда вы засыпаете или просыпаетесь! Это может пригодиться, если вы не хотите, чтобы другие услышали ваш храп ;)",
     "muteOptions": {
-      "MUTE": "Выкл. звук микро",
+      "MUTE": "Выкл. микрофон",
       "NONE": "Не менять",
-      "UNMUTE": "Вкл. звук микро"
+      "UNMUTE": "Вкл. микрофон"
     },
     "overlayIndicator": {
       "description": "Показывать индикатор в VR, когда ваш микрофон отключен.",
