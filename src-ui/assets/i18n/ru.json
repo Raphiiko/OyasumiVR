@@ -186,6 +186,9 @@
       "displayBrightness": "Яркость экрана",
       "imageBrightness": "Яркость изображения"
     },
+    "confirm-modal": {
+      "defaultTitle": "Подтвердить"
+    },
     "controller-binding": {
       "dropdown": {
         "description": "Открыть настройку биндов",
@@ -497,7 +500,8 @@
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Когда SteamVR закрылся",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "Поскольку режим сна был включен достаточно долго",
               "SLEEP_MODE_DISABLE_AT_TIME": "В назначенное время",
-              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Когда устройство было включено"
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Когда устройство было включено",
+              "unknown": "Неизвестная автоматизация"
             },
             "hotkey": "Вы отключили режим сна, нажав горячую клавишу",
             "manual": "Вы отключили режим сна вручную",
@@ -658,7 +662,8 @@
     },
     "update-modal": {
       "message": "Обнаружено новое обновление для OyasumiVR: v{newVersion}.\n\nВ настоящее время вы используете v{currentVersion}.\n\nХотите обновить сейчас или позже?",
-      "steamAd": "<b>OyasumiVR также доступен в Steam!</b><br><br>Это новый рекомендуемый способ установки OyasumiVR.<br>Посетите страницу магазина <a href=\"https://store. Steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>, чтобы узнать больше!"
+      "steamAd": "<b>OyasumiVR также доступен в Steam!</b><br><br>Это новый рекомендуемый способ установки OyasumiVR.<br>Посетите страницу магазина <a href=\"https://store. Steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>, чтобы узнать больше!",
+      "updateNow": "Установить v{version}"
     },
     "vrchat-login-modal": {
       "errors": {
