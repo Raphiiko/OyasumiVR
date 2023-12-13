@@ -365,6 +365,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - Perancis (Français) (Kontribusi komunitas dari [neuroblack](https://github.com/neuroblack)) (**Mencari pengelola tambahan!**)
 - Spanyol (Español) (Kontribusi komunitas dari [aacal666](https://twitter.com/aacalde666))
 - Indonesia (Bahasa Indonesia) (Kontribusi komunitas dari [a9ito](https://twitter.com/a9ito))
+- Rusia (Русский) (Kontribusi komunitas dari [Kanjir0](https://twitter.com/Kanjiro_vrc))
 
 ### Membantu penerjemahan
 
