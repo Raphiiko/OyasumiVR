@@ -100,8 +100,8 @@ export class OscControlService {
         debounceTime(0)
       )
       .subscribe(() => {
-        if (this.settings.oscEnableExternalControl) this.runParameterSync();
-        if (this.settings.oscEnableExpressionMenu) this.runParameterSync('/avatar/parameters');
+        this.runParameterSync();
+        this.runParameterSync('/avatar/parameters');
       });
   }
 
@@ -120,15 +120,6 @@ export class OscControlService {
       if (message.address.startsWith('/Oyasumi/')) return 'OSC_CONTROL';
       return null;
     })();
-    // Block certain modes when they are disabled
-    switch (mode) {
-      case 'EXPRESSION_MENU':
-        if (!this.settings.oscEnableExpressionMenu) return;
-        break;
-      case 'OSC_CONTROL':
-        if (!this.settings.oscEnableExternalControl) return;
-        break;
-    }
     // Strip the prefix from the address if needed
     let address = message.address;
     if (mode === 'EXPRESSION_MENU') address = message.address.replace('/avatar/parameters', '');

@@ -510,9 +510,6 @@
           "NAVIGATE": "시스템 마이크:\n자동화",
           "TOGGLE_MUTE": "시스템 마이크:\n음소거 해제"
         }
-      },
-      "vrchat": {
-        "tooltip": "설정: VRChat"
       }
     },
     "osc-script-code-editor": {
@@ -1286,15 +1283,6 @@
         "title": "일반 알림 음량"
       }
     },
-    "tab": {
-      "advanced": "고급",
-      "general": "일반",
-      "integrations": "연동",
-      "notifications": "알림",
-      "updates": "업데이트",
-      "vrchat": "VRChat"
-    },
-    "title": "설정",
     "updates": {
       "changelog": "변경 사항",
       "checkForUpdates": "업데이트 확인하기",
@@ -1305,68 +1293,6 @@
       "updatesDisabled": {
         "DEV": "OyasumiVR의 개발 빌드를 실행 중이므로 업데이트가 비활성화되었어요.\n새 버전의 OyasumiVR을 설치하려면 설치 프로그램을 수동으로 다운로드하여 실행해주세요.",
         "STEAM": "스팀 버전의 OyasumiVR이 설치되어 있어요.\n새 버전의 OyasumiVR 업데이트는 스팀을 통해 제공됩니다!"
-      }
-    },
-    "vrchat": {
-      "logIn": {
-        "description": "OyasumiVR 기능 중에는 VRChat 계정으로 로그인해야 사용할 수 있는 것이 있어요.",
-        "disclaimers": {
-          "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
-          "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요.",
-          "use": "로그인 정보는 사용자의 컴퓨터 외에는 다른 곳에 저장되지 않으며 인증 목적으로만 VRChat의 서버로 전송되어요."
-        },
-        "loggedIn": {
-          "logOut": "로그아웃",
-          "subtext": "현재 VRChat 계정으로 로그인 중이에요.",
-          "title": "{name}님, 어서오세요!"
-        },
-        "loggedOut": {
-          "logIn": "로그인",
-          "subtext": "현재 VRChat 계정으로 로그인 되어있지 않아요.",
-          "title": "로그아웃 중"
-        },
-        "title": "로그인"
-      },
-      "OSC": {
-        "description": "일부 기능을 사용하려면 OSC를 통해 VRChat에 연결해야 해요. 특별히 변경해야 할 이유가 없다면 기본값으로 두는 것이 좋아요.",
-        "errors": {
-          "INVALID_HOST": "호스트는 유효한 호스트 이름, IPv4 주소 또는 IPv6 주소여야 해요.",
-          "PORT_IN_USE": "이 주소는 바인딩할 수 없어요. 다른 애플리케이션에서 이미 사용 중일 수 있어요. 해당 애플리케이션을 닫고 다시 시도하거나 다른 수신 포트 또는 호스트를 선택할 수 있어요.",
-          "PORT_INVALID": "포트 번호는 1에서 65535 사이의 유효한 숫자여야 해요.",
-          "PORT_IO_IDENTICAL": "송신(VRChat) 및 수신 호스트가 동일한 경우 송신 및 수신 포트에 동일한 포트를 사용할 수 없어요."
-        },
-        "features": {
-          "all": {
-            "description": "이러한 각 기능을 비활성화하면 OyasumiVR이 OSC 메시지를 수신하지 않아요.",
-            "title": "모든 기능 활성화하기"
-          },
-          "expressionMenu": {
-            "description": "VRChat 아바타의 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">표현 메뉴</a>에서 OyasumiVR의 기능을 제어해요.",
-            "title": "VRChat 익스프레션 메뉴 제어 활성화하기"
-          },
-          "externalControl": {
-            "description": "<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>에서 OyasumiVR의 기능을 제어해요.",
-            "title": "외부 제어 활성화하기"
-          }
-        },
-        "receivingHost": {
-          "description": "OyasumiVR이 OSC 메시지를 받을 호스트에요.\n(VRChat은 기본적으로 127.0.0.1로 전송해요)",
-          "title": "수신 호스트"
-        },
-        "receivingPort": {
-          "description": "OyasumiVR이 OSC 메시지를 받을 포트 번호에요.\n(VRChat은 기본적으로 포트 9001로 전송해요)",
-          "title": "수신 포트"
-        },
-        "reset": "기본 설정으로 초기화",
-        "sendingHost": {
-          "description": "OyasumiVR이 OSC 메시지를 수신할 호스트에요.\n(같은 컴퓨터에서 VRChat이 실행되는 경우 127.0.0.1 이에요)",
-          "title": "VRChat 호스트"
-        },
-        "sendingPort": {
-          "description": "OyasumiVR이 OSC 메시지를 보낼 포트 번호에요.\n(VRChat은 기본적으로 포트 9000에서 수신을 대기해요)",
-          "title": "VRChat 포트"
-        },
-        "title": "OSC 설정"
       }
     }
   },

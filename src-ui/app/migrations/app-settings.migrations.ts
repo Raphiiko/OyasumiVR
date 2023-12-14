@@ -10,6 +10,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   5: from4to5,
   6: from5to6,
   7: from6to7,
+  8: from7to8,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -39,6 +40,17 @@ export function migrateAppSettings(data: any): AppSettings {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from7to8(data: any): any {
+  data.version = 8;
+  delete data.oscSendingPort;
+  delete data.oscSendingHost;
+  delete data.oscReceivingPort;
+  delete data.oscReceivingHost;
+  delete data.oscEnableExpressionMenu;
+  delete data.oscEnableExternalControl;
   return data;
 }
 

@@ -208,7 +208,8 @@
         "updates": "Updates",
         "integrations": "Integrations",
         "advanced": "Advanced Settings",
-        "hotkeys": "Hotkey Settings"
+        "hotkeys": "Hotkey Settings",
+        "statusInfo": "Status Information"
       }
     },
     "device-list": {
@@ -562,7 +563,7 @@
         }
       },
       "vrchat": {
-        "tooltip": "Settings: VRChat"
+        "tooltip": "Settings: Integrations"
       }
     },
     "osc-script-code-editor": {
@@ -1152,6 +1153,21 @@
               "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs."
             }
           }
+        },
+        "oscRestart": {
+          "title": "Restart OSC- & OSCQuery services",
+          "description": "Troubleshoot OSC communication by stopping and restarting the internal OSC- and OSCQuery services",
+          "action": "Restart Services",
+          "modal": {
+            "error": {
+              "title": "Restart Failed",
+              "message": "Something went wrong while trying to restart the OSC- and OSCQuery services. Please check the logs and contact a developer."
+            },
+            "success": {
+              "title": "Restart Complete",
+              "message": "The internal OSC- and OSCQuery services have been restarted."
+            }
+          }
         }
       }
     },
@@ -1339,69 +1355,6 @@
         "STEAM": "You have installed the Steam version of OyasumiVR.\nNew OyasumiVR updates are therefore provided through Steam!"
       }
     },
-    "vrchat": {
-      "title": "VRChat Settings",
-      "logIn": {
-        "description": "Some OyasumiVR features require you to log in with your VRChat account for them to work.",
-        "disclaimers": {
-          "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
-          "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
-        },
-        "loggedIn": {
-          "logOut": "Log out",
-          "subtext": "You are currently logged in with your VRChat account.",
-          "title": "Hi {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Log in",
-          "subtext": "You are currently not logged in with your VRChat account.",
-          "title": "Logged Out"
-        },
-        "title": "Log in"
-      },
-      "OSC": {
-        "description": "Some features require connecting to VRChat via OSC. Unless you have a specific reason to change these, you should leave these as default.",
-        "errors": {
-          "INVALID_HOST": "The host has to be a valid hostname, IPv4 address, or IPv6 address.",
-          "PORT_IN_USE": "This address could not be bound. It could be that another application is already using it. You can try to close that application and try again, or choose a different receiving port or host.",
-          "PORT_INVALID": "A port has to be a valid number between 1 and 65535.",
-          "PORT_IO_IDENTICAL": "You cannot use the same port for the sending and receiving port when the hosts for sending and receiving are the same."
-        },
-        "features": {
-          "all": {
-            "description": "Disabling each of these features will stop OyasumiVR from listening for OSC messages",
-            "title": "Enable all features"
-          },
-          "expressionMenu": {
-            "description": "Control OyasumiVR features from your VRChat avatar's <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu</a>",
-            "title": "Enable VRChat expression menu control"
-          },
-          "externalControl": {
-            "description": "Control OyasumiVR features over <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "Enable external control"
-          }
-        },
-        "receivingHost": {
-          "description": "The host OyasumiVR will listen for OSC messages on.\n(VRChat sends to 127.0.0.1 by default)",
-          "title": "Receiving Host"
-        },
-        "receivingPort": {
-          "description": "The port number OyasumiVR will listen for OSC messages on.\n(VRChat sends to port 9001 by default)",
-          "title": "Receiving Port"
-        },
-        "reset": "Reset to defaults",
-        "sendingHost": {
-          "description": "The host OyasumiVR will send OSC messages to.\n(If VRChat runs on the same machine, this is 127.0.0.1)",
-          "title": "Sending Host"
-        },
-        "sendingPort": {
-          "description": "The port number OyasumiVR will send OSC messages to.\n(VRChat listens on port 9000 by default)",
-          "title": "Sending Port"
-        },
-        "title": "OSC Settings"
-      }
-    },
     "hotkeys": {
       "title": "Hotkey Settings",
       "description": "Here you can bind system-wide hotkeys to certain actions within OyasumiVR.",
@@ -1419,6 +1372,15 @@
         "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Turn Off Basestations"
       },
       "actions": "Hotkey Actions"
+    },
+    "statusInfo": {
+      "title": "Status Information",
+      "description": "Here you'll find some technical information regarding OyasumiVR and some of its internals. This is mainly used for debugging purposes and might be useful when troubleshooting, or getting support.",
+      "copy": {
+        "title": "Copy to clipboard",
+        "description": "Copy all of the information below to your clipboard",
+        "action": "Copy"
+      }
     }
   },
   "shared": {

@@ -1,17 +1,11 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 
 export interface AppSettings {
-  version: 7;
+  version: 8;
   userLanguage: string;
   userLanguagePicked: boolean;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
-  oscSendingHost: string;
-  oscSendingPort: number;
-  oscReceivingHost: string;
-  oscReceivingPort: number;
-  oscEnableExpressionMenu: boolean;
-  oscEnableExternalControl: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
   lighthousePowerControl: boolean;
@@ -55,18 +49,12 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 7,
+  version: 8,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
   lighthouseConsolePath:
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
-  oscSendingHost: '127.0.0.1',
-  oscSendingPort: 9000,
-  oscReceivingHost: '127.0.0.1',
-  oscReceivingPort: 9001,
-  oscEnableExpressionMenu: true,
-  oscEnableExternalControl: true,
   exitInSystemTray: false,
   startInSystemTray: false,
   lighthousePowerControl: true,

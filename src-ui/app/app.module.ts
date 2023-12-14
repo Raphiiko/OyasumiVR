@@ -174,7 +174,6 @@ import { WindowsService } from './services/windows.service';
 import { DeviceEditModalComponent } from './components/device-list/device-edit-modal/device-edit-modal.component';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
-import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
@@ -187,6 +186,7 @@ import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { open } from '@tauri-apps/api/shell';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 
 [
   localeEN,
@@ -246,7 +246,6 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsNotificationsViewComponent,
     SettingsUpdatesViewComponent,
     SettingsAdvancedViewComponent,
-    SettingsVRChatViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     StatusAutomationsViewComponent,
@@ -299,6 +298,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsHotkeyViewComponent,
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
+    SettingsStatusInfoViewComponent,
   ],
   imports: [
     CommonModule,

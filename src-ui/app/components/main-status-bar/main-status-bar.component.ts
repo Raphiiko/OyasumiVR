@@ -106,8 +106,8 @@ export class MainStatusBarComponent implements OnInit {
     }
   }
 
-  async navigateToVRChatSettings() {
+  async navigateToIntegrationSettings() {
     await this.router.navigateByUrl('/', { skipLocationChange: true });
-    await this.router.navigate(['dashboard', 'settings', 'vrchat']);
+    await this.router.navigate(['dashboard', 'settings', 'integrations']);
   }
 }
