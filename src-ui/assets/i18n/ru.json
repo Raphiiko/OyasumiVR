@@ -621,9 +621,6 @@
           "NAVIGATE": "Системный микрофон:\nАвтоматизация",
           "TOGGLE_MUTE": "Системный микрофон:\nВключить звук"
         }
-      },
-      "vrchat": {
-        "tooltip": "Настройки: VRChat"
       }
     },
     "osc-script-code-editor": {

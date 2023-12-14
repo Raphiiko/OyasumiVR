@@ -505,9 +505,6 @@
           "NAVIGATE": "Systeem Microfoon: Automatiseringen",
           "TOGGLE_MUTE": "Systeem Microfoon: Demping Deactiveren"
         }
-      },
-      "vrchat": {
-        "tooltip": "Instellingen: VRChat"
       }
     },
     "osc-script-code-editor": {

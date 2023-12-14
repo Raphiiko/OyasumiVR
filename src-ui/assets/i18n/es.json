@@ -560,9 +560,6 @@
           "NAVIGATE": "Micrófono de sistema:\nAutomatizaciones",
           "TOGGLE_MUTE": "Micrófono de sistema:\nUnmute"
         }
-      },
-      "vrchat": {
-        "tooltip": "Configuración: VRChat"
       }
     },
     "osc-script-code-editor": {

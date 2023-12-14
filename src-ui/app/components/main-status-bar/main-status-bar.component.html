@@ -148,7 +148,7 @@
       *ngVar="{ hover: false } as state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
-      (click)="navigateToVRChatSettings()"
+      (click)="navigateToIntegrationSettings()"
       [tooltip]="'comp.main-status-bar.vrchat.tooltip'"
     >
       <ng-container *ngVar="user | async as user">

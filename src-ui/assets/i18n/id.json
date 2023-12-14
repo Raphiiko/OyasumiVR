@@ -505,9 +505,6 @@
           "NAVIGATE": "Mikrofon Sistem:\nOtomatisasi",
           "TOGGLE_MUTE": "Mikrofon Sistem:\nBunyikan"
         }
-      },
-      "vrchat": {
-        "tooltip": "Pengaturan: VRChat"
       }
     },
     "osc-script-code-editor": {

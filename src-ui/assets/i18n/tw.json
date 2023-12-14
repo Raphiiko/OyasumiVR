@@ -510,9 +510,6 @@
           "NAVIGATE": "系統麥克風： \n自動化",
           "TOGGLE_MUTE": "系統麥克風：\n解除靜音"
         }
-      },
-      "vrchat": {
-        "tooltip": "設定：VRChat"
       }
     },
     "osc-script-code-editor": {

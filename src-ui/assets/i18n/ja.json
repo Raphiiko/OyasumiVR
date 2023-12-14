@@ -538,9 +538,6 @@
           "NAVIGATE": "システムマイクロフォン:\n自動化",
           "TOGGLE_MUTE": "システムマイクロフォン:\nミュート解除"
         }
-      },
-      "vrchat": {
-        "tooltip": "設定: VRChat"
       }
     },
     "osc-script-code-editor": {

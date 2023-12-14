@@ -535,9 +535,6 @@
           "NAVIGATE": "系统麦克风：\n自动",
           "TOGGLE_MUTE": "系统麦克风：\n关闭"
         }
-      },
-      "vrchat": {
-        "tooltip": "点击打开VRChat配置页"
       }
     },
     "osc-script-code-editor": {

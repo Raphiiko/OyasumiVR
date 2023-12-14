@@ -510,9 +510,6 @@
           "NAVIGATE": "시스템 마이크:\n자동화",
           "TOGGLE_MUTE": "시스템 마이크:\n음소거 해제"
         }
-      },
-      "vrchat": {
-        "tooltip": "설정: VRChat"
       }
     },
     "osc-script-code-editor": {
