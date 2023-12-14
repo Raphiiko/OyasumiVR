@@ -47,7 +47,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -69,7 +69,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrcAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -83,7 +83,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.miscAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -275,16 +275,6 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
       <div class="menu-item-icon-suffix" @fade *ngIf="lighthouseConsoleErrors | async">
-        <i class="material-icons-round">error_outline</i>
-      </div>
-    </div>
-
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'vrchat']">
-      <div class="menu-item-icon-prefix">
-        <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat-icon" />
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.vrchat</div>
-      <div class="menu-item-icon-suffix" @fade *ngIf="oscErrors | async">
         <i class="material-icons-round">error_outline</i>
       </div>
     </div>

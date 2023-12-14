@@ -22,7 +22,6 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
-import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
@@ -105,10 +104,6 @@ const routes: Routes = [
           {
             path: 'general',
             component: SettingsGeneralViewComponent,
-          },
-          {
-            path: 'vrchat',
-            component: SettingsVRChatViewComponent,
           },
           {
             path: 'notifications',

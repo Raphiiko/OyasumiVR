@@ -21,6 +21,11 @@ lazy_static! {
 }
 
 pub async fn init() {
+    // Start looking for VRChat's OSC and OSCQuery services
+    match oyasumivr_oscquery::client::init().await {
+        Err(err) => error!("[Core] Could not initialize OSCQuery client: {:#?}", err),
+        _ => {}
+    };
     // Setup sending socket
     *OSC_SEND_SOCKET.lock().await = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
         Ok(s) => Some(s),

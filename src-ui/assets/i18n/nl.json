@@ -1234,15 +1234,6 @@
         "title": "Algemene Notificatie Volume"
       }
     },
-    "tab": {
-      "advanced": "Geavanceerd",
-      "general": "Algemeen",
-      "integrations": "Integraties",
-      "notifications": "Notificaties",
-      "updates": "Updates",
-      "vrchat": "VRChat"
-    },
-    "title": "Instellingen",
     "updates": {
       "changelog": "Changelog",
       "checkForUpdates": "Updates checken",
@@ -1253,67 +1244,6 @@
       "updatesDisabled": {
         "DEV": "Omdat je een development build van OyasumiVR draait is de mogelijkheid om voor updates te checken uitgeschakeld. \nAls je een nieuwere versie van OyasumiVR wilt installeren, download en installeer deze dan met de hand.",
         "STEAM": "Je hebt de Steam versie van OyasumiVR geinstalleerd.\nNieuwe updates komen daarom binnen via Steam!"
-      }
-    },
-    "vrchat": {
-      "logIn": {
-        "description": "Sommige OyasumiVR features vereisen dat je bent ingelogd met je VRChat account om hun ding te kunnen doen.",
-        "disclaimers": {
-          "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico."
-        },
-        "loggedIn": {
-          "logOut": "Log uit",
-          "subtext": "Je bent ingelogd met je VRChat account.",
-          "title": "Hey {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Log in",
-          "subtext": "Je bent niet ingelogd met je VRChat account.",
-          "title": "Uitgelogd"
-        },
-        "title": "Log in"
-      },
-      "OSC": {
-        "description": "Sommige functies van OyasumiVR moeten communiceren met VRChat via OSC. Tenzij je een reden hebt om deze instellingen aan te passen, kan je ze het beste op de standaard waarden laten staan.",
-        "errors": {
-          "INVALID_HOST": "Deze host is niet geldig. Hosts moeten een geldig IPv4 adres, IPv6 adres, of een geldige hostnaam zijn.",
-          "PORT_IN_USE": "Het adres kon niet worden gebonden. Dit kan komen doordat er al een andere applicatie luistert naar dezelfde adres en poort combinatie. Je kan proberen die andere applicatie te sluiten en het opnieuw te proberen, of een een andere poort of host te kiezen.",
-          "PORT_INVALID": "Deze poort is niet geldig. Poorten moeten tussen 1 en 65535 liggen.",
-          "PORT_IO_IDENTICAL": "Je kan niet dezelfde poort gebruiken voor zowel ontvangst als verzending, als de host voor beide hetzelfde is."
-        },
-        "features": {
-          "all": {
-            "description": "OyasumiVR zal niet luisteren naar OSC berichten als je al deze features uitschakelt",
-            "title": "Alle features inschakelen"
-          },
-          "expressionMenu": {
-            "description": "Stuur OyasumiVR features aan vanaf je VRChat avatar's <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu</a>.",
-            "title": "VRChat Expression Menu Aansturing"
-          },
-          "externalControl": {
-            "description": "Stuur OyasumiVR features extern aan via <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "Externe aansturing"
-          }
-        },
-        "receivingHost": {
-          "description": "De host waarop OyasumiVR naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar 127.0.0.1)",
-          "title": "Host voor ontvangst"
-        },
-        "receivingPort": {
-          "description": "De poort waarop OyasumiVR naar OSC berichten luistert.\n(VRChat stuurt OSC berichten standaard naar poort 9001)",
-          "title": "Poort voor ontvangst"
-        },
-        "reset": "Reset naar standaard waarden",
-        "sendingHost": {
-          "description": "De host waar naar OyasumiVR OSC berichten verstuurt.\n(Als VRChat op dezelfde computer draait, is dit 127.0.0.1)",
-          "title": "Host voor verzending"
-        },
-        "sendingPort": {
-          "description": "De poort waar naar OyasumiVR OSC berichten verstuurt.\n(VRChat luistert standaard naar poort 9000)",
-          "title": "Poort voor verzending"
-        },
-        "title": "OSC Configuratie"
       }
     }
   },

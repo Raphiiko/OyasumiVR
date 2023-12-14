@@ -15,8 +15,8 @@ tonic-build = { version = "0.9", features = [] }
 
 [dependencies]
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0.108"
+serde = { version = "1.0.193", features = ["derive"] }
 lazy_static = "1.4.0"
 cronjob = "0.4.17"
 rosc = "0.10.1"
@@ -40,6 +40,7 @@ tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", br
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-deep-link = "0.1.2"
+oyasumivr_oscquery = { git = "https://github.com/Raphiiko/oyasumivr_oscquery.git", rev = "ef784f9" }
 windows-sys = { version = "0.36.1", features = [
   "Win32_UI_Shell",
   "Win32_Foundation",
@@ -86,7 +87,8 @@ enumset = "1.1.3"
 
 [dependencies.tauri]
 version = "1.4.1"
-features = [ "global-shortcut-all",
+features = [
+  "global-shortcut-all",
   "clipboard-write-text",
   "cli",
   "fs-write-file",

@@ -108,6 +108,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
         osc::commands::stop_osc_server,
+        osc::commands::get_vrchat_osc_address,
         system_tray::commands::set_close_to_system_tray,
         system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevated_sidecar_started,

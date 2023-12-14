@@ -1339,69 +1339,6 @@
         "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
       }
     },
-    "vrchat": {
-      "title": "Ajustes VRChat",
-      "logIn": {
-        "description": "Algunas funciones de OyasumiVR requieren que inicies sesión con tu cuenta de VRChat para que funcionen.",
-        "disclaimers": {
-          "brand": "OyasumiVR no está respaldado por VRChat y no refleja los puntos de vista u opiniones de VRChat ni de nadie que participe oficialmente en la producción o gestión de VRChat. VRChat es una marca comercial de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!",
-          "use": "Sus credenciales de inicio de sesión nunca se almacenarán en ningún lugar que no sea su propia máquina y solo se envían a los servidores de VRChat para fines de autenticación."
-        },
-        "loggedIn": {
-          "logOut": "Cerrar sesión",
-          "subtext": "Actualmente estás conectado con tu cuenta de VRChat.",
-          "title": "Hola {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Iniciar sesión",
-          "subtext": "Actualmente no has iniciado sesión con tu cuenta de VRChat.",
-          "title": "Desconectado"
-        },
-        "title": "Iniciar sesión"
-      },
-      "OSC": {
-        "description": "Algunas características requieren conectarse a VRChat vía OSC. A menos que tengas una razón específica para cambiarlas, deberías dejarlas por defecto.",
-        "errors": {
-          "INVALID_HOST": "El host debe ser un nombre de host válido, una dirección IPv4 o una dirección IPv6.",
-          "PORT_IN_USE": "No se ha podido vincular esta dirección. Puede ser que otra aplicación ya la esté utilizando. Puedes intentar cerrar esa aplicación e intentarlo de nuevo, o elegir un puerto o host de recepción diferente.",
-          "PORT_INVALID": "Un puerto tiene que ser un número válido entre 1 y 65535.",
-          "PORT_IO_IDENTICAL": "No se puede utilizar el mismo puerto para el envío y la recepción cuando los hosts de envío y recepción son los mismos."
-        },
-        "features": {
-          "all": {
-            "description": "La desactivación de cada una de estas características hará que OyasumiVR deje de escuchar los mensajes OSC",
-            "title": "Activar todas las funciones"
-          },
-          "expressionMenu": {
-            "description": "Controla las funciones de OyasumiVR desde el avatar de tu VRChat <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">menú de expresión</a>",
-            "title": "Activar el control del menú de expresión de VRChat"
-          },
-          "externalControl": {
-            "description": "Controla las funciones de OyasumiVR en <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "Activar control externo"
-          }
-        },
-        "receivingHost": {
-          "description": "El anfitrión OyasumiVR escuchará los mensajes OSC en.\n(VRChat envía a 127.0.0.1 por defecto)",
-          "title": "Anfitrión receptor"
-        },
-        "receivingPort": {
-          "description": "El número de puerto en el que OyasumiVR escuchará los mensajes OSC.\n(VRChat envía al puerto 9001 por defecto)",
-          "title": "Puerto receptor"
-        },
-        "reset": "Restablecer valores por defecto",
-        "sendingHost": {
-          "description": "El anfitrión OyasumiVR enviará mensajes OSC a.\n(Si VRChat se ejecuta en la misma máquina, es 127.0.0.1)",
-          "title": "Anfitrión emisor"
-        },
-        "sendingPort": {
-          "description": "El número de puerto al que OyasumiVR enviará los mensajes OSC.\n(VRChat escucha por defecto en el puerto 9000)",
-          "title": "Puerto de envío"
-        },
-        "title": "Ajustes OSC"
-      }
-    },
     "hotkeys": {
       "title": "Ajustes teclas",
       "description": "Aquí puede unir las teclas de acceso rápido en todo el sistema a ciertas acciones dentro de Oyasumivr.",
@@ -1419,16 +1356,7 @@
         "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Apagar basestaciones"
       },
       "actions": "Acciones teclas"
-    },
-    "tab": {
-      "advanced": "Avanzado",
-      "general": "General",
-      "integrations": "Integraciones",
-      "notifications": "Notificaciones",
-      "updates": "Actualizaciones",
-      "vrchat": "VRChat"
-    },
-    "title": "Ajustes"
+    }
   },
   "shared": {
     "common": {
