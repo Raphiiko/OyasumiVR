@@ -19,7 +19,7 @@ import { VRChatService } from '../vrchat.service';
   providedIn: 'root',
 })
 export class OverlayService {
-  private overlaySidecarActive = this.ipcService.overlaySidecarClient.pipe(map(Boolean));
+  public readonly overlaySidecarActive = this.ipcService.overlaySidecarClient.pipe(map(Boolean));
   private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
 
   constructor(

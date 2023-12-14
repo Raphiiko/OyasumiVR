@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
 - Detection for initialization failures and error handling.
 - Basic support for OSCQuery
+- Status information view to the settings, for showing technical information regarding OyasumiVR and some of its internals.
 
 ### Changed
 
@@ -36,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
 
 ### Removed
+
 - VRChat settings
 - OSC configuration options (Now handled by OSCQuery)
 

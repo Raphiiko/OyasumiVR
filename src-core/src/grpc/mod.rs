@@ -7,6 +7,7 @@ use tokio::sync::Mutex;
 use tokio_stream::wrappers::TcpListenerStream;
 use tonic::transport::Server;
 
+pub mod commands;
 mod server;
 
 pub mod models {

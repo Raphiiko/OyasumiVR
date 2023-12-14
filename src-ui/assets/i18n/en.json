@@ -208,7 +208,8 @@
         "updates": "Updates",
         "integrations": "Integrations",
         "advanced": "Advanced Settings",
-        "hotkeys": "Hotkey Settings"
+        "hotkeys": "Hotkey Settings",
+        "statusInfo": "Status Information"
       }
     },
     "device-list": {
@@ -1152,6 +1153,21 @@
               "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs."
             }
           }
+        },
+        "oscRestart": {
+          "title": "Restart OSC- & OSCQuery services",
+          "description": "Troubleshoot OSC communication by stopping and restarting the internal OSC- and OSCQuery services",
+          "action": "Restart Services",
+          "modal": {
+            "error": {
+              "title": "Restart Failed",
+              "message": "Something went wrong while trying to restart the OSC- and OSCQuery services. Please check the logs and contact a developer."
+            },
+            "success": {
+              "title": "Restart Complete",
+              "message": "The internal OSC- and OSCQuery services have been restarted."
+            }
+          }
         }
       }
     },
@@ -1356,6 +1372,15 @@
         "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Turn Off Basestations"
       },
       "actions": "Hotkey Actions"
+    },
+    "statusInfo": {
+      "title": "Status Information",
+      "description": "Here you'll find some technical information regarding OyasumiVR and some of its internals. This is mainly used for debugging purposes and might be useful when troubleshooting, or getting support.",
+      "copy": {
+        "title": "Copy to clipboard",
+        "description": "Copy all of the information below to your clipboard",
+        "action": "Copy"
+      }
     }
   },
   "shared": {

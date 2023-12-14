@@ -186,6 +186,7 @@ import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { open } from '@tauri-apps/api/shell';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 
 [
   localeEN,
@@ -297,6 +298,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsHotkeyViewComponent,
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
+    SettingsStatusInfoViewComponent,
   ],
   imports: [
     CommonModule,

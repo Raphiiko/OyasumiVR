@@ -22,6 +22,15 @@ pub async fn get_vrchat_osc_address() -> Option<String> {
 }
 
 #[tauri::command]
+pub async fn get_vrchat_oscquery_address() -> Option<String> {
+    let addr = oyasumivr_oscquery::client::get_vrchat_oscquery_address().await;
+    match addr {
+        Some(addr) => Some(format!("{}:{}", addr.0, addr.1)),
+        None => None,
+    }
+}
+
+#[tauri::command]
 pub async fn stop_osc_server() {
     // Terminate existing task if it exists
     let mut cancellation_token = CANCELLATION_TOKEN.lock().await;
@@ -29,18 +38,18 @@ pub async fn stop_osc_server() {
         info!("[Core] Stopping OSC server");
         token.cancel();
         *cancellation_token = None;
+        // Terminate OSCQuery server
+        match oyasumivr_oscquery::server::deinit().await {
+            Err(err) => error!("[Core] Could not terminate OSCQuery server: {:#?}", err),
+            _ => {}
+        };
     }
     let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().await;
     *receive_socket_guard = None;
-    // Terminate OSCQuery server
-    match oyasumivr_oscquery::server::deinit().await {
-        Err(err) => error!("[Core] Could not terminate OSCQuery server: {:#?}", err),
-        _ => {}
-    };
 }
 
 #[tauri::command]
-pub async fn start_osc_server() -> Option<String> {
+pub async fn start_osc_server() -> Option<(String, Option<String>)> {
     info!("[Core] Starting OSC server");
     stop_osc_server().await;
     // Setup receiving socket
@@ -73,17 +82,21 @@ pub async fn start_osc_server() -> Option<String> {
     let cancellation_token = super::spawn_receiver_task().await;
     *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     // Start the OSCQuery server
-    match oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port).await {
-        Err(err) => error!("[Core] Could not initialize OSCQuery server: {:#?}", err),
-        _ => {}
-    };
+    let osc_query_addr_string =
+        match oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port).await {
+            Ok(result) => Some(format!("{}:{}", result.0, result.1)),
+            Err(err) => {
+                error!("[Core] Could not initialize OSCQuery server: {:#?}", err);
+                None
+            }
+        };
     oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
     match oyasumivr_oscquery::server::advertise().await {
         Err(err) => error!("[Core] Could not advertise OSCQuery server: {:#?}", err),
         _ => {}
     }
     // Return bound address
-    Some(osc_addr_string)
+    Some((osc_addr_string, osc_query_addr_string))
 }
 
 #[tauri::command]

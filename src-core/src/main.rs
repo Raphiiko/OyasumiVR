@@ -109,13 +109,16 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::start_osc_server,
         osc::commands::stop_osc_server,
         osc::commands::get_vrchat_osc_address,
+        osc::commands::get_vrchat_oscquery_address,
         system_tray::commands::set_close_to_system_tray,
         system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
+        elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
+        overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
@@ -136,6 +139,8 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        grpc::commands::get_core_grpc_port,
+        grpc::commands::get_core_grpc_web_port,
     ]
 }
 

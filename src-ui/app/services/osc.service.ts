@@ -12,15 +12,29 @@ import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
   providedIn: 'root',
 })
 export class OscService {
-  private scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
-  private _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
-  public messages: Observable<OSCMessage> = this._messages.asObservable();
-  private _vrchatOscAddress: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
-    null
-  );
-  private _oscServerAddress: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(
-    null
-  );
+  private readonly scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
+  private readonly _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
+  public readonly messages: Observable<OSCMessage> = this._messages.asObservable();
+  private readonly _vrchatOscAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly vrchatOscAddress: Observable<string | null> =
+    this._vrchatOscAddress.asObservable();
+  private readonly _vrchatOscQueryAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly vrchatOscQueryAddress: Observable<string | null> =
+    this._vrchatOscQueryAddress.asObservable();
+  private readonly _oscServerAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly oscServerAddress: Observable<string | null> =
+    this._oscServerAddress.asObservable();
+  private readonly _oscQueryServerAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly oscQueryServerAddress: Observable<string | null> =
+    this._oscQueryServerAddress.asObservable();
 
   constructor() {}
 
@@ -33,20 +47,25 @@ export class OscService {
     interval(1000).subscribe(() => this.fetchVRChatOSCAddress());
   }
 
-  private async startOscServer(): Promise<string | null> {
-    let address = await invoke<string | null>('start_osc_server');
-    if (address) {
-      address = address.replace('0.0.0.0', '127.0.0.1');
-      this._oscServerAddress.next(address);
+  private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
+    let [oscAddress, oscQueryAddress] = (await invoke<[string, string] | null>(
+      'start_osc_server'
+    )) ?? [null, null];
+    if (oscAddress) {
+      oscAddress = oscAddress.replace('0.0.0.0', '127.0.0.1');
+      this._oscServerAddress.next(oscAddress);
     } else error("[OSC] Couldn't start OSC server");
-    console.log(address);
-    return address ?? null;
+    if (oscQueryAddress) {
+      oscQueryAddress = oscQueryAddress.replace('0.0.0.0', '127.0.0.1');
+      this._oscQueryServerAddress.next(oscQueryAddress);
+    } else error("[OSC] Couldn't start OSCQuery server");
+    return oscAddress && oscQueryAddress ? { oscAddress, oscQueryAddress } : null;
   }
 
-  // private async stopOscServer(): Promise<void> {
-  //   this._oscServerAddress.next(null);
-  //   await invoke<string>('stop_osc_server');
-  // }
+  private async stopOscServer(): Promise<void> {
+    this._oscServerAddress.next(null);
+    await invoke<string>('stop_osc_server');
+  }
 
   async send_float(address: string, value: number) {
     const addr = this._vrchatOscAddress.value;
@@ -112,7 +131,15 @@ export class OscService {
   }
 
   private async fetchVRChatOSCAddress() {
-    const address = await invoke<string | null>('get_vrchat_osc_address');
-    if (address !== this._vrchatOscAddress.value) this._vrchatOscAddress.next(address);
+    const osc_address = await invoke<string | null>('get_vrchat_osc_address');
+    if (osc_address !== this._vrchatOscAddress.value) this._vrchatOscAddress.next(osc_address);
+    const oscquery_address = await invoke<string | null>('get_vrchat_oscquery_address');
+    if (oscquery_address !== this._vrchatOscQueryAddress.value)
+      this._vrchatOscQueryAddress.next(oscquery_address);
+  }
+
+  async restartOscServer() {
+    await this.stopOscServer();
+    await this.startOscServer();
   }
 }

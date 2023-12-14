@@ -27,6 +27,7 @@ import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/setti
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 
 const routes: Routes = [
   {
@@ -124,6 +125,10 @@ const routes: Routes = [
           {
             path: 'advanced',
             component: SettingsAdvancedViewComponent,
+          },
+          {
+            path: 'statusInfo',
+            component: SettingsStatusInfoViewComponent,
           },
           {
             path: '**',

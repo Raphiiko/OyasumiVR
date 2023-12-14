@@ -31,6 +31,7 @@ import { firstValueFrom } from 'rxjs';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
+import { OscService } from '../../../../services/osc.service';
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -64,7 +65,8 @@ export class SettingsAdvancedViewComponent {
     private ipcService: IPCService,
     protected openvr: OpenVRService,
     private destroyRef: DestroyRef,
-    private settingsService: AppSettingsService
+    private settingsService: AppSettingsService,
+    private oscService: OscService
   ) {}
 
   isPersistentStorageItemChecked(key: string) {
@@ -286,4 +288,28 @@ export class SettingsAdvancedViewComponent {
   }
 
   protected readonly open = open;
+
+  async restartOscServer() {
+    try {
+      await this.oscService.restartOscServer();
+    } catch (e) {
+      error('[AdvancedSettings] Could not restart OSC Server: ' + e);
+      this.modalService
+        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+          title: 'settings.advanced.fixes.oscRestart.modal.error.title',
+          message: 'settings.advanced.fixes.oscRestart.modal.error.message',
+          showCancel: false,
+        })
+        .subscribe();
+      return;
+    }
+    error('[AdvancedSettings] Restarted OSC Server');
+    this.modalService
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+        title: 'settings.advanced.fixes.oscRestart.modal.success.title',
+        message: 'settings.advanced.fixes.oscRestart.modal.success.message',
+        showCancel: false,
+      })
+      .subscribe();
+  }
 }
