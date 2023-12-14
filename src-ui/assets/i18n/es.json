@@ -11,7 +11,8 @@
     "discordInvite": "Discord Server",
     "projectLinks": "Enlaces de proyectos",
     "sourceLink": "Código fuente @ GitHub",
-    "translations": "Traducciones"
+    "translations": "Traducciones",
+    "supporters": "Supporters"
   },
   "auto-invite-request-accept": {
     "addFriends": "Añadir amigos",
@@ -57,7 +58,8 @@
     "title": "Aceptar automáticamente solicitudes de invitación",
     "userOnBusyStatus": "No puedes aceptar solicitudes de invitación de usuarios mientras tu estado sea ocupado. (red).",
     "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue).",
-    "whitelist": "Jugador Whitelist"
+    "whitelist": "Jugador Whitelist",
+    "loadingFriends": "Cargando amigos..."
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -196,7 +198,18 @@
       "vrcAutomations": "Automatizaciones VRChat",
       "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRChat",
       "miscAutomations": "Automacaciones misceláneas",
-      "nightmareDetection": "Detección de pesadilla"
+      "nightmareDetection": "Detección de pesadilla",
+      "audioVolumeAutomations": "Automatización volumen de audio",
+      "settings": {
+        "subMenu": "Ajustes",
+        "general": "Ajustes generales",
+        "vrchat": "Ajustes Vrchat",
+        "notifications": "Ajustes notificaciónes",
+        "updates": "Actualizaciones",
+        "integrations": "Integraciones",
+        "advanced": "Ajustes avanzados",
+        "hotkeys": "Ajustes teclas"
+      }
     },
     "device-list": {
       "category": {
@@ -308,7 +321,8 @@
                 "MANUAL": "Encendido manual",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Encendido de todas las estaciones base"
             },
@@ -317,7 +331,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
+                "STEAMVR_STOP": "Cuando SteamVR comenzó",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner todas las estaciones base en modo reposo"
             },
@@ -326,7 +341,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
+                "STEAMVR_STOP": "Cuando SteamVR comenzó",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner todas las estaciones base en modo de espera"
             }
@@ -337,7 +353,8 @@
                 "MANUAL": "Encendido manual",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR empezó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Encendido de una estación base"
             },
@@ -346,7 +363,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando empezó SteamVR",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner una estación base en modo reposo"
             },
@@ -355,7 +373,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner una estación base en modo de espera"
             }
@@ -387,6 +406,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "Activado manualmente",
+            "HOTKEY": "Activado por la tecla de acceso rápido",
             "SLEEP_TRIGGER": "Cuando estuviste dormido el tiempo suficiente"
           },
           "title": "Se ha iniciado la secuencia de apagado"
@@ -417,6 +437,7 @@
               "unknown": "Por un automatismo desconocido"
             },
             "manual": "Ha desactivado el modo sueño manualmente",
+            "hotkey": "Ha desactivado el modo sueño presionando la tecla de acceso rápido",
             "osc-control": "El modo sueño se desactivó a través de OSC"
           },
           "title": "Modo de sueño desactivado"
@@ -432,6 +453,7 @@
               "unknown": "Por un automatismo desconocido"
             },
             "manual": "Has activado el modo de sueño manualmente",
+            "hotkey": "Has activado el modo sueño presionando la tecla de acceso rápido",
             "osc-control": "El modo sueño se activó a través de OSC"
           },
           "title": "Modo de sueño activado"
@@ -449,7 +471,8 @@
             "CHARGING": "Mientras el dispositivo se recarga",
             "MANUAL": "Apagado manual",
             "OSC_CONTROL": "Apagado sobre OSC",
-            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado"
+            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado",
+            "HOTKEY": "Como se presionó una tecla de acceso rápido"
           },
           "title": {
             "ALL": "Apagado todos los dispositivos",
@@ -466,6 +489,30 @@
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado"
           },
           "title": "Política de energía de Windows establecida en ''{policy}'' plan"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "Volumen para dispositivos de audio ''{deviceName}'' establecido en {percentaje}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "Dispositivo de audio apagado ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "Dispositivo de audio encendido ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
         }
       }
     },
@@ -484,7 +531,10 @@
       "noFriendsSelected": "No hay amigos seleccionados",
       "noResultsFor": "No hay resultados para ''{query}''",
       "searchPlaceholder": "Buscar amigo por nombre...",
-      "title": "Seleccionar amigos"
+      "title": "Seleccionar amigos",
+      "loading": "Cargando amigos...",
+      "loadingError": "Tu lista de amigos no podra cargarse. Por favor, inténtelo de nuevo más tarde.",
+      "moreResultsAvailable": "Hay más amigos para encontrar de los que se muestran actualmente. Por favor, reduzca su búsqueda."
     },
     "main-status-bar": {
       "active": "Activo",
@@ -580,6 +630,24 @@
       },
       "title": "Autenticación de dos factores",
       "logginInAs": "Estás iniciando sesión en VRCHAT como:"
+    },
+    "device-edit-modal": {
+      "title": "Editar dispositivo: {deviceID}",
+      "deviceNickname": {
+        "title": "Apodo",
+        "description": "Opcionalmente, configure un nombre personalizado para este dispositivo"
+      },
+      "ignoreLighthouse": {
+        "title": "Ignorar la base",
+        "description": "Las bases ignoradas estarán ocultas y no se ven afectadas por ninguna automatización"
+      }
+    },
+    "hotkey-selector": {
+      "select": "Establecer la tecla de acceso rápido"
+    },
+    "hotkey-selector-modal": {
+      "title": "Establecer la tecla de acceso rápido",
+      "description": "Para establecer una tecla de acceso rápido, presione cualquier tecla de modificador, seguido de la tecla con la que desea combinarlas."
     }
   },
   "gpu-automations": {
@@ -962,6 +1030,7 @@
   },
   "settings": {
     "advanced": {
+      "title": "Ajustes avanzados",
       "logs": {
         "openFolder": {
           "action": "Abrir carpeta de registro",
@@ -1087,6 +1156,7 @@
       }
     },
     "general": {
+      "title": "Ajustes generales",
       "adminPrivileges": {
         "description": "OyasumiVR necesita privilegios de administrador para poder controlar los límites de potencia de tu GPU. Si habilitas esta opción, OyasumiVR te pedirá privilegios de administrador cuando se inicie.",
         "label": "Solicitar privilegios de administrador al inicio",
@@ -1206,6 +1276,7 @@
       }
     },
     "integrations": {
+      "title": "Integraciones",
       "connect": "Conectar",
       "copy": "Copiar enlace al portapapeles",
       "description": "Algunas de las funcionalidades de OyasumiVR pueden hacer uso de servicios externos. Si quieres conectar OyasumiVR a uno de ellos, ¡estás en el lugar adecuado!",
@@ -1222,6 +1293,7 @@
       }
     },
     "notifications": {
+      "title": "Ajustes de las notificaciones",
       "notifications": {
         "category": {
           "AUTO_ACCEPTED_INVITE_REQUEST": {
@@ -1248,23 +1320,14 @@
         "description": "Seleccione el proveedor que se utilizará para enviarle las notificaciones",
         "title": "Proveedor de notificaciones"
       },
-      "title": "Ajustes de las notificaciones",
       "volume": {
         "description": "Ajustar el nivel de volumen al que suenan algunos tipos de notificaciones",
         "test": "Test",
         "title": "Volumen general de notificaciones"
       }
     },
-    "tab": {
-      "advanced": "Avanzado",
-      "general": "General",
-      "integrations": "Integraciones",
-      "notifications": "Notificaciones",
-      "updates": "Actualizaciones",
-      "vrchat": "VRChat"
-    },
-    "title": "Ajustes",
     "updates": {
+      "title": "Acrualizaciones",
       "changelog": "Registro de cambios",
       "checkForUpdates": "Comprobar actualizaciones",
       "install": "Instalar v{version}",
@@ -1277,6 +1340,7 @@
       }
     },
     "vrchat": {
+      "title": "Ajustes VRChat",
       "logIn": {
         "description": "Algunas funciones de OyasumiVR requieren que inicies sesión con tu cuenta de VRChat para que funcionen.",
         "disclaimers": {
@@ -1337,7 +1401,34 @@
         },
         "title": "Ajustes OSC"
       }
-    }
+    },
+    "hotkeys": {
+      "title": "Ajustes teclas",
+      "description": "Aquí puede unir las teclas de acceso rápido en todo el sistema a ciertas acciones dentro de Oyasumivr.",
+      "actionDescription": "Establezca qué llave de acceso rápido debe activar esta acción",
+      "action": {
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Alternar el modo sueño",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Habilitar el modo sueño",
+        "HOTKEY_DISABLE_SLEEP_MODE": "Desactivar el modo sueño",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Preparar para dormir",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Ejecutar secuencia de cierre",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Apagar los controladores",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Apagar los tracker",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Alternar basestaciones",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Encender basestaciones",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Apagar basestaciones"
+      },
+      "actions": "Acciones teclas"
+    },
+    "tab": {
+      "advanced": "Avanzado",
+      "general": "General",
+      "integrations": "Integraciones",
+      "notifications": "Notificaciones",
+      "updates": "Actualizaciones",
+      "vrchat": "VRChat"
+    },
+    "title": "Ajustes"
   },
   "shared": {
     "common": {
@@ -1834,5 +1925,48 @@
       }
     },
     "notification": "Detección de una posible pesadilla, ya que ha tenido una frecuencia cardíaca elevada prolongada."
+  },
+  "audio-volume-automations": {
+    "title": "Automatización de volumen de audio",
+    "description": "¡Cambie automáticamente el volumen de sus dispositivos de audio cuando se duerma o se despierta!Esto puede ser útil si desea evitar que otros perturben su sueño.",
+    "onSleepEnable": {
+      "title": "Cuando me voy a dormir",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando el modo sueño esté habilitado"
+    },
+    "onSleepDisable": {
+      "title": "Cuando me levanto",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando el modo sueño está deshabilitado"
+    },
+    "onSleepPreparation": {
+      "title": "Cuando me preparo para ir a dormir",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando activo la preparación del sueño"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "No se seleccionan dispositivos de audio",
+        "hasDevices": "Agregar dispositivos de audio"
+      },
+      "description": "Seleccione un dispositivo de audio para automatizar su nivel de volumen"
+    },
+    "selectDevice": "Seleccionar dispositivo de audio",
+    "removeDevice": "Remover",
+    "actionOptions": {
+      "SET_VOLUME": "Cambiar volumen",
+      "MUTE": "Muteado",
+      "UNMUTE": "Desmuteado"
+    },
+    "picker": {
+      "title": "Seleccione un dispositivo",
+      "noCaptureDevices": "No se han encontrado dispositivos de captura",
+      "noPlaybackDevices": "No se han encontrado dispositivos de reproducción",
+      "defaultDevice": "Dispositivo por defecto"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Automation} other {# Automations}}"
+    },
+    "volume": {
+      "title": "Volumen",
+      "description": "Qué nivel de volumen establecer para el dispositivo de audio cuando se ejecuta esta automatización"
+    }
   }
 }
