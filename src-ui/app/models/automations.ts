@@ -221,6 +221,7 @@ export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends Automat
 export interface OscGeneralAutomationConfig extends AutomationConfig {
   onSleepModeEnable?: OscScript;
   onSleepModeDisable?: OscScript;
+  onSleepPreparation?: OscScript;
 }
 
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
