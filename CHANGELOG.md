@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Detection for initialization failures and error handling.
 - Basic support for OSCQuery
 - Status information view to the settings, for showing technical information regarding OyasumiVR and some of its internals.
+- Automation for running a OSC script whenever the user prepares to go to sleep.
 
 ### Changed
 
