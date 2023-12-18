@@ -43,8 +43,8 @@ jobs:
             src-shared-rust
             src-elevated-sidecar
             src-core
-      - name: Install development Tauri CLI
-        run: cargo install --git https://github.com/tauri-apps/tauri --branch 1.x tauri-cli
+#      - name: Install development Tauri CLI
+#        run: cargo install --git https://github.com/tauri-apps/tauri --branch 1.x tauri-cli
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -64,7 +64,7 @@ jobs:
       - name: Set flavour to STEAM
         run: npm run set-flavour STEAM
       - name: Build OyasumiVR (STEAM Flavour)
-        run: cargo-tauri build -b none
+        run: tauri build -b none
       - name: Copy STEAM build
         shell: bash
         run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh

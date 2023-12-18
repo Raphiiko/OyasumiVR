@@ -183,10 +183,9 @@ import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-sel
 import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
-import { open } from '@tauri-apps/api/shell';
-import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 
 [
   localeEN,
