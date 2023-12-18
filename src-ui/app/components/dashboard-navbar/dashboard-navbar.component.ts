@@ -9,7 +9,6 @@ import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
-import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
