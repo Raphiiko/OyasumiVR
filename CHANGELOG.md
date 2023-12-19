@@ -21,9 +21,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option for ignoring specific basestations in automations.
 - Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
 - Detection for initialization failures and error handling.
-- Basic support for OSCQuery
+- Added support for OSCQuery
 - Status information view to the settings, for showing technical information regarding OyasumiVR and some of its internals.
 - Automation for running a OSC script whenever the user prepares to go to sleep.
+- Added OSC command for turning on and turning off all base stations.
 
 ### Changed
 
@@ -31,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved reliability of base station power management
 - Brightness automations no longer apply on start as a default setting
 - Updated to Tauri v1.5
+- Rewrote OSC control (Old OSC addresses remain supported, but check the wiki page on OSC control for any updates)
 
 ### Fixed
 

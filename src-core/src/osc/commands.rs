@@ -1,5 +1,6 @@
 use super::{OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
 use log::{debug, error, info};
+use oyasumivr_oscquery::OSCMethod;
 use rosc::{encoder, OscMessage, OscPacket, OscType};
 use std::{
     net::{SocketAddrV4, UdpSocket},
@@ -98,6 +99,17 @@ pub async fn start_osc_server() -> Option<(String, Option<String>)> {
     // Return bound address
     Some((osc_addr_string, osc_query_addr_string))
 }
+
+#[tauri::command]
+pub async fn add_osc_method(method: OSCMethod) {
+    oyasumivr_oscquery::server::add_osc_method(method).await;
+}
+
+#[tauri::command]
+pub async fn set_osc_method_value(address: String, value: String) {
+    oyasumivr_oscquery::server::set_osc_method_value(address, Some(value)).await;
+}
+
 
 #[tauri::command]
 pub async fn osc_send_int(addr: String, osc_addr: String, data: i32) -> Result<bool, String> {

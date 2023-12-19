@@ -58,7 +58,6 @@ import { SleepingAnimationPresetModalComponent } from './components/sleeping-ani
 import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
-import { OscControlService } from './services/osc-control.service';
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 import { FriendSelectionModalComponent } from './components/friend-selection-modal/friend-selection-modal.component';
 import { CachedValue } from './utils/cached-value';
@@ -185,7 +184,7 @@ import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
-import { cloneDeep } from 'lodash';
+import { OscControlService } from './services/osc-control/osc-control.service';
 
 [
   localeEN,
