@@ -7,6 +7,7 @@ import { debug, error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
 import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
+import { OscMethod } from './osc-control/osc-method';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +36,9 @@ export class OscService {
   >(null);
   public readonly oscQueryServerAddress: Observable<string | null> =
     this._oscQueryServerAddress.asObservable();
+  private readonly _oscMethods: BehaviorSubject<OscMethod<unknown>[]> = new BehaviorSubject<
+    OscMethod<unknown>[]
+  >([]);
 
   constructor() {}
 
@@ -58,8 +62,29 @@ export class OscService {
     if (oscQueryAddress) {
       oscQueryAddress = oscQueryAddress.replace('0.0.0.0', '127.0.0.1');
       this._oscQueryServerAddress.next(oscQueryAddress);
+      for (const method of this._oscMethods.value) {
+        await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
+      }
     } else error("[OSC] Couldn't start OSCQuery server");
     return oscAddress && oscQueryAddress ? { oscAddress, oscQueryAddress } : null;
+  }
+
+  public async addOscMethod(method: OscMethod<unknown>) {
+    const methods = [...this._oscMethods.value].filter(
+      (m) => m.options.address !== method.options.address
+    );
+    methods.push(method);
+    this._oscMethods.next(methods);
+    if (this._oscQueryServerAddress.value) {
+      await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
+    }
+  }
+
+  public async updateOscMethodValue(method: OscMethod<unknown>) {
+    await invoke('set_osc_method_value', {
+      address: method.options.address,
+      value: method.getValue() + '',
+    });
   }
 
   private async stopOscServer(): Promise<void> {
@@ -141,5 +166,21 @@ export class OscService {
   async restartOscServer() {
     await this.stopOscServer();
     await this.startOscServer();
+  }
+
+  private mapToOscMethod(method: OscMethod<unknown>): {
+    address: string;
+    adType: 'Write' | 'Read' | 'ReadWrite';
+    valueType: 'Bool' | 'Int' | 'Float' | 'String';
+    value?: string;
+    description?: string;
+  } {
+    return {
+      address: method.options.address,
+      adType: method.options.access,
+      valueType: method.options.type,
+      value: method.options.access === 'Write' ? undefined : method.getValue() + '',
+      description: method.options.description,
+    };
   }
 }

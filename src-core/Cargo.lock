@@ -3339,7 +3339,7 @@ dependencies = [
 [[package]]
 name = "oyasumivr_oscquery"
 version = "0.2.0"
-source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=ef784f9#ef784f94d7ebbc2caa6046d4cd76998669233385"
+source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=2fe4ca1#2fe4ca139778201ffb6bc2b67814823ba2168b84"
 dependencies = [
  "http-body-util",
  "hyper 1.0.1",
