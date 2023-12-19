@@ -621,7 +621,12 @@
       "password": "Password",
       "title": "Log in to VRChat",
       "username": "VRChat Username/E-mail",
-      "rememberCredentials": "Remember Credentials"
+      "rememberCredentials": "Remember Credentials",
+      "disclaimers": {
+        "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
+        "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Your VRChat account is protected with two factor authentication.\n\nPlease enter a 2FA code:",

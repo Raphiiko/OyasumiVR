@@ -561,7 +561,11 @@
       },
       "password": "Wachtwoord",
       "title": "Log in met VRChat",
-      "username": "VRChat Gebruikersnaam/E-mail"
+      "username": "VRChat Gebruikersnaam/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico."
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Je VRCHat account wordt beschermt met twee-factor authenticatie. Voer een 2FA code in:",

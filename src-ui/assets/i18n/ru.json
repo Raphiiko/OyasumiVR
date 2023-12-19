@@ -678,7 +678,12 @@
       "password": "Пароль",
       "rememberCredentials": "Запомнить учетные данные",
       "title": "Войдите в VRChat",
-      "username": "VRChat Логин/E-mail"
+      "username": "VRChat Логин/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR не поддерживает VRChat и не отражает взгляды или мнения VRChat и не участвует в создании или управлении VRChat. VRChat является торговой маркой VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko не несет ответственности за любые проблемы, вызванные OyasumiVR. Используйте на свой страх и риск!",
+        "use": "Ваши учетные данные для входа в систему никогда нигде не будут сохранены и будут отправлены только на серверы VRChat для аутентификации."
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Ваша учетная запись VRChat защищена двухфакторной аутентификацией.\n\nПожалуйста, введите код 2FA:",

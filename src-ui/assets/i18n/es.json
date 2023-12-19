@@ -617,7 +617,12 @@
       "password": "Contraseña",
       "title": "Iniciar sesión en VRChat",
       "username": "VRChat Usuario/E-mail",
-      "rememberCredentials": "Recuerda credenciales"
+      "rememberCredentials": "Recuerda credenciales",
+      "disclaimers": {
+        "brand": "OyasumiVR no está respaldado por VRChat y no refleja los puntos de vista u opiniones de VRChat ni de nadie que participe oficialmente en la producción o gestión de VRChat. VRChat es una marca comercial de VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!",
+        "use": "Sus credenciales de inicio de sesión nunca se almacenarán en ningún lugar que no sea su propia máquina y solo se envían a los servidores de VRChat para fines de autenticación."
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Tu cuenta de VRChat está protegida con autenticación de dos factores.\n\nPor favor, introduzca un código 2FA:",

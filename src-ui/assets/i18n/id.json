@@ -561,7 +561,11 @@
       },
       "password": "Password",
       "title": "Masuk ke VRChat",
-      "username": "VRChat Username/E-mail"
+      "username": "VRChat Username/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Akun VRChat Anda dilindungi dengan autentikasi dua faktor.\n\nMasukkan kode 2FA:",

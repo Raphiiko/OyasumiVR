@@ -567,7 +567,12 @@
       "password": "密碼",
       "rememberCredentials": "記住憑據",
       "title": "登入到 VRChat",
-      "username": "VRChat 使用者名稱/E-mail"
+      "username": "VRChat 使用者名稱/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR 沒有得到 VRChat 的官方認可，\n也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 \nVRChat 是 VRChat Inc. 的商標 VRChat © VRChat Inc.",
+        "liability": "Raphiiko 對 OyasumiVR 引起的任何問題概不負責。 使用風險請自己承擔！",
+        "use": "你的登入憑證絕對不會被儲存在任何地方，只會被傳送到 VRChat 的伺服器進行身份驗證"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 帳戶受雙重驗證保護\n\n請輸入 2FA 代碼：",
