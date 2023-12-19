@@ -595,7 +595,12 @@
       "password": "パスワード",
       "title": "VRChatにログイン",
       "username": "VRChatユーザー名/Eメール",
-      "rememberCredentials": "ログイン情報を保存する"
+      "rememberCredentials": "ログイン情報を保存する",
+      "disclaimers": {
+        "brand": "OyasumiVRはVRChatが承認したものではなく、VRChatやVRChatの制作・運営に公式に関与している人物の見解や意見を反映したものではありません。VRChatは、VRChat Inc.の商標です。VRChat © VRChat Inc.",
+        "liability": "Raphiiko はOyasumiVRに関わるいかなる問題にも責任を負いません。自己責任でご利用ください。",
+        "use": "ログイン情報は自身のPC以外に保存されることはなく、認証のためだけにVRChatのサーバーに送信されます。"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "VRChatアカウントは二要素認証で保護されています。\r\n\r\n2FAコードを入力してください:",
