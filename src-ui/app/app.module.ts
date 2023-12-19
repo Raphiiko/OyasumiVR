@@ -29,7 +29,6 @@ import { SleepService } from './services/sleep.service';
 import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
 import { NgPipesModule } from 'ngx-pipes';
-import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/sleeping-pose-viewer.component';
 import { OscService } from './services/osc.service';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { SelectBoxComponent } from './components/select-box/select-box.component';
@@ -186,6 +185,7 @@ import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
+import { cloneDeep } from 'lodash';
 
 [
   localeEN,
@@ -227,7 +227,6 @@ export function createTranslateLoader(http: HttpClient) {
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
-    SleepingPoseViewerComponent,
     OscAutomationsViewComponent,
     SelectBoxComponent,
     TStringTranslatePipe,
