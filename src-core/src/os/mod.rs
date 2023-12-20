@@ -60,6 +60,10 @@ async fn watch_processes() {
                 }
             }
         }
+        // Only monitor memory usage in dev builds, to help find memory leaks
+        if crate::BUILD_FLAVOUR == crate::flavour::BuildFlavour::Dev {
+            crate::utils::monitor_memory_usage(false).await;
+        }
         tokio::time::sleep(Duration::from_secs(1)).await;
     }
 }
