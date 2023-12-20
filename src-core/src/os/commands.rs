@@ -308,3 +308,14 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
     };
     manager.set_mic_activity_device_id(device_id).await;
 }
+
+#[tauri::command]
+pub async fn activate_memory_watcher() -> bool {
+    let mut watcher_active_guard = super::MEMORY_WATCHER_ACTIVE.lock().await;
+    if *watcher_active_guard {
+        return false;
+    }
+    info!("[Core] Activating memory watcher");
+    *watcher_active_guard = true;
+    true
+}

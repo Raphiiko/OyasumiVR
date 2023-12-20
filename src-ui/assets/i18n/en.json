@@ -1178,6 +1178,21 @@
               "message": "The internal OSC- and OSCQuery services have been restarted."
             }
           }
+        },
+        "memoryWatcher": {
+          "title": "Memory Watcher",
+          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged.",
+          "action": "Activate",
+          "modal": {
+            "error": {
+              "title": "Already Active",
+              "message": "The memory watcher was already active."
+            },
+            "success": {
+              "title": "Memory Watcher Activated",
+              "message": "The memory watcher has been activated!"
+            }
+          }
         }
       }
     },
