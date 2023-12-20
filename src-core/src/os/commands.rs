@@ -147,7 +147,16 @@ pub async fn show_in_folder(path: String) {
 
 #[tauri::command]
 pub async fn set_windows_power_policy(guid: String) {
-    let parsed_guid = crate::utils::serialization::string_to_guid(&guid).unwrap();
+    let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
+        Ok(g) => g,
+        Err(e) => {
+            error!(
+                "[Core] Could not parse GUID in set_windows_power_policy \"{}\": {}",
+                guid, e
+            );
+            return;
+        }
+    };
     info!("[Core] Setting Windows power policy to \"{}\" plan", guid);
     super::set_windows_power_policy(&parsed_guid);
 }
