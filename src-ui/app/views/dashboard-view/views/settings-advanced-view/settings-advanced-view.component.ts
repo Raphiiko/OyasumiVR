@@ -32,6 +32,7 @@ import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-clie
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { OscService } from '../../../../services/osc.service';
+import { FLAVOUR } from '../../../../../build';
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -56,6 +57,7 @@ export class SettingsAdvancedViewComponent {
     { key: 'miscData' },
   ];
   checkedPersistentStorageItems: string[] = [];
+  memoryWatcherActive = FLAVOUR === 'DEV';
 
   constructor(
     private router: Router,
@@ -311,5 +313,26 @@ export class SettingsAdvancedViewComponent {
         showCancel: false,
       })
       .subscribe();
+  }
+
+  async activateMemoryWatcher() {
+    this.memoryWatcherActive = true;
+    if (await invoke<boolean>('activate_memory_watcher')) {
+      this.modalService
+        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+          title: 'settings.advanced.fixes.memoryWatcher.modal.success.title',
+          message: 'settings.advanced.fixes.memoryWatcher.modal.success.message',
+          showCancel: false,
+        })
+        .subscribe();
+    } else {
+      this.modalService
+        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+          title: 'settings.advanced.fixes.memoryWatcher.modal.error.title',
+          message: 'settings.advanced.fixes.memoryWatcher.modal.error.message',
+          showCancel: false,
+        })
+        .subscribe();
+    }
   }
 }

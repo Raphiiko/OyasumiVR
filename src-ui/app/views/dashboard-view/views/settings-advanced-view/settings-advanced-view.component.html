@@ -105,10 +105,10 @@
             <div class="setting-row-label" translate>
               <span translate>{{
                 'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
-              }}</span>
+                }}</span>
               <span translate>{{
                 'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
-              }}</span>
+                }}</span>
             </div>
             <div class="setting-row-action">
               <label class="check-toggle">
@@ -154,6 +154,21 @@
               (click)="restartOscServer()"
             >
               <span translate>settings.advanced.fixes.oscRestart.action</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.fixes.memoryWatcher.title</span>
+            <span translate>settings.advanced.fixes.memoryWatcher.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-primary"
+              [disabled]="memoryWatcherActive"
+              (click)="activateMemoryWatcher()"
+            >
+              <span translate>settings.advanced.fixes.memoryWatcher.action</span>
             </button>
           </div>
         </div>
