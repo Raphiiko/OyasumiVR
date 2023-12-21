@@ -166,8 +166,9 @@ pub async fn monitor_memory_usage(refresh_processes: bool) {
                 let _ = tauri::api::dialog::MessageDialogBuilder::new(
                     "Possible Memory Leak Detected",
                     &format!(
-                        "OyasumiVR's subprocess \"{}\" is using {} of memory. This is highly unlikely to happen, and likely indicates the presence of a memory leak. If you see this, please contact a developer.",
+                        "OyasumiVR's subprocess \"{}\" (PID:{}) is using {} of memory. This is highly unlikely to happen, and likely indicates the presence of a memory leak. If you see this, please contact a developer.",
                         process.name(),
+                        process.pid().as_u32(),
                         mem
                     ),
                 )

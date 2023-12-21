@@ -23,6 +23,7 @@ export interface AppSettings {
   };
   ignoredLighthouses: string[];
   hotkeys: { [hotkeyId: string]: string[] };
+  hideSnowverlay: boolean;
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
@@ -70,6 +71,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   deviceNicknames: {},
   ignoredLighthouses: [],
   hotkeys: {},
+  hideSnowverlay: false,
 };
 
 export type ExecutableReferenceStatus =

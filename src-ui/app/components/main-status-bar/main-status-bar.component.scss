@@ -213,6 +213,24 @@ $background-color: var(--color-surface-2);
   }
 }
 
+.snowverlay {
+  .pill-icon {
+    margin: 0;
+    transition: all .15s;
+    opacity: 0.5;
+    i {
+      opacity: 1;
+      color: white;
+    }
+    &.active {
+      opacity: 1;
+    }
+    &:active {
+      opacity: 0.5;
+    }
+  }
+}
+
 .sleep-mode,
 .vrc-status,
 .steamvr-status,
