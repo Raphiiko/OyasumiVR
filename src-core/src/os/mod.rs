@@ -2,13 +2,19 @@ mod audio_devices;
 pub mod commands;
 mod models;
 
-use log::error;
+use log::{error, info};
 use soloud::*;
 use std::collections::HashMap;
+use std::ffi::OsString;
+use std::os::windows::ffi::OsStringExt;
+use std::ptr::null_mut;
+use std::slice;
+use std::time::Duration;
 use tokio::sync::Mutex;
 use winapi::shared::guiddef::GUID;
+use winapi::shared::minwindef::{DWORD, UCHAR, ULONG};
 use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
-use winapi::DEFINE_GUID;
+use winapi::um::powrprof::{PowerEnumerate, PowerReadFriendlyName};
 
 use self::audio_devices::manager::AudioDeviceManager;
 
@@ -17,6 +23,8 @@ lazy_static! {
         std::sync::Mutex::new(HashMap::new());
     static ref SOLOUD: std::sync::Mutex<Soloud> = std::sync::Mutex::new(Soloud::default().unwrap());
     static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
+    static ref VRCHAT_ACTIVE: Mutex<bool> = Mutex::new(false);
+    static ref MEMORY_WATCHER_ACTIVE: Mutex<bool> = Mutex::new(false);
 }
 
 pub async fn init_audio_device_manager() {
@@ -34,6 +42,32 @@ pub async fn init_audio_device_manager() {
     *manager = Some(m);
     if let Err(e) = manager.as_ref().unwrap().refresh_audio_devices().await {
         error!("[Core] Failed to refresh audio devices: {}", e);
+    }
+    tokio::task::spawn(watch_processes());
+}
+
+async fn watch_processes() {
+    loop {
+        {
+            let res = crate::utils::is_process_active("VRChat.exe", true).await;
+            let mut vrc_active = VRCHAT_ACTIVE.lock().await;
+            if *vrc_active != res {
+                *vrc_active = res;
+                crate::utils::send_event("VRCHAT_PROCESS_ACTIVE", res).await;
+                if res {
+                    info!("[Core] Detected VRChat process has started");
+                } else {
+                    info!("[Core] Detected VRChat process has stopped");
+                }
+            }
+        }
+        if {
+            let watcher_active = MEMORY_WATCHER_ACTIVE.lock().await;
+            *watcher_active
+        } {
+            crate::utils::monitor_memory_usage(false).await;
+        }
+        tokio::time::sleep(Duration::from_secs(1)).await;
     }
 }
 
@@ -61,12 +95,35 @@ pub async fn load_sounds() {
     });
 }
 
-DEFINE_GUID! {GUID_POWER_POLICY_POWER_SAVING,
-0xa1841308, 0x3541, 0x4fab, 0xbc, 0x81, 0xf7, 0x15, 0x56, 0xf2, 0x0b, 0x4a}
-DEFINE_GUID! {GUID_POWER_POLICY_BALANCED,
-0x381b4222, 0xf694, 0x41f0, 0x96, 0x85, 0xff, 0x5b, 0xb2, 0x60, 0xdf, 0x2e}
-DEFINE_GUID! {GUID_POWER_POLICY_HIGH_PERFORMANCE,
-0x8c5e7fda, 0xe8bf, 0x4a96, 0x9a, 0x85, 0xa6, 0xe2, 0x3a, 0x8c, 0x63, 0x5c}
+fn get_windows_power_policies() -> Vec<GUID> {
+    let mut power_schemes = Vec::new();
+    let mut index: ULONG = 0;
+    let mut buffer_size: DWORD = std::mem::size_of::<GUID>() as DWORD;
+
+    loop {
+        let mut buffer: GUID = unsafe { std::mem::zeroed() };
+        let result = unsafe {
+            PowerEnumerate(
+                null_mut(),
+                null_mut(),
+                null_mut(),
+                winapi::um::powrprof::ACCESS_SCHEME,
+                index,
+                &mut buffer as *mut _ as *mut UCHAR,
+                &mut buffer_size as *mut _ as *mut DWORD,
+            )
+        };
+
+        if result == winapi::shared::winerror::ERROR_SUCCESS {
+            power_schemes.push(buffer);
+            index += 1;
+        } else {
+            break;
+        }
+    }
+
+    power_schemes
+}
 
 fn active_windows_power_policy() -> Option<GUID> {
     unsafe {
@@ -90,6 +147,50 @@ fn set_windows_power_policy(guid: &GUID) -> bool {
     result == 0
 }
 
-fn guid_equal(a: &GUID, b: &GUID) -> bool {
-    (a.Data1 == b.Data1) && (a.Data2 == b.Data2) && (a.Data3 == b.Data3) && (a.Data4 == b.Data4)
+fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<String> {
+    let mut buffer_size: DWORD = 0;
+
+    // First call to determine the buffer size needed
+    let result = unsafe {
+        PowerReadFriendlyName(
+            null_mut(),
+            scheme_guid as *const _,
+            null_mut(),
+            null_mut(),
+            null_mut() as *mut UCHAR,
+            &mut buffer_size,
+        )
+    };
+
+    if result != winapi::shared::winerror::ERROR_SUCCESS || buffer_size == 0 {
+        return None;
+    }
+
+    let mut buffer: Vec<UCHAR> = Vec::with_capacity(buffer_size as usize);
+    buffer.resize(buffer_size as usize, 0);
+
+    // Second call to actually get the friendly name
+    let result = unsafe {
+        PowerReadFriendlyName(
+            null_mut(),
+            scheme_guid as *const _,
+            null_mut(),
+            null_mut(),
+            buffer.as_mut_ptr(),
+            &mut buffer_size,
+        )
+    };
+
+    if result != winapi::shared::winerror::ERROR_SUCCESS {
+        return None;
+    }
+
+    let wide_buffer =
+        unsafe { slice::from_raw_parts(buffer.as_ptr() as *const u16, buffer_size as usize / 2) };
+    let os_str = OsString::from_wide(wide_buffer);
+
+    match os_str.to_string_lossy().into_owned() {
+        s if !s.is_empty() => Some(s.trim_end_matches('\0').to_string()),
+        _ => None,
+    }
 }

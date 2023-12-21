@@ -3,8 +3,8 @@ import { TString } from '../../models/translatable-string';
 import { fadeDown, fadeUp } from '../../utils/animations';
 import { SafeHtml } from '@angular/platform-browser';
 
-export interface SelectBoxItem {
-  id: string;
+export interface SelectBoxItem<T = string> {
+  id: T;
   label: TString;
   subLabel?: TString;
   infoAction?: () => void;

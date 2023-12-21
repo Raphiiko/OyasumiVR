@@ -13,18 +13,30 @@
       *ngVar="{ hover: false }; let state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
+      [tooltip]="'comp.main-status-bar.sleepMode.tooltip'"
+      [tooltipMode]="'top'"
+      [tooltipMargin]="8"
       (click)="toggleSleepMode()"
     >
       <div class="pill-icon">
         <i class="material-icons-round">nights_stay</i>
       </div>
       <span @hshrink *ngIf="state.hover"
-        >{{ 'comp.main-status-bar.sleepMode' | translate }}:&nbsp;</span
+      >{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="(sleepMode | async) === false" @hshrink translate
-        >comp.main-status-bar.inactive</span
+      >comp.main-status-bar.inactive</span
       >
+    </div>
+    <div
+      class="pill clickable snowverlay"
+      (click)="toggleSnowverlay()"
+      *ngIf="snowverlayAvailable"
+    >
+      <div class="pill-icon" [class.active]="snowverlayActive">
+        <i class="material-icons-round">ac_unit</i>
+      </div>
     </div>
   </div>
   <div class="right">
@@ -44,7 +56,7 @@
           <i class="material-icons-round mic-muted">mic_off</i>
         </div>
         <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
-          >comp.main-status-bar.systemMicMuted.label</span
+        >comp.main-status-bar.systemMicMuted.label</span
         >
       </div>
     </ng-container>
@@ -60,11 +72,11 @@
           <i
             class="material-icons-round heart-icon"
             [style.animation-duration]="60 / ((pulsoid.heartRate | async) ?? 1) + 's'"
-            >favorite</i
+          >favorite</i
           >
         </div>
         <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
         >
         <span>{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
       </div>
@@ -86,7 +98,7 @@
           <i class="material-icons-round">brightness_medium</i>
         </div>
         <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
         >
         <span>{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
       </div>
@@ -108,7 +120,7 @@
           <i class="material-icons-round">monitor</i>
         </div>
         <span [class.inactive]="(displayBrightnessControl.driverIsAvailable | async) === false"
-          >{{ displayBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+        >{{ displayBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
         >
         <span><b>&nbsp;|&nbsp;</b></span>
         <span>{{ imageBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
@@ -145,7 +157,7 @@
       *ngVar="{ hover: false } as state"
       (mouseenter)="state.hover = true"
       (mouseleave)="state.hover = false"
-      (click)="navigateToVRChatSettings()"
+      (click)="navigateToIntegrationSettings()"
       [tooltip]="'comp.main-status-bar.vrchat.tooltip'"
     >
       <ng-container *ngVar="user | async as user">
@@ -154,7 +166,7 @@
         </div>
         <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
           <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-            >brightness_1</i
+          >brightness_1</i
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>

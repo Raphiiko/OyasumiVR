@@ -5,9 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0]
+
+### Added
+
+- Automations for controlling the volume and mute state of all system audio devices.
+- Russian language support (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
+- A credential saving option for remembering your VRChat credentials.
+- Automation for disabling the sleep mode after its been enabled for a specified amount of time.
+- An option for your system microphone to change its mute state when joining a world in VRChat.
+- Option for preventing the overlay from opening when VRChat is not running.
+- Support for custom Windows power policies
+- Custom nicknames for controller, tracker, and base station devices.
+- Option for ignoring specific basestations in automations.
+- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
+- Detection for initialization failures and error handling.
+- Added support for OSCQuery
+- Status information view to the settings, for showing technical information regarding OyasumiVR and some of its internals.
+- Automation for running a OSC script whenever the user prepares to go to sleep.
+- Added OSC commands for turning on and turning off all base stations.
+
+### Changed
+
+- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
+- Improved reliability of base station power management
+- Brightness automations no longer apply on start as a default setting
+- Updated to Tauri v1.5
+- Rewrote OSC control (Old OSC addresses remain supported, but check the wiki page on OSC control for any updates)
+
+### Fixed
+
+- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
+- Default bindings sometimes triggering haptics for some users.
+- Improved search performance in the friend selection modal for automatically accepting invite requests.
+
+### Removed
+
+- VRChat settings
+- OSC configuration options (Now handled by OSCQuery)
+
 ## [1.10.4]
 
 ### Fixed
+
 - Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
 - Fixed telemetry settings not always being saved properly.
 
@@ -93,7 +134,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://twitter.com/u_flower_elf)).
+- Improvements to the Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)).
 - Disabling OSC features leading to a crash
 - A configuration saving loop in status automations view
 - Malformed OSC packets causing a crash

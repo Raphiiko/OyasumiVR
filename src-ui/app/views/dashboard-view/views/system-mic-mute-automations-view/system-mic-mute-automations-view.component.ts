@@ -1,4 +1,4 @@
-import { Component, DestroyRef, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,11 +10,14 @@ import {
   SystemMicMuteAutomationsConfig,
   SystemMicMuteControllerBindingBehavior,
   SystemMicMuteStateOption,
+  VRChatMicrophoneWorldJoinBehaviour,
 } from '../../../../models/automations';
 import { cloneDeep, isEqual } from 'lodash';
 import { OVRInputEventAction } from '../../../../models/ovr-input-event';
 import { fade, vshrink } from '../../../../utils/animations';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
+import { SliderSettingComponent } from '../../../../components/slider-setting/slider-setting.component';
+import { listen, UnlistenFn } from '@tauri-apps/api/event';
 
 @Component({
   selector: 'app-system-mic-mute-automations-view',
@@ -22,10 +25,34 @@ import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-m
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
   animations: [vshrink(), fade()],
 })
-export class SystemMicMuteAutomationsViewComponent implements OnInit {
+export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
   config: SystemMicMuteAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
+  worldJoinBehaviourOptions: SelectBoxItem[] = [
+    {
+      id: 'KEEP',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.KEEP',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_none</i>'
+      ),
+    },
+    {
+      id: 'MUTE',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.MUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic_off</i>'
+      ),
+    },
+    {
+      id: 'UNMUTE',
+      label: 'systemMicMuteAutomations.vrchat.worldJoinBehaviour.options.UNMUTE',
+      htmlPrefix: this.domSanitizer.bypassSecurityTrustHtml(
+        '<i class="material-icons" style="margin-right: 0.5em">mic</i>'
+      ),
+    },
+  ];
+  worldJoinBehaviourOption: SelectBoxItem | undefined;
   muteActionOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -75,6 +102,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
   onSleepEnableControlButtonBehaviorOption: SelectBoxItem | undefined;
   onSleepDisableControlButtonBehaviorOption: SelectBoxItem | undefined;
   onSleepPreparationControlButtonBehaviorOption: SelectBoxItem | undefined;
+  voiceActivationModeOptions: SelectBoxItem[] = [
+    {
+      id: 'VRCHAT',
+      label: 'systemMicMuteAutomations.overlayIndicator.voiceActivityMode.modes.VRCHAT',
+    },
+    {
+      id: 'HARDWARE',
+      label: 'systemMicMuteAutomations.overlayIndicator.voiceActivityMode.modes.HARDWARE',
+    },
+  ];
+  voiceActivationModeOption: SelectBoxItem | undefined;
+  micLevelUnlisten?: UnlistenFn;
+
+  @ViewChild('voiceActivationThresholdSlider')
+  voiceActivationThresholdSlider?: SliderSettingComponent;
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -118,6 +160,12 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
       this.controlButtonBehaviorOption = this.controlButtonBehaviorOptions.find(
         (o) => o.id === config.controllerBindingBehavior
       );
+      this.voiceActivationModeOption = this.voiceActivationModeOptions.find(
+        (o) => o.id === config.voiceActivationMode
+      );
+      this.worldJoinBehaviourOption = this.worldJoinBehaviourOptions.find(
+        (o) => o.id === config.vrchatWorldJoinBehaviour
+      );
     });
     // Process audio devices and config related to audio devices
     combineLatest([
@@ -129,31 +177,21 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
         let options: SelectBoxItem[] = devices
           .filter((d) => d.deviceType === 'Capture')
           .map((d) => {
-            let label = d.name;
-            const breakIndex = label.indexOf('(');
-            if (breakIndex > -1) {
-              label =
-                label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-            }
             return {
-              id: this.systemMicMuteAutomationService.getPersistentIdForAudioDevice(d),
-              label,
+              id: d.persistentId!,
+              label: (d.parsedName!.display + '\n' + d.parsedName!.driver).trim(),
             };
           });
         // Add default option
-        const device = devices.find((d) => d.default);
+        const device = devices.find((d) => d.default && d.deviceType === 'Capture');
         if (device) {
-          let label = device.name;
-          const breakIndex = label.indexOf('(');
-          if (breakIndex > -1) {
-            label =
-              label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-          }
           const defaultOption: SelectBoxItem = {
-            id: 'DEFAULT',
+            id: 'DEFAULT_CAPTURE',
             label: {
               string: 'systemMicMuteAutomations.audioDevice.options.DEFAULT',
-              values: { deviceName: label },
+              values: {
+                deviceName: (device.parsedName!.display + '\n' + device.parsedName!.driver).trim(),
+              },
             },
           };
           options = [defaultOption, ...options];
@@ -165,18 +203,11 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
           // If we cannot find the option, we'll insert it.
           // This is in case the user has previously a configured a device that is currently not active.
           if (!option) {
-            let label =
-              (await this.systemMicMuteAutomationService.getAudioDeviceNameForPersistentId(
-                audioDevicePersistedId
-              )) ?? 'Unknown Device';
-            const breakIndex = label.indexOf('(');
-            if (breakIndex > -1) {
-              label =
-                label.substring(0, breakIndex) + '\n' + label.substring(breakIndex, label.length);
-            }
+            const name =
+              this.audioDeviceService.getAudioDeviceNameForPersistentId(audioDevicePersistedId);
             option = {
               id: audioDevicePersistedId,
-              label,
+              label: name ? (name.display + '\n' + name.driver).trim() : 'Unknown Device',
             };
             options = [option, ...options];
           }
@@ -185,6 +216,16 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
         this.audioDeviceOptions = options;
         this.audioDeviceOption = option ?? undefined;
       });
+    // Process mic audio level for visualisation
+    this.micLevelUnlisten = await listen<{ deviceId: string; level: number }>('mic_level', (e) => {
+      if (this.voiceActivationThresholdSlider) {
+        this.voiceActivationThresholdSlider.audioLevel = e.payload.level;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.micLevelUnlisten) this.micLevelUnlisten();
   }
 
   async onChangeAudioDevice($event: SelectBoxItem | undefined) {
@@ -283,6 +324,35 @@ export class SystemMicMuteAutomationsViewComponent implements OnInit {
       'SYSTEM_MIC_MUTE_AUTOMATIONS',
       {
         overlayMuteIndicatorOpacity: opacity,
+      }
+    );
+  }
+
+  async onChangeHardwareVoiceActivationThreshold(threshold: number) {
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        hardwareVoiceActivationThreshold: threshold,
+      }
+    );
+  }
+
+  async onChangeVoiceActivationMode(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        voiceActivationMode: option!.id as 'VRCHAT' | 'HARDWARE',
+      }
+    );
+  }
+
+  async onChangeWorldJoinBehaviourOption(option: SelectBoxItem | undefined) {
+    if (!option) return;
+    await this.automationConfigService.updateAutomationConfig<SystemMicMuteAutomationsConfig>(
+      'SYSTEM_MIC_MUTE_AUTOMATIONS',
+      {
+        vrchatWorldJoinBehaviour: option!.id as VRChatMicrophoneWorldJoinBehaviour,
       }
     );
   }

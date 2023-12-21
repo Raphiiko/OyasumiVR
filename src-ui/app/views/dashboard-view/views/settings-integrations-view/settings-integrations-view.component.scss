@@ -1,0 +1,121 @@
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}
+
+.clickable-logo {
+  transition: all 0.15s;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 0.5em var(--color-surface-5));
+  }
+}
+
+.setting-row-label {
+  span:nth-child(2) {
+    color: var(--color-text-3);
+  }
+}
+
+.pulsoid-logo {
+  padding: 0 0.5em;
+  width: 3em;
+}
+
+.vrchat-logo {
+  padding: 0 0.25em;
+  width: 3em;
+}
+
+.connected {
+  background: var(--color-surface-0);
+  padding: 1em;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: white;
+  border: 0.125em solid var(--color-surface-2);
+
+  * {
+    transition: all 0.15s;
+  }
+
+  &-info {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    padding-bottom: 0.75em;
+
+    i {
+      flex-shrink: 0;
+      margin-right: 0.25em;
+      font-size: 1.4em;
+      color: var(--color-alert-success);
+    }
+
+    &-account {
+      flex: 1;
+      font-family: monospace;
+      color: var(--color-text-2);
+
+      &.obfuscated {
+        cursor: pointer;
+
+        &:hover {
+          color: var(--color-text-1);
+        }
+
+        &:active {
+          color: var(--color-text-3);
+        }
+      }
+    }
+  }
+
+  &-disconnect {
+    background-color: var(--color-surface-1);
+
+    &:hover {
+      background-color: var(--color-surface-2);
+    }
+
+    &:active {
+      background-color: var(--color-surface-1);
+    }
+  }
+}
+
+.btn-copy {
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.connect-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  > *:first-child {
+    margin-right: 0.5em;
+  }
+}
+
+.material-icons.success {
+  color: var(--color-success);
+}

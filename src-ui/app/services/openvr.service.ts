@@ -3,7 +3,7 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error } from 'tauri-plugin-log-api';
@@ -24,11 +24,15 @@ export class OpenVRService {
   }> = new BehaviorSubject<{ [p: number]: OVRDevicePose }>({});
   public devicePoses: Observable<{ [trackingIndex: number]: OVRDevicePose }> =
     this._devicePoses.asObservable();
+  private deviceNicknames: { [id: string]: string } = {};
 
-  constructor(private appRef: ApplicationRef, private settingsService: AppSettingsService) {}
+  constructor(private appRef: ApplicationRef, private appSettings: AppSettingsService) {}
 
   async init() {
     this._status.next(await invoke<OpenVRStatus>('openvr_status'));
+    this.appSettings.settings.subscribe((settings) => {
+      this.deviceNicknames = settings.deviceNicknames;
+    });
     await Promise.all([
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
@@ -125,5 +129,23 @@ export class OpenVRService {
     });
     // Return newly fetched devices
     return devices;
+  }
+
+  public getDeviceNickname(device: OVRDevice): string | null {
+    return this.deviceNicknames['OVRDEVICE_' + device.serialNumber] ?? null;
+  }
+
+  public async setDeviceNickname(device: OVRDevice, nickname: string) {
+    const settings = await firstValueFrom(this.appSettings.settings);
+    const deviceNicknames = cloneDeep(settings.deviceNicknames);
+    nickname = nickname.trim();
+    if (nickname) {
+      deviceNicknames['OVRDEVICE_' + device.serialNumber] = nickname;
+    } else {
+      delete deviceNicknames['OVRDEVICE_' + device.serialNumber];
+    }
+    this.appSettings.updateSettings({
+      deviceNicknames,
+    });
   }
 }

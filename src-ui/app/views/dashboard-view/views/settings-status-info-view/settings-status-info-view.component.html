@@ -1,0 +1,49 @@
+<div class="pane">
+  <div class="pane-title" translate>settings.statusInfo.title</div>
+  <div class="pane-content">
+    <p translate>settings.statusInfo.description</p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>settings.statusInfo.copy.title</span>
+          <span translate>settings.statusInfo.copy.description</span>
+        </div>
+        <div class="setting-row-action">
+          <button class="btn btn-primary btn-copy" translate (click)="copyToClipboard()">
+            <span @hshrink *ngIf="!copiedToClipboard.includes('ALL_DATA')">
+              <i class="material-icons">copy_all</i>
+              <span translate>settings.statusInfo.copy.action</span>
+            </span>
+            <i
+              class="material-icons success"
+              *ngIf="copiedToClipboard.includes('ALL_DATA')"
+              @hshrink
+            >check</i
+            >
+          </button>
+        </div>
+      </div>
+      <ng-container *ngFor="let category of categories">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span>{{ category.name | tsTranslate }}</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+          </div>
+        </div>
+        <div class="setting-row-group">
+          <div class="setting-row" [class.compact]="compact" *ngFor="let entry of category.entries">
+            <div class="setting-row-label" translate>
+              <span>{{ entry.key | tsTranslate }}</span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <span><b>{{ ((entry.value | async) ?? '') | tsTranslate }}</b></span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

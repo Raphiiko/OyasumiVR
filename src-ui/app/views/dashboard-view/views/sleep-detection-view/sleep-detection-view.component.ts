@@ -8,6 +8,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,
   AutomationType,
+  SleepModeDisableAfterTimeAutomationConfig,
   SleepModeDisableAtTimeAutomationConfig,
   SleepModeDisableOnDevicePowerOnAutomationConfig,
   SleepModeEnableAtBatteryPercentageAutomationConfig,
@@ -24,6 +25,7 @@ import { SleepDetectorEnableSleepModeModalComponent } from './sleep-detector-ena
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
+import { DurationDisableSleepModeModalComponent } from './duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -52,7 +54,7 @@ export class SleepDetectionViewComponent implements OnInit {
   onClick(event: MouseEvent) {
     if ((event.target as HTMLElement).className !== 'integrationsPageLink') return;
     event.preventDefault();
-    this.router.navigate(['/dashboard/settings'], { fragment: 'INTEGRATIONS' });
+    this.router.navigate(['/dashboard/settings/integrations']);
   }
 
   openModal_EnableSleepModeAtTime() {
@@ -82,6 +84,22 @@ export class SleepDetectionViewComponent implements OnInit {
           'SLEEP_MODE_DISABLE_AT_TIME',
           {
             time: data.time,
+          }
+        );
+      });
+  }
+
+  openModal_DisableSleepModeAfterTime() {
+    this.modalService
+      .addModal(DurationDisableSleepModeModalComponent, {
+        duration: this.automationConfigs.SLEEP_MODE_DISABLE_AFTER_TIME.duration,
+      })
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {
+        this.automationConfigService.updateAutomationConfig<SleepModeDisableAfterTimeAutomationConfig>(
+          'SLEEP_MODE_DISABLE_AFTER_TIME',
+          {
+            duration: data.duration,
           }
         );
       });
@@ -160,5 +178,32 @@ export class SleepDetectionViewComponent implements OnInit {
 
   async goToPowerAutomations(fragment: string) {
     await this.router.navigate(['dashboard', 'powerAutomations'], { fragment });
+  }
+
+  protected getStringForDuration(duration: string): string {
+    return getStringForDuration(this.translate, duration);
+  }
+}
+
+export function getStringForDuration(translate: TranslateService, duration: string): string {
+  const [hours, minutes] = duration.split(':').map((v) => parseInt(v));
+  if (hours && minutes) {
+    return translate.instant(
+      'sleep-detection.disableAutomations.afterTime.description.hoursAndMinutes',
+      {
+        hours,
+        minutes,
+      }
+    );
+  } else if (hours) {
+    return translate.instant('sleep-detection.disableAutomations.afterTime.description.hours', {
+      hours,
+    });
+  } else if (minutes) {
+    return translate.instant('sleep-detection.disableAutomations.afterTime.description.minutes', {
+      minutes,
+    });
+  } else {
+    return '';
   }
 }

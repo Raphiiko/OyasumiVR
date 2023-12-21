@@ -18,6 +18,7 @@ export class SleepPreparationService {
   public readonly sleepPreparationAvailable = this.automationConfigService.configs.pipe(
     map((configs) =>
       [
+        (configs.OSC_GENERAL.onSleepPreparation?.commands.length ?? 0) > 0,
         configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationState !== 'NONE',
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBinding &&
@@ -37,7 +38,10 @@ export class SleepPreparationService {
   }
 
   public async prepareForSleep() {
-    if (await firstValueFrom(this.sleepPreparationAvailable)) {
+    if (
+      (await firstValueFrom(this.sleepPreparationAvailable)) &&
+      !this._sleepPreparationTimedOut.value
+    ) {
       this._sleepPreparationTimedOut.next(true);
       this._onSleepPreparation.next();
       setTimeout(() => this._sleepPreparationTimedOut.next(false), SLEEP_PREPARATION_TIMEOUT);

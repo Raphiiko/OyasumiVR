@@ -1,0 +1,315 @@
+{{HEADER_TAGLINE}}
+💤 Utilitas untuk membantu tidur dalam virtual reality. 💤
+
+{{DISCORD_INVITE}}
+Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+
+{{DOWNLOAD_AND_INSTALL_HEADER}}
+Download & Instal
+
+{{DOWNLOAD_AND_INSTALL_BODY}}
+Dapatkan installer terbaru kami dari tempat mana pun yang Anda inginkan:
+
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**Metode rekomendasi**_)
+- [releases page](https://github.com/Raphiiko/Oyasumi/releases) kita
+- Halaman kami di [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
+- Halaman kami di [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
+
+Jalankan saja installernya dan Anda bisa langsung menggunakannya!
+
+{{WHAT_IS_OYASUMIVR_HEADER}}
+Apa itu OyasumiVR?
+
+{{WHAT_IS_OYASUMIVR_BODY}}
+OyasumiVR adalah aplikasi desktop yang berisi berbagai utilitas dan otomatisasi untuk **membantu Anda tidur dengan menggunakan headset virtual reality**. Sebagian besar utilitas ini dibuat khusus untuk digunakan dalam platform vr-sosial [VRChat](https://vrchat.com).
+
+OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berbagai cara seperti:
+- 🔋 Menghemat listrik dan baterai dalam semalam
+- 🔅 Meredupkan kecerahan headset Anda
+- ✨ Memicu animasi avatar berdasarkan pose tidur Anda
+- 📩 Menangani permintaan undangan secara otomatis
+- 🎤 Membisukan mikrofon saat Anda tertidur
+- 🛠 Mengotomatiskan berbagai pengaturan SteamVR
+
+...dan masih banyak lagi! Silakan lihat bagian "Fitur" yang akan datang untuk membaca lebih lanjut tentang fungsionalitas yang ditawarkan OyasumiVR.
+
+{{FEATURES}}
+Fitur
+
+{{SLEEP_DETECTION_HEADER}}
+💤 Deteksi Tidur
+
+{{SLEEP_DETECTION_BODY}}
+OyasumiVR dapat mendeteksi secara otomatis ketika Anda tertidur, berdasarkan gerakan Anda! Cukup kalibrasi sekali, aktifkan otomatisasi, dan Anda siap.
+<br><br>
+Jika deteksi otomatis bukan yang Anda cari, ada berbagai otomatisasi alternatif yang dapat Anda gunakan, yang didasarkan pada:
+<br><br>
+<ul>
+  <li>Jadwal waktu</li>
+  <li>Tingkat baterai kontroler & tracker</li>
+  <li>Status daya kontroler & tracker</li>
+  <li>Status SteamVR</li>
+</ul>
+
+{{STEAMVR_OVERLAY_HEADER}}
+📲 Overlay SteamVR
+
+{{STEAMVR_OVERLAY_BODY}}
+OyasumiVR hadir dengan overlay SteamVR-nya sendiri, yang memungkinkan Anda mengontrol beberapa fiturnya dari dalam VR!
+<br><br>
+Secara default, tekan dua kali tombol A pada kontroler kanan Anda, dan tombol ini akan muncul di depan Anda.
+
+{{POWER_AUTOMATIONS_HEADER}}
+🔋 Otomatisasi Power
+
+{{POWER_AUTOMATIONS_BODY_CONTROLLERS_AND_TRACKERS}}
+<b>Kontroler & Tracker</b>
+<br>
+Secara otomatis, kontroler dan/atau tracker Anda akan mati ketika Anda tidur, dan menghemat baterainya! Anda akan senang saat bangun di pagi hari dan mendapati baterainya masih tersisa!
+<br>
+<br>
+Selain itu, Anda dapat membuat kontroler dan/atau tracker Anda mati pada level baterai tertentu, atau ketika Anda meletakkannya pada pengisi daya. Ideal untuk hotswapping kontroler!
+
+{{POWER_AUTOMATIONS_BODY_WINDOWS_POWER_POLICY}}
+<b>Kebijakan Daya Windows</b>
+<br>
+Hemat listrik dengan mengatur Kebijakan Daya Windows secara otomatis saat Anda tidur dan bangun! Cukup setel kebijakan yang lebih konservatif (seperti "Penghemat Daya") saat Anda tidur, lalu kembalikan kebijakan kinerja yang lebih tinggi saat Anda bangun lagi.
+
+{{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
+<b>Base Station</b>
+<br>
+Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya.
+<br><br>
+<i>Saat ini hanya V2 Lighthouse yang didukung.</i>
+
+{{GPU_AUTOMATIONS_HEADER}}
+🔌 Otomatisasi GPU
+
+{{GPU_AUTOMATIONS_BODY_POWER_LIMITING}}
+<b>Pembatasan Daya GPU</b>
+<br>
+Menghemat listrik dengan secara otomatis membatasi daya GPU saat Anda tidur, dan mengembalikan daya penuh saat Anda bangun! Cukup atur batas watt yang diinginkan dan OyasumiVR akan mengaturnya saat dibutuhkan.
+<br><br>
+<i>Pembatasan daya hanya tersedia pada GPU Nvidia. Pengguna AMD dapat memanfaatkan otomatisasi MSI Afterburner.</i>
+
+
+{{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
+<b>MSI Afterburner</b>
+<br>
+Jika Anda ingin kontrol lebih besar atas GPU Anda lebih dari sekadar mengatur batas daya, Anda dapat membuat OyasumiVR secara otomatis mengaktifkan profil yang telah Anda siapkan di <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>.
+Sesuaikan over-atau underclock, batas daya, dan lainnya, dan minta OyasumiVR memanggil mereka saat Anda tidur, atau bangun!
+
+
+{{VRCHAT_AUTOMATIONS_HEADER}}
+💫 Otomatisasi VRChat
+
+{{VRCHAT_AUTOMATIONS_BODY_SLEEPING_ANIMATIONS}}
+🌜 <b>Animasi Tidur</b>
+<br>
+OyasumiVR dapat mendeteksi pose tidur Anda, dan menggunakannya untuk memicu animasi atau pose yang tepat pada avatar Anda.
+<br><br>
+Terdapat preset bawaan untuk aset locomotion yang populer, termasuk:
+<br><br>
+<ul>
+  <li>
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
+  </li>
+  <li>
+    <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
+  </li>
+</ul>
+<br>
+Atau, picu animasi Anda sendiri dengan editor skrip OSC yang disertakan!
+
+{{VRCHAT_AUTOMATIONS_BODY_AUTO_ACCEPT_INVITE_REQUESTS}}
+📧 <b>Terima Otomatis Permintaan Undangan</b>
+<br>
+Secara otomatis menerima permintaan undangan dari teman tertentu saat Anda tidur! Anda dapat menambahkan teman yang ingin Anda masukkan ke whitelist, atau bahkan memblokir teman tertentu agar permintaan mereka tidak diterima secara otomatis dengan blacklist.
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+🔵 <b>Otomatisasi Status</b>
+<br>
+Secara otomatis mengubah status Anda berdasarkan jumlah pemain di dunia Anda:
+<br><br>
+Beralihlah ke warna biru saat Anda tidur sendirian agar teman Anda dapat bergabung dengan Anda, dan beralihlah ke warna oranye saat ada cukup banyak orang di sekitar Anda!
+
+{{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
+🔧 <b>Otomatisasi OSC</b>
+<br>
+Anda dapat mengirim pesan OSC tertentu ke VRChat ketika mode tidur diaktifkan, atau dinonaktifkan. Anda dapat menggunakan editor skrip OSC bawaan untuk menulis pesan yang ingin Anda kirim.
+<br><br>
+Ini adalah fitur yang lebih canggih yang dapat Anda gunakan untuk memicu fitur tertentu pada avatar Anda. Sebagai contoh: Menampilkan ekspresi mengantuk di wajah Anda saat mode tidur diaktifkan!
+
+{{SHUTDOWN_SEQUENCE_HEADER}}
+⛔ Urutan Shutdown
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+Pernahkah Anda ingin tertidur dalam VR, tetapi tidak bisa terus berada dalam VR sepanjang malam? Urutan shutdown bisa Anda siapkan!
+<br><br>
+Urutan shutdown dapat dipicu secara otomatis apabila Anda telah tertidur selama jangka waktu tertentu. Tergantung pada tindakan yang Anda konfigurasikan, tindakan tersebut akan melakukan salah satu dari yang berikut ini:
+<br><br>
+<ul>
+  <li>Mematikan semua kontroler dan/atau Tracker kamu</li>
+  <li>Mematikan Base Stationmu</li>
+  <li>Keluar SteamVR <i>(fan beberapa game/software yang kamu jalankan)</i></li>
+  <li>Mematikan Windows</li>
+</ul>
+<br>
+Sekarang Anda dapat tertidur lelap dalam VR, mengetahui bahwa semuanya akan mati setelah Anda tertidur!
+
+{{BRIGHTNESS_AUTOMATIONS_HEADER}}
+🔅 Otomatisasi Brightness
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+Mengotomatiskan kecerahan Anda saat Anda tidur dan bangun. OyasumiVR dapat mentransisikan kecerahan headset VR Anda dengan lancar, sehingga kecerahannya turun secara bertahap saat Anda tidur tanpa membangunkan Anda.
+<br><br>
+Hal ini memungkinkan Anda untuk mengontrol kecerahan gambar, serta kecerahan layar (lampu latar LCD) jika headset Anda mendukungnya (mis. Valve Index). Selain menyediakan beberapa otomatisasi, Anda dapat dengan mudah mengontrol tingkat kecerahan langsung dari menu overlay SteamVR!
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+🎤 Otomatisasi Mute Mikrofon Sistem
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+Anda dapat membuat OyasumiVR secara otomatis membisukan atau membunyikan mikrofon ketika Anda tidur dan bangun. Atau, Anda bahkan dapat beralih antara mode toggle bisu dan push-to-talk.
+<br><br>Sempurna jika Anda ingin mencegah orang lain mendengar Anda mendengkur!
+<br><br>
+Dilengkapi dengan indikator pembisuan opsional di hamparan VR, dan opsi untuk mengikat tombol pengontrol sehingga Anda dapat sepenuhnya menggantikan fungsionalitas pembisuan mikrofon pada VRChat atau game VR lain yang Anda mainkan.
+
+{{HEART_RATE_AUTOMATIONS_HEADER}}
+♥️ Otomatisasi Denyut Jantung (Integrasi Pulsoid)
+
+{{HEART_RATE_AUTOMATIONS_INTRO}}
+Untuk mendukung otomatisasi berbasis detak jantung, OyasumiVR terintegrasi dengan layanan detak jantung online <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>. Untuk ini, Anda dapat menggunakan perangkat keras apa pun yang didukung Pulsoid, seperti monitor denyut jantung bluetooth, jam tangan pintar WearOS, atau Apple Watch.
+<br><br>
+<i>Harap dicatat bahwa integrasi ini memerlukan pembelian integrasi OyasumiVR Pulsoid satu kali, atau memiliki langganan "BRO" Pulsoid yang masih aktif. Pastikan Anda memiliki perangkat yang kompatibel sebelum melakukan pembelian.</i>
+
+{{HEART_RATE_AUTOMATIONS_BODY_SLEEP_DETECTION}}
+<b>Deteksi Tidur</b>
+<br>
+Anda dapat mengatur OyasumiVR untuk secara otomatis mengaktifkan mode tidur ketika detak jantung Anda sudah cukup rendah untuk durasi tertentu. Cukup atur ambang batas BPM dan berapa lama detak jantung Anda harus berada di bawah ambang batas tersebut, dan Anda sudah siap! Jika Anda tidak yakin, Anda bisa mendapatkan beberapa wawasan sederhana untuk menentukan nilai yang tepat untuk tubuh Anda.
+
+{{HEART_RATE_AUTOMATIONS_BODY_NIGHTMARE_DETECTION}}
+<b>Deteksi Mimpi Buruk</b>
+<br>
+OyasumiVR dapat mendeteksi ketika detak jantung Anda meningkat dalam waktu lama, yang dapat mengindikasikan mimpi buruk. Dengan fitur ini, Anda dapat mencoba mempersingkat mimpi buruk Anda dengan menonaktifkan mode tidur secara otomatis (misalnya, meningkatkan kecerahan), atau dengan memainkan suara untuk mencoba membangunkan Anda.
+
+{{RESOLUTION_AUTOMATIONS_HEADER}}
+👓 Otomatisasi Resolusi
+
+{{RESOLUTION_AUTOMATIONS_BODY}}
+Secara otomatis menyesuaikan resolusi render SteamVR Anda saat Anda tidur dan bangun! Memiliki OyasumiVR yang menurunkan resolusi render Anda membantu Anda mengurangi beban pada perangkat keras Anda pada saat Anda tidak membutuhkannya.
+
+{{CHAPERONE_AUTOMATIONS_HEADER}}
+🔳 Otomatisasi Chaperone
+
+{{CHAPERONE_AUTOMATIONS_BODY}}
+Secara otomatis menyesuaikan jarak pudar chaperone SteamVR saat Anda tidur. Jika Anda memiliki area bermain yang kecil, Anda dapat menggunakan ini untuk memastikan pendamping tetap tersembunyi saat Anda tidur, dan mengaktifkannya kembali saat Anda bangun!
+
+{{TRANSLATION_AND_LOCALIZATION_HEADER}}
+Translasi & Lokalisasi
+
+{{TRANSLATION_AND_LOCALIZATION_BODY}}
+OyasumiVR saat ini mendukung bahasa-bahasa berikut:
+
+- Inggris
+- Belanda (Nederlands)
+- Jepang (日本語) (Outsourcing + Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea))
+- Korea (한국어) (Kontribusi komunitas dari [Soumt](https://github.com/soumt-r))
+- Mandarin Tradisional (繁體中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL))
+- Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) dan [いんく](https://twitter.com/sayonara_natsu))
+- Perancis (Français) (Kontribusi komunitas dari [neuroblack](https://github.com/neuroblack)) (**Mencari pengelola tambahan!**)
+- Spanyol (Español) (Kontribusi komunitas dari [aacal666](https://twitter.com/aacalde666))
+- Indonesia (Bahasa Indonesia) (Kontribusi komunitas dari [a9ito](https://twitter.com/a9ito))
+- Rusia (Русский) (Kontribusi komunitas dari [Kanjir0](https://twitter.com/Kanjiro_vrc))
+
+{{TRANSLATION_HELP_HEADER}}
+Membantu penerjemahan
+
+{{TRANSLATION_HELP_BODY}}
+OyasumiVR tidak akan mendukung banyak bahasa seperti sekarang ini tanpa bantuan para sukarelawan kami yang luar biasa. Saya pribadi berpikir bahwa berkat usaha mereka, lebih banyak orang yang dapat menggunakan OyasumiVR daripada yang seharusnya..
+
+Jika Anda ingin mendukung kami, baik dengan menyumbangkan terjemahan yang belum ada, atau dengan menambahkan bahasa yang sama sekali baru, silakan lihat [halaman wiki tentang menambahkan terjemahan](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) untuk petunjuk tentang cara memulainya! Jika Anda mencari informasi lebih lanjut, jangan ragu untuk mengunjungi [Discord](https://discord.gg/7MqdPJhYxC) kami dan bertanya!
+
+{{SUPPORTED_HARDWARE_HEADER}}
+Perangkat Keras yang Didukung
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_HEADER}}
+Otomatisasi Baterai
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_BODY}}
+Saat ini OyasumiVR mendukung mematikan perangkat menggunakan otomatisasi baterainya untuk semua perangkat SteamVR yang:
+
+1. Mendukung pelaporan untuk level baterai dan status pengisian daya
+2. Dukungan dimatikan melalui SteamVR.
+
+Ini termasuk, namun tidak terbatas pada perangkat berikut ini:
+
+- Kontroler/Wands HTC Vive
+- Kontroler/Knuckle Index
+- Vive Trackers (1.0/2.0/3.0)
+- Tundra Trackers\*
+
+Ini berarti bahwa pengontrol Oculus apa pun tidak mungkin berfungsi, dan pelacak SlimeVR tidak didukung kecuali jika mereka mengimplementasikan fungsionalitas ini dalam [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver).
+
+_(\*) Tundra Tracker memiliki pelaporan tingkat baterai dan status pengisian daya yang sangat lambat. Ini berarti bahwa meskipun otomatisasi baterai masih akan berfungsi, mereka dirasa sangat lama (menit dalam dua digit), kecuali jika Tundra memperbaikinya dalam firmware tracker mereka._
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_HEADER}}
+Otomatisasi GPU
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_BODY}}
+Kartu grafis NVIDIA atau AMD apa pun yang didukung oleh MSI Afterburner dapat diotomatisasi dengan meminta OyasumiVR mengaktifkan profil yang telah Anda siapkan di dalam MSI Afterburner
+
+Mengontrol batas daya kartu grafis Anda secara langsung dengan OyasumiVR hanya didukung dengan kartu NVIDIA. Pengguna AMD harus menggunakan otomatisasi profil MSI Afterburner untuk dapat mengontrol batas daya mereka dengan OyasumiVR.
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
+Otomatisasi Kecerahan
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+Mengontrol kecerahan layar (baca 'lampu latar LCD') dari layar headset VR hanya didukung pada Valve Index.
+
+Kontrol kecerahan gambar tersedia pada semua headset.
+
+{{BUILT_WITH_HEADER}}
+Pembuatan
+
+{{BUILT_WITH_BODY}}
+OyasumiVR telah dibuat dengan:
+
+- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Tauri](https://tauri.app/) (Rust, Desktop Framework)
+- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
+
+{{DEVELOPMENT_HEADER}}
+Pengembangan
+
+{{DEVELOPMENT_BODY}}
+Silakan lihat halaman wiki kami di [Memulai Pengembangan](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development).
+
+{{VRCHAT_HEADER}}
+VRChat
+
+{{VRCHAT_BODY}}
+Beberapa fitur OyasumiVR mengharuskan Anda untuk masuk dengan akun VRChat Anda agar fitur tersebut dapat berfungsi. (Misalnya otomatisasi status)
+
+Ini hanya diperlukan untuk fitur yang mengandalkan ini. Anda dapat menggunakan fitur yang tidak bergantung pada hal ini tanpa harus memberikan kredensial.
+Kredensial login Anda tidak akan pernah disimpan di mana pun kecuali di mesin Anda sendiri, dan hanya akan dikirim ke server VRChat untuk tujuan otentikasi.
+
+OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat inc. VRChat © VRChat Inc.
+
+Pengembang OyasumiVR dan kontributor proyek ini tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR (pada akun VRChat anda atau sebaliknya). Gunakan dengan risiko Anda sendiri.
+
+{{SUPPORT_HEADER}}
+Support
+
+{{SUPPORT_BODY}}
+Jika Anda mengalami masalah dengan OyasumiVR, katakanlah Anda memiliki bug, atau permintaan fitur, Anda dapat bergabung dengan [Discord server](https://discord.gg/7MqdPJhYxC).
+
+Atau, Anda dapat menghubungi saya secara langsung di [Twitter @Raphiiko](https://twitter.com/Raphiiko). Saya akan mencoba menghubungi Anda sesegera mungkin!
+
+{{LICENSE_HEADER}}
+License
+
+{{LICENSE_BODY}}
+OyasumiVR tersedia di bawah bagian lisensi [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md).

@@ -2,7 +2,7 @@ import { OVRDeviceClass } from './ovr-device';
 import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
-import { WindowsPowerPolicy } from './windows-power-policy';
+import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -16,6 +16,7 @@ export type AutomationType =
   | 'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD'
   | 'SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS'
   | 'SLEEP_MODE_DISABLE_AT_TIME'
+  | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
@@ -43,6 +44,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
   // MISCELLANEOUS
+  | 'AUDIO_DEVICE_AUTOMATIONS'
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
@@ -50,7 +52,7 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
-  version: 11;
+  version: 12;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -61,6 +63,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig;
   SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS: SleepModeChangeOnSteamVRStatusAutomationConfig;
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
+  SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
@@ -84,11 +87,11 @@ export interface AutomationConfigs {
   // CHAPERONE AUTOMATIONS
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
   CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE: ChaperoneFadeDistanceOnSleepModeAutomationConfig;
-  // SHUTDOWN AUTOMATIONS
   // WINDOWS POWER POLICY AUTOMATIONS
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   // MISCELLANEOUS AUTOMATIONS
+  AUDIO_DEVICE_AUTOMATIONS: AudioDeviceAutomationsConfig;
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
@@ -182,6 +185,10 @@ export interface SleepModeDisableAtTimeAutomationConfig extends AutomationConfig
   time: string | null;
 }
 
+export interface SleepModeDisableAfterTimeAutomationConfig extends AutomationConfig {
+  duration: string | null;
+}
+
 export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends AutomationConfig {
   triggerClasses: OVRDeviceClass[];
 }
@@ -214,6 +221,7 @@ export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends Automat
 export interface OscGeneralAutomationConfig extends AutomationConfig {
   onSleepModeEnable?: OscScript;
   onSleepModeDisable?: OscScript;
+  onSleepPreparation?: OscScript;
 }
 
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
@@ -249,14 +257,50 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
 
 // WINDOWS POWER POLICY AUTOMATIONS
 export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
-  powerPolicy?: WindowsPowerPolicy;
+  powerPolicy?: string;
 }
 
 // MISCELLANEOUS AUTOMATIONS
 
+export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
+export type AudioVolumeAutomation =
+  | MuteAudioVolumeAutomation
+  | UnmuteAudioVolumeAutomation
+  | SetAudioVolumeAutomation;
+
+export interface BaseAudioVolumeAutomation {
+  type: AudioVolumeAutomationType;
+  audioDeviceRef: {
+    persistentId: string;
+    type: AudioDeviceType;
+    name: AudioDeviceParsedName;
+  };
+}
+
+export interface MuteAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'MUTE';
+}
+
+export interface UnmuteAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'UNMUTE';
+}
+
+export interface SetAudioVolumeAutomation extends BaseAudioVolumeAutomation {
+  type: 'SET_VOLUME';
+  volume: number;
+}
+
+export interface AudioDeviceAutomationsConfig extends AutomationConfig {
+  onSleepEnableAutomations: AudioVolumeAutomation[];
+  onSleepDisableAutomations: AudioVolumeAutomation[];
+  onSleepPreparationAutomations: AudioVolumeAutomation[];
+}
+
 export type SystemMicMuteControllerBindingBehavior = 'TOGGLE' | 'PUSH_TO_TALK';
 
 export type SystemMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
+
+export type VRChatMicrophoneWorldJoinBehaviour = 'MUTE' | 'UNMUTE' | 'KEEP';
 
 export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   audioDevicePersistentId: string | null;
@@ -272,6 +316,9 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
   onSleepModeEnableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepModeDisableControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
   onSleepPreparationControllerBindingBehavior: SystemMicMuteControllerBindingBehavior | 'NONE';
+  voiceActivationMode: 'VRCHAT' | 'HARDWARE';
+  hardwareVoiceActivationThreshold: number;
+  vrchatWorldJoinBehaviour: VRChatMicrophoneWorldJoinBehaviour;
 }
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
@@ -309,7 +356,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 11,
+  version: 12,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -321,7 +368,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     displayBrightness: 100,
     transition: true,
     transitionTime: 1000 * 60 * 5,
-    applyOnStart: true,
+    applyOnStart: false,
   },
   SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
@@ -330,7 +377,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     displayBrightness: 100,
     transition: true,
     transitionTime: 10000,
-    applyOnStart: true,
+    applyOnStart: false,
   },
   SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
     enabled: false,
@@ -412,6 +459,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SLEEP_MODE_DISABLE_AT_TIME: {
     enabled: false,
     time: null,
+  },
+  SLEEP_MODE_DISABLE_AFTER_TIME: {
+    enabled: false,
+    duration: null,
   },
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
     enabled: false,
@@ -504,6 +555,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
   },
   // MISCELLANEOUS AUTOMATIONS
+  AUDIO_DEVICE_AUTOMATIONS: {
+    enabled: false,
+    onSleepEnableAutomations: [],
+    onSleepDisableAutomations: [],
+    onSleepPreparationAutomations: [],
+  },
   SYSTEM_MIC_MUTE_AUTOMATIONS: {
     enabled: false,
     audioDevicePersistentId: null,
@@ -519,6 +576,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepModeEnableControllerBindingBehavior: 'NONE',
     onSleepModeDisableControllerBindingBehavior: 'NONE',
     onSleepPreparationControllerBindingBehavior: 'NONE',
+    voiceActivationMode: 'VRCHAT',
+    hardwareVoiceActivationThreshold: 4,
+    vrchatWorldJoinBehaviour: 'KEEP',
   },
   NIGHTMARE_DETECTION: {
     enabled: false,

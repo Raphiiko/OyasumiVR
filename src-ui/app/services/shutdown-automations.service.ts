@@ -127,7 +127,7 @@ export class ShutdownAutomationsService {
     });
   }
 
-  async runSequence(reason: 'MANUAL' | 'SLEEP_TRIGGER') {
+  async runSequence(reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER') {
     const stages = this.getApplicableStages();
     if (this._stage.value !== 'IDLE' || !stages.length) return;
     this.eventLog.logEvent({

@@ -43,14 +43,14 @@ jobs:
             src-shared-rust
             src-elevated-sidecar
             src-core
-      - name: Install development Tauri CLI
-        run: cargo install --git https://github.com/tauri-apps/tauri --branch 1.x tauri-cli
+#      - name: Install development Tauri CLI
+#        run: cargo install --git https://github.com/tauri-apps/tauri --branch 1.x tauri-cli
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
         with:
           validation_level: warn
-          version: ${{ steps.get-package-version.outputs.version }}
+          version: Unreleased
           path: ./CHANGELOG.md
       - name: Prepare Steamworks SDK
         env:
@@ -64,14 +64,14 @@ jobs:
       - name: Set flavour to STEAM
         run: npm run set-flavour STEAM
       - name: Build OyasumiVR (STEAM Flavour)
-        run: cargo-tauri build -b none
+        run: npm run tauri -- build -b none
       - name: Copy STEAM build
         shell: bash
         run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh
       - name: Set flavour to STEAM_CN
         run: npm run set-flavour STEAM_CN
       - name: Build OyasumiVR (STEAM_CN Flavour)
-        run: cargo-tauri build -b none
+        run: npm run tauri -- build -b none
       - name: Copy STEAM_CN build
         shell: bash
         run: chmod +x ./scripts/steam/3-move-build-steam-cn.sh && ./scripts/steam/3-move-build-steam-cn.sh

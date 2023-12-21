@@ -37,7 +37,8 @@
           'brightnessAutomations',
           'powerAutomations',
           'gpuAutomations',
-          'resolutionAutomations'
+          'resolutionAutomations',
+          'audioVolumeAutomations'
         ])
       "
     >
@@ -82,7 +83,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.miscAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -93,16 +94,34 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.shutdownAutomations</div>
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'settings'">
+    <div
+      class="menu-item"
+      (click)="openSubMenu('SETTINGS')"
+      [class.active]="
+        pathIsActive([
+          'settings/general',
+          'settings/vrchat',
+          'settings/notifications',
+          'settings/hotkeys',
+          'settings/updates',
+          'settings/integrations',
+          'settings/advanced'
+        ])
+      "
+    >
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">settings</i>
       </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings</div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.subMenu</div>
+      <!-- TODO: SET SETTING ERROR ICON ON SPECIFIC SUB MENU ITEM-->
       <div class="menu-item-icon-suffix" @fade *ngIf="settingErrors | async">
         <i class="material-icons-round">error_outline</i>
       </div>
       <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
         <i class="material-icons-round">notification_important</i>
+      </div>
+      <div class="menu-item-submenu-icon">
+        <i class="material-icons-round">arrow_forward_ios</i>
       </div>
     </div>
 
@@ -195,6 +214,13 @@
       ></div>
     </div>
 
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">volume_up</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.audioVolumeAutomations</div>
+    </div>
+
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'systemMicMuteAutomations'">
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">mic_off</i>
@@ -231,6 +257,78 @@
         <i class="material-icons-round">notification_important</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.nightmareDetection</div>
+    </div>
+  </div>
+
+  <!--Settings Submenu-->
+  <div class="submenu" *ngIf="subMenu === 'SETTINGS'" @subMenu>
+    <div class="menu-header">
+      <button class="btn" (click)="openSubMenu('GENERAL')">
+        <i class="material-icons-round">arrow_back_ios_new</i>
+        <div class="menu-header-label" translate>comp.dashboard-navbar.settings.subMenu</div>
+      </button>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'general']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">settings</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
+      <div class="menu-item-icon-suffix" @fade *ngIf="lighthouseConsoleErrors | async">
+        <i class="material-icons-round">error_outline</i>
+      </div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'notifications']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">keyboard</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.hotkeys</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'updates']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">update</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
+      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
+        <i class="material-icons-round">notification_important</i>
+      </div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'integrations']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">power</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.integrations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'advanced']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">build</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.advanced</div>
+    </div>
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'statusInfo']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">checklist</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.statusInfo</div>
     </div>
   </div>
 </div>

@@ -1,0 +1,45 @@
+<div class="pane modal modal-lg" @fadeUp>
+  <div class="pane-title" translate [translateParams]="{ deviceId: getDeviceId() }">
+    comp.device-edit-modal.title
+  </div>
+  <div class="pane-content">
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>comp.device-edit-modal.deviceNickname.title</span>
+          <span translate>comp.device-edit-modal.deviceNickname.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="input-wrapper">
+            <input
+              type="text"
+              [placeholder]="lighthouseDevice?.deviceName ?? ovrDevice?.serialNumber ?? ''"
+              [(ngModel)]="nickname"
+              [maxlength]="32"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="setting-row" *ngIf="lighthouseDevice">
+        <div class="setting-row-label" translate>
+          <span translate>comp.device-edit-modal.ignoreLighthouse.title</span>
+          <span translate>comp.device-edit-modal.ignoreLighthouse.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input type="checkbox" [(ngModel)]="ignoreLighthouse" />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()">
+      {{ 'shared.modals.close' | tsTranslate }}
+    </button>
+    <button class="btn btn-primary" (click)="save()">
+      {{ 'shared.modals.save' | tsTranslate }}
+    </button>
+  </div>
+</div>

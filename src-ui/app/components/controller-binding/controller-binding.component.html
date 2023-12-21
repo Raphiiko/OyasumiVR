@@ -39,11 +39,11 @@
   <div class="text-wrapper" *ngIf="!error">
     <div class="line0">{{ activeBinding?.localizedControllerType }}</div>
     <div class="line1"
-    >{{ activeBinding?.localizedHand }} {{ activeBinding?.localizedInputSource }}</div
+      >{{ activeBinding?.localizedHand }} {{ activeBinding?.localizedInputSource }}</div
     >
     <div class="line2">{{
       'comp.controller-binding.slot.' + activeBinding?.slotName | translate
-      }}</div>
+    }}</div>
   </div>
 </button>
 <div class="dropdown-container">

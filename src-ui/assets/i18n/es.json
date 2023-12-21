@@ -11,7 +11,8 @@
     "discordInvite": "Discord Server",
     "projectLinks": "Enlaces de proyectos",
     "sourceLink": "Código fuente @ GitHub",
-    "translations": "Traducciones"
+    "translations": "Traducciones",
+    "supporters": "Supporters"
   },
   "auto-invite-request-accept": {
     "addFriends": "Añadir amigos",
@@ -57,7 +58,8 @@
     "title": "Aceptar automáticamente solicitudes de invitación",
     "userOnBusyStatus": "No puedes aceptar solicitudes de invitación de usuarios mientras tu estado sea ocupado. (red).",
     "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue).",
-    "whitelist": "Jugador Whitelist"
+    "whitelist": "Jugador Whitelist",
+    "loadingFriends": "Cargando amigos..."
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -188,7 +190,6 @@
       "overview": "Visión general",
       "powerAutomations": "Automatizaciones de energía",
       "resolutionAutomations": "Automatizaciones de resolución",
-      "settings": "Ajustes",
       "shutdownAutomations": "Secuencia de apagado",
       "sleepAnimations": "Animaciones para dormir",
       "sleepDetection": "Detección de sueño",
@@ -197,7 +198,18 @@
       "vrcAutomations": "Automatizaciones VRChat",
       "vrchatMicMuteAutomations": "Silenciamiento del micrófono VRChat",
       "miscAutomations": "Automacaciones misceláneas",
-      "nightmareDetection": "Detección de pesadilla"
+      "nightmareDetection": "Detección de pesadilla",
+      "audioVolumeAutomations": "Automatización volumen de audio",
+      "settings": {
+        "subMenu": "Ajustes",
+        "general": "Ajustes generales",
+        "vrchat": "Ajustes Vrchat",
+        "notifications": "Ajustes notificaciónes",
+        "updates": "Actualizaciones",
+        "integrations": "Integraciones",
+        "advanced": "Ajustes avanzados",
+        "hotkeys": "Ajustes teclas"
+      }
     },
     "device-list": {
       "category": {
@@ -309,7 +321,8 @@
                 "MANUAL": "Encendido manual",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Encendido de todas las estaciones base"
             },
@@ -318,7 +331,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
+                "STEAMVR_STOP": "Cuando SteamVR comenzó",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner todas las estaciones base en modo reposo"
             },
@@ -327,7 +341,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR comenzó"
+                "STEAMVR_STOP": "Cuando SteamVR comenzó",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner todas las estaciones base en modo de espera"
             }
@@ -338,7 +353,8 @@
                 "MANUAL": "Encendido manual",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR empezó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Encendido de una estación base"
             },
@@ -347,7 +363,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando empezó SteamVR",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner una estación base en modo reposo"
             },
@@ -356,7 +373,8 @@
                 "MANUAL": "Ajustar manualmente",
                 "OYASUMI_START": "Cuando OyasumiVR comenzó",
                 "STEAMVR_START": "Cuando SteamVR comenzó",
-                "STEAMVR_STOP": "Cuando SteamVR se detuvo"
+                "STEAMVR_STOP": "Cuando SteamVR se detuvo",
+                "HOTKEY": "Como se presionó una tecla de acceso rápido"
               },
               "title": "Poner una estación base en modo de espera"
             }
@@ -388,6 +406,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "Activado manualmente",
+            "HOTKEY": "Activado por la tecla de acceso rápido",
             "SLEEP_TRIGGER": "Cuando estuviste dormido el tiempo suficiente"
           },
           "title": "Se ha iniciado la secuencia de apagado"
@@ -412,11 +431,13 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Como SteamVR cerro",
               "SLEEP_MODE_DISABLE_AT_TIME": "A la hora prevista",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "Como el modo de suspensión se habilitó durante el tiempo suficiente",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Al encender un dispositivo",
               "NIGHTMARE_DETECTION": "Como se detectó, posiblemente podrías estar teniendo una pesadilla",
               "unknown": "Por un automatismo desconocido"
             },
             "manual": "Ha desactivado el modo sueño manualmente",
+            "hotkey": "Ha desactivado el modo sueño presionando la tecla de acceso rápido",
             "osc-control": "El modo sueño se desactivó a través de OSC"
           },
           "title": "Modo de sueño desactivado"
@@ -432,6 +453,7 @@
               "unknown": "Por un automatismo desconocido"
             },
             "manual": "Has activado el modo de sueño manualmente",
+            "hotkey": "Has activado el modo sueño presionando la tecla de acceso rápido",
             "osc-control": "El modo sueño se activó a través de OSC"
           },
           "title": "Modo de sueño activado"
@@ -449,7 +471,8 @@
             "CHARGING": "Mientras el dispositivo se recarga",
             "MANUAL": "Apagado manual",
             "OSC_CONTROL": "Apagado sobre OSC",
-            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado"
+            "SLEEP_MODE_ENABLED": "Cuando el modo de suspensión estaba activado",
+            "HOTKEY": "Como se presionó una tecla de acceso rápido"
           },
           "title": {
             "ALL": "Apagado todos los dispositivos",
@@ -466,6 +489,30 @@
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado"
           },
           "title": "Política de energía de Windows establecida en ''{policy}'' plan"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "Volumen para dispositivos de audio ''{deviceName}'' establecido en {percentaje}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "Dispositivo de audio apagado ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "Dispositivo de audio encendido ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_MODE_ENABLED": "Como el modo sueño estaba deshabilitado",
+            "SLEEP_PREPARATION": "Mientras te preparas para ir a dormir"
+          }
         }
       }
     },
@@ -484,7 +531,10 @@
       "noFriendsSelected": "No hay amigos seleccionados",
       "noResultsFor": "No hay resultados para ''{query}''",
       "searchPlaceholder": "Buscar amigo por nombre...",
-      "title": "Seleccionar amigos"
+      "title": "Seleccionar amigos",
+      "loading": "Cargando amigos...",
+      "loadingError": "Tu lista de amigos no podra cargarse. Por favor, inténtelo de nuevo más tarde.",
+      "moreResultsAvailable": "Hay más amigos para encontrar de los que se muestran actualmente. Por favor, reduzca su búsqueda."
     },
     "main-status-bar": {
       "active": "Activo",
@@ -495,7 +545,10 @@
       "heartrate": "Frecuencia cardiaca",
       "inactive": "Inactivo",
       "loggedOut": "Desconectado",
-      "sleepMode": "Modo sueño",
+      "sleepMode": {
+        "label": "Modo de dormir",
+        "tooltip": "Alternar el modo de dormir"
+      },
       "steamvr": {
         "INACTIVE": "Inactivo",
         "INITIALIZED": "Activo",
@@ -507,9 +560,6 @@
           "NAVIGATE": "Micrófono de sistema:\nAutomatizaciones",
           "TOGGLE_MUTE": "Micrófono de sistema:\nUnmute"
         }
-      },
-      "vrchat": {
-        "tooltip": "Configuración: VRChat"
       }
     },
     "osc-script-code-editor": {
@@ -566,7 +616,13 @@
       },
       "password": "Contraseña",
       "title": "Iniciar sesión en VRChat",
-      "username": "VRChat Usuario/E-mail"
+      "username": "VRChat Usuario/E-mail",
+      "rememberCredentials": "Recuerda credenciales",
+      "disclaimers": {
+        "brand": "OyasumiVR no está respaldado por VRChat y no refleja los puntos de vista u opiniones de VRChat ni de nadie que participe oficialmente en la producción o gestión de VRChat. VRChat es una marca comercial de VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!",
+        "use": "Sus credenciales de inicio de sesión nunca se almacenarán en ningún lugar que no sea su propia máquina y solo se envían a los servidores de VRChat para fines de autenticación."
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Tu cuenta de VRChat está protegida con autenticación de dos factores.\n\nPor favor, introduzca un código 2FA:",
@@ -574,7 +630,26 @@
         "INVALID_FORMAT": "Un código 2FA válido es una secuencia de 6 números. Por favor, verifique su entrada.",
         "LAST_CODE_INVALID": "El código 2FA que has proporcionado era incorrecto."
       },
-      "title": "Autenticación de dos factores"
+      "title": "Autenticación de dos factores",
+      "logginInAs": "Estás iniciando sesión en VRCHAT como:"
+    },
+    "device-edit-modal": {
+      "title": "Editar dispositivo: {deviceID}",
+      "deviceNickname": {
+        "title": "Apodo",
+        "description": "Opcionalmente, configure un nombre personalizado para este dispositivo"
+      },
+      "ignoreLighthouse": {
+        "title": "Ignorar la base",
+        "description": "Las bases ignoradas estarán ocultas y no se ven afectadas por ninguna automatización"
+      }
+    },
+    "hotkey-selector": {
+      "select": "Establecer la tecla de acceso rápido"
+    },
+    "hotkey-selector-modal": {
+      "title": "Establecer la tecla de acceso rápido",
+      "description": "Para establecer una tecla de acceso rápido, presione cualquier tecla de modificador, seguido de la tecla con la que desea combinarlas."
     }
   },
   "gpu-automations": {
@@ -957,6 +1032,7 @@
   },
   "settings": {
     "advanced": {
+      "title": "Ajustes avanzados",
       "logs": {
         "openFolder": {
           "action": "Abrir carpeta de registro",
@@ -1040,9 +1116,49 @@
           "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
           "experimental": "Este módulo todavía está en una etapa experimental y está disponible solo en inglés. Si bien puede probarlo, todavía está en desarrollo. Por ahora, aún puede esperar encontrar problemas y faltar funcionalidad."
         }
+      },
+      "fixes": {
+        "title": "Correcciones y solución de problemas",
+        "description": "Esta sección contiene algunas opciones y acciones relacionadas con la reparación de problemas y la solución de problemas.En general, no debe usarlos a menos que sepa lo que está haciendo, o si se le pide que los use al obtener apoyo.",
+        "vrManifestReregister": {
+          "title": "Reiniciar el manifiesto de la aplicación SteamVR",
+          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
+          "action": "Retregistro manifiesto",
+          "modal": {
+            "success": {
+              "title": "VR Aplicación Manifiesta reregistrado",
+              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR."
+            },
+            "MANIFEST_ADD_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros."
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto no pudo ser retirado.Por favor revise los registros."
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR."
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros."
+            },
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "title": "Aplicación Manifiestas no registradas",
+              "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR."
+            },
+            "UNKNOWN": {
+              "title": "Retregistración del manifiesto de la aplicación VR falló",
+              "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros."
+            }
+          }
+        }
       }
     },
     "general": {
+      "title": "Ajustes generales",
       "adminPrivileges": {
         "description": "OyasumiVR necesita privilegios de administrador para poder controlar los límites de potencia de tu GPU. Si habilitas esta opción, OyasumiVR te pedirá privilegios de administrador cuando se inicie.",
         "label": "Solicitar privilegios de administrador al inicio",
@@ -1100,7 +1216,11 @@
           "description": "Esto se puede desactivar si desea desactivar completamente el menú de superposición de OyasumiVR.",
           "title": "Activar menú superpuesto"
         },
-        "title": "Superposición"
+        "title": "Superposición",
+        "onlyOpenMenuWhenVRChatRunning": {
+          "title": "Solo abra el menú mientras se ejecuta VRChat",
+          "description": "Habilite esto para evitar que el menú se abra mientras VRChat no se ejecuta"
+        }
       },
       "sleepMode": {
         "startupBehaviour": {
@@ -1158,13 +1278,14 @@
       }
     },
     "integrations": {
+      "title": "Integraciones",
       "connect": "Conectar",
       "copy": "Copiar enlace al portapapeles",
       "description": "Algunas de las funcionalidades de OyasumiVR pueden hacer uso de servicios externos. Si quieres conectar OyasumiVR a uno de ellos, ¡estás en el lugar adecuado!",
       "disconnect": "Desconectar",
       "providerLink": "Sitio web del proveedor",
       "pulsoid": {
-        "description": "Proporciona tus datos de frecuencia cardíaca a OyasumiVR, que pueden utilizarse para activar ciertas automatizaciones.<br><i>Requiere: Pulsoid \"BRO\" suscripción</i>",
+        "description": "Proporciona sus datos de frecuencia cardíaca a OyasumiVR, que se pueden utilizar para desencadenar ciertas automatizaciones.<br><i>Esta integración requiere una compra única de la integración OyasumiVR de pulsoide, o para tener una suscripción activa de pulsoide \"BRO\".Asegúrese de tener un dispositivo compatible antes de realizar una compra. </i>",
         "title": "Pulsoid"
       },
       "reveal": "Revelar",
@@ -1174,6 +1295,7 @@
       }
     },
     "notifications": {
+      "title": "Ajustes de las notificaciones",
       "notifications": {
         "category": {
           "AUTO_ACCEPTED_INVITE_REQUEST": {
@@ -1200,23 +1322,14 @@
         "description": "Seleccione el proveedor que se utilizará para enviarle las notificaciones",
         "title": "Proveedor de notificaciones"
       },
-      "title": "Ajustes de las notificaciones",
       "volume": {
         "description": "Ajustar el nivel de volumen al que suenan algunos tipos de notificaciones",
         "test": "Test",
         "title": "Volumen general de notificaciones"
       }
     },
-    "tab": {
-      "advanced": "Avanzado",
-      "general": "General",
-      "integrations": "Integraciones",
-      "notifications": "Notificaciones",
-      "updates": "Actualizaciones",
-      "vrchat": "VRChat"
-    },
-    "title": "Ajustes",
     "updates": {
+      "title": "Acrualizaciones",
       "changelog": "Registro de cambios",
       "checkForUpdates": "Comprobar actualizaciones",
       "install": "Instalar v{version}",
@@ -1228,67 +1341,23 @@
         "STEAM": "Has instalado la versión Steam de OyasumiVR.\nPor lo tanto, ¡las nuevas actualizaciones de OyasumiVR se proporcionan a través de Steam!"
       }
     },
-    "vrchat": {
-      "logIn": {
-        "description": "Algunas funciones de OyasumiVR requieren que inicies sesión con tu cuenta de VRChat para que funcionen.",
-        "disclaimers": {
-          "brand": "OyasumiVR no está respaldado por VRChat y no refleja los puntos de vista u opiniones de VRChat ni de nadie que participe oficialmente en la producción o gestión de VRChat. VRChat es una marca comercial de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko no se hace responsable de los problemas causados por OyasumiVR. Utilícelo bajo su propia responsabilidad!",
-          "use": "Tus credenciales de acceso nunca se almacenarán en ningún sitio y sólo se envían a los servidores de VRChat con fines de autenticación."
-        },
-        "loggedIn": {
-          "logOut": "Cerrar sesión",
-          "subtext": "Actualmente estás conectado con tu cuenta de VRChat.",
-          "title": "Hola {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Iniciar sesión",
-          "subtext": "Actualmente no has iniciado sesión con tu cuenta de VRChat.",
-          "title": "Desconectado"
-        },
-        "title": "Iniciar sesión"
+    "hotkeys": {
+      "title": "Ajustes teclas",
+      "description": "Aquí puede unir las teclas de acceso rápido en todo el sistema a ciertas acciones dentro de Oyasumivr.",
+      "actionDescription": "Establezca qué llave de acceso rápido debe activar esta acción",
+      "action": {
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Alternar el modo sueño",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Habilitar el modo sueño",
+        "HOTKEY_DISABLE_SLEEP_MODE": "Desactivar el modo sueño",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Preparar para dormir",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Ejecutar secuencia de cierre",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Apagar los controladores",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Apagar los tracker",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Alternar basestaciones",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Encender basestaciones",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Apagar basestaciones"
       },
-      "OSC": {
-        "description": "Algunas características requieren conectarse a VRChat vía OSC. A menos que tengas una razón específica para cambiarlas, deberías dejarlas por defecto.",
-        "errors": {
-          "INVALID_HOST": "El host debe ser un nombre de host válido, una dirección IPv4 o una dirección IPv6.",
-          "PORT_IN_USE": "No se ha podido vincular esta dirección. Puede ser que otra aplicación ya la esté utilizando. Puedes intentar cerrar esa aplicación e intentarlo de nuevo, o elegir un puerto o host de recepción diferente.",
-          "PORT_INVALID": "Un puerto tiene que ser un número válido entre 1 y 65535.",
-          "PORT_IO_IDENTICAL": "No se puede utilizar el mismo puerto para el envío y la recepción cuando los hosts de envío y recepción son los mismos."
-        },
-        "features": {
-          "all": {
-            "description": "La desactivación de cada una de estas características hará que OyasumiVR deje de escuchar los mensajes OSC",
-            "title": "Activar todas las funciones"
-          },
-          "expressionMenu": {
-            "description": "Controla las funciones de OyasumiVR desde el avatar de tu VRChat <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">menú de expresión</a>",
-            "title": "Activar el control del menú de expresión de VRChat"
-          },
-          "externalControl": {
-            "description": "Controla las funciones de OyasumiVR en <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "Activar control externo"
-          }
-        },
-        "receivingHost": {
-          "description": "El anfitrión OyasumiVR escuchará los mensajes OSC en.\n(VRChat envía a 127.0.0.1 por defecto)",
-          "title": "Anfitrión receptor"
-        },
-        "receivingPort": {
-          "description": "El número de puerto en el que OyasumiVR escuchará los mensajes OSC.\n(VRChat envía al puerto 9001 por defecto)",
-          "title": "Puerto receptor"
-        },
-        "reset": "Restablecer valores por defecto",
-        "sendingHost": {
-          "description": "El anfitrión OyasumiVR enviará mensajes OSC a.\n(Si VRChat se ejecuta en la misma máquina, es 127.0.0.1)",
-          "title": "Anfitrión emisor"
-        },
-        "sendingPort": {
-          "description": "El número de puerto al que OyasumiVR enviará los mensajes OSC.\n(VRChat escucha por defecto en el puerto 9000)",
-          "title": "Puerto de envío"
-        },
-        "title": "Ajustes OSC"
-      }
+      "actions": "Acciones teclas"
     }
   },
   "shared": {
@@ -1299,12 +1368,7 @@
       "tagline": "Utiles VR para dormir"
     },
     "misc": {
-      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Equilibrado",
-        "HIGH_PERFORMANCE": "Alto rendimiento",
-        "POWER_SAVING": "Ahorro de energía"
-      }
+      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat."
     },
     "modals": {
       "cancel": "Cancelar",
@@ -1399,6 +1463,14 @@
   "sleep-detection": {
     "disableAutomations": {
       "atTime": "En un momento determinado",
+      "afterTime": {
+        "title": "Después de una cantidad específica de tiempo",
+        "description": {
+          "minutes": "Después de {minutos, plural, uno {1 minuto} otro {# minutos}}",
+          "hours": "Después de {horas, plural, uno {1 hora} otro {# horas}}",
+          "hoursAndMinutes": "Después de {horas, plural, uno {1 hora} otro {# horas}} y {minutos, plural, uno {1 minuto} otro {# minutos}}"
+        }
+      },
       "description": "Desactivación automática del modo sueño en función de varios activadores",
       "onDevicePowerOn": "Cuando se enciende un dispositivo",
       "onSteamVRStop": "Cuando SteamVR está parado",
@@ -1428,9 +1500,14 @@
     "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",
     "modals": {
       "disableAtTime": {
-        "description": "Desactiva el modo  a una hora determinada del día.",
+        "description": "Desactiva el modo dormir a una hora determinada del día.",
         "time": "Tiempo",
         "title": "Desactivar el modo sueño"
+      },
+      "disableAfterTime": {
+        "description": "Deshabilite el modo dormir después de haber sido habilitado durante un cierto período de tiempo.",
+        "time": "Duración",
+        "title": "Desactivar el modo dormir"
       },
       "disableOnDevicePowerOn": {
         "Controller": "Controlador",
@@ -1493,7 +1570,7 @@
           "title": "Umbral de BPM",
           "unit": "BPM"
         },
-        "description": "Activa el modo de reposo cuando tu frecuencia cardiaca esté por debajo de un determinado umbral durante un periodo de tiempo: Define el umbral de pulsaciones por minuto que tu frecuencia cardiaca debe permanecer por debajo, así como durante qué cantidad de tiempo, para que se active el modo de reposo.\n\nPara ello es necesario activar la integración <a class=\"integrationsPageLink\">Pulsoid</a> y tener una suscripción activa a Pulsoid \"BRO\".",
+        "description": "Habilite el modo dormir cuando su frecuencia cardíaca esté por debajo de un cierto umbral por un período de tiempo: defina los ritmos por minuto umbral de que su frecuencia cardíaca debe permanecer bajo, así como por la cantidad de tiempo, para que el modo dormir esté habilitado.\n\nEsta requiere que habilite la <a class=\"ingrationspagelink\">integración pulsoid</a>",
         "duration": {
           "description": "Cuánto tiempo debe permanecer tu frecuencia cardiaca por debajo del umbral para que se active el modo de reposo.",
           "title": "DURACION",
@@ -1649,7 +1726,19 @@
         "description": "Opacidad máxima del icono indicador",
         "title": "Opacidad"
       },
-      "title": "Indicador de superposición"
+      "title": "Indicador de superposición",
+      "voiceActivityMode": {
+        "modes": {
+          "VRCHAT": "Por VRChat",
+          "HARDWARE": "Por volumen de micrófono"
+        },
+        "title": "Modo de activación de voz",
+        "description": "Determina en qué modo se determina la activación de voz (la iluminación del indicador)."
+      },
+      "hardwareVoiceActivityThreshold": {
+        "title": "Umbral de activación de voz",
+        "description": "Establezca el umbral de volumen en el que el indicador de micrófono debe iluminarse"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1666,7 +1755,19 @@
       },
       "title": "Automatizaciones de silencio"
     },
-    "title": "Sistema de silenciamiento automático del micrófono"
+    "title": "Sistema de silenciamiento automático del micrófono",
+    "vrchat": {
+      "title": "Opciones VRChat",
+      "worldJoinBehaviour": {
+        "title": "Comportamiento de unión mundial",
+        "description": "Cómo debe comportarse su micrófono al cambiar los mundos en VRChat",
+        "options": {
+          "MUTE": "Predeterminado Off",
+          "UNMUTE": "Predeterminado ON",
+          "KEEP": "Mantener el último estado"
+        }
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1726,7 +1827,7 @@
   },
   "nightmare-detection": {
     "title": "Detección de pesadilla",
-    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que Oyasumivr intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo de suspensión está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración pulsoide</a> y que tengaUna suscripción activa de pulsoide \"Bro\".",
+    "description": "Cuando cualquiera de sus automatizaciones está habilitada, esta característica intenta detectar cuándo tiene una pesadilla al verificar una frecuencia cardíaca elevada prolongada mientras está dormido.Cuando se detecta una posible pesadilla, tienes la opción de que OyasumiVR intente despertarte.La detección de pesadilla solo se ejecuta mientras el modo dormir está activo.\n\n<b>Nota:</b> Esta característica requiere que habilite la <a class=\"ingrationspagelink\"> integración pulsoid </a>.",
     "bpmThreshold": {
       "unit": "bpm",
       "title": "Frecuencia cardíaca mínima",
@@ -1754,5 +1855,48 @@
       }
     },
     "notification": "Detección de una posible pesadilla, ya que ha tenido una frecuencia cardíaca elevada prolongada."
+  },
+  "audio-volume-automations": {
+    "title": "Automatización de volumen de audio",
+    "description": "¡Cambie automáticamente el volumen de sus dispositivos de audio cuando se duerma o se despierta!Esto puede ser útil si desea evitar que otros perturben su sueño.",
+    "onSleepEnable": {
+      "title": "Cuando me voy a dormir",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando el modo sueño esté habilitado"
+    },
+    "onSleepDisable": {
+      "title": "Cuando me levanto",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando el modo sueño está deshabilitado"
+    },
+    "onSleepPreparation": {
+      "title": "Cuando me preparo para ir a dormir",
+      "description": "Cambie el volumen de sus dispositivos de audio cuando activo la preparación del sueño"
+    },
+    "devices": {
+      "title": {
+        "noDevices": "No se seleccionan dispositivos de audio",
+        "hasDevices": "Agregar dispositivos de audio"
+      },
+      "description": "Seleccione un dispositivo de audio para automatizar su nivel de volumen"
+    },
+    "selectDevice": "Seleccionar dispositivo de audio",
+    "removeDevice": "Remover",
+    "actionOptions": {
+      "SET_VOLUME": "Cambiar volumen",
+      "MUTE": "Muteado",
+      "UNMUTE": "Desmuteado"
+    },
+    "picker": {
+      "title": "Seleccione un dispositivo",
+      "noCaptureDevices": "No se han encontrado dispositivos de captura",
+      "noPlaybackDevices": "No se han encontrado dispositivos de reproducción",
+      "defaultDevice": "Dispositivo por defecto"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Automation} other {# Automations}}"
+    },
+    "volume": {
+      "title": "Volumen",
+      "description": "Qué nivel de volumen establecer para el dispositivo de audio cuando se ejecuta esta automatización"
+    }
   }
 }

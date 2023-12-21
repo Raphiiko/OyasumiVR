@@ -35,9 +35,7 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api';
-
-const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
-const PERSISTENT_ID_TRAIL = ']';
+import { VRChatService } from './vrchat.service';
 
 @Injectable({
   providedIn: 'root',
@@ -52,8 +50,8 @@ export class SystemMicMuteAutomationService {
     ),
     this.audioDeviceService.activeDevices,
   ]).pipe(
-    switchMap(async ([config]) =>
-      this.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
+    map(([config]) =>
+      this.audioDeviceService.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
     ),
     shareReplay(1)
   );
@@ -75,7 +73,8 @@ export class SystemMicMuteAutomationService {
     private sleepService: SleepService,
     private sleepPreparationService: SleepPreparationService,
     private notificationService: NotificationService,
-    private eventLog: EventLogService
+    private eventLog: EventLogService,
+    private vrchat: VRChatService
   ) {}
 
   async init() {
@@ -85,6 +84,7 @@ export class SystemMicMuteAutomationService {
       .subscribe((config) => {
         this.config = config;
       });
+
     // Handle automations
     this.changeMuteOnSleepEnable();
     this.changeMuteOnSleepDisable();
@@ -92,10 +92,40 @@ export class SystemMicMuteAutomationService {
     this.changeControllerBindingBehaviorOnSleepEnable();
     this.changeControllerBindingBehaviorOnSleepDisable();
     this.changeControllerBindingBehaviorOnSleepPreparation();
+    this.changeMuteOnVRChatWorldChange();
+    // Handle voice activity mode
+    this.handleVoiceActivitySettingChanges();
     // Handle controller binding
     this.handleControllerBinding();
     // Handle audio metering
     this.handleHardwareAudioMetering();
+  }
+
+  private handleVoiceActivitySettingChanges() {
+    // Update the hardware mic activity depending on the voice activation mode
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.voiceActivationMode),
+        distinctUntilChanged(),
+        switchMap((mode) =>
+          invoke('set_hardware_mic_activity_enabled', {
+            enabled: mode === 'HARDWARE',
+          })
+        )
+      )
+      .subscribe();
+    // Update the hardware mic activity threshold based on the config
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SYSTEM_MIC_MUTE_AUTOMATIONS.hardwareVoiceActivationThreshold),
+        distinctUntilChanged(),
+        switchMap((threshold) =>
+          invoke('set_hardware_mic_activivation_threshold', {
+            threshold: threshold / 100,
+          })
+        )
+      )
+      .subscribe();
   }
 
   private changeMuteOnSleepEnable() {
@@ -307,6 +337,28 @@ export class SystemMicMuteAutomationService {
       .subscribe();
   }
 
+  private changeMuteOnVRChatWorldChange() {
+    this.vrchat.world
+      .pipe(
+        map((w) => w.instanceId),
+        skip(1),
+        filter(Boolean),
+        distinctUntilChanged()
+      )
+      .subscribe(async () => {
+        switch (this.config.vrchatWorldJoinBehaviour) {
+          case 'MUTE':
+            await this.setMute(true);
+            break;
+          case 'UNMUTE':
+            await this.setMute(false);
+            break;
+          case 'KEEP':
+            break;
+        }
+      });
+  }
+
   private async handleHardwareAudioMetering() {
     this.captureDevice
       .pipe(
@@ -335,28 +387,6 @@ export class SystemMicMuteAutomationService {
         switchMap((mute) => this.setMute(mute))
       )
       .subscribe();
-  }
-
-  public getPersistentIdForAudioDevice(device: AudioDevice): string {
-    return PERSISTENT_ID_LEAD + device.name + PERSISTENT_ID_TRAIL;
-  }
-
-  public async getAudioDeviceNameForPersistentId(id: string): Promise<string | null> {
-    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
-    if (id === 'DEFAULT') return devices.find((d) => d.default)?.name ?? null;
-    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
-    return id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
-  }
-
-  public async getAudioDeviceForPersistentId(
-    id: string | undefined | null
-  ): Promise<AudioDevice | null> {
-    if (!id) return null;
-    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
-    if (id === 'DEFAULT') return devices.find((d) => d.default) ?? null;
-    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
-    const name = id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
-    return devices.find((d) => d.name === name) ?? null;
   }
 
   async setDefaultControlButtonBehavior(

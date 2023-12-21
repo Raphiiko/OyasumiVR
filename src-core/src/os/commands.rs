@@ -1,4 +1,9 @@
-use super::{audio_devices::device::AudioDeviceDto, models::Output, SOLOUD, SOUNDS};
+use super::{
+    audio_devices::device::AudioDeviceDto,
+    get_friendly_name_for_windows_power_policy,
+    models::{Output, WindowsPowerPolicy},
+    SOLOUD, SOUNDS, VRCHAT_ACTIVE,
+};
 use log::{error, info};
 use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
@@ -34,6 +39,12 @@ pub fn play_sound(name: String, volume: f32) {
 #[tauri::command]
 pub async fn quit_steamvr(kill: bool) {
     crate::utils::stop_process("vrmonitor.exe", kill).await;
+}
+
+#[tauri::command]
+pub async fn is_vrchat_active() -> bool {
+    let vrc_active_guard = VRCHAT_ACTIVE.lock().await;
+    *vrc_active_guard
 }
 
 #[tauri::command]
@@ -135,34 +146,47 @@ pub async fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
-pub async fn set_windows_power_policy(policy: String) {
-    let guid = match policy.as_str() {
-        "POWER_SAVING" => super::GUID_POWER_POLICY_POWER_SAVING,
-        "BALANCED" => super::GUID_POWER_POLICY_BALANCED,
-        "HIGH_PERFORMANCE" => super::GUID_POWER_POLICY_HIGH_PERFORMANCE,
-        _ => panic!("Unknown power policy: {}", policy),
+pub async fn set_windows_power_policy(guid: String) {
+    let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
+        Ok(g) => g,
+        Err(e) => {
+            error!(
+                "[Core] Could not parse GUID in set_windows_power_policy \"{}\": {}",
+                guid, e
+            );
+            return;
+        }
     };
-    info!("[Core] Setting Windows power policy to \"{}\" plan", policy);
-    super::set_windows_power_policy(&guid);
+    info!("[Core] Setting Windows power policy to \"{}\" plan", guid);
+    super::set_windows_power_policy(&parsed_guid);
 }
 
 #[tauri::command]
-pub async fn active_windows_power_policy() -> Option<String> {
+pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
     let guid = super::active_windows_power_policy();
     if guid.is_none() {
         return None;
     }
     let guid = guid.unwrap();
-    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_POWER_SAVING) {
-        return Some(String::from("POWER_SAVING"));
+    let name = get_friendly_name_for_windows_power_policy(&guid);
+    Some(WindowsPowerPolicy {
+        guid: crate::utils::serialization::guid_to_string(&guid),
+        name: name.unwrap_or(String::from("Unknown Policy")),
+    })
+}
+
+#[tauri::command]
+pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
+    let mut policies = Vec::new();
+    let schemes = super::get_windows_power_policies();
+    for scheme in schemes {
+        let name = get_friendly_name_for_windows_power_policy(&scheme);
+        policies.push(WindowsPowerPolicy {
+            guid: crate::utils::serialization::guid_to_string(&scheme),
+            name: name.unwrap_or(String::from("Unknown Policy")),
+        });
     }
-    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_BALANCED) {
-        return Some(String::from("BALANCED"));
-    }
-    if super::guid_equal(&guid, &super::GUID_POWER_POLICY_HIGH_PERFORMANCE) {
-        return Some(String::from("HIGH_PERFORMANCE"));
-    }
-    None
+    policies
 }
 
 #[tauri::command]
@@ -247,12 +271,27 @@ pub async fn set_hardware_mic_activity_enabled(enabled: bool) {
         Some(m) => m,
         None => {
             error!(
-              "[Core] Could not set active capture device ID, as audio device manager was not initialized"
+              "[Core] Could not enable/disable hardware mic activation, as audio device manager was not initialized"
           );
             return;
         }
     };
     manager.set_mic_activity_enabled(enabled).await;
+}
+
+#[tauri::command]
+pub async fn set_hardware_mic_activivation_threshold(threshold: f32) {
+    let manager_guard = super::AUDIO_DEVICE_MANAGER.lock().await;
+    let manager = match manager_guard.as_ref() {
+        Some(m) => m,
+        None => {
+            error!(
+              "[Core] Could not set the hardware mic activation threshold, as audio device manager was not initialized"
+          );
+            return;
+        }
+    };
+    manager.set_mic_activation_threshold(threshold).await;
 }
 
 #[tauri::command]
@@ -268,4 +307,15 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
         }
     };
     manager.set_mic_activity_device_id(device_id).await;
+}
+
+#[tauri::command]
+pub async fn activate_memory_watcher() -> bool {
+    let mut watcher_active_guard = super::MEMORY_WATCHER_ACTIVE.lock().await;
+    if *watcher_active_guard {
+        return false;
+    }
+    info!("[Core] Activating memory watcher");
+    *watcher_active_guard = true;
+    true
 }

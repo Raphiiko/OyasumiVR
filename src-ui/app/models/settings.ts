@@ -1,17 +1,11 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 
 export interface AppSettings {
-  version: 7;
+  version: 8;
   userLanguage: string;
   userLanguagePicked: boolean;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
-  oscSendingHost: string;
-  oscSendingPort: number;
-  oscReceivingHost: string;
-  oscReceivingPort: number;
-  oscEnableExpressionMenu: boolean;
-  oscEnableExternalControl: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
   lighthousePowerControl: boolean;
@@ -21,11 +15,30 @@ export interface AppSettings {
   notificationsEnabled: { types: NotificationType[] };
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
+  overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
+  deviceNicknames: {
+    [deviceId: string]: string;
+  };
+  ignoredLighthouses: string[];
+  hotkeys: { [hotkeyId: string]: string[] };
+  hideSnowverlay: boolean;
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
+
+export type HotkeyId =
+  | 'HOTKEY_TOGGLE_SLEEP_MODE'
+  | 'HOTKEY_ENABLE_SLEEP_MODE'
+  | 'HOTKEY_DISABLE_SLEEP_MODE'
+  | 'HOTKEY_RUN_SLEEP_PREPARATION'
+  | 'HOTKEY_RUN_SHUTDOWN_SEQUENCE'
+  | 'HOTKEY_TURN_OFF_CONTROLLER_DEVICES'
+  | 'HOTKEY_TURN_OFF_TRACKER_DEVICES'
+  | 'HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES'
+  | 'HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES'
+  | 'HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES';
 
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
@@ -37,18 +50,12 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 7,
+  version: 8,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
   lighthouseConsolePath:
     'C:\\Program Files (x86)\\Steam\\steamapps\\common\\SteamVR\\tools\\lighthouse\\bin\\win64\\lighthouse_console.exe',
-  oscSendingHost: '127.0.0.1',
-  oscSendingPort: 9000,
-  oscReceivingHost: '127.0.0.1',
-  oscReceivingPort: 9001,
-  oscEnableExpressionMenu: true,
-  oscEnableExternalControl: true,
   exitInSystemTray: false,
   startInSystemTray: false,
   lighthousePowerControl: true,
@@ -59,7 +66,12 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   quitWithSteamVR: 'DISABLED',
   overlayMenuEnabled: true,
   overlayGpuFix: false,
+  overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
+  deviceNicknames: {},
+  ignoredLighthouses: [],
+  hotkeys: {},
+  hideSnowverlay: false,
 };
 
 export type ExecutableReferenceStatus =

@@ -41,3 +41,19 @@ pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
         None => None,
     }
 }
+
+#[tauri::command]
+pub async fn overlay_sidecar_get_grpc_port() -> Option<u32> {
+    let manager_guard = super::SIDECAR_MANAGER.lock().await;
+    let manager = manager_guard.as_ref();
+    match manager {
+        Some(manager) => {
+            let grpc_port = manager.grpc_port.lock().await;
+            match grpc_port.as_ref() {
+                Some(grpc_port) => Some(*grpc_port),
+                None => None,
+            }
+        }
+        None => None,
+    }
+}

@@ -1,11 +1,7 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import {
-  EventLogBase,
-  EventLogChangedSystemMicMuteState,
-  EventLogType,
-} from '../../../models/event-log-entry';
+import { EventLogChangedSystemMicMuteState, EventLogType } from '../../../models/event-log-entry';
 
-export class EventLogChangedSystemMicMuteStateEntryParser extends EventLogEntryParser<EventLogBase> {
+export class EventLogChangedSystemMicMuteStateEntryParser extends EventLogEntryParser<EventLogChangedSystemMicMuteState> {
   entryType(): EventLogType {
     return 'changedSystemMicMuteState';
   }

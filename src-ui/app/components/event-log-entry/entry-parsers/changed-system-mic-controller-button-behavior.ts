@@ -1,11 +1,10 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
 import {
-  EventLogBase,
   EventLogChangedSystemMicControllerButtonBehavior,
   EventLogType,
 } from '../../../models/event-log-entry';
 
-export class EventLogChangedSystemMicControllerButtonBehaviorEntryParser extends EventLogEntryParser<EventLogBase> {
+export class EventLogChangedSystemMicControllerButtonBehaviorEntryParser extends EventLogEntryParser<EventLogChangedSystemMicControllerButtonBehavior> {
   entryType(): EventLogType {
     return 'changedSystemMicControllerButtonBehavior';
   }
