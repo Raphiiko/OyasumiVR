@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SleepService } from '../../services/sleep.service';
 import { VRChatService } from '../../services/vrchat.service';
 import { UserStatus } from 'vrchat/dist';
@@ -16,6 +16,8 @@ import { BrightnessControlAutomationService } from '../../services/brightness-co
 import { PulsoidService } from '../../services/integrations/pulsoid.service';
 import { Router } from '@angular/router';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
+import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -27,12 +29,16 @@ export class MainStatusBarComponent implements OnInit {
   protected sleepMode = this.sleepService.mode;
   protected user = this.vrchat.user;
   private brightnessControlModalOpen = false;
+  protected snowverlayAvailable = new Date().getDate() >= 18 && new Date().getMonth() == 11;
+  protected snowverlayActive = false;
 
   constructor(
     private sleepService: SleepService,
     private vrchat: VRChatService,
     private modalService: ModalService,
     private router: Router,
+    private settings: AppSettingsService,
+    private destroyRef: DestroyRef,
     protected systemMicMuteAutomation: SystemMicMuteAutomationService,
     protected openvr: OpenVRService,
     protected background: BackgroundService,
@@ -44,7 +50,11 @@ export class MainStatusBarComponent implements OnInit {
     protected pulsoid: PulsoidService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
+      this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
+    });
+  }
 
   getStatusColor(status: UserStatus) {
     switch (status) {
@@ -109,5 +119,11 @@ export class MainStatusBarComponent implements OnInit {
   async navigateToIntegrationSettings() {
     await this.router.navigateByUrl('/', { skipLocationChange: true });
     await this.router.navigate(['dashboard', 'settings', 'integrations']);
+  }
+
+  toggleSnowverlay() {
+    this.settings.updateSettings({
+      hideSnowverlay: this.snowverlayActive,
+    });
   }
 }

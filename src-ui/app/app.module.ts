@@ -185,6 +185,7 @@ import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/se
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { OscControlService } from './services/osc-control/osc-control.service';
+import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
 
 [
   localeEN,
@@ -296,6 +297,7 @@ export function createTranslateLoader(http: HttpClient) {
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
     SettingsStatusInfoViewComponent,
+    SnowverlayComponent,
   ],
   imports: [
     CommonModule,
