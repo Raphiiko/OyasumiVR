@@ -1128,10 +1128,10 @@
       },
       "fixes": {
         "title": "Fixes & Troubleshooting",
-        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support.",
+        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support",
         "vrManifestReregister": {
           "title": "Reregister SteamVR application manifest",
-          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR.",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
           "action": "Reregister Manifest",
           "modal": {
             "success": {
@@ -1179,9 +1179,14 @@
             }
           }
         },
+        "devTools": {
+          "title": "Open Developer Tools",
+          "description": "Opens the Edge Developer Tools, for debugging purposes",
+          "action": "Open DevTools"
+        },
         "memoryWatcher": {
           "title": "Memory Watcher",
-          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged.",
+          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged",
           "action": "Activate",
           "modal": {
             "error": {

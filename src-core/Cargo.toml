@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "1.11.0"
+version = "1.11.1"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -112,6 +112,7 @@ features = [
   "shell-execute",
   "shell-open",
   "updater",
+  "devtools",
 ]
 
 [dependencies.ovr_overlay]
