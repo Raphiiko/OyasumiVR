@@ -335,4 +335,8 @@ export class SettingsAdvancedViewComponent {
         .subscribe();
     }
   }
+
+  async openDevTools() {
+    await invoke('open_dev_tools');
+  }
 }

@@ -142,6 +142,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::open_dev_tools,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
     ]
