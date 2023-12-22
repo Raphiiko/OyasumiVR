@@ -6,6 +6,7 @@ import { AppSettingsService } from './services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, map, skip } from 'rxjs';
 import { fade } from './utils/animations';
+import { TelemetryService } from './services/telemetry.service';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,19 @@ export class AppComponent implements OnInit {
   constructor(
     public openvr: OpenVRService,
     translate: TranslateService,
-    private settings: AppSettingsService
+    private settings: AppSettingsService,
+    private telemetry: TelemetryService
   ) {
-    this.settings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
-      translate.use(settings.userLanguage);
-    });
+    this.settings.settings
+      .pipe(
+        takeUntilDestroyed(),
+        map((settings) => settings.userLanguage),
+        distinctUntilChanged()
+      )
+      .subscribe((userLanguage) => {
+        translate.use(userLanguage);
+        this.telemetry.trackEvent('use_language', { language: userLanguage });
+      });
     // Snowverlay
     this.settings.settings
       .pipe(

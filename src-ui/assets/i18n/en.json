@@ -1316,7 +1316,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "The data that will be sent is limited to the version of OyasumiVR that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics.",
+        "description": "When enabled, OyasumiVR will collect anonymous usage data such as version information and crash reports. This data is completely anonymous, and does not contain any personal data. It is only used for tracking down bugs and providing some general usage statistics.<br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       }

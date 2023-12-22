@@ -3227,6 +3227,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "os_info"
+version = "3.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "006e42d5b888366f1880eda20371fedde764ed2213dc8496f49622fa0c99cd5e"
+dependencies = [
+ "log",
+ "serde",
+ "winapi",
+]
+
+[[package]]
 name = "os_pipe"
 version = "1.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3276,7 +3287,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "1.11.1"
+version = "1.11.2"
 dependencies = [
  "async-recursion",
  "bluest",
@@ -3313,6 +3324,7 @@ dependencies = [
  "system_shutdown",
  "tauri",
  "tauri-build",
+ "tauri-plugin-aptabase",
  "tauri-plugin-deep-link",
  "tauri-plugin-fs-extra",
  "tauri-plugin-log",
@@ -3338,7 +3350,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.11.1"
+version = "1.11.2"
 dependencies = [
  "winapi",
 ]
@@ -4702,6 +4714,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "sys-locale"
+version = "0.2.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8a11bd9c338fdba09f7881ab41551932ad42e405f61d01e8406baea71c07aee"
+dependencies = [
+ "js-sys",
+ "libc",
+ "wasm-bindgen",
+ "web-sys",
+ "windows-sys 0.45.0",
+]
+
+[[package]]
 name = "sysinfo"
 version = "0.26.9"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4870,6 +4895,7 @@ dependencies = [
  "serialize-to-javascript",
  "shared_child",
  "state",
+ "sys-locale",
  "tar",
  "tauri-macros",
  "tauri-runtime",
@@ -4944,6 +4970,26 @@ dependencies = [
  "syn 1.0.109",
  "tauri-codegen",
  "tauri-utils",
+]
+
+[[package]]
+name = "tauri-plugin-aptabase"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0390ceea6bd4e873795889565ad8ad6009f3c38fdfc9b5268b74b0deaddefb8a"
+dependencies = [
+ "futures",
+ "log",
+ "os_info",
+ "rand 0.8.5",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tauri",
+ "thiserror",
+ "time 0.3.22",
+ "tokio",
+ "uuid",
 ]
 
 [[package]]
@@ -6126,6 +6172,15 @@ dependencies = [
  "windows_x86_64_gnu 0.42.2",
  "windows_x86_64_gnullvm 0.42.2",
  "windows_x86_64_msvc 0.42.2",
+]
+
+[[package]]
+name = "windows-sys"
+version = "0.45.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75283be5efb2831d37ea142365f009c02ec203cd29a3ebecbc093d52315b66d0"
+dependencies = [
+ "windows-targets 0.42.2",
 ]
 
 [[package]]

@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.2]
+
+### Added
+
+- Crash reporting for Rust panics and JS errors in main UI.
+
+### Changed
+
+- Updated telemetry to integrate with [Aptabase](https://aptabase.com/). A
+  new [privacy policy](https://aptabase.com/legal/privacy) applies.
+
 ## [1.11.1]
 
 ### Added
@@ -25,16 +36,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for custom Windows power policies
 - Custom nicknames for controller, tracker, and base station devices.
 - Option for ignoring specific basestations in automations.
-- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep preparation, running the shutdown sequence, and turning devices on and off)
+- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep
+  preparation, running the shutdown sequence, and turning devices on and off)
 - Detection for initialization failures and error handling.
 - Added support for OSCQuery
-- Status information view to the settings, for showing technical information regarding OyasumiVR and some of its internals.
+- Status information view to the settings, for showing technical information regarding OyasumiVR and some of its
+  internals.
 - Automation for running a OSC script whenever the user prepares to go to sleep.
 - Added OSC commands for turning on and turning off all base stations.
 
 ### Changed
 
-- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
+- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to
+  log you back in.
 - Improved reliability of base station power management
 - Brightness automations no longer apply on start as a default setting
 - Updated to Tauri v1.5
@@ -42,7 +56,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
+- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)
+  and [i0nTempest](https://twitter.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
 
@@ -118,7 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
-- Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to sleep.
+- Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to
+  sleep.
 - Sleep preparation button in the overlay and on the overview, to trigger automations that support this feature.
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
@@ -135,7 +151,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated translations to use ICU syntax.
-- Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in SteamVR!)
+- Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in
+  SteamVR!)
 - Bundled dotnet runtime requirements with overlay sidecar module. (Separate installation no longer required)
 
 ### Fixed
@@ -181,7 +198,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
+- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo
+  Loco 1.8.0 onwards!)
 
 ## [1.8.0]
 
@@ -399,12 +417,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Status automations for automatically changing your VRChat status based on the amount of players in your world.
 - VRChat login for features that require accessing the VRChat API. (e.g. Status automations)
 - Possibility for specific options to be triggered over OSC (and thus using VRChat avatar parameters):
-  - Sleep Mode
-  - Sleeping Animation Automations
-  - Status Automations
-  - Turning off controllers
-  - Turning off trackers
-  - Turning off trackers & controllers
+    - Sleep Mode
+    - Sleeping Animation Automations
+    - Status Automations
+    - Turning off controllers
+    - Turning off trackers
+    - Turning off trackers & controllers
 - Status bar for showing the current sleep mode and logged-in VRChat account, as well as the status of that account.
 - Better logging
 
@@ -422,7 +440,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also support v2.3 and
+- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also
+  support v2.3 and
   the new EX version.
 - Changed presets to support multiple info links (to show both んみんみーん's EX and non-EX version)
 
@@ -436,7 +455,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping
   position.
-  - Preset for [ごろ寝システム (Sleep System) v2.2 by みんみんみーん](https://booth.pm/ko/items/2886739).
+    - Preset for [ごろ寝システム (Sleep System) v2.2 by みんみんみーん](https://booth.pm/ko/items/2886739).
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
 - In-app updater & changelog
