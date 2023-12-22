@@ -1181,7 +1181,6 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "Data yang akan dikirim terbatas pada versi OyasumiVR yang Anda gunakan, dan bahasa yang telah Anda tetapkan. Tidak ada data lain yang dikirim dan sepenuhnya anonim. Data ini hanya digunakan untuk menyediakan beberapa statistik penggunaan umum.",
         "label": "Mengirim data penggunaan anonim",
         "title": "Telemetri"
       }

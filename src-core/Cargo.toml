@@ -84,6 +84,7 @@ human_bytes = { version = "0.4.3" }
 system_shutdown = "4.0.1"
 async-recursion = "1.0.5"
 enumset = "1.1.3"
+tauri-plugin-aptabase = "0.5"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
