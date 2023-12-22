@@ -65,6 +65,18 @@ export class TelemetryService {
     } else {
       debug('[Telemetry] Disabling telemetry in dev mode');
     }
+
+    addEventListener('unhandledrejection', (e) => {
+      this.trackEvent('ui_promise_rejected', {
+        message: (e.reason?.message || e.reason || e).toString(),
+      });
+    });
+
+    window.addEventListener('error', (e) => {
+      this.trackEvent('ui_js_error', {
+        message: e.message,
+      });
+    });
   }
 
   async loadSettings() {
