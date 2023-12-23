@@ -68,7 +68,13 @@ pub async fn init() {
 pub async fn start_scan(duration: Duration) {
     // Get the adapter
     let adapter_guard = ADAPTER.lock().await;
-    let adapter = adapter_guard.as_ref().unwrap();
+    let adapter = match adapter_guard.as_ref() {
+        Some(adapter) => adapter,
+        None => {
+            // No bluetooth adapter was found, we stop here
+            return;
+        }
+    };
     // Wait until the adapter is available
     if let Err(e) = adapter.wait_available().await {
         warn!(
@@ -381,10 +387,11 @@ async fn reset() {
     // Disconnect all devices
     {
         let adapter_guard = ADAPTER.lock().await;
-        let adapter = adapter_guard.as_ref().unwrap();
-        let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
-        for device in devices_guard.iter() {
-            let _ = adapter.disconnect_device(&device).await;
+        if let Some(adapter) = adapter_guard.as_ref() {
+            let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
+            for device in devices_guard.iter() {
+                let _ = adapter.disconnect_device(&device).await;
+            }
         }
     }
     // Clear all known devices

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- Crash for some users without bluetooth adapters when disabling lighthouse control.
+
 ## [1.11.2]
 
 ### Added
