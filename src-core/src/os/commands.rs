@@ -146,7 +146,8 @@ pub async fn show_in_folder(path: String) {
 }
 
 #[tauri::command]
-pub async fn set_windows_power_policy(guid: String) {
+pub async fn set_windows_power_policy(mut guid: String) {
+    guid = guid.to_uppercase();
     let parsed_guid = match crate::utils::serialization::string_to_guid(&guid) {
         Ok(g) => g,
         Err(e) => {
