@@ -2696,7 +2696,7 @@ checksum = "490cc448043f947bae3cbee9c203358d62dbee0db12107a74be5c30ccfd09771"
 [[package]]
 name = "mdns-sd"
 version = "0.10.1"
-source = "git+https://github.com/Raphiiko/vrc-mdns-sd.git#93da0202ef0a2f383092c02c2358964d9efcb5ff"
+source = "git+https://github.com/Raphiiko/vrc-mdns-sd.git?rev=b0c8914#b0c8914c2dabaa0a7dfa218e801a1a2297275ad8"
 dependencies = [
  "flume",
  "if-addrs",
@@ -3358,7 +3358,7 @@ dependencies = [
 [[package]]
 name = "oyasumivr_oscquery"
 version = "0.2.0"
-source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=2fe4ca1#2fe4ca139778201ffb6bc2b67814823ba2168b84"
+source = "git+https://github.com/Raphiiko/oyasumivr_oscquery.git?rev=2599fba#2599fba448a89b178d468bcb3d400c8a4c711d7b"
 dependencies = [
  "http-body-util",
  "hyper 1.0.1",
