@@ -114,7 +114,7 @@
           <div class="setting-row-label" translate>
             <span translate>settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title</span>
             <span translate
-              >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
+            >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -181,7 +181,7 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-              >settings.general.startWithSteamVR.howTo
+            >settings.general.startWithSteamVR.howTo
             </button>
           </div>
         </div>
@@ -291,7 +291,7 @@
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>settings.general.telemetry.label</span>
-            <span translate>settings.general.telemetry.description</span>
+            <span [innerHtml]="'settings.general.telemetry.description' | translate"></span>
           </div>
           <div class="setting-row-action">
             <label class="switch-toggle">

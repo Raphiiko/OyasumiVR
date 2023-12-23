@@ -1272,7 +1272,6 @@
         "title": "Bandeja de sistema"
       },
       "telemetry": {
-        "description": "Los datos que se enviarán se limitan a la versión de OyasumiVR que estás utilizando y al idioma que has configurado. No se envía ningún otro dato y es completamente anónimo. Estos datos sólo se utilizan para proporcionar algunas estadísticas generales de uso.",
         "label": "Enviar datos de uso anónimos",
         "title": "Telemetría"
       }

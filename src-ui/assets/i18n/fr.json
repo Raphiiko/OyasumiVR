@@ -656,7 +656,6 @@
         "title": "Barre d'état"
       },
       "telemetry": {
-        "description": "Les données envoyées seront limitées à la version d'OyasumiVR que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques.",
         "label": "Envoyer des données d'utilisation anonymes",
         "title": "Télémétrie"
       }

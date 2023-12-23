@@ -1128,10 +1128,10 @@
       },
       "fixes": {
         "title": "Fixes & Troubleshooting",
-        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support.",
+        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support",
         "vrManifestReregister": {
           "title": "Reregister SteamVR application manifest",
-          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR.",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
           "action": "Reregister Manifest",
           "modal": {
             "success": {
@@ -1179,9 +1179,14 @@
             }
           }
         },
+        "devTools": {
+          "title": "Open Developer Tools",
+          "description": "Opens the Edge Developer Tools, for debugging purposes",
+          "action": "Open DevTools"
+        },
         "memoryWatcher": {
           "title": "Memory Watcher",
-          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged.",
+          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged",
           "action": "Activate",
           "modal": {
             "error": {
@@ -1311,7 +1316,7 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "The data that will be sent is limited to the version of OyasumiVR that you are using, and the language you have set. No other data is sent and it is completely anonymous. This data is only used for providing some general usage statistics.",
+        "description": "When enabled, OyasumiVR will collect anonymous usage data such as version information and crash reports. This data is completely anonymous, and does not contain any personal data. It is only used for tracking down bugs and providing some general usage statistics.<br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
       }

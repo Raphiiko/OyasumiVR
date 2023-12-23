@@ -4,8 +4,9 @@ import { routeAnimations } from './app-routing.module';
 import { TranslateService } from '@ngx-translate/core';
 import { AppSettingsService } from './services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { distinctUntilChanged, map, skip } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip, tap } from 'rxjs';
 import { fade } from './utils/animations';
+import { TelemetryService } from './services/telemetry.service';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +20,19 @@ export class AppComponent implements OnInit {
   constructor(
     public openvr: OpenVRService,
     translate: TranslateService,
-    private settings: AppSettingsService
+    private settings: AppSettingsService,
+    private telemetry: TelemetryService
   ) {
-    this.settings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
-      translate.use(settings.userLanguage);
-    });
+    this.settings.settings
+      .pipe(
+        takeUntilDestroyed(),
+        map((settings) => settings.userLanguage),
+        distinctUntilChanged(),
+        tap((userLanguage) => translate.use(userLanguage)),
+        debounceTime(10000),
+        tap((userLanguage) => this.telemetry.trackEvent('use_language', { language: userLanguage }))
+      )
+      .subscribe();
     // Snowverlay
     this.settings.settings
       .pipe(

@@ -1181,7 +1181,6 @@
         "title": "Systeemvak"
       },
       "telemetry": {
-        "description": "De enige data die wordt verstuurd, is de versie van OyasumiVR die je gebruikt en je ingestelde taal. Er wordt geen persoonlijke informatie verstuurd: dit is compleet anoniem. Deze data wordt alleen gebruikt voor algemene gebruikstatistieken van OyasumiVR.",
         "label": "Verstuur anonieme telemetrie data",
         "title": "Telemetrie"
       }

@@ -1,6 +1,6 @@
 {
   "name": "oyasumi",
-  "version": "1.11.0",
+  "version": "1.11.2",
   "author": "Raphiiko",
   "license": "MIT",
   "type": "module",
@@ -47,6 +47,7 @@
     "@angular/platform-browser": "^16.1.8",
     "@angular/platform-browser-dynamic": "^16.1.8",
     "@angular/router": "^16.1.8",
+    "@aptabase/tauri": "^0.4.1",
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/noto-sans-jp": "^4.5.12",
     "@fontsource/noto-sans-kr": "^4.5.12",

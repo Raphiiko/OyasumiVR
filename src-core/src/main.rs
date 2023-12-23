@@ -21,16 +21,20 @@ mod osc;
 mod overlay_sidecar;
 mod steam;
 mod system_tray;
+mod telemetry;
 mod utils;
 mod vrc_log_parser;
+
+use std::sync::atomic::Ordering;
 
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::TAURI_APP_HANDLE;
+use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
+use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
@@ -42,6 +46,7 @@ fn main() {
         .plugin(tauri_plugin_fs_extra::init())
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
+        .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             configure_tauri_plugin_deep_link(app.handle());
             let matches = app.get_cli_matches().unwrap();
@@ -142,9 +147,39 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::open_dev_tools,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
+        telemetry::commands::set_telemetry_enabled,
     ]
+}
+
+fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
+    tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
+        .with_panic_hook(Box::new(|client, info, msg| {
+            let location = info
+                .location()
+                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .unwrap_or_else(|| "".to_string());
+
+            if !telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                // Write msg and location to file
+                let panic_log_path = {
+                    let full_path = std::env::current_exe().unwrap();
+                    full_path.parent().unwrap().to_path_buf().join("panic.log")
+                };
+                let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
+                return;
+            }
+
+            client.track_event(
+                "rust_panic",
+                Some(json!({
+                  "info": format!("{} ({})", msg, location),
+                })),
+            );
+        }))
+        .build()
 }
 
 fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
@@ -157,6 +192,11 @@ fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
+    // #[cfg(debug_assertions)]
+    // const LOG_LEVEL: LevelFilter = LevelFilter::Debug;
+    // #[cfg(not(debug_assertions))]
+    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
+
     tauri_plugin_log::Builder::default()
         .format(move |out, message, record| {
             let format = time::format_description::parse(
@@ -170,7 +210,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
                 message
             ))
         })
-        .level(LevelFilter::Info)
+        .level(LOG_LEVEL)
         .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
         .rotation_strategy(RotationStrategy::KeepAll)
         .build()
