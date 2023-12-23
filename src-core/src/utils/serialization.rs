@@ -16,6 +16,7 @@ pub fn guid_to_string(guid: &GUID) -> String {
         guid.Data4[6],
         guid.Data4[7]
     )
+    .to_uppercase()
 }
 
 // Converts a String to a GUID

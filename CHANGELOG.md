@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Crash for some users without bluetooth adapters when disabling lighthouse control.
+- Error for windows power policies sometimes not being set correctly, even when they are.
 
 ## [1.11.2]
 
