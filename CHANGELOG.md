@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.3]
+
+### Fixed
+- Crash for some users without bluetooth adapters when disabling lighthouse control.
+- Error for windows power policies sometimes not being set correctly, even when they are.
+- Fixed setting of invalid analog gain values
+- Updated subdependency which caused a crash when detecting some invalid DNS records.
+
 ## [1.11.2]
 
 ### Added
