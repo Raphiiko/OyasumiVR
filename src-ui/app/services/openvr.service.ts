@@ -73,11 +73,11 @@ export class OpenVRService {
   }
 
   public async setAnalogGain(analogGain: number): Promise<void> {
-    if (analogGain !== null && analogGain !== undefined) {
+    if (typeof analogGain === 'number' && isFinite(analogGain)) {
       return invoke('openvr_set_analog_gain', { analogGain });
     } else {
-      console.error('[OpenVR] Attempted to set analogGain to null or undefined', analogGain);
-      error('[OpenVR] Attempted to set analogGain to null or undefined');
+      console.error('[OpenVR] Attempted to set analogGain to invalid value', analogGain);
+      error('[OpenVR] Attempted to set analogGain to invalid value: ' + analogGain);
     }
   }
 

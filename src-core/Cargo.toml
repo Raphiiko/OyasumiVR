@@ -88,7 +88,7 @@ tauri-plugin-aptabase = "0.5"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "2fe4ca1"
+rev = "2599fba"
 # path = "../../oyasumivr-oscquery"
 
 [dependencies.tauri]
