@@ -162,6 +162,17 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
                 .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
                 .unwrap_or_else(|| "".to_string());
 
+            // Upload crash report if telemetry is enabled
+            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                client.track_event(
+                    "rust_panic",
+                    Some(json!({
+                      "info": format!("{} ({})", msg, location),
+                    })),
+                );
+            }
+
             // Write msg and location to file
             let panic_log_path = {
                 let full_path = std::env::current_exe().unwrap();
@@ -169,20 +180,6 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             };
             println!("Writing panic log to {:#?}", panic_log_path);
             let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
-
-            // Stop here if telemetry is disabled
-            if !telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                return;
-            }
-
-            // Upload panic data to Aptabase
-            println!("Uploading panic data to Aptabase: {} ({})", msg, location);
-            client.track_event(
-                "rust_panic",
-                Some(json!({
-                  "info": format!("{} ({})", msg, location),
-                })),
-            );
         }))
         .build()
 }
