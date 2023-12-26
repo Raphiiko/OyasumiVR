@@ -224,7 +224,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     #[cfg(debug_assertions)]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
     #[cfg(not(debug_assertions))]
-    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout];
+    const LOG_TARGETS: [LogTarget; 2] = [LogTarget::LogDir, LogTarget::Stdout];
     #[cfg(not(debug_assertions))]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
 
