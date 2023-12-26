@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Some stability issues with Tauri v1.5, by downgrading back down to Tauri v1.4.
 
+### Changed
+- Disabled Rust to Webview logging in release builds.
+
 ## [1.11.3]
 
 ### Fixed
