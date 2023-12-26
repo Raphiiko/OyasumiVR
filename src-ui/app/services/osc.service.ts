@@ -6,8 +6,19 @@ import { TaskQueue } from '../utils/task-queue';
 import { debug, error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
-import { BehaviorSubject, interval, Observable, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  distinctUntilChanged,
+  EMPTY,
+  interval,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { OscMethod } from './osc-control/osc-method';
+import { AppSettingsService } from './app-settings.service';
 
 @Injectable({
   providedIn: 'root',
@@ -40,15 +51,31 @@ export class OscService {
     OscMethod<unknown>[]
   >([]);
 
-  constructor() {}
+  constructor(private appSettings: AppSettingsService) {}
 
   async init() {
     await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
       this._messages.next(parseOSCMessage(data.payload));
     });
-    await this.startOscServer();
-    await this.fetchVRChatOSCAddress();
-    interval(1000).subscribe(() => this.fetchVRChatOSCAddress());
+    this.appSettings.settings
+      .pipe(
+        map((s) => s.oscServerEnabled),
+        distinctUntilChanged(),
+        debounceTime(500),
+        switchMap(async (enabled) => {
+          if (enabled) {
+            await this.startOscServer();
+            await this.fetchVRChatOSCAddress();
+          } else {
+            await this.stopOscServer();
+          }
+          return enabled;
+        }),
+        switchMap((enabled) =>
+          enabled ? interval(1000).pipe(switchMap(() => this.fetchVRChatOSCAddress())) : EMPTY
+        )
+      )
+      .subscribe();
   }
 
   private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
@@ -89,6 +116,7 @@ export class OscService {
 
   private async stopOscServer(): Promise<void> {
     this._oscServerAddress.next(null);
+    this._oscQueryServerAddress.next(null);
     await invoke<string>('stop_osc_server');
   }
 
@@ -161,11 +189,6 @@ export class OscService {
     const oscquery_address = await invoke<string | null>('get_vrchat_oscquery_address');
     if (oscquery_address !== this._vrchatOscQueryAddress.value)
       this._vrchatOscQueryAddress.next(oscquery_address);
-  }
-
-  async restartOscServer() {
-    await this.stopOscServer();
-    await this.startOscServer();
   }
 
   private mapToOscMethod(method: OscMethod<unknown>): {

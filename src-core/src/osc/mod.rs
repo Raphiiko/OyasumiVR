@@ -22,10 +22,12 @@ lazy_static! {
 
 pub async fn init() {
     // Start looking for VRChat's OSC and OSCQuery services
-    match oyasumivr_oscquery::client::init().await {
-        Err(err) => error!("[Core] Could not initialize OSCQuery client: {:#?}", err),
-        _ => {}
-    };
+    if !crate::globals::is_flag_set("DISABLE_MDNS").await {
+        match oyasumivr_oscquery::client::init().await {
+            Err(err) => error!("[Core] Could not initialize OSCQuery client: {:#?}", err),
+            _ => {}
+        };
+    }
     // Setup sending socket
     *OSC_SEND_SOCKET.lock().await = match UdpSocket::bind((Ipv4Addr::UNSPECIFIED, 0)) {
         Ok(s) => Some(s),
@@ -115,7 +117,7 @@ async fn spawn_receiver_task() -> CancellationToken {
                 }
             }
         }
+        info!("[Core] Terminated OSC receiver task");
     });
-    info!("[Core] Terminated OSC receiver task");
     cancellation_token
 }

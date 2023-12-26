@@ -27,11 +27,12 @@ mod vrc_log_parser;
 
 use std::sync::atomic::Ordering;
 
+use config::Config;
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
+use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
@@ -71,6 +72,30 @@ fn main() {
     // Run Oyasumi
     app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
+}
+
+async fn load_configs() {
+    match Config::builder()
+        .add_source(config::File::with_name("flags"))
+        .build()
+    {
+        Ok(flags) => {
+            *FLAGS.lock().await = Some(flags);
+        }
+        Err(e) => match e {
+            config::ConfigError::NotFound(_) => {
+                warn!("[Core] Could not find flags config. Using default values.");
+            }
+            _ => {
+                warn!("[Core] Could not load flags config: {:#?}", e);
+            }
+        },
+    };
+    if globals::is_flag_set("DISABLE_MDNS").await {
+        warn!(
+            "[Core] DISABLE_MDNS flag set: MDNS is disabled. OSC and OSCQuery functionality cannot be expected to work."
+        );
+    }
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
@@ -249,6 +274,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     std::env::set_current_dir(&executable_path).unwrap();
     // Run any migrations first
     migrations::run_migrations().await;
+    // Load configs
+    load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     // Open devtools if we're in debug mode
