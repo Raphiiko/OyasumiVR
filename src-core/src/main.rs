@@ -194,9 +194,13 @@ fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    // #[cfg(debug_assertions)]
-    // const LOG_LEVEL: LevelFilter = LevelFilter::Debug;
-    // #[cfg(not(debug_assertions))]
+    #[cfg(debug_assertions)]
+    const LOG_TARGETS = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
+    #[cfg(debug_assertions)]
+    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
+    #[cfg(not(debug_assertions))]
+    const LOG_TARGETS = [LogTarget::LogDir, LogTarget::Stdout];
+    #[cfg(not(debug_assertions))]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
 
     tauri_plugin_log::Builder::default()
@@ -213,7 +217,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             ))
         })
         .level(LOG_LEVEL)
-        .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+        .targets(LOG_TARGETS)
         .rotation_strategy(RotationStrategy::KeepAll)
         .build()
 }
