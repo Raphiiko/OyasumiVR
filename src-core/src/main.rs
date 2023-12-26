@@ -195,11 +195,11 @@ fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
     #[cfg(debug_assertions)]
-    const LOG_TARGETS = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
+    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
     #[cfg(debug_assertions)]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
     #[cfg(not(debug_assertions))]
-    const LOG_TARGETS = [LogTarget::LogDir, LogTarget::Stdout];
+    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout];
     #[cfg(not(debug_assertions))]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
 
