@@ -5,22 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
 ## [1.11.4]
 
 ### Added
+
 - Added debug option for disabling the OSC and OSCQuery servers
 - Flags file for setting debugging flags
 - Debugging flag for disabling MDNS (and as a result, OSCQuery) completely.
 
 ### Fixed
+
 - Some stability issues with Tauri v1.5, by downgrading back down to Tauri v1.4.
 
 ### Changed
+
 - Disabled Rust to Webview logging in release builds.
 
 ## [1.11.3]
 
 ### Fixed
+
 - Crash for some users without bluetooth adapters when disabling lighthouse control.
 - Error for windows power policies sometimes not being set correctly, even when they are.
 - Fixed setting of invalid analog gain values
@@ -438,12 +444,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Status automations for automatically changing your VRChat status based on the amount of players in your world.
 - VRChat login for features that require accessing the VRChat API. (e.g. Status automations)
 - Possibility for specific options to be triggered over OSC (and thus using VRChat avatar parameters):
-    - Sleep Mode
-    - Sleeping Animation Automations
-    - Status Automations
-    - Turning off controllers
-    - Turning off trackers
-    - Turning off trackers & controllers
+  - Sleep Mode
+  - Sleeping Animation Automations
+  - Status Automations
+  - Turning off controllers
+  - Turning off trackers
+  - Turning off trackers & controllers
 - Status bar for showing the current sleep mode and logged-in VRChat account, as well as the status of that account.
 - Better logging
 
@@ -476,7 +482,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Sleeping animation automations for automatically changing the sleeping animation of your avatar based on your sleeping
   position.
-    - Preset for [ごろ寝システム (Sleep System) v2.2 by みんみんみーん](https://booth.pm/ko/items/2886739).
+  - Preset for [ごろ寝システム (Sleep System) v2.2 by みんみんみーん](https://booth.pm/ko/items/2886739).
 - Setting to start Oyasumi with administrator privileges by default
 - Editor for writing OSC scripts
 - In-app updater & changelog
