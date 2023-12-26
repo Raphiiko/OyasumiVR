@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Added debug option for disabling the OSC and OSCQuery servers
+- Flags file for setting debugging flags
+- Debugging flag for disabling MDNS (and as a result, OSCQuery) completely.
+
 ### Fixed
 - Some stability issues with Tauri v1.5, by downgrading back down to Tauri v1.4.
 
