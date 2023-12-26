@@ -145,20 +145,6 @@
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span translate>settings.advanced.fixes.oscRestart.title</span>
-            <span translate>settings.advanced.fixes.oscRestart.description</span>
-          </div>
-          <div class="setting-row-action">
-            <button
-              class="btn btn-primary"
-              (click)="restartOscServer()"
-            >
-              <span translate>settings.advanced.fixes.oscRestart.action</span>
-            </button>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
             <span translate>settings.advanced.fixes.memoryWatcher.title</span>
             <span translate>settings.advanced.fixes.memoryWatcher.description</span>
           </div>
@@ -184,6 +170,22 @@
             >
               <span translate>settings.advanced.fixes.devTools.action</span>
             </button>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.fixes.oscServerEnabled.title</span>
+            <span translate>settings.advanced.fixes.oscServerEnabled.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="oscServerEnabled"
+                (change)="setOscServerEnabled(!oscServerEnabled)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
           </div>
         </div>
       </div>

@@ -1164,21 +1164,6 @@
             }
           }
         },
-        "oscRestart": {
-          "title": "Restart OSC- & OSCQuery services",
-          "description": "Troubleshoot OSC communication by stopping and restarting the internal OSC- and OSCQuery services",
-          "action": "Restart Services",
-          "modal": {
-            "error": {
-              "title": "Restart Failed",
-              "message": "Something went wrong while trying to restart the OSC- and OSCQuery services. Please check the logs and contact a developer."
-            },
-            "success": {
-              "title": "Restart Complete",
-              "message": "The internal OSC- and OSCQuery services have been restarted."
-            }
-          }
-        },
         "devTools": {
           "title": "Open Developer Tools",
           "description": "Opens the Edge Developer Tools, for debugging purposes",
@@ -1198,6 +1183,10 @@
               "message": "The memory watcher has been activated!"
             }
           }
+        },
+        "oscServerEnabled": {
+          "title": "Enable OSC & OSCQuery Servers",
+          "description": "Turning this off disables the built-in OSC and OSCQuery servers. This option persists between restarts. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use."
         }
       }
     },

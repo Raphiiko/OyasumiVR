@@ -27,11 +27,12 @@ mod vrc_log_parser;
 
 use std::sync::atomic::Ordering;
 
+use config::Config;
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::{APTABASE_APP_KEY, TAURI_APP_HANDLE};
+use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
@@ -71,6 +72,30 @@ fn main() {
     // Run Oyasumi
     app.run(tauri::generate_context!())
         .expect("An error occurred while running the application");
+}
+
+async fn load_configs() {
+    match Config::builder()
+        .add_source(config::File::with_name("flags"))
+        .build()
+    {
+        Ok(flags) => {
+            *FLAGS.lock().await = Some(flags);
+        }
+        Err(e) => match e {
+            config::ConfigError::NotFound(_) => {
+                warn!("[Core] Could not find flags config. Using default values.");
+            }
+            _ => {
+                warn!("[Core] Could not load flags config: {:#?}", e);
+            }
+        },
+    };
+    if globals::is_flag_set("DISABLE_MDNS").await {
+        warn!(
+            "[Core] DISABLE_MDNS flag set: MDNS is disabled. OSC and OSCQuery functionality cannot be expected to work."
+        );
+    }
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
@@ -162,6 +187,17 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
                 .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
                 .unwrap_or_else(|| "".to_string());
 
+            // Upload crash report if telemetry is enabled
+            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                client.track_event(
+                    "rust_panic",
+                    Some(json!({
+                      "info": format!("{} ({})", msg, location),
+                    })),
+                );
+            }
+
             // Write msg and location to file
             let panic_log_path = {
                 let full_path = std::env::current_exe().unwrap();
@@ -169,20 +205,6 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             };
             println!("Writing panic log to {:#?}", panic_log_path);
             let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
-
-            // Stop here if telemetry is disabled
-            if !telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                return;
-            }
-
-            // Upload panic data to Aptabase
-            println!("Uploading panic data to Aptabase: {} ({})", msg, location);
-            client.track_event(
-                "rust_panic",
-                Some(json!({
-                  "info": format!("{} ({})", msg, location),
-                })),
-            );
         }))
         .build()
 }
@@ -197,9 +219,13 @@ fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    // #[cfg(debug_assertions)]
-    // const LOG_LEVEL: LevelFilter = LevelFilter::Debug;
-    // #[cfg(not(debug_assertions))]
+    #[cfg(debug_assertions)]
+    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
+    #[cfg(debug_assertions)]
+    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
+    #[cfg(not(debug_assertions))]
+    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout];
+    #[cfg(not(debug_assertions))]
     const LOG_LEVEL: LevelFilter = LevelFilter::Info;
 
     tauri_plugin_log::Builder::default()
@@ -216,7 +242,7 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
             ))
         })
         .level(LOG_LEVEL)
-        .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+        .targets(LOG_TARGETS)
         .rotation_strategy(RotationStrategy::KeepAll)
         .build()
 }
@@ -248,6 +274,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     std::env::set_current_dir(&executable_path).unwrap();
     // Run any migrations first
     migrations::run_migrations().await;
+    // Load configs
+    load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     // Open devtools if we're in debug mode

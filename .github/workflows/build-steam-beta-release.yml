@@ -64,7 +64,7 @@ jobs:
       - name: Set flavour to STEAM
         run: npm run set-flavour STEAM
       - name: Build OyasumiVR (STEAM Flavour)
-        run: npm run tauri -- build -b none
+        run: npm run tauri -- build -b none --debug
       - name: Copy STEAM build
         shell: bash
         run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh

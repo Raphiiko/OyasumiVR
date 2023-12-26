@@ -27,12 +27,13 @@ import { relaunch } from '@tauri-apps/api/process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
-import { firstValueFrom } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { OscService } from '../../../../services/osc.service';
 import { FLAVOUR } from '../../../../../build';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -58,6 +59,7 @@ export class SettingsAdvancedViewComponent {
   ];
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
+  oscServerEnabled = true;
 
   constructor(
     private router: Router,
@@ -69,7 +71,17 @@ export class SettingsAdvancedViewComponent {
     private destroyRef: DestroyRef,
     private settingsService: AppSettingsService,
     private oscService: OscService
-  ) {}
+  ) {
+    this.settingsService.settings
+      .pipe(
+        takeUntilDestroyed(),
+        map((s) => s.oscServerEnabled),
+        distinctUntilChanged()
+      )
+      .subscribe((oscServerEnabled) => {
+        this.oscServerEnabled = oscServerEnabled;
+      });
+  }
 
   isPersistentStorageItemChecked(key: string) {
     if (key === 'ALL') {
@@ -291,30 +303,6 @@ export class SettingsAdvancedViewComponent {
 
   protected readonly open = open;
 
-  async restartOscServer() {
-    try {
-      await this.oscService.restartOscServer();
-    } catch (e) {
-      error('[AdvancedSettings] Could not restart OSC Server: ' + e);
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'settings.advanced.fixes.oscRestart.modal.error.title',
-          message: 'settings.advanced.fixes.oscRestart.modal.error.message',
-          showCancel: false,
-        })
-        .subscribe();
-      return;
-    }
-    error('[AdvancedSettings] Restarted OSC Server');
-    this.modalService
-      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-        title: 'settings.advanced.fixes.oscRestart.modal.success.title',
-        message: 'settings.advanced.fixes.oscRestart.modal.success.message',
-        showCancel: false,
-      })
-      .subscribe();
-  }
-
   async activateMemoryWatcher() {
     this.memoryWatcherActive = true;
     if (await invoke<boolean>('activate_memory_watcher')) {
@@ -338,5 +326,11 @@ export class SettingsAdvancedViewComponent {
 
   async openDevTools() {
     await invoke('open_dev_tools');
+  }
+
+  setOscServerEnabled(enabled: boolean) {
+    this.settingsService.updateSettings({
+      oscServerEnabled: enabled,
+    });
   }
 }
