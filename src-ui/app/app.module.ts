@@ -673,10 +673,6 @@ export class AppModule {
     }
     // Only initialize update service after language selection
     await this.updateService.init();
-    // Start memory watcher automatically on development builds
-    if (FLAVOUR === 'DEV') {
-      await invoke<boolean>('activate_memory_watcher');
-    }
   }
 
   async preloadAssets() {

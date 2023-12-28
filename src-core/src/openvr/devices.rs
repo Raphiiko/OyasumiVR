@@ -1,4 +1,8 @@
-use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent};
+use std::collections::HashMap;
+
+use super::models::{
+    DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent, TrackedDeviceClass,
+};
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use byteorder::{ByteOrder, LE};
@@ -14,6 +18,10 @@ lazy_static! {
     static ref GESTURE_DETECTOR: Mutex<GestureDetector> = Mutex::new(GestureDetector::new());
     static ref NEXT_DEVICE_REFRESH: Mutex<NaiveDateTime> =
         Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
+    static ref NEXT_POSE_BROADCAST: Mutex<NaiveDateTime> =
+        Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
+    static ref DEVICE_CLASS_CACHE: Mutex<HashMap<u32, TrackedDeviceClass>> =
+        Mutex::new(HashMap::new());
 }
 
 pub async fn on_ovr_tick() {
@@ -73,6 +81,20 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         Some(context) => context.system_mngr(),
         None => return,
     };
+    let class: TrackedDeviceClass = system.get_tracked_device_class(device_index).into();
+    let mut device_class_cache = DEVICE_CLASS_CACHE.lock().await;
+    // Stop here if the class is invalid and we don't have it cached
+    if class == TrackedDeviceClass::Invalid && !device_class_cache.contains_key(&device_index.0) {
+        return;
+    }
+    // Update class cache
+    if class == TrackedDeviceClass::Invalid {
+        device_class_cache.remove(&device_index.0);
+    } else {
+        device_class_cache.insert(device_index.0, class.clone());
+    }
+    drop(device_class_cache);
+    // Get device properties
     let battery: Option<f32> = system
         .get_tracked_device_property(
             device_index,
@@ -130,7 +152,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
 
     let device = OVRDevice {
         index: device_index.0,
-        class: system.get_tracked_device_class(device_index).into(),
+        class,
         role: system
             .get_controller_role_for_tracked_device_index(device_index)
             .into(),
@@ -220,15 +242,23 @@ async fn refresh_device_poses<'a>() {
                     .await;
             }
             // Emit event
-            send_event(
-                "OVR_POSE_UPDATE",
-                OVRDevicePose {
-                    index: n as u32,
-                    quaternion: [q.x, q.y, q.z, q.w],
-                    position: pos.v,
-                },
-            )
-            .await;
+            if n == 0 {
+                // Only for the HMD, the rest is not required
+                let mut next_pose_broadcast = NEXT_POSE_BROADCAST.lock().await;
+                if (Utc::now().naive_utc() - *next_pose_broadcast).num_milliseconds() > 0 {
+                    *next_pose_broadcast = Utc::now().naive_utc() + Duration::milliseconds(250);
+                    drop(next_pose_broadcast);
+                    send_event(
+                        "OVR_POSE_UPDATE",
+                        OVRDevicePose {
+                            index: n as u32,
+                            quaternion: [q.x, q.y, q.z, q.w],
+                            position: pos.v,
+                        },
+                    )
+                    .await;
+                }
+            }
         }
     }
 }

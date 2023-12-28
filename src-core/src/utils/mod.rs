@@ -2,6 +2,7 @@ use human_bytes::human_bytes;
 use log::{error, warn};
 use serde::Serialize;
 use std::{
+    collections::HashMap,
     os::raw::c_char,
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -14,6 +15,7 @@ use crate::globals::{TAURI_APP_HANDLE, TAURI_CLI_MATCHES};
 lazy_static! {
     static ref SYSINFO: Mutex<System> = Mutex::new(System::new_all());
     static ref LAST_MEM_DIALOG: Mutex<u128> = Mutex::new(0);
+    static ref EVENT_COUNTER: Mutex<HashMap<String, u64>> = Mutex::new(HashMap::new());
 }
 
 pub mod models;
@@ -53,6 +55,13 @@ pub fn get_time() -> u128 {
 }
 
 pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
+    {
+        let mut event_counter_guard = EVENT_COUNTER.lock().await;
+        let event_counter = &mut *event_counter_guard;
+        let count = event_counter.entry(event.to_string()).or_insert(0);
+        *count += 1;
+        println!("EVENT COUNTER: {} {}", event, count);
+    }
     let app_handle_guard = TAURI_APP_HANDLE.lock().await;
     let app_handle = app_handle_guard.as_ref().unwrap();
     match app_handle.emit_all(event, payload) {

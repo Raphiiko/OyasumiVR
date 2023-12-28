@@ -179,3 +179,8 @@ async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<
     }
     Ok(true)
 }
+
+#[tauri::command]
+pub async fn set_osc_receive_address_whitelist(whitelist: Vec<String>) {
+    *super::OSC_RECEIVE_ADDRESS_WHITELIST.lock().await = whitelist;
+}

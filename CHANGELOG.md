@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Added performance improvements to OSC message handling and sleeping pose detection.
+
 ## [1.11.4]
 
 ### Added
