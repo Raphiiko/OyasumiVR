@@ -19,7 +19,11 @@
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
+    <br>
+    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
+    <br>
 如果你想一起聊天的话，就来加入我们的<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord服务器吧！</a>
+    <br>
     <br>
     <table align="center">
         <tr>
@@ -424,6 +428,16 @@ OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。�
 OyasumiVR并未得到VRChat的认可，也不反映VRChat官方或任何参与制作或管理VRChat的人的观点或意见。VRChat是VRChat inc的商标。VRChat © VRChat Inc。
 
 OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。
+
+## Aptabase
+
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+
+OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+
+The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+
+You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
 
 ## 支持
 

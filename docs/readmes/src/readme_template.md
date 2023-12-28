@@ -19,7 +19,11 @@
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
+    <br>
+    ❤️&nbsp;<a href="https://aptabase.com/">{{token.builtOnAptabase}}</a>
+    <br>
 {{DISCORD_INVITE}}
+    <br>
     <br>
     <table align="center">
         <tr>
@@ -283,6 +287,12 @@
 ## {{VRCHAT_HEADER}}
 
 {{VRCHAT_BODY}}
+
+## {{TELEMETRY_HEADER}}
+
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+
+{{TELEMETRY_BODY}}
 
 ## {{SUPPORT_HEADER}}
 
