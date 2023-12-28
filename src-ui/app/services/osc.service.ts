@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
 import { debug, error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
 import {
+  asyncScheduler,
   BehaviorSubject,
   debounceTime,
   distinctUntilChanged,
@@ -16,6 +17,7 @@ import {
   Observable,
   Subject,
   switchMap,
+  throttleTime,
 } from 'rxjs';
 import { OscMethod } from './osc-control/osc-method';
 import { AppSettingsService } from './app-settings.service';
@@ -57,6 +59,20 @@ export class OscService {
     await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
       this._messages.next(parseOSCMessage(data.payload));
     });
+    this._oscMethods
+      .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
+      .subscribe(async (methods) => {
+        const addresses = flatten(
+          methods.map((m) => {
+            const addresses = [m.options.address, ...m.options.addressAliases];
+            if (m.options.isVRCAvatarParameter)
+              addresses.push(...addresses.map((a) => '/avatar/parameters' + a));
+            return addresses;
+          })
+        );
+        console.log('SETTING WHITELIST', addresses);
+        await invoke('set_osc_receive_address_whitelist', { whitelist: addresses });
+      });
     this.appSettings.settings
       .pipe(
         map((s) => s.oscServerEnabled),

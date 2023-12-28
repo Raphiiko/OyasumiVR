@@ -18,6 +18,7 @@ use crate::utils::send_event;
 lazy_static! {
     static ref OSC_SEND_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
     static ref OSC_RECEIVE_SOCKET: Mutex<Option<UdpSocket>> = Default::default();
+    static ref OSC_RECEIVE_ADDRESS_WHITELIST: Mutex<Vec<String>> = Default::default();
 }
 
 pub async fn init() {
@@ -70,39 +71,44 @@ async fn spawn_receiver_task() -> CancellationToken {
                         if let Some(packet) = result {
                             if let OscPacket::Message(msg) = packet {
                                 vrchat::process_event(msg.clone()).await;
-                                send_event(
-                                    "OSC_MESSAGE",
-                                    OSCMessage {
-                                        address: msg.addr,
-                                        values: msg
-                                            .args
-                                            .iter()
-                                            .map(|value| match value {
-                                                OscType::Int(v) => OSCValue {
-                                                    kind: "int".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                OscType::Float(v) => OSCValue {
-                                                    kind: "float".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                OscType::String(v) => OSCValue {
-                                                    kind: "string".into(),
-                                                    value: Some(v.clone()),
-                                                },
-                                                OscType::Bool(v) => OSCValue {
-                                                    kind: "bool".into(),
-                                                    value: Some(v.to_string()),
-                                                },
-                                                _ => OSCValue {
-                                                    kind: "unsupported".into(),
-                                                    value: None,
-                                                },
-                                            })
-                                            .collect(),
-                                    },
-                                )
-                                .await;
+                                // check if address is whitelisted
+                                let address_whitelist_guard =
+                                    OSC_RECEIVE_ADDRESS_WHITELIST.lock().await;
+                                if address_whitelist_guard.contains(&msg.addr) {
+                                    send_event(
+                                        "OSC_MESSAGE",
+                                        OSCMessage {
+                                            address: msg.addr,
+                                            values: msg
+                                                .args
+                                                .iter()
+                                                .map(|value| match value {
+                                                    OscType::Int(v) => OSCValue {
+                                                        kind: "int".into(),
+                                                        value: Some(v.to_string()),
+                                                    },
+                                                    OscType::Float(v) => OSCValue {
+                                                        kind: "float".into(),
+                                                        value: Some(v.to_string()),
+                                                    },
+                                                    OscType::String(v) => OSCValue {
+                                                        kind: "string".into(),
+                                                        value: Some(v.clone()),
+                                                    },
+                                                    OscType::Bool(v) => OSCValue {
+                                                        kind: "bool".into(),
+                                                        value: Some(v.to_string()),
+                                                    },
+                                                    _ => OSCValue {
+                                                        kind: "unsupported".into(),
+                                                        value: None,
+                                                    },
+                                                })
+                                                .collect(),
+                                        },
+                                    )
+                                    .await;
+                                }
                             }
                         }
                     }
