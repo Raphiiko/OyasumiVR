@@ -1,1 +1,2 @@
 DISABLE_MDNS = false
+ENABLE_PROFILING = false

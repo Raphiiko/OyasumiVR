@@ -5,6 +5,7 @@ use crate::Models::elevated_sidecar::{
 use log::error;
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn msi_afterburner_set_profile(
     executable_path: String,
     profile: u32,

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Added performance improvements to OSC message handling and sleeping pose detection.
+- Reduced IPC communication to avoid crashes due to overloading the IPC channels.
 
 ## [1.11.4]
 

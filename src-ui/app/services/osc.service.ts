@@ -70,7 +70,6 @@ export class OscService {
             return addresses;
           })
         );
-        console.log('SETTING WHITELIST', addresses);
         await invoke('set_osc_receive_address_whitelist', { whitelist: addresses });
       });
     this.appSettings.settings
@@ -86,12 +85,18 @@ export class OscService {
             await this.stopOscServer();
           }
           return enabled;
-        }),
-        switchMap((enabled) =>
-          enabled ? interval(1000).pipe(switchMap(() => this.fetchVRChatOSCAddress())) : EMPTY
-        )
+        })
+        // switchMap((enabled) =>
+        //   enabled ? interval(60000).pipe(switchMap(() => this.fetchVRChatOSCAddress())) : EMPTY
+        // )
       )
       .subscribe();
+    await listen<string | null>('VRC_OSC_ADDRESS_CHANGED', (event) => {
+      this._vrchatOscAddress.next(event.payload);
+    });
+    await listen<string | null>('VRC_OSCQUERY_ADDRESS_CHANGED', (event) => {
+      this._vrchatOscQueryAddress.next(event.payload);
+    });
   }
 
   private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
