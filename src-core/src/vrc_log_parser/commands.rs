@@ -7,6 +7,7 @@ lazy_static! {
 }
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling_async]
 pub async fn init_vrc_log_watcher() {
     info!("[Core] Initializing VRChat Log Watcher...");
     // Terminate existing task if it exists

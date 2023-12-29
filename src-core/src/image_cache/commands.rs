@@ -1,4 +1,5 @@
 #[tauri::command]
+#[oyasumivr_macros::command_profiling_async]
 pub async fn clean_image_cache(only_expired: bool) {
     super::INSTANCE
         .lock()

@@ -336,6 +336,11 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
         );
     }
+    // Start command profiling if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        utils::profiling::enable_profiling();
+    }
 }
 
 fn on_cron_minute_start(_: &str) {

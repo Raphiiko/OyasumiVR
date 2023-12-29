@@ -1,9 +1,11 @@
 #[tauri::command]
+#[oyasumivr_macros::command_profiling_async]
 pub async fn steam_active() -> bool {
     crate::steam::STEAMWORKS_CLIENT.lock().await.is_some()
 }
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling_async]
 pub async fn steam_achievement_get(achievement_id: String) -> Result<bool, String> {
     let mut client_guard = crate::steam::STEAMWORKS_CLIENT.lock().await;
     let client = match client_guard.as_mut() {
@@ -19,6 +21,7 @@ pub async fn steam_achievement_get(achievement_id: String) -> Result<bool, Strin
 }
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling_async]
 pub async fn steam_achievement_set(achievement_id: String, unlocked: bool) -> Result<(), String> {
     let mut client_guard = crate::steam::STEAMWORKS_CLIENT.lock().await;
     let client = match client_guard.as_mut() {
