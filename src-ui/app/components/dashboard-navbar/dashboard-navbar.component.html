@@ -83,7 +83,7 @@
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.miscAutomations</div>
       <div class="menu-item-submenu-icon"
-        ><i class="material-icons-round">arrow_forward_ios</i></div
+      ><i class="material-icons-round">arrow_forward_ios</i></div
       >
     </div>
 
@@ -279,16 +279,6 @@
       </div>
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'vrchat']">
-      <div class="menu-item-icon-prefix">
-        <img draggable="false" src="/assets/img/vrc_icon_stencil.png" class="vrchat-icon" />
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.vrchat</div>
-      <div class="menu-item-icon-suffix" @fade *ngIf="oscErrors | async">
-        <i class="material-icons-round">error_outline</i>
-      </div>
-    </div>
-
     <div
       class="menu-item"
       [routerLinkActive]="'active'"
@@ -333,6 +323,12 @@
         <i class="material-icons-round">build</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.advanced</div>
+    </div>
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'statusInfo']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">checklist</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.statusInfo</div>
     </div>
   </div>
 </div>

@@ -32,7 +32,7 @@ export class OscAutomationsViewComponent implements OnInit {
   }
 
   async setOscScript(
-    event: 'onSleepModeEnable' | 'onSleepModeDisable',
+    event: 'onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation',
     script: OscScript | undefined
   ) {
     await this.automationConfigService.updateAutomationConfig<OscGeneralAutomationConfig>(

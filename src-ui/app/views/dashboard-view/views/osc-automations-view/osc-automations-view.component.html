@@ -30,6 +30,19 @@
             ></app-osc-script-button>
           </div>
         </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>oscAutomations.general.onSleepPreparation.title</span>
+            <span translate>oscAutomations.general.onSleepPreparation.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-osc-script-button
+              [label]="'oscAutomations.general.onSleepPreparation.script'"
+              [script]="config.onSleepPreparation"
+              (scriptChange)="setOscScript('onSleepPreparation', $event)"
+            ></app-osc-script-button>
+          </div>
+        </div>
       </div>
     </div>
   </div>

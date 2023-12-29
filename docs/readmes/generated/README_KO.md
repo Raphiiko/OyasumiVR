@@ -19,7 +19,11 @@
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
+    <br>
+    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
+    <br>
 이야기를 나누고 싶으시면, 우리 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> 디스코드 서버</a>에 들러주세요!
+    <br>
     <br>
     <table align="center">
         <tr>
@@ -74,7 +78,7 @@
 
 ## OyasumiVR이 뭔가요?
 
-OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 도와주는** 다양한 유틸리티와 자동화 기능이이 포함된 데스크톱 애플리케이션이에요. 이러한 유틸리티의 대부분은 소셜 가상현실 플랫폼인 [VRChat](https://vrchat.com) 내에서 사용하기 위해 특별히 제작되었습니다.
+OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 도와주는** 다양한 유틸리티와 자동화 기능이 포함된 데스크톱 애플리케이션이에요. 이러한 유틸리티의 대부분은 소셜 가상현실 플랫폼인 [VRChat](https://vrchat.com) 내에서 사용하기 위해 특별히 제작되었습니다.
 
 오야스미VR은 **잠든 것을 감지**하여 다음과 같은 다양한 방법으로 사용자를 도와줄 수 있어요:
 - 🔋 밤 사이의 전기 사용과 배터리를 절약하기
@@ -86,16 +90,16 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
 
 ...그리고 더 많은 기능을 제공하죠! OyasumiVR이 제공하는 기능에 대해 자세히 알아보려면 아래 '기능' 섹션을 참조하세요.
 
-## Support OyasumiVR
+## OyasumiVR 지원하기
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+OyasumiVR 자체는 완전 무료이고, 항상 무료일 것이에요. 하지만 저와 OyasumiVR의 개발을 지원하고 싶다면, 다음과 같이 할 수 있는 몇 가지 장소가 있습니다:
 
-<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
-<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi 페이지" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon 페이지" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+저를 지원함으로써 새로운 기능을 개발하고 현재 기능을 개선하는 데 더 많은 시간을 할애하고, 개발 과정에서 발생하는 비용의 일부를 충당하고, 제 커피 중독 ☕에 연료를 공급할 수 있도록 도와주실 수 있어요.
 
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
+오야스미VR은 아직 완성되지 않았답니다: **아직 작업하고 싶은 게 더 많거든요!**
 
 ## 기능
 
@@ -365,6 +369,7 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 - 프랑스어 (Français) (커뮤니티 번역 기여: [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - 스페인어 (Español) (커뮤니티 번역 기여: [aacal666](https://twitter.com/aacalde666))
 - 인도네시아어 (Bahasa Indonesia) (커뮤니티 번역 기여: [a9ito](https://twitter.com/a9ito))
+- 러시아어 (Русский) (커뮤니티 번역 기여: [Kanjir0](https://twitter.com/Kanjiro_vrc))
 
 ### 번역 지원하기
 
@@ -427,6 +432,16 @@ OyasumiVR의 일부 기능을 사용하려면 VRChat 계정으로 로그인하�
 OyasumiVR은 VRChat이 보증하지 않으며, VRChat 또는 VRChat의 제작 또는 관리에 공식적으로 관여하는 사람의 견해나 의견을 반영하지 않습니다. VRChat은 VRChat Inc의 상표입니다. VRChat © VRChat Inc.
 
 OyasumiVR 개발자 및 이 프로젝트의 기여자는 OyasumiVR로 인해 발생한 문제(귀하의 VRChat 계정 또는 기타)에 대해 책임을 지지 않습니다. 사용자 책임하에 사용하시기 바랍니다.
+
+## Aptabase
+
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+
+OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+
+The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+
+You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
 
 ## 지원
 

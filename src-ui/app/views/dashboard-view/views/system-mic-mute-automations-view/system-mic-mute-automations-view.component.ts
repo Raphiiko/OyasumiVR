@@ -16,8 +16,8 @@ import { cloneDeep, isEqual } from 'lodash';
 import { OVRInputEventAction } from '../../../../models/ovr-input-event';
 import { fade, vshrink } from '../../../../utils/animations';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
-import { listen, UnlistenFn } from '@tauri-apps/api/event';
 import { SliderSettingComponent } from '../../../../components/slider-setting/slider-setting.component';
+import { listen, UnlistenFn } from '@tauri-apps/api/event';
 
 @Component({
   selector: 'app-system-mic-mute-automations-view',

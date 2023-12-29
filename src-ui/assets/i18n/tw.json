@@ -510,9 +510,6 @@
           "NAVIGATE": "系統麥克風： \n自動化",
           "TOGGLE_MUTE": "系統麥克風：\n解除靜音"
         }
-      },
-      "vrchat": {
-        "tooltip": "設定：VRChat"
       }
     },
     "osc-script-code-editor": {
@@ -570,7 +567,12 @@
       "password": "密碼",
       "rememberCredentials": "記住憑據",
       "title": "登入到 VRChat",
-      "username": "VRChat 使用者名稱/E-mail"
+      "username": "VRChat 使用者名稱/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR 沒有得到 VRChat 的官方認可，\n也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 \nVRChat 是 VRChat Inc. 的商標 VRChat © VRChat Inc.",
+        "liability": "Raphiiko 對 OyasumiVR 引起的任何問題概不負責。 使用風險請自己承擔！",
+        "use": "你的登入憑證絕對不會被儲存在任何地方，只會被傳送到 VRChat 的伺服器進行身份驗證"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 帳戶受雙重驗證保護\n\n請輸入 2FA 代碼：",
@@ -1227,7 +1229,6 @@
         "title": "系統工作列"
       },
       "telemetry": {
-        "description": "發送的數據僅限於你正在使用的 OyasumiVR 版本，以及你所設定的語言。沒有其他數據會被發送，而且是完全匿名的。這些數據只用於提供一些一般的使用統計",
         "label": "發送匿名的使用數據",
         "title": "匿名數據"
       }
@@ -1282,15 +1283,6 @@
         "title": "一般通知音量"
       }
     },
-    "tab": {
-      "advanced": "進階",
-      "general": "一般",
-      "integrations": "整合",
-      "notifications": "通知",
-      "updates": "更新",
-      "vrchat": "VRChat"
-    },
-    "title": "設定",
     "updates": {
       "changelog": "更新日誌",
       "checkForUpdates": "檢查更新",
@@ -1301,68 +1293,6 @@
       "updatesDisabled": {
         "DEV": "如果你想安裝新版本的 OyasumiVR，請下載並手動運行安裝程式",
         "STEAM": "你已經安裝了 Steam 版本的《OyasumiVR》\n因此，《OyasumiVR》更新將會透過 Steam 提供！"
-      }
-    },
-    "vrchat": {
-      "logIn": {
-        "description": "OyasumiVR 的某些功能需要你使用 VRChat 帳戶登入才能使用",
-        "disclaimers": {
-          "brand": "OyasumiVR 沒有得到 VRChat 的官方認可，\n也不表示 VRChat 或任何正式參與製作或管理 VRChat 團隊成員的觀點或意見。 \nVRChat 是 VRChat Inc. 的商標 VRChat © VRChat Inc.",
-          "liability": "Raphiiko 對 OyasumiVR 引起的任何問題概不負責。 使用風險請自己承擔！",
-          "use": "你的登入憑證絕對不會被儲存在任何地方，只會被傳送到 VRChat 的伺服器進行身份驗證"
-        },
-        "loggedIn": {
-          "logOut": "登出",
-          "subtext": "你當前已使用 VRChat 帳戶登入",
-          "title": "你好 {name}!"
-        },
-        "loggedOut": {
-          "logIn": "登入",
-          "subtext": "你目前沒有使用你的 VRChat 帳戶登入",
-          "title": "已登出"
-        },
-        "title": "登入"
-      },
-      "OSC": {
-        "description": "某些功能需要通過 OSC 連接到 VRChat。 除非你有特殊原因要變更這些，否則你應該將它們保留為預設值",
-        "errors": {
-          "INVALID_HOST": "主機必須是有效的主機名、IPv4 地址或 IPv6 地址",
-          "PORT_IN_USE": "無法綁定此地址。 可能是另一個應用程式已經在使用它。 你可以嘗試關閉該應用程式並重試，或者選擇不同的接收通訊埠或主機",
-          "PORT_INVALID": "通訊埠必須是 1 到 65535 之間的有效數字",
-          "PORT_IO_IDENTICAL": "當發送主機和接收主機相同時，發送埠和接收埠不能使用相同的通訊埠"
-        },
-        "features": {
-          "all": {
-            "description": "停用這些功能將使OyasumiVR停止監聽OSC資訊",
-            "title": "啟用所有功能"
-          },
-          "expressionMenu": {
-            "description": "從你的 VRChat 角色的 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">表情選單</a> 控制OyasumiVR功能",
-            "title": "啟用 VRChat 角色選單控制"
-          },
-          "externalControl": {
-            "description": "控制OyasumiVR的功能超過 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "啟用外部控制"
-          }
-        },
-        "receivingHost": {
-          "description": "OyasumiVR 將監聽此 IP 的 OSC 資訊\n（VRChat 預設發送到 127.0.0.1）",
-          "title": "接收 IP"
-        },
-        "receivingPort": {
-          "description": "OyasumiVR 將監聽 OSC 資訊的通訊埠\n（VRChat 預設發送到通訊埠 9001）",
-          "title": "接收埠"
-        },
-        "reset": "重設為預設值",
-        "sendingHost": {
-          "description": "OyasumiVR 將向此 IP 發送 OSC 資訊。\n（如果 VRChat 在同一台計算機上運行，則為 127.0.0.1）",
-          "title": "發送 IP"
-        },
-        "sendingPort": {
-          "description": "OyasumiVR 將向其發送 OSC 資訊的埠。\n（VRChat 預設偵聽埠 9000）",
-          "title": "發送埠"
-        },
-        "title": "OSC 設定"
       }
     }
   },

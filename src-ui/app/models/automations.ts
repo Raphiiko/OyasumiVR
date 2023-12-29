@@ -52,7 +52,7 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
-  version: 11;
+  version: 12;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -221,6 +221,7 @@ export interface TurnOffLighthousesOnSteamVRStopAutomationConfig extends Automat
 export interface OscGeneralAutomationConfig extends AutomationConfig {
   onSleepModeEnable?: OscScript;
   onSleepModeDisable?: OscScript;
+  onSleepPreparation?: OscScript;
 }
 
 export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
@@ -355,7 +356,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 11,
+  version: 12,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,

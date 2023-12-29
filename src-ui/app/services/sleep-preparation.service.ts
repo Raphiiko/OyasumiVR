@@ -18,6 +18,7 @@ export class SleepPreparationService {
   public readonly sleepPreparationAvailable = this.automationConfigService.configs.pipe(
     map((configs) =>
       [
+        (configs.OSC_GENERAL.onSleepPreparation?.commands.length ?? 0) > 0,
         configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationState !== 'NONE',
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBinding &&

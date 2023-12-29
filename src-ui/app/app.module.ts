@@ -29,7 +29,6 @@ import { SleepService } from './services/sleep.service';
 import { GpuAutomationsService } from './services/gpu-automations.service';
 import { PowerLimitInputComponent } from './views/dashboard-view/views/gpu-automations-view/power-limit-input/power-limit-input.component';
 import { NgPipesModule } from 'ngx-pipes';
-import { SleepingPoseViewerComponent } from './components/sleeping-pose-viewer/sleeping-pose-viewer.component';
 import { OscService } from './services/osc.service';
 import { OscAutomationsViewComponent } from './views/dashboard-view/views/osc-automations-view/osc-automations-view.component';
 import { SelectBoxComponent } from './components/select-box/select-box.component';
@@ -59,7 +58,6 @@ import { SleepingAnimationPresetModalComponent } from './components/sleeping-ani
 import { VRChatLogService } from './services/vrchat-log.service';
 import { StatusChangeForPlayerCountAutomationService } from './services/status-automations/status-change-for-player-count-automation.service';
 import { MainStatusBarComponent } from './components/main-status-bar/main-status-bar.component';
-import { OscControlService } from './services/osc-control.service';
 import { AutoInviteRequestAcceptViewComponent } from './views/dashboard-view/views/auto-invite-request-accept-view/auto-invite-request-accept-view.component';
 import { FriendSelectionModalComponent } from './components/friend-selection-modal/friend-selection-modal.component';
 import { CachedValue } from './utils/cached-value';
@@ -91,6 +89,7 @@ import localeCN_TW from '@angular/common/locales/zh';
 import localeKO from '@angular/common/locales/ko';
 import localeES from '@angular/common/locales/es';
 import localeID from '@angular/common/locales/id';
+import localeRU from '@angular/common/locales/ru';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -173,7 +172,6 @@ import { WindowsService } from './services/windows.service';
 import { DeviceEditModalComponent } from './components/device-list/device-edit-modal/device-edit-modal.component';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
-import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { StartWithSteamVRHowToModalComponent } from './views/dashboard-view/views/settings-general-view/start-with-steamvr-how-to-modal/start-with-steamvr-how-to-modal.component';
@@ -183,13 +181,23 @@ import { HotkeySelectorComponent } from './components/hotkey-selector/hotkey-sel
 import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal/hotkey-selector-modal.component';
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
-import { open } from '@tauri-apps/api/shell';
+import { OscControlService } from './services/osc-control/osc-control.service';
+import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
 
-[localeEN, localeFR, localeCN_TW, localeNL, localeKO, localeJP, localeES, localeID].forEach(
-  (locale) => registerLocaleData(locale)
-);
+[
+  localeEN,
+  localeFR,
+  localeCN_TW,
+  localeNL,
+  localeKO,
+  localeJP,
+  localeES,
+  localeID,
+  localeRU,
+].forEach((locale) => registerLocaleData(locale));
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -219,7 +227,6 @@ export function createTranslateLoader(http: HttpClient) {
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
-    SleepingPoseViewerComponent,
     OscAutomationsViewComponent,
     SelectBoxComponent,
     TStringTranslatePipe,
@@ -237,7 +244,6 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsNotificationsViewComponent,
     SettingsUpdatesViewComponent,
     SettingsAdvancedViewComponent,
-    SettingsVRChatViewComponent,
     VRChatLoginModalComponent,
     VRChatLoginTFAModalComponent,
     StatusAutomationsViewComponent,
@@ -290,6 +296,8 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsHotkeyViewComponent,
     HotkeySelectorComponent,
     HotkeySelectorModalComponent,
+    SettingsStatusInfoViewComponent,
+    SnowverlayComponent,
   ],
   imports: [
     CommonModule,

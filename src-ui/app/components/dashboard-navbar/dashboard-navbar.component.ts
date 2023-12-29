@@ -9,7 +9,6 @@ import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
-import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
@@ -133,7 +132,6 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
-  oscErrors: Observable<boolean>;
   updateAvailable: Observable<boolean>;
   lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
@@ -152,19 +150,12 @@ export class DashboardNavbarComponent implements OnInit {
     private destroyRef: DestroyRef
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
-    this.oscErrors = this.osc.addressValidation.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      map((validation) => {
-        return flatten(Object.values(validation)).length > 0;
-      }),
-      startWith(false)
-    );
     this.lighthouseConsoleErrors = this.lighthouse.consoleStatus.pipe(
       takeUntilDestroyed(this.destroyRef),
       map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
       startWith(false)
     );
-    this.settingErrors = combineLatest([this.oscErrors, this.lighthouseConsoleErrors]).pipe(
+    this.settingErrors = combineLatest([this.lighthouseConsoleErrors]).pipe(
       map((errorAreas: boolean[]) => !!errorAreas.find((a) => a))
     );
 

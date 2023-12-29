@@ -19,7 +19,11 @@
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
+    <br>
+    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
+    <br>
 If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+    <br>
     <br>
     <table align="center">
         <tr>
@@ -365,6 +369,7 @@ OyasumiVR currently supports the following languages:
 - French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
+- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
 
 ### Help out with translation
 
@@ -427,6 +432,16 @@ Your login credentials will never be stored anywhere but your own machine, and a
 OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is a trademark of VRChat inc. VRChat © VRChat Inc.
 
 The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
+
+## Aptabase
+
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+
+OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+
+The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+
+You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
 
 ## Support
 

@@ -22,12 +22,12 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
 import { SettingsGeneralViewComponent } from './views/dashboard-view/views/settings-general-view/settings-general-view.component';
-import { SettingsVRChatViewComponent } from './views/dashboard-view/views/settings-vrchat-view/settings-vrchat-view.component';
 import { SettingsNotificationsViewComponent } from './views/dashboard-view/views/settings-notifications-view/settings-notifications-view.component';
 import { SettingsUpdatesViewComponent } from './views/dashboard-view/views/settings-updates-view/settings-updates-view.component';
 import { SettingsIntegrationsViewComponent } from './views/dashboard-view/views/settings-integrations-view/settings-integrations-view.component';
 import { SettingsAdvancedViewComponent } from './views/dashboard-view/views/settings-advanced-view/settings-advanced-view.component';
 import { SettingsHotkeyViewComponent } from './views/dashboard-view/views/settings-hotkey-view/settings-hotkey-view.component';
+import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
 
 const routes: Routes = [
   {
@@ -107,10 +107,6 @@ const routes: Routes = [
             component: SettingsGeneralViewComponent,
           },
           {
-            path: 'vrchat',
-            component: SettingsVRChatViewComponent,
-          },
-          {
             path: 'notifications',
             component: SettingsNotificationsViewComponent,
           },
@@ -129,6 +125,10 @@ const routes: Routes = [
           {
             path: 'advanced',
             component: SettingsAdvancedViewComponent,
+          },
+          {
+            path: 'statusInfo',
+            component: SettingsStatusInfoViewComponent,
           },
           {
             path: '**',

@@ -27,10 +27,13 @@ import { relaunch } from '@tauri-apps/api/process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
-import { firstValueFrom } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
+import { OscService } from '../../../../services/osc.service';
+import { FLAVOUR } from '../../../../../build';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -55,6 +58,8 @@ export class SettingsAdvancedViewComponent {
     { key: 'miscData' },
   ];
   checkedPersistentStorageItems: string[] = [];
+  memoryWatcherActive = FLAVOUR === 'DEV';
+  oscServerEnabled = true;
 
   constructor(
     private router: Router,
@@ -64,8 +69,19 @@ export class SettingsAdvancedViewComponent {
     private ipcService: IPCService,
     protected openvr: OpenVRService,
     private destroyRef: DestroyRef,
-    private settingsService: AppSettingsService
-  ) {}
+    private settingsService: AppSettingsService,
+    private oscService: OscService
+  ) {
+    this.settingsService.settings
+      .pipe(
+        takeUntilDestroyed(),
+        map((s) => s.oscServerEnabled),
+        distinctUntilChanged()
+      )
+      .subscribe((oscServerEnabled) => {
+        this.oscServerEnabled = oscServerEnabled;
+      });
+  }
 
   isPersistentStorageItemChecked(key: string) {
     if (key === 'ALL') {
@@ -286,4 +302,35 @@ export class SettingsAdvancedViewComponent {
   }
 
   protected readonly open = open;
+
+  async activateMemoryWatcher() {
+    this.memoryWatcherActive = true;
+    if (await invoke<boolean>('activate_memory_watcher')) {
+      this.modalService
+        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+          title: 'settings.advanced.fixes.memoryWatcher.modal.success.title',
+          message: 'settings.advanced.fixes.memoryWatcher.modal.success.message',
+          showCancel: false,
+        })
+        .subscribe();
+    } else {
+      this.modalService
+        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
+          title: 'settings.advanced.fixes.memoryWatcher.modal.error.title',
+          message: 'settings.advanced.fixes.memoryWatcher.modal.error.message',
+          showCancel: false,
+        })
+        .subscribe();
+    }
+  }
+
+  async openDevTools() {
+    await invoke('open_dev_tools');
+  }
+
+  setOscServerEnabled(enabled: boolean) {
+    this.settingsService.updateSettings({
+      oscServerEnabled: enabled,
+    });
+  }
 }
