@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.11.5]
+
 ### Fixed
 
-- Added performance improvements to OSC message handling and sleeping pose detection.
+- Added performance improvements to OSC message handling, SteamVR device updates, and sleeping pose detection.
 - Reduced IPC communication to avoid crashes due to overloading the IPC channels.
 
 ## [1.11.4]
