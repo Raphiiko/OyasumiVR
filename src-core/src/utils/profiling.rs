@@ -3,7 +3,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use log::{error, warn};
+use log::warn;
 // use serde_json::json;
 // use tauri_plugin_aptabase::EventTracker;
 use tokio::sync::Mutex;
