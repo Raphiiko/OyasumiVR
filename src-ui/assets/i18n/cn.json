@@ -1162,32 +1162,32 @@
               "title": "未能成功注册程序的清单数据",
               "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。"
             }
-          } 
-        },
-          "devTools": {
-            "title": "打开开发者工具",
-            "description": "打开Edge的开发者工具",
-            "action": "打开开发者工具"
-          },
-          "memoryWatcher": {
-            "title": "内存监视器",
-            "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过一千兆字节，将显示错误对话框，并记录额外的日志信息",
-            "action": "打开",
-            "modal": {
-              "error": {
-                "title": "错误",
-                "message": "内存监视器已经被打开了"
-              },
-              "success": {
-                "title": "成功",
-                "message": "已打开内存监视器"
-              }
-            }
-          },
-          "oscServerEnabled": {
-            "title": "启用OSC和OSCQuery服务器",
-            "description": "关闭此选项将禁用内置的OSC和OSCQuery服务器。此选项在重启后仍然生效。请注意，如果您关闭此选项，OyasumiVR的几个功能将停止工作，且不会有任何警告。此选项纯粹用于调试目的，一般情况下不应关闭。"
           }
+        },
+        "devTools": {
+          "title": "打开开发者工具",
+          "description": "打开Edge的开发者工具",
+          "action": "打开开发者工具"
+        },
+        "memoryWatcher": {
+          "title": "内存监视器",
+          "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过一千兆字节，将显示错误对话框，并记录额外的日志信息",
+          "action": "打开",
+          "modal": {
+            "error": {
+              "title": "错误",
+              "message": "内存监视器已经被打开了"
+            },
+            "success": {
+              "title": "成功",
+              "message": "已打开内存监视器"
+            }
+          }
+        },
+        "oscServerEnabled": {
+          "title": "启用OSC和OSCQuery服务器",
+          "description": "关闭此选项将禁用内置的OSC和OSCQuery服务器。此选项在重启后仍然生效。请注意，如果您关闭此选项，OyasumiVR的几个功能将停止工作，且不会有任何警告。此选项纯粹用于调试目的，一般情况下不应关闭。"
+        }
       }
     },
     "general": {
@@ -1400,8 +1400,8 @@
         "description": "将下面的所有信息复制到剪贴板",
         "action": "复制"
       }
-  }
-},
+    }
+  },
   "shared": {
     "common": {
       "none": "无"
