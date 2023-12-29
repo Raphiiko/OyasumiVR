@@ -119,7 +119,7 @@
       "simple": "简单模式"
     },
     "modeInfoModal": {
-      "message": "默认情况下，OyasumiVR 将通过调整图像亮度来控制 VR 头显的亮度。在简单模式下，OyasumiVR 会在控制图像亮度和显示亮度之间平稳过渡。\n如果你更喜欢直接控制，高级模式允许你同时控制图像亮度和显示亮度，并允许你为每种亮度设置精确的亮度值。\n在其他 VR 头显上，简单模式和高级模式没有区别。",
+      "message": "默认情况下，OyasumiVR 将通过调整图像亮度来控制 VR 头显的亮度。在简单模式下，OyasumiVR 会在控制图像亮度和显示亮度之间平稳过渡。\n如果你更喜欢直接控制，高级模式允许你同时控制图像亮度和显示亮度，并允许你为每种亮度设置精确的亮度值。不过这暂时只适用于支持这种模式的头显。\n截止到目前，只有 Valve Index支持这个功能。\n在其他 VR 头显上，简单模式和高级模式没有区别。",
       "title": "亮度调节模式"
     },
     "title": "亮度自动化"
@@ -208,7 +208,8 @@
         "updates": "更新",
         "integrations": "集成插件",
         "advanced": "高级选项",
-        "hotkeys": "快捷键设置"
+        "hotkeys": "快捷键设置",
+        "statusInfo": "调试信息"
       }
     },
     "device-list": {
@@ -620,7 +621,12 @@
       "password": "密码",
       "title": "登录到 VRChat",
       "username": "VRChat 用户名/电子邮件",
-      "rememberCredentials": "在本地保存登录信息"
+      "rememberCredentials": "在本地保存登录信息",
+      "disclaimers": {
+        "brand": "OyasumiVR并未得到VRChat的认可，也不反映VRChat或任何官方参与制作或管理VRChat的人的观点或意见。VRChat是VRChat Inc的商标。VRChat © VRChat Inc。",
+        "liability": "Raphiiko对使用 OyasumiVR 可能会导致的任何问题不负任何责任。使用风险自负！",
+        "use": "您的登录凭据只会存储在您自己的机器上，且只会发送到VRChat的服务器进行身份验证。"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
@@ -783,6 +789,11 @@
         "description": "发送这些OSC命令",
         "script": "启用睡眠模式",
         "title": "当我入睡时"
+      },
+      "onSleepPreparation": {
+        "description": "发送这些OSC命令",
+        "script": "进入睡眠准备状态",
+        "title": "当我准备入睡时"
       }
     },
     "sleepingAnimations": {
@@ -899,7 +910,7 @@
   },
   "overview": {
     "sleep-mode": {
-      "activate": "已启用",
+      "activate": "开启",
       "active": "已开启",
       "deactivate": "关闭",
       "inactive": "已关闭",
@@ -1151,8 +1162,32 @@
               "title": "未能成功注册程序的清单数据",
               "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。"
             }
+          } 
+        },
+          "devTools": {
+            "title": "打开开发者工具",
+            "description": "打开Edge的开发者工具",
+            "action": "打开开发者工具"
+          },
+          "memoryWatcher": {
+            "title": "内存监视器",
+            "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过一千兆字节，将显示错误对话框，并记录额外的日志信息",
+            "action": "打开",
+            "modal": {
+              "error": {
+                "title": "错误",
+                "message": "内存监视器已经被打开了"
+              },
+              "success": {
+                "title": "成功",
+                "message": "已打开内存监视器"
+              }
+            }
+          },
+          "oscServerEnabled": {
+            "title": "启用OSC和OSCQuery服务器",
+            "description": "关闭此选项将禁用内置的OSC和OSCQuery服务器。此选项在重启后仍然生效。请注意，如果您关闭此选项，OyasumiVR的几个功能将停止工作，且不会有任何警告。此选项纯粹用于调试目的，一般情况下不应关闭。"
           }
-        }
       }
     },
     "general": {
@@ -1339,69 +1374,6 @@
         "STEAM": "你已经安装了 Steam 版本的《OyasumiVR》。因此，《OyasumiVR》的更新将通过 Steam 提供！"
       }
     },
-    "vrchat": {
-      "title": "VRChat 相关设置",
-      "logIn": {
-        "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
-        "disclaimers": {
-          "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的任何观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
-          "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！",
-          "use": "你的登录凭据不会存储在除你自己的计算机以外的任何地方，并且仅会发送到 VRChat 服务器进行身份验证。"
-        },
-        "loggedIn": {
-          "logOut": "退出登录",
-          "subtext": "你当前已使用 VRChat 账户登录",
-          "title": "你好 {name}!"
-        },
-        "loggedOut": {
-          "logIn": "登录",
-          "subtext": "你目前没有使用你的 VRChat 账户登录",
-          "title": "未登录"
-        },
-        "title": "登录"
-      },
-      "OSC": {
-        "description": "某些功能需要通过 OSC 与 VRChat 交互。 除非你有特殊原因要更改这些设置，否则你应该将它们保持为默认值。",
-        "errors": {
-          "INVALID_HOST": "主机必须是有效的主机名、IPv4 地址或 IPv6 地址。",
-          "PORT_IN_USE": "无法绑定此地址。 可能是另一个应用程序已经在使用它。 你可以尝试关闭该应用程序并重试，或者选择不同的接收端口或主机。",
-          "PORT_INVALID": "端口必须是 1 到 65535 之间的有效数字。",
-          "PORT_IO_IDENTICAL": "当发送主机和接收主机相同时，发送端口和接收端口不能使用相同的端口"
-        },
-        "features": {
-          "all": {
-            "description": "禁用这些功能将使OyasumiVR停止监听OSC信号",
-            "title": "启用相关功能"
-          },
-          "expressionMenu": {
-            "description": "从你的VRChat模型的 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">功能菜单</a> 控制OyasumiVR的功能",
-            "title": "通过模型功能菜单控制"
-          },
-          "externalControl": {
-            "description": "通过 <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC </a>控制OyasumiVR的功能",
-            "title": "启用外部控制"
-          }
-        },
-        "receivingHost": {
-          "description": "OyasumiVR 将监听此 IP 的 OSC 信号\n（VRChat 默认发送到 127.0.0.1）",
-          "title": "接收 IP"
-        },
-        "receivingPort": {
-          "description": "OyasumiVR 将监听 OSC 信号的端口\n（VRChat 默认发送到端口 9001）",
-          "title": "接收端口"
-        },
-        "reset": "重置为默认值",
-        "sendingHost": {
-          "description": "OyasumiVR 将向此 IP 发送 OSC 信号。\n（如果 VRChat 在同一台计算机上运行，则为 127.0.0.1）",
-          "title": "发送 IP"
-        },
-        "sendingPort": {
-          "description": "OyasumiVR 将向其发送 OSC 信号的端口。\n（VRChat 默认监听端口 9000）",
-          "title": "发送端口"
-        },
-        "title": "OSC 设置"
-      }
-    },
     "hotkeys": {
       "title": "快捷键",
       "description": "在这里，您可以设置 OyasumiVR 中的快捷键，这些快捷键可以触发相应的操作。",
@@ -1419,8 +1391,17 @@
         "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "关闭基站"
       },
       "actions": "快捷键行为"
-    }
-  },
+    },
+    "statusInfo": {
+      "title": "调试信息",
+      "description": "这里是一些关于OyasumiVR及其内部的技术信息。这些信息主要用于调试，在寻求支持时可能会有所帮助。",
+      "copy": {
+        "title": "复制到剪贴板",
+        "description": "将下面的所有信息复制到剪贴板",
+        "action": "复制"
+      }
+  }
+},
   "shared": {
     "common": {
       "none": "无"
@@ -1825,7 +1806,7 @@
         "options": {
           "MUTE": "默认静音",
           "UNMUTE": "默认开启",
-          "KEEP": "保持上次状态"
+          "KEEP": "保持当前状态"
         }
       }
     }
