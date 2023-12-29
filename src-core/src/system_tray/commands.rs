@@ -1,7 +1,7 @@
 use super::{SystemTrayManager, SYSTEMTRAY_MANAGER};
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn set_close_to_system_tray(enabled: bool) {
     let mut manager_guard = SYSTEMTRAY_MANAGER.lock().await;
     let manager: &mut SystemTrayManager = manager_guard.as_mut().unwrap();
@@ -9,7 +9,7 @@ pub async fn set_close_to_system_tray(enabled: bool) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn set_start_in_system_tray(enabled: bool) {
     let mut manager_guard = SYSTEMTRAY_MANAGER.lock().await;
     let manager: &mut SystemTrayManager = manager_guard.as_mut().unwrap();

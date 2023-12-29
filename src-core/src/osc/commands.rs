@@ -14,7 +14,7 @@ lazy_static! {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn get_vrchat_osc_address() -> Option<String> {
     if crate::globals::is_flag_set("DISABLE_MDNS").await {
         return None;
@@ -27,7 +27,7 @@ pub async fn get_vrchat_osc_address() -> Option<String> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn get_vrchat_oscquery_address() -> Option<String> {
     if crate::globals::is_flag_set("DISABLE_MDNS").await {
         return None;
@@ -40,7 +40,7 @@ pub async fn get_vrchat_oscquery_address() -> Option<String> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn stop_osc_server() {
     // Terminate existing task if it exists
     let mut cancellation_token = CANCELLATION_TOKEN.lock().await;
@@ -59,7 +59,7 @@ pub async fn stop_osc_server() {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn start_osc_server() -> Option<(String, Option<String>)> {
     info!("[Core] Starting OSC server");
     stop_osc_server().await;
@@ -114,13 +114,13 @@ pub async fn start_osc_server() -> Option<(String, Option<String>)> {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn add_osc_method(method: OSCMethod) {
     oyasumivr_oscquery::server::add_osc_method(method).await;
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn set_osc_method_value(address: String, value: String) {
     println!(
         "RUN set_osc_method_value with address: {} and value: {}",
@@ -130,7 +130,7 @@ pub async fn set_osc_method_value(address: String, value: String) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn osc_send_int(addr: String, osc_addr: String, data: i32) -> Result<bool, String> {
     debug!(
         "[Core] Sending OSC command (address={}, type={}, value={})",
@@ -140,7 +140,7 @@ pub async fn osc_send_int(addr: String, osc_addr: String, data: i32) -> Result<b
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn osc_send_float(addr: String, osc_addr: String, data: f32) -> Result<bool, String> {
     debug!(
         "[Core] Sending OSC command (address={}, type={}, value={})",
@@ -150,7 +150,7 @@ pub async fn osc_send_float(addr: String, osc_addr: String, data: f32) -> Result
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn osc_send_bool(addr: String, osc_addr: String, data: bool) -> Result<bool, String> {
     debug!(
         "[Core] Sending OSC command (address={}, type={}, value={})",
@@ -160,8 +160,8 @@ pub async fn osc_send_bool(addr: String, osc_addr: String, data: bool) -> Result
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_sync]
-pub fn osc_valid_addr(addr: String) -> bool {
+#[oyasumivr_macros::command_profiling]
+pub async fn osc_valid_addr(addr: String) -> bool {
     SocketAddrV4::from_str(addr.as_str()).is_ok()
 }
 
@@ -195,7 +195,7 @@ async fn osc_send(addr: String, osc_addr: String, data: Vec<OscType>) -> Result<
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn set_osc_receive_address_whitelist(whitelist: Vec<String>) {
     *super::OSC_RECEIVE_ADDRESS_WHITELIST.lock().await = whitelist;
 }

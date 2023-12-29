@@ -3,7 +3,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use log::warn;
+use log::{error, warn};
 // use serde_json::json;
 // use tauri_plugin_aptabase::EventTracker;
 use tokio::sync::Mutex;
@@ -51,7 +51,7 @@ pub async fn register_event(name: &str) {
     // println!("EVENT EMITTED: {} (COUNT: {})", name, count);
 }
 
-pub fn profile_command_start(name: &str) -> Option<String> {
+pub async fn profile_command_start(name: &str) -> Option<String> {
     if !PROFILING_ENABLED.load(Ordering::Relaxed) {
         return None;
     }
@@ -60,22 +60,26 @@ pub fn profile_command_start(name: &str) -> Option<String> {
     let invocation_id = uuid::Uuid::new_v4().to_string();
     let invocation_id_inner = invocation_id.clone();
     let time = super::get_time();
-    tokio::task::spawn(async move {
-        // Increase count for name
-        {
-            let mut invocation_count_guard = INVOCATION_COUNT.lock().await;
-            let invocation_count = &mut *invocation_count_guard;
-            let count = invocation_count.entry(name.clone()).or_insert(0);
-            *count += 1;
-            // println!("COMMAND CALLED: {} (COUNT: {})", name, count);
-        }
-        // Store invocation time
-        {
-            let mut invocation_times_guard = INVOCATION_TIMES.lock().await;
-            let invocation_times = &mut *invocation_times_guard;
-            invocation_times.insert(invocation_id_inner, CommandInvocation { name, time });
-        }
-    });
+    // Store invocation time
+    {
+        let mut invocation_times_guard = INVOCATION_TIMES.lock().await;
+        let invocation_times = &mut *invocation_times_guard;
+        invocation_times.insert(
+            invocation_id_inner.clone(),
+            CommandInvocation {
+                name: name.clone(),
+                time,
+            },
+        );
+    }
+    // Increase count for name
+    {
+        let mut invocation_count_guard = INVOCATION_COUNT.lock().await;
+        let invocation_count = &mut *invocation_count_guard;
+        let count = invocation_count.entry(name.clone()).or_insert(0);
+        *count += 1;
+        // println!("COMMAND CALLED: {} (COUNT: {})", name, count);
+    }
     Some(invocation_id)
 }
 
@@ -98,11 +102,6 @@ pub fn profile_command_finish(invocation_id: Option<String>) {
         let invocation = invocation.unwrap();
         // Calculate duration
         let duration = time - invocation.time;
-        // Remove invocation from map
-        {
-            let mut invocation_times = INVOCATION_TIMES.lock().await;
-            invocation_times.remove(&invocation_id);
-        }
         // Process duration
         if duration >= 1000 {
             warn!(

@@ -11,7 +11,7 @@ pub async fn init(path: PathBuf) {
 }
 
 #[tauri::command]
-#[oyasumivr_macros::command_profiling_async]
+#[oyasumivr_macros::command_profiling]
 pub async fn clean_log_files() {
     info!("[Core] Deleting log files...");
     // Delete all log files in the log directory
