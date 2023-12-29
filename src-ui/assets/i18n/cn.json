@@ -620,7 +620,7 @@
       },
       "password": "密码",
       "title": "登录到 VRChat",
-      "username": "VRChat 用户名/电子邮件",
+      "username": "VRChat 用户名/邮箱",
       "rememberCredentials": "在本地保存登录信息",
       "disclaimers": {
         "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的任何观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
@@ -631,7 +631,7 @@
     "vrchat-login-tfa-modal": {
       "description": "你的 VRChat 账户受两步验证保护\n\n请输入 2FA 代码：",
       "errors": {
-        "INVALID_FORMAT": "有效的 2FA 代码是由 6 个数字组成的，请确认你的输入正确",
+        "INVALID_FORMAT": "有效的 2FA 代码是由 6 个数字组成的，请确认你输入的代码是正确的",
         "LAST_CODE_INVALID": "你提供的 2FA 代码不正确"
       },
       "title": "两步验证",
