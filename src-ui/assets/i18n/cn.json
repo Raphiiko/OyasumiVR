@@ -11,7 +11,8 @@
     "discordInvite": "Discord 服务器",
     "projectLinks": "项目链接",
     "sourceLink": "源代码 @ GitHub",
-    "translations": "翻译人员"
+    "translations": "翻译人员",
+    "supporters": "支持者们"
   },
   "auto-invite-request-accept": {
     "addFriends": "添加朋友",
@@ -57,7 +58,8 @@
     "title": "自动处理加入请求",
     "userOnBusyStatus": "当你的状态为忙碌（红色）时，你不能接受玩家的加入请求",
     "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
-    "whitelist": "玩家白名单"
+    "whitelist": "玩家白名单",
+    "loadingFriends": "正在加载好友列表..."
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -197,7 +199,17 @@
       "vrchatMicMuteAutomations": "VRChat麦克风",
       "miscAutomations": "其他自动化操作",
       "nightmareDetection": "噩梦检测",
-      "audioVolumeAutomations": "音量"
+      "audioVolumeAutomations": "音量",
+      "settings": {
+        "subMenu": "设置",
+        "general": "常规设置",
+        "vrchat": "VRChat 相关",
+        "notifications": "通知",
+        "updates": "更新",
+        "integrations": "集成插件",
+        "advanced": "高级选项",
+        "hotkeys": "快捷键设置"
+      }
     },
     "device-list": {
       "category": {
@@ -309,7 +321,8 @@
                 "MANUAL": "手动设置",
                 "OYASUMI_START": "由于 OyasumiVR 开启",
                 "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "打开所有的基站"
             },
@@ -318,7 +331,8 @@
                 "MANUAL": "手动设置",
                 "OYASUMI_START": "由于 OyasumiVR 开启",
                 "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "将所有基站设置为睡眠模式"
             },
@@ -327,7 +341,8 @@
                 "MANUAL": "手动设置",
                 "OYASUMI_START": "由于OyasumiVR 开启",
                 "STEAMVR_START": "由于SteamVR 开启",
-                "STEAMVR_STOP": "由于SteamVR 关闭"
+                "STEAMVR_STOP": "由于SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "将所有基站设置为待机模式"
             }
@@ -338,7 +353,8 @@
                 "MANUAL": "手动开启",
                 "OYASUMI_START": "由于 OyasumiVR 开启",
                 "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "打开了一个基站"
             },
@@ -347,7 +363,8 @@
                 "MANUAL": "手动设置",
                 "OYASUMI_START": "由于 OyasumiVR 开启",
                 "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "将基站设置为睡眠模式"
             },
@@ -356,7 +373,8 @@
                 "MANUAL": "手动设置",
                 "OYASUMI_START": "由于 OyasumiVR 开启",
                 "STEAMVR_START": "由于 SteamVR 开启",
-                "STEAMVR_STOP": "由于 SteamVR 关闭"
+                "STEAMVR_STOP": "由于 SteamVR 关闭",
+                "HOTKEY": "由于你按下了快捷键"
               },
               "title": "将基站设置为待机模式"
             }
@@ -388,6 +406,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "手动触发",
+            "HOTKEY": "通过快捷键触发",
             "SLEEP_TRIGGER": "因为你已经睡了足够长的时间"
           },
           "title": "关机序列开始执行了"
@@ -418,7 +437,8 @@
               "unknown": "一个未知的自动化操作导致了睡眠模式被关闭"
             },
             "manual": "你手动关闭了睡眠模式",
-            "osc-control": "睡眠模式通过OSC被禁用"
+            "hotkey": "你使用快捷键关闭了睡眠模式",
+            "osc-control": "睡眠模式通过OSC被关闭"
           },
           "title": "禁用睡眠模式"
         },
@@ -433,7 +453,8 @@
               "unknown": "通过一个未知的自动化"
             },
             "manual": "你手动开启了睡眠模式",
-            "osc-control": "通过OSC启用了睡眠模式"
+            "hotkey": "你使用快捷键开启了睡眠模式",
+            "osc-control": "通过OSC开启了睡眠模式"
           },
           "title": "启用睡眠模式"
         },
@@ -450,7 +471,8 @@
             "CHARGING": "当设备正在充电的时候",
             "MANUAL": "手动关闭",
             "OSC_CONTROL": "通过 OSC 关闭",
-            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "HOTKEY": "因为你按下了快捷键"
           },
           "title": {
             "ALL": "关闭全部设备",
@@ -467,6 +489,30 @@
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式"
           },
           "title": "Windows 电源策略已设置为 ''{policy}'' 方案"
+        },
+        "changedAudioDeviceVolume": {
+          "title": "设备 ''{deviceName}'' 的音量已被设置为 {percentage}",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          }
+        },
+        "mutedAudioDevice": {
+          "title": "已关闭音频设备 ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          }
+        },
+        "unmutedAudioDevice": {
+          "title": "已开启音频设备 ''{deviceName}''",
+          "reason": {
+            "SLEEP_MODE_DISABLED": "因为已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          }
         }
       }
     },
@@ -484,17 +530,20 @@
       "noFriends": "你的好友列表是空的",
       "noFriendsSelected": "没有任何好友被选择",
       "noResultsFor": "找不到任何结果 ''{query}''",
-      "searchPlaceholder": "依名字寻找好友...",
-      "title": "选择好友"
+      "searchPlaceholder": "根据名字寻找好友...",
+      "title": "选择好友",
+      "loading": "正在加载好友列表...",
+      "loadingError": "无法加载你的好友列表。请稍后再试",
+      "moreResultsAvailable": "当前显示的好友少于实际可找到的好友。请尝试缩小您的搜索范围。"
     },
     "main-status-bar": {
-      "active": "启动",
+      "active": "已开启",
       "brightness": {
         "simple": "亮度",
         "tooltip": "亮度调整"
       },
       "heartrate": "心率",
-      "inactive": "未启动",
+      "inactive": "已关闭",
       "loggedOut": "未登录",
       "sleepMode": {
         "label": "睡眠模式",
@@ -502,8 +551,8 @@
       },
       "steamvr": {
         "INACTIVE": "未启动",
-        "INITIALIZED": "启动",
-        "INITIALIZING": "等待启动"
+        "INITIALIZED": "已启动",
+        "INITIALIZING": "正在启动"
       },
       "systemMicMuted": {
         "label": "开关状态",
@@ -556,7 +605,7 @@
       "title": "通过 SteamVR 启动 OyasumiVR"
     },
     "update-modal": {
-      "message": "已找到 OyasumiVR 的新更新：版本 v{newVersion}\n\n你当前仍在运行版本 v{currentVersion}\n\n你要立即更新还是稍后更新？",
+      "message": "我们找到了 OyasumiVR 的新版本：版本号 v{newVersion}\n\n你当前仍在使用版本 v{currentVersion}\n\n现在要立刻更新吗？",
       "steamAd": "<b>OyasumiVR 还可以在 Steam 上下载！</b><br><br>这是安装 OyasumiVR 的推荐方法。<br>访问我们的Steam商店页面 <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\"></a> 以了解更多！",
       "title": "有新的更新",
       "updateLater": "稍后",
@@ -581,6 +630,24 @@
       },
       "title": "两步验证",
       "logginInAs": "当前正在尝试登录的账户:"
+    },
+    "device-edit-modal": {
+      "title": "编辑设备: {deviceId}",
+      "deviceNickname": {
+        "title": "设备名称",
+        "description": "为这个设备指定"
+      },
+      "ignoreLighthouse": {
+        "title": "忽略基站",
+        "description": "被忽略的基站将被彻底隐藏，不会受到任何自动化操作的影响"
+      }
+    },
+    "hotkey-selector": {
+      "select": "设置快捷键"
+    },
+    "hotkey-selector-modal": {
+      "title": "设置快捷键",
+      "description": "要设置快捷键，请先按任意修饰键，再按要与之组合的键"
     }
   },
   "gpu-automations": {
@@ -832,8 +899,8 @@
   },
   "overview": {
     "sleep-mode": {
-      "activate": "启动",
-      "active": "已启动",
+      "activate": "已启用",
+      "active": "已开启",
       "deactivate": "关闭",
       "inactive": "已关闭",
       "label": "睡眠模式"
@@ -963,6 +1030,7 @@
   },
   "settings": {
     "advanced": {
+      "title": "高级选项",
       "logs": {
         "openFolder": {
           "action": "打开日志文件夹",
@@ -1088,13 +1156,14 @@
       }
     },
     "general": {
+      "title": "通用",
       "adminPrivileges": {
         "description": "OyasumiVR 需要管理员权限才能设置 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限",
         "label": "启动时请求管理员权限",
         "title": "管理员权限"
       },
       "language": {
-        "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属国家语言的支持，请联系我们！",
+        "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属国家/地区语言的支持，请联系我们！",
         "title": "语言"
       },
       "lighthouseConsole": {
@@ -1207,6 +1276,7 @@
       }
     },
     "integrations": {
+      "title": "集成插件",
       "connect": "连接",
       "copy": "复制链接到剪贴板",
       "description": "OyasumiVR 的某些功能可以使用外部服务。如果你想将 OyasumiVR 与外部服务连接起来，那就找对地方了！",
@@ -1223,6 +1293,7 @@
       }
     },
     "notifications": {
+      "title": "通知",
       "notifications": {
         "category": {
           "AUTO_ACCEPTED_INVITE_REQUEST": {
@@ -1249,23 +1320,14 @@
         "description": "选择要用于向你传递通知的提供方",
         "title": "通知提供方"
       },
-      "title": "通知设置",
       "volume": {
         "description": "设置通知的音量大小",
         "test": "测试",
         "title": "一般通知音量"
       }
     },
-    "tab": {
-      "advanced": "高级",
-      "general": "通用",
-      "integrations": "集成",
-      "notifications": "通知",
-      "updates": "更新",
-      "vrchat": "VRChat"
-    },
-    "title": "设置",
     "updates": {
+      "title": "更新",
       "changelog": "更新日志",
       "checkForUpdates": "检查更新",
       "install": "安装版本 {version}",
@@ -1278,6 +1340,7 @@
       }
     },
     "vrchat": {
+      "title": "VRChat 相关设置",
       "logIn": {
         "description": "OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能使用",
         "disclaimers": {
@@ -1338,6 +1401,24 @@
         },
         "title": "OSC 设置"
       }
+    },
+    "hotkeys": {
+      "title": "快捷键",
+      "description": "在这里，您可以设置 OyasumiVR 中的快捷键，这些快捷键可以触发相应的操作。",
+      "actionDescription": "设置哪个快捷键会触发该操作",
+      "action": {
+        "HOTKEY_TOGGLE_SLEEP_MODE": "切换睡眠模式状态",
+        "HOTKEY_ENABLE_SLEEP_MODE": "开启睡眠模式",
+        "HOTKEY_DISABLE_SLEEP_MODE": "关闭睡眠模式",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "进入睡眠准备状态",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "运行关机序列",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "关闭控制器",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "关闭追踪器",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "切换基站",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "打开基站",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "关闭基站"
+      },
+      "actions": "快捷键行为"
     }
   },
   "shared": {
