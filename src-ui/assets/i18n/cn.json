@@ -1191,7 +1191,7 @@
       }
     },
     "general": {
-      "title": "通用",
+      "title": "常规设置",
       "adminPrivileges": {
         "description": "OyasumiVR 需要管理员权限才能设置 GPU 的功耗限制。 如果启用此功能，OyasumiVR 将在启动时请求管理员权限",
         "label": "启动时请求管理员权限",
