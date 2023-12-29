@@ -19,7 +19,11 @@
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
+    <br>
+    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
+    <br>
 Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+    <br>
     <br>
     <table align="center">
         <tr>
@@ -428,6 +432,16 @@ Kredensial login Anda tidak akan pernah disimpan di mana pun kecuali di mesin An
 OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat inc. VRChat © VRChat Inc.
 
 Pengembang OyasumiVR dan kontributor proyek ini tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR (pada akun VRChat anda atau sebaliknya). Gunakan dengan risiko Anda sendiri.
+
+## Aptabase
+
+<img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
+
+OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+
+The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+
+You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
 
 ## Support
 

@@ -143,6 +143,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::get_vrchat_oscquery_address,
         osc::commands::add_osc_method,
         osc::commands::set_osc_method_value,
+        osc::commands::set_osc_receive_address_whitelist,
         system_tray::commands::set_close_to_system_tray,
         system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevated_sidecar_started,
@@ -334,6 +335,16 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         info!(
             "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
         );
+    }
+    // Start profiling if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        utils::profiling::enable_profiling();
+    }
+    // Start profiling if the flag for it is set
+    #[cfg(not(debug_assertions))]
+    if globals::is_flag_set("ENABLE_PROFILING").await {
+        utils::profiling::enable_profiling();
     }
 }
 

@@ -2,6 +2,7 @@ use human_bytes::human_bytes;
 use log::{error, warn};
 use serde::Serialize;
 use std::{
+    // collections::HashMap,
     os::raw::c_char,
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -17,6 +18,7 @@ lazy_static! {
 }
 
 pub mod models;
+pub mod profiling;
 pub mod serialization;
 pub mod sidecar_manager;
 
@@ -53,6 +55,7 @@ pub fn get_time() -> u128 {
 }
 
 pub async fn send_event<S: Serialize + Clone>(event: &str, payload: S) {
+    profiling::register_event(event).await;
     let app_handle_guard = TAURI_APP_HANDLE.lock().await;
     let app_handle = app_handle_guard.as_ref().unwrap();
     match app_handle.emit_all(event, payload) {

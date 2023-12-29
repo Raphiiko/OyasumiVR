@@ -5,6 +5,7 @@ use crate::{
 };
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn start_overlay_sidecar(gpu_fix: bool) {
     match crate::utils::cli_sidecar_overlay_mode().await {
         // In release mode, start the sidecar like normal
@@ -27,6 +28,7 @@ pub async fn start_overlay_sidecar(gpu_fix: bool) {
 }
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();
@@ -43,6 +45,7 @@ pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
 }
 
 #[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn overlay_sidecar_get_grpc_port() -> Option<u32> {
     let manager_guard = super::SIDECAR_MANAGER.lock().await;
     let manager = manager_guard.as_ref();

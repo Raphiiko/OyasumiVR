@@ -311,6 +311,16 @@ OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of 
 
 The OyasumiVR developer and any of this project's contributors are not responsible for any problems caused by OyasumiVR (to your VRChat account or otherwise). Use at your own risk.
 
+{{TELEMETRY_HEADER}}
+Aptabase
+
+{{TELEMETRY_BODY}}
+OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+
+The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+
+You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+
 {{SUPPORT_HEADER}}
 Support
 
