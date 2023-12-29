@@ -623,9 +623,9 @@
       "username": "VRChat 用户名/电子邮件",
       "rememberCredentials": "在本地保存登录信息",
       "disclaimers": {
-        "brand": "OyasumiVR并未得到VRChat的认可，也不反映VRChat或任何官方参与制作或管理VRChat的人的观点或意见。VRChat是VRChat Inc的商标。VRChat © VRChat Inc。",
-        "liability": "Raphiiko对使用 OyasumiVR 可能会导致的任何问题不负任何责任。使用风险自负！",
-        "use": "您的登录凭据只会存储在您自己的机器上，且只会发送到VRChat的服务器进行身份验证。"
+        "brand": "OyasumiVR 没有得到 VRChat 的官方认可，也不代表 VRChat 或任何正式参与制作或管理 VRChat 团队成员的任何观点或意见。 VRChat 是 VRChat Inc. 的商标 VRChat © VRChat Inc.",
+        "liability": "Raphiiko 对 OyasumiVR 引起的任何问题概不负责。 使用风险请自行承担！",
+        "use": "你的登录凭据只会存储在你自己的计算机上，并且仅会发送到 VRChat 服务器进行身份验证。"
       }
     },
     "vrchat-login-tfa-modal": {
