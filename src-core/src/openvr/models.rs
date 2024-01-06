@@ -1,5 +1,6 @@
 use ovr_overlay::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
+use strum_macros::{IntoStaticStr, EnumIter};
 
 pub struct OpenVRAction {
     pub name: String,
@@ -127,6 +128,7 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
+    pub handle_type: Option<OVRHandleType>
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -135,6 +137,61 @@ pub struct OVRDevicePose {
     pub index: u32,
     pub quaternion: [f64; 4],
     pub position: [f32; 3],
+}
+
+#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter)]
+pub enum OVRHandleType {
+    HandPrimary,
+    HandSecondary,
+    Head,
+    Gamepad,
+    Treadmill,
+    Stylus,
+    FootLeft,
+    FootRight,
+    ShoulderLeft,
+    ShoulderRight,
+    ElbowLeft,
+    ElbowRight,
+    KneeLeft,
+    KneeRight,
+    WristLeft,
+    WristRight,
+    AnkleLeft,
+    AnkleRight,
+    Waist,
+    Chest,
+    Camera,
+    Keyboard
+}
+
+impl OVRHandleType {
+    pub fn as_action_handle(&self) -> &str {
+        match self {
+            OVRHandleType::HandPrimary => "/user/hand/primary",
+            OVRHandleType::HandSecondary => "/user/hand/secondary",
+            OVRHandleType::Head => "/user/head",
+            OVRHandleType::Gamepad => "/user/gamepad",
+            OVRHandleType::Treadmill => "/user/treadmill",
+            OVRHandleType::Stylus => "/user/stylus",
+            OVRHandleType::FootLeft => "/user/foot/left",
+            OVRHandleType::FootRight => "/user/foot/right",
+            OVRHandleType::ShoulderLeft => "/user/shoulder/left",
+            OVRHandleType::ShoulderRight => "/user/shoulder/right",
+            OVRHandleType::ElbowLeft => "/user/elbow/left",
+            OVRHandleType::ElbowRight => "/user/elbow/right",
+            OVRHandleType::KneeLeft => "/user/knee/left",
+            OVRHandleType::KneeRight => "/user/knee/right",
+            OVRHandleType::WristLeft => "/user/wrist/left",
+            OVRHandleType::WristRight => "/user/wrist/right",
+            OVRHandleType::AnkleLeft => "/user/ankle/left",
+            OVRHandleType::AnkleRight => "/user/ankle/right",
+            OVRHandleType::Waist => "/user/waist",
+            OVRHandleType::Chest => "/user/chest",
+            OVRHandleType::Camera => "/user/camera",
+            OVRHandleType::Keyboard => "/user/keyboard"
+          }
+    }
 }
 
 // EVENTS

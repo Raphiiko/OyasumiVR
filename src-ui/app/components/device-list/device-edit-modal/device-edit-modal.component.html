@@ -11,12 +11,7 @@
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input
-              type="text"
-              [placeholder]="lighthouseDevice?.deviceName ?? ovrDevice?.serialNumber ?? ''"
-              [(ngModel)]="nickname"
-              [maxlength]="32"
-            />
+            <input type="text" [placeholder]="identifier" [(ngModel)]="nickname" [maxlength]="32" />
           </div>
         </div>
       </div>
