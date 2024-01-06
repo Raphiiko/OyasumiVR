@@ -80,7 +80,7 @@ export class DeviceEditModalComponent
             'comp.device-list.deviceRole.' + this.ovrDevice!.handleType
           );
         }
-        return this.ovrDevice?.serialNumber
+        return this.ovrDevice?.serialNumber;
       }
       default: {
         // Should never happen

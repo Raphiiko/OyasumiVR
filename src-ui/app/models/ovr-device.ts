@@ -14,29 +14,29 @@ export type OVRDeviceRole =
   | 'Treadmill'
   | 'Stylus';
 
-export type OVRHandleType = 
-  | "HandPrimary"
-  | "HandSecondary"
-  | "Head"
-  | "Gamepad"
-  | "Treadmill"
-  | "Stylus"
-  | "FootLeft"
-  | "FootRight"
-  | "ShoulderLeft"
-  | "ShoulderRight"
-  | "ElbowLeft"
-  | "ElbowRight"
-  | "KneeLeft"
-  | "KneeRight"
-  | "WristLeft"
-  | "WristRight"
-  | "AnkleLeft"
-  | "AnkleRight"
-  | "Waist"
-  | "Chest"
-  | "Camera"
-  | "Keyboard"
+export type OVRHandleType =
+  | 'HandPrimary'
+  | 'HandSecondary'
+  | 'Head'
+  | 'Gamepad'
+  | 'Treadmill'
+  | 'Stylus'
+  | 'FootLeft'
+  | 'FootRight'
+  | 'ShoulderLeft'
+  | 'ShoulderRight'
+  | 'ElbowLeft'
+  | 'ElbowRight'
+  | 'KneeLeft'
+  | 'KneeRight'
+  | 'WristLeft'
+  | 'WristRight'
+  | 'AnkleLeft'
+  | 'AnkleRight'
+  | 'Waist'
+  | 'Chest'
+  | 'Camera'
+  | 'Keyboard';
 
 export interface OVRDevice {
   // Native properties

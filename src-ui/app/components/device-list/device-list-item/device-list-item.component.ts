@@ -63,7 +63,7 @@ export class DeviceListItemComponent implements OnInit {
   }
 
   protected get deviceRole(): string | undefined {
-    return this.ovrDevice?.handleType
+    return this.ovrDevice?.handleType;
   }
 
   protected get deviceNickname(): string | null {
