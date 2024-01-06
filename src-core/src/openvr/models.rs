@@ -1,6 +1,6 @@
 use ovr_overlay::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
-use strum_macros::{EnumString, IntoStaticStr, EnumIter};
+use strum_macros::{IntoStaticStr, EnumIter};
 
 pub struct OpenVRAction {
     pub name: String,
@@ -166,18 +166,31 @@ pub enum OVRHandleType {
 }
 
 impl OVRHandleType {
-    pub fn as_action_handle(&self) -> String {
-        let re: regex::Regex = regex::Regex::new(r"([A-Z][a-z]+)").expect("Unable to create regex pattern");
-        let mut output_str = String::from("/user");
-
-        let stringified: &'static str = self.into();
-
-        for component in re.find_iter(stringified) {
-            output_str += "/";
-            output_str += component.as_str().to_lowercase().as_str();
-        }
-
-        return output_str;
+    pub fn as_action_handle(&self) -> &str {
+        match self {
+            OVRHandleType::HandPrimary => "/user/hand/primary",
+            OVRHandleType::HandSecondary => "/user/hand/secondary",
+            OVRHandleType::Head => "/user/head",
+            OVRHandleType::Gamepad => "/user/gamepad",
+            OVRHandleType::Treadmill => "/user/treadmill",
+            OVRHandleType::Stylus => "/user/stylus",
+            OVRHandleType::FootLeft => "/user/foot/left",
+            OVRHandleType::FootRight => "/user/foot/right",
+            OVRHandleType::ShoulderLeft => "/user/shoulder/left",
+            OVRHandleType::ShoulderRight => "/user/shoulder/right",
+            OVRHandleType::ElbowLeft => "/user/elbow/left",
+            OVRHandleType::ElbowRight => "/user/elbow/right",
+            OVRHandleType::KneeLeft => "/user/knee/left",
+            OVRHandleType::KneeRight => "/user/knee/right",
+            OVRHandleType::WristLeft => "/user/wrist/left",
+            OVRHandleType::WristRight => "/user/wrist/right",
+            OVRHandleType::AnkleLeft => "/user/ankle/left",
+            OVRHandleType::AnkleRight => "/user/ankle/right",
+            OVRHandleType::Waist => "/user/waist",
+            OVRHandleType::Chest => "/user/chest",
+            OVRHandleType::Camera => "/user/camera",
+            OVRHandleType::Keyboard => "/user/keyboard"
+          }
     }
 }
 

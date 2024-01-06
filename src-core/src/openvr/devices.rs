@@ -75,10 +75,9 @@ pub async fn get_devices() -> Vec<OVRDevice> {
 }
 
 async fn update_handle_types() {
-    let mut device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
-    device_handle_cache.clear();
-    
-    drop(device_handle_cache);
+    {
+        DEVICE_HANDLE_TYPE_CACHE.lock().await.clear();
+    }
 
     for handle_type in OVRHandleType::iter() {
         update_handle_type(handle_type).await;

@@ -44,7 +44,7 @@ export interface OVRDevice {
   canPowerOff: boolean;
   class: OVRDeviceClass;
   role: OVRDeviceRole;
-  handleType: OVRHandleType;
+  handleType?: OVRHandleType;
   dongleId: string;
   hardwareRevision: string;
   index: number;
