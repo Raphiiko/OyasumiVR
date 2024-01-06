@@ -219,6 +219,30 @@
         "Lighthouse": "Base Stations",
         "other": "Others"
       },
+      "deviceRole": {
+        "HandPrimary": "Primary Hand",
+        "HandSecondary": "Secondary Hand",
+        "Head": "Head",
+        "Gamepad": "Gamepad",
+        "Treadmill": "Treadmill",
+        "Stylus": "Stylus",
+        "FootLeft": "Left Foot",
+        "FootRight": "Right Foot",
+        "ShoulderLeft": "Left Shoulder",
+        "ShoulderRight": "Right Shoulder",
+        "ElbowLeft": "Left Elbow",
+        "ElbowRight": "Right Elbow",
+        "KneeLeft": "Left Knee",
+        "KneeRight": "Right Knee",
+        "WristLeft": "Left Wrist",
+        "WristRight": "Right Wrist",
+        "AnkleLeft": "Left Ankle",
+        "AnkleRight": "Right Ankle",
+        "Waist": "Waist",
+        "Chest": "Chest",
+        "Camera": "Camera",
+        "Keyboard": "Keyboard"
+      },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
       },

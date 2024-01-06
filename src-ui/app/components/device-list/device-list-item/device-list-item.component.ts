@@ -62,6 +62,13 @@ export class DeviceListItemComponent implements OnInit {
     return 'unknown';
   }
 
+  protected get deviceRole(): string | null {
+    if (this.ovrDevice && this.ovrDevice.handleType) {
+      return 'comp.device-list.deviceRole.' + this.ovrDevice.handleType;
+    }
+    return null;
+  }
+
   protected get deviceNickname(): string | null {
     if (this.ovrDevice) {
       return this.openvr.getDeviceNickname(this.ovrDevice);

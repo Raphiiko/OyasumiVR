@@ -1,5 +1,6 @@
 use ovr_overlay::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
+use strum_macros::{EnumString, IntoStaticStr, EnumIter};
 
 pub struct OpenVRAction {
     pub name: String,
@@ -127,6 +128,7 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
+    pub handle_type: Option<OVRHandleType>
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -135,6 +137,48 @@ pub struct OVRDevicePose {
     pub index: u32,
     pub quaternion: [f64; 4],
     pub position: [f32; 3],
+}
+
+#[derive(Clone, Serialize, Deserialize, IntoStaticStr, EnumIter)]
+pub enum OVRHandleType {
+    HandPrimary,
+    HandSecondary,
+    Head,
+    Gamepad,
+    Treadmill,
+    Stylus,
+    FootLeft,
+    FootRight,
+    ShoulderLeft,
+    ShoulderRight,
+    ElbowLeft,
+    ElbowRight,
+    KneeLeft,
+    KneeRight,
+    WristLeft,
+    WristRight,
+    AnkleLeft,
+    AnkleRight,
+    Waist,
+    Chest,
+    Camera,
+    Keyboard
+}
+
+impl OVRHandleType {
+    pub fn as_action_handle(&self) -> String {
+        let re: regex::Regex = regex::Regex::new(r"([A-Z][a-z]+)").expect("Unable to create regex pattern");
+        let mut output_str = String::from("/user");
+
+        let stringified: &'static str = self.into();
+
+        for component in re.find_iter(stringified) {
+            output_str += "/";
+            output_str += component.as_str().to_lowercase().as_str();
+        }
+
+        return output_str;
+    }
 }
 
 // EVENTS

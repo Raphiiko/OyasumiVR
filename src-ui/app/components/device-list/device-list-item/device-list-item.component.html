@@ -6,7 +6,8 @@
       </div>
       <div class="header-bar-info" (click)="editDevice()">
         <div class="device-name" translate>{{ deviceName }}</div>
-        <div class="device-serial" *ngIf="!deviceNickname">{{ deviceIdentifier }}</div>
+        <div class="device-serial" *ngIf="!deviceNickname && deviceRole" translate>{{ deviceRole }}</div>
+        <div class="device-serial" *ngIf="!deviceNickname && !deviceRole">{{ deviceIdentifier }}</div>
         <div class="device-nickname" *ngIf="deviceNickname">{{ deviceNickname }}</div>
       </div>
       <div class="header-bar-spacer"></div>
