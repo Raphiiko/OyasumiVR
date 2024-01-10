@@ -347,7 +347,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "{PLACEHOLDER}"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをオンにする"
             },
@@ -357,7 +357,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "ショートカットキーが押されたとき"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをスリープモードにする"
             },
@@ -367,7 +367,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "{PLACEHOLDER}"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをスタンバイモードにする"
             }
@@ -379,7 +379,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "ショートカットキーが押されたとき"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションの電源を入れた"
             },
@@ -389,7 +389,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "ショートカットキーが押されたとき"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションをスリープモードにする"
             },
@@ -399,7 +399,7 @@
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
                 "STEAMVR_STOP": "SteamVRが停止したため",
-                "HOTKEY": "ショートカットキーが押されたとき"
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションをスタンバイモードにする"
             }
@@ -431,7 +431,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "手動で開始した",
-            "HOTKEY": "{PLACEHOLDER}",
+            "HOTKEY": "ショートカットキーを押した",
             "SLEEP_TRIGGER": "指定時間、眠っていた"
           },
           "title": "シャットダウン機能を開始した"
@@ -462,7 +462,7 @@
               "unknown": "不明な自動機能"
             },
             "manual": "手動で無効化",
-            "hotkey": "{PLACEHOLDER}",
+            "hotkey": "ショートカットキーによって無効化",
             "osc-control": "OSCによって無効化"
           },
           "title": "睡眠モードを無効化"
@@ -478,7 +478,7 @@
               "unknown": "不明な自動機能"
             },
             "manual": "手動で有効化",
-            "hotkey": "ショートカットキーによる",
+            "hotkey": "ショートカットキーによって有効化",
             "osc-control": "OSCにより有効化"
           },
           "title": "睡眠モードを有効化"
@@ -497,7 +497,7 @@
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
-            "HOTKEY": "{PLACEHOLDER}"
+            "HOTKEY": "ショートカットキーが押されたため"
           },
           "title": {
             "ALL": "全ての機器の電源を切った",
