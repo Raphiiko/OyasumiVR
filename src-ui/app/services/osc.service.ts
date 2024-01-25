@@ -1,221 +1,165 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { SleepService } from './sleep.service';
 import { OscScript, OscScriptSleepAction } from '../models/osc-script';
-import { cloneDeep, isEqual, pick } from 'lodash';
+import { cloneDeep, flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
-import { debug, info } from 'tauri-plugin-log-api';
+import { debug, error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
 import {
+  asyncScheduler,
   BehaviorSubject,
+  debounceTime,
   distinctUntilChanged,
-  filter,
-  firstValueFrom,
+  EMPTY,
+  interval,
   map,
   Observable,
   Subject,
+  switchMap,
+  throttleTime,
 } from 'rxjs';
+import { OscMethod } from './osc-control/osc-method';
 import { AppSettingsService } from './app-settings.service';
-import { AppSettings } from '../models/settings';
-import { isValidHostname, isValidIPv4, isValidIPv6 } from '../utils/regex-utils';
-
-export type OscAddressError = 'PORT_IN_USE' | 'PORT_INVALID' | 'PORT_IO_IDENTICAL' | 'INVALID_HOST';
-export type OscAddressValidation = {
-  oscReceivingHost?: OscAddressError[];
-  oscReceivingPort?: OscAddressError[];
-  oscSendingHost?: OscAddressError[];
-  oscSendingPort?: OscAddressError[];
-};
 
 @Injectable({
   providedIn: 'root',
 })
 export class OscService {
-  private scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
-  private _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
-  public messages: Observable<OSCMessage> = this._messages.asObservable();
-  private validationLock: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  private _addressValidation: BehaviorSubject<OscAddressValidation> = new BehaviorSubject({});
-  public addressValidation: Observable<OscAddressValidation> =
-    this._addressValidation.asObservable();
-
-  private receivingFeaturesEnabled: Observable<boolean> = this.appSettings.settings.pipe(
-    map((settings) =>
-      [settings.oscEnableExpressionMenu, settings.oscEnableExternalControl].some(Boolean)
-    )
-  );
-
-  private _initializedOnAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+  private readonly scriptQueue: TaskQueue = new TaskQueue({ runUniqueTasksConcurrently: true });
+  private readonly _messages: Subject<OSCMessage> = new Subject<OSCMessage>();
+  public readonly messages: Observable<OSCMessage> = this._messages.asObservable();
+  private readonly _vrchatOscAddress: BehaviorSubject<string | null> = new BehaviorSubject<
     string | null
   >(null);
+  public readonly vrchatOscAddress: Observable<string | null> =
+    this._vrchatOscAddress.asObservable();
+  private readonly _vrchatOscQueryAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly vrchatOscQueryAddress: Observable<string | null> =
+    this._vrchatOscQueryAddress.asObservable();
+  private readonly _oscServerAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly oscServerAddress: Observable<string | null> =
+    this._oscServerAddress.asObservable();
+  private readonly _oscQueryServerAddress: BehaviorSubject<string | null> = new BehaviorSubject<
+    string | null
+  >(null);
+  public readonly oscQueryServerAddress: Observable<string | null> =
+    this._oscQueryServerAddress.asObservable();
+  private readonly _oscMethods: BehaviorSubject<OscMethod<unknown>[]> = new BehaviorSubject<
+    OscMethod<unknown>[]
+  >([]);
 
-  constructor(private sleep: SleepService, private appSettings: AppSettingsService) {}
+  constructor(private appSettings: AppSettingsService) {}
 
   async init() {
     await listen<OSCMessageRaw>('OSC_MESSAGE', (data) => {
       this._messages.next(parseOSCMessage(data.payload));
     });
+    this._oscMethods
+      .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
+      .subscribe(async (methods) => {
+        const addresses = flatten(
+          methods.map((m) => {
+            const addresses = [m.options.address, ...m.options.addressAliases];
+            if (m.options.isVRCAvatarParameter)
+              addresses.push(...addresses.map((a) => '/avatar/parameters' + a));
+            return addresses;
+          })
+        );
+        await invoke('set_osc_receive_address_whitelist', { whitelist: addresses });
+      });
     this.appSettings.settings
       .pipe(
-        distinctUntilChanged((a, b) => {
-          const pickRelevant = (c: AppSettings) =>
-            pick(c, [
-              'oscEnableExpressionMenu',
-              'oscEnableExternalControl',
-              'oscReceivingHost',
-              'oscReceivingPort',
-              'oscSendingHost',
-              'oscSendingPort',
-            ]);
-          return isEqual(pickRelevant(a), pickRelevant(b));
+        map((s) => s.oscServerEnabled),
+        distinctUntilChanged(),
+        debounceTime(500),
+        switchMap(async (enabled) => {
+          if (enabled) {
+            await this.startOscServer();
+            await this.fetchVRChatOSCAddress();
+          } else {
+            await this.stopOscServer();
+          }
+          return enabled;
         })
+        // switchMap((enabled) =>
+        //   enabled ? interval(60000).pipe(switchMap(() => this.fetchVRChatOSCAddress())) : EMPTY
+        // )
       )
-      .subscribe((settings) => {
-        this.setOscSendingAddress(settings.oscSendingHost, settings.oscSendingPort, settings);
-        this.setOscReceivingAddress(settings.oscReceivingHost, settings.oscReceivingPort, settings);
-      });
-  }
-
-  public async setOscReceivingAddress(
-    host: string,
-    port: number,
-    settings?: AppSettings
-  ): Promise<OscAddressValidation> {
-    // Await the validation lock to be released
-    await firstValueFrom(this.validationLock.pipe(filter((v) => !v)));
-    // Lock the validation lock
-    this.validationLock.next(true);
-    // Define validation
-    const validation: OscAddressValidation = cloneDeep(this._addressValidation.value);
-    validation.oscReceivingHost = [];
-    validation.oscReceivingPort = [];
-    validation.oscSendingPort = (validation.oscSendingPort ?? []).filter(
-      (e) => e !== 'PORT_IO_IDENTICAL'
-    );
-    // Get the current settings if not provided
-    if (!settings) settings = await firstValueFrom(this.appSettings.settings);
-    // Validate sending and receiving ports not being identical
-    if (settings.oscSendingHost === host && settings.oscSendingPort === port) {
-      validation.oscReceivingPort.push('PORT_IO_IDENTICAL');
-      validation.oscSendingPort.push('PORT_IO_IDENTICAL');
-    }
-    // Validate port being in range
-    if (port <= 0 || port > 65535) {
-      validation.oscReceivingPort.push('PORT_INVALID');
-    }
-    // Validate host
-    if (host === '' || !(isValidIPv6(host) || isValidIPv4(host) || isValidHostname(host))) {
-      validation.oscReceivingHost.push('INVALID_HOST');
-    }
-    // Validate port not already being bound (only if any receiving features are enabled)
-    const receivingFeaturesEnabled = await firstValueFrom(this.receivingFeaturesEnabled);
-    if (
-      receivingFeaturesEnabled &&
-      !validation.oscReceivingHost.length &&
-      !validation.oscReceivingPort.length
-    ) {
-      const result = await this.start_osc_server(host, port);
-      if (!result) {
-        validation.oscReceivingPort.push('PORT_IN_USE');
-      }
-    } else {
-      await this.stop_osc_server();
-    }
-    // Update the current settings with the new data
-    await this.appSettings.updateSettings({
-      oscReceivingHost: host,
-      oscReceivingPort: port,
+      .subscribe();
+    await listen<string | null>('VRC_OSC_ADDRESS_CHANGED', (event) => {
+      this._vrchatOscAddress.next(event.payload);
     });
-    // Return validation results
-    this._addressValidation.next(validation);
-    this.validationLock.next(false);
-    return validation;
-  }
-
-  public async setOscSendingAddress(
-    host: string,
-    port: number,
-    settings?: AppSettings
-  ): Promise<OscAddressValidation> {
-    // Await the validation lock to be released
-    await firstValueFrom(this.validationLock.pipe(filter((v) => !v)));
-    // Lock the validation lock
-    this.validationLock.next(true);
-    // Define validation
-    const validation: OscAddressValidation = cloneDeep(this._addressValidation.value);
-    validation.oscSendingHost = [];
-    validation.oscSendingPort = [];
-    validation.oscReceivingPort = (validation.oscSendingPort ?? []).filter(
-      (e) => e !== 'PORT_IO_IDENTICAL'
-    );
-    // Get the current settings if not provided
-    if (!settings) settings = await firstValueFrom(this.appSettings.settings);
-    // Validate sending and receiving ports not being identical
-    if (settings.oscReceivingHost === host && settings.oscReceivingPort === port) {
-      validation.oscReceivingPort.push('PORT_IO_IDENTICAL');
-      validation.oscSendingPort.push('PORT_IO_IDENTICAL');
-    }
-    // Validate port being in range
-    if (port <= 0 || port > 65535) {
-      validation.oscSendingPort.push('PORT_INVALID');
-    }
-    // Validate host
-    if (host === '' || !(isValidIPv6(host) || isValidIPv4(host) || isValidHostname(host))) {
-      validation.oscSendingHost.push('INVALID_HOST');
-    }
-    // Update the current settings with the new data
-    await this.appSettings.updateSettings({
-      oscSendingHost: host,
-      oscSendingPort: port,
+    await listen<string | null>('VRC_OSCQUERY_ADDRESS_CHANGED', (event) => {
+      this._vrchatOscQueryAddress.next(event.payload);
     });
-    // Return validation results
-    this._addressValidation.next(validation);
-    this.validationLock.next(false);
-    return validation;
   }
 
-  private async start_osc_server(host: string, port: number): Promise<boolean> {
-    const receiveAddr = `${host}:${port}`;
-    let result = true;
-    if (this._initializedOnAddress.value !== receiveAddr) {
-      result = await invoke<boolean>('start_osc_server', { receiveAddr });
-      if (!result) {
-        info(`[OSC] Could not bind a UDP socket on ${receiveAddr}.`);
-        this._initializedOnAddress.next(null);
-      } else {
-        this._initializedOnAddress.next(receiveAddr);
+  private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
+    let [oscAddress, oscQueryAddress] = (await invoke<[string, string] | null>(
+      'start_osc_server'
+    )) ?? [null, null];
+    if (oscAddress) {
+      oscAddress = oscAddress.replace('0.0.0.0', '127.0.0.1');
+      this._oscServerAddress.next(oscAddress);
+    } else error("[OSC] Couldn't start OSC server");
+    if (oscQueryAddress) {
+      oscQueryAddress = oscQueryAddress.replace('0.0.0.0', '127.0.0.1');
+      this._oscQueryServerAddress.next(oscQueryAddress);
+      for (const method of this._oscMethods.value) {
+        await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
       }
-    }
-    return result;
+    } else error("[OSC] Couldn't start OSCQuery server");
+    return oscAddress && oscQueryAddress ? { oscAddress, oscQueryAddress } : null;
   }
 
-  private async stop_osc_server(): Promise<void> {
-    await invoke<boolean>('stop_osc_server');
-    this._initializedOnAddress.next(null);
+  public async addOscMethod(method: OscMethod<unknown>) {
+    const methods = [...this._oscMethods.value].filter(
+      (m) => m.options.address !== method.options.address
+    );
+    methods.push(method);
+    this._oscMethods.next(methods);
+    if (this._oscQueryServerAddress.value) {
+      await invoke('add_osc_method', { method: this.mapToOscMethod(method) });
+    }
+  }
+
+  public async updateOscMethodValue(method: OscMethod<unknown>) {
+    await invoke('set_osc_method_value', {
+      address: method.options.address,
+      value: method.getValue() + '',
+    });
+  }
+
+  private async stopOscServer(): Promise<void> {
+    this._oscServerAddress.next(null);
+    this._oscQueryServerAddress.next(null);
+    await invoke<string>('stop_osc_server');
   }
 
   async send_float(address: string, value: number) {
+    const addr = this._vrchatOscAddress.value;
+    if (!addr) return;
     debug(`[OSC] Sending float ${value} to ${address}`);
-    const addr = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
-    );
     await invoke('osc_send_float', { addr, oscAddr: address, data: value });
   }
 
   async send_int(address: string, value: number) {
+    const addr = this._vrchatOscAddress.value;
+    if (!addr) return;
     debug(`[OSC] Sending int ${value} to ${address}`);
-    const addr = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
-    );
+
     await invoke('osc_send_int', { addr, oscAddr: address, data: value });
   }
 
   async send_bool(address: string, value: boolean) {
+    const addr = this._vrchatOscAddress.value;
+    if (!addr) return;
     debug(`[OSC] Sending bool ${value} to ${address}`);
-    const addr = await firstValueFrom(this.appSettings.settings).then(
-      (settings) => settings.oscSendingHost + ':' + settings.oscSendingPort
-    );
     await invoke('osc_send_bool', { addr, oscAddr: address, data: value });
   }
 
@@ -258,5 +202,29 @@ export class OscService {
     };
 
     await run(script);
+  }
+
+  private async fetchVRChatOSCAddress() {
+    const osc_address = await invoke<string | null>('get_vrchat_osc_address');
+    if (osc_address !== this._vrchatOscAddress.value) this._vrchatOscAddress.next(osc_address);
+    const oscquery_address = await invoke<string | null>('get_vrchat_oscquery_address');
+    if (oscquery_address !== this._vrchatOscQueryAddress.value)
+      this._vrchatOscQueryAddress.next(oscquery_address);
+  }
+
+  private mapToOscMethod(method: OscMethod<unknown>): {
+    address: string;
+    adType: 'Write' | 'Read' | 'ReadWrite';
+    valueType: 'Bool' | 'Int' | 'Float' | 'String';
+    value?: string;
+    description?: string;
+  } {
+    return {
+      address: method.options.address,
+      adType: method.options.access,
+      valueType: method.options.type,
+      value: method.options.access === 'Write' ? undefined : method.getValue() + '',
+      description: method.options.description,
+    };
   }
 }

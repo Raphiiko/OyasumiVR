@@ -24,6 +24,9 @@ import { EventLogSimpleBrightnessChangedEntryParser } from './entry-parsers/simp
 import { EventLogChangedVRChatMicMuteStateEntryParser } from './entry-parsers/changed-vrchat-mic-mute-state';
 import { EventLogChangedSystemMicControllerButtonBehaviorEntryParser } from './entry-parsers/changed-system-mic-controller-button-behavior';
 import { EventLogChangedSystemMicMuteStateEntryParser } from './entry-parsers/changed-system-mic-mute-state';
+import { EventLogChangedAudioDeviceVolumeEntryParser } from './entry-parsers/changed-audio-device-volume';
+import { EventLogMutedAudioDeviceEntryParser } from './entry-parsers/muted-audio-device';
+import { EventLogUnmutedAudioDeviceEntryParser } from './entry-parsers/unmuted-audio-device';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -56,6 +59,9 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogChangedVRChatMicMuteStateEntryParser(),
     new EventLogChangedSystemMicMuteStateEntryParser(),
     new EventLogChangedSystemMicControllerButtonBehaviorEntryParser(),
+    new EventLogChangedAudioDeviceVolumeEntryParser(),
+    new EventLogMutedAudioDeviceEntryParser(),
+    new EventLogUnmutedAudioDeviceEntryParser(),
   ];
 
   constructor(

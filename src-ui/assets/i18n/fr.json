@@ -100,7 +100,6 @@
       "oscAutomations": "Automatisations OSC",
       "overview": "Résumé",
       "resolutionAutomations": "Automatisation de résolution",
-      "settings": "Paramètres",
       "sleepDetection": "Détection de sommeil",
       "statusAutomations": "Automatisations de statut",
       "vrcAutomations": "Automatisations VRChat"
@@ -332,7 +331,11 @@
       },
       "password": "Mot de passe",
       "title": "Connexion à VRChat",
-      "username": "Nom d'utilisateur/E-mail VRChat"
+      "username": "Nom d'utilisateur/E-mail VRChat",
+      "disclaimers": {
+        "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Votre compte VRChat est protégé par une authentification à deux facteurs.\n\nVeuillez saisir le code :",
@@ -653,7 +656,6 @@
         "title": "Barre d'état"
       },
       "telemetry": {
-        "description": "Les données envoyées seront limitées à la version d'OyasumiVR que vous utilisez, et au langage paramétré. Aucune autre donnée n'est envoyée, et ces dernières sont complètement anonymes. Ces données sont utilisées à des fins statistiques.",
         "label": "Envoyer des données d'utilisation anonymes",
         "title": "Télémétrie"
       }
@@ -678,13 +680,6 @@
         "test": "Test"
       }
     },
-    "tab": {
-      "general": "Général",
-      "notifications": "Notifications",
-      "updates": "Mises à jour",
-      "vrchat": "VRChat"
-    },
-    "title": "Paramètres",
     "updates": {
       "changelog": "Changelog",
       "checkForUpdates": "Rechercher des mises à jour",
@@ -692,53 +687,6 @@
       "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
       "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{version}) !",
       "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{currentVersion}.\nLa nouvelle version est la v{latestVersion}."
-    },
-    "vrchat": {
-      "logIn": {
-        "description": "Certaines fonctionnalités d'OyasumiVR nécessitent d'être connecté à votre compte VRChat.",
-        "disclaimers": {
-          "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
-        },
-        "loggedIn": {
-          "logOut": "Se déconnecter",
-          "subtext": "Vous êtes actuellement connecté(e) à votre compte VRChat.",
-          "title": "Bonjour {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Se connecter",
-          "subtext": "Vous êtes actuellement déconnecté(e) de votre compte VRChat.",
-          "title": "Déconnecté(e)"
-        },
-        "title": "Connexion"
-      },
-      "OSC": {
-        "description": "Certaines fonctionnalités requièrent une connexion à VRChat via OSC. A moins d'avoir une raison spécifique, il est recommandé de ne pas modifier ces paramètres.",
-        "errors": {
-          "INVALID_HOST": "L'hôte doit être un nom d'hôte, une adresse IPv4 ou IPv6 valide.",
-          "PORT_IN_USE": "Cette adresse n'a pas pu être affectée. Il se peut qu'une autre application l'utilise déjà. Merci de fermer cette application et réessayer, ou choisir un autre hôte ou port de réception.",
-          "PORT_INVALID": "Un port valide se situe entre 1 et 65535.",
-          "PORT_IO_IDENTICAL": "Vous ne pouvez pas utiliser le même port pour l'envoi et la réception."
-        },
-        "receivingHost": {
-          "description": "L'adresse sur laquelle OyasumiVR reçoit les messages OSC.\n(VRCHat envoie sur 127.0.0.1 par défaut)",
-          "title": "Hôte de réception"
-        },
-        "receivingPort": {
-          "description": "Le port sur lequel OyasumiVR reçoit les messages OSC.\n(VRCHat envoie le port 9001 par défaut)",
-          "title": "Port de réception"
-        },
-        "reset": "Réinitialiser les paramètres",
-        "sendingHost": {
-          "description": "L'adresse sur laquelle OyasumiVR envoie des messages OSC.\n(Si VRChat tourne sur la même machine, l'adresse sera 127.0.0.1)",
-          "title": "Hôte d'envoi"
-        },
-        "sendingPort": {
-          "description": "Le port sur lequel OyasumiVR envoie des messages OSC.\n(VRChat reçoit les messages par défaut sur le port 9000)",
-          "title": "Port d'envoi"
-        },
-        "title": "Paramètres OSC"
-      }
     }
   },
   "shared": {

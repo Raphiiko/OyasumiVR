@@ -257,6 +257,6 @@ export class ShutdownAutomationsViewComponent implements OnInit {
   }
 
   goToGeneralSettings() {
-    this.router.navigate(['dashboard', 'settings'], { fragment: 'GENERAL' });
+    this.router.navigate(['dashboard', 'settings', 'general']);
   }
 }

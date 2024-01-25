@@ -14,6 +14,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   9: from8to9,
   10: from9to10,
   11: from10to11,
+  12: from11to12,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -47,6 +48,49 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from11to12(data: any): any {
+  data.version = 12;
+  if (data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE?.powerPolicy) {
+    switch (data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy) {
+      case 'HIGH_PERFORMANCE':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy =
+          '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c';
+        break;
+      case 'BALANCED':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy =
+          '381b4222-f694-41f0-9685-ff5bb260df2e';
+        break;
+      case 'POWER_SAVING':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy =
+          'a1841308-3541-4fab-bc81-f71556f20b4a';
+        break;
+      default:
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE.powerPolicy = undefined;
+        break;
+    }
+  }
+  if (data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE?.powerPolicy) {
+    switch (data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy) {
+      case 'HIGH_PERFORMANCE':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy =
+          '8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c';
+        break;
+      case 'BALANCED':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy =
+          '381b4222-f694-41f0-9685-ff5bb260df2e';
+        break;
+      case 'POWER_SAVING':
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy =
+          'a1841308-3541-4fab-bc81-f71556f20b4a';
+        break;
+      default:
+        data.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE.powerPolicy = undefined;
+        break;
+    }
+  }
   return data;
 }
 

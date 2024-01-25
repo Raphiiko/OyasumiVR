@@ -1,11 +1,17 @@
-use super::models::{DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent};
+use std::collections::HashMap;
+
+use super::models::{
+    DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent, TrackedDeviceClass, OVRHandleType,
+};
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use byteorder::{ByteOrder, LE};
 use chrono::{Duration, NaiveDateTime, Utc};
 use log::error;
 use ovr::input::InputValueHandle;
+use ovr::sys::EVRInputError;
 use ovr_overlay as ovr;
+use strum::IntoEnumIterator;
 use tokio::sync::Mutex;
 
 lazy_static! {
@@ -14,6 +20,12 @@ lazy_static! {
     static ref GESTURE_DETECTOR: Mutex<GestureDetector> = Mutex::new(GestureDetector::new());
     static ref NEXT_DEVICE_REFRESH: Mutex<NaiveDateTime> =
         Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
+    static ref NEXT_POSE_BROADCAST: Mutex<NaiveDateTime> =
+        Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
+    static ref DEVICE_CLASS_CACHE: Mutex<HashMap<u32, TrackedDeviceClass>> =
+        Mutex::new(HashMap::new());
+    static ref DEVICE_HANDLE_TYPE_CACHE: Mutex<HashMap<u32, OVRHandleType>> =
+        Mutex::new(HashMap::new());
 }
 
 pub async fn on_ovr_tick() {
@@ -21,6 +33,7 @@ pub async fn on_ovr_tick() {
     let mut next_device_refresh = NEXT_DEVICE_REFRESH.lock().await;
     if (Utc::now().naive_utc() - *next_device_refresh).num_milliseconds() > 0 {
         *next_device_refresh = Utc::now().naive_utc() + Duration::seconds(5);
+        update_handle_types().await;
         update_all_devices(true).await;
     }
     // Update poses
@@ -61,6 +74,47 @@ pub async fn get_devices() -> Vec<OVRDevice> {
     devices.clone()
 }
 
+async fn update_handle_types() {
+    {
+        DEVICE_HANDLE_TYPE_CACHE.lock().await.clear();
+    }
+
+    for handle_type in OVRHandleType::iter() {
+        update_handle_type(handle_type).await;
+    }
+}
+
+async fn update_handle_type(handle_type: OVRHandleType) {
+
+    let context = OVR_CONTEXT.lock().await;
+    let mut device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
+    let mut input = match context.as_ref() {
+        Some(context) => context.input_mngr(),
+        None => return,
+    };
+
+    let action_handle = match input.get_input_source_handle(&handle_type.as_action_handle()) {
+        Ok(handle) => handle,
+        Err(err) => {
+            error!("[Core] Unable to get action handle by name {}: {err}", handle_type.as_action_handle()); // shouldn't happen but log just in case
+            return;
+        }
+    };
+
+    let device_info = match input.get_origin_tracked_device_info(action_handle) {
+        Ok(info) => info,
+        Err(err) => {
+            // expected errors
+            if err == EVRInputError::VRInputError_NoData.into() || err == EVRInputError::VRInputError_InvalidHandle.into() {
+                return;
+            }
+            error!("[Core] Unable to get device info for handle {}: {err}", handle_type.as_action_handle()); // unexpected error
+            return;
+        }
+    };
+    device_handle_cache.insert(device_info.0.trackedDeviceIndex, handle_type);
+}
+
 async fn update_all_devices<'a>(emit: bool) {
     for n in 0..(ovr::sys::k_unMaxTrackedDeviceCount as usize) {
         update_device(ovr::TrackedDeviceIndex(n.try_into().unwrap()), emit).await;
@@ -73,6 +127,24 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         Some(context) => context.system_mngr(),
         None => return,
     };
+    let class: TrackedDeviceClass = system.get_tracked_device_class(device_index).into();
+    let mut device_class_cache = DEVICE_CLASS_CACHE.lock().await;
+    let device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
+    // Stop here if the class is invalid and we don't have it cached
+    if class == TrackedDeviceClass::Invalid && !device_class_cache.contains_key(&device_index.0) {
+        return;
+    }
+    // Update class cache
+    if class == TrackedDeviceClass::Invalid {
+        device_class_cache.remove(&device_index.0);
+    } else {
+        device_class_cache.insert(device_index.0, class.clone());
+    }
+    drop(device_class_cache);
+    
+    let handle_type: Option<OVRHandleType> = device_handle_cache.get(&device_index.0).map(|it| it.clone());
+    drop(device_handle_cache);
+    // Get device properties
     let battery: Option<f32> = system
         .get_tracked_device_property(
             device_index,
@@ -130,7 +202,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
 
     let device = OVRDevice {
         index: device_index.0,
-        class: system.get_tracked_device_class(device_index).into(),
+        class,
         role: system
             .get_controller_role_for_tracked_device_index(device_index)
             .into(),
@@ -143,6 +215,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         hardware_revision,
         manufacturer_name,
         model_number,
+        handle_type
     };
 
     // Add or update device in list
@@ -220,15 +293,23 @@ async fn refresh_device_poses<'a>() {
                     .await;
             }
             // Emit event
-            send_event(
-                "OVR_POSE_UPDATE",
-                OVRDevicePose {
-                    index: n as u32,
-                    quaternion: [q.x, q.y, q.z, q.w],
-                    position: pos.v,
-                },
-            )
-            .await;
+            if n == 0 {
+                // Only for the HMD, the rest is not required
+                let mut next_pose_broadcast = NEXT_POSE_BROADCAST.lock().await;
+                if (Utc::now().naive_utc() - *next_pose_broadcast).num_milliseconds() > 0 {
+                    *next_pose_broadcast = Utc::now().naive_utc() + Duration::milliseconds(250);
+                    drop(next_pose_broadcast);
+                    send_event(
+                        "OVR_POSE_UPDATE",
+                        OVRDevicePose {
+                            index: n as u32,
+                            quaternion: [q.x, q.y, q.z, q.w],
+                            position: pos.v,
+                        },
+                    )
+                    .await;
+                }
+            }
         }
     }
 }

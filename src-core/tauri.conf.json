@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "OyasumiVR",
-    "version": "1.10.3"
+    "version": "1.11.5"
   },
   "tauri": {
     "allowlist": {
@@ -45,6 +45,7 @@
       "http": {
         "request": true,
         "scope": [
+          "https://europe-west1-oyasumivr.cloudfunctions.net/*",
           "https://api.vrchat.cloud/api/1/*",
           "https://assets.vrchat.com/*",
           "https://files.vrchat.cloud/*",
@@ -53,6 +54,9 @@
         ]
       },
       "notification": {
+        "all": true
+      },
+      "globalShortcut": {
         "all": true
       }
     },
@@ -65,6 +69,7 @@
       },
       "resources": [
         "./openvr_api.dll",
+        "./flags.toml",
         "./steam_api64.dll",
         "./resources/**/*"
       ],
@@ -175,7 +180,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.10.3 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.11.5 (https://github.com/Raphiiko/OyasumiVR)"
       },
       {
         "width": 700,
@@ -187,7 +192,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.10.3 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.11.5 (https://github.com/Raphiiko/OyasumiVR)"
       }
     ]
   }

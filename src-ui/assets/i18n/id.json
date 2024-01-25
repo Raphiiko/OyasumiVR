@@ -190,7 +190,6 @@
       "overview": "Ikhtisar",
       "powerAutomations": "Otomatisasi Power",
       "resolutionAutomations": "Otomatisasi Resolusi",
-      "settings": "Pengaturan",
       "shutdownAutomations": "Urutan Shutdown",
       "sleepAnimations": "Animasi Tidur",
       "sleepDetection": "Deteksi Tidur",
@@ -506,9 +505,6 @@
           "NAVIGATE": "Mikrofon Sistem:\nOtomatisasi",
           "TOGGLE_MUTE": "Mikrofon Sistem:\nBunyikan"
         }
-      },
-      "vrchat": {
-        "tooltip": "Pengaturan: VRChat"
       }
     },
     "osc-script-code-editor": {
@@ -565,7 +561,11 @@
       },
       "password": "Password",
       "title": "Masuk ke VRChat",
-      "username": "VRChat Username/E-mail"
+      "username": "VRChat Username/E-mail",
+      "disclaimers": {
+        "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
+      }
     },
     "vrchat-login-tfa-modal": {
       "description": "Akun VRChat Anda dilindungi dengan autentikasi dua faktor.\n\nMasukkan kode 2FA:",
@@ -1181,7 +1181,6 @@
         "title": "System Tray"
       },
       "telemetry": {
-        "description": "Data yang akan dikirim terbatas pada versi OyasumiVR yang Anda gunakan, dan bahasa yang telah Anda tetapkan. Tidak ada data lain yang dikirim dan sepenuhnya anonim. Data ini hanya digunakan untuk menyediakan beberapa statistik penggunaan umum.",
         "label": "Mengirim data penggunaan anonim",
         "title": "Telemetri"
       }
@@ -1235,15 +1234,6 @@
         "title": "Volume Pemberitahuan Umum"
       }
     },
-    "tab": {
-      "advanced": "Lanjutan",
-      "general": "Umum",
-      "integrations": "Integrasi",
-      "notifications": "Notifikasi",
-      "updates": "Update",
-      "vrchat": "VRChat"
-    },
-    "title": "Pengaturan",
     "updates": {
       "changelog": "Daftar Perubahan",
       "checkForUpdates": "Periksa pembaruan",
@@ -1255,67 +1245,6 @@
         "DEV": "Karena Anda menjalankan versi pengembangan OyasumiVR, pembaruan telah dinonaktifkan.\nJika Anda ingin menginstal versi baru OyasumiVR, silakan unduh dan jalankan penginstal secara manual.",
         "STEAM": "Anda telah menginstal OyasumiVR versi Steam.\nOleh karena itu, pembaruan OyasumiVR baru disediakan melalui Steam!"
       }
-    },
-    "vrchat": {
-      "logIn": {
-        "description": "Beberapa fitur OyasumiVR mengharuskan Anda untuk masuk dengan akun VRChat Anda agar fitur-fitur tersebut dapat berfungsi.",
-        "disclaimers": {
-          "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
-          "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
-        },
-        "loggedIn": {
-          "logOut": "Keluar",
-          "subtext": "Saat ini Anda sedang masuk dengan akun VRChat Anda.",
-          "title": "Hai {name}!"
-        },
-        "loggedOut": {
-          "logIn": "Masuk",
-          "subtext": "Saat ini Anda belum masuk dengan akun VRChat Anda.",
-          "title": "Keluar"
-        },
-        "title": "Masuk"
-      },
-      "OSC": {
-        "description": "Beberapa fitur memerlukan koneksi ke VRChat melalui OSC. Kecuali jika Anda memiliki alasan khusus untuk mengubahnya, Anda harus membiarkannya sebagai default.",
-        "errors": {
-          "INVALID_HOST": "Host harus berupa nama host, alamat IPv4, atau alamat IPv6 yang valid.",
-          "PORT_IN_USE": "Alamat ini tidak dapat diikat. Bisa jadi ada aplikasi lain yang sudah menggunakannya. Anda dapat mencoba menutup aplikasi tersebut dan mencoba lagi, atau memilih port atau host penerima yang berbeda.",
-          "PORT_INVALID": "Port harus berupa angka yang valid antara 1 dan 65535.",
-          "PORT_IO_IDENTICAL": "Anda tidak dapat menggunakan port yang sama untuk port pengirim dan penerima jika host untuk pengirim dan penerima sama."
-        },
-        "features": {
-          "all": {
-            "description": "Menonaktifkan masing-masing fitur ini akan menghentikan OyasumiVR dari mendengarkan pesan OSC",
-            "title": "Nyalakan semua fitur"
-          },
-          "expressionMenu": {
-            "description": "Kontrol fitur OyasumiVR dari avatar VRChat <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/OyasumiVR-Expression-Menu\" target=\"_blank\">expression menu Anda</a>",
-            "title": "Nyalakan menu kontrol VRChat expression"
-          },
-          "externalControl": {
-            "description": "Kontrol fitur OyasumiVR melalui <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Controlling-OyasumiVR-over-OSC\" target=\"_blank\">OSC</a>",
-            "title": "Nyalakan kontrol eksternal"
-          }
-        },
-        "receivingHost": {
-          "description": "Host OyasumiVR akan mendengarkan pesan OSC yang masuk.\n(VRChat mengirim ke 127.0.0.1 secara default)",
-          "title": "Host Penerima"
-        },
-        "receivingPort": {
-          "description": "Nomor port OyasumiVR akan mendengarkan pesan OSC.\n(VRChat mengirim ke port 9001 secara default)",
-          "title": "Port Penerima"
-        },
-        "reset": "Mengatur ulang ke default",
-        "sendingHost": {
-          "description": "Host OyasumiVR akan mengirim pesan OSC.\n(Jika VRChat berjalan pada mesin yang sama, Hostnya adalah 127.0.0.1)",
-          "title": "Host Pengirim"
-        },
-        "sendingPort": {
-          "description": "Nomor port yang akan digunakan OyasumiVR untuk mengirim pesan OSC.\n(VRChat mendengarkan pada port 9000 secara default)",
-          "title": "Port Pengirim"
-        },
-        "title": "Pengaturan OSC"
-      }
     }
   },
   "shared": {
@@ -1326,12 +1255,7 @@
       "tagline": "Utilitas VR Sleeping"
     },
     "misc": {
-      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat.",
-      "windowsPowerPolicy": {
-        "BALANCED": "Seimbang",
-        "HIGH_PERFORMANCE": "Performa Penuh",
-        "POWER_SAVING": "Hemat Daya"
-      }
+      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "modals": {
       "cancel": "Batalkan",

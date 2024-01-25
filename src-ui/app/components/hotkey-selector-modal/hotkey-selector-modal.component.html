@@ -1,0 +1,14 @@
+<div class="pane modal modal-lg" @fadeUp>
+  <div class="pane-title" translate> comp.hotkey-selector-modal.title </div>
+  <div class="pane-content">
+    <p translate>comp.hotkey-selector-modal.description</p>
+    <div class="input-wrapper">
+      <h2 class="input" [class.success]="success">{{ displayString || 'Set Hotkey' }}</h2>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()" translate [disabled]="!!key">
+      shared.modals.cancel
+    </button>
+  </div>
+</div>

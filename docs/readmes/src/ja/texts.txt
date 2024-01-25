@@ -1,0 +1,313 @@
+{{HEADER_TAGLINE}}
+💤 バーチャルリアリティの中で睡眠をアシストするソフトウェアです 💤
+
+{{DISCORD_INVITE}}
+If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+
+{{DOWNLOAD_AND_INSTALL_HEADER}}
+ダウンロード&インストール
+
+{{DOWNLOAD_AND_INSTALL_BODY}}
+任意の場所から最新のインストーラーを入手できます。
+
+- [Steam](https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/) (_**推奨**_)
+- [releases page](https://github.com/Raphiiko/Oyasumi/releases)
+- [BOOTH.pm](https://raphiiko.booth.pm/items/4216880)
+- [Gumroad](https://raphiiko.gumroad.com/l/oyasumi?layout=profile)
+
+インストーラーを実行するだけでOKです！
+
+{{WHAT_IS_OYASUMIVR_HEADER}}
+OyasumiVRとは?
+
+{{WHAT_IS_OYASUMIVR_BODY}}
+HMDを被りながら眠るのに便利な機能を実装したデスクトップアプリケーションです。主にVRChatでの使用を想定しています。
+
+あなたの睡眠を検知して以下のような機能を実行できます。
+- 🔋 電力の節約
+- 🔅 明るさの調整
+- ✨ 寝相に合わせたアバターポーズの変更
+- 📩 Request Inviteの自動承認
+- 🎤 マイクミュート
+- 🛠 SteamVRの設定の自動化
+
+…他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
+
+{{FEATURES}}
+機能
+
+{{SLEEP_DETECTION_HEADER}}
+💤 睡眠検出
+
+{{SLEEP_DETECTION_BODY}}
+HMDの動きを分析して寝落ちを自動で検出します！一度キャリブレーションを行うだけで設定完了します。
+<br><br>
+他にも、以下の項目をトリガーにして自動化の機能を使用できます。
+<br><br>
+<ul>
+  <li>時刻指定</li>
+  <li>コントローラー, トラッカーのバッテリー残量</li>
+  <li>コントローラー, トラッカーの充電状態</li>
+  <li>SteamVRの状態</li>
+</ul>
+
+{{STEAMVR_OVERLAY_HEADER}}
+📲 SteamVRオーバーレイ
+
+{{STEAMVR_OVERLAY_BODY}}
+一部の機能は独自のSteamVRオーバーレイを使ってVR内から直接操作できます！
+<br><br>
+デフォルトでは右コントローラーのAを2回押すとオーバーレイが表示されるようになっています。
+
+{{POWER_AUTOMATIONS_HEADER}}
+🔋 電源の自動化
+
+{{POWER_AUTOMATIONS_BODY_CONTROLLERS_AND_TRACKERS}}
+<b>コントローラー & トラッカー</b>
+<br>
+機器の電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
+<br>
+<br>
+他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！
+
+{{POWER_AUTOMATIONS_BODY_WINDOWS_POWER_POLICY}}
+<b>Windowsの電源オプション</b>
+<br>
+Windowsの電源プランを変更してPCの消費電力を節約します。眠ったときは省電力モードに、起きたときは元のプランに戻すことができます。
+
+{{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
+<b>ベースステーション</b>
+<br>
+SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。
+<br><br>
+<i>現在はV2 Lighthouseのみがサポートされています。</i>
+
+{{GPU_AUTOMATIONS_HEADER}}
+🔌 GPU自動化
+
+{{GPU_AUTOMATIONS_BODY_POWER_LIMITING}}
+<b>GPUパワーリミッター</b>
+<br>
+GPUの電力を制限してPCの消費電力を節約します。希望の消費電力を指定するだけで設定完了です。
+<br><br>
+<i>この機能はNvidia GPUでのみ利用可能です。AMDユーザーはMSI Afterburnerを介して自動化を利用できます。</i>
+
+{{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
+<b>MSI Afterburner</b>
+<br>
+電力制限だけでなくさらに細かく制御したい場合はMSI Afterburnerを使用できます。オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
+
+{{VRCHAT_AUTOMATIONS_HEADER}}
+💫 VRChat関係の自動化
+
+{{VRCHAT_AUTOMATIONS_BODY_SLEEPING_ANIMATIONS}}
+🌜 <b>アニメーション</b>
+<br>
+寝相に合わせて適切なアニメーションやポーズを設定できます。
+<br><br>
+人気のlocomotionアセットに対応しており、専用のプリセットを用意しています。
+<br><br>
+<ul>
+  <li>
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br><a href="https://booth.pm/en/items/4233545">EXバージョン</a> にも対応！
+  </li>
+  <li>
+    <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
+  </li>
+</ul>
+<br>
+他にも、OSCスクリプトエディターを使って独自のアニメーションを設定することも可能です。
+
+{{VRCHAT_AUTOMATIONS_BODY_AUTO_ACCEPT_INVITE_REQUESTS}}
+📧 <b>Request Inviteの自動承認</b>
+<br>
+寝ている間に来たReqInを自動的に承認できます！ホワイトリストやブラックリストを使って、承認するフレンドを制限することもできます。
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+🔵 <b>ステータス自動化</b>
+<br>
+ワールドにいる人数に応じてステータスを変更できます。
+<br><br>
+一人のときは青に、人数を満たすとオレンジに切り替えるなど、活用方法は様々です！
+
+{{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
+🔧 <b>OSC自動化</b>
+<br>
+任意のOSCメッセージをVRChatに送信できます。内臓のOSCスクリプトエディタを使って、送信したいメッセージを正確に作成できます。
+<br><br>
+これはより高度な機能であり、アバターに特定の機能を実行させるために使用できます！例えば、寝ているときには眠そうな表情をさせる場合など活用方法は様々です！
+
+{{SHUTDOWN_SEQUENCE_HEADER}}
+⛔ シャットダウン機能
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+一晩中VRの中にいるのは嫌だと思ったことはありませんか？この機能がそれを解決します！
+<br><br>
+この機能を有効にすると、一定時間眠った場合に以下の任意のアクションを実行できます。
+<br><br>
+<ul>
+  <li>コントローラー, トラッカーの電源を切る</li>
+  <li>ベースステーションの電源を切る</li>
+  <li>SteamVRの終了<i>（関連ゲームも終了します）</i></li>
+  <li>Windowsのシャットダウン</li>
+</ul>
+<br>
+「PCつけっぱなしは嫌だな…」と思っていた人には朗報かも？
+
+{{BRIGHTNESS_AUTOMATIONS_HEADER}}
+🔅 明るさの自動化
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
+<br><br>
+映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+🎤 マイクミュートの自動化
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
+<br><br>いびきを聞かれたくない場合に最適です！
+<br><br>
+新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
+
+{{HEART_RATE_AUTOMATIONS_HEADER}}
+♥️ 心拍数による自動化 (Pulsoid Integration)
+
+{{HEART_RATE_AUTOMATIONS_INTRO}}
+この機能にはオンライン心拍数サービス <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a> を利用します。このため、Bluetooth心拍数モニター, WearOS スマートウォッチ, Apple Watchなど、Pulsoidがサポートするハードウェアを使用できます。
+<br><br>
+<i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの「BRO」サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。</i>
+
+{{HEART_RATE_AUTOMATIONS_BODY_SLEEP_DETECTION}}
+<b>睡眠検出</b>
+<br>
+一定以下の心拍数が続くと睡眠モードを有効にします。BPM閾値と、その継続時間を設定するだけでOKです。分析により、おすすめの設定時間を見ることもできます。
+
+{{HEART_RATE_AUTOMATIONS_BODY_NIGHTMARE_DETECTION}}
+<b>悪夢の検知</b>
+<br>
+睡眠中の高い心拍数をチェックして悪夢を見ていないか確認します。自動的に睡眠モードを解除したり(明るさを上げたり)、アラームを鳴らしたりすることで悪夢からの目覚めをサポートします。
+
+{{RESOLUTION_AUTOMATIONS_HEADER}}
+👓 解像度の自動化
+
+{{RESOLUTION_AUTOMATIONS_BODY}}
+SteamVRのレンダリング解像度を調整できます！眠っているときに解像度を下げることでハードウェアへの負担を軽減できます。
+
+{{CHAPERONE_AUTOMATIONS_HEADER}}
+🔳 ガーディアンの自動化
+
+{{CHAPERONE_AUTOMATIONS_BODY}}
+SteamVRのガーディアンのフェード距離を調整できます。眠っているときにガーディアンを非表示にし、起きたときに再度表示させることができます。
+
+{{TRANSLATION_AND_LOCALIZATION_HEADER}}
+翻訳 & ローカライズ
+
+{{TRANSLATION_AND_LOCALIZATION_BODY}}
+OyasumiVR currently supports the following languages:
+
+OyasumiVRは現在、以下の言語に対応しています。
+- English
+- Dutch (Nederlands)
+- Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
+- Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
+- Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
+- Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
+- French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
+- Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
+- Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
+- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+
+{{TRANSLATION_HELP_HEADER}}
+翻訳への協力
+
+{{TRANSLATION_HELP_BODY}}
+素晴らしいボランティアの方々の協力なしには、これほど多くの言語に対応することはできませんでした。みなさまの努力のおかげで多くの方がOyasumiVRを利用できるようになりました。
+
+不足している翻訳の提供や、新しい言語の追加にご協力いただける場合は、翻訳に関する[wiki](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)をご確認ください。
+さらに詳しい情報をお探しの場合はお気軽にDiscordまでよろしくお願いします。
+
+{{SUPPORTED_HARDWARE_HEADER}}
+対応ハードウェア
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_HEADER}}
+電源の自動化
+
+{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_BODY}}
+現在、以下の機能をサポートしています。
+
+1. バッテリー残量と充電状況のレポート
+2. SteamVRによる電源オフ
+
+これには以下のデバイスが含まれますが、これらに限定されるものではありません。
+
+- HTC Vive Controllers/Wands
+- Index Controllers/Knuckles
+- Vive Trackers (1.0/2.0/3.0)
+- Tundra Trackers\*
+
+これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) を実装しない限りサポートされることはありません。
+
+_(\*) Tundra trackersは、バッテリーレベルと充電ステータスの通信が非常に遅れています。これはファームウェアに起因するものであり、自動化は機能しますが十数分の遅延があります。_
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_HEADER}}
+GPUの自動化
+
+{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_BODY}}
+MSI AfterburnerでサポートされているNVIDIA, AMDのグラフィックカードであればMSI Afterburnerで設定したプロファイルを用いて自動化することができます。
+
+OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみです。AMDユーザーはMSI Afterburnerを経由する必要があります。
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
+明るさの自動化
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
+
+映像の明るさの自動化はすべてのHMDで利用可能です。
+
+{{BUILT_WITH_HEADER}}
+ビルド
+
+{{BUILT_WITH_BODY}}
+OyasumiVRは以下により構築されています。
+
+- [Angular](https://angular.io/) (TypeScript, Main UI)
+- [Tauri](https://tauri.app/) (Rust, Desktop Framework)
+- [SvelteKit](https://kit.svelte.dev/) (TypeScript, Overlay UI)
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, Overlay)
+
+{{DEVELOPMENT_HEADER}}
+開発
+
+{{DEVELOPMENT_BODY}}
+Wikiの [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development) をご覧ください。
+
+{{VRCHAT_HEADER}}
+VRChat
+
+{{VRCHAT_BODY}}
+いくつかの機能にはVRChatでのログインが必要です。（ステータスの自動化など）
+
+ログイン認証に依存しない機能は、認証情報を入力することなく利用できます。
+ログイン情報は自身のPC以外に保存されることはなく、認証のためだけにVRChatのサーバーに送信されます。
+
+OyasumiVRはVRChatによって承認されたものではなく、VRChatまたはVRChatの制作や管理に公式に関与している人物の見解や意見を反映するものではありません。 VRChatはVRChat incの商標です。VRChat © VRChat Inc.
+
+OyasumiVRの開発者及びこのプロジェクトの貢献者は、OyasumiVRに起因するいかなる問題にも責任を負いません。自己責任でご利用ください。
+
+{{SUPPORT_HEADER}}
+サポート
+
+{{SUPPORT_BODY}}
+OyasumiVRでお困りのことがありましたら [Discord](https://discord.gg/7MqdPJhYxC) までお願いします。
+
+もしくはX(旧Twitter) [@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
+
+{{LICENSE_HEADER}}
+ライセンス
+
+{{LICENSE_BODY}}
+OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) license.

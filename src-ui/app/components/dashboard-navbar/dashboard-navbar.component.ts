@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { GpuAutomationsService } from '../../services/gpu-automations.service';
@@ -9,11 +9,11 @@ import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
-import { flatten } from 'lodash';
 import { OscService } from '../../services/osc.service';
 import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -116,7 +116,7 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
   ]);
 }
 
-type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS';
+type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 
 @Component({
   selector: 'app-dashboard-navbar',
@@ -133,6 +133,7 @@ export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
   updateAvailable: Observable<boolean>;
+  lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
 
   constructor(
@@ -145,18 +146,19 @@ export class DashboardNavbarComponent implements OnInit {
     protected router: Router,
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessControlAutomationService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private destroyRef: DestroyRef
   ) {
     this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
-    this.settingErrors = combineLatest([
-      this.lighthouse.consoleStatus.pipe(
-        map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
-        startWith(false)
-      ),
-      this.osc.addressValidation.pipe(
-        map((validation) => flatten(Object.values(validation)).length > 0)
-      ),
-    ]).pipe(map((errorAreas: boolean[]) => !!errorAreas.find((a) => a)));
+    this.lighthouseConsoleErrors = this.lighthouse.consoleStatus.pipe(
+      takeUntilDestroyed(this.destroyRef),
+      map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
+      startWith(false)
+    );
+    this.settingErrors = combineLatest([this.lighthouseConsoleErrors]).pipe(
+      map((errorAreas: boolean[]) => !!errorAreas.find((a) => a))
+    );
+
     this.gpuAutomationsErrors = combineLatest([
       this.gpuAutomations.isEnabled(),
       this.nvml.status,

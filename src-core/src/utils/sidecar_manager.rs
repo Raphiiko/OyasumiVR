@@ -186,6 +186,8 @@ impl SidecarManager {
         }
         // Store started state
         *self.started.lock().await = true;
+        // Update the known pid
+        *self.sidecar_pid.lock().await = Some(pid);
         // Store the GRPC ports
         *self.grpc_port.lock().await = Some(grpc_port);
         *self.grpc_web_port.lock().await = Some(grpc_web_port);
@@ -239,6 +241,8 @@ impl SidecarManager {
                             *sidecar_child.lock().await = None;
                             let grpc_port = &self_guard.grpc_port;
                             *grpc_port.lock().await = None;
+                            let grpc_web_port = &self_guard.grpc_web_port;
+                            *grpc_web_port.lock().await = None;
                             let active = &self_guard.active;
                             *active.lock().await = false;
                             let started = &self_guard.started;

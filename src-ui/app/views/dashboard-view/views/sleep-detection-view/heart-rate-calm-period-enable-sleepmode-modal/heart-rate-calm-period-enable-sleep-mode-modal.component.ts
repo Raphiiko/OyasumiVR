@@ -38,7 +38,7 @@ export class HeartRateCalmPeriodEnableSleepModeModalComponent
   onClick(event: MouseEvent) {
     if ((event.target as HTMLElement).className !== 'integrationsPageLink') return;
     event.preventDefault();
-    this.router.navigate(['/dashboard/settings'], { fragment: 'INTEGRATIONS' });
+    this.router.navigate(['/dashboard/settings/integrations']);
     this.close();
   }
 

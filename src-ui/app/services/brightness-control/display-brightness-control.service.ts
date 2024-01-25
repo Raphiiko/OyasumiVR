@@ -116,9 +116,7 @@ export class DisplayBrightnessControlService {
     options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
   ) {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (!(await firstValueFrom(this.driverIsAvailable))) {
-      throw 'DRIVER_UNAVAILABLE';
-    }
+    if (!(await firstValueFrom(this.driverIsAvailable))) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);
@@ -131,7 +129,6 @@ export class DisplayBrightnessControlService {
   }
 
   async fetchBrightness(): Promise<number | undefined> {
-    if (!(await firstValueFrom(this.driverIsAvailable))) throw 'DRIVER_UNAVAILABLE';
     const brightness = (await this.driver.value?.getBrightnessPercentage()) ?? undefined;
     if (brightness !== undefined) {
       this._brightness.next(brightness);

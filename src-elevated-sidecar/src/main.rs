@@ -86,6 +86,7 @@ async fn main() {
     // Relaunch as admin if not elevated
     if !is_elevated() {
         relaunch_with_elevation(host_port, main_pid, true);
+        return;
     }
     // Setup the grpc server
     let grpc_port = grpc::init_server().await;

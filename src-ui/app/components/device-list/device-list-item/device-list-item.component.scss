@@ -18,7 +18,16 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    flex: 1;
+    background: transparent;
+    transition: all 0.15s;
+    cursor: pointer;
+    padding: 0.5em;
+    margin: -0.5em 0.5em -0.5em -0.5em;
+    border-radius: var(--surface-border-radius);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    min-width: 0;
 
     // .device-name {
     // }
@@ -26,6 +35,28 @@
     .device-serial {
       color: var(--color-text-4);
     }
+
+    .device-nickname {
+      width: 100%;
+      overflow: hidden;
+      color: var(--color-text-4);
+      font-weight: 700;
+      white-space: nowrap;
+      min-height: 0;
+      text-overflow: ellipsis;
+    }
+
+    &:hover {
+      background: var(--color-surface-1);
+    }
+
+    &:active {
+      background: var(--color-surface-0);
+    }
+  }
+
+  &-spacer {
+    flex: 1;
   }
 
   &-action {
@@ -88,4 +119,12 @@
   vertical-align: middle;
   margin-right: 1em;
   filter: invert(91%) sepia(2%) saturate(3440%) hue-rotate(193deg) brightness(83%) contrast(100%);
+}
+
+.wrapper {
+  transition: all 0.15s;
+}
+
+.device-ignored {
+  opacity: 0.6;
 }

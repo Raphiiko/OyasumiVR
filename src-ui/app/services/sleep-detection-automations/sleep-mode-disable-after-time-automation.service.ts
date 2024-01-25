@@ -45,7 +45,6 @@ export class SleepModeDisableAfterTimeAutomationService {
 
   async onTick() {
     if (!this.config.enabled || !this.config.duration) return;
-    const d = new Date();
     if (this.threshold <= 0 || this.sleepLastEnabled <= 0) return;
     if (this.sleepEnabled && Date.now() - this.sleepLastEnabled >= this.threshold) {
       this.sleepEnabled = false;

@@ -2,7 +2,19 @@
   <div class="pane-title">
     {{ 'comp.friend-selection-modal.title' | translate }}
   </div>
-  <div class="pane-content">
+  <div class="pane-content" *ngIf="loadingState === 'LOADING'">
+    <div class="info-container">
+      <span class="large-spinner"></span>
+      <span translate>comp.friend-selection-modal.loading</span>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="loadingState === 'ERROR'">
+    <div class="info-container">
+      <span class="large-spinner"></span>
+      <span translate>comp.friend-selection-modal.loadingError</span>
+    </div>
+  </div>
+  <div class="pane-content" *ngIf="loadingState === 'LOADED'">
     <div class="search">
       <input
         type="text"
@@ -39,6 +51,9 @@
           ><i class="material-icons-round">check</i></button
         >
       </div>
+      <div class="more-results-available" *ngIf="moreResults">
+        <span translate>comp.friend-selection-modal.moreResultsAvailable</span>
+      </div>
     </div>
     <div class="no-results" *ngIf="!results.length" @vshrink>
       <span
@@ -53,7 +68,7 @@
     <button class="btn btn-secondary" (click)="cancel()">
       {{ 'shared.modals.cancel' | translate }}
     </button>
-    <button class="btn btn-primary" (click)="confirm()">
+    <button class="btn btn-primary" (click)="confirm()" *ngIf="loadingState === 'LOADED'" @hshrink>
       {{ 'shared.modals.confirm' | translate }}
     </button>
   </div>

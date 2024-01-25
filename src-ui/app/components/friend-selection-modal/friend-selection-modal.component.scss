@@ -127,6 +127,7 @@
   }
 }
 
+.more-results-available,
 .no-results {
   display: flex;
   justify-content: center;
@@ -136,4 +137,20 @@
   width: 100%;
   height: 100%;
   padding: 1.5em;
+}
+
+.info-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  color: var(--color-text-3);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 1.5em;
+
+  .large-spinner {
+    margin-bottom: 1em;
+  }
 }

@@ -2,8 +2,17 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
-import { debounceTime, delay, firstValueFrom, map, of, takeUntil } from 'rxjs';
+import {
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  of,
+  takeUntil,
+} from 'rxjs';
 import { EventLogLighthouseSetPowerState } from 'src-ui/app/models/event-log-entry';
+import { isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -33,12 +42,19 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
       .pipe(
         // Stop detection after 20 seconds
         takeUntil(of(null).pipe(delay(20000))),
+        distinctUntilChanged((a, b) =>
+          isEqual(
+            a.map((d) => d.id),
+            b.map((d) => d.id)
+          )
+        ),
         // Try to get most in one go
         debounceTime(500)
       )
       .subscribe((lighthouses) => {
         const devices = lighthouses.filter(
           (lighthouse) =>
+            !this.lighthouse.isDeviceIgnored(lighthouse) &&
             !this.seenDevices.includes(lighthouse.id) &&
             (lighthouse.powerState === 'sleep' ||
               lighthouse.powerState === 'standby' ||

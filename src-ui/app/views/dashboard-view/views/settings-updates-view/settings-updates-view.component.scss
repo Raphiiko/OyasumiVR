@@ -1,0 +1,65 @@
+@import 'panes';
+
+:host {
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.pane {
+  width: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}
+
+.updates-disabled {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  font-weight: 600;
+  white-space: pre-line;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    flex-shrink: 0;
+    width: 4em;
+    height: 4em;
+    margin: 0.5em 1em 0.5em 0.5em;
+  }
+  span {
+    flex: 1;
+  }
+}
+
+.update-checker {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 1em;
+
+  p {
+    margin-bottom: 0;
+    white-space: pre;
+  }
+
+  button {
+    margin-right: 1em;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+.pane-changelog {
+  @extend .pane;
+  background: var(--color-surface-1);
+  padding: 1em;
+  overflow-y: overlay;
+}

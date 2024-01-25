@@ -1,55 +1,66 @@
 <ng-container *ngIf="lighthouseDevice || ovrDevice">
-  <div class="header-bar">
-    <div class="header-bar-icon">
-      <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
-    </div>
-    <div class="header-bar-info">
-      <div class="device-name" translate>{{ deviceName }}</div>
-      <div class="device-serial" translate>{{ deviceIdentifier }}</div>
-    </div>
-    <div class="header-bar-action">
-      <button
-        class="btn-power"
-        [class.power-off]="powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'"
-        [class.power-on]="powerButtonState === 'turn_on' || powerButtonState === 'turn_on_busy'"
-        *ngIf="powerButtonState !== 'hide'"
-        [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
-        [@fade]
-        (click)="clickDevicePowerButton()"
-      >
-        <i
-          class="material-icons"
-          *ngIf="powerButtonState === 'turn_off' || powerButtonState === 'turn_on'"
-          >power_settings_new</i
+  <div class="wrapper" [class.device-ignored]="isDeviceIgnored()">
+    <div class="header-bar">
+      <div class="header-bar-icon">
+        <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
+      </div>
+      <div class="header-bar-info" (click)="editDevice()">
+        <div class="device-name" translate>{{ deviceName }}</div>
+        <div class="device-serial" *ngIf="!deviceNickname && deviceRole">{{
+          'comp.device-list.deviceRole.' + deviceRole | translate
+        }}</div>
+        <div class="device-serial" *ngIf="!deviceNickname && !deviceRole">{{
+          deviceIdentifier
+        }}</div>
+        <div class="device-nickname" *ngIf="deviceNickname">{{ deviceNickname }}</div>
+      </div>
+      <div class="header-bar-spacer"></div>
+      <div class="header-bar-action" *ngIf="!isDeviceIgnored()">
+        <button
+          class="btn-power"
+          [class.power-off]="
+            powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'
+          "
+          [class.power-on]="powerButtonState === 'turn_on' || powerButtonState === 'turn_on_busy'"
+          *ngIf="powerButtonState !== 'hide'"
+          [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
+          [@fade]
+          (click)="clickDevicePowerButton()"
         >
+          <i
+            class="material-icons"
+            *ngIf="powerButtonState === 'turn_off' || powerButtonState === 'turn_on'"
+            >power_settings_new</i
+          >
+          <div
+            class="small-spinner"
+            [class.power-off]="powerButtonState === 'turn_off_busy'"
+            [class.power-on]="powerButtonState === 'turn_on_busy'"
+            *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
+          ></div>
+        </button>
+      </div>
+    </div>
+    <div class="status-info" @vshrink *ngIf="status && !isDeviceIgnored()">
+      <span *ngFor="let s of status ? [status] : []" [@vshrink]>{{ s | translate }}</span></div
+    >
+    <div class="battery-info" @vshrink *ngIf="showBattery && !isDeviceIgnored()">
+      <div class="battery-info-bar">
         <div
-          class="small-spinner"
-          [class.power-off]="powerButtonState === 'turn_off_busy'"
-          [class.power-on]="powerButtonState === 'turn_on_busy'"
-          *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
+          class="battery-info-bar-fill"
+          @fade
+          *ngIf="showBattery"
+          [style.width]="batteryPercentage + '%'"
         ></div>
-      </button>
-    </div>
-  </div>
-  <div class="status-info" [@vshrink] *ngIf="status">
-    <span *ngFor="let s of status ? [status] : []" [@vshrink]>{{ s | translate }}</span></div
-  >
-  <div class="battery-info" [@vshrink] *ngIf="showBattery">
-    <div class="battery-info-bar">
-      <div
-        class="battery-info-bar-fill"
-        [@fade]
-        *ngIf="showBattery"
-        [style.width]="batteryPercentage + '%'"
-      ></div>
-    </div>
-    <div class="battery-info-label">
-      <span *ngIf="showBattery" [@fade]>
-        {{ batteryPercentageString }}
-      </span>
-      <i class="material-icons">
-        {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
-      </i>
+      </div>
+      <div class="battery-info-label">
+        <span *ngIf="showBattery" @fade>
+          {{ batteryPercentageString }}
+        </span>
+        <i class="material-icons">
+          {{ isCharging ? 'battery_charging_full' : 'battery_std' }}
+        </i>
+      </div>
     </div>
   </div>
 </ng-container>

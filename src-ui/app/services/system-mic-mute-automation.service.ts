@@ -37,9 +37,6 @@ import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api';
 import { VRChatService } from './vrchat.service';
 
-const PERSISTENT_ID_LEAD = 'CAPTURE_DEVICE_[';
-const PERSISTENT_ID_TRAIL = ']';
-
 @Injectable({
   providedIn: 'root',
 })
@@ -53,8 +50,8 @@ export class SystemMicMuteAutomationService {
     ),
     this.audioDeviceService.activeDevices,
   ]).pipe(
-    switchMap(async ([config]) =>
-      this.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
+    map(([config]) =>
+      this.audioDeviceService.getAudioDeviceForPersistentId(config.audioDevicePersistentId)
     ),
     shareReplay(1)
   );
@@ -390,28 +387,6 @@ export class SystemMicMuteAutomationService {
         switchMap((mute) => this.setMute(mute))
       )
       .subscribe();
-  }
-
-  public getPersistentIdForAudioDevice(device: AudioDevice): string {
-    return PERSISTENT_ID_LEAD + device.name + PERSISTENT_ID_TRAIL;
-  }
-
-  public async getAudioDeviceNameForPersistentId(id: string): Promise<string | null> {
-    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
-    if (id === 'DEFAULT') return devices.find((d) => d.default)?.name ?? null;
-    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
-    return id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
-  }
-
-  public async getAudioDeviceForPersistentId(
-    id: string | undefined | null
-  ): Promise<AudioDevice | null> {
-    if (!id) return null;
-    const devices = await firstValueFrom(this.audioDeviceService.activeDevices);
-    if (id === 'DEFAULT') return devices.find((d) => d.default) ?? null;
-    if (!id.startsWith(PERSISTENT_ID_LEAD) || !id.endsWith(PERSISTENT_ID_TRAIL)) return null;
-    const name = id.substring(PERSISTENT_ID_LEAD.length, id.length - PERSISTENT_ID_TRAIL.length);
-    return devices.find((d) => d.name === name) ?? null;
   }
 
   async setDefaultControlButtonBehavior(

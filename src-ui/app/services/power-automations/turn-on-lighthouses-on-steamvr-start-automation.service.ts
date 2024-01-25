@@ -10,13 +10,10 @@ import { EventLogService } from '../event-log.service';
 import {
   asyncScheduler,
   debounceTime,
-  delay,
   filter,
   firstValueFrom,
   map,
-  of,
   pairwise,
-  skipUntil,
   startWith,
   tap,
   throttleTime,
@@ -50,8 +47,6 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
       .pipe(
         // Get the previous as and current status
         pairwise(),
-        // Ignore status changes for the first 5 seconds
-        skipUntil(of(null).pipe(delay(5000))),
         // Stop if it's not a SteamVR start
         filter(
           ([oldStatus, newStatus]) => oldStatus === 'INITIALIZING' && newStatus === 'INITIALIZED'
@@ -64,7 +59,10 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
       .subscribe(async () => {
         const devices = (await firstValueFrom(this.lighthouse.devices)).filter(
           (d) =>
-            d.powerState === 'sleep' || d.powerState === 'standby' || d.powerState === 'booting'
+            (d.powerState === 'sleep' ||
+              d.powerState === 'standby' ||
+              d.powerState === 'booting') &&
+            !this.lighthouse.isDeviceIgnored(d)
         );
         if (devices.length) {
           this.eventLog.logEvent({
@@ -86,7 +84,9 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
         filter(() => this.config.enabled),
         // Get the newly discovered devices
         map(([oldDevices, newDevices]) =>
-          newDevices.filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+          newDevices
+            .filter((d) => !oldDevices.some((_d) => _d.id === d.id))
+            .filter((d) => !this.lighthouse.isDeviceIgnored(d))
         ),
         // Handle the new devices
         tap((newDevices) => {

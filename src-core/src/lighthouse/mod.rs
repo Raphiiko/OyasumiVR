@@ -68,7 +68,13 @@ pub async fn init() {
 pub async fn start_scan(duration: Duration) {
     // Get the adapter
     let adapter_guard = ADAPTER.lock().await;
-    let adapter = adapter_guard.as_ref().unwrap();
+    let adapter = match adapter_guard.as_ref() {
+        Some(adapter) => adapter,
+        None => {
+            // No bluetooth adapter was found, we stop here
+            return;
+        }
+    };
     // Wait until the adapter is available
     if let Err(e) = adapter.wait_available().await {
         warn!(
@@ -169,7 +175,7 @@ pub async fn get_device_power_state(
                 power_state: state.clone(),
             },
         )
-            .await;
+        .await;
     }
     Ok(state)
 }
@@ -279,7 +285,7 @@ async fn handle_discovered_device(device: Device) {
             device: map_device_to_lighthouse_device(device.clone()).await,
         },
     )
-        .await;
+    .await;
     info!("[Core] Discovered lighthouse device: {}", device_name);
 }
 
@@ -291,7 +297,7 @@ async fn set_lighthouse_status(status: LighthouseStatus) {
             status: status.clone(),
         },
     )
-        .await;
+    .await;
 }
 
 async fn set_scanning_status(scanning: bool) {
@@ -300,7 +306,7 @@ async fn set_scanning_status(scanning: bool) {
         EVENT_SCANNING_STATUS_CHANGED,
         LighthouseScanningStatusChangedEvent { scanning },
     )
-        .await;
+    .await;
 }
 
 async fn get_device(device_id: String) -> Option<Arc<Device>> {
@@ -377,6 +383,16 @@ async fn reset() {
         }
         drop(scanning_guard);
         sleep(Duration::from_millis(100)).await;
+    }
+    // Disconnect all devices
+    {
+        let adapter_guard = ADAPTER.lock().await;
+        if let Some(adapter) = adapter_guard.as_ref() {
+            let devices_guard = LIGHTHOUSE_DEVICES.lock().await;
+            for device in devices_guard.iter() {
+                let _ = adapter.disconnect_device(&device).await;
+            }
+        }
     }
     // Clear all known devices
     {

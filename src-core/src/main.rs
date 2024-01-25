@@ -21,16 +21,21 @@ mod osc;
 mod overlay_sidecar;
 mod steam;
 mod system_tray;
+mod telemetry;
 mod utils;
 mod vrc_log_parser;
 
+use std::sync::atomic::Ordering;
+
+use config::Config;
 pub use flavour::BUILD_FLAVOUR;
 pub use grpc::models as Models;
 
 use cronjob::CronJob;
-use globals::TAURI_APP_HANDLE;
+use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
+use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
@@ -42,6 +47,7 @@ fn main() {
         .plugin(tauri_plugin_fs_extra::init())
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
+        .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             configure_tauri_plugin_deep_link(app.handle());
             let matches = app.get_cli_matches().unwrap();
@@ -68,6 +74,30 @@ fn main() {
         .expect("An error occurred while running the application");
 }
 
+async fn load_configs() {
+    match Config::builder()
+        .add_source(config::File::with_name("flags"))
+        .build()
+    {
+        Ok(flags) => {
+            *FLAGS.lock().await = Some(flags);
+        }
+        Err(e) => match e {
+            config::ConfigError::NotFound(_) => {
+                warn!("[Core] Could not find flags config. Using default values.");
+            }
+            _ => {
+                warn!("[Core] Could not load flags config: {:#?}", e);
+            }
+        },
+    };
+    if globals::is_flag_set("DISABLE_MDNS").await {
+        warn!(
+            "[Core] DISABLE_MDNS flag set: MDNS is disabled. OSC and OSCQuery functionality cannot be expected to work."
+        );
+    }
+}
+
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
     tauri::generate_handler![
         openvr::commands::openvr_get_devices,
@@ -87,6 +117,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,
+        os::commands::get_windows_power_policies,
         os::commands::set_windows_power_policy,
         os::commands::active_windows_power_policy,
         os::commands::windows_shutdown,
@@ -101,19 +132,27 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::set_hardware_mic_activity_enabled,
         os::commands::set_hardware_mic_activivation_threshold,
         os::commands::is_vrchat_active,
+        os::commands::activate_memory_watcher,
         osc::commands::osc_send_bool,
         osc::commands::osc_send_float,
         osc::commands::osc_send_int,
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
         osc::commands::stop_osc_server,
+        osc::commands::get_vrchat_osc_address,
+        osc::commands::get_vrchat_oscquery_address,
+        osc::commands::add_osc_method,
+        osc::commands::set_osc_method_value,
+        osc::commands::set_osc_receive_address_whitelist,
         system_tray::commands::set_close_to_system_tray,
         system_tray::commands::set_start_in_system_tray,
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
+        elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
+        overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
@@ -134,7 +173,41 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_status,
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
+        commands::debug::open_dev_tools,
+        grpc::commands::get_core_grpc_port,
+        grpc::commands::get_core_grpc_web_port,
+        telemetry::commands::set_telemetry_enabled,
     ]
+}
+
+fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
+    tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
+        .with_panic_hook(Box::new(|client, info, msg| {
+            let location = info
+                .location()
+                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .unwrap_or_else(|| "".to_string());
+
+            // Upload crash report if telemetry is enabled
+            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                client.track_event(
+                    "rust_panic",
+                    Some(json!({
+                      "info": format!("{} ({})", msg, location),
+                    })),
+                );
+            }
+
+            // Write msg and location to file
+            let panic_log_path = {
+                let full_path = std::env::current_exe().unwrap();
+                full_path.parent().unwrap().to_path_buf().join("panic.log")
+            };
+            println!("Writing panic log to {:#?}", panic_log_path);
+            let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
+        }))
+        .build()
 }
 
 fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
@@ -147,6 +220,15 @@ fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
+    #[cfg(debug_assertions)]
+    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
+    #[cfg(debug_assertions)]
+    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
+    #[cfg(not(debug_assertions))]
+    const LOG_TARGETS: [LogTarget; 2] = [LogTarget::LogDir, LogTarget::Stdout];
+    #[cfg(not(debug_assertions))]
+    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
+
     tauri_plugin_log::Builder::default()
         .format(move |out, message, record| {
             let format = time::format_description::parse(
@@ -160,8 +242,8 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
                 message
             ))
         })
-        .level(LevelFilter::Info)
-        .targets([LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview])
+        .level(LOG_LEVEL)
+        .targets(LOG_TARGETS)
         .rotation_strategy(RotationStrategy::KeepAll)
         .build()
 }
@@ -193,6 +275,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     std::env::set_current_dir(&executable_path).unwrap();
     // Run any migrations first
     migrations::run_migrations().await;
+    // Load configs
+    load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
     // Open devtools if we're in debug mode
@@ -251,6 +335,16 @@ async fn app_setup(app_handle: tauri::AppHandle) {
         info!(
             "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
         );
+    }
+    // Start profiling if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        utils::profiling::enable_profiling();
+    }
+    // Start profiling if the flag for it is set
+    #[cfg(not(debug_assertions))]
+    if globals::is_flag_set("ENABLE_PROFILING").await {
+        utils::profiling::enable_profiling();
     }
 }
 

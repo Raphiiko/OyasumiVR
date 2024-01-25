@@ -3,13 +3,17 @@ import { TelemetryManifest } from '../models/telemetry-manifest';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE, SETTINGS_KEY_TELEMETRY_SETTINGS } from '../globals';
 import {
+  asyncScheduler,
   BehaviorSubject,
   debounceTime,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
   map,
   Observable,
   pairwise,
+  switchMap,
+  throttleTime,
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
@@ -18,6 +22,8 @@ import { cloneDeep } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { getVersion } from '../utils/app-utils';
 import { debug, info } from 'tauri-plugin-log-api';
+import { invoke } from '@tauri-apps/api';
+import { trackEvent } from '@aptabase/tauri';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +41,16 @@ export class TelemetryService {
 
   async init() {
     await this.loadSettings();
+    this.settings
+      .pipe(
+        map((settings) => settings.enabled),
+        distinctUntilChanged(),
+        throttleTime(2000, asyncScheduler, { leading: false, trailing: true }),
+        switchMap(async (enable) => {
+          await invoke('set_telemetry_enabled', { enable });
+        })
+      )
+      .subscribe();
     if (!isDevMode()) {
       this.timeout = setTimeout(() => this.scheduleTelemetry(), 10000);
       // Send heartbeat when language setting has changed
@@ -49,6 +65,18 @@ export class TelemetryService {
     } else {
       debug('[Telemetry] Disabling telemetry in dev mode');
     }
+
+    addEventListener('unhandledrejection', (e) => {
+      this.trackEvent('ui_promise_rejected', {
+        message: (e.reason?.message || e.reason || e).toString(),
+      });
+    });
+
+    window.addEventListener('error', (e) => {
+      this.trackEvent('ui_js_error', {
+        message: e.message,
+      });
+    });
   }
 
   async loadSettings() {
@@ -65,9 +93,10 @@ export class TelemetryService {
     await this.store.save();
   }
 
-  updateSettings(settings: Partial<TelemetrySettings>) {
+  async updateSettings(settings: Partial<TelemetrySettings>) {
     const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
     this._settings.next(newSettings);
+    await this.saveSettings();
   }
 
   async scheduleTelemetry() {
@@ -84,13 +113,13 @@ export class TelemetryService {
   async sendTelemetry(): Promise<boolean> {
     try {
       const settings = this._settings.value;
+      // Stop if telemetry is not enabled
+      if (!settings.enabled) return false;
       // Fetch manifest if needed
       if (!this.manifest) {
         await this.fetchManifest();
         if (!this.manifest) return false;
       }
-      // Stop if telemetry is not enabled
-      if (!settings.enabled) return false;
       // Determine version and language to send
       const version = await getVersion();
       const lang = await firstValueFrom(this.appSettings.settings).then(
@@ -150,5 +179,10 @@ export class TelemetryService {
         'https://gist.githubusercontent.com/Raphiiko/675fcd03e1e22c2514951ef21c99e4d5/raw/1ba8bc77ab994da8f86f5cf184dd9c79e77f481d/oyasumi_telemetry_manifest.json'
       )
     );
+  }
+
+  async trackEvent(event: string, props: { [key: string]: string | number }) {
+    if (!this._settings.value.enabled) return;
+    await trackEvent(event, props);
   }
 }

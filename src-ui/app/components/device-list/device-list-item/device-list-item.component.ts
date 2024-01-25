@@ -12,6 +12,13 @@ import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { firstValueFrom } from 'rxjs';
+import {
+  DeviceEditModalComponent,
+  DeviceEditModalInputModel,
+  DeviceEditModalOutputModel,
+} from '../device-edit-modal/device-edit-modal.component';
+import { ModalService } from 'src-ui/app/services/modal.service';
+import { OpenVRService } from '../../../services/openvr.service';
 
 @Component({
   selector: 'app-device-list-item',
@@ -27,8 +34,10 @@ export class DeviceListItemComponent implements OnInit {
   constructor(
     private lighthouseConsole: LighthouseConsoleService,
     private lighthouse: LighthouseService,
+    private openvr: OpenVRService,
     private eventLog: EventLogService,
-    private appSettings: AppSettingsService
+    private appSettings: AppSettingsService,
+    private modalService: ModalService
   ) {}
 
   ngOnInit(): void {}
@@ -51,6 +60,20 @@ export class DeviceListItemComponent implements OnInit {
       return this.lighthouseDevice.deviceName;
     }
     return 'unknown';
+  }
+
+  protected get deviceRole(): string | undefined {
+    return this.ovrDevice?.handleType;
+  }
+
+  protected get deviceNickname(): string | null {
+    if (this.ovrDevice) {
+      return this.openvr.getDeviceNickname(this.ovrDevice);
+    }
+    if (this.lighthouseDevice) {
+      return this.lighthouse.getDeviceNickname(this.lighthouseDevice);
+    }
+    return null;
   }
 
   protected get showBattery(): boolean {
@@ -170,5 +193,30 @@ export class DeviceListItemComponent implements OnInit {
           break;
       }
     }
+  }
+
+  editDevice() {
+    let input: DeviceEditModalInputModel;
+    if (this.ovrDevice) {
+      input = {
+        deviceType: 'OPENVR',
+        ovrDevice: this.ovrDevice,
+      };
+    } else if (this.lighthouseDevice) {
+      input = {
+        deviceType: 'LIGHTHOUSE',
+        lighthouseDevice: this.lighthouseDevice,
+      };
+    } else return;
+    this.modalService
+      .addModal<DeviceEditModalInputModel, DeviceEditModalOutputModel>(
+        DeviceEditModalComponent,
+        input
+      )
+      .subscribe();
+  }
+
+  isDeviceIgnored() {
+    return this.lighthouseDevice && this.lighthouse.isDeviceIgnored(this.lighthouseDevice);
   }
 }

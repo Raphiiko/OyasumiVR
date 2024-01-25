@@ -8,18 +8,107 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Show SteamVR device roles instead of serial numbers in the device list, when available. (by [góngo](https://github.com/TheMrGong))
+
+## [1.11.5]
+
+### Fixed
+
+- Added performance improvements to OSC message handling, SteamVR device updates, and sleeping pose detection.
+- Reduced IPC communication to avoid crashes due to overloading the IPC channels.
+
+## [1.11.4]
+
+### Added
+
+- Added debug option for disabling the OSC and OSCQuery servers
+- Flags file for setting debugging flags
+- Debugging flag for disabling MDNS (and as a result, OSCQuery) completely.
+
+### Fixed
+
+- Some stability issues with Tauri v1.5, by downgrading back down to Tauri v1.4.
+
+### Changed
+
+- Disabled Rust to Webview logging in release builds.
+
+## [1.11.3]
+
+### Fixed
+
+- Crash for some users without bluetooth adapters when disabling lighthouse control.
+- Error for windows power policies sometimes not being set correctly, even when they are.
+- Fixed setting of invalid analog gain values
+- Updated subdependency which caused a crash when detecting some invalid DNS records.
+
+## [1.11.2]
+
+### Added
+
+- Crash reporting for Rust panics and JS errors in main UI.
+
+### Changed
+
+- Updated telemetry to integrate with [Aptabase](https://aptabase.com/). A
+  new [privacy policy](https://aptabase.com/legal/privacy) applies.
+
+## [1.11.1]
+
+### Added
+
+- Option for opening the developer tools in release builds.
+
+## [1.11.0]
+
+### Added
+
+- Automations for controlling the volume and mute state of all system audio devices.
+- Russian language support (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
 - Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
 - A credential saving option for remembering your VRChat credentials.
 - Automation for disabling the sleep mode after its been enabled for a specified amount of time.
 - An option for your system microphone to change its mute state when joining a world in VRChat.
 - Option for preventing the overlay from opening when VRChat is not running.
+- Support for custom Windows power policies
+- Custom nicknames for controller, tracker, and base station devices.
+- Option for ignoring specific basestations in automations.
+- Support for setting custom hotkeys (With actions for sleep mode toggling/enabling/disabling, running sleep
+  preparation, running the shutdown sequence, and turning devices on and off)
+- Detection for initialization failures and error handling.
+- Added support for OSCQuery
+- Status information view to the settings, for showing technical information regarding OyasumiVR and some of its
+  internals.
+- Automation for running a OSC script whenever the user prepares to go to sleep.
+- Added OSC commands for turning on and turning off all base stations.
 
 ### Changed
-- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to log you back in.
+
+- When your VRChat session expires and you've opted to store your credentials, OyasumiVR will automatically attempt to
+  log you back in.
+- Improved reliability of base station power management
+- Brightness automations no longer apply on start as a default setting
+- Updated to Tauri v1.5
+- Rewrote OSC control (Old OSC addresses remain supported, but check the wiki page on OSC control for any updates)
 
 ### Fixed
-- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf) and [i0nTempest](https://twitter.com/i0ntempest)).
+
+- Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)
+  and [i0nTempest](https://twitter.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
+- Improved search performance in the friend selection modal for automatically accepting invite requests.
+
+### Removed
+
+- VRChat settings
+- OSC configuration options (Now handled by OSCQuery)
+
+## [1.10.4]
+
+### Fixed
+
+- Fixed failing resource preloads sometimes causing OyasumiVR to fail to start.
+- Fixed telemetry settings not always being saved properly.
 
 ## [1.10.3]
 
@@ -81,7 +170,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Simple mode for brightness control that consolidates image- and display brightness.
 - Brightness control dialog to directly control brightness from the main window.
 - Brightness control sliders to directly control brightness from the overlay.
-- Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to sleep.
+- Sleep preparation automation for brightness control, to allow for dimming brightness levels already before going to
+  sleep.
 - Sleep preparation button in the overlay and on the overview, to trigger automations that support this feature.
 - Copy buttons to the brightness automation configuration for copying current brightness levels.
 - Options to apply sleep-mode based brightness levels on OyasumiVR and SteamVR startup.
@@ -98,7 +188,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Updated translations to use ICU syntax.
-- Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in SteamVR!)
+- Migrated from Legacy OpenVR Input system to SteamVR's current input system (Controller bindings are now configured in
+  SteamVR!)
 - Bundled dotnet runtime requirements with overlay sidecar module. (Separate installation no longer required)
 
 ### Fixed
@@ -144,7 +235,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo Loco 1.8.0 onwards!)
+- Custom VRCFury installation prefabs for GoGo Loco. (You can now use GoGo Loco's own installation prefabs from GoGo
+  Loco 1.8.0 onwards!)
 
 ## [1.8.0]
 
@@ -385,7 +477,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also support v2.3 and
+- Marked the preset for [ごろ寝システム (Sleep System) by みんみんみーん](https://booth.pm/ko/items/2886739) to also
+  support v2.3 and
   the new EX version.
 - Changed presets to support multiple info links (to show both んみんみーん's EX and non-EX version)
 

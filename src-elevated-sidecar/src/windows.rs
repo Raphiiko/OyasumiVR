@@ -9,7 +9,8 @@ pub fn relaunch_with_elevation(main_port: u32, main_pid: u32, force_exit: bool) 
     path_result.push(0);
     let path = path_result;
     // Get port parameter
-    let mut port_result: Vec<_> = OsStr::new(format!("{main_port} {main_pid}").as_str())
+    let old_pid = std::process::id();
+    let mut port_result: Vec<_> = OsStr::new(format!("{main_port} {main_pid} {old_pid}").as_str())
         .encode_wide()
         .collect();
     port_result.push(0);
