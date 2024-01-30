@@ -75,6 +75,17 @@ OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berba
 
 ...dan masih banyak lagi! Silakan lihat bagian "Fitur" yang akan datang untuk membaca lebih lanjut tentang fungsionalitas yang ditawarkan OyasumiVR.
 
+## Support OyasumiVR
+
+OyasumiVR sendiri sudah sepenuhnya gratis, dan akan selalu gratis. Namun, jika Kamu ingin mendukungku dan pengembangan OyasumiVR itu sendiri, berikut adalah beberapa tempat yang dapat Kamu lakukan untuk mendukungku:
+
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+
+Dengan mendukung saya, Kamu membantu saya mendedikasikan lebih banyak waktu untuk mengembangkan fitur-fitur baru, meningkatkan fungsionalitas saat ini, mengimbangi beberapa biaya yang muncul dalam proses pengembangan, dan memicu kecanduan kopi saya ☕.
+
+Saya belum selesai dengan OyasumiVR dalam waktu dekat: **masih ada banyak yang ingin saya kerjakan!**
+
 ## Fitur
 
 ### 💤 Deteksi Tidur
