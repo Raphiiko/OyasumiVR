@@ -3,7 +3,7 @@
     "author": {
       "role": "開発者"
     },
-    "contributions": "貢献",
+    "contributions": "共同開発",
     "contributionType": {
       "feature": "機能",
       "soundFx": "サウンド効果"
@@ -11,7 +11,8 @@
     "discordInvite": "Discord",
     "projectLinks": "プロジェクトリンク",
     "sourceLink": "Source Code @ GitHub",
-    "translations": "翻訳"
+    "translations": "翻訳",
+    "supporters": "サポーター"
   },
   "auto-invite-request-accept": {
     "addFriends": "フレンドを追加",
@@ -57,7 +58,8 @@
     "title": "Req Inviteの自動承認",
     "userOnBusyStatus": "自分のステータスが赤(Do Not Disturb)になっている間は、ユーザーからのReq Inviteを受け入れることができません。",
     "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
-    "whitelist": "ホワイトリスト"
+    "whitelist": "ホワイトリスト",
+    "loadingFriends": "フレンドを読み込み中…"
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -197,7 +199,18 @@
       "vrchatMicMuteAutomations": "マイクミュート",
       "miscAutomations": "その他の自動化",
       "nightmareDetection": "悪夢の検知",
-      "audioVolumeAutomations": "音量の自動化"
+      "audioVolumeAutomations": "音量の自動化",
+      "settings": {
+        "subMenu": "設定",
+        "general": "一般設定",
+        "vrchat": "VRChat設定",
+        "notifications": "通知設定",
+        "updates": "アップデート",
+        "integrations": "外部連携",
+        "advanced": "詳細設定",
+        "hotkeys": "ショートカットキー設定",
+        "statusInfo": "ステータス情報"
+      }
     },
     "device-list": {
       "category": {
@@ -205,6 +218,30 @@
         "GenericTracker": "トラッカー",
         "Lighthouse": "ベースステーション",
         "other": "その他"
+      },
+      "deviceRole": {
+        "HandPrimary": "プライマリハンド",
+        "HandSecondary": "セカンダリハンド",
+        "Head": "ヘッド",
+        "Gamepad": "ゲームパッド",
+        "Treadmill": "トレッドミル",
+        "Stylus": "スタイラス",
+        "FootLeft": "左足",
+        "FootRight": "右足",
+        "ShoulderLeft": "左肩",
+        "ShoulderRight": "右肩",
+        "ElbowLeft": "左ひじ",
+        "ElbowRight": "右ひじ",
+        "KneeLeft": "左膝",
+        "KneeRight": "右膝",
+        "WristLeft": "左手首",
+        "WristRight": "右手首",
+        "AnkleLeft": "左足首",
+        "AnkleRight": "右足首",
+        "Waist": "腰",
+        "Chest": "胸",
+        "Camera": "カメラ",
+        "Keyboard": "キーボード"
       },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
@@ -309,7 +346,8 @@
                 "MANUAL": "手動でオンにした",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをオンにする"
             },
@@ -318,7 +356,8 @@
                 "MANUAL": "手動で設定した",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをスリープモードにする"
             },
@@ -327,7 +366,8 @@
                 "MANUAL": "手動で設定した",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "すべてのベースステーションをスタンバイモードにする"
             }
@@ -338,7 +378,8 @@
                 "MANUAL": "手動でオンにした",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションの電源を入れた"
             },
@@ -347,7 +388,8 @@
                 "MANUAL": "手動で設定した",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションをスリープモードにする"
             },
@@ -356,7 +398,8 @@
                 "MANUAL": "手動で設定した",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
-                "STEAMVR_STOP": "SteamVRが停止したため"
+                "STEAMVR_STOP": "SteamVRが停止したため",
+                "HOTKEY": "ショートカットキーが押されたため"
               },
               "title": "ベースステーションをスタンバイモードにする"
             }
@@ -388,6 +431,7 @@
         "shutdownSequenceStarted": {
           "reason": {
             "MANUAL": "手動で開始した",
+            "HOTKEY": "ショートカットキーを押した",
             "SLEEP_TRIGGER": "指定時間、眠っていた"
           },
           "title": "シャットダウン機能を開始した"
@@ -418,6 +462,7 @@
               "unknown": "不明な自動機能"
             },
             "manual": "手動で無効化",
+            "hotkey": "ショートカットキーによって無効化",
             "osc-control": "OSCによって無効化"
           },
           "title": "睡眠モードを無効化"
@@ -433,6 +478,7 @@
               "unknown": "不明な自動機能"
             },
             "manual": "手動で有効化",
+            "hotkey": "ショートカットキーによって有効化",
             "osc-control": "OSCにより有効化"
           },
           "title": "睡眠モードを有効化"
@@ -450,7 +496,8 @@
             "CHARGING": "充電器に接続された",
             "MANUAL": "手動でオフにした",
             "OSC_CONTROL": "OSCによってオフになった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "HOTKEY": "ショートカットキーが押されたため"
           },
           "title": {
             "ALL": "全ての機器の電源を切った",
@@ -538,6 +585,9 @@
           "NAVIGATE": "システムマイクロフォン:\n自動化",
           "TOGGLE_MUTE": "システムマイクロフォン:\nミュート解除"
         }
+      },
+      "vrchat": {
+        "tooltip": "設定: 連携"
       }
     },
     "osc-script-code-editor": {
@@ -610,6 +660,24 @@
       },
       "title": "二要素認証",
       "logginInAs": "You're logging into VRChat as:"
+    },
+    "device-edit-modal": {
+      "title": "デバイスの編集: {deviceId}",
+      "deviceNickname": {
+        "title": "ニックネーム",
+        "description": "このデバイスのカスタム名をオプションで設定"
+      },
+      "ignoreLighthouse": {
+        "title": "ベースステーションを無視",
+        "description": "無視されたベースステーションは非表示にされ、どんな自動化の影響も受けません"
+      }
+    },
+    "hotkey-selector": {
+      "select": "ショートカットキーの設定"
+    },
+    "hotkey-selector-modal": {
+      "title": "ショートカットキーの設定",
+      "description": "ショートカットキーを設定するには、任意の修飾キーを押し、それに続いて組み合わせたいキーを押します。"
     }
   },
   "gpu-automations": {
@@ -745,6 +813,11 @@
         "description": "送信コマンド",
         "script": "睡眠モード有効時",
         "title": "睡眠時"
+      },
+      "onSleepPreparation": {
+        "description": "OSCコマンドを送信",
+        "script": "就寝準備",
+        "title": "眠る準備をするとき"
       }
     },
     "sleepingAnimations": {
@@ -992,6 +1065,7 @@
   },
   "settings": {
     "advanced": {
+      "title": "詳細設定",
       "logs": {
         "openFolder": {
           "action": "フォルダを開く",
@@ -1065,7 +1139,7 @@
         },
         "loadFile": {
           "action": "ファイルを読み込む",
-          "description": "カスタム言語ファイルを読み込みます。新しい翻訳をテストするときに便利です。",
+          "description": "カスタム言語ファイルを読み込みます。翻訳のテストに便利です",
           "title": "翻訳ファイルを読み込む"
         },
         "title": "言語・翻訳",
@@ -1081,7 +1155,7 @@
         "description": "このセクションには問題を修正し、トラブルシューティングに関連するいくつかのオプションとアクションが含まれています。通常時に利用するものではありません。",
         "vrManifestReregister": {
           "title": "SteamVRアプリケーションマニフェストの再登録",
-          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します。",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
           "action": "マニフェストの再登録",
           "modal": {
             "success": {
@@ -1113,10 +1187,35 @@
               "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。"
             }
           }
+        },
+        "devTools": {
+          "title": "開発者ツールを開く",
+          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
+          "action": "開発者ツールを開く"
+        },
+        "memoryWatcher": {
+          "title": "メモリ監視",
+          "description": "全ての子プロセスを監視するためにメモリ監視をアクティブ化します。プロセスが1GB以上のメモリを使用するとエラーダイアログが表示され、追加情報がログに記録されます",
+          "action": "アクティブ化",
+          "modal": {
+            "error": {
+              "title": "既にアクティブ",
+              "message": "メモリ監視は既にアクティブです。"
+            },
+            "success": {
+              "title": "メモリ監視がアクティブ化されました",
+              "message": "メモリ監視がアクティブ化されました！"
+            }
+          }
+        },
+        "oscServerEnabled": {
+          "title": "OSCおよびOSCQueryサーバーを有効にする",
+          "description": "これをオフにすると、組み込みのOSCおよびOSCQueryサーバーが無効になります。このオプションは再起動しても維持されます。ただし、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、一般的な使用中にオフにするべきではありません"
         }
       }
     },
     "general": {
+      "title": "一般設定",
       "adminPrivileges": {
         "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。これを有効にすることで、OyasumiVRは起動時に管理者権限を要求するようになります",
         "label": "起動時に管理者権限を要求する",
@@ -1167,17 +1266,17 @@
       },
       "overlay": {
         "binding": {
-          "description": "オーバーレイメニューをトリガーするボタンは、SteamVRのバインディングメニューで設定できます。",
+          "description": "オーバーレイメニューをトリガーするボタンは、SteamVRのバインディングメニューで設定できます",
           "title": "コントローラーボタンバインド"
         },
         "overlayMenu": {
-          "description": "OyasumiVRのオーバーレイメニューを完全に無効にしたい場合、このオプションをオフにできます。",
+          "description": "OyasumiVRのオーバーレイメニューを完全に無効にしたい場合、このオプションをオフにできます",
           "title": "オーバーレイメニューを有効にする"
         },
         "title": "オーバーレイ",
         "onlyOpenMenuWhenVRChatRunning": {
           "title": "VRChatが実行中の場合のみメニューを開く",
-          "description": "VRChatが実行されていない間にメニューが開かないようになります。"
+          "description": "VRChatが実行されていない間にメニューが開かないようになります"
         }
       },
       "sleepMode": {
@@ -1230,27 +1329,30 @@
         "title": "システムトレイ"
       },
       "telemetry": {
+        "description": "有効にすると、OyasumiVRはバージョン情報やクラッシュレポートなどの匿名の使用データを収集します。このデータは完全に匿名であり、個人データは含まれません。主にバグの追跡と一般的な使用統計の提供にのみ使用されます。<br>詳細については、<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabaseプライバシーポリシー</a>をご覧ください。",
         "label": "利用データの送信(匿名)",
         "title": "データの送信"
       }
     },
     "integrations": {
+      "title": "連携",
       "connect": "接続",
       "copy": "リンクをクリップボードにコピー",
-      "description": "OyasumiVRの一部の機能は外部サービスを利用することができます。OyasumiVRをこれらのサービスと連携させたい場合、ここが正しい場所です！",
+      "description": "OyasumiVRの一部の機能は外部サービスを利用することができます。OyasumiVRとの連携はここから行います！",
       "disconnect": "切断",
       "providerLink": "公式サイト",
       "pulsoid": {
-        "description": "心拍数データを共有し、特定の自動化を有効にできます。<br><i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの\"BRO\"サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください。",
+        "description": "心拍数データを共有し、特定の自動化を有効にできます<br><i>連携を行うには、PulsoidのOyasumiVR連携を購入するか、Pulsoidの\"BRO\"サブスクリプションを有効にする必要があります。お持ちのデバイスが対応されているか、事前にご確認ください",
         "title": "Pulsoid"
       },
       "reveal": "表示",
       "vrchat": {
-        "description": "アカウントをリンクさせると、OyasumiVRのVRChat関連の自動化にアクセスできるようになります。",
+        "description": "アカウントをリンクさせると、OyasumiVRのVRChat関連の自動化にアクセスできるようになります",
         "title": "VRChat"
       }
     },
     "notifications": {
+      "title": "通知の設定",
       "notifications": {
         "category": {
           "AUTO_ACCEPTED_INVITE_REQUEST": {
@@ -1277,7 +1379,6 @@
         "description": "使用したい通知先を選択します",
         "title": "通知先"
       },
-      "title": "通知の設定",
       "volume": {
         "description": "一部の通知タイプがサウンドを再生する音量レベルを設定します",
         "test": "テスト",
@@ -1285,6 +1386,7 @@
       }
     },
     "updates": {
+      "title": "アップデート",
       "changelog": "変更履歴",
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
@@ -1294,6 +1396,33 @@
       "updatesDisabled": {
         "DEV": "新しいバージョンのOyasumiVRをインストールしたい場合は、手動でインストーラーをダウンロードして実行してください",
         "STEAM": "Steam版をインストールしているため、新しいアップデートはSteamを通じて提供されます！"
+      }
+    },
+    "hotkeys": {
+      "title": "ショートカットキー設定",
+      "description": "OyasumiVR内の特定のアクションに対してシステム全体のショートカットキーを割り当てることができます。",
+      "actionDescription": "ショートカットキーを設定します",
+      "action": {
+        "HOTKEY_TOGGLE_SLEEP_MODE": "睡眠モードの切り替え",
+        "HOTKEY_ENABLE_SLEEP_MODE": "睡眠モードの有効化",
+        "HOTKEY_DISABLE_SLEEP_MODE": "睡眠モードの無効化",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "就寝準備",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "シャットダウンシーケンスの実行",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "コントローラーの電源を切る",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "トラッカーの電源を切る",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "ベースステーションの切り替え",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "ベースステーションの電源を入れる",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "ベースステーションの電源を切る"
+      },
+      "actions": "ショートカットキーアクション"
+    },
+    "statusInfo": {
+      "title": "ステータス情報",
+      "description": "OyasumiVRとその内部のいくつかの技術的な情報が表示されます。主にデバッグ目的で使用され、トラブルシューティングやサポートの際に役立つことがあります。",
+      "copy": {
+        "title": "クリップボードにコピー",
+        "description": "以下の情報をすべてクリップボードにコピーします",
+        "action": "コピー"
       }
     }
   },
