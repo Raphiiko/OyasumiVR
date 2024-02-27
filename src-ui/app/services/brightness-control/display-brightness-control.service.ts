@@ -56,7 +56,7 @@ export class DisplayBrightnessControlService {
         filter(([oldDevices, newDevices]) => {
           const oldHMD = oldDevices.find((d) => d.class === 'HMD');
           const newHMD = newDevices.find((d) => d.class === 'HMD');
-          return !isEqual(oldHMD, newHMD);
+          return !isEqual(oldHMD, newHMD) && !!newHMD;
         })
       )
       .subscribe(async () => {
