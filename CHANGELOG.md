@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - OyasumiVR crashing when trying to read SteamVR's display brightness upon SteamVR quitting.
+- Battery level automations not working for trackers.
 
 ## [1.11.5]
 
