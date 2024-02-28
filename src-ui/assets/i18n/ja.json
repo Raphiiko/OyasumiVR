@@ -1888,8 +1888,7 @@
       "title": "現在のVRChatのマイク状態",
       "unknown": "不明",
       "unmuted": "ミュート解除"
-    },
-    "title": "マイクミュート"
+    }
   },
   "nightmare-detection": {
     "title": "悪夢の検知",

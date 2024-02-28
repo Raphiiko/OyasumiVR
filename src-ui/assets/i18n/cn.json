@@ -1864,8 +1864,7 @@
       "title": "当前 VRChat 麦克风状态",
       "unknown": "未知",
       "unmuted": "已开麦"
-    },
-    "title": "麦克风设置"
+    }
   },
   "nightmare-detection": {
     "title": "噩梦检测",

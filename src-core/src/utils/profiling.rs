@@ -79,7 +79,7 @@ pub async fn profile_command_start(name: &str) -> Option<String> {
         let invocation_count = &mut *invocation_count_guard;
         let count = invocation_count.entry(name.clone()).or_insert(0);
         *count += 1;
-        println!("COMMAND CALLED: {} (COUNT: {})", name, count);
+        // println!("COMMAND CALLED: {} (COUNT: {})", name, count);
     }
     Some(invocation_id)
 }

@@ -1913,7 +1913,6 @@
       "title": "현재 VRChat 마이크 상태",
       "unknown": "알 수 없음",
       "unmuted": "음소거"
-    },
-    "title": "마이크 음소거"
+    }
   }
 }
