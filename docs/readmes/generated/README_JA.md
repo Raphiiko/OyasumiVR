@@ -58,6 +58,20 @@ Discordへの参加もお待ちしています！ <a href="https://discord.gg/7M
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=indonesian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
             </td>
         </tr>
+        <tr>
+            <td align="center">Russian</td>
+            <td align="center"></td>
+            <td align="center"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=russian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_RU.md">Readme</a>
+            </td>
+            <td align="center">
+            </td>
+            <td align="center">
+            </td>
+        </tr>
     </table>
 </p>
 <p align="center">
