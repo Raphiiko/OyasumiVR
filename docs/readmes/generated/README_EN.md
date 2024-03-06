@@ -249,7 +249,7 @@ Switch to blue when you are sleeping alone so your friends can join you, and swi
 <br>
 You can send certain OSC messages to VRChat when sleep mode is enabled, or disabled. You can use the built-in OSC script editor to compose the exact messages you want to send.
 <br><br>
-This is a more advanced feature that you can use use to trigger certain features on your avatar. For example: Show a sleepy expression on your face while sleep mode is enabled!
+This is a more advanced feature that you can use to trigger certain features on your avatar. For example: Show a sleepy expression on your face while sleep mode is enabled!
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dd98c34b-2cce-4037-aaa9-85cdf722cd83"></td>
   </tr>
@@ -356,7 +356,7 @@ Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If
   </tr>
 </table>
 
-## Translation & Localisation
+## Translation & Localization
 
 OyasumiVR currently supports the following languages:
 
