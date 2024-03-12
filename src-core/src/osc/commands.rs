@@ -122,10 +122,6 @@ pub async fn add_osc_method(method: OSCMethod) {
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn set_osc_method_value(address: String, value: String) {
-    println!(
-        "RUN set_osc_method_value with address: {} and value: {}",
-        address, value
-    );
     oyasumivr_oscquery::server::set_osc_method_value(address, Some(value)).await;
 }
 

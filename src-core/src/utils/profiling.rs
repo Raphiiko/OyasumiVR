@@ -3,7 +3,7 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
-use log::warn;
+use log::{info, warn};
 // use serde_json::json;
 // use tauri_plugin_aptabase::EventTracker;
 use tokio::sync::Mutex;
@@ -24,6 +24,7 @@ lazy_static! {
 }
 
 pub fn enable_profiling() {
+    info!("[Core] [PROFILING] Profiling enabled!");
     PROFILING_ENABLED.store(true, Ordering::Relaxed);
     tokio::task::spawn(async {
         loop {
@@ -103,6 +104,7 @@ pub fn profile_command_finish(invocation_id: Option<String>) {
         // Calculate duration
         let duration = time - invocation.time;
         // Process duration
+        // println!("COMMAND FINISHED: {}", invocation.name);
         if duration >= 1000 {
             warn!(
                 "[Core] [PROFILING] Invocation of '{}' command finished, but took {}ms!",

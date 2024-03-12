@@ -29,6 +29,7 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
 
   protected dragging = false;
   protected innerWidth = '0%';
+  protected dragValue = 50;
   onDragStart = (event: MouseEvent) => {
     event.stopImmediatePropagation();
     if (this.dragging) return;
@@ -40,6 +41,7 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
   onDragEnd = () => {
     if (!this.dragging) return;
     this.dragging = false;
+    this.recalculateStyles();
   };
 
   @HostListener('window:mousemove', ['$event'])
@@ -48,12 +50,19 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
     const barBounds = this.rangeGuideEl!.nativeElement.getBoundingClientRect();
     const progress = clamp(($event.pageX - barBounds.left) / barBounds.width, 0.0, 1.0);
     this.value = Math.round(progress * (this.max - this.min) + this.min);
+    this.dragValue = this.value;
     this.valueChange.emit(this.value);
     this.recalculateStyles();
   };
 
   recalculateStyles() {
-    const progress = (this.value - this.min) / (this.max - this.min);
+    let progress;
+    if (this.dragging) {
+      progress = (this.dragValue - this.min) / (this.max - this.min);
+    } else {
+      progress = (this.value - this.min) / (this.max - this.min);
+    }
+    progress = clamp(progress, 0, 1);
     this.innerWidth = `calc(calc(100% - 3.75em) * ${progress} + 3.75em)`;
   }
 
@@ -62,7 +71,11 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['value'] && changes['value'].currentValue !== changes['value'].previousValue)
+    if (
+      ['value', 'min', 'max'].some(
+        (key) => changes[key] && changes[key].currentValue !== changes[key].previousValue
+      )
+    )
       this.recalculateStyles();
   }
 }

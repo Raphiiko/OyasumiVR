@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Show SteamVR device roles instead of serial numbers in the device list, when available. (by [góngo](https://github.com/TheMrGong))
+- Added back VRChat microphone mute automations.
+- Hardware brightness control for Bigscreen Beyond.
+
+### Changed
+
+- Redefined "Display Brightness" as "Hardware Brightness", and "Image Brightness" as "Software Brightness".
+- Updated overlay sidecar to .NET 8.0
+
+### Fixed
+
+- OyasumiVR crashing when trying to read SteamVR's display brightness upon SteamVR quitting.
+- Battery level automations not working for trackers.
+
 ## [1.11.5]
 
 ### Fixed

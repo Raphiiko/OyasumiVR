@@ -22,7 +22,7 @@
     <br>
     ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
     <br>
-If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+Discordへの参加もお待ちしています！ <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <br>
     <table align="center">
@@ -58,6 +58,20 @@ If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img 
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=indonesian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
             </td>
         </tr>
+        <tr>
+            <td align="center">Russian</td>
+            <td align="center"></td>
+            <td align="center"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=russian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_RU.md">Readme</a>
+            </td>
+            <td align="center">
+            </td>
+            <td align="center">
+            </td>
+        </tr>
     </table>
 </p>
 <p align="center">
@@ -90,16 +104,16 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
 
 …他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
 
-## Support OyasumiVR
+## OyasumiVRをサポート
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+OyasumiVR自体は現在も、そしてこれからも完全に無料です。しかしながら私とOyasumiVRの開発を以下の方法でサポートしていただくことも可能です。
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部へと…… そして何より、私のコーヒー依存症を促進させることができます☕
 
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
+OyasumiVRはすぐに終わるわけではありません。**やりたいことはまだまだ残っています！**
 
 ## 機能
 

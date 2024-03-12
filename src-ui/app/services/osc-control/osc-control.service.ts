@@ -16,6 +16,7 @@ import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
 import { AppSettingsService } from '../app-settings.service';
+import { VRCMuteSelfParamOscMethod } from './methods/vrc-mute-self-param.osc-method';
 
 @Injectable({
   providedIn: 'root',
@@ -41,6 +42,7 @@ export class OscControlService {
         new AutoAcceptVRCInviteRequestsOscMethod(osc, automationConfig),
         new VRCPlayerCountStatusAutomationOscMethod(osc, automationConfig),
         new VRCSleepingAnimationsOscMethod(osc, automationConfig),
+        new VRCMuteSelfParamOscMethod(osc),
         new CommandOscMethod(
           osc,
           this,

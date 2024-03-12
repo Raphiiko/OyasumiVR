@@ -2,12 +2,12 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
 <!--    <OutputType>Exe</OutputType>-->
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <RuntimeFrameworkVersion>7.0.13</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>8.0.3</RuntimeFrameworkVersion>
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>

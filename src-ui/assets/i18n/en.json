@@ -75,13 +75,13 @@
       },
       "copyBrightness": "Copy current\nbrightness value",
       "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
-      "displayBrightness": {
-        "description": "Adjusts the brightness of the LCD backlight (Valve Index only)",
-        "title": "Change the display brightness to"
+      "hardwareBrightness": {
+        "description": "Adjusts the brightness of the display itself",
+        "title": "Change the hardware brightness to"
       },
-      "imageBrightness": {
+      "softwareBrightness": {
         "description": "Adjusts the brightness of the image shown in your VR headset",
-        "title": "Change the image brightness to"
+        "title": "Change the software brightness to"
       },
       "onSleepDisable": {
         "description": "Adjust the brightness",
@@ -119,7 +119,7 @@
       "simple": "Simple Mode"
     },
     "modeInfoModal": {
-      "message": "By default, OyasumiVR will control the brightness of your VR headset by adjusting the brightness of the image. If you're using a headset with a LCD panel that can have its backlight controlled through SteamVR (e.g. the Valve Index), OyasumiVR will control the display brightness instead whenever possible.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling image brightness and display brightness.\n\nIn case you prefer direct control, advanced mode allows you to control both image- and display brightness separate from each other, and allows you to set exact brightness values for each.\n\nThis only applies to headsets that support this, which currently only consists of the Valve Index. On other VR headsets, there is no difference between simple and advanced mode.",
+      "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
     "title": "Brightness Automations"
@@ -143,8 +143,8 @@
     "brightness-control-modal": {
       "automationsTooltip": "Brightness Automations",
       "brightness": "Brightness",
-      "displayBrightness": "Display Brightness",
-      "imageBrightness": "Image Brightness"
+      "hardwareBrightness": "Hardware Brightness",
+      "softwareBrightness": "Software Brightness"
     },
     "confirm-modal": {
       "defaultTitle": "Confirm"
@@ -219,6 +219,30 @@
         "Lighthouse": "Base Stations",
         "other": "Others"
       },
+      "deviceRole": {
+        "HandPrimary": "Primary Hand",
+        "HandSecondary": "Secondary Hand",
+        "Head": "Head",
+        "Gamepad": "Gamepad",
+        "Treadmill": "Treadmill",
+        "Stylus": "Stylus",
+        "FootLeft": "Left Foot",
+        "FootRight": "Right Foot",
+        "ShoulderLeft": "Left Shoulder",
+        "ShoulderRight": "Right Shoulder",
+        "ElbowLeft": "Left Elbow",
+        "ElbowRight": "Right Elbow",
+        "KneeLeft": "Left Knee",
+        "KneeRight": "Right Knee",
+        "WristLeft": "Left Wrist",
+        "WristRight": "Right Wrist",
+        "AnkleLeft": "Left Ankle",
+        "AnkleRight": "Right Ankle",
+        "Waist": "Waist",
+        "Chest": "Chest",
+        "Camera": "Camera",
+        "Keyboard": "Keyboard"
+      },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
       },
@@ -283,15 +307,15 @@
           },
           "title": "Chaperone fade distance set to {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Headset display brightness set to {value}",
-            "transition": "Headset display brightness transitioning to {value}"
+            "set": "Headset hardware brightness set to {value}",
+            "transition": "Headset hardware brightness transitioning to {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -304,15 +328,15 @@
             "set": "Power limit for ''{device}'' set to {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Headset image brightness set to {value}",
-            "transition": "Headset image brightness transitioning to {value}"
+            "set": "Headset software brightness set to {value}",
+            "transition": "Headset software brightness transitioning to {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -843,8 +867,8 @@
   },
   "overlay": {
     "brightness": {
-      "display": "Display Brightness",
-      "image": "Image Brightness",
+      "hardware": "Hardware Brightness",
+      "software": "Software Brightness",
       "simple": "Brightness"
     },
     "dashboard": {
@@ -1865,7 +1889,7 @@
       "unknown": "Unknown",
       "unmuted": "Unmuted"
     },
-    "title": "Microphone Muting"
+    "title": "VRChat Microphone Mute Automations"
   },
   "nightmare-detection": {
     "title": "Nightmare Detection",

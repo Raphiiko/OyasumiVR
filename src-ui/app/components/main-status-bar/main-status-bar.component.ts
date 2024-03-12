@@ -7,8 +7,8 @@ import { firstValueFrom } from 'rxjs';
 import { OpenVRService } from '../../services/openvr.service';
 import { BackgroundService } from '../../services/background.service';
 import { OscService } from '../../services/osc.service';
-import { DisplayBrightnessControlService } from '../../services/brightness-control/display-brightness-control.service';
-import { ImageBrightnessControlService } from '../../services/brightness-control/image-brightness-control.service';
+import { HardwareBrightnessControlService } from '../../services/brightness-control/hardware-brightness-control.service';
+import { SoftwareBrightnessControlService } from '../../services/brightness-control/software-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
 import { ModalService } from '../../services/modal.service';
 import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
@@ -43,8 +43,8 @@ export class MainStatusBarComponent implements OnInit {
     protected openvr: OpenVRService,
     protected background: BackgroundService,
     protected osc: OscService,
-    protected displayBrightnessControl: DisplayBrightnessControlService,
-    protected imageBrightnessControl: ImageBrightnessControlService,
+    protected hardwareBrightnessControl: HardwareBrightnessControlService,
+    protected softwareBrightnessControl: SoftwareBrightnessControlService,
     protected simpleBrightnessControl: SimpleBrightnessControlService,
     protected brightnessAutomations: BrightnessControlAutomationService,
     protected pulsoid: PulsoidService

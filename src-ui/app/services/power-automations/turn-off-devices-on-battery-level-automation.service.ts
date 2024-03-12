@@ -59,7 +59,7 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
     sleepMode: boolean
   ) {
     if (previousLevel === null || previousLevel <= currentLevel) return;
-    if (!['Controller', 'Tracker'].includes(device.class)) return;
+    if (!['Controller', 'GenericTracker'].includes(device.class)) return;
     let threshold = 0;
     switch (device.class) {
       case 'Controller':

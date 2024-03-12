@@ -1,25 +1,27 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import { EventLogDisplayBrightnessChanged, EventLogType } from '../../../models/event-log-entry';
+import { EventLogHardwareBrightnessChanged, EventLogType } from '../../../models/event-log-entry';
 
-export class EventLogDisplayBrightnessChangedEntryParser extends EventLogEntryParser<EventLogDisplayBrightnessChanged> {
+export class EventLogHardwareBrightnessChangedEntryParser extends EventLogEntryParser<EventLogHardwareBrightnessChanged> {
   entryType(): EventLogType {
-    return 'displayBrightnessChanged';
+    return 'hardwareBrightnessChanged';
   }
 
-  override headerInfoTitle(entry: EventLogDisplayBrightnessChanged): string {
+  override headerInfoTitle(entry: EventLogHardwareBrightnessChanged): string {
     return (
-      'comp.event-log-entry.type.displayBrightnessChanged.title.' +
+      'comp.event-log-entry.type.hardwareBrightnessChanged.title.' +
       (entry.transition ? 'transition' : 'set')
     );
   }
 
-  override headerInfoTitleParams(entry: EventLogDisplayBrightnessChanged): { [p: string]: string } {
+  override headerInfoTitleParams(entry: EventLogHardwareBrightnessChanged): {
+    [p: string]: string;
+  } {
     return {
       value: entry.value.toString() + '%',
     };
   }
 
-  override headerInfoSubTitle(entry: EventLogDisplayBrightnessChanged): string {
-    return 'comp.event-log-entry.type.displayBrightnessChanged.reason.' + entry.reason;
+  override headerInfoSubTitle(entry: EventLogHardwareBrightnessChanged): string {
+    return 'comp.event-log-entry.type.hardwareBrightnessChanged.reason.' + entry.reason;
   }
 }

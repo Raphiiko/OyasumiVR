@@ -15,6 +15,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   10: from9to10,
   11: from10to11,
   12: from11to12,
+  13: from12to13,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -48,6 +49,21 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from12to13(data: any): any {
+  data.version = 13;
+  [
+    'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE',
+    'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE',
+    'SET_BRIGHTNESS_ON_SLEEP_PREPARATION',
+  ].forEach((automation) => {
+    data[automation]['softwareBrightness'] = data[automation]['imageBrightness'];
+    delete data[automation]['imageBrightness'];
+    data[automation]['hardwareBrightness'] = data[automation]['displayBrightness'];
+    delete data[automation]['displayBrightness'];
+  });
   return data;
 }
 

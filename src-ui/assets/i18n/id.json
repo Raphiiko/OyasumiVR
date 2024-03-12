@@ -73,13 +73,8 @@
       },
       "copyBrightness": "Salin nilai\nkecerahan saat ini",
       "description": "Buat OyasumiVR secara otomatis menyesuaikan kecerahan headset VR Anda pada berbagai waktu, seperti saat Anda pergi tidur, atau saat Anda bangun.",
-      "displayBrightness": {
-        "description": "Menyesuaikan kecerahan lampu latar LCD (hanya Valve Index)",
-        "title": "Ubah kecerahan tampilan ke"
-      },
-      "imageBrightness": {
-        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda",
-        "title": "Ubah kecerahan gambar ke"
+      "softwareBrightness": {
+        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
       },
       "onSleepDisable": {
         "description": "Sesuaikan kecerahan",
@@ -117,7 +112,6 @@
       "simple": "Mode simpel"
     },
     "modeInfoModal": {
-      "message": "Secara default, OyasumiVR akan mengontrol kecerahan headset VR Anda dengan menyesuaikan kecerahan gambar. Jika Anda menggunakan headset dengan panel LCD yang lampu latarnya dapat dikontrol melalui SteamVR (misalnya Valve Index), OyasumiVR akan mengontrol kecerahan layar bila memungkinkan.\n\nDalam mode sederhana, OyasumiVR akan bertransisi dengan lancar antara mengontrol kecerahan gambar dan kecerahan layar.\n\nJika Anda lebih suka kontrol langsung, mode lanjutan memungkinkan Anda mengontrol kecerahan gambar dan tampilan secara terpisah, dan memungkinkan Anda menyetel nilai kecerahan yang tepat untuk masing-masing.\n\nHal ini hanya berlaku pada headset yang mendukung hal tersebut, yang saat ini hanya terdiri dari Valve Index saja. Pada headset VR lainnya, tidak ada perbedaan antara mode sederhana dan lanjutan.",
       "title": "Mode Kontrol Kecerahan"
     },
     "title": "Automasi Kecerahan"
@@ -140,9 +134,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "Automasi Kecerahan",
-      "brightness": "Kecerahan",
-      "displayBrightness": "Kecerahan Layar",
-      "imageBrightness": "Kecerahan Gambar"
+      "brightness": "Kecerahan"
     },
     "confirm-modal": {
       "defaultTitle": "Konfirmasi"
@@ -269,15 +261,11 @@
           },
           "title": "jarak pudar Chaperone diatur ke {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
-          },
-          "title": {
-            "set": "Kecerahan layar headset diatur ke {value}",
-            "transition": "Kecerahan layar headset beralih menuju {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -290,15 +278,11 @@
             "set": "Power limit untuk ''{device}'' diatur ke {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
-          },
-          "title": {
-            "set": "Kecerahan gambar headset diatur ke {value}",
-            "transition": "Kecerahan gambar headset beralih menuju {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -788,8 +772,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "Kecerahan Layar",
-      "image": "Kecerahan Gambar",
       "simple": "Kecerahan"
     },
     "dashboard": {
@@ -1671,7 +1653,6 @@
       "title": "Status mikrofon VRChat saat ini",
       "unknown": "Tidak diketahui",
       "unmuted": "Dibunyikan"
-    },
-    "title": "Matikan Mikrofon"
+    }
   }
 }

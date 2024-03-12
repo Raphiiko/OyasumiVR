@@ -118,13 +118,8 @@
       },
       "copyBrightness": "현재\n밝기 값 복사",
       "description": "잠들거나 일어날 때와 같이 다양한 시간에 OyasumiVR이 VR 헤드셋의 밝기를 자동으로 조정하도록 설정해요.",
-      "displayBrightness": {
-        "description": "LCD 백라이트의 밝기를 조절해요. (Valve Index 전용)",
-        "title": "변경할 디스플레이 밝기"
-      },
-      "imageBrightness": {
-        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
-        "title": "변경할 이미지 밝기"
+      "softwareBrightness": {
+        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요."
       },
       "onSleepDisable": {
         "description": "밝기를 조절해요",
@@ -162,7 +157,6 @@
       "simple": "단순 모드"
     },
     "modeInfoModal": {
-      "message": "기본적으로 OyasumiVR은 이미지의 밝기를 조절하여 VR 헤드셋의 밝기를 제어해요. SteamVR을 통해 LCD 백라이트의 밝기를 제어할 수 있는 헤드셋(예: Valve Index)을 사용하는 경우, OyasumiVR은 가능하면 디스플레이의 밝기를 대신 제어해요. \n\n단순 모드에서는 이미지 밝기와 디스플레이 밝기 사이에서 부드럽게 전환됩니다. \n\n직접 제어하는 것을 선호할 경우 고급 모드에서 이미지 밝기와 디스플레이 밝기를 분리해 제어할 수 있으며 각각에 대한 정확한 밝기 값을 설정할 수 있어요. \n\n이 기능은 이를 지원하는 헤드셋에만 적용되며, 현제 Valve Index만 지원하고 있어요. 다른 VR 헤드셋에서는 단순 모드와 고급 모드의 차이가 없습니다.",
       "title": "밝기 제어 모드"
     },
     "title": "밝기 자동화"
@@ -185,9 +179,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "밝기 자동화",
-      "brightness": "밝기",
-      "displayBrightness": "디스플레이 밝기",
-      "imageBrightness": "이미지 밝기"
+      "brightness": "밝기"
     },
     "confirm-modal": {
       "defaultTitle": "확인"
@@ -345,15 +337,11 @@
           },
           "title": "Chaperone 경계 표시 거리를 {value}으로 변경함"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
-          },
-          "title": {
-            "set": "헤드셋의 디스플레이 밝기를 {value}으로 설정함",
-            "transition": "헤드셋의 디스플레이 밝기를 {value}으로 점차 변화시킴"
           }
         },
         "gpuPowerLimitChanged": {
@@ -366,15 +354,11 @@
             "set": "''{device}''의 전력 제한을 {limit}으로 설정함"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
-          },
-          "title": {
-            "set": "헤드셋의 이미지 밝기를 {value}으로 설정함",
-            "transition": "헤드셋의 이미지 밝기를 {value}으로 점차 변화시킴"
           }
         },
         "lighthouseSetPowerState": {
@@ -917,8 +901,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "디스플레이 밝기",
-      "image": "이미지 밝기",
       "simple": "밝기"
     },
     "dashboard": {
@@ -1913,7 +1895,6 @@
       "title": "현재 VRChat 마이크 상태",
       "unknown": "알 수 없음",
       "unmuted": "음소거"
-    },
-    "title": "마이크 음소거"
+    }
   }
 }

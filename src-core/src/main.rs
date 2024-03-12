@@ -11,6 +11,7 @@ mod elevated_sidecar;
 mod flavour;
 mod globals;
 mod grpc;
+mod hardware;
 mod http;
 mod image_cache;
 mod lighthouse;
@@ -113,6 +114,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_binding_origins,
         openvr::commands::openvr_is_dashboard_visible,
         openvr::commands::openvr_reregister_manifest,
+        hardware::beyond::commands::bigscreen_beyond_set_brightness,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
@@ -308,6 +310,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth
     lighthouse::init().await;
+    // Initialize Hardware modules
+    hardware::init().await;
     // Initialize log commands
     commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
     // Initialize elevated sidecar module

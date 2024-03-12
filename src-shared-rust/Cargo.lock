@@ -4,7 +4,7 @@ version = 3
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.8.0"
+version = "1.11.5"
 dependencies = [
  "winapi",
 ]

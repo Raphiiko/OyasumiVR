@@ -16,8 +16,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EventLogLighthouseSetPowerStateEntryParser } from './entry-parsers/lighthouse-set-power-state';
 import { EventLogShutdownSequenceStartedEntryParser } from './entry-parsers/shutdown-sequence-started';
 import { EventLogShutdownSequenceCancelledEntryParser } from './entry-parsers/shutdown-sequence-cancelled';
-import { EventLogDisplayBrightnessChangedEntryParser } from './entry-parsers/display-brightness-changed';
-import { EventLogImageBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
+import { EventLogHardwareBrightnessChangedEntryParser } from './entry-parsers/display-brightness-changed';
+import { EventLogSoftwareBrightnessChangedEntryParser } from './entry-parsers/image-brightness-changed';
 import { EventLogWindowsPowerPolicySetEntryParser } from './entry-parsers/windows-power-policy-set';
 import { EventLogMsiAfterburnerProfileSetEntryParser } from './entry-parsers/msi-afterburner-profile-set';
 import { EventLogSimpleBrightnessChangedEntryParser } from './entry-parsers/simple-brightness-changed';
@@ -45,8 +45,8 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogLighthouseSetPowerStateEntryParser(),
     new EventLogGpuPowerLimitChangedEntryParser(),
     new EventLogSimpleBrightnessChangedEntryParser(),
-    new EventLogDisplayBrightnessChangedEntryParser(),
-    new EventLogImageBrightnessChangedEntryParser(),
+    new EventLogHardwareBrightnessChangedEntryParser(),
+    new EventLogSoftwareBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
     new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
     new EventLogSleepDetectorEnableCancelledEntryParser(),

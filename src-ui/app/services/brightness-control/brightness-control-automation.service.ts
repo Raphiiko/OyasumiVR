@@ -20,14 +20,14 @@ import {
 import { CancellableTask } from '../../utils/cancellable-task';
 import { EventLogService } from '../event-log.service';
 import { SimpleBrightnessControlService } from './simple-brightness-control.service';
-import { DisplayBrightnessControlService } from './display-brightness-control.service';
-import { ImageBrightnessControlService } from './image-brightness-control.service';
+import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { SetBrightnessAutomationConfig } from '../../models/automations';
 import { OpenVRService } from '../openvr.service';
 import { SetBrightnessReason } from './brightness-control-models';
 import {
-  EventLogDisplayBrightnessChanged,
-  EventLogImageBrightnessChanged,
+  EventLogHardwareBrightnessChanged,
+  EventLogSoftwareBrightnessChanged,
   EventLogSimpleBrightnessChanged,
 } from '../../models/event-log-entry';
 import { SleepPreparationService } from '../sleep-preparation.service';
@@ -63,8 +63,8 @@ export class BrightnessControlAutomationService {
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
     private simpleBrightnessControl: SimpleBrightnessControlService,
-    private displayBrightnessControl: DisplayBrightnessControlService,
-    private imageBrightnessControl: ImageBrightnessControlService,
+    private hardwareBrightnessControl: HardwareBrightnessControlService,
+    private softwareBrightnessControl: SoftwareBrightnessControlService,
     private eventLog: EventLogService,
     private openvr: OpenVRService,
     private sleepPreparation: SleepPreparationService
@@ -144,8 +144,8 @@ export class BrightnessControlAutomationService {
       switchMap((lastActivatedTransition) => {
         if (lastActivatedTransition?.automation !== automation) return of(false);
         return combineLatest([
-          this.displayBrightnessControl.activeTransition,
-          this.imageBrightnessControl.activeTransition,
+          this.hardwareBrightnessControl.activeTransition,
+          this.softwareBrightnessControl.activeTransition,
           this.simpleBrightnessControl.activeTransition,
         ]).pipe(
           map((activeTransitions) => {
@@ -187,8 +187,8 @@ export class BrightnessControlAutomationService {
       : logReasonMap[automationType];
     // Cancel any active transitions
     this.simpleBrightnessControl.cancelActiveTransition();
-    this.displayBrightnessControl.cancelActiveTransition();
-    this.imageBrightnessControl.cancelActiveTransition();
+    this.hardwareBrightnessControl.cancelActiveTransition();
+    this.softwareBrightnessControl.cancelActiveTransition();
     // Apply the brightness changes
     const advancedMode = await firstValueFrom(this.automationConfigService.configs).then(
       (c) => c.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled
@@ -197,18 +197,18 @@ export class BrightnessControlAutomationService {
       const tasks: CancellableTask[] = await (async () => {
         if (advancedMode) {
           const tasks = [
-            this.imageBrightnessControl.transitionBrightness(
-              config.imageBrightness,
+            this.softwareBrightnessControl.transitionBrightness(
+              config.softwareBrightness,
               config.transitionTime,
               {
                 logReason,
               }
             ),
           ];
-          if (await firstValueFrom(this.displayBrightnessControl.driverIsAvailable)) {
+          if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
             tasks.push(
-              this.displayBrightnessControl.transitionBrightness(
-                config.displayBrightness,
+              this.hardwareBrightnessControl.transitionBrightness(
+                config.hardwareBrightness,
                 config.transitionTime,
                 {
                   logReason,
@@ -235,11 +235,11 @@ export class BrightnessControlAutomationService {
       });
     } else {
       if (advancedMode) {
-        await this.imageBrightnessControl.setBrightness(config.imageBrightness, {
+        await this.softwareBrightnessControl.setBrightness(config.softwareBrightness, {
           logReason,
         });
-        if (await firstValueFrom(this.displayBrightnessControl.driverIsAvailable)) {
-          await this.displayBrightnessControl.setBrightness(config.displayBrightness, {
+        if (await firstValueFrom(this.hardwareBrightnessControl.driverIsAvailable)) {
+          await this.hardwareBrightnessControl.setBrightness(config.hardwareBrightness, {
             logReason,
           });
         }
@@ -255,19 +255,19 @@ export class BrightnessControlAutomationService {
     if (!eventLogReason) return;
     if (advancedMode) {
       this.eventLog.logEvent({
-        type: 'imageBrightnessChanged',
+        type: 'softwareBrightnessChanged',
         reason: eventLogReason,
         value: config.brightness,
         transition: config.transition,
         transitionTime: config.transitionTime,
-      } as EventLogImageBrightnessChanged);
+      } as EventLogSoftwareBrightnessChanged);
       this.eventLog.logEvent({
-        type: 'displayBrightnessChanged',
+        type: 'hardwareBrightnessChanged',
         reason: eventLogReason,
         value: config.brightness,
         transition: config.transition,
         transitionTime: config.transitionTime,
-      } as EventLogDisplayBrightnessChanged);
+      } as EventLogHardwareBrightnessChanged);
     } else {
       this.eventLog.logEvent({
         type: 'simpleBrightnessChanged',

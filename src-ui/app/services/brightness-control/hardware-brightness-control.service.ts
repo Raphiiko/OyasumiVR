@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { DisplayBrightnessControlDriver } from './display-brightness-drivers/display-brightness-control-driver';
-import { ValveIndexDisplayBrightnessControlDriver } from './display-brightness-drivers/valve-index-display-brightness-control-driver';
+import {
+  HardwareBrightnessControlDriver,
+  HardwareBrightnessControlDriverBounds,
+} from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { OpenVRService } from '../openvr.service';
 import {
   BehaviorSubject,
+  combineLatest,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -20,13 +24,17 @@ import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
+import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 
 @Injectable({
   providedIn: 'root',
 })
-export class DisplayBrightnessControlService {
-  private driver: BehaviorSubject<DisplayBrightnessControlDriver | null> =
-    new BehaviorSubject<DisplayBrightnessControlDriver | null>(null);
+export class HardwareBrightnessControlService {
+  private readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
+  private readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
+
+  private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
+    new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
@@ -45,7 +53,15 @@ export class DisplayBrightnessControlService {
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
   constructor(private openvr: OpenVRService) {
-    this.driver.next(new ValveIndexDisplayBrightnessControlDriver(openvr));
+    this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(openvr);
+    this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(openvr);
+    const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];
+    combineLatest(driverList.map((driver) => driver.isAvailable()))
+      .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))
+      .subscribe((drivers) => {
+        const availableDriver = driverList.find((_, i) => drivers[i]);
+        this.driver.next(availableDriver ?? null);
+      });
   }
 
   async init() {
@@ -56,13 +72,13 @@ export class DisplayBrightnessControlService {
         filter(([oldDevices, newDevices]) => {
           const oldHMD = oldDevices.find((d) => d.class === 'HMD');
           const newHMD = newDevices.find((d) => d.class === 'HMD');
-          return !isEqual(oldHMD, newHMD);
+          return !isEqual(oldHMD, newHMD) && !!newHMD;
         })
       )
       .subscribe(async () => {
         await this.fetchBrightness();
       });
-    await listen<number>('setDisplayBrightness', async (event) => {
+    await listen<number>('setHardwareBrightness', async (event) => {
       await this.setBrightness(event.payload, { cancelActiveTransition: true });
     });
   }
@@ -80,10 +96,13 @@ export class DisplayBrightnessControlService {
     }
     this._activeTransition.value?.cancel();
     const transition = new BrightnessTransitionTask(
-      'DISPLAY',
+      'HARDWARE',
       this.setBrightness.bind(this),
       this.fetchBrightness.bind(this),
-      this.getBrightnessBounds.bind(this),
+      async () => {
+        const bounds = await this.getBrightnessBounds();
+        return [bounds.softwareStops[0], bounds.softwareStops[bounds.softwareStops.length - 1]];
+      },
       percentage,
       duration,
       { logReason: opt.logReason }
@@ -97,7 +116,9 @@ export class DisplayBrightnessControlService {
         this._activeTransition.next(undefined);
     });
     if (opt.logReason) {
-      info(`[BrightnessControl] Starting display brightness transition (Reason: ${opt.logReason})`);
+      info(
+        `[BrightnessControl] Starting hardware brightness transition (Reason: ${opt.logReason})`
+      );
     }
     this._activeTransition.next(transition);
     transition.start();
@@ -123,7 +144,7 @@ export class DisplayBrightnessControlService {
     await this.driver.value!.setBrightnessPercentage(percentage);
     if (opt.logReason) {
       await info(
-        `[BrightnessControl] Set display brightness to ${percentage}% (Reason: ${opt.logReason})`
+        `[BrightnessControl] Set hardware brightness to ${percentage}% (Reason: ${opt.logReason})`
       );
     }
   }
@@ -132,14 +153,19 @@ export class DisplayBrightnessControlService {
     const brightness = (await this.driver.value?.getBrightnessPercentage()) ?? undefined;
     if (brightness !== undefined) {
       this._brightness.next(brightness);
-      await info(`[BrightnessControl] Fetched display brightness from SteamVR (${brightness}%)`);
+      await info(`[BrightnessControl] Fetched hardware brightness from SteamVR (${brightness}%)`);
     }
     return brightness;
   }
 
-  async getBrightnessBounds(): Promise<[number, number]> {
-    // For now this check is not needed, but it might be in the future.
-    // if (!(await firstValueFrom(this.driverIsAvailable()))) throw 'DRIVER_UNAVAILABLE';
+  async getBrightnessBounds(): Promise<HardwareBrightnessControlDriverBounds> {
+    if (!this.driver.value)
+      return {
+        softwareStops: [0, 100],
+        hardwareStops: [0, 100],
+        overdriveThreshold: 100,
+        riskThreshold: 100,
+      };
     return this.driver.value!.getBrightnessBounds();
   }
 }

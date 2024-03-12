@@ -7,20 +7,20 @@
 </h3>
 
 <p align="center">
-    <a><img alt="Latest Version" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
-    <a><img alt="Development Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
-    <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="License" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
+    <a><img alt="Versi Terbaru" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
+    <a><img alt="Status Pengembangan Build" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
+    <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="Lisensi" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
-    <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam Page" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
-    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
+    <a href="https://discord.gg/7MqdPJhYxC"><img alt="Lencana Discord" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Halaman Steam" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Halaman BOOTH.pm" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
+    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Halaman Gumroad" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
+    ❤️&nbsp;<a href="https://aptabase.com/">Dibuat di Aptabase</a>
     <br>
 Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
@@ -58,6 +58,20 @@ Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=indonesian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
             </td>
         </tr>
+        <tr>
+            <td align="center">Russian</td>
+            <td align="center"></td>
+            <td align="center"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=russian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_RU.md">Readme</a>
+            </td>
+            <td align="center">
+            </td>
+            <td align="center">
+            </td>
+        </tr>
     </table>
 </p>
 <p align="center">
@@ -90,16 +104,16 @@ OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berba
 
 ...dan masih banyak lagi! Silakan lihat bagian "Fitur" yang akan datang untuk membaca lebih lanjut tentang fungsionalitas yang ditawarkan OyasumiVR.
 
-## Support OyasumiVR
+## Dukung OyasumiVR
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+OyasumiVR sendiri sepenuhnya gratis, dan akan selalu gratis. Namun, jika Anda ingin mendukung saya dan pengembangan OyasumiVR, berikut adalah beberapa tempat yang dapat Anda lakukan:
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+Dengan mendukung saya, Anda membantu saya mendedikasikan lebih banyak waktu untuk mengembangkan fitur-fitur baru, meningkatkan fungsionalitas saat ini, mengimbangi beberapa biaya yang muncul dalam proses pengembangan, dan memicu kecanduan kopi saya ☕.
 
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
+Saya belum selesai dengan OyasumiVR dalam waktu dekat: **Masih ada banyak yang ingin saya kerjakan!
 
 ## Fitur
 
