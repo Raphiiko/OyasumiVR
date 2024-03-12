@@ -27,6 +27,17 @@ pub async fn bigscreen_beyond_set_brightness(brightness: u16) -> Result<(), Stri
             return Err("DEVICE_NOT_FOUND".to_string());
         }
     };
+    let mut fan_percentage: u8 = 50;
+    if brightness > 266 {
+        fan_percentage = 100;
+    }
+    match device.send_feature_report(&[0, 0x46, fan_percentage as u8]) {
+        Ok(_) => {}
+        Err(e) => {
+            error!("[Core] Could not send data to Bigscreen Beyond: {}", e);
+            return Err("DEVICE_WRITE_ERROR".to_string());
+        }
+    };
     match device.send_feature_report(&[
         0,
         0x49,
