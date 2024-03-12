@@ -27,8 +27,8 @@ import { OpenVRService } from '../openvr.service';
 import { SetBrightnessReason } from './brightness-control-models';
 import {
   EventLogHardwareBrightnessChanged,
-  EventLogSoftwareBrightnessChanged,
   EventLogSimpleBrightnessChanged,
+  EventLogSoftwareBrightnessChanged,
 } from '../../models/event-log-entry';
 import { SleepPreparationService } from '../sleep-preparation.service';
 

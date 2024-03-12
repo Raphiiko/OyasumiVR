@@ -8,7 +8,7 @@ import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 import { invoke } from '@tauri-apps/api';
 
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
-  private lastSetBrightnessPercentage: number = 100;
+  private lastSetBrightnessPercentage = 100;
 
   constructor(private openvr: OpenVRService) {
     super();

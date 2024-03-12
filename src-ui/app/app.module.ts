@@ -181,10 +181,10 @@ import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
-import { ask } from '@tauri-apps/api/dialog';
-import { exit } from '@tauri-apps/api/process';
-import { OscControlService } from './services/osc-control/osc-control.service';
-import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
+import { ask } from "@tauri-apps/api/dialog";
+import { exit } from "@tauri-apps/api/process";
+import { OscControlService } from "./services/osc-control/osc-control.service";
+import { SnowverlayComponent } from "./components/snowverlay/snowverlay.component";
 
 [
   localeEN,
