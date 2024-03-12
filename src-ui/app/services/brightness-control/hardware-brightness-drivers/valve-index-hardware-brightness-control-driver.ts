@@ -1,15 +1,23 @@
-import { DisplayBrightnessControlDriver } from './display-brightness-control-driver';
+import {
+  HardwareBrightnessControlDriver,
+  HardwareBrightnessControlDriverBounds,
+} from './hardware-brightness-control-driver';
 import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
-import { combineLatest, map, Observable } from 'rxjs';
+import { combineLatest, debounceTime, map, Observable } from 'rxjs';
 
-export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessControlDriver {
+export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   constructor(private openvr: OpenVRService) {
     super();
   }
 
-  async getBrightnessBounds(): Promise<[number, number]> {
-    return [20, 160];
+  getBrightnessBounds(): HardwareBrightnessControlDriverBounds {
+    return {
+      softwareStops: [20, 160],
+      hardwareStops: [20, 160],
+      overdriveThreshold: 100,
+      riskThreshold: 160,
+    };
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -19,14 +27,14 @@ export class ValveIndexDisplayBrightnessControlDriver extends DisplayBrightnessC
   }
 
   async setBrightnessPercentage(percentage: number): Promise<void> {
-    const bounds = await this.getBrightnessBounds();
-    percentage = clamp(percentage, bounds[0], bounds[1]);
+    percentage = this.percentageToHardwareValue(percentage);
     const analogGain = this.percentageToAnalogGain(percentage);
     this.openvr.setAnalogGain(analogGain);
   }
 
   isAvailable(): Observable<boolean> {
     return combineLatest([this.openvr.status, this.openvr.devices]).pipe(
+      debounceTime(0),
       map(([status, devices]) => {
         const hmd = devices.find((d) => d.class === 'HMD');
         return (

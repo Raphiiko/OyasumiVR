@@ -115,11 +115,11 @@
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">monitor</i>
         </div>
-        <span [class.inactive]="(displayBrightnessControl.driverIsAvailable | async) === false"
-          >{{ displayBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+        <span [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
+          >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
         >
         <span><b>&nbsp;|&nbsp;</b></span>
-        <span>{{ imageBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        <span>{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">image</i>
         </div>

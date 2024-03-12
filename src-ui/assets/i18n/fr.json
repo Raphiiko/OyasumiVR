@@ -149,7 +149,7 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
@@ -165,7 +165,7 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"

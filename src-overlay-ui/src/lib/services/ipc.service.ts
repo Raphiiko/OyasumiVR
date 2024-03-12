@@ -64,7 +64,7 @@ class IPCService {
         cloneDeep(DEFAULT_OYASUMI_STATE),
         cloneDeep(get(INSTANCE.state)),
         state,
-        (objValue, srcValue) => {
+        (objValue: unknown, srcValue: unknown) => {
           if (Array.isArray(objValue)) return srcValue;
         }
       );
@@ -145,7 +145,7 @@ class IPCService {
     await window.OyasumiIPCOut.sendEventJson("turnOffOVRDevices", JSON.stringify(deviceIds));
   }
 
-  public async setBrightness(type: "SIMPLE" | "IMAGE" | "DISPLAY", value: number): Promise<void> {
+  public async setBrightness(type: "SIMPLE" | "SOFTWARE" | "HARDWARE", value: number): Promise<void> {
     this.state.update((state) => {
       state = cloneDeep(state);
       switch (type) {
@@ -153,13 +153,13 @@ class IPCService {
           state.brightnessState!.brightness = value;
           window.OyasumiIPCOut.sendEventDouble("setSimpleBrightness", value);
           break;
-        case "IMAGE":
-          state.brightnessState!.imageBrightness = value;
-          window.OyasumiIPCOut.sendEventDouble("setImageBrightness", value);
+        case "SOFTWARE":
+          state.brightnessState!.softwareBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setSoftwareBrightness", value);
           break;
-        case "DISPLAY":
-          state.brightnessState!.displayBrightness = value;
-          window.OyasumiIPCOut.sendEventDouble("setDisplayBrightness", value);
+        case "HARDWARE":
+          state.brightnessState!.hardwareBrightness = value;
+          window.OyasumiIPCOut.sendEventDouble("setHardwareBrightness", value);
           break;
       }
       return state;

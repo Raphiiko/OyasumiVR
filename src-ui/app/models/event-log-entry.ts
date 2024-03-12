@@ -5,12 +5,12 @@ import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {
-  version: 3;
+  version: 5;
   logs: EventLogEntry[];
 };
 
 export const EVENT_LOG_DEFAULT: EventLog = {
-  version: 3,
+  version: 5,
   logs: [],
 };
 
@@ -21,8 +21,8 @@ export type EventLogEntry =
   | EventLogLighthouseSetPowerState
   | EventLogGpuPowerLimitChanged
   | EventLogSimpleBrightnessChanged
-  | EventLogDisplayBrightnessChanged
-  | EventLogImageBrightnessChanged
+  | EventLogHardwareBrightnessChanged
+  | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogSleepDetectorEnableCancelled
@@ -48,8 +48,8 @@ export type EventLogType =
   | 'lighthouseSetPowerState'
   | 'gpuPowerLimitChanged'
   | 'simpleBrightnessChanged'
-  | 'displayBrightnessChanged'
-  | 'imageBrightnessChanged'
+  | 'hardwareBrightnessChanged'
+  | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
   | 'statusChangedOnPlayerCountChange'
   | 'sleepDetectorEnableCancelled'
@@ -116,16 +116,16 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
   resetToDefault: boolean;
 }
 
-export interface EventLogDisplayBrightnessChanged extends EventLogBase {
-  type: 'displayBrightnessChanged';
+export interface EventLogHardwareBrightnessChanged extends EventLogBase {
+  type: 'hardwareBrightnessChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;
   transitionTime: number;
 }
 
-export interface EventLogImageBrightnessChanged extends EventLogBase {
-  type: 'imageBrightnessChanged';
+export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
+  type: 'softwareBrightnessChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   transition: boolean;
   value: number;

@@ -118,13 +118,8 @@
       },
       "copyBrightness": "複製\n當前亮度值",
       "description": "讓 OyasumiVR 在不同的時間自動調整 VR 頭顯的亮度，比如睡覺或起床時",
-      "displayBrightness": {
-        "description": "調整 LCD 背光的亮度（僅限 Valve Index）",
-        "title": "將顯示器亮度變更為"
-      },
-      "imageBrightness": {
-        "description": "調整 VR 頭顯影像的亮度",
-        "title": "將影像亮度變更為"
+      "softwareBrightness": {
+        "description": "調整 VR 頭顯影像的亮度"
       },
       "onSleepDisable": {
         "description": "調整亮度",
@@ -162,7 +157,6 @@
       "simple": "簡單模式"
     },
     "modeInfoModal": {
-      "message": "預設情況下，OyasumiVR 將透過調整影像亮度來控制 VR 頭顯的亮度。如果你使用的頭顯帶有液晶面板，可以通過 SteamVR 控制其背光（例如 Valve Index），OyasumiVR 將盡可能控制顯示器亮度。 \n如果你更喜歡直接控制，高級模式允許你同時控制影像亮度和顯示亮度，並允許你為每種亮度設定精確的亮度值。\n\n在其他 VR 頭顯上，簡單模式和高級模式沒有區別",
       "title": "亮度控制模式"
     },
     "title": "亮度自動調整"
@@ -185,9 +179,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "亮度自動調整",
-      "brightness": "亮度",
-      "displayBrightness": "顯示器亮度",
-      "imageBrightness": "影像亮度"
+      "brightness": "亮度"
     },
     "confirm-modal": {
       "defaultTitle": "確認"
@@ -369,15 +361,11 @@
           },
           "title": "Chaperone 淡化距離設定為 {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
             "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
-          },
-          "title": {
-            "set": "頭戴式顯示器亮度設定為 {value}",
-            "transition": "頭戴式顯示器亮度正在調整到 {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -390,15 +378,11 @@
             "set": "將 「{device}」 的功率限制設定為 {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "由於睡眠模式被停用",
             "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
-          },
-          "title": {
-            "set": "頭戴式顯示器影像亮度設定為 {value}",
-            "transition": "頭戴式顯示器影像亮度調整到 {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -941,8 +925,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "顯示亮度",
-      "image": "影像亮度",
       "simple": "亮度"
     },
     "dashboard": {

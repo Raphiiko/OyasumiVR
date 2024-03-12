@@ -390,49 +390,49 @@ export interface OyasumiSidecarBrightnessState {
    */
   brightness: number;
   /**
-   * @generated from protobuf field: double display_brightness = 3;
+   * @generated from protobuf field: double hardware_brightness = 3;
    */
-  displayBrightness: number;
+  hardwareBrightness: number;
   /**
-   * @generated from protobuf field: double image_brightness = 4;
+   * @generated from protobuf field: double software_brightness = 4;
    */
-  imageBrightness: number;
+  softwareBrightness: number;
   /**
    * @generated from protobuf field: bool brightness_transitioning = 5;
    */
   brightnessTransitioning: boolean;
   /**
-   * @generated from protobuf field: bool display_brightness_transitioning = 6;
+   * @generated from protobuf field: bool hardware_brightness_transitioning = 6;
    */
-  displayBrightnessTransitioning: boolean;
+  hardwareBrightnessTransitioning: boolean;
   /**
-   * @generated from protobuf field: bool image_brightness_transitioning = 7;
+   * @generated from protobuf field: bool software_brightness_transitioning = 7;
    */
-  imageBrightnessTransitioning: boolean;
+  softwareBrightnessTransitioning: boolean;
   /**
    * @generated from protobuf field: double brightness_transition_target = 8;
    */
   brightnessTransitionTarget: number;
   /**
-   * @generated from protobuf field: double display_brightness_transition_target = 9;
+   * @generated from protobuf field: double hardware_brightness_transition_target = 9;
    */
-  displayBrightnessTransitionTarget: number;
+  hardwareBrightnessTransitionTarget: number;
   /**
-   * @generated from protobuf field: double image_brightness_transition_target = 10;
+   * @generated from protobuf field: double software_brightness_transition_target = 10;
    */
-  imageBrightnessTransitionTarget: number;
+  softwareBrightnessTransitionTarget: number;
   /**
-   * @generated from protobuf field: bool display_brightness_available = 11;
+   * @generated from protobuf field: bool hardware_brightness_available = 11;
    */
-  displayBrightnessAvailable: boolean;
+  hardwareBrightnessAvailable: boolean;
   /**
-   * @generated from protobuf field: double display_min_brightness = 12;
+   * @generated from protobuf field: double hardware_min_brightness = 12;
    */
-  displayMinBrightness: number;
+  hardwareMinBrightness: number;
   /**
-   * @generated from protobuf field: double display_max_brightness = 13;
+   * @generated from protobuf field: double hardware_max_brightness = 13;
    */
-  displayMaxBrightness: number;
+  hardwareMaxBrightness: number;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -2234,44 +2234,54 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
     super('OyasumiOverlaySidecar.OyasumiSidecarBrightnessState', [
       { no: 1, name: 'advanced_mode', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 2, name: 'brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
-      { no: 3, name: 'display_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
-      { no: 4, name: 'image_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 3, name: 'hardware_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 4, name: 'software_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
       { no: 5, name: 'brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-      { no: 6, name: 'display_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-      { no: 7, name: 'image_brightness_transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      {
+        no: 6,
+        name: 'hardware_brightness_transitioning',
+        kind: 'scalar',
+        T: 8 /*ScalarType.BOOL*/,
+      },
+      {
+        no: 7,
+        name: 'software_brightness_transitioning',
+        kind: 'scalar',
+        T: 8 /*ScalarType.BOOL*/,
+      },
       { no: 8, name: 'brightness_transition_target', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
       {
         no: 9,
-        name: 'display_brightness_transition_target',
+        name: 'hardware_brightness_transition_target',
         kind: 'scalar',
         T: 1 /*ScalarType.DOUBLE*/,
       },
       {
         no: 10,
-        name: 'image_brightness_transition_target',
+        name: 'software_brightness_transition_target',
         kind: 'scalar',
         T: 1 /*ScalarType.DOUBLE*/,
       },
-      { no: 11, name: 'display_brightness_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-      { no: 12, name: 'display_min_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
-      { no: 13, name: 'display_max_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 11, name: 'hardware_brightness_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 12, name: 'hardware_min_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
+      { no: 13, name: 'hardware_max_brightness', kind: 'scalar', T: 1 /*ScalarType.DOUBLE*/ },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarBrightnessState>): OyasumiSidecarBrightnessState {
     const message = {
       advancedMode: false,
       brightness: 0,
-      displayBrightness: 0,
-      imageBrightness: 0,
+      hardwareBrightness: 0,
+      softwareBrightness: 0,
       brightnessTransitioning: false,
-      displayBrightnessTransitioning: false,
-      imageBrightnessTransitioning: false,
+      hardwareBrightnessTransitioning: false,
+      softwareBrightnessTransitioning: false,
       brightnessTransitionTarget: 0,
-      displayBrightnessTransitionTarget: 0,
-      imageBrightnessTransitionTarget: 0,
-      displayBrightnessAvailable: false,
-      displayMinBrightness: 0,
-      displayMaxBrightness: 0,
+      hardwareBrightnessTransitionTarget: 0,
+      softwareBrightnessTransitionTarget: 0,
+      hardwareBrightnessAvailable: false,
+      hardwareMinBrightness: 0,
+      hardwareMaxBrightness: 0,
     };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
@@ -2295,38 +2305,38 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
         case /* double brightness */ 2:
           message.brightness = reader.double();
           break;
-        case /* double display_brightness */ 3:
-          message.displayBrightness = reader.double();
+        case /* double hardware_brightness */ 3:
+          message.hardwareBrightness = reader.double();
           break;
-        case /* double image_brightness */ 4:
-          message.imageBrightness = reader.double();
+        case /* double software_brightness */ 4:
+          message.softwareBrightness = reader.double();
           break;
         case /* bool brightness_transitioning */ 5:
           message.brightnessTransitioning = reader.bool();
           break;
-        case /* bool display_brightness_transitioning */ 6:
-          message.displayBrightnessTransitioning = reader.bool();
+        case /* bool hardware_brightness_transitioning */ 6:
+          message.hardwareBrightnessTransitioning = reader.bool();
           break;
-        case /* bool image_brightness_transitioning */ 7:
-          message.imageBrightnessTransitioning = reader.bool();
+        case /* bool software_brightness_transitioning */ 7:
+          message.softwareBrightnessTransitioning = reader.bool();
           break;
         case /* double brightness_transition_target */ 8:
           message.brightnessTransitionTarget = reader.double();
           break;
-        case /* double display_brightness_transition_target */ 9:
-          message.displayBrightnessTransitionTarget = reader.double();
+        case /* double hardware_brightness_transition_target */ 9:
+          message.hardwareBrightnessTransitionTarget = reader.double();
           break;
-        case /* double image_brightness_transition_target */ 10:
-          message.imageBrightnessTransitionTarget = reader.double();
+        case /* double software_brightness_transition_target */ 10:
+          message.softwareBrightnessTransitionTarget = reader.double();
           break;
-        case /* bool display_brightness_available */ 11:
-          message.displayBrightnessAvailable = reader.bool();
+        case /* bool hardware_brightness_available */ 11:
+          message.hardwareBrightnessAvailable = reader.bool();
           break;
-        case /* double display_min_brightness */ 12:
-          message.displayMinBrightness = reader.double();
+        case /* double hardware_min_brightness */ 12:
+          message.hardwareMinBrightness = reader.double();
           break;
-        case /* double display_max_brightness */ 13:
-          message.displayMaxBrightness = reader.double();
+        case /* double hardware_max_brightness */ 13:
+          message.hardwareMaxBrightness = reader.double();
           break;
         default:
           let u = options.readUnknownField;
@@ -2356,39 +2366,39 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
     if (message.advancedMode !== false) writer.tag(1, WireType.Varint).bool(message.advancedMode);
     /* double brightness = 2; */
     if (message.brightness !== 0) writer.tag(2, WireType.Bit64).double(message.brightness);
-    /* double display_brightness = 3; */
-    if (message.displayBrightness !== 0)
-      writer.tag(3, WireType.Bit64).double(message.displayBrightness);
-    /* double image_brightness = 4; */
-    if (message.imageBrightness !== 0)
-      writer.tag(4, WireType.Bit64).double(message.imageBrightness);
+    /* double hardware_brightness = 3; */
+    if (message.hardwareBrightness !== 0)
+      writer.tag(3, WireType.Bit64).double(message.hardwareBrightness);
+    /* double software_brightness = 4; */
+    if (message.softwareBrightness !== 0)
+      writer.tag(4, WireType.Bit64).double(message.softwareBrightness);
     /* bool brightness_transitioning = 5; */
     if (message.brightnessTransitioning !== false)
       writer.tag(5, WireType.Varint).bool(message.brightnessTransitioning);
-    /* bool display_brightness_transitioning = 6; */
-    if (message.displayBrightnessTransitioning !== false)
-      writer.tag(6, WireType.Varint).bool(message.displayBrightnessTransitioning);
-    /* bool image_brightness_transitioning = 7; */
-    if (message.imageBrightnessTransitioning !== false)
-      writer.tag(7, WireType.Varint).bool(message.imageBrightnessTransitioning);
+    /* bool hardware_brightness_transitioning = 6; */
+    if (message.hardwareBrightnessTransitioning !== false)
+      writer.tag(6, WireType.Varint).bool(message.hardwareBrightnessTransitioning);
+    /* bool software_brightness_transitioning = 7; */
+    if (message.softwareBrightnessTransitioning !== false)
+      writer.tag(7, WireType.Varint).bool(message.softwareBrightnessTransitioning);
     /* double brightness_transition_target = 8; */
     if (message.brightnessTransitionTarget !== 0)
       writer.tag(8, WireType.Bit64).double(message.brightnessTransitionTarget);
-    /* double display_brightness_transition_target = 9; */
-    if (message.displayBrightnessTransitionTarget !== 0)
-      writer.tag(9, WireType.Bit64).double(message.displayBrightnessTransitionTarget);
-    /* double image_brightness_transition_target = 10; */
-    if (message.imageBrightnessTransitionTarget !== 0)
-      writer.tag(10, WireType.Bit64).double(message.imageBrightnessTransitionTarget);
-    /* bool display_brightness_available = 11; */
-    if (message.displayBrightnessAvailable !== false)
-      writer.tag(11, WireType.Varint).bool(message.displayBrightnessAvailable);
-    /* double display_min_brightness = 12; */
-    if (message.displayMinBrightness !== 0)
-      writer.tag(12, WireType.Bit64).double(message.displayMinBrightness);
-    /* double display_max_brightness = 13; */
-    if (message.displayMaxBrightness !== 0)
-      writer.tag(13, WireType.Bit64).double(message.displayMaxBrightness);
+    /* double hardware_brightness_transition_target = 9; */
+    if (message.hardwareBrightnessTransitionTarget !== 0)
+      writer.tag(9, WireType.Bit64).double(message.hardwareBrightnessTransitionTarget);
+    /* double software_brightness_transition_target = 10; */
+    if (message.softwareBrightnessTransitionTarget !== 0)
+      writer.tag(10, WireType.Bit64).double(message.softwareBrightnessTransitionTarget);
+    /* bool hardware_brightness_available = 11; */
+    if (message.hardwareBrightnessAvailable !== false)
+      writer.tag(11, WireType.Varint).bool(message.hardwareBrightnessAvailable);
+    /* double hardware_min_brightness = 12; */
+    if (message.hardwareMinBrightness !== 0)
+      writer.tag(12, WireType.Bit64).double(message.hardwareMinBrightness);
+    /* double hardware_max_brightness = 13; */
+    if (message.hardwareMaxBrightness !== 0)
+      writer.tag(13, WireType.Bit64).double(message.hardwareMaxBrightness);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
