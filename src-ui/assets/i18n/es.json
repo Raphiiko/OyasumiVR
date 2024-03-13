@@ -118,13 +118,8 @@
       },
       "copyBrightness": "Copia actual\nvalor de luminosidad",
       "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
-      "displayBrightness": {
-        "description": "Ajusta el brillo de la retroiluminación de la pantalla LCD (sólo Valve Index)",
-        "title": "Cambia el brillo de la pantalla a"
-      },
-      "imageBrightness": {
-        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
-        "title": "Cambia el brillo de la imagen a"
+      "softwareBrightness": {
+        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual"
       },
       "onSleepDisable": {
         "description": "Ajustar el brillo",
@@ -162,7 +157,6 @@
       "simple": "Modo simple"
     },
     "modeInfoModal": {
-      "message": "Por defecto, OyasumiVR controlará el brillo de tu casco de RV ajustando el brillo de la imagen. Si estás usando un casco con un panel LCD que puede tener su retroiluminación controlada a través de SteamVR (e.j, el Valve Index), OyasumiVR controlará el brillo de la pantalla en su lugar siempre que sea posible.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo de la imagen y el brillo de la pantalla.\n\nEn caso de que prefiera el control directo, el modo avanzado le permite controlar tanto el brillo de la imagen como el de la pantalla por separado, y le permite establecer valores exactos de brillo para cada uno de ellos.\n\nEsto sólo se aplica a los cascos que lo admiten, que actualmente sólo son los Valve Index. En otros cascos de RV, no hay diferencia entre el modo simple y el avanzado.",
       "title": "Modo de control de brillo"
     },
     "title": "Automatización del brillo"
@@ -185,9 +179,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "Automatización del brillo",
-      "brightness": "Brillo",
-      "displayBrightness": "Brillo de la pantalla",
-      "imageBrightness": "Brillo de la imagen"
+      "brightness": "Brillo"
     },
     "confirm-modal": {
       "defaultTitle": "Confirmar"
@@ -369,15 +361,11 @@
           },
           "title": "Distancia de desvanecimiento del chaperón ajustada a {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad",
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
-          },
-          "title": {
-            "set": "Brillo de la pantalla del auricular ajustado a {value}",
-            "transition": "Brillo de la pantalla del auricular pasando a {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -390,15 +378,11 @@
             "set": "Límite de potencia para ''{device}'' ajustado a {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
             "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
-          },
-          "title": {
-            "set": "Brillo de la imagen del auricular ajustado a {value}",
-            "transition": "Brillo de la imagen del auricular pasando a {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -941,8 +925,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "Brillo de la pantalla",
-      "image": "Brillo de la imagen",
       "simple": "Brillo"
     },
     "dashboard": {

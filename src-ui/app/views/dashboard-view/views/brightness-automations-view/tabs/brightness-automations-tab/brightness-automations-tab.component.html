@@ -66,10 +66,10 @@
         <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -77,21 +77,21 @@
               class="btn btn-copy btn-secondary"
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
-              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'IMAGE')"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'SOFTWARE')"
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.IMAGE.min"
-              [max]="brightnessBounds.IMAGE.max"
-              [value]="onSleepModeEnableConfig.imageBrightness"
+              [min]="brightnessBounds.SOFTWARE.min"
+              [max]="brightnessBounds.SOFTWARE.max"
+              [value]="onSleepModeEnableConfig.softwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'IMAGE', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'SOFTWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.IMAGE"
-              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [snapValues]="brightnessSnapValues.SOFTWARE"
+              [snapDistance]="brightnessSnapDistance.SOFTWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE_IMAGE')
               "
@@ -102,10 +102,10 @@
         <div class="setting-row" *ngIf="onSleepModeEnableConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -114,22 +114,22 @@
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
               (click)="
-                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'DISPLAY')
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'HARDWARE')
               "
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.DISPLAY.min"
-              [max]="brightnessBounds.DISPLAY.max"
-              [value]="onSleepModeEnableConfig.displayBrightness"
+              [min]="brightnessBounds.HARDWARE.min"
+              [max]="brightnessBounds.HARDWARE.max"
+              [value]="onSleepModeEnableConfig.hardwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'DISPLAY', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE', 'HARDWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.DISPLAY"
-              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [snapValues]="brightnessSnapValues.HARDWARE"
+              [snapDistance]="brightnessSnapDistance.HARDWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE_DISPLAY')
               "
@@ -292,10 +292,10 @@
         <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -303,21 +303,21 @@
               class="btn btn-copy btn-secondary"
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
-              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'IMAGE')"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'SOFTWARE')"
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.IMAGE.min"
-              [max]="brightnessBounds.IMAGE.max"
-              [value]="onSleepModeDisableConfig.imageBrightness"
+              [min]="brightnessBounds.SOFTWARE.min"
+              [max]="brightnessBounds.SOFTWARE.max"
+              [value]="onSleepModeDisableConfig.softwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'IMAGE', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'SOFTWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.IMAGE"
-              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [snapValues]="brightnessSnapValues.SOFTWARE"
+              [snapDistance]="brightnessSnapDistance.SOFTWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE_IMAGE')
               "
@@ -328,10 +328,10 @@
         <div class="setting-row" *ngIf="onSleepModeDisableConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -340,22 +340,22 @@
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
               (click)="
-                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'DISPLAY')
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'HARDWARE')
               "
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.DISPLAY.min"
-              [max]="brightnessBounds.DISPLAY.max"
-              [value]="onSleepModeDisableConfig.displayBrightness"
+              [min]="brightnessBounds.HARDWARE.min"
+              [max]="brightnessBounds.HARDWARE.max"
+              [value]="onSleepModeDisableConfig.hardwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'DISPLAY', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE', 'HARDWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.DISPLAY"
-              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [snapValues]="brightnessSnapValues.HARDWARE"
+              [snapDistance]="brightnessSnapDistance.HARDWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE_DISPLAY')
               "
@@ -523,10 +523,10 @@
         <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.title</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.imageBrightness.description</span
+              >brightness-automations.brightnessAutomations.softwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -534,21 +534,21 @@
               class="btn btn-copy btn-secondary"
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
-              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'IMAGE')"
+              (click)="updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'SOFTWARE')"
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.IMAGE.min"
-              [max]="brightnessBounds.IMAGE.max"
-              [value]="onSleepPreparationConfig.imageBrightness"
+              [min]="brightnessBounds.SOFTWARE.min"
+              [max]="brightnessBounds.SOFTWARE.max"
+              [value]="onSleepPreparationConfig.softwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'IMAGE', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'SOFTWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.IMAGE"
-              [snapDistance]="brightnessSnapDistance.IMAGE"
+              [snapValues]="brightnessSnapValues.SOFTWARE"
+              [snapDistance]="brightnessSnapDistance.SOFTWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_PREPARATION_IMAGE')
               "
@@ -559,10 +559,10 @@
         <div class="setting-row" *ngIf="onSleepPreparationConfig.enabled && advancedMode" @vshrink>
           <div class="setting-row-label" translate>
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.title</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.title</span
             >
             <span translate
-              >brightness-automations.brightnessAutomations.displayBrightness.description</span
+              >brightness-automations.brightnessAutomations.hardwareBrightness.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -571,22 +571,22 @@
               tooltip="brightness-automations.brightnessAutomations.copyBrightness"
               tooltipMode="left"
               (click)="
-                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'DISPLAY')
+                updateBrightnessWithCurrent('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'HARDWARE')
               "
             >
               <i class="material-icons">copy_all</i>
             </button>
             <app-slider-setting
               unit="%"
-              [min]="brightnessBounds.DISPLAY.min"
-              [max]="brightnessBounds.DISPLAY.max"
-              [value]="onSleepPreparationConfig.displayBrightness"
+              [min]="brightnessBounds.HARDWARE.min"
+              [max]="brightnessBounds.HARDWARE.max"
+              [value]="onSleepPreparationConfig.hardwareBrightness"
               (valueChange)="
-                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'DISPLAY', $event)
+                updateBrightness('SET_BRIGHTNESS_ON_SLEEP_PREPARATION', 'HARDWARE', $event)
               "
               [step]="1"
-              [snapValues]="brightnessSnapValues.DISPLAY"
-              [snapDistance]="brightnessSnapDistance.DISPLAY"
+              [snapValues]="brightnessSnapValues.HARDWARE"
+              [snapDistance]="brightnessSnapDistance.HARDWARE"
               [class.anim-vshake]="
                 vshakeElements.includes('SET_BRIGHTNESS_ON_SLEEP_PREPARATION_DISPLAY')
               "

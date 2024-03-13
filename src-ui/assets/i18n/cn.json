@@ -75,13 +75,8 @@
       },
       "copyBrightness": "复制当前亮度值",
       "description": "让 OyasumiVR 在不同的时间自动调节 VR 头显的亮度，比如睡觉或起床时。",
-      "displayBrightness": {
-        "description": "调整 LCD 背光的亮度（仅Value Index可用）",
-        "title": "将显示屏亮度更改为"
-      },
-      "imageBrightness": {
-        "description": "调整 VR 头显图像的亮度",
-        "title": "将图像亮度更改为"
+      "softwareBrightness": {
+        "description": "调整 VR 头显图像的亮度"
       },
       "onSleepDisable": {
         "description": "调整亮度",
@@ -119,7 +114,6 @@
       "simple": "简单模式"
     },
     "modeInfoModal": {
-      "message": "默认情况下，OyasumiVR 将通过调整图像亮度来控制 VR 头显的亮度。在简单模式下，OyasumiVR 会在控制图像亮度和显示亮度之间平稳过渡。\n如果你更喜欢直接控制，高级模式允许你同时控制图像亮度和显示亮度，并允许你为每种亮度设置精确的亮度值。不过这暂时只适用于支持这种模式的头显。\n截止到目前，只有 Valve Index支持这个功能。\n在其他 VR 头显上，简单模式和高级模式没有区别。",
       "title": "亮度调节模式"
     },
     "title": "亮度自动化"
@@ -142,9 +136,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "自动化亮度调整",
-      "brightness": "亮度",
-      "displayBrightness": "显示屏亮度",
-      "imageBrightness": "图像亮度"
+      "brightness": "亮度"
     },
     "confirm-modal": {
       "defaultTitle": "确认"
@@ -283,15 +275,11 @@
           },
           "title": "保护墙的淡化距离已设置为{value}。"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-          },
-          "title": {
-            "set": "头显屏幕亮度设置为 {value}",
-            "transition": "头显屏幕亮度正在过渡到 {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -304,15 +292,11 @@
             "set": "将 ''{device}'' 的功率限制设置为 {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-          },
-          "title": {
-            "set": "头显亮度设置为 {value}",
-            "transition": "头显亮度过渡到 {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -843,8 +827,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "屏幕亮度",
-      "image": "图像亮度",
       "simple": "亮度"
     },
     "dashboard": {

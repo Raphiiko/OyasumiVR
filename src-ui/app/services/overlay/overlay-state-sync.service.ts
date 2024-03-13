@@ -36,8 +36,8 @@ import { OpenVRService } from '../openvr.service';
 import { OVRDevice } from '../../models/ovr-device';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import { SimpleBrightnessControlService } from '../brightness-control/simple-brightness-control.service';
-import { DisplayBrightnessControlService } from '../brightness-control/display-brightness-control.service';
-import { ImageBrightnessControlService } from '../brightness-control/image-brightness-control.service';
+import { HardwareBrightnessControlService } from '../brightness-control/hardware-brightness-control.service';
+import { SoftwareBrightnessControlService } from '../brightness-control/software-brightness-control.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { SystemMicMuteAutomationService } from '../system-mic-mute-automation.service';
 
@@ -101,17 +101,17 @@ export class OverlayStateSyncService {
     brightnessState: {
       advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
       brightness: 100,
-      displayBrightness: 100,
-      imageBrightness: 100,
+      hardwareBrightness: 100,
+      softwareBrightness: 100,
       brightnessTransitioning: false,
-      displayBrightnessTransitioning: false,
-      imageBrightnessTransitioning: false,
+      hardwareBrightnessTransitioning: false,
+      softwareBrightnessTransitioning: false,
       brightnessTransitionTarget: 100,
-      displayBrightnessTransitionTarget: 100,
-      imageBrightnessTransitionTarget: 100,
-      displayBrightnessAvailable: false,
-      displayMinBrightness: 20,
-      displayMaxBrightness: 160,
+      hardwareBrightnessTransitionTarget: 100,
+      softwareBrightnessTransitionTarget: 100,
+      hardwareBrightnessAvailable: false,
+      hardwareMinBrightness: 20,
+      hardwareMaxBrightness: 160,
     },
     sleepPreparationAvailable: false,
     sleepPreparationTimedOut: false,
@@ -127,8 +127,8 @@ export class OverlayStateSyncService {
     private shutdownAutomationsService: ShutdownAutomationsService,
     private openvr: OpenVRService,
     private simpleBrightness: SimpleBrightnessControlService,
-    private displayBrightness: DisplayBrightnessControlService,
-    private imageBrightness: ImageBrightnessControlService,
+    private hardwareBrightness: HardwareBrightnessControlService,
+    private softwareBrightness: SoftwareBrightnessControlService,
     private sleepPreparation: SleepPreparationService,
     private systemMicMuteAutomationService: SystemMicMuteAutomationService
   ) {}
@@ -333,35 +333,37 @@ export class OverlayStateSyncService {
         state.brightnessState!.brightness = brightness;
         this.state.next(state);
       });
-    this.displayBrightness.brightnessStream
+    this.hardwareBrightness.brightnessStream
       .pipe(
         map((brightness) => Math.round(brightness)),
         distinctUntilChanged()
       )
       .subscribe((brightness) => {
         const state = cloneDeep(this.state.value);
-        state.brightnessState!.displayBrightness = brightness;
+        state.brightnessState!.hardwareBrightness = brightness;
         this.state.next(state);
       });
-    this.imageBrightness.brightnessStream
+    this.softwareBrightness.brightnessStream
       .pipe(
         map((brightness) => Math.round(brightness)),
         distinctUntilChanged()
       )
       .subscribe((brightness) => {
         const state = cloneDeep(this.state.value);
-        state.brightnessState!.imageBrightness = brightness;
+        state.brightnessState!.softwareBrightness = brightness;
         this.state.next(state);
       });
-    this.displayBrightness.driverIsAvailable
+    this.hardwareBrightness.driverIsAvailable
       .pipe(distinctUntilChanged())
       .subscribe(async (driverIsAvailable) => {
         const state = cloneDeep(this.state.value);
-        state.brightnessState!.displayBrightnessAvailable = driverIsAvailable;
+        state.brightnessState!.hardwareBrightnessAvailable = driverIsAvailable;
         if (driverIsAvailable) {
-          const bounds = await this.displayBrightness.getBrightnessBounds();
-          state.brightnessState!.displayMinBrightness = bounds[0];
-          state.brightnessState!.displayMaxBrightness = bounds[1];
+          const bounds = await this.hardwareBrightness.getBrightnessBounds();
+          state.brightnessState!.hardwareMinBrightness = bounds.softwareStops[0];
+          // TODO: Up this limit to overdrive or hardware max
+          state.brightnessState!.hardwareMaxBrightness =
+            bounds.softwareStops[bounds.softwareStops.length - 1];
         }
         this.state.next(state);
       });
@@ -372,20 +374,24 @@ export class OverlayStateSyncService {
         state.brightnessState!.brightnessTransitionTarget = transition.targetBrightness;
       this.state.next(state);
     });
-    this.displayBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
-      const state = cloneDeep(this.state.value);
-      state.brightnessState!.displayBrightnessTransitioning = !!transition;
-      if (transition)
-        state.brightnessState!.displayBrightnessTransitionTarget = transition.targetBrightness;
-      this.state.next(state);
-    });
-    this.imageBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
-      const state = cloneDeep(this.state.value);
-      state.brightnessState!.imageBrightnessTransitioning = !!transition;
-      if (transition)
-        state.brightnessState!.imageBrightnessTransitionTarget = transition.targetBrightness;
-      this.state.next(state);
-    });
+    this.hardwareBrightness.activeTransition
+      .pipe(distinctUntilChanged())
+      .subscribe((transition) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.hardwareBrightnessTransitioning = !!transition;
+        if (transition)
+          state.brightnessState!.hardwareBrightnessTransitionTarget = transition.targetBrightness;
+        this.state.next(state);
+      });
+    this.softwareBrightness.activeTransition
+      .pipe(distinctUntilChanged())
+      .subscribe((transition) => {
+        const state = cloneDeep(this.state.value);
+        state.brightnessState!.softwareBrightnessTransitioning = !!transition;
+        if (transition)
+          state.brightnessState!.softwareBrightnessTransitionTarget = transition.targetBrightness;
+        this.state.next(state);
+      });
   }
 
   private updateState_WhenSleepPreparationStateChanges() {

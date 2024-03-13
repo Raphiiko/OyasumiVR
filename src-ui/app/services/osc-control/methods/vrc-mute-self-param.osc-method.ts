@@ -1,7 +1,6 @@
 import { OscService } from '../../osc.service';
 import { OscMethod } from '../osc-method';
-import { OSCBoolValue, OSCMessage, OSCStringValue } from '../../../models/osc-message';
-import { OscControlService } from '../osc-control.service';
+import { OSCBoolValue, OSCMessage } from '../../../models/osc-message';
 
 export class VRCMuteSelfParamOscMethod extends OscMethod<boolean> {
   constructor(osc: OscService) {

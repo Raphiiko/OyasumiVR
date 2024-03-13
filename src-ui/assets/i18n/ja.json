@@ -75,13 +75,8 @@
       },
       "copyBrightness": "現在の明るさの値をコピーする",
       "description": "様々なタイミングでHMDの明るさを調整します。",
-      "displayBrightness": {
-        "description": "LCDバックライトの輝度を調整します（Valve Indexのみ）",
-        "title": "ディスプレイの輝度を変更"
-      },
-      "imageBrightness": {
-        "description": "HMDに表示される画像の輝度を調整します",
-        "title": "画像の輝度を変更"
+      "softwareBrightness": {
+        "description": "HMDに表示される画像の輝度を調整します"
       },
       "onSleepDisable": {
         "description": "明るさの調整",
@@ -119,7 +114,6 @@
       "simple": "シンプル"
     },
     "modeInfoModal": {
-      "message": "画像の明るさを調整することでHMDの明るさを制御します。バックライトを制御できるLCDパネルを搭載したHMD(Valve Indexなど)を使用している場合、可能な限りディスプレイの輝度を制御します。 \n\n高度なモードでは、映像の明るさとディスプレイの輝度を別々に制御でき、それぞれに正確な値を設定できます。他のVRヘッドセットでは、シンプルモードとアドバンスモードの違いはありません。",
       "title": "輝度調整モード"
     },
     "title": "明るさの自動化"
@@ -142,9 +136,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "輝度自動化",
-      "brightness": "輝度",
-      "displayBrightness": "ディスプレイ輝度",
-      "imageBrightness": "画像輝度"
+      "brightness": "輝度"
     },
     "confirm-modal": {
       "defaultTitle": "確認"
@@ -307,15 +299,11 @@
           },
           "title": "ガーディアンのフェード距離を{value}に設定した。"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
-          },
-          "title": {
-            "set": "HMDのディスプレイの明るさを{value}に設定",
-            "transition": "HMDのディスプレイの明るさを{value}へ遷移"
           }
         },
         "gpuPowerLimitChanged": {
@@ -328,15 +316,11 @@
             "set": "''{device}''の電源制限を{limit}に設定"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
-          },
-          "title": {
-            "set": "HMDの画像の明るさを{value}に設定",
-            "transition": "HMDの画像の明るさを{value}へ遷移"
           }
         },
         "lighthouseSetPowerState": {
@@ -867,8 +851,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "ディスプレイ輝度",
-      "image": "イメージ輝度",
       "simple": "輝度"
     },
     "dashboard": {

@@ -10,13 +10,6 @@
     </div>
     <div
       class="tab"
-      [class.active]="activeTab === 'BRIGHTNESS_TESTING'"
-      (click)="activeTab = 'BRIGHTNESS_TESTING'"
-    >
-      <div class="tab-label">Brightness Testing</div>
-    </div>
-    <div
-      class="tab"
       [class.active]="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
       (click)="activeTab = 'SLEEP_DETECTION_DEBUGGER'"
     >
@@ -34,9 +27,6 @@
     <app-debug-sleep-detection-debugger
       *ngIf="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
     ></app-debug-sleep-detection-debugger>
-    <app-debug-brightness-testing
-      *ngIf="activeTab === 'BRIGHTNESS_TESTING'"
-    ></app-debug-brightness-testing>
     <app-debug-audio-device-debugger
       *ngIf="activeTab === 'AUDIO_DEVICE'"
     ></app-debug-audio-device-debugger>

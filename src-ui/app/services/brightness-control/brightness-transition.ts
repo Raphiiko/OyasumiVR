@@ -17,7 +17,7 @@ export class BrightnessTransitionTask extends CancellableTask {
   private options: BrightnessTransitionTaskOptions;
 
   constructor(
-    public readonly type: 'DISPLAY' | 'IMAGE' | 'SIMPLE',
+    public readonly type: 'HARDWARE' | 'SOFTWARE' | 'SIMPLE',
     private setBrightness: (
       percentage: number,
       options?: Partial<SetBrightnessOptions>
@@ -35,16 +35,6 @@ export class BrightnessTransitionTask extends CancellableTask {
 
   private async task(task: CancellableTask): Promise<void> {
     const label = this.type.toLowerCase();
-    // Ensure the target brightness is within the bounds of the brightness control
-    const [min, max] = await this.getBrightnessBounds();
-    const clampedBrightness = clamp(this.targetBrightness, min, max);
-    if (clampedBrightness != this.targetBrightness) {
-      warn(
-        `[BrightnessControl] Attempted to transition to out-of-bounds ${label} brightness (Target: ${
-          this.targetBrightness
-        }%, Duration: ${this.duration}ms, Reason: ${this.options.logReason ?? 'NONE'})`
-      );
-    }
     // Get the current brightness
     const currentBrightness = await this.getBrightness();
     if (currentBrightness === undefined) {
@@ -63,14 +53,14 @@ export class BrightnessTransitionTask extends CancellableTask {
       // Stop if the transition was cancelled
       if (task.isCancelled() && this.options.logReason) {
         info(
-          `[BrightnessControl] Cancelled running ${label} brightness transition (${currentBrightness}%=>${clampedBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
+          `[BrightnessControl] Cancelled running ${label} brightness transition (${currentBrightness}%=>${this.targetBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
         );
         return;
       }
       // Calculate the required brightness
       const timeExpired = Date.now() - startTime;
       const progress = clamp(timeExpired / this.duration, 0, 1);
-      const brightness = smoothLerp(currentBrightness, clampedBrightness, progress);
+      const brightness = smoothLerp(currentBrightness, this.targetBrightness, progress);
       // Set the intermediary brightness
       await this.setBrightness(brightness, {
         cancelActiveTransition: false,
@@ -78,13 +68,13 @@ export class BrightnessTransitionTask extends CancellableTask {
       });
     }
     // Set the final target brightness
-    await this.setBrightness(clampedBrightness, {
+    await this.setBrightness(this.targetBrightness, {
       cancelActiveTransition: false,
       logReason: undefined,
     });
     if (this.options.logReason) {
       await info(
-        `[BrightnessControl] Finished ${label} brightness transition (${currentBrightness}%=>${clampedBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
+        `[BrightnessControl] Finished ${label} brightness transition (${currentBrightness}%=>${this.targetBrightness}%, ${this.duration}ms, Reason: ${this.options.logReason})`
       );
     }
   }

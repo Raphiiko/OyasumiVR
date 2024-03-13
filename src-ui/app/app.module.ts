@@ -72,7 +72,7 @@ import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
-import { DisplayBrightnessControlService } from './services/brightness-control/display-brightness-control.service';
+import { HardwareBrightnessControlService } from './services/brightness-control/hardware-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
@@ -114,7 +114,7 @@ import { TurnOffLighthousesOnSteamVRStopAutomationService } from './services/pow
 import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/shutdown-automations-view/shutdown-automations-view.component';
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
-import { ImageBrightnessControlService } from './services/brightness-control/image-brightness-control.service';
+import { SoftwareBrightnessControlService } from './services/brightness-control/software-brightness-control.service';
 import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
@@ -131,7 +131,6 @@ import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/
 import { TooltipDirective } from './directives/tooltip.directive';
 import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
-import { DebugBrightnessTestingComponent } from './components/developer-debug-modal/debug-brightness-testing/debug-brightness-testing.component';
 import { BrightnessControlModalComponent } from './components/brightness-control-modal/brightness-control-modal.component';
 import { BrightnessControlSliderComponent } from './components/brightness-control-modal/brightness-control-slider/brightness-control-slider.component';
 import { TranslateMessageFormatCompiler } from 'ngx-translate-messageformat-compiler';
@@ -182,10 +181,10 @@ import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
-import { ask } from '@tauri-apps/api/dialog';
-import { exit } from '@tauri-apps/api/process';
-import { OscControlService } from './services/osc-control/osc-control.service';
-import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
+import { ask } from "@tauri-apps/api/dialog";
+import { exit } from "@tauri-apps/api/process";
+import { OscControlService } from "./services/osc-control/osc-control.service";
+import { SnowverlayComponent } from "./components/snowverlay/snowverlay.component";
 
 [
   localeEN,
@@ -271,7 +270,6 @@ export function createTranslateLoader(http: HttpClient) {
     DeveloperDebugModalComponent,
     WindowsPowerPolicyTabComponent,
     DebugSleepDetectionDebuggerComponent,
-    DebugBrightnessTestingComponent,
     BrightnessControlModalComponent,
     BrightnessControlSliderComponent,
     ClickOutsideDirective,
@@ -340,8 +338,8 @@ export class AppModule {
     private vrchatService: VRChatService,
     private vrchatLogService: VRChatLogService,
     private imageCacheService: ImageCacheService,
-    private displayBrightnessControlService: DisplayBrightnessControlService,
-    private imageBrightnessControlService: ImageBrightnessControlService,
+    private hardwareBrightnessControlService: HardwareBrightnessControlService,
+    private softwareBrightnessControlService: SoftwareBrightnessControlService,
     private simpleBrightnessControlService: SimpleBrightnessControlService,
     private systemTrayService: SystemTrayService,
     private eventLog: EventLogService,
@@ -484,12 +482,12 @@ export class AppModule {
           // Initialize Brightness Control
           await Promise.all([
             this.logInit(
-              'DisplayBrightnessControlService initialization',
-              this.displayBrightnessControlService.init()
+              'HardwareBrightnessControlService initialization',
+              this.hardwareBrightnessControlService.init()
             ),
             this.logInit(
-              'ImageBrightnessControlService initialization',
-              this.imageBrightnessControlService.init()
+              'SoftwareBrightnessControlService initialization',
+              this.softwareBrightnessControlService.init()
             ),
           ]);
           await this.logInit(

@@ -52,7 +52,7 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION';
 
 export interface AutomationConfigs {
-  version: 12;
+  version: 13;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -112,8 +112,8 @@ export interface BrightnessControlAdvancedModeAutomationConfig extends Automatio
 
 export interface SetBrightnessAutomationConfig extends AutomationConfig {
   brightness: number;
-  imageBrightness: number;
-  displayBrightness: number;
+  softwareBrightness: number;
+  hardwareBrightness: number;
   transition: boolean;
   transitionTime: number;
   applyOnStart: boolean;
@@ -356,7 +356,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 12,
+  version: 13,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -364,8 +364,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
     brightness: 20,
-    imageBrightness: 20,
-    displayBrightness: 100,
+    softwareBrightness: 20,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 1000 * 60 * 5,
     applyOnStart: false,
@@ -373,8 +373,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
     brightness: 100,
-    imageBrightness: 100,
-    displayBrightness: 100,
+    softwareBrightness: 100,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 10000,
     applyOnStart: false,
@@ -382,8 +382,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
     enabled: false,
     brightness: 50,
-    imageBrightness: 50,
-    displayBrightness: 100,
+    softwareBrightness: 50,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 30000,
   },
