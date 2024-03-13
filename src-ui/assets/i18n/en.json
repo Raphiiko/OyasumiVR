@@ -122,7 +122,38 @@
       "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
-    "title": "Brightness Automations"
+    "title": "Brightness Automations",
+    "tabs": {
+      "automations": "Automations",
+      "hmdSettings": "HMD Settings"
+    },
+    "hmdSettings": {
+      "description": "Here you'll find any brightness related settings for your specific VR Headset.",
+      "valveIndex": {
+        "title": "Valve Index",
+        "maxBrightness": {
+          "title": "Maximum Brightness",
+          "description": "Limit the maximum brightness value that OyasumiVR will set."
+        }
+      },
+      "bigscreenBeyond": {
+        "title": "Bigscreen Beyond",
+        "maxBrightness": {
+          "title": "Maximum Brightness",
+          "description": "Limit the maximum brightness value that OyasumiVR will set."
+        },
+        "permitRiskRange": {
+          "title": "Allow brightness beyond 150%",
+          "description": "Unlock setting the brightness to values beyond 150%",
+          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Use it at your own risk!"
+        },
+        "forceFanSafety": {
+          "title": "Enable Safe Fan Parameters",
+          "description": "When enabled, force the fan to 100% at brightness values above 100%",
+          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk!"
+        }
+      }
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",

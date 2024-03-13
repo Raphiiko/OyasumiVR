@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HardwareBrightnessControlDriver,
-  HardwareBrightnessControlDriverBounds,
-} from './hardware-brightness-drivers/hardware-brightness-control-driver';
+import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
 import { OpenVRService } from '../openvr.service';
 import {
@@ -15,16 +12,20 @@ import {
   Observable,
   of,
   pairwise,
+  shareReplay,
   startWith,
   switchMap,
 } from 'rxjs';
-import { isEqual } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
+import { AppSettingsService } from '../app-settings.service';
+import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
+import { clamp } from '../../utils/number-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -33,6 +34,7 @@ export class HardwareBrightnessControlService {
   private readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
   private readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
 
+  private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
     new BehaviorSubject<HardwareBrightnessControlDriver | null>(null);
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
@@ -43,8 +45,11 @@ export class HardwareBrightnessControlService {
     map(() => void 0)
   );
   public readonly driverIsAvailable = this.driver.pipe(
-    switchMap((driver) => driver?.isAvailable() ?? of(false))
+    switchMap((driver) => driver?.isAvailable() ?? of(false)),
+    distinctUntilChanged(),
+    shareReplay(1)
   );
+  public readonly brightnessBounds: Observable<[number, number]>;
 
   get brightness(): number {
     return this._brightness.value;
@@ -52,7 +57,7 @@ export class HardwareBrightnessControlService {
 
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
-  constructor(private openvr: OpenVRService) {
+  constructor(private openvr: OpenVRService, private appSettingsService: AppSettingsService) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(openvr);
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(openvr);
     const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];
@@ -62,6 +67,17 @@ export class HardwareBrightnessControlService {
         const availableDriver = driverList.find((_, i) => drivers[i]);
         this.driver.next(availableDriver ?? null);
       });
+    this.brightnessBounds = combineLatest([this.driver, this.appSettingsService.settings]).pipe(
+      map(([driver, settings]: [HardwareBrightnessControlDriver | null, AppSettings]) => {
+        if (!driver) return [0, 100] as [number, number];
+        return driver.getBrightnessBounds(settings);
+      }),
+      distinctUntilChanged((a, b) => a[0] === b[0] && a[1] === b[1]),
+      shareReplay(1)
+    );
+    this.appSettingsService.settings.subscribe((settings) => {
+      this.appSettings = settings;
+    });
   }
 
   async init() {
@@ -81,6 +97,7 @@ export class HardwareBrightnessControlService {
     await listen<number>('setHardwareBrightness', async (event) => {
       await this.setBrightness(event.payload, { cancelActiveTransition: true });
     });
+    await this.initializeSafetyChecks();
   }
 
   transitionBrightness(
@@ -99,10 +116,7 @@ export class HardwareBrightnessControlService {
       'HARDWARE',
       this.setBrightness.bind(this),
       this.fetchBrightness.bind(this),
-      async () => {
-        const bounds = await this.getBrightnessBounds();
-        return [bounds.softwareStops[0], bounds.softwareStops[bounds.softwareStops.length - 1]];
-      },
+      () => firstValueFrom(this.brightnessBounds),
       percentage,
       duration,
       { logReason: opt.logReason }
@@ -134,14 +148,15 @@ export class HardwareBrightnessControlService {
 
   async setBrightness(
     percentage: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS,
+    force = false
   ) {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (!(await firstValueFrom(this.driverIsAvailable))) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
-    if (percentage == this.brightness) return;
+    if (!force && percentage == this.brightness) return;
     this._brightness.next(percentage);
-    await this.driver.value!.setBrightnessPercentage(percentage);
+    await this.driver.value!.setBrightnessPercentage(this.appSettings, percentage);
     if (opt.logReason) {
       await info(
         `[BrightnessControl] Set hardware brightness to ${percentage}% (Reason: ${opt.logReason})`
@@ -158,14 +173,12 @@ export class HardwareBrightnessControlService {
     return brightness;
   }
 
-  async getBrightnessBounds(): Promise<HardwareBrightnessControlDriverBounds> {
-    if (!this.driver.value)
-      return {
-        softwareStops: [0, 100],
-        hardwareStops: [0, 100],
-        overdriveThreshold: 100,
-        riskThreshold: 100,
-      };
-    return this.driver.value!.getBrightnessBounds();
+  private async initializeSafetyChecks() {
+    this.brightnessBounds.subscribe((bounds) => {
+      let clamped = clamp(this.brightness, bounds[0], bounds[1]);
+      if (clamped !== this.brightness) {
+        this.setBrightness(clamped);
+      }
+    });
   }
 }

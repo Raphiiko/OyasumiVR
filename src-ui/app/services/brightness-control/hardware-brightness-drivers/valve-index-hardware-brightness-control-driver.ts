@@ -5,19 +5,28 @@ import {
 import { clamp, ensurePrecision, lerp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
 import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import { AppSettings } from '../../../models/settings';
+
+export const VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
+  {
+    softwareStops: [20, 160],
+    hardwareStops: [20, 160],
+    overdriveThreshold: 100,
+    riskThreshold: 160,
+  };
 
 export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   constructor(private openvr: OpenVRService) {
     super();
   }
 
-  getBrightnessBounds(): HardwareBrightnessControlDriverBounds {
-    return {
-      softwareStops: [20, 160],
-      hardwareStops: [20, 160],
-      overdriveThreshold: 100,
-      riskThreshold: 160,
-    };
+  getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
+    return VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
+  }
+
+  getBrightnessBounds(settings: AppSettings): [number, number] {
+    const config = this.getBrightnessConfiguration();
+    return [config.softwareStops[0], settings.valveIndexMaxBrightness];
   }
 
   async getBrightnessPercentage(): Promise<number> {
@@ -26,8 +35,8 @@ export class ValveIndexHardwareBrightnessControlDriver extends HardwareBrightnes
     return this.analogGainToPercentage(analogGain);
   }
 
-  async setBrightnessPercentage(percentage: number): Promise<void> {
-    percentage = this.percentageToHardwareValue(percentage);
+  async setBrightnessPercentage(settings: AppSettings, percentage: number): Promise<void> {
+    percentage = this.percentageToHardwareValue(settings, percentage);
     const analogGain = this.percentageToAnalogGain(percentage);
     this.openvr.setAnalogGain(analogGain);
   }

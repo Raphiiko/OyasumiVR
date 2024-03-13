@@ -4,51 +4,73 @@ import {
 } from './hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
 import { OpenVRService } from '../../openvr.service';
-import { combineLatest, debounceTime, map, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  interval,
+  Observable,
+  shareReplay,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { invoke } from '@tauri-apps/api';
+import { AppSettings } from '../../../models/settings';
+import { listen } from '@tauri-apps/api/event';
+
+export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
+  {
+    softwareStops: [10, 100, 237],
+    hardwareStops: [-23, 100, 237],
+    overdriveThreshold: 100,
+    riskThreshold: 150,
+  };
 
 export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrightnessControlDriver {
   private lastSetBrightnessPercentage = 100;
+  private connected = new BehaviorSubject(false);
 
   constructor(private openvr: OpenVRService) {
     super();
+    listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
+      this.connected.next(event.payload);
+    });
+    interval(10000)
+      .pipe(
+        startWith(0),
+        switchMap(() =>
+          invoke<boolean>('bigscreen_beyond_is_connected').then((connected) => {
+            this.connected.next(connected);
+          })
+        )
+      )
+      .subscribe();
   }
 
-  getBrightnessBounds(): HardwareBrightnessControlDriverBounds {
-    return {
-      // softwareStops: [10, 100, 237],
-      // hardwareStops: [-23, 100, 237],
-      softwareStops: [10, 100, 150], // TODO: Remove artificial limit when proper warnings are in place
-      hardwareStops: [-23, 100, 150], // TODO: Remove artificial limit when proper warnings are in place
-      overdriveThreshold: 100,
-      riskThreshold: 150,
-    };
+  getBrightnessConfiguration(): HardwareBrightnessControlDriverBounds {
+    return BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS;
+  }
+
+  getBrightnessBounds(settings: AppSettings): [number, number] {
+    const config = this.getBrightnessConfiguration();
+    return [config.softwareStops[0], settings.bigscreenBeyondMaxBrightness];
   }
 
   async getBrightnessPercentage(): Promise<number> {
     return this.lastSetBrightnessPercentage;
   }
 
-  async setBrightnessPercentage(percentage: number): Promise<void> {
-    const hwPercentage = this.percentageToHardwareValue(percentage);
+  async setBrightnessPercentage(settings: AppSettings, percentage: number): Promise<void> {
+    const hwPercentage = this.percentageToHardwareValue(settings, percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    await invoke('bigscreen_beyond_set_brightness', { brightness: hwValue });
+    await invoke('bigscreen_beyond_set_brightness', {
+      brightness: hwValue,
+      fanSafety: settings.bigscreenBeyondForceFanSafety,
+    });
   }
 
   isAvailable(): Observable<boolean> {
-    return combineLatest([this.openvr.status, this.openvr.devices]).pipe(
-      debounceTime(0),
-      map(([status, devices]) => {
-        const hmd = devices.find((d) => d.class === 'HMD');
-        return (
-          status === 'INITIALIZED' &&
-          !!hmd &&
-          hmd.manufacturerName === 'Bigscreen' &&
-          hmd.modelNumber === 'Beyond'
-        );
-      })
-    );
+    return this.connected.pipe(distinctUntilChanged(), shareReplay(1));
   }
 
   private swValueToHWValue(percentage: number) {

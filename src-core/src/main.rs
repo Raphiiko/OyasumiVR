@@ -114,6 +114,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_binding_origins,
         openvr::commands::openvr_is_dashboard_visible,
         openvr::commands::openvr_reregister_manifest,
+        hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         os::commands::run_command,
         os::commands::play_sound,

@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show SteamVR device roles instead of serial numbers in the device list, when available. (by [góngo](https://github.com/TheMrGong))
 - Added back VRChat microphone mute automations.
 - Hardware brightness control for Bigscreen Beyond.
+- Options for limiting the maximum hardware brightness on Valve Index and Bigscreen Beyond.
+- Option for bypassing fan safety on the Bigscreen Beyond.
+- Option for bypassing the maximum brightness on the Bigscreen Beyond.
 
 ### Changed
 

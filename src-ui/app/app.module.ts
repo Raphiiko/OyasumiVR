@@ -185,6 +185,7 @@ import { ask } from "@tauri-apps/api/dialog";
 import { exit } from "@tauri-apps/api/process";
 import { OscControlService } from "./services/osc-control/osc-control.service";
 import { SnowverlayComponent } from "./components/snowverlay/snowverlay.component";
+import { BrightnessHmdSettingsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-hmd-settings-tab/brightness-hmd-settings-tab.component';
 
 [
   localeEN,
@@ -296,6 +297,7 @@ export function createTranslateLoader(http: HttpClient) {
     HotkeySelectorModalComponent,
     SettingsStatusInfoViewComponent,
     SnowverlayComponent,
+    BrightnessHmdSettingsTabComponent,
   ],
   imports: [
     CommonModule,

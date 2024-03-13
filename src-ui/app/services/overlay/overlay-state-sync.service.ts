@@ -353,20 +353,16 @@ export class OverlayStateSyncService {
         state.brightnessState!.softwareBrightness = brightness;
         this.state.next(state);
       });
-    this.hardwareBrightness.driverIsAvailable
-      .pipe(distinctUntilChanged())
-      .subscribe(async (driverIsAvailable) => {
-        const state = cloneDeep(this.state.value);
-        state.brightnessState!.hardwareBrightnessAvailable = driverIsAvailable;
-        if (driverIsAvailable) {
-          const bounds = await this.hardwareBrightness.getBrightnessBounds();
-          state.brightnessState!.hardwareMinBrightness = bounds.softwareStops[0];
-          // TODO: Up this limit to overdrive or hardware max
-          state.brightnessState!.hardwareMaxBrightness =
-            bounds.softwareStops[bounds.softwareStops.length - 1];
-        }
-        this.state.next(state);
-      });
+    combineLatest([
+      this.hardwareBrightness.brightnessBounds,
+      this.hardwareBrightness.driverIsAvailable,
+    ]).subscribe(([bounds, available]) => {
+      const state = cloneDeep(this.state.value);
+      state.brightnessState!.hardwareBrightnessAvailable = available;
+      state.brightnessState!.hardwareMinBrightness = bounds[0];
+      state.brightnessState!.hardwareMaxBrightness = bounds[1];
+      this.state.next(state);
+    });
     this.simpleBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
       const state = cloneDeep(this.state.value);
       state.brightnessState!.brightnessTransitioning = !!transition;
