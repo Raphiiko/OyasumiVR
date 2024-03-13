@@ -26,7 +26,7 @@ type BrightnessType = 'SIMPLE' | 'SOFTWARE' | 'HARDWARE';
 @Component({
   selector: 'app-brightness-automations-tab',
   templateUrl: './brightness-automations-tab.component.html',
-  styleUrls: ['../../brightness-automations-view.component.scss'],
+  styleUrls: ['./brightness-automations-tab.component.scss'],
   animations: [vshrink(), fade(), noop()],
 })
 export class BrightnessAutomationsTabComponent implements OnInit {
@@ -93,14 +93,11 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.hardwareBrightnessControl.onDriverChange
+    this.hardwareBrightnessControl.brightnessBounds
       .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(async () => {
-        const bounds = await this.hardwareBrightnessControl.getBrightnessBounds();
-        console.log(bounds);
-        this.brightnessBounds.HARDWARE.min = bounds.softwareStops[0];
-        // TODO: Up this limit to overdrive or hardware max
-        this.brightnessBounds.HARDWARE.max = bounds.softwareStops[bounds.softwareStops.length - 1];
+      .subscribe(async (bounds) => {
+        this.brightnessBounds.HARDWARE.min = bounds[0];
+        this.brightnessBounds.HARDWARE.max = bounds[1];
       });
 
     this.automationConfigService.configs

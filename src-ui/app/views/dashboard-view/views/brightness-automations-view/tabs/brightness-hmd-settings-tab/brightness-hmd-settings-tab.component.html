@@ -1,0 +1,108 @@
+<p translate>brightness-automations.hmdSettings.description</p>
+<div class="setting-category">
+  <h2 translate>brightness-automations.hmdSettings.valveIndex.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>brightness-automations.hmdSettings.valveIndex.maxBrightness.title</span>
+        <span translate
+        >brightness-automations.hmdSettings.valveIndex.maxBrightness.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          class="slider-battery-level"
+          [min]="valveIndexMin"
+          [max]="valveIndexMax"
+          [value]="appSettings.valveIndexMaxBrightness"
+          (valueChange)="changeValveIndexMaxBrightness($event)"
+          unit="%"
+        ></app-slider-setting>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="setting-category">
+  <h2 translate>brightness-automations.hmdSettings.bigscreenBeyond.title</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate
+        >brightness-automations.hmdSettings.bigscreenBeyond.maxBrightness.title</span
+        >
+        <span translate
+        >brightness-automations.hmdSettings.bigscreenBeyond.maxBrightness.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          class="slider-battery-level"
+          [min]="bigscreenBeyondMin"
+          [max]="bigscreenBeyondMax"
+          [value]="appSettings.bigscreenBeyondMaxBrightness"
+          (valueChange)="changeBigscreenBeyondMaxBrightness($event)"
+          unit="%"
+        ></app-slider-setting>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span class="row-title">
+          <span translate
+          >brightness-automations.hmdSettings.bigscreenBeyond.permitRiskRange.title</span
+          >
+          <span
+            class="experimental-flag"
+            [tooltip]="'brightness-automations.hmdSettings.bigscreenBeyond.permitRiskRange.warning'"
+            [tooltipMode]="'right'"
+          >
+            <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate
+        >brightness-automations.hmdSettings.bigscreenBeyond.permitRiskRange.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.bigscreenBeyondUnsafeBrightness"
+            (change)="toggleBigscreenBeyondUnsafeBrightness()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+         <span class="row-title">
+          <span translate
+          >brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.title</span
+          >
+          <span
+            class="experimental-flag"
+            [tooltip]="'brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.warning'"
+            [tooltipMode]="'right'"
+          >
+            <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate
+        >brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.bigscreenBeyondForceFanSafety"
+            (change)="toggleBigscreenBeyondForceFanSafety()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

@@ -53,17 +53,10 @@ export class BrightnessControlModalComponent
           this.driverAvailable = available;
         }),
         filter(Boolean),
-        switchMap(() => this.hardwareBrightnessControl.getBrightnessBounds()),
+        switchMap(() => this.hardwareBrightnessControl.brightnessBounds),
         tap(() => (this.driverChecked = true))
       )
-      .subscribe(
-        (bounds) =>
-          (this.hardwareBrightnessBounds = [
-            bounds.softwareStops[0],
-            // TODO
-            bounds.softwareStops[bounds.softwareStops.length - 1],
-          ])
-      );
+      .subscribe((bounds) => (this.hardwareBrightnessBounds = bounds));
     this.setHardwareBrightness
       .pipe(
         takeUntilDestroyed(this.destroyRef),

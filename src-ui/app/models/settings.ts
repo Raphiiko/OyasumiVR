@@ -25,6 +25,10 @@ export interface AppSettings {
   hotkeys: { [hotkeyId: string]: string[] };
   hideSnowverlay: boolean;
   oscServerEnabled: boolean;
+  valveIndexMaxBrightness: number;
+  bigscreenBeyondMaxBrightness: number;
+  bigscreenBeyondUnsafeBrightness: boolean;
+  bigscreenBeyondForceFanSafety: boolean;
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
@@ -74,6 +78,10 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   hotkeys: {},
   hideSnowverlay: false,
   oscServerEnabled: true,
+  valveIndexMaxBrightness: 160,
+  bigscreenBeyondMaxBrightness: 150,
+  bigscreenBeyondUnsafeBrightness: false,
+  bigscreenBeyondForceFanSafety: true,
 };
 
 export type ExecutableReferenceStatus =

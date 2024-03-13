@@ -17,4 +17,5 @@ pub async fn init() {
         }
     };
     *HIDAPI.lock().await = Some(api);
+    beyond::init().await;
 }

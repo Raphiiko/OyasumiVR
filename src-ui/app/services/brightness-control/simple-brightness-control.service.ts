@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, skip, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  skip,
+  tap,
+} from 'rxjs';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
@@ -133,19 +142,20 @@ export class SimpleBrightnessControlService {
     // If the hardware brightness driver is available, intelligently switch between the two brightnesses
     if (this.hardwareBrightnessDriverAvailable) {
       const softwareBrightnessRange = [0, 0];
-      const hardwareBrightnessRange = await this.hardwareBrightnessControl.getBrightnessBounds();
-      if (hardwareBrightnessRange.softwareStops[0] > 0) {
-        softwareBrightnessRange[1] = hardwareBrightnessRange.softwareStops[0];
+      const hardwareBrightnessRange = await firstValueFrom(
+        this.hardwareBrightnessControl.brightnessBounds
+      );
+      if (hardwareBrightnessRange[0] > 0) {
+        softwareBrightnessRange[1] = hardwareBrightnessRange[0];
       }
       if (percentage >= 0 && percentage < softwareBrightnessRange[1]) {
-        hardwareBrightness = hardwareBrightnessRange.softwareStops[0];
+        hardwareBrightness = hardwareBrightnessRange[0];
         softwareBrightness = lerp(0, 100, percentage / softwareBrightnessRange[1]);
       } else {
         softwareBrightness = 100;
         hardwareBrightness = lerp(
-          hardwareBrightnessRange.softwareStops[0],
-          // TODO
-          hardwareBrightnessRange.softwareStops[hardwareBrightnessRange.softwareStops.length - 1],
+          hardwareBrightnessRange[0],
+          hardwareBrightnessRange[1],
           (percentage - softwareBrightnessRange[1]) / (100 - softwareBrightnessRange[1])
         );
       }
