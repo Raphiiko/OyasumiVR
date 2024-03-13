@@ -63,7 +63,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const hwPercentage = this.percentageToHardwareValue(settings, percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);
-    await invoke('bigscreen_beyond_set_brightness', {
+    invoke('bigscreen_beyond_set_brightness', {
       brightness: hwValue,
       fanSafety: settings.bigscreenBeyondForceFanSafety,
     });

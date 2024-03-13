@@ -1,3 +1,4 @@
+use hidapi::HidDevice;
 use log::{error, info};
 use tokio::sync::Mutex;
 
@@ -45,7 +46,7 @@ pub async fn init() {
     });
 }
 
-pub async fn set_fan_speed(speed: u8) -> Result<(), String> {
+pub fn set_fan_speed(device: &HidDevice, speed: u8) -> Result<(), String> {
     if speed > 100 {
         error!(
             "[Core][Beyond] Attempted to set fan speed of Bigscreen Beyond to an out of bounds value: {}",
@@ -53,24 +54,6 @@ pub async fn set_fan_speed(speed: u8) -> Result<(), String> {
         );
         return Err("OUT_OF_BOUNDS".to_string());
     }
-    let api_guard = super::HIDAPI.lock().await;
-    let api = match &*api_guard {
-        Some(a) => a,
-        None => {
-            error!("[Core][Beyond] Attempted to call set_fan_speed, but hidapi is not initialized");
-            return Err("HIDAPI_NOT_INITIALIZED".to_string());
-        }
-    };
-    let device = match api.open(BIGSCREEN_VID, BEYOND_PID) {
-        Ok(d) => d,
-        Err(e) => {
-            error!(
-                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
-                e
-            );
-            return Err("DEVICE_NOT_FOUND".to_string());
-        }
-    };
     match device.send_feature_report(&[0, 0x46, speed as u8]) {
         Ok(_) => Ok(()),
         Err(e) => {
@@ -83,7 +66,7 @@ pub async fn set_fan_speed(speed: u8) -> Result<(), String> {
     }
 }
 
-pub async fn set_brightness(brightness: u16) -> Result<(), String> {
+pub fn set_brightness(device: &HidDevice, brightness: u16) -> Result<(), String> {
     if brightness >= 0x0400 {
         error!(
             "[Core][Beyond] Attempted to set brightness of Bigscreen Beyond to an out of bounds value: {}",
@@ -91,26 +74,6 @@ pub async fn set_brightness(brightness: u16) -> Result<(), String> {
         );
         return Err("OUT_OF_BOUNDS".to_string());
     }
-    let api_guard = super::HIDAPI.lock().await;
-    let api = match &*api_guard {
-        Some(a) => a,
-        None => {
-            error!(
-                "[Core][Beyond] Attempted to call set_brightness, but hidapi is not initialized"
-            );
-            return Err("HIDAPI_NOT_INITIALIZED".to_string());
-        }
-    };
-    let device = match api.open(BIGSCREEN_VID, BEYOND_PID) {
-        Ok(d) => d,
-        Err(e) => {
-            error!(
-                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
-                e
-            );
-            return Err("DEVICE_NOT_FOUND".to_string());
-        }
-    };
     match device.send_feature_report(&[
         0,
         0x49,
