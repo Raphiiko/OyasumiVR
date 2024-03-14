@@ -143,14 +143,14 @@
           "description": "Limit the maximum brightness value that OyasumiVR will set."
         },
         "permitRiskRange": {
-          "title": "Allow brightness beyond 150%",
-          "description": "Unlock setting the brightness to values beyond 150%",
-          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Use it at your own risk!"
+          "title": "Limit to safe brightness levels",
+          "description": "Prevents you from setting the brightness above 150%",
+          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
         },
         "forceFanSafety": {
-          "title": "Enable Safe Fan Parameters",
-          "description": "When enabled, force the fan to 100% at brightness values above 100%",
-          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk!"
+          "title": "Overdrive fan safety",
+          "description": "Force the fan to 100% at brightness values above 100%",
+          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
         }
       }
     }
@@ -241,7 +241,8 @@
         "advanced": "Advanced Settings",
         "hotkeys": "Hotkey Settings",
         "statusInfo": "Status Information"
-      }
+      },
+      "hmdAutomations": "HMD Specific Automations"
     },
     "device-list": {
       "category": {
@@ -679,7 +680,7 @@
       "rememberCredentials": "Remember Credentials",
       "disclaimers": {
         "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
-        "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
+        "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk.",
         "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
       }
     },
@@ -1994,6 +1995,38 @@
     "volume": {
       "title": "Volume",
       "description": "What volume level to set for the audio device when this automation runs"
+    }
+  },
+  "hmd-automations": {
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD Specific Automations",
+    "bigscreenBeyond": {
+      "description": "Here you can automate certain features specific to the Bigscreen Beyond.",
+      "fanControl": {
+        "title": "Fan Speed",
+        "onSleepEnable": {
+          "title": "When I go to sleep",
+          "description": "Change the fan speed when the sleep mode is enabled"
+        },
+        "onSleepDisable": {
+          "title": "When I wake up",
+          "description": "Change the fan speed when the sleep mode is disabled"
+        },
+        "onSleepPreparation": {
+          "title": "When I prepare to go to sleep",
+          "description": "Change the fan speed when I prepare to go to sleep"
+        },
+        "allowUnsafeFanSpeed": {
+          "title": "Limit to safe fan speeds",
+          "description": "Prevents you from setting the fan speed below 40%",
+          "warning": "Setting the fan speed lower than 40% is not supported by the manufacturer, and could potentially cause damage by letting your headset overheat. Only disable this functionality at your own risk."
+        }
+      },
+      "rgb": {
+        "title": "RGB Led"
+      }
     }
   }
 }
