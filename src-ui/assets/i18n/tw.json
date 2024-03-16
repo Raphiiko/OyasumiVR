@@ -842,7 +842,7 @@
           "description": "當睡眠模式關閉時調整風扇速度",
           "title": "當我醒來時"
         },
-        "onSleepEnable": {ㄆ
+        "onSleepEnable": {
           "description": "當睡眠模式開啟時調整風扇速度",
           "title": "當我入睡時"
         },
