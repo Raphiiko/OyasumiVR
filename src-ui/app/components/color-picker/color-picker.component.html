@@ -1,6 +1,9 @@
-<div class="color-input-wrapper"
-     [style.--picked-color]="cssColor"
-     [class.disabled]="disabled"
->
-  <input type="color" [value]="hexValue" (input)="onColorChange(colorInput.value)" #colorInput [disabled]="disabled" />
+<div class="color-input-wrapper" [style.--picked-color]="cssColor" [class.disabled]="disabled">
+  <input
+    type="color"
+    [value]="hexValue"
+    (input)="onColorChange(colorInput.value)"
+    #colorInput
+    [disabled]="disabled"
+  />
 </div>

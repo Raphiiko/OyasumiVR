@@ -90,7 +90,7 @@ export class BigscreenBeyondLedAutomationService {
       const duration = 1000;
       const frequency = 30;
       const startTime = Date.now();
-      let startColor = [...this.lastSetColor];
+      const startColor = [...this.lastSetColor];
       console.log('START');
       while (Date.now() <= startTime + duration) {
         // Sleep to match the frequency

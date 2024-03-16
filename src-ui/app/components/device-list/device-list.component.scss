@@ -53,6 +53,7 @@
     flex-direction: row;
     align-items: center;
     padding: 0 1em;
+
     span {
       vertical-align: middle;
     }
@@ -81,9 +82,11 @@
     margin-right: 0.4em;
     filter: invert(24%) sepia(84%) saturate(1782%) hue-rotate(340deg) brightness(106%) contrast(93%);
   }
+
   > i.material-icons {
     margin-left: -0.3em;
   }
+
   &:hover {
     .category-icon {
       filter: invert(99%) sepia(0%) saturate(2934%) hue-rotate(279deg) brightness(116%)
@@ -116,12 +119,14 @@
 
     &:not(:disabled) {
       cursor: pointer;
+
       &:hover {
         background: var(--color-surface-2);
       }
 
       &:active {
         background: var(--color-surface-1);
+
         & > * {
           opacity: 0.8;
         }

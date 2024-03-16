@@ -28,10 +28,9 @@ input {
   outline: none;
   border: var(--color-surface-3) 0.2em solid;
   border-radius: 0.5em;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
   position: relative;
   overflow: hidden;
-
 
   &.disabled {
     opacity: 0.5;
@@ -46,7 +45,7 @@ input {
     left: 0;
     position: absolute;
     opacity: 0.25;
-    background: linear-gradient(210deg, rgba(255, 255, 255, 1.0) 0%, rgba(0, 0, 0, 1.0) 100%);
+    background: linear-gradient(210deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 1) 100%);
     pointer-events: none;
   }
 

@@ -12,10 +12,13 @@ export class ColorPickerComponent {
   public get color(): [number, number, number] {
     return this._color;
   }
-  @Input() public set color(value: [number, number, number]) {
+
+  @Input()
+  public set color(value: [number, number, number]) {
     this._color = value;
     this.hexValue = this.rgbToHex(value);
   }
+
   @Output() public colorChange = new EventEmitter<[number, number, number]>();
   protected hexValue = '#ffffff';
 

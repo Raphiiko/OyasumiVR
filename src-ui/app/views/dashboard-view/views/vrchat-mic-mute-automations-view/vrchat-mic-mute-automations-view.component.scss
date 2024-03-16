@@ -20,11 +20,14 @@
   &-unknown {
     font-size: 2em;
   }
+
   &-muted {
     color: var(--color-alert-error);
   }
+
   &-unmuted {
   }
+
   &-unknown {
     color: var(--color-text-3);
   }
@@ -34,6 +37,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+
   span {
     margin-right: 0.5em;
     font-weight: 600;
