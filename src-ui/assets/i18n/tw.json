@@ -118,8 +118,9 @@
       },
       "copyBrightness": "複製\n當前亮度值",
       "description": "讓 OyasumiVR 在不同的時間自動調整 VR 頭顯的亮度，比如睡覺或起床時",
-      "softwareBrightness": {
-        "description": "調整 VR 頭顯影像的亮度"
+      "hardwareBrightness": {
+        "description": "調整顯示器本身的亮度",
+        "title": "更改硬體亮度為"
       },
       "onSleepDisable": {
         "description": "調整亮度",
@@ -142,6 +143,10 @@
         "description": "你可以按下 OyasumiVR 疊層畫面畫面中的按鈕，為入睡做準備。當你啟用了一個或多個睡眠準備自動操作（比如這個）時，就會顯示這個按鈕。使用這個按鈕可以在入睡前開始調暗亮度",
         "title": "睡眠準備"
       },
+      "softwareBrightness": {
+        "description": "調整 VR 頭顯影像的亮度",
+        "title": "更改軟體亮度為"
+      },
       "startupAutomations": "啟動自動化",
       "transition": {
         "description": "平滑地調整到所需的亮度值",
@@ -152,12 +157,44 @@
         "title": "調整時間"
       }
     },
+    "hmdSettings": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
+          "title": "風扇超速安全保護",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "maxBrightness": {
+          "description": "在 OyasumiVR 中設定最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "permitRiskRange": {
+          "description": "避免將亮度設定超過150%",
+          "title": "限制在安全亮度範圍內",
+          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "description": "在此處，你可以找到適用於你特定 VR 頭戴式顯示器的所有亮度相關設定",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "title": "Valve Index"
+      }
+    },
     "mode": {
       "advanced": "進階模式",
       "simple": "簡單模式"
     },
     "modeInfoModal": {
+      "message": "當使用 OyasumiVR 來控制 VR 頭戴式顯示器的亮度時，可以選擇兩種不同的控制方法：軟體控制與硬體控制。\n\n軟體控制適用於所有類型的頭戴式顯示器，它透過調整影像的亮度來改變顯示器的亮度。\n\n硬體控制則只適用於特定支援的顯示器（如 Valve Index、Bigscreen Beyond），此方法會直接在支援的範圍內調整顯示器顯示的亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體和硬體亮度控制之間進行切換，或者在不支援硬體亮度的情況下只控制軟體亮度。\n\n如果你偏好直接控制，進階模式允許你分別獨立控制軟體和硬體亮度，讓你可以為每一種設置確切的亮度值。",
       "title": "亮度控制模式"
+    },
+    "tabs": {
+      "automations": "自動化",
+      "hmdSettings": "頭顯設定"
     },
     "title": "亮度自動調整"
   },
@@ -179,7 +216,9 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "亮度自動調整",
-      "brightness": "亮度"
+      "brightness": "亮度",
+      "hardwareBrightness": "硬體亮度",
+      "softwareBrightness": "軟體亮度"
     },
     "confirm-modal": {
       "defaultTitle": "確認"
@@ -222,6 +261,7 @@
       "chaperoneAutomations": "Chaperone 導護自動化",
       "gpuAutomations": "GPU 自動化",
       "hardwareAutomations": "硬體自動化",
+      "hmdAutomations": "頭顯專用自動化",
       "miscAutomations": "其他自動化",
       "nightmareDetection": "惡夢偵測",
       "oscAutomations": "OSC 自動化",
@@ -261,7 +301,7 @@
     "device-list": {
       "category": {
         "Controller": "控制器",
-        "GenericTracker": "追蹤器",
+        "GenericTracker": "定位器",
         "Lighthouse": "基地台",
         "other": "其他"
       },
@@ -299,7 +339,7 @@
         "standby": "待機",
         "unknown": "未知狀態"
       },
-      "noDevices": "沒有偵測到控制器或追蹤器",
+      "noDevices": "沒有偵測到控制器或定位器",
       "scanForLighthouses": "掃描",
       "title": "裝置",
       "turnOffAll": "全部"
@@ -361,13 +401,6 @@
           },
           "title": "Chaperone 淡化距離設定為 {value}"
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
-            "SLEEP_PREPARATION": "當你準備入睡時"
-          }
-        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "因為睡眠模式已停用",
@@ -378,11 +411,15 @@
             "set": "將 「{device}」 的功率限制設定為 {limit}"
           }
         },
-        "softwareBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由於睡眠模式被停用",
-            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
+            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
+          },
+          "title": {
+            "set": "頭顯硬體亮度設定到 {value}",
+            "transition": "頭顯硬體亮度過渡到 {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -537,6 +574,17 @@
           },
           "title": "啟用睡眠模式"
         },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "由於睡眠模式被停用",
+            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
+            "SLEEP_PREPARATION": "當你準備入睡時"
+          },
+          "title": {
+            "set": "頭顯軟體亮度設定到 {value}",
+            "transition": "頭顯軟體亮度過渡到 {value}"
+          }
+        },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "由於你的房間中的玩家數量達到了 {threshold} 位的極限",
@@ -557,8 +605,8 @@
             "ALL": "關閉全部裝置",
             "CONTROLLER": "關閉一個控制器",
             "CONTROLLERS": "關閉多個控制器",
-            "TRACKER": "關閉一個追蹤器",
-            "TRACKERS": "關閉多個追蹤器",
+            "TRACKER": "關閉一個定位器",
+            "TRACKERS": "關閉多個定位器",
             "VARIOUS": "關閉各種裝置"
           }
         },
@@ -781,6 +829,38 @@
     },
     "title": "GPU 自動化"
   },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "description": "在這裡，你可以請用 Bigscreen Beyond 一些特定的功能",
+      "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "防止將風扇速度設定在 40% 以下",
+          "title": "限制安全風扇速度",
+          "warning": "製造商不支持將風扇轉速設置在低於 40% 的水準，這有可能導致耳機過熱而造成損壞。請自行承擔禁用此功能的風險"
+        },
+        "onSleepDisable": {
+          "description": "當睡眠模式關閉時調整風扇速度",
+          "title": "當我醒來時"
+        },
+        "onSleepEnable": {ㄆ
+          "description": "當睡眠模式開啟時調整風扇速度",
+          "title": "當我入睡時"
+        },
+        "onSleepPreparation": {
+          "description": "當我準備睡覺時調整風扇速度",
+          "title": "當我準備入睡時"
+        },
+        "title": "風扇速度"
+      },
+      "rgb": {
+        "title": "RGB LED"
+      }
+    },
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "頭癬專用自動化"
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此預設檔使用的解決方法存在一些問題。 如果你不能使用較新的 GoGo Loco 預設，請僅使用此預設檔。 如果你的角色仍然使用舊版本的 GoGo Loco，建議你將你的角色更新使用最新的 GoGo Loco 版本",
     "oscScriptEditorErrors": {
@@ -881,7 +961,7 @@
     "sleepingAnimations": {
       "currentPose": "目前姿勢",
       "customPreset": "自訂動畫",
-      "description": "OyasumiVR 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 OyasumiVR）在夜晚時關閉你的追蹤器，這將很有用 請查看範例影片來看這功能的運作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">這裡</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫",
+      "description": "OyasumiVR 可以在你改變睡姿時自動改變你的角色動畫。 如果你沒有全身追蹤，或者如果你（或你有 OyasumiVR）在夜晚時關閉你的定位器，這將很有用 請查看範例影片來看這功能的運作方式 <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">這裡</a>.\n\n預設可用於多個角色動作預製檔，但你也可以指定設定自己的動畫",
       "enable": "開啟睡眠動畫自動化",
       "manualControl": "手動控制",
       "options": {
@@ -925,7 +1005,9 @@
   },
   "overlay": {
     "brightness": {
-      "simple": "亮度"
+      "hardware": "硬體亮度",
+      "simple": "亮度",
+      "software": "軟體亮度"
     },
     "dashboard": {
       "automations": {
@@ -1022,7 +1104,7 @@
         "trackers": {
           "description": "當電量低於",
           "onlyDuringSleepMode": {
-            "description": "只有在睡眠模式啟用時，才能用這種方法關閉追蹤器",
+            "description": "只有在睡眠模式啟用時，才能用這種方法關閉定位器",
             "title": "僅在睡眠模式啟用時"
           },
           "title": "關閉定位器"
@@ -1633,7 +1715,7 @@
       },
       "disableOnDevicePowerOn": {
         "Controller": "控制器",
-        "GenericTracker": "追蹤器",
+        "GenericTracker": "定位器",
         "title": "關閉睡眠模式",
         "whenTurningOn": "當啟動其中一個"
       },
@@ -1644,7 +1726,7 @@
           "thresholdOutOfRange": "百分比必須介於 0% 和 100% 之間"
         },
         "fallsBelow": "電量降低到",
-        "GenericTracker": "追蹤器",
+        "GenericTracker": "定位器",
         "title": "開啟睡眠模式",
         "whenA": "當其中一個"
       },
@@ -1944,6 +2026,7 @@
       "title": "當前 VRChat 麥克風狀態",
       "unknown": "未知",
       "unmuted": "已解除靜音"
-    }
+    },
+    "title": "VRChat 麥克風靜音自動化"
   }
 }
