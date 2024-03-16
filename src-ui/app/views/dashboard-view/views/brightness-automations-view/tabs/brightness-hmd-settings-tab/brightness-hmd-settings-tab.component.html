@@ -11,7 +11,6 @@
       </div>
       <div class="setting-row-action">
         <app-slider-setting
-          class="slider-battery-level"
           [min]="valveIndexMin"
           [max]="valveIndexMax"
           [value]="appSettings.valveIndexMaxBrightness"
@@ -37,7 +36,6 @@
       </div>
       <div class="setting-row-action">
         <app-slider-setting
-          class="slider-battery-level"
           [min]="bigscreenBeyondMin"
           [max]="bigscreenBeyondMax"
           [value]="appSettings.bigscreenBeyondMaxBrightness"
@@ -68,7 +66,7 @@
         <label class="switch-toggle">
           <input
             type="checkbox"
-            [checked]="appSettings.bigscreenBeyondUnsafeBrightness"
+            [checked]="!appSettings.bigscreenBeyondUnsafeBrightness"
             (change)="toggleBigscreenBeyondUnsafeBrightness()"
           />
           <span class="switch-toggle-slider"></span>
@@ -97,8 +95,8 @@
         <label class="switch-toggle">
           <input
             type="checkbox"
-            [checked]="appSettings.bigscreenBeyondForceFanSafety"
-            (change)="toggleBigscreenBeyondForceFanSafety()"
+            [checked]="appSettings.bigscreenBeyondForceFanBrightnessSafety"
+            (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
           />
           <span class="switch-toggle-slider"></span>
         </label>

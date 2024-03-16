@@ -1,0 +1,15 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
+.pane {
+  height: 100%;
+}
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  width: 100%;
+}

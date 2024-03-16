@@ -59,7 +59,7 @@ export class HardwareBrightnessControlService {
 
   constructor(private openvr: OpenVRService, private appSettingsService: AppSettingsService) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(openvr);
-    this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver(openvr);
+    this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver();
     const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];
     combineLatest(driverList.map((driver) => driver.isAvailable()))
       .pipe(distinctUntilChanged((a, b) => isEqual(a, b)))

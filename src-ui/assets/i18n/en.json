@@ -710,6 +710,9 @@
     "hotkey-selector-modal": {
       "title": "Set Hotkey",
       "description": "To set a hotkey, press any modifier keys, followed by the key you want to combine them with."
+    },
+    "color-picker-modal": {
+      "title": "Pick Colour"
     }
   },
   "gpu-automations": {
@@ -2025,7 +2028,24 @@
         }
       },
       "rgb": {
-        "title": "RGB Led"
+        "title": "RGB Led",
+        "onSleepEnable": {
+          "title": "When I go to sleep",
+          "description": "Change the HMD LED's color when the sleep mode is enabled"
+        },
+        "onSleepDisable": {
+          "title": "When I wake up",
+          "description": "Change the HMD LED's color when the sleep mode is disabled"
+        },
+        "onSleepPreparation": {
+          "title": "When I prepare to go to sleep",
+          "description": "Change the HMD LED's color when I prepare to go to sleep"
+        },
+        "pickerTitle": {
+          "onSleepEnable": "Set Beyond LED color when going to sleep",
+          "onSleepDisable": "Set Beyond LED color when waking up",
+          "onSleepPreparation": "Set Beyond LED color when preparing to go to sleep"
+        }
       }
     }
   }

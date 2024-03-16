@@ -49,7 +49,9 @@ export type AutomationType =
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
   | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
-  | 'NIGHTMARE_DETECTION';
+  | 'NIGHTMARE_DETECTION'
+  | 'BIGSCREEN_BEYOND_FAN_CONTROL'
+  | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
   version: 13;
@@ -97,6 +99,8 @@ export interface AutomationConfigs {
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
+  BIGSCREEN_BEYOND_FAN_CONTROL: BigscreenBeyondFanControlAutomationsConfig;
+  BIGSCREEN_BEYOND_RGB_CONTROL: BigscreenBeyondRgbControlAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -351,6 +355,25 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
   soundVolume: number;
 }
 
+export interface BigscreenBeyondFanControlAutomationsConfig extends AutomationConfig {
+  onSleepEnable: boolean;
+  onSleepEnableFanSpeed: number;
+  onSleepDisable: boolean;
+  onSleepDisableFanSpeed: number;
+  onSleepPreparation: boolean;
+  onSleepPreparationFanSpeed: number;
+  allowUnsafeFanSpeed: boolean;
+}
+
+export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationConfig {
+  onSleepEnable: boolean;
+  onSleepEnableRgb: [number, number, number];
+  onSleepDisable: boolean;
+  onSleepDisableRgb: [number, number, number];
+  onSleepPreparation: boolean;
+  onSleepPreparationRgb: [number, number, number];
+}
+
 //
 // DEFAULT
 //
@@ -587,5 +610,24 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     disableSleepMode: false,
     playSound: false,
     soundVolume: 100,
+  },
+  BIGSCREEN_BEYOND_FAN_CONTROL: {
+    enabled: true,
+    onSleepEnable: false,
+    onSleepEnableFanSpeed: 50,
+    onSleepDisable: false,
+    onSleepDisableFanSpeed: 50,
+    onSleepPreparation: false,
+    onSleepPreparationFanSpeed: 50,
+    allowUnsafeFanSpeed: false,
+  },
+  BIGSCREEN_BEYOND_RGB_CONTROL: {
+    enabled: true,
+    onSleepEnable: false,
+    onSleepEnableRgb: [0, 0, 0],
+    onSleepDisable: false,
+    onSleepDisableRgb: [0, 255, 0],
+    onSleepPreparation: false,
+    onSleepPreparationRgb: [128, 0, 0],
   },
 };

@@ -20,3 +20,8 @@ export function clamp(val: number, min: number, max: number) {
 export function ensurePrecision(num: number, decimals: number) {
   return Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 }
+
+export function smoothLerp(min: number, max: number, percent: number) {
+  const t = percent * percent * (3 - 2 * percent); // cubic easing function
+  return min + t * (max - min);
+}

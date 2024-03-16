@@ -181,11 +181,15 @@ import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
-import { ask } from "@tauri-apps/api/dialog";
-import { exit } from "@tauri-apps/api/process";
-import { OscControlService } from "./services/osc-control/osc-control.service";
-import { SnowverlayComponent } from "./components/snowverlay/snowverlay.component";
+import { ask } from '@tauri-apps/api/dialog';
+import { exit } from '@tauri-apps/api/process';
+import { OscControlService } from './services/osc-control/osc-control.service';
+import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
 import { BrightnessHmdSettingsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-hmd-settings-tab/brightness-hmd-settings-tab.component';
+import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
+import { HmdAutomationsBigscreenBeyondTabComponent } from './views/dashboard-view/views/hmd-automations-view/tabs/hmd-automations-bigscreen-beyond-tab/hmd-automations-bigscreen-beyond-tab.component';
+import { ColorPickerComponent } from './components/color-picker/color-picker.component';
+import { BigscreenBeyondLedAutomationService } from './services/bigscreen-beyond-led-automation.service';
 
 [
   localeEN,
@@ -298,6 +302,9 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsStatusInfoViewComponent,
     SnowverlayComponent,
     BrightnessHmdSettingsTabComponent,
+    HmdAutomationsViewComponent,
+    HmdAutomationsBigscreenBeyondTabComponent,
+    ColorPickerComponent,
   ],
   imports: [
     CommonModule,
@@ -403,7 +410,8 @@ export class AppModule {
     // Miscellaneous automations
     private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
-    private nightmareDetectionAutomationService: NightmareDetectionAutomationService
+    private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
+    private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService
   ) {
     this.init();
   }
@@ -631,6 +639,10 @@ export class AppModule {
             this.logInit(
               'NightmareDetectionAutomationService initialization',
               this.nightmareDetectionAutomationService.init()
+            ),
+            this.logInit(
+              'BigsceenBeyondLedAutomationService initialization',
+              this.bigscreenBeyondLedAutomationService.init()
             ),
           ]);
         })(),

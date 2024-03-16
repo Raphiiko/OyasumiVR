@@ -38,7 +38,8 @@
           'powerAutomations',
           'gpuAutomations',
           'resolutionAutomations',
-          'audioVolumeAutomations'
+          'audioVolumeAutomations',
+          'hmdAutomations',
         ])
       "
     >
@@ -212,6 +213,13 @@
         @fade
         *ngIf="brightnessAutomation.anyTransitionActive | async"
       ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'hmdAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-symbols-outlined">head_mounted_device</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.hmdAutomations</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'audioVolumeAutomations'">

@@ -28,7 +28,7 @@ export interface AppSettings {
   valveIndexMaxBrightness: number;
   bigscreenBeyondMaxBrightness: number;
   bigscreenBeyondUnsafeBrightness: boolean;
-  bigscreenBeyondForceFanSafety: boolean;
+  bigscreenBeyondForceFanBrightnessSafety: boolean;
 }
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
@@ -81,7 +81,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   valveIndexMaxBrightness: 160,
   bigscreenBeyondMaxBrightness: 150,
   bigscreenBeyondUnsafeBrightness: false,
-  bigscreenBeyondForceFanSafety: true,
+  bigscreenBeyondForceFanBrightnessSafety: true,
 };
 
 export type ExecutableReferenceStatus =
