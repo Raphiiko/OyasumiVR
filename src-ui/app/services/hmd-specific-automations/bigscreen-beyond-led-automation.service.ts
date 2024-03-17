@@ -12,16 +12,16 @@ import {
 } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api';
-import { AutomationConfigService } from './automation-config.service';
+import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   BigscreenBeyondRgbControlAutomationsConfig,
-} from '../models/automations';
+} from '../../models/automations';
 import { cloneDeep } from 'lodash';
-import { SleepService } from './sleep.service';
-import { SleepPreparationService } from './sleep-preparation.service';
-import { CancellableTask } from '../utils/cancellable-task';
-import { clamp, smoothLerp } from '../utils/number-utils';
+import { SleepService } from '../sleep.service';
+import { SleepPreparationService } from '../sleep-preparation.service';
+import { CancellableTask } from '../../utils/cancellable-task';
+import { clamp, smoothLerp } from '../../utils/number-utils';
 
 @Injectable({
   providedIn: 'root',

@@ -18,6 +18,8 @@ import { Router } from '@angular/router';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BigscreenBeyondFanAutomationService } from 'src-ui/app/services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
+import { BSBFanSpeedControlModalComponent } from '../bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -29,6 +31,7 @@ export class MainStatusBarComponent implements OnInit {
   protected sleepMode = this.sleepService.mode;
   protected user = this.vrchat.user;
   private brightnessControlModalOpen = false;
+  private bsbFanSpeedControlModalOpen = false;
   protected snowverlayAvailable = new Date().getDate() >= 18 && new Date().getMonth() == 11;
   protected snowverlayActive = false;
 
@@ -47,7 +50,8 @@ export class MainStatusBarComponent implements OnInit {
     protected softwareBrightnessControl: SoftwareBrightnessControlService,
     protected simpleBrightnessControl: SimpleBrightnessControlService,
     protected brightnessAutomations: BrightnessControlAutomationService,
-    protected pulsoid: PulsoidService
+    protected pulsoid: PulsoidService,
+    protected bigscreenBeyondFanAutomation: BigscreenBeyondFanAutomationService
   ) {}
 
   ngOnInit(): void {
@@ -86,15 +90,25 @@ export class MainStatusBarComponent implements OnInit {
     }
     this.brightnessControlModalOpen = true;
     await firstValueFrom(
-      this.modalService.addModal<BrightnessControlModalComponent>(
-        BrightnessControlModalComponent,
-        undefined,
-        {
-          id: 'BrightnessControlModal',
-        }
-      )
+      this.modalService.addModal(BrightnessControlModalComponent, undefined, {
+        id: 'BrightnessControlModal',
+      })
     );
     this.brightnessControlModalOpen = false;
+  }
+
+  async openBSBFanSpeedControlModal() {
+    if (this.bsbFanSpeedControlModalOpen) {
+      this.modalService.closeModal('BSBFanSpeedControlModal');
+      return;
+    }
+    this.bsbFanSpeedControlModalOpen = true;
+    await firstValueFrom(
+      this.modalService.addModal(BSBFanSpeedControlModalComponent, undefined, {
+        id: 'BSBFanSpeedControlModal',
+      })
+    );
+    this.bsbFanSpeedControlModalOpen = false;
   }
 
   async doSystemMicrophoneMuteAction() {

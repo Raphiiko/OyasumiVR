@@ -171,6 +171,10 @@
     "title": "Chaperone Automations"
   },
   "comp": {
+    "bsb-fan-speed-control-modal": {
+      "fanSpeed": "Fan Speed",
+      "automationsTooltip": "Bigscreen Beyond Automations"
+    },
     "brightness-control-modal": {
       "automationsTooltip": "Brightness Automations",
       "brightness": "Brightness",
@@ -620,6 +624,10 @@
       },
       "vrchat": {
         "tooltip": "Settings: Integrations"
+      },
+      "bsbFanSpeed": {
+        "tooltip": "Bigscreen Beyond Fan Speed",
+        "label": "Fan Speed"
       }
     },
     "osc-script-code-editor": {

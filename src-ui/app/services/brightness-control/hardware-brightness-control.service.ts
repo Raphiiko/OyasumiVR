@@ -31,8 +31,8 @@ import { clamp } from '../../utils/number-utils';
   providedIn: 'root',
 })
 export class HardwareBrightnessControlService {
-  private readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
-  private readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
+  public readonly driverValveIndex: ValveIndexHardwareBrightnessControlDriver;
+  public readonly driverBigscreenBeyond: BigscreenBeyondHardwareBrightnessControlDriver;
 
   private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
   private driver: BehaviorSubject<HardwareBrightnessControlDriver | null> =
@@ -57,7 +57,10 @@ export class HardwareBrightnessControlService {
 
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
-  constructor(private openvr: OpenVRService, private appSettingsService: AppSettingsService) {
+  constructor(
+    private openvr: OpenVRService,
+    private appSettingsService: AppSettingsService // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
+  ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(openvr);
     this.driverBigscreenBeyond = new BigscreenBeyondHardwareBrightnessControlDriver();
     const driverList = [this.driverValveIndex, this.driverBigscreenBeyond];

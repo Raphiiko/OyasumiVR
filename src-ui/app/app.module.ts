@@ -189,7 +189,9 @@ import { BrightnessHmdSettingsTabComponent } from './views/dashboard-view/views/
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
 import { HmdAutomationsBigscreenBeyondTabComponent } from './views/dashboard-view/views/hmd-automations-view/tabs/hmd-automations-bigscreen-beyond-tab/hmd-automations-bigscreen-beyond-tab.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
-import { BigscreenBeyondLedAutomationService } from './services/bigscreen-beyond-led-automation.service';
+import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-led-automation.service';
+import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
+import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 
 [
   localeEN,
@@ -305,6 +307,7 @@ export function createTranslateLoader(http: HttpClient) {
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
+    BSBFanSpeedControlModalComponent,
   ],
   imports: [
     CommonModule,
@@ -411,7 +414,8 @@ export class AppModule {
     private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
-    private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService
+    private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService,
+    private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService
   ) {
     this.init();
   }
@@ -643,6 +647,10 @@ export class AppModule {
             this.logInit(
               'BigsceenBeyondLedAutomationService initialization',
               this.bigscreenBeyondLedAutomationService.init()
+            ),
+            this.logInit(
+              'BigsceenBeyondFanAutomationService initialization',
+              this.bigscreenBeyondFanAutomationService.init()
             ),
           ]);
         })(),

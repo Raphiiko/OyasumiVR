@@ -53,8 +53,7 @@ export class BrightnessHmdSettingsTabComponent implements OnInit {
 
   toggleBigscreenBeyondForceFanBrightnessSafety() {
     this.appSettingsService.updateSettings({
-      bigscreenBeyondForceFanBrightnessSafety:
-        !this.appSettings.bigscreenBeyondForceFanBrightnessSafety,
+      bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
     });
     // Set brightness to same value to reset fan safety if needed
     this.hardwareBrightness.setBrightness(

@@ -263,7 +263,7 @@ export class HotkeyService {
     try {
       await this.unregisterHotkey(hotkeyId, true);
     } catch (e) {
-      console.log('what');
+      warn('[HotkeyService] Could not unregister hotkey: ' + e);
     }
     if (this.hotkeys[hotkeyString]) {
       this.hotkeys[hotkeyString].push(hotkeyId);

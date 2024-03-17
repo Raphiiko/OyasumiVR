@@ -117,6 +117,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         hardware::beyond::commands::bigscreen_beyond_set_led_color,
+        hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
