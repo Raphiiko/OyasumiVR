@@ -108,6 +108,7 @@
   &.power-on {
     --spinner-color: var(--color-alert-success);
   }
+
   &.power-off {
     --spinner-color: var(--color-alert-error);
   }

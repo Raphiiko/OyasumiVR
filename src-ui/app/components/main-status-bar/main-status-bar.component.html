@@ -36,6 +36,27 @@
     </div>
   </div>
   <div class="right">
+    <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
+      <div
+        class="pill bsb-fanctl clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.bsbFanSpeed.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openBSBFanSpeedControlModal()"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-symbols-outlined">mode_fan</i>
+        </div>
+        <span @hshrink *ngIf="state.hover"
+        >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
+        >
+        <span>{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
+      </div>
+    </ng-container>
     <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
       <div
         class="pill system-mic-mute clickable"

@@ -82,6 +82,7 @@ export class SleepAnimationsViewComponent implements OnInit {
       this.currentPose = pose;
     });
   }
+
   async updateConfig(config: Partial<SleepingAnimationsAutomationConfig>) {
     await this.automationConfig.updateAutomationConfig('SLEEPING_ANIMATIONS', config);
   }

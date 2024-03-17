@@ -27,6 +27,7 @@ button {
     display: flex;
     flex-direction: row;
     align-items: center;
+
     & > div {
       overflow: hidden;
       white-space: nowrap;

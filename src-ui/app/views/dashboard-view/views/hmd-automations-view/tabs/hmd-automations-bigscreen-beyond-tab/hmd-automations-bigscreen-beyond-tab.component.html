@@ -1,0 +1,121 @@
+<p translate>hmd-automations.bigscreenBeyond.description</p>
+<div class="setting-category">
+  <h2 translate>hmd-automations.bigscreenBeyond.fanControl.title</h2>
+  <div class="settings">
+    <div class="setting-row" *ngFor="let automation of fanAutomationEnableKeys">
+      <div class="setting-row-label" translate>
+        <span translate>hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.title</span>
+        <span translate
+          >hmd-automations.bigscreenBeyond.fanControl.{{ automation }}.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <app-slider-setting
+          class="with-margin"
+          [min]="fanControlConfig.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED"
+          [max]="100"
+          [value]="asNumber(fanControlConfig[asFanControlKey(automation + 'FanSpeed')])"
+          (valueChange)="updateFanAutomationSpeed(automation, $event)"
+          unit="%"
+          [disabled]="!fanControlConfig[automation]"
+        ></app-slider-setting>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="fanControlConfig[automation]"
+            (change)="toggleFanAutomation(automation)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span class="row-title">
+          <span translate
+            >hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.title</span
+          >
+          <span
+            class="experimental-flag"
+            [tooltip]="'hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.warning'"
+            [tooltipMode]="'right'"
+          >
+            <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate
+          >hmd-automations.bigscreenBeyond.fanControl.allowUnsafeFanSpeed.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="!fanControlConfig.allowUnsafeFanSpeed"
+            (change)="toggleUnsafeFanSpeed()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span class="row-title">
+          <span translate
+            >brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.title</span
+          >
+          <span
+            class="experimental-flag"
+            [tooltip]="'brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.warning'"
+            [tooltipMode]="'right'"
+          >
+            <i class="material-icons">warning</i>
+          </span>
+        </span>
+        <span translate
+          >brightness-automations.hmdSettings.bigscreenBeyond.forceFanSafety.description</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
+            (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="setting-category">
+  <h2 translate>hmd-automations.bigscreenBeyond.rgb.title</h2>
+  <div class="settings">
+    <div class="setting-row" *ngFor="let automation of rgbAutomationEnableKeys">
+      <div class="setting-row-label" translate>
+        <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.title</span>
+        <span translate>hmd-automations.bigscreenBeyond.rgb.{{ automation }}.description</span>
+      </div>
+      <div class="setting-row-action">
+        <app-color-picker
+          class="with-margin"
+          [disabled]="!rgbControlConfig[automation]"
+          [color]="asColor(rgbControlConfig[asRgbControlKey(automation + 'Rgb')])"
+          [title]="'hmd-automations.bigscreenBeyond.rgb.pickerTitle.' + automation"
+          (colorChange)="updateRgbAutomation(automation, $event)"
+        ></app-color-picker>
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="rgbControlConfig[automation]"
+            (change)="toggleRgbAutomation(automation)"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>

@@ -7,7 +7,9 @@ import { warn } from 'tauri-plugin-log-api';
 })
 export class ImageCacheService {
   httpServerPort = 0;
+
   constructor() {}
+
   async init() {
     // Fetch http server port until it's available
     while (!this.httpServerPort) {

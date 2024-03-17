@@ -28,10 +28,12 @@
     margin-right: 0.5em;
     height: 3em;
     width: 3em;
+
     i.material-icons {
       &.muted {
         color: var(--color-alert-error);
       }
+
       &.unmuted {
         color: var(--color-text-1);
       }
@@ -47,6 +49,7 @@
 
     &:active {
       background: var(--color-surface-0);
+
       > * {
         opacity: 0.8;
       }

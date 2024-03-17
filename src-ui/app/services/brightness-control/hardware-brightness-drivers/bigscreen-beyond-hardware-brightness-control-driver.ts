@@ -3,7 +3,6 @@ import {
   HardwareBrightnessControlDriverBounds,
 } from './hardware-brightness-control-driver';
 import { clamp } from '../../../utils/number-utils';
-import { OpenVRService } from '../../openvr.service';
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -29,7 +28,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   private lastSetBrightnessPercentage = 100;
   private connected = new BehaviorSubject(false);
 
-  constructor(private openvr: OpenVRService) {
+  constructor() {
     super();
     listen<boolean>('BIGSCREEN_BEYOND_CONNECTED', (event) => {
       this.connected.next(event.payload);
@@ -65,7 +64,6 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
     const hwValue = this.swValueToHWValue(hwPercentage);
     invoke('bigscreen_beyond_set_brightness', {
       brightness: hwValue,
-      fanSafety: settings.bigscreenBeyondForceFanSafety,
     });
   }
 

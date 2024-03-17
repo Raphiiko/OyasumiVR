@@ -51,9 +51,9 @@ export class BrightnessHmdSettingsTabComponent implements OnInit {
       : BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS.riskThreshold;
   }
 
-  toggleBigscreenBeyondForceFanSafety() {
+  toggleBigscreenBeyondForceFanBrightnessSafety() {
     this.appSettingsService.updateSettings({
-      bigscreenBeyondForceFanSafety: !this.appSettings.bigscreenBeyondForceFanSafety,
+      bigscreenBeyondBrightnessFanSafety: !this.appSettings.bigscreenBeyondBrightnessFanSafety,
     });
     // Set brightness to same value to reset fan safety if needed
     this.hardwareBrightness.setBrightness(

@@ -39,9 +39,9 @@
             ><b translate>audio-volume-automations.picker.defaultDevice</b>
           </div>
           <div class="audio-device-name-label">{{ device.parsedName!.display }}</div>
-          <div class="audio-device-name-label" *ngIf="device.parsedName!.driver">{{
-            device.parsedName!.driver
-          }}</div>
+          <div class="audio-device-name-label" *ngIf="device.parsedName!.driver"
+            >{{ device.parsedName!.driver }}
+          </div>
         </div>
         <div class="audio-device-actions">
           <button

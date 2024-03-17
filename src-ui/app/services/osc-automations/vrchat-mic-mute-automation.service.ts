@@ -196,7 +196,6 @@ export class VRChatMicMuteAutomationService {
         typeof resp.data.VALUE[0] === 'boolean'
       ) {
         this._muted.next(Boolean(resp.data.VALUE[0]));
-        console.log('CURRENT MUTE STATE', resp.data.VALUE[0]);
         return true;
       }
       return false;

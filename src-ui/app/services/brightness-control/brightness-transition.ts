@@ -1,5 +1,5 @@
 import { CancellableTask } from '../../utils/cancellable-task';
-import { clamp } from '../../utils/number-utils';
+import { clamp, smoothLerp } from '../../utils/number-utils';
 import { info, warn } from 'tauri-plugin-log-api';
 import { SetBrightnessOptions, SetBrightnessReason } from './brightness-control-models';
 
@@ -78,9 +78,4 @@ export class BrightnessTransitionTask extends CancellableTask {
       );
     }
   }
-}
-
-function smoothLerp(min: number, max: number, percent: number) {
-  const t = percent * percent * (3 - 2 * percent); // cubic easing function
-  return min + t * (max - min);
 }
