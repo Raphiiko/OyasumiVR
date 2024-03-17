@@ -23,6 +23,7 @@ export class BrightnessControlSliderComponent implements OnInit, OnChanges {
   @Input() value = 50;
   @Input() step = 1;
   @Input() transitionActive = false;
+  @Input() icons: 'BRIGHTNESS' | 'FAN_SPEED' = 'BRIGHTNESS';
   @Output() valueChange = new EventEmitter<number>();
 
   @ViewChild('rangeGuideEl') rangeGuideEl?: ElementRef;

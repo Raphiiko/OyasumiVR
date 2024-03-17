@@ -9,6 +9,7 @@
         [value]="(fanControl.fanSpeed | async) ?? 0"
         [min]="fanSpeedBounds[0]"
         [max]="fanSpeedBounds[1]"
+        [icons]="'FAN_SPEED'"
         (valueChange)="setFanSpeed.next($event)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
