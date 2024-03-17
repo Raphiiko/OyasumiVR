@@ -25,7 +25,6 @@ export class BrightnessControlModalComponent
   driverAvailable = false;
   driverChecked = false;
 
-  protected readonly destroy$ = new Subject<void>();
   protected readonly setHardwareBrightness = new Subject<number>();
   protected readonly setSoftwareBrightness = new Subject<number>();
   protected readonly setSimpleBrightness = new Subject<number>();
