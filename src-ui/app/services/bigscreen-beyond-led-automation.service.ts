@@ -91,7 +91,6 @@ export class BigscreenBeyondLedAutomationService {
       const frequency = 30;
       const startTime = Date.now();
       const startColor = [...this.lastSetColor];
-      console.log('START');
       while (Date.now() <= startTime + duration) {
         // Sleep to match the frequency
         await new Promise((resolve) => setTimeout(resolve, 1000 / frequency));
@@ -106,7 +105,7 @@ export class BigscreenBeyondLedAutomationService {
           Math.round(smoothLerp(startColor[2], targetColor[2], progress)),
         ];
         // Set the intermediary color
-        await invoke('bigscreen_beyond_set_led_color', {
+        invoke('bigscreen_beyond_set_led_color', {
           r: color[0],
           g: color[1],
           b: color[2],
@@ -114,7 +113,7 @@ export class BigscreenBeyondLedAutomationService {
         this.lastSetColor = [...color];
       }
       // Set the final target color
-      await invoke('bigscreen_beyond_set_led_color', {
+      invoke('bigscreen_beyond_set_led_color', {
         r: targetColor[0],
         g: targetColor[1],
         b: targetColor[2],
