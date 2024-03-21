@@ -27,6 +27,7 @@ import { clamp } from '../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';
 import { HardwareBrightnessControlService } from '../brightness-control/hardware-brightness-control.service';
+import { warn } from 'tauri-plugin-log-api';
 
 const MIN_SAFE_FAN_SPEED = 40;
 
@@ -69,11 +70,14 @@ export class BigscreenBeyondFanAutomationService {
     interval(10000)
       .pipe(
         startWith(0),
-        switchMap(() =>
-          invoke<boolean>('bigscreen_beyond_is_connected').then((connected) => {
-            this._connected.next(connected);
-          })
-        )
+        switchMap(async () => {
+          let connected = await invoke<boolean>('bigscreen_beyond_is_connected');
+          this._connected.next(connected);
+          if (connected) {
+            let savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
+            if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
+          }
+        })
       )
       .subscribe();
     // Setup the automations
@@ -146,5 +150,23 @@ export class BigscreenBeyondFanAutomationService {
     // Set the fan speed
     this._fanSpeed.next(speed);
     await invoke('bigscreen_beyond_set_fan_speed', { speed });
+  }
+
+  private getBeyondDriverSavedFanSpeed(): Promise<number | null> {
+    return invoke<string>('bigscreen_beyond_get_saved_preferences').then((result) => {
+      if (!result) return null;
+      let preferences: { fan_speed: number } | undefined;
+      try {
+        preferences = JSON.parse(result);
+      } catch (e) {
+        warn(
+          '[BigscreenBeyondFanAutomationService] Failed to parse saved preferences from Bigscreen Beyond driver utility: ' +
+            e
+        );
+        return null;
+      }
+      if (!preferences || !isFinite(preferences?.fan_speed)) return null;
+      return preferences.fan_speed;
+    });
   }
 }
