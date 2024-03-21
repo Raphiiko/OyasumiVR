@@ -7,7 +7,6 @@ import { asyncScheduler, map, Subject, switchMap, tap, throttleTime } from 'rxjs
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
-import { invoke } from '@tauri-apps/api';
 
 @Component({
   selector: 'app-bsb-fan-speed-control-modal',
