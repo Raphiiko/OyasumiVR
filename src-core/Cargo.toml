@@ -89,6 +89,7 @@ config = "0.13.4"
 oyasumivr_macros = { path = "./macros" }
 regex = "1.10.2"
 hidapi = "2.6.0"
+steamlocate = "1.2.1"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
