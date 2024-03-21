@@ -71,10 +71,10 @@ export class BigscreenBeyondFanAutomationService {
       .pipe(
         startWith(0),
         switchMap(async () => {
-          let connected = await invoke<boolean>('bigscreen_beyond_is_connected');
+          const connected = await invoke<boolean>('bigscreen_beyond_is_connected');
           this._connected.next(connected);
           if (connected) {
-            let savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
+            const savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
             if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
           }
         })
