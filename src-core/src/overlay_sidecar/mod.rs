@@ -20,7 +20,7 @@ pub async fn init() {
     let (tx, mut rx) = tokio::sync::mpsc::channel(10);
     *SIDECAR_MANAGER.lock().await = Some(SidecarManager::new(
         "OVERLAY".to_string(),
-        "resources/overlay-sidecar/".to_string(),
+        "resources/dotnet-sidecars/".to_string(),
         "overlay-sidecar.exe".to_string(),
         tx,
         true,

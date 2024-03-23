@@ -93,21 +93,24 @@ pub async fn start_osc_server() -> Option<(String, Option<String>)> {
     let cancellation_token = super::spawn_receiver_task().await;
     *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     // Start the OSCQuery server
-    let mut osc_query_addr_string = None;
-    if !crate::globals::is_flag_set("DISABLE_MDNS").await {
-        osc_query_addr_string =
-            match oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port).await {
-                Ok(result) => Some(format!("{}:{}", result.0, result.1)),
-                Err(err) => {
-                    error!("[Core] Could not initialize OSCQuery server: {:#?}", err);
-                    None
-                }
-            };
-        oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
-        match oyasumivr_oscquery::server::advertise().await {
-            Err(err) => error!("[Core] Could not advertise OSCQuery server: {:#?}", err),
-            _ => {}
+    let osc_query_addr_string = match oyasumivr_oscquery::server::init(
+        "OyasumiVR",
+        "127.0.0.1",
+        osc_addr_port,
+        false,
+    )
+    .await
+    {
+        Ok(result) => Some(format!("{}:{}", result.0, result.1)),
+        Err(err) => {
+            error!("[Core] Could not initialize OSCQuery server: {:#?}", err);
+            None
         }
+    };
+    oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
+    match oyasumivr_oscquery::server::advertise().await {
+        Err(err) => error!("[Core] Could not advertise OSCQuery server: {:#?}", err),
+        _ => {}
     }
     // Return bound address
     Some((osc_addr_string, osc_query_addr_string))
