@@ -72,6 +72,10 @@ impl SidecarManager {
         }
     }
 
+    pub async fn set_args(&mut self, args: Vec<String>) {
+        *self.args.lock().await = args;
+    }
+
     pub async fn start_or_restart(&mut self) {
         let active = self.active.lock().await.clone();
         // Kill process if it is already active
@@ -155,8 +159,8 @@ impl SidecarManager {
 
     pub async fn handle_start_signal(
         &self,
-        grpc_port: u32,
-        grpc_web_port: u32,
+        grpc_port: Option<u32>,
+        grpc_web_port: Option<u32>,
         pid: u32,
         old_pid: Option<u32>,
     ) -> bool {
@@ -189,10 +193,10 @@ impl SidecarManager {
         // Update the known pid
         *self.sidecar_pid.lock().await = Some(pid);
         // Store the GRPC ports
-        *self.grpc_port.lock().await = Some(grpc_port);
-        *self.grpc_web_port.lock().await = Some(grpc_web_port);
+        *self.grpc_port.lock().await = grpc_port;
+        *self.grpc_web_port.lock().await = grpc_web_port;
         info!(
-            "[Core] Detected start of {} sidecar (pid={}, grpc_port={}, grpc_web_port={})",
+            "[Core] Detected start of {} sidecar (pid={}, grpc_port={:?}, grpc_web_port={:?})",
             self.sidecar_id, pid, grpc_port, grpc_web_port
         );
         return true;

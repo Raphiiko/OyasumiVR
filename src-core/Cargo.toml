@@ -93,7 +93,7 @@ steamlocate = "1.2.1"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "2599fba"
+rev = "2949a3f"
 # path = "../../oyasumivr-oscquery"
 
 [dependencies.tauri]

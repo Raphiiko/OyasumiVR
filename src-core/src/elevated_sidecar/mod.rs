@@ -57,7 +57,12 @@ pub async fn handle_elevated_sidecar_start(
     let manager = manager_guard.as_ref().unwrap();
     // Ignore this signal if it is invalid
     if !manager
-        .handle_start_signal(args.grpc_port, args.grpc_web_port, args.pid, args.old_pid)
+        .handle_start_signal(
+            Some(args.grpc_port),
+            Some(args.grpc_web_port),
+            args.pid,
+            args.old_pid,
+        )
         .await
     {
         return Ok(());

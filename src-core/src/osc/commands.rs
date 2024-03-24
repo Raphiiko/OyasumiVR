@@ -16,27 +16,15 @@ lazy_static! {
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn get_vrchat_osc_address() -> Option<String> {
-    if crate::globals::is_flag_set("DISABLE_MDNS").await {
-        return None;
-    }
-    let addr = oyasumivr_oscquery::client::get_vrchat_osc_address().await;
-    match addr {
-        Some(addr) => Some(format!("{}:{}", addr.0, addr.1)),
-        None => None,
-    }
+    let guard = super::VRC_OSC_ADDRESS.lock().await;
+    guard.as_ref().cloned()
 }
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn get_vrchat_oscquery_address() -> Option<String> {
-    if crate::globals::is_flag_set("DISABLE_MDNS").await {
-        return None;
-    }
-    let addr = oyasumivr_oscquery::client::get_vrchat_oscquery_address().await;
-    match addr {
-        Some(addr) => Some(format!("{}:{}", addr.0, addr.1)),
-        None => None,
-    }
+    let guard = super::VRC_OSCQUERY_ADDRESS.lock().await;
+    guard.as_ref().cloned()
 }
 
 #[tauri::command]
@@ -60,7 +48,7 @@ pub async fn stop_osc_server() {
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
-pub async fn start_osc_server() -> Option<(String, Option<String>)> {
+pub async fn start_osc_server() -> Option<(String, String)> {
     info!("[Core] Starting OSC server");
     stop_osc_server().await;
     // Setup receiving socket
@@ -93,22 +81,19 @@ pub async fn start_osc_server() -> Option<(String, Option<String>)> {
     let cancellation_token = super::spawn_receiver_task().await;
     *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     // Start the OSCQuery server
-    let mut osc_query_addr_string = None;
-    if !crate::globals::is_flag_set("DISABLE_MDNS").await {
-        osc_query_addr_string =
-            match oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port).await {
-                Ok(result) => Some(format!("{}:{}", result.0, result.1)),
-                Err(err) => {
-                    error!("[Core] Could not initialize OSCQuery server: {:#?}", err);
-                    None
-                }
-            };
-        oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
-        match oyasumivr_oscquery::server::advertise().await {
-            Err(err) => error!("[Core] Could not advertise OSCQuery server: {:#?}", err),
-            _ => {}
-        }
-    }
+    let osc_query_addr =
+        oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port, false).await;
+    if osc_query_addr.is_err() {
+        error!(
+            "[Core] Could not initialize OSCQuery server: {:#?}",
+            osc_query_addr.err()
+        );
+        return None;
+    };
+    let osc_query_addr = osc_query_addr.unwrap();
+    let osc_query_addr_string = format!("{}:{}", osc_query_addr.0, osc_query_addr.1);
+    oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
+    crate::mdns_sidecar::start_mdns_sidecar(osc_addr_port, osc_query_addr.1).await;
     // Return bound address
     Some((osc_addr_string, osc_query_addr_string))
 }
