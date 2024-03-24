@@ -15,6 +15,7 @@ mod hardware;
 mod http;
 mod image_cache;
 mod lighthouse;
+mod mdns_sidecar;
 mod migrations;
 mod openvr;
 mod os;
@@ -92,11 +93,6 @@ async fn load_configs() {
             }
         },
     };
-    if globals::is_flag_set("DISABLE_MDNS").await {
-        warn!(
-            "[Core] DISABLE_MDNS flag set: MDNS is disabled. OSC and OSCQuery functionality cannot be expected to work."
-        );
-    }
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
@@ -322,6 +318,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     elevated_sidecar::init().await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
+    // Initialize mdns sidecar module
+    mdns_sidecar::init().await;
     // Setup start of minute cronjob
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");

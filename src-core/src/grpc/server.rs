@@ -41,15 +41,24 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         &self,
         request: Request<MdnsSidecarStartArgs>,
     ) -> Result<Response<Empty>, Status> {
-        // TODO
-        Ok(Response::new(Empty {}))
+        match crate::mdns_sidecar::handle_mdns_sidecar_start(request.get_ref()).await {
+            Ok(_) => Ok(Response::new(Empty {})),
+            Err(e) => {
+                error!("[Core] Failed to handle MDNS sidecar start: {}", e);
+                Err(Status::internal("Failed to handle MDNS sidecar start"))
+            }
+        }
     }
 
     async fn set_vr_chat_osc_address(
         &self,
         request: Request<SetAddressRequest>,
     ) -> Result<Response<Empty>, Status> {
-        // TODO
+        crate::osc::set_vr_chat_osc_address(
+            request.get_ref().host.clone(),
+            request.get_ref().port as u16,
+        )
+        .await;
         Ok(Response::new(Empty {}))
     }
 
@@ -57,7 +66,11 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         &self,
         request: Request<SetAddressRequest>,
     ) -> Result<Response<Empty>, Status> {
-        // TODO
+        crate::osc::set_vr_chat_osc_query_address(
+            request.get_ref().host.clone(),
+            request.get_ref().port as u16,
+        )
+        .await;
         Ok(Response::new(Empty {}))
     }
 

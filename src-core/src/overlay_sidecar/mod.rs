@@ -42,7 +42,12 @@ pub async fn handle_overlay_sidecar_start(
     let manager = manager_guard.as_ref().unwrap();
     // Ignore this signal if it is invalid
     if !manager
-        .handle_start_signal(args.grpc_port, args.grpc_web_port, args.pid, None)
+        .handle_start_signal(
+            Some(args.grpc_port),
+            Some(args.grpc_web_port),
+            args.pid,
+            None,
+        )
         .await
     {
         return Ok(());
@@ -64,7 +69,10 @@ pub async fn set_microphone_active(active: bool, mode: MicrophoneActivityMode) {
     };
     let _ = client
         .set_microphone_active(tonic::Request::new(
-            crate::Models::overlay_sidecar::SetMicrophoneActiveRequest { active, mode: mode as i32, },
+            crate::Models::overlay_sidecar::SetMicrophoneActiveRequest {
+                active,
+                mode: mode as i32,
+            },
         ))
         .await;
 }

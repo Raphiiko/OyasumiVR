@@ -145,6 +145,18 @@
             "release",
             "dev"
           ]
+        },
+        {
+          "name": "mdns-sidecar-mode",
+          "short": "m",
+          "description": "Mode for handling the mdns sidecar",
+          "longDescription": "See developer notes for more information",
+          "maxValues": 1,
+          "takesValue": true,
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
         }
       ]
     },

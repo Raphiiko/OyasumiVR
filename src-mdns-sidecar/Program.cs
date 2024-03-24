@@ -61,10 +61,9 @@ namespace mdns_sidecar {
       Log.Information("Starting OyasumiVR MDNS sidecar in " + (Mode == SidecarMode.Dev ? "dev" : "release") +
                       " mode.");
 
-      _discovery = new MeaModDiscovery();
-
       IpcManager.Instance.Init(coreGrpcPort);
 
+      _discovery = new MeaModDiscovery();
       _discovery.OnOscServiceAdded += OnOSCServiceDiscovery;
       _discovery.OnOscQueryServiceAdded += OnOSCQueryServiceDiscovery;
 
@@ -77,6 +76,7 @@ namespace mdns_sidecar {
     private static void OnOSCServiceDiscovery(OSCQueryServiceProfile profile)
     {
       if (!profile.name.StartsWith("VRChat-Client-")) return;
+      Log.Information("Found VRChat client. Setting OSC address.");
       IpcManager.Instance.CoreClient.SetVRChatOSCAddress(new SetAddressRequest()
       {
         Host = profile.address.ToString(),
@@ -87,6 +87,7 @@ namespace mdns_sidecar {
     private static void OnOSCQueryServiceDiscovery(OSCQueryServiceProfile profile)
     {
       if (!profile.name.StartsWith("VRChat-Client-")) return;
+      Log.Information("Found VRChat client. Setting OSCQuery address.");
       IpcManager.Instance.CoreClient.SetVRChatOSCQueryAddress(new SetAddressRequest()
       {
         Host = profile.address.ToString(),
@@ -112,7 +113,7 @@ namespace mdns_sidecar {
 
     private static void WatchMainProcess(int mainPid)
     {
-      if (InDevMode())
+      if (InDevMode() || mainPid == 0)
       {
         new Thread(() =>
         {
