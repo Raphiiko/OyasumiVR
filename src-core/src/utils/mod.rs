@@ -2,7 +2,6 @@ use human_bytes::human_bytes;
 use log::{error, warn};
 use serde::Serialize;
 use std::{
-    // collections::HashMap,
     os::raw::c_char,
     time::{SystemTime, UNIX_EPOCH},
 };

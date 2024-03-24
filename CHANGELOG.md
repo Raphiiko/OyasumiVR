@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fan control & fan automations for Bigscreen Beyond.
 - RGB Led automations for Bigscreen Beyond.
 - Options for limiting the maximum hardware brightness.
+- Automatic cleanup for log files older than 30 days, or that exceed 10MB.
 
 ### Changed
 

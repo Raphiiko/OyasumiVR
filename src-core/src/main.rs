@@ -168,7 +168,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         steam::commands::steam_active,
         steam::commands::steam_achievement_get,
         steam::commands::steam_achievement_set,
-        commands::log_utils::clean_log_files,
+        commands::log_utils::clear_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
         commands::splash::close_splashscreen,
