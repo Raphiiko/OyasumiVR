@@ -225,7 +225,7 @@ export class SettingsAdvancedViewComponent {
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
-                await invoke('clean_log_files');
+                await invoke('clear_log_files');
                 break;
               case 'eventLog':
                 info('[Settings] Clearing event log');
