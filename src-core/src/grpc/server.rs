@@ -1,10 +1,7 @@
-use crate::Models::oyasumi_core::{
-    AddNotificationRequest, AddNotificationResponse, HttpServerPort,
-};
-
 use super::models::oyasumi_core::{
-    event_params::EventData, oyasumi_core_server::OyasumiCore, ElevatedSidecarStartArgs, Empty,
-    EventParams, OverlaySidecarStartArgs,
+    event_params::EventData, oyasumi_core_server::OyasumiCore, AddNotificationRequest,
+    AddNotificationResponse, ElevatedSidecarStartArgs, Empty, EventParams, HttpServerPort,
+    MdnsSidecarStartArgs, OverlaySidecarStartArgs, SetAddressRequest,
 };
 use log::error;
 use tonic::{Request, Response, Status};
@@ -38,6 +35,43 @@ impl OyasumiCore for OyasumiCoreServerImpl {
                 Err(Status::internal("Failed to handle elevated sidecar start"))
             }
         }
+    }
+
+    async fn on_mdns_sidecar_start(
+        &self,
+        request: Request<MdnsSidecarStartArgs>,
+    ) -> Result<Response<Empty>, Status> {
+        match crate::mdns_sidecar::handle_mdns_sidecar_start(request.get_ref()).await {
+            Ok(_) => Ok(Response::new(Empty {})),
+            Err(e) => {
+                error!("[Core] Failed to handle MDNS sidecar start: {}", e);
+                Err(Status::internal("Failed to handle MDNS sidecar start"))
+            }
+        }
+    }
+
+    async fn set_vr_chat_osc_address(
+        &self,
+        request: Request<SetAddressRequest>,
+    ) -> Result<Response<Empty>, Status> {
+        crate::osc::set_vr_chat_osc_address(
+            request.get_ref().host.clone(),
+            request.get_ref().port as u16,
+        )
+        .await;
+        Ok(Response::new(Empty {}))
+    }
+
+    async fn set_vr_chat_osc_query_address(
+        &self,
+        request: Request<SetAddressRequest>,
+    ) -> Result<Response<Empty>, Status> {
+        crate::osc::set_vr_chat_osc_query_address(
+            request.get_ref().host.clone(),
+            request.get_ref().port as u16,
+        )
+        .await;
+        Ok(Response::new(Empty {}))
     }
 
     async fn send_event(&self, request: Request<EventParams>) -> Result<Response<Empty>, Status> {
