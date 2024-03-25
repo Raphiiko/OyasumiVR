@@ -79,7 +79,8 @@ namespace mdns_sidecar {
       Log.Information("Found VRChat client. Setting OSC address.");
       IpcManager.Instance.CoreClient.SetVRChatOSCAddress(new SetAddressRequest()
       {
-        Host = profile.address.ToString(),
+        // Host = profile.address.ToString(),
+        Host = "127.0.0.1", // Force to be localhost
         Port = (uint)profile.port
       });
     }
@@ -90,7 +91,8 @@ namespace mdns_sidecar {
       Log.Information("Found VRChat client. Setting OSCQuery address.");
       IpcManager.Instance.CoreClient.SetVRChatOSCQueryAddress(new SetAddressRequest()
       {
-        Host = profile.address.ToString(),
+        // Host = profile.address.ToString(),
+        Host = "127.0.0.1", // Force to be localhost
         Port = (uint)profile.port
       });
     }
