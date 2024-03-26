@@ -75,8 +75,13 @@
       },
       "copyBrightness": "現在の明るさの値をコピーする",
       "description": "様々なタイミングでHMDの明るさを調整します。",
+      "hardwareBrightness": {
+        "description": "ディスプレイの輝度を調整します",
+        "title": "ハードウェアの輝度を調整する"
+      },
       "softwareBrightness": {
-        "description": "HMDに表示される画像の輝度を調整します"
+        "description": "HMDに表示される映像の明るさを調整します",
+        "title": "ソフトウェアの明るさを変更する"
       },
       "onSleepDisable": {
         "description": "明るさの調整",
@@ -96,16 +101,16 @@
       },
       "sleepAutomations": "睡眠時の自動化",
       "sleepPreparation": {
-        "description": "オーバーレイのボタンを押すと、就寝の準備をすることができます。就寝準備の自動化が1つ以上アクティブな場合にのみ、このボタンが表示され、眠りにつく前に輝度を徐々に落とし始めることができます。",
+        "description": "オーバーレイからこのボタンを押すと、就寝の準備をすることができます。就寝準備の自動化が1つ以上アクティブな場合にのみこのボタンが表示され、眠りにつく前に輝度を徐々に落とし始めることができます。",
         "title": "就寝準備"
       },
       "startupAutomations": "起動の自動化",
       "transition": {
-        "description": "輝度を徐々に移行させる",
+        "description": "輝度を徐々に遷移させる",
         "title": "なめらかな遷移"
       },
       "transitionTime": {
-        "description": "移行するのにかかる時間",
+        "description": "遷移するのにかかる時間",
         "title": "遷移時間"
       }
     },
@@ -114,9 +119,41 @@
       "simple": "シンプル"
     },
     "modeInfoModal": {
+      "message": "ソフトウェア側とハードウェア側を制御する2つの方法があります。\n\nソフトウェア制御は画面に表示される映像の明るさを調整します。これは全てのHMDで利用可能です。\n\nハードウェア制御はHMDの輝度を直接調整します。サポートされているHMD(Valve Index, Bigscreen Beyond)でのみ利用可能です。\n\nシンプルモードではソフトウェアとハードウェアの明るさのバランスを自動的に変更します。ただし、サポート外のHMDを使用している場合はソフトウェア側のみ制御されます。\n\n高度なモードではそれぞれ任意の値が設定可能です。",
       "title": "輝度調整モード"
     },
-    "title": "明るさの自動化"
+    "title": "明るさの自動化",
+    "tabs": {
+      "automations": "自動化",
+      "hmdSettings": "HMD設定"
+    },
+    "hmdSettings": {
+      "description": "特定のHMDに対して設定ができます。",
+      "valveIndex": {
+        "title": "Valve Index",
+        "maxBrightness": {
+          "title": "最大輝度",
+          "description": "OyasumiVRが設定する最大輝度の値を制限します。"
+        }
+      },
+      "bigscreenBeyond": {
+        "title": "Bigscreen Beyond",
+        "maxBrightness": {
+          "title": "最大輝度",
+          "description": "OyasumiVRが設定する最大輝度の値を制限します"
+        },
+        "permitRiskRange": {
+          "title": "安全な輝度レベルに制限",
+          "description": "150%を超えないように制限します。",
+          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        },
+        "forceFanSafety": {
+          "title": "過熱防止機能",
+          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
+          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        }
+      }
+    }
   },
   "chaperone-automations": {
     "description": "SteamVRのガーディアンのフェード距離を自動的に調整します。",
@@ -134,9 +171,15 @@
     "title": "ガーディアンの自動化"
   },
   "comp": {
+    "bsb-fan-speed-control-modal": {
+      "fanSpeed": "ファン速度",
+      "automationsTooltip": "Bigscreen Beyondの自動化"
+    },
     "brightness-control-modal": {
       "automationsTooltip": "輝度自動化",
-      "brightness": "輝度"
+      "brightness": "輝度",
+      "hardwareBrightness": "ハードウェアの輝度",
+      "softwareBrightness": "ソフトウェアの明るさ"
     },
     "confirm-modal": {
       "defaultTitle": "確認"
@@ -202,7 +245,8 @@
         "advanced": "詳細設定",
         "hotkeys": "ショートカットキー設定",
         "statusInfo": "ステータス情報"
-      }
+      },
+      "hmdAutomations": "HMD固有の自動化"
     },
     "device-list": {
       "category": {
@@ -266,8 +310,8 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
-            "PUSH_TO_TALK": "マイクコントローラのボタン動作を「プッシュトゥトーク」に変更しました",
-            "TOGGLE": "マイクコントローラのボタン動作を「トグル」に変更しました"
+            "PUSH_TO_TALK": "マイクコントローラのボタン動作を「プッシュトゥトーク」に変更した",
+            "TOGGLE": "マイクコントローラのボタン動作を「トグル」に変更した"
           }
         },
         "changedSystemMicMuteState": {
@@ -288,8 +332,8 @@
             "SLEEP_PREPARATION": "就寝準備をしたため"
           },
           "title": {
-            "MUTE": "VRChatでマイクをミュートしました",
-            "UNMUTE": "VRChatでマイクのミュートを解除しました"
+            "MUTE": "VRChatマイクをミュート",
+            "UNMUTE": "VRChatマイクをミュート解除"
           }
         },
         "chaperoneFadeDistanceChanged": {
@@ -304,6 +348,10 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
+          },
+          "title": {
+            "set": "ハードウェア輝度を{value}に設定",
+            "transition": "ハードウェア輝度を{value}に遷移中"
           }
         },
         "gpuPowerLimitChanged": {
@@ -321,6 +369,10 @@
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
+          },
+          "title": {
+            "set": "ソフトウェアの明るさを{value}に設定",
+            "transition": "ソフトウェアの明るさを{value}に遷移中"
           }
         },
         "lighthouseSetPowerState": {
@@ -428,12 +480,12 @@
           },
           "title": {
             "set": "HMDの輝度が{value}に設定されました",
-            "transition": "HMDの輝度が{value}に移行中"
+            "transition": "HMDの輝度を{value}に遷移中"
           }
         },
         "sleepDetectorEnableCancelled": {
           "subtitle": "ユーザーがまだ起きていた",
-          "title": "睡眠モードを有効にする処理をキャンセル"
+          "title": "睡眠モードの有効化をキャンセル"
         },
         "sleepModeDisabled": {
           "reason": {
@@ -572,6 +624,10 @@
       },
       "vrchat": {
         "tooltip": "設定: 連携"
+      },
+      "bsbFanSpeed": {
+        "tooltip": "Bigscreen Beyond ファン速度",
+        "label": "ファン速度"
       }
     },
     "osc-script-code-editor": {
@@ -662,6 +718,9 @@
     "hotkey-selector-modal": {
       "title": "ショートカットキーの設定",
       "description": "ショートカットキーを設定するには、任意の修飾キーを押し、それに続いて組み合わせたいキーを押します。"
+    },
+    "color-picker-modal": {
+      "title": "色を選択"
     }
   },
   "gpu-automations": {
@@ -851,6 +910,8 @@
   },
   "overlay": {
     "brightness": {
+      "hardware": "ハードウェアの輝度",
+      "software": "ソフトウェアの明るさ",
       "simple": "輝度"
     },
     "dashboard": {
@@ -1870,7 +1931,8 @@
       "title": "現在のVRChatのマイク状態",
       "unknown": "不明",
       "unmuted": "ミュート解除"
-    }
+    },
+    "title": "VRChatマイクミュートの自動化"
   },
   "nightmare-detection": {
     "title": "悪夢の検知",
@@ -1916,7 +1978,7 @@
     },
     "onSleepPreparation": {
       "title": "就寝準備時",
-      "description": "スリープの準備をアクティブにしたとき、オーディオデバイスの音量を変更します"
+      "description": "就寝準備を押したとき、オーディオデバイスの音量を変更します"
     },
     "devices": {
       "title": {
@@ -1944,6 +2006,55 @@
     "volume": {
       "title": "音量",
       "description": "オーディオデバイスの音量を設定するレベル"
+    }
+  },
+  "hmd-automations": {
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD固有の自動化",
+    "bigscreenBeyond": {
+      "description": "Bigscreen Beyondの特定の機能を自動化できます。",
+      "fanControl": {
+        "title": "ファン速度",
+        "onSleepEnable": {
+          "title": "就寝時",
+          "description": "睡眠モードが有効になったとき、ファン速度を変更します"
+        },
+        "onSleepDisable": {
+          "title": "起床時",
+          "description": "睡眠モードが無効になったとき、ファン速度を変更します"
+        },
+        "onSleepPreparation": {
+          "title": "就寝準備時",
+          "description": "就寝準備を押したとき、ファン速度を変更します"
+        },
+        "allowUnsafeFanSpeed": {
+          "title": "安全なファン速度に制限",
+          "description": "ファン速度が40%未満に設定されることを防ぎます",
+          "warning": "40%未満の設定はメーカーでサポートされていません。HMDが過熱によって損傷する可能性があります。自己責任にてご利用ください。"
+        }
+      },
+      "rgb": {
+        "title": "RGB LED",
+        "onSleepEnable": {
+          "title": "就寝時",
+          "description": "睡眠モードが有効になったとき、HMD LEDの色を変更します"
+        },
+        "onSleepDisable": {
+          "title": "起床時",
+          "description": "睡眠モードが無効になったとき、HMD LEDの色を変更します"
+        },
+        "onSleepPreparation": {
+          "title": "就寝準備時",
+          "description": "就寝準備を押したとき、HMD LEDの色を変更します"
+        },
+        "pickerTitle": {
+          "onSleepEnable": "就寝時にBeyond LEDの色を設定する",
+          "onSleepDisable": "Beyond LEDの色を設定する",
+          "onSleepPreparation": "Beyond LEDの色を設定する"
+        }
+      }
     }
   }
 }
