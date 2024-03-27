@@ -75,8 +75,13 @@
       },
       "copyBrightness": "复制当前亮度值",
       "description": "让 OyasumiVR 在不同的时间自动调节 VR 头显的亮度，比如睡觉或起床时。",
+      "hardwareBrightness": {
+        "description": "调整显示屏本身的亮度",
+        "title": "将硬件亮度更改为"
+      },
       "softwareBrightness": {
-        "description": "调整 VR 头显图像的亮度"
+        "description": "调整 VR 头显图像的亮度",
+        "title": "将软件亮度更改为"
       },
       "onSleepDisable": {
         "description": "调整亮度",
@@ -114,10 +119,42 @@
       "simple": "简单模式"
     },
     "modeInfoModal": {
+      "message": "OyasumiVR有两种控制VR头戴设备亮度的方法：软件控制和硬件控制：\n\n软件控制适用于所有头戴设备。它通过调整图像的亮度来调整您的VR头戴设备的亮度。\n\n硬件控制只适用于支持的头戴设备（Valve Index，Bigscreen Beyond）。它直接在支持的范围内调整您的头戴设备的显示屏亮度。\n\n在简单模式下，如果不支持硬件亮度，OyasumiVR将平滑地过渡到控制软件和硬件亮度，或者只控制软件亮度。\n\n如果您更喜欢直接控制，高级模式允许您分别控制软件和硬件亮度，从而允许您为每个设备设置精确的亮度值。",
       "title": "亮度调节模式"
     },
-    "title": "亮度自动化"
-  },
+    "title": "亮度自动化",
+      "tabs": {
+        "automations": "自动化",
+        "hmdSettings": "HMD 设置"
+      },
+      "hmdSettings": {
+        "description": "在这里，您可以找到与您的特定VR头戴设备的亮度相关的设置。",
+        "valveIndex": {
+          "title": "阀门索引",
+          "maxBrightness": {
+            "title": "最大亮度",
+            "description": "限制 OyasumiVR 将设置的最大亮度值。"
+          }
+        },
+        "bigscreenBeyond": {
+          "title": "Bigscreen Beyond",
+          "maxBrightness": {
+            "title": "最大亮度",
+            "description": "限制 OyasumiVR 将设置的最大亮度值。"
+          },
+          "permitRiskRange": {
+            "title": "限制到安全亮度级别",
+            "description": "防止您将亮度设置高于150%",
+            "warning": "这个功能不被制造商支持。\n\n请注意，这可能会损坏您的头戴设备：只有在您自愿承担风险的情况下才禁用此功能。"
+          },
+          "forceFanSafety": {
+            "title": "过驱动风扇安全",
+            "description": "在亮度值超过100%时，强制风扇到100%",
+            "warning": "此功能模仿官方 Bigscreen Beyond 驱动程序的安全风扇参数。只有在您自愿承担风险的情况下才禁用此功能。"
+          }
+        }
+      }
+    },
   "chaperone-automations": {
     "description": "在启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的保护墙的淡出距离。",
     "fadeDistance": {
@@ -134,9 +171,15 @@
     "title": "保护墙自动化"
   },
   "comp": {
+    "bsb-fan-speed-control-modal": {
+      "fanSpeed": "Fan Speed",
+      "automationsTooltip": "Bigscreen Beyond Automations"
+    },
     "brightness-control-modal": {
       "automationsTooltip": "自动化亮度调整",
-      "brightness": "亮度"
+      "brightness": "亮度",
+      "hardwareBrightness": "Hardware Brightness",
+      "softwareBrightness": "Software Brightness"
     },
     "confirm-modal": {
       "defaultTitle": "确认"
@@ -202,7 +245,8 @@
         "advanced": "高级选项",
         "hotkeys": "快捷键设置",
         "statusInfo": "调试信息"
-      }
+      },
+      "hmdAutomations": "特定HMD的自动化"
     },
     "device-list": {
       "category": {
@@ -210,6 +254,30 @@
         "GenericTracker": "追踪器",
         "Lighthouse": "基站",
         "other": "其他"
+      },
+      "deviceRole": {
+        "HandPrimary": "主手",
+        "HandSecondary": "副手",
+        "Head": "头部",
+        "Gamepad": "游戏手柄",
+        "Treadmill": "跑步机",
+        "Stylus": "触控笔",
+        "FootLeft": "左脚",
+        "FootRight": "右脚",
+        "ShoulderLeft": "左肩",
+        "ShoulderRight": "右肩",
+        "ElbowLeft": "左肘",
+        "ElbowRight": "右肘",
+        "KneeLeft": "左膝",
+        "KneeRight": "右膝",
+        "WristLeft": "左腕",
+        "WristRight": "右腕",
+        "AnkleLeft": "左脚踝",
+        "AnkleRight": "右脚踝",
+        "Waist": "腰部",
+        "Chest": "胸部",
+        "Camera": "相机",
+        "Keyboard": "键盘"
       },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
@@ -280,7 +348,11 @@
             "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-          }
+        },
+        "title": {
+              "set": "头显硬件亮度设置为 {value}",
+              "transition": "头显硬件亮度过渡到 {value}"
+              }
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -297,6 +369,10 @@
             "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          },
+          "title": {
+            "set": "Headset software brightness set to {value}",
+            "transition": "Headset software brightness transitioning to {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -548,6 +624,10 @@
       },
       "vrchat": {
         "tooltip": "点击打开VRChat配置页"
+      },
+      "bsbFanSpeed": {
+        "tooltip": "Bigscreen Beyond 风扇速度",
+        "label": "风扇速度"
       }
     },
     "osc-script-code-editor": {
@@ -638,6 +718,9 @@
     "hotkey-selector-modal": {
       "title": "设置快捷键",
       "description": "要设置快捷键，请先按任意修饰键，再按要与之组合的键"
+    },
+    "color-picker-modal": {
+      "title": "选择颜色"
     }
   },
   "gpu-automations": {
@@ -827,6 +910,8 @@
   },
   "overlay": {
     "brightness": {
+      "hardware": "Hardware Brightness",
+      "software": "Software Brightness",
       "simple": "亮度"
     },
     "dashboard": {
@@ -1180,7 +1265,7 @@
         "title": "管理员权限"
       },
       "language": {
-        "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属国家/地区语言的支持，请联系我们！",
+        "description": "你可以在此处选择你的语言。如果有任何遗漏的翻译，或者你想添加对你所属区域语言的支持，请联系我们！",
         "title": "语言"
       },
       "lighthouseConsole": {
@@ -1188,7 +1273,7 @@
         "status": {
           "CHECKING": "正在验证 <strong>lighthouse_console.exe 的有效性</strong>",
           "INVALID_EXECUTABLE": "无法验证此位置的 <strong>lighthouse_console.exe</strong> 是否正常运作",
-          "INVALID_FILENAME": "所设置的位置不是有效的文件路径",
+          "INVALID_FILENAME": "所选择的位置不是有效的文件路径",
           "NOT_FOUND": "在此位置下找不到 <strong>lighthouse_console.exe</strong>",
           "PERMISSION_DENIED": "OyasumiVR 没有在此位置运行 <strong>lighthouse_console.exe</strong> 的权限。 尝试以管理员身份运行 OyasumiVR",
           "SUCCESS": "<strong>lighthouse_console.exe</strong> 已找到并且可以正常运作！",
@@ -1636,11 +1721,11 @@
             "two": "从叠加层上启动 OyasumiVR 进行校准"
           },
           "stepPrefix": "校准步骤如下：",
-          "stepSuffix": "就是这样！ 校准后，OyasumiVR 应该能够根据 VR 头盔的移动来检测你是否进入睡眠"
+          "stepSuffix": "就是这样！ 校准后，OyasumiVR 应该能够根据 VR 头显的移动来检测你是否进入睡眠"
         },
         "noSteamVR": "你只能在 SteamVR 正确启动并且识别到头显的情况下才能开始校准",
         "prepare": {
-          "instruction": "戴上你的 VR 头盔并躺下",
+          "instruction": "戴上你的 VR 头显并躺下",
           "note": "当你准备好后你会在叠加层界面看到这个窗口，点击「开始校准」来进行校准"
         },
         "restartCalibration": "重新开始校准",
@@ -1846,7 +1931,8 @@
       "title": "当前 VRChat 麦克风状态",
       "unknown": "未知",
       "unmuted": "已开麦"
-    }
+    },
+    "title": "VRChat麦克风自动化"
   },
   "nightmare-detection": {
     "title": "噩梦检测",
@@ -1920,6 +2006,55 @@
     "volume": {
       "title": "音量",
       "description": "运行此自动化操作时，为音频设备设置的音量大小"
+    }
+  },
+  "hmd-automations": {
+      "tabs": {
+        "bigscreenBeyond": "Bigscreen Beyond"
+      },
+      "title": "特定于HMD的自动化",
+      "bigscreenBeyond": {
+        "description": "在这里，您可以自动化一些特定于Bigscreen Beyond的功能。",
+        "fanControl": {
+          "title": "风扇速度",
+          "onSleepEnable": {
+            "title": "当我睡觉时",
+            "description": "在启用睡眠模式时改变风扇速度"
+          },
+          "onSleepDisable": {
+            "title": "当我醒来时",
+            "description": "在禁用睡眠模式时改变风扇速度"
+          },
+          "onSleepPreparation": {
+            "title": "当我准备睡觉时",
+            "description": "在我准备睡觉时改变风扇速度"
+          },
+          "allowUnsafeFanSpeed": {
+            "title": "关闭风扇安全限制",
+            "description": "允许将风扇速度设置为低于40%的值",
+            "warning": "设备造商不支持将风扇速度设置为低于40%的值，并且可能会因让您的头戴式设备过热而造成潜在的损坏。只有在您自愿承担风险的情况下才禁用此功能。"
+          }
+        },
+        "rgb": {
+          "title": "RGB Led",
+          "onSleepEnable": {
+            "title": "当我睡觉时",
+            "description": "在启用睡眠模式时改变HMD LED的颜色"
+          },
+          "onSleepDisable": {
+            "title": "当我醒来时",
+            "description": "在禁用睡眠模式时改变HMD LED的颜色"
+          },
+          "onSleepPreparation": {
+            "title": "当我准备睡觉时",
+            "description": "在我准备睡觉时改变HMD LED的颜色"
+          },
+          "pickerTitle": {
+            "onSleepEnable": "设置睡眠时的Beyond LED颜色",
+            "onSleepDisable": "设置醒来时的Beyond LED颜色",
+            "onSleepPreparation": "设置准备睡觉时的Beyond LED颜色"
+        }
+      }
     }
   }
 }
