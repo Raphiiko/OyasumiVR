@@ -157,6 +157,8 @@ img[data-src]:not(.no-fade) {
 }
 
 #version {
+  white-space: pre-line;
+  text-align: center;
   opacity: 0.75;
   padding-bottom: 1em;
   text-shadow: 0 0 5px rgba(0, 0, 0, 1);

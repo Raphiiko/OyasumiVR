@@ -12,3 +12,13 @@ const revision = execSync('git rev-parse --short HEAD').toString().trim();
   writeFileSync('src-ui/build.ts', uiFlavour);
   console.log('Updated src-ui/build.ts');
 }
+
+{
+  let splashScreenHtml = readFileSync('src-ui/assets/splashscreen/splashscreen.html').toString();
+  splashScreenHtml = splashScreenHtml.replaceAll(
+    /\s+const buildId = '[a-fA-F0-9]+';\s+/g,
+    `\nconst buildId = '${revision}';\n`
+  );
+  writeFileSync('src-ui/assets/splashscreen/splashscreen.html', splashScreenHtml);
+  console.log('Updated src-ui/assets/splashscreen/splashscreen.html');
+}
