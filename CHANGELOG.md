@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Battery level automations not working for trackers.
 - MDNS advertisements for OSC & OSCQuery not working for some network configurations.
 
+### Removed
+
+- Legacy telemetry
+
 ## [1.11.5]
 
 ### Fixed
