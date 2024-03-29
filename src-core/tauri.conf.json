@@ -9,7 +9,7 @@
   },
   "package": {
     "productName": "OyasumiVR",
-    "version": "1.11.5"
+    "version": "1.12.0"
   },
   "tauri": {
     "allowlist": {
@@ -45,12 +45,8 @@
       "http": {
         "request": true,
         "scope": [
-          "https://europe-west1-oyasumivr.cloudfunctions.net/*",
-          "https://api.vrchat.cloud/api/1/*",
-          "https://assets.vrchat.com/*",
-          "https://files.vrchat.cloud/*",
-          "https://dotnetcli.azureedge.net/*",
-          "https://dev.pulsoid.net/*"
+          "https://*",
+          "http://*"
         ]
       },
       "notification": {
@@ -149,6 +145,18 @@
             "release",
             "dev"
           ]
+        },
+        {
+          "name": "mdns-sidecar-mode",
+          "short": "m",
+          "description": "Mode for handling the mdns sidecar",
+          "longDescription": "See developer notes for more information",
+          "maxValues": 1,
+          "takesValue": true,
+          "possibleValues": [
+            "release",
+            "dev"
+          ]
         }
       ]
     },
@@ -180,7 +188,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.11.5 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.12.0 (https://github.com/Raphiiko/OyasumiVR)"
       },
       {
         "width": 700,
@@ -192,7 +200,7 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.11.5 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.12.0 (https://github.com/Raphiiko/OyasumiVR)"
       }
     ]
   }

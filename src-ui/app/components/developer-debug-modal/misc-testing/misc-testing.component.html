@@ -1,8 +1,8 @@
 <h3>Navigation</h3>
 <div class="row">
   <button class="btn btn-secondary" (click)="navigateTo(['translation'])"
-    >Translation Module</button
-  >
+    >Translation Module
+  </button>
 </div>
 <h3>Actions</h3>
 <button class="btn btn-secondary" (click)="openBindingConfig()">Open Binding Config</button>
@@ -11,11 +11,11 @@
 <h3>Notification Sounds</h3>
 <div class="row">
   <button class="btn btn-secondary" (click)="playSound('notification_bell')"
-    >notification_bell</button
-  >
+    >notification_bell
+  </button>
   <button class="btn btn-secondary" (click)="playSound('notification_block')"
-    >notification_block</button
-  >
+    >notification_block
+  </button>
   <button class="btn btn-secondary" (click)="playSound('mic_mute')">mic_mute</button>
   <button class="btn btn-secondary" (click)="playSound('mic_unmute')">mic_unmute</button>
   <app-slider-setting [(value)]="soundVolume" [max]="200"></app-slider-setting>

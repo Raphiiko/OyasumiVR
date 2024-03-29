@@ -149,9 +149,11 @@
       color: var(--color-text-2);
       cursor: pointer;
       transition: all 0.15s;
+
       &:hover {
         background: var(--color-surface-1);
       }
+
       &:active {
         opacity: 0.6;
       }

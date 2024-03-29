@@ -14,6 +14,7 @@ lazy_static! {
     pub static ref FLAGS: Mutex<Option<Config>> = Default::default();
 }
 
+#[allow(dead_code)]
 pub async fn is_flag_set(flag: &str) -> bool {
     let flags = FLAGS.lock().await;
     if let Some(flags) = flags.as_ref() {

@@ -75,13 +75,13 @@
       },
       "copyBrightness": "Copy current\nbrightness value",
       "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
-      "displayBrightness": {
-        "description": "Adjusts the brightness of the LCD backlight (Valve Index only)",
-        "title": "Change the display brightness to"
+      "hardwareBrightness": {
+        "description": "Adjusts the brightness of the display itself",
+        "title": "Change the hardware brightness to"
       },
-      "imageBrightness": {
+      "softwareBrightness": {
         "description": "Adjusts the brightness of the image shown in your VR headset",
-        "title": "Change the image brightness to"
+        "title": "Change the software brightness to"
       },
       "onSleepDisable": {
         "description": "Adjust the brightness",
@@ -119,10 +119,41 @@
       "simple": "Simple Mode"
     },
     "modeInfoModal": {
-      "message": "By default, OyasumiVR will control the brightness of your VR headset by adjusting the brightness of the image. If you're using a headset with a LCD panel that can have its backlight controlled through SteamVR (e.g. the Valve Index), OyasumiVR will control the display brightness instead whenever possible.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling image brightness and display brightness.\n\nIn case you prefer direct control, advanced mode allows you to control both image- and display brightness separate from each other, and allows you to set exact brightness values for each.\n\nThis only applies to headsets that support this, which currently only consists of the Valve Index. On other VR headsets, there is no difference between simple and advanced mode.",
+      "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
-    "title": "Brightness Automations"
+    "title": "Brightness Automations",
+    "tabs": {
+      "automations": "Automations",
+      "hmdSettings": "HMD Settings"
+    },
+    "hmdSettings": {
+      "description": "Here you'll find any brightness related settings for your specific VR Headset.",
+      "valveIndex": {
+        "title": "Valve Index",
+        "maxBrightness": {
+          "title": "Maximum Brightness",
+          "description": "Limit the maximum brightness value that OyasumiVR will set."
+        }
+      },
+      "bigscreenBeyond": {
+        "title": "Bigscreen Beyond",
+        "maxBrightness": {
+          "title": "Maximum Brightness",
+          "description": "Limit the maximum brightness value that OyasumiVR will set."
+        },
+        "permitRiskRange": {
+          "title": "Limit to safe brightness levels",
+          "description": "Prevents you from setting the brightness above 150%",
+          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
+        },
+        "forceFanSafety": {
+          "title": "Overdrive fan safety",
+          "description": "Force the fan to 100% at brightness values above 100%",
+          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
+        }
+      }
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
@@ -140,11 +171,15 @@
     "title": "Chaperone Automations"
   },
   "comp": {
+    "bsb-fan-speed-control-modal": {
+      "fanSpeed": "Fan Speed",
+      "automationsTooltip": "Bigscreen Beyond Automations"
+    },
     "brightness-control-modal": {
       "automationsTooltip": "Brightness Automations",
       "brightness": "Brightness",
-      "displayBrightness": "Display Brightness",
-      "imageBrightness": "Image Brightness"
+      "hardwareBrightness": "Hardware Brightness",
+      "softwareBrightness": "Software Brightness"
     },
     "confirm-modal": {
       "defaultTitle": "Confirm"
@@ -210,7 +245,8 @@
         "advanced": "Advanced Settings",
         "hotkeys": "Hotkey Settings",
         "statusInfo": "Status Information"
-      }
+      },
+      "hmdAutomations": "HMD Specific Automations"
     },
     "device-list": {
       "category": {
@@ -218,6 +254,30 @@
         "GenericTracker": "Trackers",
         "Lighthouse": "Base Stations",
         "other": "Others"
+      },
+      "deviceRole": {
+        "HandPrimary": "Primary Hand",
+        "HandSecondary": "Secondary Hand",
+        "Head": "Head",
+        "Gamepad": "Gamepad",
+        "Treadmill": "Treadmill",
+        "Stylus": "Stylus",
+        "FootLeft": "Left Foot",
+        "FootRight": "Right Foot",
+        "ShoulderLeft": "Left Shoulder",
+        "ShoulderRight": "Right Shoulder",
+        "ElbowLeft": "Left Elbow",
+        "ElbowRight": "Right Elbow",
+        "KneeLeft": "Left Knee",
+        "KneeRight": "Right Knee",
+        "WristLeft": "Left Wrist",
+        "WristRight": "Right Wrist",
+        "AnkleLeft": "Left Ankle",
+        "AnkleRight": "Right Ankle",
+        "Waist": "Waist",
+        "Chest": "Chest",
+        "Camera": "Camera",
+        "Keyboard": "Keyboard"
       },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
@@ -283,15 +343,15 @@
           },
           "title": "Chaperone fade distance set to {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Headset display brightness set to {value}",
-            "transition": "Headset display brightness transitioning to {value}"
+            "set": "Headset hardware brightness set to {value}",
+            "transition": "Headset hardware brightness transitioning to {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -304,15 +364,15 @@
             "set": "Power limit for ''{device}'' set to {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
-            "set": "Headset image brightness set to {value}",
-            "transition": "Headset image brightness transitioning to {value}"
+            "set": "Headset software brightness set to {value}",
+            "transition": "Headset software brightness transitioning to {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -564,6 +624,10 @@
       },
       "vrchat": {
         "tooltip": "Settings: Integrations"
+      },
+      "bsbFanSpeed": {
+        "tooltip": "Bigscreen Beyond Fan Speed",
+        "label": "Fan Speed"
       }
     },
     "osc-script-code-editor": {
@@ -624,7 +688,7 @@
       "rememberCredentials": "Remember Credentials",
       "disclaimers": {
         "brand": "OyasumiVR isn't endorsed by VRChat and doesn't reflect the views or opinions of VRChat or anyone officially involved in producing or managing VRChat. VRChat is trademark of VRChat Inc. VRChat © VRChat Inc.",
-        "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk!",
+        "liability": "Raphiiko is not not responsible for any problems caused by OyasumiVR. Use at your own risk.",
         "use": "Your login credentials will never be stored anywhere but your own machine and are only ever sent to VRChat's servers for authentication purposes."
       }
     },
@@ -654,6 +718,9 @@
     "hotkey-selector-modal": {
       "title": "Set Hotkey",
       "description": "To set a hotkey, press any modifier keys, followed by the key you want to combine them with."
+    },
+    "color-picker-modal": {
+      "title": "Pick Colour"
     }
   },
   "gpu-automations": {
@@ -843,8 +910,8 @@
   },
   "overlay": {
     "brightness": {
-      "display": "Display Brightness",
-      "image": "Image Brightness",
+      "hardware": "Hardware Brightness",
+      "software": "Software Brightness",
       "simple": "Brightness"
     },
     "dashboard": {
@@ -1865,7 +1932,7 @@
       "unknown": "Unknown",
       "unmuted": "Unmuted"
     },
-    "title": "Microphone Muting"
+    "title": "VRChat Microphone Mute Automations"
   },
   "nightmare-detection": {
     "title": "Nightmare Detection",
@@ -1939,6 +2006,66 @@
     "volume": {
       "title": "Volume",
       "description": "What volume level to set for the audio device when this automation runs"
+    }
+  },
+  "hmd-automations": {
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD Specific Automations",
+    "bigscreenBeyond": {
+      "description": "Here you can automate certain features specific to the Bigscreen Beyond.",
+      "fanControl": {
+        "title": "Fan Speed",
+        "onSleepEnable": {
+          "title": "When I go to sleep",
+          "description": "Change the fan speed when the sleep mode is enabled"
+        },
+        "onSleepDisable": {
+          "title": "When I wake up",
+          "description": "Change the fan speed when the sleep mode is disabled"
+        },
+        "onSleepPreparation": {
+          "title": "When I prepare to go to sleep",
+          "description": "Change the fan speed when I prepare to go to sleep"
+        },
+        "allowUnsafeFanSpeed": {
+          "title": "Limit to safe fan speeds",
+          "description": "Prevents you from setting the fan speed below 40%",
+          "warning": "Setting the fan speed lower than 40% is not supported by the manufacturer, and could potentially cause damage by letting your headset overheat. Only disable this functionality at your own risk."
+        }
+      },
+      "rgb": {
+        "title": "RGB Led",
+        "onSleepEnable": {
+          "title": "When I go to sleep",
+          "description": "Change the HMD LED's color when the sleep mode is enabled"
+        },
+        "onSleepDisable": {
+          "title": "When I wake up",
+          "description": "Change the HMD LED's color when the sleep mode is disabled"
+        },
+        "onSleepPreparation": {
+          "title": "When I prepare to go to sleep",
+          "description": "Change the HMD LED's color when I prepare to go to sleep"
+        },
+        "pickerTitle": {
+          "onSleepEnable": "Set Beyond LED color when going to sleep",
+          "onSleepDisable": "Set Beyond LED color when waking up",
+          "onSleepPreparation": "Set Beyond LED color when preparing to go to sleep"
+        }
+      }
+    }
+  },
+  "discord": {
+    "details": "VR Sleeping Software",
+    "state": {
+      "sleeping": "Sleeping",
+      "awake": "Awake"
+    },
+    "label": {
+      "sleeping": "sleepy time",
+      "awake": "no more sleepy"
     }
   }
 }

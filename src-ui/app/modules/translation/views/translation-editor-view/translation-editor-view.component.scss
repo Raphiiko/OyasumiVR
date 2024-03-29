@@ -196,11 +196,13 @@
   align-items: stretch;
   justify-content: space-between;
   background: var(--color-surface-3);
+
   .left {
     font-weight: 700;
     flex: 1;
     padding: 0.5em 1em;
   }
+
   .right {
     flex-shrink: 0;
   }

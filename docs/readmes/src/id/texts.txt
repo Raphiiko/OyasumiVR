@@ -33,6 +33,19 @@ OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berba
 
 ...dan masih banyak lagi! Silakan lihat bagian "Fitur" yang akan datang untuk membaca lebih lanjut tentang fungsionalitas yang ditawarkan OyasumiVR.
 
+{{SUPPORT_OYASUMIVR_HEADER}}
+Dukung OyasumiVR
+
+{{SUPPORT_OYASUMIVR_BODY}}
+OyasumiVR sendiri sepenuhnya gratis, dan akan selalu gratis. Namun, jika Anda ingin mendukung saya dan pengembangan OyasumiVR, berikut adalah beberapa tempat yang dapat Anda lakukan:
+
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+
+Dengan mendukung saya, Anda membantu saya mendedikasikan lebih banyak waktu untuk mengembangkan fitur-fitur baru, meningkatkan fungsionalitas saat ini, mengimbangi beberapa biaya yang muncul dalam proses pengembangan, dan memicu kecanduan kopi saya ☕.
+
+Saya belum selesai dengan OyasumiVR dalam waktu dekat: **Masih ada banyak yang ingin saya kerjakan!
+
 {{FEATURES}}
 Fitur
 
@@ -162,20 +175,6 @@ Sekarang Anda dapat tertidur lelap dalam VR, mengetahui bahwa semuanya akan mati
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 Otomatisasi Brightness
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-Mengotomatiskan kecerahan Anda saat Anda tidur dan bangun. OyasumiVR dapat mentransisikan kecerahan headset VR Anda dengan lancar, sehingga kecerahannya turun secara bertahap saat Anda tidur tanpa membangunkan Anda.
-<br><br>
-Hal ini memungkinkan Anda untuk mengontrol kecerahan gambar, serta kecerahan layar (lampu latar LCD) jika headset Anda mendukungnya (mis. Valve Index). Selain menyediakan beberapa otomatisasi, Anda dapat dengan mudah mengontrol tingkat kecerahan langsung dari menu overlay SteamVR!
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 Otomatisasi Mute Mikrofon Sistem
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-Anda dapat membuat OyasumiVR secara otomatis membisukan atau membunyikan mikrofon ketika Anda tidur dan bangun. Atau, Anda bahkan dapat beralih antara mode toggle bisu dan push-to-talk.
-<br><br>Sempurna jika Anda ingin mencegah orang lain mendengar Anda mendengkur!
-<br><br>
-Dilengkapi dengan indikator pembisuan opsional di hamparan VR, dan opsi untuk mengikat tombol pengontrol sehingga Anda dapat sepenuhnya menggantikan fungsionalitas pembisuan mikrofon pada VRChat atau game VR lain yang Anda mainkan.
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ Otomatisasi Denyut Jantung (Integrasi Pulsoid)
 
@@ -264,11 +263,6 @@ Mengontrol batas daya kartu grafis Anda secara langsung dengan OyasumiVR hanya d
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 Otomatisasi Kecerahan
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-Mengontrol kecerahan layar (baca 'lampu latar LCD') dari layar headset VR hanya didukung pada Valve Index.
-
-Kontrol kecerahan gambar tersedia pada semua headset.
 
 {{BUILT_WITH_HEADER}}
 Pembuatan

@@ -1,0 +1,44 @@
+<div class="b-modal-container" @fadeUp (clickOutside)="close()">
+  <div class="sliders-container">
+    <div
+      class="brightness-slider"
+      @vshrink
+      [class.disabled]="fanControl.fanSafetyActive | async"
+    >
+      <app-brightness-control-slider
+        [value]="(fanControl.fanSpeed | async) ?? 0"
+        [min]="fanSpeedBounds[0]"
+        [max]="fanSpeedBounds[1]"
+        [icons]="'FAN_SPEED'"
+        (valueChange)="setFanSpeed.next($event)"
+      ></app-brightness-control-slider>
+      <div class="brightness-slider-title">
+        <span translate>comp.bsb-fan-speed-control-modal.fanSpeed</span>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="footer-row"
+    *ngIf="
+      !router.isActive('/dashboard/hmdAutomations', {
+        paths: 'subset',
+        queryParams: 'subset',
+        fragment: 'ignored',
+        matrixParams: 'ignored'
+      })
+    "
+    @vshrink
+  >
+    <a
+      class="shortcut-automations"
+      [routerLink]="['/dashboard/hmdAutomations']"
+      [routerLinkActive]="'active'"
+      [tooltip]="'comp.bsb-fan-speed-control-modal.automationsTooltip'"
+      [tooltipMode]="'left'"
+      (click)="close()"
+    >
+      <i class="material-icons">settings</i>
+    </a>
+  </div>
+</div>

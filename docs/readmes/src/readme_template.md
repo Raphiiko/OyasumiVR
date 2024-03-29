@@ -58,6 +58,20 @@
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=indonesian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
             </td>
         </tr>
+        <tr>
+            <td align="center">Russian</td>
+            <td align="center"></td>
+            <td align="center"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=russian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_RU.md">Readme</a>
+            </td>
+            <td align="center">
+            </td>
+            <td align="center">
+            </td>
+        </tr>
     </table>
 </p>
 <p align="center">
@@ -198,14 +212,31 @@
 
 </table>
 
-### {{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+### {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 
 <table>
+   <tr>
+    <td>
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
   <tr>
     <td>
 {{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+</table>
+
+### {{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+
+<table>
+   <tr>
+    <td>
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
 </table>
 
@@ -229,6 +260,17 @@
 {{HEART_RATE_AUTOMATIONS_BODY_NIGHTMARE_DETECTION}}
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
+### {{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+
+<table>
+   <tr>
+    <td>
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
   </tr>
 </table>
 

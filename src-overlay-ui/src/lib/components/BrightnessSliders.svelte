@@ -49,21 +49,21 @@
         				duration: animationSpeed,
         				y: flyYTransform,
         			}}>
-        <BrightnessSlider label={$t('t.overlay.brightness.image')}
+        <BrightnessSlider label={$t('t.overlay.brightness.software')}
                           min={5}
-                          value={brightnessState.imageBrightness}
-                          isTransitioning={brightnessState.imageBrightnessTransitioning}
-                          transitionTarget="{brightnessState.imageBrightnessTransitionTarget}"
-                          onValueChange={throttle((value) => ipc.setBrightness('IMAGE', value), 16, {leading: true, trailing: true})}
+                          value={brightnessState.softwareBrightness}
+                          isTransitioning={brightnessState.softwareBrightnessTransitioning}
+                          transitionTarget="{brightnessState.softwareBrightnessTransitionTarget}"
+                          onValueChange={throttle((value) => ipc.setBrightness('SOFTWARE', value), 16, {leading: true, trailing: true})}
         ></BrightnessSlider>
-        <BrightnessSlider label={$t('t.overlay.brightness.display')}
-                          min="{brightnessState.displayMinBrightness}"
-                          max="{brightnessState.displayMaxBrightness}"
-                          value={brightnessState.displayBrightness}
-                          disabled={!brightnessState.displayBrightnessAvailable}
-                          isTransitioning={brightnessState.displayBrightnessTransitioning}
-                          transitionTarget="{brightnessState.displayBrightnessTransitionTarget}"
-                          onValueChange={throttle((value) => ipc.setBrightness('DISPLAY', value), 16, {leading: true, trailing: true})}
+        <BrightnessSlider label={$t('t.overlay.brightness.hardware')}
+                          min="{brightnessState.hardwareMinBrightness}"
+                          max="{brightnessState.hardwareMaxBrightness}"
+                          value={brightnessState.hardwareBrightness}
+                          disabled={!brightnessState.hardwareBrightnessAvailable}
+                          isTransitioning={brightnessState.hardwareBrightnessTransitioning}
+                          transitionTarget="{brightnessState.hardwareBrightnessTransitionTarget}"
+                          onValueChange={throttle((value) => ipc.setBrightness('HARDWARE', value), 16, {leading: true, trailing: true})}
         ></BrightnessSlider>
       </div>
     {/if}

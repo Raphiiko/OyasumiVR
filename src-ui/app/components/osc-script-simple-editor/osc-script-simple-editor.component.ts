@@ -96,6 +96,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.scriptChange.emit(this._script);
       });
   }
+
   onAdd(item: DropdownItem) {
     switch (item.id) {
       case 'COMMAND':

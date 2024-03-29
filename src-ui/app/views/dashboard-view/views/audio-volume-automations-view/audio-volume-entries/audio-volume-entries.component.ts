@@ -89,7 +89,6 @@ export class AudioVolumeEntriesComponent implements OnInit {
   }
 
   addAudioDevice() {
-    console.log(this.automations.map((a) => a.audioDeviceRef.persistentId));
     this.modalService
       .addModal<AudioDevicePickerInput, AudioDevicePickerOutput>(
         AudioDevicePickerComponent,

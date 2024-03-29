@@ -151,7 +151,7 @@ Switch to blue when you are sleeping alone so your friends can join you, and swi
 <br>
 You can send certain OSC messages to VRChat when sleep mode is enabled, or disabled. You can use the built-in OSC script editor to compose the exact messages you want to send.
 <br><br>
-This is a more advanced feature that you can use use to trigger certain features on your avatar. For example: Show a sleepy expression on your face while sleep mode is enabled!
+This is a more advanced feature that you can use to trigger certain features on your avatar. For example: Show a sleepy expression on your face while sleep mode is enabled!
 
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ Shutdown Sequence
@@ -176,16 +176,28 @@ Now you can fall asleep soundly in VR, knowing that everything will shut down af
 {{BRIGHTNESS_AUTOMATIONS_BODY}}
 Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-It allows you to control both image brightness, as well as display brightness (the LCD backlight) if your headset supports it (e.g. Valve Index). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
 
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 System Microphone Mute Automations
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+🎤 Microphone Mute Automations
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+<b>VRChat Microphone Mute Automations</b><br>
+You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
 
 {{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-You can have OyasumiVR automatically mute or unmute your mic when you go to sleep and wake up. Alternatively, you can even switch between mute toggle mode and push-to-talk.
-<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<b>System Microphone Mute Automations</b><br>
+OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
+With this, you can even switch between mute toggle mode and push-to-talk.
 <br><br>
 This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+🔉 Audio Volume Automations
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
 
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ Heart Rate Automations (Pulsoid Integration)
@@ -205,6 +217,18 @@ You can set up OyasumiVR to automatically enable the sleep mode when your heart 
 <br>
 OyasumiVR can detect when you've got a prolonged elevated heartrate, which could indicate a nightmare. With this feature you can try to cut your nightmares short by automatically deactivating the sleep mode (to for example, increase the brightness), or by playing a sound to attempt waking you up.
 
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+🚨 HMD Specific Automations
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB Led Control</li>
+<li>Fan Speed Control</li>
+</ul>
+
 {{RESOLUTION_AUTOMATIONS_HEADER}}
 👓 Resolution Automations
 
@@ -218,7 +242,7 @@ Automatically adjust your SteamVR render resolution when you sleep and wake up! 
 Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
 
 {{TRANSLATION_AND_LOCALIZATION_HEADER}}
-Translation & Localisation
+Translation & Localization
 
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
 OyasumiVR currently supports the following languages:
@@ -277,7 +301,7 @@ Directly controlling the power limits of your graphics card with OyasumiVR is on
 Brightness Automations
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-Controlling the display brightness (read 'LCD backlight') of the VR headset's display is only supported on the Valve Index.
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
 Image brightness control is available on all headsets.
 

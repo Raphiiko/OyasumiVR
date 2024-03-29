@@ -19,12 +19,13 @@ import {
   VRChatMicMuteAutomationsConfig,
   VRChatVoiceMode,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isArray } from 'lodash';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { EventLogService } from '../event-log.service';
 import { EventLogChangedVRChatMicMuteState } from '../../models/event-log-entry';
 import { info } from 'tauri-plugin-log-api';
+import { Client, getClient } from '@tauri-apps/api/http';
 
 const READ_ADDR = '/avatar/parameters/MuteSelf';
 const WRITE_ADDR = '/input/Voice';
@@ -42,6 +43,7 @@ export class VRChatMicMuteAutomationService {
   private config: VRChatMicMuteAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS
   );
+  private http!: Client;
 
   constructor(
     private osc: OscService,
@@ -52,6 +54,8 @@ export class VRChatMicMuteAutomationService {
   ) {}
 
   async init() {
+    this.http = await getClient();
+
     this.automationConfigs.configs.subscribe((configs) => {
       this.config = configs.VRCHAT_MIC_MUTE_AUTOMATIONS;
       this._mode.next(this.config.mode);
@@ -126,19 +130,12 @@ export class VRChatMicMuteAutomationService {
       }
     });
     // In case the muted state is not known (This happens when OyasumiVR is launched after VRChat is already active)
-    // We try to determine the muted state by toggling the mute button twice until it is known
-    merge(interval(5000), this._mode.pipe(skip(1)))
+    // We poll the muted state through OSCQuery every 3 seconds, until it is known.
+    merge(interval(3000), this._mode.pipe(skip(1)))
       .pipe(
         debounceTime(100),
         filter(() => this._muted.value === null),
-        filter(() => this._mode.value === 'TOGGLE'),
-        filter(
-          () =>
-            this.config.onSleepModeEnable !== 'NONE' ||
-            this.config.onSleepModeDisable !== 'NONE' ||
-            this.config.onSleepPreparation !== 'NONE'
-        ),
-        switchMap(() => this.ensureMutedStateKnown())
+        switchMap(() => this.fetchMutedState())
       )
       .subscribe();
   }
@@ -153,7 +150,7 @@ export class VRChatMicMuteAutomationService {
   }
 
   async toggleMute(ensureStateKnown = true) {
-    if (ensureStateKnown && !(await this.ensureMutedStateKnown())) return;
+    if (ensureStateKnown && !(await this.fetchMutedState())) return;
     switch (this._mode.value) {
       case 'TOGGLE':
         await this.osc.send_int(WRITE_ADDR, 0);
@@ -184,10 +181,27 @@ export class VRChatMicMuteAutomationService {
     }
   }
 
-  private async ensureMutedStateKnown(): Promise<boolean> {
+  private async fetchMutedState(): Promise<boolean> {
     if (this._muted.value !== null) return true;
-    await this.setMute(false);
-    await this.setMute(true);
-    return this._muted.value !== null;
+    const oscqAddr = await firstValueFrom(this.osc.vrchatOscQueryAddress);
+    if (!oscqAddr) return false;
+    try {
+      const resp = await this.http.get<{ VALUE?: boolean[] }>(
+        `http://${oscqAddr}/avatar/parameters/MuteSelf`
+      );
+      if (
+        resp.data.VALUE &&
+        isArray(resp.data.VALUE) &&
+        resp.data.VALUE.length &&
+        typeof resp.data.VALUE[0] === 'boolean'
+      ) {
+        this._muted.next(Boolean(resp.data.VALUE[0]));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.warn(e);
+      return false;
+    }
   }
 }

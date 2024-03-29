@@ -18,11 +18,13 @@ button.btn-power {
 
   &:not(:disabled) {
     cursor: pointer;
+
     &:hover {
       &.power-off {
         background: var(--color-alert-error);
         color: var(--color-on-alert-error);
       }
+
       &.power-on {
         background: var(--color-alert-success);
         color: var(--color-on-alert-success);
@@ -73,6 +75,7 @@ button.btn {
   background-color: var(--scoped-bg-color);
   color: var(--scoped-color);
   border-radius: 0.5em;
+
   &,
   &:visited,
   &:hover,

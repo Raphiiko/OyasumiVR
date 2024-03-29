@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: toLatest,
+  2: from1to2,
 };
 
 export function migrateTelemetrySettings(data: any): TelemetrySettings {
@@ -33,6 +34,13 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
     }
   });
   return data as TelemetrySettings;
+}
+
+function from1to2(data: any): any {
+  return {
+    enabled: data.enabled,
+    version: 2,
+  };
 }
 
 function toLatest(data: any): any {

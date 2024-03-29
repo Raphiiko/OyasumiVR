@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { fadeUp, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
-import { DisplayBrightnessControlService } from '../../services/brightness-control/display-brightness-control.service';
-import { ImageBrightnessControlService } from '../../services/brightness-control/image-brightness-control.service';
+import { HardwareBrightnessControlService } from '../../services/brightness-control/hardware-brightness-control.service';
+import { SoftwareBrightnessControlService } from '../../services/brightness-control/software-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
 import { AutomationConfigService } from '../../services/automation-config.service';
-import { filter, map, switchMap, tap } from 'rxjs';
+import { asyncScheduler, filter, map, Subject, switchMap, tap, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
@@ -20,16 +20,22 @@ export class BrightnessControlModalComponent
   extends BaseModalComponent<void, void>
   implements OnInit
 {
-  displayBrightnessBounds = [0, 100];
+  hardwareBrightnessBounds = [0, 100];
   advancedMode = false;
   driverAvailable = false;
+  driverChecked = false;
+
+  protected readonly setHardwareBrightness = new Subject<number>();
+  protected readonly setSoftwareBrightness = new Subject<number>();
+  protected readonly setSimpleBrightness = new Subject<number>();
 
   constructor(
-    protected displayBrightnessControl: DisplayBrightnessControlService,
-    protected imageBrightnessControl: ImageBrightnessControlService,
+    protected hardwareBrightnessControl: HardwareBrightnessControlService,
+    protected softwareBrightnessControl: SoftwareBrightnessControlService,
     protected simpleBrightnessControl: SimpleBrightnessControlService,
     protected router: Router,
-    public automationConfigService: AutomationConfigService
+    public automationConfigService: AutomationConfigService,
+    private destroyRef: DestroyRef
   ) {
     super();
     automationConfigService.configs
@@ -38,14 +44,39 @@ export class BrightnessControlModalComponent
         takeUntilDestroyed()
       )
       .subscribe((advancedMode) => (this.advancedMode = advancedMode.enabled));
-    displayBrightnessControl.driverIsAvailable
+    hardwareBrightnessControl.driverIsAvailable
       .pipe(
         takeUntilDestroyed(),
-        tap((available) => (this.driverAvailable = available)),
+        tap((available) => {
+          if (!available) this.driverChecked = true;
+          this.driverAvailable = available;
+        }),
         filter(Boolean),
-        switchMap(() => this.displayBrightnessControl.getBrightnessBounds())
+        switchMap(() => this.hardwareBrightnessControl.brightnessBounds),
+        tap(() => (this.driverChecked = true))
       )
-      .subscribe((bounds) => (this.displayBrightnessBounds = bounds));
+      .subscribe((bounds) => (this.hardwareBrightnessBounds = bounds));
+    this.setHardwareBrightness
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
+        switchMap((percentage) => this.hardwareBrightnessControl.setBrightness(percentage))
+      )
+      .subscribe();
+    this.setSoftwareBrightness
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
+        switchMap((percentage) => this.softwareBrightnessControl.setBrightness(percentage))
+      )
+      .subscribe();
+    this.setSimpleBrightness
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        throttleTime(1000 / 30, asyncScheduler, { leading: true, trailing: true }),
+        switchMap((percentage) => this.simpleBrightnessControl.setBrightness(percentage))
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {}

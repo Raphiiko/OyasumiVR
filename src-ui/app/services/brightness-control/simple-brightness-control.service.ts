@@ -1,11 +1,20 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, filter, map, Observable, skip, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  map,
+  Observable,
+  skip,
+  tap,
+} from 'rxjs';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { AutomationConfigService } from '../automation-config.service';
-import { DisplayBrightnessControlService } from './display-brightness-control.service';
-import { ImageBrightnessControlService } from './image-brightness-control.service';
+import { HardwareBrightnessControlService } from './hardware-brightness-control.service';
+import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
@@ -19,7 +28,7 @@ export class SimpleBrightnessControlService {
   private _brightness: BehaviorSubject<number> = new BehaviorSubject<number>(100);
   private _activeTransition = new BehaviorSubject<BrightnessTransitionTask | undefined>(undefined);
   public readonly activeTransition = this._activeTransition.asObservable();
-  private displayBrightnessDriverAvailable = false;
+  private hardwareBrightnessDriverAvailable = false;
   public readonly advancedMode = this._advancedMode.asObservable();
 
   get brightness(): number {
@@ -30,8 +39,8 @@ export class SimpleBrightnessControlService {
 
   constructor(
     private automationConfigService: AutomationConfigService,
-    private displayBrightnessControl: DisplayBrightnessControlService,
-    private imageBrightnessControl: ImageBrightnessControlService
+    private hardwareBrightnessControl: HardwareBrightnessControlService,
+    private softwareBrightnessControl: SoftwareBrightnessControlService
   ) {}
 
   async init() {
@@ -47,8 +56,8 @@ export class SimpleBrightnessControlService {
       )
       .subscribe(async (advancedMode) => {
         this.cancelActiveTransition();
-        this.displayBrightnessControl.cancelActiveTransition();
-        this.imageBrightnessControl.cancelActiveTransition();
+        this.hardwareBrightnessControl.cancelActiveTransition();
+        this.softwareBrightnessControl.cancelActiveTransition();
         if (!advancedMode) {
           await this.setBrightness(this.brightness, {
             cancelActiveTransition: true,
@@ -56,12 +65,12 @@ export class SimpleBrightnessControlService {
           });
         }
       });
-    // Set brightness when the display brightness driver availability changes
-    this.displayBrightnessControl.driverIsAvailable
+    // Set brightness when the hardware brightness driver availability changes
+    this.hardwareBrightnessControl.driverIsAvailable
       .pipe(
         skip(1),
         distinctUntilChanged(),
-        tap((available) => (this.displayBrightnessDriverAvailable = available)),
+        tap((available) => (this.hardwareBrightnessDriverAvailable = available)),
         filter(() => !this._advancedMode.value)
       )
       .subscribe(() => {
@@ -128,34 +137,36 @@ export class SimpleBrightnessControlService {
       await info(`[BrightnessControl] Set brightness to ${percentage}% (Reason: ${opt.logReason})`);
     }
     // Calculate brightnesses
-    let imageBrightness = percentage;
-    let displayBrightness = 100;
-    // If the display brightness driver is available, intelligently switch between the two brightnesses
-    if (this.displayBrightnessDriverAvailable) {
-      const imageBrightnessRange = [0, 0];
-      const displayBrightnessRange = await this.displayBrightnessControl.getBrightnessBounds();
-      if (displayBrightnessRange[0] > 0) {
-        imageBrightnessRange[1] = displayBrightnessRange[0];
+    let softwareBrightness = percentage;
+    let hardwareBrightness = 100;
+    // If the hardware brightness driver is available, intelligently switch between the two brightnesses
+    if (this.hardwareBrightnessDriverAvailable) {
+      const softwareBrightnessRange = [0, 0];
+      const hardwareBrightnessRange = await firstValueFrom(
+        this.hardwareBrightnessControl.brightnessBounds
+      );
+      if (hardwareBrightnessRange[0] > 0) {
+        softwareBrightnessRange[1] = hardwareBrightnessRange[0];
       }
-      if (percentage >= 0 && percentage < imageBrightnessRange[1]) {
-        displayBrightness = displayBrightnessRange[0];
-        imageBrightness = lerp(0, 100, percentage / imageBrightnessRange[1]);
+      if (percentage >= 0 && percentage < softwareBrightnessRange[1]) {
+        hardwareBrightness = hardwareBrightnessRange[0];
+        softwareBrightness = lerp(0, 100, percentage / softwareBrightnessRange[1]);
       } else {
-        imageBrightness = 100;
-        displayBrightness = lerp(
-          displayBrightnessRange[0],
-          displayBrightnessRange[1],
-          (percentage - imageBrightnessRange[1]) / (100 - imageBrightnessRange[1])
+        softwareBrightness = 100;
+        hardwareBrightness = lerp(
+          hardwareBrightnessRange[0],
+          hardwareBrightnessRange[1],
+          (percentage - softwareBrightnessRange[1]) / (100 - softwareBrightnessRange[1])
         );
       }
     }
     // Set brightnesses
-    await this.imageBrightnessControl.setBrightness(imageBrightness, {
+    await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
       logReason: null,
     });
-    if (this.displayBrightnessDriverAvailable) {
-      await this.displayBrightnessControl.setBrightness(displayBrightness, {
+    if (this.hardwareBrightnessDriverAvailable) {
+      await this.hardwareBrightnessControl.setBrightness(hardwareBrightness, {
         cancelActiveTransition: true,
         logReason: null,
       });

@@ -173,20 +173,6 @@ VR에서 잠들고 싶지만 밤새 VR에 머물고 싶지 않은 적이 있나�
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 밝기 자동화
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-자고 일어날 때 밝기를 자동으로 조절할 수 있어요. OyasumiVR은 VR 헤드셋의 밝기를 부드럽게 전환할 수 있으므로 잠을 깨우지 않고 잠을 자는 동안 서서히 밝기가 낮아집니다.
-<br><br>
-이미지 밝기뿐만 아니라 헤드셋이 지원하는 경우 디스플레이 밝기(LCD 백라이트)도 제어할 수 있어요(예: Valve Index). 여러 가지 자동화 기능을 제공할 뿐만 아니라 SteamVR 오버레이 메뉴에서 바로 밝기 수준을 쉽게 제어할 수 있습니다!
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 시스템 마이크 음소거 자동화
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-OyasumiVR이 잠들거나 깨어날 때 자동으로 마이크를 음소거하거나 음소거 해제하도록 설정할 수 있어요. 또는 음소거 토글 모드와 눌러서 말하기 모드 사이를 전환할 수도 있습니다.
-<br><br>다른 사람에게 코 고는 소리가 들리지 않도록 하고 싶다면 안성맞춤입니다!
-<br><br>
-VR 오버레이에 음소거 표시기가 옵션으로 제공되며, 컨트롤러 버튼을 바인딩하는 옵션이 있어 VRChat 또는 플레이하는 다른 VR 게임의 마이크 음소거 기능을 완전히 대체할 수 있습니다.
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 심박수 자동화 (Pulsoid 연동)
 
@@ -275,11 +261,6 @@ OyasumiVR로 그래픽 카드의 전력 제한을 직접 제어하는 것은 NVI
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 밝기 자동화
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-VR 헤드셋 디스플레이의 디스플레이 밝기(LCD 백라이트 밝기)를 제어하는 기능은 Valve Index에서만 지원되어요.
-
-이미지 밝기 제어는 모든 헤드셋에서 사용할 수 있습니다.
 
 {{BUILT_WITH_HEADER}}
 기반 기술

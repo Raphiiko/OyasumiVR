@@ -1,25 +1,27 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
-import { EventLogImageBrightnessChanged, EventLogType } from '../../../models/event-log-entry';
+import { EventLogSoftwareBrightnessChanged, EventLogType } from '../../../models/event-log-entry';
 
-export class EventLogImageBrightnessChangedEntryParser extends EventLogEntryParser<EventLogImageBrightnessChanged> {
+export class EventLogSoftwareBrightnessChangedEntryParser extends EventLogEntryParser<EventLogSoftwareBrightnessChanged> {
   entryType(): EventLogType {
-    return 'imageBrightnessChanged';
+    return 'softwareBrightnessChanged';
   }
 
-  override headerInfoTitle(entry: EventLogImageBrightnessChanged): string {
+  override headerInfoTitle(entry: EventLogSoftwareBrightnessChanged): string {
     return (
-      'comp.event-log-entry.type.imageBrightnessChanged.title.' +
+      'comp.event-log-entry.type.softwareBrightnessChanged.title.' +
       (entry.transition ? 'transition' : 'set')
     );
   }
 
-  override headerInfoTitleParams(entry: EventLogImageBrightnessChanged): { [p: string]: string } {
+  override headerInfoTitleParams(entry: EventLogSoftwareBrightnessChanged): {
+    [p: string]: string;
+  } {
     return {
       value: entry.value.toString() + '%',
     };
   }
 
-  override headerInfoSubTitle(entry: EventLogImageBrightnessChanged): string {
-    return 'comp.event-log-entry.type.imageBrightnessChanged.reason.' + entry.reason;
+  override headerInfoSubTitle(entry: EventLogSoftwareBrightnessChanged): string {
+    return 'comp.event-log-entry.type.softwareBrightnessChanged.reason.' + entry.reason;
   }
 }

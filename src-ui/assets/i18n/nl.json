@@ -73,13 +73,8 @@
       },
       "copyBrightness": "Kopieer huidig helderheidsniveau",
       "description": "Laat OyasumiVR automatisch het helderheidsniveau van je VR headset aanpassen, zoals wanneer je in slaap valt of wanneer je wakker wordt.",
-      "displayBrightness": {
-        "description": "Past het helderheidsniveau aan van het LCD backlight (Alleen voor Valve Index)",
-        "title": "Zet de schermhelderheid aan naar"
-      },
-      "imageBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
-        "title": "Zet de beeldhelderheid aan naar"
+      "softwareBrightness": {
+        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont"
       },
       "onSleepDisable": {
         "description": "Pas het helderheidsniveau aan",
@@ -117,7 +112,6 @@
       "simple": "Simpele Modus"
     },
     "modeInfoModal": {
-      "message": "Standaard zal OyasumiVR de helderheid in je VR headset aanpassen door de helderheid van het beeld aan te passen. Als je een headset met een LCD paneel gebruikt waarvan de sterkte van het backlight aangepast kan worden via SteamVR (bijvoorbeeld de Valve Index), dan zal OyasumiVR wanneer mogelijk de helderheid van het scherm aanpassen ipv die van het beeld.\n\nIn de simpele modus zal OyasumiVR een vloeiende overgang maken tussen de helderheid van het beeld en scherm.\n\nAls je liever directe controle hebt, dan kun je in de geavanceerde modus de helderheid van het beeld en de helderheid van het scherm los van elkaar aanpassen, met de mogelijkheid om exacte waarden in te stellen voor beide. \n\nDit is alleen van toepassing op VR headsets die dit ondersteunen, wat op dit moment alleen de Valve Index betreft. Met andere VR headsets is er geen verschil tussen de simpele en geavanceerde modus.",
       "title": "Modus voor Helderheidsbesturing"
     },
     "title": "Helderheid Automatiseringen"
@@ -140,9 +134,7 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "Helderheid Automatiseringen",
-      "brightness": "Helderheid",
-      "displayBrightness": "Schermhelderheid",
-      "imageBrightness": "Beeldhelderheid"
+      "brightness": "Helderheid"
     },
     "confirm-modal": {
       "defaultTitle": "Bevestig"
@@ -269,15 +261,11 @@
           },
           "title": "Chaperone activatie afstand ingesteld op {value}"
         },
-        "displayBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
-          },
-          "title": {
-            "set": "De schermhelderheid is ingesteld op {value}",
-            "transition": "De schermhelderheid wordt veranderd naar {value}"
           }
         },
         "gpuPowerLimitChanged": {
@@ -290,15 +278,11 @@
             "set": "Stroom limiet voor ''{device}'' ingesteld op {limit}"
           }
         },
-        "imageBrightnessChanged": {
+        "softwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
-          },
-          "title": {
-            "set": "De beeldhelderheid is ingesteld op {value}",
-            "transition": "De beeldhelderheid wordt veranderd naar {value}"
           }
         },
         "lighthouseSetPowerState": {
@@ -788,8 +772,6 @@
   },
   "overlay": {
     "brightness": {
-      "display": "Schermhelderheid",
-      "image": "Beeldhelderheid",
       "simple": "Helderheid"
     },
     "dashboard": {
@@ -1671,7 +1653,6 @@
       "title": "Huidige VRChat microfoondemping",
       "unknown": "Onbekend",
       "unmuted": "Niet gedempt"
-    },
-    "title": "Microfoon Demping"
+    }
   }
 }

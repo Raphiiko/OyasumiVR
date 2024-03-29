@@ -7,29 +7,30 @@
       [class.disabled]="!driverAvailable"
     >
       <app-brightness-control-slider
-        [value]="(displayBrightnessControl.brightnessStream | async) ?? 0"
-        [min]="displayBrightnessBounds[0]"
-        [max]="displayBrightnessBounds[1]"
-        (valueChange)="displayBrightnessControl.setBrightness($event)"
-        [class.transition-active]="!!(displayBrightnessControl.activeTransition | async)"
-        [transitionActive]="!!(displayBrightnessControl.activeTransition | async)"
+        *ngIf="driverChecked"
+        [value]="(hardwareBrightnessControl.brightnessStream | async) ?? 0"
+        [min]="hardwareBrightnessBounds[0]"
+        [max]="hardwareBrightnessBounds[1]"
+        (valueChange)="setHardwareBrightness.next($event)"
+        [class.transition-active]="!!(hardwareBrightnessControl.activeTransition | async)"
+        [transitionActive]="!!(hardwareBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
-        <span translate>comp.brightness-control-modal.displayBrightness</span>
+        <span translate>comp.brightness-control-modal.hardwareBrightness</span>
       </div>
     </div>
 
     <div class="brightness-slider" *ngIf="advancedMode" @vshrink>
       <app-brightness-control-slider
-        [value]="(imageBrightnessControl.brightnessStream | async) ?? 0"
+        [value]="(softwareBrightnessControl.brightnessStream | async) ?? 0"
         [min]="5"
         [max]="100"
-        (valueChange)="imageBrightnessControl.setBrightness($event)"
-        [class.transition-active]="!!(imageBrightnessControl.activeTransition | async)"
-        [transitionActive]="!!(imageBrightnessControl.activeTransition | async)"
+        (valueChange)="setSoftwareBrightness.next($event)"
+        [class.transition-active]="!!(softwareBrightnessControl.activeTransition | async)"
+        [transitionActive]="!!(softwareBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>
       <div class="brightness-slider-title">
-        <span translate>comp.brightness-control-modal.imageBrightness</span>
+        <span translate>comp.brightness-control-modal.softwareBrightness</span>
       </div>
     </div>
 
@@ -38,7 +39,7 @@
         [value]="(simpleBrightnessControl.brightnessStream | async) ?? 0"
         [min]="5"
         [max]="100"
-        (valueChange)="simpleBrightnessControl.setBrightness($event)"
+        (valueChange)="setSimpleBrightness.next($event)"
         [class.transition-active]="!!(simpleBrightnessControl.activeTransition | async)"
         [transitionActive]="!!(simpleBrightnessControl.activeTransition | async)"
       ></app-brightness-control-slider>

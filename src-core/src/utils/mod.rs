@@ -2,7 +2,6 @@ use human_bytes::human_bytes;
 use log::{error, warn};
 use serde::Serialize;
 use std::{
-    // collections::HashMap,
     os::raw::c_char,
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -103,6 +102,24 @@ pub async fn cli_sidecar_overlay_mode() -> models::OverlaySidecarMode {
         _ => {
             error!("[Core] Invalid overlay sidecar mode specified. Defaulting to release mode.");
             models::OverlaySidecarMode::Release
+        }
+    }
+}
+
+pub async fn cli_sidecar_mdns_mode() -> models::MdnsSidecarMode {
+    let default = "release";
+    let match_guard = TAURI_CLI_MATCHES.lock().await;
+    let mode = match match_guard.as_ref().unwrap().args.get("mdns-sidecar-mode") {
+        Some(data) => data.value.as_str().unwrap_or(default),
+        None => default,
+    };
+    // Determine the correct mode
+    match mode {
+        "dev" => models::MdnsSidecarMode::Dev,
+        "release" => models::MdnsSidecarMode::Release,
+        _ => {
+            error!("[Core] Invalid mdns sidecar mode specified. Defaulting to release mode.");
+            models::MdnsSidecarMode::Release
         }
     }
 }

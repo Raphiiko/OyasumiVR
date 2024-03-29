@@ -69,16 +69,36 @@ export class DeviceEditModalComponent
     this.close();
   }
 
+  get identifier() {
+    switch (this.deviceType) {
+      case 'LIGHTHOUSE': {
+        return this.lighthouseDevice?.deviceName;
+      }
+      case 'OPENVR': {
+        if (this.ovrDevice?.handleType) {
+          return this.translate.instant(
+            'comp.device-list.deviceRole.' + this.ovrDevice!.handleType
+          );
+        }
+        return this.ovrDevice?.serialNumber;
+      }
+      default: {
+        // Should never happen
+        return 'Unknown Device';
+      }
+    }
+  }
+
   getDeviceId() {
     switch (this.deviceType) {
       case 'LIGHTHOUSE': {
         const model = this.translate.instant(
           'comp.device-list.deviceName.' + this.lighthouseDevice!.deviceType
         );
-        return model + ' (' + this.lighthouseDevice?.deviceName + ')';
+        return model + ' (' + this.identifier + ')';
       }
       case 'OPENVR': {
-        return this.ovrDevice?.modelNumber + ' (' + this.ovrDevice?.serialNumber + ')';
+        return this.ovrDevice?.modelNumber + ' (' + this.identifier + ')';
       }
       default: {
         // Should never happen

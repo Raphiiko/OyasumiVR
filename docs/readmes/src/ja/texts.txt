@@ -2,7 +2,7 @@
 💤 バーチャルリアリティの中で睡眠をアシストするソフトウェアです 💤
 
 {{DISCORD_INVITE}}
-If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+Discordへの参加もお待ちしています！ <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
 
 {{DOWNLOAD_AND_INSTALL_HEADER}}
 ダウンロード&インストール
@@ -32,6 +32,19 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
 - 🛠 SteamVRの設定の自動化
 
 …他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
+
+{{SUPPORT_OYASUMIVR_HEADER}}
+OyasumiVRをサポート
+
+{{SUPPORT_OYASUMIVR_BODY}}
+OyasumiVR自体は現在も、そしてこれからも完全に無料です。しかしながら私とOyasumiVRの開発を以下の方法でサポートしていただくことも可能です。
+
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+
+サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部へと…… そして何より、私のコーヒー依存症を促進させることができます☕
+
+OyasumiVRはすぐに終わるわけではありません。**やりたいことはまだまだ残っています！**
 
 {{FEATURES}}
 機能
@@ -158,20 +171,6 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 明るさの自動化
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
-<br><br>
-映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 マイクミュートの自動化
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
-<br><br>いびきを聞かれたくない場合に最適です！
-<br><br>
-新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心拍数による自動化 (Pulsoid Integration)
 
@@ -262,11 +261,6 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 明るさの自動化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
-
-映像の明るさの自動化はすべてのHMDで利用可能です。
 
 {{BUILT_WITH_HEADER}}
 ビルド

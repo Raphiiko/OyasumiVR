@@ -149,17 +149,17 @@ enum OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode {
 message OyasumiSidecarBrightnessState {
   bool advanced_mode = 1;
   double brightness = 2;
-  double display_brightness = 3;
-  double image_brightness = 4;
+  double hardware_brightness = 3;
+  double software_brightness = 4;
   bool brightness_transitioning = 5;
-  bool display_brightness_transitioning = 6;
-  bool image_brightness_transitioning = 7;
+  bool hardware_brightness_transitioning = 6;
+  bool software_brightness_transitioning = 7;
   double brightness_transition_target = 8;
-  double display_brightness_transition_target = 9;
-  double image_brightness_transition_target = 10;
-  bool display_brightness_available = 11;
-  double display_min_brightness = 12;
-  double display_max_brightness = 13;
+  double hardware_brightness_transition_target = 9;
+  double software_brightness_transition_target = 10;
+  bool hardware_brightness_available = 11;
+  double hardware_min_brightness = 12;
+  double hardware_max_brightness = 13;
 }
 
 enum VrcStatus {

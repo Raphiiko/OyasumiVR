@@ -6,7 +6,7 @@
 # Clean up pre-existing files
 rm -rf SteamSDK
 # Unzip the SteamWorks SDK
-unzip scripts/steam/lib/steamworks_sdk_157.zip -d SteamSDK
+unzip scripts/steam/lib/steamworks_sdk_159.zip -d SteamSDK
 # Create Depot folders
 mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64
 mkdir -p SteamSDK/sdk/tools/ContentBuilder/content/Win64_CN

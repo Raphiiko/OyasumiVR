@@ -49,10 +49,12 @@ export type AutomationType =
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
   | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
-  | 'NIGHTMARE_DETECTION';
+  | 'NIGHTMARE_DETECTION'
+  | 'BIGSCREEN_BEYOND_FAN_CONTROL'
+  | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 12;
+  version: 13;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -97,6 +99,8 @@ export interface AutomationConfigs {
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
+  BIGSCREEN_BEYOND_FAN_CONTROL: BigscreenBeyondFanControlAutomationsConfig;
+  BIGSCREEN_BEYOND_RGB_CONTROL: BigscreenBeyondRgbControlAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -112,8 +116,8 @@ export interface BrightnessControlAdvancedModeAutomationConfig extends Automatio
 
 export interface SetBrightnessAutomationConfig extends AutomationConfig {
   brightness: number;
-  imageBrightness: number;
-  displayBrightness: number;
+  softwareBrightness: number;
+  hardwareBrightness: number;
   transition: boolean;
   transitionTime: number;
   applyOnStart: boolean;
@@ -351,12 +355,31 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
   soundVolume: number;
 }
 
+export interface BigscreenBeyondFanControlAutomationsConfig extends AutomationConfig {
+  onSleepEnable: boolean;
+  onSleepEnableFanSpeed: number;
+  onSleepDisable: boolean;
+  onSleepDisableFanSpeed: number;
+  onSleepPreparation: boolean;
+  onSleepPreparationFanSpeed: number;
+  allowUnsafeFanSpeed: boolean;
+}
+
+export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationConfig {
+  onSleepEnable: boolean;
+  onSleepEnableRgb: [number, number, number];
+  onSleepDisable: boolean;
+  onSleepDisableRgb: [number, number, number];
+  onSleepPreparation: boolean;
+  onSleepPreparationRgb: [number, number, number];
+}
+
 //
 // DEFAULT
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 12,
+  version: 13,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -364,8 +387,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
     enabled: false,
     brightness: 20,
-    imageBrightness: 20,
-    displayBrightness: 100,
+    softwareBrightness: 20,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 1000 * 60 * 5,
     applyOnStart: false,
@@ -373,8 +396,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
     enabled: false,
     brightness: 100,
-    imageBrightness: 100,
-    displayBrightness: 100,
+    softwareBrightness: 100,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 10000,
     applyOnStart: false,
@@ -382,8 +405,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
     enabled: false,
     brightness: 50,
-    imageBrightness: 50,
-    displayBrightness: 100,
+    softwareBrightness: 50,
+    hardwareBrightness: 100,
     transition: true,
     transitionTime: 30000,
   },
@@ -587,5 +610,24 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     disableSleepMode: false,
     playSound: false,
     soundVolume: 100,
+  },
+  BIGSCREEN_BEYOND_FAN_CONTROL: {
+    enabled: true,
+    onSleepEnable: false,
+    onSleepEnableFanSpeed: 50,
+    onSleepDisable: false,
+    onSleepDisableFanSpeed: 50,
+    onSleepPreparation: false,
+    onSleepPreparationFanSpeed: 50,
+    allowUnsafeFanSpeed: false,
+  },
+  BIGSCREEN_BEYOND_RGB_CONTROL: {
+    enabled: true,
+    onSleepEnable: false,
+    onSleepEnableRgb: [0, 0, 0],
+    onSleepDisable: false,
+    onSleepDisableRgb: [0, 255, 0],
+    onSleepPreparation: false,
+    onSleepPreparationRgb: [128, 0, 0],
   },
 };

@@ -7,13 +7,16 @@
 extern crate lazy_static;
 
 mod commands;
+mod discord;
 mod elevated_sidecar;
 mod flavour;
 mod globals;
 mod grpc;
+mod hardware;
 mod http;
 mod image_cache;
 mod lighthouse;
+mod mdns_sidecar;
 mod migrations;
 mod openvr;
 mod os;
@@ -91,11 +94,6 @@ async fn load_configs() {
             }
         },
     };
-    if globals::is_flag_set("DISABLE_MDNS").await {
-        warn!(
-            "[Core] DISABLE_MDNS flag set: MDNS is disabled. OSC and OSCQuery functionality cannot be expected to work."
-        );
-    }
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
@@ -113,6 +111,11 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_get_binding_origins,
         openvr::commands::openvr_is_dashboard_visible,
         openvr::commands::openvr_reregister_manifest,
+        hardware::beyond::commands::bigscreen_beyond_is_connected,
+        hardware::beyond::commands::bigscreen_beyond_set_brightness,
+        hardware::beyond::commands::bigscreen_beyond_set_led_color,
+        hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
+        hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
         os::commands::run_command,
         os::commands::play_sound,
         os::commands::show_in_folder,
@@ -154,6 +157,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
+        discord::commands::discord_update_activity,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
         lighthouse::commands::lighthouse_start_scan,
@@ -166,7 +170,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         steam::commands::steam_active,
         steam::commands::steam_achievement_get,
         steam::commands::steam_achievement_set,
-        commands::log_utils::clean_log_files,
+        commands::log_utils::clear_log_files,
         commands::afterburner::msi_afterburner_set_profile,
         commands::notifications::xsoverlay_send_message,
         commands::splash::close_splashscreen,
@@ -308,12 +312,18 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth
     lighthouse::init().await;
+    // Initialize Hardware modules
+    hardware::init().await;
     // Initialize log commands
     commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
     // Initialize elevated sidecar module
     elevated_sidecar::init().await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
+    // Initialize mdns sidecar module
+    mdns_sidecar::init().await;
+    // Initialize Discord module
+    discord::init().await;
     // Setup start of minute cronjob
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");

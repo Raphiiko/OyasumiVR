@@ -18,7 +18,7 @@
               class="material-icons success"
               *ngIf="copiedToClipboard.includes('ALL_DATA')"
               @hshrink
-            >check</i
+              >check</i
             >
           </button>
         </div>
@@ -29,8 +29,7 @@
             <span>{{ category.name | tsTranslate }}</span>
             <span></span>
           </div>
-          <div class="setting-row-action">
-          </div>
+          <div class="setting-row-action"></div>
         </div>
         <div class="setting-row-group">
           <div class="setting-row" [class.compact]="compact" *ngFor="let entry of category.entries">
@@ -39,7 +38,9 @@
               <span></span>
             </div>
             <div class="setting-row-action">
-              <span><b>{{ ((entry.value | async) ?? '') | tsTranslate }}</b></span>
+              <span
+                ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
+              >
             </div>
           </div>
         </div>

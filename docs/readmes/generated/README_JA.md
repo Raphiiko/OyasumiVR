@@ -22,7 +22,7 @@
     <br>
     ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
     <br>
-If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+Discordへの参加もお待ちしています！ <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <br>
     <table align="center">
@@ -58,6 +58,20 @@ If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img 
                 <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=indonesian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_ID.md">Readme</a>
             </td>
         </tr>
+        <tr>
+            <td align="center">Russian</td>
+            <td align="center"></td>
+            <td align="center"></td>
+        </tr>
+        <tr>
+            <td align="center">
+                <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/?l=russian">Steam</a>&nbsp;|&nbsp;<a href="https://github.com/Raphiiko/OyasumiVR/blob/develop/docs/readmes/generated/README_RU.md">Readme</a>
+            </td>
+            <td align="center">
+            </td>
+            <td align="center">
+            </td>
+        </tr>
     </table>
 </p>
 <p align="center">
@@ -90,16 +104,16 @@ HMDを被りながら眠るのに便利な機能を実装したデスクトッ�
 
 …他にもまだまだあります！詳細は次の「機能」の項目をご確認ください。
 
-## Support OyasumiVR
+## OyasumiVRをサポート
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+OyasumiVR自体は現在も、そしてこれからも完全に無料です。しかしながら私とOyasumiVRの開発を以下の方法でサポートしていただくことも可能です。
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
 
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
+サポートは、新機能の開発, 機能の改善, 開発プロセスに伴うコストの一部へと…… そして何より、私のコーヒー依存症を促進させることができます☕
 
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
+OyasumiVRはすぐに終わるわけではありません。**やりたいことはまだまだ残っています！**
 
 ## 機能
 
@@ -280,26 +294,46 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <table>
   <tr>
     <td>
-HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 マイクミュートの自動化
+### 🎤 Microphone Mute Automations
 
 <table>
-  <tr>
+   <tr>
     <td>
-ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
-<br><br>いびきを聞かれたくない場合に最適です！
-<br><br>
-新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
+<b>VRChat Microphone Mute Automations</b><br>
+You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+  <tr>
+    <td>
+<b>System Microphone Mute Automations</b><br>
+OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
+With this, you can even switch between mute toggle mode and push-to-talk.
+<br><br>
+This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+</table>
+
+### 🔉 Audio Volume Automations
+
+<table>
+   <tr>
+    <td>
+Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
 </table>
 
@@ -329,6 +363,23 @@ HMDの明るさを自動で調整します。時間をかけて気づかない�
 睡眠中の高い心拍数をチェックして悪夢を見ていないか確認します。自動的に睡眠モードを解除したり(明るさを上げたり)、アラームを鳴らしたりすることで悪夢からの目覚めをサポートします。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
+### 🚨 HMD Specific Automations
+
+<table>
+   <tr>
+    <td>
+OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB Led Control</li>
+<li>Fan Speed Control</li>
+</ul>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
   </tr>
 </table>
 
@@ -405,9 +456,9 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 ### 明るさの自動化
 
-HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
-映像の明るさの自動化はすべてのHMDで利用可能です。
+Image brightness control is available on all headsets.
 
 ## ビルド
 
