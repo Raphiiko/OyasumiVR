@@ -20,13 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Redefined "Display Brightness" as "Hardware Brightness", and "Image Brightness" as "Software Brightness".
+- Updated sleep detection to include controller button presses as a factor
 - Updated overlay sidecar to .NET 8.0
+- Upgraded to Tauri v1.6 and updated various dependencies.
 
 ### Fixed
 
 - OyasumiVR crashing when trying to read SteamVR's display brightness upon SteamVR quitting.
 - Battery level automations not working for trackers.
 - MDNS advertisements for OSC & OSCQuery not working for some network configurations.
+- System microphone still being muted due to changing controller button behavior, when controller binding is disabled.
 
 ### Removed
 

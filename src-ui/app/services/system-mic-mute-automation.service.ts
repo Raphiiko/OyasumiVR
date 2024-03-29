@@ -248,6 +248,7 @@ export class SystemMicMuteAutomationService {
     this._effectiveControllerBehaviour
       .pipe(
         distinctUntilChanged(),
+        filter(() => this.config.controllerBinding),
         switchMap(async (behavior) => {
           if (behavior === 'PUSH_TO_TALK') {
             await this.setMute(!buttonPressed);

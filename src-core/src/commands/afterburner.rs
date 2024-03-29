@@ -37,7 +37,7 @@ pub async fn msi_afterburner_set_profile(
         );
         match response.error {
             None => Err(SetMsiAfterburnerProfileError::UnknownError),
-            Some(e) => Err(SetMsiAfterburnerProfileError::from_i32(e).unwrap()),
+            Some(e) => Err(SetMsiAfterburnerProfileError::try_from(e).unwrap()),
         }
     }
 }
