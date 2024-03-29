@@ -20,8 +20,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Redefined "Display Brightness" as "Hardware Brightness", and "Image Brightness" as "Software Brightness".
-- Updated overlay sidecar to .NET 8.0
 - Updated sleep detection to include controller button presses as a factor
+- Updated overlay sidecar to .NET 8.0
+- Upgraded to Tauri v1.6 and updated various dependencies.
 
 ### Fixed
 

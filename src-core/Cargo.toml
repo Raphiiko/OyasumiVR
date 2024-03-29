@@ -97,7 +97,7 @@ rev = "2949a3f"
 # path = "../../oyasumivr-oscquery"
 
 [dependencies.tauri]
-version = "1.5.4"
+version = "1.6.1"
 features = [
   "global-shortcut-all",
   "clipboard-write-text",
