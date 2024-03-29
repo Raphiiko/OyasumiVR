@@ -171,20 +171,6 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 明るさの自動化
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
-<br><br>
-映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 マイクミュートの自動化
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
-<br><br>いびきを聞かれたくない場合に最適です！
-<br><br>
-新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心拍数による自動化 (Pulsoid Integration)
 
@@ -275,11 +261,6 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 明るさの自動化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
-
-映像の明るさの自動化はすべてのHMDで利用可能です。
 
 {{BUILT_WITH_HEADER}}
 ビルド

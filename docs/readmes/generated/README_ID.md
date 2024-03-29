@@ -296,26 +296,46 @@ Sekarang Anda dapat tertidur lelap dalam VR, mengetahui bahwa semuanya akan mati
 <table>
   <tr>
     <td>
-Mengotomatiskan kecerahan Anda saat Anda tidur dan bangun. OyasumiVR dapat mentransisikan kecerahan headset VR Anda dengan lancar, sehingga kecerahannya turun secara bertahap saat Anda tidur tanpa membangunkan Anda.
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-Hal ini memungkinkan Anda untuk mengontrol kecerahan gambar, serta kecerahan layar (lampu latar LCD) jika headset Anda mendukungnya (mis. Valve Index). Selain menyediakan beberapa otomatisasi, Anda dapat dengan mudah mengontrol tingkat kecerahan langsung dari menu overlay SteamVR!
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 Otomatisasi Mute Mikrofon Sistem
+### 🎤 Microphone Mute Automations
 
 <table>
-  <tr>
+   <tr>
     <td>
-Anda dapat membuat OyasumiVR secara otomatis membisukan atau membunyikan mikrofon ketika Anda tidur dan bangun. Atau, Anda bahkan dapat beralih antara mode toggle bisu dan push-to-talk.
-<br><br>Sempurna jika Anda ingin mencegah orang lain mendengar Anda mendengkur!
-<br><br>
-Dilengkapi dengan indikator pembisuan opsional di hamparan VR, dan opsi untuk mengikat tombol pengontrol sehingga Anda dapat sepenuhnya menggantikan fungsionalitas pembisuan mikrofon pada VRChat atau game VR lain yang Anda mainkan.
+<b>VRChat Microphone Mute Automations</b><br>
+You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+  <tr>
+    <td>
+<b>System Microphone Mute Automations</b><br>
+OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
+With this, you can even switch between mute toggle mode and push-to-talk.
+<br><br>
+This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+</table>
+
+### 🔉 Audio Volume Automations
+
+<table>
+   <tr>
+    <td>
+Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
 </table>
 
@@ -345,6 +365,23 @@ Anda dapat mengatur OyasumiVR untuk secara otomatis mengaktifkan mode tidur keti
 OyasumiVR dapat mendeteksi ketika detak jantung Anda meningkat dalam waktu lama, yang dapat mengindikasikan mimpi buruk. Dengan fitur ini, Anda dapat mencoba mempersingkat mimpi buruk Anda dengan menonaktifkan mode tidur secara otomatis (misalnya, meningkatkan kecerahan), atau dengan memainkan suara untuk mencoba membangunkan Anda.
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
+### 🚨 HMD Specific Automations
+
+<table>
+   <tr>
+    <td>
+OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB Led Control</li>
+<li>Fan Speed Control</li>
+</ul>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
   </tr>
 </table>
 
@@ -419,9 +456,9 @@ Mengontrol batas daya kartu grafis Anda secara langsung dengan OyasumiVR hanya d
 
 ### Otomatisasi Kecerahan
 
-Mengontrol kecerahan layar (baca 'lampu latar LCD') dari layar headset VR hanya didukung pada Valve Index.
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
-Kontrol kecerahan gambar tersedia pada semua headset.
+Image brightness control is available on all headsets.
 
 ## Pembuatan
 

@@ -161,20 +161,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 亮度自动化
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-自动调整你睡觉和醒来时的亮度。OyasumiVR可以平滑地过渡你的VR头显的亮度，因此当你睡着时，它会逐渐降低亮度。
-<br><br>
-它允许你控制图像亮度，以及如果你的头显支持的话，还可以控制显示亮度（LCD背光）（例如Valve Index）。除了提供的几种自动化控制选项外，你还可以直接从SteamVR的叠加层界面中轻松控制你的亮度级别！
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 麦克风自动化
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-你可以让OyasumiVR在你睡觉和醒来时关闭你的麦克风。或者，你甚至可以在按键切换模式和按键说话之间切换。
-<br><br>如果你想防止别人听到你<s>那震天响</s>的打鼾，这是完美的选择！
-<br><br>
-除此以外，还带有一个可选的，工作在VR叠加层的麦克风状态指示器以及绑定控制器按钮的选项，这样你就可以用OyasumiVR的功能完全替代VRChat或你玩的任何其他VR游戏的麦克风开关了。
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心率自动化（依赖Pulsoid服务）
 
@@ -258,11 +244,6 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 亮度自动化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-只有Valve Index支持控制头显屏幕的背光亮度。
-
-不过，所有头显都支持基于图像的亮度控制。
 
 {{BUILT_WITH_HEADER}}
 使用的技术和工具
