@@ -296,26 +296,46 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
 <table>
   <tr>
     <td>
-在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地調整亮度，讓你在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-這允許你控制影像亮度，以及如果您的頭戴式顯示器支援的話（例如 Valve Index），還可以控制顯示器亮度（LCD 背光）。除了為您提供多種自動化選項外，你還可以直接從 SteamVR 疊層選單輕鬆控制亮度等級！
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 系統麥克風靜音自動化
+### 🎤 Microphone Mute Automations
 
 <table>
-  <tr>
+   <tr>
     <td>
-OyasumiVR 可以在你睡著和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或持續按住說話模式。
-<br><br>這樣你的鼾聲就不會吵到別人了！
-<br><br>
-在 VR 疊層畫面中提供了一個可開關的靜音指示器，還可以綁定一個控制器按鈕，這樣就可以完全取代 VRChat 或其他 VR 遊戲的麥克風靜音功能。
+<b>VRChat Microphone Mute Automations</b><br>
+You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+  <tr>
+    <td>
+<b>System Microphone Mute Automations</b><br>
+OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
+With this, you can even switch between mute toggle mode and push-to-talk.
+<br><br>
+This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+</table>
+
+### 🔉 Audio Volume Automations
+
+<table>
+   <tr>
+    <td>
+Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
 </table>
 
@@ -345,6 +365,23 @@ OyasumiVR 可以在你睡著和醒來時自動關閉和打開麥克風，也可�
 OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你正在做惡夢。透過這項功能，你可以嘗試通過自動停用睡眠模式（例如，增加亮度），或播放聲音以嘗試喚醒你，從而縮短惡夢時間。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
+### 🚨 HMD Specific Automations
+
+<table>
+   <tr>
+    <td>
+OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB Led Control</li>
+<li>Fan Speed Control</li>
+</ul>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
   </tr>
 </table>
 
@@ -419,9 +456,9 @@ _(\*) Tundra 定位器的電池水平和充電狀態報告非常延遲。這意�
 
 ### 亮度自動化
 
-僅支援 Valve Index 頭盔的顯示亮度（即「LCD 背光」）控制。
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
-所有頭盔都支援影像亮度控制。
+Image brightness control is available on all headsets.
 
 ## 使用的技術
 

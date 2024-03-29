@@ -2056,5 +2056,16 @@
         }
       }
     }
+  },
+  "discord": {
+    "details": "VR Sleeping Software",
+    "state": {
+      "sleeping": "Sleeping",
+      "awake": "Awake"
+    },
+    "label": {
+      "sleeping": "sleepy time",
+      "awake": "no more sleepy"
+    }
   }
 }
