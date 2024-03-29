@@ -31,6 +31,7 @@ export type SleepDetectorStateReportHandlingResult =
   | 'TOO_MUCH_MOVEMENT'
   | 'RATE_LIMITED'
   | 'SLEEP_MODE_DISABLED_TOO_RECENTLY'
+  | 'CONTROLLER_PRESENCE_INDICATED_TOO_RECENTLY'
   | 'SLEEP_CHECK_ALREADY_IN_PROGRESS'
   | 'SLEEP_CHECK'
   | 'SLEEP_CHECK_USER_AWAKE'
@@ -44,6 +45,7 @@ export class SleepModeForSleepDetectorAutomationService {
   private sleepEnableTimeoutId: number | null = null;
   private lastEnableAttempt = 0;
   private lastSleepModeDisable = 0;
+  private lastControllerButtonPresenceIndication = 0;
   private sleepCheckNotificationId: string | null = null;
   private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
@@ -93,7 +95,7 @@ export class SleepModeForSleepDetectorAutomationService {
         if (event.payload.gesture !== 'head_shake') return;
         this.dismissSleepCheck();
       });
-      // Dismiss sleep check for controller button presence indication
+      // Detect controller button presence indication
       this.openvrInputService.state
         .pipe(
           map((s) => s[OVRInputEventAction.IndicatePresence]),
@@ -105,7 +107,12 @@ export class SleepModeForSleepDetectorAutomationService {
             )
           )
         )
-        .subscribe(() => this.dismissSleepCheck());
+        .subscribe(() => {
+          // Dismiss sleep check for controller button presence indication
+          this.dismissSleepCheck();
+          // Register last controller button presence indication time
+          this.lastControllerButtonPresenceIndication = Date.now();
+        });
     });
   }
 
@@ -160,6 +167,12 @@ export class SleepModeForSleepDetectorAutomationService {
       1000 * 60 * this.enableConfig.detectionWindowMinutes
     )
       return 'SLEEP_MODE_DISABLED_TOO_RECENTLY';
+    // Stop here if the user has proven presence through controller buttons in the detection window
+    if (
+      Date.now() - this.lastControllerButtonPresenceIndication <
+      1000 * 60 * this.enableConfig.detectionWindowMinutes
+    )
+      return 'CONTROLLER_PRESENCE_INDICATED_TOO_RECENTLY';
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.
