@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0]
+
 ### Added
 
 - Show SteamVR device roles instead of serial numbers in the device list, when available. (by [góngo](https://github.com/TheMrGong))
