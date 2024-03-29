@@ -10,8 +10,8 @@ edition = "2021"
 rust-version = "1.70.0"
 
 [build-dependencies]
-tauri-build = { version = "1.4.0", features = [] }
-tonic-build = { version = "0.9", features = [] }
+tauri-build = { version = "1.5.1", features = [] }
+tonic-build = { version = "0.11.0", features = [] }
 
 [dependencies]
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
@@ -97,7 +97,7 @@ rev = "2949a3f"
 # path = "../../oyasumivr-oscquery"
 
 [dependencies.tauri]
-version = "1.4.1"
+version = "1.5.4"
 features = [
   "global-shortcut-all",
   "clipboard-write-text",
