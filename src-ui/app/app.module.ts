@@ -192,6 +192,7 @@ import { ColorPickerComponent } from './components/color-picker/color-picker.com
 import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-led-automation.service';
 import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
+import { DiscordService } from './services/discord.service';
 
 [
   localeEN,
@@ -373,6 +374,7 @@ export class AppModule {
     private windowsService: WindowsService,
     private hotkeyService: HotkeyService,
     private hotkeyHandlerService: HotkeyHandlerService,
+    private discordService: DiscordService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -515,8 +517,12 @@ export class AppModule {
             'OverlayAppStateSyncService initialization',
             this.overlayAppStateSyncService.init()
           );
-          // Initialize Steam support
-          await this.logInit('SteamService initialization', this.steamService.init());
+          await Promise.all([
+            // Initialize Steam support
+            await this.logInit('SteamService initialization', this.steamService.init()),
+            // Initialize Discord support
+            await this.logInit('DiscordService initialization', this.discordService.init()),
+          ]);
           // Initialize automations
           await Promise.all([
             // GPU automations

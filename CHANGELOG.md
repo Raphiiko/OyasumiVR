@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RGB Led automations for Bigscreen Beyond.
 - Options for limiting the maximum hardware brightness.
 - Automatic cleanup for log files older than 30 days, or that exceed 10MB.
+- Discord rich presence support for showing the current sleep mode.
 
 ### Changed
 

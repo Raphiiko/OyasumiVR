@@ -7,6 +7,7 @@
 extern crate lazy_static;
 
 mod commands;
+mod discord;
 mod elevated_sidecar;
 mod flavour;
 mod globals;
@@ -156,6 +157,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
+        discord::commands::discord_update_activity,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
         lighthouse::commands::lighthouse_start_scan,
@@ -320,6 +322,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     overlay_sidecar::init().await;
     // Initialize mdns sidecar module
     mdns_sidecar::init().await;
+    // Initialize Discord module
+    discord::init().await;
     // Setup start of minute cronjob
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
