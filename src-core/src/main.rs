@@ -323,7 +323,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     // Initialize mdns sidecar module
     mdns_sidecar::init().await;
     // Initialize Discord module
-    discord::init().await;
+    // discord::init().await;
     // Setup start of minute cronjob
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
