@@ -7,9 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Reverted back to Tauri v1.6
+
+### Fixed
+
+- Fixed Discord Rich Presence integration preventing OyasumiVR from starting without Discord running
+
 ## [1.12.1]
 
 ### Changed
+
 - Temporarily disabled Discord rich presence support
 - Temporarily reverted to Tauri v1.4
 
