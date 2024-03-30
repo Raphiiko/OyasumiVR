@@ -197,7 +197,7 @@ This comes with an optional mute indicator in the VR overlay, and the option for
 🔉 Audio Volume Automations
 
 {{AUDIO_VOLUME_AUTOMATIONS_BODY}}
-Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
 
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ Heart Rate Automations (Pulsoid Integration)

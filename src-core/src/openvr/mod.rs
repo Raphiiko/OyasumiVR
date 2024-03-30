@@ -70,7 +70,7 @@ pub async fn task() {
                 // If we need to reinitialize OpenVR after this, wait at least 3 seconds
                 ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(3);
                 // Check if SteamVR is running, snd stop initializing if it's not.
-                if !crate::utils::is_process_active("vrmonitor.exe", true).await {
+                if !crate::utils::is_process_active("vrmonitor.exe", false).await {
                     update_status(OpenVRStatus::Inactive).await;
                     continue;
                 }
