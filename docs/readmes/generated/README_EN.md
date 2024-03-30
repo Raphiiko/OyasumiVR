@@ -333,7 +333,7 @@ This comes with an optional mute indicator in the VR overlay, and the option for
 <table>
    <tr>
     <td>
-Automatically change the volume of your audi o devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
