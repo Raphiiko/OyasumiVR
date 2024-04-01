@@ -29,7 +29,11 @@ export interface AppSettings {
   bigscreenBeyondMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
+  discordActivityMode: DiscordActivityMode;
+  discordActivityOnlyWhileVRChatIsRunning: boolean;
 }
+
+export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
 
 export type QuitWithSteamVRMode = 'DISABLED' | 'IMMEDIATELY' | 'AFTERDELAY';
 
@@ -82,6 +86,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondMaxBrightness: 150,
   bigscreenBeyondUnsafeBrightness: false,
   bigscreenBeyondBrightnessFanSafety: true,
+  discordActivityMode: 'ENABLED',
+  discordActivityOnlyWhileVRChatIsRunning: true,
 };
 
 export type ExecutableReferenceStatus =
