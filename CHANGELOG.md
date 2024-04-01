@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Options for (conditionally) disabling Discord rich presence, based on sleep mode, or VRChat being active.
+
 ## [1.12.2]
 
 ### Changed

@@ -82,6 +82,42 @@ struct ActivityUpdate {
     asset_label: Option<String>,
 }
 
+pub async fn clear_activity() -> bool {
+    *LAST_ACTIVITY_UPDATE.lock().await = None;
+    let client_guard = match timeout(Duration::from_secs(2), DISCORD_CLIENT.lock()).await {
+        Ok(res) => res,
+        Err(_) => return false,
+    };
+    let client = match client_guard.as_ref() {
+        Some(client) => client,
+        None => return false,
+    };
+    let result = match timeout(Duration::from_secs(4), client.discord.clear_activity()).await {
+        Ok(res) => {
+            if let Err(err) = res {
+                drop(client_guard);
+                match err {
+                    ds::Error::NoConnection => on_discord_stopped().await,
+                    ds::Error::TimedOut => on_discord_stopped().await,
+                    ds::Error::Close(_) => on_discord_stopped().await,
+                    ds::Error::CorruptConnection => on_discord_stopped().await,
+                    _ => {}
+                };
+                false
+            } else {
+                true
+            }
+        }
+        Err(_) => {
+            drop(client_guard);
+            on_discord_stopped().await;
+            false
+        }
+    };
+    result
+
+}
+
 pub async fn update_activity(
     details: String,
     state: String,

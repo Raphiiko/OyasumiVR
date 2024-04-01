@@ -158,6 +158,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
         vrc_log_parser::commands::init_vrc_log_watcher,
         discord::commands::discord_update_activity,
+        discord::commands::discord_clear_activity,
         http::commands::get_http_server_port,
         image_cache::commands::clean_image_cache,
         lighthouse::commands::lighthouse_start_scan,
