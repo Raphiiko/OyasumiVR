@@ -278,13 +278,17 @@
       "sleepAnimations": "Schlafanimationen",
       "sleepDetection": "Schlaferkennung",
       "statusAutomations": "Status-Automatisierungen",
-      "vrcAutomations": "VRChat-Automatisierungen"
+      "systemMicMuteAutomations": "System-Stummschaltungsautomatisierungen",
+      "vrcAutomations": "VRChat-Automatisierungen",
+      "vrchatMicMuteAutomations": "VRChat-Stummschaltungsautomatisierungen"
     },
     "device-edit-modal": {
       "deviceNickname": {
+        "description": "Optional setze einen eigenen Namen für dieses Gerät",
         "title": "Nickname"
       },
       "ignoreLighthouse": {
+        "description": "Ignorierte Basisstationen werden versteckt und sind nicht von Automatisierungen betroffen",
         "title": "Basisstationen ignorieren"
       },
       "title": "Gerät bearbeiten: {deviceid}"
@@ -315,16 +319,213 @@
         "WristLeft": "Linkes Handgelenk",
         "WristRight": "Rechtes Handgelenk"
       },
+      "lighthouseStatus": {
+        "booting": "Startet",
+        "on": "Aktiv",
+        "sleep": "",
+        "unknown": "Unbekannter Status"
+      },
+      "noDevices": "Keine Geräte erkannt",
       "scanForLighthouses": "Scannen",
       "title": "Geräte",
       "turnOffAll": "ALLE"
     },
+    "event-log-entry": {
+      "type": {
+        "acceptedInviteRequest": {
+          "subtitle": {
+            "blacklist": "Da dieser Spieler nicht geblacklistet war",
+            "whitelist": "Da dieser Spieler nicht gewhitelistet war"
+          },
+          "title": "Einladungsanfrage von \"{displayName}\" automatisch angenommen"
+        },
+        "changedAudioDeviceVolume": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          },
+          "title": "Lautstärke für Audiogerät ''{deviceName}'' wurde zu {percentage} geändert"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          },
+          "title": {
+            "MUTE": "Mikrofon stummgeschaltet: {deviceName}",
+            "UNMUTE": "Stummschaltung für Mikrofon aufgehoben: {deviceName}"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          },
+          "title": {
+            "MUTE": "Stummgeschaltetes Mikrofon in VRChat",
+            "UNMUTE": "Freigeschaltetes Mikrofon in VRChat"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          }
+        },
+        "gpuPowerLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          }
+        },
+        "hardwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "ALL": {
+            "on": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell eingeschaltet",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              },
+              "title": "Alle Basisstationen eingeschaltet"
+            },
+            "sleep": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell gesetzt",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              }
+            },
+            "standby": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell gesetzt",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              }
+            }
+          },
+          "SINGLE": {
+            "on": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell eingeschaltet",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              },
+              "title": "Basisstation eingeschaltet"
+            },
+            "sleep": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell gesetzt",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              }
+            },
+            "standby": {
+              "reasons": {
+                "HOTKEY": "Da ein Hotkey gedrückt wurde",
+                "MANUAL": "Manuell gesetzt",
+                "OYASUMI_START": "Da OyasumiVR gestartet ist",
+                "STEAMVR_START": "Da SteamVR gestartet ist",
+                "STEAMVR_STOP": "Da SteamVR gestoppt ist"
+              }
+            }
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          }
+        },
+        "mutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          },
+          "title": "Audiogerät ''{deviceName}'' stummgeschaltet"
+        },
+        "renderResolutionChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          },
+          "title": {
+            "auto": "SteamVR-Renderauflösung auf \"auto\" gesetzt",
+            "custom": "SteamVR-Renderauflösung auf {value} gesetzt"
+          }
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "turnedOffOpenVRDevices": {
+          "reason": {
+            "HOTKEY": "Da ein Hotkey gedrückt wurde",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          }
+        },
+        "unmutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "windowsPowerPolicySet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war"
+          }
+        }
+      }
+    },
     "main-status-bar": {
+      "active": "Aktiv",
       "brightness": {
         "simple": "Helligkeit"
       },
       "bsbFanSpeed": {
         "label": "Lüftergeschwindigkeit"
+      },
+      "steamvr": {
+        "INITIALIZED": "Aktiv"
       }
     }
   },
@@ -415,6 +616,7 @@
         }
       },
       "overview": {
+        "active": "Aktiv",
         "tooltip": {
           "automations": "Automatisierungen",
           "shutdown": "Ausschaltsequenz"
@@ -425,6 +627,11 @@
           "title": "Ausschaltsequenz"
         }
       }
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "active": "Aktiv"
     }
   },
   "power-automations": {
@@ -467,6 +674,15 @@
         "activityMode": {
           "options": {
             "DISABLED": "Deaktiviert"
+          }
+        }
+      },
+      "sleepMode": {
+        "startupBehaviour": {
+          "option": {
+            "enabled": {
+              "title": "Aktiv"
+            }
           }
         }
       },
@@ -532,7 +748,8 @@
       "onSleepPreparation": {
         "title": "Wenn ich mich fürs Schlafen vorbereite"
       }
-    }
+    },
+    "title": "System-Stummschaltungsautomatisierungen"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
@@ -544,6 +761,7 @@
     },
     "onSleepPreparation": {
       "title": "Wenn ich mich fürs Schlafen vorbereite"
-    }
+    },
+    "title": "VRChat-Stummschaltungsautomatisierungen"
   }
 }
