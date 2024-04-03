@@ -28,6 +28,8 @@ import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';
 import { HardwareBrightnessControlService } from '../brightness-control/hardware-brightness-control.service';
 import { warn } from 'tauri-plugin-log-api';
+import { EventLogService } from '../event-log.service';
+import { EventLogBSBFanSpeedChanged } from '../../models/event-log-entry';
 
 const MIN_SAFE_FAN_SPEED = 40;
 
@@ -52,7 +54,8 @@ export class BigscreenBeyondFanAutomationService {
     private sleepService: SleepService,
     private sleepPreparation: SleepPreparationService,
     private appSettingsService: AppSettingsService,
-    private hardwareBrightness: HardwareBrightnessControlService
+    private hardwareBrightness: HardwareBrightnessControlService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -73,6 +76,7 @@ export class BigscreenBeyondFanAutomationService {
         switchMap(async () => {
           const connected = await invoke<boolean>('bigscreen_beyond_is_connected');
           this._connected.next(connected);
+          // Attempt to set the fan speed to the value saved by the beyond driver utility
           if (connected) {
             const savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
             if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
@@ -92,16 +96,42 @@ export class BigscreenBeyondFanAutomationService {
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
+    if (!this._connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
-      await this.setFanSpeed(this.config.onSleepEnableFanSpeed);
+      const speedSet = await this.setFanSpeed(this.config.onSleepEnableFanSpeed);
+      if (speedSet !== null) {
+        this.eventLog.logEvent({
+          type: 'bsbFanSpeedChanged',
+          reason: 'SLEEP_MODE_ENABLED',
+          speed: this.config.onSleepEnableFanSpeed,
+          effectiveSpeed: speedSet,
+        } as EventLogBSBFanSpeedChanged);
+      }
     } else if (!sleepMode && this.config.onSleepDisable) {
-      await this.setFanSpeed(this.config.onSleepDisableFanSpeed);
+      const speedSet = await this.setFanSpeed(this.config.onSleepDisableFanSpeed);
+      if (speedSet !== null) {
+        this.eventLog.logEvent({
+          type: 'bsbFanSpeedChanged',
+          reason: 'SLEEP_MODE_DISABLED',
+          speed: this.config.onSleepDisableFanSpeed,
+          effectiveSpeed: speedSet,
+        } as EventLogBSBFanSpeedChanged);
+      }
     }
   }
 
   private async onSleepPreparation() {
+    if (!this._connected.value) return;
     if (this.config.onSleepPreparation) {
-      await this.setFanSpeed(this.config.onSleepPreparationFanSpeed);
+      const speedSet = await this.setFanSpeed(this.config.onSleepPreparationFanSpeed);
+      if (speedSet !== null) {
+        this.eventLog.logEvent({
+          type: 'bsbFanSpeedChanged',
+          reason: 'SLEEP_PREPARATION',
+          speed: this.config.onSleepPreparationFanSpeed,
+          effectiveSpeed: speedSet,
+        } as EventLogBSBFanSpeedChanged);
+      }
     }
   }
 
@@ -133,8 +163,8 @@ export class BigscreenBeyondFanAutomationService {
     });
   }
 
-  public async setFanSpeed(speed: number, saveAsRestore = true) {
-    if (!this._connected.value) return;
+  public async setFanSpeed(speed: number, saveAsRestore = true): Promise<number | null> {
+    if (!this._connected.value) return null;
     // Keep fan speed in safe range
     speed = clamp(speed, this.config.allowUnsafeFanSpeed ? 0 : MIN_SAFE_FAN_SPEED, 100);
     if (saveAsRestore) {
@@ -150,6 +180,7 @@ export class BigscreenBeyondFanAutomationService {
     // Set the fan speed
     this._fanSpeed.next(speed);
     await invoke('bigscreen_beyond_set_fan_speed', { speed });
+    return speed;
   }
 
   private getBeyondDriverSavedFanSpeed(): Promise<number | null> {

@@ -22,6 +22,8 @@ import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { clamp, smoothLerp } from '../../utils/number-utils';
+import { EventLogService } from '../event-log.service';
+import { EventLogBSBLedChanged } from '../../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +39,8 @@ export class BigscreenBeyondLedAutomationService {
   constructor(
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -70,16 +73,33 @@ export class BigscreenBeyondLedAutomationService {
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
+    if (!this.connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
       await this.setLedColor(this.config.onSleepEnableRgb);
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_MODE_ENABLED',
+        color: this.config.onSleepEnableRgb,
+      } as EventLogBSBLedChanged);
     } else if (!sleepMode && this.config.onSleepDisable) {
       await this.setLedColor(this.config.onSleepDisableRgb);
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_MODE_DISABLED',
+        color: this.config.onSleepDisableRgb,
+      } as EventLogBSBLedChanged);
     }
   }
 
   private async onSleepPreparation() {
+    if (!this.connected.value) return;
     if (this.config.onSleepPreparation) {
       await this.setLedColor(this.config.onSleepPreparationRgb);
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_PREPARATION',
+        color: this.config.onSleepPreparationRgb,
+      } as EventLogBSBLedChanged);
     }
   }
 

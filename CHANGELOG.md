@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Options for (conditionally) disabling Discord rich presence, based on sleep mode, or VRChat being active.
+- Missing event logs for Bigscreen Beyond fan- and led automations.
+
+### Fixed
+
+- Fixed sleep preparation not being available even when some of its automations are enabled.
 
 ## [1.12.2]
 

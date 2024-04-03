@@ -27,6 +27,8 @@ import { EventLogChangedSystemMicMuteStateEntryParser } from './entry-parsers/ch
 import { EventLogChangedAudioDeviceVolumeEntryParser } from './entry-parsers/changed-audio-device-volume';
 import { EventLogMutedAudioDeviceEntryParser } from './entry-parsers/muted-audio-device';
 import { EventLogUnmutedAudioDeviceEntryParser } from './entry-parsers/unmuted-audio-device';
+import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-speed-changed';
+import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -62,6 +64,8 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogChangedAudioDeviceVolumeEntryParser(),
     new EventLogMutedAudioDeviceEntryParser(),
     new EventLogUnmutedAudioDeviceEntryParser(),
+    new EventLogBSBFanSpeedChangedEntryParser(),
+    new EventLogBSBLedChangedEntryParser(),
   ];
 
   constructor(
