@@ -483,6 +483,25 @@
             "transition": "Headset brightness transitioning to {value}"
           }
         },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": "Bigscreen Beyond RGB Led set to {color}"
+        },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "exact": "Bigscreen Beyond Fan set to {setPercentage}%",
+            "adjusted": "Bigscreen Beyond Fan set to {setPercentage}% (adjusted from {requestedPercentage}% for safety)"
+          }
+        },
         "sleepDetectorEnableCancelled": {
           "subtitle": "As the user was still awake",
           "title": "Automatic enabling of sleep mode cancelled"
