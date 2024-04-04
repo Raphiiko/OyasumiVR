@@ -1933,15 +1933,7 @@
       "title": "Control microphone mute",
       "unmute": "Unmute\nmicrophone"
     },
-    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat.",
-    "mode": {
-      "description": "Select which mic behaviour you're using within VRChat. Note that selecting a different behaviour than the one you're using in VRChat could cause these automations to misbehave.",
-      "title": "VRChat microphone behaviour"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Push to Talk",
-      "TOGGLE": "Toggle"
-    },
+    "description": "Automatically mute or unmute your microphone in VRChat when you fall asleep, or wake up! This can come in useful when you want to prevent others from hearing your snoring ;)\n\nNote that in order for this to work, it requires OSC to be enabled within VRChat, and for your microphone behaviour to be set to \"Toggle\".",
     "muteOptions": {
       "MUTE": "Mute",
       "NONE": "None",

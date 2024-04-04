@@ -28,7 +28,7 @@ mod telemetry;
 mod utils;
 mod vrc_log_parser;
 
-use std::sync::atomic::Ordering;
+use std::{sync::atomic::Ordering, time::Duration};
 
 use config::Config;
 pub use flavour::BUILD_FLAVOUR;
@@ -39,7 +39,8 @@ use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
-use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
+use tauri::{plugin::TauriPlugin, AppHandle, Manager, RunEvent, Wry};
+use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
@@ -51,6 +52,7 @@ fn main() {
         .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
         .plugin(configure_tauri_plugin_aptabase())
+        .plugin(configure_app_exit_plugin())
         .setup(|app| {
             configure_tauri_plugin_deep_link(app.handle());
             let matches = app.get_cli_matches().unwrap();
@@ -183,6 +185,20 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
     ]
+}
+
+fn configure_app_exit_plugin() -> TauriPlugin<Wry> {
+    tauri::plugin::Builder::new("app_exit_plugin")
+        .on_event(|app_handle, event| match event {
+            RunEvent::ExitRequested { api, .. } => {
+                if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                    app_handle.track_event("app_quit", None);
+                    std::thread::sleep(Duration::from_secs(2));
+                }
+            }
+            _ => {}
+        })
+        .build()
 }
 
 fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {

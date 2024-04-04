@@ -54,7 +54,7 @@ export type AutomationType =
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 13;
+  version: 14;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -241,11 +241,10 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   footLockReleaseWindow: number;
 }
 
-export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_MUTE';
+export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_TALK';
 export type VRChatMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
 export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
-  mode: VRChatVoiceMode;
   onSleepModeEnable: VRChatMicMuteStateOption;
   onSleepModeDisable: VRChatMicMuteStateOption;
   onSleepPreparation: VRChatMicMuteStateOption;
@@ -379,7 +378,7 @@ export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationCo
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 13,
+  version: 14,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -535,7 +534,6 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   },
   VRCHAT_MIC_MUTE_AUTOMATIONS: {
     enabled: true,
-    mode: 'TOGGLE',
     onSleepModeEnable: 'NONE',
     onSleepModeDisable: 'NONE',
     onSleepPreparation: 'NONE',

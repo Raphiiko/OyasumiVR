@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- VRChat microphone mute automations blocking keyboard- and controller bindings from toggling the microphone mute state.
+
 ## [1.12.3]
 
 ### Added
