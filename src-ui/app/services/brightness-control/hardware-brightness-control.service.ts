@@ -56,7 +56,6 @@ export class HardwareBrightnessControlService {
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
   constructor(
-    private openvr: OpenVRService,
     private appSettingsService: AppSettingsService // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
