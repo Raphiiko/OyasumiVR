@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
-import { OpenVRService } from '../openvr.service';
 import {
   BehaviorSubject,
   combineLatest,
@@ -56,7 +55,6 @@ export class HardwareBrightnessControlService {
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
   constructor(
-    private openvr: OpenVRService,
     private appSettingsService: AppSettingsService // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(

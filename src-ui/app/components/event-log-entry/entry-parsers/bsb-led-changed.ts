@@ -6,7 +6,7 @@ export class EventLogBSBLedChangedEntryParser extends EventLogEntryParser<EventL
     return 'bsbLedChanged';
   }
 
-  override headerInfoTitle(entry: EventLogBSBLedChanged): string {
+  override headerInfoTitle(): string {
     return 'comp.event-log-entry.type.bsbLedChanged.title';
   }
 
