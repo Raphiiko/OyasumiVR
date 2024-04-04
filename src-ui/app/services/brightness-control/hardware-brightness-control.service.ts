@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HardwareBrightnessControlDriver } from './hardware-brightness-drivers/hardware-brightness-control-driver';
 import { ValveIndexHardwareBrightnessControlDriver } from './hardware-brightness-drivers/valve-index-hardware-brightness-control-driver';
-import { OpenVRService } from '../openvr.service';
 import {
   BehaviorSubject,
   combineLatest,
