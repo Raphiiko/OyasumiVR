@@ -420,7 +420,7 @@ OyasumiVR has various automations for controlling certain features specific to c
 - French (Français) (Вклад сообщества от [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Вклад сообщества от [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Вклад сообщества от [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Вклад сообщества от [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian (Русский) (Вклад сообщества от [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
 
 ### Помогайте с переводом
 
