@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { OscService } from '../osc.service';
 import {
   BehaviorSubject,
-  debounceTime,
   delay,
   filter,
   firstValueFrom,
@@ -17,7 +16,6 @@ import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   VRChatMicMuteAutomationsConfig,
-  VRChatVoiceMode,
 } from '../../models/automations';
 import { cloneDeep, isArray } from 'lodash';
 import { SleepService } from '../sleep.service';
@@ -36,10 +34,6 @@ const WRITE_ADDR = '/input/Voice';
 export class VRChatMicMuteAutomationService {
   private _muted = new BehaviorSubject<boolean | null>(null);
   public muted = this._muted.asObservable();
-  private _mode = new BehaviorSubject<VRChatVoiceMode>(
-    AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS.mode
-  );
-  public mode = this._mode.asObservable();
   private config: VRChatMicMuteAutomationsConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS
   );
@@ -58,7 +52,6 @@ export class VRChatMicMuteAutomationService {
 
     this.automationConfigs.configs.subscribe((configs) => {
       this.config = configs.VRCHAT_MIC_MUTE_AUTOMATIONS;
-      this._mode.next(this.config.mode);
     });
     // Listen for the muted state
     this.osc.messages.subscribe((message) => {
@@ -131,53 +124,28 @@ export class VRChatMicMuteAutomationService {
     });
     // In case the muted state is not known (This happens when OyasumiVR is launched after VRChat is already active)
     // We poll the muted state through OSCQuery every 3 seconds, until it is known.
-    merge(interval(3000), this._mode.pipe(skip(1)))
+    merge(interval(3000))
       .pipe(
-        debounceTime(100),
         filter(() => this._muted.value === null),
         switchMap(() => this.fetchMutedState())
       )
       .subscribe();
   }
 
-  async setMode(mode: VRChatVoiceMode) {
-    await this.automationConfigs.updateAutomationConfig<VRChatMicMuteAutomationsConfig>(
-      'VRCHAT_MIC_MUTE_AUTOMATIONS',
-      {
-        mode,
-      }
-    );
-  }
-
   async toggleMute(ensureStateKnown = true) {
     if (ensureStateKnown && !(await this.fetchMutedState())) return;
-    switch (this._mode.value) {
-      case 'TOGGLE':
-        await this.osc.send_int(WRITE_ADDR, 0);
-        await firstValueFrom(of(null).pipe(delay(150)));
-        await this.osc.send_int(WRITE_ADDR, 1);
-        await firstValueFrom(of(null).pipe(delay(150)));
-        break;
-      case 'PUSH_TO_MUTE':
-        await this.osc.send_int(WRITE_ADDR, this._muted.value ? 0 : 1);
-        await firstValueFrom(of(null).pipe(delay(150)));
-        break;
-    }
+    await this.osc.send_int(WRITE_ADDR, 0);
+    await firstValueFrom(of(null).pipe(delay(150)));
+    await this.osc.send_int(WRITE_ADDR, 1);
+    await firstValueFrom(of(null).pipe(delay(150)));
+    await this.osc.send_int(WRITE_ADDR, 0);
+    await firstValueFrom(of(null).pipe(delay(150)));
   }
 
   async setMute(state: boolean) {
-    switch (this._mode.value) {
-      case 'TOGGLE':
-        if (this._muted.value !== state) {
-          if (this._muted.value !== null) this._muted.next(state);
-          await this.toggleMute(false);
-        }
-        break;
-      case 'PUSH_TO_MUTE':
-        if (this._muted.value !== null) this._muted.next(state);
-        await this.osc.send_int(WRITE_ADDR, state ? 0 : 1);
-        await firstValueFrom(of(null).pipe(delay(150)));
-        break;
+    if (this._muted.value !== state) {
+      if (this._muted.value !== null) this._muted.next(state);
+      await this.toggleMute(false);
     }
   }
 

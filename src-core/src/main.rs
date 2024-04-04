@@ -40,6 +40,7 @@ use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
+use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
 
 fn main() {
@@ -71,10 +72,17 @@ fn main() {
         .system_tray(system_tray::init_system_tray())
         .on_system_tray_event(system_tray::handle_system_tray_events())
         .on_window_event(system_tray::handle_window_events())
-        .invoke_handler(configure_command_handlers());
-    // Run Oyasumi
-    app.run(tauri::generate_context!())
+        .invoke_handler(configure_command_handlers())
+        .build(tauri::generate_context!())
         .expect("An error occurred while running the application");
+    // Run OyasumiVR
+    app.run(|handler, event| match event {
+        tauri::RunEvent::Exit { .. } => {
+            handler.track_event("app_exited", None);
+            handler.flush_events_blocking();
+        }
+        _ => {}
+    })
 }
 
 async fn load_configs() {
