@@ -162,13 +162,6 @@ export class SimpleBrightnessControlService {
         );
       }
     }
-    const dbg = {
-      softwareBrightness,
-      hardwareBrightness,
-      hardwareBrightnessDriverAvailable: this.hardwareBrightnessDriverAvailable,
-      dbgHwBrightnessRange,
-    };
-    await info('SIMPLE_BRIGHTNESS_DBG: ' + JSON.stringify(dbg));
     // Set brightnesses
     await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
@@ -180,5 +173,12 @@ export class SimpleBrightnessControlService {
         logReason: null,
       });
     }
+    const dbg = {
+      softwareBrightness,
+      hardwareBrightness,
+      hardwareBrightnessDriverAvailable: this.hardwareBrightnessDriverAvailable,
+      dbgHwBrightnessRange,
+    };
+    info('SIMPLE_BRIGHTNESS_DBG: ' + JSON.stringify(dbg));
   }
 }
