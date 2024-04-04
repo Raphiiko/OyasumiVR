@@ -140,13 +140,11 @@ export class SimpleBrightnessControlService {
     let softwareBrightness = percentage;
     let hardwareBrightness = 100;
     // If the hardware brightness driver is available, intelligently switch between the two brightnesses
-    let dbgHwBrightnessRange;
     if (this.hardwareBrightnessDriverAvailable) {
       const softwareBrightnessRange = [0, 0];
       const hardwareBrightnessRange = await firstValueFrom(
         this.hardwareBrightnessControl.brightnessBounds
       );
-      dbgHwBrightnessRange = [...hardwareBrightnessRange];
       if (hardwareBrightnessRange[0] > 0) {
         softwareBrightnessRange[1] = hardwareBrightnessRange[0];
       }
@@ -162,13 +160,6 @@ export class SimpleBrightnessControlService {
         );
       }
     }
-    const dbg = {
-      softwareBrightness,
-      hardwareBrightness,
-      hardwareBrightnessDriverAvailable: this.hardwareBrightnessDriverAvailable,
-      dbgHwBrightnessRange,
-    };
-    await info('SIMPLE_BRIGHTNESS_DBG: ' + JSON.stringify(dbg));
     // Set brightnesses
     await this.softwareBrightnessControl.setBrightness(softwareBrightness, {
       cancelActiveTransition: true,
