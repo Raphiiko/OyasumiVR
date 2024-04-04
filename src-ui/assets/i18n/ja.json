@@ -1899,15 +1899,6 @@
       "title": "マイクミュートの制御",
       "unmute": "ミュート解除"
     },
-    "description": "VRChatのマイクのミュートを切り替えられます。他の人にいびきを聞かせたくない場合などに便利です。 \n\nこれを動作させるには、VRChat内でOSCが有効になっている必要があります。",
-    "mode": {
-      "description": "マイク動作を選択します。VRChatで使用しているものと異なる動作を選択すると、誤作動の原因となります",
-      "title": "VRChatのマイク動作"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "プッシュトーク",
-      "TOGGLE": "トグル"
-    },
     "muteOptions": {
       "MUTE": "ミュート",
       "NONE": "変更しない",

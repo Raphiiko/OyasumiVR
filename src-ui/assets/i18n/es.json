@@ -1994,15 +1994,6 @@
       "title": "Controlar el silencio del micrófono",
       "unmute": "Unmute\nmicrofono"
     },
-    "description": "Silencia o desactiva automáticamente tu micrófono en VRChat cuando te duermas o te despiertes. Esto puede ser útil cuando quieres evitar que otros oigan tus ronquidos ;)\n\nTen en cuenta que para que esto funcione, es necesario que OSC esté activado en VRChat.",
-    "mode": {
-      "description": "Selecciona el comportamiento de micrófono que utilizas en VRChat. Ten en cuenta que si seleccionas un comportamiento diferente al que utilizas en VRChat, estas automatizaciones podrían no funcionar correctamente.",
-      "title": "Comportamiento del micrófono VRChat"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Pulsar para hablar",
-      "TOGGLE": "Toggle"
-    },
     "muteOptions": {
       "MUTE": "Mute",
       "NONE": "None",

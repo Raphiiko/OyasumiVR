@@ -2067,15 +2067,6 @@
       "title": "Regel microfoon demping",
       "unmute": "Microfoon niet dempen"
     },
-    "description": "Demp je microfoon automatisch in VRChat wanneer je in slaap valt, of wakker wordt! Dit kan handig zijn als je wilt voorkomen dat anderen je horen snurken ;)\n\nLet op dat om dit te kunnen gebruiken, je OSC ingeschakeld moet hebben in VRChat.",
-    "mode": {
-      "description": "Selecteer welke microfoon modus je gebruikt in VRChat. Als je hier iets anders selecteerd dan wat je in VRChat gebruikt, dan kunnen deze automatiseringen een ongewenst effect hebben.",
-      "title": "VRChat Microfoon Modus"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Push to Talk",
-      "TOGGLE": "Toggle"
-    },
     "muteOptions": {
       "MUTE": "Dempen",
       "NONE": "Geen",
