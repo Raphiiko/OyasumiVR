@@ -483,6 +483,25 @@
             "transition": "Headset brightness transitioning to {value}"
           }
         },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": "Bigscreen Beyond RGB Led set to {color}"
+        },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "exact": "Bigscreen Beyond Fan set to {setPercentage}%",
+            "adjusted": "Bigscreen Beyond Fan set to {setPercentage}% (adjusted from {requestedPercentage}% for safety)"
+          }
+        },
         "sleepDetectorEnableCancelled": {
           "subtitle": "As the user was still awake",
           "title": "Automatic enabling of sleep mode cancelled"
@@ -1215,7 +1234,7 @@
             },
             "MANIFEST_NOT_REGISTERED": {
               "title": "Reregistration of VR Application Manifest Failed",
-              "message": "OyasumiVR's had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR."
+              "message": "OyasumiVR had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR."
             },
             "MANIFEST_CHECK_FAILED": {
               "title": "Reregistration of VR Application Manifest Failed",
@@ -1375,6 +1394,21 @@
         "description": "When enabled, OyasumiVR will collect anonymous usage data such as version information and crash reports. This data is completely anonymous, and does not contain any personal data. It is only used for tracking down bugs and providing some general usage statistics.<br>For more information, you can check out the <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a>.",
         "label": "Send anonymous usage data",
         "title": "Telemetry"
+      },
+      "discord": {
+        "title": "Discord",
+        "activityMode": {
+          "title": "Discord Rich Presence",
+          "description": "Show OyasumiVR as your current activity on Discord",
+          "options": {
+            "ENABLED": "Enabled",
+            "ONLY_ASLEEP": "Only while asleep",
+            "DISABLED": "Disabled"
+          }
+        },
+        "activityModeVRCCondition": {
+          "title": "Only show activity while VRChat is running"
+        }
       }
     },
     "integrations": {

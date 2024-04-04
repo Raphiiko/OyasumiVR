@@ -419,7 +419,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
 
 ### 翻訳への協力
 
