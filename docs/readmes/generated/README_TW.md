@@ -420,7 +420,7 @@ OyasumiVR has various automations for controlling certain features specific to c
 - 法文 (Français)（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 - 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito) 提供)
-- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 提供）
+- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 與 [Pacmard](https://github.com/pacmard)提供)
 
 ### 協助翻譯
 
