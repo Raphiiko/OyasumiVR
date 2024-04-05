@@ -23,16 +23,16 @@ pub mod sidecar_manager;
 
 pub fn init() {
     // Refresh processes at least every second
-    // tokio::task::spawn(async {
-    //     loop {
-    //         {
-    //             let mut sysinfo_guard = SYSINFO.lock().await;
-    //             let sysinfo = &mut *sysinfo_guard;
-    //             sysinfo.refresh_processes();
-    //         }
-    //         tokio::time::sleep(Duration::from_secs(1)).await;
-    //     }
-    // });
+    tokio::task::spawn(async {
+        loop {
+            {
+                let mut sysinfo_guard = SYSINFO.lock().await;
+                let sysinfo = &mut *sysinfo_guard;
+                sysinfo.refresh_processes();
+            }
+            tokio::time::sleep(Duration::from_secs(1)).await;
+        }
+    });
 }
 
 pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> bool {
