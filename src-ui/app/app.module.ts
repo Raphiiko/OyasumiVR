@@ -425,11 +425,12 @@ export class AppModule {
   }
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
+    const TIMEOUT = 10000;
     if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
         promise,
-        6000,
+        TIMEOUT,
         new Error(`Initialization function ${action} timed out.`)
       );
       if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
@@ -720,42 +721,55 @@ export class AppModule {
     }
     try {
       await Promise.all(
-        preloadAssets.imageUrls.map((imageUrl) => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              debug('Preloaded asset: ' + imageUrl);
-              resolve(void 0);
-            };
-            img.onerror = (
-              event: Event | string,
-              source?: string,
-              lineno?: number,
-              colno?: number,
-              _error?: Error
-            ) => {
-              warn(
-                `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
-                  event,
-                  source,
-                  lineno,
-                  colno,
-                  error: _error,
-                })}`
-              );
-              if (imageUrl.startsWith('http')) {
-                // Preloading of remote assets is allowed to fail
-                resolve(void 0);
-              } else {
-                reject({ event, source, lineno, colno, error: _error });
-              }
-            };
-            img.src = imageUrl;
-          });
-        })
+        preloadAssets.imageUrls.map((imageUrl) => this.preloadImageAsset(imageUrl))
       );
     } catch (e) {
       error(`[Init] Failed to preload assets: (Could not load images) ${JSON.stringify(e)}`);
+      throw e;
+    }
+  }
+
+  private async preloadImageAsset(imageUrl: string) {
+    const TIMEOUT = 5000;
+    const TIMEOUT_ERR = 'TIMEOUT_REACHED';
+    try {
+      await pTimeout(
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            debug('Preloaded asset: ' + imageUrl);
+            resolve(void 0);
+          };
+          img.onerror = (
+            event: Event | string,
+            source?: string,
+            lineno?: number,
+            colno?: number,
+            _error?: Error
+          ) => {
+            warn(
+              `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
+                event,
+                source,
+                lineno,
+                colno,
+                error: _error,
+              })}`
+            );
+            if (imageUrl.startsWith('http')) {
+              // Preloading of remote assets is allowed to fail
+              resolve(void 0);
+            } else {
+              reject({ event, source, lineno, colno, error: _error });
+            }
+          };
+          img.src = imageUrl;
+        }),
+        TIMEOUT,
+        TIMEOUT_ERR
+      );
+    } catch (e) {
+      if (e === TIMEOUT_ERR) return; // Preload timeouts are acceptable
       throw e;
     }
   }
