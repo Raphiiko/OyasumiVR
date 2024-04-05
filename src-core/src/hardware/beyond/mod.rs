@@ -25,43 +25,43 @@ pub async fn init() {
         }
     };
 
-    // tokio::spawn(async move {
-    //     loop {
-    //         tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-    //         let _ = api.refresh_devices();
-    //         let devices = api.device_list();
-    //         let mut device: Option<HidDevice> = None;
-    //         for device_info in devices {
-    //             if device_info.vendor_id() == BIGSCREEN_VID
-    //                 && device_info.product_id() == BEYOND_PID
-    //             {
-    //                 device = Some(match device_info.open_device(&api) {
-    //                     Ok(d) => d,
-    //                     Err(e) => {
-    //                         error!(
-    //                             "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
-    //                             e
-    //                         );
-    //                         continue;
-    //                     }
-    //                 });
-    //                 break;
-    //             }
-    //         }
-    //         let connected = BSB_CONNECTED.load(Ordering::Relaxed);
-    //         if connected && device.is_none() {
-    //             *BSB_DEVICE.lock().await = None;
-    //             BSB_CONNECTED.store(false, Ordering::Relaxed);
-    //             info!("[Core] Bigscreen Beyond disconnected");
-    //             send_event("BIGSCREEN_BEYOND_CONNECTED", false).await;
-    //         } else if !connected && device.is_some() {
-    //             *BSB_DEVICE.lock().await = device;
-    //             BSB_CONNECTED.store(true, Ordering::Relaxed);
-    //             info!("[Core] Bigscreen Beyond connected");
-    //             send_event("BIGSCREEN_BEYOND_CONNECTED", true).await;
-    //         }
-    //     }
-    // });
+    tokio::spawn(async move {
+        loop {
+            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+            let _ = api.refresh_devices();
+            let devices = api.device_list();
+            let mut device: Option<HidDevice> = None;
+            for device_info in devices {
+                if device_info.vendor_id() == BIGSCREEN_VID
+                    && device_info.product_id() == BEYOND_PID
+                {
+                    device = Some(match device_info.open_device(&api) {
+                        Ok(d) => d,
+                        Err(e) => {
+                            error!(
+                                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
+                                e
+                            );
+                            continue;
+                        }
+                    });
+                    break;
+                }
+            }
+            let connected = BSB_CONNECTED.load(Ordering::Relaxed);
+            if connected && device.is_none() {
+                *BSB_DEVICE.lock().await = None;
+                BSB_CONNECTED.store(false, Ordering::Relaxed);
+                info!("[Core] Bigscreen Beyond disconnected");
+                send_event("BIGSCREEN_BEYOND_CONNECTED", false).await;
+            } else if !connected && device.is_some() {
+                *BSB_DEVICE.lock().await = device;
+                BSB_CONNECTED.store(true, Ordering::Relaxed);
+                info!("[Core] Bigscreen Beyond connected");
+                send_event("BIGSCREEN_BEYOND_CONNECTED", true).await;
+            }
+        }
+    });
 }
 
 pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), String> {
