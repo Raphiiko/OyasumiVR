@@ -46,7 +46,7 @@ use tauri_plugin_log::{LogTarget, RotationStrategy};
 fn main() {
     tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
     // Construct Oyasumi Tauri application
-    let app = tauri::Builder::default()
+    tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs_extra::init())
         .plugin(configure_tauri_plugin_log())
@@ -74,15 +74,14 @@ fn main() {
         .on_window_event(system_tray::handle_window_events())
         .invoke_handler(configure_command_handlers())
         .build(tauri::generate_context!())
-        .expect("An error occurred while running the application");
-    // Run OyasumiVR
-    app.run(|handler, event| match event {
-        tauri::RunEvent::Exit { .. } => {
-            handler.track_event("app_exited", None);
-            handler.flush_events_blocking();
-        }
-        _ => {}
-    })
+        .expect("An error occurred while running the application")
+        .run(|handler, event| match event {
+            tauri::RunEvent::Exit { .. } => {
+                handler.track_event("app_exited", None);
+                handler.flush_events_blocking();
+            }
+            _ => {}
+        })
 }
 
 async fn load_configs() {
