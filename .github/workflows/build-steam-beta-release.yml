@@ -6,9 +6,6 @@ on:
 
 jobs:
   build-steam-release:
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}-steam-beta
-      cancel-in-progress: true
     strategy:
       fail-fast: false
       matrix:
