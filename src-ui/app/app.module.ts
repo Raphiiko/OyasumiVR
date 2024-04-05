@@ -193,6 +193,8 @@ import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-aut
 import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { DiscordService } from './services/discord.service';
+import { trackEvent } from '@aptabase/tauri';
+import { pTimeout } from './utils/promise-utils';
 
 [
   localeEN,
@@ -425,10 +427,15 @@ export class AppModule {
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
     if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
     try {
-      const result = await promise;
+      const result = await pTimeout<T>(
+        promise,
+        6000,
+        new Error(`Initialization function ${action} timed out.`)
+      );
       if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
+      trackEvent('app_init_error', { action, error: `${e}` });
       error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
