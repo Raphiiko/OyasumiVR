@@ -111,7 +111,7 @@ export class BigscreenBeyondLedAutomationService {
       const frequency = 30;
       const startTime = Date.now();
       const startColor = [...this.lastSetColor];
-      while (Date.now() <= startTime + duration) {
+      while (Date.now() <= startTime + duration && this.connected.value) {
         // Sleep to match the frequency
         await new Promise((resolve) => setTimeout(resolve, 1000 / frequency));
         // Stop if the transition was cancelled
@@ -125,20 +125,24 @@ export class BigscreenBeyondLedAutomationService {
           Math.round(smoothLerp(startColor[2], targetColor[2], progress)),
         ];
         // Set the intermediary color
-        invoke('bigscreen_beyond_set_led_color', {
-          r: color[0],
-          g: color[1],
-          b: color[2],
-        });
-        this.lastSetColor = [...color];
+        if (this.connected.value) {
+          invoke('bigscreen_beyond_set_led_color', {
+            r: color[0],
+            g: color[1],
+            b: color[2],
+          });
+          this.lastSetColor = [...color];
+        }
       }
       // Set the final target color
-      invoke('bigscreen_beyond_set_led_color', {
-        r: targetColor[0],
-        g: targetColor[1],
-        b: targetColor[2],
-      });
-      this.lastSetColor = [...targetColor];
+      if (this.connected.value) {
+        invoke('bigscreen_beyond_set_led_color', {
+          r: targetColor[0],
+          g: targetColor[1],
+          b: targetColor[2],
+        });
+        this.lastSetColor = [...targetColor];
+      }
     });
     await this.transitionTask.start();
   }

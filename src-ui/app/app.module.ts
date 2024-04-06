@@ -193,6 +193,8 @@ import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-aut
 import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { DiscordService } from './services/discord.service';
+import { trackEvent } from '@aptabase/tauri';
+import { pTimeout } from './utils/promise-utils';
 
 [
   localeEN,
@@ -423,12 +425,18 @@ export class AppModule {
   }
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
+    const TIMEOUT = 10000;
     if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
     try {
-      const result = await promise;
+      const result = await pTimeout<T>(
+        promise,
+        TIMEOUT,
+        new Error(`Initialization function ${action} timed out.`)
+      );
       if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
+      trackEvent('app_init_error', { action, error: `${e}` });
       error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
@@ -713,42 +721,55 @@ export class AppModule {
     }
     try {
       await Promise.all(
-        preloadAssets.imageUrls.map((imageUrl) => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              debug('Preloaded asset: ' + imageUrl);
-              resolve(void 0);
-            };
-            img.onerror = (
-              event: Event | string,
-              source?: string,
-              lineno?: number,
-              colno?: number,
-              _error?: Error
-            ) => {
-              warn(
-                `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
-                  event,
-                  source,
-                  lineno,
-                  colno,
-                  error: _error,
-                })}`
-              );
-              if (imageUrl.startsWith('http')) {
-                // Preloading of remote assets is allowed to fail
-                resolve(void 0);
-              } else {
-                reject({ event, source, lineno, colno, error: _error });
-              }
-            };
-            img.src = imageUrl;
-          });
-        })
+        preloadAssets.imageUrls.map((imageUrl) => this.preloadImageAsset(imageUrl))
       );
     } catch (e) {
       error(`[Init] Failed to preload assets: (Could not load images) ${JSON.stringify(e)}`);
+      throw e;
+    }
+  }
+
+  private async preloadImageAsset(imageUrl: string) {
+    const TIMEOUT = 5000;
+    const TIMEOUT_ERR = 'TIMEOUT_REACHED';
+    try {
+      await pTimeout(
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            debug('Preloaded asset: ' + imageUrl);
+            resolve(void 0);
+          };
+          img.onerror = (
+            event: Event | string,
+            source?: string,
+            lineno?: number,
+            colno?: number,
+            _error?: Error
+          ) => {
+            warn(
+              `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
+                event,
+                source,
+                lineno,
+                colno,
+                error: _error,
+              })}`
+            );
+            if (imageUrl.startsWith('http')) {
+              // Preloading of remote assets is allowed to fail
+              resolve(void 0);
+            } else {
+              reject({ event, source, lineno, colno, error: _error });
+            }
+          };
+          img.src = imageUrl;
+        }),
+        TIMEOUT,
+        TIMEOUT_ERR
+      );
+    } catch (e) {
+      if (e === TIMEOUT_ERR) return; // Preload timeouts are acceptable
       throw e;
     }
   }
