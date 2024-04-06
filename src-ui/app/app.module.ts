@@ -451,9 +451,11 @@ export class AppModule {
             this.developerDebugService.init()
           );
           // Clean cache
-          await this.logInit('cache clean', CachedValue.cleanCache());
+          await this.logInit('cache clean', CachedValue.cleanCache())
+            .catch(() => {}); // Allow initialization to continue if failed
           // Preload assets
-          await this.logInit('asset preload', this.preloadAssets());
+          await this.logInit('asset preload', this.preloadAssets())
+            .catch(() => {}); // Allow initialization to continue if failed
           // Initialize base utilities
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
@@ -730,7 +732,7 @@ export class AppModule {
   }
 
   private async preloadImageAsset(imageUrl: string) {
-    const TIMEOUT = 5000;
+    const TIMEOUT = 8000;
     const TIMEOUT_ERR = 'TIMEOUT_REACHED';
     try {
       await pTimeout(
