@@ -730,7 +730,7 @@ export class AppModule {
   }
 
   private async preloadImageAsset(imageUrl: string) {
-    const TIMEOUT = 5000;
+    const TIMEOUT = 8000;
     const TIMEOUT_ERR = 'TIMEOUT_REACHED';
     try {
       await pTimeout(
