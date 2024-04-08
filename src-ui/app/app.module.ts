@@ -195,6 +195,7 @@ import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-con
 import { DiscordService } from './services/discord.service';
 import { trackEvent } from '@aptabase/tauri';
 import { pTimeout } from './utils/promise-utils';
+import { MdnsSidecarService } from './services/mdns-sidecar.service';
 
 [
   localeEN,
@@ -345,7 +346,8 @@ export class AppModule {
     private sleepService: SleepService,
     private oscService: OscService,
     private oscControlService: OscControlService,
-    private sidecarService: ElevatedSidecarService,
+    private elevatedSidecarService: ElevatedSidecarService,
+    private mdnsSidecarService: MdnsSidecarService,
     private updateService: UpdateService,
     private telemetryService: TelemetryService,
     private appSettingsService: AppSettingsService,
@@ -425,7 +427,7 @@ export class AppModule {
   }
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
-    const TIMEOUT = 10000;
+    const TIMEOUT = 30000;
     if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
@@ -436,7 +438,12 @@ export class AppModule {
       if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
-      trackEvent('app_init_error', { action, error: `${e}` });
+      trackEvent('app_init_error', {
+        action,
+        error: `${e}`,
+        timeout: TIMEOUT,
+        metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
+      });
       error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
@@ -451,11 +458,9 @@ export class AppModule {
             this.developerDebugService.init()
           );
           // Clean cache
-          await this.logInit('cache clean', CachedValue.cleanCache())
-            .catch(() => {}); // Allow initialization to continue if failed
-          // Preload assets
-          await this.logInit('asset preload', this.preloadAssets())
-            .catch(() => {}); // Allow initialization to continue if failed
+          await this.logInit('cache clean', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
+          // Preload assets (Not blocking)
+          this.logInit('asset preload', this.preloadAssets());
           // Initialize base utilities
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
@@ -500,11 +505,12 @@ export class AppModule {
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
           ]);
           // Initialize GPU control services
-          await this.logInit('SidecarService initialization', this.sidecarService.init()).then(
-            async () => {
-              await this.logInit('NVMLService initialization', this.nvmlService.init());
-            }
-          );
+          await this.logInit(
+            'SidecarService initialization',
+            this.elevatedSidecarService.init()
+          ).then(async () => {
+            await this.logInit('NVMLService initialization', this.nvmlService.init());
+          });
           // Initialize Brightness Control
           await Promise.all([
             this.logInit(
@@ -523,6 +529,7 @@ export class AppModule {
           // Initialize IPC
           await this.logInit('IpcService initialization', this.ipcService.init());
           await this.logInit('OverlayService initialization', this.overlayService.init());
+          await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init());
           await this.logInit(
             'OverlayAppStateSyncService initialization',
             this.overlayAppStateSyncService.init()
@@ -732,7 +739,7 @@ export class AppModule {
   }
 
   private async preloadImageAsset(imageUrl: string) {
-    const TIMEOUT = 8000;
+    const TIMEOUT = 30000;
     const TIMEOUT_ERR = 'TIMEOUT_REACHED';
     try {
       await pTimeout(

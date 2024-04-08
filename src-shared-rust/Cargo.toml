@@ -1,10 +1,10 @@
 [package]
 name = "oyasumivr-shared"
-version = "1.12.6"
+version = "1.12.7"
 authors = ["Raphiiko"]
 edition = "2021"
 license = "MIT"
-rust-version = "1.70.0"
+rust-version = "1.71.1"
 
 [dependencies.winapi]
 version = "0.3.9"
