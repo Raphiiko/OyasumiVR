@@ -428,14 +428,14 @@ export class AppModule {
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
     const TIMEOUT = 30000;
-    if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
+    console.log(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
         promise,
         TIMEOUT,
         new Error(`Initialization function ${action} timed out.`)
       );
-      if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
+      info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
       trackEvent('app_init_error', {
