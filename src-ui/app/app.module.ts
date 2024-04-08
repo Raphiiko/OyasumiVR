@@ -436,7 +436,12 @@ export class AppModule {
       if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
-      trackEvent('app_init_error', { action, error: `${e}` });
+      trackEvent('app_init_error', {
+        action,
+        error: `${e}`,
+        timeout: TIMEOUT,
+        metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
+      });
       error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
@@ -451,10 +456,9 @@ export class AppModule {
             this.developerDebugService.init()
           );
           // Clean cache
-          await this.logInit('cache clean', CachedValue.cleanCache())
-            .catch(() => {}); // Allow initialization to continue if failed
+          await this.logInit('cache clean', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
           // Preload assets (Not blocking)
-          this.logInit('asset preload', this.preloadAssets())
+          this.logInit('asset preload', this.preloadAssets());
           // Initialize base utilities
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
