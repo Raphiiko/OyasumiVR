@@ -3860,7 +3860,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "1.12.6"
+version = "1.12.7"
 dependencies = [
  "async-recursion",
  "bluest",
@@ -3920,6 +3920,7 @@ dependencies = [
  "url",
  "urlencoding",
  "uuid",
+ "webview2-com",
  "widestring",
  "winapi",
  "windows 0.51.1",
@@ -3929,7 +3930,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.12.6"
+version = "1.12.7"
 dependencies = [
  "winapi",
 ]
