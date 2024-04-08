@@ -160,6 +160,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
+        mdns_sidecar::commands::mdns_sidecar_started,
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
