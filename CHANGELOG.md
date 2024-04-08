@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Improved device detection for Bigscreen Beyond
+- Increased timeout duration for initialization tasks
+
 ## [1.12.6]
 
 ### Changed

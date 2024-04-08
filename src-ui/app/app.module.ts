@@ -425,7 +425,7 @@ export class AppModule {
   }
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
-    const TIMEOUT = 10000;
+    const TIMEOUT = 30000;
     if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
@@ -453,9 +453,8 @@ export class AppModule {
           // Clean cache
           await this.logInit('cache clean', CachedValue.cleanCache())
             .catch(() => {}); // Allow initialization to continue if failed
-          // Preload assets
-          await this.logInit('asset preload', this.preloadAssets())
-            .catch(() => {}); // Allow initialization to continue if failed
+          // Preload assets (Not blocking)
+          this.logInit('asset preload', this.preloadAssets())
           // Initialize base utilities
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
@@ -732,7 +731,7 @@ export class AppModule {
   }
 
   private async preloadImageAsset(imageUrl: string) {
-    const TIMEOUT = 8000;
+    const TIMEOUT = 30000;
     const TIMEOUT_ERR = 'TIMEOUT_REACHED';
     try {
       await pTimeout(
