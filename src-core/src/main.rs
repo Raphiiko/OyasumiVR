@@ -28,7 +28,7 @@ mod telemetry;
 mod utils;
 mod vrc_log_parser;
 
-use std::sync::atomic::Ordering;
+use std::{mem, sync::atomic::Ordering};
 
 use config::Config;
 pub use flavour::BUILD_FLAVOUR;
@@ -42,6 +42,7 @@ use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
+use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
     tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
@@ -292,12 +293,25 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
+    let window = app_handle.get_window("main").unwrap();
     // Open devtools if we're in debug mode
     #[cfg(debug_assertions)]
     {
-        let window = app_handle.get_window("main").unwrap();
         window.open_devtools();
     }
+    // Disable swipe navigation in main window
+    window
+        .with_webview(|webview| unsafe {
+            let settings = webview
+                .controller()
+                .CoreWebView2()
+                .unwrap()
+                .Settings()
+                .unwrap();
+            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
+            settings.SetIsSwipeNavigationEnabled(false).unwrap();
+        })
+        .unwrap();
     // Get dependencies
     let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
     // Initialize utility module

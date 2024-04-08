@@ -3920,6 +3920,7 @@ dependencies = [
  "url",
  "urlencoding",
  "uuid",
+ "webview2-com",
  "widestring",
  "winapi",
  "windows 0.51.1",
