@@ -7,7 +7,7 @@ license = "MIT"
 repository = "https://github.com/Raphiiko/Oyasumi"
 default-run = "oyasumivr"
 edition = "2021"
-rust-version = "1.70.0"
+rust-version = "1.71.1"
 
 [build-dependencies]
 tauri-build = { version = "1.5.1", features = [] }
@@ -124,7 +124,7 @@ features = [
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "7f2fcc1059e5ca8d586d2a46d2751769f779713d"
+rev = "b7e51d0"
 # path = "../../ovr_overlay_oyasumi"
 features = ["ovr_system", "ovr_settings"]
 

@@ -6,7 +6,7 @@ use super::models::{
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
 use byteorder::{ByteOrder, LE};
-use chrono::{Duration, NaiveDateTime, Utc};
+use chrono::{DateTime, Duration, Utc};
 use log::error;
 use ovr::input::InputValueHandle;
 use ovr::sys::EVRInputError;
@@ -18,10 +18,10 @@ lazy_static! {
     static ref OVR_DEVICES: Mutex<Vec<OVRDevice>> = Mutex::new(Vec::new());
     static ref SLEEP_DETECTOR: Mutex<SleepDetector> = Mutex::new(SleepDetector::new());
     static ref GESTURE_DETECTOR: Mutex<GestureDetector> = Mutex::new(GestureDetector::new());
-    static ref NEXT_DEVICE_REFRESH: Mutex<NaiveDateTime> =
-        Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
-    static ref NEXT_POSE_BROADCAST: Mutex<NaiveDateTime> =
-        Mutex::new(NaiveDateTime::from_timestamp_millis(0).unwrap());
+    static ref NEXT_DEVICE_REFRESH: Mutex<DateTime::<Utc>> =
+        Mutex::new(DateTime::from_timestamp_millis(0).unwrap());
+    static ref NEXT_POSE_BROADCAST: Mutex<DateTime::<Utc>> =
+        Mutex::new(DateTime::from_timestamp_millis(0).unwrap());
     static ref DEVICE_CLASS_CACHE: Mutex<HashMap<u32, TrackedDeviceClass>> =
         Mutex::new(HashMap::new());
     static ref DEVICE_HANDLE_TYPE_CACHE: Mutex<HashMap<u32, OVRHandleType>> =
@@ -31,8 +31,8 @@ lazy_static! {
 pub async fn on_ovr_tick() {
     // Refresh all devices when needed
     let mut next_device_refresh = NEXT_DEVICE_REFRESH.lock().await;
-    if (Utc::now().naive_utc() - *next_device_refresh).num_milliseconds() > 0 {
-        *next_device_refresh = Utc::now().naive_utc() + Duration::seconds(5);
+    if (Utc::now() - *next_device_refresh).num_milliseconds() > 0 {
+        *next_device_refresh = Utc::now() + Duration::seconds(5);
         update_handle_types().await;
         update_all_devices(true).await;
     }
@@ -296,8 +296,8 @@ async fn refresh_device_poses<'a>() {
             if n == 0 {
                 // Only for the HMD, the rest is not required
                 let mut next_pose_broadcast = NEXT_POSE_BROADCAST.lock().await;
-                if (Utc::now().naive_utc() - *next_pose_broadcast).num_milliseconds() > 0 {
-                    *next_pose_broadcast = Utc::now().naive_utc() + Duration::milliseconds(250);
+                if (Utc::now() - *next_pose_broadcast).num_milliseconds() > 0 {
+                    *next_pose_broadcast = Utc::now() + Duration::milliseconds(250);
                     drop(next_pose_broadcast);
                     send_event(
                         "OVR_POSE_UPDATE",
