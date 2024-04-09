@@ -196,6 +196,7 @@ import { trackEvent } from '@aptabase/tauri';
 import { pTimeout } from './utils/promise-utils';
 import { MdnsSidecarService } from './services/mdns-sidecar.service';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
+import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
 
 [
   localeEN,
@@ -313,6 +314,7 @@ export function createTranslateLoader(http: HttpClient) {
     ColorPickerComponent,
     BSBFanSpeedControlModalComponent,
     PlayerListPresetModalComponent,
+    PlayerCountSleepVisualizationComponent,
   ],
   imports: [
     CommonModule,

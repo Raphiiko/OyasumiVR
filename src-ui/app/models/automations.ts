@@ -326,6 +326,8 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
   onlyIfSleepModeEnabled: boolean;
+  onlyBelowPlayerCount: number;
+  onlyBelowPlayerCountEnabled: boolean;
   listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
   playerIds: string[];
 }
@@ -550,6 +552,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   AUTO_ACCEPT_INVITE_REQUESTS: {
     enabled: false,
     onlyIfSleepModeEnabled: false,
+    onlyBelowPlayerCount: 2,
+    onlyBelowPlayerCountEnabled: false,
     listMode: 'WHITELIST',
     playerIds: [],
   },

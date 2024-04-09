@@ -40,33 +40,8 @@
       </div>
       <div class="limit-setting">
         <h3 translate>status-automations.playerLimit</h3>
-        <div class="limit-setting-graphic">
-          <div class="bed" [style.--people]="limit.value > bedLimit ? bedLimit + 1 : bedLimit">
-            <div class="bed-sheets">
-              <div class="under-cover"></div>
-              <div class="cover"></div>
-              <div class="stripe"></div>
-              <div class="stripe"></div>
-            </div>
-            <div class="people">
-              <div
-                class="person"
-                *ngFor="let _ of [].constructor(bedLimit); let i = index"
-                @hshrink
-                [class.yourself]="i === 0"
-              >
-                <img
-                  draggable="false"
-                  src="/assets/img/sleeping-person.png"
-                  alt="sleeping person"
-                />
-              </div>
-              <div class="person-limit-exceeded" *ngIf="limit.value > bedLimit">
-                +{{ limit.value - bedLimit }}
-              </div>
-            </div>
-          </div>
-        </div>
+        <app-player-count-sleep-visualization [count]="limit.value"></app-player-count-sleep-visualization>
+
         <div class="limit-setting-controls">
           <div class="limit-setting-controls-slider">
             <app-slider

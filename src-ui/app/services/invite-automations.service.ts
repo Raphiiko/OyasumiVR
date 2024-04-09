@@ -60,6 +60,16 @@ export class InviteAutomationsService {
       warn('Ignoring invite because sleep mode is disabled');
       return;
     }
+    // Stop if there is a player count limit set, and there are more people in the instance than the limit
+    if (config.onlyBelowPlayerCountEnabled) {
+      const world = await firstValueFrom(this.vrchat.world);
+      if (world.playerCount >= config.onlyBelowPlayerCount) {
+        warn(
+          `Ignoring invite because there are too many players in the instance (${world.playerCount}>=${config.onlyBelowPlayerCount})`
+        );
+        return;
+      }
+    }
     switch (config.listMode) {
       case 'DISABLED':
         // No check needed

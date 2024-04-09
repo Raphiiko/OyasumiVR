@@ -47,6 +47,24 @@
           </label>
         </div>
       </div>
+
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.listMode.title</span>
+          <span translate>auto-invite-request-accept.options.listMode.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            [items]="listModeOptions"
+            [selected]="listModeOption"
+            (selectedChange)="setListMode($event?.id)"
+          ></app-select-box>
+        </div>
+      </div>
+    </div>
+    <h2 translate>auto-invite-request-accept.conditions.title</h2>
+    <p translate>auto-invite-request-accept.conditions.description</p>
+    <div class="settings">
       <div class="setting-row">
         <div class="setting-row-label" translate>
           <span translate>auto-invite-request-accept.options.onlyIfSleepModeEnabled.title</span>
@@ -63,17 +81,38 @@
           </label>
         </div>
       </div>
+
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>auto-invite-request-accept.options.listMode.title</span>
-          <span translate>auto-invite-request-accept.options.listMode.description</span>
+          <span>{{
+            'auto-invite-request-accept.options.onlyBelowPlayerCount.title' | translate : {
+              count: config.onlyBelowPlayerCount
+            }
+          }}</span>
+          <span translate>auto-invite-request-accept.options.onlyBelowPlayerCount.description</span>
         </div>
         <div class="setting-row-action">
-          <app-select-box
-            [items]="listModeOptions"
-            [selected]="listModeOption"
-            (selectedChange)="setListMode($event?.id)"
-          ></app-select-box>
+          <app-slider-setting
+            class="with-margin"
+            [unit]="'<i class=&quot;material-icons&quot;>person</i>'"
+            [min]="2"
+            [max]="100"
+            [value]="config.onlyBelowPlayerCount"
+            (valueChange)="updateConfig({ onlyBelowPlayerCount: $event })"
+            [disabled]="!config.onlyBelowPlayerCountEnabled"
+          ></app-slider-setting>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyBelowPlayerCountEnabled"
+              (change)="
+                updateConfig({
+                  onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled
+                })
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
         </div>
       </div>
     </div>

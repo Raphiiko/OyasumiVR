@@ -44,6 +44,10 @@
       },
       "onlyIfSleepModeEnabled": {
         "title": "Only when sleep mode is enabled"
+      },
+      "onlyBelowPlayerCount": {
+        "title": "Only when there are fewer than {count, plural, one {# player} other {# players}} in your world",
+        "description": "This includes yourself"
       }
     },
     "removeModal": {
@@ -61,7 +65,11 @@
     "loadingFriends": "Loading friends...",
     "clearPlayers": "Clear All",
     "savePreset": "Save As Preset",
-    "loadPreset": "Load Saved Preset"
+    "loadPreset": "Load Saved Preset",
+    "conditions": {
+      "title": "Conditions",
+      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are"
+    }
   },
   "brightness-automations": {
     "brightnessAutomations": {
