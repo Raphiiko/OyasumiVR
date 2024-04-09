@@ -60,7 +60,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Añadir amigos",
     "blacklist": "Jugador Blacklist",
-    "clearPlayers": "Despejar jugadores",
     "description": "OyasumiVR puede aceptar automáticamente las solicitudes de invitación que recibas. Utilizando la lista blanca o negra de jugadores, puedes asegurarte de que solo se acepten automáticamente las solicitudes de invitación de los amigos que elijas.",
     "loadingFriends": "Cargando amigos...",
     "noPlayersAdded": "Actualmente no hay jugadores añadidos a la lista.",

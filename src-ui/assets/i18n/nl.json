@@ -60,7 +60,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Vrienden toevoegen",
     "blacklist": "Speler Blacklist",
-    "clearPlayers": "Alle spelers verwijderen",
     "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
     "loadingFriends": "Vrienden worden geladen...",
     "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",

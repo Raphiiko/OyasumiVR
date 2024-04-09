@@ -160,7 +160,6 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
-import { FLAVOUR } from '../build';
 import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
@@ -196,6 +195,7 @@ import { DiscordService } from './services/discord.service';
 import { trackEvent } from '@aptabase/tauri';
 import { pTimeout } from './utils/promise-utils';
 import { MdnsSidecarService } from './services/mdns-sidecar.service';
+import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 
 [
   localeEN,
@@ -312,6 +312,7 @@ export function createTranslateLoader(http: HttpClient) {
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
     BSBFanSpeedControlModalComponent,
+    PlayerListPresetModalComponent,
   ],
   imports: [
     CommonModule,

@@ -4,16 +4,11 @@
   height: 100%;
 }
 
-.pane {
-  overflow: hidden;
-}
-
-.main {
+.pane.main {
   flex: 1;
 
   .pane-content {
-    overflow: auto;
-
+    overflow-y: overlay;
     app-select-box {
       width: 18em;
     }
@@ -40,28 +35,26 @@
   }
 }
 
-.player-list-wrapper {
+.pane-player-list-wrapper {
   display: flex;
   flex-direction: row;
   height: 100%;
   overflow: visible;
   padding-left: 1em;
-
-  .player-list {
-    flex: 1;
-    overflow: auto;
-  }
 }
 
-.player-list {
-  width: 225px;
-  min-width: 225px;
+.pane-player-list {
+  width: 22em;
+  min-width: 22em;
+  overflow: visible;
 
   .pane-content {
-    overflow: hidden;
+    flex: 1;
+    min-height: 0;
+    position: relative;
     padding: 0;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: stretch;
 
     .players-list {
@@ -71,6 +64,8 @@
       display: flex;
       flex-direction: column;
       align-items: stretch;
+      height: 100%;
+      background: var(--color-surface-1);
 
       .no-players {
         display: flex;
@@ -138,19 +133,37 @@
       }
     }
 
-    .player-list-actions {
+    .player-list-action-bar {
+      $size: 3em;
+      padding: 0;
       flex-shrink: 0;
+      width: $size;
       display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      padding: 1em;
-      border-top: 1px solid var(--color-surface-3);
+      flex-direction: column-reverse;
+      justify-content: flex-start;
 
-      & > * {
-        flex: 1;
-
-        &:not(:last-child) {
-          margin-bottom: 0.5em;
+      .player-list-action {
+        width: $size;
+        height: $size;
+        margin: 0;
+        font-size: 1em;
+        padding: 0;
+        outline: none;
+        border: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: transparent;
+        color: var(--color-text-2);
+        transition: all 0.15s;
+        &:not(:disabled) {
+          cursor: pointer;
+          &:hover {
+            color: var(--color-text-1);
+          }
+        }
+        &:disabled {
+          color: var(--color-text-4);
         }
       }
     }

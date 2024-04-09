@@ -17,6 +17,11 @@ import {
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  PlayerListPresetModalComponent,
+  PlayerListPresetModalInputModel,
+  PlayerListPresetModalOutputModel,
+} from '../../../../components/player-list-preset-modal/player-list-preset-modal.component';
 
 @Component({
   selector: 'app-auto-invite-request-accept-view',
@@ -152,6 +157,34 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
           await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
         }
       });
+  }
+
+  async loadPreset() {
+    this.modalService
+      .addModal<PlayerListPresetModalInputModel, PlayerListPresetModalOutputModel>(
+        PlayerListPresetModalComponent,
+        {
+          mode: 'load',
+        },
+        {}
+      )
+      .subscribe((result) => {
+        if (result?.playerIds) {
+          this.updateConfig({ playerIds: result.playerIds });
+        }
+      });
+  }
+
+  async savePreset() {
+    this.modalService
+      .addModal<PlayerListPresetModalInputModel, PlayerListPresetModalOutputModel>(
+        PlayerListPresetModalComponent,
+        {
+          mode: 'save',
+          playerIds: this.playerList.map((p) => p.id),
+        }
+      )
+      .subscribe();
   }
 
   async setListMode(id?: string) {

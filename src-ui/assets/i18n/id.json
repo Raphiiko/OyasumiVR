@@ -16,7 +16,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Tambahkan teman",
     "blacklist": "Blacklist Player",
-    "clearPlayers": "Bersihkan player",
     "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
     "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
     "options": {

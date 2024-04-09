@@ -1,4 +1,5 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
+import { PlayerListPreset } from './player-list-preset';
 
 export interface AppSettings {
   version: 8;
@@ -31,6 +32,7 @@ export interface AppSettings {
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
   discordActivityMode: DiscordActivityMode;
   discordActivityOnlyWhileVRChatIsRunning: boolean;
+  playerListPresets: PlayerListPreset[];
 }
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
@@ -88,6 +90,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondBrightnessFanSafety: true,
   discordActivityMode: 'ENABLED',
   discordActivityOnlyWhileVRChatIsRunning: true,
+  playerListPresets: [],
 };
 
 export type ExecutableReferenceStatus =

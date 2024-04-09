@@ -60,7 +60,6 @@
   "auto-invite-request-accept": {
     "addFriends": "新增朋友",
     "blacklist": "玩家黑名單",
-    "clearPlayers": "清除玩家",
     "description": "OyasumiVR 可以自動接受你收到的加入請求。 透過使用玩家白名單或黑名單，可確保只有你選擇的朋友才會自動接受他們的邀請請求",
     "loadingFriends": "正在載入好友...",
     "noPlayersAdded": "目前沒有任何玩家在此列表中",

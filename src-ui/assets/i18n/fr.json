@@ -11,7 +11,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Ajouter des amis",
     "blacklist": "Liste noire",
-    "clearPlayers": "Vider la liste",
     "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
     "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
     "options": {

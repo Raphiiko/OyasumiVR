@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Add Friends",
     "blacklist": "Player Blacklist",
-    "clearPlayers": "Clear Players",
     "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
     "noPlayersAdded": "No players are currently added to the list.",
     "options": {
@@ -59,7 +58,10 @@
     "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
     "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
     "whitelist": "Player Whitelist",
-    "loadingFriends": "Loading friends..."
+    "loadingFriends": "Loading friends...",
+    "clearPlayers": "Clear All",
+    "savePreset": "Save As Preset",
+    "loadPreset": "Load Saved Preset"
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -740,6 +742,29 @@
     },
     "color-picker-modal": {
       "title": "Pick Colour"
+    },
+    "player-list-preset-modal": {
+      "title": {
+        "save": "Save Player List",
+        "load": "Load Player List"
+      },
+      "namePlaceholder": "Preset name",
+      "currentPresets": "Current Presets",
+      "noPresets": "You have no presets saved yet",
+      "preset": {
+        "subtitle": "List of {count, plural, one {1 player} other {# players}}"
+      },
+      "overwrite": "Overwrite Preset",
+      "delete": "Delete Preset",
+      "load": "Load Preset",
+      "confirmDelete": {
+        "title": "Are you sure?",
+        "message": "Are you sure you want to delete your preset named ''{name}''? It has {count, plural, one {1 player} other {# players}} in it."
+      },
+      "confirmOverwrite": {
+        "title": "Are you sure?",
+        "message": "Are you sure you want to overwrite your preset named ''{name}''?"
+      }
     }
   },
   "gpu-automations": {
