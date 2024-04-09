@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Option to load and save VRChat player lists as presets for automatic invite request acceptance.
 - Option to limit automatically accepting invite request based on the number of players in the world.
+- Automations for switching between various player list presets for automatic invite request acceptance.
 
 ## [1.12.7]
 

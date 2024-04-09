@@ -116,6 +116,57 @@
         </div>
       </div>
     </div>
+
+    <h2 translate>auto-invite-request-accept.otherAutomations.title</h2>
+    <p translate>auto-invite-request-accept.otherAutomations.description</p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepEnable.title</span>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepEnable.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepEnable']"
+            (selectedChange)="setPresetOption('onSleepEnable', $event?.id ?? 'NONE')"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepDisable.title</span>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepDisable.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepDisable']"
+            (selectedChange)="setPresetOption('onSleepDisable', $event?.id ?? 'NONE')"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepPreparation.title</span>
+          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepPreparation.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepPreparation']"
+            (selectedChange)="setPresetOption('onSleepPreparation', $event?.id ?? 'NONE')"
+          ></app-select-box>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 <div class="pane-player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>

@@ -330,6 +330,9 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   onlyBelowPlayerCountEnabled: boolean;
   listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
   playerIds: string[];
+  presetOnSleepEnable: string | null;
+  presetOnSleepDisable: string | null;
+  presetOnSleepPreparation: string | null;
 }
 
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
@@ -556,6 +559,9 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onlyBelowPlayerCountEnabled: false,
     listMode: 'WHITELIST',
     playerIds: [],
+    presetOnSleepEnable: null,
+    presetOnSleepDisable: null,
+    presetOnSleepPreparation: null,
   },
   // SHUTDOWN AUTOMATIONS
   SHUTDOWN_AUTOMATIONS: {
