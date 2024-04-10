@@ -160,7 +160,6 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
-import { FLAVOUR } from '../build';
 import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
@@ -196,6 +195,10 @@ import { DiscordService } from './services/discord.service';
 import { trackEvent } from '@aptabase/tauri';
 import { pTimeout } from './utils/promise-utils';
 import { MdnsSidecarService } from './services/mdns-sidecar.service';
+import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
+import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
+import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
+import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
 
 [
   localeEN,
@@ -234,6 +237,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeDisableSleepModeModalComponent,
     DurationDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
+    UprightPoseDisableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
@@ -312,6 +316,8 @@ export function createTranslateLoader(http: HttpClient) {
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
     BSBFanSpeedControlModalComponent,
+    PlayerListPresetModalComponent,
+    PlayerCountSleepVisualizationComponent,
   ],
   imports: [
     CommonModule,
@@ -391,6 +397,7 @@ export class AppModule {
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableAfterTimeAutomationService: SleepModeDisableAfterTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
+    private sleepModeDisableOnUprightPoseAutomationService: SleepModeDisableOnUprightPoseAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
@@ -476,7 +483,7 @@ export class AppModule {
           await Promise.all([
             this.logInit('TelemetryService initialization', this.telemetryService.init()),
           ]);
-          // Initialize general utility services
+          // Initialize "base" services
           await Promise.all([
             this.logInit('OpenVRService initialization', this.openvrService.init()),
             this.logInit('OscService initialization', this.oscService.init()).then(() =>
@@ -503,42 +510,47 @@ export class AppModule {
             this.logInit('WindowsService initialization', this.windowsService.init()),
             this.logInit('HotkeyService initialization', this.hotkeyService.init()),
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
-          ]);
-          // Initialize GPU control services
-          await this.logInit(
-            'SidecarService initialization',
-            this.elevatedSidecarService.init()
-          ).then(async () => {
-            await this.logInit('NVMLService initialization', this.nvmlService.init());
-          });
-          // Initialize Brightness Control
-          await Promise.all([
+            // Initialize GPU control services
             this.logInit(
-              'HardwareBrightnessControlService initialization',
-              this.hardwareBrightnessControlService.init()
-            ),
-            this.logInit(
-              'SoftwareBrightnessControlService initialization',
-              this.softwareBrightnessControlService.init()
-            ),
+              'ElevatedSidecarService initialization',
+              this.elevatedSidecarService.init()
+            ).then(async () => {
+              await this.logInit('NVMLService initialization', this.nvmlService.init());
+            }),
           ]);
-          await this.logInit(
-            'simpleBrightnessControlService initialization',
-            this.simpleBrightnessControlService.init()
-          );
-          // Initialize IPC
-          await this.logInit('IpcService initialization', this.ipcService.init());
-          await this.logInit('OverlayService initialization', this.overlayService.init());
-          await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init());
-          await this.logInit(
-            'OverlayAppStateSyncService initialization',
-            this.overlayAppStateSyncService.init()
-          );
           await Promise.all([
+            // Initialize MDNS Sidecar
+            await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init()),
             // Initialize Steam support
             await this.logInit('SteamService initialization', this.steamService.init()),
             // Initialize Discord support
             await this.logInit('DiscordService initialization', this.discordService.init()),
+            // Initialize IPC
+            await this.logInit('IpcService initialization', this.ipcService.init()).then(
+              async () => {
+                await this.logInit('OverlayService initialization', this.overlayService.init());
+                await this.logInit(
+                  'OverlayAppStateSyncService initialization',
+                  this.overlayAppStateSyncService.init()
+                );
+              }
+            ),
+            // Initialize Brightness Control
+            await Promise.all([
+              this.logInit(
+                'HardwareBrightnessControlService initialization',
+                this.hardwareBrightnessControlService.init()
+              ),
+              this.logInit(
+                'SoftwareBrightnessControlService initialization',
+                this.softwareBrightnessControlService.init()
+              ),
+            ]).then(async () => {
+              await this.logInit(
+                'simpleBrightnessControlService initialization',
+                this.simpleBrightnessControlService.init()
+              );
+            }),
           ]);
           // Initialize automations
           await Promise.all([
@@ -580,6 +592,10 @@ export class AppModule {
             this.logInit(
               'SleepModeDisableOnDevicePowerOnAutomationService initialization',
               this.sleepModeDisableOnDevicePowerOnAutomationService.init()
+            ),
+            this.logInit(
+              'SleepModeDisableOnUprightPoseAutomationService initialization',
+              this.sleepModeDisableOnUprightPoseAutomationService.init()
             ),
             // Power automations
             this.logInit(

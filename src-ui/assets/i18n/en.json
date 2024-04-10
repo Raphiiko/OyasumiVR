@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Add Friends",
     "blacklist": "Player Blacklist",
-    "clearPlayers": "Clear Players",
     "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
     "noPlayersAdded": "No players are currently added to the list.",
     "options": {
@@ -45,6 +44,29 @@
       },
       "onlyIfSleepModeEnabled": {
         "title": "Only when sleep mode is enabled"
+      },
+      "onlyBelowPlayerCount": {
+        "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world",
+        "description": "This includes yourself"
+      },
+      "presetOptions": {
+        "options": {
+          "NONE": "Don't change"
+        }
+      },
+      "changeListPreset": {
+        "onSleepEnable": {
+          "title": "Load preset when I go to sleep",
+          "description": "Load a saved preset for the player list when the sleep mode enables"
+        },
+        "onSleepDisable": {
+          "title": "Load preset when I wake up",
+          "description": "Load a saved preset for the player list when the sleep mode disables"
+        },
+        "onSleepPreparation": {
+          "title": "Load preset when I prepare to go to sleep",
+          "description": "Load a saved preset for the player list when you prepare to go to sleep"
+        }
       }
     },
     "removeModal": {
@@ -59,7 +81,18 @@
     "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
     "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
     "whitelist": "Player Whitelist",
-    "loadingFriends": "Loading friends..."
+    "loadingFriends": "Loading friends...",
+    "clearPlayers": "Clear All",
+    "savePreset": "Save As Preset",
+    "loadPreset": "Load Saved Preset",
+    "conditions": {
+      "title": "Conditions",
+      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are"
+    },
+    "otherAutomations": {
+      "title": "Other Automations",
+      "description": "Here you can find automations that will automatically change how this feature works."
+    }
   },
   "brightness-automations": {
     "brightnessAutomations": {
@@ -511,6 +544,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "As you got upright for long enough",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
@@ -740,6 +774,29 @@
     },
     "color-picker-modal": {
       "title": "Pick Colour"
+    },
+    "player-list-preset-modal": {
+      "title": {
+        "save": "Save Player List",
+        "load": "Load Player List"
+      },
+      "namePlaceholder": "Preset name",
+      "currentPresets": "Current Presets",
+      "noPresets": "You have no presets saved yet",
+      "preset": {
+        "subtitle": "List of {count, plural, one {1 player} other {# players}}"
+      },
+      "overwrite": "Overwrite Preset",
+      "delete": "Delete Preset",
+      "load": "Load Preset",
+      "confirmDelete": {
+        "title": "Are you sure?",
+        "message": "Are you sure you want to delete your preset named ''{name}''? It has {count, plural, one {1 player} other {# players}} in it."
+      },
+      "confirmOverwrite": {
+        "title": "Are you sure?",
+        "message": "Are you sure you want to overwrite your preset named ''{name}''?"
+      }
     }
   },
   "gpu-automations": {
@@ -1614,15 +1671,16 @@
           "hoursAndMinutes": "After {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}"
         }
       },
-      "description": "Automatically disable sleep mode based on various triggers",
+      "description": "Automatically disable sleep mode based on various other triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
-      "title": "Disabling sleep mode"
+      "title": "Disabling sleep mode",
+      "onUprightPose": "When sitting upright after laying down"
     },
     "enableAutomations": {
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
       "atTime": "At a specific time",
-      "description": "Automatically enable sleep mode based on various triggers",
+      "description": "Automatically enable sleep mode based on various other triggers",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
           "action": "Power Automations:\nControllers & Trackers",
@@ -1634,9 +1692,6 @@
       "onHeartRateCalmPeriod": {
         "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "title": "When my heart rate is calm for a period of time"
-      },
-      "onMotionDetection": {
-        "title": "When OyasumiVR detects you are asleep based on your movement"
       },
       "title": "Enabling sleep mode"
     },
@@ -1673,6 +1728,14 @@
         "description": "Enable sleep mode at a specific time of day.",
         "time": "Time",
         "title": "Enable sleep mode"
+      },
+      "disableForUprightPose": {
+        "title": "Disable sleep mode",
+        "description": "Disable sleep mode when you are sitting upright for a certain amount of time after laying down.",
+        "duration": {
+          "title": "Time Duration",
+          "description": "How long you have to be sitting upright for the sleep mode to be disabled"
+        }
       },
       "enableForSleepDetector": {
         "calibration": {
@@ -1767,7 +1830,18 @@
         "title": "Calibrate Sleep Detection"
       }
     },
-    "title": "Sleep Detection"
+    "title": "Sleep Detection",
+    "sleepDetection": {
+      "description": "Sleep Detection is OyasumiVR's intended way for the sleep mode to be activated. This feature automatically enables sleep mode for you when it suspects you are asleep, based on various factors like the movement of your VR headset and your controller inputs.",
+      "automation": {
+        "title": "Sleep Detection",
+        "description": "Automatically enable sleep mode when OyasumiVR suspects you are asleep",
+        "calibrationPending": {
+          "title": "<strong>Calibration Pending:</strong> Before using sleep detection, you should calibrate at least once to improve its accuracy.",
+          "calibrate": "Calibrate Now"
+        }
+      }
+    }
   },
   "sleepAnimations": {
     "title": "Sleep Animations"
@@ -1783,7 +1857,7 @@
       "description": "Set your status to",
       "title": "Below the limit"
     },
-    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
+    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\nbased on how many players there are in your world.",
     "disableToEdit": "Please disable status automations before you make any changes.",
     "enable": "Enable Status Automations",
     "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",

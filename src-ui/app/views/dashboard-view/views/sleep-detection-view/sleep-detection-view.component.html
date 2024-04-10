@@ -2,15 +2,12 @@
   <div class="pane-title" translate>sleep-detection.title</div>
   <div class="pane-content">
     <div class="setting-category">
-      <h2 translate>sleep-detection.enableAutomations.title</h2>
-      <p translate>sleep-detection.enableAutomations.description</p>
+      <p translate>sleep-detection.sleepDetection.description</p>
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
-            <span style="display: flex; flex-direction: row; align-items: center">
-              <span translate>sleep-detection.enableAutomations.onMotionDetection.title</span>
-            </span>
-            <span></span>
+            <span translate>sleep-detection.sleepDetection.automation.title</span>
+            <span translate>sleep-detection.sleepDetection.automation.description</span>
           </div>
           <div class="setting-row-action">
             <button
@@ -29,7 +26,36 @@
             </label>
           </div>
         </div>
+        <div class="setting-row-group" @vshrink *ngIf="showSleepDetectionCalibrationWarning">
+          <div class="setting-row">
+            <div class="setting-row-icon">
+              <i class="material-icons warning-icon">warning</i>
+            </div>
+            <div class="setting-row-label" translate>
+              <span
+                style="display: initial"
+                [innerHtml]="
+                  'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
+                "
+              ></span>
+              <span></span>
+            </div>
+            <div class="setting-row-action">
+              <button class="btn btn-secondary" (click)="openModal_CalibrateSleepDetector()">
+                <span translate
+                  >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
+                >
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <div class="setting-category">
+      <h2 translate>sleep-detection.enableAutomations.title</h2>
+      <p translate>sleep-detection.enableAutomations.description</p>
+      <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>sleep-detection.enableAutomations.atTime</span>
@@ -276,6 +302,29 @@
                 (change)="
                   toggleAutomation('SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS', 'disableOnSteamVRStop')
                 "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.onUprightPose</span>
+            <span> </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeOnUprightPose()"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
               />
               <span class="switch-toggle-slider"></span>
             </label>

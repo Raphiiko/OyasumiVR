@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "フレンドを追加",
     "blacklist": "ブラックリスト",
-    "clearPlayers": "リスト消去",
     "description": "自分が受け取ったReq Inviteを自動的に受け入れることができます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ、この機能を有効にできます。",
     "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
     "options": {
@@ -1600,9 +1599,6 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 連携</a>が必要です",
         "title": "心拍数から寝落ちを検知したとき"
-      },
-      "onMotionDetection": {
-        "title": "動作から寝落ちを検知したとき"
       },
       "title": "睡眠モードの有効化"
     },

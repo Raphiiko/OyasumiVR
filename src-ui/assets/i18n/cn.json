@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "添加朋友",
     "blacklist": "玩家黑名单",
-    "clearPlayers": "清除所有",
     "description": "OyasumiVR 可以自动处理你收到的加入请求。通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
     "noPlayersAdded": "目前没有任何玩家在此列表中",
     "options": {
@@ -1515,9 +1514,6 @@
       "onHeartRateCalmPeriod": {
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成",
         "title": "当我的心率在一段时间内保持平稳时"
-      },
-      "onMotionDetection": {
-        "title": "启用动作检测"
       },
       "title": "开启睡眠模式"
     },

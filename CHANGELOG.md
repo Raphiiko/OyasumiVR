@@ -7,19 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Option to load and save VRChat player lists as presets for automatic invite request acceptance.
+- Option to limit automatically accepting invite request based on the number of players in the world.
+- Automations for switching between various player list presets for automatic invite request acceptance.
+- Automation for disabling the sleep mode when you've been upright for long enough after laying down.
+
 ## [1.12.7]
 
 ### Changed
+
 - Improved device detection for Bigscreen Beyond
 - Increased timeout duration for initialization tasks
 - Improved telemetry
 
 ### Fixed
+
 - Disabled swipe navigation in main window
 
 ## [1.12.6]
 
 ### Changed
+
 - Improved initialization
 
 ## [1.12.5]
