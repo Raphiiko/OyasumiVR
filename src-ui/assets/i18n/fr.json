@@ -730,9 +730,6 @@
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{value}%</strong>",
       "atTime": "À une heure prédéfinie",
       "description": "Active automatiquement le mode sommeil selon plusieurs critères",
-      "onMotionDetection": {
-        "title": "Quand OyasumiVR détecte que vous dormez selon vos mouvements"
-      },
       "title": "Activation du mode sommeil"
     },
     "modals": {

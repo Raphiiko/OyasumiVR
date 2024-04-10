@@ -1545,9 +1545,6 @@
         "description": "Требуется <a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "title": "Когда мой пульс стабилен в течение определенного времени"
       },
-      "onMotionDetection": {
-        "title": "Когда OyasumiVR определяет, что вы спите по Вашему движению"
-      },
       "title": "Включение спящего режима"
     },
     "experimentalAutomation": "Отключит режим сна после его включения в течение определенного времени.",

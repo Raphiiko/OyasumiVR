@@ -26,6 +26,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { DurationDisableSleepModeModalComponent } from './duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
+import { SleepDetectorCalibrationModalComponent } from './sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -35,6 +36,13 @@ import { DurationDisableSleepModeModalComponent } from './duration-disable-sleep
 })
 export class SleepDetectionViewComponent implements OnInit {
   automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  get showSleepDetectionCalibrationWarning(): boolean {
+    return (
+      this.automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled &&
+      this.automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue ===
+        AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue
+    );
+  }
 
   constructor(
     private modalService: ModalService,
@@ -141,10 +149,11 @@ export class SleepDetectionViewComponent implements OnInit {
   }
 
   openModal_EnableSleepModeForSleepDetector() {
-    this.modalService
-      .addModal(SleepDetectorEnableSleepModeModalComponent, {})
-      .pipe(filter((data) => !!data))
-      .subscribe(() => {});
+    this.modalService.addModal(SleepDetectorEnableSleepModeModalComponent, {}).subscribe(() => {});
+  }
+
+  openModal_CalibrateSleepDetector() {
+    this.modalService.addModal(SleepDetectorCalibrationModalComponent, {}).subscribe(() => {});
   }
 
   openModal_EnableSleepModeOnHeartRateCalmPeriod() {

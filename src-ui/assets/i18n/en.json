@@ -46,7 +46,7 @@
         "title": "Only when sleep mode is enabled"
       },
       "onlyBelowPlayerCount": {
-        "title": "Only when there are fewer than {count, plural, one {# player} other {# players}} in your world",
+        "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world",
         "description": "This includes yourself"
       },
       "presetOptions": {
@@ -1670,7 +1670,7 @@
           "hoursAndMinutes": "After {hours, plural, one {1 hour} other {# hours}} and {minutes, plural, one {1 minute} other {# minutes}}"
         }
       },
-      "description": "Automatically disable sleep mode based on various triggers",
+      "description": "Automatically disable sleep mode based on various other triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
       "title": "Disabling sleep mode"
@@ -1678,7 +1678,7 @@
     "enableAutomations": {
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
       "atTime": "At a specific time",
-      "description": "Automatically enable sleep mode based on various triggers",
+      "description": "Automatically enable sleep mode based on various other triggers",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
           "action": "Power Automations:\nControllers & Trackers",
@@ -1690,9 +1690,6 @@
       "onHeartRateCalmPeriod": {
         "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "title": "When my heart rate is calm for a period of time"
-      },
-      "onMotionDetection": {
-        "title": "When OyasumiVR detects you are asleep based on your movement"
       },
       "title": "Enabling sleep mode"
     },
@@ -1823,7 +1820,18 @@
         "title": "Calibrate Sleep Detection"
       }
     },
-    "title": "Sleep Detection"
+    "title": "Sleep Detection",
+    "sleepDetection": {
+      "description": "Sleep Detection is OyasumiVR's intended way for the sleep mode to be activated. This feature automatically enables sleep mode for you when it suspects you are asleep, based on various factors like the movement of your VR headset and your controller inputs.",
+      "automation": {
+        "title": "Sleep Detection",
+        "description": "Automatically enable sleep mode when OyasumiVR suspects you are asleep",
+        "calibrationPending": {
+          "title": "<strong>Calibration Pending:</strong> Before using sleep detection, you should calibrate at least once to improve its accuracy.",
+          "calibrate": "Calibrate Now"
+        }
+      }
+    }
   },
   "sleepAnimations": {
     "title": "Sleep Animations"
@@ -1839,7 +1847,7 @@
       "description": "Set your status to",
       "title": "Below the limit"
     },
-    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\n      based on how many players there are in your world.",
+    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\nbased on how many players there are in your world.",
     "disableToEdit": "Please disable status automations before you make any changes.",
     "enable": "Enable Status Automations",
     "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",

@@ -1723,9 +1723,6 @@
         "description": "<a class=\"integrationsPageLink\">Pulsoid 연동</a>이 필요해요.",
         "title": "심박수가 일정 시간 동안 안정될 때"
       },
-      "onMotionDetection": {
-        "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
-      },
       "title": "수면 모드 활성화"
     },
     "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",

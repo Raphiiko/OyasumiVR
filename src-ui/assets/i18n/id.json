@@ -1352,9 +1352,6 @@
         "description": "Memerlukan <a class=\"integrationsPageLink\">Integrasi Pulsoid</a>",
         "title": "Saat detak jantung saya tenang untuk jangka waktu tertentu"
       },
-      "onMotionDetection": {
-        "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
-      },
       "title": "Mengaktifkan mode tidur"
     },
     "experimentalAutomation": "Otomatisasi ini bersifat eksperimental dan mungkin belum dapat diandalkan.",

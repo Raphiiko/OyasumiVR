@@ -1695,9 +1695,6 @@
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 整合</a>",
         "title": "當我的心臟跳動率在一段時間內保持平靜時"
       },
-      "onMotionDetection": {
-        "title": "OyasumiVR 根據你的睡眠動作檢測你是否睡眠"
-      },
       "title": "啟動睡眠模式"
     },
     "experimentalAutomation": "這種自動化是實驗性的，可能還不穩定",

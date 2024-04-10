@@ -84,11 +84,16 @@
 
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span>{{
-            'auto-invite-request-accept.options.onlyBelowPlayerCount.title' | translate : {
-              count: config.onlyBelowPlayerCount
-            }
-          }}</span>
+          <span
+            style="display: initial"
+            [innerHtml]="
+              'auto-invite-request-accept.options.onlyBelowPlayerCount.title'
+                | translate
+                  : {
+                      count: config.onlyBelowPlayerCount
+                    }
+            "
+          ></span>
           <span translate>auto-invite-request-accept.options.onlyBelowPlayerCount.description</span>
         </div>
         <div class="setting-row-action">
@@ -122,8 +127,12 @@
     <div class="settings">
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepEnable.title</span>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepEnable.description</span>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepEnable.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepEnable.description</span
+          >
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -137,8 +146,12 @@
       </div>
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepDisable.title</span>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepDisable.description</span>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepDisable.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepDisable.description</span
+          >
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -152,8 +165,12 @@
       </div>
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepPreparation.title</span>
-          <span translate>auto-invite-request-accept.options.changeListPreset.onSleepPreparation.description</span>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepPreparation.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepPreparation.description</span
+          >
         </div>
         <div class="setting-row-action">
           <app-select-box
@@ -166,7 +183,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 <div class="pane-player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>

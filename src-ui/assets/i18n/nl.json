@@ -1768,9 +1768,6 @@
         "description": "Vereist <a class=\"integrationsPageLink\">Pulsoid integratie</a>",
         "title": "Wanneer je hartslag laag genoeg is voor een bepaalde periode"
       },
-      "onMotionDetection": {
-        "title": "Wanneer OyasumiVR detecteert dat je slaapt gebaseerd op je bewegingen"
-      },
       "title": "Slaap modus inschakelen"
     },
     "experimentalAutomation": "Deze automatisering is momenteel nog experimenteel en het kan zijn dat deze nog niet betrouwbaar is.",

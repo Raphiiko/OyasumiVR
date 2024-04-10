@@ -1695,9 +1695,6 @@
         "description": "Requiere <a class=\"integrationsPageLink\">integración con Pulsoid</a>",
         "title": "Cuando mi ritmo cardíaco se calma durante un periodo de tiempo"
       },
-      "onMotionDetection": {
-        "title": "Cuando OyasumiVR detecta que estás dormido basándose en tu movimiento"
-      },
       "title": "Activar el modo de suspensión"
     },
     "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",

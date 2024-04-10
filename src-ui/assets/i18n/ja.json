@@ -1600,9 +1600,6 @@
         "description": "<a class=\"integrationsPageLink\">Pulsoid 連携</a>が必要です",
         "title": "心拍数から寝落ちを検知したとき"
       },
-      "onMotionDetection": {
-        "title": "動作から寝落ちを検知したとき"
-      },
       "title": "睡眠モードの有効化"
     },
     "experimentalAutomation": "実験的機能のため、動作が不安定になる可能性があります。",

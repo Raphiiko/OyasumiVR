@@ -1515,9 +1515,6 @@
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成",
         "title": "当我的心率在一段时间内保持平稳时"
       },
-      "onMotionDetection": {
-        "title": "启用动作检测"
-      },
       "title": "开启睡眠模式"
     },
     "experimentalAutomation": "这个自动化操作目前是实验性的，目前并不稳定。",

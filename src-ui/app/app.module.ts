@@ -479,7 +479,7 @@ export class AppModule {
           await Promise.all([
             this.logInit('TelemetryService initialization', this.telemetryService.init()),
           ]);
-          // Initialize general utility services
+          // Initialize "base" services
           await Promise.all([
             this.logInit('OpenVRService initialization', this.openvrService.init()),
             this.logInit('OscService initialization', this.oscService.init()).then(() =>
@@ -506,42 +506,47 @@ export class AppModule {
             this.logInit('WindowsService initialization', this.windowsService.init()),
             this.logInit('HotkeyService initialization', this.hotkeyService.init()),
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
-          ]);
-          // Initialize GPU control services
-          await this.logInit(
-            'SidecarService initialization',
-            this.elevatedSidecarService.init()
-          ).then(async () => {
-            await this.logInit('NVMLService initialization', this.nvmlService.init());
-          });
-          // Initialize Brightness Control
-          await Promise.all([
+            // Initialize GPU control services
             this.logInit(
-              'HardwareBrightnessControlService initialization',
-              this.hardwareBrightnessControlService.init()
-            ),
-            this.logInit(
-              'SoftwareBrightnessControlService initialization',
-              this.softwareBrightnessControlService.init()
-            ),
+              'ElevatedSidecarService initialization',
+              this.elevatedSidecarService.init()
+            ).then(async () => {
+              await this.logInit('NVMLService initialization', this.nvmlService.init());
+            }),
           ]);
-          await this.logInit(
-            'simpleBrightnessControlService initialization',
-            this.simpleBrightnessControlService.init()
-          );
-          // Initialize IPC
-          await this.logInit('IpcService initialization', this.ipcService.init());
-          await this.logInit('OverlayService initialization', this.overlayService.init());
-          await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init());
-          await this.logInit(
-            'OverlayAppStateSyncService initialization',
-            this.overlayAppStateSyncService.init()
-          );
           await Promise.all([
+            // Initialize MDNS Sidecar
+            await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init()),
             // Initialize Steam support
             await this.logInit('SteamService initialization', this.steamService.init()),
             // Initialize Discord support
             await this.logInit('DiscordService initialization', this.discordService.init()),
+            // Initialize IPC
+            await this.logInit('IpcService initialization', this.ipcService.init()).then(
+              async () => {
+                await this.logInit('OverlayService initialization', this.overlayService.init());
+                await this.logInit(
+                  'OverlayAppStateSyncService initialization',
+                  this.overlayAppStateSyncService.init()
+                );
+              }
+            ),
+            // Initialize Brightness Control
+            await Promise.all([
+              this.logInit(
+                'HardwareBrightnessControlService initialization',
+                this.hardwareBrightnessControlService.init()
+              ),
+              this.logInit(
+                'SoftwareBrightnessControlService initialization',
+                this.softwareBrightnessControlService.init()
+              ),
+            ]).then(async () => {
+              await this.logInit(
+                'simpleBrightnessControlService initialization',
+                this.simpleBrightnessControlService.init()
+              );
+            }),
           ]);
           // Initialize automations
           await Promise.all([
