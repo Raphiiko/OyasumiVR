@@ -544,6 +544,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "As SteamVR quit",
               "SLEEP_MODE_DISABLE_AT_TIME": "At scheduled time",
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "As you got upright for long enough",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
@@ -1673,7 +1674,8 @@
       "description": "Automatically disable sleep mode based on various other triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
-      "title": "Disabling sleep mode"
+      "title": "Disabling sleep mode",
+      "onUprightPose": "When sitting upright after laying down"
     },
     "enableAutomations": {
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
@@ -1726,6 +1728,14 @@
         "description": "Enable sleep mode at a specific time of day.",
         "time": "Time",
         "title": "Enable sleep mode"
+      },
+      "disableForUprightPose": {
+        "title": "Disable sleep mode",
+        "description": "Disable sleep mode when you are sitting upright for a certain amount of time after laying down.",
+        "duration": {
+          "title": "Time Duration",
+          "description": "How long you have to be sitting upright for the sleep mode to be disabled"
+        }
       },
       "enableForSleepDetector": {
         "calibration": {

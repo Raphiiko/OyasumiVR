@@ -18,6 +18,7 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
+  | 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
@@ -67,6 +68,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: SleepModeDisableOnUprightPoseAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
@@ -195,6 +197,10 @@ export interface SleepModeDisableAfterTimeAutomationConfig extends AutomationCon
 
 export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends AutomationConfig {
   triggerClasses: OVRDeviceClass[];
+}
+
+export interface SleepModeDisableOnUprightPoseAutomationConfig extends AutomationConfig {
+  duration: number;
 }
 
 // DEVICE POWER AUTOMATIONS
@@ -456,7 +462,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     calibrationValue: 0.01,
     sensitivity: 'MEDIUM',
-    sleepCheck: false,
+    sleepCheck: true,
     detectionWindowMinutes: 15,
     activationWindow: false,
     activationWindowStart: [23, 0],
@@ -494,6 +500,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
+  },
+  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: {
+    enabled: false,
+    duration: 5000,
   },
   // DEVICE POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {

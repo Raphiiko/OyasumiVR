@@ -11,6 +11,7 @@ import {
   SleepModeDisableAfterTimeAutomationConfig,
   SleepModeDisableAtTimeAutomationConfig,
   SleepModeDisableOnDevicePowerOnAutomationConfig,
+  SleepModeDisableOnUprightPoseAutomationConfig,
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
   SleepModeEnableOnHeartRateCalmPeriodAutomationConfig,
@@ -27,6 +28,7 @@ import { Router } from '@angular/router';
 import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { DurationDisableSleepModeModalComponent } from './duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepDetectorCalibrationModalComponent } from './sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import { UprightPoseDisableSleepModeModalComponent } from './upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -154,6 +156,22 @@ export class SleepDetectionViewComponent implements OnInit {
 
   openModal_CalibrateSleepDetector() {
     this.modalService.addModal(SleepDetectorCalibrationModalComponent, {}).subscribe(() => {});
+  }
+
+  openModal_DisableSleepModeOnUprightPose() {
+    this.modalService
+      .addModal(UprightPoseDisableSleepModeModalComponent, {
+        duration: this.automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.duration,
+      })
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {
+        this.automationConfigService.updateAutomationConfig<SleepModeDisableOnUprightPoseAutomationConfig>(
+          'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE',
+          {
+            duration: data.duration,
+          }
+        );
+      });
   }
 
   openModal_EnableSleepModeOnHeartRateCalmPeriod() {

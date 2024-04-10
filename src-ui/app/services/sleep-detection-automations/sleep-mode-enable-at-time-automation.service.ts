@@ -18,11 +18,7 @@ export class SleepModeEnableAtTimeAutomationService {
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_AT_TIME
   );
 
-  constructor(
-    private automationConfig: AutomationConfigService,
-    private openvr: OpenVRService,
-    private sleep: SleepService
-  ) {}
+  constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
 
   async init() {
     this.automationConfig.configs

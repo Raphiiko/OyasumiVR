@@ -307,6 +307,29 @@
             </label>
           </div>
         </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.onUprightPose</span>
+            <span> </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeOnUprightPose()"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE', 'enabled')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -197,6 +197,8 @@ import { pTimeout } from './utils/promise-utils';
 import { MdnsSidecarService } from './services/mdns-sidecar.service';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
+import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
+import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
 
 [
   localeEN,
@@ -235,6 +237,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeDisableSleepModeModalComponent,
     DurationDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
+    UprightPoseDisableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
@@ -394,6 +397,7 @@ export class AppModule {
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableAfterTimeAutomationService: SleepModeDisableAfterTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
+    private sleepModeDisableOnUprightPoseAutomationService: SleepModeDisableOnUprightPoseAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
@@ -588,6 +592,10 @@ export class AppModule {
             this.logInit(
               'SleepModeDisableOnDevicePowerOnAutomationService initialization',
               this.sleepModeDisableOnDevicePowerOnAutomationService.init()
+            ),
+            this.logInit(
+              'SleepModeDisableOnUprightPoseAutomationService initialization',
+              this.sleepModeDisableOnUprightPoseAutomationService.init()
             ),
             // Power automations
             this.logInit(

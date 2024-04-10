@@ -217,7 +217,7 @@
           <button
             class="player-list-action"
             (click)="clearPlayers()"
-            [disabled]="!loggedIn || !playerList?.length"
+            [disabled]="!loggedIn || !playerList.length"
             [tooltip]="'auto-invite-request-accept.clearPlayers'"
             [tooltipMode]="'right'"
           >
@@ -226,7 +226,7 @@
           <button
             class="player-list-action"
             (click)="savePreset()"
-            [disabled]="!loggedIn || !playerList?.length"
+            [disabled]="!loggedIn || !playerList.length"
             [tooltip]="'auto-invite-request-accept.savePreset'"
             [tooltipMode]="'right'"
           >

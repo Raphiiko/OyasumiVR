@@ -1,0 +1,28 @@
+<div class="pane modal-lg" [@fadeUp]>
+  <div class="pane-title" translate>sleep-detection.modals.disableForUprightPose.title</div>
+  <div class="pane-content">
+    <p translate>sleep-detection.modals.disableForUprightPose.description</p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>sleep-detection.modals.disableForUprightPose.duration.title</span>
+          <span translate>sleep-detection.modals.disableForUprightPose.duration.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-slider-setting
+            [(value)]="durationInternal"
+            unit="s"
+            [min]="1"
+            [snapValues]="[5]"
+            [snapDistance]="2"
+            [max]="59"
+          ></app-slider-setting>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+    <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+  </div>
+</div>
