@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { listen } from '@tauri-apps/api/event';
-import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableAtTimeAutomationConfig,

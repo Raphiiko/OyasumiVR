@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableAfterTimeAutomationConfig,
