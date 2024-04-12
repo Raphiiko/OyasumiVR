@@ -1574,9 +1574,9 @@
       "afterTime": {
         "title": "指定時間の経過後",
         "description": {
-          "minutes": "{minutes, plural, one {1分} other {#分}}後",
-          "hours": "{hours, plural, one {1時間} other {#時間}}後",
-          "hoursAndMinutes": "{hours, plural, one {1時間} other {#時間}} {minutes, plural, one {1分} other {#分}}後"
+          "minutes": "{minutes}分後",
+          "hours": "{hours}時間後",
+          "hoursAndMinutes": "{hours}時間 {minutes}分後"
         }
       },
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
@@ -1988,7 +1988,7 @@
       "defaultDevice": "デフォルトデバイス"
     },
     "automations": {
-      "label": "{count, plural, one {1つの自動化} other {#つの自動化}}"
+      "label": "{count}つの自動化"
     },
     "volume": {
       "title": "音量",

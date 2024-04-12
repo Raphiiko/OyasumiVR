@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Function for VRChat player join/leave notifications
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
 
+### Fixed
+- Pluralization issues causing Japanese language translation to break
+
 ## [1.12.7]
 
 ### Changed
