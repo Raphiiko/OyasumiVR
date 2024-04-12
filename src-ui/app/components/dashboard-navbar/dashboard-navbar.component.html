@@ -61,7 +61,8 @@
           'oscAutomations',
           'statusAutomations',
           'autoInviteRequestAccept',
-          'vrchatMicMuteAutomations'
+          'vrchatMicMuteAutomations',
+          'joinNotifications',
         ])
       "
     >
@@ -168,6 +169,13 @@
         <i class="material-icons-round">mic_off</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-symbols-outlined icon-filled">person_alert</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.joinNotifications</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'oscAutomations'">

@@ -45,6 +45,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
   // MISCELLANEOUS
+  | 'JOIN_NOTIFICATIONS'
   | 'AUDIO_DEVICE_AUTOMATIONS'
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
@@ -95,6 +96,7 @@ export interface AutomationConfigs {
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   // MISCELLANEOUS AUTOMATIONS
+  JOIN_NOTIFICATIONS: JoinNotificationsAutomationsConfig;
   AUDIO_DEVICE_AUTOMATIONS: AudioDeviceAutomationsConfig;
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
@@ -270,6 +272,19 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 }
 
 // MISCELLANEOUS AUTOMATIONS
+
+export type JoinNotificationsMode = 'EVERYONE' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
+export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
+  playerIds: string[];
+  onlyDuringSleepMode: boolean;
+  onlyWhenPreviouslyAlone: boolean;
+  onlyWhenLeftAlone: boolean;
+  joinNotification: JoinNotificationsMode;
+  leaveNotification: JoinNotificationsMode;
+  joinSound: JoinNotificationsMode;
+  leaveSound: JoinNotificationsMode;
+  joinSoundVolume: number;
+}
 
 export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
 export type AudioVolumeAutomation =
@@ -546,6 +561,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     releaseFootLockOnPoseChange: true,
     footLockReleaseWindow: 600,
     oscScripts: {},
+  },
+  JOIN_NOTIFICATIONS: {
+    enabled: false,
+    playerIds: [],
+    onlyDuringSleepMode: false,
+    onlyWhenPreviouslyAlone: false,
+    onlyWhenLeftAlone: false,
+    joinNotification: 'WHITELIST',
+    leaveNotification: 'DISABLED',
+    joinSound: 'WHITELIST',
+    leaveSound: 'DISABLED',
+    joinSoundVolume: 100,
   },
   VRCHAT_MIC_MUTE_AUTOMATIONS: {
     enabled: true,

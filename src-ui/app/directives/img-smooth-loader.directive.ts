@@ -19,6 +19,7 @@ export class ImgSmoothLoaderDirective implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['imageUrl']?.previousValue !== changes['imageUrl']?.currentValue) {
+      if (!this.imageUrl) return;
       this.renderer.setAttribute(this.elementRef.nativeElement, 'src', this.imageUrl ?? '');
       this.elementRef.nativeElement.style.transition = '';
       this.elementRef.nativeElement.style.opacity = '0';

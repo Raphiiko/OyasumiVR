@@ -1,0 +1,12 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.pane.main {
+  flex: 1;
+
+  .pane-content {
+    overflow-y: overlay;
+  }
+}

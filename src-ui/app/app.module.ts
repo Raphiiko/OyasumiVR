@@ -199,6 +199,9 @@ import { PlayerListPresetModalComponent } from './components/player-list-preset-
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
 import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
 import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
+import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+import { JoinNotificationsService } from './services/join-notifications.service';
 
 [
   localeEN,
@@ -318,6 +321,8 @@ export function createTranslateLoader(http: HttpClient) {
     BSBFanSpeedControlModalComponent,
     PlayerListPresetModalComponent,
     PlayerCountSleepVisualizationComponent,
+    JoinNotificationsViewComponent,
+    PlayerListComponent,
   ],
   imports: [
     CommonModule,
@@ -424,6 +429,7 @@ export class AppModule {
     // Windows power policy automations
     private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
+    private joinNotificationsService: JoinNotificationsService,
     private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
@@ -435,7 +441,7 @@ export class AppModule {
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
     const TIMEOUT = 30000;
-    console.log(`[Init] Running ${action}`);
+    info(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
         promise,
@@ -634,6 +640,11 @@ export class AppModule {
             this.logInit(
               'VRChatMicMuteAutomationService initialization',
               this.vrchatMicMuteAutomationService.init()
+            ),
+            // Join notifications
+            this.logInit(
+              'JoinNotificationsService initialization',
+              this.joinNotificationsService.init()
             ),
             // Status automations
             this.logInit(
