@@ -11,6 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NotificationService } from '../../../../services/notification.service';
 import { hshrink } from 'src-ui/app/utils/animations';
+import { VRChatService } from '../../../../services/vrchat.service';
 
 @Component({
   selector: 'app-join-notifications-view',
@@ -54,7 +55,8 @@ export class JoinNotificationsViewComponent implements OnInit {
   constructor(
     private automationConfigService: AutomationConfigService,
     private destroyRef: DestroyRef,
-    private notifications: NotificationService
+    private notifications: NotificationService,
+    protected vrchat: VRChatService
   ) {}
 
   ngOnInit() {

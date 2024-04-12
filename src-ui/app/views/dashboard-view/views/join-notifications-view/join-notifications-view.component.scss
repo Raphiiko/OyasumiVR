@@ -10,3 +10,23 @@
     overflow-y: overlay;
   }
 }
+
+.alert {
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+      flex: 1;
+    }
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
