@@ -21,7 +21,7 @@
       "UNMUTE": "음소거 해제"
     },
     "automations": {
-      "label": "{count, plural, one {자동화 1개} other {자동화 #개}}"
+      "label": "자동화 {count}개"
     },
     "description": "잠들거나 일어날 때 오디오 장치의 볼륨을 자동으로 변경해보세요! 이 기능은 다른 사람이 수면을 방해하는 것을 방지하고 싶을 때 유용합니다.",
     "devices": {
@@ -1696,9 +1696,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "{hours, plural, one {1시간} other {#시간}} 뒤에",
-          "hoursAndMinutes": "{hours, plural, one {1시간} other {#시간}} {minutes, plural, one {1분} other {#분}} 뒤에",
-          "minutes": "{minutes, plural, one {1분} other {#분}} 뒤에"
+          "hours": "{hours}시간 뒤에",
+          "hoursAndMinutes": "{hours}시간 {minutes}분 뒤에",
+          "minutes": "{minutes}분 뒤에"
         },
         "title": "특정 시간이 지난 후"
       },
