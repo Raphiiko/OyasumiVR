@@ -37,22 +37,9 @@
               <span translate>shutdown-automations.triggers.whenAsleepDuration.description</span>
             </div>
             <div class="setting-row-action">
-              <app-slider-setting
-                [min]="1"
-                [snapValues]="[15, 30, 45]"
-                [snapDistance]="5"
-                [max]="59"
-                [step]="1"
-                [value]="duration"
-                (valueChange)="onChangeDuration($event, onSleepTriggerDurationUnit?.id)"
-              ></app-slider-setting>
-              <app-select-box
-                class="status-dropdown"
-                [type]="'SMALL'"
-                [items]="durationUnitOptions"
-                [selected]="onSleepTriggerDurationUnit"
-                (selectedChange)="onChangeDuration(duration, $event?.id)"
-              ></app-select-box>
+              <div class="input-wrapper">
+                <input type="time" step="1" [value]="sleepDurationString" (change)="onSleepDurationChange(sleepDurationInput.value)" #sleepDurationInput />
+              </div>
             </div>
           </div>
 
