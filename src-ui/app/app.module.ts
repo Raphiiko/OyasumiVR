@@ -202,6 +202,8 @@ import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep
 import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { JoinNotificationsService } from './services/join-notifications.service';
+import { PlayerJoinLeaveDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
+import { SleepModeDisableOnPlayerJoinLeaveAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-player-join-leave.service';
 
 [
   localeEN,
@@ -240,6 +242,7 @@ export function createTranslateLoader(http: HttpClient) {
     TimeDisableSleepModeModalComponent,
     DurationDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
+    PlayerJoinLeaveDisableSleepModeModalComponent,
     UprightPoseDisableSleepModeModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
@@ -403,6 +406,7 @@ export class AppModule {
     private sleepModeDisableAfterTimeAutomationService: SleepModeDisableAfterTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
     private sleepModeDisableOnUprightPoseAutomationService: SleepModeDisableOnUprightPoseAutomationService,
+    private sleepModeDisableOnPlayerJoinLeaveAutomationService: SleepModeDisableOnPlayerJoinLeaveAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
@@ -602,6 +606,10 @@ export class AppModule {
             this.logInit(
               'SleepModeDisableOnUprightPoseAutomationService initialization',
               this.sleepModeDisableOnUprightPoseAutomationService.init()
+            ),
+            this.logInit(
+              'SleepModeDisableOnPlayerJoinLeaveAutomationService initialization',
+              this.sleepModeDisableOnPlayerJoinLeaveAutomationService.init()
             ),
             // Power automations
             this.logInit(

@@ -6,7 +6,8 @@ export type SleepModeStatusChangeReason =
   | ManualSleepModeStatusChangeReason
   | HotkeySleepModeStatusChangeReason
   | OSCControlSleepModeStatusChangeReason
-  | AutomationSleepModeStatusChangeReason;
+  | AutomationSleepModeStatusChangeReason
+  | SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason;
 
 export interface SleepModeStatusChangeReasonBase {
   enabled?: boolean;
@@ -27,5 +28,13 @@ export interface OSCControlSleepModeStatusChangeReason extends SleepModeStatusCh
 
 export interface AutomationSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
   type: 'AUTOMATION';
-  automation: AutomationType;
+  automation: Exclude<AutomationType, 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'>;
+}
+
+export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason
+  extends SleepModeStatusChangeReasonBase {
+  type: 'AUTOMATION';
+  automation: 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE';
+  event: 'join' | 'leave';
+  displayName: string;
 }

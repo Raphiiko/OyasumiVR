@@ -549,6 +549,10 @@
               "SLEEP_MODE_DISABLE_AFTER_TIME": "As sleep mode was enabled for long enough",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "As a device was turned on",
               "NIGHTMARE_DETECTION": "As it was detected you could possibly be having a nightmare",
+              "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
+                "join": "As {name} joined your world",
+                "leave": "As {name} left your world"
+              },
               "unknown": "By an unknown automation"
             },
             "manual": "You disabled sleep mode manually",
@@ -1679,7 +1683,8 @@
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
       "title": "Disabling sleep mode",
-      "onUprightPose": "When sitting upright after laying down"
+      "onUprightPose": "When sitting upright after laying down",
+      "onPlayerJoinOrLeave": "When a VRChat player joins or leaves your world"
     },
     "enableAutomations": {
       "atBatteryPercentage": "When a device's battery percentage falls below <strong>{value}%</strong>",
@@ -1739,6 +1744,31 @@
         "duration": {
           "title": "Time Duration",
           "description": "How long you have to be sitting upright for the sleep mode to be disabled"
+        }
+      },
+      "disableForPlayerJoinLeave": {
+        "title": "Disable sleep mode",
+        "description": "Disable the sleep mode when a (certain) player joins or leaves your world. This can be useful if you want to wake up if someone specific joins you while you sleep, or when you're being left alone.",
+        "onJoin": {
+          "title": "Trigger when a player joins"
+        },
+        "onLeave": {
+          "title": "Trigger when a player leaves"
+        },
+        "onlyWhenPreviouslyAlone": {
+          "title": "Only when previously alone",
+          "description": "Only trigger when you were alone in your world before the other player joined"
+        },
+        "onlyWhenLeftAlone": {
+          "title": "Only when left alone",
+          "description": "Only trigger when you are alone in your world after the other player left"
+        },
+        "triggerOptions": {
+          "EVERYONE": "For everyone",
+          "FRIEND": "For friends",
+          "WHITELIST": "Players on list",
+          "BLACKLIST": "Players not on list",
+          "DISABLED": "For Nobody"
         }
       },
       "enableForSleepDetector": {

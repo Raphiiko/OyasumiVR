@@ -19,6 +19,7 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
   | 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE'
+  | 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
@@ -70,6 +71,7 @@ export interface AutomationConfigs {
   SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
   SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: SleepModeDisableOnUprightPoseAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
@@ -203,6 +205,14 @@ export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends Automat
 
 export interface SleepModeDisableOnUprightPoseAutomationConfig extends AutomationConfig {
   duration: number;
+}
+
+export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig extends AutomationConfig {
+  joinMode: JoinNotificationsMode;
+  leaveMode: JoinNotificationsMode;
+  playerIds: string[];
+  onlyWhenPreviouslyAlone: boolean;
+  onlyWhenLeftAlone: boolean;
 }
 
 // DEVICE POWER AUTOMATIONS
@@ -519,6 +529,14 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: {
     enabled: false,
     duration: 5000,
+  },
+  SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: {
+    enabled: false,
+    joinMode: 'EVERYONE',
+    leaveMode: 'DISABLED',
+    playerIds: [],
+    onlyWhenPreviouslyAlone: false,
+    onlyWhenLeftAlone: false,
   },
   // DEVICE POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {

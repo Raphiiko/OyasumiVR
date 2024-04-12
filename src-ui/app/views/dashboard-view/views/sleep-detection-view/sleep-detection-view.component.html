@@ -330,6 +330,29 @@
             </label>
           </div>
         </div>
+
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.disableAutomations.onPlayerJoinOrLeave</span>
+            <span> </span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-automation-settings"
+              (click)="openModal_DisableSleepModeOnPlayerJoinOrLeave()"
+            >
+              <i class="material-icons">settings</i>
+            </button>
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE.enabled"
+                (change)="toggleAutomation('SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE', 'enabled')"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
