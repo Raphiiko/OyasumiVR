@@ -279,7 +279,8 @@
         "hotkeys": "Hotkey Settings",
         "statusInfo": "Status Information"
       },
-      "hmdAutomations": "HMD Specific Automations"
+      "hmdAutomations": "HMD Specific Automations",
+      "joinNotifications": "Join Notifications"
     },
     "device-list": {
       "category": {
@@ -797,6 +798,9 @@
         "title": "Are you sure?",
         "message": "Are you sure you want to overwrite your preset named ''{name}''?"
       }
+    },
+    "player-list": {
+      "title": "Player List"
     }
   },
   "gpu-automations": {
@@ -2166,6 +2170,51 @@
     "label": {
       "sleeping": "sleepy time",
       "awake": "no more sleepy"
+    }
+  },
+  "join-notifications": {
+    "title": "Join Notifications",
+    "description": "Play a notification message and/or sound when another player enters or leaves your world. This can be useful if you want OyasumiVR to wake you up when someone joins you.",
+    "modeOptions": {
+      "EVERYONE": "For everyone",
+      "WHITELIST": "Players on list",
+      "BLACKLIST": "Players not on list",
+      "DISABLED": "Nobody"
+    },
+    "joinNotifications": {
+      "title": "Join Notifications",
+      "description": "Show a notification when a player joins your world"
+    },
+    "leaveNotifications": {
+      "title": "Leave Notifications",
+      "description": "Show a notification when a player leaves your world"
+    },
+    "joinSounds": {
+      "title": "Join Sounds",
+      "description": "Play a sound when a player joins your world"
+    },
+    "leaveSounds": {
+      "title": "Leave Sounds",
+      "description": "Play a sound when a player leaves your world"
+    },
+    "joinSoundVolume": {
+      "title": "Sound Volume",
+      "description": "The volume of the sound effect that plays when a player enters or leaves your world"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "Only when sleep mode is enabled"
+    },
+    "onlyWhenPreviouslyAlone": {
+      "title": "Only when previously alone",
+      "description": "Only notify when you were alone in your world before the other player joined"
+    },
+    "onlyWhenLeftAlone": {
+      "title": "Only when left alone",
+      "description": "Only notify when you are alone in your world after the other player left"
+    },
+    "notification": {
+      "join": "{name} has joined your world",
+      "leave": "{name} has left your world"
     }
   }
 }

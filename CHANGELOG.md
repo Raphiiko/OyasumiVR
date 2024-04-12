@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option to limit automatically accepting invite request based on the number of players in the world.
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
+- Function for VRChat player join/leave notifications
 
 ## [1.12.7]
 

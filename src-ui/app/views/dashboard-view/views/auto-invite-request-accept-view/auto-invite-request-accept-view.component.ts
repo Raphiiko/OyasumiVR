@@ -3,25 +3,13 @@ import { SelectBoxItem } from '../../../../components/select-box/select-box.comp
 import { distinctUntilChanged, map, skip, tap } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat.service';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
-import { ModalService } from 'src-ui/app/services/modal.service';
-import {
-  FriendSelectionModalComponent,
-  SelectedFriendPlayer,
-} from '../../../../components/friend-selection-modal/friend-selection-modal.component';
 import { cloneDeep, isEqual } from 'lodash';
-import { LimitedUser } from 'vrchat/dist';
 import {
   AutoAcceptInviteRequestsAutomationConfig,
   AUTOMATION_CONFIGS_DEFAULT,
 } from '../../../../models/automations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-  PlayerListPresetModalComponent,
-  PlayerListPresetModalInputModel,
-  PlayerListPresetModalOutputModel,
-} from '../../../../components/player-list-preset-modal/player-list-preset-modal.component';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 
 interface PresetOptions {
@@ -37,7 +25,6 @@ interface PresetOptions {
 })
 export class AutoInviteRequestAcceptViewComponent implements OnInit {
   loggedIn = false;
-  playerList: LimitedUser[] = [];
   listModeOption?: SelectBoxItem;
   listModeOptions: SelectBoxItem[] = [
     {
@@ -72,13 +59,12 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
     onSleepDisable: this.presetOptions[0],
     onSleepPreparation: this.presetOptions[0],
   };
+  playerIds: string[] = [];
 
   constructor(
     protected vrchat: VRChatService,
-    private modal: ModalService,
     private automationConfig: AutomationConfigService,
     private appSettings: AppSettingsService,
-    private modalService: ModalService,
     private destroyRef: DestroyRef
   ) {}
 
@@ -87,7 +73,6 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef), distinctUntilChanged())
       .subscribe(async (status) => {
         this.loggedIn = status === 'LOGGED_IN';
-        if (this.loggedIn && this.config.playerIds.length) await this.refreshPlayerList();
       });
     this.vrchat.user.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
       this.isOnBusyStatus = user?.status === 'busy';
@@ -127,10 +112,6 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
       .subscribe(async (configs) => {
         this.config = cloneDeep(configs.AUTO_ACCEPT_INVITE_REQUESTS);
         this.listModeOption = this.listModeOptions.find((o) => o.id === this.config.listMode)!;
-        const playersChanged = !isEqual(
-          [...this.config.playerIds].sort(),
-          this.playerList.map((o) => o.id).sort()
-        );
         this.presetOption['onSleepEnable'] =
           this.presetOptions.find((o) => o.id === this.config.presetOnSleepEnable) ??
           this.presetOptions[0];
@@ -140,7 +121,13 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
         this.presetOption['onSleepPreparation'] =
           this.presetOptions.find((o) => o.id === this.config.presetOnSleepPreparation) ??
           this.presetOptions[0];
-        if (this.loggedIn && playersChanged) await this.refreshPlayerList();
+        const playersChanged = !isEqual(
+          [...this.config.playerIds].sort(),
+          [...this.playerIds].sort()
+        );
+        if (playersChanged) {
+          this.playerIds = [...this.config.playerIds];
+        }
       });
   }
 
@@ -150,97 +137,6 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
 
   async updateConfig(config: Partial<AutoAcceptInviteRequestsAutomationConfig>) {
     await this.automationConfig.updateAutomationConfig('AUTO_ACCEPT_INVITE_REQUESTS', config);
-  }
-
-  async refreshPlayerList() {
-    const friends = await this.vrchat.listFriends();
-    this.playerList = friends.filter((f) => this.config.playerIds.includes(f.id));
-    await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
-  }
-
-  addPlayer() {
-    this.modal
-      .addModal(FriendSelectionModalComponent, {
-        selection: this.playerList.map(
-          (p) =>
-            ({
-              type: 'player',
-              playerId: p.id,
-              playerName: p.displayName,
-            } as SelectedFriendPlayer)
-        ),
-      })
-      .subscribe(async (result) => {
-        if (!result || result.selection === undefined) return;
-        const friends = await this.vrchat.listFriends();
-        this.playerList = result.selection
-          .filter((r) => r.type === 'player')
-          .map((r) => r as SelectedFriendPlayer)
-          .map((r) => friends.find((f) => f.id === r.playerId))
-          .filter(Boolean) as LimitedUser[];
-        await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
-      });
-  }
-
-  async removePlayer(player: LimitedUser) {
-    this.modalService
-      .addModal(ConfirmModalComponent, {
-        title: 'auto-invite-request-accept.removeModal.title',
-        message: {
-          string: 'auto-invite-request-accept.removeModal.message',
-          values: { name: player.displayName },
-        },
-      })
-      .subscribe(async (data) => {
-        if (data?.confirmed) {
-          this.playerList = this.playerList.filter((p) => p.id !== player.id);
-          await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
-        }
-      });
-  }
-
-  async clearPlayers() {
-    this.modalService
-      .addModal(ConfirmModalComponent, {
-        title: 'auto-invite-request-accept.removeModalBulk.title',
-        message: {
-          string: 'auto-invite-request-accept.removeModalBulk.message',
-        },
-      })
-      .subscribe(async (data) => {
-        if (data.confirmed) {
-          this.playerList = [];
-          await this.updateConfig({ playerIds: this.playerList.map((p) => p.id) });
-        }
-      });
-  }
-
-  async loadPreset() {
-    this.modalService
-      .addModal<PlayerListPresetModalInputModel, PlayerListPresetModalOutputModel>(
-        PlayerListPresetModalComponent,
-        {
-          mode: 'load',
-        },
-        {}
-      )
-      .subscribe((result) => {
-        if (result?.playerIds) {
-          this.updateConfig({ playerIds: result.playerIds });
-        }
-      });
-  }
-
-  async savePreset() {
-    this.modalService
-      .addModal<PlayerListPresetModalInputModel, PlayerListPresetModalOutputModel>(
-        PlayerListPresetModalComponent,
-        {
-          mode: 'save',
-          playerIds: this.playerList.map((p) => p.id),
-        }
-      )
-      .subscribe();
   }
 
   async setListMode(id?: string) {
@@ -269,5 +165,10 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
         });
         break;
     }
+  }
+
+  async updatePlayerIds(playerIds: string[]) {
+    this.playerIds = playerIds;
+    await this.updateConfig({ playerIds });
   }
 }
