@@ -2177,9 +2177,10 @@
     "description": "Play a notification message and/or sound when another player enters or leaves your world. This can be useful if you want OyasumiVR to wake you up when someone joins you.",
     "modeOptions": {
       "EVERYONE": "For everyone",
+      "FRIEND": "For friends",
       "WHITELIST": "Players on list",
       "BLACKLIST": "Players not on list",
-      "DISABLED": "Nobody"
+      "DISABLED": "For Nobody"
     },
     "joinNotifications": {
       "title": "Join Notifications",

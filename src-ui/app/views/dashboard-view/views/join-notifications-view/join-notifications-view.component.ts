@@ -25,6 +25,10 @@ export class JoinNotificationsViewComponent implements OnInit {
       label: 'join-notifications.modeOptions.EVERYONE',
     },
     {
+      id: 'FRIEND',
+      label: 'join-notifications.modeOptions.FRIEND',
+    },
+    {
       id: 'WHITELIST',
       label: 'join-notifications.modeOptions.WHITELIST',
     },

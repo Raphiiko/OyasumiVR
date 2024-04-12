@@ -185,6 +185,8 @@ export class JoinNotificationsService {
     switch (mode) {
       case 'EVERYONE':
         return true;
+      case 'FRIEND':
+        return this.friends.some((f) => f.displayName === displayName);
       case 'WHITELIST':
         return this.isPlayerOnList(displayName);
       case 'BLACKLIST':

@@ -273,7 +273,7 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 
 // MISCELLANEOUS AUTOMATIONS
 
-export type JoinNotificationsMode = 'EVERYONE' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
+export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
 export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
   playerIds: string[];
   onlyDuringSleepMode: boolean;
