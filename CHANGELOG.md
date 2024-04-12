@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
 
 ### Fixed
-- Pluralization issues causing Japanese language translation to break
+- Pluralization issues causing Japanese- and Korean language translations to break
 
 ## [1.12.7]
 
