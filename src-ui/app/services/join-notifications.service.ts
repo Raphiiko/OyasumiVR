@@ -26,6 +26,7 @@ export class JoinNotificationsService {
   private alone = false;
   private notAloneSince = 0;
   private friends: LimitedUser[] = [];
+  private worldLoaded = false;
   private playNotification = new Subject<{
     notification?: {
       displayName: string;
@@ -33,7 +34,6 @@ export class JoinNotificationsService {
     };
     sound?: boolean;
   }>();
-  private worldLoaded = false;
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -185,6 +185,8 @@ export class JoinNotificationsService {
     switch (mode) {
       case 'EVERYONE':
         return true;
+      case 'FRIEND':
+        return this.friends.some((f) => f.displayName === displayName);
       case 'WHITELIST':
         return this.isPlayerOnList(displayName);
       case 'BLACKLIST':
@@ -198,7 +200,7 @@ export class JoinNotificationsService {
     const playerIds = this.config.playerIds;
     const playerId = this.getFriendIdForDisplayName(displayName);
     if (!playerId || !playerIds.includes(playerId)) return false;
-    return false;
+    return true;
   }
 
   private getFriendIdForDisplayName(displayName: string): string | null {

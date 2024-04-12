@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
 - Function for VRChat player join/leave notifications
+- Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
 
 ## [1.12.7]
 

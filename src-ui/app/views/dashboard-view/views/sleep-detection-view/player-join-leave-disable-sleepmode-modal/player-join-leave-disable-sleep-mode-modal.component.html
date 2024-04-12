@@ -1,0 +1,90 @@
+<div class="row-wrapper" @fadeUp>
+  <div class="pane modal-lg">
+    <div class="pane-title" translate>sleep-detection.modals.disableForPlayerJoinLeave.title</div>
+    <div class="pane-content">
+      <p translate>sleep-detection.modals.disableForPlayerJoinLeave.description</p>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.modals.disableForPlayerJoinLeave.onJoin.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="triggerOptions"
+              [selected]="joinTriggerOption"
+              (selectedChange)="setJoinTriggerOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.title</span
+            >
+            <span translate
+              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenPreviouslyAlone.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyWhenPreviouslyAlone"
+                (change)="config.onlyWhenPreviouslyAlone = !config.onlyWhenPreviouslyAlone"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>sleep-detection.modals.disableForPlayerJoinLeave.onLeave.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="triggerOptions"
+              [selected]="leaveTriggerOption"
+              (selectedChange)="setLeaveTriggerOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.title</span
+            >
+            <span translate
+              >sleep-detection.modals.disableForPlayerJoinLeave.onlyWhenLeftAlone.description</span
+            >
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyWhenLeftAlone"
+                (change)="config.onlyWhenLeftAlone = !config.onlyWhenLeftAlone"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="pane-actions spread">
+        <button class="btn btn-secondary" (click)="close()" translate>shared.modals.cancel</button>
+        <button class="btn btn-primary" (click)="save()" translate>shared.modals.save</button>
+      </div>
+    </div>
+  </div>
+  <app-player-list
+    [playerIds]="config.playerIds"
+    (playerIdsChange)="config.playerIds = $event"
+  ></app-player-list>
+</div>

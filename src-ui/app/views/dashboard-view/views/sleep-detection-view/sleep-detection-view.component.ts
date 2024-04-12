@@ -11,6 +11,7 @@ import {
   SleepModeDisableAfterTimeAutomationConfig,
   SleepModeDisableAtTimeAutomationConfig,
   SleepModeDisableOnDevicePowerOnAutomationConfig,
+  SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
   SleepModeDisableOnUprightPoseAutomationConfig,
   SleepModeEnableAtBatteryPercentageAutomationConfig,
   SleepModeEnableAtTimeAutomationConfig,
@@ -29,6 +30,7 @@ import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './heart-rate-c
 import { DurationDisableSleepModeModalComponent } from './duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepDetectorCalibrationModalComponent } from './sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { UprightPoseDisableSleepModeModalComponent } from './upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
+import { PlayerJoinLeaveDisableSleepModeModalComponent } from './player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
 
 @Component({
   selector: 'app-sleep-detection-view',
@@ -170,6 +172,21 @@ export class SleepDetectionViewComponent implements OnInit {
           {
             duration: data.duration,
           }
+        );
+      });
+  }
+
+  openModal_DisableSleepModeOnPlayerJoinOrLeave() {
+    this.modalService
+      .addModal(PlayerJoinLeaveDisableSleepModeModalComponent, {
+        config: cloneDeep(this.automationConfigs.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE),
+      })
+      .pipe(filter((data) => !!data))
+      .subscribe((data) => {
+        if (!data.config) return;
+        this.automationConfigService.updateAutomationConfig<SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig>(
+          'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE',
+          data.config
         );
       });
   }
