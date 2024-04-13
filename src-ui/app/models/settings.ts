@@ -104,4 +104,4 @@ export type ExecutableReferenceStatus =
   | 'UNKNOWN_ERROR'
   | 'SUCCESS';
 
-export type NotificationProvider = 'OYASUMIVR' | 'XSOVERLAY' | 'DESKTOP';
+export type NotificationProvider = 'OYASUMIVR' | 'XSOVERLAY' | 'DESKTOP' | 'OVRTOOLKIT';
