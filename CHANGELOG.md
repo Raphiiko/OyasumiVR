@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Improved duration selection for sleep duration in shutdown sequence
+- Made device edit dialog always show the device serial number in its title.
 
 ### Fixed
 - Pluralization issues causing Japanese- and Korean language translations to break
