@@ -15,7 +15,7 @@ export class ImageCacheService {
     while (!this.httpServerPort.value) {
       const port = (await invoke<number>('get_http_server_port')) || null;
       if (port) this.httpServerPort.next(port);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 50));
     }
   }
 
