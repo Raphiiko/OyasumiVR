@@ -148,8 +148,9 @@ $background-color: var(--color-surface-2);
     display: flex;
     flex-direction: row;
     align-items: center;
-
     justify-content: center;
+    height: 100%;
+    line-height: 0;
   }
 
   &-icon {
