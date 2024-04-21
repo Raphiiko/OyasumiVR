@@ -204,6 +204,10 @@ import { PlayerListComponent } from './components/player-list/player-list.compon
 import { JoinNotificationsService } from './services/join-notifications.service';
 import { PlayerJoinLeaveDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
 import { SleepModeDisableOnPlayerJoinLeaveAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-player-join-leave.service';
+import { MqttService } from './services/mqtt.service';
+import { MqttDiscoveryService } from './services/mqtt-discovery.service';
+import { MqttIntegrationService } from './services/mqtt-integration.service';
+import { MqttConfigModalComponent } from './components/mqtt-config-modal/mqtt-config-modal.component';
 
 [
   localeEN,
@@ -244,6 +248,7 @@ export function createTranslateLoader(http: HttpClient) {
     BatteryPercentageEnableSleepModeModalComponent,
     PlayerJoinLeaveDisableSleepModeModalComponent,
     UprightPoseDisableSleepModeModalComponent,
+    MqttConfigModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
@@ -326,6 +331,7 @@ export function createTranslateLoader(http: HttpClient) {
     PlayerCountSleepVisualizationComponent,
     JoinNotificationsViewComponent,
     PlayerListComponent,
+    MqttConfigModalComponent,
   ],
   imports: [
     CommonModule,
@@ -393,6 +399,9 @@ export class AppModule {
     private hotkeyService: HotkeyService,
     private hotkeyHandlerService: HotkeyHandlerService,
     private discordService: DiscordService,
+    private mqttService: MqttService,
+    private mqttDiscoveryService: MqttDiscoveryService,
+    private mqttIntegrationService: MqttIntegrationService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -521,6 +530,13 @@ export class AppModule {
             this.logInit('WindowsService initialization', this.windowsService.init()),
             this.logInit('HotkeyService initialization', this.hotkeyService.init()),
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
+            this.logInit(
+              'MqttService initialization',
+              this.mqttService
+                .init()
+                .then(() => this.mqttDiscoveryService.init())
+                .then(() => this.mqttIntegrationService.init())
+            ),
             // Initialize GPU control services
             this.logInit(
               'ElevatedSidecarService initialization',

@@ -557,7 +557,8 @@
             },
             "manual": "You disabled sleep mode manually",
             "hotkey": "You disabled sleep mode by pressing the hotkey",
-            "osc-control": "Sleep mode was disabled over OSC"
+            "osc-control": "Sleep mode was disabled over OSC",
+            "mqtt": "Sleep mode was disabled over MQTT"
           },
           "title": "Sleep mode disabled"
         },
@@ -573,7 +574,8 @@
             },
             "manual": "You enabled sleep mode manually",
             "hotkey": "You enabled sleep mode by pressing the hotkey",
-            "osc-control": "Sleep mode was enabled over OSC"
+            "osc-control": "Sleep mode was enabled over OSC",
+            "mqtt": "Sleep mode was enabled over MQTT"
           },
           "title": "Sleep mode enabled"
         },
@@ -686,6 +688,10 @@
       "bsbFanSpeed": {
         "tooltip": "Bigscreen Beyond Fan Speed",
         "label": "Fan Speed"
+      },
+      "mqttStatus": {
+        "label": "MQTT",
+        "tooltip": "Settings: Integrations"
       }
     },
     "osc-script-code-editor": {
@@ -805,6 +811,48 @@
     },
     "player-list": {
       "title": "Player List"
+    },
+    "mqtt-config-modal": {
+      "title": "MQTT Configuration",
+      "description": "OyasumiVR can communicate with Home Assistant over MQTT. To set this up, please provide the connection details for your MQTT broker below.",
+      "brokerSetupNote": "Note that Home Assistant does not come with a MQTT broker enabled by default. If you do not already have a MQTT broker set up and configured with Home Assistant, please follow their <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentation</a> to do so first.",
+      "websocketNote": "MQTT over Websockets is the only supported protocol: please make sure your broker has websocket support enabled. Standard MQTT over TCP is <i>not</i> supported!",
+      "testConnection": {
+        "title": "Test Connection",
+        "description": "Test whether OyasumiVR can connect to your MQTT broker with the settings provided below",
+        "test": "Test Connection"
+      },
+      "testConnectionResult": {
+        "title": "Test Result",
+        "success": "Connection successful!",
+        "error": "Connection failed!",
+        "errorMessage": "The following failure was reported:\n{error}"
+      },
+      "mqttEnabled": {
+        "title": "Enable Integration",
+        "description": "Enable or disable the MQTT integration",
+        "test": "Test Connection"
+      },
+      "brokerHost": {
+        "title": "Host",
+        "description": "The hostname or IP address your MQTT broker can be reached on"
+      },
+      "brokerPort": {
+        "title": "Port",
+        "description": "The port of the websocket your MQTT broker can be reached on"
+      },
+      "username": {
+        "title": "Username",
+        "description": "The username to authenticate with your MQTT broker (optional)"
+      },
+      "password": {
+        "title": "Password",
+        "description": "The password to authenticate with your MQTT broker (optional)"
+      },
+      "ssl": {
+        "title": "Secure SSL",
+        "description": "Whether the connection to your MQTT broker should be secured with SSL"
+      }
     }
   },
   "gpu-automations": {
@@ -1479,6 +1527,7 @@
     "integrations": {
       "title": "Integrations",
       "connect": "Connect",
+      "configure": "Configure",
       "copy": "Copy link to clipboard",
       "description": "Some of OyasumiVR's functionalities can make use of external services. If you're looking to connect OyasumiVR to one of them, you're in the right place!",
       "disconnect": "Disconnect",
@@ -1491,6 +1540,10 @@
       "vrchat": {
         "description": "Linking your account provides access to some of OyasumiVR's VRChat-related automations.",
         "title": "VRChat"
+      },
+      "homeAssistant": {
+        "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
+        "title": "Home Assistant (over MQTT)"
       }
     },
     "notifications": {

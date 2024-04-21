@@ -20,6 +20,7 @@ import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BigscreenBeyondFanAutomationService } from 'src-ui/app/services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from '../bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
+import { MqttService } from '../../services/mqtt.service';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -34,6 +35,7 @@ export class MainStatusBarComponent implements OnInit {
   private bsbFanSpeedControlModalOpen = false;
   protected snowverlayAvailable = new Date().getDate() >= 18 && new Date().getMonth() == 11;
   protected snowverlayActive = false;
+  protected mqttStatus: 'DISABLED' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR' = 'DISABLED';
 
   constructor(
     private sleepService: SleepService,
@@ -42,6 +44,7 @@ export class MainStatusBarComponent implements OnInit {
     private router: Router,
     private settings: AppSettingsService,
     private destroyRef: DestroyRef,
+    private mqttService: MqttService,
     protected systemMicMuteAutomation: SystemMicMuteAutomationService,
     protected openvr: OpenVRService,
     protected background: BackgroundService,
@@ -57,6 +60,9 @@ export class MainStatusBarComponent implements OnInit {
   ngOnInit(): void {
     this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
+    });
+    this.mqttService.clientStatus.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
+      this.mqttStatus = status;
     });
   }
 
