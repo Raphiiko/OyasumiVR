@@ -27,10 +27,10 @@ pub async fn init_telemetry(handle: &tauri::AppHandle) {
         .unwrap()
         .to_uppercase();
     handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
-    // Send heartbeats roughly every hour
+    // Send heartbeats roughly every 24 hours (to keep the current session alive)
     tokio::task::spawn(async {
         let mut start_time = Instant::now();
-        let one_hour = Duration::from_secs(3600 - 30);
+        let one_hour = Duration::from_secs((3600 * 24) - 30);
         loop {
             let elapsed = start_time.elapsed();
             if elapsed >= one_hour {
