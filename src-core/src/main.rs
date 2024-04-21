@@ -42,6 +42,7 @@ use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
 use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
+use telemetry::TELEMETRY_ENABLED;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
@@ -65,7 +66,7 @@ fn main() {
                 Ok(_) => {}
                 Err(e) => {
                     eprintln!("Error during Oyasumi's application setup: {e}");
-                    std::process::exit(1);
+                    app.handle().exit(1);
                 }
             }
             Ok(())
@@ -78,8 +79,10 @@ fn main() {
         .expect("An error occurred while running the application")
         .run(|handler, event| match event {
             tauri::RunEvent::Exit { .. } => {
-                handler.track_event("app_exited", None);
-                handler.flush_events_blocking();
+                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                    handler.track_event("app_exited", None);
+                    handler.flush_events_blocking();
+                }
             }
             _ => {}
         })
