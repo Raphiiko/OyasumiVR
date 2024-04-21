@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { warn } from 'tauri-plugin-log-api';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImageCacheService {
-  httpServerPort = 0;
+  httpServerPort = new BehaviorSubject<number | null>(null);
 
   constructor() {}
 
@@ -20,11 +21,10 @@ export class ImageCacheService {
   }
 
   getImageUrl(remoteUrl: string, ttl = 3600) {
-    if (!this.httpServerPort)
-      warn('[ImageCache] Attempted getting url before http server port was initialized');
+    if (!this.httpServerPort.value) return '';
     return (
       'http://localhost:' +
-      this.httpServerPort +
+      this.httpServerPort.value +
       '/image_cache/get?url=' +
       encodeURIComponent(remoteUrl) +
       '&ttl=' +
