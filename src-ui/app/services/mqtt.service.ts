@@ -51,9 +51,11 @@ export class MqttService {
       });
       return client.connected;
     } catch (e: any) {
-      if (typeof e === 'object') e = e.hasOwnProperty('code') ? `${e.message} (${e.code})` : e;
-      warn('[MQTT] MQTT Config test failed: ' + e);
-      throw `${e}`;
+      let estr = `${e}`;
+      if (typeof e === 'object')
+        estr = e.hasOwnProperty('code') ? `${e.message} (${e.code})` : e.message;
+      warn('[MQTT] MQTT Config test failed: ' + estr);
+      throw estr;
     }
   }
 
