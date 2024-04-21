@@ -1,11 +1,17 @@
 import { AutomationType } from './automations';
 
-export type SleepModeStatusChangeReasonType = 'MANUAL' | 'HOTKEY' | 'OSC_CONTROL' | 'AUTOMATION';
+export type SleepModeStatusChangeReasonType =
+  | 'MANUAL'
+  | 'MQTT'
+  | 'HOTKEY'
+  | 'OSC_CONTROL'
+  | 'AUTOMATION';
 
 export type SleepModeStatusChangeReason =
   | ManualSleepModeStatusChangeReason
   | HotkeySleepModeStatusChangeReason
   | OSCControlSleepModeStatusChangeReason
+  | MQTTSleepModeStatusChangeReason
   | AutomationSleepModeStatusChangeReason
   | SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason;
 
@@ -24,6 +30,10 @@ export interface HotkeySleepModeStatusChangeReason extends SleepModeStatusChange
 
 export interface OSCControlSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
   type: 'OSC_CONTROL';
+}
+
+export interface MQTTSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
+  type: 'MQTT';
 }
 
 export interface AutomationSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {

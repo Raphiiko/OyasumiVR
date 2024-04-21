@@ -14,6 +14,8 @@ export class EventLogSleepModeDisabledEntryParser extends EventLogEntryParser<Ev
         return 'comp.event-log-entry.type.sleepModeDisabled.reason.hotkey';
       case 'OSC_CONTROL':
         return 'comp.event-log-entry.type.sleepModeDisabled.reason.osc-control';
+      case 'MQTT':
+        return 'comp.event-log-entry.type.sleepModeDisabled.reason.mqtt';
       case 'AUTOMATION':
         switch (entry.reason.automation) {
           case 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE':
