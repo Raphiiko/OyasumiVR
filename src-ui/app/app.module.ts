@@ -428,23 +428,23 @@ export class AppModule {
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
     const TIMEOUT = 30000;
-    console.log(`[Init] Running ${action}`);
+    await info(`[Init] Running ${action}`);
     try {
       const result = await pTimeout<T>(
         promise,
         TIMEOUT,
         new Error(`Initialization function ${action} timed out.`)
       );
-      info(`[Init] '${action}' ran successfully`);
+      await info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
-      trackEvent('app_init_error', {
+      await trackEvent('app_init_error', {
         action,
         error: `${e}`,
         timeout: TIMEOUT,
         metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
       });
-      error(`[Init] Running '${action}' failed: ` + e);
+      await error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
   }
@@ -453,6 +453,7 @@ export class AppModule {
     try {
       await pMinDelay(
         (async () => {
+          const initStartTime = Date.now();
           await this.logInit(
             'DeveloperDebugService initialization',
             this.developerDebugService.init()
@@ -676,6 +677,7 @@ export class AppModule {
               this.bigscreenBeyondFanAutomationService.init()
             ),
           ]);
+          await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);
         })(),
         SPLASH_MIN_DURATION
       );
@@ -703,7 +705,6 @@ export class AppModule {
       throw e;
     }
     // Close the splash screen after initialization
-    info('[Init] Initialization complete! Closing splash screen.');
     await invoke('close_splashscreen');
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);

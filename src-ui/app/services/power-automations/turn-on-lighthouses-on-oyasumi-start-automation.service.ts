@@ -35,41 +35,44 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
     );
     // Stop if the automation is disabled
     if (!config.enabled) return;
-    // Wait for 5 seconds (So that we can be sure most lighthouses will have been discovered already)
-    await firstValueFrom(of(null).pipe(delay(5000)));
-    // Turn on any lighthouse that is detected within the next 20 seconds
-    this.lighthouse.devices
-      .pipe(
-        // Stop detection after 20 seconds
-        takeUntil(of(null).pipe(delay(20000))),
-        distinctUntilChanged((a, b) =>
-          isEqual(
-            a.map((d) => d.id),
-            b.map((d) => d.id)
-          )
-        ),
-        // Try to get most in one go
-        debounceTime(500)
-      )
-      .subscribe((lighthouses) => {
-        const devices = lighthouses.filter(
-          (lighthouse) =>
-            !this.lighthouse.isDeviceIgnored(lighthouse) &&
-            !this.seenDevices.includes(lighthouse.id) &&
-            (lighthouse.powerState === 'sleep' ||
-              lighthouse.powerState === 'standby' ||
-              lighthouse.powerState === 'booting')
-        );
-        lighthouses.forEach((d) => this.seenDevices.push(d.id));
-        if (devices.length) {
-          this.eventLog.logEvent({
-            type: 'lighthouseSetPowerState',
-            reason: 'OYASUMI_START',
-            devices: 'ALL',
-            state: 'on',
-          } as EventLogLighthouseSetPowerState);
-        }
-        devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'));
-      });
+    // IIAFE, as we don't need to block initialization for the following
+    (async () => {
+      // Turn on any lighthouse that is detected within the next 20 seconds
+      this.lighthouse.devices
+        .pipe(
+          // Stop detection after 20 seconds
+          takeUntil(of(null).pipe(delay(20000))),
+          distinctUntilChanged((a, b) =>
+            isEqual(
+              a.map((d) => d.id),
+              b.map((d) => d.id)
+            )
+          ),
+          // Try to get most in one go
+          debounceTime(500)
+        )
+        .subscribe((lighthouses) => {
+          const devices = lighthouses.filter(
+            (lighthouse) =>
+              !this.lighthouse.isDeviceIgnored(lighthouse) &&
+              !this.seenDevices.includes(lighthouse.id) &&
+              (lighthouse.powerState === 'sleep' ||
+                lighthouse.powerState === 'standby' ||
+                lighthouse.powerState === 'booting')
+          );
+          lighthouses.forEach((d) => this.seenDevices.push(d.id));
+          if (devices.length) {
+            this.eventLog.logEvent({
+              type: 'lighthouseSetPowerState',
+              reason: 'OYASUMI_START',
+              devices: 'ALL',
+              state: 'on',
+            } as EventLogLighthouseSetPowerState);
+          }
+          devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'));
+        });
+    })()
+      // Ignore result
+      .then(() => {});
   }
 }

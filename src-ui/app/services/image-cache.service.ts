@@ -12,9 +12,10 @@ export class ImageCacheService {
 
   async init() {
     // Fetch http server port until it's available
-    while (!this.httpServerPort) {
-      this.httpServerPort = (await invoke<number>('get_http_server_port')) || 0;
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+    while (!this.httpServerPort.value) {
+      const port = (await invoke<number>('get_http_server_port')) || null;
+      if (port) this.httpServerPort.next(port);
+      await new Promise((resolve) => setTimeout(resolve, 50));
     }
   }
 

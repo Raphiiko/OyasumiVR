@@ -18,7 +18,7 @@ export class FontLoaderService {
     // Fetch http server port until it's available
     while (!this._httpServerPort) {
       this._httpServerPort = (await invoke<number>('get_http_server_port')) || 0;
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 50));
     }
     // Initialize font loader
     fontLoader.init(this._httpServerPort, this.translate.currentLang).then(() => {

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Pluralization issues causing Japanese- and Korean language translations to break
+- Improved initialization performance
 
 ## [1.12.7]
 
