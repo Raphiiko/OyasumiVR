@@ -75,19 +75,19 @@ export class BigscreenBeyondLedAutomationService {
   private async onSleepModeChange(sleepMode: boolean) {
     if (!this.connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
-      await this.setLedColor(this.config.onSleepEnableRgb);
       this.eventLog.logEvent({
         type: 'bsbLedChanged',
         reason: 'SLEEP_MODE_ENABLED',
         color: this.config.onSleepEnableRgb,
       } as EventLogBSBLedChanged);
+      await this.setLedColor(this.config.onSleepEnableRgb);
     } else if (!sleepMode && this.config.onSleepDisable) {
-      await this.setLedColor(this.config.onSleepDisableRgb);
       this.eventLog.logEvent({
         type: 'bsbLedChanged',
         reason: 'SLEEP_MODE_DISABLED',
         color: this.config.onSleepDisableRgb,
       } as EventLogBSBLedChanged);
+      await this.setLedColor(this.config.onSleepDisableRgb);
     }
   }
 
