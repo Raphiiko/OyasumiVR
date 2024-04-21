@@ -3,7 +3,7 @@ import { getVersion } from '../utils/app-utils';
 import { invoke } from '@tauri-apps/api';
 import * as DesktopNotifications from '@tauri-apps/api/notification';
 import { AppSettingsService } from './app-settings.service';
-import { debounceTime, distinctUntilChanged, filter, firstValueFrom, interval, map } from 'rxjs';
+import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
 import { APP_ICON_ARR, APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
 import { error, info, warn } from 'tauri-plugin-log-api';
@@ -38,6 +38,7 @@ export type NotificationSound =
 })
 export class NotificationService {
   private ovrtSocket?: WebSocket;
+
   constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
 
   public async init() {

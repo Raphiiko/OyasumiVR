@@ -81,7 +81,7 @@ export class MqttDiscoveryService {
         const property = this.properties.value.find((p) => p.id === id);
         if (!property) return;
         switch (property.type) {
-          case 'TOGGLE':
+          case 'TOGGLE': {
             const newValue = payload.toString() === 'ON';
             if (property.value === newValue) return;
             const previous = cloneDeep(property);
@@ -89,6 +89,7 @@ export class MqttDiscoveryService {
             const current = cloneDeep(this.properties.value.find((p) => p.id === id)!);
             this._propertyCommands.next({ previous, current });
             break;
+          }
         }
       }
     });
@@ -112,7 +113,7 @@ export class MqttDiscoveryService {
     const property = this.properties.value.find((p) => p.id === id);
     if (!property) return;
     switch (property.type) {
-      case 'TOGGLE':
+      case 'TOGGLE': {
         const baseTopic = `homeassistant/switch/oyasumivr/${property.id}`;
         await client.publishAsync(
           `${baseTopic}/config`,
@@ -129,6 +130,7 @@ export class MqttDiscoveryService {
           }
         );
         break;
+      }
     }
   }
 
@@ -142,12 +144,13 @@ export class MqttDiscoveryService {
     const property = this.properties.value.find((p) => p.id === id);
     if (!property) return;
     switch (property.type) {
-      case 'TOGGLE':
+      case 'TOGGLE': {
         await client.publishAsync(
           `homeassistant/switch/oyasumivr/${property.id}/state`,
           property.value ? 'ON' : 'OFF'
         );
         break;
+      }
     }
   }
 }
