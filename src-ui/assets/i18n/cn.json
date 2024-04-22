@@ -370,8 +370,8 @@
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
-            "set": "Headset software brightness set to {value}",
-            "transition": "Headset software brightness transitioning to {value}"
+            "set": "头显软件亮度设置为 {value}",
+            "transition": "头显软件亮度过渡到 {value}"
           }
         },
         "lighthouseSetPowerState": {
