@@ -161,7 +161,8 @@
       ]
     },
     "security": {
-      "csp": null
+      "csp": null,
+      "dangerousUseHttpScheme": true
     },
     "systemTray": {
       "iconPath": "icons/icon.png",
