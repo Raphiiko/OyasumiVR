@@ -9,6 +9,9 @@ import { EventLogService } from './event-log.service';
 import { EventLogAcceptedInviteRequest } from '../models/event-log-entry';
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { AppSettingsService } from './app-settings.service';
+import { AutoAcceptInviteRequestsAutomationConfig } from '../models/automations';
+import { SleepPreparationService } from './sleep-preparation.service';
 
 @Injectable({
   providedIn: 'root',
@@ -17,10 +20,12 @@ export class InviteAutomationsService {
   constructor(
     private vrchat: VRChatService,
     private automationConfig: AutomationConfigService,
+    private appSettings: AppSettingsService,
     private sleep: SleepService,
     private eventLog: EventLogService,
     private notifications: NotificationService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private sleepPreparation: SleepPreparationService
   ) {}
 
   async init() {
@@ -31,6 +36,7 @@ export class InviteAutomationsService {
           break;
       }
     });
+    this.handlePlayerListPresetAutomations();
   }
 
   private async handleRequestInviteNotification(notification: Notification) {
@@ -59,6 +65,16 @@ export class InviteAutomationsService {
     if (config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) {
       warn('Ignoring invite because sleep mode is disabled');
       return;
+    }
+    // Stop if there is a player count limit set, and there are more people in the instance than the limit
+    if (config.onlyBelowPlayerCountEnabled) {
+      const world = await firstValueFrom(this.vrchat.world);
+      if (world.playerCount >= config.onlyBelowPlayerCount) {
+        warn(
+          `Ignoring invite because there are too many players in the instance (${world.playerCount}>=${config.onlyBelowPlayerCount})`
+        );
+        return;
+      }
     }
     switch (config.listMode) {
       case 'DISABLED':
@@ -95,5 +111,54 @@ export class InviteAutomationsService {
       displayName: notification.senderUsername,
       mode: config.listMode,
     } as EventLogAcceptedInviteRequest);
+  }
+
+  private handlePlayerListPresetAutomations() {
+    this.sleepPreparation.onSleepPreparation.subscribe(async () => {
+      const config = await firstValueFrom(this.automationConfig.configs);
+      if (!config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepPreparation) return;
+      const appSettings = await firstValueFrom(this.appSettings.settings);
+      const preset = appSettings.playerListPresets.find(
+        (p) => p.id === config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepPreparation
+      );
+      if (preset) {
+        await this.automationConfig.updateAutomationConfig<AutoAcceptInviteRequestsAutomationConfig>(
+          'AUTO_ACCEPT_INVITE_REQUESTS',
+          {
+            playerIds: preset.playerIds,
+          }
+        );
+      }
+    });
+
+    this.sleep.mode.subscribe(async (sleepMode) => {
+      const config = await firstValueFrom(this.automationConfig.configs);
+      const appSettings = await firstValueFrom(this.appSettings.settings);
+      if (sleepMode && config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepEnable) {
+        const preset = appSettings.playerListPresets.find(
+          (p) => p.id === config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepEnable
+        );
+        if (preset) {
+          await this.automationConfig.updateAutomationConfig<AutoAcceptInviteRequestsAutomationConfig>(
+            'AUTO_ACCEPT_INVITE_REQUESTS',
+            {
+              playerIds: preset.playerIds,
+            }
+          );
+        }
+      } else if (!sleepMode && config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepDisable) {
+        const preset = appSettings.playerListPresets.find(
+          (p) => p.id === config.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepDisable
+        );
+        if (preset) {
+          await this.automationConfig.updateAutomationConfig<AutoAcceptInviteRequestsAutomationConfig>(
+            'AUTO_ACCEPT_INVITE_REQUESTS',
+            {
+              playerIds: preset.playerIds,
+            }
+          );
+        }
+      }
+    });
   }
 }

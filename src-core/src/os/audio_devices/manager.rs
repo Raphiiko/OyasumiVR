@@ -222,7 +222,7 @@ impl AudioDeviceManager {
             }
             DeviceNotification::DefaultDeviceChanged { device_id: _, flow } => {
                 if flow == eAll || flow == eRender {
-                    let state = state.as_ref().clone();
+                    let state = state.as_ref();
                     if let Err(e) = AudioDeviceManager::determine_default_devices(
                         state,
                         AudioDeviceType::Render,
@@ -234,7 +234,7 @@ impl AudioDeviceManager {
                     }
                 }
                 if flow == eAll || flow == eCapture {
-                    let state = state.as_ref().clone();
+                    let state = state.as_ref();
                     if let Err(e) = AudioDeviceManager::determine_default_devices(
                         state,
                         AudioDeviceType::Capture,

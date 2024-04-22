@@ -11,13 +11,57 @@
     "discordInvite": "Discord Server",
     "projectLinks": "Project Links",
     "sourceLink": "Broncode @ GitHub",
+    "supporters": "Supporters",
     "translations": "Vertalingen"
+  },
+  "audio-volume-automations": {
+    "actionOptions": {
+      "MUTE": "Dempen",
+      "SET_VOLUME": "Volume Aanpassen",
+      "UNMUTE": "Niet dempen"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Automatisering} other {# Automatiseringen}}"
+    },
+    "description": "Verander automatisch het volume van je geluidsapparaten wanneer je in slaap valt, of wakker word! Dit kan handig zijn als je wilt voorkomen dat mensen je storen terwijl je slaapt.",
+    "devices": {
+      "description": "Kies een geluidsapparaat om het volume van te automatiseren",
+      "title": {
+        "hasDevices": "Voeg geluidsapparaten toe",
+        "noDevices": "Geen geluidsapparaten geselecteerd"
+      }
+    },
+    "onSleepDisable": {
+      "description": "Pas het volume van je geluidsapparaten aan wanneer de slaap modus word uitgeschakeld",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "description": "Pas het volume van je geluidsapparaten aan wanneer de slaap modus word ingeschakeld",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "description": "Pas het volume van je geluidsapparaten aan wanneer je je voorbereid om te gaan slapen",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "picker": {
+      "defaultDevice": "Standaard Apparaat",
+      "noCaptureDevices": "Er zijn geen opname apparaten gevonden",
+      "noPlaybackDevices": "Er zijn geen afspeel apparaten gevonden",
+      "title": "Selecteer een apparaat"
+    },
+    "removeDevice": "Verwijder",
+    "selectDevice": "Select Geluidsapparaat",
+    "title": "Volume Automatiseringen",
+    "volume": {
+      "description": "Het volume om in te stellen voor dit geluidsapparaat wanneer deze automatisering draait",
+      "title": "Volume"
+    }
   },
   "auto-invite-request-accept": {
     "addFriends": "Vrienden toevoegen",
     "blacklist": "Speler Blacklist",
-    "clearPlayers": "Alle spelers verwijderen",
     "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+    "loadingFriends": "Vrienden worden geladen...",
     "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
     "options": {
       "enable": {
@@ -73,8 +117,9 @@
       },
       "copyBrightness": "Kopieer huidig helderheidsniveau",
       "description": "Laat OyasumiVR automatisch het helderheidsniveau van je VR headset aanpassen, zoals wanneer je in slaap valt of wanneer je wakker wordt.",
-      "softwareBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont"
+      "hardwareBrightness": {
+        "description": "Past de helderheid van het fysieke scherm aan",
+        "title": "Zet de hardware helderheid naar"
       },
       "onSleepDisable": {
         "description": "Pas het helderheidsniveau aan",
@@ -97,6 +142,10 @@
         "description": "Je kan je slaap voorbereiden door op de knop te drukken in OyasumiVR's overlay. De knop hier voor zal bruikbaar worden als je één of meerdere automatiseringen voor slaap voorbereiding, zoals deze, hebt geactiveerd. Je kunt dit gebruiken om alvast het helderheidsniveau te dimmen voordat je in slaap valt.",
         "title": "Slaap Voorbereiding"
       },
+      "softwareBrightness": {
+        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
+        "title": "Zet de software helderheid naar"
+      },
       "startupAutomations": "Opstart Automatiseringen",
       "transition": {
         "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid",
@@ -107,12 +156,44 @@
         "title": "Overgangsduur"
       }
     },
+    "hmdSettings": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
+          "title": "Overdrive ventilator veiligheid",
+          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
+        },
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "permitRiskRange": {
+          "description": "Voorkomt dat je de helderheid boven 150% zet",
+          "title": "Beperk tot veilige schermhelderheidswaarden",
+          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "description": "Hier kan je alle instellingen vinden mbt schermhelderheid voor jou specifieke VR headset.",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "title": "Valve Index"
+      }
+    },
     "mode": {
       "advanced": "Geavanceerde Modus",
       "simple": "Simpele Modus"
     },
     "modeInfoModal": {
+      "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
+    },
+    "tabs": {
+      "automations": "Automatiseringen",
+      "hmdSettings": "HMD Instellingen"
     },
     "title": "Helderheid Automatiseringen"
   },
@@ -134,7 +215,16 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "Helderheid Automatiseringen",
-      "brightness": "Helderheid"
+      "brightness": "Helderheid",
+      "hardwareBrightness": "Hardware Helderheid",
+      "softwareBrightness": "Software Helderheid"
+    },
+    "bsb-fan-speed-control-modal": {
+      "automationsTooltip": "Bigscreen Beyond Automatiseringen",
+      "fanSpeed": "Ventilator Snelheid"
+    },
+    "color-picker-modal": {
+      "title": "Kies een kleur"
     },
     "confirm-modal": {
       "defaultTitle": "Bevestig"
@@ -171,17 +261,30 @@
     },
     "dashboard-navbar": {
       "about": "Over OyasumiVR",
+      "audioVolumeAutomations": "Volume Automatiseringen",
       "autoInviteRequestAccept": "Invite Requests Automatisch Accepteren",
       "brightnessAutomations": "Helderheid Automatiseringen",
       "chaperoneAutomations": "Chaperone Automatiseringen",
       "gpuAutomations": "GPU Automatiseringen",
       "hardwareAutomations": "Hardware Automatiseringen",
+      "hmdAutomations": "HMD Specifieke Automatiseringen",
       "miscAutomations": "Overige Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
       "overview": "Overzicht",
       "powerAutomations": "Energie Automatiseringen",
       "resolutionAutomations": "Resolutie Automatiseringen",
+      "settings": {
+        "advanced": "Geavanceerde Instellingen",
+        "general": "Algemene Instellingen",
+        "hotkeys": "Hotkey Instellingen",
+        "integrations": "Integraties",
+        "notifications": "Notificatie instellingen",
+        "statusInfo": "Status Informatie",
+        "subMenu": "Instellingen",
+        "updates": "Updates",
+        "vrchat": "VRChat Instellingen"
+      },
       "shutdownAutomations": "Afsluit Procedure",
       "sleepAnimations": "Slaap Animaties",
       "sleepDetection": "Slaap Detectie",
@@ -189,6 +292,17 @@
       "systemMicMuteAutomations": "Systeem Microfoon Dempings Automatiseringen",
       "vrcAutomations": "VRChat Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
+    },
+    "device-edit-modal": {
+      "deviceNickname": {
+        "description": "Geef optioneel een aangepaste naam voor dit apparaat",
+        "title": "Nickname"
+      },
+      "ignoreLighthouse": {
+        "description": "Genegeerde basestations zullen worden verborgen en worden niet aangestuurd door automatiseringen",
+        "title": "Negeer Basestation"
+      },
+      "title": "Bewerk Device: {deviceId}"
     },
     "device-list": {
       "category": {
@@ -199,6 +313,30 @@
       },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
+      },
+      "deviceRole": {
+        "AnkleLeft": "Linker Enkel",
+        "AnkleRight": "Rechter Enkel",
+        "Camera": "Camera",
+        "Chest": "Borst",
+        "ElbowLeft": "Linker Elleboog",
+        "ElbowRight": "Rechter Elleboog",
+        "FootLeft": "Linker Voet",
+        "FootRight": "Rechter Voet",
+        "Gamepad": "Gamepad",
+        "HandPrimary": "Primaire Hand",
+        "HandSecondary": "Secundaire Hand",
+        "Head": "Hoofd",
+        "Keyboard": "Toetsenbord",
+        "KneeLeft": "Linker Knie",
+        "KneeRight": "Rechter Knie",
+        "ShoulderLeft": "Linker Schouder",
+        "ShoulderRight": "Rechter Schouder",
+        "Stylus": "Stylus",
+        "Treadmill": "Loopband",
+        "Waist": "Middel",
+        "WristLeft": "Linker Pols",
+        "WristRight": "Rechter Pols"
       },
       "lighthouseStatus": {
         "booting": "Aan het starten",
@@ -220,6 +358,33 @@
             "whitelist": "Omdat deze speler op de whitelist staat"
           },
           "title": "Invite request van ''{displayName}'' automatisch geaccepteerd"
+        },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "adjusted": "Bigscreen Beyond Ventilator naar {setPercentage}% gezet (Aangepast van {requestedPercentage}% voor de veiligheid)",
+            "exact": "Bigscreen Beyond Ventilator naar {setPercentage}% gezet"
+          }
+        },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Bigscreen Beyond RGB Led naar {color} gezet"
+        },
+        "changedAudioDeviceVolume": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Volume voor geluidsapparaat \"{deviceName}\" naar {percentage} gezet"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -261,13 +426,6 @@
           },
           "title": "Chaperone activatie afstand ingesteld op {value}"
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
-            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
-          }
-        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
@@ -278,17 +436,22 @@
             "set": "Stroom limiet voor ''{device}'' ingesteld op {limit}"
           }
         },
-        "softwareBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "set": "Headset hardware helderheid naar {value} gezet",
+            "transition": "Headset hardware helderheid gaat over naar {value}"
           }
         },
         "lighthouseSetPowerState": {
           "ALL": {
             "on": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig aangezet",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -298,6 +461,7 @@
             },
             "sleep": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig veranderd",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -307,6 +471,7 @@
             },
             "standby": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig veranderd",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -318,6 +483,7 @@
           "SINGLE": {
             "on": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig aangezet",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -327,6 +493,7 @@
             },
             "sleep": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig aangezet",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -336,6 +503,7 @@
             },
             "standby": {
               "reasons": {
+                "HOTKEY": "Omdat een hotkey was geactiveerd",
                 "MANUAL": "Handmatig aangezet",
                 "OYASUMI_START": "Omdat Oyasumi is gestart",
                 "STEAMVR_START": "Omdat SteamVR is gestart",
@@ -351,6 +519,14 @@
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld"
           },
           "title": "MSI Afterburner profiel is ingesteld op profiel ''{profile}''"
+        },
+        "mutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Geluidsapparaat \"{deviceName}\" gedempt"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -370,6 +546,7 @@
         },
         "shutdownSequenceStarted": {
           "reason": {
+            "HOTKEY": "Geactiveerd door een hotkey",
             "MANUAL": "Handmatig gestart",
             "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was"
           },
@@ -395,10 +572,12 @@
             "automation": {
               "NIGHTMARE_DETECTION": "Omdat er een mogelijke nachtmerrie werd gedetecteerd",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Omdat SteamVR is gestopt",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "Omdat de slapa modus lang genoeg actief was",
               "SLEEP_MODE_DISABLE_AT_TIME": "Op de ingestelde tijd",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Omdat een controller of tracker is ingeschakeld",
               "unknown": "Door een onbekende automatisering"
             },
+            "hotkey": "Je hebt de slaap modus uitgeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig uitgeschakeld",
             "osc-control": "De slaap modus werdt uitgeschakeld via OSC"
           },
@@ -414,10 +593,22 @@
               "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "Omdat je hartslag lang genoeg laag was",
               "unknown": "Door een onbekende automatisering"
             },
+            "hotkey": "Je hebt de slaap modus ingeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig ingeschakeld",
             "osc-control": "De slaap modus werdt ingeschakeld via OSC"
           },
           "title": "Slaap modus ingeschakeld"
+        },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "set": "Headset software helderheid naar {value} gezet",
+            "transition": "Headset software helderheid gaat over naar {value}"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
@@ -430,6 +621,7 @@
           "reason": {
             "BATTERY_LEVEL": "Omdat het batterijniveau onder {threshold}% kwam",
             "CHARGING": "Omdat het apparaat aan het opladen is",
+            "HOTKEY": "Omdat een hotkey was geactiveerd",
             "MANUAL": "Handmatig uitgeschakeld",
             "OSC_CONTROL": "Uitgeschakeld via OSC",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld"
@@ -442,6 +634,14 @@
             "TRACKERS": "Meerdere trackers uitgeschakeld",
             "VARIOUS": "Meerdere apparaten uitgeschakeld"
           }
+        },
+        "unmutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Demping van geluidsapparaat \"{deviceName}\" verwijderd"
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -463,11 +663,21 @@
       "title": "Logboek"
     },
     "friend-selection-modal": {
+      "loading": "Vrienden worden geladen....",
+      "loadingError": "Je vriendenlijst kon niet worden opgehaald. Probeer het later opnieuw.",
+      "moreResultsAvailable": "Je hebt meer vrienden dan er nu worden getoond. Wees iets specifieker.",
       "noFriends": "Je vriendenlijst is leeg",
       "noFriendsSelected": "Geen vrienden geselecteerd",
       "noResultsFor": "Geen resultaten voor ''{query}''",
       "searchPlaceholder": "Zoek vrienden op naam...",
       "title": "Selecteer Vrienden"
+    },
+    "hotkey-selector-modal": {
+      "description": "Om een hotkey in te stellen houd je de gewenste modifiers vast, en druk je daarna op de toets waarmee je ze wilt combineren.",
+      "title": "Hotkey Instellen"
+    },
+    "hotkey-selector": {
+      "select": "Hotkey Instellen"
     },
     "main-status-bar": {
       "active": "Actief",
@@ -475,9 +685,17 @@
         "simple": "Helderheid",
         "tooltip": "Helderheids Besturing"
       },
+      "bsbFanSpeed": {
+        "label": "Ventilator Snelheid",
+        "tooltip": "Bigscreen Beyond Ventilator Snelheid"
+      },
       "heartrate": "Hartslag",
       "inactive": "Inactief",
       "loggedOut": "Uitgelogd",
+      "sleepMode": {
+        "label": "Slaap Modus",
+        "tooltip": "Schakel Slaap Modus"
+      },
       "steamvr": {
         "INACTIVE": "Inactief",
         "INITIALIZED": "Actief",
@@ -489,6 +707,9 @@
           "NAVIGATE": "Systeem Microfoon: Automatiseringen",
           "TOGGLE_MUTE": "Systeem Microfoon: Demping Deactiveren"
         }
+      },
+      "vrchat": {
+        "tooltip": "Instellingen: Integraties"
       }
     },
     "osc-script-code-editor": {
@@ -538,18 +759,20 @@
       "updateNow": "Installeer v{version}"
     },
     "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico.",
+        "use": "Je login gegevens zullen nooit ergens anders worden opgeslagen dan je eigen PC, en worden alleen verstuurd naar VRChat's servers om je in te kunnen loggen."
+      },
       "errors": {
         "CHECK_EMAIL": "Login mislukt: Voor meer informatie, check de mailbox van het e-mailadres dat gekoppeld is aan je VRChat account.",
         "INVALID_CREDENTIALS": "De logingegevens zijn onjuist.",
         "UNEXPECTED_RESPONSE": "Login mislukt: Een onverwachte fout is opgetreden. Check je internetverbinding en probeer het later nog eens."
       },
       "password": "Wachtwoord",
+      "rememberCredentials": "Onthoud Login Gegevens",
       "title": "Log in met VRChat",
-      "username": "VRChat Gebruikersnaam/E-mail",
-      "disclaimers": {
-        "brand": "OyasumiVR wordt niet erkend door VRChat en vertegenwoordigt niet de standpunten en meningen van VRChat of van diegenen die officieel betrokken zijn bij het produceren of beheren van VRChat. VRChat is een handelsmerk van VRChat Inc. VRChat © VRChat Inc.",
-        "liability": "Raphiiko is niet verantwoordelijk voor eventuele problemen die ontstaan door het gebruik van OyasumiVR. Gebruik is op eigen risico."
-      }
+      "username": "VRChat Gebruikersnaam/E-mail"
     },
     "vrchat-login-tfa-modal": {
       "description": "Je VRCHat account wordt beschermt met twee-factor authenticatie. Voer een 2FA code in:",
@@ -557,7 +780,19 @@
         "INVALID_FORMAT": "Een 2FA code bestaat altijd uit een reeks van 6 cijfers. Deze code is niet correct.",
         "LAST_CODE_INVALID": "De 2FA code is onjuist."
       },
+      "logginInAs": "Je logt in bij VRChat als:",
       "title": "Twee-Factor Authenticatie"
+    }
+  },
+  "discord": {
+    "details": "VR Slaap Software",
+    "label": {
+      "awake": "slaapt niet",
+      "sleeping": "bedtijd"
+    },
+    "state": {
+      "awake": "Wakker",
+      "sleeping": "Slaap modus"
     }
   },
   "gpu-automations": {
@@ -634,6 +869,55 @@
     },
     "title": "GPU Automatiseringen"
   },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "description": "Hier kan je bepaalde features van de Bigscreen Beyond automatiseren.",
+      "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "Voorkomt dat de ventilatorsnelheid onder de 40% word ingesteld",
+          "title": "Beperk tot veilige ventilatorsnelheden",
+          "warning": "Het instellen van de ventilatorsnelheid onder de 40% word niet ondersteund door de fabrikant, en kan mogelijk oververhitting veroorzaken, en dus schade aan je headset. Schakel deze functie alleen uit op eigen risico."
+        },
+        "onSleepDisable": {
+          "description": "Verander de ventilator snelheid wanneer de slaap modus word uitgeschakeld",
+          "title": "Wanneer ik wakker word"
+        },
+        "onSleepEnable": {
+          "description": "Verander de ventilator snelheid wanneer de slaap modus word ingeschakeld",
+          "title": "Wanneer ik ga slapen"
+        },
+        "onSleepPreparation": {
+          "description": "Verander de ventilator snelheid wanneer je je voorbereid om te gaan slapen",
+          "title": "Wanneer ik me voorbereid om te gaan slapen"
+        },
+        "title": "Ventilator Snelheid"
+      },
+      "rgb": {
+        "onSleepDisable": {
+          "description": "Verander de kleur van de RGB LED wanneer de slaap modus word uitgeschakeld",
+          "title": "Wanneer ik wakker word"
+        },
+        "onSleepEnable": {
+          "description": "Verander de kleur van de RGB LED wanneer de slaap modus word ingeschakeld",
+          "title": "Wanneer ik ga slapen"
+        },
+        "onSleepPreparation": {
+          "description": "Verander de kleur van de RGB LED wanneer je je voorbereid om te gaan slapen",
+          "title": "Wanneer ik me voorbereid om te gaan slapen"
+        },
+        "pickerTitle": {
+          "onSleepDisable": "Stel de Beyond LED kleur in wanneer je wakker word",
+          "onSleepEnable": "Stel de Beyond LED kleur in wanneer je in slaap valt",
+          "onSleepPreparation": "Stel de Beyond LED kleur in wanneer je je voorbereid om te gaan slapen"
+        },
+        "title": "RGB Led"
+      }
+    },
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD Specifieke Automatiseringen"
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
     "oscScriptEditorErrors": {
@@ -662,6 +946,7 @@
       "title": "Minimale hartslag",
       "unit": "BPM"
     },
+    "description": "Wanneer deze automatiseringen zijn ingeschakeld, probeert deze feature te detecteren wanneer je een nachtmerrie hebt, door te checken of je hartslag hoog blijft voor een bepaalde periode terwijl je slaapt. Wanneer er een mogelijke nachtmerrie wordt gedetecteerd, is er de optie dat OyasumiVR je wakker probeert te maken. Detectie van nachtmerries is alleen actief wanneer de slaap modus actief is.\n\n<b>Let op:</b> Voor deze feature moet je de <a class=\"integrationsPageLink\">Pulsoid integratie</a> inschakelen.",
     "disableSleepMode": {
       "description": "Deactiveert de slaap modus wanneer je mogelijk een nachtmerrie hebt",
       "title": "Slaap modus uitschakelen"
@@ -723,6 +1008,11 @@
         "description": "Stuur deze OSC commandos",
         "script": "Slaap Modus Ingeschakeld",
         "title": "Wanneer ik ga slapen"
+      },
+      "onSleepPreparation": {
+        "description": "Stuur deze OSC commandos",
+        "script": "Slaap Voorbereiding",
+        "title": "Wanneer ik me voorbereid om te gaan slapen"
       }
     },
     "sleepingAnimations": {
@@ -772,7 +1062,9 @@
   },
   "overlay": {
     "brightness": {
-      "simple": "Helderheid"
+      "hardware": "Hardware Helderheid",
+      "simple": "Helderheid",
+      "software": "Software Helderheid"
     },
     "dashboard": {
       "automations": {
@@ -968,6 +1260,69 @@
   },
   "settings": {
     "advanced": {
+      "fixes": {
+        "description": "Dit stuk bevat wat opties mbt het oplossen en vinden van problemen met OyasumiVR. Over het algemeen zou je deze niet moeten gebruiken, tenzij je weet waar je mee bezig bent, of omdat je dit gevraagd word wanneer je ondersteuning krijgt van de ontwikkelaar.",
+        "devTools": {
+          "action": "Open DevTools",
+          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
+          "title": "Open Developer Tools"
+        },
+        "memoryWatcher": {
+          "action": "Activeer",
+          "description": "Activeer de memory watcher om alle child processen te monitoren. Er zal een error venster worden getoond als er een proces meer dan een gigabyte aan geheugen gebruikt, en er wordt extra informatie gelogd.",
+          "modal": {
+            "error": {
+              "message": "De memory watcher was al actief.",
+              "title": "Al actief."
+            },
+            "success": {
+              "message": "De memory watcher is geactiveerd!",
+              "title": "Memory Watcher Geactiveerd"
+            }
+          },
+          "title": "Memory Watcher"
+        },
+        "oscServerEnabled": {
+          "description": "Hiermee kun je de ingebouwde OSC en OSCQuery servers uitschakelen. Let op dat deze keuze word bewaard, en dat verschillende features van OyasumiVR niet meer zullen werken, zonder waarschuwing. Deze optie bestaat alleen voor foutopsporing, en zou niet uitgeschakeld moeten worden tijdens standaard gebruik.",
+          "title": "OSC & OSCQuery Servers Inschakelen"
+        },
+        "title": "Oplossingen & Foutopsporing",
+        "vrManifestReregister": {
+          "action": "Herregistreer Manifest",
+          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "Als je een build van OyasumiVR gebruikt die niet in aanmerking komt (e.g. de Steam versie), dan is de registratie van het application manifest ongedaan gemaakt, maar niet opnieuw geregistreerd. Dit is geen fout! Herstart OyasumiVR a.u.b.",
+              "title": "Application manifest gederegistreerd"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "Het manifest was verwijderd, maar kon niet terug toegevoegd worden. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "Het kon niet worden gecheckt of OyasumiVR's manifest al was geregistreerd met SteamVR. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR had geen geregistreerd manifest met SteamVR. Het manifest is niet (her)geregistreerd. Herstart a.u.b. OyasumiVR.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "success": {
+              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
+              "title": "VR Application Manifest Hergeregistreerd"
+            },
+            "UNKNOWN": {
+              "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            }
+          },
+          "title": "Herregistreet SteamVR application manifest"
+        }
+      },
       "logs": {
         "openFolder": {
           "action": "Open Map",
@@ -1033,6 +1388,7 @@
         },
         "title": "Opgeslagen Gegevens"
       },
+      "title": "Geavanceerde Instellingen",
       "translation": {
         "contribute": {
           "description": "Help met het toevoegen van missende vertalingen, of hele nieuwe talen!",
@@ -1058,6 +1414,21 @@
         "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen.",
         "label": "Vraag om beheerders rechten bij het opstarten",
         "title": "Beheerders Rechten"
+      },
+      "discord": {
+        "activityMode": {
+          "description": "Toon OyasumiVR als je huidige activiteit op Discord",
+          "options": {
+            "DISABLED": "Uitgeschakeld",
+            "ENABLED": "Ingeschakeld",
+            "ONLY_ASLEEP": "Alleen wanneer je slaapt"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Alleen de activiteit tonen wanneer VRChat actief is"
+        },
+        "title": "Discord"
       },
       "language": {
         "description": "Je kan hier je voorkeurstaal selecteren. Als er vertalingen missen, neem a.u.b. contact op!",
@@ -1106,6 +1477,10 @@
         "binding": {
           "description": "Welke controller knop(pen) het overlay menu kunnen openen kan geconfigureerd worden in SteamVR's binding menu.",
           "title": "Controller knop binding"
+        },
+        "onlyOpenMenuWhenVRChatRunning": {
+          "description": "Dit kun je inschakelen om te voorkomen dat het menu opent wanneer VRChat niet actief is",
+          "title": "Alleen openen wanneer VRChat actief is"
         },
         "overlayMenu": {
           "description": "Hiermee kan je OyasumiVR's overlay menu compleet uitschakelen.",
@@ -1163,9 +1538,29 @@
         "title": "Systeemvak"
       },
       "telemetry": {
+        "description": "Wanneer ingeschakeld zal OyasumiVR anonieme gebruiksinformatie verzamelen, zoals de gebruikte applicatie versie, en crash rapportage. Deze data bevat absoluut geen persoonlijke informatie, het wordt alleen gebruikt voor het opsporen van software fouten en het opbouwen van algemene gebruiksstatistieken.<br>Voor meer informatie kun je de <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase Privacy Policy</a> lezen.",
         "label": "Verstuur anonieme telemetrie data",
         "title": "Telemetrie"
-      }
+      },
+      "title": "Algemene Instellingen"
+    },
+    "hotkeys": {
+      "action": {
+        "HOTKEY_DISABLE_SLEEP_MODE": "Slaap Modus Uitschakelen",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Slaap Modus Inschakelen",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Afsluit Procedure Activeren",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Slaapvoorbereiding Activeren",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Basestations Schakelen",
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Schakel Slaap Modus",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Controllers Uitschakelen",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Basestations Uit Zetten",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Trackers Uitschakelen",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Basestations Aan Zetten"
+      },
+      "actionDescription": "Stel in welke hotkey gebruikt moet worden voor deze actie",
+      "actions": "Hotkey Acties",
+      "description": "Hier kan je systeem-breede hotkey instellen voor verschillende acties in OyasumiVR",
+      "title": "Hotkey Instellingen"
     },
     "integrations": {
       "connect": "Koppel",
@@ -1174,9 +1569,11 @@
       "disconnect": "Loskoppelen",
       "providerLink": "Provider Website",
       "pulsoid": {
+        "description": "Stelt je hartslag data beschikbaar aan OyasumiVR, welke gebruikt kan worden voor verschillende automatiseringen.<br><i>Deze integratie vereist een eenmalige aankoop van Pulsoid's OyasumiVR integratie, of dat je een actief Pulsoid \"BRO\" abbonnement hebt. Check dat je een compatibel apparaat hebt voordat je het aanschaft.</i>",
         "title": "Pulsoid"
       },
       "reveal": "Toon",
+      "title": "Integraties",
       "vrchat": {
         "description": "Het koppelen van je account geeft je de mogelijkheid om OyasumiVR's VRChat-gerelateerde automatiseringen te gebruiken.",
         "title": "VRChat"
@@ -1216,12 +1613,22 @@
         "title": "Algemene Notificatie Volume"
       }
     },
+    "statusInfo": {
+      "copy": {
+        "action": "Kopieer",
+        "description": "Kopieer alle onderstaande informatie naar je klembord",
+        "title": "Kopieer naar klembord"
+      },
+      "description": "Hier kun je wat technische informatie vinden van OyasumiVR's interne werking. Dit kan vooral gebruikt worden voor foutopsporing, en kan handig zijn wanneer je om ondersteuning vraagt.",
+      "title": "Status Informatie"
+    },
     "updates": {
       "changelog": "Changelog",
       "checkForUpdates": "Updates checken",
       "install": "Installeer v{version}",
       "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
       "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
+      "title": "Updates",
       "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "Omdat je een development build van OyasumiVR draait is de mogelijkheid om voor updates te checken uitgeschakeld. \nAls je een nieuwere versie van OyasumiVR wilt installeren, download en installeer deze dan met de hand.",
@@ -1331,6 +1738,14 @@
   },
   "sleep-detection": {
     "disableAutomations": {
+      "afterTime": {
+        "description": {
+          "hours": "Na {hours, plural, one {1 uur} other {# uren}}",
+          "hoursAndMinutes": "Na {hours, plural, one {1 uur} other {# uren}} en {minutes, plural, one {1 minuut} other {# minuten}}",
+          "minutes": "na {minutes, plural, one {1 minuut} other {# minuten}}"
+        },
+        "title": "Na een bepaalde tijd"
+      },
       "atTime": "Om een specifieke tijd",
       "description": "Automatisch de slaap modus uitschakelen",
       "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
@@ -1353,13 +1768,15 @@
         "description": "Vereist <a class=\"integrationsPageLink\">Pulsoid integratie</a>",
         "title": "Wanneer je hartslag laag genoeg is voor een bepaalde periode"
       },
-      "onMotionDetection": {
-        "title": "Wanneer OyasumiVR detecteert dat je slaapt gebaseerd op je bewegingen"
-      },
       "title": "Slaap modus inschakelen"
     },
     "experimentalAutomation": "Deze automatisering is momenteel nog experimenteel en het kan zijn dat deze nog niet betrouwbaar is.",
     "modals": {
+      "disableAfterTime": {
+        "description": "Schakel de slaap modus uit nadat deze actief is geweest voor een bepaalde tijd.",
+        "time": "Tijdsduur",
+        "title": "Slaap modus uitschakelen"
+      },
       "disableAtTime": {
         "description": "Om een specifieke tijd op de dag",
         "time": "Tijd",
@@ -1426,6 +1843,7 @@
           "title": "BPM Grens",
           "unit": "BPM"
         },
+        "description": "Schakel de slaap modus in wanneer je hartslag onder een bepaalde grens is gebleven voor een bepaalde tijd: Stel de waarde in waar je hartslag onder moet blijven, en de nodige tijdsduur, om de slaap modus in te laten schakelen.\n\nDeze feature vereist dat je de <a class=\"integrationsPageLink\">Pulsoid integratie</a> inschakeld.",
         "duration": {
           "description": "Hoe lang je hartslag onder de grens moet blijven om de slaap modus te activeren.",
           "title": "Tijdsduur",
@@ -1577,11 +1995,23 @@
         "description": "Fade de indicator uit na een paar seconden. Je kunt de indicator weer tonen door op een controller knop te drukken. Deze optie is aan te raden als je een VR headset gebruikt met OLED schermen om het risico op inbranding te verminderen.",
         "title": "Fade out"
       },
+      "hardwareVoiceActivityThreshold": {
+        "description": "Stel de volumegrens in waarbij de mic indicator op moet lichten",
+        "title": "Stem activatie grens"
+      },
       "opacity": {
         "description": "De maximale dekking van de indicator",
         "title": "Dekking"
       },
-      "title": "Overlay Indicator"
+      "title": "Overlay Indicator",
+      "voiceActivityMode": {
+        "description": "Bepaald in welke modus stem activatie (de indicator die oplicht) zal functioneren.",
+        "modes": {
+          "HARDWARE": "Door Mic Volume",
+          "VRCHAT": "Door VRChat"
+        },
+        "title": "Stem activatie modus"
+      }
     },
     "stateAutomations": {
       "onSleepModeDisable": {
@@ -1598,7 +2028,19 @@
       },
       "title": "Dempings Automatiseringen"
     },
-    "title": "Systeem Microfoon Dempings Automatiseringen"
+    "title": "Systeem Microfoon Dempings Automatiseringen",
+    "vrchat": {
+      "title": "VRChat Opties",
+      "worldJoinBehaviour": {
+        "description": "Hoe de microfoon zich moet gedragen wanneer je van wereld wisselt in VRChat",
+        "options": {
+          "KEEP": "Behoud Laatste Modus",
+          "MUTE": "Standaard Uit",
+          "UNMUTE": "Standaard Aan"
+        },
+        "title": "Wereld Join Gedrag"
+      }
+    }
   },
   "updater": {
     "modals": {
@@ -1620,15 +2062,6 @@
       "mute": "Microfoon dempen",
       "title": "Regel microfoon demping",
       "unmute": "Microfoon niet dempen"
-    },
-    "description": "Demp je microfoon automatisch in VRChat wanneer je in slaap valt, of wakker wordt! Dit kan handig zijn als je wilt voorkomen dat anderen je horen snurken ;)\n\nLet op dat om dit te kunnen gebruiken, je OSC ingeschakeld moet hebben in VRChat.",
-    "mode": {
-      "description": "Selecteer welke microfoon modus je gebruikt in VRChat. Als je hier iets anders selecteerd dan wat je in VRChat gebruikt, dan kunnen deze automatiseringen een ongewenst effect hebben.",
-      "title": "VRChat Microfoon Modus"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Push to Talk",
-      "TOGGLE": "Toggle"
     },
     "muteOptions": {
       "MUTE": "Dempen",
@@ -1653,6 +2086,7 @@
       "title": "Huidige VRChat microfoondemping",
       "unknown": "Onbekend",
       "unmuted": "Niet gedempt"
-    }
+    },
+    "title": "VRChat Microfoon Dempings Automatiseringen"
   }
 }

@@ -30,6 +30,10 @@ export class SettingsNotificationsViewComponent implements OnInit {
       label: 'XSOverlay',
     },
     {
+      id: 'OVRTOOLKIT',
+      label: 'OVRToolkit',
+    },
+    {
       id: 'DESKTOP',
       label: 'Windows',
     },

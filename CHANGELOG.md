@@ -9,6 +9,88 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Option to load and save VRChat player lists as presets for automatic invite request acceptance.
+- Option to limit automatically accepting invite request based on the number of players in the world.
+- Automations for switching between various player list presets for automatic invite request acceptance.
+- Automation for disabling the sleep mode when you've been upright for long enough after laying down.
+- Function for VRChat player join/leave notifications
+- Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
+- OVRToolkit as a notification provider
+- Integration with Home Assistant via MQTT
+
+### Changed
+- Improved duration selection for sleep duration in shutdown sequence
+- Made device edit dialog always show the device serial number in its title.
+
+## [1.12.8]
+
+### Fixed
+- Pluralization issues causing Japanese- and Korean language translations to break
+- Improved initialization performance
+
+## [1.12.7]
+
+### Changed
+
+- Improved device detection for Bigscreen Beyond
+- Increased timeout duration for initialization tasks
+- Improved telemetry
+
+### Fixed
+
+- Disabled swipe navigation in main window
+
+## [1.12.6]
+
+### Changed
+
+- Improved initialization
+
+## [1.12.5]
+
+### Added
+
+- Crash reporting for initialization errors
+
+## [1.12.4]
+
+### Fixed
+
+- VRChat microphone mute automations blocking keyboard- and controller bindings from toggling the microphone mute state.
+
+## [1.12.3]
+
+### Added
+
+- Options for (conditionally) disabling Discord rich presence, based on sleep mode, or VRChat being active.
+- Missing event logs for Bigscreen Beyond fan- and led automations.
+- Missing Dutch translations
+
+### Fixed
+
+- Fixed sleep preparation not being available even when some of its automations are enabled.
+
+## [1.12.2]
+
+### Changed
+
+- Reverted back to Tauri v1.6
+
+### Fixed
+
+- Fixed Discord Rich Presence integration preventing OyasumiVR from starting without Discord running
+
+## [1.12.1]
+
+### Changed
+
+- Temporarily disabled Discord rich presence support
+- Temporarily reverted to Tauri v1.4
+
+## [1.12.0]
+
+### Added
+
 - Show SteamVR device roles instead of serial numbers in the device list, when available. (by [góngo](https://github.com/TheMrGong))
 - Added back VRChat microphone mute automations.
 - Hardware brightness control for Bigscreen Beyond.
@@ -16,17 +98,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - RGB Led automations for Bigscreen Beyond.
 - Options for limiting the maximum hardware brightness.
 - Automatic cleanup for log files older than 30 days, or that exceed 10MB.
+- Discord rich presence support for showing the current sleep mode.
 
 ### Changed
 
 - Redefined "Display Brightness" as "Hardware Brightness", and "Image Brightness" as "Software Brightness".
+- Updated sleep detection to include controller button presses as a factor
 - Updated overlay sidecar to .NET 8.0
+- Upgraded to Tauri v1.6 and updated various dependencies.
 
 ### Fixed
 
 - OyasumiVR crashing when trying to read SteamVR's display brightness upon SteamVR quitting.
 - Battery level automations not working for trackers.
 - MDNS advertisements for OSC & OSCQuery not working for some network configurations.
+- System microphone still being muted due to changing controller button behavior, when controller binding is disabled.
+
+### Removed
+
+- Legacy telemetry
 
 ## [1.11.5]
 

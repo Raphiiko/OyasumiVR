@@ -17,7 +17,7 @@ pub async fn nvml_status() -> NvmlStatus {
             return NvmlStatus::UnknownError;
         }
     };
-    return NvmlStatus::from_i32(response.status).unwrap();
+    return NvmlStatus::try_from(response.status).unwrap();
 }
 
 #[tauri::command]
@@ -64,7 +64,7 @@ pub async fn nvml_set_power_management_limit(
         );
         match response.error {
             None => Err(NvmlSetPowerManagementLimitError::UnknownError),
-            Some(e) => Err(NvmlSetPowerManagementLimitError::from_i32(e).unwrap()),
+            Some(e) => Err(NvmlSetPowerManagementLimitError::try_from(e).unwrap()),
         }
     }
 }

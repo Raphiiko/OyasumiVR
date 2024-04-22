@@ -18,6 +18,8 @@ export type AutomationType =
   | 'SLEEP_MODE_DISABLE_AT_TIME'
   | 'SLEEP_MODE_DISABLE_AFTER_TIME'
   | 'SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON'
+  | 'SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE'
+  | 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'
   // POWER AUTOMATIONS
   | 'TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE'
   | 'TURN_OFF_DEVICES_WHEN_CHARGING'
@@ -44,6 +46,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
   // MISCELLANEOUS
+  | 'JOIN_NOTIFICATIONS'
   | 'AUDIO_DEVICE_AUTOMATIONS'
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
@@ -54,7 +57,7 @@ export type AutomationType =
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 13;
+  version: 14;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -67,6 +70,8 @@ export interface AutomationConfigs {
   SLEEP_MODE_DISABLE_AT_TIME: SleepModeDisableAtTimeAutomationConfig;
   SLEEP_MODE_DISABLE_AFTER_TIME: SleepModeDisableAfterTimeAutomationConfig;
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: SleepModeDisableOnDevicePowerOnAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: SleepModeDisableOnUprightPoseAutomationConfig;
+  SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig;
   // POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: TurnOffDevicesOnSleepModeEnableAutomationConfig;
   TURN_OFF_DEVICES_WHEN_CHARGING: TurnOffDevicesWhenChargingAutomationConfig;
@@ -93,6 +98,7 @@ export interface AutomationConfigs {
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   // MISCELLANEOUS AUTOMATIONS
+  JOIN_NOTIFICATIONS: JoinNotificationsAutomationsConfig;
   AUDIO_DEVICE_AUTOMATIONS: AudioDeviceAutomationsConfig;
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
@@ -197,6 +203,18 @@ export interface SleepModeDisableOnDevicePowerOnAutomationConfig extends Automat
   triggerClasses: OVRDeviceClass[];
 }
 
+export interface SleepModeDisableOnUprightPoseAutomationConfig extends AutomationConfig {
+  duration: number;
+}
+
+export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig extends AutomationConfig {
+  joinMode: JoinNotificationsMode;
+  leaveMode: JoinNotificationsMode;
+  playerIds: string[];
+  onlyWhenPreviouslyAlone: boolean;
+  onlyWhenLeftAlone: boolean;
+}
+
 // DEVICE POWER AUTOMATIONS
 export interface TurnOffDevicesOnSleepModeEnableAutomationConfig extends AutomationConfig {
   deviceClasses: OVRDeviceClass[];
@@ -241,11 +259,10 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   footLockReleaseWindow: number;
 }
 
-export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_MUTE';
+export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_TALK';
 export type VRChatMicMuteStateOption = 'MUTE' | 'UNMUTE' | 'NONE';
 
 export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
-  mode: VRChatVoiceMode;
   onSleepModeEnable: VRChatMicMuteStateOption;
   onSleepModeDisable: VRChatMicMuteStateOption;
   onSleepPreparation: VRChatMicMuteStateOption;
@@ -265,6 +282,19 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 }
 
 // MISCELLANEOUS AUTOMATIONS
+
+export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
+export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
+  playerIds: string[];
+  onlyDuringSleepMode: boolean;
+  onlyWhenPreviouslyAlone: boolean;
+  onlyWhenLeftAlone: boolean;
+  joinNotification: JoinNotificationsMode;
+  leaveNotification: JoinNotificationsMode;
+  joinSound: JoinNotificationsMode;
+  leaveSound: JoinNotificationsMode;
+  joinSoundVolume: number;
+}
 
 export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
 export type AudioVolumeAutomation =
@@ -327,8 +357,13 @@ export interface SystemMicMuteAutomationsConfig extends AutomationConfig {
 
 export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConfig {
   onlyIfSleepModeEnabled: boolean;
+  onlyBelowPlayerCount: number;
+  onlyBelowPlayerCountEnabled: boolean;
   listMode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
   playerIds: string[];
+  presetOnSleepEnable: string | null;
+  presetOnSleepDisable: string | null;
+  presetOnSleepPreparation: string | null;
 }
 
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
@@ -379,7 +414,7 @@ export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationCo
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 13,
+  version: 14,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -452,7 +487,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     calibrationValue: 0.01,
     sensitivity: 'MEDIUM',
-    sleepCheck: false,
+    sleepCheck: true,
     detectionWindowMinutes: 15,
     activationWindow: false,
     activationWindowStart: [23, 0],
@@ -490,6 +525,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON: {
     enabled: false,
     triggerClasses: ['GenericTracker', 'Controller'],
+  },
+  SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE: {
+    enabled: false,
+    duration: 5000,
+  },
+  SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE: {
+    enabled: false,
+    joinMode: 'EVERYONE',
+    leaveMode: 'DISABLED',
+    playerIds: [],
+    onlyWhenPreviouslyAlone: false,
+    onlyWhenLeftAlone: false,
   },
   // DEVICE POWER AUTOMATIONS
   TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE: {
@@ -533,9 +580,20 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     footLockReleaseWindow: 600,
     oscScripts: {},
   },
+  JOIN_NOTIFICATIONS: {
+    enabled: false,
+    playerIds: [],
+    onlyDuringSleepMode: false,
+    onlyWhenPreviouslyAlone: false,
+    onlyWhenLeftAlone: false,
+    joinNotification: 'WHITELIST',
+    leaveNotification: 'DISABLED',
+    joinSound: 'WHITELIST',
+    leaveSound: 'DISABLED',
+    joinSoundVolume: 100,
+  },
   VRCHAT_MIC_MUTE_AUTOMATIONS: {
     enabled: true,
-    mode: 'TOGGLE',
     onSleepModeEnable: 'NONE',
     onSleepModeDisable: 'NONE',
     onSleepPreparation: 'NONE',
@@ -552,8 +610,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   AUTO_ACCEPT_INVITE_REQUESTS: {
     enabled: false,
     onlyIfSleepModeEnabled: false,
+    onlyBelowPlayerCount: 2,
+    onlyBelowPlayerCountEnabled: false,
     listMode: 'WHITELIST',
     playerIds: [],
+    presetOnSleepEnable: null,
+    presetOnSleepDisable: null,
+    presetOnSleepPreparation: null,
   },
   // SHUTDOWN AUTOMATIONS
   SHUTDOWN_AUTOMATIONS: {

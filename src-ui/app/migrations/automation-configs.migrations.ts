@@ -16,6 +16,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   11: from10to11,
   12: from11to12,
   13: from12to13,
+  14: from13to14,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -49,6 +50,12 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from13to14(data: any): any {
+  data.version = 14;
+  delete data['VRCHAT_MIC_MUTE_AUTOMATIONS'].mode;
   return data;
 }
 

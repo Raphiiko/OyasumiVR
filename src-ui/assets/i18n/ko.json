@@ -21,7 +21,7 @@
       "UNMUTE": "음소거 해제"
     },
     "automations": {
-      "label": "{count, plural, one {자동화 1개} other {자동화 #개}}"
+      "label": "자동화 {count}개"
     },
     "description": "잠들거나 일어날 때 오디오 장치의 볼륨을 자동으로 변경해보세요! 이 기능은 다른 사람이 수면을 방해하는 것을 방지하고 싶을 때 유용합니다.",
     "devices": {
@@ -60,7 +60,6 @@
   "auto-invite-request-accept": {
     "addFriends": "플레이어 추가",
     "blacklist": "플레이어 블랙리스트",
-    "clearPlayers": "목록 비우기",
     "description": "OyasumiVR은 여러분이 받는 초대 요청을 자동으로 수락할 수 있어요. 플레이어 화이트리스트 또는 블랙리스트를 사용하면 선택한 친구만 초대 요청을 자동으로 수락하도록 할 수 있습니다.",
     "loadingFriends": "친구 목록을 불러오는 중...",
     "noPlayersAdded": "목록에 아무도 추가되지 않았어요.",
@@ -114,12 +113,13 @@
         "title": "시작시 밝기 적용"
       },
       "brightness": {
-        "title": "조정할 밝기"
+        "title": "조절할 밝기"
       },
       "copyBrightness": "현재\n밝기 값 복사",
       "description": "잠들거나 일어날 때와 같이 다양한 시간에 OyasumiVR이 VR 헤드셋의 밝기를 자동으로 조정하도록 설정해요.",
-      "softwareBrightness": {
-        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요."
+      "hardwareBrightness": {
+        "description": "디스플레이 자체의 밝기를 조절해요.",
+        "title": "조절할 하드웨어 밝기"
       },
       "onSleepDisable": {
         "description": "밝기를 조절해요",
@@ -142,6 +142,10 @@
         "description": "OyasumiVR의 오버레이에서 버튼을 눌러 수면 준비를 할 수 있어요. 이 버튼은 잠자기 전에 미리 밝기를 낮추는 등 수면 준비 자동화 기능이 하나 이상 활성화되어 있을 때 표시됩니다.",
         "title": "수면 준비"
       },
+      "softwareBrightness": {
+        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
+        "title": "조절할 소프트웨어 밝기"
+      },
       "startupAutomations": "시작 자동화",
       "transition": {
         "description": "원하는 밝기까지 조금씩 부드럽게 조절해요.",
@@ -152,12 +156,44 @@
         "title": "변화 시간"
       }
     },
+    "hmdSettings": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "밝기 값이 100% 이상일 때 팬 속도를 강제로 100%로 설정해요.",
+          "title": "과부하 팬 안정화",
+          "warning": "이 기능은 공식 Bigscreen Beyond 드라이버의 안전 팬 파라미터를 모방합니다. 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "permitRiskRange": {
+          "description": "밝기를 150% 이상으로 설정하는 것을 방지해요.",
+          "title": "안전한 밝기 수준으로 제한",
+          "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "description": "여기에서 특정 VR 헤드셋의 밝기 관련 설정을 확인할 수 있어요.",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "title": "Valve Index"
+      }
+    },
     "mode": {
       "advanced": "고급 모드",
       "simple": "단순 모드"
     },
     "modeInfoModal": {
+      "message": "OyasumiVR에는 VR 헤드셋의 밝기를 제어하는 두 가지 방식이 있어요: 각각 소프트웨어 제어 방식과 하드웨어 제어 방식이에요:\n\n소프트웨어 제어는 모든 헤드셋에서 사용할 수 있어요. 이미지의 밝기를 조절하여 VR 헤드셋의 밝기를 조절합니다.\n\n하드웨어 제어는 지원되는 헤드셋( Valve Index, Bigscreen Beyond)에서만 사용할 수 있어요. 지원되는 범위 내에서 헤드셋 디스플레이의 밝기를 직접 조절합니다.\n\n단순 모드에서는 OyasumiVR이 소프트웨어와 하드웨어 밝기를 유연하게 제어하며, 하드웨어 밝기가 지원되지 않는 경우 소프트웨어 밝기로만 제어합니다. \n\n직접적인 제어를 선호하는 경우 고급 모드를 사용하면 소프트웨어와 하드웨어 밝기를 각각 개별적으로 제어할 수 있어 각각에 대한 정확한 밝기 값을 설정할 수 있습니다.",
       "title": "밝기 제어 모드"
+    },
+    "tabs": {
+      "automations": "자동화",
+      "hmdSettings": "HMD 설정"
     },
     "title": "밝기 자동화"
   },
@@ -179,7 +215,16 @@
   "comp": {
     "brightness-control-modal": {
       "automationsTooltip": "밝기 자동화",
-      "brightness": "밝기"
+      "brightness": "밝기",
+      "hardwareBrightness": "하드웨어 밝기",
+      "softwareBrightness": "소프트웨어 밝기"
+    },
+    "bsb-fan-speed-control-modal": {
+      "automationsTooltip": "Bigscreen Beyond 자동화",
+      "fanSpeed": "팬 속도"
+    },
+    "color-picker-modal": {
+      "title": "색상 선택"
     },
     "confirm-modal": {
       "defaultTitle": "확인"
@@ -222,6 +267,7 @@
       "chaperoneAutomations": "경계 표시 자동화",
       "gpuAutomations": "GPU 자동화",
       "hardwareAutomations": "하드웨어 자동화",
+      "hmdAutomations": "HMD별 자동화",
       "miscAutomations": "기타 자동화",
       "nightmareDetection": "악몽 감지",
       "oscAutomations": "OSC 자동화",
@@ -267,6 +313,30 @@
       },
       "deviceName": {
         "lighthouseV2": "V2 Lighthouse"
+      },
+      "deviceRole": {
+        "AnkleLeft": "왼쪽 발목",
+        "AnkleRight": "오른쪽 발목",
+        "Camera": "카메라",
+        "Chest": "가슴",
+        "ElbowLeft": "왼쪽 팔꿈치",
+        "ElbowRight": "오른쪽 팔꿈치",
+        "FootLeft": "왼쪽 발",
+        "FootRight": "오른쪽 발",
+        "Gamepad": "게임 패드",
+        "HandPrimary": "기본 손",
+        "HandSecondary": "보조 손",
+        "Head": "머리",
+        "Keyboard": "키보드",
+        "KneeLeft": "왼쪽 무릎",
+        "KneeRight": "오른쪽 무릎",
+        "ShoulderLeft": "왼쪽 어깨",
+        "ShoulderRight": "오른쪽 어깨",
+        "Stylus": "스타일러스",
+        "Treadmill": "트레드밀",
+        "Waist": "허리",
+        "WristLeft": "왼쪽 손목",
+        "WristRight": "오른쪽 손목"
       },
       "lighthouseStatus": {
         "booting": "부팅 중",
@@ -337,13 +407,6 @@
           },
           "title": "Chaperone 경계 표시 거리를 {value}으로 변경함"
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
-            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
-          }
-        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 전력 제한을 복원했어요.",
@@ -354,11 +417,15 @@
             "set": "''{device}''의 전력 제한을 {limit}으로 설정함"
           }
         },
-        "softwareBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
             "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          },
+          "title": {
+            "set": "헤드셋의 하드웨어 밝기를 {value}으로 설정함",
+            "transition": "헤드셋의 하드웨어 밝기를 {value}으로 점차 변화시킴"
           }
         },
         "lighthouseSetPowerState": {
@@ -513,6 +580,17 @@
           },
           "title": "수면 모드가 활성화 됨"
         },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          },
+          "title": {
+            "set": "헤드셋의 소프트웨어 밝기를 {value}으로 설정함",
+            "transition": "헤드셋의 소프트웨어 밝기를 {value}으로 점차 변화시킴"
+          }
+        },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "월드의 플레이어가 {threshold}인 이상이기에 스테이터스가 변경되었어요.",
@@ -588,6 +666,10 @@
         "simple": "밝기",
         "tooltip": "밝기 제어"
       },
+      "bsbFanSpeed": {
+        "label": "팬 속도",
+        "tooltip": "Bigscreen Beyond 팬 속도"
+      },
       "heartrate": "심박수",
       "inactive": "비활성화 됨",
       "loggedOut": "로그아웃 중",
@@ -658,6 +740,11 @@
       "updateNow": "v{version} 설치"
     },
     "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
+        "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요.",
+        "use": "로그인 정보는 사용자의 컴퓨터 외에는 다른 곳에 저장되지 않으며 인증 목적으로만 VRChat의 서버로 전송되어요."
+      },
       "errors": {
         "CHECK_EMAIL": "로그인 실패: 자세한 내용은 VRChat 계정에 연결된 이메일 주소의 수신함을 확인해주세요.",
         "INVALID_CREDENTIALS": "입력된 인증 정보가 잘못되었어요.",
@@ -666,12 +753,7 @@
       "password": "비밀번호",
       "rememberCredentials": "계정 기억",
       "title": "VRChat 로그인",
-      "username": "VRChat 사용자명 / 이메일",
-      "disclaimers": {
-        "brand": "OyasumiVR은 VRChat이 승인한 프로그램이 아니며 VRChat이나 VRChat의 제작·운영에 공식적으로 관여하고 있는 인물들의 견해나 의견을 반영한 것이 아닙니다. VRChat은 VRChat Inc.의 상표입니다. VRChat © VRChat Inc.",
-        "liability": "Raphiiko는 OyasumiVR와 관련된 어떠한 문제에도 책임지지 않습니다. 본인의 책임 하에 이용해주세요.",
-        "use": "로그인 정보는 사용자의 컴퓨터 외에는 다른 곳에 저장되지 않으며 인증 목적으로만 VRChat의 서버로 전송되어요."
-      }
+      "username": "VRChat 사용자명 / 이메일"
     },
     "vrchat-login-tfa-modal": {
       "description": "당신의 VRChat 계정이 2단계 인증으로 보호받고 있음을 확인했어요.\r\n\r\n2단계 인증 코드를 입력해주세요 :",
@@ -756,6 +838,55 @@
       "powerLimiting": "전력 제한"
     },
     "title": "GPU 자동화"
+  },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "description": "여기에서 Bigscreen Beyond의 특정 기능을 자동화할 수 있어요.",
+      "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "팬 속도를 40% 미만으로 설정하는 것을 방지해요.",
+          "title": "안전한 팬 속도로 제한",
+          "warning": "팬 속도를 40% 미만으로 설정하는 것은 제조사에서 지원하지 않으며, 헤드셋 과열로 인한 손상의 원인이 될 수 있어요. 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "onSleepDisable": {
+          "description": "수면 모드 비활성화 시 팬 속도를 변경해요.",
+          "title": "수면 모드 비활성화 시"
+        },
+        "onSleepEnable": {
+          "description": "수면 모드 활성화 시 팬 속도를 변경해요.",
+          "title": "수면 모드 활성화 시"
+        },
+        "onSleepPreparation": {
+          "description": "수면 준비 시 팬 속도를 변경해요.",
+          "title": "수면 준비 시작 시"
+        },
+        "title": "팬 속도"
+      },
+      "rgb": {
+        "onSleepDisable": {
+          "description": "수면 모드 비활성화 시 HMD의 LED 색상을 변경해요.",
+          "title": "수면 모드 비활성화 시"
+        },
+        "onSleepEnable": {
+          "description": "수면 모드 활성화 시 HMD의 LED 색상을 변경해요.",
+          "title": "수면 모드 활성화 시"
+        },
+        "onSleepPreparation": {
+          "description": "수면 준비 시 HMD의 LED 색상을 변경해요.",
+          "title": "수면 준비 시작 시"
+        },
+        "pickerTitle": {
+          "onSleepDisable": "수면 모드 비활성화 시의 Beyond의 LED 색상을 설정하기",
+          "onSleepEnable": "수면 모드 활성화 시의 Beyond의 LED 색상을 설정하기",
+          "onSleepPreparation": "수면 준비 시의 Beyond의 LED 색상을 설정하기"
+        },
+        "title": "RGB Led"
+      }
+    },
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "HMD별 자동화"
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "이 프리셋은 몇 가지 문제가 있는 워크어라운드를 사용하고 있어요. 새로은 GoGo Loco 프리셋을 사용할 수 없는 경우에만 이 프리셋을 사용하도록 부닥드립니다. 또한 당신의 아바타가 구버전의 Gogo Loco를 사용하고 있다면 최신 버전의 Gogo Loco 버전으로 업데이트하는 것을 추천해요.",
@@ -901,7 +1032,9 @@
   },
   "overlay": {
     "brightness": {
-      "simple": "밝기"
+      "hardware": "하드웨어 밝기",
+      "simple": "밝기",
+      "software": "소프트웨어 밝기"
     },
     "dashboard": {
       "automations": {
@@ -1099,6 +1232,30 @@
     "advanced": {
       "fixes": {
         "description": "이 섹션에서는 문제 해결 및 문제 해결과 관련된 몇 가지 옵션과 조치를 설명해요. 일반적으로 자신이 무엇을 하고 있는지 모르거나 지원을 받을 때 이러한 조치를 사용하라는 요청을 받지 않는 한 이러한 조치를 사용해서는 안 됩니다.",
+        "devTools": {
+          "action": "DevTools 열기",
+          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
+          "title": "개발자 도구 열기"
+        },
+        "memoryWatcher": {
+          "action": "활성화",
+          "description": "모든 하위 프로세스를 모니터링하려면 메모리 감시기를 활성화하세요. 프로세스의 메모리 사용량이 1GB를 초과하는 경우 오류 대화 상자가 표시되고 추가 정보가 기록됩니다.",
+          "modal": {
+            "error": {
+              "message": "메모리 감시기가 이미 활성화되어 있습니다.",
+              "title": "이미 활성화 됨"
+            },
+            "success": {
+              "message": "메모리 감시기가 활성화되었습니다!",
+              "title": "메모리 감시기 활성화 됨"
+            }
+          },
+          "title": "메모리 감시기"
+        },
+        "oscServerEnabled": {
+          "description": "이 기능을 끄면 내장된 OSC 및 OSCQuery 서버가 비활성화됩니다. 이 설정은 재시작할 때에도 유지됩니다. 이 설정은 디버깅 목적으로만 존재하며 일반적인 사용 중에는 해제해서는 안 됩니다.",
+          "title": "OSC & OSCQuery 서버 활성화"
+        },
         "title": "수정 및 문제 해결",
         "vrManifestReregister": {
           "action": "매니페스트 재등록",
@@ -1336,6 +1493,7 @@
         "title": "시스템 트레이"
       },
       "telemetry": {
+        "description": "활성화하면 OyasumiVR이 버전 정보 및 충돌 보고서와 같은 익명의 사용 데이터를 수집하게 됩니다. 이 정보는 완전히 익명으로 수집되며 버그를 파악하고 일반적인 사용 통계를 확인하는 데만 사용됩니다.<br> 자세한 내용은 <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabase 개인정보 처리방침</a>에서 확인하실 수 있습니다.",
         "label": "익명의 사용 데이터 전송하기",
         "title": "텔레메트리"
       },
@@ -1537,9 +1695,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "{hours, plural, one {1시간} other {#시간}} 뒤에",
-          "hoursAndMinutes": "{hours, plural, one {1시간} other {#시간}} {minutes, plural, one {1분} other {#분}} 뒤에",
-          "minutes": "{minutes, plural, one {1분} other {#분}} 뒤에"
+          "hours": "{hours}시간 뒤에",
+          "hoursAndMinutes": "{hours}시간 {minutes}분 뒤에",
+          "minutes": "{minutes}분 뒤에"
         },
         "title": "특정 시간이 지난 후"
       },
@@ -1564,9 +1722,6 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 연동</a>이 필요해요.",
         "title": "심박수가 일정 시간 동안 안정될 때"
-      },
-      "onMotionDetection": {
-        "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
       },
       "title": "수면 모드 활성화"
     },
@@ -1863,15 +2018,6 @@
       "title": "마이크 음소거 제어",
       "unmute": "마이크\n음소거 해제"
     },
-    "description": "잠들거나 깨어날 때 VRChat에서 자동으로 마이크를 음소거하거나 음소거 해제할 수 있어요! 다른 사람에게 코 고는 소리가 들리지 않도록 하고 싶을 때 유용하게 사용할 수 있습니다 ;)\n\n이 기능을 사용하려면 VRChat 내에서 OSC가 활성화되어 있어야 한다는 점에 유의하세요.",
-    "mode": {
-      "description": "VRChat 내에서 사용 중인 마이크 동작 방식을 선택해주세요. VRChat에서 사용 중인 동작 방식과 다른 방식을 선택하면 이러한 자동화가 오작동할 수 있다는 점에 유의하세요.",
-      "title": "VRChat 마이크 동작 방식"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "눌러서 말하기",
-      "TOGGLE": "토글"
-    },
     "muteOptions": {
       "MUTE": "음소거",
       "NONE": "없음",
@@ -1895,6 +2041,7 @@
       "title": "현재 VRChat 마이크 상태",
       "unknown": "알 수 없음",
       "unmuted": "음소거"
-    }
+    },
+    "title": "VRChat 마이크 음소거 자동화"
   }
 }

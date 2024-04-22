@@ -80,6 +80,7 @@ export class VRChatService {
   );
   private _world: BehaviorSubject<WorldContext> = new BehaviorSubject<WorldContext>({
     playerCount: 1,
+    loaded: false,
   });
   private _friendsCache: CachedValue<LimitedUser[]> = new CachedValue<LimitedUser[]>(
     undefined,
@@ -499,12 +500,15 @@ export class VRChatService {
   private async subscribeToLogEvents() {
     this.logService.logEvents.subscribe((event) => {
       switch (event.type) {
-        case 'OnPlayerJoined':
-          this._world.next({
+        case 'OnPlayerJoined': {
+          const context = {
             ...cloneDeep(this._world.value),
             playerCount: this._world.value.playerCount + 1,
-          });
+          };
+          if (event.displayName === this._user.value?.displayName) context.loaded = true;
+          this._world.next(context);
           break;
+        }
         case 'OnPlayerLeft':
           this._world.next({
             ...cloneDeep(this._world.value),
@@ -516,6 +520,7 @@ export class VRChatService {
             ...cloneDeep(this._world.value),
             playerCount: 0,
             instanceId: event.instanceId,
+            loaded: false,
           });
           break;
       }

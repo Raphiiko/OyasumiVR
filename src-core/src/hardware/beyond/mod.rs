@@ -1,12 +1,13 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use hidapi::{HidApi, HidDevice};
-use log::{error, info};
+use log::{error, info, warn};
 use tokio::sync::Mutex;
 
 use crate::utils::send_event;
 
 pub mod commands;
+mod detector;
 
 const BIGSCREEN_VID: u16 = 0x35bd;
 const BEYOND_PID: u16 = 0x0101;
@@ -17,51 +18,77 @@ lazy_static! {
 }
 
 pub async fn init() {
-    let mut api = match HidApi::new() {
-        Ok(a) => a,
-        Err(e) => {
-            error!("[Core] Failed to initialize HIDAPI: {}", e);
-            return;
-        }
-    };
-
     tokio::spawn(async move {
-        loop {
-            tokio::time::sleep(std::time::Duration::from_secs(1)).await;
-            let _ = api.refresh_devices();
-            let devices = api.device_list();
-            let mut device: Option<HidDevice> = None;
-            for device_info in devices {
-                if device_info.vendor_id() == BIGSCREEN_VID
-                    && device_info.product_id() == BEYOND_PID
-                {
-                    device = Some(match device_info.open_device(&api) {
-                        Ok(d) => d,
-                        Err(e) => {
-                            error!(
-                                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
-                                e
-                            );
-                            continue;
-                        }
-                    });
-                    break;
-                }
+        let mut api = match HidApi::new() {
+            Ok(a) => a,
+            Err(e) => {
+                error!("[Core] Failed to initialize HIDAPI: {}", e);
+                return;
             }
-            let connected = BSB_CONNECTED.load(Ordering::Relaxed);
-            if connected && device.is_none() {
-                *BSB_DEVICE.lock().await = None;
-                BSB_CONNECTED.store(false, Ordering::Relaxed);
-                info!("[Core] Bigscreen Beyond disconnected");
-                send_event("BIGSCREEN_BEYOND_CONNECTED", false).await;
-            } else if !connected && device.is_some() {
-                *BSB_DEVICE.lock().await = device;
-                BSB_CONNECTED.store(true, Ordering::Relaxed);
-                info!("[Core] Bigscreen Beyond connected");
-                send_event("BIGSCREEN_BEYOND_CONNECTED", true).await;
+        };
+        // Check if beyond is currently connected
+        match api.refresh_devices() {
+            Ok(_) => {}
+            Err(e) => {
+                error!("[Core][Beyond] Could not refresh device list: {}", e);
+                return;
+            }
+        }
+        let devices = api.device_list();
+        for device_info in devices {
+            if device_info.vendor_id() == BIGSCREEN_VID && device_info.product_id() == BEYOND_PID {
+                on_bsb_plugged(&api).await;
+                break;
+            }
+        }
+        // Detect USB plug/unplug events
+        let mut detector = detector::PnPDetector::start();
+        loop {
+            let event = match detector.recv().await {
+                Some(e) => e,
+                None => {
+                    warn!("[Core][Beyond] PnP detector task terminated");
+                    return;
+                }
+            };
+            match event {
+                detector::PnPDetectorEvent::Plug { device_ref } => {
+                    if device_ref.vid == BIGSCREEN_VID && device_ref.pid == BEYOND_PID {
+                        on_bsb_plugged(&api).await;
+                    }
+                }
+                detector::PnPDetectorEvent::Unplug { device_ref } => {
+                    if device_ref.vid == BIGSCREEN_VID && device_ref.pid == BEYOND_PID {
+                        on_bsb_unplugged().await;
+                    }
+                }
             }
         }
     });
+}
+
+async fn on_bsb_plugged(api: &HidApi) {
+    let device = match api.open(BIGSCREEN_VID, BEYOND_PID) {
+        Ok(d) => d,
+        Err(e) => {
+            error!(
+                "[Core][Beyond] Could not open device for Bigscreen Beyond: {}",
+                e
+            );
+            return;
+        }
+    };
+    *BSB_DEVICE.lock().await = Some(device);
+    BSB_CONNECTED.store(true, Ordering::Relaxed);
+    info!("[Core] Bigscreen Beyond connected");
+    send_event("BIGSCREEN_BEYOND_CONNECTED", true).await;
+}
+
+async fn on_bsb_unplugged() {
+    *BSB_DEVICE.lock().await = None;
+    BSB_CONNECTED.store(false, Ordering::Relaxed);
+    info!("[Core] Bigscreen Beyond disconnected");
+    send_event("BIGSCREEN_BEYOND_CONNECTED", false).await;
 }
 
 pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), String> {

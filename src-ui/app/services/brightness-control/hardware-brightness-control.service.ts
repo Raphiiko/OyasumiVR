@@ -56,7 +56,7 @@ export class HardwareBrightnessControlService {
   public readonly brightnessStream: Observable<number> = this._brightness.asObservable();
 
   constructor(
-    private openvr: OpenVRService,
+    openvr: OpenVRService,
     private appSettingsService: AppSettingsService // private bsbFanAutomationService: BigscreenBeyondFanAutomationService
   ) {
     this.driverValveIndex = new ValveIndexHardwareBrightnessControlDriver(
@@ -153,11 +153,12 @@ export class HardwareBrightnessControlService {
     force = false
   ) {
     const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
-    if (!(await firstValueFrom(this.driverIsAvailable))) return;
+    const driver = await firstValueFrom(this.driver);
+    if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (!force && percentage == this.brightness) return;
     this._brightness.next(percentage);
-    await this.driver.value!.setBrightnessPercentage(percentage);
+    await driver.setBrightnessPercentage(percentage);
     if (opt.logReason) {
       await info(
         `[BrightnessControl] Set hardware brightness to ${percentage}% (Reason: ${opt.logReason})`

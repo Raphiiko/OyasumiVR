@@ -55,3 +55,4 @@ src-ui/assets/splashscreen/splash-blurhash.css
 # Steam
 /SteamSDK/
 /steamsdk.zip
+/config/config.vdf
