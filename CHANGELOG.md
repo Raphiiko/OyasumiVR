@@ -19,12 +19,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Integration with Home Assistant via MQTT
 
 ### Changed
+
 - Improved duration selection for sleep duration in shutdown sequence
 - Made device edit dialog always show the device serial number in its title.
+
+### Fixed
+
+- CJK fonts not properly being loaded in some parts of the overlay UI
 
 ## [1.12.8]
 
 ### Fixed
+
 - Pluralization issues causing Japanese- and Korean language translations to break
 - Improved initialization performance
 
