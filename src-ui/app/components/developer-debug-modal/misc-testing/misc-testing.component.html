@@ -1,7 +1,7 @@
 <h3>Navigation</h3>
 <div class="row">
   <button class="btn btn-secondary" (click)="navigateTo(['translation'])"
-    >Translation Module
+  >Translation Module
   </button>
 </div>
 <h3>Actions</h3>
@@ -11,10 +11,10 @@
 <h3>Notification Sounds</h3>
 <div class="row">
   <button class="btn btn-secondary" (click)="playSound('notification_bell')"
-    >notification_bell
+  >notification_bell
   </button>
   <button class="btn btn-secondary" (click)="playSound('notification_block')"
-    >notification_block
+  >notification_block
   </button>
   <button class="btn btn-secondary" (click)="playSound('mic_mute')">mic_mute</button>
   <button class="btn btn-secondary" (click)="playSound('mic_unmute')">mic_unmute</button>
@@ -22,11 +22,6 @@
 </div>
 <h3>VRChat microphone muting</h3>
 <p>Muted: {{ automation.muted | async }}</p>
-<p>Mode: {{ automation.mode | async }}</p>
 <button class="btn btn-primary" (click)="automation.toggleMute()">Toggle</button>
 <button class="btn btn-primary" (click)="automation.setMute(true)">Mute</button>
 <button class="btn btn-primary" (click)="automation.setMute(false)">Unmute</button>
-<button class="btn btn-secondary" (click)="automation.setMode('TOGGLE')">Set Toggle Mode</button>
-<button class="btn btn-secondary" (click)="automation.setMode('PUSH_TO_MUTE')"
-  >Set Push To Mute Mode
-</button>

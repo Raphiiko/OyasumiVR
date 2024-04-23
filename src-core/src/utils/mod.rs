@@ -3,7 +3,7 @@ use log::{error, warn};
 use serde::Serialize;
 use std::{
     os::raw::c_char,
-    time::{SystemTime, UNIX_EPOCH},
+    time::{Duration, SystemTime, UNIX_EPOCH},
 };
 use sysinfo::{Pid, PidExt, Process, ProcessExt, Signal, System, SystemExt};
 use tauri::Manager;
@@ -20,6 +20,20 @@ pub mod models;
 pub mod profiling;
 pub mod serialization;
 pub mod sidecar_manager;
+
+pub fn init() {
+    // Refresh processes at least every second
+    tokio::task::spawn(async {
+        loop {
+            {
+                let mut sysinfo_guard = SYSINFO.lock().await;
+                let sysinfo = &mut *sysinfo_guard;
+                sysinfo.refresh_processes();
+            }
+            tokio::time::sleep(Duration::from_secs(1)).await;
+        }
+    });
+}
 
 pub async fn is_process_active(process_name: &str, refresh_processes: bool) -> bool {
     let mut sysinfo_guard = SYSINFO.lock().await;

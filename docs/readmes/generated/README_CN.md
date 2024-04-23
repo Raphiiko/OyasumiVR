@@ -297,26 +297,46 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 <table>
   <tr>
     <td>
-自动调整你睡觉和醒来时的亮度。OyasumiVR可以平滑地过渡你的VR头显的亮度，因此当你睡着时，它会逐渐降低亮度。
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-它允许你控制图像亮度，以及如果你的头显支持的话，还可以控制显示亮度（LCD背光）（例如Valve Index）。除了提供的几种自动化控制选项外，你还可以直接从SteamVR的叠加层界面中轻松控制你的亮度级别！
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 麦克风自动化
+### 🎤 Microphone Mute Automations
 
 <table>
-  <tr>
+   <tr>
     <td>
-你可以让OyasumiVR在你睡觉和醒来时关闭你的麦克风。或者，你甚至可以在按键切换模式和按键说话之间切换。
-<br><br>如果你想防止别人听到你<s>那震天响</s>的打鼾，这是完美的选择！
-<br><br>
-除此以外，还带有一个可选的，工作在VR叠加层的麦克风状态指示器以及绑定控制器按钮的选项，这样你就可以用OyasumiVR的功能完全替代VRChat或你玩的任何其他VR游戏的麦克风开关了。
+<b>VRChat Microphone Mute Automations</b><br>
+You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
+<br><br>Perfect if you'd like to prevent others from hearing you snore!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+  <tr>
+    <td>
+<b>System Microphone Mute Automations</b><br>
+OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
+With this, you can even switch between mute toggle mode and push-to-talk.
+<br><br>
+This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
+  </tr>
+</table>
+
+### 🔉 Audio Volume Automations
+
+<table>
+   <tr>
+    <td>
+Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
 </table>
 
@@ -346,6 +366,23 @@ OyasumiVR可以检测你的心率，如果你的心率持续升高，这可能�
 OyasumiVR可以检测你的心率，如果你的心率持续升高，这可能表明你在做噩梦。有了这个功能，OyasumiVR可以尝试通过自动停用睡眠模式，以及进行一些操作（例如，增加亮度），或者播放声音来试图唤醒你，将你从噩梦中拉出来。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/91ac5113-0400-4888-ba6c-3260f73aee8b"></td>
+  </tr>
+</table>
+
+### 🚨 HMD Specific Automations
+
+<table>
+   <tr>
+    <td>
+OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB Led Control</li>
+<li>Fan Speed Control</li>
+</ul>
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
   </tr>
 </table>
 
@@ -384,7 +421,7 @@ OyasumiVR目前支持以下语言：
 - 法语（Français）（由社区成员[neuroblack](https://github.com/neuroblack)贡献）（**招纳贤士！需要额外的维护人员！**）
 - 西班牙语（Español）（由社区成员[aacal666](https://twitter.com/aacalde666)贡献）
 - 印度尼西亚语（Bahasa Indonesia）（由社区成员[a9ito](https://twitter.com/a9ito)贡献）
-- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)贡献）
+- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)和[Pacmard](https://github.com/pacmard)贡献)
 
 ### 帮助翻译
 
@@ -415,9 +452,9 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 ### 亮度自动化
 
-只有Valve Index支持控制头显屏幕的背光亮度。
+Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
-不过，所有头显都支持基于图像的亮度控制。
+Image brightness control is available on all headsets.
 
 ## 使用的技术和工具
 

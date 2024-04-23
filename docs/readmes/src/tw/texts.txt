@@ -160,20 +160,6 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 亮度自動化
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-在進入睡眠和醒來時，自動調整虛擬實境頭盔的亮度。OyasumiVR 可以平滑地調整亮度，讓你在入睡時逐漸降低亮度，在醒來時逐漸恢復亮度。
-<br><br>
-這允許你控制影像亮度，以及如果您的頭戴式顯示器支援的話（例如 Valve Index），還可以控制顯示器亮度（LCD 背光）。除了為您提供多種自動化選項外，你還可以直接從 SteamVR 疊層選單輕鬆控制亮度等級！
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 系統麥克風靜音自動化
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-OyasumiVR 可以在你睡著和醒來時自動關閉和打開麥克風，也可以幫你切換為開關或持續按住說話模式。
-<br><br>這樣你的鼾聲就不會吵到別人了！
-<br><br>
-在 VR 疊層畫面中提供了一個可開關的靜音指示器，還可以綁定一個控制器按鈕，這樣就可以完全取代 VRChat 或其他 VR 遊戲的麥克風靜音功能。
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心跳率自動化 (Pulsoid 整合)
 
@@ -219,7 +205,7 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
 - 法文 (Français)（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 - 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito) 提供)
-- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 提供）
+- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 與 [Pacmard](https://github.com/pacmard)提供)
 
 {{TRANSLATION_HELP_HEADER}}
 協助翻譯
@@ -262,11 +248,6 @@ GPU 自動化
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 亮度自動化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-僅支援 Valve Index 頭盔的顯示亮度（即「LCD 背光」）控制。
-
-所有頭盔都支援影像亮度控制。
 
 {{BUILT_WITH_HEADER}}
 使用的技術

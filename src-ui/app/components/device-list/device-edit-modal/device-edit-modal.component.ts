@@ -69,7 +69,22 @@ export class DeviceEditModalComponent
     this.close();
   }
 
-  get identifier() {
+  get serialIdentifier() {
+    switch (this.deviceType) {
+      case 'LIGHTHOUSE': {
+        return this.lighthouseDevice?.deviceName;
+      }
+      case 'OPENVR': {
+        return this.ovrDevice?.serialNumber;
+      }
+      default: {
+        // Should never happen
+        return 'Unknown Device';
+      }
+    }
+  }
+
+  get displayIdentifier() {
     switch (this.deviceType) {
       case 'LIGHTHOUSE': {
         return this.lighthouseDevice?.deviceName;
@@ -89,16 +104,16 @@ export class DeviceEditModalComponent
     }
   }
 
-  getDeviceId() {
+  getTitleIdentifier() {
     switch (this.deviceType) {
       case 'LIGHTHOUSE': {
         const model = this.translate.instant(
           'comp.device-list.deviceName.' + this.lighthouseDevice!.deviceType
         );
-        return model + ' (' + this.identifier + ')';
+        return model + ' (' + this.serialIdentifier + ')';
       }
       case 'OPENVR': {
-        return this.ovrDevice?.modelNumber + ' (' + this.identifier + ')';
+        return this.ovrDevice?.modelNumber + ' (' + this.serialIdentifier + ')';
       }
       default: {
         // Should never happen

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
-import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableAfterTimeAutomationConfig,
@@ -20,11 +19,7 @@ export class SleepModeDisableAfterTimeAutomationService {
   sleepEnabled = false;
   threshold = -1;
 
-  constructor(
-    private automationConfig: AutomationConfigService,
-    private openvr: OpenVRService,
-    private sleep: SleepService
-  ) {}
+  constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
 
   async init() {
     this.automationConfig.configs

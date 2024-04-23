@@ -13,7 +13,7 @@ use crate::{
     openvr::models::{OpenVRAction, OpenVRActionSet},
     utils::send_event,
 };
-use chrono::{naive::NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 use gesture_detector::GestureDetector;
 use log::{error, info};
 use models::OpenVRStatus;
@@ -55,7 +55,7 @@ pub async fn init() {
 pub async fn task() {
     // Task state
     let mut ovr_active = false;
-    let mut ovr_next_init = NaiveDateTime::from_timestamp_millis(0).unwrap();
+    let mut ovr_next_init = DateTime::from_timestamp_millis(0).unwrap();
 
     // Main Loop
     'ovr_loop: loop {
@@ -64,13 +64,13 @@ pub async fn task() {
             // If we're not active, try to initialize OpenVR
             if OVR_CONTEXT.lock().await.is_none() {
                 // Stop if we cannot yet (re)initialize OpenVR
-                if (Utc::now().naive_utc() - ovr_next_init).num_milliseconds() <= 0 {
+                if (Utc::now() - ovr_next_init).num_milliseconds() <= 0 {
                     continue;
                 }
                 // If we need to reinitialize OpenVR after this, wait at least 3 seconds
-                ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(3);
+                ovr_next_init = Utc::now() + chrono::Duration::seconds(3);
                 // Check if SteamVR is running, snd stop initializing if it's not.
-                if !crate::utils::is_process_active("vrmonitor.exe", true).await {
+                if !crate::utils::is_process_active("vrmonitor.exe", false).await {
                     update_status(OpenVRStatus::Inactive).await;
                     continue;
                 }
@@ -270,7 +270,7 @@ pub async fn task() {
                     }
                     *OVR_CONTEXT.lock().await = None;
                     // Schedule next initialization attempt
-                    ovr_next_init = Utc::now().naive_utc() + chrono::Duration::seconds(5);
+                    ovr_next_init = Utc::now() + chrono::Duration::seconds(5);
                     continue 'ovr_loop;
                 }
                 // Handle other events

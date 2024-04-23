@@ -171,20 +171,6 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 明るさの自動化
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDの明るさを自動で調整します。時間をかけて気づかないくらいスムーズに切り替えることもできます。
-<br><br>
-映像の明るさの調整は全てのHMDで実行可能で、OLEDベースのHMDで特に有効です。 Valve Indexを使用している場合はLCDバックライト（ディスプレイの輝度）も調整できます！
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-🎤 マイクミュートの自動化
-
-{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-ミュートの切り替えを自動で行います。トグルモードとプッシュトゥトークを切り替えることもできます。
-<br><br>いびきを聞かれたくない場合に最適です！
-<br><br>
-新たにマイクアイコンのオーバーレイが追加されます。ボタンをバインドすることでVRChat以外のゲームでもマイクミュート機能を完全に置き換えることができます。
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心拍数による自動化 (Pulsoid Integration)
 
@@ -231,7 +217,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
 
 {{TRANSLATION_HELP_HEADER}}
 翻訳への協力
@@ -275,11 +261,6 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 明るさの自動化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-HMDのディスプレイ輝度(LCDバックライトの強さ)の自動化はValve Indexのみでサポートされています。
-
-映像の明るさの自動化はすべてのHMDで利用可能です。
 
 {{BUILT_WITH_HEADER}}
 ビルド

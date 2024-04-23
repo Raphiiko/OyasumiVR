@@ -1,7 +1,7 @@
 use std::ptr::null_mut;
 use std::sync::Arc;
 
-use chrono::{NaiveDateTime, Utc};
+use chrono::{DateTime, Utc};
 use log::{error, info};
 use serde::Serialize;
 use tokio::runtime::Handle;
@@ -292,7 +292,7 @@ impl AudioDevice {
         drop(metering_enabled);
         tokio::spawn(async move {
             const ACTIVATION_TIMEOUT: i64 = 1000;
-            let mut last_activation = NaiveDateTime::from_timestamp_millis(0).unwrap();
+            let mut last_activation = DateTime::from_timestamp_millis(0).unwrap();
             let mut previously_active = false;
             loop {
                 // Stop if metering has been disabled
@@ -320,10 +320,10 @@ impl AudioDevice {
                     .await;
                 // Determine if the mic is considered "active"
                 let currently_active = if value >= threshold {
-                    last_activation = Utc::now().naive_utc();
+                    last_activation = Utc::now();
                     true
                 } else {
-                    let now = Utc::now().naive_utc();
+                    let now = Utc::now();
                     let duration = now - last_activation;
                     duration.num_milliseconds() < ACTIVATION_TIMEOUT
                 };

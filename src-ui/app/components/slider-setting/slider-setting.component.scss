@@ -49,9 +49,14 @@ $unit-width: 2em;
     justify-content: center;
     text-align: center;
     font-weight: 700;
+    line-height: 0;
     width: $unit-width;
     background-color: var(--color-surface-2);
     border-radius: 0 0.5em 0.5em 0;
+
+    i.material-icons {
+      font-size: 1.5em;
+    }
   }
 }
 

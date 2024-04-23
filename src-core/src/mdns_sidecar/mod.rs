@@ -1,5 +1,6 @@
 use tokio::sync::Mutex;
 
+pub mod commands;
 use crate::{
     utils::{models::MdnsSidecarMode, send_event, sidecar_manager::SidecarManager},
     Models::oyasumi_core::MdnsSidecarStartArgs,

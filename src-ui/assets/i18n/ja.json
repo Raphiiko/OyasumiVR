@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "フレンドを追加",
     "blacklist": "ブラックリスト",
-    "clearPlayers": "リスト消去",
     "description": "自分が受け取ったReq Inviteを自動的に受け入れることができます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ、この機能を有効にできます。",
     "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
     "options": {
@@ -1575,9 +1574,9 @@
       "afterTime": {
         "title": "指定時間の経過後",
         "description": {
-          "minutes": "{minutes, plural, one {1分} other {#分}}後",
-          "hours": "{hours, plural, one {1時間} other {#時間}}後",
-          "hoursAndMinutes": "{hours, plural, one {1時間} other {#時間}} {minutes, plural, one {1分} other {#分}}後"
+          "minutes": "{minutes}分後",
+          "hours": "{hours}時間後",
+          "hoursAndMinutes": "{hours}時間 {minutes}分後"
         }
       },
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
@@ -1600,9 +1599,6 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 連携</a>が必要です",
         "title": "心拍数から寝落ちを検知したとき"
-      },
-      "onMotionDetection": {
-        "title": "動作から寝落ちを検知したとき"
       },
       "title": "睡眠モードの有効化"
     },
@@ -1899,15 +1895,6 @@
       "title": "マイクミュートの制御",
       "unmute": "ミュート解除"
     },
-    "description": "VRChatのマイクのミュートを切り替えられます。他の人にいびきを聞かせたくない場合などに便利です。 \n\nこれを動作させるには、VRChat内でOSCが有効になっている必要があります。",
-    "mode": {
-      "description": "マイク動作を選択します。VRChatで使用しているものと異なる動作を選択すると、誤作動の原因となります",
-      "title": "VRChatのマイク動作"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "プッシュトーク",
-      "TOGGLE": "トグル"
-    },
     "muteOptions": {
       "MUTE": "ミュート",
       "NONE": "変更しない",
@@ -2001,7 +1988,7 @@
       "defaultDevice": "デフォルトデバイス"
     },
     "automations": {
-      "label": "{count, plural, one {1つの自動化} other {#つの自動化}}"
+      "label": "{count}つの自動化"
     },
     "volume": {
       "title": "音量",

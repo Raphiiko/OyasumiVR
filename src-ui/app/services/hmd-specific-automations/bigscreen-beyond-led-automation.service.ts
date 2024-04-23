@@ -22,6 +22,8 @@ import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { clamp, smoothLerp } from '../../utils/number-utils';
+import { EventLogService } from '../event-log.service';
+import { EventLogBSBLedChanged } from '../../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +39,8 @@ export class BigscreenBeyondLedAutomationService {
   constructor(
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -70,16 +73,33 @@ export class BigscreenBeyondLedAutomationService {
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
+    if (!this.connected.value) return;
     if (sleepMode && this.config.onSleepEnable) {
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_MODE_ENABLED',
+        color: this.config.onSleepEnableRgb,
+      } as EventLogBSBLedChanged);
       await this.setLedColor(this.config.onSleepEnableRgb);
     } else if (!sleepMode && this.config.onSleepDisable) {
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_MODE_DISABLED',
+        color: this.config.onSleepDisableRgb,
+      } as EventLogBSBLedChanged);
       await this.setLedColor(this.config.onSleepDisableRgb);
     }
   }
 
   private async onSleepPreparation() {
+    if (!this.connected.value) return;
     if (this.config.onSleepPreparation) {
       await this.setLedColor(this.config.onSleepPreparationRgb);
+      this.eventLog.logEvent({
+        type: 'bsbLedChanged',
+        reason: 'SLEEP_PREPARATION',
+        color: this.config.onSleepPreparationRgb,
+      } as EventLogBSBLedChanged);
     }
   }
 
@@ -91,7 +111,7 @@ export class BigscreenBeyondLedAutomationService {
       const frequency = 30;
       const startTime = Date.now();
       const startColor = [...this.lastSetColor];
-      while (Date.now() <= startTime + duration) {
+      while (Date.now() <= startTime + duration && this.connected.value) {
         // Sleep to match the frequency
         await new Promise((resolve) => setTimeout(resolve, 1000 / frequency));
         // Stop if the transition was cancelled
@@ -105,20 +125,24 @@ export class BigscreenBeyondLedAutomationService {
           Math.round(smoothLerp(startColor[2], targetColor[2], progress)),
         ];
         // Set the intermediary color
-        invoke('bigscreen_beyond_set_led_color', {
-          r: color[0],
-          g: color[1],
-          b: color[2],
-        });
-        this.lastSetColor = [...color];
+        if (this.connected.value) {
+          invoke('bigscreen_beyond_set_led_color', {
+            r: color[0],
+            g: color[1],
+            b: color[2],
+          });
+          this.lastSetColor = [...color];
+        }
       }
       // Set the final target color
-      invoke('bigscreen_beyond_set_led_color', {
-        r: targetColor[0],
-        g: targetColor[1],
-        b: targetColor[2],
-      });
-      this.lastSetColor = [...targetColor];
+      if (this.connected.value) {
+        invoke('bigscreen_beyond_set_led_color', {
+          r: targetColor[0],
+          g: targetColor[1],
+          b: targetColor[2],
+        });
+        this.lastSetColor = [...targetColor];
+      }
     });
     await this.transitionTask.start();
   }

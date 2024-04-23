@@ -17,7 +17,6 @@
   "auto-invite-request-accept": {
     "addFriends": "添加朋友",
     "blacklist": "玩家黑名单",
-    "clearPlayers": "清除所有",
     "description": "OyasumiVR 可以自动处理你收到的加入请求。通过使用玩家白名单或黑名单，可确保只有你选择的朋友才会自动接受他们的加入请求",
     "noPlayersAdded": "目前没有任何玩家在此列表中",
     "options": {
@@ -1516,9 +1515,6 @@
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成",
         "title": "当我的心率在一段时间内保持平稳时"
       },
-      "onMotionDetection": {
-        "title": "启用动作检测"
-      },
       "title": "开启睡眠模式"
     },
     "experimentalAutomation": "这个自动化操作目前是实验性的，目前并不稳定。",
@@ -1813,15 +1809,6 @@
       "mute": "关闭\n麦克风",
       "title": "麦克风状态设置",
       "unmute": "打开\n麦克风"
-    },
-    "description": "当你睡着时，在 VRChat 中自动关闭麦克风！（反之亦然）当你想防止别人听到你的鼾声时，这个功能就派上用场了；）\n\n注意：为了使这个功能生效，需要在 VRChat 中启用 OSC。",
-    "mode": {
-      "description": "选择你在 VRChat 中使用的麦克风行为。请注意，选择与你在 VRChat 中使用的行为不同的行为可能会导致这些自动操作出现异常。",
-      "title": "VRChat 麦克风行为"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "按住说话",
-      "TOGGLE": "按下切换"
     },
     "muteOptions": {
       "MUTE": "关闭",

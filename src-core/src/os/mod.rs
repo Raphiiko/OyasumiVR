@@ -49,7 +49,7 @@ pub async fn init_audio_device_manager() {
 async fn watch_processes() {
     loop {
         {
-            let res = crate::utils::is_process_active("VRChat.exe", true).await;
+            let res = crate::utils::is_process_active("VRChat.exe", false).await;
             let mut vrc_active = VRCHAT_ACTIVE.lock().await;
             if *vrc_active != res {
                 *vrc_active = res;

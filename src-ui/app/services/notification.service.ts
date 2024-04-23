@@ -3,10 +3,10 @@ import { getVersion } from '../utils/app-utils';
 import { invoke } from '@tauri-apps/api';
 import * as DesktopNotifications from '@tauri-apps/api/notification';
 import { AppSettingsService } from './app-settings.service';
-import { firstValueFrom, map } from 'rxjs';
-import { APP_ICON_B64 } from '../globals';
+import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
+import { APP_ICON_ARR, APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
-import { warn } from 'tauri-plugin-log-api';
+import { error, info, warn } from 'tauri-plugin-log-api';
 import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
@@ -37,6 +37,8 @@ export type NotificationSound =
   providedIn: 'root',
 })
 export class NotificationService {
+  private ovrtSocket?: WebSocket;
+
   constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
 
   public async init() {
@@ -45,6 +47,7 @@ export class NotificationService {
       await this.send(request.payload.message, request.payload.duration);
       // TODO: SEND BACK NOTIFICATION ID TO CORE
     });
+    await this.manageOVRTSocketConnection();
   }
 
   public async playSound(sound: NotificationSound, volume: number | null = null) {
@@ -70,6 +73,8 @@ export class NotificationService {
           return await this.sendXSOverlayNotification('OyasumiVR', content, false, duration / 1000);
         case 'DESKTOP':
           return await this.sendDesktopNotification('OyasumiVR', content);
+        case 'OVRTOOLKIT':
+          return await this.sendOVRToolkitNotification('OyasumiVR', content);
       }
     } catch (e) {
       warn('[Notification] Failed to send notification: ' + e);
@@ -85,6 +90,7 @@ export class NotificationService {
         break;
       case 'XSOVERLAY':
       case 'DESKTOP':
+      case 'OVRTOOLKIT':
       default:
     }
   }
@@ -99,6 +105,8 @@ export class NotificationService {
 
   public async setProvider(provider: NotificationProvider) {
     switch (provider) {
+      case 'OVRTOOLKIT':
+        break;
       case 'OYASUMIVR':
         break;
       case 'XSOVERLAY':
@@ -155,6 +163,25 @@ export class NotificationService {
     return null;
   }
 
+  private async sendOVRToolkitNotification(title: string, content: string): Promise<string | null> {
+    // Stop here if the socket is unavailable
+    if (!this.ovrtSocket || this.ovrtSocket.readyState !== WebSocket.OPEN) return null;
+    // Construct notification
+    const notification = {
+      title: title,
+      body: content,
+      icon: APP_ICON_ARR,
+    };
+    // Construct packet payload
+    const packet = {
+      messageType: 'SendNotification',
+      json: JSON.stringify(notification),
+    };
+    // Send packet
+    this.ovrtSocket.send(JSON.stringify(packet));
+    return null;
+  }
+
   private async sendXSOverlayNotification(
     title: string,
     content: string,
@@ -179,5 +206,75 @@ export class NotificationService {
       message: Array.from(new TextEncoder().encode(JSON.stringify(message))),
     });
     return null;
+  }
+
+  private async manageOVRTSocketConnection() {
+    const buildSocket = () => {
+      if (this.ovrtSocket) {
+        try {
+          this.ovrtSocket.close();
+        } catch (e) {
+          // Ignore any error, we just want to disconnect
+        }
+        this.ovrtSocket = undefined;
+      }
+      this.ovrtSocket = new WebSocket('ws://127.0.0.1:11450/api');
+      this.ovrtSocket.onopen = () => this.onOVRTSocketEvent('OPEN');
+      this.ovrtSocket.onerror = () => this.onOVRTSocketEvent('ERROR');
+      this.ovrtSocket.onclose = () => this.onOVRTSocketEvent('CLOSE');
+      this.ovrtSocket.onmessage = (message) => this.onOVRTSocketEvent('MESSAGE', message);
+    };
+    this.appSettingsService.settings
+      .pipe(
+        map((settings) => settings.notificationProvider),
+        distinctUntilChanged(),
+        debounceTime(500)
+      )
+      .subscribe((provider) => {
+        if (provider === 'OVRTOOLKIT') {
+          buildSocket();
+        } else {
+          if (this.ovrtSocket) {
+            try {
+              this.ovrtSocket.close();
+            } catch (e) {
+              // Ignore any error, we just want to disconnect
+            }
+            this.ovrtSocket = undefined;
+          }
+        }
+      });
+    // Check connection intermittently in case of dropouts
+    interval(10000).subscribe(async () => {
+      // Stop if we have an active connection
+      if (this.ovrtSocket && this.ovrtSocket.readyState === WebSocket.OPEN) return;
+      // Stop if we are not using OVRToolkit as our current provider
+      const settings = await firstValueFrom(this.appSettingsService.settings);
+      if (settings.notificationProvider !== 'OVRTOOLKIT') return;
+      // (Re)build a connection
+      buildSocket();
+    });
+  }
+
+  private async onOVRTSocketEvent(
+    event: 'OPEN' | 'CLOSE' | 'ERROR' | 'MESSAGE',
+    message?: MessageEvent
+  ) {
+    switch (event) {
+      case 'OPEN':
+        info(`[NotificationService] OVRToolkit websocket connection opened`);
+        return;
+      case 'CLOSE':
+        info(`[NotificationService] OVRToolkit websocket connection closed`);
+        return;
+      case 'ERROR':
+        error(
+          `[NotificationService] OVRToolkit websocket connection error: ${JSON.stringify(message)}`
+        );
+        return;
+      case 'MESSAGE':
+        // Maybe do something with received messages in the future
+        break;
+    }
   }
 }

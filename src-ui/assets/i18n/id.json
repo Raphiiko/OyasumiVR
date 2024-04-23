@@ -16,7 +16,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Tambahkan teman",
     "blacklist": "Blacklist Player",
-    "clearPlayers": "Bersihkan player",
     "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
     "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
     "options": {
@@ -1353,9 +1352,6 @@
         "description": "Memerlukan <a class=\"integrationsPageLink\">Integrasi Pulsoid</a>",
         "title": "Saat detak jantung saya tenang untuk jangka waktu tertentu"
       },
-      "onMotionDetection": {
-        "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
-      },
       "title": "Mengaktifkan mode tidur"
     },
     "experimentalAutomation": "Otomatisasi ini bersifat eksperimental dan mungkin belum dapat diandalkan.",
@@ -1620,15 +1616,6 @@
       "mute": "Mute\nmikrofon",
       "title": "Kontrol mikrofon senyap",
       "unmute": "Bunyikan\nmikropon"
-    },
-    "description": "Secara otomatis menonaktifkan atau mengaktifkan mikrofon Anda di VRChat saat Anda tertidur, atau bangun! Ini bisa berguna ketika Anda ingin mencegah orang lain mendengar dengkuran Anda ;)\n\nPerhatikan bahwa agar ini berfungsi, OSC harus diaktifkan dalam VRChat.",
-    "mode": {
-      "description": "Pilih perilaku mikrofon yang Anda gunakan dalam VRChat. Perhatikan bahwa memilih perilaku yang berbeda dari yang Anda gunakan di VRChat dapat menyebabkan otomatisasi ini berperilaku buruk.",
-      "title": "Perilaku mikrofon VRChat"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Push to Talk",
-      "TOGGLE": "Toggle"
     },
     "muteOptions": {
       "MUTE": "Mute",
