@@ -26,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CJK fonts not properly being loaded in some parts of the overlay UI
+- Brightness overlay not covering full view of some high FOV headsets (e.g. Pimax)
 
 ## [1.12.8]
 
