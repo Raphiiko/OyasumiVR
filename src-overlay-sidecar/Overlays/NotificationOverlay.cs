@@ -10,7 +10,7 @@ public class NotificationOverlay : BaseWebOverlay {
   private bool _updatedPositionOnce;
 
   public NotificationOverlay() :
-    base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay", false)
+    base("/notifications", 1024, "co.raphii.oyasumi:NotificationOverlay", "OyasumiVR Notification Overlay")
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);

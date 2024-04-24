@@ -61,7 +61,7 @@ export class DiscordService {
     await invoke<boolean>('discord_update_activity', {
       details: this.translate.instant('discord.details'),
       state: this.translate.instant(sleepMode ? 'discord.state.sleeping' : 'discord.state.awake'),
-      asset_label: this.translate.instant(
+      assetLabel: this.translate.instant(
         sleepMode ? 'discord.label.sleeping' : 'discord.label.awake'
       ),
       asset: sleepMode ? 'asleep' : 'awake',
