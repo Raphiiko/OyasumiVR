@@ -36,6 +36,26 @@
     </div>
   </div>
   <div class="right">
+    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
+      <div
+        class="pill system-mic-mute clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.systemMicMuted.tooltip.' + systemMicrophoneMuteAction()"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="doSystemMicrophoneMuteAction()"
+        @hshrink
+      >
+        <div class="pill-icon nomargin" @hshrink>
+          <i class="material-icons-round mic-muted">mic_off</i>
+        </div>
+        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
+        >comp.main-status-bar.systemMicMuted.label</span
+        >
+      </div>
+    </ng-container>
     <ng-container *ngIf="mqttStatus !== 'DISABLED'">
       <div
         class="pill mqtt-status clickable"
@@ -79,26 +99,6 @@
         >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
         >
         <span>{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
-      <div
-        class="pill system-mic-mute clickable"
-        *ngVar="{ hover: false }; let state"
-        (mouseenter)="state.hover = true"
-        (mouseleave)="state.hover = false"
-        [tooltip]="'comp.main-status-bar.systemMicMuted.tooltip.' + systemMicrophoneMuteAction()"
-        [tooltipMode]="'top'"
-        [tooltipMargin]="8"
-        (click)="doSystemMicrophoneMuteAction()"
-        @hshrink
-      >
-        <div class="pill-icon nomargin" @hshrink>
-          <i class="material-icons-round mic-muted">mic_off</i>
-        </div>
-        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
-        >comp.main-status-bar.systemMicMuted.label</span
-        >
       </div>
     </ng-container>
     <ng-container *ngIf="pulsoid.heartRate | async">

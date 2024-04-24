@@ -1,5 +1,14 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import _ from 'lodash';
+
+function parseTokens(raw) {
+  const json = JSON.parse(raw);
+  Object.keys(json).forEach((key) => {
+    if (!json[key]) delete json[key];
+  });
+  return json;
+}
 
 function parseTexts(raw) {
   const texts = {};
@@ -16,8 +25,56 @@ function parseTexts(raw) {
     if (!currentKey) continue;
     texts[currentKey] += line + '\n';
   }
-  texts[currentKey] = texts[currentKey].trim();
+  texts[currentKey] = texts[currentKey].trim() ?? undefined;
+  Object.entries(_.cloneDeep(texts)).forEach(([key, value]) => {
+    if (!value) delete texts[key];
+  });
   return texts;
+}
+
+function ensureDefaultsInSource(langData) {
+  const en = langData.find((l) => l.lang === 'en');
+  const clonedLangData = _.cloneDeep(langData);
+  // Add empty strings for nonexistent texts and tokens
+  clonedLangData.forEach((lang) => {
+    if (lang.lang === 'en') return;
+    Object.entries(en.texts).forEach(([key, value]) => {
+      if (!lang.texts[key]) {
+        lang.texts[key] = '';
+      }
+    });
+    Object.entries(en.tokens).forEach(([key, value]) => {
+      if (!lang.tokens[key]) {
+        lang.tokens[key] = '';
+      }
+    });
+    // If tokens or texts were missing, overwrite the source files with placeholders
+    if (
+      !_.isEqual(
+        langData.find((l) => l.lang === lang.lang),
+        lang
+      )
+    ) {
+      const langPath = path.join('./docs/readmes/src/', lang.lang);
+      fs.writeFileSync(path.join(langPath, 'tokens.json'), JSON.stringify(lang.tokens, null, 2));
+      fs.writeFileSync(
+        path.join(langPath, 'texts.txt'),
+        Object.entries(lang.texts)
+          .map(([key, value]) => `${key}\n${value}`)
+          .join('\n\n')
+      );
+    }
+  });
+
+  // Add EN defaults
+  langData.forEach((lang) => {
+    if (lang.lang === 'en') return;
+    const en = langData.find((l) => l.lang === 'en');
+    lang.tokens = { ...en.tokens, ...lang.tokens };
+    lang.texts = { ...en.texts, ...lang.texts };
+  });
+
+  return langData;
 }
 
 function loadLanguageData() {
@@ -30,17 +87,9 @@ function loadLanguageData() {
     const langPath = path.join('./docs/readmes/src/', lang);
     return {
       lang,
-      tokens: JSON.parse(fs.readFileSync(path.join(langPath, 'tokens.json')).toString()),
+      tokens: parseTokens(fs.readFileSync(path.join(langPath, 'tokens.json')).toString()),
       texts: parseTexts(fs.readFileSync(path.join(langPath, 'texts.txt')).toString()),
     };
-  });
-
-  // Add EN defaults
-  langData.forEach((lang) => {
-    if (lang.lang === 'en') return;
-    const en = langData.find((l) => l.lang === 'en');
-    lang.tokens = { ...en.tokens, ...lang.tokens };
-    lang.texts = { ...en.texts, ...lang.texts };
   });
 
   return langData;
@@ -112,6 +161,7 @@ function generateSteamStoreDescriptions(langData) {
   }
 }
 
-const langData = loadLanguageData();
+let langData = loadLanguageData();
+langData = ensureDefaultsInSource(langData);
 generateMarkdownReadmes(langData);
 generateSteamStoreDescriptions(langData);

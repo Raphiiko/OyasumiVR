@@ -46,19 +46,11 @@ export class MqttConfigModalComponent extends BaseModalComponent<void, void> imp
     if (!this.validConfig) return;
     this.appSettings.updateSettings({
       mqttEnabled: this.config.enabled,
-      mqttHost: this.config.enabled
-        ? this.config.host?.trim() ?? null
-        : APP_SETTINGS_DEFAULT.mqttHost,
-      mqttPort: this.config.enabled ? this.config.port ?? null : APP_SETTINGS_DEFAULT.mqttPort,
-      mqttUsername: this.config.enabled
-        ? this.config.username?.trim() ?? null
-        : APP_SETTINGS_DEFAULT.mqttUsername,
-      mqttPassword: this.config.enabled
-        ? this.config.password?.trim() ?? null
-        : APP_SETTINGS_DEFAULT.mqttPassword,
-      mqttSecureSocket: this.config.enabled
-        ? this.config.secureSocket
-        : APP_SETTINGS_DEFAULT.mqttSecureSocket,
+      mqttHost: this.config.host?.trim() ?? null,
+      mqttPort: this.config.port ?? null,
+      mqttUsername: this.config.username?.trim() ?? null,
+      mqttPassword: this.config.password?.trim() ?? null,
+      mqttSecureSocket: this.config.secureSocket,
     });
     this.close();
   }
