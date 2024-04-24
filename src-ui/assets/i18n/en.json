@@ -1722,6 +1722,12 @@
     }
   },
   "sleep-detection": {
+    "title": "Sleep Detection",
+    "tab": {
+      "detection": "Detection",
+      "enabling": "Enabling Sleep Mode",
+      "disabling": "Disabling Sleep Mode"
+    },
     "disableAutomations": {
       "atTime": "At a specific time",
       "afterTime": {
@@ -1735,7 +1741,6 @@
       "description": "Automatically disable sleep mode based on various other triggers",
       "onDevicePowerOn": "When a device is turned on",
       "onSteamVRStop": "When SteamVR is stopped",
-      "title": "Disabling sleep mode",
       "onUprightPose": "When sitting upright after laying down",
       "onPlayerJoinOrLeave": "When a VRChat player joins or leaves your world"
     },
@@ -1754,8 +1759,25 @@
       "onHeartRateCalmPeriod": {
         "description": "Requires <a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "title": "When my heart rate is calm for a period of time"
+      }
+    },
+    "sleepDetection": {
+      "description": "Sleep Detection is OyasumiVR's intended way for the sleep mode to be activated. This feature automatically enables sleep mode for you when it suspects you are asleep, based on various factors like the movement of your VR headset and your controller inputs.",
+      "automation": {
+        "title": "Sleep Detection",
+        "description": "Automatically enable sleep mode when OyasumiVR suspects you are asleep",
+        "calibrationPending": {
+          "title": "<strong>Calibration Pending:</strong> Before using sleep detection, you should calibrate at least once to improve its accuracy.",
+          "calibrate": "Calibrate Now"
+        }
       },
-      "title": "Enabling sleep mode"
+      "configuration": {
+        "title": "Configuration"
+      },
+      "advanced": {
+        "title": "Advanced Tweaks",
+        "description": "Here you can tweak some more in-depth aspects of the sleep detector. Generally it's recommended to leave these settings at their default values."
+      }
     },
     "experimentalAutomation": "This automation is experimental and may not yet be reliable.",
     "modals": {
@@ -1848,12 +1870,20 @@
           "title": "Sensitivity"
         },
         "sleepCheck": {
-          "description": "Sends you an actionable notification to ask if you are still awake before enabling sleep mode.",
-          "title": "Before enabling sleep mode, ask if I am still awake"
+          "title": "Before enabling sleep mode, ask if I am still awake",
+          "description": "Sends you an actionable notification to ask if you are still awake before enabling sleep mode."
         },
         "timeWindow": {
-          "description": "Only allow sleep detection to activate the sleep mode between certain hours of day",
-          "title": "Activation Window"
+          "title": "Activation Window",
+          "description": "Only allow sleep detection to activate the sleep mode between certain hours of day"
+        },
+        "considerSleepingPose": {
+          "title": "Consider sleeping pose",
+          "description": "When enabled, the sleep detector will also consider your sleeping pose."
+        },
+        "considerControllerPresence": {
+          "title": "Consider controller input",
+          "description": "When enabled, the sleep detector will also consider your controller inputs."
         },
         "title": "Enable sleep mode"
       },
@@ -1915,18 +1945,6 @@
         "restartCalibration": "Restart Calibration",
         "startCalibration": "Start Calibration",
         "title": "Calibrate Sleep Detection"
-      }
-    },
-    "title": "Sleep Detection",
-    "sleepDetection": {
-      "description": "Sleep Detection is OyasumiVR's intended way for the sleep mode to be activated. This feature automatically enables sleep mode for you when it suspects you are asleep, based on various factors like the movement of your VR headset and your controller inputs.",
-      "automation": {
-        "title": "Sleep Detection",
-        "description": "Automatically enable sleep mode when OyasumiVR suspects you are asleep",
-        "calibrationPending": {
-          "title": "<strong>Calibration Pending:</strong> Before using sleep detection, you should calibrate at least once to improve its accuracy.",
-          "calibrate": "Calibrate Now"
-        }
       }
     }
   },

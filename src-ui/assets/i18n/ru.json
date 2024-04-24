@@ -1526,8 +1526,7 @@
       "atTime": "В определенное время",
       "description": "Авто-отключение спящего режима на основе различных триггеров",
       "onDevicePowerOn": "Когда устройство включено",
-      "onSteamVRStop": "Когда SteamVR выключен",
-      "title": "Отключение спящего режима"
+      "onSteamVRStop": "Когда SteamVR выключен"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Когда процент заряда батареи устройства ниже  <strong>{value}%</strong>",
@@ -1544,8 +1543,7 @@
       "onHeartRateCalmPeriod": {
         "description": "Требуется <a class=\"integrationsPageLink\">Pulsoid integration</a>",
         "title": "Когда мой пульс стабилен в течение определенного времени"
-      },
-      "title": "Включение спящего режима"
+      }
     },
     "experimentalAutomation": "Отключит режим сна после его включения в течение определенного времени.",
     "modals": {

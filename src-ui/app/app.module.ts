@@ -12,11 +12,6 @@ import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-transl
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
-import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
-import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
-import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
-import { DevicePowerOnDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
 import { SleepModeEnableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-time-automation.service';
@@ -70,8 +65,6 @@ import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
-import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
-import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { HardwareBrightnessControlService } from './services/brightness-control/hardware-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
@@ -139,9 +132,7 @@ import { DeepLinkService } from './services/deep-link.service';
 import { SleepPreparationService } from './services/sleep-preparation.service';
 import { PulsoidService } from './services/integrations/pulsoid.service';
 import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
-import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
-import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
 import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
@@ -160,7 +151,6 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
-import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
 import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-entries/audio-volume-entries.component';
@@ -197,17 +187,29 @@ import { pTimeout } from './utils/promise-utils';
 import { MdnsSidecarService } from './services/mdns-sidecar.service';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
-import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
 import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
 import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { JoinNotificationsService } from './services/join-notifications.service';
-import { PlayerJoinLeaveDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
 import { SleepModeDisableOnPlayerJoinLeaveAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-player-join-leave.service';
 import { MqttService } from './services/mqtt.service';
 import { MqttDiscoveryService } from './services/mqtt-discovery.service';
 import { MqttIntegrationService } from './services/mqtt-integration.service';
 import { MqttConfigModalComponent } from './components/mqtt-config-modal/mqtt-config-modal.component';
+import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
+import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
+import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
+import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
+import { PlayerJoinLeaveDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
+import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
+import { DevicePowerOnDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
+import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
+import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
+import { SleepDetectionDetectionTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-detection-tab/sleep-detection-detection-tab.component';
+import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-enable-tab/sleep-detection-sleep-enable-tab.component';
+import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
+import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
 
 [
   localeEN,
@@ -241,7 +243,6 @@ export function createTranslateLoader(http: HttpClient) {
     OverviewViewComponent,
     SleepDetectionViewComponent,
     SleepDetectorCalibrationModalComponent,
-    SleepDetectorEnableSleepModeModalComponent,
     TimeEnableSleepModeModalComponent,
     TimeDisableSleepModeModalComponent,
     DurationDisableSleepModeModalComponent,
@@ -332,6 +333,9 @@ export function createTranslateLoader(http: HttpClient) {
     JoinNotificationsViewComponent,
     PlayerListComponent,
     MqttConfigModalComponent,
+    SleepDetectionDetectionTabComponent,
+    SleepDetectionSleepEnableTabComponent,
+    SleepDetectionSleepDisableTabComponent,
   ],
   imports: [
     CommonModule,

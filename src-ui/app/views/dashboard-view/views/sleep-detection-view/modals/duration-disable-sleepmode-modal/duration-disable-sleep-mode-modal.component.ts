@@ -1,8 +1,8 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
-import { getStringForDuration } from '../sleep-detection-view.component';
+import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslateService } from '@ngx-translate/core';
+import { getStringForDuration } from '../../tabs/sleep-detection-tab.component';
 
 export interface DurationDisableSleepModeModalInputModel {
   duration: string | null;

@@ -1,7 +1,7 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
-import { OVRDeviceClass } from '../../../../../models/ovr-device';
+import { fade, fadeUp, triggerChildren } from '../../../../../../utils/animations';
+import { OVRDeviceClass } from '../../../../../../models/ovr-device';
 
 export interface DevicePowerOnDisableSleepModeModalInputModel {
   triggerClasses: OVRDeviceClass[];

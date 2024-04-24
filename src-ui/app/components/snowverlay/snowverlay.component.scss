@@ -1,3 +1,5 @@
+@use "sass:math";
+
 :host {
   width: 100vw;
   height: 100vh;
@@ -28,8 +30,8 @@
     $random-x: random(1000000) * 0.0001vw;
     $random-offset: random_range(-100000, 100000) * 0.0001vw;
     $random-x-end: $random-x + $random-offset;
-    $random-x-end-yoyo: $random-x + ($random-offset / 2);
-    $random-yoyo-time: random_range(30000, 80000) / 100000;
+    $random-x-end-yoyo: $random-x + ($random-offset * 0.5);
+    $random-yoyo-time: math.div(random_range(30000, 80000), 100000);
     $random-yoyo-y: $random-yoyo-time * 100vh;
     $random-scale: random(10000) * 0.0001;
     $fall-duration: random_range(10, 30) * 1s;

@@ -1749,8 +1749,7 @@
       "atTime": "Om een specifieke tijd",
       "description": "Automatisch de slaap modus uitschakelen",
       "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
-      "onSteamVRStop": "Wanneer SteamVR stopt",
-      "title": "Slaap modus uitschakelen"
+      "onSteamVRStop": "Wanneer SteamVR stopt"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{value}%</strong> valt",
@@ -1767,8 +1766,7 @@
       "onHeartRateCalmPeriod": {
         "description": "Vereist <a class=\"integrationsPageLink\">Pulsoid integratie</a>",
         "title": "Wanneer je hartslag laag genoeg is voor een bepaalde periode"
-      },
-      "title": "Slaap modus inschakelen"
+      }
     },
     "experimentalAutomation": "Deze automatisering is momenteel nog experimenteel en het kan zijn dat deze nog niet betrouwbaar is.",
     "modals": {

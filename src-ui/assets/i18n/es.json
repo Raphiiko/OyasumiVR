@@ -1676,8 +1676,7 @@
       "atTime": "En un momento determinado",
       "description": "Desactivación automática del modo sueño en función de varios activadores",
       "onDevicePowerOn": "Cuando se enciende un dispositivo",
-      "onSteamVRStop": "Cuando SteamVR está parado",
-      "title": "Desactivar modo sueño"
+      "onSteamVRStop": "Cuando SteamVR está parado"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Cuando el porcentaje de batería de un dispositivo cae por debajo de <strong>{value}%</strong>",
@@ -1694,8 +1693,7 @@
       "onHeartRateCalmPeriod": {
         "description": "Requiere <a class=\"integrationsPageLink\">integración con Pulsoid</a>",
         "title": "Cuando mi ritmo cardíaco se calma durante un periodo de tiempo"
-      },
-      "title": "Activar el modo de suspensión"
+      }
     },
     "experimentalAutomation": "Esta automatización es experimental y puede que aún no sea fiable.",
     "modals": {

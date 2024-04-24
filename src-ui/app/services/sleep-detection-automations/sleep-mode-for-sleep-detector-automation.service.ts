@@ -22,6 +22,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from '../event-log.service';
 import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
+import { SleepingPose } from '../../models/sleeping-pose';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -31,6 +32,7 @@ export type SleepDetectorStateReportHandlingResult =
   | 'TOO_MUCH_MOVEMENT'
   | 'RATE_LIMITED'
   | 'SLEEP_MODE_DISABLED_TOO_RECENTLY'
+  | 'POSE_UPRIGHT_TOO_RECENTLY'
   | 'CONTROLLER_PRESENCE_INDICATED_TOO_RECENTLY'
   | 'SLEEP_CHECK_ALREADY_IN_PROGRESS'
   | 'SLEEP_CHECK'
@@ -46,6 +48,8 @@ export class SleepModeForSleepDetectorAutomationService {
   private lastEnableAttempt = 0;
   private lastSleepModeDisable = 0;
   private lastControllerButtonPresenceIndication = 0;
+  private lastPose: SleepingPose = 'UNKNOWN';
+  private lastUprightPose = 0;
   private sleepCheckNotificationId: string | null = null;
   private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
@@ -83,6 +87,10 @@ export class SleepModeForSleepDetectorAutomationService {
     );
     this.sleep.mode.pipe(distinctUntilChanged(), skip(1)).subscribe((mode) => {
       if (!mode) this.lastSleepModeDisable = Date.now();
+    });
+    this.sleep.pose.pipe(pairwise()).subscribe(([previous, current]) => {
+      this.lastPose = current;
+      if (current !== 'SIDE_FRONT' && previous === 'SIDE_FRONT') this.lastUprightPose = Date.now();
     });
     new Promise((resolve) => setTimeout(resolve, 15000)).then(async () => {
       await listen<SleepDetectorStateReport>('SLEEP_DETECTOR_STATE_REPORT', async (event) => {
@@ -169,10 +177,18 @@ export class SleepModeForSleepDetectorAutomationService {
       return 'SLEEP_MODE_DISABLED_TOO_RECENTLY';
     // Stop here if the user has proven presence through controller buttons in the detection window
     if (
+      this.enableConfig.considerControllerPresence &&
       Date.now() - this.lastControllerButtonPresenceIndication <
-      1000 * 60 * this.enableConfig.detectionWindowMinutes
+        1000 * 60 * this.enableConfig.detectionWindowMinutes
     )
       return 'CONTROLLER_PRESENCE_INDICATED_TOO_RECENTLY';
+    // Stop here if the user has been upright within the detection window
+    if (
+      this.enableConfig.considerSleepingPose &&
+      (this.lastPose === 'SIDE_FRONT' ||
+        Date.now() - this.lastUprightPose < 1000 * 60 * this.enableConfig.detectionWindowMinutes)
+    )
+      return 'POSE_UPRIGHT_TOO_RECENTLY';
     // Attempt enabling sleep mode
     this.lastEnableAttempt = Date.now();
     // If necessary, first check if the user is asleep, allowing them to cancel.
