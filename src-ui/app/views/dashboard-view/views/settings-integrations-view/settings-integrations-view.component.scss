@@ -54,6 +54,7 @@
   align-items: stretch;
   color: white;
   border: 0.125em solid var(--color-surface-2);
+  max-width: 20em;
 
   * {
     transition: all 0.15s;
@@ -78,6 +79,10 @@
       flex: 1;
       font-family: monospace;
       color: var(--color-text-2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-width: 0;
 
       &.obfuscated {
         cursor: pointer;
