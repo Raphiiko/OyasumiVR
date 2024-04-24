@@ -1504,7 +1504,7 @@
         "title": "システムトレイ"
       },
       "telemetry": {
-        "description": "有効にすると、OyasumiVRはバージョン情報やクラッシュレポートなどの匿名の使用データを収集します。このデータは完全に匿名であり、個人データは含まれません。主にバグの追跡と一般的な使用統計の提供にのみ使用されます。<br>詳細については、<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabaseプライバシーポリシー</a>をご覧ください。",
+        "description": "有効にすると、OyasumiVRはバージョン情報やクラッシュレポートなどの匿名の使用データを収集します。このデータは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と一般的な使用統計の提供のみに使用されます。<br>詳細については、<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabaseプライバシーポリシー</a>をご覧ください。",
         "label": "利用データの送信（匿名）",
         "title": "データの送信"
       },
@@ -2101,11 +2101,11 @@
       "UNMUTE": "ミュート解除"
     },
     "onSleepModeDisable": {
-      "description": "睡眠モードがが無効化された際にマイクの状態を変更します",
+      "description": "睡眠モードが無効化された際にマイクの状態を変更します",
       "title": "起床時"
     },
     "onSleepModeEnable": {
-      "description": "睡眠モードがが有効化された際にマイクの状態を変更します",
+      "description": "睡眠モードが有効化された際にマイクの状態を変更します",
       "title": "睡眠時"
     },
     "onSleepPreparation": {
@@ -2154,7 +2154,7 @@
   },
   "audio-volume-automations": {
     "title": "音量の自動化",
-    "description": "オーディオデバイスの音量を自動的に変更します。騒音でに起こされたくない場合に使用します。",
+    "description": "オーディオデバイスの音量を自動的に変更します。騒音で起こされたくない場合に使用します。",
     "onSleepEnable": {
       "title": "睡眠時",
       "description": "睡眠モードが有効化された際にオーディオデバイスの音量を変更します"
@@ -2199,7 +2199,7 @@
     "tabs": {
       "bigscreenBeyond": "Bigscreen Beyond"
     },
-    "title": "HMD固有の自動化",
+    "title": "HMDの自動化",
     "bigscreenBeyond": {
       "description": "Bigscreen Beyondの特定の機能を自動化できます。",
       "fanControl": {
