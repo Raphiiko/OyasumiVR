@@ -3,7 +3,7 @@
 </h1>
 
 <h3 align="center">
-💤 バーチャルリアリティの中で睡眠をアシストするソフトウェアです 💤
+💤 VR睡眠をサポートするソフトウェア 💤
 </h3>
 
 <p align="center">
@@ -22,7 +22,7 @@
     <br>
     ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
     <br>
-Discordへの参加もお待ちしています！ <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
     <br>
     <br>
     <table align="center">
@@ -124,7 +124,7 @@ OyasumiVRはすぐに終わるわけではありません。**やりたいこと
     <td>
 HMDの動きを分析して寝落ちを自動で検出します！一度キャリブレーションを行うだけで設定完了します。
 <br><br>
-他にも、以下の項目をトリガーにして自動化の機能を使用できます。
+他にも、以下の項目に応じて自動化の機能を使用できます。
 <br><br>
 <ul>
   <li>時刻指定</li>
@@ -144,7 +144,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
     <td>
 一部の機能は独自のSteamVRオーバーレイを使ってVR内から直接操作できます！
 <br><br>
-デフォルトでは右コントローラーのAを2回押すとオーバーレイが表示されるようになっています。 
+デフォルトでは右コントローラーのAを2回押すと表示されるようになっています。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/1fc76470-fbea-43de-af80-38ee38a927ba"></td>
   </tr>
@@ -157,7 +157,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
     <td>
 <b>コントローラー & トラッカー</b>
 <br>
-機器の電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
+電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
 <br>
 <br>
 他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！ 
@@ -168,7 +168,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
     <td>
 <b>Windowsの電源オプション</b>
 <br>
-Windowsの電源プランを変更してPCの消費電力を節約します。眠ったときは省電力モードに、起きたときは元のプランに戻すことができます。 
+電源プランを変更してPCの消費電力を節約します。眠ったときは省電力モードに、起きたときは元のプランに戻すことができます。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/05398894-a058-4715-b66a-067857b90e43"></td>
   </tr>
@@ -221,7 +221,7 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <ul>
   <li>
     <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br><a href="https://booth.pm/en/items/4233545">EXバージョン</a> にも対応！
+    <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
   </li>
   <li>
     <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
@@ -294,44 +294,44 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <table>
   <tr>
     <td>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+睡眠時と起床時の明るさを自動化します。HMDの輝度を徐々に落とすことができるので、急な明るさの変化で目を覚ます心配もありません！
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+ソフトウェアの明るさだけでなく、HMDが対応している場合はハードウェア輝度も制御できます(Valve Index, Bigscreen Beyond)。オーバーレイから輝度レベルを簡単にコントロールすることも可能です！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 Microphone Mute Automations
+### 🎤 マイクミュートの自動化
 
 <table>
    <tr>
     <td>
-<b>VRChat Microphone Mute Automations</b><br>
-You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
-<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<b>VRChatマイクミュートの自動化</b><br>
+睡眠時または起床時に、VRChatマイクをミュートまたはミュート解除します。
+<br><br>他の人にいびきを聞かれたくないときに使用します。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
   <tr>
     <td>
-<b>System Microphone Mute Automations</b><br>
-OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
-With this, you can even switch between mute toggle mode and push-to-talk.
+<b>システム側マイクミュートの自動化</b><br>
+マイクをデバイスレベルでミュートまたはミュート解除できます。
+これによってトグルモードとプッシュ・トゥ・トークモードを切り替えることもできます。
 <br><br>
-This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+VR内にマイクアイコンを表示できます。オプションでキーバインドを設定して、他のVRゲームのマイクミュート機能を完全に置き換えることも可能です。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
 </table>
 
-### 🔉 Audio Volume Automations
+### 🔉 音量の自動化
 
 <table>
    <tr>
     <td>
-Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+オーディオデバイスの音量を自動的に変更します。騒音で起こされたくない場合に使用します。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
@@ -366,17 +366,17 @@ Automatically change the volume of your audio devices when you fall asleep, or w
   </tr>
 </table>
 
-### 🚨 HMD Specific Automations
+### 🚨 HMDの自動化
 
 <table>
    <tr>
     <td>
-OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+特定のHMDに対して自動化制御をするための様々な機能があります。現在は以下の通り対応しています。
 <br><br>
 <b>Bigscreen Beyond</b>
 <ul>
-<li>RGB Led Control</li>
-<li>Fan Speed Control</li>
+<li>RGB LED制御</li>
+<li>ファン速度制御</li>
 </ul>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
@@ -444,7 +444,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - Vive Trackers (1.0/2.0/3.0)
 - Tundra Trackers\*
 
-これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) を実装しない限りサポートされることはありません。
+これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても[OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver)を実装しない限りサポートされることはありません。
 
 _(\*) Tundra trackersは、バッテリーレベルと充電ステータスの通信が非常に遅れています。これはファームウェアに起因するものであり、自動化は機能しますが十数分の遅延があります。_
 
@@ -456,9 +456,9 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 ### 明るさの自動化
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
+HMDのハードウェア輝度のコントロールはValve IndexとBigscreen Beyondのみサポートされています。
 
-Image brightness control is available on all headsets.
+ソフトウェアの明るさは全てのHMDで利用可能です。
 
 ## ビルド
 
@@ -471,7 +471,7 @@ OyasumiVRは以下により構築されています。
 
 ## 開発
 
-Wikiの [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development) をご覧ください。
+Wikiの[Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)をご覧ください。
 
 ## VRChat
 
@@ -488,17 +488,17 @@ OyasumiVRの開発者及びこのプロジェクトの貢献者は、OyasumiVR�
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
 
-OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+利用データの送信は[Aptabase](https://aptabase.com)によって提供されています。オープンソースであるAptabaseはモバイルおよびデスクトップアプリ向けに、プライバシーを第一としたシンプルな分析を提供してくれます。クラッシュレポートや匿名の使用統計を収集することでOyasumiVRの開発をサポートするにあたり、個人のプライバシーを最大限尊重するためにAptabaseが選ばれました。
 
-The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+利用データは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と、アプリの起動回数や使用言語などの一般的な使用統計の提供のみに使用されます。
 
-You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+OyasumiVRの設定でデータを送信しないように設定することができます。詳細については[Aptabaseプライバシーポリシー](https://aptabase.com/legal/privacy)をご覧ください。
 
 ## サポート
 
-OyasumiVRでお困りのことがありましたら [Discord](https://discord.gg/7MqdPJhYxC) までお願いします。
+OyasumiVRでお困りのことがありましたら [Discord Server](https://discord.gg/7MqdPJhYxC) までお願いします。
 
-もしくはX(旧Twitter) [@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
+もしくはX（旧Twitter）[@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
 
 ## ライセンス
 
