@@ -201,7 +201,8 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
     <td>
 <b>MSI Afterburner</b>
 <br>
-電力制限だけでなくさらに細かく制御したい場合はMSI Afterburnerを使用できます。オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
+電力制限だけでなくさらに細かく制御したい場合は <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>を使用できます。
+オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
   </tr>
@@ -222,6 +223,7 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
   <li>
     <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
     <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
+    &nbsp;
   </li>
   <li>
     <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
@@ -406,8 +408,6 @@ SteamVRのガーディアンのフェード距離を調整できます。眠っ�
 </table>
 
 ## 翻訳 & ローカライズ
-
-OyasumiVR currently supports the following languages:
 
 OyasumiVRは現在、以下の言語に対応しています。
 - English

@@ -2,7 +2,7 @@
 💤 VR睡眠をサポートするソフトウェア 💤
 
 {{DISCORD_INVITE}}
- <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
+<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
 
 {{DOWNLOAD_AND_INSTALL_HEADER}}
 ダウンロード&インストール
