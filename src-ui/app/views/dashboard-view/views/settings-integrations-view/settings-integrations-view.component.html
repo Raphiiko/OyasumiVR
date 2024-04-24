@@ -46,30 +46,6 @@
 
         <div class="setting-row">
           <div class="setting-row-icon">
-            <a href="https://vrchat.com/" target="_blank">
-              <img class="hass-logo clickable-logo" src="/assets/img/hass_logo.png" />
-            </a>
-          </div>
-          <div class="setting-row-label">
-            <span [innerHtml]="'settings.integrations.homeAssistant.title' | translate"></span>
-            <span [innerHtml]="'settings.integrations.homeAssistant.description' | translate"></span>
-            <a target="_blank" href="https://www.home-assistant.io/" translate
-            >settings.integrations.providerLink</a
-            >
-          </div>
-          <div class="setting-row-action">
-            <button
-              class="btn btn-primary"
-              (click)="showMqttConfigModal()"
-              translate
-              @hshrink
-            >settings.integrations.configure
-            </button>
-          </div>
-        </div>
-
-        <div class="setting-row">
-          <div class="setting-row-icon">
             <a
               [href]="'https://pulsoid.net/pricing?promo_campaign_id=' + PULSOID_REFERRAL_ID"
               target="_blank"
@@ -133,6 +109,48 @@
                 settings.integrations.connect
               </button>
             </div>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-row-icon">
+            <a href="https://www.home-assistant.io/" target="_blank">
+              <img class="hass-logo clickable-logo" src="/assets/img/hass_logo.png" />
+            </a>
+          </div>
+          <div class="setting-row-label">
+            <span [innerHtml]="'settings.integrations.homeAssistant.title' | translate"></span>
+            <span [innerHtml]="'settings.integrations.homeAssistant.description' | translate"></span>
+            <a target="_blank" href="https://www.home-assistant.io/" translate
+            >settings.integrations.providerLink</a
+            >
+          </div>
+          <div class="setting-row-action" *ngIf="{
+            mqttClient: (mqttService.client | async)
+          } as data">
+            <div class="connected" *ngIf="data.mqttClient" @hshrink>
+              <div class="connected-info">
+                <i class="material-icons-round">check_circle</i>
+                <div class="connected-info-account">
+                  {{ data.mqttClient.options.host }}
+                </div>
+              </div>
+              <button
+                class="btn btn-secondary connected-disconnect"
+                (click)="showMqttConfigModal()"
+                translate
+                @hshrink
+              >settings.integrations.configure
+              </button>
+            </div>
+            <button
+              *ngIf="!data.mqttClient"
+              class="btn btn-primary"
+              (click)="showMqttConfigModal()"
+              translate
+              @hshrink
+            >settings.integrations.configure
+            </button>
           </div>
         </div>
       </div>

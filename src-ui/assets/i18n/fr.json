@@ -723,14 +723,12 @@
       "atTime": "À une heure prédéfinie",
       "description": "Désactive automatiquement le mode sommeil selon plusieurs critères",
       "onDevicePowerOn": "Lorsqu'un appareil est allumé",
-      "onSteamVRStop": "Lorsque SteamVR est stoppé",
-      "title": "Désactivation du mode sommeil"
+      "onSteamVRStop": "Lorsque SteamVR est stoppé"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{value}%</strong>",
       "atTime": "À une heure prédéfinie",
-      "description": "Active automatiquement le mode sommeil selon plusieurs critères",
-      "title": "Activation du mode sommeil"
+      "description": "Active automatiquement le mode sommeil selon plusieurs critères"
     },
     "modals": {
       "disableAtTime": {

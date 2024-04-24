@@ -1333,8 +1333,7 @@
       "atTime": "Pada waktu tertentu",
       "description": "Secara otomatis menonaktifkan mode tidur berdasarkan berbagai pemicu",
       "onDevicePowerOn": "Saat perangkat dihidupkan",
-      "onSteamVRStop": "Saat SteamVR dihentikan",
-      "title": "Menonaktifkan mode tidur"
+      "onSteamVRStop": "Saat SteamVR dihentikan"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{value}%</strong>",
@@ -1351,8 +1350,7 @@
       "onHeartRateCalmPeriod": {
         "description": "Memerlukan <a class=\"integrationsPageLink\">Integrasi Pulsoid</a>",
         "title": "Saat detak jantung saya tenang untuk jangka waktu tertentu"
-      },
-      "title": "Mengaktifkan mode tidur"
+      }
     },
     "experimentalAutomation": "Otomatisasi ini bersifat eksperimental dan mungkin belum dapat diandalkan.",
     "modals": {

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, DestroyRef, OnDestroy, OnInit } from '@angula
 import {
   HeartbeatRecord,
   PulsoidService,
-} from '../../../../../../services/integrations/pulsoid.service';
+} from '../../../../../../../services/integrations/pulsoid.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { filter } from 'rxjs';
 import { Chart, TooltipModel } from 'chart.js/auto';

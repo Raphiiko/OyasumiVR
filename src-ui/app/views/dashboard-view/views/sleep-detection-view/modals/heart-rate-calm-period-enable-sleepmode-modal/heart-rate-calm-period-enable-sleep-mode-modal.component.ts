@@ -1,6 +1,6 @@
 import { Component, HostBinding, HostListener, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
+import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { Router } from '@angular/router';
 
 export interface HeartRateCalmPeriodEnableSleepModeModalInputModel {

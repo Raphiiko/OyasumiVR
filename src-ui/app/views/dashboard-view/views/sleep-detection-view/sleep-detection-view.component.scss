@@ -1,11 +1,19 @@
+:host {
+  display: block;
+  height: 100%;
+  overflow: hidden;
+}
+
 .pane {
   height: 100%;
-
-  &-content {
-    padding: 2em;
-    overflow-y: overlay;
-  }
 }
+
+.pane-content {
+  padding: 2em;
+  overflow-y: overlay;
+  height: 100%;
+}
+
 
 .warning-icon {
   color: var(--color-warning);
