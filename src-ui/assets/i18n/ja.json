@@ -1581,8 +1581,7 @@
       },
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
-      "onSteamVRStop": "SteamVRを終了したとき",
-      "title": "睡眠モードの無効化"
+      "onSteamVRStop": "SteamVRを終了したとき"
     },
     "enableAutomations": {
       "atBatteryPercentage": "デバイスのバッテリー残量が<strong>{value}%</strong>を下回ったとき",
@@ -1599,8 +1598,7 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 連携</a>が必要です",
         "title": "心拍数から寝落ちを検知したとき"
-      },
-      "title": "睡眠モードの有効化"
+      }
     },
     "experimentalAutomation": "実験的機能のため、動作が不安定になる可能性があります。",
     "modals": {

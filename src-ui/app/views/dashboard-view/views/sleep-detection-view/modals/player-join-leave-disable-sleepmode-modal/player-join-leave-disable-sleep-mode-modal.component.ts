@@ -1,14 +1,14 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
+import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslateService } from '@ngx-translate/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsMode,
   SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
-} from '../../../../../models/automations';
+} from '../../../../../../models/automations';
 import { cloneDeep } from 'lodash';
-import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
+import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 
 export interface PlayerJoinLeaveDisableSleepModeModalInputModel {
   config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig;

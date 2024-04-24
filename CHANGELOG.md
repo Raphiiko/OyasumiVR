@@ -17,11 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
 - OVRToolkit as a notification provider
 - Integration with Home Assistant via MQTT
+- Additional configuration options for the sleep detector (controller presence, sleeping pose)
 
 ### Changed
 
 - Improved duration selection for sleep duration in shutdown sequence
 - Made device edit dialog always show the device serial number in its title.
+- Improved sleep detection by considering the sleeping pose
+- Improved layouts for sleep detection configuration views
 
 ### Fixed
 
