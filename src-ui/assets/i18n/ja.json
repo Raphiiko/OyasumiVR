@@ -1735,7 +1735,6 @@
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
       "onSteamVRStop": "SteamVRを終了したとき",
-      "title": "睡眠モードの無効化",
       "onUprightPose": "横になった後、起き上がっているとき",
       "onPlayerJoinOrLeave": "プレイヤーがワールドに参加、退出したとき"
     },
