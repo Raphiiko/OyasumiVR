@@ -169,6 +169,8 @@ export interface SleepModeEnableForSleepDetectorAutomationConfig extends Automat
   activationWindow: boolean;
   activationWindowStart: [number, number];
   activationWindowEnd: [number, number];
+  considerControllerPresence: boolean;
+  considerSleepingPose: boolean;
 }
 
 export interface SleepModeEnableAtTimeAutomationConfig extends AutomationConfig {
@@ -492,6 +494,8 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     activationWindow: false,
     activationWindowStart: [23, 0],
     activationWindowEnd: [7, 0],
+    considerControllerPresence: true,
+    considerSleepingPose: true,
   },
   SLEEP_MODE_ENABLE_AT_TIME: {
     enabled: false,

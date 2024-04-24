@@ -1496,8 +1496,7 @@
       },
       "description": "根据各种触发器自动禁用睡眠模式",
       "onDevicePowerOn": "当设备启动时",
-      "onSteamVRStop": "当 SteamVR 停止时",
-      "title": "关闭睡眠模式"
+      "onSteamVRStop": "当 SteamVR 停止时"
     },
     "enableAutomations": {
       "atBatteryPercentage": "当设备的电池百分比低于 <strong>{value}%</strong>",
@@ -1514,8 +1513,7 @@
       "onHeartRateCalmPeriod": {
         "description": "需要 <a class=\"integrationsPageLink\">Pulsoid 集成",
         "title": "当我的心率在一段时间内保持平稳时"
-      },
-      "title": "开启睡眠模式"
+      }
     },
     "experimentalAutomation": "这个自动化操作目前是实验性的，目前并不稳定。",
     "modals": {

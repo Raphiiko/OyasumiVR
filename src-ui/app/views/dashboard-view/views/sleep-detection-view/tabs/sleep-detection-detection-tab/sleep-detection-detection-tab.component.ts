@@ -1,38 +1,27 @@
-import { Component, DestroyRef, HostBinding, HostListener, OnInit } from '@angular/core';
-import { fade, fadeUp, triggerChildren } from '../../../../../utils/animations';
-import { SelectBoxItem } from '../../../../../components/select-box/select-box.component';
-import { AutomationConfigService } from '../../../../../services/automation-config.service';
-import { filter } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
-  AutomationConfigs,
   SleepModeEnableForSleepDetectorAutomationConfig,
-} from '../../../../../models/automations';
-import { SleepDetectorCalibrationModalComponent } from '../sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
-import { AppSettingsService } from '../../../../../services/app-settings.service';
+} from '../../../../../../models/automations';
+import { SleepDetectionTabComponent } from '../sleep-detection-tab.component';
+import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { Router } from '@angular/router';
-import { debounce } from 'typescript-debounce-decorator';
-import { BaseModalComponent } from '../../../../../components/base-modal/base-modal.component';
-import { ModalService } from '../../../../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounce } from 'typescript-debounce-decorator';
 import { cloneDeep } from 'lodash';
-
-export interface SleepDetectorEnableSleepModeModalInputModel {}
-
-export interface SleepDetectorEnableSleepModeModalOutputModel {}
+import { SleepDetectorCalibrationModalComponent } from '../../modals/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import { filter } from 'rxjs';
+import { fade, vshrink } from '../../../../../../utils/animations';
 
 @Component({
-  selector: 'app-time-enable-sleepmode-modal',
-  templateUrl: './sleep-detector-enable-sleep-mode-modal.component.html',
-  styleUrls: ['./sleep-detector-enable-sleep-mode-modal.component.scss'],
-  animations: [fadeUp(), fade(), triggerChildren()],
+  selector: 'app-sleep-detection-detection-tab',
+  templateUrl: './sleep-detection-detection-tab.component.html',
+  styleUrls: ['./sleep-detection-detection-tab.component.scss'],
+  animations: [fade(), vshrink()],
 })
-export class SleepDetectorEnableSleepModeModalComponent
-  extends BaseModalComponent<
-    SleepDetectorEnableSleepModeModalInputModel,
-    SleepDetectorEnableSleepModeModalOutputModel
-  >
-  implements OnInit, SleepDetectorEnableSleepModeModalInputModel
+export class SleepDetectionDetectionTabComponent
+  extends SleepDetectionTabComponent
+  implements OnInit
 {
   protected sensitivityOptions: SelectBoxItem[] = [
     {
@@ -59,36 +48,16 @@ export class SleepDetectorEnableSleepModeModalComponent
   protected sensitivityOption: SelectBoxItem | undefined;
   protected activationWindowStart = '00:00';
   protected activationWindowEnd = '00:00';
-  protected automationConfigs?: AutomationConfigs;
 
-  @HostBinding('[@fadeUp]')
-  protected get fadeUp() {
-    return;
-  }
-
-  constructor(
-    private settingsService: AppSettingsService,
-    private automationConfigService: AutomationConfigService,
-    private modalService: ModalService,
-    private router: Router,
-    private destroyRef: DestroyRef
-  ) {
+  constructor(private router: Router) {
     super();
   }
 
-  @HostListener('click', ['$event'])
-  async onClick(event: MouseEvent) {
-    if ((event.target as HTMLElement).className !== 'notificationSettingsLink') return;
-    event.preventDefault();
-    await this.router.navigate(['/dashboard/settings/notifications']);
-    await this.close();
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
+    super.ngOnInit();
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
-        this.automationConfigs = configs;
         this.sensitivityOption = this.sensitivityOptions.find(
           (o) => o.id === configs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sensitivity
         );
@@ -103,33 +72,12 @@ export class SleepDetectorEnableSleepModeModalComponent
       });
   }
 
-  save() {
-    this.result = this;
-    this.close();
-  }
-
-  calibrate() {
-    this.modalService
-      .addModal(
-        SleepDetectorCalibrationModalComponent,
-        {
-          calibrationValue:
-            this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue ??
-            AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue,
-        },
-        {
-          closeOnEscape: false,
-        }
-      )
-      .pipe(filter((data) => !!data))
-      .subscribe(async (data) => {
-        await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
-          'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
-          {
-            calibrationValue: data.calibrationValue,
-          }
-        );
-      });
+  get showSleepDetectionCalibrationWarning(): boolean {
+    return (
+      this.automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled &&
+      this.automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue ===
+        AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue
+    );
   }
 
   async setSensitivityOption(id: string | undefined) {
@@ -149,6 +97,26 @@ export class SleepDetectorEnableSleepModeModalComponent
       'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
       {
         sleepCheck: !this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.sleepCheck,
+      }
+    );
+  }
+
+  async toggleControllerPresence() {
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        considerControllerPresence:
+          !this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence,
+      }
+    );
+  }
+
+  async toggleSleepingPose() {
+    await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+      'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+      {
+        considerSleepingPose:
+          !this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerSleepingPose,
       }
     );
   }
@@ -210,5 +178,29 @@ export class SleepDetectorEnableSleepModeModalComponent
       'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
       config
     );
+  }
+
+  calibrate() {
+    this.modalService
+      .addModal(
+        SleepDetectorCalibrationModalComponent,
+        {
+          calibrationValue:
+            this.automationConfigs!.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue ??
+            AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.calibrationValue,
+        },
+        {
+          closeOnEscape: false,
+        }
+      )
+      .pipe(filter((data) => !!data))
+      .subscribe(async (data) => {
+        await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
+          'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
+          {
+            calibrationValue: data.calibrationValue,
+          }
+        );
+      });
   }
 }
