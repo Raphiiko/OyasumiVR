@@ -411,7 +411,7 @@ OyasumiVR has various automations for controlling certain features specific to c
 
 - 英文
 - 荷蘭文 (Nederlands)
-- 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
+- 日文 (日本語)（社群貢獻由 [なき](https://twitter.com/NoYu_idea) 與 [Milix-M](https://github.com/Milix-M)提供）
 - 韓文 (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
 - 簡體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）

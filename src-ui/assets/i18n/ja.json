@@ -2008,6 +2008,14 @@
           "description": "一度はキャリブレーションを行う必要があります",
           "title": "キャリブレーション"
         },
+        "considerControllerPresence": {
+          "description": "有効にすると、睡眠検出はコントローラーの入力を考慮します。",
+          "title": "コントローラー入力の考慮"
+        },
+        "considerSleepingPose": {
+          "description": "有効にすると、睡眠検出は寝姿を考慮します。",
+          "title": "寝姿の考慮"
+        },
         "description": "寝落ちを検知して睡眠モードに移行します\nHMDに一定の動作があった場合はタイマーをリセットして再度測定を開始します",
         "detectionWindow": {
           "description": "時間内に一定の動作がない場合は寝落ちと判定されます",
@@ -2096,6 +2104,10 @@
       }
     },
     "sleepDetection": {
+      "advanced": {
+        "description": "睡眠検出のより詳細な調整をすることができます。一般的にはこれらの設定をデフォルト値のままにしておくことをおすすめします。",
+        "title": "高度な調整"
+      },
       "automation": {
         "calibrationPending": {
           "calibrate": "今すぐキャリブレーション",
@@ -2104,7 +2116,15 @@
         "description": "眠っていると判断した場合、自動的に睡眠モードを有効にします。",
         "title": "寝落ち検知"
       },
+      "configuration": {
+        "title": "構成"
+      },
       "description": "睡眠モードを有効にさせる複数の方法があります。HMDの状態やコントローラーの入力など、様々な要因に基づいて眠っていると判断された場合、自動的に睡眠モードを有効にします。"
+    },
+    "tab": {
+      "detection": "検出",
+      "disabling": "睡眠モードの無効化",
+      "enabling": "睡眠モードの有効化"
     },
     "title": "睡眠検出"
   },
