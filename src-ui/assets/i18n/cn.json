@@ -43,29 +43,29 @@
         "title": "列表模式"
       },
       "onlyIfSleepModeEnabled": {
-        "title": "仅当睡眠模式启动时"
+        "title": "仅当睡眠模式启用时"
       },
       "onlyBelowPlayerCount": {
-        "title": "Only when there are fewer than <strong>{count, plural, one {#</strong> player} other {#</strong> players}} in your world",
-        "description": "This includes yourself"
+        "title": "只有当你的世界中少于<strong>{count, plural, one {#</strong>个玩家} other {#</strong>个玩家}}时",
+        "description": "这包括你自己"
       },
       "presetOptions": {
         "options": {
-          "NONE": "Don't change"
+          "NONE": "不改变"
         }
       },
       "changeListPreset": {
         "onSleepEnable": {
-          "title": "Load preset when I go to sleep",
-          "description": "Load a saved preset for the player list when the sleep mode enables"
+          "title": "当我进入睡眠模式时加载预设",
+          "description": "当睡眠模式启用时，加载玩家列表的保存预设"
         },
         "onSleepDisable": {
-          "title": "Load preset when I wake up",
-          "description": "Load a saved preset for the player list when the sleep mode disables"
+          "title": "当我醒来时加载预设",
+          "description": "当睡眠模式禁用时，加载玩家列表的保存预设"
         },
         "onSleepPreparation": {
-          "title": "Load preset when I prepare to go to sleep",
-          "description": "Load a saved preset for the player list when you prepare to go to sleep"
+          "title": "当我准备睡觉时加载预设",
+          "description": "当你准备进入睡眠模式时，加载玩家列表的保存预设"
         }
       }
     },
@@ -82,16 +82,16 @@
     "userOnJoinMeStatus": "无论你的设置如何，VRChat 都会自动接受所有加入请求，因为你的状态是加入我（蓝色）",
     "whitelist": "玩家白名单",
     "loadingFriends": "正在加载好友列表...",
-    "clearPlayers": "Clear All",
-    "savePreset": "Save As Preset",
-    "loadPreset": "Load Saved Preset",
+    "clearPlayers": "清除所有",
+    "savePreset": "保存为预设",
+    "loadPreset": "加载已保存的预设",
     "conditions": {
-      "title": "Conditions",
-      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are"
+      "title": "条件",
+      "description": "在这里，你可以配置OyasumiVR只在满足某些条件时接受邀请请求"
     },
     "otherAutomations": {
-      "title": "Other Automations",
-      "description": "Here you can find automations that will automatically change how this feature works."
+      "title": "其他自动化",
+      "description": "在这里，你可以找到将自动改变此功能工作方式的自动化"
     }
   },
   "brightness-automations": {
@@ -156,38 +156,38 @@
       "title": "亮度调节模式"
     },
     "title": "亮度自动化",
-      "tabs": {
-        "automations": "自动化",
-        "hmdSettings": "HMD 设置"
+    "tabs": {
+      "automations": "自动化",
+      "hmdSettings": "HMD 设置"
+    },
+    "hmdSettings": {
+      "description": "在这里，您可以找到与您的特定VR头戴设备的亮度相关的设置。",
+      "valveIndex": {
+        "title": "阀门索引",
+        "maxBrightness": {
+          "title": "最大亮度",
+          "description": "限制 OyasumiVR 将设置的最大亮度值。"
+        }
       },
-      "hmdSettings": {
-        "description": "在这里，您可以找到与您的特定VR头戴设备的亮度相关的设置。",
-        "valveIndex": {
-          "title": "阀门索引",
-          "maxBrightness": {
-            "title": "最大亮度",
-            "description": "限制 OyasumiVR 将设置的最大亮度值。"
-          }
+      "bigscreenBeyond": {
+        "title": "Bigscreen Beyond",
+        "maxBrightness": {
+          "title": "最大亮度",
+          "description": "限制 OyasumiVR 将设置的最大亮度值。"
         },
-        "bigscreenBeyond": {
-          "title": "Bigscreen Beyond",
-          "maxBrightness": {
-            "title": "最大亮度",
-            "description": "限制 OyasumiVR 将设置的最大亮度值。"
-          },
-          "permitRiskRange": {
-            "title": "限制到安全亮度级别",
-            "description": "防止您将亮度设置高于150%",
-            "warning": "这个功能不被制造商支持。\n\n请注意，这可能会损坏您的头戴设备：只有在您自愿承担风险的情况下才禁用此功能。"
-          },
-          "forceFanSafety": {
-            "title": "过驱动风扇安全",
-            "description": "在亮度值超过100%时，强制风扇到100%",
-            "warning": "此功能模仿官方 Bigscreen Beyond 驱动程序的安全风扇参数。只有在您自愿承担风险的情况下才禁用此功能。"
-          }
+        "permitRiskRange": {
+          "title": "限制到安全亮度级别",
+          "description": "防止您将亮度设置高于150%",
+          "warning": "这个功能不被制造商支持。\n\n请注意，这可能会损坏您的头戴设备：只有在您自愿承担风险的情况下才禁用此功能。"
+        },
+        "forceFanSafety": {
+          "title": "过驱动风扇安全",
+          "description": "在亮度值超过100%时，强制风扇到100%",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驱动程序的安全风扇参数。只有在您自愿承担风险的情况下才禁用此功能。"
         }
       }
-    },
+    }
+  },
   "chaperone-automations": {
     "description": "在启用或禁用睡眠模式时，OyasumiVR可以自动调整SteamVR的保护墙的淡出距离。",
     "fadeDistance": {
@@ -211,8 +211,8 @@
     "brightness-control-modal": {
       "automationsTooltip": "自动化亮度调整",
       "brightness": "亮度",
-      "hardwareBrightness": "Hardware Brightness",
-      "softwareBrightness": "Software Brightness"
+      "hardwareBrightness": "硬件控制的亮度",
+      "softwareBrightness": "软件控制的亮度"
     },
     "confirm-modal": {
       "defaultTitle": "确认"
@@ -280,7 +280,7 @@
         "statusInfo": "调试信息"
       },
       "hmdAutomations": "特定HMD的自动化",
-      "joinNotifications": "Join Notifications"
+      "joinNotifications": "加入通知"
     },
     "device-list": {
       "category": {
@@ -382,11 +382,11 @@
             "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
             "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
-        },
-        "title": {
-              "set": "头显硬件亮度设置为 {value}",
-              "transition": "头显硬件亮度过渡到 {value}"
-              }
+          },
+          "title": {
+            "set": "头显硬件亮度设置为 {value}",
+            "transition": "头显硬件亮度过渡到 {value}"
+          }
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -519,17 +519,17 @@
         },
         "bsbLedChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": "Bigscreen Beyond RGB Led set to {color}"
         },
         "bsbFanSpeedChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_MODE_DISABLED": "因为已禁用睡眠模式",
+            "SLEEP_MODE_ENABLED": "因为已启用睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
             "exact": "Bigscreen Beyond Fan set to {setPercentage}%",
@@ -545,7 +545,7 @@
             "automation": {
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "SteamVR退出了",
               "SLEEP_MODE_DISABLE_AT_TIME": "由于到达预定时间，睡眠模式已关闭",
-              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "As you got upright for long enough",
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "因为你保持站立太久了",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "睡眠模式启用的时间已经足够长了",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "一个设备被打开了",
               "NIGHTMARE_DETECTION": "检测到你可能正在做噩梦",
@@ -691,7 +691,7 @@
       },
       "mqttStatus": {
         "label": "MQTT",
-        "tooltip": "Settings: Integrations"
+        "tooltip": "设置：集成"
       }
     },
     "osc-script-code-editor": {
@@ -788,70 +788,70 @@
     },
     "player-list-preset-modal": {
       "title": {
-        "save": "Save Player List",
-        "load": "Load Player List"
+        "save": "保存玩家列表",
+        "load": "加载玩家列表"
       },
-      "namePlaceholder": "Preset name",
-      "currentPresets": "Current Presets",
-      "noPresets": "You have no presets saved yet",
+      "namePlaceholder": "预设名称",
+      "currentPresets": "当前预设",
+      "noPresets": "您还没有保存任何预设",
       "preset": {
-        "subtitle": "List of {count, plural, one {1 player} other {# players}}"
+        "subtitle": "{count, plural, one {1个玩家} other {#个玩家}}的列表"
       },
-      "overwrite": "Overwrite Preset",
-      "delete": "Delete Preset",
-      "load": "Load Preset",
+      "overwrite": "覆盖预设",
+      "delete": "删除预设",
+      "load": "加载预设",
       "confirmDelete": {
-        "title": "Are you sure?",
-        "message": "Are you sure you want to delete your preset named ''{name}''? It has {count, plural, one {1 player} other {# players}} in it."
+        "title": "你确定吗？",
+        "message": "你确定要删除名为''{name}''的预设吗？它包含{count, plural, one {1个玩家} other {#个玩家}}。"
       },
       "confirmOverwrite": {
-        "title": "Are you sure?",
-        "message": "Are you sure you want to overwrite your preset named ''{name}''?"
+        "title": "你确定吗？",
+        "message": "你确定要覆盖名为''{name}''的预设吗？"
       }
     },
     "player-list": {
-      "title": "Player List"
+      "title": "玩家列表"
     },
     "mqtt-config-modal": {
-      "title": "MQTT Configuration",
-      "description": "OyasumiVR can communicate with Home Assistant over MQTT. To set this up, please provide the connection details for your MQTT broker below.",
-      "brokerSetupNote": "Note that Home Assistant does not come with a MQTT broker enabled by default. If you do not already have a MQTT broker set up and configured with Home Assistant, please follow their <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentation</a> to do so first.",
-      "websocketNote": "MQTT over Websockets is the only supported protocol: please make sure your broker has websocket support enabled. Standard MQTT over TCP is <i>not</i> supported!",
+      "title": "MQTT配置",
+      "description": "OyasumiVR可以通过MQTT与Home Assistant通信。为了设置这个，请在下面提供你的MQTT broker的连接细节。",
+      "brokerSetupNote": "注意，Home Assistant默认不启用MQTT broker。如果你还没有设置和配置MQTT broker和Home Assistant，请先按照他们的<a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">文档</a>来操作。",
+      "websocketNote": "只支持MQTT over Websockets协议：请确保你的broker启用了websocket支持。标准的MQTT over TCP是<i>不</i>支持的！",
       "testConnection": {
-        "title": "Test Connection",
-        "description": "Test whether OyasumiVR can connect to your MQTT broker with the settings provided below",
-        "test": "Test Connection"
+        "title": "测试连接",
+        "description": "测试OyasumiVR是否可以使用下面提供的设置连接到你的MQTT broker",
+        "test": "测试连接"
       },
       "testConnectionResult": {
-        "title": "Test Result",
-        "success": "Connection successful!",
-        "error": "Connection failed!",
-        "errorMessage": "The following failure was reported:\n{error}"
+        "title": "测试结果",
+        "success": "连接成功！",
+        "error": "连接失败！",
+        "errorMessage": "报告了以下失败：\n{error}"
       },
       "mqttEnabled": {
-        "title": "Enable Integration",
-        "description": "Enable or disable the MQTT integration",
-        "test": "Test Connection"
+        "title": "启用集成",
+        "description": "启用或禁用MQTT集成",
+        "test": "测试连接"
       },
       "brokerHost": {
-        "title": "Host",
-        "description": "The hostname or IP address your MQTT broker can be reached on"
+        "title": "主机",
+        "description": "你的MQTT broker的IP或域名"
       },
       "brokerPort": {
-        "title": "Port",
-        "description": "The port of the websocket your MQTT broker can be reached on"
+        "title": "端口",
+        "description": "你的MQTT broker的监听端口"
       },
       "username": {
-        "title": "Username",
-        "description": "The username to authenticate with your MQTT broker (optional)"
+        "title": "用户名",
+        "description": "你的MQTT broker用户名（可选）"
       },
       "password": {
-        "title": "Password",
-        "description": "The password to authenticate with your MQTT broker (optional)"
+        "title": "密码",
+        "description": "你的MQTT broker的密码（可选）"
       },
       "ssl": {
-        "title": "Secure SSL",
-        "description": "Whether the connection to your MQTT broker should be secured with SSL"
+        "title": "使用SSL/TLS",
+        "description": "是否使用加密连接保护传输数据"
       }
     }
   },
@@ -1511,16 +1511,16 @@
       "discord": {
         "title": "Discord",
         "activityMode": {
-          "title": "Discord Rich Presence",
-          "description": "Show OyasumiVR as your current activity on Discord",
+          "title": "Discord状态面板",
+          "description": "在Discord上显示OyasumiVR当前的状态",
           "options": {
-            "ENABLED": "Enabled",
-            "ONLY_ASLEEP": "Only while asleep",
-            "DISABLED": "Disabled"
+            "ENABLED": "启用",
+            "ONLY_ASLEEP": "只在睡眠时",
+            "DISABLED": "禁用"
           }
         },
         "activityModeVRCCondition": {
-          "title": "Only show activity while VRChat is running"
+          "title": "只有在VRChat运行时才显示"
         }
       }
     },
@@ -1542,8 +1542,8 @@
         "title": "VRChat"
       },
       "homeAssistant": {
-        "description": "Integrate OyasumiVR with the rest of your smart home by connecting it up to your Home Assistant instance, enabling you to build your own powerful automations and control various smart devices.",
-        "title": "Home Assistant (over MQTT)"
+        "description": "通过将OyasumiVR连接到你的Home Assistant实例，可以让它与你的智能家居整合，使你能够构建自己强大的自动化设施",
+        "title": "Home Assistant（通过MQTT）"
       }
     },
     "notifications": {
@@ -1792,36 +1792,36 @@
         "title": "开启睡眠模式"
       },
       "disableForUprightPose": {
-        "title": "Disable sleep mode",
-        "description": "Disable sleep mode when you are sitting upright for a certain amount of time after laying down.",
+        "title": "禁用睡眠模式",
+        "description": "当你在躺下后坐直一段时间后禁用睡眠模式。",
         "duration": {
-          "title": "Time Duration",
-          "description": "How long you have to be sitting upright for the sleep mode to be disabled"
+          "title": "时间长度",
+          "description": "你需要坐直多久才能禁用睡眠模式"
         }
       },
       "disableForPlayerJoinLeave": {
-        "title": "Disable sleep mode",
-        "description": "Disable the sleep mode when a (certain) player joins or leaves your world. This can be useful if you want to wake up if someone specific joins you while you sleep, or when you're being left alone.",
+        "title": "禁用睡眠模式",
+        "description": "当某个（特定的）玩家加入或离开你的世界时，禁用睡眠模式。如果你想在有人加入或者房间只剩下你一人时醒来，这可能很有用。",
         "onJoin": {
-          "title": "Trigger when a player joins"
+          "title": "当玩家加入时触发"
         },
         "onLeave": {
-          "title": "Trigger when a player leaves"
+          "title": "当玩家离开时触发"
         },
         "onlyWhenPreviouslyAlone": {
-          "title": "Only when previously alone",
-          "description": "Only trigger when you were alone in your world before the other player joined"
+          "title": "只有在之前独自一人时",
+          "description": "只有当你在其他玩家加入之前独自在你的世界中时才触发"
         },
         "onlyWhenLeftAlone": {
-          "title": "Only when left alone",
-          "description": "Only trigger when you are alone in your world after the other player left"
+          "title": "只有在被留下独自一人时",
+          "description": "只有当你在其他玩家离开后独自在你的世界中时才触发"
         },
         "triggerOptions": {
-          "EVERYONE": "For everyone",
-          "FRIEND": "For friends",
-          "WHITELIST": "Players on list",
-          "BLACKLIST": "Players not on list",
-          "DISABLED": "For Nobody"
+          "EVERYONE": "对所有人",
+          "FRIEND": "对朋友",
+          "WHITELIST": "列表上的玩家",
+          "BLACKLIST": "不在列表上的玩家",
+          "DISABLED": "对没有人"
         }
       },
       "enableForSleepDetector": {
@@ -1886,7 +1886,7 @@
         },
         "countdown": {
           "instruction": "{counter} 秒后开始",
-          "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能正常运作"
+          "note": "校准时保持静止！ 假装你睡着了\n校准时移动会阻止此功能的正常运作"
         },
         "currentCalibration": "你当前的校准值：",
         "done": {
@@ -1901,7 +1901,7 @@
           "intro": "重新校准",
           "step": {
             "one": "戴上头盔并躺下",
-            "three": "让身体躺下 10 秒",
+            "three": "躺下并等 10 秒",
             "two": "从叠加层上启动 OyasumiVR 进行校准"
           },
           "stepPrefix": "校准步骤如下：",
@@ -1919,13 +1919,13 @@
     },
     "title": "睡眠检测",
     "sleepDetection": {
-      "description": "Sleep Detection is OyasumiVR's intended way for the sleep mode to be activated. This feature automatically enables sleep mode for you when it suspects you are asleep, based on various factors like the movement of your VR headset and your controller inputs.",
+      "description": "睡眠检测是OyasumiVR的睡眠模式的预期激活方式。此功能会根据各种因素（比如你头显的移动和你的控制器输入）自动启用睡眠模式，当它怀疑你已经睡着时。",
       "automation": {
-        "title": "Sleep Detection",
-        "description": "Automatically enable sleep mode when OyasumiVR suspects you are asleep",
+        "title": "睡眠检测",
+        "description": "当OyasumiVR觉得你已经睡着时，自动启用睡眠模式",
         "calibrationPending": {
-          "title": "<strong>Calibration Pending:</strong> Before using sleep detection, you should calibrate at least once to improve its accuracy.",
-          "calibrate": "Calibrate Now"
+          "title": "<strong>待校准：</strong>在使用睡眠检测之前，你应该至少校准一次以提高其准确性。",
+          "calibrate": "现在校准"
         }
       }
     }
@@ -2196,105 +2196,105 @@
     }
   },
   "hmd-automations": {
-      "tabs": {
-        "bigscreenBeyond": "Bigscreen Beyond"
-      },
-      "title": "特定于HMD的自动化",
-      "bigscreenBeyond": {
-        "description": "在这里，您可以自动化一些特定于Bigscreen Beyond的功能。",
-        "fanControl": {
-          "title": "风扇速度",
-          "onSleepEnable": {
-            "title": "当我睡觉时",
-            "description": "在启用睡眠模式时改变风扇速度"
-          },
-          "onSleepDisable": {
-            "title": "当我醒来时",
-            "description": "在禁用睡眠模式时改变风扇速度"
-          },
-          "onSleepPreparation": {
-            "title": "当我准备睡觉时",
-            "description": "在我准备睡觉时改变风扇速度"
-          },
-          "allowUnsafeFanSpeed": {
-            "title": "关闭风扇安全限制",
-            "description": "允许将风扇速度设置为低于40%的值",
-            "warning": "设备制造商不支持将风扇速度设置为低于40%的值，并且可能会让您的头显过热，从而造成潜在的损坏。只有在您愿意承担其风险的情况下才使用此选项。"
-          }
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "特定于HMD的自动化",
+    "bigscreenBeyond": {
+      "description": "在这里，您可以自动化一些特定于Bigscreen Beyond的功能。",
+      "fanControl": {
+        "title": "风扇速度",
+        "onSleepEnable": {
+          "title": "当我睡觉时",
+          "description": "在启用睡眠模式时改变风扇速度"
         },
-        "rgb": {
-          "title": "RGB Led",
-          "onSleepEnable": {
-            "title": "当我睡觉时",
-            "description": "在启用睡眠模式时改变HMD LED的颜色"
-          },
-          "onSleepDisable": {
-            "title": "当我醒来时",
-            "description": "在禁用睡眠模式时改变HMD LED的颜色"
-          },
-          "onSleepPreparation": {
-            "title": "当我准备睡觉时",
-            "description": "在我准备睡觉时改变HMD LED的颜色"
-          },
-          "pickerTitle": {
-            "onSleepEnable": "设置睡眠时的Beyond LED颜色",
-            "onSleepDisable": "设置醒来时的Beyond LED颜色",
-            "onSleepPreparation": "设置准备睡觉时的Beyond LED颜色"
+        "onSleepDisable": {
+          "title": "当我醒来时",
+          "description": "在禁用睡眠模式时改变风扇速度"
+        },
+        "onSleepPreparation": {
+          "title": "当我准备睡觉时",
+          "description": "在我准备睡觉时改变风扇速度"
+        },
+        "allowUnsafeFanSpeed": {
+          "title": "关闭风扇安全限制",
+          "description": "允许将风扇速度设置为低于40%的值",
+          "warning": "设备制造商不支持将风扇速度设置为低于40%的值，并且可能会让您的头显过热，从而造成潜在的损坏。只有在您愿意承担其风险的情况下才使用此选项。"
+        }
+      },
+      "rgb": {
+        "title": "RGB Led",
+        "onSleepEnable": {
+          "title": "当我睡觉时",
+          "description": "在启用睡眠模式时改变HMD LED的颜色"
+        },
+        "onSleepDisable": {
+          "title": "当我醒来时",
+          "description": "在禁用睡眠模式时改变HMD LED的颜色"
+        },
+        "onSleepPreparation": {
+          "title": "当我准备睡觉时",
+          "description": "在我准备睡觉时改变HMD LED的颜色"
+        },
+        "pickerTitle": {
+          "onSleepEnable": "设置睡眠时的Beyond LED颜色",
+          "onSleepDisable": "设置醒来时的Beyond LED颜色",
+          "onSleepPreparation": "设置准备睡觉时的Beyond LED颜色"
         }
       }
     }
   },
   "discord": {
-    "details": "VR Sleeping Software",
+    "details": "VR睡眠软件",
     "state": {
-      "sleeping": "Sleeping",
-      "awake": "Awake"
+      "sleeping": "正在睡觉",
+      "awake": "清醒"
     },
     "label": {
-      "sleeping": "sleepy time",
-      "awake": "no more sleepy"
+      "sleeping": "睡觉时间",
+      "awake": "不再困倦"
     }
   },
   "join-notifications": {
-    "title": "Join Notifications",
-    "description": "Play a notification message and/or sound when another player enters or leaves your world. This can be useful if you want OyasumiVR to wake you up when someone joins you.",
+    "title": "加入通知",
+    "description": "当其他玩家进入或离开你的世界时，播放通知消息和/或声音。如果你希望OyasumiVR在有人加入你时唤醒你，这个功能将会非常实用。",
     "modeOptions": {
-      "EVERYONE": "For everyone",
-      "FRIEND": "For friends",
-      "WHITELIST": "Players on list",
-      "BLACKLIST": "Players not on list",
-      "DISABLED": "For Nobody"
+      "EVERYONE": "对所有人",
+      "FRIEND": "对朋友",
+      "WHITELIST": "列表上的玩家",
+      "BLACKLIST": "不在列表上的玩家",
+      "DISABLED": "对没有人"
     },
     "joinNotifications": {
-      "title": "Join Notifications",
-      "description": "Show a notification when a player joins your world"
+      "title": "加入通知",
+      "description": "当有人加入你的世界时显示通知"
     },
     "leaveNotifications": {
-      "title": "Leave Notifications",
-      "description": "Show a notification when a player leaves your world"
+      "title": "离开通知",
+      "description": "当有人离开你的世界时显示通知"
     },
     "joinSounds": {
-      "title": "Join Sounds",
-      "description": "Play a sound when a player joins your world"
+      "title": "加入声音",
+      "description": "当玩家加入你的世界时播放声音"
     },
     "leaveSounds": {
-      "title": "Leave Sounds",
-      "description": "Play a sound when a player leaves your world"
+      "title": "离开声音",
+      "description": "当玩家离开你的世界时播放声音"
     },
     "joinSoundVolume": {
-      "title": "Sound Volume",
-      "description": "The volume of the sound effect that plays when a player enters or leaves your world"
+      "title": "声音音量",
+      "description": "当玩家进入或离开你的世界时播放的声音的音量"
     },
     "onlyWhenSleepModeActive": {
-      "title": "Only when sleep mode is enabled"
+      "title": "只有在睡眠模式启用时"
     },
     "onlyWhenPreviouslyAlone": {
-      "title": "Only when previously alone",
-      "description": "Only notify when you were alone in your world before the other player joined"
+      "title": "只有在之前独自一人时",
+      "description": "只有当你在其他玩家加入之前独自在你的世界中时才通知"
     },
     "onlyWhenLeftAlone": {
-      "title": "Only when left alone",
-      "description": "Only notify when you are alone in your world after the other player left"
+      "title": "只有在被留下独自一人时",
+      "description": "只有当你在其他玩家离开后独自在你的世界中时才通知"
     },
     "notification": {
       "join": "{name} 已加入",
