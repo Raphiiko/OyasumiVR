@@ -249,7 +249,6 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 使用的技术和工具
 
 {{BUILT_WITH_BODY}}
-
 OyasumiVR的使用技术与工具包括：
 
 - [Angular](https://angular.io/) (TypeScript, 界面主要组成部分)
@@ -289,3 +288,41 @@ OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何�
 
 {{LICENSE_BODY}}
 OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。
+
+{{SUPPORT_OYASUMIVR_HEADER}}
+
+
+{{SUPPORT_OYASUMIVR_BODY}}
+
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{TELEMETRY_HEADER}}
+
+
+{{TELEMETRY_BODY}}

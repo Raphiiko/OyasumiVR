@@ -1,8 +1,8 @@
 {{HEADER_TAGLINE}}
-💤 バーチャルリアリティの中で睡眠をアシストするソフトウェアです 💤
+💤 VR睡眠をサポートするソフトウェア 💤
 
 {{DISCORD_INVITE}}
-Discordへの参加もお待ちしています！ <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
+<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
 
 {{DOWNLOAD_AND_INSTALL_HEADER}}
 ダウンロード&インストール
@@ -55,7 +55,7 @@ OyasumiVRはすぐに終わるわけではありません。**やりたいこと
 {{SLEEP_DETECTION_BODY}}
 HMDの動きを分析して寝落ちを自動で検出します！一度キャリブレーションを行うだけで設定完了します。
 <br><br>
-他にも、以下の項目をトリガーにして自動化の機能を使用できます。
+他にも、以下の項目に応じて自動化の機能を使用できます。
 <br><br>
 <ul>
   <li>時刻指定</li>
@@ -70,7 +70,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 {{STEAMVR_OVERLAY_BODY}}
 一部の機能は独自のSteamVRオーバーレイを使ってVR内から直接操作できます！
 <br><br>
-デフォルトでは右コントローラーのAを2回押すとオーバーレイが表示されるようになっています。
+デフォルトでは右コントローラーのAを2回押すと表示されるようになっています。
 
 {{POWER_AUTOMATIONS_HEADER}}
 🔋 電源の自動化
@@ -78,7 +78,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 {{POWER_AUTOMATIONS_BODY_CONTROLLERS_AND_TRACKERS}}
 <b>コントローラー & トラッカー</b>
 <br>
-機器の電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
+電源を切ることでバッテリーを節約します。朝起きたときのバッテリー切れを防ぎます！
 <br>
 <br>
 他にも、充電器に繋いだときに電源を切るようにすることもできます。コントローラーの入れ替えに便利！
@@ -86,7 +86,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 {{POWER_AUTOMATIONS_BODY_WINDOWS_POWER_POLICY}}
 <b>Windowsの電源オプション</b>
 <br>
-Windowsの電源プランを変更してPCの消費電力を節約します。眠ったときは省電力モードに、起きたときは元のプランに戻すことができます。
+電源プランを変更してPCの消費電力を節約します。眠ったときは省電力モードに、起きたときは元のプランに戻すことができます。
 
 {{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
 <b>ベースステーション</b>
@@ -108,7 +108,8 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
 <b>MSI Afterburner</b>
 <br>
-電力制限だけでなくさらに細かく制御したい場合はMSI Afterburnerを使用できます。オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
+電力制限だけでなくさらに細かく制御したい場合は <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>を使用できます。
+オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
 
 {{VRCHAT_AUTOMATIONS_HEADER}}
 💫 VRChat関係の自動化
@@ -123,7 +124,8 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <ul>
   <li>
     <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br><a href="https://booth.pm/en/items/4233545">EXバージョン</a> にも対応！
+    <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
+    &nbsp;
   </li>
   <li>
     <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
@@ -171,6 +173,32 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 明るさの自動化
 
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+睡眠時と起床時の明るさを自動化します。HMDの輝度を徐々に落とすことができるので、急な明るさの変化で目を覚ます心配もありません！
+<br><br>
+ソフトウェアの明るさだけでなく、HMDが対応している場合はハードウェア輝度も制御できます(Valve Index, Bigscreen Beyond)。オーバーレイから輝度レベルを簡単にコントロールすることも可能です！
+
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+🎤 マイクミュートの自動化
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+<b>VRChatマイクミュートの自動化</b><br>
+睡眠時または起床時に、VRChatマイクをミュートまたはミュート解除します。
+<br><br>他の人にいびきを聞かれたくないときに使用します。
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+<b>システム側マイクミュートの自動化</b><br>
+マイクをデバイスレベルでミュートまたはミュート解除できます。
+これによってトグルモードとプッシュ・トゥ・トークモードを切り替えることもできます。
+<br><br>
+VR内にマイクアイコンを表示できます。オプションでキーバインドを設定して、他のVRゲームのマイクミュート機能を完全に置き換えることも可能です。
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+🔉 音量の自動化
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+オーディオデバイスの音量を自動的に変更します。騒音で起こされたくない場合に使用します。
+
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心拍数による自動化 (Pulsoid Integration)
 
@@ -189,6 +217,18 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <br>
 睡眠中の高い心拍数をチェックして悪夢を見ていないか確認します。自動的に睡眠モードを解除したり(明るさを上げたり)、アラームを鳴らしたりすることで悪夢からの目覚めをサポートします。
 
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+🚨 HMDの自動化
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+特定のHMDに対して自動化制御をするための様々な機能があります。現在は以下の通り対応しています。
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB LED制御</li>
+<li>ファン速度制御</li>
+</ul>
+
 {{RESOLUTION_AUTOMATIONS_HEADER}}
 👓 解像度の自動化
 
@@ -205,8 +245,6 @@ SteamVRのガーディアンのフェード距離を調整できます。眠っ�
 翻訳 & ローカライズ
 
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
-OyasumiVR currently supports the following languages:
-
 OyasumiVRは現在、以下の言語に対応しています。
 - English
 - Dutch (Nederlands)
@@ -247,7 +285,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - Vive Trackers (1.0/2.0/3.0)
 - Tundra Trackers\*
 
-これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても [OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver) を実装しない限りサポートされることはありません。
+これはOculusコントローラーでは動作しないことを意味し、SlimeVRトラッカーについても[OpenVR driver](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver)を実装しない限りサポートされることはありません。
 
 _(\*) Tundra trackersは、バッテリーレベルと充電ステータスの通信が非常に遅れています。これはファームウェアに起因するものであり、自動化は機能しますが十数分の遅延があります。_
 
@@ -261,6 +299,11 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 明るさの自動化
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+HMDのハードウェア輝度のコントロールはValve IndexとBigscreen Beyondのみサポートされています。
+
+ソフトウェアの明るさは全てのHMDで利用可能です。
 
 {{BUILT_WITH_HEADER}}
 ビルド
@@ -277,7 +320,7 @@ OyasumiVRは以下により構築されています。
 開発
 
 {{DEVELOPMENT_BODY}}
-Wikiの [Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development) をご覧ください。
+Wikiの[Starting Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)をご覧ください。
 
 {{VRCHAT_HEADER}}
 VRChat
@@ -292,13 +335,23 @@ OyasumiVRはVRChatによって承認されたものではなく、VRChatまた�
 
 OyasumiVRの開発者及びこのプロジェクトの貢献者は、OyasumiVRに起因するいかなる問題にも責任を負いません。自己責任でご利用ください。
 
+{{TELEMETRY_HEADER}}
+Aptabase
+
+{{TELEMETRY_BODY}}
+利用データの送信は[Aptabase](https://aptabase.com)によって提供されています。オープンソースであるAptabaseはモバイルおよびデスクトップアプリ向けに、プライバシーを第一としたシンプルな分析を提供してくれます。クラッシュレポートや匿名の使用統計を収集することでOyasumiVRの開発をサポートするにあたり、個人のプライバシーを最大限尊重するためにAptabaseが選ばれました。
+
+利用データは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と、アプリの起動回数や使用言語などの一般的な使用統計の提供のみに使用されます。
+
+OyasumiVRの設定でデータを送信しないように設定することができます。詳細については[Aptabaseプライバシーポリシー](https://aptabase.com/legal/privacy)をご覧ください。
+
 {{SUPPORT_HEADER}}
 サポート
 
 {{SUPPORT_BODY}}
-OyasumiVRでお困りのことがありましたら [Discord](https://discord.gg/7MqdPJhYxC) までお願いします。
+OyasumiVRでお困りのことがありましたら [Discord Server](https://discord.gg/7MqdPJhYxC) までお願いします。
 
-もしくはX(旧Twitter) [@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
+もしくはX（旧Twitter）[@Raphiiko](https://twitter.com/Raphiiko) まで直接ご連絡ください。なるべく早くお返事します！
 
 {{LICENSE_HEADER}}
 ライセンス

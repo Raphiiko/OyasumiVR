@@ -1704,8 +1704,7 @@
       "atTime": "지정된 시간에",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요.",
       "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
-      "onSteamVRStop": "SteamVR이 멈췄을 때",
-      "title": "수면 모드 비활성화"
+      "onSteamVRStop": "SteamVR이 멈췄을 때"
     },
     "enableAutomations": {
       "atBatteryPercentage": "기기의 배터리 잔량이  <strong>{value}%</strong>  이하로 떨어질 때",
@@ -1722,8 +1721,7 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 연동</a>이 필요해요.",
         "title": "심박수가 일정 시간 동안 안정될 때"
-      },
-      "title": "수면 모드 활성화"
+      }
     },
     "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",
     "modals": {

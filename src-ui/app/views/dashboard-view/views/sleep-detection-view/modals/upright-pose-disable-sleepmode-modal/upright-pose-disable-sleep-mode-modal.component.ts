@@ -1,6 +1,6 @@
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
-import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../utils/animations';
+import { fade, fadeUp, triggerChildren, vshrink } from '../../../../../../utils/animations';
 import { TranslateService } from '@ngx-translate/core';
 
 export interface UprightPoseDisableSleepModeModalInputModel {

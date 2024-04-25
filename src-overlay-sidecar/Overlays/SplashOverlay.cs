@@ -8,7 +8,7 @@ public class SplashOverlay : BaseWebOverlay {
   private bool _updatedPositionOnce;
 
   public SplashOverlay() :
-    base("/splash", 1024, "co.raphii.oyasumi:SplashOverlay", "OyasumiVR Splash Overlay", true)
+    base("/splash", 1024, "co.raphii.oyasumi:SplashOverlay", "OyasumiVR Splash Overlay")
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);
