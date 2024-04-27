@@ -7,8 +7,7 @@ import { VRChatService } from '../../../../services/vrchat.service';
 import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
 import { ModalService } from '../../../../services/modal.service';
 import { MqttConfigModalComponent } from '../../../../components/mqtt-config-modal/mqtt-config-modal.component';
-import { MqttService } from '../../../../services/mqtt.service';
-import { AutomationConfigService } from '../../../../services/automation-config.service';
+import { MqttService } from '../../../../services/mqtt/mqtt.service';
 
 @Component({
   selector: 'app-settings-integrations-view',
