@@ -65,23 +65,23 @@
       "description": "特定の条件が満たされた場合のみReq Inviteを許可できるように設定できます。",
       "title": "条件"
     },
-    "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドだけに許可することも可能です。",
+    "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドに対してのみ許可することも可能です。",
     "loadPreset": "プリセットを読み込む",
     "loadingFriends": "フレンドを読み込み中…",
     "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
     "options": {
       "changeListPreset": {
         "onSleepDisable": {
-          "description": "睡眠モード有効時に、プリセットを読み込みます",
-          "title": "起床時にプリセットを読み込む"
+          "description": "睡眠モードが無効化された際にプリセットを読み込みます",
+          "title": "起床時"
         },
         "onSleepEnable": {
-          "description": "睡眠モード有効時に、プリセットを読み込みます",
-          "title": "睡眠時にプリセットを読み込む"
+          "description": "睡眠モードが有効化された際にプリセットを読み込みます",
+          "title": "睡眠時"
         },
         "onSleepPreparation": {
-          "description": "就寝準備時に、プリセットを読み込みます",
-          "title": "就寝準備時にプリセットを読み込む"
+          "description": "就寝準備が押下された際にプリセットを読み込みます",
+          "title": "就寝準備時"
         }
       },
       "enable": {
@@ -173,7 +173,7 @@
       },
       "sleepAutomations": "睡眠時の自動化",
       "sleepPreparation": {
-        "description": "オーバーレイからこのボタンを押すと、就寝の準備ができます。就寝準備の自動化が1つ以上有効な場合にこのボタンが表示され、就寝前に輝度を徐々に落とすことができます。",
+        "description": "設定するとオーバーレイからこのボタンを押下できるようになります。就寝の準備として輝度を徐々に落とすことができます。",
         "title": "就寝準備"
       },
       "softwareBrightness": {
@@ -301,8 +301,8 @@
       "chaperoneAutomations": "ガーディアンの自動化",
       "gpuAutomations": "GPUの電力",
       "hardwareAutomations": "ハードウェアの自動化",
-      "hmdAutomations": "HMD固有の自動化",
-      "joinNotifications": "参加通知",
+      "hmdAutomations": "HMDの自動化",
+      "joinNotifications": "Join通知",
       "miscAutomations": "その他の自動化",
       "nightmareDetection": "悪夢の検知",
       "oscAutomations": "OSC",
@@ -361,14 +361,14 @@
         "Gamepad": "ゲームパッド",
         "HandPrimary": "プライマリハンド",
         "HandSecondary": "セカンダリハンド",
-        "Head": "ヘッド",
+        "Head": "頭",
         "Keyboard": "キーボード",
         "KneeLeft": "左膝",
         "KneeRight": "右膝",
         "ShoulderLeft": "左肩",
         "ShoulderRight": "右肩",
-        "Stylus": "スタイラス",
-        "Treadmill": "トレッドミル",
+        "Stylus": "Stylus",
+        "Treadmill": "Treadmill",
         "Waist": "腰",
         "WristLeft": "左手首",
         "WristRight": "右手首"
@@ -401,8 +401,8 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
-            "adjusted": "Bigscreen Beyond ファン速度が{setPercentage}%に設定されました（安全のために{requestedPercentage}%から調整されました）",
-            "exact": "Bigscreen Beyond ファン速度が{setPercentage}%に設定されました"
+            "adjusted": "Bigscreen Beyondファン速度が{setPercentage}%に設定されました（安全のために{requestedPercentage}%から調整されました）",
+            "exact": "Bigscreen Beyondファン速度が{setPercentage}%に設定されました"
           }
         },
         "bsbLedChanged": {
@@ -439,15 +439,15 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
-            "MUTE": "マイクミュート: {deviceName}",
-            "UNMUTE": "マイクオン: {deviceName}"
+            "MUTE": "ミュート: {deviceName}",
+            "UNMUTE": "ミュート解除: {deviceName}"
           }
         },
         "changedVRChatMicMuteState": {
           "reason": {
             "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
-            "SLEEP_PREPARATION": "就寝準備をしたため"
+            "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
             "MUTE": "VRChatマイクをミュート",
@@ -611,8 +611,8 @@
               "SLEEP_MODE_DISABLE_AT_TIME": "予定時刻による",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "機器の電源が入った",
               "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
-                "join": "{name}があなたのワールドに参加した",
-                "leave": "{name}があなたのワールドから退出した"
+                "join": "{name}がJoinした",
+                "leave": "{name}が退出した"
               },
               "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "起き上がっていた",
               "unknown": "不明な自動機能"
@@ -729,7 +729,7 @@
       },
       "bsbFanSpeed": {
         "label": "ファン速度",
-        "tooltip": "Bigscreen Beyond ファン速度"
+        "tooltip": "Bigscreen Beyondファン速度"
       },
       "heartrate": "心拍数",
       "inactive": "無効",
@@ -919,7 +919,7 @@
     "elevationSidecarModal": {
       "cancel": "一回のみ",
       "confirm": "常に",
-      "message": "常に管理者権限を付与しますか？\n\n有効にすると、起動時に管理者権限を要求します。この設定はいつでも無効にできます。",
+      "message": "常に管理者権限を付与しますか？\n\n有効にすると起動時に管理者権限を要求します。この設定はいつでも無効にできます。",
       "title": "管理者権限を付与する"
     },
     "enable": "GPU自動化を有効にする",
@@ -1033,50 +1033,50 @@
     "title": "HMDの自動化"
   },
   "join-notifications": {
-    "description": "他のプレイヤーがあなたのワールドに参加または退出すると、通知メッセージまたはサウンドを再生します。参加してくれた人に起きて会いたい場合に使用します。",
+    "description": "他のプレイヤーがJoinまたは退出すると、通知メッセージまたはサウンドを再生します。Joinしてくれた人に起きて会いたい場合に使用します",
     "joinNotifications": {
-      "description": "プレイヤーがワールドに参加したときに通知を表示する",
-      "title": "参加通知"
+      "description": "他のプレイヤーがJoinしたときに通知を表示する",
+      "title": "Join通知"
     },
     "joinSoundVolume": {
-      "description": "プレイヤーがワールドに参加、退出したときに再生される効果音の音量",
+      "description": "他のプレイヤーがJoin、退出したときに再生される効果音の音量",
       "title": "サウンド音量"
     },
     "joinSounds": {
-      "description": "プレイヤーがワールドに参加したときにサウンドを再生する",
-      "title": "参加音"
+      "description": "他のプレイヤーがJoinしたときにサウンドを再生する",
+      "title": "Join音"
     },
     "leaveNotifications": {
-      "description": "プレイヤーがワールドから退出したときに通知を表示する",
+      "description": "他のプレイヤーが退出したときに通知を表示する",
       "title": "退出通知"
     },
     "leaveSounds": {
-      "description": "プレイヤーがワールドから退出したときにサウンドを再生する",
+      "description": "他のプレイヤーが退出したときにサウンドを再生する",
       "title": "退出音"
     },
     "modeOptions": {
       "BLACKLIST": "リストにないプレイヤー",
       "DISABLED": "使用しない",
       "EVERYONE": "全員",
-      "FRIEND": "友達",
+      "FRIEND": "フレンド",
       "WHITELIST": "リスト上のプレイヤー"
     },
     "notification": {
-      "join": "{name} が参加しました",
+      "join": "{name} がJoinしました",
       "leave": "{name} が退出しました"
     },
     "onlyWhenLeftAlone": {
-      "description": "他のプレイヤーが退出した後にあなたが一人であるときにのみ通知する",
-      "title": "他のプレイヤーが退出したときのみ"
+      "description": "他のプレイヤーが退出した際、あなたが一人になった場合に通知します",
+      "title": "最後の一人になったとき"
     },
     "onlyWhenPreviouslyAlone": {
-      "description": "他のプレイヤーが参加する前にあなたが一人であるときにのみ通知する",
-      "title": "Only when previously alone"
+      "description": "他のプレイヤーがJoinする際、あなたが元から一人だった場合は通知します",
+      "title": "初めから一人だったとき"
     },
     "onlyWhenSleepModeActive": {
       "title": "睡眠モードが有効な場合のみ"
     },
-    "title": "参加通知"
+    "title": "Join通知"
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
@@ -1297,7 +1297,7 @@
     },
     "sleep-preparation": {
       "activate": "就寝準備",
-      "disabledTooltip": "少なくとも1つの自動化に対して就寝準備を設定すると、利用可能になります"
+      "disabledTooltip": "就寝準備に自動化機能を割り当てると利用可能になります"
     }
   },
   "power-automations": {
@@ -1311,8 +1311,8 @@
           },
           "powerOffConflict": {
             "action": "睡眠検出",
-            "description": "全てのコントローラーがオフになると睡眠モードが有効になるように設定しているため、意図せず睡眠モードを有効にしてしまう可能性があります。他の自動化がこれに反応することもあり、望んでいない動作をするかもしれません。無効にするには、睡眠モードの設定でオフにできます。",
-            "title": "警告: 別の自動化をトリガーする可能性があります！"
+            "description": "全てのコントローラーがオフになると睡眠モードが有効になるように設定されているため、意図しないタイミングで睡眠モードが有効になる可能性があります。これを回避するには睡眠モードの設定からオフにできます。",
+            "title": "警告: 別の自動化を誘発する可能性があります！"
           },
           "title": "コントローラーをオフにする"
         },
@@ -1341,7 +1341,7 @@
       },
       "onSleepModeEnable": {
         "description": "睡眠モードが有効化された際に電源をオフにします。",
-        "hint": "有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>で設定できます。",
+        "hint": "有効になるタイミングは、<a class=\"sleepDetectionLink\">睡眠検出</a>から設定できます。",
         "optionControllers": "すべてのコントローラーをオフにする",
         "optionTrackers": "すべてのトラッカーをオフにする",
         "title": "睡眠時"
@@ -1373,7 +1373,7 @@
       },
       "title": "ベースステーションをオンにする"
     },
-    "powerManagementWarning": "OyasumiVRでベースステーションのオン/オフを自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
+    "powerManagementWarning": "OyasumiVRでベースステーションの電源を自動化する場合、SteamVRの設定でベースステーションの電源管理を無効にすることを推奨します。",
     "tabs": {
       "baseStations": "ベースステーション",
       "controllersAndTrackers": "コントローラー & トラッカー",
@@ -1443,7 +1443,7 @@
           "title": "メモリ監視"
         },
         "oscServerEnabled": {
-          "description": "これをオフにすると、組み込みのOSCおよびOSCQueryサーバーが無効になります。このオプションは再起動しても維持されます。ただし、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、一般的な使用中にオフにするべきではありません",
+          "description": "オフにすると組み込みのOSCおよびOSCQueryサーバーが無効になります。このオプションは再起動しても維持されます。ただし、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、一般的な使用中にオフにするべきではありません",
           "title": "OSCおよびOSCQueryサーバーを有効にする"
         },
         "title": "修正とトラブルシューティング",
@@ -1571,7 +1571,7 @@
     },
     "general": {
       "adminPrivileges": {
-        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。これを有効にすると、OyasumiVRは起動時に管理者権限を要求するようになります",
+        "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。有効にするとOyasumiVRは起動時に管理者権限を要求するようになります",
         "label": "起動時に管理者権限を要求する",
         "title": "管理者権限"
       },
@@ -1628,14 +1628,14 @@
       },
       "miscellaneous": {
         "overlayGpuFix": {
-          "description": "SteamVRオーバーレイを開く際に問題が発生する場合、このオプションを有効にすると、一部のシステム（ハイブリッドグラフィックスを持つシステムなど）で問題が解決する可能性があります。このオプションを変更すると、オーバーレイが再起動します。",
+          "description": "SteamVRオーバーレイを開く際に問題が発生する場合、このオプションを有効にすると一部のシステム（ハイブリッドグラフィックスを持つシステムなど）で問題が解決する可能性があります。変更時はオーバーレイを再起動します。",
           "title": "SteamVRオーバーレイのグラフィックス修正"
         },
         "title": "その他"
       },
       "overlay": {
         "binding": {
-          "description": "オーバーレイメニューをトリガーするボタンは、SteamVRのバインディングメニューで設定できます",
+          "description": "オーバーレイメニューを表示させるボタンは、SteamVRのバインディングメニューで設定できます",
           "title": "コントローラーボタンバインド"
         },
         "onlyOpenMenuWhenVRChatRunning": {
@@ -1675,11 +1675,11 @@
       "startWithSteamVR": {
         "description": "SteamVRが起動したときにOyasumiVRを起動します",
         "howTo": "方法",
-        "label": "SteamVRで起動"
+        "label": "SteamVRと起動"
       },
       "stopWithSteamVR": {
         "description": "SteamVRが一定の時間停止したときにOyasumiVRを終了します",
-        "label": "SteamVRで終了",
+        "label": "SteamVRと終了",
         "options": {
           "AFTERDELAY": "2分後",
           "DISABLED": "無効",
@@ -1698,7 +1698,7 @@
         "title": "システムトレイ"
       },
       "telemetry": {
-        "description": "有効にすると、OyasumiVRはバージョン情報やクラッシュレポートなどの匿名の使用データを収集します。このデータは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と一般的な使用統計の提供のみに使用されます。<br>詳細については、<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabaseプライバシーポリシー</a>をご覧ください。",
+        "description": "有効にするとOyasumiVRはバージョン情報やクラッシュレポートなどの匿名の使用データを収集します。このデータは完全に匿名であり、個人を特定するデータは含まれません。主にバグの追跡と一般的な使用統計の提供のみに使用されます。<br>詳細については、<a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\">Aptabaseプライバシーポリシー</a>をご覧ください。",
         "label": "利用データの送信（匿名）",
         "title": "データの送信"
       },
@@ -1740,7 +1740,7 @@
       "reveal": "表示",
       "title": "連携",
       "vrchat": {
-        "description": "アカウントをリンクさせると、OyasumiVRのVRChat関連の自動化にアクセスできるようになります",
+        "description": "アカウントをリンクさせると、VRChat関係の自動化を利用できるようになります",
         "title": "VRChat"
       }
     },
@@ -1792,7 +1792,6 @@
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
       "noUpdate": "現在、最新版であるOyasumiVR v{version} を利用しています！",
-      "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
       "title": "アップデート",
       "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
       "updatesDisabled": {
@@ -1830,8 +1829,8 @@
       "message": "今すぐシャットダウン機能を実行させますか？",
       "title": "確認"
     },
-    "description": "ずっとVRで眠りたくない場合は、シャットダウン機能をご利用ください。\n自動でシャットダウンするので、VRの外でもスムーズに睡眠を継続できます。",
-    "noOptionsSelected": "シャットダウン中に実行するアクションが選択されていないため、この機能を実行しても何の影響もありません。この機能を実行するためには、以下のオプションのうち少なくとも1つを選択してください。",
+    "description": "ずっとVRで眠りたくない場合はシャットダウン機能をご利用ください。\n自動でシャットダウンするので、VRの外でもスムーズに睡眠を継続できます。",
+    "noOptionsSelected": "シャットダウン中に実行するアクションが選択されていないため、この機能を実行しても何の影響もありません。この機能を実行するには、以下のオプションを少なくとも1つは選択してください。",
     "overlay": {
       "cancel": "キャンセル",
       "stage": {
@@ -1861,7 +1860,7 @@
         "conflict": {
           "description": "SteamVRが停止されたときにOyasumiVRがすぐに終了するように設定されています。そのため、その後の自動化が実行されない可能性があります。これを修正するには、このタスクを無効にするか、一般設定でSteamVRが停止されたときにOyasumiVRをすぐに終了しないように設定してください。",
           "goToSettings": "一般設定へ",
-          "title": "警告：このタスクを実行すると、OyasumiVRがすぐに終了します"
+          "title": "警告：このタスクを実行するとOyasumiVRがすぐに終了します"
         },
         "description": "実行中のゲームやオーバーレイも終了します",
         "title": "SteamVRを終了する"
@@ -1886,7 +1885,7 @@
     },
     "title": "シャットダウン機能",
     "triggers": {
-      "title": "自動トリガー",
+      "title": "自動シャットダウン",
       "whenAsleep": {
         "description": "睡眠モードが一定時間継続した場合に起動させる",
         "title": "寝ているときに起動する"
@@ -1896,7 +1895,7 @@
         "title": "睡眠時間"
       },
       "whenAsleepTimeWindow": {
-        "description": "シャットダウンのトリガーを特定の時間帯にのみ許可する",
+        "description": "シャットダウンを特定の時間帯にのみ許可する",
         "title": "アクティベーションウィンドウ"
       }
     }
@@ -1914,7 +1913,7 @@
       "atTime": "時刻指定",
       "description": "任意の設定に基づいて睡眠モードを無効にします。",
       "onDevicePowerOn": "デバイスの電源がオンになったとき",
-      "onPlayerJoinOrLeave": "プレイヤーがワールドに参加、退出したとき",
+      "onPlayerJoinOrLeave": "他のプレイヤーがJoin、退出したとき",
       "onSteamVRStop": "SteamVRを終了したとき",
       "onUprightPose": "横になった後、起き上がっているとき"
     },
@@ -1924,9 +1923,9 @@
       "description": "任意の設定に基づいて睡眠モードを有効にします。",
       "onControllersPoweredOff": {
         "batteryLevelAutomationConflict": {
-          "action": "電源自動化設定：\nコントローラー＆トラッカー",
-          "description": "コントローラーのバッテリー残量が一定の割合以下になると自動的にオフになるように設定されています。これにより、誤ってスリープモードが有効になる可能性があり、お望みの動作とは異なるかもしれません。これを防ぐには、「電源自動化設定」の「コントローラー＆トラッカー」セクションでこの動作を無効にできます。",
-          "title": "警告: これは他の自動化によってトリガーされる可能性があります！"
+          "action": "機器の電源：\nコントローラー＆トラッカー",
+          "description": "コントローラーのバッテリー残量によってデバイスがオフになるように設定されているため、意図しないタイミングで睡眠モードを有効にしてしまう可能性があります。これを回避するには「機器の電源」の「コントローラー＆トラッカー」から設定をオフにできます。",
+          "title": "警告: 他の自動化機能によって誘発される可能性があります！"
         },
         "title": "すべてのコントローラーがオフになったとき"
       },
@@ -1938,7 +1937,7 @@
     "experimentalAutomation": "実験的機能のため、動作が不安定になる可能性があります。",
     "modals": {
       "disableAfterTime": {
-        "description": "一定時間の経過後に睡眠モードを無効化にします",
+        "description": "一定時間の経過後に睡眠モードを無効にします",
         "time": "期間",
         "title": "睡眠モードの無効化"
       },
@@ -1948,19 +1947,19 @@
         "title": "睡眠モードの無効化"
       },
       "disableForPlayerJoinLeave": {
-        "description": "特定のプレイヤーがワールドに参加、退出したときに睡眠モードを無効にします。特定のフレンドが参加した際に目を覚ますか、一人になった際に睡眠モードを無効にしたい場合に使用します。",
+        "description": "他のプレイヤーがJoinまたは退出すると、睡眠モードを無効にします。特定のフレンドを出迎えたい場合や、一人になったときに睡眠モードを無効にしたい場合に使用します",
         "onJoin": {
-          "title": "プレイヤーが参加したとき"
+          "title": "他のプレイヤーがJoinしたとき"
         },
         "onLeave": {
-          "title": "プレイヤーが退出したとき"
+          "title": "他のプレイヤーが退出したとき"
         },
         "onlyWhenLeftAlone": {
-          "description": "他のプレイヤーが退出した後、ワールドで一人になった場合に無効化します。",
+          "description": "他のプレイヤーが退出した際、あなたが一人になった場合に無効化します",
           "title": "最後の一人になったとき"
         },
         "onlyWhenPreviouslyAlone": {
-          "description": "他のプレイヤーが参加するとき、ワールドで一人だった場合に無効化します。",
+          "description": "他のプレイヤーがJoinする際、あなたが元から一人だった場合に無効化します",
           "title": "初めから一人だったとき"
         },
         "title": "睡眠モードの無効化",
@@ -1975,8 +1974,8 @@
       "disableForUprightPose": {
         "description": "横になった後、一定時間起き上がっている場合は睡眠モードを無効にします。",
         "duration": {
-          "description": "起き上がっている間、睡眠モードが無効になるまでの時間",
-          "title": "時間の長さ"
+          "description": "起き上がってから、睡眠モードが無効になるまでの時間",
+          "title": "検知時間"
         },
         "title": "睡眠モードの無効化"
       },
@@ -2009,12 +2008,12 @@
           "title": "キャリブレーション"
         },
         "considerControllerPresence": {
-          "description": "有効にすると、睡眠検出はコントローラーの入力を考慮します。",
-          "title": "コントローラー入力の考慮"
+          "description": "コントローラーの入力があった際に検知タイマーをリセットします",
+          "title": "コントローラー入力による判定"
         },
         "considerSleepingPose": {
-          "description": "有効にすると、睡眠検出は寝姿を考慮します。",
-          "title": "寝姿の考慮"
+          "description": "睡眠検出は姿勢を考慮します。（要翻訳）",
+          "title": "姿勢による判定"
         },
         "description": "寝落ちを検知して睡眠モードに移行します\nHMDに一定の動作があった場合はタイマーをリセットして再度測定を開始します",
         "detectionWindow": {
@@ -2046,7 +2045,7 @@
       "enableOnHeartRateCalmPeriod": {
         "bpm": {
           "description": "睡眠モードを有効にするために心拍数が一定の閾値以下になる必要があります。",
-          "title": "BPM 閾値",
+          "title": "BPM",
           "unit": "BPM"
         },
         "description": "一定の閾値以下の心拍数が一定の時間継続した場合に睡眠モードを有効にします。心拍数の閾値と、睡眠モードが有効になるための時間を定義します\n\nこれには<a class=\"integrationsPageLink\">Pulsoid連携</a>を有効にする必要があります",
@@ -2105,26 +2104,26 @@
     },
     "sleepDetection": {
       "advanced": {
-        "description": "睡眠検出のより詳細な調整をすることができます。一般的にはこれらの設定をデフォルト値のままにしておくことをおすすめします。",
-        "title": "高度な調整"
+        "description": "より詳細な調整ができます。特にこだわりがない場合、デフォルトまま使用することをおすすめします。",
+        "title": "高度な設定"
       },
       "automation": {
         "calibrationPending": {
           "calibrate": "今すぐキャリブレーション",
           "title": "<strong>キャリブレーションが保留中：</strong> 寝落ち検知を使用する前に一度キャリブレーションを行い、精度を向上させることをお勧めします。"
         },
-        "description": "眠っていると判断した場合、自動的に睡眠モードを有効にします。",
+        "description": "眠っていると判断した場合、自動的に睡眠モードを有効にします",
         "title": "寝落ち検知"
       },
       "configuration": {
-        "title": "構成"
+        "title": "設定"
       },
-      "description": "睡眠モードを有効にさせる複数の方法があります。HMDの状態やコントローラーの入力など、様々な要因に基づいて眠っていると判断された場合、自動的に睡眠モードを有効にします。"
+      "description": "睡眠モードを有効にさせる方法を選択してください。HMDの状態やコントローラーの入力など、任意の設定に基づいて睡眠モードが有効になります。"
     },
     "tab": {
-      "detection": "検出",
-      "disabling": "睡眠モードの無効化",
-      "enabling": "睡眠モードの有効化"
+      "detection": "寝落ち検知",
+      "disabling": "無効化設定",
+      "enabling": "有効化設定"
     },
     "title": "睡眠検出"
   },
@@ -2145,7 +2144,7 @@
     "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限できます。",
     "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
     "enable": "ステータス自動化を有効にする",
-    "exampleUse": "使用例: 一人で寝ているときは青ステのままで、十分な人数が来たときは赤ステなどへ切り替えられます！",
+    "exampleUse": "使用例: 一人で寝ているときは青(Join Me)、十分な人数が来たときは赤(Do Not Disturb)などへ切り替えられます！",
     "moreInfo": "詳細",
     "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
     "playerLimit": "人数制限",
@@ -2261,7 +2260,7 @@
     "vrchat": {
       "title": "VRChat オプション",
       "worldJoinBehaviour": {
-        "description": "VRChatでワールドを移動する際にマイクがどのように動作するか",
+        "description": "VRChatでワールドを移動した際にマイクがどのように動作するか",
         "options": {
           "KEEP": "前回の状態を保持",
           "MUTE": "デフォルトオフ",
@@ -2292,7 +2291,7 @@
       "title": "マイクミュートの制御",
       "unmute": "ミュート解除"
     },
-    "description": "睡眠時または起床時に、VRChatマイクをミュートまたはミュート解除します。他の人にいびきを聞かれたくないときに使用します。\n\nこれを機能させるには、VRChat内でOSCが有効になっている必要があり、マイクの動作が「トグル」に設定されている必要があります。",
+    "description": "睡眠時または起床時に、VRChatマイクをミュートまたはミュート解除します。他の人にいびきを聞かれたくないときに使用します。\nVRChat内でOSCが有効になっている必要があり、マイクの動作が「トグル」に設定されている必要があります。",
     "muteOptions": {
       "MUTE": "ミュート",
       "NONE": "変更しない",
