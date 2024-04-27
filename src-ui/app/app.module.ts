@@ -192,9 +192,9 @@ import { JoinNotificationsViewComponent } from './views/dashboard-view/views/joi
 import { PlayerListComponent } from './components/player-list/player-list.component';
 import { JoinNotificationsService } from './services/join-notifications.service';
 import { SleepModeDisableOnPlayerJoinLeaveAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-player-join-leave.service';
-import { MqttService } from './services/mqtt.service';
-import { MqttDiscoveryService } from './services/mqtt-discovery.service';
-import { MqttIntegrationService } from './services/mqtt-integration.service';
+import { MqttService } from './services/mqtt/mqtt.service';
+import { MqttDiscoveryService } from './services/mqtt/mqtt-discovery.service';
+import { MqttIntegrationService } from './services/mqtt/mqtt-integration.service';
 import { MqttConfigModalComponent } from './components/mqtt-config-modal/mqtt-config-modal.component';
 import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';

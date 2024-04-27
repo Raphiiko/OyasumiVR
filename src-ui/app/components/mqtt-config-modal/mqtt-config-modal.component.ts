@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { MqttService } from '../../services/mqtt.service';
+import { MqttService } from '../../services/mqtt/mqtt.service';
 import { AppSettingsService } from '../../services/app-settings.service';
 import { cloneDeep } from 'lodash';
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
