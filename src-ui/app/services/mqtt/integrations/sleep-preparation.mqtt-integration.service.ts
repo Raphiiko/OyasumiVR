@@ -21,10 +21,8 @@ export class SleepPreparationMqttIntegrationService {
       displayName: 'Sleep Preparation',
     });
     // Handle commands
-    this.mqtt
-      .getCommandStreamForProperty<MqttButtonProperty>('sleepPreparation')
-      .subscribe((command) => {
-        this.sleepPreparation.prepareForSleep();
-      });
+    this.mqtt.getCommandStreamForProperty<MqttButtonProperty>('sleepPreparation').subscribe(() => {
+      this.sleepPreparation.prepareForSleep();
+    });
   }
 }

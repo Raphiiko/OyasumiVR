@@ -50,7 +50,7 @@ export class BigscreenBeyondMqttIntegrationService {
       this.fanSpeedService.bsbConnected.pipe(distinctUntilChanged()),
       this.fanSpeedService.fanSafetyActive.pipe(distinctUntilChanged()),
     ]).subscribe(([bsbConnected, fanSafetyActive]) => {
-      let available = bsbConnected && !fanSafetyActive;
+      const available = bsbConnected && !fanSafetyActive;
       this.mqtt.setPropertyAvailability('bsbFanSpeed', available);
     });
     this.fanSpeedService.fanSafetyActive

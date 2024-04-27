@@ -54,9 +54,9 @@ export class TrackerControllerMqttIntegrationService {
     const updatedDevices = currentDevices.filter((d) =>
       previousDevices.some((pd) => pd.serialNumber === d.serialNumber)
     );
-    for (let device of addedDevices) await this.addDevice(device);
-    for (let device of removedDevices) await this.removeDevice(device);
-    for (let device of updatedDevices) await this.updateDevice(device);
+    for (const device of addedDevices) await this.addDevice(device);
+    for (const device of removedDevices) await this.removeDevice(device);
+    for (const device of updatedDevices) await this.updateDevice(device);
   }
 
   private async addDevice(device: OVRDevice) {

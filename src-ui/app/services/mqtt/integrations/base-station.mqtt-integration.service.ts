@@ -51,9 +51,9 @@ export class BaseStationMqttIntegrationService {
     const updatedDevices = currentDevices.filter((d) =>
       previousDevices.some((pd) => pd.id === d.id)
     );
-    for (let device of addedDevices) await this.addDevice(device);
-    for (let device of removedDevices) await this.removeDevice(device);
-    for (let device of updatedDevices) await this.updateDevice(device);
+    for (const device of addedDevices) await this.addDevice(device);
+    for (const device of removedDevices) await this.removeDevice(device);
+    for (const device of updatedDevices) await this.updateDevice(device);
   }
 
   private async addDevice(device: LighthouseDevice) {

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { SleepService } from '../../sleep.service';
-import { SleepPreparationService } from '../../sleep-preparation.service';
-import { MqttButtonProperty, MqttToggleProperty } from '../../../models/mqtt';
+import { MqttToggleProperty } from '../../../models/mqtt';
 
 @Injectable({
   providedIn: 'root',

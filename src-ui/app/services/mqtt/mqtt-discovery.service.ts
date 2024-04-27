@@ -153,7 +153,7 @@ export class MqttDiscoveryService {
         const action = parts[parts.length - 1];
         switch (action) {
           case 'set':
-          case 'rgbSet':
+          case 'rgbSet': {
             const topicPath = parts.slice(1, -1).join('/');
             const property = this.properties.value.find((p) => p.topicPath === topicPath);
             if (!property) return;
@@ -219,6 +219,7 @@ export class MqttDiscoveryService {
               }
             }
             break;
+          }
         }
       }
     });
