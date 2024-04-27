@@ -3,11 +3,11 @@
     "author": {
       "role": "開発者"
     },
-    "contributions": "共同開発",
     "contributionType": {
       "feature": "機能",
       "soundFx": "サウンド効果"
     },
+    "contributions": "共同開発",
     "discordInvite": "Discord",
     "projectLinks": "プロジェクトリンク",
     "sourceLink": "Source Code @ GitHub",
@@ -66,8 +66,8 @@
       "title": "条件"
     },
     "description": "自分が受け取ったReq Inviteを自動的に許可できます。ホワイトリストやブラックリストを利用すると、特定のフレンドだけに許可することも可能です。",
-    "loadingFriends": "フレンドを読み込み中…",
     "loadPreset": "プリセットを読み込む",
+    "loadingFriends": "フレンドを読み込み中…",
     "noPlayersAdded": "現在、リストに登録されているプレイヤーはいません",
     "options": {
       "changeListPreset": {
@@ -972,8 +972,8 @@
       "gpuPowerLimitsUnsupported": "選択されたGPUは、電力制限の設定に対応していません。",
       "gpuUnsupported": "選択されたGPUは対応していません",
       "inputDefault": "GPUのデフォルトの制限値にリセットします。",
-      "noGPUs": "NVIDIA GPUが見つかりませんでした。",
       "noGPUSelected": "GPUが選択されていません",
+      "noGPUs": "NVIDIA GPUが見つかりませんでした。",
       "selectGPU": "電力制限を設定したいGPUを選択します。"
     },
     "requestAdministrator": "管理者権限を付与する",
@@ -1038,13 +1038,13 @@
       "description": "プレイヤーがワールドに参加したときに通知を表示する",
       "title": "参加通知"
     },
-    "joinSounds": {
-      "description": "プレイヤーがワールドに参加したときにサウンドを再生する",
-      "title": "参加音"
-    },
     "joinSoundVolume": {
       "description": "プレイヤーがワールドに参加、退出したときに再生される効果音の音量",
       "title": "サウンド音量"
+    },
+    "joinSounds": {
+      "description": "プレイヤーがワールドに参加したときにサウンドを再生する",
+      "title": "参加音"
     },
     "leaveNotifications": {
       "description": "プレイヤーがワールドから退出したときに通知を表示する",
@@ -1183,9 +1183,9 @@
       "manualControl": "マニュアル操作",
       "options": {
         "footLock": {
-          "description": "フットロックの有効化／無効化を OSC コマンドで設定します",
           "FOOT_LOCK": "フットロックの有効化",
           "FOOT_UNLOCK": "フットロックの無効化",
+          "description": "フットロックの有効化／無効化を OSC コマンドで設定します",
           "title": "フットロック"
         },
         "general": {
@@ -1203,13 +1203,13 @@
           "unlockFeetOnSleepModeDisable": "睡眠モード無効時にフットロック解除"
         },
         "positions": {
-          "description": "寝返りごとにアニメーションを有効化させるOSCコマンドを設定します",
           "SIDE_BACK": "仰向け",
           "SIDE_FRONT": "うつぶせ",
           "SIDE_LEFT": "左向き",
           "SIDE_RIGHT": "右向き",
-          "title": "寝返り",
-          "UNKNOWN": "不明"
+          "UNKNOWN": "不明",
+          "description": "寝返りごとにアニメーションを有効化させるOSCコマンドを設定します",
+          "title": "寝返り"
         }
       },
       "presetAuthor": "{author}による"
@@ -1247,15 +1247,15 @@
           "subtitle": "実行までの待機時間 {time}",
           "title": "自動シャットダウン"
         },
-        "sleepingAnimations": {
-          "title": "アニメーションの自動化"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "検知感度 {sensitivity}, {startTime} - {endTime}",
             "withoutActivationWindow": "検知感度 {sensitivity}"
           },
           "title": "睡眠検出"
+        },
+        "sleepingAnimations": {
+          "title": "アニメーションの自動化"
         },
         "title": "自動化の設定"
       },
@@ -1471,13 +1471,13 @@
               "message": "マニフェストを削除できませんでした。ログを確認してください。",
               "title": "VRアプリケーションマニフェストの再登録失敗"
             },
-            "success": {
-              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
-              "title": "VRアプリケーションマニフェストの再登録成功"
-            },
             "UNKNOWN": {
               "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。",
               "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "success": {
+              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
+              "title": "VRアプリケーションマニフェストの再登録成功"
             }
           },
           "title": "SteamVRアプリケーションマニフェストの再登録"
@@ -1791,8 +1791,8 @@
       "changelog": "変更履歴",
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
-      "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
       "noUpdate": "現在、最新版であるOyasumiVR v{version} を利用しています！",
+      "notChecked": "OyasumiVRはまだアップデートを確認しておりません。",
       "title": "アップデート",
       "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
       "updatesDisabled": {
@@ -1988,12 +1988,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "コントローラー",
+        "GenericTracker": "トラッカー",
         "errors": {
           "thresholdNotInteger": "数字で指定してください。",
           "thresholdOutOfRange": "0以上100以下の範囲で指定してください。"
         },
         "fallsBelow": "バッテリー残量",
-        "GenericTracker": "トラッカー",
         "title": "睡眠モードの有効化",
         "whenA": "対象"
       },
@@ -2171,10 +2171,10 @@
       },
       "conflictWarning": "VRChatでマイクのミュートボタンを切り替えるためにこの機能を使用している場合、VRChatの設定でミュートボタンのバインディングを解除するか、マイクモードを「常時オン」に設定して競合を防ぐことをお勧めします。",
       "currentMode": {
-        "description": "コントローラーボタンの現在のモードを反映します",
         "PUSH_TO_TALK": "プッシュトゥトーク",
-        "title": "ボタンの挙動",
-        "TOGGLE": "トグル"
+        "TOGGLE": "トグル",
+        "description": "コントローラーボタンの現在のモードを反映します",
+        "title": "ボタンの挙動"
       },
       "description": "コントローラーボタンをバインドして、マイクのミュート状態を制御します。",
       "enabled": {
