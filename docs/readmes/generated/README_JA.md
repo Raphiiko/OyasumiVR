@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server</a>への参加もお待ちしています！
     <br>
     <br>
@@ -201,7 +199,8 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
     <td>
 <b>MSI Afterburner</b>
 <br>
-電力制限だけでなくさらに細かく制御したい場合はMSI Afterburnerを使用できます。オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
+電力制限だけでなくさらに細かく制御したい場合は <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>を使用できます。
+オーバークロックやダウンクロック、電力制限などを設定したプリセットをOyasumiVRが自動で適用します。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/51c39db0-fa11-4612-8975-8bf642befe82"></td>
   </tr>
@@ -222,6 +221,7 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
   <li>
     <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
     <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
+    &nbsp;
   </li>
   <li>
     <a href="https://booth.pm/en/items/3290806">GoGo Loco v1.7.1+</a> by <a href="https://twitter.com/franadaVRC">franada</a>
@@ -407,12 +407,10 @@ SteamVRのガーディアンのフェード距離を調整できます。眠っ�
 
 ## 翻訳 & ローカライズ
 
-OyasumiVR currently supports the following languages:
-
 OyasumiVRは現在、以下の言語に対応しています。
 - English
 - Dutch (Nederlands)
-- Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
+- Japanese (日本語) (Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
 - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 - Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))

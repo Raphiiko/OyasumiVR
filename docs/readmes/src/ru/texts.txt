@@ -211,7 +211,7 @@ OyasumiVR может обнаруживать продолжительное п�
 
 - English
 - Dutch (Nederlands)
-- Japanese (日本語) (Сделан на заказ + Вклад сообщества от [なき](https://twitter.com/NoYu_idea))
+- Japanese (日本語) (Вклад сообщества от [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
 - Korean (한국어) (Вклад сообщества от [Soumt](https://github.com/soumt-r))
 - Traditional Chinese (繁體中文) (Вклад сообщества от [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese (简体中文) (Вклад сообщества от [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
@@ -315,3 +315,29 @@ Aptabase
 
 {{LICENSE_BODY}}
 OyasumiVR доступен по лицензии [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md).
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}

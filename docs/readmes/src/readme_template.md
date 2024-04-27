@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">{{token.builtOnAptabase}}</a>
-    <br>
 {{DISCORD_INVITE}}
     <br>
     <br>

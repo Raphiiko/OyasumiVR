@@ -198,7 +198,7 @@ OyasumiVR 可以檢測到你的心跳率持續異常升高，這可能表示你�
 
 - 英文
 - 荷蘭文 (Nederlands)
-- 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
+- 日文 (日本語)（社群貢獻由 [なき](https://twitter.com/NoYu_idea) 與 [Milix-M](https://github.com/Milix-M)提供）
 - 韓文 (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
 - 簡體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
@@ -292,3 +292,41 @@ OyasumiVR 的開發者和項目貢獻者對 OyasumiVR 導致的任何問題（�
 
 {{LICENSE_BODY}}
 OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE)進行發布。這意味著你可以自由地使用、修改和分發它，只要你遵從授權條款。
+
+{{SUPPORT_OYASUMIVR_HEADER}}
+
+
+{{SUPPORT_OYASUMIVR_BODY}}
+
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{TELEMETRY_HEADER}}
+
+
+{{TELEMETRY_BODY}}

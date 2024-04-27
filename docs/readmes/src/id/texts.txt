@@ -105,13 +105,11 @@ Menghemat listrik dengan secara otomatis membatasi daya GPU saat Anda tidur, dan
 <br><br>
 <i>Pembatasan daya hanya tersedia pada GPU Nvidia. Pengguna AMD dapat memanfaatkan otomatisasi MSI Afterburner.</i>
 
-
 {{GPU_AUTOMATIONS_BODY_MSI_AFTERBURNER}}
 <b>MSI Afterburner</b>
 <br>
 Jika Anda ingin kontrol lebih besar atas GPU Anda lebih dari sekadar mengatur batas daya, Anda dapat membuat OyasumiVR secara otomatis mengaktifkan profil yang telah Anda siapkan di <a href="https://www.msi.com/Landing/afterburner/">MSI Afterburner</a>.
 Sesuaikan over-atau underclock, batas daya, dan lainnya, dan minta OyasumiVR memanggil mereka saat Anda tidur, atau bangun!
-
 
 {{VRCHAT_AUTOMATIONS_HEADER}}
 💫 Otomatisasi VRChat
@@ -213,7 +211,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 
 - Inggris
 - Belanda (Nederlands)
-- Jepang (日本語) (Outsourcing + Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea))
+- Jepang (日本語) (Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea) dan [Milix-M](https://github.com/Milix-M))
 - Korea (한국어) (Kontribusi komunitas dari [Soumt](https://github.com/soumt-r))
 - Mandarin Tradisional (繁體中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL))
 - Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) dan [いんく](https://twitter.com/sayonara_natsu))
@@ -307,3 +305,35 @@ License
 
 {{LICENSE_BODY}}
 OyasumiVR tersedia di bawah bagian lisensi [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md).
+
+{{BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
+
+
+{{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
+
+
+{{AUDIO_VOLUME_AUTOMATIONS_BODY}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
+
+
+{{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{TELEMETRY_HEADER}}
+
+
+{{TELEMETRY_BODY}}
