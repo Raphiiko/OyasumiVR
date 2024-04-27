@@ -410,7 +410,7 @@ SteamVRのガーディアンのフェード距離を調整できます。眠っ�
 OyasumiVRは現在、以下の言語に対応しています。
 - English
 - Dutch (Nederlands)
-- Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
+- Japanese (日本語) (Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
 - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 - Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
