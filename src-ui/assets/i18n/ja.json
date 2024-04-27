@@ -108,7 +108,7 @@
       },
       "onlyBelowPlayerCount": {
         "description": "これにはあなた自身も含まれます",
-        "title": "ワールド内のプレイヤーが<strong>{count, plural, one {#</strong> 人} other {#</strong> 人}}以下の場合にのみ"
+        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人以下の場合にのみ"
       },
       "onlyIfSleepModeEnabled": {
         "title": "睡眠モード有効時のみ"
@@ -834,7 +834,7 @@
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "''{name}'' のプリセットを削除してもよろしいですか？それには {count, plural, one {1 人のプレイヤー} other {# 人のプレイヤー}} が含まれています。",
+        "message": "''{name}'' のプリセットを削除してもよろしいですか？それには{count}人のプレイヤーが含まれています。",
         "title": "本当に削除しますか？"
       },
       "confirmOverwrite": {
@@ -848,7 +848,7 @@
       "noPresets": "プリセットがありません",
       "overwrite": "上書き",
       "preset": {
-        "subtitle": "リストの{count, plural, one {プレイヤー1人} other {# 人のプレイヤー}}"
+        "subtitle": "リストの{count}人のプレイヤー"
       },
       "title": {
         "load": "読み込み",
