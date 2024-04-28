@@ -20,7 +20,7 @@ import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BigscreenBeyondFanAutomationService } from 'src-ui/app/services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from '../bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
-import { MqttService } from '../../services/mqtt.service';
+import { MqttService } from '../../services/mqtt/mqtt.service';
 
 @Component({
   selector: 'app-main-status-bar',

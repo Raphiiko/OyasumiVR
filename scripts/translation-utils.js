@@ -47,9 +47,19 @@ async function handleClean() {
       fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
       console.log('Cleaned ' + keysCleaned + ' key(s) in ' + langFile);
     });
+  // Clean en.json last
+  fs.writeFileSync(enFile, JSON.stringify(unflattenObj(enFileContentFlattened), null, 2));
 }
 
-const unflattenObj = (ob) => {
+function unflattenObj(ob) {
+  // Make sure to sort the keys before unflattening
+  const keys = Object.keys(ob);
+  keys.sort();
+  ob = keys.reduce((acc, e) => {
+    acc[e] = ob[e];
+    return acc;
+  }, {});
+  // Unflatten
   const result = {};
   for (const i in ob) {
     const keys = i.split('.');
@@ -60,18 +70,25 @@ const unflattenObj = (ob) => {
     }, result);
   }
   return result;
-};
+}
 
-const flattenObj = (ob) => {
-  let result = {};
+function flattenObj(ob) {
+  // Flatten the object
+  const result = {};
   for (const i in ob) {
     if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
       const temp = flattenObj(ob[i]);
       for (const j in temp) result[i + '.' + j] = temp[j];
     } else result[i] = ob[i];
   }
-  return result;
-};
+  // Sort the resulting flattened object
+  const keys = Object.keys(result);
+  keys.sort();
+  return keys.reduce((acc, e) => {
+    acc[e] = result[e];
+    return acc;
+  }, {});
+}
 
 const getLangFilePath = (lang) =>
   `./src-ui/assets/i18n/${lang.endsWith('.json') ? lang.split('.')[0] : lang}.json`;

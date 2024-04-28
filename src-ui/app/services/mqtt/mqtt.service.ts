@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import mqtt from 'mqtt';
 import { BehaviorSubject, concatMap, debounceTime, distinctUntilChanged, map, skip } from 'rxjs';
-import { AppSettingsService } from './app-settings.service';
-import { AppSettings } from '../models/settings';
+import { AppSettingsService } from '../app-settings.service';
+import { AppSettings } from '../../models/settings';
 import { isEqual } from 'lodash';
 import { info, warn } from 'tauri-plugin-log-api';
-import { MqttConfig, MqttStatus } from '../models/mqtt';
+import { MqttConfig, MqttStatus } from '../../models/mqtt';
 
 @Injectable({
   providedIn: 'root',
@@ -74,7 +74,7 @@ export class MqttService {
       username: config.username ?? undefined,
       password: config.password ?? undefined,
       will: {
-        topic: 'oyasumivr/available',
+        topic: 'OyasumiVR/available',
         payload: 'offline' as any, // Issue: https://github.com/mqttjs/mqtt-packet/pull/147
         retain: true,
       },
@@ -83,7 +83,7 @@ export class MqttService {
     this.client.next(client);
     client.on('connect', async () => {
       this.setClientStatus('CONNECTED');
-      await client.publishAsync('oyasumivr/available', 'online', { retain: true });
+      await client.publishAsync('OyasumiVR/available', 'online', { retain: true });
     });
     client.on('close', () => {
       this.setClientStatus('DISCONNECTED');

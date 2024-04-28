@@ -35,6 +35,8 @@ export class BigscreenBeyondLedAutomationService {
   );
   private transitionTask?: CancellableTask;
   private lastSetColor: [number, number, number] = [0, 0, 0];
+  private _lastSetColorExt = new BehaviorSubject<[number, number, number]>([0, 0, 0]);
+  public lastSetColorExt = this._lastSetColorExt.asObservable();
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -103,47 +105,59 @@ export class BigscreenBeyondLedAutomationService {
     }
   }
 
-  private async setLedColor(targetColor: [number, number, number]) {
+  public async setLedColor(targetColor: [number, number, number], transition = true) {
     this.transitionTask?.cancel();
     if (!this.connected.value) return;
-    this.transitionTask = new CancellableTask(async (task: CancellableTask) => {
-      const duration = 1000;
-      const frequency = 30;
-      const startTime = Date.now();
-      const startColor = [...this.lastSetColor];
-      while (Date.now() <= startTime + duration && this.connected.value) {
-        // Sleep to match the frequency
-        await new Promise((resolve) => setTimeout(resolve, 1000 / frequency));
-        // Stop if the transition was cancelled
-        if (task.isCancelled()) return;
-        // Calculate the required brightness
-        const timeExpired = Date.now() - startTime;
-        const progress = clamp(timeExpired / duration, 0, 1);
-        const color: [number, number, number] = [
-          Math.round(smoothLerp(startColor[0], targetColor[0], progress)),
-          Math.round(smoothLerp(startColor[1], targetColor[1], progress)),
-          Math.round(smoothLerp(startColor[2], targetColor[2], progress)),
-        ];
-        // Set the intermediary color
+    this._lastSetColorExt.next(targetColor);
+    if (transition) {
+      this.transitionTask = new CancellableTask(async (task: CancellableTask) => {
+        const duration = 1000;
+        const frequency = 30;
+        const startTime = Date.now();
+        const startColor = [...this.lastSetColor];
+        while (Date.now() <= startTime + duration && this.connected.value) {
+          // Sleep to match the frequency
+          await new Promise((resolve) => setTimeout(resolve, 1000 / frequency));
+          // Stop if the transition was cancelled
+          if (task.isCancelled()) return;
+          // Calculate the required brightness
+          const timeExpired = Date.now() - startTime;
+          const progress = clamp(timeExpired / duration, 0, 1);
+          const color: [number, number, number] = [
+            Math.round(smoothLerp(startColor[0], targetColor[0], progress)),
+            Math.round(smoothLerp(startColor[1], targetColor[1], progress)),
+            Math.round(smoothLerp(startColor[2], targetColor[2], progress)),
+          ];
+          // Set the intermediary color
+          if (this.connected.value) {
+            invoke('bigscreen_beyond_set_led_color', {
+              r: color[0],
+              g: color[1],
+              b: color[2],
+            });
+            this.lastSetColor = [...color];
+          }
+        }
+        // Set the final target color
         if (this.connected.value) {
           invoke('bigscreen_beyond_set_led_color', {
-            r: color[0],
-            g: color[1],
-            b: color[2],
+            r: targetColor[0],
+            g: targetColor[1],
+            b: targetColor[2],
           });
-          this.lastSetColor = [...color];
+          this.lastSetColor = [...targetColor];
+          this._lastSetColorExt.next(this.lastSetColor);
         }
-      }
-      // Set the final target color
-      if (this.connected.value) {
-        invoke('bigscreen_beyond_set_led_color', {
-          r: targetColor[0],
-          g: targetColor[1],
-          b: targetColor[2],
-        });
-        this.lastSetColor = [...targetColor];
-      }
-    });
-    await this.transitionTask.start();
+      });
+      await this.transitionTask.start();
+    } else {
+      invoke('bigscreen_beyond_set_led_color', {
+        r: targetColor[0],
+        g: targetColor[1],
+        b: targetColor[2],
+      });
+      this.lastSetColor = [...targetColor];
+      this._lastSetColorExt.next(this.lastSetColor);
+    }
   }
 }
