@@ -3,6 +3,7 @@ import {
   asyncScheduler,
   BehaviorSubject,
   combineLatest,
+  debounceTime,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -76,14 +77,16 @@ export class BigscreenBeyondFanAutomationService {
         switchMap(async () => {
           const connected = await invoke<boolean>('bigscreen_beyond_is_connected');
           this._connected.next(connected);
-          // Attempt to set the fan speed to the value saved by the beyond driver utility
-          if (connected) {
-            const savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
-            if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
-          }
         })
       )
       .subscribe();
+    // Attempt to set the fan speed to the value saved by the beyond driver utility, whenever the headset is detected
+    this._connected
+      .pipe(distinctUntilChanged(), debounceTime(500), filter(Boolean))
+      .subscribe(async () => {
+        const savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
+        if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
+      });
     // Setup the automations
     this.handleFanSafety();
     this.sleepService.mode
