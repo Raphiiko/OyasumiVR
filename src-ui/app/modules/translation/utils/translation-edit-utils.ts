@@ -1,5 +1,13 @@
 export class TranslationEditUtils {
-  public static unflatten(ob: { [s: string]: unknown }): unknown {
+  public static unflatten(ob: Record<string, unknown>): unknown {
+    // Make sure to sort the keys before unflattening
+    const keys = Object.keys(ob);
+    keys.sort();
+    ob = keys.reduce((acc, e) => {
+      acc[e] = ob[e];
+      return acc;
+    }, {} as Record<string, unknown>);
+    // Unflatten
     const result = {};
     for (const i in ob) {
       const keys = i.split('.');
@@ -12,14 +20,21 @@ export class TranslationEditUtils {
     return result;
   }
 
-  public static flatten<T>(ob: T): { [s: string]: unknown } {
-    const result = {} as { [s: string]: unknown };
+  public static flatten<T>(ob: T): Record<string, unknown> {
+    // Flatten the object
+    const result = {} as Record<string, unknown>;
     for (const i in ob) {
       if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
         const temp = this.flatten(ob[i] as T);
         for (const j in temp) result[i + '.' + j] = temp[j];
       } else result[i] = ob[i];
     }
-    return result;
+    // Sort the resulting flattened object
+    const keys = Object.keys(result);
+    keys.sort();
+    return keys.reduce((acc, e) => {
+      acc[e] = result[e];
+      return acc;
+    }, {} as Record<string, unknown>);
   }
 }

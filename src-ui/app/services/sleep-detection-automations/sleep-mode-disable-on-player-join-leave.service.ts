@@ -71,7 +71,7 @@ export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
   private async onLogEvent(event: VRChatLogEvent) {
     // Don't process events while the sleep mode is inactive,
     // events from initial load, or events from before a world has loaded
-    if (!this.sleepMode || event.initialLoad || !this.worldLoaded) return;
+    if (!this.config.enabled || !this.sleepMode || event.initialLoad || !this.worldLoaded) return;
     // Only process join and leave events
     if (event.type !== 'OnPlayerJoined' && event.type !== 'OnPlayerLeft') return;
     // Don't process these events while VRC is not active

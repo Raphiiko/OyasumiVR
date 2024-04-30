@@ -412,7 +412,7 @@ OyasumiVR目前支持以下语言：
 
 - 英语
 - 荷兰语（Nederlands）
-- 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)外包+贡献）
+- 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)和[Milix-M](https://github.com/Milix-M)贡献）
 - 韩语（한국어）（由社区成员[Soumt](https://github.com/soumt-r)贡献）
 - 繁体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)贡献）
 - 简体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)、[雾雨花精灵](https://github.com/flower-elf)和[いんく](https://twitter.com/sayonara_natsu)贡献）

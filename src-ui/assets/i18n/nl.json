@@ -3,11 +3,11 @@
     "author": {
       "role": "Ontwikkelaar"
     },
-    "contributions": "Contributies",
     "contributionType": {
       "feature": "Feature",
       "soundFx": "Geluid FX"
     },
+    "contributions": "Contributies",
     "discordInvite": "Discord Server",
     "projectLinks": "Project Links",
     "sourceLink": "Broncode @ GitHub",
@@ -858,8 +858,8 @@
       "gpuPowerLimitsUnsupported": "De geselecteerde GPU heeft geen ondersteuning voor het instellen van stroomlimieten.",
       "gpuUnsupported": "GPU wordt niet ondersteund",
       "inputDefault": "Herstel naar de GPU's standaard limiet.",
-      "noGPUs": "Er konden geen NVIDIA GPUs gevonden worden.",
       "noGPUSelected": "Geen GPU Geselecteerd",
+      "noGPUs": "Er konden geen NVIDIA GPUs gevonden worden.",
       "selectGPU": "Selecteer de GPU waar je stroom limieten voor in wilt stellen:"
     },
     "requestAdministrator": "Geef Beheerders Rechten",
@@ -1023,9 +1023,9 @@
       "manualControl": "Handmatige Bediening",
       "options": {
         "footLock": {
-          "description": "Stel de OSC commandos in om de voeten van je avatar vast te zetten.",
           "FOOT_LOCK": "Voeten vastzetten",
           "FOOT_UNLOCK": "Voeten losmaken",
+          "description": "Stel de OSC commandos in om de voeten van je avatar vast te zetten.",
           "title": "Voeten vastzetten"
         },
         "general": {
@@ -1043,13 +1043,13 @@
           "unlockFeetOnSleepModeDisable": "Voeten losmaken wanneer slaap modus wordt uitgeschakeld"
         },
         "positions": {
-          "description": "Stel de OSC commandos in om de animatie voor elke slaap houding te activeren.",
           "SIDE_BACK": "Op je rug",
           "SIDE_FRONT": "Rechtop",
           "SIDE_LEFT": "Op je linkerzij",
           "SIDE_RIGHT": "Op je rechterzij",
-          "title": "Slaap Houdingen",
-          "UNKNOWN": "Onbekend"
+          "UNKNOWN": "Onbekend",
+          "description": "Stel de OSC commandos in om de animatie voor elke slaap houding te activeren.",
+          "title": "Slaap Houdingen"
         }
       },
       "presetAuthor": "van {author}"
@@ -1087,15 +1087,15 @@
           "subtitle": "Wanneer je slaapt voor {time}",
           "title": "Automatische Afsluit Procedure"
         },
-        "sleepingAnimations": {
-          "title": "Slaap Animaties"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "{sensitivity} gevoeligheid, {startTime} - {endTime}",
             "withoutActivationWindow": "{sensitivity} gevoeligheid"
           },
           "title": "Slaap Detectie"
+        },
+        "sleepingAnimations": {
+          "title": "Slaap Animaties"
         },
         "title": "Automatiseringen"
       },
@@ -1311,13 +1311,13 @@
               "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
               "title": "Herregistratie van VR Application Manifest Mislukt"
             },
-            "success": {
-              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
-              "title": "VR Application Manifest Hergeregistreerd"
-            },
             "UNKNOWN": {
               "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
               "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "success": {
+              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
+              "title": "VR Application Manifest Hergeregistreerd"
             }
           },
           "title": "Herregistreet SteamVR application manifest"
@@ -1626,8 +1626,8 @@
       "changelog": "Changelog",
       "checkForUpdates": "Updates checken",
       "install": "Installeer v{version}",
-      "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
       "noUpdate": "Je draait nu OyasumiVR v{version}, en dat is de laatste versie!",
+      "notChecked": "OyasumiVR heeft nog niet gecheckt of er een update beschikbaar is.",
       "title": "Updates",
       "updateAvailable": "Er is een nieuwe update beschikbaar voor OyasumiVR! Je draait op dit moment v{currentVersion}.\nDe nieuwste versie is v{latestVersion}.",
       "updatesDisabled": {
@@ -1788,12 +1788,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Controller",
+        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Het percentage moet een geheel getal zijn.",
           "thresholdOutOfRange": "Het percentage moet tussen de 0% en 100% vallen."
         },
         "fallsBelow": "Valt onder de",
-        "GenericTracker": "Tracker",
         "title": "Slaap modus inschakelen",
         "whenA": "Wanneer een"
       },
@@ -1940,10 +1940,10 @@
       },
       "conflictWarning": "Als je deze feature gebruikt om de demping van je microfoon te schakelen in VRChat, dan is het aan te raden dat je in VRChat's instellingen, je je microphone mode op \"Always On\" instelt, of dat je je mute knop in VRChat ontbind, om eventuele overlap in functionaliteit te voorkomen.",
       "currentMode": {
-        "description": "De huidige besturingsmethode van de controller binding",
         "PUSH_TO_TALK": "Push to Talk",
-        "title": "Actieve regelings methode",
-        "TOGGLE": "Toggle"
+        "TOGGLE": "Toggle",
+        "description": "De huidige besturingsmethode van de controller binding",
+        "title": "Actieve regelings methode"
       },
       "description": "Bind een controller knop om de demping van je microfoon te regelen.",
       "enabled": {

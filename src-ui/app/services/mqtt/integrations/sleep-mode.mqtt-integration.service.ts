@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
-import { MqttDiscoveryService } from './mqtt-discovery.service';
-import { SleepService } from './sleep.service';
+import { MqttDiscoveryService } from '../mqtt-discovery.service';
+import { SleepService } from '../../sleep.service';
+import { MqttToggleProperty } from '../../../models/mqtt';
 
 @Injectable({
   providedIn: 'root',
 })
-export class MqttIntegrationService {
+export class SleepModeMqttIntegrationService {
   constructor(private mqtt: MqttDiscoveryService, private sleepService: SleepService) {}
 
   async init() {
-    await this.handleSleepMode();
-  }
-
-  private async handleSleepMode() {
     // Init property
     await this.mqtt.initProperty({
       type: 'TOGGLE',
       id: 'sleepMode',
+      topicPath: 'sleepMode',
       displayName: 'Sleep Mode',
       value: false,
     });
@@ -25,7 +23,7 @@ export class MqttIntegrationService {
       this.mqtt.setTogglePropertyValue('sleepMode', mode);
     });
     // Handle commands
-    this.mqtt.getCommandStreamForProperty('sleepMode').subscribe((command) => {
+    this.mqtt.getCommandStreamForProperty<MqttToggleProperty>('sleepMode').subscribe((command) => {
       if (command.current.value) {
         this.sleepService.enableSleepMode({ type: 'MQTT' });
       } else {

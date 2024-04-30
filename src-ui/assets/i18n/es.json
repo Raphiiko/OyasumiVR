@@ -3,11 +3,11 @@
     "author": {
       "role": "Desarrollador"
     },
-    "contributions": "Contribuciones",
     "contributionType": {
       "feature": "Característica",
       "soundFx": "Sonido FX"
     },
+    "contributions": "Contribuciones",
     "discordInvite": "Discord Server",
     "projectLinks": "Enlaces de proyectos",
     "sourceLink": "Código fuente @ GitHub",
@@ -817,8 +817,8 @@
       "gpuPowerLimitsUnsupported": "La GPU seleccionada no permite establecer límites de potencia.",
       "gpuUnsupported": "GPU no compatible",
       "inputDefault": "Reset to the GPU's default limit.",
-      "noGPUs": "No se han encontrado GPUs NVIDIA en tu sistema.",
       "noGPUSelected": "No GPU seleccionada",
+      "noGPUs": "No se han encontrado GPUs NVIDIA en tu sistema.",
       "selectGPU": "Seleccione la GPU para la que desea establecer el límite de potencia:"
     },
     "requestAdministrator": "Conceder privilegios de administrador",
@@ -965,9 +965,9 @@
       "manualControl": "Control manual",
       "options": {
         "footLock": {
-          "description": "Configura los comandos OSC para activar y desactivar el bloqueo de pie.",
           "FOOT_LOCK": "Activar el bloqueo del pie",
           "FOOT_UNLOCK": "Desactivar el bloqueo del pie",
+          "description": "Configura los comandos OSC para activar y desactivar el bloqueo de pie.",
           "title": "Bloqueo de pie"
         },
         "general": {
@@ -985,13 +985,13 @@
           "unlockFeetOnSleepModeDisable": "Desbloquear los pies cuando el modo de suspensión está desactivado"
         },
         "positions": {
-          "description": "Configura los comandos OSC para activar la animación para cada posición de sueño.",
           "SIDE_BACK": "Parte trasera",
           "SIDE_FRONT": "Vertical",
           "SIDE_LEFT": "Lado izquierdo",
           "SIDE_RIGHT": "Lado derecho",
-          "title": "Posiciones para dormir",
-          "UNKNOWN": "Desconocido"
+          "UNKNOWN": "Desconocido",
+          "description": "Configura los comandos OSC para activar la animación para cada posición de sueño.",
+          "title": "Posiciones para dormir"
         }
       },
       "presetAuthor": "by {author}"
@@ -1029,15 +1029,15 @@
           "subtitle": "Al dormir durante {time}",
           "title": "Apagado automático"
         },
-        "sleepingAnimations": {
-          "title": "Animaciones para dormir"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "{sensitivity} sensibilidad, {startTime} - {endTime}",
             "withoutActivationWindow": "{sensitivity} sensibilidad"
           },
           "title": "Detección de sueño"
+        },
+        "sleepingAnimations": {
+          "title": "Animaciones para dormir"
         },
         "title": "Ajustes de automatización"
       },
@@ -1253,13 +1253,13 @@
               "message": "El manifiesto no pudo ser retirado.Por favor revise los registros.",
               "title": "Retregistración del manifiesto de la aplicación VR falló"
             },
-            "success": {
-              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
-              "title": "VR Aplicación Manifiesta reregistrado"
-            },
             "UNKNOWN": {
               "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros.",
               "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "success": {
+              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
+              "title": "VR Aplicación Manifiesta reregistrado"
             }
           },
           "title": "Reiniciar el manifiesto de la aplicación SteamVR"
@@ -1553,8 +1553,8 @@
       "changelog": "Registro de cambios",
       "checkForUpdates": "Comprobar actualizaciones",
       "install": "Instalar v{version}",
-      "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones.",
       "noUpdate": "Actualmente está ejecutando OyasumiVR v{version} que es la última versión!",
+      "notChecked": "OyasumiVR aún no ha comprobado si hay actualizaciones.",
       "title": "Acrualizaciones",
       "updateAvailable": "¡Una nueva versión de OyasumiVR está disponible! Actualmente está ejecutando v{currentVersion}.\nLa versión más reciente es v{latestVersion}.",
       "updatesDisabled": {
@@ -1715,12 +1715,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Controlador",
+        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "El valor porcentual tiene que ser un número entero.",
           "thresholdOutOfRange": "El porcentaje debe estar comprendido entre el 0% y el 100%."
         },
         "fallsBelow": "Cae por debajo de",
-        "GenericTracker": "Tracker",
         "title": "Activar el modo sueño",
         "whenA": "Cuando un"
       },
@@ -1867,10 +1867,10 @@
       },
       "conflictWarning": "Si utilizas esta función para silenciar el micrófono con VRChat, te recomendamos que desvincules el botón de silencio de la configuración de VRChat o que configures el modo del micrófono como \"Siempre activado\" para evitar conflictos.",
       "currentMode": {
-        "description": "Refleja el modo actual del botón del controlador",
         "PUSH_TO_TALK": "Pulsar para hablar",
-        "title": "Comportamiento del botón activo",
-        "TOGGLE": "Alternar"
+        "TOGGLE": "Alternar",
+        "description": "Refleja el modo actual del botón del controlador",
+        "title": "Comportamiento del botón activo"
       },
       "description": "Vincula un botón del controlador para controlar el estado de silencio del micrófono.",
       "enabled": {

@@ -3,11 +3,11 @@
     "author": {
       "role": "開發者"
     },
-    "contributions": "貢獻",
     "contributionType": {
       "feature": "功能設計",
       "soundFx": "音效設計"
     },
+    "contributions": "貢獻",
     "discordInvite": "Discord 伺服器",
     "projectLinks": "專案連結",
     "sourceLink": "原始碼 @ GitHub",
@@ -817,8 +817,8 @@
       "gpuPowerLimitsUnsupported": "所選 GPU 不支持設定功耗限制",
       "gpuUnsupported": "不支援的 GPU",
       "inputDefault": "將 GPU 功耗重設到預設數值",
-      "noGPUs": "在你的系統中找不到任何 Nivida 顯示卡",
       "noGPUSelected": "沒有選擇 GPU",
+      "noGPUs": "在你的系統中找不到任何 Nivida 顯示卡",
       "selectGPU": "選擇你希望為其設定功耗限制的 GPU："
     },
     "requestAdministrator": "授予管理員權限",
@@ -965,9 +965,9 @@
       "manualControl": "手動控制",
       "options": {
         "footLock": {
-          "description": "設定 OSC 指令來控制腳部鎖定開關",
           "FOOT_LOCK": "開啟腳部鎖定",
           "FOOT_UNLOCK": "關閉腳部鎖定",
+          "description": "設定 OSC 指令來控制腳部鎖定開關",
           "title": "腳部(移動)鎖定"
         },
         "general": {
@@ -985,13 +985,13 @@
           "unlockFeetOnSleepModeDisable": "當睡眠模式關閉時關閉腳部鎖定"
         },
         "positions": {
-          "description": "設定 OSC 指令以啟動每個睡姿動畫",
           "SIDE_BACK": "趴躺",
           "SIDE_FRONT": "正躺",
           "SIDE_LEFT": "左側躺",
           "SIDE_RIGHT": "右側躺",
-          "title": "睡眠姿勢",
-          "UNKNOWN": "未知"
+          "UNKNOWN": "未知",
+          "description": "設定 OSC 指令以啟動每個睡姿動畫",
+          "title": "睡眠姿勢"
         }
       },
       "presetAuthor": "由 {author} 製作"
@@ -1029,15 +1029,15 @@
           "subtitle": "睡眠 {time} 後",
           "title": "自動關機"
         },
-        "sleepingAnimations": {
-          "title": "睡眠動畫"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "{sensitivity} 靈敏度, {startTime} - {endTime}",
             "withoutActivationWindow": "{sensitivity}靈敏度"
           },
           "title": "睡眠檢測"
+        },
+        "sleepingAnimations": {
+          "title": "睡眠動畫"
         },
         "title": "自動化設定"
       },
@@ -1253,13 +1253,13 @@
               "message": "列表無法刪除。請檢查日誌。",
               "title": "重新註冊 VR 應用列表失敗"
             },
-            "success": {
-              "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
-              "title": "VR 應用列表已成功重新註冊"
-            },
             "UNKNOWN": {
               "message": "由於未知錯誤，OyasumiVR 的列表無法重新註冊至 SteamVR。請重新啟動 OyasumiVR 並檢查日誌。",
               "title": "重新註冊 VR 應用列表失敗"
+            },
+            "success": {
+              "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
+              "title": "VR 應用列表已成功重新註冊"
             }
           },
           "title": "重新註冊 SteamVR 應用列表"
@@ -1553,8 +1553,8 @@
       "changelog": "更新日誌",
       "checkForUpdates": "檢查更新",
       "install": "安裝版本 {version}",
-      "notChecked": "OyasumiVR 尚未檢查更新",
       "noUpdate": "你當前運行的是最新版本的 OyasumiVR 版本 {version}！",
+      "notChecked": "OyasumiVR 尚未檢查更新",
       "title": "更新",
       "updateAvailable": "新版本的 OyasumiVR 現已推出！ 你當前正在運行版本 「{currentVersion}」。\n最新版本是 {{latest Version}}",
       "updatesDisabled": {
@@ -1715,12 +1715,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "控制器",
+        "GenericTracker": "定位器",
         "errors": {
           "thresholdNotInteger": "百分比值必須是整數",
           "thresholdOutOfRange": "百分比必須介於 0% 和 100% 之間"
         },
         "fallsBelow": "電量降低到",
-        "GenericTracker": "定位器",
         "title": "開啟睡眠模式",
         "whenA": "當其中一個"
       },
@@ -1867,10 +1867,10 @@
       },
       "conflictWarning": "如果你使用此功能在 VRChat 上切換麥克風靜音，建議你在 VRChat 的設定中取消綁定靜音按鈕或將麥克風模式設定為 「Always On」 以防止任何衝突行為",
       "currentMode": {
-        "description": "顯示控制器按鈕的當前模式",
         "PUSH_TO_TALK": "按鍵發話",
-        "title": "啟用按鈕行為",
-        "TOGGLE": "切換"
+        "TOGGLE": "切換",
+        "description": "顯示控制器按鈕的當前模式",
+        "title": "啟用按鈕行為"
       },
       "description": "綁定一個控制器按鈕來控制麥克風的靜音狀態",
       "enabled": {
