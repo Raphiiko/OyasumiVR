@@ -1792,6 +1792,7 @@
       "checkForUpdates": "アップデートを確認する",
       "install": "v{version}をインストール",
       "noUpdate": "現在、最新版であるOyasumiVR v{version} を利用しています！",
+      "notChecked": "まだアップデートをチェックしていません",
       "title": "アップデート",
       "updateAvailable": "OyasumiVRの最新版が登場！現在、あなたはv{currentVersion}を利用しています。\n最新版はv{latestVersion}です",
       "updatesDisabled": {
