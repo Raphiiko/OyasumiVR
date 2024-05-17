@@ -11,7 +11,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Ajouter des amis",
     "blacklist": "Liste noire",
-    "clearPlayers": "Vider la liste",
     "description": "OyasumiVR peut accepter les demandes d'invitation automatiquement. Grâce à la liste blanche et la liste noire, vous pouvez choisir parmi vos amis qui sera accepté ou non.",
     "noPlayersAdded": "Aucun joueur n'a été ajouté sur la liste",
     "options": {
@@ -149,12 +148,6 @@
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          }
-        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -165,7 +158,7 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
-        "softwareBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
             "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
@@ -223,6 +216,12 @@
             "osc-control": "Le mode sommeil a été activé via OSC"
           },
           "title": "Mode sommeil activé"
+        },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
+            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
+          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
@@ -324,6 +323,10 @@
       "updateNow": "Installer la v{version}"
     },
     "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
+      },
       "errors": {
         "CHECK_EMAIL": "Connexion échouée : Pour plus de détails, veuillez de consulter vos emails en lien avec VRChat.",
         "INVALID_CREDENTIALS": "Les identifiants de connexion sont incorrects.",
@@ -331,11 +334,7 @@
       },
       "password": "Mot de passe",
       "title": "Connexion à VRChat",
-      "username": "Nom d'utilisateur/E-mail VRChat",
-      "disclaimers": {
-        "brand": "OyasumiVR n'est aucunement affilié à VRChat et ne reflète pas les opinions et décisions de VRChat, ni aucune personne affiliée. VRChat est une marque de VRChat Inc. VRChat © VRChat Inc.",
-        "liability": "Raphiiko n'est responsable d'aucun dommage causé par OyasumiVR. Utilisez ce programme à vos risques et périls!"
-      }
+      "username": "Nom d'utilisateur/E-mail VRChat"
     },
     "vrchat-login-tfa-modal": {
       "description": "Votre compte VRChat est protégé par une authentification à deux facteurs.\n\nVeuillez saisir le code :",
@@ -409,8 +408,8 @@
       "gpuPowerLimitsUnsupported": "Le GPU sélectionné ne supporte pas la limitation de consommation.",
       "gpuUnsupported": "GPU non pris en charge",
       "inputDefault": "Restaurer la limite de consommation par défaut.",
-      "noGPUs": "Aucun GPU NVIDIA n'a pu être trouvé dans votre système",
       "noGPUSelected": "Aucun GPU sélectionné",
+      "noGPUs": "Aucun GPU NVIDIA n'a pu être trouvé dans votre système",
       "selectGPU": "Choisissez le GPU sur lequel appliquer l'économie d'énergie:"
     },
     "requestAdministrator": "Donner les droits administrateur",
@@ -474,9 +473,9 @@
       "manualControl": "Contrôle manuel",
       "options": {
         "footLock": {
-          "description": "Assigne les commandes OSC pour activer ou désactiver le verrouillage du pied.",
           "FOOT_LOCK": "Activer le verrouillage du pied",
           "FOOT_UNLOCK": "Désactiver le verrouillage du pied",
+          "description": "Assigne les commandes OSC pour activer ou désactiver le verrouillage du pied.",
           "title": "Verrouillage du pied"
         },
         "general": {
@@ -494,13 +493,13 @@
           "unlockFeetOnSleepModeDisable": "Dévérrouiller les pieds lorsque le mode sommeil est désactivé"
         },
         "positions": {
-          "description": "Assigne les commandes OSC activant l'animation pour chaque position de sommeil.",
           "SIDE_BACK": "Sur le dos",
           "SIDE_FRONT": "Droit",
           "SIDE_LEFT": "Sur le côté gauche",
           "SIDE_RIGHT": "Sur le côté droit",
-          "title": "Positions de sommeil",
-          "UNKNOWN": "Inconnu"
+          "UNKNOWN": "Inconnu",
+          "description": "Assigne les commandes OSC activant l'animation pour chaque position de sommeil.",
+          "title": "Positions de sommeil"
         }
       },
       "presetAuthor": "par {author}"
@@ -524,11 +523,11 @@
         "changeStatusBasedOnPlayerCount": {
           "title": "Automatisations de statut"
         },
-        "sleepingAnimations": {
-          "title": "Animations de sommeil"
-        },
         "sleepModeEnableForSleepDetector": {
           "title": "Détection de sommeil"
+        },
+        "sleepingAnimations": {
+          "title": "Animations de sommeil"
         }
       },
       "overview": {
@@ -684,8 +683,8 @@
       "changelog": "Changelog",
       "checkForUpdates": "Rechercher des mises à jour",
       "install": "Installer v{version}",
-      "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
       "noUpdate": "Vous utilisez actuellement la dernière version d'OyasumiVR (v{version}) !",
+      "notChecked": "OyasumiVR n'a pas encore recherché de mises à jour.",
       "updateAvailable": "Une nouvelle version d'OyasumiVR est disponible! Vous utilisez actuellement la v{currentVersion}.\nLa nouvelle version est la v{latestVersion}."
     }
   },
@@ -724,17 +723,12 @@
       "atTime": "À une heure prédéfinie",
       "description": "Désactive automatiquement le mode sommeil selon plusieurs critères",
       "onDevicePowerOn": "Lorsqu'un appareil est allumé",
-      "onSteamVRStop": "Lorsque SteamVR est stoppé",
-      "title": "Désactivation du mode sommeil"
+      "onSteamVRStop": "Lorsque SteamVR est stoppé"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Lorsque la charge d'un appareil est en dessous de <strong>{value}%</strong>",
       "atTime": "À une heure prédéfinie",
-      "description": "Active automatiquement le mode sommeil selon plusieurs critères",
-      "onMotionDetection": {
-        "title": "Quand OyasumiVR détecte que vous dormez selon vos mouvements"
-      },
-      "title": "Activation du mode sommeil"
+      "description": "Active automatiquement le mode sommeil selon plusieurs critères"
     },
     "modals": {
       "disableAtTime": {
@@ -750,12 +744,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Contrôleur",
+        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Le pourcentage doit être un nombre entier.",
           "thresholdOutOfRange": "Le pourcentage doit être entre 0% et 100%."
         },
         "fallsBelow": "Se décharge sous",
-        "GenericTracker": "Tracker",
         "title": "Activer le mode sommeil",
         "whenA": "Quand un"
       },

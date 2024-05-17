@@ -47,6 +47,24 @@
           </label>
         </div>
       </div>
+
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>auto-invite-request-accept.options.listMode.title</span>
+          <span translate>auto-invite-request-accept.options.listMode.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            [items]="listModeOptions"
+            [selected]="listModeOption"
+            (selectedChange)="setListMode($event?.id)"
+          ></app-select-box>
+        </div>
+      </div>
+    </div>
+    <h2 translate>auto-invite-request-accept.conditions.title</h2>
+    <p translate>auto-invite-request-accept.conditions.description</p>
+    <div class="settings">
       <div class="setting-row">
         <div class="setting-row-label" translate>
           <span translate>auto-invite-request-accept.options.onlyIfSleepModeEnabled.title</span>
@@ -63,76 +81,120 @@
           </label>
         </div>
       </div>
+
       <div class="setting-row">
         <div class="setting-row-label" translate>
-          <span translate>auto-invite-request-accept.options.listMode.title</span>
-          <span translate>auto-invite-request-accept.options.listMode.description</span>
+          <span
+            style="display: initial"
+            [innerHtml]="
+              'auto-invite-request-accept.options.onlyBelowPlayerCount.title'
+                | translate
+                  : {
+                      count: config.onlyBelowPlayerCount
+                    }
+            "
+          ></span>
+          <span translate>auto-invite-request-accept.options.onlyBelowPlayerCount.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-slider-setting
+            class="with-margin"
+            [unit]="'<i class=&quot;material-icons&quot;>person</i>'"
+            [min]="2"
+            [max]="100"
+            [value]="config.onlyBelowPlayerCount"
+            (valueChange)="updateConfig({ onlyBelowPlayerCount: $event })"
+            [disabled]="!config.onlyBelowPlayerCountEnabled"
+          ></app-slider-setting>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.onlyBelowPlayerCountEnabled"
+              (change)="
+                updateConfig({
+                  onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled
+                })
+              "
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <h2 translate>auto-invite-request-accept.otherAutomations.title</h2>
+    <p translate>auto-invite-request-accept.otherAutomations.description</p>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepEnable.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepEnable.description</span
+          >
         </div>
         <div class="setting-row-action">
           <app-select-box
-            [items]="listModeOptions"
-            [selected]="listModeOption"
-            (selectedChange)="setListMode($event?.id)"
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepEnable']"
+            (selectedChange)="setPresetOption('onSleepEnable', $event?.id ?? 'NONE')"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepDisable.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepDisable.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepDisable']"
+            (selectedChange)="setPresetOption('onSleepDisable', $event?.id ?? 'NONE')"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepPreparation.title</span
+          >
+          <span translate
+            >auto-invite-request-accept.options.changeListPreset.onSleepPreparation.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            class="preset-select-box"
+            [type]="'SMALL'"
+            [items]="presetOptions"
+            [selected]="presetOption['onSleepPreparation']"
+            (selectedChange)="setPresetOption('onSleepPreparation', $event?.id ?? 'NONE')"
           ></app-select-box>
         </div>
       </div>
     </div>
   </div>
 </div>
-<div class="player-list-wrapper" *ngIf="config.listMode !== 'DISABLED'" @hshrink>
-  <div class="pane player-list">
-    <div class="pane-title" *ngIf="config.listMode === 'WHITELIST'" translate
-      >auto-invite-request-accept.whitelist
-    </div>
-    <div class="pane-title" *ngIf="config.listMode === 'BLACKLIST'" translate
-      >auto-invite-request-accept.blacklist
-    </div>
-    <div class="pane-content">
-      <div class="players-loading" *ngIf="vrchat.isFetchingFriends | async">
-        <div class="large-spinner"></div>
-        <span translate>auto-invite-request-accept.loadingFriends</span>
-      </div>
-      <ng-container *ngIf="(vrchat.isFetchingFriends | async) === false">
-        <div class="players-list" @noop>
-          <div class="player" *ngFor="let player of playerList" @vshrink>
-            <div class="player-left">
-              <div class="player-icon">
-                <img
-                  draggable="false"
-                  onerror="this.style.display='none'"
-                  loading="lazy"
-                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
-                />
-              </div>
-              <div class="player-name">{{ player.displayName }}</div>
-            </div>
-            <div class="player-right">
-              <button class="btn" (click)="removePlayer(player)">
-                <i class="material-icons">clear</i>
-              </button>
-            </div>
-          </div>
-          <div class="no-players" *ngIf="!playerList?.length">
-            <span translate>auto-invite-request-accept.noPlayersAdded</span>
-          </div>
-        </div>
+<app-player-list
+  *ngIf="config.listMode !== 'DISABLED'"
+  @hshrink
+  [title]="
+    {
+      WHITELIST: 'auto-invite-request-accept.whitelist',
+      BLACKLIST: 'auto-invite-request-accept.blacklist'
+    }[config.listMode]
+  "
+  [playerIds]="playerIds"
+  (playerIdsChange)="updatePlayerIds($event)"
 
-        <div class="player-list-actions">
-          <button class="btn btn-secondary" translate (click)="addPlayer()" [disabled]="!loggedIn">
-            <i class="material-icons">add</i>
-            <span translate>auto-invite-request-accept.addFriends</span>
-          </button>
-          <button
-            class="btn btn-secondary"
-            translate
-            (click)="clearPlayers()"
-            [disabled]="!loggedIn"
-          >
-            <i class="material-icons">clear</i>
-            <span translate>auto-invite-request-accept.clearPlayers</span>
-          </button>
-        </div>
-      </ng-container>
-    </div>
-  </div>
-</div>
+></app-player-list>

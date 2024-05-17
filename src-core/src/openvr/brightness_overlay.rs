@@ -78,7 +78,7 @@ async fn create_overlay(
     }
     // Transform the overlay
     let transformation_matrix =
-        ovr_overlay::pose::Matrix3x4([[1., 0., 0., 0.], [0., 1., 0., 0.], [0., 0., 1., -0.12]]);
+        ovr_overlay::pose::Matrix3x4([[1., 0., 0., 0.], [0., 1., 0., 0.], [0., 0., 1., -0.15]]);
     if let Err(e) = manager.set_transform_tracked_device_relative(
         overlay,
         ovr_overlay::TrackedDeviceIndex::new(0).unwrap(), // HMD is always at 0
@@ -94,10 +94,6 @@ async fn create_overlay(
     }
     if let Err(e) = manager.set_width(overlay, 1.) {
         error!("[Core] Failed to set overlay width: {}", e);
-        return Err(());
-    }
-    if let Err(e) = manager.set_curvature(overlay, 0.2) {
-        error!("[Core] Failed to set overlay curvature: {}", e);
         return Err(());
     }
     let brightness = BRIGHTNESS.lock().await;

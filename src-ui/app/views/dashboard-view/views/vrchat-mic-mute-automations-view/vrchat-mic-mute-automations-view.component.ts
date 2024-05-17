@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { VRChatMicMuteAutomationsConfig, VRChatVoiceMode } from '../../../../models/automations';
+import { VRChatMicMuteAutomationsConfig } from '../../../../models/automations';
 import { map } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer } from '@angular/platform-browser';
@@ -15,17 +15,6 @@ import { hshrink } from 'src-ui/app/utils/animations';
   animations: [hshrink()],
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {
-  modeOptions: SelectBoxItem[] = [
-    {
-      id: 'TOGGLE',
-      label: 'vrchatMicMuteAutomations.modeOptions.TOGGLE',
-    },
-    {
-      id: 'PUSH_TO_MUTE',
-      label: 'vrchatMicMuteAutomations.modeOptions.PUSH_TO_MUTE',
-    },
-  ];
-  modeOption: SelectBoxItem | undefined;
   muteActionOptions: SelectBoxItem[] = [
     {
       id: 'NONE',
@@ -67,7 +56,6 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
         map((configs) => configs.VRCHAT_MIC_MUTE_AUTOMATIONS)
       )
       .subscribe((config) => {
-        this.modeOption = this.modeOptions.find((o) => o.id === config.mode);
         this.onSleepEnableMuteOption = this.muteActionOptions.find(
           (o) => o.id === config.onSleepModeEnable
         );
@@ -78,16 +66,6 @@ export class VRChatMicMuteAutomationsViewComponent implements OnInit {
           (o) => o.id === config.onSleepPreparation
         );
       });
-  }
-
-  onChangeModeOption($event: SelectBoxItem | undefined) {
-    if (!$event) return;
-    this.automationConfigService.updateAutomationConfig<VRChatMicMuteAutomationsConfig>(
-      'VRCHAT_MIC_MUTE_AUTOMATIONS',
-      {
-        mode: $event.id as VRChatVoiceMode,
-      }
-    );
   }
 
   async onChangeMuteOption(

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { listen } from '@tauri-apps/api/event';
-import { OpenVRService } from '../openvr.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableAtTimeAutomationConfig,
@@ -18,11 +17,7 @@ export class SleepModeDisableAtTimeAutomationService {
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_AT_TIME
   );
 
-  constructor(
-    private automationConfig: AutomationConfigService,
-    private openvr: OpenVRService,
-    private sleep: SleepService
-  ) {}
+  constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
 
   async init() {
     this.automationConfig.configs

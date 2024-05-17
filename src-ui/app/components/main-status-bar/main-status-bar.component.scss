@@ -148,8 +148,9 @@ $background-color: var(--color-surface-2);
     display: flex;
     flex-direction: row;
     align-items: center;
-
     justify-content: center;
+    height: 100%;
+    line-height: 0;
   }
 
   &-icon {
@@ -252,6 +253,20 @@ $background-color: var(--color-surface-2);
   }
 }
 
+.mqtt-status {
+  span {
+    margin-left: 0.5em;
+    opacity: 0.5;
+  }
+
+  .pill-icon {
+    margin: 0;
+    img {
+      height: 1.2em;
+    }
+  }
+}
+
 .brightness-advanced {
   span:first-of-type {
     margin-left: 0.25em;
@@ -324,9 +339,9 @@ $background-color: var(--color-surface-2);
   }
   05% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33
     );
   }
   10% {
@@ -334,16 +349,28 @@ $background-color: var(--color-surface-2);
   }
   50% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.66,
-      $lowest + ($highest - $lowest) * 0.66,
-      $lowest + ($highest - $lowest) * 0.66
+        $lowest + ($highest - $lowest) * 0.66,
+        $lowest + ($highest - $lowest) * 0.66,
+        $lowest + ($highest - $lowest) * 0.66
     );
   }
   70% {
     transform: scale3d(
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33,
-      $lowest + ($highest - $lowest) * 0.33
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33,
+        $lowest + ($highest - $lowest) * 0.33
     );
   }
+}
+
+.img-green {
+  filter: invert(68%) sepia(23%) saturate(1251%) hue-rotate(56deg) brightness(95%) contrast(86%);
+}
+
+.img-red {
+  filter: invert(47%) sepia(77%) saturate(2380%) hue-rotate(328deg) brightness(122%) contrast(92%);
+}
+
+.img-orange {
+  filter: invert(59%) sepia(73%) saturate(2367%) hue-rotate(360deg) brightness(102%) contrast(102%);
 }

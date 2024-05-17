@@ -1,5 +1,5 @@
 <div class="pane modal modal-lg" @fadeUp>
-  <div class="pane-title" translate [translateParams]="{ deviceId: getDeviceId() }">
+  <div class="pane-title" translate [translateParams]="{ deviceId: getTitleIdentifier() }">
     comp.device-edit-modal.title
   </div>
   <div class="pane-content">
@@ -11,7 +11,7 @@
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input type="text" [placeholder]="identifier" [(ngModel)]="nickname" [maxlength]="32" />
+            <input type="text" [placeholder]="displayIdentifier" [(ngModel)]="nickname" [maxlength]="32" />
           </div>
         </div>
       </div>

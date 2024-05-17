@@ -1,9 +1,12 @@
-use std::sync::atomic::AtomicBool;
+use std::{
+    sync::atomic::{AtomicBool, Ordering},
+    time::Duration,
+};
 
 use log::info;
 use serde_json::json;
 use tauri_plugin_aptabase::EventTracker;
-use tokio::sync::Mutex;
+use tokio::{sync::Mutex, time::Instant};
 
 use crate::BUILD_FLAVOUR;
 
@@ -24,4 +27,22 @@ pub async fn init_telemetry(handle: &tauri::AppHandle) {
         .unwrap()
         .to_uppercase();
     handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
+    // Send heartbeats roughly every 24 hours (to keep the current session alive)
+    tokio::task::spawn(async {
+        let mut start_time = Instant::now();
+        let one_hour = Duration::from_secs((3600 * 24) - 30);
+        loop {
+            let elapsed = start_time.elapsed();
+            if elapsed >= one_hour {
+                start_time = Instant::now();
+                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                    let handle = crate::globals::TAURI_APP_HANDLE.lock().await;
+                    if let Some(handle) = handle.as_ref() {
+                        handle.track_event("app_heartbeat", None);
+                    }
+                }
+            }
+            tokio::time::sleep(Duration::from_secs(5)).await // Check every second (adjust as needed)
+        }
+    });
 }

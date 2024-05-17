@@ -12,11 +12,6 @@ import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-transl
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
-import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
-import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
-import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
-import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
-import { DevicePowerOnDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
 import { SleepModeEnableAtTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-time-automation.service';
@@ -70,8 +65,6 @@ import { invoke } from '@tauri-apps/api';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
-import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
-import { SleepDetectorEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detector-enable-sleepmode-modal/sleep-detector-enable-sleep-mode-modal.component';
 import { HardwareBrightnessControlService } from './services/brightness-control/hardware-brightness-control.service';
 import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views/brightness-automations-view/brightness-automations-view.component';
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
@@ -139,9 +132,7 @@ import { DeepLinkService } from './services/deep-link.service';
 import { SleepPreparationService } from './services/sleep-preparation.service';
 import { PulsoidService } from './services/integrations/pulsoid.service';
 import { ObfuscatedValueDirective } from './directives/obfuscated-value.directive';
-import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
 import { SleepModeEnableOnHeartRateCalmPeriodAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-heart-rate-calm-period-automation.service';
-import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
 import { QuitWithSteamVRService } from './services/quit-with-steamvr.service';
 import { VRChatMicMuteAutomationService } from './services/osc-automations/vrchat-mic-mute-automation.service';
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
@@ -160,8 +151,6 @@ import { TranslationEditorViewComponent } from './modules/translation/views/tran
 import { TextareaAutoResizeDirective } from './directives/textarea-auto-resize.directive';
 import { NightmareDetectionViewComponent } from './views/dashboard-view/views/nightmare-detection-view/nightmare-detection-view.component';
 import { NightmareDetectionAutomationService } from './services/nightmare-detection-automation.service';
-import { FLAVOUR } from '../build';
-import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
 import { SleepModeDisableAfterTimeAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-after-time-automation.service';
 import { AudioVolumeAutomationsViewComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-automations-view.component';
 import { AudioVolumeEntriesComponent } from './views/dashboard-view/views/audio-volume-automations-view/audio-volume-entries/audio-volume-entries.component';
@@ -193,6 +182,34 @@ import { BigscreenBeyondLedAutomationService } from './services/hmd-specific-aut
 import { BigscreenBeyondFanAutomationService } from './services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { DiscordService } from './services/discord.service';
+import { trackEvent } from '@aptabase/tauri';
+import { pTimeout } from './utils/promise-utils';
+import { MdnsSidecarService } from './services/mdns-sidecar.service';
+import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
+import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
+import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
+import { JoinNotificationsViewComponent } from './views/dashboard-view/views/join-notifications-view/join-notifications-view.component';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+import { JoinNotificationsService } from './services/join-notifications.service';
+import { SleepModeDisableOnPlayerJoinLeaveAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-player-join-leave.service';
+import { MqttService } from './services/mqtt/mqtt.service';
+import { MqttDiscoveryService } from './services/mqtt/mqtt-discovery.service';
+import { MqttIntegrationService } from './services/mqtt/mqtt-integration.service';
+import { MqttConfigModalComponent } from './components/mqtt-config-modal/mqtt-config-modal.component';
+import { SleepDetectorCalibrationModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
+import { TimeEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/time-enable-sleepmode-modal/time-enable-sleep-mode-modal.component';
+import { TimeDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/time-disable-sleepmode-modal/time-disable-sleep-mode-modal.component';
+import { DurationDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/duration-disable-sleepmode-modal/duration-disable-sleep-mode-modal.component';
+import { BatteryPercentageEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/battery-percentage-enable-sleepmode-modal/battery-percentage-enable-sleep-mode-modal.component';
+import { PlayerJoinLeaveDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
+import { UprightPoseDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/upright-pose-disable-sleepmode-modal/upright-pose-disable-sleep-mode-modal.component';
+import { DevicePowerOnDisableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/device-poweron-disable-sleepmode-modal/device-power-on-disable-sleep-mode-modal.component';
+import { HeartRateCalmPeriodEnableSleepModeModalComponent } from './views/dashboard-view/views/sleep-detection-view/modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-calm-period-enable-sleep-mode-modal.component';
+import { HeartRateChartComponent } from './views/dashboard-view/views/sleep-detection-view/modals/heart-rate-calm-period-enable-sleepmode-modal/heart-rate-chart/heart-rate-chart.component';
+import { SleepDetectionDetectionTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-detection-tab/sleep-detection-detection-tab.component';
+import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-enable-tab/sleep-detection-sleep-enable-tab.component';
+import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
+import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
 
 [
   localeEN,
@@ -226,11 +243,13 @@ export function createTranslateLoader(http: HttpClient) {
     OverviewViewComponent,
     SleepDetectionViewComponent,
     SleepDetectorCalibrationModalComponent,
-    SleepDetectorEnableSleepModeModalComponent,
     TimeEnableSleepModeModalComponent,
     TimeDisableSleepModeModalComponent,
     DurationDisableSleepModeModalComponent,
     BatteryPercentageEnableSleepModeModalComponent,
+    PlayerJoinLeaveDisableSleepModeModalComponent,
+    UprightPoseDisableSleepModeModalComponent,
+    MqttConfigModalComponent,
     DevicePowerOnDisableSleepModeModalComponent,
     GpuAutomationsViewComponent,
     PowerLimitInputComponent,
@@ -309,6 +328,14 @@ export function createTranslateLoader(http: HttpClient) {
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
     BSBFanSpeedControlModalComponent,
+    PlayerListPresetModalComponent,
+    PlayerCountSleepVisualizationComponent,
+    JoinNotificationsViewComponent,
+    PlayerListComponent,
+    MqttConfigModalComponent,
+    SleepDetectionDetectionTabComponent,
+    SleepDetectionSleepEnableTabComponent,
+    SleepDetectionSleepDisableTabComponent,
   ],
   imports: [
     CommonModule,
@@ -343,7 +370,8 @@ export class AppModule {
     private sleepService: SleepService,
     private oscService: OscService,
     private oscControlService: OscControlService,
-    private sidecarService: ElevatedSidecarService,
+    private elevatedSidecarService: ElevatedSidecarService,
+    private mdnsSidecarService: MdnsSidecarService,
     private updateService: UpdateService,
     private telemetryService: TelemetryService,
     private appSettingsService: AppSettingsService,
@@ -375,6 +403,9 @@ export class AppModule {
     private hotkeyService: HotkeyService,
     private hotkeyHandlerService: HotkeyHandlerService,
     private discordService: DiscordService,
+    private mqttService: MqttService,
+    private mqttDiscoveryService: MqttDiscoveryService,
+    private mqttIntegrationService: MqttIntegrationService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -387,6 +418,8 @@ export class AppModule {
     private sleepModeDisableAtTimeAutomationService: SleepModeDisableAtTimeAutomationService,
     private sleepModeDisableAfterTimeAutomationService: SleepModeDisableAfterTimeAutomationService,
     private sleepModeDisableOnDevicePowerOnAutomationService: SleepModeDisableOnDevicePowerOnAutomationService,
+    private sleepModeDisableOnUprightPoseAutomationService: SleepModeDisableOnUprightPoseAutomationService,
+    private sleepModeDisableOnPlayerJoinLeaveAutomationService: SleepModeDisableOnPlayerJoinLeaveAutomationService,
     // Power automations
     private turnOffDevicesOnSleepModeEnableAutomationService: TurnOffDevicesOnSleepModeEnableAutomationService,
     private turnOffDevicesWhenChargingAutomationService: TurnOffDevicesWhenChargingAutomationService,
@@ -413,6 +446,7 @@ export class AppModule {
     // Windows power policy automations
     private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
+    private joinNotificationsService: JoinNotificationsService,
     private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
@@ -423,13 +457,24 @@ export class AppModule {
   }
 
   private async logInit<T>(action: string, promise: Promise<T>): Promise<T> {
-    if (FLAVOUR === 'DEV') console.log(`[Init] Running ${action}`);
+    const TIMEOUT = 30000;
+    await info(`[Init] Running ${action}`);
     try {
-      const result = await promise;
-      if (FLAVOUR === 'DEV') info(`[Init] '${action}' ran successfully`);
+      const result = await pTimeout<T>(
+        promise,
+        TIMEOUT,
+        new Error(`Initialization function ${action} timed out.`)
+      );
+      await info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
-      error(`[Init] Running '${action}' failed: ` + e);
+      await trackEvent('app_init_error', {
+        action,
+        error: `${e}`,
+        timeout: TIMEOUT,
+        metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
+      });
+      await error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
   }
@@ -438,14 +483,15 @@ export class AppModule {
     try {
       await pMinDelay(
         (async () => {
+          const initStartTime = Date.now();
           await this.logInit(
             'DeveloperDebugService initialization',
             this.developerDebugService.init()
           );
           // Clean cache
-          await this.logInit('cache clean', CachedValue.cleanCache());
-          // Preload assets
-          await this.logInit('asset preload', this.preloadAssets());
+          await this.logInit('cache clean', CachedValue.cleanCache()).catch(() => {}); // Allow initialization to continue if failed
+          // Preload assets (Not blocking)
+          this.logInit('asset preload', this.preloadAssets());
           // Initialize base utilities
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
@@ -461,7 +507,7 @@ export class AppModule {
           await Promise.all([
             this.logInit('TelemetryService initialization', this.telemetryService.init()),
           ]);
-          // Initialize general utility services
+          // Initialize "base" services
           await Promise.all([
             this.logInit('OpenVRService initialization', this.openvrService.init()),
             this.logInit('OscService initialization', this.oscService.init()).then(() =>
@@ -488,40 +534,54 @@ export class AppModule {
             this.logInit('WindowsService initialization', this.windowsService.init()),
             this.logInit('HotkeyService initialization', this.hotkeyService.init()),
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
-          ]);
-          // Initialize GPU control services
-          await this.logInit('SidecarService initialization', this.sidecarService.init()).then(
-            async () => {
+            this.logInit(
+              'MqttService initialization',
+              this.mqttService
+                .init()
+                .then(() => this.mqttDiscoveryService.init())
+                .then(() => this.mqttIntegrationService.init())
+            ),
+            // Initialize GPU control services
+            this.logInit(
+              'ElevatedSidecarService initialization',
+              this.elevatedSidecarService.init()
+            ).then(async () => {
               await this.logInit('NVMLService initialization', this.nvmlService.init());
-            }
-          );
-          // Initialize Brightness Control
-          await Promise.all([
-            this.logInit(
-              'HardwareBrightnessControlService initialization',
-              this.hardwareBrightnessControlService.init()
-            ),
-            this.logInit(
-              'SoftwareBrightnessControlService initialization',
-              this.softwareBrightnessControlService.init()
-            ),
+            }),
           ]);
-          await this.logInit(
-            'simpleBrightnessControlService initialization',
-            this.simpleBrightnessControlService.init()
-          );
-          // Initialize IPC
-          await this.logInit('IpcService initialization', this.ipcService.init());
-          await this.logInit('OverlayService initialization', this.overlayService.init());
-          await this.logInit(
-            'OverlayAppStateSyncService initialization',
-            this.overlayAppStateSyncService.init()
-          );
           await Promise.all([
+            // Initialize MDNS Sidecar
+            await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init()),
             // Initialize Steam support
             await this.logInit('SteamService initialization', this.steamService.init()),
             // Initialize Discord support
             await this.logInit('DiscordService initialization', this.discordService.init()),
+            // Initialize IPC
+            await this.logInit('IpcService initialization', this.ipcService.init()).then(
+              async () => {
+                await this.logInit('OverlayService initialization', this.overlayService.init());
+                await this.logInit(
+                  'OverlayAppStateSyncService initialization',
+                  this.overlayAppStateSyncService.init()
+                );
+              }
+            ),
+            // Initialize Brightness Control
+            await Promise.all([
+              this.logInit(
+                'HardwareBrightnessControlService initialization',
+                this.hardwareBrightnessControlService.init()
+              ),
+              this.logInit(
+                'SoftwareBrightnessControlService initialization',
+                this.softwareBrightnessControlService.init()
+              ),
+            ]).then(async () => {
+              await this.logInit(
+                'simpleBrightnessControlService initialization',
+                this.simpleBrightnessControlService.init()
+              );
+            }),
           ]);
           // Initialize automations
           await Promise.all([
@@ -564,6 +624,14 @@ export class AppModule {
               'SleepModeDisableOnDevicePowerOnAutomationService initialization',
               this.sleepModeDisableOnDevicePowerOnAutomationService.init()
             ),
+            this.logInit(
+              'SleepModeDisableOnUprightPoseAutomationService initialization',
+              this.sleepModeDisableOnUprightPoseAutomationService.init()
+            ),
+            this.logInit(
+              'SleepModeDisableOnPlayerJoinLeaveAutomationService initialization',
+              this.sleepModeDisableOnPlayerJoinLeaveAutomationService.init()
+            ),
             // Power automations
             this.logInit(
               'TurnOffDevicesOnSleepModeEnableAutomationService initialization',
@@ -601,6 +669,11 @@ export class AppModule {
             this.logInit(
               'VRChatMicMuteAutomationService initialization',
               this.vrchatMicMuteAutomationService.init()
+            ),
+            // Join notifications
+            this.logInit(
+              'JoinNotificationsService initialization',
+              this.joinNotificationsService.init()
             ),
             // Status automations
             this.logInit(
@@ -659,6 +732,7 @@ export class AppModule {
               this.bigscreenBeyondFanAutomationService.init()
             ),
           ]);
+          await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);
         })(),
         SPLASH_MIN_DURATION
       );
@@ -686,7 +760,6 @@ export class AppModule {
       throw e;
     }
     // Close the splash screen after initialization
-    info('[Init] Initialization complete! Closing splash screen.');
     await invoke('close_splashscreen');
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);
@@ -713,42 +786,55 @@ export class AppModule {
     }
     try {
       await Promise.all(
-        preloadAssets.imageUrls.map((imageUrl) => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.onload = () => {
-              debug('Preloaded asset: ' + imageUrl);
-              resolve(void 0);
-            };
-            img.onerror = (
-              event: Event | string,
-              source?: string,
-              lineno?: number,
-              colno?: number,
-              _error?: Error
-            ) => {
-              warn(
-                `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
-                  event,
-                  source,
-                  lineno,
-                  colno,
-                  error: _error,
-                })}`
-              );
-              if (imageUrl.startsWith('http')) {
-                // Preloading of remote assets is allowed to fail
-                resolve(void 0);
-              } else {
-                reject({ event, source, lineno, colno, error: _error });
-              }
-            };
-            img.src = imageUrl;
-          });
-        })
+        preloadAssets.imageUrls.map((imageUrl) => this.preloadImageAsset(imageUrl))
       );
     } catch (e) {
       error(`[Init] Failed to preload assets: (Could not load images) ${JSON.stringify(e)}`);
+      throw e;
+    }
+  }
+
+  private async preloadImageAsset(imageUrl: string) {
+    const TIMEOUT = 30000;
+    const TIMEOUT_ERR = 'TIMEOUT_REACHED';
+    try {
+      await pTimeout(
+        new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            debug('Preloaded asset: ' + imageUrl);
+            resolve(void 0);
+          };
+          img.onerror = (
+            event: Event | string,
+            source?: string,
+            lineno?: number,
+            colno?: number,
+            _error?: Error
+          ) => {
+            warn(
+              `[Init] Could not load image (${imageUrl}): ${JSON.stringify({
+                event,
+                source,
+                lineno,
+                colno,
+                error: _error,
+              })}`
+            );
+            if (imageUrl.startsWith('http')) {
+              // Preloading of remote assets is allowed to fail
+              resolve(void 0);
+            } else {
+              reject({ event, source, lineno, colno, error: _error });
+            }
+          };
+          img.src = imageUrl;
+        }),
+        TIMEOUT,
+        TIMEOUT_ERR
+      );
+    } catch (e) {
+      if (e === TIMEOUT_ERR) return; // Preload timeouts are acceptable
       throw e;
     }
   }

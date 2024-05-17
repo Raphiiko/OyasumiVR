@@ -37,7 +37,9 @@ export type EventLogEntry =
   | EventLogMsiAfterburnerProfileSet
   | EventLogChangedAudioDeviceVolume
   | EventLogMutedAudioDevice
-  | EventLogUnmutedAudioDevice;
+  | EventLogUnmutedAudioDevice
+  | EventLogBSBFanSpeedChanged
+  | EventLogBSBLedChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -64,12 +66,13 @@ export type EventLogType =
   | 'msiAfterburnerProfileSet'
   | 'changedAudioDeviceVolume'
   | 'mutedAudioDevice'
-  | 'unmutedAudioDevice';
+  | 'unmutedAudioDevice'
+  | 'bsbFanSpeedChanged'
+  | 'bsbLedChanged';
 
 export interface EventLogBase {
   id: string;
   type: EventLogType;
-
   time: number;
 }
 
@@ -221,4 +224,17 @@ export interface EventLogUnmutedAudioDevice extends EventLogBase {
   deviceName: AudioDeviceParsedName;
   deviceType: AudioDeviceType;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogBSBFanSpeedChanged extends EventLogBase {
+  type: 'bsbFanSpeedChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  speed: number;
+  effectiveSpeed: number;
+}
+
+export interface EventLogBSBLedChanged extends EventLogBase {
+  type: 'bsbLedChanged';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  color: [number, number, number];
 }

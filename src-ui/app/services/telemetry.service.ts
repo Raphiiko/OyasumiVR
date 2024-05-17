@@ -12,9 +12,7 @@ import {
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
-import { HttpClient } from '@angular/common/http';
 import { cloneDeep } from 'lodash';
-import { AppSettingsService } from './app-settings.service';
 import { invoke } from '@tauri-apps/api';
 import { trackEvent } from '@aptabase/tauri';
 
@@ -28,7 +26,7 @@ export class TelemetryService {
   );
   public settings: Observable<TelemetrySettings> = this._settings.asObservable();
 
-  constructor(private http: HttpClient, private appSettings: AppSettingsService) {}
+  constructor() {}
 
   async init() {
     await this.loadSettings();

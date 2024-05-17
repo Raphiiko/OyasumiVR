@@ -32,22 +32,10 @@ export class ShutdownAutomationsViewComponent implements OnInit {
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
 
-  protected duration = 0;
   protected activationWindowStart = '00:00';
   protected activationWindowEnd = '00:00';
   protected lighthouseControlDisabled = false;
   protected quitWithSteamVRMode: QuitWithSteamVRMode = 'DISABLED';
-  protected durationUnitOptions: SelectBoxItem[] = [
-    {
-      id: 'SECONDS',
-      label: 'Seconds',
-    },
-    {
-      id: 'MINUTES',
-      label: 'Minutes',
-    },
-  ];
-  protected onSleepTriggerDurationUnit?: SelectBoxItem = this.durationUnitOptions[0];
   protected powerDownOptions: SelectBoxItem[] = [
     {
       id: 'SHUTDOWN',
@@ -71,6 +59,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
     },
   ];
   powerDownOption: SelectBoxItem | undefined;
+  sleepDurationString = '00:00:00';
 
   constructor(
     private destroyRef: DestroyRef,
@@ -92,16 +81,7 @@ export class ShutdownAutomationsViewComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
         this.config = configs.SHUTDOWN_AUTOMATIONS;
-        // Parse non 1:1 fields
-        this.onSleepTriggerDurationUnit =
-          this.config.sleepDuration >= 60000
-            ? this.durationUnitOptions[1]
-            : this.durationUnitOptions[0];
-        this.duration = Math.floor(
-          this.config.sleepDuration >= 60000
-            ? this.config.sleepDuration / 60000
-            : this.config.sleepDuration / 1000
-        );
+        this.sleepDurationString = this.durationToString(this.config.sleepDuration);
         this.activationWindowStart = this.config.activationWindowStart
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
@@ -160,9 +140,12 @@ export class ShutdownAutomationsViewComponent implements OnInit {
     );
   }
 
-  async onChangeDuration(value?: number, unit?: string) {
-    if (value === undefined || unit === undefined) return;
-    const duration = unit === 'SECONDS' ? value * 1000 : value * 60000;
+  async onSleepDurationChange(value: string) {
+    let [hours, minutes, seconds] = value.split(':').map((v) => parseInt(v));
+    if (isNaN(hours)) hours = 0;
+    if (isNaN(minutes)) minutes = 0;
+    if (isNaN(seconds)) seconds = 0;
+    const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
@@ -258,5 +241,14 @@ export class ShutdownAutomationsViewComponent implements OnInit {
 
   goToGeneralSettings() {
     this.router.navigate(['dashboard', 'settings', 'general']);
+  }
+
+  private durationToString(sleepDuration: number): string {
+    const hours = Math.floor(sleepDuration / 3600000);
+    const minutes = Math.floor((sleepDuration % 3600000) / 60000);
+    const seconds = Math.floor((sleepDuration % 60000) / 1000);
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds
+      .toString()
+      .padStart(2, '0')}`;
   }
 }

@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+.pane.main {
+  flex: 1;
+
+  .pane-content {
+    overflow-y: overlay;
+  }
+}
+
+.alert {
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+      flex: 1;
+    }
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.preset-select-box {
+  min-width: 14em;
+}

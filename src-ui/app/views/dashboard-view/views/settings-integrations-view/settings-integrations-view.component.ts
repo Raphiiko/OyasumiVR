@@ -5,6 +5,9 @@ import { hshrink } from 'src-ui/app/utils/animations';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
 import { VRChatService } from '../../../../services/vrchat.service';
 import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
+import { ModalService } from '../../../../services/modal.service';
+import { MqttConfigModalComponent } from '../../../../components/mqtt-config-modal/mqtt-config-modal.component';
+import { MqttService } from '../../../../services/mqtt/mqtt.service';
 
 @Component({
   selector: 'app-settings-integrations-view',
@@ -13,12 +16,16 @@ import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
   animations: [hshrink()],
 })
 export class SettingsIntegrationsViewComponent {
-  deobfuscatePulsoidUsername = false;
   deobfuscated: string[] = [];
   deobfuscationTimers: { [service: string]: any } = {};
   copiedToClipboard: string[] = [];
 
-  constructor(protected pulsoid: PulsoidService, protected vrchat: VRChatService) {}
+  constructor(
+    protected pulsoid: PulsoidService,
+    protected vrchat: VRChatService,
+    protected mqttService: MqttService,
+    private modalService: ModalService
+  ) {}
 
   protected deobfuscate(service: string) {
     if (!this.deobfuscated.includes(service)) this.deobfuscated.push(service);
@@ -48,5 +55,9 @@ export class SettingsIntegrationsViewComponent {
         warn('Tried copying link for unknown service');
         break;
     }
+  }
+
+  protected showMqttConfigModal() {
+    this.modalService.addModal(MqttConfigModalComponent).subscribe();
   }
 }

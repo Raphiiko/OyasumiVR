@@ -68,10 +68,10 @@ export class SimpleBrightnessControlService {
     // Set brightness when the hardware brightness driver availability changes
     this.hardwareBrightnessControl.driverIsAvailable
       .pipe(
-        skip(1),
-        distinctUntilChanged(),
         tap((available) => (this.hardwareBrightnessDriverAvailable = available)),
-        filter(() => !this._advancedMode.value)
+        filter(() => !this._advancedMode.value),
+        skip(1),
+        distinctUntilChanged()
       )
       .subscribe(() => {
         this.setBrightness(this.brightness, {

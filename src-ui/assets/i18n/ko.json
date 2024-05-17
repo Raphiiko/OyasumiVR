@@ -3,11 +3,11 @@
     "author": {
       "role": "개발자"
     },
-    "contributions": "기여",
     "contributionType": {
       "feature": "기능",
       "soundFx": "효과음"
     },
+    "contributions": "기여",
     "discordInvite": "Discord 서버",
     "projectLinks": "프로젝트 링크",
     "sourceLink": "소스코드 @ GitHub",
@@ -21,7 +21,7 @@
       "UNMUTE": "음소거 해제"
     },
     "automations": {
-      "label": "{count, plural, one {자동화 1개} other {자동화 #개}}"
+      "label": "자동화 {count}개"
     },
     "description": "잠들거나 일어날 때 오디오 장치의 볼륨을 자동으로 변경해보세요! 이 기능은 다른 사람이 수면을 방해하는 것을 방지하고 싶을 때 유용합니다.",
     "devices": {
@@ -60,7 +60,6 @@
   "auto-invite-request-accept": {
     "addFriends": "플레이어 추가",
     "blacklist": "플레이어 블랙리스트",
-    "clearPlayers": "목록 비우기",
     "description": "OyasumiVR은 여러분이 받는 초대 요청을 자동으로 수락할 수 있어요. 플레이어 화이트리스트 또는 블랙리스트를 사용하면 선택한 친구만 초대 요청을 자동으로 수락하도록 할 수 있습니다.",
     "loadingFriends": "친구 목록을 불러오는 중...",
     "noPlayersAdded": "목록에 아무도 추가되지 않았어요.",
@@ -829,8 +828,8 @@
       "gpuPowerLimitsUnsupported": "선택된 GPU는 전력 제한 설정을 지원하지 않아요.",
       "gpuUnsupported": "GPU 미지원",
       "inputDefault": "GPU의 기본 제한값으로 리셋해요.",
-      "noGPUs": "NVIDIA GPU가 시스템에서 발견되지 않았어요.",
       "noGPUSelected": "GPU가 선택되지 않음",
+      "noGPUs": "NVIDIA GPU가 시스템에서 발견되지 않았어요.",
       "selectGPU": "전력 제한을 설정하고 싶은 GPU :"
     },
     "requestAdministrator": "관리자 권한 부여하기",
@@ -994,9 +993,9 @@
       "manualControl": "수동 조작",
       "options": {
         "footLock": {
-          "description": "다리 잠금을 OSC 명령으로 설정해요.",
           "FOOT_LOCK": "다리 잠금 활성화",
           "FOOT_UNLOCK": "다리 잠금 비활성화",
+          "description": "다리 잠금을 OSC 명령으로 설정해요.",
           "title": "다리 잠금"
         },
         "general": {
@@ -1014,13 +1013,13 @@
           "unlockFeetOnSleepModeDisable": "수면 모드 비활성화 시 다리 잠금 비활성화"
         },
         "positions": {
-          "description": "자는 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
           "SIDE_BACK": "반듯하게 눕기",
           "SIDE_FRONT": "엎드리기",
           "SIDE_LEFT": "왼쪽으로 눕기",
           "SIDE_RIGHT": "오른쪽으로 눕기",
-          "title": "수면 자세",
-          "UNKNOWN": "알수없음"
+          "UNKNOWN": "알수없음",
+          "description": "자는 자세마다 애니메이션을 활성화시키는 OSC 명령을 설정해요.",
+          "title": "수면 자세"
         }
       },
       "presetAuthor": "{author} 제작"
@@ -1058,15 +1057,15 @@
           "subtitle": "{time} 동안 잠들었을 때",
           "title": "자동 종료"
         },
-        "sleepingAnimations": {
-          "title": "수면 애니메이션"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "민감도 {sensitivity}, {startTime} - {endTime}",
             "withoutActivationWindow": "민감도 {sensitivity}"
           },
           "title": "수면 감지"
+        },
+        "sleepingAnimations": {
+          "title": "수면 애니메이션"
         },
         "title": "자동화 설정"
       },
@@ -1282,13 +1281,13 @@
               "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
               "title": "VR 애플리케이션 매니페스트 재등록 실패"
             },
-            "success": {
-              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 됨"
-            },
             "UNKNOWN": {
               "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
               "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "success": {
+              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 됨"
             }
           },
           "title": "SteamVR 애플리케이션 매니페스트 재등록"
@@ -1582,8 +1581,8 @@
       "changelog": "변경 사항",
       "checkForUpdates": "업데이트 확인하기",
       "install": "v{version} 설치",
-      "notChecked": "OyasumiVR의 업데이트를 확인하지 못했어요.",
       "noUpdate": "현재 최신 버전의 OyasumiVR v{version}을 이용하고 있어요!",
+      "notChecked": "OyasumiVR의 업데이트를 확인하지 못했어요.",
       "title": "업데이트",
       "updateAvailable": "OyasumiVR의 업데이트를 발견했어요! 현재 버전은 v{currentVersion}, \n최신 버전은 v{latestVersion}입나다.",
       "updatesDisabled": {
@@ -1696,17 +1695,16 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "{hours, plural, one {1시간} other {#시간}} 뒤에",
-          "hoursAndMinutes": "{hours, plural, one {1시간} other {#시간}} {minutes, plural, one {1분} other {#분}} 뒤에",
-          "minutes": "{minutes, plural, one {1분} other {#분}} 뒤에"
+          "hours": "{hours}시간 뒤에",
+          "hoursAndMinutes": "{hours}시간 {minutes}분 뒤에",
+          "minutes": "{minutes}분 뒤에"
         },
         "title": "특정 시간이 지난 후"
       },
       "atTime": "지정된 시간에",
       "description": "다양한 트리거에 따라 자동으로 수면 모드를 비활성화해요.",
       "onDevicePowerOn": "기기의 전원이 켜져 있을 때",
-      "onSteamVRStop": "SteamVR이 멈췄을 때",
-      "title": "수면 모드 비활성화"
+      "onSteamVRStop": "SteamVR이 멈췄을 때"
     },
     "enableAutomations": {
       "atBatteryPercentage": "기기의 배터리 잔량이  <strong>{value}%</strong>  이하로 떨어질 때",
@@ -1723,11 +1721,7 @@
       "onHeartRateCalmPeriod": {
         "description": "<a class=\"integrationsPageLink\">Pulsoid 연동</a>이 필요해요.",
         "title": "심박수가 일정 시간 동안 안정될 때"
-      },
-      "onMotionDetection": {
-        "title": "OyasumiVR이 당신의 움직임을 보고 당신이 자고 있다고 추측할 때"
-      },
-      "title": "수면 모드 활성화"
+      }
     },
     "experimentalAutomation": "이 자동화 기능은 실험 단계로, 아직 안정적이지 않을 수 있어요.",
     "modals": {
@@ -1749,12 +1743,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "컨트롤러",
+        "GenericTracker": "트래커",
         "errors": {
           "thresholdNotInteger": "조건 값은 숫자이여야 해요.",
           "thresholdOutOfRange": "조건 값은 0%에서 100% 사이여야 해요."
         },
         "fallsBelow": "조건 값",
-        "GenericTracker": "트래커",
         "title": "수면 모드 활성화",
         "whenA": "기준 기기"
       },
@@ -1901,10 +1895,10 @@
       },
       "conflictWarning": "이 기능을 사용하여 VRChat에서 마이크 음소거를 전환하는 경우, 충돌하는 동작을 방지하기 위해 VRChat 설정에서 음소거 버튼의 바인딩을 해제하거나 마이크 모드를 '항상 켜기'로 설정하는 것을 권장해요.",
       "currentMode": {
-        "description": "컨트롤러 버튼의 현재 모드를 나타내요.",
         "PUSH_TO_TALK": "눌러서 말하기",
-        "title": "활성화된 버튼 동작",
-        "TOGGLE": "토글"
+        "TOGGLE": "토글",
+        "description": "컨트롤러 버튼의 현재 모드를 나타내요.",
+        "title": "활성화된 버튼 동작"
       },
       "description": "컨트롤러 버튼을 바인딩하여 마이크의 음소거 상태를 제어할 수 있어요.",
       "enabled": {
@@ -2021,15 +2015,6 @@
       "mute": "마이크\n음소거",
       "title": "마이크 음소거 제어",
       "unmute": "마이크\n음소거 해제"
-    },
-    "description": "잠들거나 깨어날 때 VRChat에서 자동으로 마이크를 음소거하거나 음소거 해제할 수 있어요! 다른 사람에게 코 고는 소리가 들리지 않도록 하고 싶을 때 유용하게 사용할 수 있습니다 ;)\n\n이 기능을 사용하려면 VRChat 내에서 OSC가 활성화되어 있어야 한다는 점에 유의하세요.",
-    "mode": {
-      "description": "VRChat 내에서 사용 중인 마이크 동작 방식을 선택해주세요. VRChat에서 사용 중인 동작 방식과 다른 방식을 선택하면 이러한 자동화가 오작동할 수 있다는 점에 유의하세요.",
-      "title": "VRChat 마이크 동작 방식"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "눌러서 말하기",
-      "TOGGLE": "토글"
     },
     "muteOptions": {
       "MUTE": "음소거",

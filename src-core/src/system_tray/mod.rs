@@ -43,12 +43,13 @@ pub fn init_system_tray() -> SystemTray {
     SystemTray::new().with_menu(tray_menu)
 }
 
-pub fn handle_system_tray_events<R: Runtime>() -> impl Fn(&AppHandle<R>, SystemTrayEvent) + Send + Sync + 'static {
+pub fn handle_system_tray_events<R: Runtime>(
+) -> impl Fn(&AppHandle<R>, SystemTrayEvent) + Send + Sync + 'static {
     |app, event| {
         match event {
             SystemTrayEvent::MenuItemClick { id, .. } => {
                 if id.as_str() == QUIT {
-                    std::process::exit(0);
+                    app.exit(0);
                 }
             }
             // When clicking the tray icon, restore and focus window.
@@ -70,8 +71,6 @@ pub fn handle_window_events<R: Runtime>() -> impl Fn(GlobalWindowEvent<R>) + Sen
             if manager.close_to_tray {
                 event.window().hide().unwrap();
                 api.prevent_close();
-            } else {
-                std::process::exit(0);
             }
         }
     }

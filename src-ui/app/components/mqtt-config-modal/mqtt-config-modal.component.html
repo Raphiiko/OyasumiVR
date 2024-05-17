@@ -1,0 +1,125 @@
+<div class="pane modal modal-lg" @fadeUp>
+  <div class="pane-title" translate>
+    comp.mqtt-config-modal.title
+  </div>
+  <div class="pane-content">
+    <p translate>comp.mqtt-config-modal.description</p>
+    <p [innerHtml]="'comp.mqtt-config-modal.brokerSetupNote'| translate"></p>
+    <p [innerHtml]="'comp.mqtt-config-modal.websocketNote'| translate"></p>
+    <div class="settings" @vshrink *ngIf="config.enabled">
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.testConnection.title</span>
+          <span translate>comp.mqtt-config-modal.testConnection.description</span>
+        </div>
+        <div class="setting-row-action">
+          <button class="btn btn-secondary btn-test" (click)="testConnection()"
+                  [disabled]="!validConfig || testResult === 'testing'">
+            <span translate *ngIf="testResult !== 'testing'" @hshrink>comp.mqtt-config-modal.testConnection.test</span>
+            <div class="small-spinner" *ngIf="testResult === 'testing'" @hshrink></div>
+          </button>
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="testResult === 'error' || testResult === 'success'">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.testConnectionResult.title</span>
+          <span></span>
+        </div>
+        <div class="setting-row-action">
+          <div class="test-results">
+            <div class="test-results-header">
+            <span translate class="test-results-success"
+                  *ngIf="testResult === 'success'"
+                  @hshrink>comp.mqtt-config-modal.testConnectionResult.success</span>
+              <span translate class="test-results-error"
+                    *ngIf="testResult === 'error'"
+                    @hshrink>comp.mqtt-config-modal.testConnectionResult.error</span>
+            </div>
+            <div class="test-results-body" *ngIf="testError.trim()">
+              <span>{{ 'comp.mqtt-config-modal.testConnectionResult.errorMessage' | translate:{ error: testError } }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.mqttEnabled.title</span>
+          <span translate>comp.mqtt-config-modal.mqttEnabled.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.enabled"
+              (change)="config.enabled = !config.enabled"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="config.enabled">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.brokerHost.title</span>
+          <span translate>comp.mqtt-config-modal.brokerHost.description</span>
+        </div>
+        <div class="setting-row-action">
+          <input type="text" placeholder="homeassistant.local" [(ngModel)]="config.host" />
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="config.enabled">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.brokerPort.title</span>
+          <span translate>comp.mqtt-config-modal.brokerPort.description</span>
+        </div>
+        <div class="setting-row-action">
+          <input type="number" [max]="65535" [min]="1" [placeholder]="config.secureSocket ? 8884 : 1884"
+                 [(ngModel)]="config.port" />
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="config.enabled">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.username.title</span>
+          <span translate>comp.mqtt-config-modal.username.description</span>
+        </div>
+        <div class="setting-row-action">
+          <input type="text" placeholder="None" [(ngModel)]="config.username" />
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="config.enabled">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.password.title</span>
+          <span translate>comp.mqtt-config-modal.password.description</span>
+        </div>
+        <div class="setting-row-action">
+          <input type="password" placeholder="None" [(ngModel)]="config.password" />
+        </div>
+      </div>
+      <div class="setting-row" @vshrink *ngIf="config.enabled">
+        <div class="setting-row-label">
+          <span translate>comp.mqtt-config-modal.ssl.title</span>
+          <span translate>comp.mqtt-config-modal.ssl.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.secureSocket"
+              (change)="config.secureSocket = !config.secureSocket"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions spread">
+    <button class="btn btn-secondary" (click)="cancel()" translate>
+      shared.modals.cancel
+    </button>
+    <button class="btn btn-primary" [disabled]="!validConfig" (click)="save()" translate>
+      shared.modals.save
+    </button>
+  </div>
+</div>

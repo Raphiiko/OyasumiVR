@@ -4,7 +4,7 @@ version = "1.13.0"
 authors = ["Raphiiko"]
 license = "MIT"
 edition = "2021"
-rust-version = "1.70.0"
+rust-version = "1.77.2"
 
 [build-dependencies]
 tonic-build = "0.9"

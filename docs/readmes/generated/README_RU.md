@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 Если вы хотите пообщаться, присоединяйтесь к нашему <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Серверу!</a>
     <br>
     <br>
@@ -296,44 +294,44 @@ OyasumiVR имеет встроенные пресеты для популярн
 <table>
   <tr>
     <td>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+Автоматизируйте яркость, когда вы спите и просыпаетесь. OyasumiVR может плавно изменять яркость вашей VR-гарнитуры, поэтому она постепенно снижается, пока вы спите, не разбудив вас.
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+Это позволяет Вам контролировать как программную яркость, так и аппаратную яркость, если ваша гарнитура это поддерживает (например, Valve Index или Bigscreen Beyond). Помимо предоставления вам нескольких средств автоматизации, вы можете легко управлять уровнями яркости прямо из оверлея SteamVR!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 Microphone Mute Automations
+### 🎤 Автоматизации отключения микрофона
 
 <table>
    <tr>
     <td>
-<b>VRChat Microphone Mute Automations</b><br>
-You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
-<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<b>Автоматизация отключения микрофона в VRChat</b><br>
+Вы можете настроить OyasumiVR на автоматическое отключение или включение звука микрофона в VRChat, когда вы ложитесь спать и просыпаетесь.
+<br><br>Идеально, если вы хотите, чтобы другие не услышали ваш храп!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
   <tr>
     <td>
-<b>System Microphone Mute Automations</b><br>
-OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
-With this, you can even switch between mute toggle mode and push-to-talk.
+<b>Автоматизация отключения микрофона на уровне системы</b><br>
+OyasumiVR также может сделать то же самое, но на системном уровне, вместо этого отключив звук вашего микрофона.
+Благодаря этому вы даже можете переключаться между режимом отключения звука и режимом «нажать и говорить».
 <br><br>
-This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+Дополнительно к этой автоматизации мы добавили индикатор отключения звука в VR оверлее и возможность привязки кнопки контроллера, чтобы вы могли полностью заменить функцию отключения микрофона в VRChat или любой другой VR-игре, в которую вы играете.
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
 </table>
 
-### 🔉 Audio Volume Automations
+### 🔉 Автоматизация громкости звука
 
 <table>
    <tr>
     <td>
-Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+Автоматически изменяйте громкость ваших аудиоустройств, когда вы засыпаете или просыпаетесь! Это может быть полезно, если вы хотите, чтобы другие игроки или другие приложения не нарушали ваш сон.
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
@@ -368,17 +366,17 @@ OyasumiVR может обнаруживать продолжительное п�
   </tr>
 </table>
 
-### 🚨 HMD Specific Automations
+### 🚨 Автоматизации, специфичные для отдельных HMD
 
 <table>
    <tr>
     <td>
-OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+OyasumiVR имеет различные средства автоматизации для управления определенными функциями, специфичными для определенных VR гарнитур. На данный в них входит следующее:
 <br><br>
 <b>Bigscreen Beyond</b>
-<ul>
-<li>RGB Led Control</li>
-<li>Fan Speed Control</li>
+<ул>
+<li>Управление светодиодами RGB</li>
+<li>Регулирование скорости вентилятора</li>
 </ul>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
@@ -413,14 +411,14 @@ OyasumiVR has various automations for controlling certain features specific to c
 
 - English
 - Dutch (Nederlands)
-- Japanese (日本語) (Сделан на заказ + Вклад сообщества от [なき](https://twitter.com/NoYu_idea))
+- Japanese (日本語) (Вклад сообщества от [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
 - Korean (한국어) (Вклад сообщества от [Soumt](https://github.com/soumt-r))
 - Traditional Chinese (繁體中文) (Вклад сообщества от [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese (简体中文) (Вклад сообщества от [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
 - French (Français) (Вклад сообщества от [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Вклад сообщества от [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Вклад сообщества от [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Вклад сообщества от [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian (Русский) (Вклад сообщества от [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
 
 ### Помогайте с переводом
 
@@ -456,9 +454,9 @@ _(\*) Tundra трекеры имеют большую задержу отчет�
 
 ### Автоматизация Яркости
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
+Управление аппаратной яркостью дисплея VR гарнитуры в настоящее время поддерживается только в Valve Index и Bigscreen Beyond.
 
-Image brightness control is available on all headsets.
+Управление яркостью изображения доступно на всех гарнитурах.
 
 ## ПО использованное при разработке
 

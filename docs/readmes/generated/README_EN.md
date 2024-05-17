@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 If you want to come chat, join our <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <br>
@@ -413,14 +411,14 @@ OyasumiVR currently supports the following languages:
 
 - English
 - Dutch (Nederlands)
-- Japanese (日本語) (Outsourced + Community contributions by [なき](https://twitter.com/NoYu_idea))
+- Japanese (日本語) (Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
 - Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
 - Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
 - Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
 - French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
 - Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
 
 ### Help out with translation
 

@@ -1,21 +1,18 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
+import { PlayerListPreset } from './player-list-preset';
 
 export interface AppSettings {
   version: 8;
+  // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
   lighthouseConsolePath: string;
   askForAdminOnStart: boolean;
   exitInSystemTray: boolean;
   startInSystemTray: boolean;
-  lighthousePowerControl: boolean;
-  lighthousePowerOffState: LighthouseDevicePowerState;
   sleepModeStartupBehaviour: 'PERSIST' | 'ACTIVE' | 'INACTIVE';
   notificationProvider: NotificationProvider;
   notificationsEnabled: { types: NotificationType[] };
-  overlayMenuEnabled: boolean;
-  overlayGpuFix: boolean;
-  overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   quitWithSteamVR: QuitWithSteamVRMode;
   generalNotificationVolume: number;
   deviceNicknames: {
@@ -23,14 +20,31 @@ export interface AppSettings {
   };
   ignoredLighthouses: string[];
   hotkeys: { [hotkeyId: string]: string[] };
-  hideSnowverlay: boolean;
   oscServerEnabled: boolean;
+  playerListPresets: PlayerListPreset[];
+  hideSnowverlay: boolean;
+  // Overlay
+  overlayMenuEnabled: boolean;
+  overlayGpuFix: boolean;
+  overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
+  // Lighthouse
+  lighthousePowerControl: boolean;
+  lighthousePowerOffState: LighthouseDevicePowerState;
+  // Discord Rich Presence
+  discordActivityMode: DiscordActivityMode;
+  discordActivityOnlyWhileVRChatIsRunning: boolean;
+  // MQTT
+  mqttEnabled: boolean;
+  mqttHost: string | null;
+  mqttPort: number | null;
+  mqttUsername: string | null;
+  mqttPassword: string | null;
+  mqttSecureSocket: boolean;
+  // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
   bigscreenBeyondUnsafeBrightness: boolean; // Allow brightness above 150%
   bigscreenBeyondBrightnessFanSafety: boolean; // Force fan to 100% if brightness is above 100%
-  discordActivityMode: DiscordActivityMode;
-  discordActivityOnlyWhileVRChatIsRunning: boolean;
 }
 
 export type DiscordActivityMode = 'ENABLED' | 'ONLY_ASLEEP' | 'DISABLED';
@@ -88,6 +102,13 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   bigscreenBeyondBrightnessFanSafety: true,
   discordActivityMode: 'ENABLED',
   discordActivityOnlyWhileVRChatIsRunning: true,
+  playerListPresets: [],
+  mqttEnabled: false,
+  mqttHost: null,
+  mqttPort: null,
+  mqttUsername: null,
+  mqttPassword: null,
+  mqttSecureSocket: false,
 };
 
 export type ExecutableReferenceStatus =
@@ -101,4 +122,4 @@ export type ExecutableReferenceStatus =
   | 'UNKNOWN_ERROR'
   | 'SUCCESS';
 
-export type NotificationProvider = 'OYASUMIVR' | 'XSOVERLAY' | 'DESKTOP';
+export type NotificationProvider = 'OYASUMIVR' | 'XSOVERLAY' | 'DESKTOP' | 'OVRTOOLKIT';

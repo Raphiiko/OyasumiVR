@@ -22,11 +22,11 @@
         <i class="material-icons-round">nights_stay</i>
       </div>
       <span @hshrink *ngIf="state.hover"
-        >{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span
+      >{{ 'comp.main-status-bar.sleepMode.label' | translate }}:&nbsp;</span
       >
       <span *ngIf="sleepMode | async" @hshrink translate>comp.main-status-bar.active</span>
       <span *ngIf="(sleepMode | async) === false" @hshrink translate
-        >comp.main-status-bar.inactive</span
+      >comp.main-status-bar.inactive</span
       >
     </div>
     <div class="pill clickable snowverlay" (click)="toggleSnowverlay()" *ngIf="snowverlayAvailable">
@@ -36,6 +36,50 @@
     </div>
   </div>
   <div class="right">
+    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
+      <div
+        class="pill system-mic-mute clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.systemMicMuted.tooltip.' + systemMicrophoneMuteAction()"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="doSystemMicrophoneMuteAction()"
+        @hshrink
+      >
+        <div class="pill-icon nomargin" @hshrink>
+          <i class="material-icons-round mic-muted">mic_off</i>
+        </div>
+        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
+        >comp.main-status-bar.systemMicMuted.label</span
+        >
+      </div>
+    </ng-container>
+    <ng-container *ngIf="mqttStatus !== 'DISABLED'">
+      <div
+        class="pill mqtt-status clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.mqttStatus.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="navigateToIntegrationSettings()"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <img src="/assets/img/hass_logo_mono.png"
+               [class.img-green]="mqttStatus === 'CONNECTED'"
+               [class.img-orange]="mqttStatus === 'DISCONNECTED'"
+               [class.img-red]="mqttStatus === 'ERROR'"
+          />
+        </div>
+        <span @hshrink *ngIf="state.hover"
+        >{{ 'comp.main-status-bar.mqttStatus.label' | translate }}</span
+        >
+      </div>
+    </ng-container>
     <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
       <div
         class="pill bsb-fanctl clickable"
@@ -57,26 +101,6 @@
         <span>{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
       </div>
     </ng-container>
-    <ng-container *ngIf="(systemMicMuteAutomation.isMicMuted | async) === true">
-      <div
-        class="pill system-mic-mute clickable"
-        *ngVar="{ hover: false }; let state"
-        (mouseenter)="state.hover = true"
-        (mouseleave)="state.hover = false"
-        [tooltip]="'comp.main-status-bar.systemMicMuted.tooltip.' + systemMicrophoneMuteAction()"
-        [tooltipMode]="'top'"
-        [tooltipMargin]="8"
-        (click)="doSystemMicrophoneMuteAction()"
-        @hshrink
-      >
-        <div class="pill-icon nomargin" @hshrink>
-          <i class="material-icons-round mic-muted">mic_off</i>
-        </div>
-        <span @hshrink *ngIf="state.hover" translate style="margin-left: 0.25em"
-          >comp.main-status-bar.systemMicMuted.label</span
-        >
-      </div>
-    </ng-container>
     <ng-container *ngIf="pulsoid.heartRate | async">
       <div
         class="pill heartrate"
@@ -89,11 +113,11 @@
           <i
             class="material-icons-round heart-icon"
             [style.animation-duration]="60 / ((pulsoid.heartRate | async) ?? 1) + 's'"
-            >favorite</i
+          >favorite</i
           >
         </div>
         <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
         >
         <span>{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
       </div>
@@ -115,7 +139,7 @@
           <i class="material-icons-round">brightness_medium</i>
         </div>
         <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
+        >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
         >
         <span>{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
       </div>
@@ -137,7 +161,7 @@
           <i class="material-icons-round">monitor</i>
         </div>
         <span [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
-          >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+        >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
         >
         <span><b>&nbsp;|&nbsp;</b></span>
         <span>{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
@@ -183,7 +207,7 @@
         </div>
         <div class="pill-icon" *ngIf="user && user.status !== 'offline'" @hshrink>
           <i class="material-icons-round" [style.color]="getStatusColor(user.status)"
-            >brightness_1</i
+          >brightness_1</i
           >
         </div>
         <span translate @hshrink *ngIf="state.hover">VRChat:&nbsp;</span>

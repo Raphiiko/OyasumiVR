@@ -3,11 +3,11 @@
     "author": {
       "role": "Developer"
     },
-    "contributions": "Kontribusi",
     "contributionType": {
       "feature": "Fitur",
       "soundFx": "Efek Suara"
     },
+    "contributions": "Kontribusi",
     "discordInvite": "Discord Server",
     "projectLinks": "Tautan Proyek",
     "sourceLink": "Kode Sumber @ GitHub",
@@ -16,7 +16,6 @@
   "auto-invite-request-accept": {
     "addFriends": "Tambahkan teman",
     "blacklist": "Blacklist Player",
-    "clearPlayers": "Bersihkan player",
     "description": "OyasumiVR dapat secara otomatis menerima permintaan undangan yang Anda terima. Dengan menggunakan daftar putih atau daftar hitam pemain, Anda dapat memastikan hanya teman yang Anda pilih yang permintaan undangannya akan diterima secara otomatis.",
     "noPlayersAdded": "Tidak ada pemain yang saat ini ditambahkan ke dalam daftar.",
     "options": {
@@ -73,9 +72,6 @@
       },
       "copyBrightness": "Salin nilai\nkecerahan saat ini",
       "description": "Buat OyasumiVR secara otomatis menyesuaikan kecerahan headset VR Anda pada berbagai waktu, seperti saat Anda pergi tidur, atau saat Anda bangun.",
-      "softwareBrightness": {
-        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
-      },
       "onSleepDisable": {
         "description": "Sesuaikan kecerahan",
         "title": "Ketika saya bangun"
@@ -96,6 +92,9 @@
       "sleepPreparation": {
         "description": "Anda bisa bersiap untuk tidur dengan menekan tombol di overlay OyasumiVR. Tombol ini akan ditampilkan ketika Anda mengaktifkan satu atau lebih otomatisasi saat persiapan tidur, seperti ini. Gunakan ini untuk mulai meredupkan kecerahan sebelum Anda tertidur.",
         "title": "Persiapan Tidur"
+      },
+      "softwareBrightness": {
+        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
       },
       "startupAutomations": "Otomatisasi Permulaan",
       "transition": {
@@ -261,13 +260,6 @@
           },
           "title": "jarak pudar Chaperone diatur ke {value}"
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
-            "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
-          }
-        },
         "gpuPowerLimitChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
@@ -278,7 +270,7 @@
             "set": "Power limit untuk ''{device}'' diatur ke {limit}"
           }
         },
-        "softwareBrightnessChanged": {
+        "hardwareBrightnessChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
             "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
@@ -419,6 +411,13 @@
           },
           "title": "Mode tidur dinyalakan"
         },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
+            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
+            "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
+          }
+        },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Saat jumlah player di world Anda mencapai batas {threshold}",
@@ -538,6 +537,10 @@
       "updateNow": "Install v{version}"
     },
     "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
+      },
       "errors": {
         "CHECK_EMAIL": "Login gagal: Untuk detailnya, periksa kotak surat dari alamat email yang terkait dengan akun VRChat Anda.",
         "INVALID_CREDENTIALS": "Kredensial yang Anda berikan salah.",
@@ -545,11 +548,7 @@
       },
       "password": "Password",
       "title": "Masuk ke VRChat",
-      "username": "VRChat Username/E-mail",
-      "disclaimers": {
-        "brand": "OyasumiVR tidak didukung oleh VRChat dan tidak mencerminkan pandangan atau pendapat VRChat atau siapa pun yang secara resmi terlibat dalam memproduksi atau mengelola VRChat. VRChat adalah merek dagang dari VRChat Inc. VRChat © VRChat Inc.",
-        "liability": "Raphiiko tidak bertanggung jawab atas masalah apa pun yang disebabkan oleh OyasumiVR. Gunakan dengan risiko Anda sendiri!"
-      }
+      "username": "VRChat Username/E-mail"
     },
     "vrchat-login-tfa-modal": {
       "description": "Akun VRChat Anda dilindungi dengan autentikasi dua faktor.\n\nMasukkan kode 2FA:",
@@ -623,8 +622,8 @@
       "gpuPowerLimitsUnsupported": "GPU yang dipilih tidak mendukung pengaturan batas daya.",
       "gpuUnsupported": "GPU tidak didukung",
       "inputDefault": "Mengatur ulang ke batas default GPU.",
-      "noGPUs": "Tidak ada GPU NVIDIA yang dapat ditemukan dalam sistem Anda.",
       "noGPUSelected": "Tidak Ada GPU yang Dipilih",
+      "noGPUs": "Tidak ada GPU NVIDIA yang dapat ditemukan dalam sistem Anda.",
       "selectGPU": "Pilih GPU yang ingin Anda tetapkan batas dayanya:"
     },
     "requestAdministrator": "Berikan Hak Istimewa Administrator",
@@ -733,9 +732,9 @@
       "manualControl": "Kontrol manual",
       "options": {
         "footLock": {
-          "description": "Atur perintah OSC untuk mengaktifkan dan menonaktifkan kunci kaki.",
           "FOOT_LOCK": "Aktifkan kunci kaki",
           "FOOT_UNLOCK": "Nontaktifkan kunci kaki",
+          "description": "Atur perintah OSC untuk mengaktifkan dan menonaktifkan kunci kaki.",
           "title": "Kunci kaki"
         },
         "general": {
@@ -753,13 +752,13 @@
           "unlockFeetOnSleepModeDisable": "Membuka kunci kaki saat mode tidur dinonaktifkan"
         },
         "positions": {
-          "description": "Tetapkan perintah OSC untuk mengaktifkan animasi untuk setiap posisi tidur.",
           "SIDE_BACK": "Sisi belakang",
           "SIDE_FRONT": "Tegak",
           "SIDE_LEFT": "Sisi kiri",
           "SIDE_RIGHT": "Sisi kanan",
-          "title": "Posisi Tidur",
-          "UNKNOWN": "Tidak diketahui"
+          "UNKNOWN": "Tidak diketahui",
+          "description": "Tetapkan perintah OSC untuk mengaktifkan animasi untuk setiap posisi tidur.",
+          "title": "Posisi Tidur"
         }
       },
       "presetAuthor": "dari {author}"
@@ -795,15 +794,15 @@
           "subtitle": "Ketika tertidur selama {time}",
           "title": "Shutdown Otomatis"
         },
-        "sleepingAnimations": {
-          "title": "Animasi tidur"
-        },
         "sleepModeEnableForSleepDetector": {
           "subtitle": {
             "withActivationWindow": "{sensitivity} sensitivitas, {startTime} - {endTime}",
             "withoutActivationWindow": "{sensitivity} sensitivitas"
           },
           "title": "Deteksi tidur"
+        },
+        "sleepingAnimations": {
+          "title": "Animasi tidur"
         },
         "title": "Pengaturan Otomatisasi"
       },
@@ -1220,8 +1219,8 @@
       "changelog": "Daftar Perubahan",
       "checkForUpdates": "Periksa pembaruan",
       "install": "Install v{version}",
-      "notChecked": "OyasumiVR belum memeriksa pembaruan.",
       "noUpdate": "Anda saat ini sedang menjalankan OyasumiVR v{version} yang merupakan versi terbaru!",
+      "notChecked": "OyasumiVR belum memeriksa pembaruan.",
       "updateAvailable": "Versi baru OyasumiVR telah tersedia! Anda sedang menjalankan v{currentVersion}.\nVersi terbaru adalah v{latestVersion}.",
       "updatesDisabled": {
         "DEV": "Karena Anda menjalankan versi pengembangan OyasumiVR, pembaruan telah dinonaktifkan.\nJika Anda ingin menginstal versi baru OyasumiVR, silakan unduh dan jalankan penginstal secara manual.",
@@ -1334,8 +1333,7 @@
       "atTime": "Pada waktu tertentu",
       "description": "Secara otomatis menonaktifkan mode tidur berdasarkan berbagai pemicu",
       "onDevicePowerOn": "Saat perangkat dihidupkan",
-      "onSteamVRStop": "Saat SteamVR dihentikan",
-      "title": "Menonaktifkan mode tidur"
+      "onSteamVRStop": "Saat SteamVR dihentikan"
     },
     "enableAutomations": {
       "atBatteryPercentage": "Ketika persentase baterai perangkat turun di bawah <strong>{value}%</strong>",
@@ -1352,11 +1350,7 @@
       "onHeartRateCalmPeriod": {
         "description": "Memerlukan <a class=\"integrationsPageLink\">Integrasi Pulsoid</a>",
         "title": "Saat detak jantung saya tenang untuk jangka waktu tertentu"
-      },
-      "onMotionDetection": {
-        "title": "Ketika OyasumiVR mendeteksi Anda tertidur berdasarkan gerakan Anda"
-      },
-      "title": "Mengaktifkan mode tidur"
+      }
     },
     "experimentalAutomation": "Otomatisasi ini bersifat eksperimental dan mungkin belum dapat diandalkan.",
     "modals": {
@@ -1373,12 +1367,12 @@
       },
       "enableAtBatteryPercentage": {
         "Controller": "Kontroler",
+        "GenericTracker": "Tracker",
         "errors": {
           "thresholdNotInteger": "Nilai persentase harus berupa angka bulat.",
           "thresholdOutOfRange": "Persentasenya harus antara 0% dan 100%."
         },
         "fallsBelow": "Jatuh dibawah",
-        "GenericTracker": "Tracker",
         "title": "Nyalakan mode tidur",
         "whenA": "Ketika"
       },
@@ -1524,10 +1518,10 @@
       },
       "conflictWarning": "Jika Anda menggunakan fitur ini untuk mengaktifkan mode senyap mikrofon dengan VRChat, disarankan agar dalam pengaturan VRChat Anda melepas ikatan tombol senyap atau menyetel mode mikrofon ke \"Selalu Aktif\" untuk mencegah perilaku yang bertentangan.",
       "currentMode": {
-        "description": "Mencerminkan mode tombol kontroler saat ini",
         "PUSH_TO_TALK": "Push to talk",
-        "title": "Perilaku tombol aktif",
-        "TOGGLE": "Toggle"
+        "TOGGLE": "Toggle",
+        "description": "Mencerminkan mode tombol kontroler saat ini",
+        "title": "Perilaku tombol aktif"
       },
       "description": "Bind tombol kontroler untuk mengontrol status senyap mikrofon Anda.",
       "enabled": {
@@ -1620,15 +1614,6 @@
       "mute": "Mute\nmikrofon",
       "title": "Kontrol mikrofon senyap",
       "unmute": "Bunyikan\nmikropon"
-    },
-    "description": "Secara otomatis menonaktifkan atau mengaktifkan mikrofon Anda di VRChat saat Anda tertidur, atau bangun! Ini bisa berguna ketika Anda ingin mencegah orang lain mendengar dengkuran Anda ;)\n\nPerhatikan bahwa agar ini berfungsi, OSC harus diaktifkan dalam VRChat.",
-    "mode": {
-      "description": "Pilih perilaku mikrofon yang Anda gunakan dalam VRChat. Perhatikan bahwa memilih perilaku yang berbeda dari yang Anda gunakan di VRChat dapat menyebabkan otomatisasi ini berperilaku buruk.",
-      "title": "Perilaku mikrofon VRChat"
-    },
-    "modeOptions": {
-      "PUSH_TO_MUTE": "Push to Talk",
-      "TOGGLE": "Toggle"
     },
     "muteOptions": {
       "MUTE": "Mute",

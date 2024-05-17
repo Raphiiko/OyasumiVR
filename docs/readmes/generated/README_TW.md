@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 如果你想來聊聊天，加入我們的 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord 伺服器！</a>
     <br>
     <br>
@@ -413,14 +411,14 @@ OyasumiVR has various automations for controlling certain features specific to c
 
 - 英文
 - 荷蘭文 (Nederlands)
-- 日文 (日本語)（外包 + 社群貢獻由 [なき](https://twitter.com/NoYu_idea) 提供）
+- 日文 (日本語)（社群貢獻由 [なき](https://twitter.com/NoYu_idea) 與 [Milix-M](https://github.com/Milix-M)提供）
 - 韓文 (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
 - 繁體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
 - 簡體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
 - 法文 (Français)（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
 - 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
 - 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito) 提供)
-- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 提供）
+- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 與 [Pacmard](https://github.com/pacmard)提供)
 
 ### 協助翻譯
 

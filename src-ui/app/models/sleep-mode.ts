@@ -1,12 +1,19 @@
 import { AutomationType } from './automations';
 
-export type SleepModeStatusChangeReasonType = 'MANUAL' | 'HOTKEY' | 'OSC_CONTROL' | 'AUTOMATION';
+export type SleepModeStatusChangeReasonType =
+  | 'MANUAL'
+  | 'MQTT'
+  | 'HOTKEY'
+  | 'OSC_CONTROL'
+  | 'AUTOMATION';
 
 export type SleepModeStatusChangeReason =
   | ManualSleepModeStatusChangeReason
   | HotkeySleepModeStatusChangeReason
   | OSCControlSleepModeStatusChangeReason
-  | AutomationSleepModeStatusChangeReason;
+  | MQTTSleepModeStatusChangeReason
+  | AutomationSleepModeStatusChangeReason
+  | SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason;
 
 export interface SleepModeStatusChangeReasonBase {
   enabled?: boolean;
@@ -25,7 +32,19 @@ export interface OSCControlSleepModeStatusChangeReason extends SleepModeStatusCh
   type: 'OSC_CONTROL';
 }
 
+export interface MQTTSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
+  type: 'MQTT';
+}
+
 export interface AutomationSleepModeStatusChangeReason extends SleepModeStatusChangeReasonBase {
   type: 'AUTOMATION';
-  automation: AutomationType;
+  automation: Exclude<AutomationType, 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE'>;
+}
+
+export interface SleepModeDisableOnPlayerJoinOrLeaveAutomationSleepModeStatusChangeReason
+  extends SleepModeStatusChangeReasonBase {
+  type: 'AUTOMATION';
+  automation: 'SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE';
+  event: 'join' | 'leave';
+  displayName: string;
 }

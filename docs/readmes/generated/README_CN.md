@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 如果你想一起聊天的话，就来加入我们的<a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord服务器吧！</a>
     <br>
     <br>
@@ -414,14 +412,14 @@ OyasumiVR目前支持以下语言：
 
 - 英语
 - 荷兰语（Nederlands）
-- 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)外包+贡献）
+- 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)和[Milix-M](https://github.com/Milix-M)贡献）
 - 韩语（한국어）（由社区成员[Soumt](https://github.com/soumt-r)贡献）
 - 繁体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)贡献）
 - 简体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)、[雾雨花精灵](https://github.com/flower-elf)和[いんく](https://twitter.com/sayonara_natsu)贡献）
 - 法语（Français）（由社区成员[neuroblack](https://github.com/neuroblack)贡献）（**招纳贤士！需要额外的维护人员！**）
 - 西班牙语（Español）（由社区成员[aacal666](https://twitter.com/aacalde666)贡献）
 - 印度尼西亚语（Bahasa Indonesia）（由社区成员[a9ito](https://twitter.com/a9ito)贡献）
-- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)贡献）
+- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)和[Pacmard](https://github.com/pacmard)贡献)
 
 ### 帮助翻译
 

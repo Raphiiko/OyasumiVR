@@ -28,7 +28,7 @@ mod telemetry;
 mod utils;
 mod vrc_log_parser;
 
-use std::sync::atomic::Ordering;
+use std::{mem, sync::atomic::Ordering};
 
 use config::Config;
 pub use flavour::BUILD_FLAVOUR;
@@ -40,12 +40,15 @@ use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
+use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
+use telemetry::TELEMETRY_ENABLED;
+use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
     tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
     // Construct Oyasumi Tauri application
-    let app = tauri::Builder::default()
+    tauri::Builder::default()
         .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(tauri_plugin_fs_extra::init())
         .plugin(configure_tauri_plugin_log())
@@ -63,7 +66,7 @@ fn main() {
                 Ok(_) => {}
                 Err(e) => {
                     eprintln!("Error during Oyasumi's application setup: {e}");
-                    std::process::exit(1);
+                    app.handle().exit(1);
                 }
             }
             Ok(())
@@ -71,10 +74,18 @@ fn main() {
         .system_tray(system_tray::init_system_tray())
         .on_system_tray_event(system_tray::handle_system_tray_events())
         .on_window_event(system_tray::handle_window_events())
-        .invoke_handler(configure_command_handlers());
-    // Run Oyasumi
-    app.run(tauri::generate_context!())
-        .expect("An error occurred while running the application");
+        .invoke_handler(configure_command_handlers())
+        .build(tauri::generate_context!())
+        .expect("An error occurred while running the application")
+        .run(|handler, event| match event {
+            tauri::RunEvent::Exit { .. } => {
+                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                    handler.track_event("app_exited", None);
+                    handler.flush_events_blocking();
+                }
+            }
+            _ => {}
+        })
 }
 
 async fn load_configs() {
@@ -153,6 +164,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
+        mdns_sidecar::commands::mdns_sidecar_started,
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
@@ -284,12 +296,25 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     load_configs().await;
     // Set up app reference
     *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
+    let window = app_handle.get_window("main").unwrap();
     // Open devtools if we're in debug mode
     #[cfg(debug_assertions)]
     {
-        let window = app_handle.get_window("main").unwrap();
         window.open_devtools();
     }
+    // Disable swipe navigation in main window
+    window
+        .with_webview(|webview| unsafe {
+            let settings = webview
+                .controller()
+                .CoreWebView2()
+                .unwrap()
+                .Settings()
+                .unwrap();
+            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
+            settings.SetIsSwipeNavigationEnabled(false).unwrap();
+        })
+        .unwrap();
     // Get dependencies
     let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
     // Initialize utility module

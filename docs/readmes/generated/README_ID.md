@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Dibuat di Aptabase</a>
-    <br>
 Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> Discord Server!</a>
     <br>
     <br>
@@ -413,14 +411,14 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 
 - Inggris
 - Belanda (Nederlands)
-- Jepang (日本語) (Outsourcing + Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea))
+- Jepang (日本語) (Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea) dan [Milix-M](https://github.com/Milix-M))
 - Korea (한국어) (Kontribusi komunitas dari [Soumt](https://github.com/soumt-r))
 - Mandarin Tradisional (繁體中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL))
 - Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) dan [いんく](https://twitter.com/sayonara_natsu))
 - Perancis (Français) (Kontribusi komunitas dari [neuroblack](https://github.com/neuroblack)) (**Mencari pengelola tambahan!**)
 - Spanyol (Español) (Kontribusi komunitas dari [aacal666](https://twitter.com/aacalde666))
 - Indonesia (Bahasa Indonesia) (Kontribusi komunitas dari [a9ito](https://twitter.com/a9ito))
-- Rusia (Русский) (Kontribusi komunitas dari [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Rusia (Русский) (Kontribusi komunitas dari [Kanjir0](https://twitter.com/Kanjiro_vrc) dan [Pacmard](https://github.com/pacmard))
 
 ### Membantu penerjemahan
 

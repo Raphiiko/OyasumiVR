@@ -71,6 +71,7 @@ export class BigscreenBeyondHardwareBrightnessControlDriver extends HardwareBrig
   }
 
   async setBrightnessPercentage(percentage: number): Promise<void> {
+    if (!this.connected.value) return;
     const hwPercentage = this.softwarePercentageToHardwarePercentage(percentage);
     this.lastSetBrightnessPercentage = percentage;
     const hwValue = this.swValueToHWValue(hwPercentage);

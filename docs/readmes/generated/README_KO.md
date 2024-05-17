@@ -20,8 +20,6 @@
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
     <br>
     <br>
-    ❤️&nbsp;<a href="https://aptabase.com/">Built on Aptabase</a>
-    <br>
 이야기를 나누고 싶으시면, 우리 <a href="https://discord.gg/7MqdPJhYxC"><img src="https://user-images.githubusercontent.com/111654848/192362041-f09cc066-a964-446f-aa2c-fa7a7a31ec05.png" width="16" style="fill: white" /> 디스코드 서버</a>에 들러주세요!
     <br>
     <br>
@@ -413,14 +411,14 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 
 - 영어 (English)
 - 네덜란드어 (Nederlands)
-- 일본어 (日本語) (외주 + 커뮤니티 번역 기여: [なき](https://twitter.com/NoYu_idea))
+- 일본어 (日本語) (커뮤니티 번역 기여: [なき](https://twitter.com/NoYu_idea), [Milix-M](https://github.com/Milix-M))
 - 한국어 (커뮤니티 번역 기여: [Soumt](https://github.com/soumt-r))
 - 중국어 번체 (繁體中文) (커뮤니티 번역 기여: [狐 Kon](https://github.com/XoF-eLtTiL))
 - 중국어 간체 (简体中文) (커뮤니티 번역 기여: [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://twitter.com/u_flower_elf), [いんく](https://twitter.com/sayonara_natsu))
 - 프랑스어 (Français) (커뮤니티 번역 기여: [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
 - 스페인어 (Español) (커뮤니티 번역 기여: [aacal666](https://twitter.com/aacalde666))
 - 인도네시아어 (Bahasa Indonesia) (커뮤니티 번역 기여: [a9ito](https://twitter.com/a9ito))
-- 러시아어 (Русский) (커뮤니티 번역 기여: [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- 러시아어 (Русский) (커뮤니티 번역 기여: [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard))
 
 ### 번역 지원하기
 
