@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, DestroyRef, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { fadeUp } from 'src-ui/app/utils/animations';
 import { DeveloperDebugService } from '../../services/developer-debug/developer-debug.service';
-import { AutomationConfigService } from '../../services/automation-config.service';
 
 @Component({
   selector: 'app-debug-modal',
@@ -16,11 +15,7 @@ export class DeveloperDebugModalComponent
 {
   protected activeTab = 'MISC_TESTING';
 
-  constructor(
-    public debug: DeveloperDebugService,
-    private destroyRef: DestroyRef,
-    private automationConfigService: AutomationConfigService
-  ) {
+  constructor(public debug: DeveloperDebugService) {
     super();
   }
 

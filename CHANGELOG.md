@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CJK fonts not properly being loaded in some parts of the overlay UI
 - Brightness overlay not covering full view of some high FOV headsets (e.g. Pimax)
 - Bigscreen Beyond fan speed often being reset
+- VRChat accounts with 2FA being logged out after 7 days.
 
 ## [1.12.8]
 

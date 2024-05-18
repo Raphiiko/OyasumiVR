@@ -409,16 +409,16 @@ Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If
 
 OyasumiVR currently supports the following languages:
 
-- English
-- Dutch (Nederlands)
-- Japanese (日本語) (Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M))
-- Korean (한국어) (Community contribution by [Soumt](https://github.com/soumt-r))
-- Traditional Chinese (繁體中文) (Community contribution by [狐 Kon](https://github.com/XoF-eLtTiL))
-- Simplified Chinese (简体中文) (Community contributions by [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu))
-- French (Français) (Community contribution by [neuroblack](https://github.com/neuroblack)) (**Looking for additional maintainer!**)
-- Spanish (Español) (Community contribution by [aacal666](https://twitter.com/aacalde666))
-- Indonesian (Bahasa Indonesia) (Community contribution by [a9ito](https://twitter.com/a9ito))
-- Russian (Русский) (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc) and [Pacmard](https://github.com/pacmard))
+- 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
+- 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
+- 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
+- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu).
+- Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
+- Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
+- Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
+- Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
+- English: by [Raphiiko](https://linktr.ee/raphii).
 
 ### Help out with translation
 

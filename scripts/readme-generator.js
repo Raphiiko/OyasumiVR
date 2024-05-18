@@ -95,6 +95,79 @@ function loadLanguageData() {
   return langData;
 }
 
+function getTranslationContributors(mode /*: 'markdown' | 'steam'*/) {
+  const contributors = JSON.parse(
+    fs.readFileSync('./docs/translation_contributors.json').toString()
+  );
+  let result = '';
+  const languages = _.groupBy(contributors, 'langCode');
+  switch (mode) {
+    case 'markdown': {
+      Object.values(languages).forEach((contributors) => {
+        result += `\n- ${contributors[0].langNameNative}`;
+        if (
+          contributors[0].langNameEnglish &&
+          contributors[0].langNameNative !== contributors[0].langNameEnglish
+        )
+          result += ` (${contributors[0].langNameEnglish})`;
+        if (contributors.length > 1) {
+          result += ': Community contributions by';
+        } else if (contributors[0].name !== 'Raphiiko') {
+          result += ': Community contribution by';
+        } else {
+          result += ': by';
+        }
+        contributors.forEach((contributor, index) => {
+          const name = contributor.url
+            ? `[${contributor.name}](${contributor.url})`
+            : contributor.name;
+          if (index === contributors.length - 1 && contributors.length > 1) {
+            result += ` and ${name}`;
+          } else if (index === contributors.length - 2 || contributors.length === 1) {
+            result += ` ${name}`;
+          } else {
+            result += ` ${name},`;
+          }
+        });
+        result += `.`;
+      });
+      break;
+    }
+    case 'steam': {
+      result += '[list]';
+      Object.values(languages).forEach((contributors) => {
+        result += `\r\n[*]${contributors[0].langNameNative}`;
+        if (
+          contributors[0].langNameEnglish &&
+          contributors[0].langNameNative !== contributors[0].langNameEnglish
+        )
+          result += ` (${contributors[0].langNameEnglish})`;
+        if (contributors.length > 1) {
+          result += ': Community contributions by';
+        } else if (contributors[0].name !== 'Raphiiko') {
+          result += ': Community contribution by';
+        } else {
+          result += ': by';
+        }
+        contributors.forEach((contributor, index) => {
+          const name = contributor.name;
+          if (index === contributors.length - 1 && contributors.length > 1) {
+            result += ` and ${name}`;
+          } else if (index === contributors.length - 2 || contributors.length === 1) {
+            result += ` ${name}`;
+          } else {
+            result += ` ${name},`;
+          }
+        });
+        result += '.';
+      });
+      result += '\r\n[/list]';
+      break;
+    }
+  }
+  return result.trim();
+}
+
 function generateMarkdownReadmes(langData) {
   const template = fs.readFileSync('./docs/readmes/src/readme_template.md').toString();
   for (const { lang, tokens, texts } of langData) {
@@ -105,6 +178,10 @@ function generateMarkdownReadmes(langData) {
     Object.entries(tokens).forEach(([key, value]) => {
       localized = localized.replaceAll(`{{token.${key}}}`, value);
     });
+    localized = localized.replaceAll(
+      '{{TRANSLATION_CONTRIBUTORS_LIST}}',
+      getTranslationContributors('markdown')
+    );
     fs.writeFileSync(`./docs/readmes/generated/README_${lang.toUpperCase()}.md`, localized);
   }
 }
@@ -124,6 +201,7 @@ function generateSteamStoreDescriptions(langData) {
       sanitizedValue = sanitizedValue.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
       // Remove markdown links
       sanitizedValue = sanitizedValue.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+
       // Replace html and markdown formatting
       sanitizedValue = sanitizedValue
         .replaceAll(/\*\*(.+)\*\*/g, '[b]$1[/b]')
@@ -145,6 +223,10 @@ function generateSteamStoreDescriptions(langData) {
     Object.entries(tokens).forEach(([key, value]) => {
       localizedDescription = localizedDescription.replaceAll(`{{token.${key}}}`, value);
     });
+    localizedDescription = localizedDescription.replaceAll(
+      '{{TRANSLATION_CONTRIBUTORS_LIST}}',
+      getTranslationContributors('steam')
+    );
     const output = JSON.parse(JSON.stringify(outputTemplate));
     output['app[content][about]'] = localizedDescription;
     output['language'] = tokens['steamLang'];

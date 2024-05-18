@@ -1896,7 +1896,7 @@
         "title": "Sleep duration"
       },
       "whenAsleepTimeWindow": {
-        "description": "On/ly allow shutdown to trigger between certain hours of day",
+        "description": "Only allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
       }
     }

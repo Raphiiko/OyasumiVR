@@ -197,17 +197,6 @@ OyasumiVR可以检测你的心率，如果你的心率持续升高，这可能�
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
 OyasumiVR目前支持以下语言：
 
-- 英语
-- 荷兰语（Nederlands）
-- 日语（日本語）（由社区成员[なき](https://twitter.com/NoYu_idea)和[Milix-M](https://github.com/Milix-M)贡献）
-- 韩语（한국어）（由社区成员[Soumt](https://github.com/soumt-r)贡献）
-- 繁体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)贡献）
-- 简体中文（由社区成员[狐 Kon](https://github.com/XoF-eLtTiL)、[雾雨花精灵](https://github.com/flower-elf)和[いんく](https://twitter.com/sayonara_natsu)贡献）
-- 法语（Français）（由社区成员[neuroblack](https://github.com/neuroblack)贡献）（**招纳贤士！需要额外的维护人员！**）
-- 西班牙语（Español）（由社区成员[aacal666](https://twitter.com/aacalde666)贡献）
-- 印度尼西亚语（Bahasa Indonesia）（由社区成员[a9ito](https://twitter.com/a9ito)贡献）
-- 俄罗斯（Русский）（由社区成员[Kanjir0](https://twitter.com/Kanjiro_vrc)和[Pacmard](https://github.com/pacmard)贡献)
-
 {{TRANSLATION_HELP_HEADER}}
 帮助翻译
 

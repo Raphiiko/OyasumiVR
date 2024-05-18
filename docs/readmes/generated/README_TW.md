@@ -409,16 +409,16 @@ OyasumiVR has various automations for controlling certain features specific to c
 
 目前 OyasumiVR 支援以下語言：
 
-- 英文
-- 荷蘭文 (Nederlands)
-- 日文 (日本語)（社群貢獻由 [なき](https://twitter.com/NoYu_idea) 與 [Milix-M](https://github.com/Milix-M)提供）
-- 韓文 (한국어)（社群貢獻由 [Soumt](https://github.com/soumt-r) 提供）
-- 繁體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 提供）
-- 簡體中文（社群貢獻由 [狐 Kon](https://github.com/XoF-eLtTiL) 、 [雾雨花精灵](https://github.com/flower-elf) 與 [いんく](https://twitter.com/sayonara_natsu) 提供）
-- 法文 (Français)（社群貢獻由 [neuroblack](https://github.com/neuroblack) 提供）（**尋找額外的維護者！**）
-- 西班牙文 (Español)（社群貢獻由 [aacal666](https://twitter.com/aacalde666) 提供）
-- 印尼文 (Bahasa Indonesia) (社群貢獻由 [a9ito](https://twitter.com/a9ito) 提供)
-- 俄語（Русский）（社群貢獻由[Kanjir0](https://twitter.com/Kanjiro_vrc) 與 [Pacmard](https://github.com/pacmard)提供)
+- 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
+- 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
+- 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
+- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu).
+- Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
+- Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
+- Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
+- Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
+- English: by [Raphiiko](https://linktr.ee/raphii).
 
 ### 協助翻譯
 

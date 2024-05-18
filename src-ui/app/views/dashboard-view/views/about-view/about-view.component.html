@@ -43,13 +43,13 @@
       <div class="contributor-list">
         <div class="contributor-list-entry">
           <span
-            ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
+          ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
             <span translate>about.contributionType.feature</span></span
           >
         </div>
         <div class="contributor-list-entry">
           <span
-            ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
+          ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
             <span translate>about.contributionType.feature</span></span
           >
         </div>
@@ -60,7 +60,7 @@
       <div class="project-info-title" translate>about.projectLinks</div>
       <div class="project-links">
         <a href="https://github.com/Raphiiko/OyasumiVR" target="_blank" translate
-          >about.sourceLink</a
+        >about.sourceLink</a
         >
         <br />
         <a href="https://discord.gg/7MqdPJhYxC" target="_blank" translate>about.discordInvite</a>
@@ -94,67 +94,19 @@
   </div>
   <div class="row">
     <div class="left">
-      <div class="translation-author-list-entry">
-        <span class="fi fi-jp"></span>
-        日本語 | <a href="https://twitter.com/NoYu_idea" target="_blank">なき</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span class="fi fi-jp"></span>
-        日本語 | <a href="https://github.com/Milix-M" target="_blank">Milix-M</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span class="fi fi-kr"></span>
-        한국어 | <a href="https://github.com/soumt-r" target="_blank">Soumt</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span
-          class="fi"
-          [class.fi-tw]="FLAVOUR !== 'STEAM_CN'"
-          [class.fi-hk]="FLAVOUR === 'STEAM_CN'"
-        ></span>
-        繁體中文 | <a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span class="fi fi-cn"></span>
-        简体中文 | <a href="https://github.com/XoF-eLtTiL" target="_blank">狐Kon</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span class="fi fi-cn"></span>
-        简体中文 | <a href="https://github.com/flower-elf" target="_blank">雾雨花精灵</a>
-      </div>
-      <div class="translation-author-list-entry">
-        <span class="fi fi-cn"></span>
-        简体中文 | <a href="https://twitter.com/sayonara_natsu" target="_blank">いんく</a>
+      <div class="translation-author-list-entry" *ngFor="let contributor of leftTranslationContributors">
+        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
+        {{ contributor.langNameNative }} | <a *ngIf="contributor.url" [href]="contributor.url"
+                                              target="_blank">{{ contributor.name }}</a><span
+        *ngIf="!contributor.url">{{ contributor.name }}</span>
       </div>
     </div>
     <div class="right">
-      <div class="translation-author-list-entry">
-        <a href="https://github.com/neuroblack" target="_blank">neuroblack</a> | Français
-        <span class="fi fi-fr"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://twitter.com/aacalde666" target="_blank">aacal666</a> | Español
-        <span class="fi fi-es"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://twitter.com/a9ito" target="_blank">a9ito</a> | Bahasa Indonesia
-        <span class="fi fi-id"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://twitter.com/Kanjiro_vrc" target="_blank">Kanjir0</a> | Русский
-        <span class="fi fi-ru"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://github.com/pacmard" target="_blank">Pacmard</a> | Русский
-        <span class="fi fi-ru"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | English
-        <span class="fi fi-gb"></span>
-      </div>
-      <div class="translation-author-list-entry">
-        <a href="https://linktr.ee/raphii" target="_blank">Raphiiko</a> | Nederlands
-        <span class="fi fi-nl"></span>
+      <div class="translation-author-list-entry" *ngFor="let contributor of rightTranslationContributors">
+        <a *ngIf="contributor.url" [href]="contributor.url"
+           target="_blank">{{ contributor.name }}</a><span
+        *ngIf="!contributor.url">{{ contributor.name }}</span> | {{ contributor.langNameNative }} <span
+        [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
       </div>
     </div>
   </div>
