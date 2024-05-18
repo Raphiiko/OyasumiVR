@@ -17,10 +17,20 @@ import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
 import { cloneDeep, shuffle } from 'lodash';
 import { warn } from 'tauri-plugin-log-api';
+import translationContributors from '../../../../../../docs/translation_contributors.json';
 
 interface SupporterTier {
   name: string;
   supporters: string[];
+}
+
+interface TranslationContributor {
+  name: string;
+  url?: string;
+  langCode: string;
+  flagCode?: string;
+  langNameNative: string;
+  langNameEnglish: string;
 }
 
 @Component({
@@ -31,6 +41,13 @@ interface SupporterTier {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
+  protected leftTranslationContributors: TranslationContributor[] = translationContributors.slice(
+    0,
+    Math.ceil(translationContributors.length / 2)
+  );
+  protected rightTranslationContributors: TranslationContributor[] = translationContributors.slice(
+    Math.ceil(translationContributors.length / 2)
+  );
   private supportersScrolling = false;
 
   version?: string;
@@ -43,7 +60,19 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     'OYASUMIVR_SUPPORTERS'
   );
 
-  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {}
+  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {
+    // Change flags in translation contributors for CN compliance.
+    if (FLAVOUR === 'STEAM_CN') {
+      function cnComplianceFix(author: TranslationContributor): TranslationContributor {
+        if (author.flagCode === 'tw') author.flagCode = 'hk';
+        if (author.langCode === 'tw') author.langCode = 'hk';
+        return author;
+      }
+
+      this.leftTranslationContributors = this.leftTranslationContributors.map(cnComplianceFix);
+      this.rightTranslationContributors = this.rightTranslationContributors.map(cnComplianceFix);
+    }
+  }
 
   async ngOnInit() {
     this.version = await getVersion();

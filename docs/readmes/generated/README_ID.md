@@ -409,16 +409,16 @@ Secara otomatis menyesuaikan jarak pudar chaperone SteamVR saat Anda tidur. Jika
 
 OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 
-- Inggris
-- Belanda (Nederlands)
-- Jepang (日本語) (Kontribusi komunitas dari [なき](https://twitter.com/NoYu_idea) dan [Milix-M](https://github.com/Milix-M))
-- Korea (한국어) (Kontribusi komunitas dari [Soumt](https://github.com/soumt-r))
-- Mandarin Tradisional (繁體中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL))
-- Mandarin Sederhana (简体中文) (Kontribusi komunitas dari [狐 Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) dan [いんく](https://twitter.com/sayonara_natsu))
-- Perancis (Français) (Kontribusi komunitas dari [neuroblack](https://github.com/neuroblack)) (**Mencari pengelola tambahan!**)
-- Spanyol (Español) (Kontribusi komunitas dari [aacal666](https://twitter.com/aacalde666))
-- Indonesia (Bahasa Indonesia) (Kontribusi komunitas dari [a9ito](https://twitter.com/a9ito))
-- Rusia (Русский) (Kontribusi komunitas dari [Kanjir0](https://twitter.com/Kanjiro_vrc) dan [Pacmard](https://github.com/pacmard))
+- 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
+- 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
+- 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
+- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu).
+- Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
+- Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
+- Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
+- Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
+- English: by [Raphiiko](https://linktr.ee/raphii).
 
 ### Membantu penerjemahan
 
