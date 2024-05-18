@@ -8,6 +8,7 @@ import { MqttNumberProperty, MqttToggleProperty } from '../../../models/mqtt';
 import { AutomationConfigService } from '../../automation-config.service';
 import { BrightnessControlAdvancedModeAutomationConfig } from '../../../models/automations';
 import { isEqual } from 'lodash';
+import { ensurePrecision } from '../../../utils/number-utils';
 
 @Injectable({
   providedIn: 'root',
@@ -44,7 +45,7 @@ export class BrightnessMqttIntegrationService {
       unitOfMeasurement: '%',
     });
     this.simpleBrightness.brightnessStream.pipe(distinctUntilChanged()).subscribe((brightness) => {
-      this.mqtt.setNumberPropertyValue('simpleBrightness', brightness);
+      this.mqtt.setNumberPropertyValue('simpleBrightness', ensurePrecision(brightness, 0));
     });
     this.mqtt
       .getCommandStreamForProperty<MqttNumberProperty>('simpleBrightness')
@@ -75,7 +76,7 @@ export class BrightnessMqttIntegrationService {
         this.mqtt.setNumberPropertyBounds('hardwareBrightness', min, max);
       });
     this.hwBrightness.brightnessStream.pipe(distinctUntilChanged()).subscribe((brightness) => {
-      this.mqtt.setNumberPropertyValue('hardwareBrightness', brightness);
+      this.mqtt.setNumberPropertyValue('hardwareBrightness', ensurePrecision(brightness, 0));
     });
     this.mqtt
       .getCommandStreamForProperty<MqttNumberProperty>('hardwareBrightness')
@@ -98,7 +99,7 @@ export class BrightnessMqttIntegrationService {
       unitOfMeasurement: '%',
     });
     this.swBrightness.brightnessStream.pipe(distinctUntilChanged()).subscribe((brightness) => {
-      this.mqtt.setNumberPropertyValue('softwareBrightness', brightness);
+      this.mqtt.setNumberPropertyValue('softwareBrightness', ensurePrecision(brightness, 0));
     });
     this.mqtt
       .getCommandStreamForProperty<MqttNumberProperty>('softwareBrightness')
