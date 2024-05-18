@@ -9,11 +9,21 @@ import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
 import { NotificationService } from './notification.service';
-import { concatMap, filter, firstValueFrom, Subject, switchMap, tap } from 'rxjs';
+import {
+  concatMap,
+  distinctUntilChanged,
+  filter,
+  firstValueFrom,
+  skip,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { VRChatLogService } from './vrchat-log.service';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
 import { LimitedUser } from 'vrchat/dist';
 import { TranslateService } from '@ngx-translate/core';
+import { v4 as uuid } from 'uuid';
 
 @Injectable({
   providedIn: 'root',
@@ -28,12 +38,14 @@ export class JoinNotificationsService {
   private friends: LimitedUser[] = [];
   private worldLoaded = false;
   private playNotification = new Subject<{
+    id?: string;
     notification?: {
       displayName: string;
       type: 'join' | 'leave';
     };
     sound?: boolean;
   }>();
+  queuedNotifications: string[] = [];
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -76,17 +88,48 @@ export class JoinNotificationsService {
       this.alone = alone;
       this.worldLoaded = w.loaded;
     });
+    // Clear queued notifications when VRChat stops
+    this.vrchat.vrchatProcessActive
+      .pipe(
+        skip(1),
+        distinctUntilChanged(),
+        filter((active) => !active)
+      )
+      .subscribe(() => {
+        this.queuedNotifications = [];
+      });
+    // Clear queued notifications when switching worlds
+    this.vrchat.world
+      .pipe(
+        skip(1),
+        distinctUntilChanged((a, b) => a.instanceId === b.instanceId)
+      )
+      .subscribe(() => {
+        this.queuedNotifications = [];
+      });
     // Process notifications and sounds
     this.playNotification
       .pipe(
+        tap((val) => {
+          const notificationId = uuid();
+          val.id = notificationId;
+          this.queuedNotifications.push(notificationId);
+          return val;
+        }),
         concatMap(async (val) => {
+          // Skip if it's ID is not queued
+          if (!this.queuedNotifications.includes(val.id ?? '')) return;
+          // Remove ID from queued notifications
+          this.queuedNotifications = this.queuedNotifications.filter((id) => id !== val.id);
+          // Send notification
           if (val.notification) {
             const message = this.translate.instant(
               `join-notifications.notification.${val.notification.type}`,
               { name: val.notification.displayName }
             );
-            await this.notification.send(message, 3000);
+            await this.notification.send(message, 5000);
           }
+          // Send sound
           if (val.sound) {
             await this.notification.playSound(
               'notification_reverie',
