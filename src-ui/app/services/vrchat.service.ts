@@ -122,8 +122,7 @@ export class VRChatService {
     if (newStatus !== this._status.value) this._status.next(newStatus);
     // Show the login modal if we were just logged out due to token expiry
     if (this.loginExpired) {
-      info(`[VRChat] Login expired. Logging out.`);
-      await this.logout();
+      info(`[VRChat] Login expired.`);
       this.showLoginModal(true);
     }
     // Process VRChat log events
@@ -635,7 +634,7 @@ export class VRChatService {
   ): Promise<CurrentUser> {
     // Set available headers
     const headers: Record<string, string> = {
-      ...this.getDefaultHeaders(!credentials),
+      ...this.getDefaultHeaders(),
     };
     if (credentials) {
       force = true;
@@ -688,7 +687,7 @@ export class VRChatService {
     }
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
     await this.parseResponseCookies(response);
-    // If we got a missing 2FA response, throw
+    // Handle 2FA required response
     if (response.data.hasOwnProperty('requiresTwoFactorAuth')) {
       const data = response.data as { requiresTwoFactorAuth: string[] };
       const methods = data.requiresTwoFactorAuth.map((method) => method.toLowerCase());
@@ -702,7 +701,7 @@ export class VRChatService {
         '[VRChat] 2FA Required for login, but no supported method found. Available methods: ' +
           JSON.stringify(data.requiresTwoFactorAuth)
       );
-      throw '2FA_TOTP_REQUIRED'; // Should never happen but let's use it as a fallback.
+      throw '2FA_TOTP_REQUIRED'; // Should never happen
     }
     // Cache the user
     const user = response.data as CurrentUser;
@@ -712,12 +711,12 @@ export class VRChatService {
     return user;
   }
 
-  private getDefaultHeaders(allow2FACookie = true): Record<string, string> {
+  private getDefaultHeaders(): Record<string, string> {
     const settings = this._settings.value;
     const cookies = [];
     if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
-    if (settings.twoFactorCookie && allow2FACookie)
-      cookies.push(serializeCookie('twoFactor', settings.twoFactorCookie));
+    if (settings.twoFactorCookie)
+      cookies.push(serializeCookie('twoFactorAuth', settings.twoFactorCookie));
     return { Cookie: cookies.join('; '), 'User-Agent': this.userAgent };
   }
 
@@ -755,14 +754,14 @@ export class VRChatService {
     this.loginExpired = false;
     if (settings.authCookieExpiry && settings.authCookieExpiry < Date.now() / 1000) {
       info('[VRChat] Auth cookie expired, throwing it away.');
-      settings.authCookie = undefined;
-      settings.authCookieExpiry = undefined;
+      settings.authCookie = null;
+      settings.authCookieExpiry = null;
       this.loginExpired = true;
     }
     if (settings.twoFactorCookieExpiry && settings.twoFactorCookieExpiry < Date.now() / 1000) {
       info('[VRChat] Two factor cookie expired, throwing it away.');
-      settings.twoFactorCookie = undefined;
-      settings.twoFactorCookieExpiry = undefined;
+      settings.twoFactorCookie = null;
+      settings.twoFactorCookieExpiry = null;
       this.loginExpired = true;
     }
     // Generate storage crypto key if needed

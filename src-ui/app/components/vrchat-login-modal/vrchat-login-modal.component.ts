@@ -51,7 +51,10 @@ export class VRChatLoginModalComponent
         if (credentials) {
           this.username = credentials.username;
           this.password = credentials.password;
-          if (this.autoLogin) this.login();
+          if (this.autoLogin) {
+            console.log('STARTING AUTOLOGIN');
+            await this.login();
+          }
         }
       });
   }
