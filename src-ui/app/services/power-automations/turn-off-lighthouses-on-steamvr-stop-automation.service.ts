@@ -97,7 +97,7 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
       .subscribe();
   }
 
-  private async handleNewDevice(device: LighthouseDevice, attempt = 0) {
+  private async handleNewDevice(device: LighthouseDevice) {
     if (!this.config.enabled) return;
     if ((await firstValueFrom(this.openvr.status)) !== 'INACTIVE') return;
     switch (device.powerState) {
