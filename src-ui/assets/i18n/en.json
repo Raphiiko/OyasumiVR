@@ -373,6 +373,15 @@
         "WristLeft": "Left Wrist",
         "WristRight": "Right Wrist"
       },
+      "forceOnBootingWarning": {
+        "title": "Warning",
+        "message": "It looks like this base station is already on.\n\nIf you force a base station to turn on while it's already on, it usually will get stuck in its booting state. If this happens, you can fix this by putting it back to sleep or standby and then turning it on again.\n\nAre you sure you want to force this base station to turn on?"
+      },
+      "lhForceState": {
+        "on": "Force On",
+        "sleep": "Force Sleep",
+        "standby": "Force Standby"
+      },
       "lighthouseStatus": {
         "booting": "Booting",
         "on": "Active",

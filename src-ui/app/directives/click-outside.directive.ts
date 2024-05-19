@@ -9,6 +9,7 @@ export class ClickOutsideDirective {
   @Output() clickOutside = new EventEmitter<MouseEvent>();
 
   @HostListener('document:click', ['$event', '$event.target'])
+  @HostListener('document:contextmenu', ['$event', '$event.target'])
   public onClick(event: MouseEvent, targetElement: HTMLElement): void {
     if (!targetElement) {
       return;

@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OVRToolkit as a notification provider
 - Integration with Home Assistant via MQTT
 - Additional configuration options for the sleep detector (controller presence, sleeping pose)
+- Options for forcing the power state of base stations (Right click the power button).
+- Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
 
 ### Changed
 

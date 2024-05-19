@@ -58,7 +58,8 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
               !this.seenDevices.includes(lighthouse.id) &&
               (lighthouse.powerState === 'sleep' ||
                 lighthouse.powerState === 'standby' ||
-                lighthouse.powerState === 'booting')
+                lighthouse.powerState === 'booting' ||
+                lighthouse.powerState === 'unknown')
           );
           lighthouses.forEach((d) => this.seenDevices.push(d.id));
           if (devices.length) {

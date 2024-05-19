@@ -29,6 +29,11 @@ button.btn-power {
         background: var(--color-alert-success);
         color: var(--color-on-alert-success);
       }
+
+      &.power-unknown {
+        background: var(--color-text-1);
+        color: var(--color-surface-1);
+      }
     }
 
     &:active:after {
@@ -54,6 +59,10 @@ button.btn-power {
 
   &.power-on {
     color: var(--color-alert-success);
+  }
+
+  &.power-unknown {
+    color: var(--color-text-1);
   }
 }
 

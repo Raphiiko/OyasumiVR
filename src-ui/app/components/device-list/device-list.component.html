@@ -48,14 +48,24 @@
 
           <button
             class="btn-power"
+            id="btn-lh-bulk-power"
             [class.power-off]="category.canBulkPowerOff"
             [class.power-on]="category.canBulkPowerOn"
             *ngIf="category.canBulkPowerOff || category.canBulkPowerOn"
-            (click)="bulkPowerLighthouseDevices(category)"
+            (click)="clickBulkPowerLighthouseDevices(category)"
+            (contextmenu)="rightClickBulkPowerLighthouseDevices()"
+            [ngStyle]="{ 'anchor-name':'--anchor-lh-bulk-power-button' }"
             @fade
           >
             <i class="material-icons">power_settings_new</i>
           </button>
+          <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)"
+               *ngIf="showLHStatePopover">
+            <app-device-list-lh-state-popover
+              (action)="onForceLHState($event)"
+              [style.position-anchor]="'--anchor-lh-bulk-power-button'">
+            </app-device-list-lh-state-popover>
+          </div>
         </div>
         <app-device-list-item
           *ngFor="let device of category.devices"

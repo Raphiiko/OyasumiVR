@@ -102,13 +102,18 @@ export class LighthouseService {
     await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
   }
 
-  public async setPowerState(device: LighthouseDevice, powerState: LighthouseDevicePowerState) {
-    if (powerState === device.powerState) return;
-    device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
-      ? powerState
-      : undefined;
-    this._devices.next(this._devices.value);
-    await invoke('lighthouse_set_device_power_state', { deviceId: device.id, powerState });
+  public async setPowerState(
+    device: LighthouseDevice,
+    powerState: LighthouseDevicePowerState,
+    force = false
+  ) {
+    if (!force) {
+      device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
+        ? powerState
+        : undefined;
+      this._devices.next(this._devices.value);
+    }
+    invoke('lighthouse_set_device_power_state', { deviceId: device.id, powerState });
     // Wait for state to change (timeout after 10 seconds)
     await firstValueFrom(
       merge(

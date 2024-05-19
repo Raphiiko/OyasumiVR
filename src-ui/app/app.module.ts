@@ -210,6 +210,7 @@ import { SleepDetectionDetectionTabComponent } from './views/dashboard-view/view
 import { SleepDetectionSleepEnableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-enable-tab/sleep-detection-sleep-enable-tab.component';
 import { SleepDetectionSleepDisableTabComponent } from './views/dashboard-view/views/sleep-detection-view/tabs/sleep-detection-sleep-disable-tab/sleep-detection-sleep-disable-tab.component';
 import { SleepDetectionViewComponent } from './views/dashboard-view/views/sleep-detection-view/sleep-detection-view.component';
+import { DeviceListLhStatePopoverComponent } from './components/device-list/device-list-lh-state-popover/device-list-lh-state-popover.component';
 
 [
   localeEN,
@@ -336,6 +337,7 @@ export function createTranslateLoader(http: HttpClient) {
     SleepDetectionDetectionTabComponent,
     SleepDetectionSleepEnableTabComponent,
     SleepDetectionSleepDisableTabComponent,
+    DeviceListLhStatePopoverComponent,
   ],
   imports: [
     CommonModule,
