@@ -80,10 +80,7 @@ export class BaseStationMqttIntegrationService {
       topicPath: `device/${id}`,
       displayName: 'Power',
       value: device.powerState === 'on' || device.powerState === 'booting',
-      available:
-        device.powerState === 'on' ||
-        device.powerState === 'sleep' ||
-        device.powerState === 'standby',
+      available: true,
       device: deviceDesc,
     });
 
@@ -109,10 +106,6 @@ export class BaseStationMqttIntegrationService {
 
   private async updateDevice(device: LighthouseDevice) {
     const id = this.sanitizedId(device.id);
-    await this.mqtt.setPropertyAvailability(
-      id,
-      device.powerState === 'on' || device.powerState === 'sleep' || device.powerState === 'standby'
-    );
     await this.mqtt.setTogglePropertyValue(
       id,
       device.powerState === 'on' || device.powerState === 'booting'

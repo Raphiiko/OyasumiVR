@@ -101,19 +101,13 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
     if (!this.config.enabled) return;
     if ((await firstValueFrom(this.openvr.status)) !== 'INACTIVE') return;
     switch (device.powerState) {
+      case 'unknown':
       case 'on':
       case 'booting': {
         const offPowerState = await firstValueFrom(
           this.appSettings.settings.pipe(map((settings) => settings.lighthousePowerOffState))
         );
         await this.lighthouse.setPowerState(device, offPowerState);
-        break;
-      }
-      case 'unknown': {
-        // Attempt again in two seconds
-        if (attempt < 5) {
-          setTimeout(() => this.handleNewDevice(device, attempt + 1), 2000);
-        }
         break;
       }
       case 'sleep':

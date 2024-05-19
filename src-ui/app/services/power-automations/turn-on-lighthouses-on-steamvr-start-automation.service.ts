@@ -61,7 +61,8 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
           (d) =>
             (d.powerState === 'sleep' ||
               d.powerState === 'standby' ||
-              d.powerState === 'booting') &&
+              d.powerState === 'booting' ||
+              d.powerState === 'unknown') &&
             !this.lighthouse.isDeviceIgnored(d)
         );
         if (devices.length) {

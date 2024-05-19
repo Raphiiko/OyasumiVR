@@ -143,6 +143,10 @@ pub async fn get_device_power_state(
         Ok(characteristic) => characteristic,
         Err(err) => return Err(err),
     };
+    // (Raphii): For personal testing purposes, I can pretend one of my basestations doesn't report its status
+    // if device_id == "BluetoothLE#BluetoothLE48:51:c5:c6:5f:4c-f1:46:cc:56:2e:8c" {
+    //     return Err(LighthouseError::CharacteristicNotFound);
+    // }
     let value = match characteristic.read().await {
         Ok(value) => value,
         Err(err) => return Err(LighthouseError::FailedToReadCharacteristic(err)),

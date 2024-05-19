@@ -1,5 +1,5 @@
-<ng-container *ngIf="lighthouseDevice || ovrDevice">
-  <div class="wrapper" [class.device-ignored]="isDeviceIgnored()">
+<ng-container *ngIf="mode">
+  <div class="wrapper" [class.device-ignored]="isDeviceIgnored">
     <div class="header-bar">
       <div class="header-bar-icon">
         <img [src]="'/assets/img/icon_' + icon + '.png'" class="category-icon" />
@@ -7,44 +7,61 @@
       <div class="header-bar-info" (click)="editDevice()">
         <div class="device-name" translate>{{ deviceName }}</div>
         <div class="device-serial" *ngIf="!deviceNickname && deviceRole"
-          >{{ 'comp.device-list.deviceRole.' + deviceRole | translate }}
+        >{{ 'comp.device-list.deviceRole.' + deviceRole | translate }}
         </div>
         <div class="device-serial" *ngIf="!deviceNickname && !deviceRole"
-          >{{ deviceIdentifier }}
+        >{{ deviceIdentifier }}
         </div>
         <div class="device-nickname" *ngIf="deviceNickname">{{ deviceNickname }}</div>
       </div>
       <div class="header-bar-spacer"></div>
-      <div class="header-bar-action" *ngIf="!isDeviceIgnored()">
+      <div class="header-bar-action" *ngIf="!isDeviceIgnored">
         <button
+          [id]="'btn-power-' + cssId"
           class="btn-power"
           [class.power-off]="
             powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'
           "
           [class.power-on]="powerButtonState === 'turn_on' || powerButtonState === 'turn_on_busy'"
+          [class.power-unknown]="powerButtonState === 'turn_on_off' || powerButtonState === 'turn_on_off_busy'"
           *ngIf="powerButtonState !== 'hide'"
           [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
           [@fade]
           (click)="clickDevicePowerButton()"
+          (contextmenu)="rightClickDevicePowerButton()"
+          [ngStyle]="{ 'anchor-name': powerButtonAnchorId }"
         >
           <i
             class="material-icons"
             *ngIf="powerButtonState === 'turn_off' || powerButtonState === 'turn_on'"
-            >power_settings_new</i
+          >power_settings_new</i
+          >
+          <i
+            class="material-icons"
+            *ngIf="powerButtonState === 'turn_on_off'"
+          >settings_power</i
           >
           <div
             class="small-spinner"
             [class.power-off]="powerButtonState === 'turn_off_busy'"
             [class.power-on]="powerButtonState === 'turn_on_busy'"
-            *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
+            [class.power-unknown]="powerButtonState === 'turn_on_off_busy'"
+            *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy' || powerButtonState === 'turn_on_off_busy'"
           ></div>
         </button>
+        <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)"
+             *ngIf="showLHStatePopover">
+          <app-device-list-lh-state-popover
+            (action)="onForceLHState($event)"
+            [style.position-anchor]="powerButtonAnchorId">
+          </app-device-list-lh-state-popover>
+        </div>
       </div>
     </div>
-    <div class="status-info" @vshrink *ngIf="status && !isDeviceIgnored()">
+    <div class="status-info" @vshrink *ngIf="status && !isDeviceIgnored">
       <span *ngFor="let s of status ? [status] : []" [@vshrink]>{{ s | translate }}</span></div
     >
-    <div class="battery-info" @vshrink *ngIf="showBattery && !isDeviceIgnored()">
+    <div class="battery-info" @vshrink *ngIf="showBattery && !isDeviceIgnored">
       <div class="battery-info-bar">
         <div
           class="battery-info-bar-fill"
@@ -64,3 +81,4 @@
     </div>
   </div>
 </ng-container>
+

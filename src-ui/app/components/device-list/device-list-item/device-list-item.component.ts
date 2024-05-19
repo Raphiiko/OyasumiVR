@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
@@ -8,7 +8,7 @@ import {
   EventLogTurnedOffOpenVRDevices,
 } from '../../../models/event-log-entry';
 import { EventLogService } from '../../../services/event-log.service';
-import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
+import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { firstValueFrom } from 'rxjs';
@@ -19,6 +19,12 @@ import {
 } from '../device-edit-modal/device-edit-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { OpenVRService } from '../../../services/openvr.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  ConfirmModalComponent,
+  ConfirmModalInputModel,
+  ConfirmModalOutputModel,
+} from '../../confirm-modal/confirm-modal.component';
 
 @Component({
   selector: 'app-device-list-item',
@@ -27,93 +33,56 @@ import { OpenVRService } from '../../../services/openvr.service';
   animations: [fade(), vshrink(), hshrink()],
 })
 export class DeviceListItemComponent implements OnInit {
-  @Input() ovrDevice: OVRDevice | undefined;
-  @Input() lighthouseDevice: LighthouseDevice | undefined;
   @Input() icon: string | undefined;
 
-  constructor(
-    private lighthouseConsole: LighthouseConsoleService,
-    private lighthouse: LighthouseService,
-    private openvr: OpenVRService,
-    private eventLog: EventLogService,
-    private appSettings: AppSettingsService,
-    private modalService: ModalService
-  ) {}
+  @Input() set ovrDevice(device: OVRDevice | undefined) {
+    if (!device) return;
+    this.mode = 'openvr';
+    this._lighthouseDevice = undefined;
+    this._ovrDevice = device;
+    this.deviceName = device.modelNumber;
+    this.deviceIdentifier = device.serialNumber;
+    this.deviceRole = device.handleType;
+    this.deviceNickname = this.openvr.getDeviceNickname(device);
+    this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
+    this.isCharging = this.showBattery && device.isCharging;
+    this.batteryPercentage = this.showBattery ? device.battery * 100 : 0;
+    this.batteryPercentageString = this.showBattery
+      ? Math.floor(device.battery * 1000) / 10 + '%'
+      : 0 + '%';
+    this.status = null;
+    if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
+    else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
+    this.isDeviceIgnored = false;
+    this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber);
+    this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
+    this.showLHStatePopover = false;
+  }
 
-  ngOnInit(): void {}
-
-  protected get deviceName(): string {
-    if (this.ovrDevice) {
-      return this.ovrDevice.modelNumber;
+  @Input() set lighthouseDevice(device: LighthouseDevice | undefined) {
+    if (!device) return;
+    this.mode = 'lighthouse';
+    this._lighthouseDevice = device;
+    this._ovrDevice = undefined;
+    this.deviceName = 'comp.device-list.deviceName.' + device.deviceType;
+    this.deviceIdentifier = device.deviceName;
+    this.deviceRole = undefined;
+    this.deviceNickname = this.lighthouse.getDeviceNickname(device);
+    this.showBattery = false;
+    this.isCharging = false;
+    this.batteryPercentage = 100;
+    this.batteryPercentageString = '100%';
+    switch (device.powerState) {
+      case 'unknown':
+        this.status = null;
+        break;
+      default:
+        this.status = 'comp.device-list.lighthouseStatus.' + device.powerState;
+        break;
     }
-    if (this.lighthouseDevice) {
-      return 'comp.device-list.deviceName.' + this.lighthouseDevice.deviceType;
-    }
-    return 'comp.device-list.deviceName.unknown';
-  }
-
-  protected get deviceIdentifier(): string {
-    if (this.ovrDevice) {
-      return this.ovrDevice.serialNumber;
-    }
-    if (this.lighthouseDevice) {
-      return this.lighthouseDevice.deviceName;
-    }
-    return 'unknown';
-  }
-
-  protected get deviceRole(): string | undefined {
-    return this.ovrDevice?.handleType;
-  }
-
-  protected get deviceNickname(): string | null {
-    if (this.ovrDevice) {
-      return this.openvr.getDeviceNickname(this.ovrDevice);
-    }
-    if (this.lighthouseDevice) {
-      return this.lighthouse.getDeviceNickname(this.lighthouseDevice);
-    }
-    return null;
-  }
-
-  protected get showBattery(): boolean {
-    return Boolean(
-      this.ovrDevice && (this.ovrDevice.providesBatteryStatus || this.ovrDevice.isCharging)
-    );
-  }
-
-  protected get isCharging(): boolean {
-    return this.showBattery && this.ovrDevice!.isCharging;
-  }
-
-  protected get batteryPercentage(): number {
-    return this.showBattery ? this.ovrDevice!.battery * 100 : 0;
-  }
-
-  protected get batteryPercentageString(): string {
-    return this.showBattery ? Math.floor(this.ovrDevice!.battery * 1000) / 10 + '%' : 0 + '%';
-  }
-
-  protected get status(): string | null {
-    if (this.lighthouseDevice) {
-      return 'comp.device-list.lighthouseStatus.' + this.lighthouseDevice.powerState;
-    }
-    return null;
-  }
-
-  protected get powerButtonState():
-    | 'hide'
-    | 'turn_off'
-    | 'turn_on'
-    | 'turn_off_busy'
-    | 'turn_on_busy' {
-    if (this.ovrDevice) {
-      if (this.ovrDevice.isTurningOff) return 'turn_off_busy';
-      if (this.ovrDevice.canPowerOff && this.ovrDevice.dongleId) return 'turn_off';
-    }
-    if (this.lighthouseDevice) {
-      if (this.lighthouseDevice.transitioningToPowerState) {
-        switch (this.lighthouseDevice.transitioningToPowerState) {
+    this.powerButtonState = (() => {
+      if (device.transitioningToPowerState) {
+        switch (device.transitioningToPowerState) {
           case 'on':
             return 'turn_on_busy';
           case 'sleep':
@@ -123,10 +92,10 @@ export class DeviceListItemComponent implements OnInit {
             return 'turn_on_busy';
           case 'unknown':
           default:
-            return 'hide';
+            return 'turn_on_off_busy';
         }
       } else {
-        switch (this.lighthouseDevice.powerState) {
+        switch (device.powerState) {
           case 'on':
             return 'turn_off';
           case 'sleep':
@@ -136,36 +105,113 @@ export class DeviceListItemComponent implements OnInit {
             return 'turn_on_busy';
           case 'unknown':
           default:
-            return 'hide';
+            return 'turn_on_off';
         }
       }
+    })();
+    this.isDeviceIgnored = this.lighthouse.isDeviceIgnored(device);
+    this.cssId = this.sanitizeIdentifierForCSS(device.id);
+    this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
+  }
+
+  mode?: 'lighthouse' | 'openvr';
+  deviceName = '';
+  deviceIdentifier = '';
+  deviceRole: string | undefined = undefined;
+  deviceNickname: string | null = null;
+  showBattery = false;
+  isCharging = false;
+  batteryPercentage = 100;
+  batteryPercentageString = '100%';
+  status: string | null = null;
+  powerButtonState:
+    | 'hide'
+    | 'turn_on_off'
+    | 'turn_on_off_busy'
+    | 'turn_off'
+    | 'turn_on'
+    | 'turn_off_busy'
+    | 'turn_on_busy' = 'hide';
+  isDeviceIgnored = false;
+  powerButtonAnchorId = '';
+  showLHStatePopover = false;
+  cssId: string = '';
+  _lighthouseDevice?: LighthouseDevice;
+  _ovrDevice?: OVRDevice;
+
+  constructor(
+    private lighthouseConsole: LighthouseConsoleService,
+    private lighthouse: LighthouseService,
+    private openvr: OpenVRService,
+    private eventLog: EventLogService,
+    private appSettings: AppSettingsService,
+    private destroyRef: DestroyRef,
+    private modalService: ModalService
+  ) {}
+
+  ngOnInit(): void {
+    // Retrigger the setters when devices have updated
+    this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+      if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
+    });
+    this.lighthouse.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+      if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+    });
+  }
+
+  async onForceLHState(state: LighthouseDevicePowerState) {
+    this.showLHStatePopover = false;
+    if (state === 'on' && this._lighthouseDevice?.powerState === 'on') {
+      const result = await firstValueFrom(
+        this.modalService.addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
+          ConfirmModalComponent,
+          {
+            title: 'comp.device-list.forceOnBootingWarning.title',
+            message: 'comp.device-list.forceOnBootingWarning.message',
+            confirmButtonText: 'comp.device-list.lhForceState.on',
+          }
+        )
+      );
+      if (!result || !result.confirmed) return;
     }
-    return 'hide';
+    this.eventLog.logEvent({
+      type: 'lighthouseSetPowerState',
+      reason: 'MANUAL',
+      state,
+      devices: 'SINGLE',
+    } as EventLogLighthouseSetPowerState);
+    await this.lighthouse.setPowerState(this._lighthouseDevice!, state, true);
+  }
+
+  rightClickDevicePowerButton() {
+    this.showLHStatePopover = !this.showLHStatePopover;
   }
 
   async clickDevicePowerButton() {
-    if (this.ovrDevice) {
-      await this.lighthouseConsole.turnOffDevices([this.ovrDevice]);
+    if (this.mode === 'openvr') {
+      await this.lighthouseConsole.turnOffDevices([this._ovrDevice!]);
       this.eventLog.logEvent({
         type: 'turnedOffOpenVRDevices',
         reason: 'MANUAL',
         devices: (() => {
-          switch (this.ovrDevice.class) {
+          switch (this._ovrDevice!.class) {
             case 'Controller':
               return 'CONTROLLER';
             case 'GenericTracker':
               return 'TRACKER';
             default:
               error(
-                `[DeviceListItem] Couldn't determine device class for event log entry (${this.ovrDevice.class})`
+                `[DeviceListItem] Couldn't determine device class for event log entry (${
+                  this._ovrDevice!.class
+                })`
               );
               return 'VARIOUS';
           }
         })(),
       } as EventLogTurnedOffOpenVRDevices);
     }
-    if (this.lighthouseDevice) {
-      switch (this.lighthouseDevice.powerState) {
+    if (this.mode === 'lighthouse') {
+      switch (this._lighthouseDevice!.powerState) {
         case 'on': {
           const state = (await firstValueFrom(this.appSettings.settings)).lighthousePowerOffState;
           this.eventLog.logEvent({
@@ -174,7 +220,7 @@ export class DeviceListItemComponent implements OnInit {
             state,
             devices: 'SINGLE',
           } as EventLogLighthouseSetPowerState);
-          await this.lighthouse.setPowerState(this.lighthouseDevice, state);
+          await this.lighthouse.setPowerState(this._lighthouseDevice!, state);
           break;
         }
         case 'sleep':
@@ -185,10 +231,12 @@ export class DeviceListItemComponent implements OnInit {
             state: 'on',
             devices: 'SINGLE',
           } as EventLogLighthouseSetPowerState);
-          await this.lighthouse.setPowerState(this.lighthouseDevice, 'on');
+          await this.lighthouse.setPowerState(this._lighthouseDevice!, 'on');
+          break;
+        case 'unknown':
+          this.rightClickDevicePowerButton();
           break;
         case 'booting':
-        case 'unknown':
         default:
           break;
       }
@@ -216,7 +264,13 @@ export class DeviceListItemComponent implements OnInit {
       .subscribe();
   }
 
-  isDeviceIgnored() {
-    return this.lighthouseDevice && this.lighthouse.isDeviceIgnored(this.lighthouseDevice);
+  private sanitizeIdentifierForCSS(serialNumber: string) {
+    return serialNumber.replace(/[^a-zA-Z0-9]/g, '');
+  }
+
+  onClickOutsideLHStatePopover($event: MouseEvent) {
+    const targetId = ($event.target as HTMLElement).id;
+    if (targetId === 'btn-power-' + this.cssId) return;
+    this.showLHStatePopover = false;
   }
 }

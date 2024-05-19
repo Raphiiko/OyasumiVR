@@ -126,7 +126,7 @@ export class HotkeyHandlerService {
         state: 'on',
         devices: 'ALL',
       } as EventLogLighthouseSetPowerState);
-    } else if (!devices.filter((d) => d.powerState !== 'on').length) {
+    } else if (!devices.filter((d) => d.powerState !== 'on' && d.powerState != 'unknown').length) {
       // Power off
       const devicesToPowerOff = devices.filter((d) => !['standby', 'sleep'].includes(d.powerState));
       devicesToPowerOff.forEach((d) => {

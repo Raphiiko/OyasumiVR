@@ -11,7 +11,7 @@ import {
 import { EventLogService } from '../../services/event-log.service';
 import { error } from 'tauri-plugin-log-api';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LighthouseDevice } from 'src-ui/app/models/lighthouse-device';
+import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { filterInPlace } from 'src-ui/app/utils/arrays';
 import { combineLatest, debounceTime, distinctUntilChanged, firstValueFrom, map, tap } from 'rxjs';
@@ -50,6 +50,7 @@ export class DeviceListComponent implements OnInit {
   devicesCanPowerOff = false;
   scanningForLighthouses = false;
   lighthousePowerControl = false;
+  showLHStatePopover = false;
 
   constructor(
     protected openvr: OpenVRService,
@@ -272,11 +273,20 @@ export class DeviceListComponent implements OnInit {
     } as EventLogTurnedOffOpenVRDevices);
   }
 
+  async clickBulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
+    this.bulkPowerLighthouseDevices(category);
+  }
+
+  async rightClickBulkPowerLighthouseDevices() {
+    console.log('TRIGGER');
+    this.showLHStatePopover = !this.showLHStatePopover;
+  }
+
   async bulkPowerLighthouseDevices(category: LighthouseDisplayCategory) {
     if (category.canBulkPowerOn) {
       const devices = category.devices.filter(
         (d) =>
-          (d.powerState === 'standby' || d.powerState === 'sleep') &&
+          (d.powerState === 'standby' || d.powerState === 'sleep' || d.powerState === 'unknown') &&
           !this.lighthouse.isDeviceIgnored(d)
       );
       this.eventLog.logEvent({
@@ -290,7 +300,9 @@ export class DeviceListComponent implements OnInit {
       const powerOffState = (await firstValueFrom(this.appSettings.settings))
         .lighthousePowerOffState;
       const devices = category.devices.filter(
-        (d) => d.powerState === 'on' && !this.lighthouse.isDeviceIgnored(d)
+        (d) =>
+          (d.powerState === 'on' || d.powerState === 'unknown' || d.powerState === 'booting') &&
+          !this.lighthouse.isDeviceIgnored(d)
       );
       this.eventLog.logEvent({
         type: 'lighthouseSetPowerState',
@@ -323,5 +335,31 @@ export class DeviceListComponent implements OnInit {
 
   async scanForLighthouses() {
     this.lighthouse.scan();
+  }
+
+  onClickOutsideLHStatePopover($event: MouseEvent) {
+    const targetId = ($event.target as HTMLElement).id;
+    if (targetId !== 'btn-lh-bulk-power') {
+      this.showLHStatePopover = false;
+    }
+  }
+
+  async onForceLHState(state: LighthouseDevicePowerState) {
+    let devices = this.deviceCategories
+      .filter((c) => c.type === 'Lighthouse')
+      .map((c) => (c as LighthouseDisplayCategory).devices)
+      .flat()
+      .filter((d) => !this.lighthouse.isDeviceIgnored(d));
+    if (state === 'on') {
+      devices = devices.filter((d) => d.powerState !== 'on');
+    }
+    if (!devices.length) return;
+    this.eventLog.logEvent({
+      type: 'lighthouseSetPowerState',
+      reason: 'MANUAL',
+      state,
+      devices: 'ALL',
+    } as EventLogLighthouseSetPowerState);
+    await Promise.all(devices.map(async (device) => this.lighthouse.setPowerState(device, state)));
   }
 }
