@@ -17,6 +17,7 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
+  border-radius: var(--window-border-radius);
 
   &.in {
     opacity: 1;
