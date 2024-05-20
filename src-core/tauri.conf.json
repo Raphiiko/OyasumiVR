@@ -54,6 +54,17 @@
       },
       "globalShortcut": {
         "all": true
+      },
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "maximize": true,
+        "minimize": true,
+        "unmaximize": true,
+        "unminimize": true,
+        "startDragging": true
       }
     },
     "bundle": {
@@ -180,11 +191,12 @@
       {
         "fullscreen": false,
         "height": 620,
+        "decorations": false,
         "resizable": true,
         "title": "OyasumiVR",
         "width": 980,
         "minWidth": 980,
-        "minHeight": 620,
+        "minHeight": 662,
         "visible": false,
         "center": true,
         "theme": "Dark",
@@ -201,6 +213,9 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
+        "skipTaskbar": true,
+        "minimizable": false,
+        "alwaysOnTop": true,
         "userAgent": "OyasumiVR/1.13.0 (https://github.com/Raphiiko/OyasumiVR)"
       }
     ]
