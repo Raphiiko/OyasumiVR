@@ -9,7 +9,7 @@ import { BUILD_ID, FLAVOUR } from '../../../build';
   styleUrls: ['./window-titlebar.component.scss'],
 })
 export class WindowTitlebarComponent implements OnInit {
-  version: string = '0.0.0';
+  version = '0.0.0';
   showVersionExtras = false;
 
   async ngOnInit() {
