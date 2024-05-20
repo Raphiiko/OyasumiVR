@@ -24,6 +24,8 @@ static EVENT_SCANNING_STATUS_CHANGED: &str = "LIGHTHOUSE_SCANNING_STATUS_CHANGED
 static EVENT_DEVICE_DISCOVERED: &str = "LIGHTHOUSE_DEVICE_DISCOVERED";
 static EVENT_DEVICE_POWER_STATE_CHANGED: &str = "LIGHTHOUSE_DEVICE_POWER_STATE_CHANGED";
 
+const DEBUG_LIGHTHOUSE_ID: &str = "BluetoothLE#BluetoothLE7c:b2:7d:5d:6d:ac-d4:ab:0c:f2:84:62";
+
 // const LIGHTHOUSE_V2_IDENTIFY_CHARACTERISTIC: Uuid =
 //     Uuid::from_u128(0x00008421_1212_EFDE_1523_785FEABCD124);
 // const LIGHTHOUSE_V2_CHANNEL_CHARACTERISTIC: Uuid =
@@ -139,19 +141,60 @@ pub async fn get_devices() -> Vec<LighthouseDevice> {
 pub async fn get_device_power_state(
     device_id: String,
 ) -> Result<LighthousePowerState, LighthouseError> {
+    let do_debug = device_id == DEBUG_LIGHTHOUSE_ID;
+    if do_debug {
+        info!("-------");
+        info!(
+            "- GETTING DEVICE POWER STATE FOR DEBUG LIGHTHOUSE ({})",
+            device_id
+        );
+    }
     let characteristic = match get_power_characteristic(device_id.clone()).await {
         Ok(characteristic) => characteristic,
-        Err(err) => return Err(err),
+        Err(err) => {
+            if do_debug {
+                info!("- ERROR GETTING POWER CHARACTERISTIC: {:?}", err);
+            }
+            return Err(err);
+        }
     };
-    // (Raphii): For personal testing purposes, I can pretend one of my basestations doesn't report its status
-    // if device_id == "BluetoothLE#BluetoothLE48:51:c5:c6:5f:4c-f1:46:cc:56:2e:8c" {
-    //     return Err(LighthouseError::CharacteristicNotFound);
-    // }
+    if do_debug {
+        info!("- POWER CHARACTERISTIC FOUND");
+    }
+    let characteristic_props = match characteristic.properties().await {
+        Ok(props) => props,
+        Err(err) => {
+            if do_debug {
+                info!("- ERROR GETTING POWER CHARACTERISTIC PROPERTIES: {:?}", err);
+            }
+            return Err(LighthouseError::FailedToGetCharacteristicProperties(err));
+        }
+    };
+    if !characteristic_props.read {
+        if do_debug {
+            info!("- ERROR: CHARACTERISTIC DOES NOT SUPPORT READ");
+        }
+        return Err(LighthouseError::CharacteristicDoesNotSupportRead);
+    }
+    if do_debug {
+        info!("- CHARACTERISTIC SUPPORTS BEING READ");
+    }
     let value = match characteristic.read().await {
         Ok(value) => value,
-        Err(err) => return Err(LighthouseError::FailedToReadCharacteristic(err)),
+        Err(err) => {
+            if do_debug {
+                info!("- ERROR READING POWER CHARACTERISTIC: {:?}", err);
+            }
+            return Err(LighthouseError::FailedToReadCharacteristic(err));
+        }
     };
+    if do_debug {
+        info!("- POWER CHARACTERISTIC READ: (value: {:#04X?})", value);
+    }
     if value.len() != 1 {
+        if do_debug {
+            info!("- ERROR READ VALUE LENGTH INVALID: {}", value.len());
+        }
         return Err(LighthouseError::InvalidCharacteristicValue);
     }
     let state = match value[0] {
@@ -161,17 +204,30 @@ pub async fn get_device_power_state(
         0x01 | 0x08 | 0x09 => LighthousePowerState::Booting,
         _ => LighthousePowerState::Unknown,
     };
+    if do_debug {
+        info!("- PARSED STATE: {:#?}", state);
+    }
     // Get currently known power state
     let current_state = match LIGHTHOUSE_DEVICE_POWER_STATES.lock().await.get(&device_id) {
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
+    if do_debug {
+        info!("- CURRENT POWER STATE: {:#?}", current_state.clone());
+    }
     // Set the new state and send an event if the state has changed
     if current_state != state {
         LIGHTHOUSE_DEVICE_POWER_STATES
             .lock()
             .await
             .insert(device_id.clone(), state.clone());
+        if do_debug {
+            info!(
+                "- STATE NOT MATCHING KNOWN STATE, ASSUMING AS NEW {:#?}=>{:#?}",
+                current_state.clone(),
+                state.clone()
+            );
+        }
         send_event(
             EVENT_DEVICE_POWER_STATE_CHANGED,
             LighthouseDevicePowerStateChangedEvent {
@@ -188,22 +244,45 @@ pub async fn set_device_power_state(
     device_id: String,
     state: LighthousePowerState,
 ) -> Result<(), LighthouseError> {
+    let do_debug = device_id == DEBUG_LIGHTHOUSE_ID;
+    if do_debug {
+        info!("-------");
+        info!(
+            "- WRITING DEVICE POWER STATE FOR DEBUG LIGHTHOUSE ({}) (state:{:#?})",
+            device_id, state
+        );
+    }
     let characteristic = match get_power_characteristic(device_id.clone()).await {
         Ok(characteristic) => characteristic,
         Err(err) => return Err(err),
     };
     let mut wrote_state = true;
+    if do_debug {
+        info!("- WRITING STATE: {:#?}", state.clone());
+    }
     match state {
         LighthousePowerState::Sleep => {
+            if do_debug {
+                info!("- WRITING VALUE 0x00");
+            }
             characteristic.write_without_response(&[0x00]).await;
         }
         LighthousePowerState::Standby => {
+            if do_debug {
+                info!("- WRITING VALUE 0x02");
+            }
             characteristic.write_without_response(&[0x02]).await;
         }
         LighthousePowerState::On => {
+            if do_debug {
+                info!("- WRITING VALUE 0x01");
+            }
             characteristic.write_without_response(&[0x01]).await;
         }
         LighthousePowerState::Booting | LighthousePowerState::Unknown => {
+            if do_debug {
+                info!("- ABORT. CANNOT WRITE BOOTING OR UNKNOWN STATE");
+            }
             warn!("[Core] Attempted to set lighthouse device power to an invalid state");
             wrote_state = false;
         }
@@ -213,9 +292,19 @@ pub async fn set_device_power_state(
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
+    if do_debug {
+        info!("- CURRENT KNOWN STATE: {:#?}", current_state.clone());
+    }
     // Fetch the new state for confirmation, if we changed it
     if wrote_state && current_state != state {
+        if do_debug {
+            info!("- FETCHING NEW STATE, AS WE CHANGED IT");
+        }
         let _ = get_device_power_state(device_id).await;
+    } else {
+        if do_debug {
+            info!("- NOT FETCHING NEW STATE, AS THE ONE WE WROTE IS THE ONE WE KNOW");
+        }
     }
     Ok(())
 }

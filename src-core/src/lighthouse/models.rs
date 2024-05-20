@@ -34,6 +34,8 @@ pub enum LighthouseError {
     CharacteristicNotFound,
     FailedToReadCharacteristic(bluest::Error),
     InvalidCharacteristicValue,
+    CharacteristicDoesNotSupportRead,
+    FailedToGetCharacteristicProperties(bluest::Error),
 }
 
 #[derive(Debug, Serialize)]
@@ -45,8 +47,8 @@ pub struct SerializedLighthouseError {
 
 impl Serialize for LighthouseError {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        where
-            S: Serializer,
+    where
+        S: Serializer,
     {
         let mut error = serializer.serialize_struct("SerializedLighthouseError", 2)?;
         match self {
@@ -77,6 +79,14 @@ impl Serialize for LighthouseError {
             LighthouseError::InvalidCharacteristicValue => {
                 error.serialize_field("error", "InvalidCharacteristicValue")?;
                 error.serialize_field("message", &None::<String>)?;
+            }
+            LighthouseError::CharacteristicDoesNotSupportRead => {
+                error.serialize_field("error", "CharacteristicCoesNotSupportRead")?;
+                error.serialize_field("message", &None::<String>)?;
+            }
+            LighthouseError::FailedToGetCharacteristicProperties(e) => {
+                error.serialize_field("error", "FailedToReadCharacteristicProperties")?;
+                error.serialize_field("message", &Some(e.to_string()))?;
             }
         };
         error.end()
