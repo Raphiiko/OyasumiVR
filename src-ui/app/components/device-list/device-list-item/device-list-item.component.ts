@@ -135,7 +135,7 @@ export class DeviceListItemComponent implements OnInit {
   isDeviceIgnored = false;
   powerButtonAnchorId = '';
   showLHStatePopover = false;
-  cssId: string = '';
+  cssId = '';
   _lighthouseDevice?: LighthouseDevice;
   _ovrDevice?: OVRDevice;
 
@@ -151,10 +151,10 @@ export class DeviceListItemComponent implements OnInit {
 
   ngOnInit(): void {
     // Retrigger the setters when devices have updated
-    this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+    this.openvr.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       if (this._ovrDevice) this.ovrDevice = this._ovrDevice;
     });
-    this.lighthouse.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((devices) => {
+    this.lighthouse.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
     });
   }

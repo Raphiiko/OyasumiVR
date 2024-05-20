@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { hshrink, vshrink } from '../../../utils/animations';
+import { hshrink } from '../../../utils/animations';
 import { LighthouseDevicePowerState } from '../../../models/lighthouse-device';
 
 @Component({
