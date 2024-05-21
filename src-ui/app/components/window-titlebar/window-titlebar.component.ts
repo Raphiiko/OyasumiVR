@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { appWindow } from '@tauri-apps/api/window';
 import { getVersion } from '../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from '../../../build';
+import { invoke } from '@tauri-apps/api';
 
 @Component({
   selector: 'app-window-titlebar',
@@ -25,7 +26,9 @@ export class WindowTitlebarComponent implements OnInit {
   }
 
   async close() {
-    await appWindow.close();
+    // In Tauri V1, the appWindow.close() call does not get intercepted by the window close event handler.
+    // This will be changed in Tauri V2, in which this workaround will no longer be necessary: https://github.com/tauri-apps/tauri/issues/5288
+    await invoke('request_app_window_close');
   }
 
   protected readonly FLAVOUR = FLAVOUR;

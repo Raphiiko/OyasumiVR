@@ -6,6 +6,7 @@ import {
   asyncScheduler,
   concatMap,
   filter,
+  map,
   pairwise,
   startWith,
   Subject,
@@ -35,6 +36,9 @@ export class TrackerControllerMqttIntegrationService {
     this.openvr.devices
       .pipe(
         startWith([] as OVRDevice[]),
+        map((devices) =>
+          devices.filter((d) => d.class === 'GenericTracker' || d.class === 'Controller')
+        ),
         throttleTime(1000, asyncScheduler, { leading: true, trailing: true }),
         pairwise(),
         concatMap(async ([prevDevices, devices]) => {
