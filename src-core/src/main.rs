@@ -160,6 +160,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::set_osc_receive_address_whitelist,
         system_tray::commands::set_close_to_system_tray,
         system_tray::commands::set_start_in_system_tray,
+        system_tray::commands::request_app_window_close,
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,

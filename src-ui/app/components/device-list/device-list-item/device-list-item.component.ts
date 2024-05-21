@@ -53,6 +53,7 @@ export class DeviceListItemComponent implements OnInit {
     this.status = null;
     if (device.isTurningOff) this.powerButtonState = 'turn_off_busy';
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
+    else this.powerButtonState = 'hide';
     this.isDeviceIgnored = false;
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber);
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
@@ -184,7 +185,9 @@ export class DeviceListItemComponent implements OnInit {
   }
 
   rightClickDevicePowerButton() {
-    this.showLHStatePopover = !this.showLHStatePopover;
+    if (this._lighthouseDevice) {
+      this.showLHStatePopover = !this.showLHStatePopover;
+    }
   }
 
   async clickDevicePowerButton() {
@@ -245,15 +248,15 @@ export class DeviceListItemComponent implements OnInit {
 
   editDevice() {
     let input: DeviceEditModalInputModel;
-    if (this.ovrDevice) {
+    if (this._ovrDevice) {
       input = {
         deviceType: 'OPENVR',
-        ovrDevice: this.ovrDevice,
+        ovrDevice: this._ovrDevice,
       };
-    } else if (this.lighthouseDevice) {
+    } else if (this._lighthouseDevice) {
       input = {
         deviceType: 'LIGHTHOUSE',
-        lighthouseDevice: this.lighthouseDevice,
+        lighthouseDevice: this._lighthouseDevice,
       };
     } else return;
     this.modalService
