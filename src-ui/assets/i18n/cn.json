@@ -1830,7 +1830,6 @@
       "message": "你确定现在就想关闭你的设备吗？",
       "title": "你确定吗？"
     },
-    "description": "如果喜欢在VR中入睡，但又不想在VR中睡一整晚，你可以使用OyasumiVR的关机序列功能。一旦你打瞌睡了，这个功能就会自动优雅地关闭你的VR，这样你就可以顺利地在VR之外继续你的睡眠。",
     "noOptionsSelected": "由于你没有选择在关机序列中运行的操作，运行它不会有任何影响。为了让这个功能有所作为，请至少选择下面的一个选项。",
     "overlay": {
       "cancel": "立即取消",
@@ -1867,7 +1866,6 @@
         "title": "退出SteamVR"
       },
       "run": "运行序列",
-      "title": "关机设置",
       "turnOffBaseStations": {
         "description": "关闭任何活动的基站",
         "title": "关掉基站"
@@ -1892,8 +1890,7 @@
         "title": "在我睡觉时启动"
       },
       "whenAsleepDuration": {
-        "description": "睡眠模式开启后，到开始执行关机序列前应该等待多久",
-        "title": "睡眠时间"
+        "description": "睡眠模式开启后，到开始执行关机序列前应该等待多久"
       },
       "whenAsleepTimeWindow": {
         "description": "只允许在一天中的某些时间段触发",

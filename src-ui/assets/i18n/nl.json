@@ -1665,7 +1665,6 @@
       "message": "Weet je zeker dat je de afsluit procedure nu wilt starten?",
       "title": "Afsluit procedure starten"
     },
-    "description": "Als je het fijn vind om in VR in slaap te vallen, maar niet de hele nacht in VR wilt slapen, kan je gebruik maken van Oyasumi's afsluit procedure. Deze feature sluit verschillende dingen automatisch af zodra je in slaap bent gevallen, zodat je makkelijk buiten vr door kunt slapen.",
     "noOptionsSelected": "De afsluit procedure heeft op dit moment geen effect, omdat je geen enkele actie hebt geselecteerd. Kies hier onder tenminste één actie om te zorgen dat de afsluit procedure iets doet.",
     "overlay": {
       "cancel": "Annuleer",
@@ -1702,7 +1701,6 @@
         "title": "Stop SteamVR"
       },
       "run": "Start Afsluit Procedure",
-      "title": "Afsluit Instellingen",
       "turnOffBaseStations": {
         "description": "Dit zet alle base stations uit die nog aan staan",
         "title": "Zet base stations uit"
@@ -1727,8 +1725,7 @@
         "title": "Activeer wanneer ik slaap"
       },
       "whenAsleepDuration": {
-        "description": "Hoe lang de slaap modus ingeschakeld moet zijn voordat de afsluit procedure wordt gestart",
-        "title": "Wanneer ik slaap voor"
+        "description": "Hoe lang de slaap modus ingeschakeld moet zijn voordat de afsluit procedure wordt gestart"
       },
       "whenAsleepTimeWindow": {
         "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden",

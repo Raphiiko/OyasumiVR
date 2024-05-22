@@ -374,8 +374,8 @@
         "WristRight": "Right Wrist"
       },
       "forceOnBootingWarning": {
-        "title": "Warning",
-        "message": "It looks like this base station is already on.\n\nIf you force a base station to turn on while it's already on, it usually will get stuck in its booting state. If this happens, you can fix this by putting it back to sleep or standby and then turning it on again.\n\nAre you sure you want to force this base station to turn on?"
+        "message": "It looks like this base station is already on.\n\nIf you force a base station to turn on while it's already on, it usually will get stuck in its booting state. If this happens, you can fix this by putting it back to sleep or standby and then turning it on again.\n\nAre you sure you want to force this base station to turn on?",
+        "title": "Warning"
       },
       "lhForceState": {
         "on": "Force On",
@@ -592,7 +592,8 @@
           "reason": {
             "HOTKEY": "Triggered by hotkey",
             "MANUAL": "Triggered manually",
-            "SLEEP_TRIGGER": "As you were asleep for long enough"
+            "SLEEP_TRIGGER": "As you were asleep for long enough",
+            "VRC_ALONE_TRIGGER": "As you were alone in your world instance for long enough"
           },
           "title": "The shutdown sequence was started"
         },
@@ -1839,7 +1840,7 @@
       "message": "Are you sure you want to activate the shutdown sequence right now?",
       "title": "Are you sure?"
     },
-    "description": "If enjoy falling asleep in VR, but don't want to sleep in VR for the entire night, you can use OyasumiVR's shutdown sequence. This feature automatically shuts down gracefully once you've dozed off, so that you can smoothly continue your sleep outside of VR.",
+    "description": "If enjoy falling asleep in VR, but don't want to sleep in VR for the entire night, you can use OyasumiVR's shutdown sequence. This feature automatically gracefully shuts down your game, devices, and/or computer, so that you can smoothly continue your sleep outside of VR. You can either trigger it manually, or use one of several automations to trigger it automatically. For example, once you've dozed off!",
     "noOptionsSelected": "As you have no actions selected to run during the shutdown sequence, running it will have no effects. In order for this feature to do something, choose at least one of the options below.",
     "overlay": {
       "cancel": "Cancel Now",
@@ -1876,7 +1877,7 @@
         "title": "Quit SteamVR"
       },
       "run": "Run Sequence",
-      "title": "Shutdown Settings",
+      "title": "Shutdown Sequence Actions",
       "turnOffBaseStations": {
         "description": "Turns off any base stations that are still active",
         "title": "Turn off base stations"
@@ -1893,16 +1894,31 @@
         "title": "Turn off trackers"
       }
     },
+    "tabs": {
+      "settings": "Settings",
+      "triggers": "Triggers"
+    },
     "title": "Shutdown Sequence",
     "triggers": {
-      "title": "Automatic Triggers",
+      "whenAlone": {
+        "description": "Activate the shutdown sequence when you've been left alone in your VRChat world for a certain amount of time. This only triggers if you were in company before.",
+        "title": "Activate when you've been left alone"
+      },
+      "whenAloneDuration": {
+        "description": "How long you need to have been alone for before the shutdown sequence runs",
+        "title": "Duration threshold"
+      },
+      "whenAloneTimeWindow": {
+        "description": "Only allow shutdown to trigger between certain hours of day",
+        "title": "Activation Window"
+      },
       "whenAsleep": {
         "description": "Activate the shutdown sequence when sleep mode has been activated for a certain amount of time",
         "title": "Activate when I am asleep"
       },
       "whenAsleepDuration": {
         "description": "How long sleep mode should be active before the shutdown sequence runs",
-        "title": "Sleep duration"
+        "title": "Duration threshold"
       },
       "whenAsleepTimeWindow": {
         "description": "Only allow shutdown to trigger between certain hours of day",

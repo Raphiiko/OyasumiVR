@@ -57,7 +57,7 @@ export type AutomationType =
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 14;
+  version: 15;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -372,10 +372,15 @@ export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE'
 
 export interface ShutdownAutomationsConfig extends AutomationConfig {
   triggerOnSleep: boolean;
-  sleepDuration: number;
-  activationWindow: boolean;
-  activationWindowStart: [number, number];
-  activationWindowEnd: [number, number];
+  triggerOnSleepDuration: number;
+  triggerOnSleepActivationWindow: boolean;
+  triggerOnSleepActivationWindowStart: [number, number];
+  triggerOnSleepActivationWindowEnd: [number, number];
+  triggerWhenAlone: boolean;
+  triggerWhenAloneDuration: number;
+  triggerWhenAloneActivationWindow: boolean;
+  triggerWhenAloneActivationWindowStart: [number, number];
+  triggerWhenAloneActivationWindowEnd: [number, number];
   quitSteamVR: boolean;
   turnOffControllers: boolean;
   turnOffTrackers: boolean;
@@ -416,7 +421,7 @@ export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationCo
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 14,
+  version: 15,
   // BRIGHTNESS AUTOMATIONS
   BRIGHTNESS_CONTROL_ADVANCED_MODE: {
     enabled: false,
@@ -626,10 +631,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   SHUTDOWN_AUTOMATIONS: {
     enabled: true,
     triggerOnSleep: false,
-    sleepDuration: 15 * 60 * 1000,
-    activationWindow: false,
-    activationWindowStart: [23, 0],
-    activationWindowEnd: [7, 0],
+    triggerOnSleepDuration: 15 * 60 * 1000,
+    triggerOnSleepActivationWindow: false,
+    triggerOnSleepActivationWindowStart: [23, 0],
+    triggerOnSleepActivationWindowEnd: [7, 0],
+    triggerWhenAlone: false,
+    triggerWhenAloneDuration: 15 * 60 * 1000,
+    triggerWhenAloneActivationWindow: false,
+    triggerWhenAloneActivationWindowStart: [23, 0],
+    triggerWhenAloneActivationWindowEnd: [7, 0],
     quitSteamVR: true,
     turnOffControllers: true,
     turnOffTrackers: true,

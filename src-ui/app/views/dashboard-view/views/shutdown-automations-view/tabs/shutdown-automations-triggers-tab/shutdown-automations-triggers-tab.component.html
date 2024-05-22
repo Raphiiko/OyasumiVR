@@ -1,0 +1,135 @@
+<div class="setting-category">
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>shutdown-automations.triggers.whenAsleep.title</span>
+        <span translate>shutdown-automations.triggers.whenAsleep.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.triggerOnSleep"
+            (change)="toggleTriggerOnSleep()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row-group" @vshrink *ngIf="config.triggerOnSleep">
+      <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
+        <div class="setting-row-label" translate>
+          <span translate>shutdown-automations.triggers.whenAsleepDuration.title</span>
+          <span translate>shutdown-automations.triggers.whenAsleepDuration.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="input-wrapper">
+            <input type="time" step="1" [value]="onSleepDurationString"
+                   (change)="onSleepDurationChange(onSleepDurationInput.value)" #onSleepDurationInput />
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row" [class.disabled]="!config.triggerOnSleep">
+        <div class="setting-row-label" translate>
+          <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.title</span>
+          <span translate>shutdown-automations.triggers.whenAsleepTimeWindow.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="input-wrapper" *ngIf="config.triggerOnSleepActivationWindow" @fade>
+            <input
+              type="time"
+              [value]="onSleepActivationWindowStart"
+              (change)="onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)"
+              #onSleepActivationWindowStartInput
+            />
+          </div>
+          <span *ngIf="config.triggerOnSleepActivationWindow" @fade> to </span>
+          <div class="input-wrapper" *ngIf="config.triggerOnSleepActivationWindow" @fade>
+            <input
+              type="time"
+              [value]="onSleepActivationWindowEnd"
+              (change)="onChangeOnSleepActivationWindowEnd(onSleepActivationWindowEndInput.value)"
+              #onSleepActivationWindowEndInput
+            />
+          </div>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.triggerOnSleepActivationWindow"
+              (change)="toggleOnSleepActivationWindow()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>shutdown-automations.triggers.whenAlone.title</span>
+        <span translate>shutdown-automations.triggers.whenAlone.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.triggerWhenAlone"
+            (change)="toggleTriggerWhenAlone()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+    <div class="setting-row-group" @vshrink *ngIf="config.triggerWhenAlone">
+      <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
+        <div class="setting-row-label" translate>
+          <span translate>shutdown-automations.triggers.whenAloneDuration.title</span>
+          <span translate>shutdown-automations.triggers.whenAloneDuration.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="input-wrapper">
+            <input type="time" step="1" [value]="whenAloneDurationString"
+                   (change)="whenAloneDurationChange(whenAloneDurationInput.value)" #whenAloneDurationInput />
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
+        <div class="setting-row-label" translate>
+          <span translate>shutdown-automations.triggers.whenAloneTimeWindow.title</span>
+          <span translate>shutdown-automations.triggers.whenAloneTimeWindow.description</span>
+        </div>
+        <div class="setting-row-action">
+          <div class="input-wrapper" *ngIf="config.triggerWhenAloneActivationWindow" @fade>
+            <input
+              type="time"
+              [value]="whenAloneActivationWindowStart"
+              (change)="onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)"
+              #whenAloneActivationWindowStartInput
+            />
+          </div>
+          <span *ngIf="config.triggerWhenAloneActivationWindow" @fade> to </span>
+          <div class="input-wrapper" *ngIf="config.triggerWhenAloneActivationWindow" @fade>
+            <input
+              type="time"
+              [value]="whenAloneActivationWindowEnd"
+              (change)="onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)"
+              #whenAloneActivationWindowEndInput
+            />
+          </div>
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.triggerWhenAloneActivationWindow"
+              (change)="toggleWhenAloneActivationWindow()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

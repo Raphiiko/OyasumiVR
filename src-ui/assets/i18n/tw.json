@@ -1592,7 +1592,6 @@
       "message": "你確定要現在啟動關機程序嗎？",
       "title": "你確定嗎？"
     },
-    "description": "如果喜歡在 VR 中入睡，但又不想整晚都在 VR 中睡覺，可以使用 OyasumiVR 的關閉程序。一旦你打瞌睡，該功能就會自動優雅地關閉，這樣你就可以順利地在 VR 外繼續睡眠了",
     "noOptionsSelected": "由於你沒有選擇要在關機程序中運行的操作，因此運行它不會有任何效果。為使該功能發揮作用，請至少選擇以下選項之一",
     "overlay": {
       "cancel": "立即取消",
@@ -1629,7 +1628,6 @@
         "title": "退出 SteamVR"
       },
       "run": "運行序列",
-      "title": "關機設定",
       "turnOffBaseStations": {
         "description": "關閉任何仍在活動的基地台",
         "title": "關掉基地台"
@@ -1654,8 +1652,7 @@
         "title": "在我睡覺時啟動"
       },
       "whenAsleepDuration": {
-        "description": "睡眠模式啟用後，在關機程序執行之前應該持續多長時間",
-        "title": "睡眠時間"
+        "description": "睡眠模式啟用後，在關機程序執行之前應該持續多長時間"
       },
       "whenAsleepTimeWindow": {
         "description": "只允許在一天中的某些時間段觸發關機",
