@@ -17,6 +17,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   12: from11to12,
   13: from12to13,
   14: from13to14,
+  15: from14to15,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -50,6 +51,19 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from14to15(data: any): any {
+  data.version = 15;
+  data.triggerOnSleepDuration = data.sleepDuration;
+  delete data.sleepDuration;
+  data.triggerOnSleepActivationWindow = data.activationWindow;
+  delete data.activationWindow;
+  data.triggerOnSleepActivationWindowStart = data.activationWindowStart;
+  delete data.activationWindowStart;
+  data.triggerOnSleepActivationWindowEnd = data.activationWindowEnd;
+  delete data.activationWindowEnd;
   return data;
 }
 

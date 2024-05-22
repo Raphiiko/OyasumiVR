@@ -1,0 +1,27 @@
+.alert {
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+      flex: 1;
+    }
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.power-down-select-box-wrapper {
+  display: inline-flex;
+}
+
+.power-down-options-select-box {
+  min-width: 10em;
+}

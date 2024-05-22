@@ -14,7 +14,7 @@ export class HMDModelMqttIntegrationService {
     await this.mqtt.initProperty({
       type: 'SENSOR',
       id: 'hmdModel',
-      topicPath: 'device/hmdModel',
+      topicPath: 'hmdModel',
       displayName: 'VR Headset Model',
       value: 'null',
       available: false,

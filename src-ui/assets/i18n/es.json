@@ -1592,7 +1592,6 @@
       "message": "¿Estás seguro de que quieres activar la secuencia de apagado ahora mismo?",
       "title": "¿Estás seguro?"
     },
-    "description": "Si te gusta dormirte en RV, pero no quieres hacerlo durante toda la noche, puedes utilizar la secuencia de apagado de OyasumiVR. Esta función se apaga automáticamente cuando te has quedado dormido, para que puedas seguir durmiendo sin problemas fuera de la RV.",
     "noOptionsSelected": "Como no tienes ninguna acción seleccionada para ejecutar durante la secuencia de apagado, ejecutarla no tendrá ningún efecto. Para que esta función haga algo, elija al menos una de las opciones siguientes.",
     "overlay": {
       "cancel": "Cancelar ahora",
@@ -1629,7 +1628,6 @@
         "title": "Cerrar SteamVR"
       },
       "run": "Secuencia de ejecución",
-      "title": "Ajustes de apagado",
       "turnOffBaseStations": {
         "description": "Apaga las estaciones base que siguen activas",
         "title": "Apagar las estaciones base"
@@ -1654,8 +1652,7 @@
         "title": "Activar cuando estoy dormido"
       },
       "whenAsleepDuration": {
-        "description": "Cuánto tiempo debe estar activo el modo de suspensión antes de que se ejecute la secuencia de apagado.",
-        "title": "Duración del sueño"
+        "description": "Cuánto tiempo debe estar activo el modo de suspensión antes de que se ejecute la secuencia de apagado."
       },
       "whenAsleepTimeWindow": {
         "description": "Permitir la desconexión sólo a determinadas horas del día",

@@ -67,7 +67,7 @@ export class OverlayStateSyncService {
       },
       shutdownAutomations: {
         sleepTriggerEnabled: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleep,
-        timeDelay: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.sleepDuration,
+        timeDelay: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepDuration,
         running: false,
         canStart: false,
       },
@@ -252,7 +252,7 @@ export class OverlayStateSyncService {
         {
           const automation = state.automations!.shutdownAutomations!;
           automation.sleepTriggerEnabled = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep;
-          automation.timeDelay = configs.SHUTDOWN_AUTOMATIONS.sleepDuration;
+          automation.timeDelay = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleepDuration;
           automation.canStart =
             this.shutdownAutomationsService.getApplicableStages(configs.SHUTDOWN_AUTOMATIONS)
               .length > 0;
