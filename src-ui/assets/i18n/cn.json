@@ -1884,7 +1884,6 @@
     },
     "title": "关机序列",
     "triggers": {
-      "title": "触发设置",
       "whenAsleep": {
         "description": "当睡眠模式被开启一定时间后，执行关机序列",
         "title": "在我睡觉时启动"

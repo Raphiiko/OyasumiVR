@@ -1646,7 +1646,6 @@
     },
     "title": "Secuencia de apagado",
     "triggers": {
-      "title": "Activadores automáticos",
       "whenAsleep": {
         "description": "Activar la secuencia de apagado cuando el modo de suspensión ha estado activado durante un cierto tiempo.",
         "title": "Activar cuando estoy dormido"

@@ -1311,7 +1311,6 @@
     },
     "title": "Urutan Shutdown",
     "triggers": {
-      "title": "Trigger Otomatis",
       "whenAsleep": {
         "description": "Mengaktifkan urutan shutdown ketika mode tidur telah diaktifkan selama jangka waktu tertentu",
         "title": "Aktifkan jika saya mulai tidur"

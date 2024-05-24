@@ -1646,7 +1646,6 @@
     },
     "title": "關機程序",
     "triggers": {
-      "title": "自動觸發",
       "whenAsleep": {
         "description": "當睡眠模式被啟用一定時間後，啟動關機程序",
         "title": "在我睡覺時啟動"

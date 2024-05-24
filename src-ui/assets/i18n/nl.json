@@ -1719,7 +1719,6 @@
     },
     "title": "Afsluit Procedure",
     "triggers": {
-      "title": "Automatische Triggers",
       "whenAsleep": {
         "description": "Activeer de afsluit procedure wanneer de slaap modus lang genoeg is ingeschakeld",
         "title": "Activeer wanneer ik slaap"

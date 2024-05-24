@@ -1923,8 +1923,7 @@
       "whenAsleepTimeWindow": {
         "description": "特定の時間帯にのみ有効にする",
         "title": "有効な時間帯"
-      },
-      "title": "自動シャットダウン"
+      }
     }
   },
   "sleep-detection": {
