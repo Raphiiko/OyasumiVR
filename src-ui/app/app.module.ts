@@ -83,6 +83,7 @@ import localeKO from '@angular/common/locales/ko';
 import localeES from '@angular/common/locales/es';
 import localeID from '@angular/common/locales/id';
 import localeRU from '@angular/common/locales/ru';
+import localeUK from '@angular/common/locales/uk';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -225,6 +226,7 @@ import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/
   localeES,
   localeID,
   localeRU,
+  localeUK,
 ].forEach((locale) => registerLocaleData(locale));
 
 export function createTranslateLoader(http: HttpClient) {
