@@ -1,0 +1,2347 @@
+{
+  "about": {
+    "author": {
+      "role": "Розробник"
+    },
+    "contributions": "Підтримка",
+    "contributionType": {
+      "feature": "Особлива подяка",
+      "soundFx": "Звукові ефекти"
+    },
+    "discordInvite": "Discord сервер",
+    "projectLinks": "Посилання проекту",
+    "sourceLink": "Початковий код @ GitHub",
+    "supporters": "Прихильники",
+    "translations": "Переклади"
+  },
+  "audio-volume-automations": {
+    "actionOptions": {
+      "MUTE": "Беззвучний",
+      "SET_VOLUME": "Змінити гучність",
+      "UNMUTE": "Увімкнути звук"
+    },
+    "automations": {
+      "label": "{count, plural, one {1 Автоматизація} other {# Автоматизації}}"
+    },
+    "description": "Автоматично змінюйте гучність ваших аудіопристроїв, коли ви засинаєте або прокидаєтесь! Це може бути корисно, якщо ви не хочете, щоб хтось перервав ваш сон.",
+    "devices": {
+      "description": "Оберість аудіопристрій, щоб автоматизувати рівень гучності",
+      "title": {
+        "hasDevices": "Додати аудіопристрої",
+        "noDevices": "Аудіопристрої не вибрано"
+      }
+    },
+    "onSleepDisable": {
+      "description": "Зміна гучності аудіопристроїв, коли сплячий режим вимкнено",
+      "title": "Коли я прокидаюся"
+    },
+    "onSleepEnable": {
+      "description": "Зміна гучності аудіопристроїв, коли сплячий режим ввімкнено",
+      "title": "Коли я лягаю спати"
+    },
+    "onSleepPreparation": {
+      "description": "Зміна гучності аудіопристроїв, коли я готуюся до сну",
+      "title": "Коли я готуюся до сну"
+    },
+    "picker": {
+      "defaultDevice": "Пристрій за замовчуванням",
+      "noCaptureDevices": "Пристрої захоплення не знайдено",
+      "noPlaybackDevices": "Пристрої відтворення не знайдено",
+      "title": "Оберіть пристрій"
+    },
+    "removeDevice": "Видалити",
+    "selectDevice": "Оберіть аудіопристрій",
+    "title": "Автоматизація гучності звуку",
+    "volume": {
+      "description": "Яку гучність встановити для аудіопристрою під час запуску цієї автоматизації",
+      "title": "Гучність"
+    }
+  },
+  "auto-invite-request-accept": {
+    "addFriends": "Додати друзів",
+    "blacklist": "Чорний список гравців",
+    "clearPlayers": "Очистити все",
+    "conditions": {
+      "description": "Тут ви можете налаштувати OyasumiVR так, щоб він приймав запити на запрошення тільки при виконанні певних умов",
+      "title": "Умови"
+    },
+    "description": "OyasumiVR може автоматично приймати отримані запити на приєднання. Використовуючи білий або чорний список гравців, ви можете бути впевнені що запити на приєднання будуть автоматично прийняті тільки обраними вами друзями.",
+    "loadingFriends": "Завантаження друзів...",
+    "loadPreset": "Завантажити збережений пресет",
+    "noPlayersAdded": "До списку ще не додано гравців.",
+    "options": {
+      "changeListPreset": {
+        "onSleepDisable": {
+          "description": "Завантажити збережений пресет для списку гравців під час вимкнення сплячого режиму",
+          "title": "Завантажити пресет коли я прокидаюся"
+        },
+        "onSleepEnable": {
+          "description": "Завантажити збережений пресет для списку гравців, коли ввімкнено сплячий режим",
+          "title": "Завантажити пресет коли я лягаю спати"
+        },
+        "onSleepPreparation": {
+          "description": "Завантажити збережений пресет для списку гравців, коли ви готуєтеся до сну",
+          "title": "Завантажити пресет коли я готуюся до сну"
+        }
+      },
+      "enable": {
+        "description": "Автоматично приймати запити на приєднання від друзів.",
+        "title": "Увімкнути"
+      },
+      "listMode": {
+        "description": "Як буде працювати список гравців",
+        "options": {
+          "BLACKLIST": {
+            "label": "Чорний список",
+            "subLabel": "Прийняти від друзів, яких немає в цьому списку"
+          },
+          "DISABLED": {
+            "label": "Вимкнено",
+            "subLabel": "Приймати від всіх"
+          },
+          "WHITELIST": {
+            "label": "Білий список",
+            "subLabel": "Приймати від друзів зі списку"
+          }
+        },
+        "title": "Режим списку"
+      },
+      "onlyBelowPlayerCount": {
+        "description": "Включаючи тебе",
+        "title": "Тільки коли менше <strong>{count, plural, one {#</strong> гравця} other {#</strong> гравців}} у твоєму світі"
+      },
+      "onlyIfSleepModeEnabled": {
+        "title": "Тільки в разі ввімкненого сплячого режиму"
+      },
+      "presetOptions": {
+        "options": {
+          "NONE": "Не змінювати"
+        }
+      }
+    },
+    "otherAutomations": {
+      "description": "Тут ви можете знайти засоби, які автоматично змінять роботу цієї функції.",
+      "title": "Інші автоматизації"
+    },
+    "removeModal": {
+      "message": "Ви впевнені, що хочете видалити ''{name}'' зі свого списку?",
+      "title": "Підтвердити видалення"
+    },
+    "removeModalBulk": {
+      "message": "Ви впевнені, що хочете видалити всіх зі списку?",
+      "title": "Підтвердити видалення"
+    },
+    "savePreset": "Зберегти пресет",
+    "title": "Автоприйняття запитів на приєднання",
+    "userOnBusyStatus": "Ви не можете приймати запити на приєднання від користувачів, поки ваш статус встановлено на «Не турбувати» (червоний).",
+    "userOnJoinMeStatus": "VRChat автоматично прийме всі запити на приєднання незалежно від ваших налаштувань, оскільки ваш статус встановлено на «Приєднуйтесь до мене» (синій).",
+    "whitelist": "Білий список гравців"
+  },
+  "brightness-automations": {
+    "brightnessAutomations": {
+      "applyOnStart": {
+        "description": {
+          "onSleepDisable": "Якщо сплячий режим вимкнено, встановити це значення яскравості під час запуску SteamVR або OyasumiVR.",
+          "onSleepEnable": "Якщо сплячий режим увімкнено, встановити це значення яскравості під час запуску SteamVR або OyasumiVR."
+        },
+        "title": "Застосувати яскравість під час запуску"
+      },
+      "brightness": {
+        "title": "Змініть яскравість на"
+      },
+      "copyBrightness": "Копіювати поточне\nзначення яскравості",
+      "description": "OyasumiVR може автоматично регулювати яскравість вашої VR гарнітури в різний час, наприклад, коли ви лягаєте спати або коли прокидаєтеся.",
+      "hardwareBrightness": {
+        "description": "Регулює яскравість самого дисплея",
+        "title": "Змінити апаратну яскравість на"
+      },
+      "onSleepDisable": {
+        "description": "Налаштуйте яскравість",
+        "title": "Коли я прокидаюся"
+      },
+      "onSleepEnable": {
+        "description": "Налаштуйте яскравість",
+        "title": "Коли я лягаю спати"
+      },
+      "onSleepPreparation": {
+        "description": "Налаштуйте яскравість",
+        "title": "Коли я готуюся до сну"
+      },
+      "onStartup": {
+        "description": "Налаштуйте яскравість",
+        "title": "Коли запускається OyasumiVR або SteamVR"
+      },
+      "sleepAutomations": "Автоматизація сну",
+      "sleepPreparation": {
+        "description": "Ви можете підготуватися до сну, натиснувши кнопку в оверлеї OyasumiVR. Кнопка відображатиметься, якщо у вас активна одна або кілька функцій підготовки до сну, наприклад - ця. Використовуйте її, щоб почати зменшувати яскравість ще до того, як ви заснете.",
+        "title": "Підготовка до сну"
+      },
+      "softwareBrightness": {
+        "description": "Керує яскравістю зображення, що відображається у вашій VR гарнітурі",
+        "title": "Програмно змінити яскравість на"
+      },
+      "startupAutomations": "Автоматизація запуску",
+      "transition": {
+        "description": "Плавний перехід до бажаного значення яскравості",
+        "title": "Поступово регулювати яскравість"
+      },
+      "transitionTime": {
+        "description": "Скільки часу буде потрібно для переходу до нового налаштування яскравості",
+        "title": "Час переходу"
+      }
+    },
+    "hmdSettings": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Встановити швидкість вентилятора на 100% при значенні яскравості вище 100%",
+          "title": "Розгін вентилятора під час перевантаження",
+          "warning": "Ця функція імітує безпечні параметри вентилятора офіційного драйвера Bigscreen Beyond. Вимикайте цю функцію тільки на свій страх і ризик."
+        },
+        "maxBrightness": {
+          "description": "Обмежити максимальне значення яскравості, яке встановить OyasumiVR.",
+          "title": "Максимальна яскравість"
+        },
+        "permitRiskRange": {
+          "description": "Не дає змоги встановлювати яскравість вище 150%",
+          "title": "Обмежити безпечний рівень яскравості",
+          "warning": "Ця функція не підтримується виробником.\n\nМайте на увазі, що це може пошкодити вашу VR гарнітуру. Вимикайте цю функцію тільки на свій страх і ризик."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "description": "Тут ви знайдете всі налаштування яскравості для вашої конкретної VR гарнітури.",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Обмежити максимальне значення яскравості, яке встановить OyasumiVR.",
+          "title": "Максимальна яскравість"
+        },
+        "title": "Valve Index"
+      }
+    },
+    "mode": {
+      "advanced": "Професійний режим",
+      "simple": "Простий режим"
+    },
+    "modeInfoModal": {
+      "message": "OyasumiVR має два методи керування яскравістю вашої гарнітури VR: програмне керування та апаратне керування:\n\nПрограмне керування доступне для кожної гарнітури. Воно регулює яскравість у вашій гарнітурі VR, змінюючи яскравість зображення.\n\nАпаратне керування доступне тільки для підтримуваних гарнітур (Valve Index, Bigscreen Beyond). Воно регулює яскравість дисплея вашої гарнітури безпосередньо в межах підтримуваного діапазону.\n\nУ простому режимі OyasumiVR плавно перемикається між керуванням програмною та апаратною яскравістю або тільки програмною яскравістю, якщо апаратна яскравість не підтримується.\n\nЯкщо ви віддаєте перевагу прямому управлінню, розширений режим дає вам змогу керувати як програмною, так і апаратною яскравістю, окремо одне від одного, даючи змогу встановити точні значення яскравості для кожного.",
+      "title": "Режим контролю яскравості"
+    },
+    "tabs": {
+      "automations": "Автоматизації",
+      "hmdSettings": "Налаштування VR шолому"
+    },
+    "title": "Автоматизація яскравості"
+  },
+  "chaperone-automations": {
+    "description": "OyasumiVR може автоматично регулювати відстань загасання Chaperone SteamVR, коли сплячий режим ввімкнено або вимкнено.",
+    "fadeDistance": {
+      "title": "Змінити відстань загасання Chaperone на"
+    },
+    "onSleepDisable": {
+      "description": "Змінити відстань загасання мого Chaperone",
+      "title": "Коли я прокидаюся"
+    },
+    "onSleepEnable": {
+      "description": "Змінити відстань загасання мого Chaperone",
+      "title": "Коли я лягаю спати"
+    },
+    "title": "Автоматизація Chaperone"
+  },
+  "comp": {
+    "brightness-control-modal": {
+      "automationsTooltip": "Автоматизація яскравості",
+      "brightness": "Яскравість",
+      "hardwareBrightness": "Апаратна яскравість",
+      "softwareBrightness": "Програмна яскравість"
+    },
+    "bsb-fan-speed-control-modal": {
+      "automationsTooltip": "Автоматизації Bigscreen Beyond",
+      "fanSpeed": "Швидкість вентилятора"
+    },
+    "color-picker-modal": {
+      "title": "Обрати колір"
+    },
+    "confirm-modal": {
+      "defaultTitle": "Підтвердити"
+    },
+    "controller-binding": {
+      "dropdown": {
+        "description": "Відкрити налаштування призначень кнопок",
+        "desktop": "Режим Desktop",
+        "vr": "Режим SteamVR"
+      },
+      "errors": {
+        "DASHBOARD_OPEN": {
+          "message": "SteamVR\nПанель управления открыта",
+          "tooltip": "Закрийте панель керування SteamVR, щоб переглянути призначення кнопок"
+        },
+        "MISSING_CONTROLLER": {
+          "tooltip": "Переконайтеся, що лівий і правий контролери під'єднані"
+        },
+        "STEAMVR_INACTIVE": {
+          "message": "SteamVR неактивний",
+          "tooltip": "Щоб переглянути або змінити призначення контролера\nSteamVR повинен бути запущений"
+        },
+        "UNKNOWN": {
+          "message": "Налаштувати призначення"
+        }
+      },
+      "slot": {
+        "click": "Натискання",
+        "double": "Подвійне натискання",
+        "held": "Утримування",
+        "long": "Тривале натискання",
+        "touch": "Сенсорна кнопка"
+      }
+    },
+    "dashboard-navbar": {
+      "about": "Про OyasumiVR",
+      "audioVolumeAutomations": "Автоматизація гучності звуку",
+      "autoInviteRequestAccept": "Авто-прийняття запитів\nна приєднання",
+      "brightnessAutomations": "Автоматизація яскравості",
+      "chaperoneAutomations": "Автоматизація Chaperone",
+      "gpuAutomations": "Автоматизація GPU",
+      "hardwareAutomations": "Апаратна автоматизація",
+      "hmdAutomations": "Автоматизація для VR гарнітур  ",
+      "joinNotifications": "Сповіщення про приєднання",
+      "miscAutomations": "Інша автоматизація",
+      "nightmareDetection": "Виявлення кошмарів",
+      "oscAutomations": "Автоматизація OSC",
+      "overview": "Огляд",
+      "powerAutomations": "Автоматизація енергоживлення",
+      "resolutionAutomations": "Автоматизація роздільної здатності",
+      "settings": {
+        "advanced": "Розширені налаштування",
+        "general": "Загальні налаштування",
+        "hotkeys": "Налаштування гарячих клавіш",
+        "integrations": "Інтеграції",
+        "notifications": "Налаштування сповіщень",
+        "statusInfo": "Інформація про статус",
+        "subMenu": "Налаштування",
+        "updates": "Оновлення",
+        "vrchat": "Налаштування VRChat"
+      },
+      "shutdownAutomations": "Послідовність вимкнення",
+      "sleepAnimations": "Анімації сну",
+      "sleepDetection": "Виявлення сну",
+      "statusAutomations": "Автоматизація статусу",
+      "systemMicMuteAutomations": "Автоматизація вимкнення мікрофона на рівні системи",
+      "vrcAutomations": "Автоматизація VRChat",
+      "vrchatMicMuteAutomations": "Автоматизація вимкнення мікрофону в VRChat"
+    },
+    "device-edit-modal": {
+      "deviceNickname": {
+        "description": "За необхідності встановіть ім'я для цього пристрою",
+        "title": "Ім'я пристрою"
+      },
+      "ignoreLighthouse": {
+        "description": "Ігноровані базові станції будуть приховані, і на них не впливатиме автоматизація",
+        "title": "Ігнорувати базову станцію"
+      },
+      "title": "Змінити пристрій: {deviceId}"
+    },
+    "device-list": {
+      "category": {
+        "Controller": "Контролери",
+        "GenericTracker": "Трекери",
+        "Lighthouse": "Базові станції",
+        "other": "Інші"
+      },
+      "deviceName": {
+        "lighthouseV2": "Базова станція 2.0"
+      },
+      "deviceRole": {
+        "AnkleLeft": "Ліва щиколотка",
+        "AnkleRight": "Права щиколотка",
+        "Camera": "Камера",
+        "Chest": "Груди",
+        "ElbowLeft": "Лівий лікоть",
+        "ElbowRight": "Правий лікоть",
+        "FootLeft": "Ліва стопа",
+        "FootRight": "Права стопа",
+        "Gamepad": "Геймпад",
+        "HandPrimary": "Основна рука",
+        "HandSecondary": "Друга рука",
+        "Head": "Голова",
+        "Keyboard": "Клавіатура",
+        "KneeLeft": "Ліве коліно",
+        "KneeRight": "Праве коліно",
+        "ShoulderLeft": "Ліве плече",
+        "ShoulderRight": "Праве плече",
+        "Stylus": "Стилус",
+        "Treadmill": "VR платформа (бігова доріжка)",
+        "Waist": "Талія",
+        "WristLeft": "Ліве зап'ястя",
+        "WristRight": "Праве зап'ястя"
+      },
+      "forceOnBootingWarning": {
+        "message": "Схоже на те, що ваша базова станція вже увімкнена.\n\nЯкщо ви заставите базову станцію включитися коли вона вже увімкнена, зазвичай вона застрягне у стані завантаження. Якщо це сталося, ви можете виправити це, перевівши її у режим сна або очікування й увімкнути її знову.\n\nВи впевнені, що хочете примусово увімкнути цю базову станцію?",
+        "title": "Увага"
+      },
+      "lhForceState": {
+        "on": "Примусове включення",
+        "sleep": "Примусовий сон",
+        "standby": "Примусовий режім очікування"
+      },
+      "lighthouseStatus": {
+        "booting": "Завантажується",
+        "on": "Активна",
+        "sleep": "Спить",
+        "standby": "Режим очікування",
+        "unknown": "Статус невідомий"
+      },
+      "noDevices": "Пристроїв не виявлено",
+      "scanForLighthouses": "Сканувати",
+      "title": "Пристрої",
+      "turnOffAll": "УСІ"
+    },
+    "event-log-entry": {
+      "type": {
+        "acceptedInviteRequest": {
+          "subtitle": {
+            "blacklist": "Оскільки цей гравець не був у чорному списку",
+            "whitelist": "Оскільки цей гравець був у білому списку"
+          },
+          "title": "Запит на приєднання від ''{displayName}'' було прийнято автоматично."
+        },
+        "bsbFanSpeedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "adjusted": "Обороти вентилятора Bigscreen Beyond змінені з {setPercentage}% (до {requestedPercentage}% для безпеки)",
+            "exact": "Обороти вентилятора Bigscreen Beyond встановлено на {setPercentage}%"
+          }
+        },
+        "bsbLedChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": "Колір RGB світлодіода Bigscreen Beyond встановлено на {color}"
+        },
+        "changedAudioDeviceVolume": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": "Гучність аудіопристрою \"{deviceName}\" встановлено на {percentage}"
+        },
+        "changedSystemMicControllerButtonBehavior": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "PUSH_TO_TALK": "Змінено поведінку кнопки мікрофона на 'Говорити при натисканні'",
+            "TOGGLE": "Змінено поведінку кнопки мікрофона на 'Перемикання'"
+          }
+        },
+        "changedSystemMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "MUTE": "Мікрофон вимкнено: {deviceName}",
+            "UNMUTE": "Мікрофон увімкнено: {deviceName}"
+          }
+        },
+        "changedVRChatMicMuteState": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "MUTE": "Мікрофон у VRChat вимкнено",
+            "UNMUTE": "Мікрофон у VRChat увімкнено"
+          }
+        },
+        "chaperoneFadeDistanceChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": "Відстань загасання ігрової зони встановлено на {value}"
+        },
+        "gpuPowerLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": {
+            "reset": "Обмеження потужності для \"{device}\" відновлено до {limit}",
+            "set": "Обмеження потужності для \"{device}\" було встановлено на {limit}"
+          }
+        },
+        "hardwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "set": "Апаратна яскравість VR гарнітури встановлена на {value}",
+            "transition": "Апаратна яскравість VR гарнітури змінюється на {value}"
+          }
+        },
+        "lighthouseSetPowerState": {
+          "ALL": {
+            "on": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Увімкнено вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустився",
+                "STEAMVR_START": "Оскільки SteamVR запустився",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Увімкнули всі базові станції"
+            },
+            "sleep": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Встановити вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустився",
+                "STEAMVR_START": "Оскільки SteamVR запустився",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Перевели усі базові станції в сплячий режим"
+            },
+            "standby": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Встановити вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустився",
+                "STEAMVR_START": "Оскільки SteamVR запустився",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Перевели усі базові станції в режим очікування"
+            }
+          },
+          "SINGLE": {
+            "on": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Увімкнено вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустився",
+                "STEAMVR_START": "Оскільки SteamVR запустився",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Увімкнули базову станцію"
+            },
+            "sleep": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Встановити вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустився",
+                "STEAMVR_START": "Оскільки SteamVR запустився",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Перевели базову станцію в сплячий режим"
+            },
+            "standby": {
+              "reasons": {
+                "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+                "MANUAL": "Встановити вручну",
+                "OYASUMI_START": "Оскільки OyasumiVR запустился",
+                "STEAMVR_START": "Оскільки SteamVR запустился",
+                "STEAMVR_STOP": "Оскільки SteamVR зупинився"
+              },
+              "title": "Перевели базову станцію в режим очікування"
+            }
+          }
+        },
+        "msiAfterburnerProfileSet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": "Профіль MSI Afterburner було переведено на <b>Профіль</b> {profile}"
+        },
+        "mutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": "Аудіопристрій із вимкненим звуком \"{deviceName}\""
+        },
+        "renderResolutionChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": {
+            "auto": "Роздільну здатність рендерингу SteamVR встановлено на 'авто'",
+            "custom": "Роздільну здатність рендерингу SteamVR встановлено на {value}"
+          }
+        },
+        "shutdownSequenceCancelled": {
+          "reason": {
+            "MANUAL": "Скасовано вручну"
+          },
+          "title": "Послідовність вимкнення была отменена"
+        },
+        "shutdownSequenceStarted": {
+          "reason": {
+            "HOTKEY": "Оскільки гаряча клавіша була натиснута",
+            "MANUAL": "Запущено вручну",
+            "SLEEP_TRIGGER": "Оскільки ви спали достатньо довго",
+            "VRC_ALONE_TRIGGER": "Оскільки ви були на самоті у своєму домашньому світі досить довго"
+          },
+          "title": "Послідовність вимкнення запущена"
+        },
+        "simpleBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "set": "Яскравість гарнітури встановлено на{value}",
+            "transition": "Яскравість гарнітури змінюється на {value}"
+          }
+        },
+        "sleepDetectorEnableCancelled": {
+          "subtitle": "Оскільки користувач ще не спав",
+          "title": "Автоматичне вмикання режиму сну скасовано"
+        },
+        "sleepModeDisabled": {
+          "reason": {
+            "automation": {
+              "NIGHTMARE_DETECTION": "Як з'ясувалося, вам міг снитися кошмар",
+              "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Оскільки SteamVR закрився",
+              "SLEEP_MODE_DISABLE_AFTER_TIME": "Оскільки сплячий режим був увімкнений достатньо довго",
+              "SLEEP_MODE_DISABLE_AT_TIME": "У зазначений час",
+              "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Оскільки пристрій було увімкнено",
+              "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
+                "join": "оскільки {name} приєднався (-лась) до вашого світу",
+                "leave": "оскільки {name} вийшов (-ла) з вашого світу"
+              },
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Оскільки ви достатньо довго залишалися у вертикальному положенні",
+              "unknown": "Невідома автоматизація"
+            },
+            "hotkey": "Ви вимкнули сплячий режим, нажавши на гарячу клавішу",
+            "manual": "Ви вимкнули сплячий режим вручну",
+            "mqtt": "Сплячий режим було вимкнуто за допомогою MQTT",
+            "osc-control": "Сплячий режим було вимкнуто через OSC"
+          },
+          "title": "Сплячий режим вимкнуто"
+        },
+        "sleepModeEnabled": {
+          "reason": {
+            "automation": {
+              "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Рівень заряду батареї пристрою досяг порогу",
+              "SLEEP_MODE_ENABLE_AT_TIME": "У зазначений час",
+              "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Коли ти спав",
+              "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Оскільки всі ваші контролери були вимкнуті",
+              "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "Оскільки ваш сердечний ритм був спокійним достатньо довго",
+              "unknown": "Невідома автоматизація"
+            },
+            "hotkey": "Ви увімкнули сплячий режим, нажавши на гарячу клавішу",
+            "manual": "Ви умімкнули режим сна вручну",
+            "mqtt": "Сплячий режим було увімкнуто за допомогою MQTT",
+            "osc-control": "Сплячий режим було увімкнуто через OSC"
+          },
+          "title": "Сплячий режим увімкнуто"
+        },
+        "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": {
+            "set": "Програмна яскравість VR гарнітури встановлена на {value}",
+            "transition": "Програмна яскравість VR гарнітури змінюється на {value}"
+          }
+        },
+        "statusChangedOnPlayerCountChange": {
+          "reason": {
+            "AT_LIMIT_OR_ABOVE": "Оскільки кількість гравців у вашому світі сягнула межі в {threshold}",
+            "BELOW_LIMIT": "Оскільки кількість гравців у вашому світі стала нижчою {threshold}"
+          },
+          "title": "Ваш статус VRChat змінено з {oldStatus} на {newStatus}."
+        },
+        "turnedOffOpenVRDevices": {
+          "reason": {
+            "BATTERY_LEVEL": "Оскільки рівень заряду батареї впав нижче {threshold}%",
+            "CHARGING": "Поки пристрій заряджається",
+            "HOTKEY": "При натисканні гарячої клавіші",
+            "MANUAL": "Вимкнено вручну",
+            "OSC_CONTROL": "Вимкнено через OSC",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": {
+            "ALL": "Вимкнули всі пристрої",
+            "CONTROLLER": "Вимкнули контролер",
+            "CONTROLLERS": "Вимкнули декілька контролерів",
+            "TRACKER": "Вимкнули трекер",
+            "TRACKERS": "Вимкнули декілька трекерів",
+            "VARIOUS": "Вимкнули різні пристрої"
+          }
+        },
+        "unmutedAudioDevice": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
+            "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
+          },
+          "title": "Увімкнено аудіопристрії ''{deviceName}''"
+        },
+        "windowsPowerPolicySet": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
+            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений"
+          },
+          "title": "Для політики енергоживлення Windows встановлено план ''{policy}''"
+        }
+      }
+    },
+    "event-log": {
+      "clearLog": "Очистити",
+      "clearLogModal": {
+        "message": "Ви впевнені, що хочете очистити журнал подій? Назад дороги не буде.",
+        "title": "Підтвердити очищення"
+      },
+      "no-logs": "Події ще не зареєстровані.\nЖурнал подій зберігається не більше 48 годин.",
+      "show-more": "Показати більше",
+      "title": "Події"
+    },
+    "friend-selection-modal": {
+      "loading": "Завантаження друзів...",
+      "loadingError": "Не вдалося завантажити список ваших друзів. Будь ласка, повторіть спробу пізніше.",
+      "moreResultsAvailable": "Знайдених друзів більше, ніж показано на даний момент. Будь ласка, звузьте область пошуку.",
+      "noFriends": "Список друзів порожній",
+      "noFriendsSelected": "Друзів не вибрано",
+      "noResultsFor": "Немає результатів за запитом ''{query}''",
+      "searchPlaceholder": "Шукати друга по імені...",
+      "title": "Оберіть друзів"
+    },
+    "hotkey-selector-modal": {
+      "description": "Щоб встановити гарячу клавішу, натисніть будь-яку клавішу-модифікатор, а потім клавішу, з якою ви хочете їх об'єднати.",
+      "title": "Встановити гарячу клавішу"
+    },
+    "hotkey-selector": {
+      "select": "Встановити гарячу клавішу"
+    },
+    "main-status-bar": {
+      "active": "Активний",
+      "brightness": {
+        "simple": "Яскравість",
+        "tooltip": "Керування яскравістю"
+      },
+      "bsbFanSpeed": {
+        "label": "Швидкість вентилятора",
+        "tooltip": "Швидкість вентилятора Bigscreen Beyond"
+      },
+      "heartrate": "Сердечний ритм",
+      "inactive": "Неактивний",
+      "loggedOut": "Не авторизований",
+      "mqttStatus": {
+        "label": "MQTT",
+        "tooltip": "Налаштування: Інтеграції"
+      },
+      "sleepMode": {
+        "label": "Сплячий режим",
+        "tooltip": "Переключити сплячий режим"
+      },
+      "steamvr": {
+        "INACTIVE": "Вимкнуто",
+        "INITIALIZED": "Активний",
+        "INITIALIZING": "Очікування"
+      },
+      "systemMicMuted": {
+        "label": "Беззвучний",
+        "tooltip": {
+          "NAVIGATE": "Системний мікрофон:\nАвтоматизація",
+          "TOGGLE_MUTE": "Системний мікрофон:\nУвімкнути звук"
+        }
+      },
+      "vrchat": {
+        "tooltip": "Налаштування: Інтеграції"
+      }
+    },
+    "mqtt-config-modal": {
+      "brokerHost": {
+        "description": "Ім'я хоста або IP-адреса за якою можна зв'язатися з вашим MQTT-брокером",
+        "title": "Хост"
+      },
+      "brokerPort": {
+        "description": "Порт веб-сокета на якому доступний ваш MQTT-брокер",
+        "title": "Порт"
+      },
+      "brokerSetupNote": "Обратите внимание, что Home Assistant по умолчанию не имеет включенного брокера MQTT. Если у вас еще не настроен брокер MQTT и настроен с помощью Home Assistant, следуйте его <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">документации</a> чтобы его настроить.",
+      "description": "OyasumiVR может общаться с Home Assistant через MQTT. Чтобы настроить это, укажите ниже данные подключения для вашего MQTT-брокера.",
+      "mqttEnabled": {
+        "description": "Увімкнути або вимкнути інтеграцію MQTT",
+        "test": "Перевірити З'єднання",
+        "title": "Увімкнути інтеграцію"
+      },
+      "password": {
+        "description": "Пароль для аутентифікації вашого MQTT-брокера (необов'язково)",
+        "title": "Пароль"
+      },
+      "ssl": {
+        "description": "Чи слід захищати з'єднання з вашим MQTT-брокером за допомогою SSL",
+        "title": "Безпечний SSL"
+      },
+      "testConnection": {
+        "description": "Перевірте, чи може OyasumiVR під'єднатися до вашого MQTT-брокера за допомогою налаштувань, наведених нижче",
+        "test": "Перевірити З'єднання",
+        "title": "Перевірити З'єднання"
+      },
+      "testConnectionResult": {
+        "error": "З'єднання не вдалося!",
+        "errorMessage": "Повідомлялося про таку помилку:\n{error}",
+        "success": "З'єднання вдалося!",
+        "title": "Результат тестового з'єднання"
+      },
+      "title": "Конфігурація MQTT",
+      "username": {
+        "description": "Ім'я користувача для аутентифікації у вашого MQTT-брокера (необов'язково)",
+        "title": "Ім'я користувача"
+      },
+      "websocketNote": "MQTT через Websockets - єдиний підтримуваний протокол: переконайтеся, що у вашого брокера увімкнено підтримку веб-сокетів. Стандартний MQTT через TCP <i>не</i> підтримується!"
+    },
+    "osc-script-code-editor": {
+      "format": "Формат",
+      "syntaxGuide": "Посібник із синтаксису",
+      "test": "Перевірити",
+      "title": "Редактор скриптів OSC"
+    },
+    "osc-script-modal": {
+      "script": "Скрипт",
+      "simple": "Простий",
+      "title": "OSC скріпт"
+    },
+    "osc-script-simple-editor": {
+      "action": {
+        "none": "Дії ще не додані!",
+        "osc": "OSC",
+        "sleep": "Сон"
+      },
+      "addCommand": "Додати",
+      "commandCounter": "{count, plural, one {1 Команда} other {# Команд}}",
+      "commands": {
+        "COMMAND": {
+          "description": "Виконати команду OSC",
+          "title": "OSC Команда"
+        },
+        "SLEEP": {
+          "description": "Почекати певну кількість часу",
+          "title": "Сон"
+        }
+      },
+      "errorCounter": "{count, plural, one {1 Помилка перевірки} other {# Помилок перевірки}}",
+      "test": "Перевірити"
+    },
+    "player-list-preset-modal": {
+      "confirmDelete": {
+        "message": "Ви впевнені, що хочете видалити пресет з іменем «{name}»? У ньому є як мінімум {count, plural, one {1 гравець} other {# гравців}}",
+        "title": "Ви впевнені?"
+      },
+      "confirmOverwrite": {
+        "message": "Ви впевнені, що хочете перезаписати пресет з іменем «{name}»?",
+        "title": "Ви впевнені?"
+      },
+      "currentPresets": "Поточні пресети",
+      "delete": "Видалити пресет",
+      "load": "Завантажити пресет",
+      "namePlaceholder": "Ім'я пресету",
+      "noPresets": "У вас немає збережених пресетів",
+      "overwrite": "Перезаписати пресет",
+      "preset": {
+        "subtitle": "Список {count, plural, one {1 гравець} other {# гравців}}"
+      },
+      "title": {
+        "load": "Завантажити список гравців",
+        "save": "Збергети список гравців"
+      }
+    },
+    "player-list": {
+      "title": "Список гравців"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Обрати..."
+    },
+    "start-with-steamvr-how-to-modal": {
+      "description": "OyasumiVR може запускатися разом зі SteamVR. Ви можете знайти це в:\nSteamVR -> Налаштування -> Увімкнення та вимкнення -> Виберіть додатки оверлея під час запуску",
+      "title": "Запуск OyasumiVR за допомогою SteamVR"
+    },
+    "update-modal": {
+      "message": "Виявлено нове оновлення для OyasumiVR: v{newVersion}.\n\n\nНаразі ви використовуєте v{currentVersion}.\n\n\nХочете оновитися зараз або пізніше?",
+      "steamAd": "<b>OyasumiVR також доступний в Steam!</b><br><br>Це новий рекомендований спосіб встановлення OyasumiVR.<br>Відвідайте сторінку OyasumiVR в <a href=\"https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities/\" target=\"_blank\">Steam</a>, щоб дізнатися більше!",
+      "title": "Доступне оновлення",
+      "updateLater": "Не зараз",
+      "updateNow": "Встановити v{version}"
+    },
+    "vrchat-login-modal": {
+      "disclaimers": {
+        "brand": "OyasumiVR не підтримується VRChat і не відображає погляди або думки VRChat або будь-кого, офіційно залученого до створення або управління VRChat. VRChat є торговою маркою VRChat Inc. VRChat © VRChat Inc.",
+        "liability": "Raphiiko не несе відповідальності за будь-які проблеми, викликані OyasumiVR. Використовуйте на свій страх і ризик!",
+        "use": "Ваші облікові дані для входу в систему ніколи не будуть збережені поза вашим власним пристроєм і надсилатимуться тільки на сервери VRChat для автентифікації."
+      },
+      "errors": {
+        "CHECK_EMAIL": "Не вдалося увійти: для отримання докладної інформації перевірте свою пошту, прив'язану до вашого облікового запису VRChat.",
+        "INVALID_CREDENTIALS": "Надані вами облікові дані невірні.",
+        "UNEXPECTED_RESPONSE": "Не вдалося увійти: сталася невідома помилка. Перевірте підключення або повторіть спробу пізніше."
+      },
+      "password": "Пароль",
+      "rememberCredentials": "Запам'ятати облікові дані",
+      "title": "Увійдіть у VRChat",
+      "username": "VRChat Логін/E-mail"
+    },
+    "vrchat-login-tfa-modal": {
+      "description": "Ваш обліковий запис VRChat захищений двофакторною автентифікацією.\n\n\nВведіть, будь ласка, код 2FA:",
+      "errors": {
+        "INVALID_FORMAT": "Дійсний код 2FA складається з 6 цифр. Будь ласка, перевірте введені дані.",
+        "LAST_CODE_INVALID": "Наданий вами код 2FA невірний."
+      },
+      "logginInAs": "Ви увійшли в VRChat під аккаунтом:",
+      "title": "Двофакторна аутентифікація"
+    }
+  },
+  "discord": {
+    "details": "ПЗ для сну в VR",
+    "label": {
+      "awake": "більше не сонний",
+      "sleeping": "час сну"
+    },
+    "state": {
+      "awake": "Бадьорить",
+      "sleeping": "Спить"
+    }
+  },
+  "gpu-automations": {
+    "automations": "Автоматизація сну",
+    "disable": "Вимкнути автоматизацію GPU",
+    "disabled": {
+      "disabled": "У OyasumiVR є різні способи автоматичного налаштування параметрів вашої відеокарти. Це дає змогу вам заощаджувати на електроенергії під час сну. Оскільки ця функція призначена для досвідчених користувачів, за замовчуванням її вимкнуто. Ви можете ввімкнути її, натиснувши на кнопку нижче.",
+      "noSidecar": "Для того щоб OyasumiVR було дозволено змінювати налаштування вашої відеокарти, потрібні права адміністратора. Будь ласка, натисніть кнопку нижче, щоб надати права адміністратора."
+    },
+    "elevationSidecarModal": {
+      "cancel": "Лише цього разу",
+      "confirm": "Завжди",
+      "message": "Хочете завжди надавати OyasumiVR права адміністратора?\n\nЯкщо ви ввімкнете це, OyasumiVR негайно запитає їх під час запуску. Ви зможете вимкнути це пізніше в будь-який час у налаштуваннях.",
+      "title": "Надати права адміністратора"
+    },
+    "enable": "Увімкнути автоматизацію GPU",
+    "enableWarning": "Неправильне налаштування параметрів вашої відеокарти може призвести до нестабільної роботи системи. Будь ласка, майте це на увазі, та вмикайте цю функцію тільки в тому випадку, якщо ви знаєте, що робите.",
+    "msiAfterburner": {
+      "description": "OyasumiVR може автоматично змінювати налаштування вашої відеокарти, коли ви засинаєте або прокидаєтесь, застосовуючи профілі, створені вами в MSI Afterburner. Варіант використання цієї функції полягає в економії електроенергії, поки ви спите, і відновлення потужності відеокарти, коли ви прокидаєтеся.<br><br>Вам необхідно налаштувати профілі, які ви хочете застосувати в MSI Afterburner. Ви можете завантажити MSI Afterburner <a href=\"https://www.msi.com/Landing/afterburner/graphics-cards\" target=\"_blank\">тут</a>.",
+      "enabledWarning": "Майте на увазі, що неправильне налаштування графічного процесора в MSI Afterburner може призвести до нестабільної роботи вашої системи. Вимкніть цю функцію, якщо ви не знаєте, що робите.",
+      "executable": {
+        "description": "OyasumiVR необхідно знати про місцезнаходження файлу <strong>MSIAfterburner.exe</strong>.\nЯкщо OyasumiVR не може знайти його в розташуванні за замовчуванням, вам необхідно вказати, де його можна знайти.",
+        "status": {
+          "CHECKING": "Перевірка валідності <strong>MSIAfterburner.exe</strong>.",
+          "INVALID_EXECUTABLE": "Не вдалося перевірити роботу <strong>MSIAfterburner.exe</strong> за цим шляхом.",
+          "INVALID_SIGNATURE": "Не вдалося перевірити, що файл <strong>MSIAfterburner.exe</strong> належить MSI. З міркувань безпеки його використовувати не можна. Будь ласка, переконайтеся, що ви використовуєте останню версію MSI Afterburner. Якщо проблему не вирішено, зв'яжіться з розробником OyasumiVR або надішліть звіт про помилку.",
+          "NOT_FOUND": "Не вдалося знайти файл <strong>MSIAfterburner.exe</strong> за цим шляхом.",
+          "SUCCESS": "<strong>MSIAfterburner.exe</strong> знайдено і працює коректно!",
+          "UNKNOWN_ERROR": "Сталася невідома помилка під час спроби пошуку <strong>MSIAfterburner.exe</strong> у цьому місці."
+        },
+        "title": "Конфігурація"
+      },
+      "none": "Нічого",
+      "profile": "Профіль {index}",
+      "sleepModeDisable": {
+        "description": "Застосувати наступний профіль MSI Afterburner",
+        "title": "Коли сплячий режим вимкнено"
+      },
+      "sleepModeEnable": {
+        "description": "Застосувати наступний профіль MSI Afterburner",
+        "title": "Коли сплячий режим увімкнено"
+      }
+    },
+    "powerLimiting": {
+      "activatingSleepMode": {
+        "description": "Вкажіть обмеження потужності при увімкненому сплячому режимі",
+        "title": "Коли я лягаю спати"
+      },
+      "currentPowerLimit": "Межа поточної потужності",
+      "deactivatingSleepMode": {
+        "description": "Вкажіть обмеження потужності, яке буде встановлено при вимкненні сплячого режиму.",
+        "title": "Коли я прокидаюся"
+      },
+      "description": "Тут ви можете автоматизувати обмеження потужності вашої відеокарти, щоб зекономити електро енергію під час сну. Обмеження потужності доступне лише для відеокарт NVIDIA.",
+      "disabled": {
+        "initializing": "Ініціалізуються системи автоматизації обмеження живлення...",
+        "noNvidia": "Автоматизація обмеження потужності недоступна, оскільки не було виявлено запущений драйвер NVIDIA. Автоматизація обмеження споживання енергії доступна тільки для відеокарт NVIDIA.\n\nЯкщо у вашій системі встановлена відеокарта NVIDIA, переконайтеся, що для неї встановлено відповідний драйвер.\n\n({code})",
+        "noPermission": "Хоча OyasumiVR володіє правами адміністратора, у нього немає дозволу змінювати налаштування вашої відеокарти. \n\nПеревірте, будь ласка, конфігурацію вашої системи, так як зазвичай цього не повинно відбуватися.",
+        "noSidecar": "З якоїсь причини не вдалося отримати права адміністратора.\nВони необхідні для контролю потужності вашої відеокарти.\n\nСпробуйте перезавантажити OyasumiVR..",
+        "unknown": "Автоматизація обмеження потужності недоступна з невідомої причини.\n\nСпробуйте перезавантажити OyasumiVR."
+      },
+      "enabledWarning": "Майте на увазі, що встановлення занадто низьких обмежень потужності може призвести до нестабільної роботи вашої системи. Вимкніть цю функцію, якщо ви не знаєте, що робите.",
+      "gpuPowerLimitsUnsupported": "Обрана GPU не підтримує встановлення обмежень потужності.",
+      "gpuUnsupported": "Відеокарта не підтримується",
+      "inputDefault": "Скидання до обмежень відеокарти за замовчуванням.",
+      "noGPUs": "У вашій системі не вдалося знайти відеокарту NVIDIA.",
+      "noGPUSelected": "Відеокарту не вибрано",
+      "selectGPU": "Виберіть відеокарту, для якої ви хочете встановити обмеження потужності:"
+    },
+    "requestAdministrator": "Надати права адміністратора",
+    "tabs": {
+      "msiAfterburner": "MSI Afterburner",
+      "powerLimiting": "Обмеження енергоживлення"
+    },
+    "title": "Автоматизація GPU"
+  },
+  "hmd-automations": {
+    "bigscreenBeyond": {
+      "description": "Тут ви можете автоматизувати деякі функції особливі для Bigscreen Beyond.",
+      "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "Не дає змоги встановити швидкість вентилятора нижче 40%",
+          "title": "Обмежити до безпечної швидкості вентилятора",
+          "warning": "Встановлення швидкості обертання вентилятора нижче 40% не підтримується виробником і потенційно може призвести до пошкодження гарнітури через перегрів. Вимикайте цю функцію тільки на свій страх і ризик."
+        },
+        "onSleepDisable": {
+          "description": "Змінити швидкість вентилятора при вимкненому сплячому режимі",
+          "title": "Коли я прокидаюся"
+        },
+        "onSleepEnable": {
+          "description": "Змінити швидкість вентилятора при увімкненому сплячому режимі",
+          "title": "Коли я лягаю спати"
+        },
+        "onSleepPreparation": {
+          "description": "Змінити швидкість вентилятора коли я готуюся до сну",
+          "title": "Коли я готуюся до сну"
+        },
+        "title": "Швидкість вентилятора"
+      },
+      "rgb": {
+        "onSleepDisable": {
+          "description": "Змінити колір світлодіода VR гарнітури під час вимкненого сплячого режиму",
+          "title": "Коли я прокидаюся"
+        },
+        "onSleepEnable": {
+          "description": "Змінити колір світлодіода VR гарнітури під час увімкненого сплячого режиму",
+          "title": "Коли я лягаю спати"
+        },
+        "onSleepPreparation": {
+          "description": "Змінити колір світлодіода VR гарнітури коли я готуюся до сну",
+          "title": "Коли я готуюся до сну"
+        },
+        "pickerTitle": {
+          "onSleepDisable": "Встановити колір світлодіода Beyond під час пробудження",
+          "onSleepEnable": "Встановити колір світлодіода Beyond коли ви йдете спати",
+          "onSleepPreparation": "Встановити колір світлодіода Beyond коли ви готуєтеся до сну"
+        },
+        "title": "RGB світлодіод"
+      }
+    },
+    "tabs": {
+      "bigscreenBeyond": "Bigscreen Beyond"
+    },
+    "title": "Автоматизація для VR гарнітур"
+  },
+  "join-notifications": {
+    "description": "Відтворювати сповіщення та/або звук, коли інший гравець входить у ваш світ або виходить з нього. Це може бути корисно, якщо ви хочете, щоб OyasumiVR розбудив вас, коли до вас хтось приєднався.",
+    "joinNotifications": {
+      "description": "Показувати сповіщення коли гравець приєднується до вашого світу",
+      "title": "Сповіщення про приєднання"
+    },
+    "joinSounds": {
+      "description": "Відтворювати звук коли гравець приєднується до вашого світу",
+      "title": "Звук приєднання"
+    },
+    "joinSoundVolume": {
+      "description": "Гучність звукового ефекту, який відтворюється, коли гравець входить у ваш світ або залишає його",
+      "title": "Гучність звуків"
+    },
+    "leaveNotifications": {
+      "description": "Показувати сповіщення коли гравець виходить з вашого світу",
+      "title": "Сповіщення про вихід"
+    },
+    "leaveSounds": {
+      "description": "Відтворювати звук коли гравець виходить з вашого світу",
+      "title": "Звук виходу"
+    },
+    "modeOptions": {
+      "BLACKLIST": "Для гравців яких немає в списку",
+      "DISABLED": "Ні для кого",
+      "EVERYONE": "Для всіх",
+      "FRIEND": "Для друзів",
+      "WHITELIST": "Для гравців у списку"
+    },
+    "notification": {
+      "join": "{name} приєднався (-лась) до вашого світу",
+      "leave": "{name} покинув (-ла) ваш світ"
+    },
+    "onlyWhenLeftAlone": {
+      "description": "Повідомляти тільки тоді, коли ви залишилися на самоті у своєму світі після того, як інший гравець вийшов",
+      "title": "Тільки коли ви залишаєтеся на самоті"
+    },
+    "onlyWhenPreviouslyAlone": {
+      "description": "Повідомляйте тільки тоді, коли ви були на самоті у своєму світі до того, як до нього приєднався інший гравець.",
+      "title": "Тільки коли ви раніше були на самоті"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "Тільки в разі ввімкненого сплячого режиму"
+    },
+    "title": "Сповіщення про приєднання"
+  },
+  "misc": {
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "У цьому пресеті використовується обхідний шлях, який має деякі проблеми. Використовуйте цей пресет тільки в тому випадку, якщо ви не можете використовувати новий пресет GoGo Loco. Якщо ваш аватар використовує старішу версію GoGo Loco, рекомендується оновити свій аватар, щоб використовувати останню версію GoGo Loco.",
+    "oscScriptEditorErrors": {
+      "addressNoSlash": "Дійсна адреса OSC завжди повинна починатися із символу '/'.",
+      "addressNotASCII": "Допустима адреса OSC повинна містити тільки символи ASCII.",
+      "addressRequired": "Потрібна адреса OSC.",
+      "durationRequired": "Необхідно вказати тривалість сну.",
+      "durationTooLong": "Тривалість сну не може перевищувати 5 секунд.",
+      "durationTooShort": "Тривалість сну має бути не менше 1 мс.",
+      "floatOutOfBounds": "Значення має бути допустимим значенням із плаваючою комою в діапазоні від -1.0 до 1.0.",
+      "floatTooPrecise": "Значення може мати точність не більше 3 десяткових знаків.",
+      "intOutOfBounds": "Значення має бути допустимим цілим числом від 0 до 255.",
+      "invalidSyntax": "Неправильний синтаксис.",
+      "noFloatMilliseconds": "Значення мілісекунд мають бути визначені як ціле число.",
+      "tooManyCommands": "Сценарій OSC не може мати більше {value} дій.",
+      "totalDurationTooLong": "Загальна тривалість скрипта не може перевищувати 10 секунд."
+    }
+  },
+  "nightmare-detection": {
+    "automations": {
+      "description": "Автоматизація, яка запускається, коли OyasumiVR виявляє, що вам, можливо, наснився кошмар",
+      "title": "Автоматизація"
+    },
+    "bpmThreshold": {
+      "description": "Поріг, якого має сягнути ваш пульс, щоб OyasumiVR враховував його в імовірность того, що вам сниться кошмар",
+      "title": "Мінімальна частота пульсу",
+      "unit": "BPM"
+    },
+    "description": "Коли будь-яка автоматизація ввімкнена, ця функція намагатиметься визначити, чи сниться вам кошмар, перевіряючи тривале підвищення частоти пульсу уві сні. У разі виявлення можливого кошмару ви можете попросити OyasumiVR спробувати вас розбудити. Виявлення кошмарів працює тільки тоді, коли сплячий режим увімкнено.\n\n<b>Примітка.</b> Для використання цієї функції необхідно увімкнути <a class=\"integrationsPageLink\">інтеграцію з Pulsoid</a>.",
+    "disableSleepMode": {
+      "description": "Вимикає сплячий режим, коли вам, можливо, сниться кошмар",
+      "title": "Вимкнути сплячий режим"
+    },
+    "duration": {
+      "description": "Як довго ваш пульс повинен залишатися вище заданого порога, перш ніж OyasumiVR запустить функцію виявлення кошмарів",
+      "title": "Тривалість"
+    },
+    "notification": "Виявлення можливого кошмару, оскільки у вас тривалий час був підвищений пульс.",
+    "playSound": {
+      "description": "OyasumiVR розбудить вас звуком, коли вам, можливо, сниться кошмар",
+      "title": "Відтворити звук",
+      "volume": {
+        "description": "Налаштуйте гучність відтворення звукового ефекту",
+        "test": "Перевірити",
+        "title": "Гучність"
+      }
+    },
+    "title": "Виявлення кошмарів"
+  },
+  "notifications": {
+    "autoAcceptedInviteRequest": {
+      "content": "Автоматично прийнято запит на приєднання від гравця {username}"
+    },
+    "sleepCheck": {
+      "content": "Сплячий режим ввімкнеться через 20 секунд.\nВи спите? \n\n\nВідміна:\nВідтрусіть головою або натисніть будь-яку кнопку контролера."
+    },
+    "sleepCheckCancel": {
+      "content": "Автоматичне вмикання режиму сну скасовано"
+    },
+    "sleepModeDisabled": {
+      "content": "Сплячий режим вимкнено"
+    },
+    "sleepModeEnabled": {
+      "content": "Сплячий режим увімкнено"
+    },
+    "turningOffControllers": {
+      "content": "Вимкнення контролерів"
+    },
+    "turningOffControllersAndTrackers": {
+      "content": "Вимкнення контролерів й трекерів"
+    },
+    "turningOffTrackers": {
+      "content": "Вимкнення трекерів"
+    },
+    "vrcStatusChangedPlayerCount": {
+      "content": "Ваш статус VRChat встановлено на ''{newStatus}''"
+    }
+  },
+  "oscAutomations": {
+    "general": {
+      "description": "Тут ви можете налаштувати надсилання OSC-команд у VRChat у разі виникнення певних подій. Це може бути корисно, якщо ви хочете змінити налаштування свого аватара, коли лягаєте спати або прокидаєтеся.",
+      "onSleepDisable": {
+        "description": "Надіслати ці OSC-команди",
+        "script": "Сплячий режим вимкнено",
+        "title": "Коли я прокидаюся"
+      },
+      "onSleepEnable": {
+        "description": "Надіслати ці OSC-команди",
+        "script": "Сплячий режим увімкнено",
+        "title": "Коли я лягаю спати"
+      },
+      "onSleepPreparation": {
+        "description": "Надіслати ці OSC-команди",
+        "script": "Підготовка до сну",
+        "title": "Коли я готуюся до сну"
+      }
+    },
+    "sleepingAnimations": {
+      "currentPose": "Поточна позиція",
+      "customPreset": "Свої анімації",
+      "description": "OyasumiVR може автоматично змінювати анімацію вашого аватара, коли ви змінюєте положення уві сні. Це може бути корисно, якщо у вас немає FBT або якщо ви (і у вас є OyasumiVR) вимикаєте трекери на ніч. Подивіться приклад того, як це може виглядати <a href=\"https://youtu.be/3T54bTAzT7o\" target=\"_blank\">тут</a>.\n\nПресети доступні для кількох готових наборів рухів аватара, але ви також можете задати свої власні анімації.",
+      "enable": "Увімкнути автоматичну анімацію сну",
+      "manualControl": "Ручне керування",
+      "options": {
+        "footLock": {
+          "description": "Встановіть команди OSC для увімкнення та вимкнення блокування ніг.",
+          "FOOT_LOCK": "Увімкнути блокування ніг",
+          "FOOT_UNLOCK": "Вимкнути блокування ніг",
+          "title": "Блокувати ноги"
+        },
+        "general": {
+          "footLock": {
+            "description": "Блокування ніг зазвичай не дозволяє гравцеві рухатися або обертатися, коли його ввімкнено.",
+            "title": "Блокування ніг"
+          },
+          "footLockReleaseWindow": "Тривалість вимкнення блокування ніг",
+          "lockFeetOnSleepModeEnable": "Блокування ніг у разі ввімкненого сплячого режиму",
+          "onlyIfSleepModeEnabled": "Якщо сплячий режим увімкнено",
+          "onlySwitchAnimations": "Перемикати тільки анімацію",
+          "releaseFootLockOnPoseChange": "Під час зміни пози сну вимкнути фіксацію ніг на мить",
+          "title": "Загальні налаштування",
+          "unlockFeetOnAutomationDisable": "Розблокувати ноги під час вимкнення автоматичної анімації сну",
+          "unlockFeetOnSleepModeDisable": "Розблокування ніг при вимкненому сплячому режимі"
+        },
+        "positions": {
+          "description": "Встановіть команди OSC для активації анімацій кожної пози сну.",
+          "SIDE_BACK": "На спині",
+          "SIDE_FRONT": "Вертикально",
+          "SIDE_LEFT": "Лівий бок",
+          "SIDE_RIGHT": "Правий бок",
+          "title": "Пози для сну",
+          "UNKNOWN": "Невідомо"
+        }
+      },
+      "presetAuthor": "Автор {author}"
+    },
+    "tab": {
+      "general": "Загальні",
+      "sleepingAnimations": "Анімація сну"
+    },
+    "title": "OSC Автоматизація"
+  },
+  "overlay": {
+    "brightness": {
+      "hardware": "Апаратна яскравість",
+      "simple": "Яскравість",
+      "software": "Програмна яскравість"
+    },
+    "dashboard": {
+      "automations": {
+        "autoAcceptInviteRequests": {
+          "mode": {
+            "Blacklist": "Чорний список",
+            "Disabled": "Для всіх",
+            "Whitelist": "Білий список"
+          },
+          "subtitle": "{mode}: {playerCount, plural, one {1 друг} other {# друзей}}",
+          "title": "Автоматичне прийняття запитів на приєднання"
+        },
+        "changeStatusBasedOnPlayerCount": {
+          "subtitle": "Макс {threshold, plural, one {1 гравець} other {# гравців}}",
+          "title": "Статус автоматизації"
+        },
+        "shutdownAutomations": {
+          "minutes": "{minutes, plural, one {1 хвилина} other {# хвилини}}",
+          "seconds": "{seconds, plural, one {1 секунда} other {# секунди}}",
+          "subtitle": "Коли сплю {time}",
+          "title": "Автоматичне вимкнення"
+        },
+        "sleepingAnimations": {
+          "title": "Анімації сну"
+        },
+        "sleepModeEnableForSleepDetector": {
+          "subtitle": {
+            "withActivationWindow": "{sensitivity} чувствительность, {startTime} - {endTime}",
+            "withoutActivationWindow": "{sensitivity} чувствительность"
+          },
+          "title": "Виявлення сну"
+        },
+        "title": "Налаштування автоматизації"
+      },
+      "deviceControl": {
+        "title": "Керування пристроями",
+        "turnOff": {
+          "AllControllers": "Вимкнути всі\nконтролери",
+          "AllControllersAndTrackers": "Вимкнути всі\nконтролери та трекери",
+          "AllTrackers": "Вимкнути всі\nтрекери"
+        }
+      },
+      "overview": {
+        "active": "Активний",
+        "inactive": "Неактивний",
+        "sleepMode": "Сплячий режим",
+        "tooltip": {
+          "automations": "Автоматизація",
+          "deviceControl": "Керування пристроями",
+          "prepareForSleep": "Готуюся до сну",
+          "shutdown": "Послідовність вимкнення"
+        }
+      },
+      "shutdownSequence": {
+        "dialog": {
+          "message": "Вы собираетесь начать последовательность выключения.\nВы уверены, что хотите сделать это сейчас?\n\nВы можете настроить действия, выполняемые при завершении работы, в главном окне OyasumiVR.",
+          "start": "Почати вимкнення",
+          "title": "Послідовність вимкнення"
+        }
+      }
+    }
+  },
+  "overview": {
+    "sleep-mode": {
+      "activate": "Увімкнути",
+      "active": "Активний",
+      "deactivate": "Вимкнути",
+      "inactive": "Неактивний",
+      "label": "Сплячий режим"
+    },
+    "sleep-preparation": {
+      "activate": "Підготовка до сну",
+      "disabledTooltip": "Підготовка до сну стане доступною після того, як ви налаштуєте підготовку до сну хоча б для однієї з автоматизацій"
+    }
+  },
+  "power-automations": {
+    "devicePowerOff": {
+      "onBatteryLevel": {
+        "controllers": {
+          "description": "Коли рівень заряду батареї падає нижче",
+          "onlyDuringSleepMode": {
+            "description": "Вимикати контролери тільки при ввімкненому сплячому режимі",
+            "title": "Тільки в разі ввімкненого сплячого режиму"
+          },
+          "powerOffConflict": {
+            "action": "Виявлення сну",
+            "description": "Оскільки ви налаштували сплячий режим на активацію під час вимкнення всіх контролерів, увімкнення цієї автоматизації може призвести до ненавмисного ввімкнення режиму сну. На це можуть відреагувати інші засоби автоматизації, а це може бути не саме те, що вам потрібно. Ви можете вимкнути цю поведінку в налаштуваннях «Виявлення сну».",
+            "title": "Увага: це може спричинити ще одну автоматизацію!"
+          },
+          "title": "Вимкнути контролер"
+        },
+        "description": "Вимикати пристрої, коли рівень заряду батареї впаде нижче певного відсотка.",
+        "title": "Рівень заряду батареї",
+        "trackers": {
+          "description": "Коли рівень заряду батареї падає нижче",
+          "onlyDuringSleepMode": {
+            "description": "Вимикати трекери тільки при ввімкненому сплячому режимі",
+            "title": "Тільки в разі ввімкненого сплячого режиму"
+          },
+          "title": "Вимкнути трекер"
+        }
+      },
+      "onCharge": {
+        "description": "Пристрої автоматично вимкнуться, коли ви поставите їх на зарядку.",
+        "optionControllers": {
+          "description": "Коли він заряджається",
+          "title": "Вимкнути контролер"
+        },
+        "optionTrackers": {
+          "description": "Коли він заряджається",
+          "title": "Вимкнути трекер"
+        },
+        "title": "Під час їх зарядки"
+      },
+      "onSleepModeEnable": {
+        "description": "Вимикати пристрої, коли ввімкнено сплячий режим.",
+        "hint": "Ви можете налаштувати, коли сплячий режим ввімкнено в <a class=\"sleepDetectionLink\">Виявлення сну</a>.",
+        "optionControllers": "Вимкнути всі контролери",
+        "optionTrackers": "Вимкнути всі трекери",
+        "title": "Коли я лягаю спати"
+      }
+    },
+    "enableLighthouseControl": "Увімкнути",
+    "error": {
+      "adapterError": "Сталася помилка під час спроби встановити зв'язок з адаптером Bluetooth. Переконайтеся, що ваш адаптер Bluetooth увімкнено, і повторіть спробу.",
+      "noAdapter": "У вашій системі не знайдено адаптер Bluetooth. Переконайтеся, що він наявний у вашій системі і він увімкнений."
+    },
+    "lighthouseControlDisabledWarning": "Ці функції автоматизації недоступні, оскільки ви вимкнули керування живленням базової станції в налаштуваннях OyasumiVR. Увімкніть керування, якщо хочете використовувати автоматизацію.",
+    "lighthousePowerOff": {
+      "description": "OyasumiVR автоматично вимкне ваші базові станції.",
+      "onSteamVRStop": {
+        "description": "Автоматично вимикати базові станції під час вимкнення SteamVR.",
+        "title": "Під час вимкнення SteamVR"
+      },
+      "title": "Вимкнення базових станцій"
+    },
+    "lighthousePowerOn": {
+      "description": "OyasumiVR автоматично увімкне ваші базові станції.",
+      "onOyasumiStart": {
+        "description": "Автоматично вмикати базові станції під час запуску OyasumiVR.",
+        "title": "Під час запуску OyasumiVR"
+      },
+      "onSteamVRStart": {
+        "description": "Автоматично вмикайте базові станції під час запуску SteamVR.",
+        "title": "Під час запуску SteamVR"
+      },
+      "title": "Увімкнення базових станцій"
+    },
+    "powerManagementWarning": "Якщо ви вирішите використовувати OyasumiVR для ввімкнення/вимкнення ваших базових станцій, рекомендуємо вимкнути керування живленням у налаштуваннях базових станцій в SteamVR.",
+    "tabs": {
+      "baseStations": "Базові станції",
+      "controllersAndTrackers": "Контролери та трекери",
+      "windowsPowerPolicy": "Політика енергоживлення"
+    },
+    "title": "Автоматизація енергоживлення",
+    "windowsPowerPolicy": {
+      "automations": "Автоматизація",
+      "description": "OyasumiVR може автоматично змінювати активну політику енергоживлення Windows, коли ви лягаєте спати або прокидаєтеся. Це може бути корисно для зниження енергоспоживання під час сну і відновлення високої потужності, коли ви знову прокинетеся.",
+      "sleepModeDisable": {
+        "description": "Встановити цю політику енергоживлення Windows",
+        "title": "Коли вимкнено сплячий режим"
+      },
+      "sleepModeEnable": {
+        "description": "Встановити цю політику енергоживлення Windows",
+        "title": "Коли ввімкнено сплячий режим"
+      }
+    }
+  },
+  "pulsoid": {
+    "login": {
+      "error": {
+        "message": "Не вдалося увійти у ваш обліковий запис Pulsoid. Будь ласка, повторіть спробу пізніше. Якщо проблема так і не зникне, зверніться до служби підтримки!\n\n{errorDetails}",
+        "title": "Помилка входу в Pulsoid"
+      }
+    }
+  },
+  "resolution-automations": {
+    "description": "OyasumiVR може автоматично регулювати роздільну здатність рендерингу SteamVR, коли сплячий режим ввімкнено або вимкнено.",
+    "onSleepDisable": {
+      "description": "Встановити роздільну здатність рендерингу",
+      "title": "Коли я прокинуся"
+    },
+    "onSleepEnable": {
+      "description": "Встановити роздільну здатність рендерингу",
+      "title": "Коли я лягаю спати"
+    },
+    "renderResolution": {
+      "auto": "Авто",
+      "custom": "Ручной",
+      "title": "Измените разрешение рендеринга на"
+    },
+    "title": "Автоматизація роздільної здатності"
+  },
+  "settings": {
+    "advanced": {
+      "fixes": {
+        "description": "У цьому розділі містяться деякі параметри та дії, пов'язані з усуненням проблем і неполадок. Зазвичай вам не слід використовувати їх, якщо ви не знаєте, що робите, або ж якщо вас просять використовувати їх під час отримання підтримки.",
+        "devTools": {
+          "action": "Відкрити",
+          "description": "Відкриває інструменти розробника Edge для цілей налагодження",
+          "title": "Відкрити інструменти розробника"
+        },
+        "memoryWatcher": {
+          "action": "Увімкнути",
+          "description": "Активувати моніторинг ОЗП, щоб контролювати всі дочірні процеси. Якщо будь-які процеси перевищують гігабайт використання пам'яті, буде показано діалогове вікно помилки і буде записано додаткову інформацію",
+          "modal": {
+            "error": {
+              "message": "Моніторинг ОЗП вже було активовано",
+              "title": "Вже активовано"
+            },
+            "success": {
+              "message": "Моніторинг ОЗП активовано!",
+              "title": "Моніторинг ОЗП активовано"
+            }
+          },
+          "title": "Мониторінг ОЗП"
+        },
+        "oscServerEnabled": {
+          "description": "Вимкнення цього параметра вимикає вбудовані сервери OSC і OSCQuery. Ця опція буде зберігатися між перезапусками. Зверніть увагу: якщо ви вимкнете цю функцію, деякі функції OyasumiVR перестануть працювати без будь-яких попереджень. Ця опція існує виключно для цілей налагодження, і не повинна вимикатися при звичайному використанні.",
+          "title": "Увімкнути сервери OSC та OSCQuery"
+        },
+        "title": "Виправлення та усунення неполадок",
+        "vrManifestReregister": {
+          "action": "Перереєструвати маніфест",
+          "description": "Перереєструє маніфест VR додатка OyasumiVR у SteamVR.",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "Оскільки ви використовуєте невідповідну збірку OyasumiVR (наприклад, Steam версію), маніфест додатка було скасовано, але не перереєстровано. Все так і повинно бути! Перезавантажте, будь ласка, OyasumiVR.",
+              "title": "Маніфест програми незареєстровано"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "Маніфест було видалено, але додати його назад нам не вдалося. Перезавантажте OyasumiVR та перевірте логи.",
+              "title": "Перереєстрація маніфесту додатка VR не вдалася"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "Не вдалося перевірити, чи був маніфест OyasumiVR вже зареєстрований у SteamVR. Будь ласка, перезавантажте OyasumiVR та перевірте логи.",
+              "title": "Перереєстрація маніфесту додатка VR не вдалася"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "У OyasumiVR не було зареєстрованого в SteamVR маніфесту. Його не було (пере) зареєстровано. Перезавантажте OyasumiVR.",
+              "title": "Перереєстрація маніфесту додатка VR не вдалася"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "Маніфест не вдалося видалити. Перевірте логи.",
+              "title": "Перереєстрація маніфесту додатка VR не вдалася"
+            },
+            "success": {
+              "message": "Маніфест OyasumiVR успішно перереєстровано в SteamVR.",
+              "title": "Маніфест VR додатка перереєстровано"
+            },
+            "UNKNOWN": {
+              "message": "Маніфест OyasumiVR не вдалося перереєструвати в SteamVR через невідому помилку. Будь ласка, перезавантажте OyasumiVR та перевірте логи.",
+              "title": "Перереєстрація маніфесту додатка VR не вдалася"
+            }
+          },
+          "title": "Перереєструвати маніфест програми SteamVR"
+        }
+      },
+      "logs": {
+        "openFolder": {
+          "action": "Відкрити папку",
+          "description": "Відкриває папку з лог-файлами OyasumiVR у провіднику",
+          "title": "Відкрити папку з лог-файлами"
+        },
+        "title": "Лог-файли"
+      },
+      "persistentData": {
+        "clearData": "Очистити дані",
+        "clearModal": {
+          "message": "Ви впевнені, що хочете видалити ці дані? Це неможливо скасувати!\n\n{items}",
+          "title": "Підтвердіть очищення даних"
+        },
+        "dataType": {
+          "all": {
+            "description": "Усі дані, які зберігає OyasumiVR, включно з усіма вашими налаштуваннями.",
+            "title": "Усі дані"
+          },
+          "appCache": {
+            "description": "Усі дані, які зберігаються тимчасово, наприклад відповіді API VRChat.",
+            "title": "Данные Кэша"
+          },
+          "appSettings": {
+            "description": "Усі основні налаштування OyasumiVR.",
+            "title": "Налаштування програми"
+          },
+          "automationSettings": {
+            "description": "Усі налаштування, що належать до однієї з автоматизацій OyasumiVR",
+            "title": "Налаштування автоматизації"
+          },
+          "eventLog": {
+            "description": "Події, які реєструються в журналі",
+            "title": "Журнал подій"
+          },
+          "imageCache": {
+            "description": "Усі зображення, які зберігаються тимчасово, наприклад аватарки гравців в VRChat",
+            "title": "Кеш зображень"
+          },
+          "integrations": {
+            "description": "Дані, що стосуються інтеграцій (за винятком VRChat), наприклад дані аутентифікації.",
+            "title": "Дані інтеграцій"
+          },
+          "logs": {
+            "description": "Файли журналу, які створює OyasumiVR",
+            "title": "Лог-файли"
+          },
+          "miscData": {
+            "description": "Усі інші дані, які зберігає OyasumiVR, що не підпадають під інші категорії",
+            "title": "Інші дані"
+          },
+          "vrcData": {
+            "description": "Дані, що стосуються VRChat, такі як аутентифікаційні дані",
+            "title": "Дані VRChat"
+          }
+        },
+        "description": "Керування даними, які OyasumiVR зберігає на вашому диску.",
+        "relaunchModal": {
+          "later": "Я зроблю це пізніше",
+          "message": "Запитані вами дані було видалено. Після цього ми рекомендуємо вам перезавантажити OyasumiVR.\n\n\nХочете зробити це зараз? Якщо ви не перезавантажите OyasumiVR, це може призвести до небажаних наслідків.",
+          "relaunch": "Перезавантажити OyasumiVR зараз",
+          "title": "Перезавантаження OyasumiVR"
+        },
+        "title": "Незмінні дані"
+      },
+      "title": "Розширені налаштування",
+      "translation": {
+        "contribute": {
+          "description": "Додайте відсутній переклад або допоможіть додати нові мови!",
+          "docs": "Дізнатися як",
+          "title": "Допоможіть нам, додавши свій переклад"
+        },
+        "editor": {
+          "action": "Запустити редактор",
+          "description": "Запустіть редактор перекладів OyasumiVR для редагування та створення перекладів",
+          "experimental": "Цей модуль все ще перебуває в експериментальній стадії розробки і доступний тільки на англійській мові. Хоча ви все ще можете користуватися редактором, не забувайте, що він все ще перебуває в розробці. Рекомендуємо зачекати, поки усі проблеми й відсутні функції не буде виявлено і виправлено.",
+          "title": "Редактор перекладів"
+        },
+        "loadFile": {
+          "action": "Завантажити файл",
+          "description": "Завантажте власний мовний файл. Корисно під час тестування нових перекладів.",
+          "title": "Завантажити файл перекладу"
+        },
+        "title": "Мова і переклад"
+      }
+    },
+    "general": {
+      "adminPrivileges": {
+        "description": "OyasumiVR необхідні права адміністратора, щоб мати можливість контролювати обмеження потужності вашої відеокарти. Якщо ви увімкнете це, OyasumiVR запитуватиме права адміністратора під час запуску.",
+        "label": "Запитувати права адміністратора під час запуску",
+        "title": "Права адміністратора"
+      },
+      "discord": {
+        "activityMode": {
+          "description": "Показувати OyasumiVR як вашу поточну активність на Discord",
+          "options": {
+            "DISABLED": "Вимкнено",
+            "ENABLED": "Увімкнено",
+            "ONLY_ASLEEP": "Тільки під час сну"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Показувати активність тільки коли VRChat запущено"
+        },
+        "title": "Discord"
+      },
+      "language": {
+        "description": "Тут ви можете обрати мову інтерфейсу. Якщо якийсь переклад відсутній, або ж ви хочете додати вашу мову, зв'яжіться з нами!",
+        "title": "Мова інтерфейсу"
+      },
+      "lighthouseConsole": {
+        "description": "OyasumiVR необхідно знати про місцезнаходження <strong>lighthouse_console.exe</strong> вашого SteamVR.\nЯкщо OyasumiVR не може знайти його в папці за замовчуванням, вам необхідно вказати, де його можна знайти.",
+        "status": {
+          "CHECKING": "Перевірка доступності <strong>lighthouse_console.exe</strong>",
+          "INVALID_EXECUTABLE": "Не вдалося перевірити роботу <strong>lighthouse_console.exe</strong> за цим шляхом.",
+          "INVALID_FILENAME": "Шлях до файлу не є допустимим.",
+          "NOT_FOUND": "Не вдалося знайти файл <strong>lighthouse_console.exe</strong> за цим шляхом.",
+          "PERMISSION_DENIED": "OyasumiVR не має дозволу на запуск <strong>lighthouse_console.exe</strong> у цьому місці. Спробуйте запустити OyasumiVR від імені адміністратора.",
+          "SUCCESS": "<strong>lighthouse_console.exe</strong> знайдено і працює коректно!",
+          "UNKNOWN_ERROR": "Сталася невідома помилка під час пошуку <strong>lighthouse_console.exe</strong> за цим шляхом."
+        },
+        "title": "Консоль Lighthouse"
+      },
+      "lighthousePowerControl": {
+        "enable": {
+          "description": "Якщо цей параметр увімкнено, ви зможете вимикати/вмикати свої базові станції за допомогою OyasumiVR. Обов'язково потрібен Bluetooth модуль і базові станції V2.0",
+          "title": "Увімкнути керування живленням"
+        },
+        "powerOffMode": {
+          "description": "На відміну від режиму очікування, сплячий режим також вимикає мотори, повторне ввімкнення яких може зайняти більше часу.",
+          "sleep": {
+            "description": "Вимк. живлення\nлазерів й моторів",
+            "title": "Сон"
+          },
+          "standby": {
+            "description": "Вимк. живлення\nлазерів",
+            "title": "Очікування"
+          },
+          "title": "Бажаний стан вимкнення живлення"
+        },
+        "title": "Керування живленням базової станції SteamVR"
+      },
+      "miscellaneous": {
+        "overlayGpuFix": {
+          "description": "Якщо у вас виникли проблеми з відкриттям оверлея SteamVR, увімкнення цієї функції може вирішити проблему в деяких системах (наприклад, з гібридною графікою). Зміна цього налаштування перезавантажить оверлей.",
+          "title": "Виправлення графіки для оверлея SteamVR"
+        },
+        "title": "Різне"
+      },
+      "overlay": {
+        "binding": {
+          "description": "Кнопку відкриття оверлея можна налаштувати в меню налаштування прив'язки кнопок SteamVR.",
+          "title": "Прив'язка кнопок контролера"
+        },
+        "onlyOpenMenuWhenVRChatRunning": {
+          "description": "Увімкніть це, щоб меню не відкривалося, поки VRChat не запущено",
+          "title": "Відкривати меню тільки під час роботи VRChat"
+        },
+        "overlayMenu": {
+          "description": "Це можна вимкнути, якщо ви хочете повністю вимкнути оверлей меню OyasumiVR.",
+          "title": "Увімкнути меню оверлея"
+        },
+        "title": "Оверлей"
+      },
+      "sleepMode": {
+        "startupBehaviour": {
+          "description": "У якому стані має бути сплячий режим під час відкриття OyasumiVR",
+          "option": {
+            "disabled": {
+              "description": "Неактивний під час запуску",
+              "title": "Неактивний"
+            },
+            "enabled": {
+              "description": "Активний під час запуску",
+              "title": "Активний"
+            },
+            "persist": {
+              "description": "Запам'ятовує з минулого разу",
+              "title": "Збережений стан"
+            }
+          },
+          "title": "Стан запуску"
+        },
+        "title": "Сплячий режим"
+      },
+      "startStop": {
+        "title": "Запуск і зупинка"
+      },
+      "startWithSteamVR": {
+        "description": "Запустити OyasumiVR під час запуску SteamVR",
+        "howTo": "Дізнатися як",
+        "label": "Запуск разом зі SteamVR"
+      },
+      "stopWithSteamVR": {
+        "description": "Вийти з OyasumiVR, якщо SteamVR зупинено на деякий час",
+        "label": "Вийти разом зі SteamVR",
+        "options": {
+          "AFTERDELAY": "Через 2 хвилини",
+          "DISABLED": "Вимкнено",
+          "IMMEDIATELY": "Одразу ж"
+        }
+      },
+      "systemTray": {
+        "close": {
+          "description": "Згортає OyasumiVR у системний трей замість виходу з програми.",
+          "label": "Згортати в системний трей"
+        },
+        "start": {
+          "description": "Запускає OyasumiVR згорнутим у системний трей.",
+          "label": "Запуск у системному треї"
+        },
+        "title": "Системний трей"
+      },
+      "telemetry": {
+        "description": "Якщо цю функцію ввімкнено, OyasumiVR збиратиме анонімні дані про використання, такі як інформація про версію та звіти про збої. Ці дані повністю анонімні та не містять жодних персональних даних. Вони використовуються тільки для відстеження помилок і надання деякої загальної статистики про використання.<br>Для отримання додаткової інформації ви можете відвідати <a target=\"_blank\" href=\"https://aptabase.com/legal/privacy\"> Політику конфіденціальності Aptabase</a>.",
+        "label": "Надсилати анонімні дані про використання",
+        "title": "Телеметрія"
+      },
+      "title": "Загальні налаштування"
+    },
+    "hotkeys": {
+      "action": {
+        "HOTKEY_DISABLE_SLEEP_MODE": "Вимкнути сплячий режим",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Увімкнути сплячий режим",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Запустити послідовність вимкнення",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Підготовка до сну",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Переключить базовые станции",
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Переключити сплячий режим",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Вимкнути контролери",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Вимкнути базові станції",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Вимкнути трекери",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Увімкнути базові станції"
+      },
+      "actionDescription": "Встановіть гарячу клавішу для запуску цієї дії",
+      "actions": "Дії гарячих клавіш",
+      "description": "Тут ви можете прив'язати гарячі клавіші до певних дій в OyasumiVR.",
+      "title": "Налаштування гарячих клавіш"
+    },
+    "integrations": {
+      "configure": "Налаштувати",
+      "connect": "Підключити",
+      "copy": "Скопіювати посилання в буфер обміну",
+      "description": "Деякі функції OyasumiVR можуть використовувати зовнішні сервіси. Якщо ви хочете підключити OyasumiVR до одного з них, ви за адресою!",
+      "disconnect": "Від'єднати",
+      "homeAssistant": {
+        "description": "Інтегруйте OyasumiVR з іншою частиною вашого розумного будинку, під'єднавши його до Home Assistant. Це дасть вам змогу створювати власні засоби автоматизації та керувати різними розумними пристроями.",
+        "title": "Home Assistant (через MQTT)"
+      },
+      "providerLink": "Сайт постачальника",
+      "pulsoid": {
+        "description": "Надає дані про ваш пульс в OyasumiVR, які можна використовувати для запуску певних автоматизацій.<br><i>Для цієї інтеграції потрібна одноразова купівля інтеграції OyasumiVR від Pulsoid або наявність активної підписки Pulsoid «BRO». Перед покупкою переконайтеся, що у вас є сумісний пристрій.</i>",
+        "title": "Pulsoid"
+      },
+      "reveal": "Розкрити",
+      "title": "Інтеграції",
+      "vrchat": {
+        "description": "Прив'язка вашого облікового запису забезпечує доступ до деяких засобів автоматизації OyasumiVR, пов'язаних із VRChat.",
+        "title": "VRChat"
+      }
+    },
+    "notifications": {
+      "notifications": {
+        "category": {
+          "AUTO_ACCEPTED_INVITE_REQUEST": {
+            "description": "Отримувати сповіщення, коли OyasumiVR автоматично приймає чийсь запит на приєднання.",
+            "title": "Автоматично прийнято запит на приєднання"
+          },
+          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
+            "description": "Отримувати сповіщення, коли OyasumiVR автоматично оновлює ваш статус VRChat",
+            "title": "Статус VRChat оновлено (автоматизація ліміту гравців)"
+          },
+          "SLEEP_MODE_DISABLED": {
+            "description": "Отримувати сповіщення при вимкненні сплячого режиму",
+            "title": "Сплячий режим вимкнено"
+          },
+          "SLEEP_MODE_ENABLED": {
+            "description": "Отримувати сповіщення при активації сплячого режиму",
+            "title": "Сплячий режим увімкнено"
+          }
+        },
+        "description": "Виберіть, які сповіщення надсилатимуться, а які ні",
+        "title": "Увімкнені сповіщення"
+      },
+      "provider": {
+        "description": "Виберіть, яка програма-провайдер має використовуватися для доставки повідомлень",
+        "title": "Провайдер сповіщень"
+      },
+      "title": "Налаштування сповіщень",
+      "volume": {
+        "description": "Встановити рівень гучності звуку деяких типів повідомлень",
+        "test": "Перевірити",
+        "title": "Загальна гучність сповіщень"
+      }
+    },
+    "statusInfo": {
+      "copy": {
+        "action": "Скопіювати",
+        "description": "Скопіювати всю інформацію нижче в буфер обміну",
+        "title": "Скопіювати в буфер обміну"
+      },
+      "description": "Тут ви можете знайти всю технічну інформацію про OyasumiVR і деякі його внутрішні компоненти. Здебільшого це використовується для цілей налагодження, і може бути корисно під час усунення неполадок або отримання підтримки.",
+      "title": "Інформація про статус"
+    },
+    "updates": {
+      "changelog": "Журнал змін",
+      "checkForUpdates": "Перевірка наявності оновлень",
+      "install": "Встановити v{version}",
+      "notChecked": "OyasumiVR ще не перевіряв наявність оновлень.",
+      "noUpdate": "Ви використовуєте останню версію OyasumiVR v{version}!",
+      "title": "Оновлення",
+      "updateAvailable": "Доступна нова версія OyasumiVR! Ви використовуєте v{currentVersion}.\nНайновіша версія — v{latestVersion}.",
+      "updatesDisabled": {
+        "DEV": "Оскільки ви використовуєте збірку OyasumiVR для розробників, оновлення вимкнено.\nЯкщо ви хочете встановити нову версію OyasumiVR, завантажте та запустіть інсталятор вручну.",
+        "STEAM": "Ви встановили Steam версію OyasumiVR.\nНові оновлення OyasumiVR надаються через Steam!"
+      }
+    }
+  },
+  "shared": {
+    "common": {
+      "none": "Нічого"
+    },
+    "logo": {
+      "tagline": "Утиліта для сну у VR"
+    },
+    "misc": {
+      "vrcLoginRequired": "Ця функція вимагає, щоб ви увійшли у свій акаунт VRChat."
+    },
+    "modals": {
+      "cancel": "Відміна",
+      "close": "Зачинити",
+      "confirm": "Підтвердити",
+      "login": "Увійти",
+      "ok": "Ок",
+      "open": "Відкрити",
+      "save": "Зберегти"
+    },
+    "time": {
+      "minutes": "Хвилин",
+      "seconds": "Секунд"
+    }
+  },
+  "shutdown-automations": {
+    "confirm-modal": {
+      "message": "Ви впевнені, что хотите активировать последовательность выключения прямо сейчас?",
+      "title": "Ви впевнені?"
+    },
+    "description": "Якщо вам подобається засинати у VR, але ви не хочете спати у шоломі усю ніч, ви можете використати послідовне вимкнення OyasumiVR. Ця функція автоматично вимкне вашу гру, пристрої й/або комп'ютер, щоб ви змогли солодко спати й далі без VR. Ви можете запустити цю функцію вручну, або ж використати одну з декількох автоматизацій для автоматичного вимкнення, наприклад коли ви задрімали",
+    "noOptionsSelected": "Оскільки у вас не вибрано жодних дій для виконання під час послідовності вимкнення, її запуск не матиме жодних наслідків. Щоб ця функція щось зробила, виберіть хоча б один із варіантів нижче.",
+    "overlay": {
+      "cancel": "Відмінити зараз",
+      "stage": {
+        "POWERING_DOWN": "Вимикання Windows...",
+        "QUITTING_STEAMVR": "Вихід із SteamVR...",
+        "TURNING_OFF_BASESTATIONS": "Вимкнення базових станцій...",
+        "TURNING_OFF_CONTROLLERS": "Вимкнення контролерів...",
+        "TURNING_OFF_TRACKERS": "Вимкнення трекерів..."
+      },
+      "title": "Вимикання"
+    },
+    "sequence": {
+      "powerDownWindows": {
+        "description": "Спроби вимкнути комп'ютер",
+        "options": {
+          "HIBERNATE": "Режим гібернації",
+          "LOGOUT": "Вийти",
+          "REBOOT": "Перезавантаження",
+          "SHUTDOWN": "Завершити роботу",
+          "SLEEP": "Сплячий режим"
+        },
+        "rebootMessage": "OyasumiVR перезавантажує ваш комп'ютер",
+        "shutdownMessage": "OyasumiVR вимикає ваш комп'ютер",
+        "title": "Завершити роботу Windows"
+      },
+      "quitSteamVR": {
+        "conflict": {
+          "description": "Ви налаштували OyasumiVR на негайний вихід при зупинці SteamVR. Через це будь-яка подальша автоматизація може не запуститися. Щоб це виправити, або вимкніть це завдання, або налаштуйте OyasumiVR так, щоб вона не закривалася негайно під час зупинки SteamVR, у загальних налаштуваннях.",
+          "goToSettings": "Загальні налаштування",
+          "title": "Попередження: виконання цієї задачі призведе до негайного завершення роботи OyasumiVR"
+        },
+        "description": "Це також має призвести до виходу з будь-якої запущеної гри або оверлею",
+        "title": "Вийти із SteamVR"
+      },
+      "run": "Запустити послідовність",
+      "title": "Дії послідовного вимкнення",
+      "turnOffBaseStations": {
+        "description": "Вимикає всі базові станції, які ще активні",
+        "title": "Вимкнути базові станції"
+      },
+      "turnOffControllers": {
+        "description": "Вимикає ваші контролери",
+        "title": "Вимкнути контролери"
+      },
+      "turnOffDevices": {
+        "title": "Вимкнути пристрої"
+      },
+      "turnOffTrackers": {
+        "description": "Вимикає ваші трекери",
+        "title": "Вимкнути трекери"
+      }
+    },
+    "tabs": {
+      "settings": "Налаштування",
+      "triggers": "Фактори"
+    },
+    "title": "Послідовність вимкнення",
+    "triggers": {
+      "whenAlone": {
+        "description": "Активувати послідовне вимкнення якщо ви були на самоті у своєму світі в VRChat достатньо довго. Воно спрацює тільки якщо ви були в компанії до цього.",
+        "title": "Активувати, коли ви залишитесь на самоті"
+      },
+      "whenAloneDuration": {
+        "description": "Як довго ви маєте бути на самоті, перш ніж запуститься послідовне вимкнення",
+        "title": "Поріг тривалості"
+      },
+      "whenAloneTimeWindow": {
+        "description": "Дозволити вимкнення тільки в певні години дня",
+        "title": "Час активації"
+      },
+      "whenAsleep": {
+        "description": "Активувати послідовність вимкнення, коли режим сну був активний протягом певного часу",
+        "title": "Активувати, коли я сплю"
+      },
+      "whenAsleepDuration": {
+        "description": "Як довго має бути активним режим сну перед виконанням послідовності вимкнення",
+        "title": "Поріг тривалості"
+      },
+      "whenAsleepTimeWindow": {
+        "description": "Дозволити вимкнення тільки в певні години дня",
+        "title": "Час активації"
+      }
+    }
+  },
+  "sleep-detection": {
+    "disableAutomations": {
+      "afterTime": {
+        "description": {
+          "hours": "Через {hours, plural, one {1 годину} other {# годин}}",
+          "hoursAndMinutes": "Через {hours, plural, one {1 годину} other {# годин}} и {minutes, plural, one {1 хвилину} other {# хвилин}}",
+          "minutes": "Через {minutes, plural, one {1 хвилину} other {# хвилин}}"
+        },
+        "title": "Через певний час"
+      },
+      "atTime": "У певний час",
+      "description": "Авто-вимкнення сплячого режиму на основі різних умов",
+      "onDevicePowerOn": "Коли пристрій увімкнено",
+      "onPlayerJoinOrLeave": "Коли гравець VRChat приєднується до вашого світу або залишає його",
+      "onSteamVRStop": "Коли SteamVR вимкнений",
+      "onUprightPose": "Коли ви сидите прямо після того, як лежали"
+    },
+    "enableAutomations": {
+      "atBatteryPercentage": "Коли відсоток заряду батареї пристрою нижчий ніж <strong>{value}%</strong>",
+      "atTime": "У певний час",
+      "description": "Авто-увімкнення сплячого режиму на основі різних умов",
+      "onControllersPoweredOff": {
+        "batteryLevelAutomationConflict": {
+          "action": "Автоматизація ел.живлення:\nКонтролери та трекери",
+          "description": "Ви налаштували контролери на автоматичне вимкнення, коли рівень заряду батареї падає нижче певного відсотка. Це може призвести до випадкового ввімкнення режиму сну, що може бути не тим, що вам потрібно. Щоб запобігти цьому, ви можете вимкнути цю поведінку в розділі «Контролери та трекери» налаштувань автоматизації елементів живлення.",
+          "title": "Увага: це може бути спричинено іншою автоматизацією!"
+        },
+        "title": "Коли всі контролери вимкнені"
+      },
+      "onHeartRateCalmPeriod": {
+        "description": "Потрібна <a class=\"integrationsPageLink\">Інтеграція з Pulsoid</a>",
+        "title": "Коли мій пульс стабільний протягом певного часу"
+      }
+    },
+    "experimentalAutomation": "Ця автоматизація є експериментальною і поки що може бути ненадійною.",
+    "modals": {
+      "disableAfterTime": {
+        "description": "Вимкнути сплячий режим після того, як він був увімкнений протягом певного часу.",
+        "time": "Тривалість",
+        "title": "Вимкнути сплячий режим"
+      },
+      "disableAtTime": {
+        "description": "Вимкнути сплячий режим У певний час суток",
+        "time": "Час",
+        "title": "Вимкнути сплячий режим"
+      },
+      "disableForPlayerJoinLeave": {
+        "description": "Вимикати сплячий режим, коли (певний) гравець приєднується до вашого світу або залишає його. Це може бути корисно, якщо ви хочете прокинутися, якщо хтось приєднається до вас, поки ви спите, або якщо ви залишитеся самі.",
+        "onJoin": {
+          "title": "Спрацьовує коли гравець заходить"
+        },
+        "onLeave": {
+          "title": "Спрацьовує коли гравець виходить"
+        },
+        "onlyWhenLeftAlone": {
+          "description": "Спрацьовує тільки тоді, коли ви одні у своєму світі після того, як інший гравець пішов.",
+          "title": "Тільки коли ви залишаєтеся на самоті"
+        },
+        "onlyWhenPreviouslyAlone": {
+          "description": "Спрацьовує тільки тоді, коли ви були на самоті у своєму світі до того, як до нього приєднався інший гравець",
+          "title": "Тільки коли ви раніше були на самоті"
+        },
+        "title": "Вимкнути сплячий режим",
+        "triggerOptions": {
+          "BLACKLIST": "Для гравців яких немає в списку",
+          "DISABLED": "Ні для кого",
+          "EVERYONE": "Для всіх",
+          "FRIEND": "Для друзів",
+          "WHITELIST": "Для гравців у списку"
+        }
+      },
+      "disableForUprightPose": {
+        "description": "Вимикати режим сну, якщо ви сидите у вертикальному положенні протягом певного часу після того як лежали.",
+        "duration": {
+          "description": "Як довго потрібно сидіти, щоб сплячий режим вимкнувся",
+          "title": "Тривалість"
+        },
+        "title": "Вимкнути сплячий режим"
+      },
+      "disableOnDevicePowerOn": {
+        "Controller": "Контролерів",
+        "GenericTracker": "Трекерів",
+        "title": "Вимкнути сплячий режим",
+        "whenTurningOn": "При включенні"
+      },
+      "enableAtBatteryPercentage": {
+        "Controller": "Контролерів",
+        "errors": {
+          "thresholdNotInteger": "Процентное значение должно быть целым числом.",
+          "thresholdOutOfRange": "Процентное соотношение должно быть от 0% до 100%."
+        },
+        "fallsBelow": "Опускається нижче",
+        "GenericTracker": "Трекерів",
+        "title": "Увімкнути сплячий режим",
+        "whenA": "Коли заряд"
+      },
+      "enableAtTime": {
+        "description": "Увімкнути сплячий режим у певний час доби.",
+        "time": "Час",
+        "title": "Увімкнути сплячий режим"
+      },
+      "enableForSleepDetector": {
+        "calibration": {
+          "action": "Відкалібрувати",
+          "description": "Вам необхідно виконати калібрування хоча б один раз, перш ніж намагатися використовувати цю функцію.",
+          "title": "Калібровка"
+        },
+        "considerControllerPresence": {
+          "description": "Якщо цю функцію ввімкнено, виявлення сну також враховуватиме сигнали ваших контролерів.",
+          "title": "Враховувати сигнали ваших контролерів"
+        },
+        "considerSleepingPose": {
+          "description": "Якщо цю функцію ввімкнено, виявлення сну також враховуватиме вашу позу сну.",
+          "title": "Враховувати позу сну"
+        },
+        "description": "Якщо цю функцію ввімкнено, OyasumiVR автоматично ввімкне сплячий режим, коли визначить, що ви спите, на підставі вашого руху.",
+        "detectionWindow": {
+          "description": "Як довго OyasumiVR має чекати, перш ніж виявить, що ви спите",
+          "title": "Час виявлення",
+          "unit": "хв"
+        },
+        "sensitivity": {
+          "description": "Чим вища чутливість, тим більша ймовірність того, що OyasumiVR виявить, що ви спите.",
+          "presets": {
+            "HIGH": "Висока",
+            "HIGHEST": "Найвишча",
+            "LOW": "Низька",
+            "LOWEST": "Найнижча",
+            "MEDIUM": "Середня"
+          },
+          "title": "Чутливість"
+        },
+        "sleepCheck": {
+          "description": "Надішле вам повідомлення з питанням, чи не спите ви, перш ніж увімкнути сплячий режим.",
+          "title": "Перш ніж увімкнути сплячий режим, запитати, чи не сплю я"
+        },
+        "timeWindow": {
+          "description": "Дозволити виявлення сну тільки для активації сплячого режиму у певний час доби.",
+          "title": "Час активації"
+        },
+        "title": "Увімкнути сплячий режим"
+      },
+      "enableOnHeartRateCalmPeriod": {
+        "bpm": {
+          "description": "Число ударів на хвилину, яке ваше серце має підтримувати, щоб увімкнути режим сну.",
+          "title": "Поріг ударів за хвилину",
+          "unit": "Ударів за хвилину"
+        },
+        "description": "Вмикати режим сну, коли ваш пульс був нижчим за певний поріг протягом певного часу. Визначте порогове значення ударів на хвилину, нижче за яке має залишатися ваш пульс, а також протягом якого часу, щоб режим сну був увімкнений.\n\nДля цього вам потрібно увімкнути <a class=\"integrationsPageLink\">інтеграцію з Pulsoid</a>.",
+        "duration": {
+          "description": "Як довго ваш пульс має залишатися нижче порогового значення, щоб ввімкнути режим сну.",
+          "title": "Тривалість",
+          "unit": "хв"
+        },
+        "notEnoughData": "Недостатньо даних, щоб переглянути історію пульсу.",
+        "title": "Увімкнути сплячий режим",
+        "viewHistory": {
+          "actionHide": "Приховати історію",
+          "actionShow": "Переглянути історію",
+          "description": "Перегляд історії пульсу за останні 12 годин",
+          "title": "Історія пульсу"
+        }
+      },
+      "sleepDetectorCalibration": {
+        "calibrating": {
+          "countdown": "{counter} секунд залишилось...",
+          "instruction": "Калібровка",
+          "note": "Не ворушіться."
+        },
+        "countdown": {
+          "instruction": "Начинем через {counter}",
+          "note": "Не рухайся під час калібрування! Прикиньтеся, що ви спите.\nРух під час калібрування призведе до того, що функція працюватиме некоректно."
+        },
+        "currentCalibration": "Поточне значення калібрування:",
+        "done": {
+          "instruction": "Калібрування завершено!",
+          "note": "Тепер ви можете використовувати цю автоматизацію."
+        },
+        "failed": {
+          "instruction": "Помилка калібрування",
+          "note": "Не вдалося успішно виконати калібрування, ймовірно через те, що ваша гарнітура не передає жодних даних. Переконайтеся, що ваша гарнітура відстежується, і спробуйте будь ласка ще раз."
+        },
+        "info": {
+          "intro": "OyasumiVR може визначити, чи заснули ви, за рухом вашої VR гарнітури. Щоб це зробити, вам спочатку потрібно відкалібруватися відповідно до ваших налаштувань VR. Вам необхідно виконати калібрування хоча б один раз, перш ніж використовувати цю функцію.",
+          "step": {
+            "one": "Одягніть вашу VR гарнітуру і ляжте",
+            "three": "Лежіть нерухомо 10 секунд.",
+            "two": "Почніть калібрування в OyasumiVR у вашому оверлеї."
+          },
+          "stepPrefix": "Калібрування виконується таким чином:",
+          "stepSuffix": "Ось і все! Після калібрування OyasumiVR зможе визначити, чи заснули ви, за рухом вашої VR гарнітури."
+        },
+        "noSteamVR": "Ви можете почати калібрування тільки після запуску SteamVR з під'єднаною VR гарнітурою.",
+        "prepare": {
+          "instruction": "Одягніть вашу VR гарнітуру і ляжте.",
+          "note": "Щойно ви будете готові і побачите це вікно у своєму оверлеї, натисніть 'Почати калібрування', щоб приступити до роботи."
+        },
+        "restartCalibration": "Повторити калібрування",
+        "startCalibration": "Почати калібрування",
+        "title": "Калибровка обнаружения сна"
+      }
+    },
+    "sleepDetection": {
+      "advanced": {
+        "description": "Здесь вы можете настроить некоторые более глубокие аспекты детектора сна. Обычно рекомендуется оставить значения этих настроек по умолчанию.",
+        "title": "Расширенные настройки"
+      },
+      "automation": {
+        "calibrationPending": {
+          "calibrate": "Калибровать сейчас",
+          "title": "<strong>Ожидание калибровки</strong>. Прежде чем использовать функцию обнаружения сна, необходимо хотя бы один раз выполнить калибровку, чтобы повысить ее точность."
+        },
+        "description": "Автоматично вмикати сплячий режим, коли OyasumiVR вважає, що ви спите",
+        "title": "Виявлення сну"
+      },
+      "configuration": {
+        "title": "Конфігурація"
+      },
+      "description": "Виявлення сну - це спосіб активації сплячого режиму, розроблений OyasumiVR. Ця функція автоматично вмикає для вас сплячий режим, коли вона підозрює, що ви спите, на основі різних чинників, наприклад рух вашої гарнітури VR і сигнали ваших контролерів."
+    },
+    "tab": {
+      "detection": "Виявлення",
+      "disabling": "Вимкнення сплячого режиму",
+      "enabling": "Увімкнення сплячого режиму"
+    },
+    "title": "Виявлення сну"
+  },
+  "sleepAnimations": {
+    "title": "Анімації сну"
+  },
+  "status-automations": {
+    "atLimitOrAbove": {
+      "description": "Встановить вам статус на",
+      "title": "Ліміт чи вище ліміту"
+    },
+    "behaviourWarning": "Зміни статусу через OyasumiVR не видні гравцям. Навіть для інших гравців відображення оновленого статусу може зайняти деякий час. Це обмеження лежить на стороні VRChat, яке OyasumiVR не може виправити.",
+    "behaviourWarningFAQ": "Тут ви можете знайти відповіді на деякі запитання, які можуть у вас виникнути про поведінку під час зміни статусу:\n\nQ: Чи можу я, як і раніше, автоматично приймати запити на приєднання, навіть якщо VRChat не показує, що я перебуваю в синьому статусі? \nA: Якщо OyasumiVR встановить для вас синій статус (приєднуйтесь до мене), він візьме на себе роботу, автоматично приймаючи отримані запрошення. \n\nQ: Люди не можуть приєднатися до мене, тому що мій статус для них не оновлюється. \nA: Оновлення статусу може зайняти деякий час, перш ніж його стане видно іншим користувачам. Якщо вони хочуть приєднатися до вас, вони можуть примусово оновити ваш статус, відкривши ваш профіль у головному меню.",
+    "belowLimit": {
+      "description": "Встановить вам статус на",
+      "title": "Нижче ліміту"
+    },
+    "description": "OyasumiVR може обмежити кількість людей, які зможуть зайти до вас, автоматично встановлюючи ваш статус залежно від кількості гравців у вашому світі.",
+    "disableToEdit": "Будь ласка, вимкніть автоматизацію статусу, перш ніж вносити будь-які зміни.",
+    "enable": "Увімкнути автоматизацію статусу",
+    "exampleUse": "Приклад: коли хтось приєднується до вас, OyasumiVR автоматично перемкне статус на помаранчевий або червоний!\nКоли гравець покине вас, і ви знову залишитеся наодинці, OyasumiVR автоматично перемкне статус назад на синій, щоб хтось ще зміг приєднатися до вас.",
+    "moreInfo": "Більше інформації",
+    "onlyIfSleepModeEnabled": "Тільки в разі ввімкненого сплячого режиму",
+    "playerLimit": "Ліміт гравців",
+    "playerLimitLabel": "{count, plural, one {1 гравець} other {# гравців}} (включаючи вас)",
+    "title": "Автоматизація статусу"
+  },
+  "systemMicMuteAutomations": {
+    "audioDevice": {
+      "description": "Обов'язково двічі перевірте, що це той самий мікрофон, який ви використовуєте у VRChat!",
+      "options": {
+        "DEFAULT": "Пристрій за замовчуванням:\n{deviceName}"
+      },
+      "title": "Аудіопристрій із мікрофоном"
+    },
+    "config": {
+      "title": "Конфігурація"
+    },
+    "controllerBinding": {
+      "automations": "Автоматизація прив'язки кнопок контролера",
+      "binding": {
+        "description": "Налаштуйте, які кнопки контролера слід використовувати для керування вимкненням мікрофона.",
+        "title": "Прив'язка кнопок"
+      },
+      "conflictWarning": "Якщо ви використовуєте цю функцію для вимкнення мікрофона за допомогою VRChat, рекомендується в налаштуваннях VRChat або скасувати прив'язку кнопки вимкнення звуку, або встановити режим мікрофона на \"Завжди увімкнений\", щоб запобігти конфлікту клавіш.",
+      "currentMode": {
+        "description": "Відображає поточний режим кнопки контролера",
+        "PUSH_TO_TALK": "Говорити за натисканням",
+        "title": "Поведінка активної кнопки",
+        "TOGGLE": "Перемикання"
+      },
+      "description": "Прив'яжіть кнопку контролера, щоб керувати вимкненням мікрофона.",
+      "enabled": {
+        "description": "Чи ввімкнути прив'язку кнопок контролера для перемикання режиму вимкнення мікрофона",
+        "title": "Прив'язка кнопок контролера"
+      },
+      "mode": {
+        "description": "Як натискання кнопки має змінити стан мікрофона за замовчуванням",
+        "options": {
+          "NONE": "Не змінювати",
+          "PUSH_TO_TALK": "Говорити за натисканням",
+          "TOGGLE": "Перемикати"
+        },
+        "title": "Поведінка кнопки за замовчуванням"
+      },
+      "onSleepModeDisable": {
+        "description": "Змінити поведінку кнопки контролера на",
+        "title": "Коли сплячий режим вимкнено"
+      },
+      "onSleepModeEnable": {
+        "description": "Змінити поведінку кнопки контролера на",
+        "title": "Коли сплячий режим увімкнено"
+      },
+      "onSleepPreparation": {
+        "description": "Змінити поведінку кнопки контролера на",
+        "title": "Коли я готуюся до сну"
+      },
+      "title": "Прив'язка кнопок контролера",
+      "volume": {
+        "description": "Гучність звукових ефектів, які відтворюються, коли мікрофон вимкнений/ввімкнений",
+        "title": "Гучність перемикання"
+      }
+    },
+    "description": "Автоматично вимикає/вмикає мікрофон на апаратному рівні, коли ви засинаєте або прокидаєтеся! Це може стати в пригоді, якщо ви не хочете, щоб інші почули ваше хропіння чи сопіння ;)",
+    "muteOptions": {
+      "MUTE": "Викл. мікрофон",
+      "NONE": "Не змінювати",
+      "UNMUTE": "Вкл. мікрофон"
+    },
+    "overlayIndicator": {
+      "description": "Показувати індикатор в VR, коли ваш мікрофон вимкнуто.",
+      "enabled": {
+        "description": "Чи показувати індикатор вимкненого мікрофону в VR",
+        "title": "Індикатор вимкнутого мікрофона в оверлеї"
+      },
+      "fade": {
+        "description": "Через декілька секунд індикатор згасне. Ви можете знову відобразити індикатор, натиснувши на будь-яку кнопку на контролері. Рекомендується для VR-гарнітур з OLED-дисплеями, щоб знизити ризик вигоряння.",
+        "title": "Згасання"
+      },
+      "hardwareVoiceActivityThreshold": {
+        "description": "Встановіть поріг гучності, за яким має загоратися індикатор мікрофона",
+        "title": "Поріг голосової активації"
+      },
+      "opacity": {
+        "description": "Макс. непрозорість значку індикатора",
+        "title": "Непрозорість"
+      },
+      "title": "Індикатор на оверлеї",
+      "voiceActivityMode": {
+        "description": "Визначає, в якому режимі працює голосова активація (відображення індикатора).",
+        "modes": {
+          "HARDWARE": "Від гучності мікрофону",
+          "VRCHAT": "Від VRChat"
+        },
+        "title": "Режим активації голосом"
+      }
+    },
+    "stateAutomations": {
+      "onSleepModeDisable": {
+        "description": "Змінити стан мікрофона на",
+        "title": "Коли сплячий режим вимкнено"
+      },
+      "onSleepModeEnable": {
+        "description": "Змінити стан мікрофона на",
+        "title": "Коли сплячий режим увімкнено"
+      },
+      "onSleepPreparation": {
+        "description": "Змінити стан мікрофона на",
+        "title": "Коли я готуюся до сну"
+      },
+      "title": "Автоматизація вимкнення звуку"
+    },
+    "title": "Автоматизація вимкнення мікрофона на рівні системи",
+    "vrchat": {
+      "title": "Параметри VRChat",
+      "worldJoinBehaviour": {
+        "description": "Як має поводитися ваш мікрофон під час зміни світів у VRChat",
+        "options": {
+          "KEEP": "Зберегти останній стан",
+          "MUTE": "За замовчуванням викл.",
+          "UNMUTE": "За замовчуванням вкл."
+        },
+        "title": "Поведінка приєднання до світу"
+      }
+    }
+  },
+  "updater": {
+    "modals": {
+      "error": {
+        "message": "Не вдалося встановити оновлення. Будь ласка, спробуйте пізніше.",
+        "title": "Не вдалося встановити оновлення"
+      }
+    }
+  },
+  "vrchatMicMuteAutomations": {
+    "automations": {
+      "title": "Автоматизація"
+    },
+    "config": {
+      "title": "Конфігурація"
+    },
+    "control": {
+      "description": "Ви можете використати цю опцію, щоб перевірити, чи правильно працює вимкнення мікрофона",
+      "mute": "Вимкнути\nмікрофон",
+      "title": "Керування вимкненням мікрофона",
+      "unmute": "Увімкнути\nмікрофон"
+    },
+    "description": "Автоматично вимикайте або вмикайте мікрофон у VRChat, коли ви засинаєте або прокидаєтеся! Це може стати в пригоді, якщо ви хочете, щоб інші не почули ваше хропіння чи сопіння ;)\n\n\nЗверніть увагу: для того, щоб це працювало, необхідно, щоб OSC було ввімкнено у VRChat, а в поведінці вашого мікрофона було встановлено значення «Переключання»...",
+    "muteOptions": {
+      "MUTE": "Викл. звук микрофона",
+      "NONE": "Нічого",
+      "UNMUTE": "Вкл. звук микрофона"
+    },
+    "onSleepModeDisable": {
+      "description": "Змінити стан мікрофона на",
+      "title": "Коли сплячий режим вимкнено"
+    },
+    "onSleepModeEnable": {
+      "description": "Змінити стан мікрофона на",
+      "title": "Коли сплячий режим увімкнено"
+    },
+    "onSleepPreparation": {
+      "description": "Змінити стан мікрофона на",
+      "title": "Коли я готуюся до сну"
+    },
+    "status": {
+      "description": "Відображає поточний стан мікрофона в грі",
+      "muted": "Беззвучний",
+      "title": "Поточний стан мікрофона в VRChat",
+      "unknown": "Невідомо",
+      "unmuted": "Звук увімкнено"
+    },
+    "title": "Автоматизація вимкнення мікрофона VRChat"
+  }
+}
