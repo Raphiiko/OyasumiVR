@@ -130,6 +130,38 @@
       <div class="settings">
         <div class="setting-row">
           <div class="setting-row-label" translate>
+            <span translate>settings.advanced.fixes.overlayGpuFix.title</span>
+            <span translate>settings.advanced.fixes.overlayGpuFix.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="overlayGpuFix"
+                (change)="setOverlayGpuFix(!overlayGpuFix)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>settings.advanced.fixes.openVrInitDelayFix.title</span>
+            <span translate>settings.advanced.fixes.openVrInitDelayFix.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="openVrInitDelayFix"
+                (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
             <span translate>settings.advanced.fixes.vrManifestReregister.title</span>
             <span translate>settings.advanced.fixes.vrManifestReregister.description</span>
           </div>
@@ -143,21 +175,21 @@
             </button>
           </div>
         </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>settings.advanced.fixes.memoryWatcher.title</span>
-            <span translate>settings.advanced.fixes.memoryWatcher.description</span>
-          </div>
-          <div class="setting-row-action">
-            <button
-              class="btn btn-primary"
-              [disabled]="memoryWatcherActive"
-              (click)="activateMemoryWatcher()"
-            >
-              <span translate>settings.advanced.fixes.memoryWatcher.action</span>
-            </button>
-          </div>
-        </div>
+<!--        <div class="setting-row">-->
+<!--          <div class="setting-row-label" translate>-->
+<!--            <span translate>settings.advanced.fixes.memoryWatcher.title</span>-->
+<!--            <span translate>settings.advanced.fixes.memoryWatcher.description</span>-->
+<!--          </div>-->
+<!--          <div class="setting-row-action">-->
+<!--            <button-->
+<!--              class="btn btn-primary"-->
+<!--              [disabled]="memoryWatcherActive"-->
+<!--              (click)="activateMemoryWatcher()"-->
+<!--            >-->
+<!--              <span translate>settings.advanced.fixes.memoryWatcher.action</span>-->
+<!--            </button>-->
+<!--          </div>-->
+<!--        </div>-->
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>settings.advanced.fixes.devTools.title</span>

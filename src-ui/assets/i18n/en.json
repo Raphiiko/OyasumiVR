@@ -590,9 +590,9 @@
         },
         "shutdownSequenceStarted": {
           "reason": {
-            "MQTT": "Triggered over MQTT",
             "HOTKEY": "Triggered by hotkey",
             "MANUAL": "Triggered manually",
+            "MQTT": "Triggered over MQTT",
             "SLEEP_TRIGGER": "As you were asleep for long enough",
             "VRC_ALONE_TRIGGER": "As you were alone in your world instance for long enough"
           },
@@ -1451,9 +1451,17 @@
           },
           "title": "Memory Watcher"
         },
+        "openVrInitDelayFix": {
+          "title": "Enable OpenVR initialization delay",
+          "description": "Enabling this fix will add a delay to OyasumiVR initializing with OpenVR. This can help if you're experiencing issues with SteamVR crashing or encountering errors when starting it while OyasumiVR is already running."
+        },
         "oscServerEnabled": {
           "description": "Turning this off disables the built-in OSC and OSCQuery servers. This option persists between restarts. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
           "title": "Enable OSC & OSCQuery Servers"
+        },
+        "overlayGpuFix": {
+          "description": "If you are experiencing issues with opening the SteamVR overlay, enabling this option could fix the issue on some systems (e.g. those with hybrid graphics). Changing this option will restart the overlay.",
+          "title": "Graphics fix for SteamVR Overlay"
         },
         "title": "Fixes & Troubleshooting",
         "vrManifestReregister": {
@@ -1634,13 +1642,6 @@
           "title": "Preferred power off state"
         },
         "title": "SteamVR Base Station Power Control"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "If you are experiencing issues with opening the SteamVR overlay, enabling this option could fix the issue on some systems (e.g. those with hybrid graphics). Changing this option will restart the overlay.",
-          "title": "Graphics fix for SteamVR Overlay"
-        },
-        "title": "Miscellaneous"
       },
       "overlay": {
         "binding": {

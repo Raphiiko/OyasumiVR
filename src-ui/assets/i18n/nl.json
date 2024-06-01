@@ -1283,6 +1283,10 @@
           "description": "Hiermee kun je de ingebouwde OSC en OSCQuery servers uitschakelen. Let op dat deze keuze word bewaard, en dat verschillende features van OyasumiVR niet meer zullen werken, zonder waarschuwing. Deze optie bestaat alleen voor foutopsporing, en zou niet uitgeschakeld moeten worden tijdens standaard gebruik.",
           "title": "OSC & OSCQuery Servers Inschakelen"
         },
+        "overlayGpuFix": {
+          "description": "Als je problemen ervaart met de SteamVR overlay, kan deze optie mogelijk een oplossing bieden op sommige systemen (bijvoorbeeld die met een hybrid graphics). Het aanpassen van deze optie zal de overlay herstarten.",
+          "title": "Grafische fix voor de SteamVR Overlay"
+        },
         "title": "Oplossingen & Foutopsporing",
         "vrManifestReregister": {
           "action": "Herregistreer Manifest",
@@ -1462,13 +1466,6 @@
           "title": "Voorkeurs modus voor uitzetten"
         },
         "title": "Aansturing van SteamVR Base Stations"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Als je problemen ervaart met de SteamVR overlay, kan deze optie mogelijk een oplossing bieden op sommige systemen (bijvoorbeeld die met een hybrid graphics). Het aanpassen van deze optie zal de overlay herstarten.",
-          "title": "Grafische fix voor de SteamVR Overlay"
-        },
-        "title": "Overige opties"
       },
       "overlay": {
         "binding": {

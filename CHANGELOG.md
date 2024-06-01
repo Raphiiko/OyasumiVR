@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
 - Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
 - Custom window titlebar
+- Optional fix to delay initializing OyasumiVR with OpenVR. (Can potentially help with SteamVR being unstable while starting when OyasumiVR is already running)
 
 ### Changed
 
