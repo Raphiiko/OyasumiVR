@@ -569,10 +569,6 @@ export class VRChatService {
       this.socket = new WebSocket(
         'wss://pipeline.vrchat.cloud/?authToken=' + this._settings.value.authCookie
       );
-      console.log(
-        'SOCKET URL',
-        'wss://pipeline.vrchat.cloud/?authToken=' + this._settings.value.authCookie
-      );
       this.socket.onopen = () => this.onSocketEvent('OPEN');
       this.socket.onerror = () => this.onSocketEvent('ERROR');
       this.socket.onclose = () => this.onSocketEvent('CLOSE');
