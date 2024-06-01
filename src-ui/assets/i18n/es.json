@@ -1024,9 +1024,6 @@
           "title": "Automatizaciones de estado"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 minuto} other {# minutos}}",
-          "seconds": "{seconds, plural, one {1 segundo} other {# segundos}}",
-          "subtitle": "Al dormir durante {time}",
           "title": "Apagado automático"
         },
         "sleepModeEnableForSleepDetector": {

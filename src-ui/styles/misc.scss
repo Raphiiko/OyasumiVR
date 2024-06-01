@@ -55,6 +55,13 @@
       font-size: 0.6em;
     }
   }
+
+  &.disabled {
+    .setting-row {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
 }
 
 .settings {
@@ -100,8 +107,7 @@
     border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) 0;
 
     &:not(:last-child) {
-      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius)
-        var(--surface-border-radius);
+      border-radius: var(--surface-border-radius) 0 var(--surface-border-radius) var(--surface-border-radius);
     }
   }
 

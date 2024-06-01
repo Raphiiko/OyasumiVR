@@ -197,6 +197,7 @@ export class ShutdownAutomationsService {
     interval(1000)
       .pipe(
         filter(() => this._stage.value === 'IDLE'),
+        filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerOnSleep),
         filter(() => this.sleepMode),
         filter(() => Date.now() - this.sleepModeLastSet >= this.config.triggerOnSleepDuration),
@@ -218,6 +219,7 @@ export class ShutdownAutomationsService {
     interval(1000)
       .pipe(
         filter(() => this._stage.value === 'IDLE'),
+        filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerWhenAlone),
         filter(() => this.isAlone),
         filter(() => Date.now() - this.aloneSince >= this.config.triggerWhenAloneDuration),

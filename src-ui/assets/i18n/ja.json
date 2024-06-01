@@ -1252,9 +1252,6 @@
           "title": "ステータスの自動化"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} 分",
-          "seconds": "{seconds} 秒",
-          "subtitle": "実行までの待機時間 {time}",
           "title": "自動シャットダウン"
         },
         "sleepModeEnableForSleepDetector": {

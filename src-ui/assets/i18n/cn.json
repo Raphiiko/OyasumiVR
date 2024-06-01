@@ -1242,9 +1242,6 @@
           "title": "状态自动化"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} 分钟",
-          "seconds": "{seconds} 秒",
-          "subtitle": "睡眠 {time} 后",
           "title": "执行关机序列"
         },
         "sleepModeEnableForSleepDetector": {

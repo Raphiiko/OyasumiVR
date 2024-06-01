@@ -1082,9 +1082,6 @@
           "title": "Status Automatiseringen"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 minuut} other {# minuten}}",
-          "seconds": "{seconds, plural, one {1 seconde} other {# seconden}}",
-          "subtitle": "Wanneer je slaapt voor {time}",
           "title": "Automatische Afsluit Procedure"
         },
         "sleepModeEnableForSleepDetector": {

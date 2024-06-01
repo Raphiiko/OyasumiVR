@@ -1,23 +1,23 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import Card from "$lib/components/Card.svelte";
-  import { blur, scale } from "svelte/transition";
-  import VisualToggle from "$lib/components/VisualToggle.svelte";
-  import ipcService from "$lib/services/ipc.service";
-  import { derived } from "svelte/store";
-  import {
-    OyasumiSidecarAutomationsState,
-    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
-    OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
-    OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
-    OyasumiSidecarAutomationsState_ShutdownAutomations,
-    OyasumiSidecarAutomationsState_SleepingAnimations,
-    OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
-  } from "../../../../src-grpc-web-client/overlay-sidecar_pb";
-  import { t } from "$lib/translations";
-  import Clickable from "$lib/components/Clickable.svelte";
+	import { createEventDispatcher } from 'svelte';
+	import Card from '$lib/components/Card.svelte';
+	import { blur, scale } from 'svelte/transition';
+	import VisualToggle from '$lib/components/VisualToggle.svelte';
+	import ipcService from '$lib/services/ipc.service';
+	import { derived } from 'svelte/store';
+	import {
+		OyasumiSidecarAutomationsState,
+		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests,
+		OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode,
+		OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount,
+		OyasumiSidecarAutomationsState_ShutdownAutomations,
+		OyasumiSidecarAutomationsState_SleepingAnimations,
+		OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
+	} from '../../../../src-grpc-web-client/overlay-sidecar_pb';
+	import { t } from '$lib/translations';
+	import Clickable from '$lib/components/Clickable.svelte';
 
-  $: _t = $t;
+	$: _t = $t;
 	const { state } = ipcService;
 
 	let viewAutomations = derived(state, (state) =>
@@ -39,14 +39,14 @@
 		switch (automationId) {
 			case 'shutdownAutomations': {
 				let a = automation as OyasumiSidecarAutomationsState_ShutdownAutomations;
-				return !!a.sleepTriggerEnabled;
+				return !!a.triggersEnabled;
 			}
 			default: {
 				let a = automation as Exclude<
 					OyasumiSidecarAutomationsState[T],
 					OyasumiSidecarAutomationsState_ShutdownAutomations
 				>;
-				return !!a!.enabled;
+				return !!a!['enabled'];
 			}
 		}
 	};
@@ -81,20 +81,16 @@
 					}
 				})();
 				if (isDisabled) return mode;
-				return _t(
-					`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle`,
-					{
-						mode,
-						playerCount: a.playerCount
-					}
-				);
+				return _t(`t.overlay.dashboard.automations.autoAcceptInviteRequests.subtitle`, {
+					mode,
+					playerCount: a.playerCount
+				});
 			}
 			case 'changeStatusBasedOnPlayerCount': {
 				let a = automation as OyasumiSidecarAutomationsState_ChangeStatusBasedOnPlayerCount;
-				return _t(
-					`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle`,
-					{ threshold: a.threshold }
-				);
+				return _t(`t.overlay.dashboard.automations.changeStatusBasedOnPlayerCount.subtitle`, {
+					threshold: a.threshold
+				});
 			}
 			case 'sleepingAnimations': {
 				let a = automation as OyasumiSidecarAutomationsState_SleepingAnimations;
@@ -102,31 +98,23 @@
 			}
 			case 'shutdownAutomations': {
 				let a = automation as OyasumiSidecarAutomationsState_ShutdownAutomations;
-				let seconds = Math.floor((a.timeDelay ?? 0) / 1000);
-				let time = '';
-				if (seconds < 60) {
-					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.seconds`,
-						{ seconds }
-					);
-				} else {
-					let minutes = Math.round(seconds / 60) + '';
-					time = _t(
-						`t.overlay.dashboard.automations.shutdownAutomations.minutes`,
-						{ minutes }
-					);
-				}
-				return _t(`t.overlay.dashboard.automations.shutdownAutomations.subtitle`, { time });
+				let triggerCount = a.triggersConfigured;
+				return _t(`t.overlay.dashboard.automations.shutdownAutomations.subtitle`, { triggerCount });
 			}
 			case 'sleepModeEnableForSleepDetector': {
 				let a = automation as OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector;
-				let sensitivity = _t(`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`);
-				let subtitleKey = a.activationWindow ? 'withActivationWindow' : 'withoutActivationWindow'
+				let sensitivity = _t(
+					`t.sleep-detection.modals.enableForSleepDetector.sensitivity.presets.${a.sensitivity}`
+				);
+				let subtitleKey = a.activationWindow ? 'withActivationWindow' : 'withoutActivationWindow';
 
 				let startTime = formatTime(a.activationWindowStart);
 				let endTime = formatTime(a.activationWindowEnd);
 
-				return _t(`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle.${subtitleKey}`, { sensitivity, startTime, endTime })
+				return _t(
+					`t.overlay.dashboard.automations.sleepModeEnableForSleepDetector.subtitle.${subtitleKey}`,
+					{ sensitivity, startTime, endTime }
+				);
 			}
 			default: {
 				return null;
@@ -151,9 +139,9 @@
 		let hour = input[0].toString();
 		let minute = input[1].toString();
 
-		while (hour.length < 2) hour = "0" + hour;
-		while (minute.length < 2) minute = "0" + minute;
-		return `${hour}:${minute}`
+		while (hour.length < 2) hour = '0' + hour;
+		while (minute.length < 2) minute = '0' + minute;
+		return `${hour}:${minute}`;
 	}
 
 	const dispatch = createEventDispatcher();

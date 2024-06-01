@@ -416,6 +416,7 @@ OyasumiVR имеет различные средства автоматизац�
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
 - Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
+- Українська (Ukrainian): Community contribution by [senkodev](https://x.com/senkodev).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).

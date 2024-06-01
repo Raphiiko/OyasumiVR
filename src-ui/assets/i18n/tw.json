@@ -1024,9 +1024,6 @@
           "title": "狀態自動化"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} 分鐘",
-          "seconds": "{seconds} 秒",
-          "subtitle": "睡眠 {time} 後",
           "title": "自動關機"
         },
         "sleepModeEnableForSleepDetector": {

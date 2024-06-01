@@ -66,10 +66,10 @@ export class OverlayStateSyncService {
         presetName: AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS.preset ?? '',
       },
       shutdownAutomations: {
-        sleepTriggerEnabled: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleep,
-        timeDelay: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepDuration,
+        triggersEnabled: AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggersEnabled,
         running: false,
         canStart: false,
+        triggersConfigured: 0,
       },
       sleepModeEnableForSleepDetector: {
         enabled: AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.enabled,
@@ -251,8 +251,11 @@ export class OverlayStateSyncService {
         }
         {
           const automation = state.automations!.shutdownAutomations!;
-          automation.sleepTriggerEnabled = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep;
-          automation.timeDelay = configs.SHUTDOWN_AUTOMATIONS.triggerOnSleepDuration;
+          automation.triggersEnabled = configs.SHUTDOWN_AUTOMATIONS.triggersEnabled;
+          automation.triggersConfigured = [
+            configs.SHUTDOWN_AUTOMATIONS.triggerOnSleep,
+            configs.SHUTDOWN_AUTOMATIONS.triggerWhenAlone,
+          ].filter(Boolean).length;
           automation.canStart =
             this.shutdownAutomationsService.getApplicableStages(configs.SHUTDOWN_AUTOMATIONS)
               .length > 0;

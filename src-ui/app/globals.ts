@@ -26,6 +26,7 @@ export const NG_LOCALE_MAP: { [s: string]: string } = {
   es: 'es',
   id: 'id',
   ru: 'ru',
+  uk: 'uk',
 };
 export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = [
   {
@@ -71,6 +72,11 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
   {
     code: 'ru',
     label: 'Русский',
+  },
+  {
+    code: 'uk',
+    label: 'Українська',
+    flag: 'ua',
   },
 ];
 
