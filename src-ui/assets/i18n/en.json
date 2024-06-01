@@ -590,6 +590,7 @@
         },
         "shutdownSequenceStarted": {
           "reason": {
+            "MQTT": "Triggered over MQTT",
             "HOTKEY": "Triggered by hotkey",
             "MANUAL": "Triggered manually",
             "SLEEP_TRIGGER": "As you were asleep for long enough",

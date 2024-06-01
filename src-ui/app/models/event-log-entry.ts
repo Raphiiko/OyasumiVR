@@ -75,11 +75,13 @@ export interface EventLogBase {
   type: EventLogType;
   time: number;
 }
+
 export type EventLogShutdownSequenceStartedReason =
   | 'MANUAL'
   | 'HOTKEY'
   | 'SLEEP_TRIGGER'
-  | 'VRC_ALONE_TRIGGER';
+  | 'VRC_ALONE_TRIGGER'
+  | 'MQTT';
 
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
