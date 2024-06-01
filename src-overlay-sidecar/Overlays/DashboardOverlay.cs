@@ -31,14 +31,13 @@ public class DashboardOverlay : BaseWebOverlay {
     base.Dispose();
   }
 
-
   public async void Open(ETrackedControllerRole role)
   {
     if (_isOpen) return;
-    _isOpen = true;
-    while (!UiReady) await Task.Delay(TimeSpan.FromMilliseconds(16));
     _targetTransform = GetTargetTransform(role);
     if (!_targetTransform.HasValue) return;
+    _isOpen = true;
+    while (!UiReady) await Task.Delay(TimeSpan.FromMilliseconds(16));
     var transform = _targetTransform.Value.ToHmdMatrix34_t();
     OpenVR.Overlay.SetOverlayTransformAbsolute(OverlayHandle,
       ETrackingUniverseOrigin.TrackingUniverseStanding,
@@ -76,16 +75,27 @@ public class DashboardOverlay : BaseWebOverlay {
 
   private static Matrix4x4? GetTargetTransform(ETrackedControllerRole controllerRole)
   {
-    var handPose = OvrUtils.GetControllerPose(controllerRole, _poseBuffer);
     var headPose = OvrUtils.GetHeadPose(_poseBuffer);
-    if (handPose == null) return null;
-    var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
-    var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4X4();
-    var posOffset = Matrix4x4.CreateTranslation(0, 0.15f, -0.2f);
-    var headRotation = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix));
-    var handPosition =
-      Matrix4x4.CreateTranslation(handMatrix.Translation);
-    return posOffset * headRotation * handPosition;
+    if (headPose.eTrackingResult != ETrackingResult.Running_OK) return null;
+    var handPose = OvrUtils.GetControllerPose(controllerRole, _poseBuffer);
+    // We have a valid tracked pose for the hand
+    if (handPose is { eTrackingResult: ETrackingResult.Running_OK })
+    {
+      var handMatrix = handPose.Value.mDeviceToAbsoluteTracking.ToMatrix4X4();
+      var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4X4();
+      var posOffset = Matrix4x4.CreateTranslation(0, 0.15f, -0.2f);
+      var headRotation = Matrix4x4.CreateFromQuaternion(Quaternion.CreateFromRotationMatrix(headMatrix));
+      var handPosition =
+        Matrix4x4.CreateTranslation(handMatrix.Translation);
+      return posOffset * headRotation * handPosition;
+    }
+    // In case we don't, open the dashboard relative to the head
+    else
+    {
+      var offset = Matrix4x4.CreateTranslation(0, 0, -0.55f);
+      var headMatrix = headPose.mDeviceToAbsoluteTracking.ToMatrix4X4();
+      return offset * headMatrix;
+    }
   }
 
 

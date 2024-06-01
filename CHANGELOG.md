@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made device edit dialog always show the device serial number in its title.
 - Improved sleep detection by considering the sleeping pose
 - Improved layouts for sleep detection configuration views
+- When the overlay menu is opened while the controller is not tracked, the overlay will open in front of you instead.
 
 ### Fixed
 
@@ -37,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Brightness overlay not covering full view of some high FOV headsets (e.g. Pimax)
 - Bigscreen Beyond fan speed often being reset
 - VRChat accounts with 2FA being logged out after 7 days. (Now 30 days, if you store credentials)
+- The overlay menu sometimes not showing when being opened
 
 ## [1.12.8]
 
