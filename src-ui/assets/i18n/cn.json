@@ -1443,6 +1443,10 @@
           "description": "此选项纯粹用于调试目的，一般情况下不应关闭。\n若关闭此选项，将禁用内置的OSC和OSCQuery服务器，并且修改在重启后仍然生效。\n请注意，如果你关闭此选项，OyasumiVR的几个功能将停止工作，且不会有任何警告。",
           "title": "启用OSC和OSCQuery服务器"
         },
+        "overlayGpuFix": {
+          "description": "如果你在打开 SteamVR 叠加层界面时遇到问题，启用此选项可以解决某些系统（如双显卡系统）上的问题。更改此选项将重启叠加层界面。",
+          "title": "针对 SteamVR 叠加层异常的修复选项"
+        },
         "title": "问题修复与故障排除",
         "vrManifestReregister": {
           "action": "重新注册",
@@ -1622,13 +1626,6 @@
           "title": "首选的断电状态"
         },
         "title": "SteamVR基站电源控制"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "如果你在打开 SteamVR 叠加层界面时遇到问题，启用此选项可以解决某些系统（如双显卡系统）上的问题。更改此选项将重启叠加层界面。",
-          "title": "针对 SteamVR 叠加层异常的修复选项"
-        },
-        "title": "杂项"
       },
       "overlay": {
         "binding": {

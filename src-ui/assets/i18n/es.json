@@ -1225,6 +1225,10 @@
           "description": "Al desactivar esta opción, se desactivan los servidores OSC y OSCQuery integrados. Esta opción persiste entre reinicios. Tenga en cuenta que varias características de OyasumiVR dejarán de funcionar si desactiva esta opción, sin advertencias. Esta opción existe puramente para propósitos de depuración y no debe ser desactivada durante el uso general.",
           "title": "Habilitar servidores OSC y OSCQuery"
         },
+        "overlayGpuFix": {
+          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición.",
+          "title": "Corrección de gráficos para SteamVR Overlay"
+        },
         "title": "Correcciones y solución de problemas",
         "vrManifestReregister": {
           "action": "Retregistro manifiesto",
@@ -1389,13 +1393,6 @@
           "title": "Estado de apagado preferido"
         },
         "title": "Control de potencia de la estación base SteamVR"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición.",
-          "title": "Corrección de gráficos para SteamVR Overlay"
-        },
-        "title": "Miscellaneous"
       },
       "overlay": {
         "binding": {

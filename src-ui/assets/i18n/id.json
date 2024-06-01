@@ -964,6 +964,12 @@
   },
   "settings": {
     "advanced": {
+      "fixes": {
+        "overlayGpuFix": {
+          "description": "Jika Anda mengalami masalah saat membuka overlay SteamVR, mengaktifkan opsi ini dapat memperbaiki masalah pada beberapa sistem (misalnya sistem dengan grafis hibrid). Mengubah opsi ini akan memulai ulang overlay.",
+          "title": "Perbaikan grafis untuk SteamVR Overlay"
+        }
+      },
       "logs": {
         "openFolder": {
           "action": "Buka folder log",
@@ -1090,13 +1096,6 @@
           "title": "Status daya mati yang diinginkan"
         },
         "title": "Kontrol Daya Base Station SteamVR"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Jika Anda mengalami masalah saat membuka overlay SteamVR, mengaktifkan opsi ini dapat memperbaiki masalah pada beberapa sistem (misalnya sistem dengan grafis hibrid). Mengubah opsi ini akan memulai ulang overlay.",
-          "title": "Perbaikan grafis untuk SteamVR Overlay"
-        },
-        "title": "Lain-lain"
       },
       "overlay": {
         "binding": {

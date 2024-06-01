@@ -12,6 +12,12 @@ use substring::Substring;
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
+pub async fn openvr_set_init_delay_fix(enabled: bool) {
+    *super::OVR_INIT_DELAY_FIX.lock().await = enabled;
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_devices() -> Vec<OVRDevice> {
     super::devices::get_devices().await
 }

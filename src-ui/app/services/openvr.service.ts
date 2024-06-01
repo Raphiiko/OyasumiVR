@@ -3,10 +3,18 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  Observable,
+  skip,
+  startWith,
+} from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error } from 'tauri-plugin-log-api';
+import { error, info, warn } from 'tauri-plugin-log-api';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
@@ -33,6 +41,18 @@ export class OpenVRService {
     this.appSettings.settings.subscribe((settings) => {
       this.deviceNicknames = settings.deviceNicknames;
     });
+    this.appSettings.settings
+      .pipe(
+        map((settings) => settings.openVrInitDelayFix),
+        startWith(false),
+        distinctUntilChanged(),
+        skip(1)
+      )
+      .subscribe((fixEnabled) => {
+        this.applyOpenVrInitDelayFix(fixEnabled);
+        if (fixEnabled) warn('[OpenVR] Applying OpenVR Initialization delay fix');
+        else warn('[OpenVR] Removing OpenVR initialization delay fix');
+      });
     await Promise.all([
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
@@ -147,5 +167,9 @@ export class OpenVRService {
     this.appSettings.updateSettings({
       deviceNicknames,
     });
+  }
+
+  private async applyOpenVrInitDelayFix(enabled: boolean) {
+    await invoke('openvr_set_init_delay_fix', { enabled });
   }
 }

@@ -23,6 +23,7 @@ export interface AppSettings {
   oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
+  openVrInitDelayFix: boolean;
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
@@ -109,6 +110,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttUsername: null,
   mqttPassword: null,
   mqttSecureSocket: false,
+  openVrInitDelayFix: false,
 };
 
 export type ExecutableReferenceStatus =

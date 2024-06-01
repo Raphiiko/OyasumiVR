@@ -243,28 +243,6 @@
     </div>
 
     <div class="setting-category">
-      <h2 translate>settings.general.miscellaneous.title</h2>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>settings.general.miscellaneous.overlayGpuFix.title</span>
-            <span translate>settings.general.miscellaneous.overlayGpuFix.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="appSettings.overlayGpuFix"
-                (change)="setOverlayGpuFix(!appSettings.overlayGpuFix)"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="setting-category">
       <h2 translate>settings.general.lighthouseConsole.title</h2>
       <p [innerHTML]="'settings.general.lighthouseConsole.description' | translate"></p>
       <div class="settings-lighthouse-console">
