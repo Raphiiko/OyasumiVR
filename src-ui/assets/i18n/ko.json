@@ -1052,9 +1052,6 @@
           "title": "스테이터스 자동화"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes}분",
-          "seconds": "{seconds}초",
-          "subtitle": "{time} 동안 잠들었을 때",
           "title": "자동 종료"
         },
         "sleepModeEnableForSleepDetector": {

@@ -789,9 +789,6 @@
           "title": "Status Otomatisasi"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} menit",
-          "seconds": "{seconds} detik",
-          "subtitle": "Ketika tertidur selama {time}",
           "title": "Shutdown Otomatis"
         },
         "sleepModeEnableForSleepDetector": {

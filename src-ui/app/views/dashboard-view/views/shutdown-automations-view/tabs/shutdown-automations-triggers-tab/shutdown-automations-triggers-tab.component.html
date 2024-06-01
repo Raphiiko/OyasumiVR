@@ -2,6 +2,27 @@
   <div class="settings">
     <div class="setting-row">
       <div class="setting-row-label" translate>
+        <span translate>shutdown-automations.triggers.enabled.title</span>
+        <span translate>shutdown-automations.triggers.enabled.description</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.triggersEnabled"
+            (change)="toggleTriggersEnabled()"
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="setting-category" [class.disabled]="!config.triggersEnabled">
+  <h2 translate>shutdown-automations.triggers.triggers</h2>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
         <span translate>shutdown-automations.triggers.whenAsleep.title</span>
         <span translate>shutdown-automations.triggers.whenAsleep.description</span>
       </div>

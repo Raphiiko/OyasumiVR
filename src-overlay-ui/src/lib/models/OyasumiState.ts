@@ -30,10 +30,10 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 			presetName: ''
 		},
 		shutdownAutomations: {
-			sleepTriggerEnabled: false,
-			timeDelay: 0,
+			triggersEnabled: true,
 			running: false,
-			canStart: false
+			canStart: false,
+			triggersConfigured: 0
 		}
 	},
 	locale: 'en',
@@ -58,5 +58,5 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 	},
 	sleepPreparationAvailable: false,
 	sleepPreparationTimedOut: false,
-  systemMicMuted: false,
+	systemMicMuted: false
 };

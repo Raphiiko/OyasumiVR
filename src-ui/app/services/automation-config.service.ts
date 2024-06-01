@@ -38,7 +38,7 @@ export class AutomationConfigService {
       switch (payload.automationId) {
         case 'SHUTDOWN_AUTOMATIONS':
           await this.updateAutomationConfig<ShutdownAutomationsConfig>(payload.automationId, {
-            triggerOnSleep: payload.enabled,
+            triggersEnabled: payload.enabled,
           });
           break;
         default:

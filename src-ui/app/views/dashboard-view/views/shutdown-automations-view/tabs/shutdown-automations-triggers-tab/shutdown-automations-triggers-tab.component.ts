@@ -189,6 +189,15 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
+  async toggleTriggersEnabled() {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      {
+        triggersEnabled: !this.config.triggersEnabled,
+      }
+    );
+  }
+
   private durationToString(sleepDuration: number): string {
     const hours = Math.floor(sleepDuration / 3600000);
     const minutes = Math.floor((sleepDuration % 3600000) / 60000);

@@ -126,10 +126,10 @@ message OyasumiSidecarAutomationsState_SleepingAnimations {
 }
 
 message OyasumiSidecarAutomationsState_ShutdownAutomations {
-  bool sleep_trigger_enabled = 1;
-  uint32 time_delay = 2;
-  bool running = 3;
-  bool can_start = 4;
+  bool triggers_enabled = 1;
+  bool running = 2;
+  bool can_start = 3;
+  uint32 triggers_configured = 4;
 }
 
 message OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector {

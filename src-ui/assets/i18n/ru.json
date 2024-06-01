@@ -1242,9 +1242,6 @@
           "title": "Статус автоматизации"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 минута} other {# минуты}}",
-          "seconds": "{seconds, plural, one {1 секунда} other {# секунды}}",
-          "subtitle": "Когда сплю {time}",
           "title": "Автоматическое отключение"
         },
         "sleepModeEnableForSleepDetector": {

@@ -371,6 +371,7 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
 
 export interface ShutdownAutomationsConfig extends AutomationConfig {
+  triggersEnabled: boolean;
   triggerOnSleep: boolean;
   triggerOnSleepDuration: number;
   triggerOnSleepActivationWindow: boolean;
@@ -630,6 +631,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   // SHUTDOWN AUTOMATIONS
   SHUTDOWN_AUTOMATIONS: {
     enabled: true,
+    triggersEnabled: true,
     triggerOnSleep: false,
     triggerOnSleepDuration: 15 * 60 * 1000,
     triggerOnSleepActivationWindow: false,

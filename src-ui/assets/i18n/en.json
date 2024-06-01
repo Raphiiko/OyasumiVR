@@ -1252,9 +1252,7 @@
           "title": "Status Automations"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 minute} other {# minutes}}",
-          "seconds": "{seconds, plural, one {1 second} other {# seconds}}",
-          "subtitle": "When sleeping for {time}",
+          "subtitle": "{triggerCount, plural, one {1 automatic trigger} other {# automatic triggers}} configured",
           "title": "Automatic Shutdown"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1900,6 +1898,11 @@
     },
     "title": "Shutdown Sequence",
     "triggers": {
+      "enabled": {
+        "description": "Disable this to prevent the shutdown sequence from being triggered automatically by any of the triggers below.",
+        "title": "Enable automatic triggers"
+      },
+      "triggers": "Automatic Triggers",
       "whenAlone": {
         "description": "Activate the shutdown sequence when you've been left alone in your VRChat world for a certain amount of time. This only triggers if you were in company before.",
         "title": "Activate when you've been left alone"
