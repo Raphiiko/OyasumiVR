@@ -274,7 +274,13 @@ export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
 export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends AutomationConfig {
   limit: number;
   statusBelowLimit: UserStatus;
+  statusBelowLimitEnabled: boolean;
+  statusMessageBelowLimit: string;
+  statusMessageBelowLimitEnabled: boolean;
   statusAtLimitOrAbove: UserStatus;
+  statusAtLimitOrAboveEnabled: boolean;
+  statusMessageAtLimitOrAbove: string;
+  statusMessageAtLimitOrAboveEnabled: boolean;
   onlyIfSleepModeEnabled: boolean;
 }
 
@@ -613,7 +619,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     limit: 2,
     statusBelowLimit: UserStatus.JoinMe,
+    statusBelowLimitEnabled: true,
+    statusMessageBelowLimit: '',
+    statusMessageBelowLimitEnabled: false,
     statusAtLimitOrAbove: UserStatus.Busy,
+    statusAtLimitOrAboveEnabled: true,
+    statusMessageAtLimitOrAbove: '',
+    statusMessageAtLimitOrAboveEnabled: false,
     onlyIfSleepModeEnabled: false,
   },
   // INVITE AUTOMATIONS

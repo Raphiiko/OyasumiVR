@@ -1,0 +1,214 @@
+<p translate>status-automations.playerLimit.description</p>
+<div class="alert warning" *ngIf="!loggedIn" @vshrink>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+    <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+  </div>
+</div>
+<div class="settings">
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span translate>status-automations.playerLimit.enable.title</span>
+      <span translate>status-automations.playerLimit.enable.description</span>
+    </div>
+    <div class="setting-row-action">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.enabled"
+          (change)="updateConfig({ enabled: !config.enabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+</div>
+<div class="settings" [class.disabled]="config.enabled">
+  <div class="alert" @vshrink *ngIf="config.enabled">
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> info </i>
+    </div>
+    <div class="alert-content"
+      >{{ 'status-automations.playerLimit.disableToEdit' | translate }}
+    </div>
+  </div>
+  <div class="limit-setting">
+    <h3 translate>status-automations.playerLimit.playerLimit</h3>
+    <app-player-count-sleep-visualization
+      [count]="limit.value"
+    ></app-player-count-sleep-visualization>
+
+    <div class="limit-setting-controls">
+      <div class="limit-setting-controls-slider">
+        <app-slider
+          [min]="1"
+          [max]="40"
+          [step]="1"
+          [value]="limit.value"
+          (valueChange)="onLimitChange($event)"
+        ></app-slider>
+      </div>
+      <div class="limit-setting-controls-numeric-input">
+        <input
+          type="number"
+          min="1"
+          max="40"
+          step="1"
+          [value]="limit.value"
+          (input)="onLimitChange(limitNumberInput.value)"
+          (blur)="limitNumberInput.value = limit.value.toString()"
+          #limitNumberInput
+        />
+      </div>
+    </div>
+    <div
+      class="limit-setting-description"
+      [translate]="'status-automations.playerLimit.playerLimitLabel'"
+      [translateParams]="{ count: limit.value }"
+    ></div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span translate>status-automations.playerLimit.belowLimit.title</span>
+      <span translate>status-automations.playerLimit.belowLimit.description.status</span>
+    </div>
+    <div class="setting-row-action">
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="optionSetStatusBelowLimit"
+        (selectedChange)="setStatusSetOption('belowLimit', $event)"
+        [disabled]="!config.statusBelowLimitEnabled"
+      ></app-select-box>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.statusBelowLimitEnabled"
+          (change)="updateConfig({ statusBelowLimitEnabled: !config.statusBelowLimitEnabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span></span>
+      <span translate>status-automations.playerLimit.belowLimit.description.statusMessage</span>
+    </div>
+    <div class="setting-row-action">
+      <input
+        type="text"
+        [disabled]="!config.statusMessageBelowLimitEnabled"
+        maxlength="32"
+        [value]="config.statusMessageBelowLimit"
+        (input)="
+          onChangeStatusMessage('statusMessageBelowLimit', belowLimitStatusMessageInput.value)
+        "
+        #belowLimitStatusMessageInput
+      />
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.statusMessageBelowLimitEnabled"
+          (change)="
+            updateConfig({ statusMessageBelowLimitEnabled: !config.statusMessageBelowLimitEnabled })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span translate>status-automations.playerLimit.atLimitOrAbove.title</span>
+      <span translate>status-automations.playerLimit.atLimitOrAbove.description.status</span>
+    </div>
+    <div class="setting-row-action">
+      <app-select-box
+        class="status-dropdown"
+        [type]="'SMALL'"
+        [items]="statusOptions"
+        [selected]="optionSetStatusAtLimitOrAbove"
+        (selectedChange)="setStatusSetOption('atLimitOrAbove', $event)"
+        [disabled]="!config.statusAtLimitOrAboveEnabled"
+      ></app-select-box>
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.statusAtLimitOrAboveEnabled"
+          (change)="
+            updateConfig({ statusAtLimitOrAboveEnabled: !config.statusAtLimitOrAboveEnabled })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span></span>
+      <span translate>status-automations.playerLimit.atLimitOrAbove.description.statusMessage</span>
+    </div>
+    <div class="setting-row-action">
+      <input
+        type="text"
+        [disabled]="!config.statusMessageAtLimitOrAboveEnabled"
+        maxlength="32"
+        [value]="config.statusMessageAtLimitOrAbove"
+        (input)="
+          onChangeStatusMessage(
+            'statusMessageAtLimitOrAbove',
+            atLimitOrAboveStatusMessageInput.value
+          )
+        "
+        #atLimitOrAboveStatusMessageInput
+      />
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.statusMessageAtLimitOrAboveEnabled"
+          (change)="
+            updateConfig({
+              statusMessageAtLimitOrAboveEnabled: !config.statusMessageAtLimitOrAboveEnabled
+            })
+          "
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="setting-row">
+    <div class="setting-row-label" translate>
+      <span translate>status-automations.playerLimit.onlyIfSleepModeEnabled</span>
+      <span translate></span>
+    </div>
+    <div class="setting-row-action">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config.onlyIfSleepModeEnabled"
+          (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+</div>
+<div class="alert warning">
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
+    <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
+      status-automations.moreInfo
+    </button>
+  </div>
+</div>

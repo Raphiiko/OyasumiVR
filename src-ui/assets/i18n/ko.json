@@ -1846,24 +1846,26 @@
     "title": "수면 애니메이션"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "스테이터스 설정",
-      "title": "상한 이상"
-    },
-    "behaviourWarning": "OyasumiVR에 의한 상태 변경은 플레이어에게 표시되지 않아요. 다른 플레이어가 볼 때 스테이터스 업데이트가 표시되기까지 조금 시간이 걸릴 수 있어요. 이는 VRChat 사양상의 제한으로 OyasumiVR이 수정할 수 없어요.",
     "behaviourWarningFAQ": "스테이터스 변경에 관한 질문에 대한 답변은 여기를 참조해주세요.\n\nQ:VRChat에서 파란색으로 표시되지 않아도 자동으로 초대를 받을 수 있나요?\nA: OyasumiVR이 여러분의 스테이터스를 파란색(join me)으로 설정한 경우 당신이 받은 초대 요청을 자동 수락하게 되어요.\n\nQ: 스테이터스가 업데이트되지 않아 참여할 수 없어요.\nA: 스테이터스 업데이트는 다른 사용자에게 표시되기까지 시간이 걸릴 수 있어요. 참여하고 싶은데 참여할 수 없는 경우 메인 메뉴에서 프로필을 열어 여러분의 스테이터스를 강제로 업데이트할 수 있어요.",
-    "belowLimit": {
-      "description": "스테이터스 설정",
-      "title": "상한 미만"
-    },
-    "description": "OyasumiVR은 자신의 월드에 있는 플레이어의 수에 따라 스테이터스를 자동 설정하여 참가 인원을 제한할 수 있어요.",
-    "disableToEdit": "설정을 변경하기 전에 기능을 비활성화해주세요.",
-    "enable": "스테이터스 자동화 활성화하기",
-    "exampleUse": "사용 예: 누군가가 참여하면 자동으로 상태를 주황색이나 빨간색으로 전환해요!\n 그리고 누군가 나가서 다시 혼자가 되면 자동으로 상태를 파란색으로 되돌려 다른 사람이 참여할 수 있도록 할 수 있어요.",
     "moreInfo": "자세히",
-    "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
-    "playerLimit": "플레이어 수 제한",
-    "playerLimitLabel": "{count}명의 플레이어(자신 포함)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "스테이터스 설정"
+        },
+        "title": "상한 이상"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "스테이터스 설정"
+        },
+        "title": "상한 미만"
+      },
+      "description": "OyasumiVR은 자신의 월드에 있는 플레이어의 수에 따라 스테이터스를 자동 설정하여 참가 인원을 제한할 수 있어요.",
+      "onlyIfSleepModeEnabled": "수면 모드 활성화 시에만",
+      "playerLimit": "플레이어 수 제한",
+      "playerLimitLabel": "{count}명의 플레이어(자신 포함)"
+    },
     "title": "스테이터스 자동화"
   },
   "systemMicMuteAutomations": {

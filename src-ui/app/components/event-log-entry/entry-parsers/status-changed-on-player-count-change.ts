@@ -19,14 +19,14 @@ export class EventLogStatusChangedOnPlayerCountChangeEntryParser extends EventLo
     [p: string]: string;
   } {
     const oldStatusColor = this.getStatusColor(entry.oldStatus);
-    const newStatusColor = this.getStatusColor(entry.newStatus);
+    const newStatusColor = this.getStatusColor(entry.newStatus ?? entry.oldStatus);
     return {
-      oldStatus: `<i class="material-icons-round" style="color: ${oldStatusColor}">brightness_1</i><span>${vrcStatusToString(
-        entry.oldStatus
-      )}</span>`,
-      newStatus: `<i class="material-icons-round" style="color: ${newStatusColor}">brightness_1</i><span>${vrcStatusToString(
-        entry.newStatus
-      )}</span>`,
+      oldStatus: `<i class="material-icons-round" style="color: ${oldStatusColor}">brightness_1</i><span>'${
+        entry.oldStatusMessage.trim() ?? vrcStatusToString(entry.oldStatus)
+      }'</span>`,
+      newStatus: `<i class="material-icons-round" style="color: ${newStatusColor}">brightness_1</i><span>'${
+        entry.newStatusMessage?.trim() ?? vrcStatusToString(entry.newStatus ?? entry.oldStatus)
+      }'</span>`,
     };
   }
 

@@ -1452,8 +1452,8 @@
           "title": "Memory Watcher"
         },
         "openVrInitDelayFix": {
-          "title": "Enable OpenVR initialization delay",
-          "description": "Enabling this fix will add a delay to OyasumiVR initializing with OpenVR. This can help if you're experiencing issues with SteamVR crashing or encountering errors when starting it while OyasumiVR is already running."
+          "description": "Enabling this fix will add a delay to OyasumiVR initializing with OpenVR. This can help if you're experiencing issues with SteamVR crashing or encountering errors when starting it while OyasumiVR is already running.",
+          "title": "Enable OpenVR initialization delay"
         },
         "oscServerEnabled": {
           "description": "Turning this off disables the built-in OSC and OSCQuery servers. This option persists between restarts. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
@@ -2162,24 +2162,38 @@
     "title": "Sleep Animations"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Set your status to",
-      "title": "At the limit or above"
-    },
-    "behaviourWarning": "Status changes by OyasumiVR are not visible to the player. Even to other players, it can take a bit of time for a status update to show. This is a limitation of the VRChat and cannot be fixed by OyasumiVR.",
+    "behaviourWarning": "Status changes by OyasumiVR are not instantly visible to you. To other players, while usually instant, it can take a bit of time for a status update to show. This is due to caching on VRChat's part, but rest assured that your status does in fact update.",
     "behaviourWarningFAQ": "Here you can find the answers to some questions you might have about the status change behaviour:\n\nQ: Can I still automatically accept invite requests, even if VRChat does not show that I am on blue?\nA: If you have OyasumiVR set your status to blue (join me), it will take over the responsibility of automatically accepting any invite requests you receive.\n\nQ: People cannot join me because my status does not update for them.\nA: Status updates can take a while to be shown to other users. If they want to join you but can't, they can force your status to refresh by opening your profile in the main menu.",
-    "belowLimit": {
-      "description": "Set your status to",
-      "title": "Below the limit"
-    },
-    "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\nbased on how many players there are in your world.",
-    "disableToEdit": "Please disable status automations before you make any changes.",
-    "enable": "Enable Status Automations",
-    "exampleUse": "Example use: When someone joins you, automatically switch your status to orange or red!\nWhen they leave and you are alone again, automatically switch your status back to blue so someone else can join you.",
     "moreInfo": "More info",
-    "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
-    "playerLimit": "Player Limit",
-    "playerLimitLabel": "{count, plural, one {1 player} other {# players}} (including you)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Set your status to",
+          "statusMessage": "Set your status message to"
+        },
+        "title": "At the limit or above"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Set your status to",
+          "statusMessage": "Set your status message to"
+        },
+        "title": "Below the limit"
+      },
+      "description": "OyasumiVR can limit the amount of people who join you, by automatically setting your status\nbased on how many players there are in your world.",
+      "disableToEdit": "Please disable this automation before you make any changes.",
+      "enable": {
+        "description": "Automatically change your status based on the amount of playerLimit yersin your VRChat world instance",
+        "title": "Enable player limit status automations"
+      },
+      "onlyIfSleepModeEnabled": "Only when sleep mode is enabled",
+      "playerLimit": "Player Limit",
+      "playerLimitLabel": "{count, plural, one {1 player} other {# players}} (including you)"
+    },
+    "tabs": {
+      "general": "General",
+      "playerLimit": "Player Limit"
+    },
     "title": "Status Automations"
   },
   "systemMicMuteAutomations": {

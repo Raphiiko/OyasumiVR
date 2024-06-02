@@ -160,8 +160,10 @@ export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
   type: 'statusChangedOnPlayerCountChange';
   reason: 'BELOW_LIMIT' | 'AT_LIMIT_OR_ABOVE';
   threshold: number;
-  newStatus: UserStatus;
+  newStatus?: UserStatus;
   oldStatus: UserStatus;
+  newStatusMessage?: string;
+  oldStatusMessage: string;
 }
 
 export interface EventLogSleepDetectorEnableCancelled extends EventLogBase {

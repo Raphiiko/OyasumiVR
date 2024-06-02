@@ -1818,24 +1818,26 @@
     "title": "睡眠動畫"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "將你的狀態設定為",
-      "title": "高於限制人數"
-    },
-    "behaviourWarning": "OyasumiVR 的狀態變更對玩家是不可見。 即使對於其他玩家，狀態更新也可能需要一些時間才能顯示出來。 這是 VRChat 的限制，OyasumiVR 無法修復",
     "behaviourWarningFAQ": "在這裡，你可以找到關於狀態變更行為的一些問題的答案：\n\n問：即使 VRChat 沒有顯示我處於藍色狀態，我仍然可以自動接受邀請請求嗎？\n答：如果你有 OyasumiVR 將你的狀態設定為藍色（加入我），它將接管自動接受你收到的任何邀請加入請求。\n\n問：其他玩家無法加入我，因為我的狀態對他們來說沒有更新。\n答：狀態更新可能需要一段時間才會顯示給其他玩家。 如果他們想加入但不能，他們可以透過在主選單中中打開你的個人資料來強制刷新你的狀態",
-    "belowLimit": {
-      "description": "將你的狀態設定為",
-      "title": "低於限制人數"
-    },
-    "description": "OyasumiVR 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
-    "disableToEdit": "請在進行任何變更之前關閉狀態自動化",
-    "enable": "開啟狀態自動化",
-    "exampleUse": "使用範例：當有人加入你時，自動將你的狀態切換為橙色或紅色！\n當他們離開而你又獨自一人時，自動將你的狀態切換回藍色以便其他人可以加入你",
     "moreInfo": "更多資訊",
-    "onlyIfSleepModeEnabled": "只有在睡眠模式開啟的時候",
-    "playerLimit": "玩家人數限制",
-    "playerLimitLabel": "{count} 位玩家（包括你）",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "將你的狀態設定為"
+        },
+        "title": "高於限制人數"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "將你的狀態設定為"
+        },
+        "title": "低於限制人數"
+      },
+      "description": "OyasumiVR 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
+      "onlyIfSleepModeEnabled": "只有在睡眠模式開啟的時候",
+      "playerLimit": "玩家人數限制",
+      "playerLimitLabel": "{count} 位玩家（包括你）"
+    },
     "title": "狀態 自動化"
   },
   "systemMicMuteAutomations": {
