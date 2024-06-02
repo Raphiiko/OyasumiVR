@@ -1471,24 +1471,26 @@
     "title": "Animasi Tidur"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Ubah statusmu ke",
-      "title": "Di batas limit atau diatasnya"
-    },
-    "behaviourWarning": "Perubahan status oleh OyasumiVR tidak terlihat oleh pemain. Bahkan untuk pemain lain, perlu sedikit waktu untuk menampilkan pembaruan status. Ini adalah keterbatasan VRChat dan tidak dapat diperbaiki oleh OyasumiVR.",
     "behaviourWarningFAQ": "Di sini Anda dapat menemukan jawaban atas beberapa pertanyaan yang mungkin Anda miliki tentang perilaku perubahan status:\n\nT: Apakah saya masih bisa secara otomatis menerima permintaan undangan, meskipun VRChat tidak menunjukkan bahwa saya berwarna biru?\nJ: Jika Anda mengatur status OyasumiVR menjadi biru (join me), OyasumiVR akan mengambil alih tanggung jawab untuk secara otomatis menerima permintaan undangan yang Anda terima.\n\nT: Orang-orang tidak dapat bergabung dengan saya karena status saya tidak diperbarui untuk mereka.\nJ: Pembaruan status dapat memakan waktu beberapa saat untuk ditampilkan ke pengguna lain. Jika mereka ingin bergabung dengan Anda tetapi tidak bisa, mereka dapat memaksa status Anda untuk disegarkan dengan membuka profil Anda di menu utama.",
-    "belowLimit": {
-      "description": "Ubah statusmu ke",
-      "title": "Dibawah limit"
-    },
-    "description": "OyasumiVR dapat membatasi jumlah orang yang bergabung dengan Anda, dengan secara otomatis mengatur status Anda\n      berdasarkan jumlah pemain yang ada di dunia Anda.",
-    "disableToEdit": "Harap nonaktifkan otomatisasi status sebelum Anda membuat perubahan apa pun.",
-    "enable": "Mengaktifkan Otomatisasi Status",
-    "exampleUse": "Contoh penggunaan: Ketika seseorang bergabung dengan Anda, secara otomatis mengubah status Anda menjadi oranye atau merah!\nKetika mereka pergi dan Anda sendirian lagi, secara otomatis ubah status Anda kembali menjadi biru sehingga orang lain dapat bergabung dengan Anda.",
     "moreInfo": "Info lanjut",
-    "onlyIfSleepModeEnabled": "Hanya jika mode tidur diaktifkan",
-    "playerLimit": "Limit Player",
-    "playerLimitLabel": "{count} player (termasuk kamu)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Ubah statusmu ke"
+        },
+        "title": "Di batas limit atau diatasnya"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Ubah statusmu ke"
+        },
+        "title": "Dibawah limit"
+      },
+      "description": "OyasumiVR dapat membatasi jumlah orang yang bergabung dengan Anda, dengan secara otomatis mengatur status Anda\n      berdasarkan jumlah pemain yang ada di dunia Anda.",
+      "onlyIfSleepModeEnabled": "Hanya jika mode tidur diaktifkan",
+      "playerLimit": "Limit Player",
+      "playerLimitLabel": "{count} player (termasuk kamu)"
+    },
     "title": "Otomatisasi Status"
   },
   "systemMicMuteAutomations": {

@@ -1818,24 +1818,26 @@
     "title": "Animaciones para dormir"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Establezca su estado en",
-      "title": "En el límite o por encima"
-    },
-    "behaviourWarning": "Los cambios de estado de OyasumiVR no son visibles para el jugador. Incluso para otros jugadores, puede tardar un poco en mostrarse una actualización de estado. Esto es una limitación del VRChat y no puede ser arreglado por OyasumiVR.",
     "behaviourWarningFAQ": "Aquí puedes encontrar las respuestas a algunas preguntas que puedas tener sobre el comportamiento de cambio de estado:\n\nQ: ¿Puedo aceptar automáticamente las solicitudes de invitación, incluso si VRChat no muestra que estoy en azul? (join me), se encargará de aceptar automáticamente las solicitudes de invitación que reciba.\n\nQ: La gente no puede unirse a mí porque mi estado no se actualiza para ellos.\nA: Las actualizaciones de estado pueden tardar un poco en mostrarse a otros usuarios. Si quieren unirse a ti pero no pueden, pueden forzar la actualización de tu estado abriendo tu perfil en el menú principal.",
-    "belowLimit": {
-      "description": "Establece tu estado en",
-      "title": "Por debajo del límite"
-    },
-    "description": "OyasumiVR puede limitar la cantidad de personas que se unen a usted, mediante el establecimiento automático de su estado\n      en función del número de jugadores que haya en tu mundo.",
-    "disableToEdit": "Desactive las automatizaciones de estado antes de realizar cualquier cambio.",
-    "enable": "Activar automatizaciones de estado",
-    "exampleUse": "Ejemplo de uso: Cuando alguien se una a ti, ¡cambia automáticamente tu estado a naranja o rojo!\nCuando se vayan y vuelvas a estar solo, cambia automáticamente tu estado a azul para que otra persona pueda unirse a ti.",
     "moreInfo": "Más información",
-    "onlyIfSleepModeEnabled": "Sólo cuando el modo dormir está activado",
-    "playerLimit": "Límite de jugadores",
-    "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Establezca su estado en"
+        },
+        "title": "En el límite o por encima"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Establece tu estado en"
+        },
+        "title": "Por debajo del límite"
+      },
+      "description": "OyasumiVR puede limitar la cantidad de personas que se unen a usted, mediante el establecimiento automático de su estado\n      en función del número de jugadores que haya en tu mundo.",
+      "onlyIfSleepModeEnabled": "Sólo cuando el modo dormir está activado",
+      "playerLimit": "Límite de jugadores",
+      "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)"
+    },
     "title": "Automatizaciones de estado"
   },
   "systemMicMuteAutomations": {

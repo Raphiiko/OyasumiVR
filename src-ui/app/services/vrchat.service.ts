@@ -225,34 +225,52 @@ export class VRChatService {
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
-  async setStatus(status: UserStatus): Promise<void> {
+  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<void> {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
     if (!userId) {
       error(`[VRChat] Tried setting status while not logged in`);
       throw new Error('Tried setting status while not logged in');
     }
+    // Sanitize status message if needed
+    statusMessage =
+      statusMessage === null ? null : statusMessage.replace(/\s+/g, ' ').trim().slice(0, 32);
     // Don't do anything if the status is not changing
-    if (this._user.value?.status === status) return;
+    if (status && this._user.value?.status === status) return;
+    // Don't do anything if the status message is not changing
+    if (statusMessage && this._user.value?.statusDescription === statusMessage) return;
+    // Log status change
+    if (status && statusMessage) {
+      info(`[VRChat] Changing status to '${statusMessage}' ('${status}')`);
+    } else if (status) {
+      info(`[VRChat] Changing status to '${status}'`);
+    } else if (statusMessage) {
+      info(`[VRChat] Changing status message to '${statusMessage}'`);
+    } else {
+      return;
+    }
+
     // Send status change request
-    info(`[VRChat] Setting status to '${status}'`);
     try {
+      let body: Record<string, string> = {};
+      if (status) body['status'] = status;
+      if (statusMessage) body['statusDescription'] = statusMessage;
       const result = await this.apiCallQueue.queueTask<Response<unknown>>(
         {
           typeId: 'STATUS_CHANGE',
           runnable: () => {
-            return this.http.put(`${BASE_URL}/users/${userId}`, Body.json({ status }), {
+            return this.http.put(`${BASE_URL}/users/${userId}`, Body.json(body), {
               headers: this.getDefaultHeaders(),
             });
           },
         },
         true
       );
-      if (result.result && result.result.ok) this.patchCurrentUser({ status });
+      if (result.result && result.result.ok) this.patchCurrentUser(body);
       if (result.error) throw result.error;
       if (!result.result?.ok) throw result.result;
     } catch (e) {
-      error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
+      error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
     }
   }
 

@@ -215,6 +215,8 @@ import { DeviceListLhStatePopoverComponent } from './components/device-list/devi
 import { WindowTitlebarComponent } from './components/window-titlebar/window-titlebar.component';
 import { ShutdownAutomationsTriggersTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-triggers-tab/shutdown-automations-triggers-tab.component';
 import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-settings-tab/shutdown-automations-settings-tab.component';
+import { StatusAutomationsPlayerLimitTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-player-limit-tab/status-automations-player-limit-tab.component';
+import { StatusAutomationsGeneralTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-general-tab/status-automations-general-tab.component';
 
 [
   localeEN,
@@ -346,6 +348,8 @@ export function createTranslateLoader(http: HttpClient) {
     WindowTitlebarComponent,
     ShutdownAutomationsTriggersTabComponent,
     ShutdownAutomationsSettingsTabComponent,
+    StatusAutomationsPlayerLimitTabComponent,
+    StatusAutomationsGeneralTabComponent,
   ],
   imports: [
     CommonModule,

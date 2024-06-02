@@ -2151,24 +2151,26 @@
     "title": "アニメーション"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "ステータスの設定",
-      "title": "上限以上"
-    },
-    "behaviourWarning": "OyasumiVRによるステータスの変更は、自分自身には反映されていないように見えることがあります。また、他のプレイヤーから見てステータス表示が更新されるまで少し時間がかかる場合があります。これはVRChatの仕様であり、OyasumiVRは修正できません。",
     "behaviourWarningFAQ": "ステータス変更の挙動に関する質問に対する回答は、こちらをご覧下さい。\n\nQ: VRChat上で青(Join Me)に表示されていなくても、Req Inviteは自動的に承認されますか？\nA: OyasumiVRがステータスを青(Join Me)に変更した場合は、そのタイミングから受け取ったReq Inviteを自動承認します。\n\nQ: ステータスが更新されないのでJoinできません。\nA: ステータスの更新は、他のユーザーに表示されるまでに時間がかかる場合があります。Joinできない場合は、メインメニューからプロフィールを開いて自身のステータスを強制的に更新することも可能です。",
-    "belowLimit": {
-      "description": "ステータスの設定",
-      "title": "上限未満"
-    },
-    "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限できます。",
-    "disableToEdit": "変更を行う際は、ステータス自動化を無効にしてください。",
-    "enable": "ステータス自動化を有効にする",
-    "exampleUse": "使用例: 一人で寝ているときは青(Join Me)、十分な人数が来たときは赤(Do Not Disturb)などへ切り替えられます！",
     "moreInfo": "詳細",
-    "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
-    "playerLimit": "人数制限",
-    "playerLimitLabel": "{count} 人のプレイヤー（自分を含む）",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "ステータスの設定"
+        },
+        "title": "上限以上"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "ステータスの設定"
+        },
+        "title": "上限未満"
+      },
+      "description": "ワールドにいる人数に応じてステータスを自動設定し、Joinできる人数を制限できます。",
+      "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
+      "playerLimit": "人数制限",
+      "playerLimitLabel": "{count} 人のプレイヤー（自分を含む）"
+    },
     "title": "ステータス自動化"
   },
   "systemMicMuteAutomations": {

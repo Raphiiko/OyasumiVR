@@ -1891,24 +1891,26 @@
     "title": "Slaap Animaties"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Verander je status naar",
-      "title": "Op het limiet of erboven"
-    },
-    "behaviourWarning": "Aanpassingen van de status zijn niet zichtbaar voor jouwzelf. Ook voor andere spelers kan het even duren voordat de statusverandering zichtbaar is. Dit is een limitatie van VRChat zelf en kan niet worden opgelost door OyasumiVR.",
     "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu.",
-    "belowLimit": {
-      "description": "Verander je status naar",
-      "title": "Onder het limiet"
-    },
-    "description": "OyasumiVR kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
-    "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
-    "enable": "Activeer Status Automatiseringen",
-    "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
     "moreInfo": "Meer info",
-    "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
-    "playerLimit": "Speler limiet",
-    "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Verander je status naar"
+        },
+        "title": "Op het limiet of erboven"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Verander je status naar"
+        },
+        "title": "Onder het limiet"
+      },
+      "description": "OyasumiVR kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
+      "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
+      "playerLimit": "Speler limiet",
+      "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)"
+    },
     "title": "Status Automatiseringen"
   },
   "systemMicMuteAutomations": {
