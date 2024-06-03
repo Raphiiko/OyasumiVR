@@ -1,6 +1,8 @@
 import { cloneDeep, mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
-import { info } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
+import { message } from '@tauri-apps/api/dialog';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -32,7 +34,24 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
     );
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
-    data = migrations[++currentVersion](cloneDeep(data));
+    try {
+      data = migrations[++currentVersion](cloneDeep(data));
+    } catch (e) {
+      error(
+        "[automation-configs-migrations] Couldn't migrate to version " +
+          currentVersion +
+          '. Backing up configuration and resetting to the latest version. : ' +
+          e
+      );
+      saveBackup(cloneDeep(data));
+      data = resetToLatest(data);
+      currentVersion = data.version;
+      message(
+        'Your automation settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
+        { title: 'Migration Error (Automation Config)' }
+      );
+      continue;
+    }
     currentVersion = data.version;
     info(
       `[automation-configs-migrations] Migrated automation configs to version ${
@@ -46,6 +65,12 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
     }
   });
   return data as AutomationConfigs;
+}
+
+async function saveBackup(oldData: any) {
+  await writeTextFile('automation-config.backup.json', JSON.stringify(oldData, null, 2), {
+    dir: BaseDirectory.AppData,
+  });
 }
 
 function resetToLatest(data: any): any {

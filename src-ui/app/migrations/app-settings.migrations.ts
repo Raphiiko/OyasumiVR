@@ -1,6 +1,8 @@
 import { cloneDeep, mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { info } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { message } from '@tauri-apps/api/dialog';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -26,7 +28,24 @@ export function migrateAppSettings(data: any): AppSettings {
     );
   }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
-    data = migrations[++currentVersion](data);
+    try {
+      data = migrations[++currentVersion](data);
+    } catch (e) {
+      error(
+        "[app-settings-migrations] Couldn't migrate to version " +
+          currentVersion +
+          '. Backing up configuration and resetting to the latest version. : ' +
+          e
+      );
+      saveBackup(cloneDeep(data));
+      data = resetToLatest(data);
+      currentVersion = data.version;
+      message(
+        'Your application settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
+        { title: 'Migration Error (App Settings)' }
+      );
+      continue;
+    }
     currentVersion = data.version;
     info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
@@ -36,6 +55,12 @@ export function migrateAppSettings(data: any): AppSettings {
     }
   });
   return data as AppSettings;
+}
+
+async function saveBackup(oldData: any) {
+  await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
+    dir: BaseDirectory.AppData,
+  });
 }
 
 function resetToLatest(data: any): any {
