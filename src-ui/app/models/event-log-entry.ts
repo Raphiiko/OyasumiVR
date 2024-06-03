@@ -25,6 +25,7 @@ export type EventLogEntry =
   | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogStatusChangedOnPlayerCountChange
+  | EventLogStatusChangedOnGeneralEvent
   | EventLogSleepDetectorEnableCancelled
   | EventLogRenderResolutionChanged
   | EventLogChaperoneFadeDistanceChanged
@@ -54,6 +55,7 @@ export type EventLogType =
   | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
   | 'statusChangedOnPlayerCountChange'
+  | 'statusChangedOnGeneralEvent'
   | 'sleepDetectorEnableCancelled'
   | 'renderResolutionChanged'
   | 'chaperoneFadeDistanceChanged'
@@ -160,6 +162,15 @@ export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
   type: 'statusChangedOnPlayerCountChange';
   reason: 'BELOW_LIMIT' | 'AT_LIMIT_OR_ABOVE';
   threshold: number;
+  newStatus?: UserStatus;
+  oldStatus: UserStatus;
+  newStatusMessage?: string;
+  oldStatusMessage: string;
+}
+
+export interface EventLogStatusChangedOnGeneralEvent extends EventLogBase {
+  type: 'statusChangedOnGeneralEvent';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   newStatus?: UserStatus;
   oldStatus: UserStatus;
   newStatusMessage?: string;

@@ -8,5 +8,5 @@ import { noop } from '../../../../utils/animations';
   animations: [noop()],
 })
 export class StatusAutomationsViewComponent {
-  activeTab: 'GENERAL' | 'PLAYER_LIMIT' = 'PLAYER_LIMIT';
+  activeTab: 'GENERAL' | 'PLAYER_LIMIT' = 'GENERAL';
 }

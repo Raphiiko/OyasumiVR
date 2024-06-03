@@ -991,9 +991,6 @@
     },
     "turningOffTrackers": {
       "content": "Je trackers worden uitgeschakeld"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Je VRChat status is veranderd naar ''{newStatus}''"
     }
   },
   "oscAutomations": {
@@ -1579,10 +1576,6 @@
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "description": "Ontvang een notificatie wanneer OyasumiVR automatisch iemands invite request heeft geaccepteerd",
             "title": "Invite Request Automatisch Geaccepteerd"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Ontvang een notificatie wanneer OyasumiVR automatisch je VRChat status heeft aangepast",
-            "title": "VRChat Status Aangepast (Speler Limiet)"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Ontvang een notificatie wanneer de slaap modus wordt uitgeschakeld",

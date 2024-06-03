@@ -51,6 +51,7 @@ export type AutomationType =
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
+  | 'CHANGE_STATUS_GENERAL_EVENTS'
   | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
   | 'NIGHTMARE_DETECTION'
   | 'BIGSCREEN_BEYOND_FAN_CONTROL'
@@ -103,6 +104,7 @@ export interface AutomationConfigs {
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
+  CHANGE_STATUS_GENERAL_EVENTS: ChangeStatusGeneralEventsAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
   BIGSCREEN_BEYOND_FAN_CONTROL: BigscreenBeyondFanControlAutomationsConfig;
@@ -284,6 +286,21 @@ export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends Automati
   onlyIfSleepModeEnabled: boolean;
 }
 
+export interface ChangeStatusGeneralEventsAutomationConfig extends AutomationConfig {
+  changeStatusOnSleepModeEnable: boolean;
+  statusOnSleepModeEnable: UserStatus;
+  changeStatusMessageOnSleepModeEnable: boolean;
+  statusMessageOnSleepModeEnable: string;
+  changeStatusOnSleepModeDisable: boolean;
+  statusOnSleepModeDisable: UserStatus;
+  changeStatusMessageOnSleepModeDisable: boolean;
+  statusMessageOnSleepModeDisable: string;
+  changeStatusOnSleepPreparation: boolean;
+  statusOnSleepPreparation: UserStatus;
+  changeStatusMessageOnSleepPreparation: boolean;
+  statusMessageOnSleepPreparation: string;
+}
+
 // WINDOWS POWER POLICY AUTOMATIONS
 export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends AutomationConfig {
   powerPolicy?: string;
@@ -292,6 +309,7 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 // MISCELLANEOUS AUTOMATIONS
 
 export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
+
 export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
   playerIds: string[];
   onlyDuringSleepMode: boolean;
@@ -627,6 +645,21 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     statusMessageAtLimitOrAbove: '',
     statusMessageAtLimitOrAboveEnabled: false,
     onlyIfSleepModeEnabled: false,
+  },
+  CHANGE_STATUS_GENERAL_EVENTS: {
+    enabled: true,
+    changeStatusOnSleepModeEnable: false,
+    statusOnSleepModeEnable: UserStatus.AskMe,
+    changeStatusMessageOnSleepModeEnable: false,
+    statusMessageOnSleepModeEnable: '',
+    changeStatusOnSleepModeDisable: false,
+    statusOnSleepModeDisable: UserStatus.Active,
+    changeStatusMessageOnSleepModeDisable: false,
+    statusMessageOnSleepModeDisable: '',
+    changeStatusOnSleepPreparation: false,
+    statusOnSleepPreparation: UserStatus.JoinMe,
+    changeStatusMessageOnSleepPreparation: false,
+    statusMessageOnSleepPreparation: '',
   },
   // INVITE AUTOMATIONS
   AUTO_ACCEPT_INVITE_REQUESTS: {

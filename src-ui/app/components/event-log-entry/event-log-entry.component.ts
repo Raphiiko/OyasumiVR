@@ -29,6 +29,7 @@ import { EventLogMutedAudioDeviceEntryParser } from './entry-parsers/muted-audio
 import { EventLogUnmutedAudioDeviceEntryParser } from './entry-parsers/unmuted-audio-device';
 import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-speed-changed';
 import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
+import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -51,6 +52,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogSoftwareBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
     new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
+    new EventLogStatusChangedOnGeneralEventEntryParser(),
     new EventLogSleepDetectorEnableCancelledEntryParser(),
     new EventLogRenderResolutionChangedEntryParser(),
     new EventLogFadeDistanceChangedEntryParser(),

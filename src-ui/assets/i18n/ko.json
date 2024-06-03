@@ -961,9 +961,6 @@
     },
     "turningOffTrackers": {
       "content": "트래커를 끄고 있어요."
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "VRChat 스테이터스가 ''{newStatus}''로 설정되었어요."
     }
   },
   "oscAutomations": {
@@ -1534,10 +1531,6 @@
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "description": "OyasumiVR이 자동으로 누군가의 인바이트 리퀘스트를 수락했을 때 알림을 받아요.",
             "title": "인바이트 리퀘스트 자동 수락"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "OyasumiVR이 자동으로 VRChat의 스테이터스를 갱신했을 때 알림을 받아요.",
-            "title": "VRChat 스테이터스 갱신 (플레이어 제한 자동화)"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "수면 모드가 비활성화되었을 때 알림을 받아요.",

@@ -217,6 +217,7 @@ import { ShutdownAutomationsTriggersTabComponent } from './views/dashboard-view/
 import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/views/shutdown-automations-view/tabs/shutdown-automations-settings-tab/shutdown-automations-settings-tab.component';
 import { StatusAutomationsPlayerLimitTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-player-limit-tab/status-automations-player-limit-tab.component';
 import { StatusAutomationsGeneralTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-general-tab/status-automations-general-tab.component';
+import { StatusChangeGeneralEventsAutomationService } from './services/status-automations/status-change-general-events-automation.service';
 
 [
   localeEN,
@@ -447,6 +448,7 @@ export class AppModule {
     private vrchatMicMuteAutomationService: VRChatMicMuteAutomationService,
     // Status automations
     private statusChangeForPlayerCountAutomationService: StatusChangeForPlayerCountAutomationService,
+    private statusChangeGenericEventsAutomationService: StatusChangeGeneralEventsAutomationService,
     // Invite automations
     private inviteAutomationsService: InviteAutomationsService,
     // Shutdown automations
@@ -693,6 +695,10 @@ export class AppModule {
             this.logInit(
               'StatusChangeForPlayerCountAutomationService initialization',
               this.statusChangeForPlayerCountAutomationService.init()
+            ),
+            this.logInit(
+              'StatusChangeGenericEventsAutomationService initialization',
+              this.statusChangeGenericEventsAutomationService.init()
             ),
             // Invite automations
             this.logInit(
