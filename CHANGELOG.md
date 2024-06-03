@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Bigscreen Beyond fan speed often being reset
 - VRChat accounts with 2FA being logged out after 7 days. (Now 30 days, if you store credentials)
 - The overlay menu sometimes not showing when being opened
+- Improved handling of failed configuration migrations
 
 ## [1.12.8]
 
