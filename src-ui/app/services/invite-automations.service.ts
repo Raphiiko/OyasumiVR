@@ -99,7 +99,7 @@ export class InviteAutomationsService {
     info(`[VRChat] Automatically accepting invite request from ${notification.senderUserId}`);
     await this.vrchat.deleteNotification(notification.id);
     await this.vrchat.inviteUser(notification.senderUserId);
-    if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_STATUS_PLAYERCOUNT')) {
+    if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
       await this.notifications.send(
         this.translate.instant('notifications.autoAcceptedInviteRequest.content', {
           username: notification.senderUsername,

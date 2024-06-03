@@ -1,7 +1,3 @@
-@use 'sass:math';
-
-@import 'shadows';
-
 .alert {
   &:not(:last-child) {
     margin-bottom: 1em;

@@ -11,6 +11,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   6: from5to6,
   7: from6to7,
   8: from7to8,
+  9: from8to9,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -40,6 +41,21 @@ export function migrateAppSettings(data: any): AppSettings {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from8to9(data: any): any {
+  data.version = 9;
+  data.notificationsEnabled = {
+    types: (data.notificationId?.types ?? []).map((t: string) => {
+      switch (t) {
+        case 'AUTO_UPDATED_STATUS_PLAYERCOUNT':
+          return 'AUTO_UPDATED_VRC_STATUS';
+        default:
+          return t;
+      }
+    }),
+  };
   return data;
 }
 

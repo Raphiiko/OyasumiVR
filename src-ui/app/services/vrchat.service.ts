@@ -252,7 +252,7 @@ export class VRChatService {
 
     // Send status change request
     try {
-      let body: Record<string, string> = {};
+      const body: Record<string, string> = {};
       if (status) body['status'] = status;
       if (statusMessage) body['statusDescription'] = statusMessage;
       const result = await this.apiCallQueue.queueTask<Response<unknown>>(

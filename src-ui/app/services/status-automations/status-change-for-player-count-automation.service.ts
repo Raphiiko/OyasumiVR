@@ -82,9 +82,9 @@ export class StatusChangeForPlayerCountAutomationService {
       .subscribe(async (newStatus) => {
         // Set new status
         await this.vrchat.setStatus(newStatus.status, newStatus.statusMessage);
-        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_STATUS_PLAYERCOUNT')) {
+        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
           await this.notifications.send(
-            this.translate.instant('notifications.vrcStatusChangedPlayerCount.content', {
+            this.translate.instant('notifications.vrcStatusChanged.content', {
               newStatus: (
                 (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
                 ' (' +

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
-import { SleepPreparationService } from '../../sleep-preparation.service';
 import { MqttButtonProperty } from '../../../models/mqtt';
 import { ShutdownAutomationsService } from '../../shutdown-automations.service';
 

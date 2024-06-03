@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BehaviorSubject, debounceTime, distinctUntilChanged, filter, switchMap, tap } from 'rxjs';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -27,7 +27,7 @@ import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
   styleUrls: ['./status-automations-player-limit-tab.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
 })
-export class StatusAutomationsPlayerLimitTabComponent {
+export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
   UserStatus = UserStatus;
   loggedIn = false;
   limit: BehaviorSubject<number> = new BehaviorSubject<number>(1);

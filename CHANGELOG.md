@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Custom window titlebar
 - Optional fix to delay initializing OyasumiVR with OpenVR. (Can potentially help with SteamVR being unstable while starting when OyasumiVR is already running)
 - Option for changing your VRChat status description in the player limit status automations.
+- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
 
 ### Changed
 

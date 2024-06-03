@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { BigscreenBeyondFanAutomationService } from '../../hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BigscreenBeyondLedAutomationService } from '../../hmd-specific-automations/bigscreen-beyond-led-automation.service';
-import { combineLatest, distinctUntilChanged, filter, map } from 'rxjs';
+import { combineLatest, distinctUntilChanged, filter, map, take } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
 import { MqttLightProperty, MqttNumberProperty } from '../../../models/mqtt';
 import { isEqual } from 'lodash';
@@ -19,8 +19,10 @@ export class BigscreenBeyondMqttIntegrationService {
   ) {}
 
   async init() {
-    await this.initFanSpeedControl();
-    await this.initLedControl();
+    this.fanSpeedService.bsbConnected.pipe(filter(Boolean), take(1)).subscribe(async () => {
+      await this.initFanSpeedControl();
+      await this.initLedControl();
+    });
   }
 
   private async initFanSpeedControl() {

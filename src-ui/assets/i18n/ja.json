@@ -1161,9 +1161,6 @@
     },
     "turningOffTrackers": {
       "content": "トラッカーの電源をオフにしました。"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "VRChatステータスが''{newStatus}''に設定されました。"
     }
   },
   "oscAutomations": {
@@ -1754,10 +1751,6 @@
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "description": "Req Inviteを自動承認したとき",
             "title": "Req Inviteの承認時"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "VRChatステータスを自動更新したとき",
-            "title": "VRChatステータス更新時"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "睡眠モードが無効になったとき",

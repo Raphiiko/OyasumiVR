@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { cloneDeep, orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
@@ -50,8 +50,8 @@ export class OpenVRService {
       )
       .subscribe((fixEnabled) => {
         this.applyOpenVrInitDelayFix(fixEnabled);
-        if (fixEnabled) warn('[OpenVR] Applying OpenVR Initialization delay fix');
-        else warn('[OpenVR] Removing OpenVR initialization delay fix');
+        if (fixEnabled) info('[OpenVR] Applying OpenVR Initialization delay fix');
+        else info('[OpenVR] Removing OpenVR initialization delay fix');
       });
     await Promise.all([
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>

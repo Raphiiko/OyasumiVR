@@ -2,7 +2,7 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { PlayerListPreset } from './player-list-preset';
 
 export interface AppSettings {
-  version: 8;
+  version: 9;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -67,14 +67,14 @@ export type HotkeyId =
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
   'SLEEP_MODE_DISABLED',
-  'AUTO_UPDATED_STATUS_PLAYERCOUNT',
+  'AUTO_UPDATED_VRC_STATUS',
   'AUTO_ACCEPTED_INVITE_REQUEST',
 ] as const;
 
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 8,
+  version: 9,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,

@@ -705,9 +705,6 @@
     },
     "turningOffTrackers": {
       "content": "Mematikan tracker Anda"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Status VRChat Anda telah diatur ke ''{newStatus}''"
     }
   },
   "oscAutomations": {
@@ -1183,10 +1180,6 @@
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis menerima permintaan undangan dari seseorang",
             "title": "Permintaan Undangan yang Diterima Secara Otomatis"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis memperbarui status VRChat Anda",
-            "title": "Status VRChat Diperbarui (Otomatisasi Batas Pemain)"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Dapatkan pemberitahuan ketika mode tidur dinonaktifkan",

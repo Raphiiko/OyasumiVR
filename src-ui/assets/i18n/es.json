@@ -933,9 +933,6 @@
     },
     "turningOffTrackers": {
       "content": "Apagar los trackers"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Tu estado de VRChat se ha establecido en ''{newStatus}''"
     }
   },
   "oscAutomations": {
@@ -1506,10 +1503,6 @@
           "AUTO_ACCEPTED_INVITE_REQUEST": {
             "description": "Recibe una notificación cuando OyasumiVR acepte automáticamente la solicitud de invitación de alguien.",
             "title": "Solicitud de invitación aceptada automáticamente"
-          },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Recibe una notificación cuando OyasumiVR haya actualizado automáticamente tu estado en VRChat.",
-            "title": "Actualización del estado de VRChat (Automatización del límite de jugadores)"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Recibir una notificación cuando se desactiva el modo de suspensión",
