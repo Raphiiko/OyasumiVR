@@ -2223,7 +2223,7 @@
       },
       "onlyIfSleepModeEnabled": "睡眠モード有効時のみ",
       "playerLimit": "人数制限",
-      "playerLimitLabel": "{count, plural, one {1人のプレイヤー} other {#人のプレイヤー}}（自分を含む）"
+      "playerLimitLabel": "{count} 人のプレイヤー（自分を含む）"
     },
     "tabs": {
       "general": "一般",
