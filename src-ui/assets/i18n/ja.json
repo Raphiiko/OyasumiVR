@@ -1464,7 +1464,7 @@
           "title": "OpenVR初期化に遅延を追加する"
         },
         "oscServerEnabled": {
-          "description": "オフにすると組み込みのOSCおよびOSCQueryサーバーが無効になり、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、一般的にオフにするべきではありません。また、このオプションは再起動しても維持されます",
+          "description": "オフにすると組み込みのOSCおよびOSCQueryサーバーが無効になり、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、通常時はオフにするべきではありません。また、このオプションは再起動しても維持されます",
           "title": "OSCおよびOSCQueryサーバーを有効にする"
         },
         "overlayGpuFix": {
@@ -2176,24 +2176,24 @@
       "description": "特定の状況でVRChatステータスを更新できます。例えば、寝るときや起きるときにステータスを変更します！",
       "onSleepDisable": {
         "description": {
-          "status": "ステータスを設定",
-          "statusMessage": "ステータスメッセージを設定"
+          "status": "ステータスの設定",
+          "statusMessage": "ステータスメッセージの設定"
         },
         "script": "睡眠モードを無効化",
         "title": "起床時"
       },
       "onSleepEnable": {
         "description": {
-          "status": "ステータスを設定",
-          "statusMessage": "ステータスメッセージを設定"
+          "status": "ステータスの設定",
+          "statusMessage": "ステータスメッセージの設定"
         },
         "script": "睡眠モードを有効化",
         "title": "睡眠時"
       },
       "onSleepPreparation": {
         "description": {
-          "status": "ステータスを設定",
-          "statusMessage": "ステータスメッセージを設定"
+          "status": "ステータスの設定",
+          "statusMessage": "ステータスメッセージの設定"
         },
         "script": "就寝準備",
         "title": "就寝準備時"
@@ -2204,14 +2204,14 @@
       "atLimitOrAbove": {
         "description": {
           "status": "ステータスの設定",
-          "statusMessage": "ステータスメッセージを設定"
+          "statusMessage": "ステータスメッセージの設定"
         },
         "title": "上限以上"
       },
       "belowLimit": {
         "description": {
           "status": "ステータスの設定",
-          "statusMessage": "ステータスメッセージを設定"
+          "statusMessage": "ステータスメッセージの設定"
         },
         "title": "上限未満"
       },
