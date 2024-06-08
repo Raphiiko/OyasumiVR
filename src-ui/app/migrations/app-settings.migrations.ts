@@ -72,7 +72,7 @@ function resetToLatest(data: any): any {
 function from8to9(data: any): any {
   data.version = 9;
   data.notificationsEnabled = {
-    types: (data.notificationId?.types ?? []).map((t: string) => {
+    types: (data.notificationsEnabled?.types ?? []).map((t: string) => {
       switch (t) {
         case 'AUTO_UPDATED_STATUS_PLAYERCOUNT':
           return 'AUTO_UPDATED_VRC_STATUS';
