@@ -24,7 +24,6 @@
   text-align: center;
 }
 
-
 .avatars {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -39,7 +38,7 @@
   justify-content: flex-start;
   align-items: center;
   cursor: pointer;
-  transition: all .15s;
+  transition: all 0.15s;
   border-radius: var(--surface-border-radius);
 
   &:hover {
@@ -67,7 +66,8 @@
     font-weight: 600;
     overflow: hidden;
     width: 100%;
-    &, span {
+    &,
+    span {
       min-width: 0;
       text-overflow: ellipsis;
       white-space: nowrap;

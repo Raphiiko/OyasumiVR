@@ -1,10 +1,6 @@
 <div class="b-modal-container" @fadeUp (clickOutside)="close()">
   <div class="sliders-container">
-    <div
-      class="brightness-slider"
-      @vshrink
-      [class.disabled]="fanControl.fanSafetyActive | async"
-    >
+    <div class="brightness-slider" @vshrink [class.disabled]="fanControl.fanSafetyActive | async">
       <app-brightness-control-slider
         [value]="(fanControl.fanSpeed | async) ?? 0"
         [min]="fanSpeedBounds[0]"

@@ -339,9 +339,9 @@ $background-color: var(--color-surface-2);
   }
   05% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
   10% {
@@ -349,16 +349,16 @@ $background-color: var(--color-surface-2);
   }
   50% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66
     );
   }
   70% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
 }

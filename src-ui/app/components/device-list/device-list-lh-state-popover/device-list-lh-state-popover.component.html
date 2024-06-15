@@ -1,5 +1,5 @@
 <div class="pane">
-  <div class="label" @hshrink *ngFor="let label of (hoverAction ? [hoverAction] : [])">
+  <div class="label" @hshrink *ngFor="let label of hoverAction ? [hoverAction] : []">
     <span>{{ label | translate }}</span>
   </div>
   <div class="action-row">
@@ -9,10 +9,7 @@
       (mouseleave)="hoverAction = ''"
       (click)="action.emit('on')"
     >
-      <i
-        class="material-icons"
-      >power_settings_new</i
-      >
+      <i class="material-icons">power_settings_new</i>
     </button>
     <button
       class="btn-power power-off"
@@ -20,10 +17,7 @@
       (mouseleave)="hoverAction = ''"
       (click)="action.emit('standby')"
     >
-      <i
-        class="material-icons"
-      >mode_standby</i
-      >
+      <i class="material-icons">mode_standby</i>
     </button>
     <button
       class="btn-power power-off"
@@ -31,10 +25,7 @@
       (mouseleave)="hoverAction = ''"
       (click)="action.emit('sleep')"
     >
-      <i
-        class="material-icons"
-      >nights_stay</i
-      >
+      <i class="material-icons">nights_stay</i>
     </button>
   </div>
 </div>

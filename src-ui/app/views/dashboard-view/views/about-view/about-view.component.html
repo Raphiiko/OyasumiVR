@@ -43,13 +43,13 @@
       <div class="contributor-list">
         <div class="contributor-list-entry">
           <span
-          ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
+            ><a href="https://github.com/neuroblack" target="_blank">neuroblack</a> |
             <span translate>about.contributionType.feature</span></span
           >
         </div>
         <div class="contributor-list-entry">
           <span
-          ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
+            ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
             <span translate>about.contributionType.feature</span></span
           >
         </div>
@@ -60,7 +60,7 @@
       <div class="project-info-title" translate>about.projectLinks</div>
       <div class="project-links">
         <a href="https://github.com/Raphiiko/OyasumiVR" target="_blank" translate
-        >about.sourceLink</a
+          >about.sourceLink</a
         >
         <br />
         <a href="https://discord.gg/7MqdPJhYxC" target="_blank" translate>about.discordInvite</a>
@@ -94,19 +94,29 @@
   </div>
   <div class="row">
     <div class="left">
-      <div class="translation-author-list-entry" *ngFor="let contributor of leftTranslationContributors">
+      <div
+        class="translation-author-list-entry"
+        *ngFor="let contributor of leftTranslationContributors"
+      >
         <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-        {{ contributor.langNameNative }} | <a *ngIf="contributor.url" [href]="contributor.url"
-                                              target="_blank">{{ contributor.name }}</a><span
-        *ngIf="!contributor.url">{{ contributor.name }}</span>
+        {{ contributor.langNameNative }} |
+        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
+          contributor.name
+        }}</a
+        ><span *ngIf="!contributor.url">{{ contributor.name }}</span>
       </div>
     </div>
     <div class="right">
-      <div class="translation-author-list-entry" *ngFor="let contributor of rightTranslationContributors">
-        <a *ngIf="contributor.url" [href]="contributor.url"
-           target="_blank">{{ contributor.name }}</a><span
-        *ngIf="!contributor.url">{{ contributor.name }}</span> | {{ contributor.langNameNative }} <span
-        [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
+      <div
+        class="translation-author-list-entry"
+        *ngFor="let contributor of rightTranslationContributors"
+      >
+        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
+          contributor.name
+        }}</a
+        ><span *ngIf="!contributor.url">{{ contributor.name }}</span> |
+        {{ contributor.langNameNative }}
+        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
       </div>
     </div>
   </div>

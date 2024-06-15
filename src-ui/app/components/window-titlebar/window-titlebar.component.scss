@@ -26,7 +26,8 @@
     }
   }
 
-  .version, .version-extra {
+  .version,
+  .version-extra {
     color: var(--color-surface-4);
     transition: all 0.5s ease;
     &:hover {
@@ -57,7 +58,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
   width: 35px;
 
   &:hover {
@@ -69,7 +70,8 @@
   }
 
   &.btn-close {
-    &:hover, &:active {
+    &:hover,
+    &:active {
       background: var(--color-caution);
       color: white;
     }
@@ -78,6 +80,4 @@
   i.material-symbols-outlined {
     font-size: 1.1em !important;
   }
-
-
 }
