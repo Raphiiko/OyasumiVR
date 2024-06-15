@@ -1,28 +1,6 @@
-<h2>VRC Settings</h2>
-<div *ngIf="{ settings: vrchat.settings | async } as data">
-  <div>
-    <b>Auth Cookie: </b>
-    <span>{{ data.settings?.authCookie }}</span>
-  </div>
-  <br>
-  <div>
-    <b>Auth Cookie Expiry: </b>
-    <span>{{ data.settings?.authCookieExpiry }}</span>
-  </div>
-  <br>
-  <div>
-    <b>2FA Cookie: </b>
-    <span>{{ data.settings?.twoFactorCookie }}</span>
-  </div>
-  <br>
-  <div>
-    <b>2FA Cookie Expiry: </b>
-    <span>{{ data.settings?.twoFactorCookieExpiry }}</span>
-  </div>
-  <br>
-  <div>
-    <b>Remembered Credentials: </b>
-    <span>{{ data.settings?.rememberedCredentials }}</span>
-  </div>
-</div>
-<br>
+<button class="btn btn-secondary" (click)="fetchAvatars()">Fetch Avatars</button>
+<pre>
+  <code>
+    {{ avatars | json }}
+  </code>
+</pre>

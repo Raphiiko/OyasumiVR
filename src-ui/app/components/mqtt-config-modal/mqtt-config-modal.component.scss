@@ -1,5 +1,9 @@
+:host {
+  top: 16px;
+}
+
 .pane {
-  max-height: calc(100vh - 4em);
+  max-height: calc(100vh - 4em - 32px);
 }
 
 .pane-content {
@@ -35,6 +39,7 @@
     font-weight: 700;
     color: var(--color-caution);
   }
+
   &-body {
     white-space: pre;
   }

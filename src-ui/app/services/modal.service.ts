@@ -91,6 +91,7 @@ export class ModalService {
       switchMap(
         () =>
           instance.close$.pipe(
+            filter(Boolean),
             take(1),
             // Remove modal from stack
             tap(() => {

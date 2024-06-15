@@ -218,6 +218,9 @@ import { ShutdownAutomationsSettingsTabComponent } from './views/dashboard-view/
 import { StatusAutomationsPlayerLimitTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-player-limit-tab/status-automations-player-limit-tab.component';
 import { StatusAutomationsGeneralTabComponent } from './views/dashboard-view/views/status-automations-view/tabs/status-automations-general-tab/status-automations-general-tab.component';
 import { StatusChangeGeneralEventsAutomationService } from './services/status-automations/status-change-general-events-automation.service';
+import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/views/vrchat-avatar-automations-view/vrchat-avatar-automations-view.component';
+import { VrcAvatarSelectButtonComponent } from './components/vrc-avatar-select-button/vrc-avatar-select-button.component';
+import { VrcAvatarSelectModalComponent } from './components/vrc-avatar-select-modal/vrc-avatar-select-modal.component';
 
 [
   localeEN,
@@ -351,6 +354,9 @@ export function createTranslateLoader(http: HttpClient) {
     ShutdownAutomationsSettingsTabComponent,
     StatusAutomationsPlayerLimitTabComponent,
     StatusAutomationsGeneralTabComponent,
+    VRChatAvatarAutomationsViewComponent,
+    VrcAvatarSelectButtonComponent,
+    VrcAvatarSelectModalComponent,
   ],
   imports: [
     CommonModule,

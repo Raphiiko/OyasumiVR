@@ -18,14 +18,14 @@ import {
   Observable,
   Subject,
 } from 'rxjs';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, uniqBy } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
 import { VRChatLoginModalComponent } from '../components/vrchat-login-modal/vrchat-login-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { TaskQueue } from '../utils/task-queue';
-import { WorldContext } from '../models/vrchat';
+import { AvatarEx, WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
 import { CachedValue } from '../utils/cached-value';
 import { error, info, warn } from 'tauri-plugin-log-api';
@@ -41,6 +41,9 @@ import { listen } from '@tauri-apps/api/event';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
 const MAX_VRCHAT_FRIENDS = 65536;
+const MAX_FAVOURITE_AVATARS = 500;
+const MAX_UPLOADED_AVATARS = 1000;
+
 export type VRChatServiceStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 
 @Injectable({
@@ -69,6 +72,9 @@ export class VRChatService {
         INVITE: 6,
         LIST_FRIENDS: 15,
         POLL_USER: 1,
+        LIST_AVATARS_FAVOURITE: 10,
+        LIST_AVATARS_UPLOADED: 15,
+        SELECT_AVATAR: 6,
       },
     },
   });
@@ -87,7 +93,13 @@ export class VRChatService {
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_FRIENDS'
   );
+  private _avatarCache: CachedValue<AvatarEx[]> = new CachedValue<AvatarEx[]>(
+    undefined,
+    60 * 60 * 1000, // Cache for 1 hour
+    'VRCHAT_AVATARS'
+  );
   private _friendFetcher = new BehaviorSubject<Observable<'SUCCESS' | 'FAILED'> | null>(null);
+  private _avatarFetcher = new BehaviorSubject<Observable<'SUCCESS' | 'FAILED'> | null>(null);
   private _notifications: Subject<Notification> = new Subject<Notification>();
   private _userStatusLastUpdated = new BehaviorSubject<number>(0);
   private _userUpdateEventLastReceived = new BehaviorSubject<number>(0);
@@ -356,9 +368,7 @@ export class VRChatService {
     // If we have a valid cache and aren't forcing the fetch, return the cached value
     if (!force) {
       const cachedFriends = this._friendsCache.get();
-      if (cachedFriends) {
-        return cachedFriends;
-      }
+      if (cachedFriends) return cachedFriends;
     }
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
@@ -377,42 +387,109 @@ export class VRChatService {
     const friends: LimitedUser[] = [];
     // Fetch online and active friends
     let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
-    for (const offline of ['false', 'true']) {
-      try {
-        for (let offset = 0; offset < MAX_VRCHAT_FRIENDS; offset += 100) {
-          // Send request
-          const response = await this.apiCallQueue.queueTask<Response<LimitedUser[]>>({
-            typeId: 'LIST_FRIENDS',
-            runnable: () => {
-              return this.http.get(`${BASE_URL}/auth/user/friends`, {
-                headers: this.getDefaultHeaders(),
-                query: {
-                  offset: offset.toString(),
-                  n: '100',
-                  offline,
-                },
-              });
-            },
-          });
-          if (response.result && response.result.ok) {
-            fetchResult = 'SUCCESS';
-            // Add friends to list
-            friends.push(...response.result.data);
-            // If we got some friends, continue fetching
-            if (response.result.data.length > 0) continue;
-          }
-          break;
-        }
-      } catch (e) {
-        error('[VRChat] Failed to list friends: ' + JSON.stringify(e));
-        fetchResult = 'FAILED';
-        break;
+    try {
+      for (const offline of ['false', 'true']) {
+        const response = await this.fetchPaginatedData<LimitedUser>({
+          url: `${BASE_URL}/auth/user/friends`,
+          apiCallTypeId: 'LIST_FRIENDS',
+          query: {
+            offline,
+          },
+          maxEntries: MAX_VRCHAT_FRIENDS,
+        });
+        fetchResult = 'SUCCESS';
+        friends.push(...response);
       }
+    } catch (e) {
+      error('[VRChat] Failed to list friends: ' + JSON.stringify(e));
+      fetchResult = 'FAILED';
     }
-    this._friendsCache.set(friends);
+    if (fetchResult === 'SUCCESS') this._friendsCache.set(friends);
     friendFetchCompletion.next(fetchResult);
     this._friendFetcher.next(null);
     return friends;
+  }
+
+  public async selectAvatar(avatarId: string) {
+    // Throw if we don't have a current user
+    const userId = this._user.value?.id;
+    if (!userId) {
+      error('[VRChat] Tried selecting an avatar while not logged in');
+      throw new Error('Tried selecting an avatar while not logged in');
+    }
+    // Send
+    await this.apiCallQueue.queueTask({
+      typeId: 'SELECT_AVATAR',
+      runnable: () => {
+        return this.http.put(`${BASE_URL}/avatars/${avatarId}/select`, Body.json({}), {
+          headers: this.getDefaultHeaders(),
+        });
+      },
+    });
+  }
+
+  public async listAvatars(force = false): Promise<AvatarEx[]> {
+    // If we have a valid cache and aren't forcing the fetch, return the cached value
+    if (!force) {
+      const cachedAvatars = this._avatarCache.get();
+      if (cachedAvatars) return cachedAvatars;
+    }
+    // Throw if we don't have a current user
+    const userId = this._user.value?.id;
+    if (!userId) {
+      error('[VRChat] Tried listing avatars while not logged in');
+      throw new Error('Tried listing avatars while not logged in');
+    }
+    // If we are already listing avatars, just await that result
+    if (this._avatarFetcher.value) {
+      await firstValueFrom(this._avatarFetcher); // We don't care about the result, just that it completes
+      return this._avatarCache.get() ?? [];
+    }
+    // Fetch avatars
+    const avatarFetchCompletion = new Subject<'SUCCESS' | 'FAILED'>();
+    this._avatarFetcher.next(avatarFetchCompletion.asObservable());
+    let avatars: AvatarEx[] = [];
+    let fetchResult: 'SUCCESS' | 'FAILED' = 'FAILED';
+    try {
+      const ownAvatars = await this.fetchPaginatedData<AvatarEx>({
+        url: `${BASE_URL}/avatars`,
+        apiCallTypeId: 'LIST_AVATARS_UPLOADED',
+        query: {
+          user: 'me',
+          releaseStatus: 'all',
+          sort: 'updated',
+          order: 'descending',
+        },
+        maxEntries: MAX_UPLOADED_AVATARS,
+      });
+      avatars.push(...ownAvatars);
+      fetchResult = 'SUCCESS';
+    } catch (e) {
+      error('[VRChat] Failed to list uploaded avatars: ' + JSON.stringify(e));
+      fetchResult = 'FAILED';
+    }
+    if (fetchResult != 'FAILED') {
+      try {
+        const favAvatars = await this.fetchPaginatedData<AvatarEx>({
+          url: `${BASE_URL}/avatars/favorites`,
+          apiCallTypeId: 'LIST_AVATARS_FAVOURITE',
+          query: {
+            sort: 'updated',
+          },
+          maxEntries: MAX_FAVOURITE_AVATARS,
+        });
+        avatars.push(...favAvatars);
+        fetchResult = 'SUCCESS';
+      } catch (e) {
+        error('[VRChat] Failed to list favourite avatars: ' + JSON.stringify(e));
+        fetchResult = 'FAILED';
+      }
+    }
+    avatars = uniqBy(avatars, 'id');
+    if (fetchResult === 'SUCCESS') this._avatarCache.set(avatars);
+    avatarFetchCompletion.next(fetchResult);
+    this._avatarFetcher.next(null);
+    return avatars;
   }
 
   public async rememberCredentials(username: string, password: string) {
@@ -467,7 +544,102 @@ export class VRChatService {
     }
   }
 
-  public async cycleCredentialCryptoKey() {
+  //
+  // INTERNALS
+  //
+
+  private async fetchPaginatedData<T>(_options: {
+    url: string;
+    apiCallTypeId: string;
+    query?: Record<string, string>;
+    maxEntries?: number;
+    rateLimit?: {
+      maxRetries?: number;
+      timeout?: number;
+    };
+  }): Promise<T[]> {
+    const options: {
+      url: string;
+      apiCallTypeId: string;
+      query: Record<string, string>;
+      maxEntries: number;
+      rateLimit: {
+        maxRetries: number;
+        timeout: number;
+      };
+    } = Object.assign(
+      {
+        query: {},
+        maxEntries: 500,
+        rateLimit: Object.assign(
+          {
+            maxRetries: 5,
+            timeout: 5000,
+          },
+          _options.rateLimit
+        ),
+      },
+      _options
+    );
+
+    const entries: T[] = [];
+    let nextOffset = 0;
+    let rateLimitRetries = 0;
+    for (let offset = 0; offset < options.maxEntries!; offset += nextOffset) {
+      nextOffset = 100;
+      const response = await this.apiCallQueue.queueTask<Response<T[]>>({
+        typeId: options.apiCallTypeId,
+        runnable: () => {
+          return this.http.get(options.url, {
+            headers: this.getDefaultHeaders(),
+            query: {
+              offset: offset.toString(),
+              n: '100',
+              ...options.query,
+            },
+          });
+        },
+      });
+      // Handle rate limiting
+      if (response.result?.status === 429) {
+        if (rateLimitRetries < options.rateLimit.maxRetries) {
+          // Wait for a bit and retry
+          nextOffset = 0;
+          rateLimitRetries++;
+          await new Promise((resolve) => setTimeout(resolve, options.rateLimit.timeout));
+          continue;
+        } else {
+          throw new Error(
+            'Paginated request was rate limited (429) too many times (' +
+              options.rateLimit.maxRetries +
+              ')'
+          );
+        }
+      }
+      // Handle results
+      if (response.result?.ok) {
+        // Add entries to list
+        entries.push(...response.result.data);
+        // If we got some entries, continue fetching
+        if (response.result.data.length > 0) continue;
+        break;
+      } else {
+        throw new Error(
+          'Received unexpected response: ' +
+            (response.result
+              ? JSON.stringify({
+                  status: response.result.status,
+                  data: response.result.data,
+                  error: response.error,
+                })
+              : 'No Response: ' + response.error)
+        );
+      }
+    }
+    return entries;
+  }
+
+  private async cycleCredentialCryptoKey() {
     info('[VRChat] Cycling the storage crypto key');
     await this.updateSettings({
       rememberedCredentials: null,
@@ -475,10 +647,6 @@ export class VRChatService {
       credentialCryptoKey: await serializeStorageCryptoKey(await generateStorageCryptoKey()),
     });
   }
-
-  //
-  // INTERNALS
-  //
 
   private async handleLoginSideEffects() {
     this._user

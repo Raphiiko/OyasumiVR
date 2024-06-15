@@ -326,6 +326,7 @@
       "statusAutomations": "Status Automations",
       "systemMicMuteAutomations": "System Microphone Mute Automations",
       "vrcAutomations": "VRChat Automations",
+      "vrchatAvatarAutomations": "Avatar Automations",
       "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
     },
     "device-edit-modal": {
@@ -890,6 +891,19 @@
       "title": "Update Available",
       "updateLater": "Not now",
       "updateNow": "Install v{version}"
+    },
+    "vrc-avatar-select-button": {
+      "select": "Select"
+    },
+    "vrc-avatar-select-modal": {
+      "noAvatars": "No avatars could be retrieved. Please favourite or upload some avatars in VRChat first.",
+      "ownAvatars": "Uploaded",
+      "refreshAvatars": "Refresh Avatars",
+      "refreshWarning": {
+        "message": "As refreshing avatars can send out a large amount of requests to VRChat, you should generally only do this if you expect a change. If you do this too often, you might get rate limited.\n\nAre you sure you want to refresh your avatars?",
+        "title": "Refetch avatars?"
+      },
+      "title": "Select Avatar"
     },
     "vrchat-login-modal": {
       "disclaimers": {
@@ -1836,6 +1850,7 @@
       "login": "Log in",
       "ok": "Ok",
       "open": "Open",
+      "refresh": "Refresh",
       "save": "Save"
     },
     "time": {
@@ -2357,6 +2372,25 @@
         "title": "Update Failed"
       }
     }
+  },
+  "vrchatAvatarAutomations": {
+    "description": "Here you can configure OyasumiVR to automatically change your VRChat avatar for you when certain events happen. This can be useful if you want to change avatar when you fall asleep or wake up.",
+    "onSleepDisable": {
+      "description": "Change my avatar to",
+      "script": "Sleep Mode Disabled",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Change my avatar to",
+      "script": "Sleep Mode Enabled",
+      "title": "When I go to sleep"
+    },
+    "onSleepPreparation": {
+      "description": "Change my avatar to",
+      "script": "Sleep Preparation",
+      "title": "When I prepare to go to sleep"
+    },
+    "title": "Avatar Automations"
   },
   "vrchatMicMuteAutomations": {
     "automations": {

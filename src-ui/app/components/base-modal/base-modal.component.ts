@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { ModalOptions } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -10,7 +10,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class BaseModalComponent<ModalInput extends { [k: string]: any } | void, ModalOutput> {
   result?: ModalOutput;
-  close$ = new Subject<void>();
+  close$ = new BehaviorSubject(false);
   someObservable = new Subject<void>();
 
   constructor() {
@@ -25,7 +25,7 @@ export class BaseModalComponent<ModalInput extends { [k: string]: any } | void, 
   }
 
   close() {
-    this.close$.next();
+    this.close$.next(true);
   }
 
   getOptionsOverride(): Partial<ModalOptions> {

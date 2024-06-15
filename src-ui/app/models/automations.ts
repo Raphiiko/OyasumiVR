@@ -3,6 +3,7 @@ import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import { PersistedAvatar } from './vrchat';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -54,6 +55,7 @@ export type AutomationType =
   | 'CHANGE_STATUS_GENERAL_EVENTS'
   | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
   | 'NIGHTMARE_DETECTION'
+  | 'VRCHAT_AVATAR_AUTOMATIONS'
   | 'BIGSCREEN_BEYOND_FAN_CONTROL'
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
@@ -109,6 +111,7 @@ export interface AutomationConfigs {
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
   BIGSCREEN_BEYOND_FAN_CONTROL: BigscreenBeyondFanControlAutomationsConfig;
   BIGSCREEN_BEYOND_RGB_CONTROL: BigscreenBeyondRgbControlAutomationsConfig;
+  VRCHAT_AVATAR_AUTOMATIONS: VRChatAvatarAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -441,6 +444,12 @@ export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationCo
   onSleepPreparationRgb: [number, number, number];
 }
 
+export interface VRChatAvatarAutomationsConfig extends AutomationConfig {
+  onSleepEnable: PersistedAvatar | null;
+  onSleepDisable: PersistedAvatar | null;
+  onSleepPreparation: PersistedAvatar | null;
+}
+
 //
 // DEFAULT
 //
@@ -753,5 +762,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepDisableRgb: [0, 255, 0],
     onSleepPreparation: false,
     onSleepPreparationRgb: [128, 0, 0],
+  },
+  VRCHAT_AVATAR_AUTOMATIONS: {
+    enabled: true,
+    onSleepEnable: null,
+    onSleepDisable: null,
+    onSleepPreparation: null,
   },
 };

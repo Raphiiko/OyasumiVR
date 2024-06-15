@@ -1,5 +1,9 @@
+:host {
+  top: 16px;
+}
+
 .pane {
-  max-height: calc(100vh - 4em);
+  max-height: calc(100vh - 4em - 32px);
   display: flex;
   flex-direction: column;
 }

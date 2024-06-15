@@ -17,4 +17,11 @@ export class MiscTestingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
+  avatars: any = null;
+
+  async fetchAvatars() {
+    this.avatars = await this.vrchat.listAvatars();
+    console.log('FETCHED AVATARS', this.avatars);
+  }
 }
