@@ -67,6 +67,33 @@ async function handleClean() {
   fs.writeFileSync(enFile, JSON.stringify(unflattenObj(enFileContentFlattened), null, 2));
 }
 
+async function printTranslationCoverage() {
+  const paths = getLangFilePaths();
+  const enFile = paths.find((f) => f.includes('en'));
+  const enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
+  const enFileContentFlattened = flattenObj(enFileContent);
+  const keys = Object.keys(enFileContentFlattened);
+  let coverage = paths.reduce((acc, path) => {
+    const langFileContent = JSON.parse(fs.readFileSync(path, 'utf8'));
+    const langFileContentFlattened = flattenObj(langFileContent);
+    const keysTranslated = keys.filter((key) => !!langFileContentFlattened[key]);
+    const lang = path.split('/').pop().split('.').shift();
+    acc[lang] = {
+      translations: keysTranslated.length + '/' + keys.length,
+      completion: Math.round((keysTranslated.length / keys.length) * 100) + '%',
+    };
+    return acc;
+  }, {});
+  // Sort coverage object on completion
+  coverage = Object.fromEntries(
+    Object.entries(coverage).sort((a, b) => {
+      return parseInt(b[1].completion) - parseInt(a[1].completion);
+    })
+  );
+  console.log('Translation coverage:');
+  console.table(coverage);
+}
+
 function unflattenObj(ob) {
   // Make sure to sort the keys before unflattening
   const keys = Object.keys(ob);
@@ -132,6 +159,10 @@ async function main() {
       break;
     case 'mv': {
       await handleMove(args);
+      break;
+    }
+    case 'coverage': {
+      await printTranslationCoverage();
       break;
     }
     default:
