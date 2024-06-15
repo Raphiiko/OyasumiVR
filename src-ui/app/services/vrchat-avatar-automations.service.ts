@@ -5,6 +5,8 @@ import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { VRChatAvatarAutomationsConfig } from '../models/automations';
 import { VRChatService } from './vrchat.service';
+import { EventLogService } from './event-log.service';
+import { EventLogVRChatAvatarChanged } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +18,8 @@ export class VRChatAvatarAutomationsService {
     private automationConfigService: AutomationConfigService,
     private sleepService: SleepService,
     private vrchat: VRChatService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private eventLog: EventLogService
   ) {}
 
   async init() {
@@ -24,7 +27,7 @@ export class VRChatAvatarAutomationsService {
       .pipe(map((c) => c.VRCHAT_AVATAR_AUTOMATIONS))
       .subscribe((c) => (this.config = c));
     this.sleepService.mode
-      .pipe(distinctUntilChanged(), skip(1), debounceTime(5000))
+      .pipe(distinctUntilChanged(), skip(1), debounceTime(3000))
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
   }
@@ -32,18 +35,30 @@ export class VRChatAvatarAutomationsService {
   private async onSleepModeChange(sleepMode: boolean) {
     if (sleepMode && this.config?.onSleepEnable) {
       await this.vrchat.selectAvatar(this.config.onSleepEnable.id);
-      // TODO: LOG
+      this.eventLog.logEvent({
+        type: 'vrchatAvatarChanged',
+        avatarName: this.config.onSleepEnable.name,
+        reason: 'SLEEP_MODE_ENABLED',
+      } as EventLogVRChatAvatarChanged);
     }
     if (!sleepMode && this.config?.onSleepDisable) {
       await this.vrchat.selectAvatar(this.config.onSleepDisable.id);
-      // TODO: LOG
+      this.eventLog.logEvent({
+        type: 'vrchatAvatarChanged',
+        avatarName: this.config.onSleepDisable.name,
+        reason: 'SLEEP_MODE_DISABLED',
+      } as EventLogVRChatAvatarChanged);
     }
   }
 
   private async onSleepPreparation() {
     if (this.config?.onSleepPreparation) {
       await this.vrchat.selectAvatar(this.config.onSleepPreparation.id);
-      // TODO: LOG
+      this.eventLog.logEvent({
+        type: 'vrchatAvatarChanged',
+        avatarName: this.config.onSleepPreparation.name,
+        reason: 'SLEEP_PREPARATION',
+      } as EventLogVRChatAvatarChanged);
     }
   }
 }

@@ -30,6 +30,7 @@ import { EventLogUnmutedAudioDeviceEntryParser } from './entry-parsers/unmuted-a
 import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-speed-changed';
 import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
 import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
+import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -68,6 +69,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogUnmutedAudioDeviceEntryParser(),
     new EventLogBSBFanSpeedChangedEntryParser(),
     new EventLogBSBLedChangedEntryParser(),
+    new EventLogVRChatAvatarChangedEntryParser(),
   ];
 
   constructor(
