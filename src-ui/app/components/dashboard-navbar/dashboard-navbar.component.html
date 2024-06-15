@@ -62,6 +62,7 @@
           'statusAutomations',
           'autoInviteRequestAccept',
           'vrchatMicMuteAutomations',
+          'vrchatAvatarAutomations',
           'joinNotifications',
         ])
       "
@@ -171,6 +172,13 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
     </div>
 
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatAvatarAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-symbols-outlined">groups_3</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatAvatarAutomations</div>
+    </div>
+
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
       <div class="menu-item-icon-prefix">
         <i class="material-symbols-outlined icon-filled">person_alert</i>
@@ -263,7 +271,7 @@
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">view_in_ar</i>
+        <i class="material-symbols-outlined">guardian</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
     </div>

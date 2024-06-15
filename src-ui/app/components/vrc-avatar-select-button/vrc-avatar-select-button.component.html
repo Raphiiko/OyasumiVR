@@ -1,0 +1,17 @@
+<button class="btn-clear" *ngIf="!!avatar" @hshrink (click)="deselect()">
+  <i class="material-icons">clear</i>
+</button>
+<button class="btn-main" [class.selected]="!!avatar" (click)="select()" @noop>
+  <div *ngIf="avatar" @hshrink class="image">
+    <img
+      draggable="false"
+      onerror="this.style.display='none'"
+      loading="lazy"
+      [imgSmoothLoader]="avatar.imageUrl | imageCache : 3600 * 6"
+    />
+  </div>
+  <div *ngIf="avatar" @hshrink class="name">
+    {{ avatar.name }}
+  </div>
+  <div *ngIf="!avatar" @hshrink translate class="name"> comp.vrc-avatar-select-button.select</div>
+</button>

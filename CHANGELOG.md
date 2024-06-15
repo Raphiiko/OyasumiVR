@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Optional fix to delay initializing OyasumiVR with OpenVR. (Can potentially help with SteamVR being unstable while starting when OyasumiVR is already running)
 - Option for changing your VRChat status description in the player limit status automations.
 - Automations for changing your VRChat status based on the sleep mode & sleep preparation.
+- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
 
 ### Changed
 
