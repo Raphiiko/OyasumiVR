@@ -431,14 +431,6 @@
           },
           "title": "Volume for audio device ''{deviceName}'' set to {percentage}"
         },
-        "vrchatAvatarChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
-          },
-          "title": "Changed your VRChat avatar to ''{avatarName}''"
-        },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -712,6 +704,14 @@
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": "Unmuted audio device ''{deviceName}''"
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": "Changed your VRChat avatar to ''{avatarName}''"
         },
         "windowsPowerPolicySet": {
           "reason": {
