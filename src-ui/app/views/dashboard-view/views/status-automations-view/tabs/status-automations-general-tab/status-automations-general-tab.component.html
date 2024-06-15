@@ -21,7 +21,9 @@
           <input
             type="checkbox"
             [checked]="config.changeStatusOnSleepModeEnable"
-            (change)="updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })"
+            (change)="
+              updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -46,8 +48,10 @@
             type="checkbox"
             [checked]="config.changeStatusMessageOnSleepModeEnable"
             (change)="
-            updateConfig({ changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable })
-          "
+              updateConfig({
+                changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable
+              })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -71,7 +75,11 @@
           <input
             type="checkbox"
             [checked]="config.changeStatusOnSleepModeDisable"
-            (change)="updateConfig({ changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable })"
+            (change)="
+              updateConfig({
+                changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable
+              })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -96,8 +104,10 @@
             type="checkbox"
             [checked]="config.changeStatusMessageOnSleepModeDisable"
             (change)="
-            updateConfig({ changeStatusMessageOnSleepModeDisable: !config.changeStatusMessageOnSleepModeDisable })
-          "
+              updateConfig({
+                changeStatusMessageOnSleepModeDisable: !config.changeStatusMessageOnSleepModeDisable
+              })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -121,7 +131,11 @@
           <input
             type="checkbox"
             [checked]="config.changeStatusOnSleepPreparation"
-            (change)="updateConfig({ changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation })"
+            (change)="
+              updateConfig({
+                changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation
+              })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -138,7 +152,9 @@
     <div class="setting-row">
       <div class="setting-row-label" translate>
         <span></span>
-        <span translate>status-automations.general.onSleepPreparation.description.statusMessage</span>
+        <span translate
+          >status-automations.general.onSleepPreparation.description.statusMessage</span
+        >
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -146,8 +162,10 @@
             type="checkbox"
             [checked]="config.changeStatusMessageOnSleepPreparation"
             (change)="
-            updateConfig({ changeStatusMessageOnSleepPreparation: !config.changeStatusMessageOnSleepPreparation })
-          "
+              updateConfig({
+                changeStatusMessageOnSleepPreparation: !config.changeStatusMessageOnSleepPreparation
+              })
+            "
           />
           <span class="switch-toggle-slider"></span>
         </label>
@@ -156,7 +174,9 @@
           [disabled]="!config.changeStatusMessageOnSleepPreparation"
           maxlength="32"
           [value]="config.statusMessageOnSleepPreparation"
-          (input)="updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)"
+          (input)="
+            updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)
+          "
           #onSleepPreparationStatusMessageInput
         />
       </div>
@@ -175,4 +195,3 @@
     </button>
   </div>
 </div>
-

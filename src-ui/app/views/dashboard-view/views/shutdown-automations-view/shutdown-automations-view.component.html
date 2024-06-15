@@ -1,23 +1,19 @@
 <div class="pane">
   <div class="pane-title" translate>shutdown-automations.title</div>
   <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'SETTINGS'"
-      (click)="activeTab = 'SETTINGS'"
-    >
+    <div class="tab" [class.active]="activeTab === 'SETTINGS'" (click)="activeTab = 'SETTINGS'">
       <div class="tab-label" translate>shutdown-automations.tabs.settings</div>
     </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'TRIGGERS'"
-      (click)="activeTab = 'TRIGGERS'"
-    >
+    <div class="tab" [class.active]="activeTab === 'TRIGGERS'" (click)="activeTab = 'TRIGGERS'">
       <div class="tab-label" translate>shutdown-automations.tabs.triggers</div>
     </div>
   </div>
   <div class="pane-content">
-    <app-shutdown-automations-settings-tab *ngIf="activeTab === 'SETTINGS'"></app-shutdown-automations-settings-tab>
-    <app-shutdown-automations-triggers-tab *ngIf="activeTab === 'TRIGGERS'"></app-shutdown-automations-triggers-tab>
+    <app-shutdown-automations-settings-tab
+      *ngIf="activeTab === 'SETTINGS'"
+    ></app-shutdown-automations-settings-tab>
+    <app-shutdown-automations-triggers-tab
+      *ngIf="activeTab === 'TRIGGERS'"
+    ></app-shutdown-automations-triggers-tab>
   </div>
 </div>

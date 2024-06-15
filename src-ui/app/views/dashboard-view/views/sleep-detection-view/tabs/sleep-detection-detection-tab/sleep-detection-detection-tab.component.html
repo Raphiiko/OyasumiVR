@@ -23,19 +23,19 @@
           <i class="material-icons warning-icon">warning</i>
         </div>
         <div class="setting-row-label" translate>
-                  <span
-                    style="display: initial"
-                    [innerHtml]="
-                      'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
-                    "
-                  ></span>
+          <span
+            style="display: initial"
+            [innerHtml]="
+              'sleep-detection.sleepDetection.automation.calibrationPending.title' | translate
+            "
+          ></span>
           <span></span>
         </div>
         <div class="setting-row-action">
           <button class="btn btn-secondary" (click)="calibrate()">
-                    <span translate
-                    >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
-                    >
+            <span translate
+              >sleep-detection.sleepDetection.automation.calibrationPending.calibrate</span
+            >
           </button>
         </div>
       </div>
@@ -112,10 +112,7 @@
             #activationWindowStartInput
           />
         </div>
-        <span
-          *ngIf="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow"
-          @fade
-        >
+        <span *ngIf="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindow" @fade>
           to
         </span>
         <div
@@ -151,7 +148,7 @@
       <div class="setting-row-label" translate>
         <span translate>sleep-detection.modals.enableForSleepDetector.detectionWindow.title</span>
         <span translate
-        >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
+          >sleep-detection.modals.enableForSleepDetector.detectionWindow.description</span
         >
       </div>
       <div class="setting-row-action">
@@ -159,9 +156,7 @@
           [unit]="'sleep-detection.modals.enableForSleepDetector.detectionWindow.unit' | translate"
           [min]="15"
           [max]="60"
-          [value]="
-            automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes
-          "
+          [value]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.detectionWindowMinutes"
           (valueChange)="onDetectionWindowChange($event)"
           [snapValues]="[15]"
           [snapDistance]="5"
@@ -172,13 +167,19 @@
 
     <div class="setting-row">
       <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title</span>
-        <span translate>sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description</span>
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.title</span
+        >
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerControllerPresence.description</span
+        >
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
           <input
-            [checked]="automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence"
+            [checked]="
+              automationConfigs.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.considerControllerPresence
+            "
             (change)="toggleControllerPresence()"
             type="checkbox"
           />
@@ -189,8 +190,12 @@
 
     <div class="setting-row">
       <div class="setting-row-label" translate>
-        <span translate>sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title</span>
-        <span translate>sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description</span>
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.title</span
+        >
+        <span translate
+          >sleep-detection.modals.enableForSleepDetector.considerSleepingPose.description</span
+        >
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
@@ -203,6 +208,5 @@
         </label>
       </div>
     </div>
-
   </div>
 </div>

@@ -18,6 +18,9 @@ export class SleepPreparationService {
   public readonly sleepPreparationAvailable = this.automationConfigService.configs.pipe(
     map((configs) =>
       [
+        configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusOnSleepPreparation,
+        configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusMessageOnSleepPreparation,
+        configs.VRCHAT_AVATAR_AUTOMATIONS.onSleepPreparation,
         (configs.OSC_GENERAL.onSleepPreparation?.commands.length ?? 0) > 0,
         configs.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepPreparation !== null,
         configs.BIGSCREEN_BEYOND_FAN_CONTROL.onSleepPreparation,

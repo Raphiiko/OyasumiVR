@@ -1,6 +1,10 @@
 <div class="brightness-slider-bar-row">
   <i class="material-icons brightness-level-icon" *ngIf="icons === 'BRIGHTNESS'">brightness_5</i>
-  <i class="material-symbols-outlined brightness-level-icon icon-filled" *ngIf="icons === 'FAN_SPEED'">mode_fan_off</i>
+  <i
+    class="material-symbols-outlined brightness-level-icon icon-filled"
+    *ngIf="icons === 'FAN_SPEED'"
+    >mode_fan_off</i
+  >
   <div class="brightness-slider-bar" (mousedown)="onDragStart($event)">
     <div
       class="brightness-slider-bar-inner"
@@ -9,11 +13,15 @@
       [style.width]="innerWidth"
     >
       <div class="brightness-slider-bar-label"
-      ><span>{{ (dragging ? dragValue : value) | number : '1.0-0' }}%</span></div
+        ><span>{{ (dragging ? dragValue : value) | number : '1.0-0' }}%</span></div
       >
     </div>
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
   </div>
   <i class="material-icons brightness-level-icon" *ngIf="icons === 'BRIGHTNESS'">brightness_7</i>
-  <i class="material-symbols-outlined brightness-level-icon icon-filled" *ngIf="icons === 'FAN_SPEED'">mode_fan</i>
+  <i
+    class="material-symbols-outlined brightness-level-icon icon-filled"
+    *ngIf="icons === 'FAN_SPEED'"
+    >mode_fan</i
+  >
 </div>

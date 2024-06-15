@@ -45,8 +45,13 @@
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input type="time" step="1" [value]="onSleepDurationString"
-                   (change)="onSleepDurationChange(onSleepDurationInput.value)" #onSleepDurationInput />
+            <input
+              type="time"
+              step="1"
+              [value]="onSleepDurationString"
+              (change)="onSleepDurationChange(onSleepDurationInput.value)"
+              #onSleepDurationInput
+            />
           </div>
         </div>
       </div>
@@ -61,7 +66,9 @@
             <input
               type="time"
               [value]="onSleepActivationWindowStart"
-              (change)="onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)"
+              (change)="
+                onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)
+              "
               #onSleepActivationWindowStartInput
             />
           </div>
@@ -85,7 +92,6 @@
         </div>
       </div>
     </div>
-
   </div>
   <div class="settings">
     <div class="setting-row">
@@ -112,8 +118,13 @@
         </div>
         <div class="setting-row-action">
           <div class="input-wrapper">
-            <input type="time" step="1" [value]="whenAloneDurationString"
-                   (change)="whenAloneDurationChange(whenAloneDurationInput.value)" #whenAloneDurationInput />
+            <input
+              type="time"
+              step="1"
+              [value]="whenAloneDurationString"
+              (change)="whenAloneDurationChange(whenAloneDurationInput.value)"
+              #whenAloneDurationInput
+            />
           </div>
         </div>
       </div>
@@ -128,7 +139,9 @@
             <input
               type="time"
               [value]="whenAloneActivationWindowStart"
-              (change)="onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)"
+              (change)="
+                onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)
+              "
               #whenAloneActivationWindowStartInput
             />
           </div>
@@ -137,7 +150,9 @@
             <input
               type="time"
               [value]="whenAloneActivationWindowEnd"
-              (change)="onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)"
+              (change)="
+                onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)
+              "
               #whenAloneActivationWindowEndInput
             />
           </div>

@@ -18,7 +18,6 @@
   }
 }
 
-
 .limit-setting {
   padding: 1em;
   display: flex;
@@ -49,13 +48,12 @@
   }
 }
 
-input[type="text"],
+input[type='text'],
 .status-dropdown {
   width: 12em;
   font-size: 1em;
 }
 
-input[type="text"] {
+input[type='text'] {
   background: var(--color-surface-2);
 }
-

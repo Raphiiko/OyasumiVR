@@ -7,10 +7,10 @@
       <div class="header-bar-info" (click)="editDevice()">
         <div class="device-name" translate>{{ deviceName }}</div>
         <div class="device-serial" *ngIf="!deviceNickname && deviceRole"
-        >{{ 'comp.device-list.deviceRole.' + deviceRole | translate }}
+          >{{ 'comp.device-list.deviceRole.' + deviceRole | translate }}
         </div>
         <div class="device-serial" *ngIf="!deviceNickname && !deviceRole"
-        >{{ deviceIdentifier }}
+          >{{ deviceIdentifier }}
         </div>
         <div class="device-nickname" *ngIf="deviceNickname">{{ deviceNickname }}</div>
       </div>
@@ -23,7 +23,9 @@
             powerButtonState === 'turn_off' || powerButtonState === 'turn_off_busy'
           "
           [class.power-on]="powerButtonState === 'turn_on' || powerButtonState === 'turn_on_busy'"
-          [class.power-unknown]="powerButtonState === 'turn_on_off' || powerButtonState === 'turn_on_off_busy'"
+          [class.power-unknown]="
+            powerButtonState === 'turn_on_off' || powerButtonState === 'turn_on_off_busy'
+          "
           *ngIf="powerButtonState !== 'hide'"
           [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
           [@fade]
@@ -34,26 +36,26 @@
           <i
             class="material-icons"
             *ngIf="powerButtonState === 'turn_off' || powerButtonState === 'turn_on'"
-          >power_settings_new</i
+            >power_settings_new</i
           >
-          <i
-            class="material-icons"
-            *ngIf="powerButtonState === 'turn_on_off'"
-          >settings_power</i
-          >
+          <i class="material-icons" *ngIf="powerButtonState === 'turn_on_off'">settings_power</i>
           <div
             class="small-spinner"
             [class.power-off]="powerButtonState === 'turn_off_busy'"
             [class.power-on]="powerButtonState === 'turn_on_busy'"
             [class.power-unknown]="powerButtonState === 'turn_on_off_busy'"
-            *ngIf="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy' || powerButtonState === 'turn_on_off_busy'"
+            *ngIf="
+              powerButtonState === 'turn_off_busy' ||
+              powerButtonState === 'turn_on_busy' ||
+              powerButtonState === 'turn_on_off_busy'
+            "
           ></div>
         </button>
-        <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)"
-             *ngIf="showLHStatePopover">
+        <div @fade (clickOutside)="onClickOutsideLHStatePopover($event)" *ngIf="showLHStatePopover">
           <app-device-list-lh-state-popover
             (action)="onForceLHState($event)"
-            [style.position-anchor]="powerButtonAnchorId">
+            [style.position-anchor]="powerButtonAnchorId"
+          >
           </app-device-list-lh-state-popover>
         </div>
       </div>
@@ -81,4 +83,3 @@
     </div>
   </div>
 </ng-container>
-

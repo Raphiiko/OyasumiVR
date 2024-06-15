@@ -40,7 +40,8 @@ export type EventLogEntry =
   | EventLogMutedAudioDevice
   | EventLogUnmutedAudioDevice
   | EventLogBSBFanSpeedChanged
-  | EventLogBSBLedChanged;
+  | EventLogBSBLedChanged
+  | EventLogVRChatAvatarChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -70,7 +71,8 @@ export type EventLogType =
   | 'mutedAudioDevice'
   | 'unmutedAudioDevice'
   | 'bsbFanSpeedChanged'
-  | 'bsbLedChanged';
+  | 'bsbLedChanged'
+  | 'vrchatAvatarChanged';
 
 export interface EventLogBase {
   id: string;
@@ -257,4 +259,10 @@ export interface EventLogBSBLedChanged extends EventLogBase {
   type: 'bsbLedChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   color: [number, number, number];
+}
+
+export interface EventLogVRChatAvatarChanged extends EventLogBase {
+  type: 'vrchatAvatarChanged';
+  avatarName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

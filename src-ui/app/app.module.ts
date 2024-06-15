@@ -221,6 +221,7 @@ import { StatusChangeGeneralEventsAutomationService } from './services/status-au
 import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/views/vrchat-avatar-automations-view/vrchat-avatar-automations-view.component';
 import { VrcAvatarSelectButtonComponent } from './components/vrc-avatar-select-button/vrc-avatar-select-button.component';
 import { VrcAvatarSelectModalComponent } from './components/vrc-avatar-select-modal/vrc-avatar-select-modal.component';
+import { VRChatAvatarAutomationsService } from './services/vrchat-avatar-automations.service';
 
 [
   localeEN,
@@ -473,7 +474,8 @@ export class AppModule {
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
     private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService,
-    private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService
+    private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService,
+    private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService
   ) {
     this.init();
   }
@@ -756,6 +758,10 @@ export class AppModule {
             this.logInit(
               'BigsceenBeyondFanAutomationService initialization',
               this.bigscreenBeyondFanAutomationService.init()
+            ),
+            this.logInit(
+              'VRChatAvatarAutomationsService initialization',
+              this.vrchatAvatarAutomationsService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);

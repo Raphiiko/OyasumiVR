@@ -16,7 +16,7 @@
       translate
       (click)="runSequence()"
       [disabled]="noOptionsSelected"
-    >shutdown-automations.sequence.run
+      >shutdown-automations.sequence.run
     </button>
   </h2>
   <div class="alert warning" *ngIf="noOptionsSelected" @vshrink>
@@ -97,11 +97,7 @@
       </div>
       <div class="setting-row-action">
         <label class="switch-toggle">
-          <input
-            type="checkbox"
-            [checked]="config.quitSteamVR"
-            (change)="toggleQuitSteamVR()"
-          />
+          <input type="checkbox" [checked]="config.quitSteamVR" (change)="toggleQuitSteamVR()" />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>
@@ -114,10 +110,10 @@
     >
       <div class="setting-row">
         <div class="setting-row-label conflict" translate>
-              <span>
-                <span><i class="material-icons">warning</i></span>
-                <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
-              </span>
+          <span>
+            <span><i class="material-icons">warning</i></span>
+            <span translate>shutdown-automations.sequence.quitSteamVR.conflict.title</span>
+          </span>
           <span translate>shutdown-automations.sequence.quitSteamVR.conflict.description</span>
         </div>
         <div class="setting-row-action">

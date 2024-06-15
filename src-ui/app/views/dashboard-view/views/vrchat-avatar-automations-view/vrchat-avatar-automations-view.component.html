@@ -20,8 +20,10 @@
             <span translate>vrchatAvatarAutomations.onSleepEnable.description</span>
           </div>
           <div class="setting-row-action">
-            <app-vrc-avatar-select-button [avatar]="this.config.onSleepEnable"
-                                          (avatarChange)="updateOnSleepEnable($event)"></app-vrc-avatar-select-button>
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepEnable"
+              (avatarChange)="updateOnSleepEnable($event)"
+            ></app-vrc-avatar-select-button>
           </div>
         </div>
         <div class="setting-row">
@@ -30,8 +32,10 @@
             <span translate>vrchatAvatarAutomations.onSleepDisable.description</span>
           </div>
           <div class="setting-row-action">
-            <app-vrc-avatar-select-button [avatar]="this.config.onSleepDisable"
-                                          (avatarChange)="updateOnSleepDisable($event)"></app-vrc-avatar-select-button>
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepDisable"
+              (avatarChange)="updateOnSleepDisable($event)"
+            ></app-vrc-avatar-select-button>
           </div>
         </div>
         <div class="setting-row">
@@ -40,9 +44,10 @@
             <span translate>vrchatAvatarAutomations.onSleepPreparation.description</span>
           </div>
           <div class="setting-row-action">
-            <app-vrc-avatar-select-button [avatar]="this.config.onSleepPreparation"
-                                          (avatarChange)="updateOnSleepPreparation($event)"></app-vrc-avatar-select-button>
-
+            <app-vrc-avatar-select-button
+              [avatar]="this.config.onSleepPreparation"
+              (avatarChange)="updateOnSleepPreparation($event)"
+            ></app-vrc-avatar-select-button>
           </div>
         </div>
       </div>
