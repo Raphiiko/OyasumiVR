@@ -21,7 +21,7 @@
       "UNMUTE": "开启"
     },
     "automations": {
-      "label": "{count, plural, one {1 个自动化} other {# 个自动化}}"
+      "label": "{count} 个自动化"
     },
     "description": "当你入睡（或醒来）时，自动改变音频设备的音量！如果你想防止他人打扰你的睡眠，这将会非常有用。",
     "devices": {
@@ -108,7 +108,7 @@
       },
       "onlyBelowPlayerCount": {
         "description": "这包括你自己",
-        "title": "只有当你的世界中少于<strong>{count, plural, one {#</strong> 个玩家} other {#</strong> 个玩家}}时"
+        "title": "只有当你的世界中少于<strong>{count}</strong> 个玩家时"
       },
       "onlyIfSleepModeEnabled": {
         "title": "仅当睡眠模式开启时生效"
@@ -846,7 +846,7 @@
         "sleep": "等待"
       },
       "addCommand": "新增",
-      "commandCounter": "{count, plural, one {1 条指令} other {# 条指令}}",
+      "commandCounter": "{count}条指令",
       "commands": {
         "COMMAND": {
           "description": "新增一条 OSC 指令",
@@ -857,12 +857,12 @@
           "title": "等待"
         }
       },
-      "errorCounter": "{count, plural, one {1 个错误} other {# 个错误}}",
+      "errorCounter": "{count}个错误",
       "test": "测试"
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "你确定要删除名为''{name}''的预设吗？它包含 {count, plural, one {1 个玩家} other {# 个玩家}}。",
+        "message": "你确定要删除名为''{name}''的预设吗？它包含 {count}个玩家。",
         "title": "你确定吗？"
       },
       "confirmOverwrite": {
@@ -876,7 +876,7 @@
       "noPresets": "你还没有保存任何预设",
       "overwrite": "覆盖预设",
       "preset": {
-        "subtitle": "{count, plural, one {1 个玩家} other {# 个玩家}} 的列表"
+        "subtitle": "{count}个玩家 的列表"
       },
       "title": {
         "load": "加载玩家列表",
@@ -1283,7 +1283,7 @@
           "title": "状态自动化"
         },
         "shutdownAutomations": {
-          "subtitle": "{triggerCount, plural, one {1 个触发器} other {# 个触发器}} 已配置",
+          "subtitle": "{triggerCount}个触发器 已配置",
           "title": "执行关机序列"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1966,9 +1966,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "在 {hours, plural, one {1 小时} other {# 小时}} 之后关闭",
-          "hoursAndMinutes": "在 {hours, plural, one {1 小时} other {# 小时}} {minutes, plural, one {1 分钟} other {# 分钟}} 之后关闭",
-          "minutes": "在 {minutes, plural, one {1 分钟} other {# 分钟}} 之后关闭"
+          "hours": "在 {hours}小时 之后关闭",
+          "hoursAndMinutes": "在 {hours}小时 {minutes}分钟 之后关闭",
+          "minutes": "在 {minutes}分钟 之后关闭"
         },
         "title": "在一定时间后"
       },
