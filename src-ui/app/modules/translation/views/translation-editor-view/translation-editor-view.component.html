@@ -48,7 +48,7 @@
   <button class="btn btn-secondary btn-action btn-action-square" (click)="goPreviousPage()" [disabled]="paginationStart <= 0">
     <i class="material-icons">arrow_back_ios_new</i>
   </button>
-  <span class="pagination-label">{{paginationStart}}-{{paginationEnd - 1}} ({{entries.length}})</span>
+  <span class="pagination-label">{{paginationStart + 1}}-{{paginationEnd}} ({{entries.length}})</span>
   <button class="btn btn-secondary btn-action btn-action-square" (click)="goNextPage()" [disabled]="paginationEnd >= entries.length">
     <i class="material-icons">arrow_forward_ios</i>
   </button>

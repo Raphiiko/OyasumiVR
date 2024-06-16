@@ -61,10 +61,29 @@
     "addFriends": "Vrienden toevoegen",
     "blacklist": "Speler Blacklist",
     "clearPlayers": "Leegmaken",
+    "conditions": {
+      "description": "Hier kan je voorwaarden configureren voor OyasumiVR om invite requests automatisch te accepteren.",
+      "title": "Voorwaarden"
+    },
     "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+    "loadPreset": "Laad Opgeslagen Preset",
     "loadingFriends": "Vrienden worden geladen...",
     "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
     "options": {
+      "changeListPreset": {
+        "onSleepDisable": {
+          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word uitgeschakeld",
+          "title": "Laad een preset wanneer ik wakker word"
+        },
+        "onSleepEnable": {
+          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word ingeschakeld",
+          "title": "Laad een preset wanneer ik in slaap val"
+        },
+        "onSleepPreparation": {
+          "description": "Laad een opgeslagen preset wanneer je je voorbereid om naar bed te gaan",
+          "title": "Laad een preset wanneer je je voorbereid om naar bed te gaan"
+        }
+      },
       "enable": {
         "description": "Accepteer automatisch invite requests die je van vrienden ontvangt.",
         "title": "Activeren"
@@ -87,9 +106,22 @@
         },
         "title": "Lijst Modus"
       },
+      "onlyBelowPlayerCount": {
+        "description": "Dit is inclusief jezelf",
+        "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler in je wereld is} other {#</strong> spelers in je wereld zijn}}"
+      },
       "onlyIfSleepModeEnabled": {
         "title": "Alleen als de slaap modus is geactiveerd"
+      },
+      "presetOptions": {
+        "options": {
+          "NONE": "Niets wijzigen"
+        }
       }
+    },
+    "otherAutomations": {
+      "description": "Hier kan je overige automatiseringen vinden die automatisch de werking van deze functie beinvloeden.",
+      "title": "Overige Automatiseringen"
     },
     "removeModal": {
       "message": "Weet je zeker dat je ''{name}'' van de lijst wilt verwijderen?",
@@ -99,6 +131,7 @@
       "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?",
       "title": "Bevestig verwijderen"
     },
+    "savePreset": "Opslaan Als Preset",
     "title": "Invite Requests Automatisch Accepteren",
     "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
     "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
@@ -269,6 +302,7 @@
       "gpuAutomations": "GPU Automatiseringen",
       "hardwareAutomations": "Hardware Automatiseringen",
       "hmdAutomations": "HMD Specifieke Automatiseringen",
+      "joinNotifications": "Join Notificaties",
       "miscAutomations": "Overige Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
@@ -292,6 +326,7 @@
       "statusAutomations": "Status Automatiseringen",
       "systemMicMuteAutomations": "Systeem Microfoon Dempings Automatiseringen",
       "vrcAutomations": "VRChat Automatiseringen",
+      "vrchatAvatarAutomations": "Avatar Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
     "device-edit-modal": {
@@ -338,6 +373,15 @@
         "Waist": "Middel",
         "WristLeft": "Linker Pols",
         "WristRight": "Rechter Pols"
+      },
+      "forceOnBootingWarning": {
+        "message": "Het lijkt er op dat dit base station al aan staat.\n\nAls je een base station aan forceert terwijl deze al aan staat, zal deze meestal vast komen te zitten in de \"opstart\" modus. Als dit je gebeurd, kan je dit fixen door  hem terug naar slaap of standby modus te zetten, en dan weer aan te zetten.\n\nWeet je zeker dat je dit base stations aan wilt forceren?",
+        "title": "Waarschuwing"
+      },
+      "lhForceState": {
+        "on": "Forceer Aan",
+        "sleep": "Forceer Slaap",
+        "standby": "Forceer Standby"
       },
       "lighthouseStatus": {
         "booting": "Aan het starten",
@@ -549,7 +593,9 @@
           "reason": {
             "HOTKEY": "Geactiveerd door een hotkey",
             "MANUAL": "Handmatig gestart",
-            "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was"
+            "MQTT": "Getriggered via MQTT",
+            "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was",
+            "VRC_ALONE_TRIGGER": "Omdat je voor lang genoeg alleen in je wereld was."
           },
           "title": "De afsluit procedure is gestart"
         },
@@ -576,10 +622,16 @@
               "SLEEP_MODE_DISABLE_AFTER_TIME": "Omdat de slapa modus lang genoeg actief was",
               "SLEEP_MODE_DISABLE_AT_TIME": "Op de ingestelde tijd",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Omdat een controller of tracker is ingeschakeld",
+              "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
+                "join": "Omdat {name} je wereld heeft gejoint",
+                "leave": "Omdat {name} je wereld heeft verlaten"
+              },
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Omdat je lang genoeg rechtop zat",
               "unknown": "Door een onbekende automatisering"
             },
             "hotkey": "Je hebt de slaap modus uitgeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig uitgeschakeld",
+            "mqtt": "Je hebt de slaap modus uitgeschakeld via MQTT",
             "osc-control": "De slaap modus werdt uitgeschakeld via OSC"
           },
           "title": "Slaap modus uitgeschakeld"
@@ -596,6 +648,7 @@
             },
             "hotkey": "Je hebt de slaap modus ingeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig ingeschakeld",
+            "mqtt": "Je hebt de slaap modus ingeschakeld via MQTT",
             "osc-control": "De slaap modus werdt ingeschakeld via OSC"
           },
           "title": "Slaap modus ingeschakeld"
@@ -657,7 +710,8 @@
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
             "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
-          }
+          },
+          "title": "Je VRChat avatar is veranderd naar \"{avatarName}\""
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -709,6 +763,7 @@
       "inactive": "Inactief",
       "loggedOut": "Uitgelogd",
       "mqttStatus": {
+        "label": "MQTT",
         "tooltip": "Instellingen: Integraties"
       },
       "sleepMode": {
@@ -732,9 +787,41 @@
       }
     },
     "mqtt-config-modal": {
+      "brokerHost": {
+        "description": "De hostname of het IP address waarop je je MQTT broker kan bereiken.",
+        "title": "Host"
+      },
+      "brokerPort": {
+        "description": "De poort van de websocket waarop je je MQTT broker kan bereiken.",
+        "title": "Poort"
+      },
+      "brokerSetupNote": "Let op dat Home Assistant niet standaard een MQTT broker geconfigureerd heeft. Als je niet al een MQTT broker opgezet hebt met Home Assistant, volg dan hun <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentatie</a> eerst om dat te regelen.",
+      "description": "OyasumiVR kan met Home Assistant communiceren via MQTT. Stel hier onder de toegangsgegevens in van je MQTT broker.",
+      "mqttEnabled": {
+        "description": "Schakel de MQTT integratie in of uit.",
+        "test": "Test Verbinding",
+        "title": "Integratie Inschakelen"
+      },
       "password": {
+        "description": "Het wachtwoord om je te authenticeren met je MQTT broker (optional)",
         "title": "Wachtwoord"
-      }
+      },
+      "ssl": {
+        "description": "Of de verbinding met je MQTT broker versleuteld moet worden met SSL.",
+        "title": "Secure SSL"
+      },
+      "testConnection": {
+        "description": "Test of OyasumiVR kan verbinden met je MQTT broker met de onderstaande gegevens",
+        "test": "Test Verbinding",
+        "title": "Test Verbinding"
+      },
+      "testConnectionResult": {
+        "error": "Verbinding mislukt!",
+        "errorMessage": "De volgende fout werd gerapporteerd:\n{error}",
+        "success": "Verbinding gelukt!",
+        "title": "Test Resultaat"
+      },
+      "title": "MQTT Configuratie"
     },
     "osc-script-code-editor": {
       "format": "Formatteren",

@@ -1283,7 +1283,7 @@
           "title": "ステータスの自動化"
         },
         "shutdownAutomations": {
-          "subtitle": "自動化が{triggerCount, plural, one {1つ} other {#つ}}設定されています",
+          "subtitle": "自動化が{triggerCount}つ設定されています",
           "title": "自動シャットダウン"
         },
         "sleepModeEnableForSleepDetector": {
