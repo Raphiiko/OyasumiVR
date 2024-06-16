@@ -326,6 +326,7 @@
       "statusAutomations": "ステータス",
       "systemMicMuteAutomations": "マイクミュート",
       "vrcAutomations": "VRChat関係の自動化",
+      "vrchatAvatarAutomations": "アバター変更",
       "vrchatMicMuteAutomations": "マイクミュート"
     },
     "device-edit-modal": {
@@ -428,7 +429,7 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "オーディオデバイス ''{deviceName}'' の音量を {percentage} に設定"
+          "title": "''{deviceName}'' の音量を {percentage} に設定"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -570,7 +571,7 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "ミュートされたオーディオデバイス ''{deviceName}''"
+          "title": "''{deviceName}''をミュート"
         },
         "renderResolutionChanged": {
           "reason": {
@@ -702,7 +703,15 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "ミュート解除されたオーディオデバイス ''{deviceName}''"
+          "title": "''{deviceName}''をミュート解除"
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          },
+          "title": "アバターを''{avatarName}''に変更"
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -890,6 +899,19 @@
       "title": "アップデート可能",
       "updateLater": "後で",
       "updateNow": "v{version}をインストール"
+    },
+    "vrc-avatar-select-button": {
+      "select": "選択"
+    },
+    "vrc-avatar-select-modal": {
+      "noAvatars": "アバターを取得できませんでした。VRChatにアップロードするか、お気に入りを追加してください。",
+      "ownAvatars": "アップロード済み",
+      "refreshAvatars": "アバター情報を更新",
+      "refreshWarning": {
+        "message": "アバターの更新は大量のリクエストをVRChatに送信する可能性があるため、必要な場合にのみ行ってください。頻繁に更新すると制限を受ける可能性があります。\n\n本当にアバターを更新しますか？",
+        "title": "アバターを再取得しますか？"
+      },
+      "title": "アバターを選択"
     },
     "vrchat-login-modal": {
       "disclaimers": {
@@ -1836,6 +1858,7 @@
       "login": "ログイン",
       "ok": "OK",
       "open": "開く",
+      "refresh": "更新",
       "save": "保存"
     },
     "time": {
@@ -2357,6 +2380,25 @@
         "title": "アップデートに失敗しました"
       }
     }
+  },
+  "vrchatAvatarAutomations": {
+    "description": "VRChatアバターを自動的に変更します。",
+    "onSleepDisable": {
+      "description": "アバターを変更する",
+      "script": "睡眠モードを無効化",
+      "title": "起床時"
+    },
+    "onSleepEnable": {
+      "description": "アバターを変更する",
+      "script": "睡眠モードを有効化",
+      "title": "睡眠時"
+    },
+    "onSleepPreparation": {
+      "description": "アバターを変更する",
+      "script": "睡眠準備",
+      "title": "就寝準備時"
+    },
+    "title": "アバター変更"
   },
   "vrchatMicMuteAutomations": {
     "automations": {

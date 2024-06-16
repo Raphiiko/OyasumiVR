@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Option to load and save VRChat player lists as presets for automatic invite request acceptance.
 - Option to limit automatically accepting invite request based on the number of players in the world.
+- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev))
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
 - Function for VRChat player join/leave notifications
@@ -195,7 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Automations for controlling the volume and mute state of all system audio devices.
-- Russian language support (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian language support (Community contribution by [Kanjir0](https://x.com/Kanjiro_vrc))
 - Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
 - A credential saving option for remembering your VRChat credentials.
 - Automation for disabling the sleep mode after its been enabled for a specified amount of time.
@@ -225,7 +226,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)
-  and [i0nTempest](https://twitter.com/i0ntempest)).
+  and [i0nTempest](https://x.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
 
@@ -270,8 +271,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Deadlock in logic for reading possible input bindings.
-- Updated missing Spanish translations (by [aacal666](https://twitter.com/aacalde666))
-- Updated missing Indonesian translations (by [a9ito](https://twitter.com/a9ito))
+- Updated missing Spanish translations (by [aacal666](https://x.com/aacalde666))
+- Updated missing Indonesian translations (by [a9ito](https://x.com/a9ito))
 
 ## [1.10.1]
 
@@ -285,7 +286,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Japanese translations (by [なき](https://x.com/NoYu_idea)).
 - Missing Dutch translations.
 - UI issues with some duration unit selectors.
 
@@ -345,12 +346,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow limiting sleep detection to certain hours of the day.
 - Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
 - OSC address for toggling the sleep detection automation.
-- Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
-- Indonesian language support (Community contribution by [a9ito](https://twitter.com/a9ito))
+- Spanish language support (Community contribution by [aacal666](https://x.com/aacalde666))
+- Indonesian language support (Community contribution by [a9ito](https://x.com/a9ito))
 - Support for a release on [Steam](https://store.steampowered.com/)
 - VR Manifest for registering OyasumiVR with SteamVR.
 - Sleeping animations preset for GoGo Loco 1.8.0+
-- Cute drawings (by [Jun](https://twitter.com/JunHakase)) to the sleep toggle card in the overview
+- Cute drawings (by [Jun](https://x.com/JunHakase)) to the sleep toggle card in the overview
 
 ### Changed
 
@@ -509,7 +510,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
+- Various improvements to the Japanese translations (by [なき](https://x.com/NoYu_idea))
 - Various small bugs
 
 ## [1.4.1]
