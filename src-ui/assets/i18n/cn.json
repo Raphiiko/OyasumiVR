@@ -2081,7 +2081,7 @@
         "detectionWindow": {
           "description": "OyasumiVR 应该等待多久才认为你在睡觉",
           "title": "检测阈值",
-          "unit": "分钟"
+          "unit": "分"
         },
         "sensitivity": {
           "description": "灵敏度设置越高，OyasumiVR 认为你进入睡眠状态的概率就越高。",
