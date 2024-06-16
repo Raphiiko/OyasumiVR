@@ -764,7 +764,7 @@
       "loggedOut": "未登录",
       "mqttStatus": {
         "label": "MQTT",
-        "tooltip": "设置：集成"
+        "tooltip": "打开MQTT集成设置"
       },
       "sleepMode": {
         "label": "睡眠模式",
