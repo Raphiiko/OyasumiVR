@@ -20,9 +20,6 @@
       "SET_VOLUME": "變更音量",
       "UNMUTE": "解除靜音"
     },
-    "automations": {
-      "label": "{count, plural, one {1 Automation} other {# Automations}}"
-    },
     "description": "當你入睡或醒來時，自動改變音訊裝置的音量！如果你想防止他人打擾你的睡眠，這將非常有用。",
     "devices": {
       "description": "選擇音訊裝置，自動調節音量大小",
@@ -1650,9 +1647,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "在 {hours, plural, one {1 小時} other {# 小時}} 後",
-          "hoursAndMinutes": "在 {hours, plural, one {1 小時} other {# 小時}} 及 {minutes, plural, one {1 分鐘} other {# 分鐘}} 後",
-          "minutes": "在 {minutes, plural, one {1 分鐘} other {# 分鐘}} 後"
+          "hours": "在 {hours}小時 後",
+          "hoursAndMinutes": "在 {hours}小時 及 {minutes}分鐘 後",
+          "minutes": "在 {minutes}分鐘 後"
         },
         "title": "在特定時間後"
       },
