@@ -60,6 +60,7 @@
   "auto-invite-request-accept": {
     "addFriends": "Vrienden toevoegen",
     "blacklist": "Speler Blacklist",
+    "clearPlayers": "Leegmaken",
     "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
     "loadingFriends": "Vrienden worden geladen...",
     "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
@@ -610,6 +611,14 @@
             "transition": "Headset software helderheid gaat over naar {value}"
           }
         },
+        "statusChangedOnGeneralEvent": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Status gewijzigd van ''{oldStatus}'' naar ''{newStatus}''"
+        },
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "Omdat het aantal spelers op of boven het limiet is gekomen",
@@ -642,6 +651,13 @@
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": "Demping van geluidsapparaat \"{deviceName}\" verwijderd"
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          }
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -692,6 +708,9 @@
       "heartrate": "Hartslag",
       "inactive": "Inactief",
       "loggedOut": "Uitgelogd",
+      "mqttStatus": {
+        "tooltip": "Instellingen: Integraties"
+      },
       "sleepMode": {
         "label": "Slaap Modus",
         "tooltip": "Schakel Slaap Modus"
@@ -710,6 +729,11 @@
       },
       "vrchat": {
         "tooltip": "Instellingen: Integraties"
+      }
+    },
+    "mqtt-config-modal": {
+      "password": {
+        "title": "Wachtwoord"
       }
     },
     "osc-script-code-editor": {
@@ -743,6 +767,14 @@
       },
       "errorCounter": "{count, plural, one {1 Validatie Error} other {# Validatie Errors}}",
       "test": "Test"
+    },
+    "player-list-preset-modal": {
+      "confirmDelete": {
+        "title": "Afsluit procedure starten"
+      },
+      "confirmOverwrite": {
+        "title": "Afsluit procedure starten"
+      }
     },
     "select-box": {
       "defaultPlaceholder": "Selecteer..."
@@ -917,6 +949,14 @@
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "HMD Specifieke Automatiseringen"
+  },
+  "join-notifications": {
+    "modeOptions": {
+      "EVERYONE": "Van iedereen"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "Alleen als de slaap modus is geactiveerd"
+    }
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
@@ -1704,8 +1744,15 @@
         "title": "Zet trackers uit"
       }
     },
+    "tabs": {
+      "settings": "Instellingen"
+    },
     "title": "Afsluit Procedure",
     "triggers": {
+      "whenAloneTimeWindow": {
+        "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden",
+        "title": "Tijdsvenster"
+      },
       "whenAsleep": {
         "description": "Activeer de afsluit procedure wanneer de slaap modus lang genoeg is ingeschakeld",
         "title": "Activeer wanneer ik slaap"
@@ -1761,6 +1808,15 @@
       "disableAtTime": {
         "description": "Om een specifieke tijd op de dag",
         "time": "Tijd",
+        "title": "Slaap modus uitschakelen"
+      },
+      "disableForPlayerJoinLeave": {
+        "title": "Slaap modus uitschakelen",
+        "triggerOptions": {
+          "EVERYONE": "Van iedereen"
+        }
+      },
+      "disableForUprightPose": {
         "title": "Slaap modus uitschakelen"
       },
       "disableOnDevicePowerOn": {
@@ -1878,6 +1934,14 @@
         "title": "Kalibratie van slaap detectie"
       }
     },
+    "sleepDetection": {
+      "automation": {
+        "title": "Slaap Detectie"
+      },
+      "configuration": {
+        "title": "Configuratie"
+      }
+    },
     "title": "Slaap Detectie"
   },
   "sleepAnimations": {
@@ -1885,6 +1949,20 @@
   },
   "status-automations": {
     "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu.",
+    "general": {
+      "onSleepDisable": {
+        "script": "Slaap Modus Uitgeschakeld",
+        "title": "Wanneer ik wakker word"
+      },
+      "onSleepEnable": {
+        "script": "Slaap Modus Ingeschakeld",
+        "title": "Wanneer ik ga slapen"
+      },
+      "onSleepPreparation": {
+        "script": "Slaap Voorbereiding",
+        "title": "Wanneer ik me voorbereid om te gaan slapen"
+      }
+    },
     "moreInfo": "Meer info",
     "playerLimit": {
       "atLimitOrAbove": {
@@ -1903,6 +1981,10 @@
       "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
       "playerLimit": "Speler limiet",
       "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)"
+    },
+    "tabs": {
+      "general": "Algemeen",
+      "playerLimit": "Speler limiet"
     },
     "title": "Status Automatiseringen"
   },
@@ -2031,6 +2113,20 @@
         "message": "De update kon niet geinstalleerd worden. Probeer het later nog eens.",
         "title": "Update Mislukt"
       }
+    }
+  },
+  "vrchatAvatarAutomations": {
+    "onSleepDisable": {
+      "script": "Slaap Modus Uitgeschakeld",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "script": "Slaap Modus Ingeschakeld",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "script": "Slaap Voorbereiding",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
     }
   },
   "vrchatMicMuteAutomations": {
