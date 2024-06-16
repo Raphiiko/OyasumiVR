@@ -59,6 +59,12 @@ export class MqttDiscoveryService {
     await this.reportAvailability(property.id);
   }
 
+  async disposeProperty(id: string) {
+    await this.reportAvailability(id, false);
+    const properties = this.properties.value.filter((p) => p.id !== id);
+    this.properties.next(properties);
+  }
+
   async setTogglePropertyValue(id: string, value: boolean) {
     const property = this.properties.value.find((p) => p.id === id);
     if (!property || property.type !== 'TOGGLE' || property.value === value) return;
@@ -393,18 +399,19 @@ export class MqttDiscoveryService {
     }
   }
 
-  private async reportAvailability(id?: string) {
+  private async reportAvailability(id?: string, override?: boolean) {
     const client = this.mqtt.client.value;
     if (!client || !client.connected) return;
     if (!id) {
-      this.properties.value.forEach((property) => this.reportAvailability(property.id));
+      this.properties.value.forEach((property) => this.reportAvailability(property.id, override));
       return;
     }
     const property = this.properties.value.find((p) => p.id === id);
-    if (!property || property.available === undefined) return;
+    const available = override ?? property?.available;
+    if (!property || available === undefined) return;
     await client.publishAsync(
       `OyasumiVR/${property.topicPath}/available`,
-      property.available ? 'online' : 'offline'
+      available ? 'online' : 'offline'
     );
   }
 }
