@@ -76,9 +76,31 @@
   background: var(--color-surface-2);
   border-bottom: 1px solid var(--color-surface-3);
 
-  .btn-action {
+  .action-spacer {
+    flex: 1;
+  }
+
+
+  .btn-action, .pagination-label {
     &:not(:first-child) {
       margin-left: 0.5em;
+    }
+  }
+
+  .btn-action-square {
+    width: 2em;
+    height: 2em;
+    padding: 0;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+
+    i.material-icons {
+      //margin: 0;
+      //padding: 0;
+      //width: 0;
+      //height: 0;
     }
   }
 }
