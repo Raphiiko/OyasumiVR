@@ -62,7 +62,7 @@
     "blacklist": "Player Blacklist",
     "clearPlayers": "Clear All",
     "conditions": {
-      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are",
+      "description": "Here you can configure OyasumiVR to only accept invite requests when certain conditions are met.",
       "title": "Conditions"
     },
     "description": "OyasumiVR can automatically accept invite requests you receive. By using the player whitelist or blacklist, you can make sure only the friends you pick will have their invite requests automatically accepted.",
