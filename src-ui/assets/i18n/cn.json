@@ -711,7 +711,7 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
-          "title": "Changed your VRChat avatar to''{avatarName}''"
+          "title": "已将你的模型更改为 ''{avatarName}''"
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -905,7 +905,7 @@
     },
     "vrc-avatar-select-modal": {
       "noAvatars": "无法检索到任何模型。请先在 VRChat 中收藏或上传一些模型。",
-      "ownAvatars": "已上传",
+      "ownAvatars": "我上传的",
       "refreshAvatars": "刷新模型",
       "refreshWarning": {
         "message": "由于刷新操作可能会向 VRChat API 发送大量请求，通常只有在预期有变化时才应该这样做。如果操作过于频繁，你可能会被限制频率。\n\n 你确定要刷新模型吗？",
