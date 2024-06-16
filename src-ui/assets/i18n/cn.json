@@ -946,7 +946,7 @@
       "sleeping": "睡觉时间"
     },
     "state": {
-      "awake": "努力的清醒着",
+      "awake": "十分有活力的清醒着",
       "sleeping": "正在安详的睡眠"
     }
   },
@@ -958,7 +958,7 @@
       "noSidecar": "为了让 OyasumiVR 能够控制 GPU 设置，它需要管理员权限。请点击下方按钮授予 OyasumiVR 管理员权限"
     },
     "elevationSidecarModal": {
-      "cancel": "只有这次",
+      "cancel": "只是这次",
       "confirm": "总是",
       "message": "你确定想要授予 OyasumiVR 管理员权限吗？\n\n 如果你开启此设置，OyasumiVR 将在启动时立即请求这些权限。 你可以稍后随时在设置中关闭此功能",
       "title": "授予管理员权限"
@@ -972,7 +972,7 @@
         "description": "OyasumiVR 需要知道你的 <strong>MSIAfterburner.exe</strong> 可执行文件的位置 \n 如果 OyasumiVR 在默认位置找不到它，那么需要你手动设置它的位置",
         "status": {
           "CHECKING": "正在验证 <strong>MSIAfterburner.exe</strong>",
-          "INVALID_EXECUTABLE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 正常运作",
+          "INVALID_EXECUTABLE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong>，可能文件有些问题",
           "INVALID_SIGNATURE": "无法验证此位置中的 <strong>MSIAfterburner.exe</strong> 是否来源于 MSI。 出于安全考量，这个位置的程序将不会被使用。 请确保你使用的是最新官方版本的 MSI Afterburner。 如果问题依然存在，或者你确定可执行文件正确无误，请联络 OyasumiVR 的开发人员或提交错误报告",
           "NOT_FOUND": "无法在此位置中找到 <strong>MSIAfterburner.exe</strong>",
           "SUCCESS": "<strong>MSIAfterburner.exe</strong> 已找到并正常运作！",
