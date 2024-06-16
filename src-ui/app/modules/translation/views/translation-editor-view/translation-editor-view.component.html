@@ -44,6 +44,14 @@
     <i class="material-icons">comment</i>
     <span>Check for suggestions</span>
   </button>
+  <div class="action-spacer"></div>
+  <button class="btn btn-secondary btn-action btn-action-square" (click)="goPreviousPage()" [disabled]="paginationStart <= 0">
+    <i class="material-icons">arrow_back_ios_new</i>
+  </button>
+  <span class="pagination-label">{{paginationStart}}-{{paginationEnd - 1}} ({{entries.length}})</span>
+  <button class="btn btn-secondary btn-action btn-action-square" (click)="goNextPage()" [disabled]="paginationEnd >= entries.length">
+    <i class="material-icons">arrow_forward_ios</i>
+  </button>
 </div>
 
 <div class="editor-table">
@@ -56,7 +64,7 @@
   <div class="editor-table-header-cell">
     <span>'{{ locale }}' Translation</span>
   </div>
-  <div class="editor-table-row" *ngFor="let entry of entries">
+  <div class="editor-table-row" *ngFor="let entry of entries | slice:paginationStart:paginationEnd">
     <div class="editor-table-cell">
       <span [innerHtml]="entry.htmlKey" class="key"></span>
     </div>
@@ -70,7 +78,7 @@
           rows="1"
           appTextareaAutoResize
           [ngModel]="entry.values[locale!]"
-          (ngModelChange)="onTranslationChange(entry, locale!, $event)"
+          (change)="onTranslationChange(entry, locale!, $event)"
         ></textarea>
       </div>
       <div *ngIf="entry.suggestion" class="entry-suggestion" @vshrink>
@@ -95,7 +103,7 @@
 <div class="footer-row">
   <div class="left">
     <span
-      >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
+    >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
         entriesTranslatedPercentage
       }}%)</span
     >
