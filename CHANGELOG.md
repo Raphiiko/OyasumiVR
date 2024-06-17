@@ -9,24 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Integration with Home Assistant via MQTT
+- Function for VRChat player join/leave notifications
+- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
+- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
+- Option for changing your VRChat status description in the player limit status automations.
 - Option to load and save VRChat player lists as presets for automatic invite request acceptance.
 - Option to limit automatically accepting invite request based on the number of players in the world.
-- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev))
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
-- Function for VRChat player join/leave notifications
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
-- OVRToolkit as a notification provider
-- Integration with Home Assistant via MQTT
+- Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
+- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev) and [Fanyatsu]("https://fanyat.su/))
 - Additional configuration options for the sleep detector (controller presence, sleeping pose)
 - Options for forcing the power state of base stations (Right click the power button).
 - Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
-- Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
-- Custom window titlebar
-- Optional fix to delay initializing OyasumiVR with OpenVR. (Can potentially help with SteamVR being unstable while starting when OyasumiVR is already running)
-- Option for changing your VRChat status description in the player limit status automations.
-- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
-- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
+- Optional fix to delay initializing OyasumiVR with OpenVR.
+- OVRToolkit as a notification provider
 
 ### Changed
 
@@ -35,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved sleep detection by considering the sleeping pose
 - Improved layouts for sleep detection configuration views
 - When the overlay menu is opened while the controller is not tracked, the overlay will open in front of you instead.
+- Custom window titlebar
 
 ### Fixed
 
