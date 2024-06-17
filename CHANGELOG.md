@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
 - Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
-- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev) and [Fanyatsu]("https://fanyat.su/))
+- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/))
 - Additional configuration options for the sleep detector (controller presence, sleeping pose)
 - Options for forcing the power state of base stations (Right click the power button).
 - Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
