@@ -81,6 +81,14 @@
     "langNameEnglish": "Ukrainian"
   },
   {
+    "name": "Fanyatsu",
+    "url": "https://fanyat.su/",
+    "langCode": "uk",
+    "flagCode": "ua",
+    "langNameNative": "Українська",
+    "langNameEnglish": "Ukrainian"
+  },
+  {
     "name": "Kanjir0",
     "url": "https://twitter.com/Kanjiro_vrc",
     "langCode": "ru",
