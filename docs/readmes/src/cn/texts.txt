@@ -29,6 +29,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 - 🔅 调暗你头显的亮度
 - ✨ 根据你的睡姿触发模型的不同动画
 - 📩 自动处理加入请求
+- 🔵 Automating your VRChat status
 - 🎤 当你睡着时关闭你的麦克风
 - 🛠️ 自动化各种各样的操作，例如关闭你的设备，或者调整你的GPU功耗限制
 
@@ -50,6 +51,9 @@ OyasumiVR可以根据你的动作自动检测你何时入睡！只需一次校�
   <li>根据控制器和追踪器的电量启用/禁用睡眠模式</li>
   <li>根据控制器和追踪器的开关状态来启用/禁用睡眠模式</li>
   <li>根据SteamVR的状态来进行模式切换</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
@@ -127,13 +131,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 <br>
 当你睡觉时，自动处理朋友们的加入请求！你可以将你想让他们进入的朋友添加到白名单，或者使用黑名单阻止某些朋友的请求被自动接受。
 
-{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
-🔵 <b>状态自动化</b>
-<br>
-根据世界中的人数自动改变你的状态：
-<br><br>
-当你独自睡觉时切换到蓝色（加入我），这样你的朋友可以加入你，当周围有足够的人时切换到橙色（询问我）！
-
 {{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
 🔧 <b>OSC自动化</b>
 <br>
@@ -143,20 +140,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ 关机序列
-
-{{SHUTDOWN_SEQUENCE_BODY}}
-你是否曾经想在VR中入睡，但又不想整夜待在VR中？关机序列可以帮你解决这个问题！
-<br><br>
-当你睡着一段时间后，这个功能可以被自动触发。根据你的配置，它可能会执行以下操作：
-<br><br>
-<ul>
-  <li>关闭你的控制器和追踪器</li>
-  <li>关闭你的基站</li>
-  <li>退出SteamVR <i>（以及任何正在运行的游戏或叠加层）</i></li>
-  <li>关闭你的电脑</li>
-</ul>
-<br>
-现在你可以安心地在VR中入睡，在你熟睡后，你选择的设备都会关闭！
 
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 亮度自动化
@@ -284,6 +267,24 @@ OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)
 {{SUPPORT_OYASUMIVR_BODY}}
 
 
+{{DEVICE_CONTROL_HEADER}}
+
+
+{{DEVICE_CONTROL_BODY}}
+
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+
+
+{{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+
+
+{{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
+
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+
+
 {{BRIGHTNESS_AUTOMATIONS_BODY}}
 
 
@@ -306,6 +307,15 @@ OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)
 
 
 {{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{MQTT_CONTROL_HEADER}}
+
+
+{{MQTT_CONTROL_BODY}}
+
+
+{{MQTT_CONTROL_FEATURES}}
 
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}

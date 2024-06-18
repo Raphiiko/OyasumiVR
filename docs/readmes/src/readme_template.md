@@ -73,7 +73,7 @@
     </table>
 </p>
 <p align="center">
-    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
+    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/563abe4d-2a8d-43e2-9515-39ea8d772d09" width="640">
 </p>
 
 ## {{DOWNLOAD_AND_INSTALL_HEADER}}
@@ -98,7 +98,7 @@
     <td>
 {{SLEEP_DETECTION_BODY}} 
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/cfe464c4-129b-4441-a54c-5ec489b002e2"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/48775fe7-2646-4d0b-ba8c-f7d7eb3a5d86"></td>
   </tr>
 </table>
 
@@ -133,6 +133,16 @@
 {{POWER_AUTOMATIONS_BODY_BASE_STATIONS}} 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
+  </tr>
+</table>
+
+### {{DEVICE_CONTROL_HEADER}}
+<table>
+  <tr>
+    <td>
+{{DEVICE_CONTROL_BODY}} 
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
 </table>
 
@@ -171,13 +181,25 @@
     <td>
 {{VRCHAT_AUTOMATIONS_BODY_AUTO_ACCEPT_INVITE_REQUESTS}}
     </td>    
-    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/a3778498-b3e4-464a-af91-1f9b74bf134e"></td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0b96c76a-4ecb-415d-a446-0430f9e0c233"></td>
   </tr>
   <tr>
     <td>
 {{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
+  </tr>
+  <tr>
+    <td>
+{{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+    </td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
+  </tr>
+  <tr>
+    <td>
+{{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
+    </td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
   </tr>
   <tr>
     <td>
@@ -292,6 +314,19 @@
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/ae809124-3f7e-4106-9a4d-7ddf3a8e754e"></td>
   </tr>
+</table>
+
+### {{MQTT_CONTROL_HEADER}}
+
+<table>
+  <tr>
+    <td colspan="2">
+<img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
+{{MQTT_CONTROL_BODY}}
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
+  </tr>
+{{MQTT_CONTROL_FEATURES}}
 </table>
 
 ## {{TRANSLATION_AND_LOCALIZATION_HEADER}}
