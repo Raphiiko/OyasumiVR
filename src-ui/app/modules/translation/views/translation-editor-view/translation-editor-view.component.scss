@@ -80,8 +80,8 @@
     flex: 1;
   }
 
-
-  .btn-action, .pagination-label {
+  .btn-action,
+  .pagination-label {
     &:not(:first-child) {
       margin-left: 0.5em;
     }

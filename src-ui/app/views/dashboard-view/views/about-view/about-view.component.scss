@@ -192,23 +192,45 @@
       margin-top: 1em;
     }
   }
+}
 
-  .translation-author-list,
-  .contributor-list {
+.contributor-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-bottom: 0.5em;
+
+  &-entry {
+    .fi {
+      margin-left: 0.5em;
+    }
+  }
+}
+
+.translation-author-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 0 1em;
+  padding-bottom: 0.5em;
+
+  &-entry {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    padding-bottom: 0.5em;
-
-    &-entry {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    .fi {
+      margin: 0 0.5em 0 0;
+    }
+    &:nth-child(3n) {
+      flex-direction: row-reverse;
       .fi {
-        margin-left: 0.5em;
+        margin: 0 0 0 0.5em;
       }
     }
   }
+}
 
-  .project-links {
-  }
+.project-links {
 }
 
 .build-info {

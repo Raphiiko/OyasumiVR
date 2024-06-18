@@ -41,13 +41,7 @@ interface TranslationContributor {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
-  protected leftTranslationContributors: TranslationContributor[] = translationContributors.slice(
-    0,
-    Math.ceil(translationContributors.length / 2)
-  );
-  protected rightTranslationContributors: TranslationContributor[] = translationContributors.slice(
-    Math.ceil(translationContributors.length / 2)
-  );
+  protected translationContributors: TranslationContributor[] = translationContributors;
   private supportersScrolling = false;
 
   version?: string;
@@ -69,9 +63,18 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return author;
       };
 
-      this.leftTranslationContributors = this.leftTranslationContributors.map(cnComplianceFix);
-      this.rightTranslationContributors = this.rightTranslationContributors.map(cnComplianceFix);
+      this.translationContributors = this.translationContributors.map(cnComplianceFix);
     }
+
+    // Rotate translation contributors matrix diagonally
+    function mirrorMatrixDiagonally<T>(arr: T[], columns: number): T[] {
+      const newArr = new Array<T>(arr.length);
+      const rows = Math.ceil(arr.length / columns);
+      for (let i = 0; i < arr.length; i++)
+        newArr[(i % rows) * columns + Math.floor(i / rows)] = arr[i];
+      return newArr;
+    }
+    this.translationContributors = mirrorMatrixDiagonally(this.translationContributors, 3);
   }
 
   async ngOnInit() {

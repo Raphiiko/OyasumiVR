@@ -93,30 +93,18 @@
     </div>
   </div>
   <div class="row">
-    <div class="left">
+    <div class="translation-author-list">
       <div
         class="translation-author-list-entry"
-        *ngFor="let contributor of leftTranslationContributors"
+        *ngFor="let contributor of translationContributors"
       >
         <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-        {{ contributor.langNameNative }} |
+        <span>{{ contributor.langNameNative }}</span>
+        <span>&nbsp;|&nbsp;</span>
         <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
           contributor.name
         }}</a
         ><span *ngIf="!contributor.url">{{ contributor.name }}</span>
-      </div>
-    </div>
-    <div class="right">
-      <div
-        class="translation-author-list-entry"
-        *ngFor="let contributor of rightTranslationContributors"
-      >
-        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
-          contributor.name
-        }}</a
-        ><span *ngIf="!contributor.url">{{ contributor.name }}</span> |
-        {{ contributor.langNameNative }}
-        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
       </div>
     </div>
   </div>

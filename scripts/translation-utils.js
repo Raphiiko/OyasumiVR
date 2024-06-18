@@ -79,15 +79,15 @@ async function printTranslationCoverage() {
     const keysTranslated = keys.filter((key) => !!langFileContentFlattened[key]);
     const lang = path.split('/').pop().split('.').shift();
     acc[lang] = {
-      translations: keysTranslated.length + '/' + keys.length,
-      completion: Math.round((keysTranslated.length / keys.length) * 100) + '%',
+      'Coverage (#)': keysTranslated.length + '/' + keys.length,
+      'Coverage (%)': Math.round((keysTranslated.length / keys.length) * 100) + '%',
     };
     return acc;
   }, {});
   // Sort coverage object on completion
   coverage = Object.fromEntries(
     Object.entries(coverage).sort((a, b) => {
-      return parseInt(b[1].completion) - parseInt(a[1].completion);
+      return parseInt(b[1]['Coverage (%)']) - parseInt(a[1]['Coverage (%)']);
     })
   );
   console.log('Translation coverage:');
