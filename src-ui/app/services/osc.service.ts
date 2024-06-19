@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
-import { OscScript, OscScriptSleepAction } from '../models/osc-script';
+import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { cloneDeep, flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
 import { debug, error } from 'tauri-plugin-log-api';
@@ -140,25 +140,66 @@ export class OscService {
   }
 
   async send_float(address: string, value: number) {
-    const addr = this._vrchatOscAddress.value;
-    if (!addr) return;
-    debug(`[OSC] Sending float ${value} to ${address}`);
-    await invoke('osc_send_float', { addr, oscAddr: address, data: value });
+    await this.send_command(address, [
+      {
+        type: 'FLOAT',
+        value: value + '',
+      },
+    ]);
   }
 
   async send_int(address: string, value: number) {
-    const addr = this._vrchatOscAddress.value;
-    if (!addr) return;
-    debug(`[OSC] Sending int ${value} to ${address}`);
-
-    await invoke('osc_send_int', { addr, oscAddr: address, data: value });
+    await this.send_command(address, [
+      {
+        type: 'INT',
+        value: value + '',
+      },
+    ]);
   }
 
   async send_bool(address: string, value: boolean) {
+    await this.send_command(address, [
+      {
+        type: 'BOOLEAN',
+        value: value + '',
+      },
+    ]);
+  }
+
+  async send_string(address: string, value: string) {
+    await this.send_command(address, [
+      {
+        type: 'STRING',
+        value: value,
+      },
+    ]);
+  }
+
+  async send_command(address: string, parameters: OscParameter[]) {
     const addr = this._vrchatOscAddress.value;
     if (!addr) return;
-    debug(`[OSC] Sending bool ${value} to ${address}`);
-    await invoke('osc_send_bool', { addr, oscAddr: address, data: value });
+
+    const _parameters = structuredClone(parameters); // copy parameter array because some parameters may be modified before sending
+
+    _parameters.forEach((parameter) => {
+      // handle "\n" in string values to insert newlines
+      if (parameter.type === 'STRING') {
+        parameter.value = parameter.value.replace(/\\n/g, '\n');
+      }
+    });
+
+    const parametersString = _parameters
+      .map((parameter) => `${parameter.type} => ${parameter.value}`)
+      .join(', ');
+
+    debug(`[OSC] Sending {${parametersString}} to ${address}`);
+
+    await invoke('osc_send_command', {
+      addr,
+      oscAddr: address,
+      types: _parameters.map((parameter) => parameter.type),
+      values: _parameters.map((parameter) => parameter.value),
+    });
   }
 
   queueScript(script: OscScript, replaceId?: string) {
@@ -183,17 +224,7 @@ export class OscService {
             );
             break;
           case 'COMMAND':
-            switch (command.parameterType) {
-              case 'INT':
-                await this.send_int(command.address, parseInt(command.value));
-                break;
-              case 'FLOAT':
-                await this.send_float(command.address, parseFloat(command.value));
-                break;
-              case 'BOOLEAN':
-                await this.send_bool(command.address, command.value === 'true');
-                break;
-            }
+            await this.send_command(command.address, command.parameters);
             break;
         }
       }

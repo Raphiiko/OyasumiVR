@@ -1,7 +1,7 @@
 import { TString } from './translatable-string';
 
 export interface OscScript {
-  version: 1;
+  version: 2;
   commands: OscScriptAction[];
 }
 
@@ -15,11 +15,15 @@ export type OscScriptSleepAction = {
 export type OscScriptCommandAction = {
   type: 'COMMAND';
   address: string;
-  parameterType: OscParameterType;
+  parameters: OscParameter[];
+};
+
+export type OscParameter = {
+  type: OscParameterType;
   value: string;
 };
 
-export type OscParameterType = 'INT' | 'FLOAT' | 'BOOLEAN';
+export type OscParameterType = 'INT' | 'FLOAT' | 'BOOLEAN' | 'STRING';
 
 export interface OscScriptCodeValidationError {
   line: number;
