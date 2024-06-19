@@ -1,4 +1,4 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 import { error, info } from 'tauri-plugin-log-api';
 import { message } from '@tauri-apps/api/dialog';
@@ -20,6 +20,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   13: from12to13,
   14: from13to14,
   15: from14to15,
+  16: from15to16,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -35,7 +36,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     try {
-      data = migrations[++currentVersion](cloneDeep(data));
+      data = migrations[++currentVersion](structuredClone(data));
     } catch (e) {
       error(
         "[automation-configs-migrations] Couldn't migrate to version " +
@@ -43,7 +44,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(data));
+      saveBackup(structuredClone(data));
       data = resetToLatest(data);
       currentVersion = data.version;
       message(
@@ -59,7 +60,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
-  data = mergeWith(cloneDeep(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -75,7 +76,50 @@ async function saveBackup(oldData: any) {
 
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  data = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from15to16(data: any): any {
+  data.version = 16;
+
+  const oscAutomationsConfig = data.OSC_GENERAL;
+
+  const oscAutomations = [
+    oscAutomationsConfig.onSleepModeEnable,
+    oscAutomationsConfig.onSleepModeDisable,
+    oscAutomationsConfig.onSleepPreparation,
+    oscAutomationsConfig.SIDE_BACK,
+    oscAutomationsConfig.SIDE_FRONT,
+    oscAutomationsConfig.SIDE_LEFT,
+    oscAutomationsConfig.SIDE_RIGHT,
+    oscAutomationsConfig.FOOT_LOCK,
+    oscAutomationsConfig.FOOT_UNLOCK,
+  ];
+
+  for (const automation of oscAutomations) {
+    if (!automation) {
+      continue;
+    }
+
+    automation.version = 2;
+
+    for (const command of automation.commands) {
+      if (command.type !== 'COMMAND') {
+        continue;
+      }
+
+      command.parameters = [];
+      command.parameters[0] = {};
+
+      command.parameters[0]['type'] = command.parameterType;
+      command.parameters[0]['value'] = command.value;
+
+      delete command.parameterType;
+      delete command.value;
+    }
+  }
+
   return data;
 }
 
@@ -187,13 +231,13 @@ function from8to9(data: any): any {
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
   // Insert new configuration defaults
-  data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = cloneDeep(
+  data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
-  data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = cloneDeep(
+  data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
   );
-  data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION = cloneDeep(
+  data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION
   );
   // Attempt to migrate old on sleep enable automations
@@ -259,7 +303,7 @@ function from6to7(data: any): any {
 
 function from5to6(data: any): any {
   data.version = 6;
-  data.MSI_AFTERBURNER = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
+  data.MSI_AFTERBURNER = structuredClone(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
   data.MSI_AFTERBURNER.enabled = data.GPU_POWER_LIMITS.enabled;
   return data;
 }

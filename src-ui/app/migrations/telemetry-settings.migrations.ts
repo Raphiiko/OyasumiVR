@@ -1,4 +1,4 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { error, info } from 'tauri-plugin-log-api';
 import { v4 as uuidv4 } from 'uuid';
@@ -31,7 +31,7 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(data));
+      saveBackup(structuredClone(data));
       data = resetToLatest(data);
       currentVersion = data.version;
       message(
@@ -47,7 +47,7 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
       }`
     );
   }
-  data = mergeWith(cloneDeep(TELEMETRY_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(TELEMETRY_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -71,7 +71,7 @@ function from1to2(data: any): any {
 function resetToLatest(data: any): any {
   // Reset to latest
   const telemetryId = data.telemetryId || uuidv4();
-  data = cloneDeep(TELEMETRY_SETTINGS_DEFAULT);
+  data = structuredClone(TELEMETRY_SETTINGS_DEFAULT);
   data.telemetryId = telemetryId;
   return data;
 }

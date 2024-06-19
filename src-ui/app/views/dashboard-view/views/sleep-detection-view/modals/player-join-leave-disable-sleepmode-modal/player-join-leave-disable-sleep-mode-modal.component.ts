@@ -7,7 +7,7 @@ import {
   JoinNotificationsMode,
   SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 
 export interface PlayerJoinLeaveDisableSleepModeModalInputModel {
@@ -55,7 +55,7 @@ export class PlayerJoinLeaveDisableSleepModeModalComponent
   ];
   joinTriggerOption: SelectBoxItem | undefined;
   leaveTriggerOption: SelectBoxItem | undefined;
-  config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig = cloneDeep(
+  config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE
   );
 

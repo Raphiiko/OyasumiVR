@@ -10,7 +10,7 @@ import {
 import { info } from 'tauri-plugin-log-api';
 import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
-import { cloneDeep } from 'lodash';
+
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { invoke } from '@tauri-apps/api';
 import { VRChatService } from '../vrchat.service';
@@ -20,7 +20,7 @@ import { VRChatService } from '../vrchat.service';
 })
 export class OverlayService {
   public readonly sidecarStarted = this.ipcService.overlaySidecarClient.pipe(map(Boolean));
-  private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  private appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
     private ipcService: IPCService,

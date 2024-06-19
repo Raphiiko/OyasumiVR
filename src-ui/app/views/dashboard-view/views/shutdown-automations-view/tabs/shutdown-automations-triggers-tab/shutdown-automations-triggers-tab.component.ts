@@ -3,7 +3,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   ShutdownAutomationsConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fade, vshrink } from '../../../../../../utils/animations';
@@ -15,7 +15,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   animations: [fade(), vshrink()],
 })
 export class ShutdownAutomationsTriggersTabComponent implements OnInit {
-  protected config: ShutdownAutomationsConfig = cloneDeep(
+  protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   protected onSleepActivationWindowStart = '00:00';
@@ -145,10 +145,10 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     };
     // Reset the window back to default when turning off the activation window
     if (!config.triggerOnSleepActivationWindow) {
-      config.triggerOnSleepActivationWindowStart = cloneDeep(
+      config.triggerOnSleepActivationWindowStart = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindowStart
       );
-      config.triggerOnSleepActivationWindowEnd = cloneDeep(
+      config.triggerOnSleepActivationWindowEnd = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindowEnd
       );
     }
@@ -175,10 +175,10 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     };
     // Reset the window back to default when turning off the activation window
     if (!config.triggerWhenAloneActivationWindow) {
-      config.triggerWhenAloneActivationWindowStart = cloneDeep(
+      config.triggerWhenAloneActivationWindowStart = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerWhenAloneActivationWindowStart
       );
-      config.triggerWhenAloneActivationWindowEnd = cloneDeep(
+      config.triggerWhenAloneActivationWindowEnd = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerWhenAloneActivationWindowEnd
       );
     }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { combineLatest, map } from 'rxjs';
@@ -18,7 +18,7 @@ import { SleepService } from '../sleep.service';
   providedIn: 'root',
 })
 export class TurnOffDevicesOnBatteryLevelAutomationService {
-  config: TurnOffDevicesOnBatteryLevelAutomationConfig = cloneDeep(
+  config: TurnOffDevicesOnBatteryLevelAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL
   );
   private batteryLevelCache: {

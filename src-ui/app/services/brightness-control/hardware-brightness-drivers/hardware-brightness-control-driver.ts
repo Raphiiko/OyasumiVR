@@ -1,7 +1,6 @@
 import { Observable } from 'rxjs';
 import { clamp, lerp } from '../../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
-import { cloneDeep } from 'lodash';
 
 export interface HardwareBrightnessControlDriverBounds {
   softwareStops: number[]; // Percentages device stops are mapped to by the driver
@@ -11,7 +10,7 @@ export interface HardwareBrightnessControlDriverBounds {
 }
 
 export abstract class HardwareBrightnessControlDriver {
-  protected appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(protected appSettings$: Observable<AppSettings>) {
     this.appSettings$.subscribe((settings) => (this.appSettings = settings));

@@ -17,7 +17,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   BigscreenBeyondRgbControlAutomationsConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { CancellableTask } from '../../utils/cancellable-task';
@@ -30,7 +30,7 @@ import { EventLogBSBLedChanged } from '../../models/event-log-entry';
 })
 export class BigscreenBeyondLedAutomationService {
   private connected = new BehaviorSubject(false);
-  private config: BigscreenBeyondRgbControlAutomationsConfig = cloneDeep(
+  private config: BigscreenBeyondRgbControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL
   );
   private transitionTask?: CancellableTask;

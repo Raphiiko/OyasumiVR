@@ -3,7 +3,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusGeneralEventsAutomationConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { vrcStatusToString } from '../../../../../../utils/status-utils';
 import { UserStatus } from 'vrchat';
@@ -26,7 +26,7 @@ import { ModalService } from '../../../../../../services/modal.service';
 export class StatusAutomationsGeneralTabComponent implements OnInit {
   UserStatus = UserStatus;
   loggedIn = false;
-  config: ChangeStatusGeneralEventsAutomationConfig = cloneDeep(
+  config: ChangeStatusGeneralEventsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_GENERAL_EVENTS
   );
   statusOptions: SelectBoxItem[] = [
@@ -78,7 +78,7 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
     this.automationConfigService.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
-        this.config = cloneDeep(configs.CHANGE_STATUS_GENERAL_EVENTS);
+        this.config = structuredClone(configs.CHANGE_STATUS_GENERAL_EVENTS);
         this.onSleepEnableStatusOption = this.statusOptions.find(
           (s) => s.id === this.config.statusOnSleepModeEnable
         );

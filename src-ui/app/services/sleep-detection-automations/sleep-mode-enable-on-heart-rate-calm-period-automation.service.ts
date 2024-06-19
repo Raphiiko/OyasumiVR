@@ -4,7 +4,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableOnHeartRateCalmPeriodAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { distinctUntilChanged, filter, firstValueFrom, map, skip } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { PulsoidService } from '../integrations/pulsoid.service';
@@ -13,7 +13,7 @@ import { PulsoidService } from '../integrations/pulsoid.service';
   providedIn: 'root',
 })
 export class SleepModeEnableOnHeartRateCalmPeriodAutomationService {
-  private config: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig = cloneDeep(
+  private config: SleepModeEnableOnHeartRateCalmPeriodAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD
   );
   private thresholdLastExceeded = 0;

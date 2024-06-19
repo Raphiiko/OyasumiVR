@@ -6,7 +6,7 @@ import {
   AutomationType,
   SetBrightnessAutomationConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { clamp } from '../../../../../../utils/number-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -48,14 +48,14 @@ export class BrightnessAutomationsTabComponent implements OnInit {
   protected transitionValueOnDisable = 0;
   protected transitionValueOnPreparation = 0;
 
-  protected onSleepModeEnableConfig: SetBrightnessAutomationConfig = cloneDeep(
+  protected onSleepModeEnableConfig: SetBrightnessAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
   );
-  protected onSleepModeDisableConfig: SetBrightnessAutomationConfig = cloneDeep(
+  protected onSleepModeDisableConfig: SetBrightnessAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
   );
   protected onSleepPreparationConfig: Omit<SetBrightnessAutomationConfig, 'applyOnStart'> =
-    cloneDeep(AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION);
+    structuredClone(AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION);
   protected brightnessBounds: Record<BrightnessType, BrightnessBounds> = {
     SIMPLE: { min: 5, max: 100 },
     SOFTWARE: { min: 5, max: 100 },

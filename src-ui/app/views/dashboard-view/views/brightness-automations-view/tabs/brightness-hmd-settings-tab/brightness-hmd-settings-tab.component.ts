@@ -3,7 +3,7 @@ import { VALVE_INDEX_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../
 import { BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS } from '../../../../../../services/brightness-control/hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../../../models/settings';
-import { cloneDeep } from 'lodash';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { clamp } from '../../../../../../utils/number-utils';
 import { HardwareBrightnessControlService } from '../../../../../../services/brightness-control/hardware-brightness-control.service';
@@ -15,7 +15,7 @@ import { SET_BRIGHTNESS_OPTIONS_DEFAULTS } from '../../../../../../services/brig
   styleUrls: ['./brightness-hmd-settings-tab.component.scss'],
 })
 export class BrightnessHmdSettingsTabComponent implements OnInit {
-  protected appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
     private appSettingsService: AppSettingsService,

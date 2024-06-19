@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { map } from 'rxjs';
@@ -14,7 +14,7 @@ import { SleepService } from '../sleep.service';
   providedIn: 'root',
 })
 export class SleepModeEnableAtBatteryPercentageAutomationService {
-  private config: SleepModeEnableAtBatteryPercentageAutomationConfig = cloneDeep(
+  private config: SleepModeEnableAtBatteryPercentageAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE
   );
   private batteryLevelCache: {

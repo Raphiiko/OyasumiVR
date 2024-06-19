@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { skip } from 'rxjs';
 import {
@@ -13,10 +13,10 @@ import { WindowsService } from '../windows.service';
   providedIn: 'root',
 })
 export class SetWindowsPowerPolicyOnSleepModeAutomationService {
-  onSleepModeEnableConfig: WindowsPowerPolicyOnSleepModeAutomationConfig = cloneDeep(
+  onSleepModeEnableConfig: WindowsPowerPolicyOnSleepModeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE
   );
-  onSleepModeDisableConfig: WindowsPowerPolicyOnSleepModeAutomationConfig = cloneDeep(
+  onSleepModeDisableConfig: WindowsPowerPolicyOnSleepModeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE
   );
 

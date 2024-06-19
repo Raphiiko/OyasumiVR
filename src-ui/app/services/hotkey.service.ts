@@ -3,7 +3,7 @@ import { isRegistered, register, unregister, unregisterAll } from '@tauri-apps/a
 import { error, warn } from 'tauri-plugin-log-api';
 import { map, Observable, Subject, take } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
-import { cloneDeep } from 'lodash';
+
 import { HotkeyId } from '../models/settings';
 
 const validKeys = [
@@ -207,7 +207,7 @@ export class HotkeyService {
   public async init() {
     this.appSettings.settings.pipe(take(1)).subscribe(async (settings) => {
       await unregisterAll();
-      this.hotkeys = cloneDeep(settings.hotkeys);
+      this.hotkeys = structuredClone(settings.hotkeys);
       for (const hotkeyString of Object.keys(this.hotkeys)) {
         await register(hotkeyString, () => {
           this.onHotkeyPressed(hotkeyString);
@@ -322,7 +322,7 @@ export class HotkeyService {
 
   private saveHotkeys() {
     this.appSettings.updateSettings({
-      hotkeys: cloneDeep(this.hotkeys),
+      hotkeys: structuredClone(this.hotkeys),
     });
   }
 }

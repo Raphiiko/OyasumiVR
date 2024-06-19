@@ -7,7 +7,7 @@ import {
   BigscreenBeyondFanControlAutomationsConfig,
   BigscreenBeyondRgbControlAutomationsConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../../../models/settings';
 import { hshrink } from '../../../../../../utils/animations';
 import { SET_BRIGHTNESS_OPTIONS_DEFAULTS } from '../../../../../../services/brightness-control/brightness-control-models';
@@ -29,13 +29,13 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
   protected readonly rgbAutomationEnableKeys = AUTOMATION_ENABLE_KEYS as Array<
     keyof BigscreenBeyondRgbControlAutomationsConfig
   >;
-  protected rgbControlConfig: BigscreenBeyondRgbControlAutomationsConfig = cloneDeep(
+  protected rgbControlConfig: BigscreenBeyondRgbControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL
   );
-  protected fanControlConfig: BigscreenBeyondFanControlAutomationsConfig = cloneDeep(
+  protected fanControlConfig: BigscreenBeyondFanControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL
   );
-  protected appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
     private automationConfigService: AutomationConfigService,

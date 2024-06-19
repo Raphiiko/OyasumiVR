@@ -18,7 +18,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   BigscreenBeyondFanControlAutomationsConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
@@ -40,10 +40,10 @@ const MIN_SAFE_FAN_SPEED = 40;
 export class BigscreenBeyondFanAutomationService {
   private _connected = new BehaviorSubject(false);
   public bsbConnected = this._connected.asObservable();
-  private config: BigscreenBeyondFanControlAutomationsConfig = cloneDeep(
+  private config: BigscreenBeyondFanControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL
   );
-  private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  private appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   private _fanSpeed = new BehaviorSubject<number>(50);
   public fanSpeed = this._fanSpeed.asObservable();
   private _fanSafetyActive = new BehaviorSubject(false);

@@ -846,6 +846,7 @@
         "sleep": "Sleep"
       },
       "addCommand": "Add",
+      "addParameter": "New parameter",
       "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
       "commands": {
         "COMMAND": {
@@ -1133,6 +1134,8 @@
       "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
       "invalidSyntax": "Invalid syntax.",
       "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
+      "maxParameterCountExceeded": "Maximum allowed parameter count per command is {value}.",
+      "stringTooLong": "String value must not exceed {value} character limit.",
       "tooManyCommands": "An OSC script cannot have more than {value} actions.",
       "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
     }

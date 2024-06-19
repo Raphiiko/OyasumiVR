@@ -2,7 +2,7 @@ import { Component, DestroyRef, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { MqttService } from '../../services/mqtt/mqtt.service';
 import { AppSettingsService } from '../../services/app-settings.service';
-import { cloneDeep } from 'lodash';
+
 import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
@@ -16,7 +16,7 @@ import { error } from 'tauri-plugin-log-api';
   animations: [fadeUp(), hshrink(), vshrink()],
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {
-  config = MqttService.mapAppSettingsToMqttConfig(cloneDeep(APP_SETTINGS_DEFAULT));
+  config = MqttService.mapAppSettingsToMqttConfig(structuredClone(APP_SETTINGS_DEFAULT));
   testResult: 'idle' | 'testing' | 'success' | 'error' = 'idle';
   testError = '';
 

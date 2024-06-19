@@ -4,7 +4,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusBasedOnPlayerCountAutomationConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SelectBoxItem } from '../../../../../../components/select-box/select-box.component';
 import { vrcStatusToString } from '../../../../../../utils/status-utils';
 import { VRChatService } from '../../../../../../services/vrchat.service';
@@ -32,7 +32,7 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
   loggedIn = false;
   limit: BehaviorSubject<number> = new BehaviorSubject<number>(1);
   bedLimit = 1;
-  config: ChangeStatusBasedOnPlayerCountAutomationConfig = cloneDeep(
+  config: ChangeStatusBasedOnPlayerCountAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
   );
   statusOptions: SelectBoxItem[] = [
@@ -84,7 +84,7 @@ export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
     this.automationConfig.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
-        this.config = cloneDeep(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
+        this.config = structuredClone(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
         this.limit.next(this.config.limit);
         this.optionSetStatusAtLimitOrAbove = this.statusOptions.find(
           (o) => o.id === this.config.statusAtLimitOrAbove

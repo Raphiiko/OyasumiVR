@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   NightmareDetectionAutomationsConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -20,7 +20,7 @@ import { NotificationService } from '../../../../services/notification.service';
   animations: [hshrink()],
 })
 export class NightmareDetectionViewComponent implements OnInit {
-  protected config: NightmareDetectionAutomationsConfig = cloneDeep(
+  protected config: NightmareDetectionAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION
   );
   protected durationUnitOptions: SelectBoxItem[] = [

@@ -3,7 +3,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   OscGeneralAutomationConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { OpenVRService } from '../../../../services/openvr.service';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { OscScript } from '../../../../models/osc-script';
@@ -15,7 +15,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   styleUrls: ['./osc-automations-view.component.scss'],
 })
 export class OscAutomationsViewComponent implements OnInit {
-  protected config: OscGeneralAutomationConfig = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.OSC_GENERAL);
+  protected config: OscGeneralAutomationConfig = structuredClone(
+    AUTOMATION_CONFIGS_DEFAULT.OSC_GENERAL
+  );
 
   constructor(
     private openvr: OpenVRService,

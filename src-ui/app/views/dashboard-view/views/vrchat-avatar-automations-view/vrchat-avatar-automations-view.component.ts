@@ -7,7 +7,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   VRChatAvatarAutomationsConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { PersistedAvatar } from '../../../../models/vrchat';
 
 @Component({
@@ -18,7 +18,7 @@ import { PersistedAvatar } from '../../../../models/vrchat';
 })
 export class VRChatAvatarAutomationsViewComponent implements OnInit {
   loggedIn = false;
-  config: VRChatAvatarAutomationsConfig = cloneDeep(
+  config: VRChatAvatarAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_AVATAR_AUTOMATIONS
   );
 

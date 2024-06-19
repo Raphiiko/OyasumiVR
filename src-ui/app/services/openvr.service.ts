@@ -12,7 +12,7 @@ import {
   skip,
   startWith,
 } from 'rxjs';
-import { cloneDeep, orderBy } from 'lodash';
+import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { error, info } from 'tauri-plugin-log-api';
 
@@ -59,7 +59,7 @@ export class OpenVRService {
       ),
       listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => this.onStatusUpdate(event.payload)),
       listen<any>('OVR_POSE_UPDATE', (event) => {
-        const poses = cloneDeep(this._devicePoses.value);
+        const poses = structuredClone(this._devicePoses.value);
         const {
           index,
           quaternion,
@@ -157,7 +157,7 @@ export class OpenVRService {
 
   public async setDeviceNickname(device: OVRDevice, nickname: string) {
     const settings = await firstValueFrom(this.appSettings.settings);
-    const deviceNicknames = cloneDeep(settings.deviceNicknames);
+    const deviceNicknames = structuredClone(settings.deviceNicknames);
     nickname = nickname.trim();
     if (nickname) {
       deviceNicknames['OVRDEVICE_' + device.serialNumber] = nickname;

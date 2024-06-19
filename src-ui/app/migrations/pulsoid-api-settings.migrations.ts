@@ -1,4 +1,4 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { error, info } from 'tauri-plugin-log-api';
 import { PULSOID_API_SETTINGS_DEFAULT, PulsoidApiSettings } from '../models/pulsoid-api-settings';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
@@ -29,7 +29,7 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(data));
+      saveBackup(structuredClone(data));
       data = resetToLatest(data);
       currentVersion = data.version;
       message(
@@ -45,7 +45,7 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
       }`
     );
   }
-  data = mergeWith(cloneDeep(PULSOID_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(PULSOID_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -61,6 +61,6 @@ async function saveBackup(oldData: any) {
 
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(PULSOID_API_SETTINGS_DEFAULT);
+  data = structuredClone(PULSOID_API_SETTINGS_DEFAULT);
   return data;
 }
