@@ -12,7 +12,7 @@ import {
   startWith,
   throttleTime,
 } from 'rxjs';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { UserStatus } from 'vrchat';
 import { IPCService } from '../ipc.service';
 import { AutomationConfigService } from '../automation-config.service';
@@ -160,14 +160,14 @@ export class OverlayStateSyncService {
 
   private updateState_WhenSleepModeChanges() {
     this.sleepService.mode.subscribe((sleepMode) => {
-      this.state.next({ ...cloneDeep(this.state.value), sleepMode });
+      this.state.next({ ...structuredClone(this.state.value), sleepMode });
     });
   }
 
   private updateState_WhenVRCUserChanges() {
     this.vrchatService.user.subscribe((user) => {
       this.state.next({
-        ...cloneDeep(this.state.value),
+        ...structuredClone(this.state.value),
         vrcUsername: user?.displayName ?? '',
         vrcStatus: this.mapVRCStatus(user?.status),
       });
@@ -182,7 +182,7 @@ export class OverlayStateSyncService {
       )
       .subscribe((locale) => {
         this.state.next({
-          ...cloneDeep(this.state.value),
+          ...structuredClone(this.state.value),
           locale,
         });
       });
@@ -209,7 +209,7 @@ export class OverlayStateSyncService {
         map(([, configs]) => configs)
       )
       .subscribe((configs) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         {
           const automation = state.automations!.autoAcceptInviteRequests!;
           automation.enabled = configs.AUTO_ACCEPT_INVITE_REQUESTS.enabled;
@@ -282,7 +282,7 @@ export class OverlayStateSyncService {
     this.shutdownAutomationsService.stage.subscribe((stage) => {
       const index = ShutdownSequenceStageOrder.indexOf(stage);
       const active = index > 0;
-      const state = cloneDeep(this.state.value);
+      const state = structuredClone(this.state.value);
       if (state.automations?.shutdownAutomations?.running !== active) {
         const automation = state.automations!.shutdownAutomations!;
         automation.running = active;
@@ -295,7 +295,7 @@ export class OverlayStateSyncService {
     this.openvr.devices
       .pipe(throttleTime(100, asyncScheduler, { leading: true, trailing: true }))
       .subscribe((devices) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         const deviceInfo: OyasumiSidecarDeviceInfo = {
           controllers: [],
           trackers: [],
@@ -320,7 +320,7 @@ export class OverlayStateSyncService {
   private updateState_WhenAppSettingsChange() {
     // Reserved for future use when adding more overlay preferences
     // this.appSettings.settings.subscribe((settings) => {
-    //   const state = cloneDeep(this.state.value);
+    //   const state = structuredClone(this.state.value);
     //   this.state.next(state);
     // });
   }
@@ -332,7 +332,7 @@ export class OverlayStateSyncService {
         distinctUntilChanged()
       )
       .subscribe((brightness) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.brightnessState!.brightness = brightness;
         this.state.next(state);
       });
@@ -342,7 +342,7 @@ export class OverlayStateSyncService {
         distinctUntilChanged()
       )
       .subscribe((brightness) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.brightnessState!.hardwareBrightness = brightness;
         this.state.next(state);
       });
@@ -352,7 +352,7 @@ export class OverlayStateSyncService {
         distinctUntilChanged()
       )
       .subscribe((brightness) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.brightnessState!.softwareBrightness = brightness;
         this.state.next(state);
       });
@@ -360,14 +360,14 @@ export class OverlayStateSyncService {
       this.hardwareBrightness.brightnessBounds,
       this.hardwareBrightness.driverIsAvailable,
     ]).subscribe(([bounds, available]) => {
-      const state = cloneDeep(this.state.value);
+      const state = structuredClone(this.state.value);
       state.brightnessState!.hardwareBrightnessAvailable = available;
       state.brightnessState!.hardwareMinBrightness = bounds[0];
       state.brightnessState!.hardwareMaxBrightness = bounds[1];
       this.state.next(state);
     });
     this.simpleBrightness.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
-      const state = cloneDeep(this.state.value);
+      const state = structuredClone(this.state.value);
       state.brightnessState!.brightnessTransitioning = !!transition;
       if (transition)
         state.brightnessState!.brightnessTransitionTarget = transition.targetBrightness;
@@ -376,7 +376,7 @@ export class OverlayStateSyncService {
     this.hardwareBrightness.activeTransition
       .pipe(distinctUntilChanged())
       .subscribe((transition) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.brightnessState!.hardwareBrightnessTransitioning = !!transition;
         if (transition)
           state.brightnessState!.hardwareBrightnessTransitionTarget = transition.targetBrightness;
@@ -385,7 +385,7 @@ export class OverlayStateSyncService {
     this.softwareBrightness.activeTransition
       .pipe(distinctUntilChanged())
       .subscribe((transition) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.brightnessState!.softwareBrightnessTransitioning = !!transition;
         if (transition)
           state.brightnessState!.softwareBrightnessTransitionTarget = transition.targetBrightness;
@@ -395,12 +395,12 @@ export class OverlayStateSyncService {
 
   private updateState_WhenSleepPreparationStateChanges() {
     this.sleepPreparation.sleepPreparationAvailable.subscribe((available) => {
-      const state = cloneDeep(this.state.value);
+      const state = structuredClone(this.state.value);
       state.sleepPreparationAvailable = available;
       this.state.next(state);
     });
     this.sleepPreparation.sleepPreparationTimedOut.subscribe((timedOut) => {
-      const state = cloneDeep(this.state.value);
+      const state = structuredClone(this.state.value);
       state.sleepPreparationTimedOut = timedOut;
       this.state.next(state);
     });
@@ -410,7 +410,7 @@ export class OverlayStateSyncService {
     this.systemMicMuteAutomationService.isMicMuted
       .pipe(distinctUntilChanged())
       .subscribe((muted) => {
-        const state = cloneDeep(this.state.value);
+        const state = structuredClone(this.state.value);
         state.systemMicMuted = muted ?? false;
         this.state.next(state);
       });

@@ -11,7 +11,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { AutomationConfigService } from '../automation-config.service';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusBasedOnPlayerCountAutomationConfig,
@@ -27,7 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root',
 })
 export class StatusChangeForPlayerCountAutomationService {
-  private config: ChangeStatusBasedOnPlayerCountAutomationConfig = cloneDeep(
+  private config: ChangeStatusBasedOnPlayerCountAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
   );
   private sleepMode = false;
@@ -44,7 +44,7 @@ export class StatusChangeForPlayerCountAutomationService {
   async init() {
     // Pull in data
     this.automationConfig.configs.subscribe((configs) => {
-      this.config = cloneDeep(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
+      this.config = structuredClone(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
     });
     this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
 

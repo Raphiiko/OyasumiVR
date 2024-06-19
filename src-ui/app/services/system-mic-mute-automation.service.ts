@@ -24,7 +24,7 @@ import {
   SystemMicMuteAutomationsConfig,
   SystemMicMuteControllerBindingBehavior,
 } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { OVRInputEventAction } from '../models/ovr-input-event';
@@ -41,7 +41,7 @@ import { VRChatService } from './vrchat.service';
   providedIn: 'root',
 })
 export class SystemMicMuteAutomationService {
-  private config: SystemMicMuteAutomationsConfig = cloneDeep(
+  private config: SystemMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
   public readonly captureDevice = combineLatest([

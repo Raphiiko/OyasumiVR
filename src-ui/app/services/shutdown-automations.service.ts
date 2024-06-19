@@ -21,7 +21,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, ShutdownAutomationsConfig } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
@@ -51,7 +51,7 @@ export const ShutdownSequenceStageOrder = [
   providedIn: 'root',
 })
 export class ShutdownAutomationsService {
-  private config: ShutdownAutomationsConfig = cloneDeep(
+  private config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   private sleepMode = false;

@@ -4,7 +4,7 @@ import { LighthouseService } from '../../lighthouse.service';
 import { concatMap, filter, pairwise, startWith, Subject, takeUntil } from 'rxjs';
 import { LighthouseDevice } from '../../../models/lighthouse-device';
 import { MqttDiscoveryConfigDevice, MqttToggleProperty } from '../../../models/mqtt';
-import { cloneDeep } from 'lodash';
+
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../models/settings';
 import { AppSettingsService } from '../../app-settings.service';
 
@@ -15,7 +15,7 @@ const POWER_STATE_SUFFIX = 'power_state';
 })
 export class BaseStationMqttIntegrationService {
   private deviceRemoved = new Subject<LighthouseDevice>();
-  private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  private appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(
     private mqtt: MqttDiscoveryService,

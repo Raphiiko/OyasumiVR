@@ -3,7 +3,7 @@ import {
   AutomationConfigs,
   AutomationType,
 } from '../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../services/automation-config.service';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
@@ -13,7 +13,7 @@ import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
 @Component({ template: '' })
 export abstract class SleepDetectionTabComponent implements OnInit {
-  protected automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  protected automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
   protected automationConfigService = inject(AutomationConfigService);
   protected destroyRef = inject(DestroyRef);
   protected modalService = inject(ModalService);

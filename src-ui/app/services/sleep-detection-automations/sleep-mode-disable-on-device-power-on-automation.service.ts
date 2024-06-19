@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableOnDevicePowerOnAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { OVRDevice } from '../../models/ovr-device';
@@ -14,7 +14,7 @@ import { OVRDevice } from '../../models/ovr-device';
   providedIn: 'root',
 })
 export class SleepModeDisableOnDevicePowerOnAutomationService {
-  private config: SleepModeDisableOnDevicePowerOnAutomationConfig = cloneDeep(
+  private config: SleepModeDisableOnDevicePowerOnAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON
   );
   private poweredOnDevices: number[] = [];

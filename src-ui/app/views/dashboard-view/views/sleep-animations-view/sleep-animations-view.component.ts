@@ -10,7 +10,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepingAnimationsAutomationConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SleepingPose } from '../../../../models/sleeping-pose';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { OscService } from '../../../../services/osc.service';
@@ -45,7 +45,7 @@ export class SleepAnimationsViewComponent implements OnInit {
       infoAction: this.buildPresetInfoAction(preset),
     })),
   ];
-  config: SleepingAnimationsAutomationConfig = cloneDeep(
+  config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
   currentPose: SleepingPose = 'UNKNOWN';
@@ -70,7 +70,7 @@ export class SleepAnimationsViewComponent implements OnInit {
     this.automationConfig.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
-        this.config = cloneDeep(configs.SLEEPING_ANIMATIONS);
+        this.config = structuredClone(configs.SLEEPING_ANIMATIONS);
         this.oscOptionsExpanded = this.config && this.config.preset === 'CUSTOM';
         if (this.config.preset && this.config.preset !== 'CUSTOM') {
           this.presetNotes =

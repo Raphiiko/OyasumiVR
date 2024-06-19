@@ -12,7 +12,7 @@ import {
   PowerDownWindowsMode,
   ShutdownAutomationsConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { AppSettingsService } from '../../../../../../services/app-settings.service';
@@ -28,7 +28,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   animations: [fade(), vshrink()],
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {
-  protected config: ShutdownAutomationsConfig = cloneDeep(
+  protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   protected quitWithSteamVRMode: QuitWithSteamVRMode = 'DISABLED';

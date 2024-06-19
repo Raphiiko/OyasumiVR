@@ -20,7 +20,7 @@ import {
   GPUPowerLimitsAutomationConfig,
   MSIAfterburnerAutomationConfig,
 } from '../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NvmlService } from './nvml.service';
 import { NvmlDevice } from '../models/nvml-device';
@@ -40,7 +40,7 @@ import {
 })
 export class GpuAutomationsService {
   // Power limiting
-  private currentPowerLimitsConfig: GPUPowerLimitsAutomationConfig = cloneDeep(
+  private currentPowerLimitsConfig: GPUPowerLimitsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS
   );
   public powerLimitsConfig: Observable<GPUPowerLimitsAutomationConfig> =
@@ -48,7 +48,7 @@ export class GpuAutomationsService {
   private _nvmlDevices: BehaviorSubject<GPUDevice[]> = new BehaviorSubject<GPUDevice[]>([]);
   public nvmlDevices: Observable<Array<GPUDevice & { selected: boolean }>>;
   // MSI Afterburner
-  private currentMSIAfterburnerConfig: MSIAfterburnerAutomationConfig = cloneDeep(
+  private currentMSIAfterburnerConfig: MSIAfterburnerAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER
   );
   public msiAfterburnerConfig: Observable<MSIAfterburnerAutomationConfig> =
@@ -111,11 +111,11 @@ export class GpuAutomationsService {
   async enable() {
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',
-      { ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS), enabled: true }
+      { ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS), enabled: true }
     );
     await this.automationConfig.updateAutomationConfig<MSIAfterburnerAutomationConfig>(
       'MSI_AFTERBURNER',
-      { ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER), enabled: true }
+      { ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER), enabled: true }
     );
     if (this.currentPowerLimitsConfig.selectedDeviceId === null) {
       const device = (this._nvmlDevices.value ?? []).find((d) => d.supportsPowerLimiting);
@@ -126,11 +126,11 @@ export class GpuAutomationsService {
   async disable() {
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',
-      { ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS), enabled: false }
+      { ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS), enabled: false }
     );
     await this.automationConfig.updateAutomationConfig<MSIAfterburnerAutomationConfig>(
       'MSI_AFTERBURNER',
-      { ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER), enabled: false }
+      { ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER), enabled: false }
     );
   }
 
@@ -142,11 +142,11 @@ export class GpuAutomationsService {
       {
         selectedDeviceId: device.id,
         onSleepEnable: {
-          ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS.onSleepEnable),
+          ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS.onSleepEnable),
           powerLimit: device.defaultPowerLimit,
         },
         onSleepDisable: {
-          ...cloneDeep(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS.onSleepDisable),
+          ...structuredClone(AUTOMATION_CONFIGS_DEFAULT.GPU_POWER_LIMITS.onSleepDisable),
           powerLimit: device.defaultPowerLimit,
         },
       }
@@ -157,7 +157,7 @@ export class GpuAutomationsService {
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',
       {
-        ...cloneDeep(this.currentPowerLimitsConfig),
+        ...structuredClone(this.currentPowerLimitsConfig),
         onSleepEnable: {
           enabled: this.currentPowerLimitsConfig.onSleepEnable.enabled,
           powerLimit: limit.limit,
@@ -171,7 +171,7 @@ export class GpuAutomationsService {
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',
       {
-        ...cloneDeep(this.currentPowerLimitsConfig),
+        ...structuredClone(this.currentPowerLimitsConfig),
         onSleepDisable: {
           enabled: this.currentPowerLimitsConfig.onSleepDisable.enabled,
           powerLimit: limit.limit,
@@ -182,7 +182,7 @@ export class GpuAutomationsService {
   }
 
   async togglePowerLimitOnSleepEnabledAutomation() {
-    const config = cloneDeep(this.currentPowerLimitsConfig);
+    const config = structuredClone(this.currentPowerLimitsConfig);
     config.onSleepEnable.enabled = !config.onSleepEnable.enabled;
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',
@@ -191,7 +191,7 @@ export class GpuAutomationsService {
   }
 
   async togglePowerLimitOnSleepDisabledAutomation() {
-    const config = cloneDeep(this.currentPowerLimitsConfig);
+    const config = structuredClone(this.currentPowerLimitsConfig);
     config.onSleepDisable.enabled = !config.onSleepDisable.enabled;
     await this.automationConfig.updateAutomationConfig<GPUPowerLimitsAutomationConfig>(
       'GPU_POWER_LIMITS',

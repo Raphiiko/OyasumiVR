@@ -4,7 +4,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeDisableOnUprightPoseAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepingPose } from '../../models/sleeping-pose';
@@ -13,7 +13,7 @@ import { SleepingPose } from '../../models/sleeping-pose';
   providedIn: 'root',
 })
 export class SleepModeDisableOnUprightPoseAutomationService {
-  private config: SleepModeDisableOnUprightPoseAutomationConfig = cloneDeep(
+  private config: SleepModeDisableOnUprightPoseAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE
   );
   private lastPose?: { pose: SleepingPose; time: number };

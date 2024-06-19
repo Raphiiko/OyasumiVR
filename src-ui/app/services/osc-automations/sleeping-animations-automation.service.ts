@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepingAnimationsAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import {
   combineLatest,
   debounceTime,
@@ -25,7 +25,7 @@ import { getOscScriptDuration } from '../../utils/osc-script-utils';
   providedIn: 'root',
 })
 export class SleepingAnimationsAutomationService {
-  private config: SleepingAnimationsAutomationConfig = cloneDeep(
+  private config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
 
@@ -86,7 +86,7 @@ export class SleepingAnimationsAutomationService {
         if (!this.config.enabled) return;
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
         // Combine OSC scripts
-        const script: OscScript = { version: 1, commands: [] };
+        const script: OscScript = { version: 2, commands: [] };
         const enableFootUnlock = !!(
           this.config.releaseFootLockOnPoseChange &&
           this.config.oscScripts.FOOT_UNLOCK &&

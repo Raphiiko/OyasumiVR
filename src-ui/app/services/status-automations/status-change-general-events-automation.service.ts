@@ -8,7 +8,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusGeneralEventsAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { debounceTime, distinctUntilChanged, filter, map, skip } from 'rxjs';
 import { UserStatus } from 'vrchat';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,7 +20,7 @@ import { EventLogService } from '../event-log.service';
   providedIn: 'root',
 })
 export class StatusChangeGeneralEventsAutomationService {
-  config: ChangeStatusGeneralEventsAutomationConfig = cloneDeep(
+  config: ChangeStatusGeneralEventsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_GENERAL_EVENTS
   );
   private vrcUser: CurrentUser | null = null;
@@ -37,7 +37,7 @@ export class StatusChangeGeneralEventsAutomationService {
 
   async init() {
     this.automationConfig.configs.subscribe((configs) => {
-      this.config = cloneDeep(configs.CHANGE_STATUS_GENERAL_EVENTS);
+      this.config = structuredClone(configs.CHANGE_STATUS_GENERAL_EVENTS);
     });
     this.vrchat.user.subscribe((user) => {
       this.vrcUser = user;

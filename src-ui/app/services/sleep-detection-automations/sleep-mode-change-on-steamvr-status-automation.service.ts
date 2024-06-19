@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeChangeOnSteamVRStatusAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { debounceTime, map, pairwise, tap } from 'rxjs';
 import { SleepService } from '../sleep.service';
 
@@ -13,7 +13,7 @@ import { SleepService } from '../sleep.service';
   providedIn: 'root',
 })
 export class SleepModeChangeOnSteamVRStatusAutomationService {
-  private config: SleepModeChangeOnSteamVRStatusAutomationConfig = cloneDeep(
+  private config: SleepModeChangeOnSteamVRStatusAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS
   );
 

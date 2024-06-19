@@ -4,7 +4,7 @@ import {
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
 } from '../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
@@ -29,7 +29,7 @@ import { v4 as uuid } from 'uuid';
   providedIn: 'root',
 })
 export class JoinNotificationsService {
-  private config: JoinNotificationsAutomationsConfig = cloneDeep(
+  private config: JoinNotificationsAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS
   );
   private ownVRChatDisplayName = '';

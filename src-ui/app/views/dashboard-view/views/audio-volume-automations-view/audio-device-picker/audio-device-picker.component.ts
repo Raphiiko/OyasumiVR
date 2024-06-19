@@ -4,7 +4,6 @@ import { fadeRight } from '../../../../../utils/animations';
 import { AudioDeviceService } from '../../../../../services/audio-device.service';
 import { AudioDevice, AudioDeviceType } from '../../../../../models/audio-device';
 import { EMPTY, map, Observable } from 'rxjs';
-import { cloneDeep } from 'lodash';
 
 export interface AudioDevicePickerInput {
   disablePersistentIds?: string[];
@@ -37,7 +36,7 @@ export class AudioDevicePickerComponent extends BaseModalComponent<
       map((devices) => devices.filter((device) => device.deviceType === type)),
       // Add default option
       map((devices) => {
-        const defaultDevice = cloneDeep(devices.find((device) => device.default));
+        const defaultDevice = structuredClone(devices.find((device) => device.default));
         if (defaultDevice) {
           defaultDevice.persistentId = 'DEFAULT_' + defaultDevice.deviceType.toUpperCase();
           return [defaultDevice, ...devices];

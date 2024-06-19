@@ -5,7 +5,7 @@ import {
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -46,7 +46,7 @@ export class JoinNotificationsViewComponent implements OnInit {
   leaveNotificationOption: SelectBoxItem | undefined;
   joinSoundOption: SelectBoxItem | undefined;
   leaveSoundOption: SelectBoxItem | undefined;
-  config: JoinNotificationsAutomationsConfig = cloneDeep(
+  config: JoinNotificationsAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS
   );
   protected playingTestSound = false;

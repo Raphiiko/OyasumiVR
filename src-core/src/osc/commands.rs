@@ -2,12 +2,21 @@ use super::{OSC_RECEIVE_SOCKET, OSC_SEND_SOCKET};
 use log::{debug, error, info};
 use oyasumivr_oscquery::OSCMethod;
 use rosc::{encoder, OscMessage, OscPacket, OscType};
+use serde::{Deserialize, Serialize};
 use std::{
     net::{SocketAddrV4, UdpSocket},
     str::FromStr,
 };
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
+
+#[derive(Serialize, Deserialize, Debug)]
+pub enum SupportedOscType {
+    INT,
+    FLOAT,
+    BOOLEAN,
+    STRING,
+}
 
 lazy_static! {
     static ref CANCELLATION_TOKEN: Mutex<Option<CancellationToken>> = Default::default();
@@ -112,32 +121,39 @@ pub async fn set_osc_method_value(address: String, value: String) {
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
-pub async fn osc_send_int(addr: String, osc_addr: String, data: i32) -> Result<bool, String> {
+pub async fn osc_send_command(
+    addr: String,
+    osc_addr: String,
+    types: Vec<SupportedOscType>,
+    values: Vec<String>,
+) -> Result<bool, String> {
     debug!(
-        "[Core] Sending OSC command (address={}, type={}, value={})",
-        osc_addr, "int", data
+        "[Core] Sending OSC command (address={}, types={:?}, values={:?})",
+        osc_addr, types, values
     );
-    osc_send(addr, osc_addr, vec![OscType::Int(data)]).await
-}
 
-#[tauri::command]
-#[oyasumivr_macros::command_profiling]
-pub async fn osc_send_float(addr: String, osc_addr: String, data: f32) -> Result<bool, String> {
-    debug!(
-        "[Core] Sending OSC command (address={}, type={}, value={})",
-        osc_addr, "float", data
-    );
-    osc_send(addr, osc_addr, vec![OscType::Float(data)]).await
-}
+    let mut data = Vec::new();
 
-#[tauri::command]
-#[oyasumivr_macros::command_profiling]
-pub async fn osc_send_bool(addr: String, osc_addr: String, data: bool) -> Result<bool, String> {
-    debug!(
-        "[Core] Sending OSC command (address={}, type={}, value={})",
-        osc_addr, "bool", data
-    );
-    osc_send(addr, osc_addr, vec![OscType::Bool(data)]).await
+    for (osc_type, value) in types.into_iter().zip(values.into_iter()) {
+        let osc_value = match osc_type {
+            SupportedOscType::INT => value
+                .parse::<i32>()
+                .map(OscType::Int)
+                .map_err(|_| String::from("INVALID_INT_VALUE"))?,
+            SupportedOscType::FLOAT => value
+                .parse::<f32>()
+                .map(OscType::Float)
+                .map_err(|_| String::from("INVALID_FLOAT_VALUE"))?,
+            SupportedOscType::BOOLEAN => value
+                .parse::<bool>()
+                .map(OscType::Bool)
+                .map_err(|_| String::from("INVALID_BOOL_VALUE"))?,
+            SupportedOscType::STRING => OscType::String(value),
+        };
+        data.push(osc_value);
+    }
+
+    osc_send(addr, osc_addr, data).await
 }
 
 #[tauri::command]
