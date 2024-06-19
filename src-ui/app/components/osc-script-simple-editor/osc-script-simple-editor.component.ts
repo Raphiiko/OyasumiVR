@@ -209,13 +209,6 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.validationTrigger.next();
   }
 
-  getBooleanValueForCommandParameter(command: OscScriptCommandAction, parameterIndex: number) {
-    const parameter = command.parameters[parameterIndex];
-    return parameter.type === 'BOOLEAN' && parameter.value === 'true'
-      ? { id: 'true', label: 'true' }
-      : { id: 'false', label: 'false' };
-  }
-
   removeCommand(command: OscScriptSleepAction | OscScriptCommandAction) {
     const index = this._script.commands.indexOf(command);
     if (index >= 0) this._script.commands.splice(index, 1);
@@ -341,7 +334,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     if (!event) return;
     const el: HTMLElement = event.target as HTMLElement;
     const x = el.offsetLeft + el.offsetWidth + 6;
-    const y = el.offsetTop - 9;
+    const y = el.offsetTop;
     this.tooltipPosition = { x, y };
   }
 }

@@ -64,10 +64,15 @@
 .simple-command {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5em;
   padding: 0.5em 1em;
   background: var(--color-surface-1);
+
+  &>* {
+    display: flex;
+    min-height: 2.5em;
+  }
 
   &:not(:first-child) {
     border-top: 1px solid var(--color-surface-3);
@@ -97,10 +102,16 @@
   &-index {
     font-weight: 600;
     margin-right: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   &-action {
     margin-right: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   &-type-input,
@@ -148,12 +159,15 @@
     display: flex;
     flex-direction: column;
     gap: 0.5em;
-    margin-top: 10px;
   }
 
   &-parameter-row {
     display: flex;
     align-items: center;
+  }
+
+  .btn-add-parameter {
+    min-height: 2.5em;
   }
 }
 

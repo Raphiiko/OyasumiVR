@@ -39,6 +39,7 @@
         <div
           *ngFor="let parameter of command.parameters; let j = index"
           class="simple-command-parameter-row"
+          @vshrink
         >
           <app-select-box
             [type]="'SMALL'"
@@ -99,13 +100,14 @@
             class="btn simple-command-remove-button"
             *ngIf="command.parameters.length > 1"
             (click)="removeParameter(i, j)"
+            @hshrink
           >
             <i class="material-icons">clear</i>
           </button>
         </div>
         <div>
           <button
-            class="btn btn-secondary"
+            class="btn btn-secondary btn-add-parameter"
             *ngIf="command.parameters.length < MAX_PARAMETERS_PER_COMMAND"
             (click)="addParameter(i)"
           >
