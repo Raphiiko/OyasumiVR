@@ -69,7 +69,7 @@
   padding: 0.5em 1em;
   background: var(--color-surface-1);
 
-  &>* {
+  & > * {
     display: flex;
     min-height: 2.5em;
   }

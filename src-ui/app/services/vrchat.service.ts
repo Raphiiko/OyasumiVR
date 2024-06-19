@@ -18,7 +18,7 @@ import {
   Observable,
   Subject,
 } from 'rxjs';
-import { cloneDeep, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
@@ -299,7 +299,7 @@ export class VRChatService {
   }
 
   public patchCurrentUser(user: Partial<CurrentUser>) {
-    const currentUser = cloneDeep(this._user.value);
+    const currentUser = structuredClone(this._user.value);
     if (!currentUser) return;
     Object.assign(currentUser, user);
     this._user.next(currentUser);
@@ -687,7 +687,7 @@ export class VRChatService {
       switch (event.type) {
         case 'OnPlayerJoined': {
           const context = {
-            ...cloneDeep(this._world.value),
+            ...structuredClone(this._world.value),
             playerCount: this._world.value.playerCount + 1,
           };
           if (event.displayName === this._user.value?.displayName) context.loaded = true;
@@ -696,13 +696,13 @@ export class VRChatService {
         }
         case 'OnPlayerLeft':
           this._world.next({
-            ...cloneDeep(this._world.value),
+            ...structuredClone(this._world.value),
             playerCount: Math.max(this._world.value.playerCount - 1, 0),
           });
           break;
         case 'OnLocationChange':
           this._world.next({
-            ...cloneDeep(this._world.value),
+            ...structuredClone(this._world.value),
             playerCount: 0,
             instanceId: event.instanceId,
             loaded: false,
@@ -961,7 +961,7 @@ export class VRChatService {
   }
 
   private async updateSettings(settings: Partial<VRChatApiSettings>) {
-    const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    const newSettings = Object.assign(structuredClone(this._settings.value), settings);
     this._settings.next(newSettings);
     await this.saveSettings();
   }

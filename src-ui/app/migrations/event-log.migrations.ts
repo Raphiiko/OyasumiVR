@@ -1,5 +1,5 @@
 import { error, info } from 'tauri-plugin-log-api';
-import { cloneDeep } from 'lodash';
+
 import { EVENT_LOG_DEFAULT, EventLog } from '../models/event-log-entry';
 import { message } from '@tauri-apps/api/dialog';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
@@ -33,7 +33,7 @@ export function migrateEventLog(log: EventLog): EventLog {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(log));
+      saveBackup(structuredClone(log));
       log = resetToLatest(log);
       currentVersion = log.version;
       message(
@@ -118,6 +118,6 @@ function from1to2(data: any): any {
 
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(EVENT_LOG_DEFAULT);
+  data = structuredClone(EVENT_LOG_DEFAULT);
   return data;
 }

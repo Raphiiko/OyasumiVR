@@ -6,7 +6,7 @@ import {
   OscScriptCommandAction,
   OscScriptSleepAction,
 } from '../../models/osc-script';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { SelectBoxItem } from '../select-box/select-box.component';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
 import { TString } from '../../models/translatable-string';
@@ -32,7 +32,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   protected _script: OscScript = { version: 2, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
-    this._script = cloneDeep(script);
+    this._script = structuredClone(script);
     this.validationTrigger.next();
   }
 

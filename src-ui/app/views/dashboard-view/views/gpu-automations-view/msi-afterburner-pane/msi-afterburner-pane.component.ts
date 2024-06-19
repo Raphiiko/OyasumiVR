@@ -6,7 +6,7 @@ import {
   ExecutableReferenceStatus,
 } from '../../../../../models/settings';
 import { open as openFile } from '@tauri-apps/api/dialog';
-import { cloneDeep } from 'lodash';
+
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
@@ -30,8 +30,10 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     loadingIndicator?: boolean;
   };
   msiAfterburnerPathInputChange: Subject<string> = new Subject();
-  appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
-  config: MSIAfterburnerAutomationConfig = cloneDeep(AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER);
+  appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
+  config: MSIAfterburnerAutomationConfig = structuredClone(
+    AUTOMATION_CONFIGS_DEFAULT.MSI_AFTERBURNER
+  );
   profileOptions: SelectBoxItem[] = [
     {
       id: '0',

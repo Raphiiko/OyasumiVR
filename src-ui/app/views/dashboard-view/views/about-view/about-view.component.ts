@@ -15,7 +15,7 @@ import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
-import { cloneDeep, shuffle } from 'lodash';
+import { shuffle } from 'lodash';
 import { warn } from 'tauri-plugin-log-api';
 import translationContributors from '../../../../../../docs/translation_contributors.json';
 
@@ -103,7 +103,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ignore failure, we'll just not show the list.
       }
     } else {
-      supporters = cloneDeep(supporters);
+      supporters = structuredClone(supporters);
       supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
       await this.supporterCache.set(supporters);
     }

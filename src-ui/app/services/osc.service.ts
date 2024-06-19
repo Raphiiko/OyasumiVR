@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
-import { cloneDeep, flatten } from 'lodash';
+import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
 import { debug, error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
@@ -203,7 +203,7 @@ export class OscService {
   }
 
   queueScript(script: OscScript, replaceId?: string) {
-    script = cloneDeep(script);
+    script = structuredClone(script);
     this.scriptQueue.queueTask(
       {
         runnable: () => this.runScript(script),

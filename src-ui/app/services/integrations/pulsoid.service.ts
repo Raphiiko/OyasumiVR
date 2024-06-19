@@ -27,7 +27,7 @@ import {
 } from 'rxjs';
 import { Client, getClient } from '@tauri-apps/api/http';
 import { Store } from 'tauri-plugin-store-api';
-import { cloneDeep } from 'lodash';
+
 import {
   PULSOID_API_SETTINGS_DEFAULT,
   PulsoidApiSettings,
@@ -206,7 +206,7 @@ export class PulsoidService {
   }
 
   private async setActiveTokenSet(tokenSet: PulsoidTokenSet | null) {
-    const newSettings = cloneDeep(this.settings.value);
+    const newSettings = structuredClone(this.settings.value);
     newSettings.accessToken = tokenSet?.access_token ?? undefined;
     newSettings.expiresAt = tokenSet
       ? Math.floor(Date.now() / 1000) + tokenSet!.expires_in
@@ -216,7 +216,7 @@ export class PulsoidService {
   }
 
   private async setActiveProfile(profile: PulsoidProfile | null) {
-    const newSettings = cloneDeep(this.settings.value);
+    const newSettings = structuredClone(this.settings.value);
     newSettings.username = profile?.username ?? undefined;
     this.settings.next(newSettings);
     await this.saveSettings();
@@ -264,7 +264,7 @@ export class PulsoidService {
   }
 
   private async updateSettings(settings: Partial<PulsoidApiSettings>) {
-    const newSettings = Object.assign(cloneDeep(this.settings.value), settings);
+    const newSettings = Object.assign(structuredClone(this.settings.value), settings);
     this.settings.next(newSettings);
     await this.saveSettings();
   }

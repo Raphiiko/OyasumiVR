@@ -9,7 +9,7 @@ import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 import { Store } from 'tauri-plugin-store-api';
 import { EVENT_LOG_FILE } from '../globals';
-import { cloneDeep } from 'lodash';
+
 import { migrateEventLog } from '../migrations/event-log.migrations';
 
 const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
@@ -20,7 +20,7 @@ const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
 export class EventLogService {
   private store = new Store(EVENT_LOG_FILE);
   private _eventLog: BehaviorSubject<EventLog> = new BehaviorSubject<EventLog>(
-    cloneDeep(EVENT_LOG_DEFAULT)
+    structuredClone(EVENT_LOG_DEFAULT)
   );
   public eventLog: Observable<EventLog> = this._eventLog.asObservable();
 
@@ -34,7 +34,7 @@ export class EventLogService {
   }
 
   public clearLog() {
-    this._eventLog.next(cloneDeep(EVENT_LOG_DEFAULT));
+    this._eventLog.next(structuredClone(EVENT_LOG_DEFAULT));
   }
 
   public logEvent(event: EventLogDraft) {

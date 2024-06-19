@@ -6,7 +6,7 @@ import {
   AudioVolumeAutomation,
   AUTOMATION_CONFIGS_DEFAULT,
 } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { distinctUntilChanged, firstValueFrom, map, skip } from 'rxjs';
@@ -23,7 +23,7 @@ import {
   providedIn: 'root',
 })
 export class AudioDeviceAutomationsService {
-  private config: AudioDeviceAutomationsConfig = cloneDeep(
+  private config: AudioDeviceAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.AUDIO_DEVICE_AUTOMATIONS
   );
 
@@ -73,7 +73,7 @@ export class AudioDeviceAutomationsService {
         distinctUntilChanged((previous, current) => isEqual(previous, current))
       )
       .subscribe(async () => {
-        const config = cloneDeep(
+        const config = structuredClone(
           (await firstValueFrom(this.automationConfigService.configs)).AUDIO_DEVICE_AUTOMATIONS
         );
         const automations = [

@@ -12,7 +12,7 @@ import {
   SystemMicMuteStateOption,
   VRChatMicrophoneWorldJoinBehaviour,
 } from '../../../../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { OVRInputEventAction } from '../../../../models/ovr-input-event';
 import { fade, vshrink } from '../../../../utils/animations';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
@@ -26,7 +26,7 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event';
   animations: [vshrink(), fade()],
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
-  config: SystemMicMuteAutomationsConfig = cloneDeep(
+  config: SystemMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SYSTEM_MIC_MUTE_AUTOMATIONS
   );
   worldJoinBehaviourOptions: SelectBoxItem[] = [

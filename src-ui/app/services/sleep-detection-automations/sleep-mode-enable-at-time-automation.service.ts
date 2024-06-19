@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableAtTimeAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 
@@ -13,7 +13,7 @@ import { SleepService } from '../sleep.service';
   providedIn: 'root',
 })
 export class SleepModeEnableAtTimeAutomationService {
-  private config: SleepModeEnableAtTimeAutomationConfig = cloneDeep(
+  private config: SleepModeEnableAtTimeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_AT_TIME
   );
 

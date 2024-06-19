@@ -3,7 +3,7 @@ import { SelectBoxItem } from '../../../../components/select-box/select-box.comp
 import { distinctUntilChanged, map, skip, tap } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat.service';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import {
   AutoAcceptInviteRequestsAutomationConfig,
   AUTOMATION_CONFIGS_DEFAULT,
@@ -43,7 +43,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
       subLabel: 'auto-invite-request-accept.options.listMode.options.BLACKLIST.subLabel',
     },
   ];
-  config: AutoAcceptInviteRequestsAutomationConfig = cloneDeep(
+  config: AutoAcceptInviteRequestsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.AUTO_ACCEPT_INVITE_REQUESTS
   );
   isOnBusyStatus = false;
@@ -110,7 +110,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
     this.automationConfig.configs
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(async (configs) => {
-        this.config = cloneDeep(configs.AUTO_ACCEPT_INVITE_REQUESTS);
+        this.config = structuredClone(configs.AUTO_ACCEPT_INVITE_REQUESTS);
         this.listModeOption = this.listModeOptions.find((o) => o.id === this.config.listMode)!;
         this.presetOption['onSleepEnable'] =
           this.presetOptions.find((o) => o.id === this.config.presetOnSleepEnable) ??

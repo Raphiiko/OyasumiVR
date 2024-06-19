@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -52,7 +52,7 @@ export class SleepModeForSleepDetectorAutomationService {
   private lastPose: SleepingPose = 'UNKNOWN';
   private lastUprightPose = 0;
   private sleepCheckNotificationId: string | null = null;
-  private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
+  private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
   );
   private _lastStateReport: BehaviorSubject<SleepDetectorStateReport | null> =

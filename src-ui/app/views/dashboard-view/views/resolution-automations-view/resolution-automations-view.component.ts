@@ -6,7 +6,7 @@ import {
   AutomationType,
   RenderResolutionOnSleepModeAutomationConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { debounce } from 'typescript-debounce-decorator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -17,10 +17,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   animations: [],
 })
 export class ResolutionAutomationsViewComponent implements OnInit {
-  protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = cloneDeep(
+  protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE
   );
-  protected onSleepModeDisableConfig: RenderResolutionOnSleepModeAutomationConfig = cloneDeep(
+  protected onSleepModeDisableConfig: RenderResolutionOnSleepModeAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE
   );
 

@@ -11,7 +11,6 @@ import {
 } from '../../models/mqtt';
 import { getVersion } from '../../utils/app-utils';
 import { SleepService } from '../sleep.service';
-import { cloneDeep } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -167,9 +166,11 @@ export class MqttDiscoveryService {
               case 'TOGGLE': {
                 const newValue = payload.toString() === 'ON';
                 if (property.value === newValue) return;
-                const previous = cloneDeep(property);
+                const previous = structuredClone(property);
                 await this.setTogglePropertyValue(property.id, newValue);
-                const current = cloneDeep(this.properties.value.find((p) => p.id === property.id)!);
+                const current = structuredClone(
+                  this.properties.value.find((p) => p.id === property.id)!
+                );
                 this._propertyCommands.next({ previous, current });
                 break;
               }
@@ -180,9 +181,11 @@ export class MqttDiscoveryService {
               case 'NUMBER': {
                 const newValue = parseFloat(payload.toString());
                 if (isNaN(newValue) || property.value === newValue) return;
-                const previous = cloneDeep(property);
+                const previous = structuredClone(property);
                 await this.setNumberPropertyValue(property.id, newValue);
-                const current = cloneDeep(this.properties.value.find((p) => p.id === property.id)!);
+                const current = structuredClone(
+                  this.properties.value.find((p) => p.id === property.id)!
+                );
                 this._propertyCommands.next({ previous, current });
                 break;
               }
@@ -190,14 +193,14 @@ export class MqttDiscoveryService {
                 switch (action) {
                   case 'set': {
                     const newValue = payload.toString() === 'ON';
-                    const previous = cloneDeep(property);
+                    const previous = structuredClone(property);
                     if (newValue && property.rgbValue.every((v) => v === 0))
                       property.rgbValue = [255, 255, 255];
                     await this.setLightPropertyRGBValue(
                       property.id,
                       newValue ? property.rgbValue : [0, 0, 0]
                     );
-                    const current = cloneDeep(
+                    const current = structuredClone(
                       this.properties.value.find((p) => p.id === property.id)!
                     );
                     this._propertyCommands.next({ previous, current });
@@ -209,12 +212,12 @@ export class MqttDiscoveryService {
                       .split(',')
                       .map((v) => parseInt(v, 10));
                     if (newValue.length !== 3) return;
-                    const previous = cloneDeep(property);
+                    const previous = structuredClone(property);
                     await this.setLightPropertyRGBValue(
                       property.id,
                       newValue as [number, number, number]
                     );
-                    const current = cloneDeep(
+                    const current = structuredClone(
                       this.properties.value.find((p) => p.id === property.id)!
                     );
                     this._propertyCommands.next({ previous, current });
@@ -253,7 +256,7 @@ export class MqttDiscoveryService {
     }
     const property = this.properties.value.find((p) => p.id === id);
     if (!property) return;
-    const baseConfig = cloneDeep(this.baseConfig)!;
+    const baseConfig = structuredClone(this.baseConfig)!;
     if (property.available !== undefined) {
       baseConfig.availability.push({
         topic: `OyasumiVR/${property.topicPath}/available`,

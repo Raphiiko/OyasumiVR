@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepingAnimationsAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import {
   combineLatest,
   debounceTime,
@@ -25,7 +25,7 @@ import { getOscScriptDuration } from '../../utils/osc-script-utils';
   providedIn: 'root',
 })
 export class SleepingAnimationsAutomationService {
-  private config: SleepingAnimationsAutomationConfig = cloneDeep(
+  private config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
 

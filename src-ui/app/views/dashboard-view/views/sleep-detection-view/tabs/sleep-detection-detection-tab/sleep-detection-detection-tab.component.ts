@@ -8,7 +8,7 @@ import { SelectBoxItem } from '../../../../../../components/select-box/select-bo
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounce } from 'typescript-debounce-decorator';
-import { cloneDeep } from 'lodash';
+
 import { SleepDetectorCalibrationModalComponent } from '../../modals/sleep-detector-calibration-modal/sleep-detector-calibration-modal.component';
 import { filter } from 'rxjs';
 import { fade, vshrink } from '../../../../../../utils/animations';
@@ -166,10 +166,10 @@ export class SleepDetectionDetectionTabComponent
     };
     // Reset the window back to default when turning off the activation window
     if (!config.activationWindow) {
-      config.activationWindowStart = cloneDeep(
+      config.activationWindowStart = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowStart
       );
-      config.activationWindowEnd = cloneDeep(
+      config.activationWindowEnd = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR.activationWindowEnd
       );
     }
