@@ -20,6 +20,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   13: from12to13,
   14: from13to14,
   15: from14to15,
+  16: from15to16,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -76,6 +77,49 @@ async function saveBackup(oldData: any) {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from15to16(data: any): any {
+  data.version = 16;
+
+  const oscAutomationsConfig = data.OSC_GENERAL;
+
+  const oscAutomations = [
+    oscAutomationsConfig.onSleepModeEnable,
+    oscAutomationsConfig.onSleepModeDisable,
+    oscAutomationsConfig.onSleepPreparation,
+    oscAutomationsConfig.SIDE_BACK,
+    oscAutomationsConfig.SIDE_FRONT,
+    oscAutomationsConfig.SIDE_LEFT,
+    oscAutomationsConfig.SIDE_RIGHT,
+    oscAutomationsConfig.FOOT_LOCK,
+    oscAutomationsConfig.FOOT_UNLOCK,
+  ];
+
+  for (const automation of oscAutomations) {
+    if (!automation) {
+      continue;
+    }
+
+    automation.version = 2;
+
+    for (const command of automation.commands) {
+      if (command.type !== 'COMMAND') {
+        continue;
+      }
+
+      command.parameters = [];
+      command.parameters[0] = {};
+
+      command.parameters[0]['type'] = command.parameterType;
+      command.parameters[0]['value'] = command.value;
+
+      delete command.parameterType;
+      delete command.value;
+    }
+  }
+
   return data;
 }
 

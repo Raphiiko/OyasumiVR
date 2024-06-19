@@ -35,7 +35,7 @@ export class OscScriptModalComponent
   ngOnInit(): void {
     if (!this.script) {
       this.script = {
-        version: 1,
+        version: 2,
         commands: [],
       };
     }

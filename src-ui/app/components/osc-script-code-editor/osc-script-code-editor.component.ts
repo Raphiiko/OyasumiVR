@@ -114,15 +114,20 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
           case 'SLEEP':
             return `sleep ${command.duration}ms`;
           case 'COMMAND': {
-            const type = { FLOAT: 'f', INT: 'i', BOOLEAN: 'b' }[
-              command.parameterType
-            ] as OscParameterType;
-            const value = {
-              FLOAT: (v: string) => parseFloat(v),
-              INT: (v: string) => parseInt(v),
-              BOOLEAN: (v: string) => (v === 'true' ? 'true' : 'false'),
-            }[command.parameterType](command.value);
-            return `${type} ${value} ${command.address}`;
+            let commandParametersString = '';
+            command.parameters.forEach((parameter) => {
+              const type = { FLOAT: 'f', INT: 'i', BOOLEAN: 'b', STRING: 's' }[
+                parameter.type
+              ] as OscParameterType;
+              const value = {
+                FLOAT: (v: string) => parseFloat(v),
+                INT: (v: string) => parseInt(v),
+                BOOLEAN: (v: string) => (v === 'true' ? 'true' : 'false'),
+                STRING: (v: string) => `"${v.replace(/"/g, '\\"')}"`, // put string into quotes and escape all inner quoutes
+              }[parameter.type](parameter.value);
+              commandParametersString += `${type} ${value} `;
+            });
+            return commandParametersString + command.address;
           }
         }
       })

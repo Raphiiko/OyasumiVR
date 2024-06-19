@@ -86,7 +86,7 @@ export class SleepingAnimationsAutomationService {
         if (!this.config.enabled) return;
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
         // Combine OSC scripts
-        const script: OscScript = { version: 1, commands: [] };
+        const script: OscScript = { version: 2, commands: [] };
         const enableFootUnlock = !!(
           this.config.releaseFootLockOnPoseChange &&
           this.config.oscScripts.FOOT_UNLOCK &&

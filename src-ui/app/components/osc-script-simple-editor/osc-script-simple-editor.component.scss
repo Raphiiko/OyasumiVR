@@ -65,6 +65,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 0.5em;
   padding: 0.5em 1em;
   background: var(--color-surface-1);
 
@@ -105,7 +106,8 @@
   &-type-input,
   &-boolean-input,
   &-integer-input,
-  &-float-input {
+  &-float-input,
+  &-string-input {
     margin-right: 0.5em;
     width: 8em;
 
@@ -113,6 +115,10 @@
       padding: 0.25em 1em;
       width: 100%;
     }
+  }
+
+  &-string-input {
+    width: 24em;
   }
 
   &-address-input {
@@ -126,7 +132,6 @@
 
   &-remove-button {
     padding: 0;
-    margin-left: 1em;
 
     i.material-icons {
       margin: 0;
@@ -137,6 +142,18 @@
     input {
       width: 5em;
     }
+  }
+
+  &-parameters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    margin-top: 10px;
+  }
+
+  &-parameter-row {
+    display: flex;
+    align-items: center;
   }
 }
 
