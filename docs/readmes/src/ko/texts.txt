@@ -28,6 +28,7 @@ OyasumiVR은 **가상현실 헤드셋을 착용하고 잠을 잘 수 있도록 �
 - 🔅 헤드셋의 밝기를 어둡게 조절하기
 - ✨ 잠자는 자세에 따라 아바타 애니메이션을 적용하기
 - 📩 초대 요청을 자동으로 처리하기
+- 🔵 Automating your VRChat status
 - 🎤 잠들었을 때 마이크를 음소거하기
 - 🛠️ 다양한 SteamVR 설정을 자동화하기
 
@@ -62,6 +63,9 @@ OyasumiVR 자체는 완전 무료이고, 항상 무료일 것이에요. 하지�
   <li>컨트롤러 및 트래커 배터리 잔량</li>
   <li>컨트롤러 및 트래커 전원 상태</li>
   <li>SteamVR 상태</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
@@ -139,13 +143,6 @@ OyasumiVR은 사용자가 어떤 수면 자세를 취하고 있는지 감지하�
 <br>
 잠든 동안 특정 친구의 초대 요청을 자동으로 수락할 수 있어요! 허용하려는 친구를 화이트리스트에 추가할 수도 있고, 블랙리스트를 통해 특정 친구의 요청이 자동으로 수락되지 않도록 차단할 수도 있습니다.
 
-{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
-🔵 <b>스테이터스 자동화</b>
-<br>
-월드의 플레이어 수에 따라 자동으로 스테이더스가 변경되어요:
-<br><br>
-혼자 자고 있을 때는 파란색으로 전환하여 친구들이 함께 자도록 하고, 주변에 사람이 많을 때는 주황색으로 전환해 보세요!
-
 {{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
 🔧 <b>OSC 자동화</b>
 <br>
@@ -155,20 +152,6 @@ OyasumiVR은 사용자가 어떤 수면 자세를 취하고 있는지 감지하�
 
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ 종료 시퀀스
-
-{{SHUTDOWN_SEQUENCE_BODY}}
-VR에서 잠들고 싶지만 밤새 VR에 머물고 싶지 않은 적이 있나요? 종료 시퀀스가 해결해 드릴게요!
-<br><br>
-종료 시퀀스는 일정 시간 동안 잠자고 있으면 자동으로 실행될 수 있어요. 이때 구성하는 동작에 따라 다음과 같은 작업을 수행합니다:
-<br><br>
-<ul>
-  <li>컨트롤러 및/또는 트래커 끄기</li>
-  <li>베이스스테이션 끄기</li>
-  <li>SteamVR <i>(및 함께 실행 중인 게임이나 오버레이)</i> 종료하기</li>
-  <li>Windows 종료하기</li>
-</ul>
-<br>
-이제 잠이 들면 모든 것이 자동으로 종료되는 것을 알고 VR에서 편안하게 잠들 수 있습니다!
 
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 밝기 자동화
@@ -295,6 +278,24 @@ OyasumiVR에 문제가 있거나 버그 또는 기능 요청이 있는 경우, [
 {{LICENSE_BODY}}
 OyasumiVR은 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 라이센스에 따라 이용하실 수 있습니다.
 
+{{DEVICE_CONTROL_HEADER}}
+
+
+{{DEVICE_CONTROL_BODY}}
+
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+
+
+{{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+
+
+{{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
+
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+
+
 {{BRIGHTNESS_AUTOMATIONS_BODY}}
 
 
@@ -317,6 +318,15 @@ OyasumiVR은 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md
 
 
 {{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+
+
+{{MQTT_CONTROL_HEADER}}
+
+
+{{MQTT_CONTROL_BODY}}
+
+
+{{MQTT_CONTROL_FEATURES}}
 
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}

@@ -28,6 +28,7 @@ OyasumiVR can **detect when you are asleep**, and help you in various ways such 
 - 🔅 Dimming your headset brightness
 - ✨ Triggering avatar animations based on your sleeping pose
 - 📩 Automatically handling invite requests
+- 🔵 Automating your VRChat status
 - 🎤 Muting your microphone when you fall asleep
 - 🛠️ Automating various SteamVR settings
 
@@ -62,6 +63,9 @@ If automatic detection is not what you're looking for, there's various alternati
   <li>Controller & tracker battery levels</li>
   <li>Controller & tracker power states</li>
   <li>SteamVR status</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
@@ -94,6 +98,14 @@ Save some electricity by automatically setting Windows' Power Policy when you go
 Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go.
 <br><br>
 <i>Currently only V2 Lighthouses are supported.</i>
+
+{{DEVICE_CONTROL_HEADER}}
+🎮 Device Control
+
+{{DEVICE_CONTROL_BODY}}
+OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+<br><br>
+Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click!
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU Automations
@@ -142,9 +154,29 @@ Automatically accept invite requests from specific friends while you are asleep!
 {{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
 🔵 <b>Status Automations</b>
 <br>
-Automatically change your status based on the number of players in your world:
+OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
 <br><br>
-Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+
+{{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+🔔 <b>Join Notifications</b>
+<br>
+OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
+
+It can configured to only notify you in specific situations, like only:
+<br>
+<ul>
+  <li>For your friends</li>
+  <li>For certain specific players</li>
+  <li>When you're being left alone</li>
+  <li>When you're no longer alone</li>
+</ul>
+
+{{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
+🏃 <b>Avatar Automations</b>
+<br>
+You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
+Useful if you have a specific avatar you use for sleeping.
 
 {{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
 🔧 <b>OSC Automations</b>
@@ -159,7 +191,14 @@ This is a more advanced feature that you can use to trigger certain features on 
 {{SHUTDOWN_SEQUENCE_BODY}}
 Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
 <br><br>
-The shutdown sequence can trigger automatically when you've been asleep for a certain amount of time. Depending on which actions you configure, it will do any of the following:
+While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
+<br><br>
+<ul>
+  <li>When you've been asleep for a certain amount of time. </li>
+  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
+</ul>
+<br>
+Depending on which actions you configure, it will do any of the following:
 <br><br>
 <ul>
   <li>Turn off your controllers and/or Trackers</li>
@@ -168,7 +207,7 @@ The shutdown sequence can trigger automatically when you've been asleep for a ce
   <li>Shut down Windows</li>
 </ul>
 <br>
-Now you can fall asleep soundly in VR, knowing that everything will shut down after you've dozed off!
+With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
 
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 Brightness Automations
@@ -240,6 +279,83 @@ Automatically adjust your SteamVR render resolution when you sleep and wake up! 
 
 {{CHAPERONE_AUTOMATIONS_BODY}}
 Automatically adjust the fade distance of SteamVR's chaperone when you sleep. If you have a small play area, you can use this to make sure the chaperone stays hidden while you are asleep, and re-enable it when you wake up!
+
+{{MQTT_CONTROL_HEADER}}
+🏠 Home Assistant Integration
+
+{{MQTT_CONTROL_BODY}}
+OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
+For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+<br><br>
+Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+
+{{MQTT_CONTROL_FEATURES}}
+<tr>
+  <td>
+    <b>OyasumiVR Features</b>
+    <ul>
+      <li>Sleep Mode (Switch)</li>
+      <li>Shutdown Sequence (Button)</li>
+      <li>Sleep Preparation (Button)</li>
+      <li>Heart Rate (Sensor)</li>
+      <li>Sleeping Position (Sensor)</li>
+      <li>
+        Base Station
+        <ul>
+          <li>Power (Switch)</li>
+          <li>Power State (Sensor)</li>
+        </ul>
+      </li>
+      <li>
+        HMD Brightness
+        <ul>
+          <li>Advanced Mode (Switch)</li>
+          <li>Simple Brightness (Number)</li>
+          <li>Software Brightness (Number)</li>
+          <li>Hardware Brightness (Number)</li>
+        </ul>
+      </li>
+    </ul>
+  </td>
+  <td colspan="2">
+    <b>VRChat Features</b>
+    <ul>
+      <li>VRChat Running (Sensor)</li>
+      <li>Player Name (Sensor)</li>
+      <li># Players In World (Sensor)</li>
+      <li>Status Visibility (Sensor)</li>
+      <li>World Instance ID (Sensor)</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>
+    <b>SteamVR Features</b>
+    <ul>
+      <li>VR Headset Model (Sensor)</li>
+      <li>SteamVR Running (Sensor)</li>
+      <li>
+        Controller & Tracker
+        <ul>
+          <li>Power (Switch) (Only Powering Off)</li>
+          <li>Charging State (Sensor)</li>
+          <li>Battery Level (Sensor)</li>
+          <li>Device Roles (Sensor)</li>
+        </ul>
+      </li>
+    </ul>
+    <br />
+  </td>
+  <td colspan="2">
+    <b>Bigscreen Beyond Features</b>
+    <ul>
+      <li>Fan Speed (Number)</li>
+      <li>RGB LED (Light)</li>
+      <li>Brightness (Number)</li>
+    </ul>
+  </td>
+</tr>
+
 
 {{TRANSLATION_AND_LOCALIZATION_HEADER}}
 Translation & Localization

@@ -45,11 +45,21 @@
     <span>Check for suggestions</span>
   </button>
   <div class="action-spacer"></div>
-  <button class="btn btn-secondary btn-action btn-action-square" (click)="goPreviousPage()" [disabled]="paginationStart <= 0">
+  <button
+    class="btn btn-secondary btn-action btn-action-square"
+    (click)="goPreviousPage()"
+    [disabled]="paginationStart <= 0"
+  >
     <i class="material-icons">arrow_back_ios_new</i>
   </button>
-  <span class="pagination-label">{{paginationStart + 1}}-{{paginationEnd}} ({{entries.length}})</span>
-  <button class="btn btn-secondary btn-action btn-action-square" (click)="goNextPage()" [disabled]="paginationEnd >= entries.length">
+  <span class="pagination-label"
+    >{{ paginationStart + 1 }}-{{ paginationEnd }} ({{ entries.length }})</span
+  >
+  <button
+    class="btn btn-secondary btn-action btn-action-square"
+    (click)="goNextPage()"
+    [disabled]="paginationEnd >= entries.length"
+  >
     <i class="material-icons">arrow_forward_ios</i>
   </button>
 </div>
@@ -64,7 +74,10 @@
   <div class="editor-table-header-cell">
     <span>'{{ locale }}' Translation</span>
   </div>
-  <div class="editor-table-row" *ngFor="let entry of entries | slice:paginationStart:paginationEnd">
+  <div
+    class="editor-table-row"
+    *ngFor="let entry of entries | slice : paginationStart : paginationEnd"
+  >
     <div class="editor-table-cell">
       <span [innerHtml]="entry.htmlKey" class="key"></span>
     </div>
@@ -103,7 +116,7 @@
 <div class="footer-row">
   <div class="left">
     <span
-    >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
+      >Keys translated: {{ entriesTranslated }}/{{ entries.length }} ({{
         entriesTranslatedPercentage
       }}%)</span
     >

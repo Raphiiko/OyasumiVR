@@ -35,9 +35,9 @@ function parseTexts(raw) {
 function ensureDefaultsInSource(langData) {
   const en = langData.find((l) => l.lang === 'en');
   const clonedLangData = _.cloneDeep(langData);
-  // Add empty strings for nonexistent texts and tokens
   clonedLangData.forEach((lang) => {
     if (lang.lang === 'en') return;
+    // Add empty strings for nonexistent texts and tokens
     Object.entries(en.texts).forEach(([key, value]) => {
       if (!lang.texts[key]) {
         lang.texts[key] = '';
@@ -46,6 +46,17 @@ function ensureDefaultsInSource(langData) {
     Object.entries(en.tokens).forEach(([key, value]) => {
       if (!lang.tokens[key]) {
         lang.tokens[key] = '';
+      }
+    });
+    // Remove texts and tokens that are not in the EN file
+    Object.keys(lang.texts).forEach((key) => {
+      if (!en.texts[key]) {
+        delete lang.texts[key];
+      }
+    });
+    Object.keys(lang.tokens).forEach((key) => {
+      if (!en.tokens[key]) {
+        delete lang.tokens[key];
       }
     });
     // If tokens or texts were missing, overwrite the source files with placeholders
