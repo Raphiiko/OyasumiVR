@@ -87,7 +87,7 @@ export class PlayerListPresetModalComponent
         confirmButtonText: 'comp.player-list-preset-modal.overwrite',
       })
       .subscribe((data) => {
-        if (data.confirmed) {
+        if (data?.confirmed) {
           this.saved = true;
           this.appSettings.updateSettings({
             playerListPresets: this.lists.map((list) => {
@@ -123,7 +123,7 @@ export class PlayerListPresetModalComponent
         confirmButtonText: 'comp.player-list-preset-modal.delete',
       })
       .subscribe((data) => {
-        if (data.confirmed) {
+        if (data?.confirmed) {
           this.appSettings.updateSettings({
             playerListPresets: this.lists.filter((list) => list.id !== preset.id),
           });

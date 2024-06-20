@@ -63,34 +63,39 @@ export class ModalService {
     modalComponent: Type<BaseModalComponent<ModalInput, ModalOutput>>,
     input?: ModalInput,
     customOptions: Partial<ModalOptions> = {}
-  ): Observable<ModalOutput> {
+  ): Observable<ModalOutput | undefined> {
     const options: ModalOptions = { ...DEFAULT_MODAL_OPTIONS, ...(customOptions ?? {}) };
-    // Create component
-    const componentRef = this.componentFactoryResolver
-      .resolveComponentFactory(modalComponent)
-      .create(this.injector);
-    this.appRef.attachView(componentRef.hostView);
-    const domElem = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
-    document.body.appendChild(domElem);
-    // Update options
-    Object.assign(options, componentRef.instance?.getOptionsOverride() ?? {});
-    // Add to stack
-    const modalRef = { componentRef, options };
-    this.modalStack.push(modalRef);
-    // Set modal wrapper classes
-    domElem.classList.add(options.wrapperDefaultClass);
-    // Set inputs
-    const instance: any = componentRef.instance;
-    Object.assign(instance, input ?? {});
-    // Apply wrapper class after a tick
     return of(null).pipe(
+      // Create component after a tick
       delay(1),
-      tap(() => domElem.classList.add(options.wrapperClass)),
+      map(() => {
+        // Create component
+        const componentRef = this.componentFactoryResolver
+          .resolveComponentFactory(modalComponent)
+          .create(this.injector);
+        this.appRef.attachView(componentRef.hostView);
+        const element = (componentRef.hostView as EmbeddedViewRef<any>).rootNodes[0] as HTMLElement;
+        document.body.appendChild(element);
+        // Update options
+        Object.assign(options, componentRef.instance?.getOptionsOverride() ?? {});
+        // Add to stack
+        const modalRef = { componentRef, options };
+        this.modalStack.push(modalRef);
+        // Set modal wrapper classes
+        element.classList.add(options.wrapperDefaultClass);
+        // Set inputs
+        const instance: any = componentRef.instance;
+        Object.assign(instance, input ?? {});
+        return { element, componentRef, modalRef };
+      }),
+      // Apply wrapper class after a tick
+      delay(1),
+      tap(({ element }) => element.classList.add(options.wrapperClass)),
       delay(options.animationDuration),
       // Wait for close signal
       switchMap(
-        () =>
-          instance.close$.pipe(
+        ({ componentRef, element, modalRef }) =>
+          componentRef.instance.close$.pipe(
             filter(Boolean),
             take(1),
             // Remove modal from stack
@@ -98,10 +103,10 @@ export class ModalService {
               this.modalStack = this.modalStack.filter((m) => m !== modalRef);
             }),
             // Get the result
-            map(() => instance.result),
+            map(() => componentRef.instance.result),
             // Remove the wrapper class (for animating out)
             tap(() => {
-              domElem.classList.remove(options.wrapperClass);
+              element.classList.remove(options.wrapperClass);
             }),
             // Wait for animation to complete
             delay(options.animationDuration),
@@ -110,7 +115,7 @@ export class ModalService {
               this.appRef.detachView(componentRef.hostView);
               componentRef.destroy();
             })
-          ) as Observable<ModalOutput>
+          ) as Observable<ModalOutput | undefined>
       )
     );
   }

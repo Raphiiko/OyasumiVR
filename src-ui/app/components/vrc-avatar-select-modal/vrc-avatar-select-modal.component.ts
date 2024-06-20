@@ -88,7 +88,7 @@ export class VrcAvatarSelectModalComponent
         confirmButtonText: 'shared.modals.refresh',
       })
       .subscribe(async (data) => {
-        if (data.confirmed) await this.fetchAvatars(true);
+        if (data?.confirmed) await this.fetchAvatars(true);
       });
   }
 

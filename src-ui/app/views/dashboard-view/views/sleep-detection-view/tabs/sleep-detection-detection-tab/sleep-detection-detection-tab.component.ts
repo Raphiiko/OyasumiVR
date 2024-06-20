@@ -193,7 +193,7 @@ export class SleepDetectionDetectionTabComponent
           closeOnEscape: false,
         }
       )
-      .pipe(filter((data) => !!data))
+      .pipe(filter(Boolean))
       .subscribe(async (data) => {
         await this.automationConfigService.updateAutomationConfig<SleepModeEnableForSleepDetectorAutomationConfig>(
           'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
