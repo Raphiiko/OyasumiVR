@@ -177,7 +177,7 @@ export class SettingsAdvancedViewComponent {
         },
       })
       .subscribe(async (data) => {
-        if (!data.confirmed) return;
+        if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
         await Promise.all(
@@ -242,7 +242,7 @@ export class SettingsAdvancedViewComponent {
               cancelButtonText: 'settings.advanced.persistentData.relaunchModal.later',
             })
             .subscribe(async (data) => {
-              if (!data.confirmed) return;
+              if (!data?.confirmed) return;
               await relaunch();
             });
         }

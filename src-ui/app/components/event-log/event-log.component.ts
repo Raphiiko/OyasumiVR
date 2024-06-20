@@ -70,7 +70,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
         message: 'comp.event-log.clearLogModal.message',
       })
       .subscribe((data) => {
-        if (data.confirmed) {
+        if (data?.confirmed) {
           this.eventLog.clearLog();
         }
       });
