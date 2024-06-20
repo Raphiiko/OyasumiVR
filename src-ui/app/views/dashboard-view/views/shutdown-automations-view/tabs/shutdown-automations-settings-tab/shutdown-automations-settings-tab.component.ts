@@ -89,7 +89,7 @@ export class ShutdownAutomationsSettingsTabComponent implements OnInit {
         title: 'shutdown-automations.confirm-modal.title',
         message: 'shutdown-automations.confirm-modal.message',
       })
-      .pipe(filter((result) => result.confirmed))
+      .pipe(filter((result) => !!result?.confirmed))
       .subscribe(() => this.shutdownAutomations.runSequence('MANUAL'));
   }
 

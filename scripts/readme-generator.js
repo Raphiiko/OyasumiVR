@@ -218,7 +218,7 @@ function generateSteamStoreDescriptions(langData) {
         .replaceAll(/\*\*(.+)\*\*/g, '[b]$1[/b]')
         .replaceAll(/_(.+)_/g, '[i]$1[/i]')
         .replaceAll('<MARKDOWN-BR>', ' ')
-        .replaceAll('<br>', '\n')
+        .replaceAll(/<br\s*\/?>/g, '\n')
         .replaceAll('<ul>', '[list]')
         .replaceAll('</ul>', '[/list]')
         .replaceAll(/\s*<li>\s*/g, '\n[*]')
@@ -227,13 +227,15 @@ function generateSteamStoreDescriptions(langData) {
         .replaceAll('</b>', '[/b]')
         .replaceAll('<i>', '[i]')
         .replaceAll('</i>', '[/i]')
-        .replaceAll(/(\r\n|\r|\n){3,}/g, '\n\n')
-        .replaceAll('\r', '');
+        .replaceAll(/\n*<\/?(table|tr|td)(\s+colspan="[0-9]+")?>\n*/g, '')
+        .replaceAll('\r', '')
+        .replaceAll(/(\r\n|\r|\n){1,}\s+(\r\n|\r|\n){1,}/g, '\n');
       localizedDescription = localizedDescription.replaceAll(key, sanitizedValue);
     });
     Object.entries(tokens).forEach(([key, value]) => {
       localizedDescription = localizedDescription.replaceAll(`{{token.${key}}}`, value);
     });
+    if (lang === 'en') console.log(localizedDescription);
     localizedDescription = localizedDescription.replaceAll(
       '{{TRANSLATION_CONTRIBUTORS_LIST}}',
       getTranslationContributors('steam')

@@ -136,7 +136,7 @@ export class TranslationEditorViewComponent {
           }
         )
       );
-      if (!result.confirmed) return;
+      if (!result?.confirmed) return;
     }
     this.entries = [];
     this.translationEditService.reset();

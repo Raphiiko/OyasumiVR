@@ -45,7 +45,7 @@ export class SleepDetectionSleepEnableTabComponent
       .addModal(TimeEnableSleepModeModalComponent, {
         time: this.automationConfigs.SLEEP_MODE_ENABLE_AT_TIME.time,
       })
-      .pipe(filter((data) => !!data))
+      .pipe(filter(Boolean))
       .subscribe((data) => {
         this.automationConfigService.updateAutomationConfig<SleepModeEnableAtTimeAutomationConfig>(
           'SLEEP_MODE_ENABLE_AT_TIME',
@@ -63,7 +63,7 @@ export class SleepDetectionSleepEnableTabComponent
           this.automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.triggerClasses,
         threshold: this.automationConfigs.SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE.threshold,
       })
-      .pipe(filter((data) => !!data))
+      .pipe(filter(Boolean))
       .subscribe((data) => {
         this.automationConfigService.updateAutomationConfig<SleepModeEnableAtBatteryPercentageAutomationConfig>(
           'SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE',
@@ -82,7 +82,7 @@ export class SleepDetectionSleepEnableTabComponent
         threshold: config.heartRateThreshold,
         duration: config.periodDuration,
       })
-      .pipe(filter((data) => !!data))
+      .pipe(filter(Boolean))
       .subscribe((data) => {
         this.automationConfigService.updateAutomationConfig<SleepModeEnableOnHeartRateCalmPeriodAutomationConfig>(
           'SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD',

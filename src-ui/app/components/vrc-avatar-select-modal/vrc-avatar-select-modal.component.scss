@@ -1,8 +1,5 @@
-:host {
-  top: 16px;
-}
-
 .pane {
+  margin-top: 16px;
   max-height: calc(100vh - 4em - 32px);
 }
 
@@ -66,6 +63,7 @@
     font-weight: 600;
     overflow: hidden;
     width: 100%;
+
     &,
     span {
       min-width: 0;

@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.1]
+
+### Fixed
+
+- Some modals automatically closing right after opening them
+- Some modals being rendered incorrectly
+
 ## [1.13.0]
 
 ### Added
