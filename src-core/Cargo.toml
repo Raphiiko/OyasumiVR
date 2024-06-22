@@ -100,7 +100,15 @@ rev = "2949a3f"
 
 [dependencies.tauri]
 version = "1.6.1"
-features = [ "window-unminimize", "window-start-dragging", "window-show", "window-hide", "window-close", "window-unmaximize", "window-minimize", "window-maximize",
+features = [
+  "window-unminimize",
+  "window-start-dragging",
+  "window-show",
+  "window-hide",
+  "window-close",
+  "window-unmaximize",
+  "window-minimize",
+  "window-maximize",
   "global-shortcut-all",
   "clipboard-write-text",
   "cli",
@@ -125,7 +133,7 @@ features = [ "window-unminimize", "window-start-dragging", "window-show", "windo
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "b7e51d0"
+rev = "f400e12a21355edc897c7a82c6ddf1889d740b05"
 # path = "../../ovr_overlay_oyasumi"
 features = ["ovr_system", "ovr_settings"]
 

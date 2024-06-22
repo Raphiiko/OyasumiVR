@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Exposed HMD activity level over MQTT as "HMD On Head" (Experimental).
+
 ## [1.13.1]
 
 ### Fixed

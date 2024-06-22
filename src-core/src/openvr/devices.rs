@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 use super::models::{
-    DeviceUpdateEvent, OVRDevice, OVRDevicePose, OpenVRInputEvent, TrackedDeviceClass, OVRHandleType,
+    DeviceUpdateEvent, OVRDevice, OVRDevicePose, OVRHandleType, OpenVRInputEvent,
+    TrackedDeviceClass,
 };
 use super::{GestureDetector, SleepDetector, OVR_CONTEXT};
 use crate::utils::send_event;
@@ -85,7 +86,6 @@ async fn update_handle_types() {
 }
 
 async fn update_handle_type(handle_type: OVRHandleType) {
-
     let context = OVR_CONTEXT.lock().await;
     let mut device_handle_cache = DEVICE_HANDLE_TYPE_CACHE.lock().await;
     let mut input = match context.as_ref() {
@@ -96,7 +96,10 @@ async fn update_handle_type(handle_type: OVRHandleType) {
     let action_handle = match input.get_input_source_handle(&handle_type.as_action_handle()) {
         Ok(handle) => handle,
         Err(err) => {
-            error!("[Core] Unable to get action handle by name {}: {err}", handle_type.as_action_handle()); // shouldn't happen but log just in case
+            error!(
+                "[Core] Unable to get action handle by name {}: {err}",
+                handle_type.as_action_handle()
+            ); // shouldn't happen but log just in case
             return;
         }
     };
@@ -105,10 +108,15 @@ async fn update_handle_type(handle_type: OVRHandleType) {
         Ok(info) => info,
         Err(err) => {
             // expected errors
-            if err == EVRInputError::VRInputError_NoData.into() || err == EVRInputError::VRInputError_InvalidHandle.into() {
+            if err == EVRInputError::VRInputError_NoData.into()
+                || err == EVRInputError::VRInputError_InvalidHandle.into()
+            {
                 return;
             }
-            error!("[Core] Unable to get device info for handle {}: {err}", handle_type.as_action_handle()); // unexpected error
+            error!(
+                "[Core] Unable to get device info for handle {}: {err}",
+                handle_type.as_action_handle()
+            ); // unexpected error
             return;
         }
     };
@@ -141,8 +149,10 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         device_class_cache.insert(device_index.0, class.clone());
     }
     drop(device_class_cache);
-    
-    let handle_type: Option<OVRHandleType> = device_handle_cache.get(&device_index.0).map(|it| it.clone());
+
+    let handle_type: Option<OVRHandleType> = device_handle_cache
+        .get(&device_index.0)
+        .map(|it| it.clone());
     drop(device_handle_cache);
     // Get device properties
     let battery: Option<f32> = system
@@ -199,6 +209,30 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
             ovr::sys::ETrackedDeviceProperty::Prop_ModelNumber_String,
         )
         .ok();
+    let mut hmd_on_head = None;
+    let mut debug_hmd_activity = None;
+    if class == TrackedDeviceClass::HMD {
+        let activity_level = system.get_tracked_device_activity_level(device_index);
+        hmd_on_head = Some(activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction || activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout);
+        // Serialize activity level
+        debug_hmd_activity = Some(
+            match activity_level {
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Unknown => "Unknown",
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle => "Idle",
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction => {
+                    "UserInteraction"
+                }
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout => {
+                    "UserInteractionTimeout"
+                }
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Standby => "Standby",
+                ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle_Timeout => {
+                    "IdleTimeout"
+                }
+            }
+            .to_string(),
+        );
+    }
 
     let device = OVRDevice {
         index: device_index.0,
@@ -215,7 +249,9 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         hardware_revision,
         manufacturer_name,
         model_number,
-        handle_type
+        handle_type,
+        hmd_on_head,
+        debug_hmd_activity,
     };
 
     // Add or update device in list

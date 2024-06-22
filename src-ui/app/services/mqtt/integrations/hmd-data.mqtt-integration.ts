@@ -6,11 +6,11 @@ import { map } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
-export class HMDModelMqttIntegrationService {
+export class HMDDataMqttIntegrationService {
   constructor(private mqtt: MqttDiscoveryService, private openvr: OpenVRService) {}
 
   async init() {
-    // Init property
+    // Init properties
     await this.mqtt.initProperty({
       type: 'SENSOR',
       id: 'hmdModel',
@@ -19,8 +19,26 @@ export class HMDModelMqttIntegrationService {
       value: 'null',
       available: false,
     });
+    await this.mqtt.initProperty({
+      type: 'SENSOR',
+      id: 'hmdOnHead',
+      topicPath: 'hmdOnHead',
+      displayName: 'VR HMD On Head',
+      value: 'off',
+      available: false,
+    });
+    await this.mqtt.initProperty({
+      type: 'SENSOR',
+      id: 'debugHmdActivity',
+      topicPath: 'debugHmdActivity',
+      displayName: 'VR HMD Activity (DEBUG)',
+      value: 'null',
+      available: false,
+    });
     this.openvr.status.subscribe((status) => {
       this.mqtt.setPropertyAvailability('hmdModel', status === 'INITIALIZED');
+      this.mqtt.setPropertyAvailability('hmdOnHead', status === 'INITIALIZED');
+      this.mqtt.setPropertyAvailability('debugHmdActivity', status === 'INITIALIZED');
     });
     this.openvr.devices
       .pipe(map((devices) => devices.find((d) => d.class === 'HMD')))
@@ -28,6 +46,9 @@ export class HMDModelMqttIntegrationService {
         const name =
           [device?.manufacturerName, device?.modelNumber].filter(Boolean).join(' ') ?? 'null';
         this.mqtt.setSensorPropertyValue('hmdModel', name);
+        console.log(device);
+        this.mqtt.setSensorPropertyValue('hmdOnHead', device?.hmdOnHead ? 'on' : 'off');
+        this.mqtt.setSensorPropertyValue('debugHmdActivity', device?.debugHmdActivity ?? 'null');
       });
   }
 }
