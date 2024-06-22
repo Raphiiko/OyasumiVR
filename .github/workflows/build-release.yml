@@ -32,10 +32,10 @@ jobs:
         run: npm run set-flavour STANDALONE
       - name: Set build id
         run: npm run set-build-id
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v2
+      - name: Setup LLVM
+        uses: ZhongRuoyu/setup-llvm@v0
         with:
-          version: "17.0.6"
+          llvm-version: 17
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
