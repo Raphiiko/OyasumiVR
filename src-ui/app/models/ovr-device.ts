@@ -54,6 +54,9 @@ export interface OVRDevice {
   providesBatteryStatus: boolean;
   serialNumber: string;
   pose: any;
+  hmdOnHead: boolean;
+  debugHmdActivity: string;
+
   // Status properties
   isTurningOff: boolean;
 }

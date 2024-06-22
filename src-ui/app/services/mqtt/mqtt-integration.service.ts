@@ -3,7 +3,7 @@ import { SleepModeMqttIntegrationService } from './integrations/sleep-mode.mqtt-
 import { SleepPreparationMqttIntegrationService } from './integrations/sleep-preparation.mqtt-integration.service';
 import { BaseStationMqttIntegrationService } from './integrations/base-station.mqtt-integration.service';
 import { TrackerControllerMqttIntegrationService } from './integrations/tracker-controller.mqtt-integration';
-import { HMDModelMqttIntegrationService } from './integrations/hmd-model.mqtt-integration';
+import { HMDDataMqttIntegrationService } from './integrations/hmd-data.mqtt-integration';
 import { SleepingPositionMqttIntegrationService } from './integrations/sleeping-position.mqtt-integration.service';
 import { ProcessActiveMqttIntegrationService } from './integrations/process-active.mqtt-integration.service';
 import { VRChatMqttIntegrationService } from './integrations/vrchat.mqtt-integration.service';
@@ -21,7 +21,7 @@ export class MqttIntegrationService {
     private sleepPreparationMqttIntegrationService: SleepPreparationMqttIntegrationService,
     private baseStationMqttIntegrationService: BaseStationMqttIntegrationService,
     private trackerControllerMqttIntegrationService: TrackerControllerMqttIntegrationService,
-    private hmdModelMqttIntegrationService: HMDModelMqttIntegrationService,
+    private hmdDataMqttIntegrationService: HMDDataMqttIntegrationService,
     private sleepingPositionMqttIntegrationService: SleepingPositionMqttIntegrationService,
     private processActiveMqttIntegrationService: ProcessActiveMqttIntegrationService,
     private vrchatMqttIntegrationService: VRChatMqttIntegrationService,
@@ -37,7 +37,7 @@ export class MqttIntegrationService {
       this.sleepPreparationMqttIntegrationService.init(),
       this.baseStationMqttIntegrationService.init(),
       this.trackerControllerMqttIntegrationService.init(),
-      this.hmdModelMqttIntegrationService.init(),
+      this.hmdDataMqttIntegrationService.init(),
       this.sleepingPositionMqttIntegrationService.init(),
       this.processActiveMqttIntegrationService.init(),
       this.vrchatMqttIntegrationService.init(),
