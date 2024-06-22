@@ -46,7 +46,6 @@ export class HMDDataMqttIntegrationService {
         const name =
           [device?.manufacturerName, device?.modelNumber].filter(Boolean).join(' ') ?? 'null';
         this.mqtt.setSensorPropertyValue('hmdModel', name);
-        console.log(device);
         this.mqtt.setSensorPropertyValue('hmdOnHead', device?.hmdOnHead ? 'on' : 'off');
         this.mqtt.setSensorPropertyValue('debugHmdActivity', device?.debugHmdActivity ?? 'null');
       });
