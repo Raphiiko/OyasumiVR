@@ -23,6 +23,10 @@ jobs:
           cache: npm
       - name: Initialize the project
         run: npm run ci
+      - name: Setup LLVM
+        uses: ZhongRuoyu/setup-llvm@v0
+        with:
+          llvm-version: 17
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
