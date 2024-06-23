@@ -70,7 +70,7 @@ export class StatusChangeGeneralEventsAutomationService {
           }
           return { status, statusMessage, sleepMode };
         }),
-        filter((data) => Boolean(data.status || data.statusMessage)),
+        filter((data) => Boolean(data.status !== null || data.statusMessage !== null)),
         debounceTime(500)
       )
       .subscribe(async ({ status, statusMessage, sleepMode }) => {
