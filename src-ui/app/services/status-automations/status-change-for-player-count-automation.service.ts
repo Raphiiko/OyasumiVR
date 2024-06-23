@@ -81,28 +81,32 @@ export class StatusChangeForPlayerCountAutomationService {
       )
       .subscribe(async (newStatus) => {
         // Set new status
-        await this.vrchat.setStatus(newStatus.status, newStatus.statusMessage);
-        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
-          await this.notifications.send(
-            this.translate.instant('notifications.vrcStatusChanged.content', {
-              newStatus: (
-                (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
-                ' (' +
-                (newStatus.status ?? newStatus.oldStatus) +
-                ')'
-              ).trim(),
-            })
-          );
+        let success = await this.vrchat
+          .setStatus(newStatus.status, newStatus.statusMessage)
+          .catch(() => false);
+        if (success) {
+          if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
+            await this.notifications.send(
+              this.translate.instant('notifications.vrcStatusChanged.content', {
+                newStatus: (
+                  (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
+                  ' (' +
+                  (newStatus.status ?? newStatus.oldStatus) +
+                  ')'
+                ).trim(),
+              })
+            );
+          }
+          this.eventLog.logEvent({
+            type: 'statusChangedOnPlayerCountChange',
+            reason: newStatus.reason,
+            threshold: this.config.limit,
+            newStatus: newStatus.status,
+            oldStatus: newStatus.oldStatus,
+            newStatusMessage: newStatus.statusMessage,
+            oldStatusMessage: newStatus.oldStatusMessage,
+          } as EventLogStatusChangedOnPlayerCountChange);
         }
-        this.eventLog.logEvent({
-          type: 'statusChangedOnPlayerCountChange',
-          reason: newStatus.reason,
-          threshold: this.config.limit,
-          newStatus: newStatus.status,
-          oldStatus: newStatus.oldStatus,
-          newStatusMessage: newStatus.statusMessage,
-          oldStatusMessage: newStatus.oldStatusMessage,
-        } as EventLogStatusChangedOnPlayerCountChange);
       });
   }
 
