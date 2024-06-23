@@ -846,7 +846,7 @@
         "sleep": "Sleep"
       },
       "addCommand": "Add",
-      "addParameter": "New parameter",
+      "addParameter": "Add parameter",
       "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
       "commands": {
         "COMMAND": {
