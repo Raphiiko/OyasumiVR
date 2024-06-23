@@ -76,7 +76,7 @@ export class StatusChangeGeneralEventsAutomationService {
       .subscribe(async ({ status, statusMessage, sleepMode }) => {
         const oldStatus = this.vrcUser?.status;
         const oldStatusMessage = this.vrcUser?.statusDescription;
-        const success = await this.vrchat.setStatus(status, statusMessage).catch((e) => false);
+        const success = await this.vrchat.setStatus(status, statusMessage).catch(() => false);
         if (success) {
           if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
             await this.notifications.send(
