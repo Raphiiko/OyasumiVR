@@ -281,7 +281,9 @@ export class VRChatService {
       if (!result.result?.ok) throw result.result;
     } catch (e) {
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
+      return false;
     }
+    return true;
   }
 
   public showLoginModal(autoLogin = false) {
