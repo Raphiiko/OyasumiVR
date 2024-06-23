@@ -237,7 +237,7 @@ export class VRChatService {
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
-  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<void> {
+  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
     if (!userId) {
@@ -247,26 +247,24 @@ export class VRChatService {
     // Sanitize status message if needed
     statusMessage =
       statusMessage === null ? null : statusMessage.replace(/\s+/g, ' ').trim().slice(0, 32);
-    // Don't do anything if the status is not changing
-    if (status && this._user.value?.status === status) return;
-    // Don't do anything if the status message is not changing
-    if (statusMessage && this._user.value?.statusDescription === statusMessage) return;
+    const statusChange = status !== null && this._user.value?.status !== status;
+    const statusMessageChange =
+      statusMessage !== null && this._user.value?.statusDescription !== statusMessage;
+    // Don't do anything if there would be no changes
+    if (!statusChange && !statusMessageChange) return false;
     // Log status change
-    if (status && statusMessage) {
+    if (status !== null && statusMessage !== null) {
       info(`[VRChat] Changing status to '${statusMessage}' ('${status}')`);
-    } else if (status) {
+    } else if (status !== null) {
       info(`[VRChat] Changing status to '${status}'`);
-    } else if (statusMessage) {
+    } else if (statusMessage !== null) {
       info(`[VRChat] Changing status message to '${statusMessage}'`);
-    } else {
-      return;
     }
-
     // Send status change request
     try {
       const body: Record<string, string> = {};
-      if (status) body['status'] = status;
-      if (statusMessage) body['statusDescription'] = statusMessage;
+      if (status !== null) body['status'] = status;
+      if (statusMessage !== null) body['statusDescription'] = statusMessage;
       const result = await this.apiCallQueue.queueTask<Response<unknown>>(
         {
           typeId: 'STATUS_CHANGE',
@@ -283,7 +281,9 @@ export class VRChatService {
       if (!result.result?.ok) throw result.result;
     } catch (e) {
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
+      return false;
     }
+    return true;
   }
 
   public showLoginModal(autoLogin = false) {

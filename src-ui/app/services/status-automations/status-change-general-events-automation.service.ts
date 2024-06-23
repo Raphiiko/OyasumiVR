@@ -70,33 +70,35 @@ export class StatusChangeGeneralEventsAutomationService {
           }
           return { status, statusMessage, sleepMode };
         }),
-        filter((data) => Boolean(data.status || data.statusMessage)),
+        filter((data) => Boolean(data.status !== null || data.statusMessage !== null)),
         debounceTime(500)
       )
       .subscribe(async ({ status, statusMessage, sleepMode }) => {
         const oldStatus = this.vrcUser?.status;
         const oldStatusMessage = this.vrcUser?.statusDescription;
-        await this.vrchat.setStatus(status, statusMessage);
-        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
-          await this.notifications.send(
-            this.translate.instant('notifications.vrcStatusChanged.content', {
-              newStatus: (
-                (statusMessage ?? oldStatusMessage) +
-                ' (' +
-                (status ?? oldStatus) +
-                ')'
-              ).trim(),
-            })
-          );
+        const success = await this.vrchat.setStatus(status, statusMessage).catch((e) => false);
+        if (success) {
+          if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
+            await this.notifications.send(
+              this.translate.instant('notifications.vrcStatusChanged.content', {
+                newStatus: (
+                  (statusMessage ?? oldStatusMessage) +
+                  ' (' +
+                  (status ?? oldStatus) +
+                  ')'
+                ).trim(),
+              })
+            );
+          }
+          this.eventLog.logEvent({
+            type: 'statusChangedOnGeneralEvent',
+            reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
+            newStatus: status,
+            oldStatus: oldStatus,
+            newStatusMessage: statusMessage,
+            oldStatusMessage: oldStatusMessage,
+          } as EventLogStatusChangedOnGeneralEvent);
         }
-        this.eventLog.logEvent({
-          type: 'statusChangedOnGeneralEvent',
-          reason: sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED',
-          newStatus: status,
-          oldStatus: oldStatus,
-          newStatusMessage: statusMessage,
-          oldStatusMessage: oldStatusMessage,
-        } as EventLogStatusChangedOnGeneralEvent);
       });
   }
 
