@@ -68,6 +68,14 @@ pub async fn openvr_get_fade_distance() -> Result<f32, String> {
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
+pub async fn openvr_set_analog_color_temp(
+    temperature: Option<u32>,
+) -> Result<(f64, f64, f64), String> {
+    super::colortemp_analog::set_color_temp(temperature).await
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn openvr_set_image_brightness(
     brightness: f64,
     perceived_brightness_adjustment_gamma: Option<f64>,

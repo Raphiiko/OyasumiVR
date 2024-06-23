@@ -3835,7 +3835,7 @@ checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
 [[package]]
 name = "ovr_overlay"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=f400e12a21355edc897c7a82c6ddf1889d740b05#f400e12a21355edc897c7a82c6ddf1889d740b05"
+source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=5d3f832d6c4e9e669af96f282ff4698d62541790#5d3f832d6c4e9e669af96f282ff4698d62541790"
 dependencies = [
  "byteorder",
  "derive_more",
@@ -3850,7 +3850,7 @@ dependencies = [
 [[package]]
 name = "ovr_overlay_sys"
 version = "0.0.0"
-source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=f400e12a21355edc897c7a82c6ddf1889d740b05#f400e12a21355edc897c7a82c6ddf1889d740b05"
+source = "git+https://github.com/Raphiiko/ovr_overlay_oyasumi?rev=5d3f832d6c4e9e669af96f282ff4698d62541790#5d3f832d6c4e9e669af96f282ff4698d62541790"
 dependencies = [
  "autocxx",
  "autocxx-build",

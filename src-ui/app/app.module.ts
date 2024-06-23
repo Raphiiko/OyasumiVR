@@ -139,7 +139,6 @@ import { VRChatMicMuteAutomationService } from './services/osc-automations/vrcha
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
-import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
 import { AudioDeviceService } from './services/audio-device.service';
 import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
 import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
@@ -320,7 +319,6 @@ export function createTranslateLoader(http: HttpClient) {
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
-    DebugAudioDeviceDebuggerComponent,
     SystemMicMuteAutomationsViewComponent,
     ControllerBindingComponent,
     TranslationLoaderViewComponent,
