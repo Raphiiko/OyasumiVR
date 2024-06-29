@@ -235,7 +235,6 @@ function generateSteamStoreDescriptions(langData) {
     Object.entries(tokens).forEach(([key, value]) => {
       localizedDescription = localizedDescription.replaceAll(`{{token.${key}}}`, value);
     });
-    if (lang === 'en') console.log(localizedDescription);
     localizedDescription = localizedDescription.replaceAll(
       '{{TRANSLATION_CONTRIBUTORS_LIST}}',
       getTranslationContributors('steam')
