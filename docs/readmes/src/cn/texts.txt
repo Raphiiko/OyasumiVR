@@ -358,14 +358,14 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
 {{MQTT_CONTROL_HEADER}}
 🏠 智能家庭控制
 
+{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
+
 {{MQTT_CONTROL_BODY}}
 
 
 {{MQTT_CONTROL_FEATURES}}
 
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
 {{TELEMETRY_HEADER}}
 

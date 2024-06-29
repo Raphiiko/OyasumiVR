@@ -104,16 +104,12 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 
 除此之外，还可以看看"功能"部分，了解更多由OyasumiVR提供的功能。
 
-## Support OyasumiVR
+## 赞助Oyasumi VR
 
-OyasumiVR itself is completely free, and will always be free. However, if you want to support me and the development of OyasumiVR, here's a few places you can do so:
+Oyasumi VR 完全且永久免费。不过，如果你愿意支持我继续开发 Oyasumi VR, 欢迎你在这些地方赞助我：
 
 <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
 <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
-
-By supporting me, you help me dedicate more time to developing new features, improving the current functionality, offsetting some of the costs that come with the development process, and fueling my coffee addiction ☕.
-
-I'm not done with OyasumiVR anytime soon: **there is a lot more I want to work on!**
 
 ## 功能
 
@@ -187,13 +183,13 @@ OyasumiVR拥有自己的SteamVR叠加层界面，可以让你在VR里玩游戏�
   </tr>
 </table>
 
-### 🎮 Device Control
+### 🎮 设备控制
 <table>
   <tr>
     <td>
-OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+Oyasumi VR 可以让你轻松控制许多 SteamVR 设备，例如控制器、追踪器和基站。
 <br><br>
-Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click! 
+只需点击一次，你就可以轻松确认电池电量、充电状态，或者开关你的基站。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
@@ -264,37 +260,27 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
   </tr>
   <tr>
     <td>
-🔵 <b>Status Automations</b>
+🔵 <b>自动化状态</b>
 <br>
-OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
+Oyasumi VR 支持多种方式来控制你的 VRChat 状态以及在线签名，允许当你睡着或醒来时触发！
 <br><br>
-Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+或者，Oyasumi VR 也可以在房间内到达特定人数时触发更改状态。例如：当你独自睡觉时开启蓝灯，当房间超过指定人数时改为橙灯。
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
   <tr>
     <td>
-🔔 <b>Join Notifications</b>
+🔔 <b>加入通知</b>
 <br>
-OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
-
-It can configured to only notify you in specific situations, like only:
-<br>
-<ul>
-  <li>For your friends</li>
-  <li>For certain specific players</li>
-  <li>When you're being left alone</li>
-  <li>When you're no longer alone</li>
-</ul>
+Oyasumi VR 可以在他人加入或者退出时通知你。当你需要在特定情境醒来时可以使用。
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
   </tr>
   <tr>
     <td>
-🏃 <b>Avatar Automations</b>
+🏃 <b>模型自动化</b>
 <br>
-You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
-Useful if you have a specific avatar you use for sleeping.
+Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自动切换模型！如果你有专门睡觉用的模型，这应该很方便。
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
   </tr>
@@ -315,25 +301,25 @@ Useful if you have a specific avatar you use for sleeping.
 <table>
   <tr>
     <td>
-Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
+想在VR里睡着，但是又不想整夜开着VR？我们支持自动关机序列！
 <br><br>
-While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
-<br><br>
-<ul>
-  <li>When you've been asleep for a certain amount of time. </li>
-  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
-</ul>
-<br>
-Depending on which actions you configure, it will do any of the following:
+你当然可以手动触发关机序列，不过也有一些自动的触发器供你设置：
 <br><br>
 <ul>
-  <li>Turn off your controllers and/or Trackers</li>
-  <li>Turn off your Base Stations</li>
-  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
-  <li>Shut down Windows</li>
+  <li>当你睡着一定时间后 </li>
+  <li>当你一个人在房间一定时间后 </li>
 </ul>
 <br>
-With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
+您也可以选择满足条件后的动作：
+<br><br>
+<ul>
+  <li>关闭控制器 / 追踪器</li>
+  <li>关闭基站</li>
+  <li>关闭SteamVR <i>(以及SteamVR游戏和覆盖层)</i></li>
+  <li>关闭Windows</li>
+</ul>
+<br>
+当设置好关机序列后，你就可以在VR里安心睡着而不需要担心你的电费了！
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
@@ -344,44 +330,45 @@ With the shutdown sequence configured, you can fall asleep soundly in VR, knowin
 <table>
   <tr>
     <td>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+你可以设置睡着和醒来时的亮度自动化。
+OyasumiVR 可以平滑地过渡您的头显亮度，在你睡着时渐渐调暗亮度而不会惊醒你。
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+OyasumiVR 支持调节软件和硬件亮度（如果你的头显支持，例如Valve Index或者Bigscreen Beyond）。除了一些预设以外，你也可以在SteamVR覆盖层上自定义具体的亮度等级。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
   </tr>
 
 </table>
 
-### 🎤 Microphone Mute Automations
+### 🎤 麦克风自动化
 
 <table>
    <tr>
     <td>
-<b>VRChat Microphone Mute Automations</b><br>
-You can have OyasumiVR automatically mute or unmute your mic in VRChat when you go to sleep and wake up.
-<br><br>Perfect if you'd like to prevent others from hearing you snore!
+<b>VRChat 麦克风自动化</b><br>
+OyasumiVR 可以在你醒来或者睡着时自动开麦或者闭麦
+<br><br>如果你不想自己的呼噜吵到别人，这应该很有用。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
   <tr>
     <td>
-<b>System Microphone Mute Automations</b><br>
-OyasumiVR can also do the same, but on a system level, muting your Microphone's audio device instead.
-With this, you can even switch between mute toggle mode and push-to-talk.
+<b>系统麦克风静音自动化</b><br>
+OyasumiVR 也可以做到在系统级别静音你的麦克风。
+当然也可以做到按键切换静音和按住说话。
 <br><br>
-This comes with an optional mute indicator in the VR overlay, and the option for binding a controller button so that you can have it completely replace the microphone muting functionality of VRChat or any other VR game you play.
+此功能也可以开启一个VR的静音指示器覆盖层，以及绑定一个控制器按钮来完全替代VR游戏内的静音开关。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6c3d3f13-0c88-4af7-96b0-d9ea72acf69c"></td>
   </tr>
 </table>
 
-### 🔉 Audio Volume Automations
+### 🔉 音量自动化
 
 <table>
    <tr>
     <td>
-Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent other players, or other applications from disturbing your sleep.
+在你睡着或醒来时自动调节系统音量！这可以防止你被其他玩家或者应用程序吵醒。
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e5043544-b426-4b45-8131-4f63dcc6a184"></td>
   </tr>
@@ -416,17 +403,17 @@ OyasumiVR可以检测你的心率，如果你的心率持续升高，这可能�
   </tr>
 </table>
 
-### 🚨 HMD Specific Automations
+### 🚨 头显自动化
 
 <table>
    <tr>
     <td>
-OyasumiVR has various automations for controlling certain features specific to certain VR Headsets. Currently, this includes the following:
+OyasumiVR 支持控制多种头显的功能，目前包括：
 <br><br>
 <b>Bigscreen Beyond</b>
 <ul>
-<li>RGB Led Control</li>
-<li>Fan Speed Control</li>
+<li>RGB灯控制</li>
+<li>风扇速度控制</li>
 </ul>
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/9909caa0-deeb-41da-a56e-148a09d0303c"></td>
@@ -455,7 +442,7 @@ OyasumiVR has various automations for controlling certain features specific to c
   </tr>
 </table>
 
-### 🏠 Home Assistant Integration
+### 🏠 智能家庭控制
 
 <table>
   <tr>
@@ -580,9 +567,7 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 ### 亮度自动化
 
-Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
-
-Image brightness control is available on all headsets.
+头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
 ## 使用的技术和工具
 
