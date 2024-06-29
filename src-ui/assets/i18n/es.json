@@ -105,48 +105,18 @@
   },
   "brightness-automations": {
     "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Si el modo de suspensión está inactivo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicie.",
-          "onSleepEnable": "Si el modo de suspensión está activo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicien."
-        },
-        "title": "Aplicar brillo al iniciar"
-      },
       "brightness": {
         "title": "Cambia el brillo a"
       },
       "copyBrightness": "Copia actual\nvalor de luminosidad",
-      "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
       "hardwareBrightness": {
         "description": "Ajusta el brillo de la pantalla.",
         "title": "Cambia el brillo del hardware a"
-      },
-      "onSleepDisable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me despierto"
-      },
-      "onSleepEnable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me voy a dormir"
-      },
-      "onSleepPreparation": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me preparo para dormir"
-      },
-      "onStartup": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando empiece OyasumiVR o SteamVR"
-      },
-      "sleepAutomations": "Automatizaciones del sueño",
-      "sleepPreparation": {
-        "description": "Puedes prepararte para irte a dormir pulsando un botón en la superposición de OyasumiVR. El botón para esto se mostrará cuando tengas una o más automatizaciones de preparación para dormir activas, como esta. Utilízalo para empezar a atenuar el brillo antes de quedarte dormido.",
-        "title": "Preparación para dormir"
       },
       "softwareBrightness": {
         "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
         "title": "Cambia el brillo del software a"
       },
-      "startupAutomations": "Automatizaciones de arranque",
       "transition": {
         "description": "Transición suave al valor de brillo deseado",
         "title": "Ajuste el brillo gradualmente"

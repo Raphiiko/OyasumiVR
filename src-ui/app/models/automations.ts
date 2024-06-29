@@ -33,10 +33,7 @@ export type AutomationType =
   | 'SLEEPING_ANIMATIONS'
   | 'VRCHAT_MIC_MUTE_AUTOMATIONS'
   // BRIGHTNESS AUTOMATIONS
-  | 'BRIGHTNESS_CONTROL_ADVANCED_MODE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION'
+  | 'BRIGHTNESS_AUTOMATIONS'
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
@@ -60,7 +57,7 @@ export type AutomationType =
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 16;
+  version: 17;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -87,10 +84,7 @@ export interface AutomationConfigs {
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   VRCHAT_MIC_MUTE_AUTOMATIONS: VRChatMicMuteAutomationsConfig;
   // BRIGHTNESS AUTOMATIONS
-  BRIGHTNESS_CONTROL_ADVANCED_MODE: BrightnessControlAdvancedModeAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: SetBrightnessAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: SetBrightnessAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: Omit<SetBrightnessAutomationConfig, 'applyOnStart'>;
+  BRIGHTNESS_AUTOMATIONS: BrightnessAutomationsConfig;
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
@@ -123,15 +117,34 @@ export interface AutomationConfig {
 //
 
 // BRIGHTNESS AUTOMATIONS
-export interface BrightnessControlAdvancedModeAutomationConfig extends AutomationConfig {}
+export const BrightnessEvents = [
+  'SLEEP_MODE_ENABLE',
+  'SLEEP_MODE_DISABLE',
+  'SLEEP_PREPARATION',
+  'AT_SUNSET',
+  'AT_SUNRISE',
+] as const;
+export type BrightnessEvent = (typeof BrightnessEvents)[number];
 
-export interface SetBrightnessAutomationConfig extends AutomationConfig {
+export type BrightnessAutomationsConfig = AutomationConfig & {
+  advancedMode: boolean;
+} & {
+  [key in BrightnessEvent]: BrightnessEventAutomationConfig;
+};
+
+export interface BrightnessEventAutomationConfig extends AutomationConfig {
+  changeBrightness: boolean;
+  changeColorTemperature: boolean;
   brightness: number;
   softwareBrightness: number;
   hardwareBrightness: number;
   transition: boolean;
   transitionTime: number;
-  applyOnStart: boolean;
+  colorTemperature: number;
+}
+
+export interface SunsetBrightnessEventAutomationConfig extends BrightnessEventAutomationConfig {
+  onlyWhenSleepDisabled: boolean;
 }
 
 // RESOLUTION AUTOMATIONS
@@ -455,36 +468,66 @@ export interface VRChatAvatarAutomationsConfig extends AutomationConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 16,
+  version: 17,
   // BRIGHTNESS AUTOMATIONS
-  BRIGHTNESS_CONTROL_ADVANCED_MODE: {
-    enabled: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
-    enabled: false,
-    brightness: 20,
-    softwareBrightness: 20,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 1000 * 60 * 5,
-    applyOnStart: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
-    enabled: false,
-    brightness: 100,
-    softwareBrightness: 100,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 10000,
-    applyOnStart: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
-    enabled: false,
-    brightness: 50,
-    softwareBrightness: 50,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 30000,
+  BRIGHTNESS_AUTOMATIONS: {
+    enabled: true,
+    advancedMode: false,
+    SLEEP_PREPARATION: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 50,
+      softwareBrightness: 50,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 1000 * 60 * 5,
+      colorTemperature: 3500,
+    },
+    SLEEP_MODE_ENABLE: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 20,
+      softwareBrightness: 20,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 1800,
+    },
+    SLEEP_MODE_DISABLE: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 100,
+      softwareBrightness: 100,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 6600,
+    },
+    AT_SUNSET: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 80,
+      softwareBrightness: 80,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 1000 * 60 * 5,
+      colorTemperature: 1800,
+    },
+    AT_SUNRISE: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 100,
+      softwareBrightness: 100,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 1000 * 60 * 5,
+      colorTemperature: 6600,
+    },
   },
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: {

@@ -50,8 +50,8 @@ export class SimpleBrightnessControlService {
     // Set brightness when switching to simple mode
     this.automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE),
-        tap((config) => this._advancedMode.next(config.enabled)),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS),
+        tap((config) => this._advancedMode.next(config.advancedMode)),
         skip(1)
       )
       .subscribe(async (advancedMode) => {

@@ -139,48 +139,35 @@
   },
   "brightness-automations": {
     "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "If sleep mode is inactive, set this brightness value directly when SteamVR or OyasumiVR starts.",
-          "onSleepEnable": "If sleep mode is active, set this brightness value directly when SteamVR or OyasumiVR starts."
-        },
-        "title": "Apply brightness on startup"
+      "AT_SUNRISE": {
+        "title": "At sunrise"
+      },
+      "AT_SUNSET": {
+        "title": "At sunset"
+      },
+      "SLEEP_MODE_DISABLE": {
+        "title": "When I wake up"
+      },
+      "SLEEP_MODE_ENABLE": {
+        "title": "When I go to sleep"
+      },
+      "SLEEP_PREPARATION": {
+        "title": "When I prepare to go to sleep"
       },
       "brightness": {
         "title": "Change the brightness to"
       },
       "copyBrightness": "Copy current\nbrightness value",
-      "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
+      "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
+      "events": "Events",
       "hardwareBrightness": {
         "description": "Adjusts the brightness of the display itself",
         "title": "Change the hardware brightness to"
-      },
-      "onSleepDisable": {
-        "description": "Adjust the brightness",
-        "title": "When I wake up"
-      },
-      "onSleepEnable": {
-        "description": "Adjust the brightness",
-        "title": "When I go to sleep"
-      },
-      "onSleepPreparation": {
-        "description": "Adjust the brightness",
-        "title": "When I prepare to go to sleep"
-      },
-      "onStartup": {
-        "description": "Adjust the brightness",
-        "title": "When OyasumiVR or SteamVR starts"
-      },
-      "sleepAutomations": "Sleep Automations",
-      "sleepPreparation": {
-        "description": "You can prepare to go to sleep by pressing a button in OyasumiVR's overlay. The button for this will be shown when you have one or more sleep preparation automations active, like this one. Use this to already start dimming the brightness before you fall asleep.",
-        "title": "Sleep Preparation"
       },
       "softwareBrightness": {
         "description": "Adjusts the brightness of the image shown in your VR headset",
         "title": "Change the software brightness to"
       },
-      "startupAutomations": "Startup Automations",
       "transition": {
         "description": "Smoothly transition to your desired brightness value",
         "title": "Adjust brightness gradually"
@@ -1133,8 +1120,8 @@
       "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
       "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
       "invalidSyntax": "Invalid syntax.",
-      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "maxParameterCountExceeded": "Maximum allowed parameter count per command is {value}.",
+      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "stringTooLong": "String value must not exceed {value} character limit.",
       "tooManyCommands": "An OSC script cannot have more than {value} actions.",
       "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."

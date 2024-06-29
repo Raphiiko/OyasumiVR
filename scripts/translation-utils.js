@@ -43,7 +43,9 @@ async function handleUnset(args) {
 async function handleClean() {
   const enFile = getLangFilePath('en');
   let enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
-  const enFileContentFlattened = flattenObj(enFileContent);
+  const enFileContentFlattened = Object.fromEntries(
+    Object.entries(flattenObj(enFileContent)).filter(([k]) => !k.includes('!'))
+  );
   getLangFilePaths()
     .filter((f) => f !== enFile)
     .forEach((langFile) => {
@@ -53,7 +55,8 @@ async function handleClean() {
           (entry) =>
             Object.keys(enFileContentFlattened).includes(entry[0]) &&
             entry[1] !== '{PLACEHOLDER}' &&
-            entry[1]?.trim() !== ''
+            entry[1]?.trim() !== '' &&
+            !entry[0].includes('!')
         )
       );
       let keysCleaned =

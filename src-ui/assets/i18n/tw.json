@@ -102,48 +102,18 @@
   },
   "brightness-automations": {
     "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "如果睡眠模式未啟用，則在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值",
-          "onSleepEnable": "如果睡眠模式已啟用，請在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值"
-        },
-        "title": "啟動時應用亮度設定"
-      },
       "brightness": {
         "title": "將亮度改為"
       },
       "copyBrightness": "複製\n當前亮度值",
-      "description": "讓 OyasumiVR 在不同的時間自動調整 VR 頭顯的亮度，比如睡覺或起床時",
       "hardwareBrightness": {
         "description": "調整顯示器本身的亮度",
         "title": "更改硬體亮度為"
-      },
-      "onSleepDisable": {
-        "description": "調整亮度",
-        "title": "當我醒來時"
-      },
-      "onSleepEnable": {
-        "description": "調整亮度",
-        "title": "當我進入睡眠模式時"
-      },
-      "onSleepPreparation": {
-        "description": "調整亮度",
-        "title": "當我準備入睡時"
-      },
-      "onStartup": {
-        "description": "調整亮度",
-        "title": "當 OyasumiVR 或 SteamVR 啟動時"
-      },
-      "sleepAutomations": "睡眠自動化",
-      "sleepPreparation": {
-        "description": "你可以按下 OyasumiVR 疊層畫面畫面中的按鈕，為入睡做準備。當你啟用了一個或多個睡眠準備自動操作（比如這個）時，就會顯示這個按鈕。使用這個按鈕可以在入睡前開始調暗亮度",
-        "title": "睡眠準備"
       },
       "softwareBrightness": {
         "description": "調整 VR 頭顯影像的亮度",
         "title": "更改軟體亮度為"
       },
-      "startupAutomations": "啟動自動化",
       "transition": {
         "description": "平滑地調整到所需的亮度值",
         "title": "逐步調整亮度"

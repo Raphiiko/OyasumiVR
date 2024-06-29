@@ -30,10 +30,9 @@
     </div>
   </div>
   <div class="pane-content">
-    <app-brightness-automations-tab
-      [advancedMode]="advancedMode"
+    <app-new-brightness-automations-tab
       *ngIf="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
-    ></app-brightness-automations-tab>
+    ></app-new-brightness-automations-tab>
     <app-brightness-hmd-settings-tab *ngIf="activeTab === 'HMD_SETTINGS'">
     </app-brightness-hmd-settings-tab>
   </div>

@@ -21,7 +21,7 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
     }
     // Color temperature to RGB conversion based on algorithm by Tanner Helland
     // https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
-    let temperature = temperature.unwrap().max(1000).min(6600);
+    let temperature = temperature.unwrap().max(1000).min(10000);
     let temperature = (temperature as f64) / 100.0;
     let red = if temperature <= 66.0 {
         255.0

@@ -139,48 +139,18 @@
   },
   "brightness-automations": {
     "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "수면 모드가 비활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요.",
-          "onSleepEnable": "수면 모드가 활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요."
-        },
-        "title": "시작시 밝기 적용"
-      },
       "brightness": {
         "title": "조절할 밝기"
       },
       "copyBrightness": "현재\n밝기 값 복사",
-      "description": "잠들거나 일어날 때와 같이 다양한 시간에 OyasumiVR이 VR 헤드셋의 밝기를 자동으로 조정하도록 설정해요.",
       "hardwareBrightness": {
         "description": "디스플레이 자체의 밝기를 조절해요.",
         "title": "조절할 하드웨어 밝기"
-      },
-      "onSleepDisable": {
-        "description": "밝기를 조절해요",
-        "title": "수면 모드 비활성화 시"
-      },
-      "onSleepEnable": {
-        "description": "밝기를 조절해요",
-        "title": "수면 모드 활성화 시"
-      },
-      "onSleepPreparation": {
-        "description": "밝기를 조절해요",
-        "title": "수면 준비 시작 시"
-      },
-      "onStartup": {
-        "description": "밝기를 조절해요",
-        "title": "OyasumiVR 또는 SteamVR 시작 시"
-      },
-      "sleepAutomations": "수면 자동화",
-      "sleepPreparation": {
-        "description": "OyasumiVR의 오버레이에서 버튼을 눌러 수면 준비를 할 수 있어요. 이 버튼은 잠자기 전에 미리 밝기를 낮추는 등 수면 준비 자동화 기능이 하나 이상 활성화되어 있을 때 표시됩니다.",
-        "title": "수면 준비"
       },
       "softwareBrightness": {
         "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
         "title": "조절할 소프트웨어 밝기"
       },
-      "startupAutomations": "시작 자동화",
       "transition": {
         "description": "원하는 밝기까지 조금씩 부드럽게 조절해요.",
         "title": "점진적 밝기 조절"

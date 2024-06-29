@@ -1,0 +1,25 @@
+<div class="label" *ngIf="config">
+  <div class="colortemp-container" @hshrink *ngIf="config?.changeColorTemperature">
+    <div class="colortemp-icon" [style.background-color]="getCSSColorForCCT(config?.colorTemperature ?? 6600)"></div>
+    <span>{{config?.colorTemperature}} K</span>
+  </div>
+  <div class="brightness-container" *ngIf="config?.changeBrightness" @hshrink>
+    <div class="brightness-value" *ngIf="!advancedMode" @vshrink>
+      <span>{{config?.brightness}}%</span>
+      <i class="material-icons">brightness_6</i>
+    </div>
+    <div class="brightness-value" *ngIf="advancedMode" @vshrink>
+      <span>{{config?.softwareBrightness}}%</span>
+      <i class="material-symbols-outlined icon-filled">image</i>
+    </div>
+    <div class="brightness-value" *ngIf="advancedMode" @vshrink>
+      <span>{{config?.hardwareBrightness}}%</span>
+      <i class="material-symbols-outlined">monitor</i>
+    </div>
+  </div>
+  <div class="icon">
+    <i class="material-symbols-outlined icon-filled">
+      settings
+    </i>
+  </div>
+</div>

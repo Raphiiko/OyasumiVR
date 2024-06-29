@@ -2,8 +2,8 @@ export type SetBrightnessReason =
   | 'SLEEP_MODE_ENABLE'
   | 'SLEEP_MODE_DISABLE'
   | 'SLEEP_PREPARATION'
-  | 'OYASUMIVR_START'
-  | 'STEAMVR_START';
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
 
 export interface SetBrightnessOptions {
   cancelActiveTransition: boolean;

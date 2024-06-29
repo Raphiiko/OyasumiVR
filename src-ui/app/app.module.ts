@@ -121,7 +121,6 @@ import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
-import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
 import { TooltipDirective } from './directives/tooltip.directive';
 import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
@@ -221,6 +220,10 @@ import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/vie
 import { VrcAvatarSelectButtonComponent } from './components/vrc-avatar-select-button/vrc-avatar-select-button.component';
 import { VrcAvatarSelectModalComponent } from './components/vrc-avatar-select-modal/vrc-avatar-select-modal.component';
 import { VRChatAvatarAutomationsService } from './services/vrchat-avatar-automations.service';
+import { NewBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/new-brightness-automations-tab.component';
+import { BrightnessAutomationConfigLabelComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-config-label/brightness-automation-config-label.component';
+import { BrightnessAutomationsListComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-list/brightness-automations-list.component';
+import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-details/brightness-automation-details.component';
 
 [
   localeEN,
@@ -292,7 +295,6 @@ export function createTranslateLoader(http: HttpClient) {
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
     BrightnessAutomationsViewComponent,
-    BrightnessAutomationsTabComponent,
     SliderSettingComponent,
     SliderComponent,
     EventLogComponent,
@@ -356,6 +358,10 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatAvatarAutomationsViewComponent,
     VrcAvatarSelectButtonComponent,
     VrcAvatarSelectModalComponent,
+    NewBrightnessAutomationsTabComponent,
+    BrightnessAutomationConfigLabelComponent,
+    BrightnessAutomationsListComponent,
+    BrightnessAutomationDetailsComponent,
   ],
   imports: [
     CommonModule,

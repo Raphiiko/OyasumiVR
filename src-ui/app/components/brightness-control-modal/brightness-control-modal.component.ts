@@ -40,10 +40,10 @@ export class BrightnessControlModalComponent
     super();
     automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS.advancedMode),
         takeUntilDestroyed()
       )
-      .subscribe((advancedMode) => (this.advancedMode = advancedMode.enabled));
+      .subscribe((advancedMode) => (this.advancedMode = advancedMode));
     hardwareBrightnessControl.driverIsAvailable
       .pipe(
         takeUntilDestroyed(),

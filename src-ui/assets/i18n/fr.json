@@ -58,13 +58,6 @@
       "brightness": {
         "title": "Changer la luminosité pour"
       },
-      "onSleepDisable": {
-        "title": "Quand je me réveille"
-      },
-      "onSleepEnable": {
-        "title": "Quand je vais dormir"
-      },
-      "sleepAutomations": "Automatisations de sommeil",
       "transition": {
         "description": "Transitionne en douceur vers la luminosité paramétrée",
         "title": "Ajuster la luminosité graduellement"
