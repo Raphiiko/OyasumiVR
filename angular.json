@@ -82,10 +82,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "oyasumivr:build:production"
+              "buildTarget": "oyasumivr:build:production"
             },
             "development": {
-              "browserTarget": "oyasumivr:build:development"
+              "buildTarget": "oyasumivr:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -93,7 +93,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "oyasumivr:build"
+            "buildTarget": "oyasumivr:build"
           }
         },
         "lint": {
