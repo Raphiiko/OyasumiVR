@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, distinctUntilChanged, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  Observable,
+} from 'rxjs';
 import { CCTTransitionTask } from './cct-transition';
 import { listen } from '@tauri-apps/api/event';
 import {
@@ -39,14 +45,20 @@ export class CCTControlService {
       this.cctControlEnabled = settings.cctControlEnabled;
       if (!this.initialized) {
         this.setCCT(this.cct);
-        combineLatest([this.openvr.status, this.openvr.devices]).subscribe(([status, devices]) => {
-          const ready = status === 'INITIALIZED' && !!devices.length && devices[0]?.class === 'HMD';
-          if (ready && !this.hardwareReady) {
+        combineLatest([this.openvr.status, this.openvr.devices])
+          .pipe(debounceTime(100))
+          .subscribe(([status, devices]) => {
+            const ready =
+              status === 'INITIALIZED' &&
+              !!devices.length &&
+              devices.find((d) => d.index === 0)?.class === 'HMD';
+            if (ready && !this.hardwareReady) {
+              console.log({ ready, hardwareReady: this.hardwareReady });
+              this.hardwareReady = ready;
+              this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
+            }
             this.hardwareReady = ready;
-            this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
-          }
-          this.hardwareReady = ready;
-        });
+          });
       }
       this.initialized = true;
     });

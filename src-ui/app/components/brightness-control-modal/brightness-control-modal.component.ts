@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { fadeUp, vshrink } from '../../utils/animations';
+import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
 import { HardwareBrightnessControlService } from '../../services/brightness-control/hardware-brightness-control.service';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   selector: 'app-brightness-control-modal',
   templateUrl: './brightness-control-modal.component.html',
   styleUrls: ['./brightness-control-modal.component.scss'],
-  animations: [fadeUp(), vshrink()],
+  animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class BrightnessControlModalComponent
   extends BaseModalComponent<void, void>
