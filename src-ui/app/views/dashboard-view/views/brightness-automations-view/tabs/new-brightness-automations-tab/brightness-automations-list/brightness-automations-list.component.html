@@ -14,6 +14,7 @@
         <div class="small-spinner" @fade *ngIf="event.inProgress"></div>
         <app-brightness-automation-config-label
           [advancedMode]="config.advancedMode"
+          [cctControlEnabled]="cctControlEnabled"
           [config]="config[event.name]"
           (click)="editEvent.emit(event.name)"
         ></app-brightness-automation-config-label>

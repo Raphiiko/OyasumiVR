@@ -140,7 +140,7 @@
       </div>
     </div>
   </div>
-  <div class="setting-category">
+  <div class="setting-category" *ngIf="cctControlEnabled()">
     <div class="setting-category-title-row">
       <h3 translate>brightness-automations.brightnessAutomations.changeTemperature.category</h3>
       <span class="warning-icon" [tooltip]="'brightness-automations.brightnessAutomations.changeTemperature.warning'"

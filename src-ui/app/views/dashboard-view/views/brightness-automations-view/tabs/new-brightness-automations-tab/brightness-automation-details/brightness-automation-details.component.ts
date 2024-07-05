@@ -10,6 +10,7 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { HardwareBrightnessControlService } from '../../../../../../../services/brightness-control/hardware-brightness-control.service';
 import { SimpleBrightnessControlService } from '../../../../../../../services/brightness-control/simple-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
+import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 
 interface BrightnessBounds {
   min: number;
@@ -29,6 +30,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   eventId = input.required<BrightnessEvent>();
   advancedMode: Signal<boolean>;
   config: Signal<BrightnessEventAutomationConfig>;
+  cctControlEnabled: Signal<boolean>;
   protected brightnessBounds: Record<BrightnessType, BrightnessBounds> = {
     SIMPLE: { min: 5, max: 100 },
     SOFTWARE: { min: 5, max: 100 },
@@ -48,12 +50,17 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   protected vshakeElements: string[] = [];
 
   constructor(
-    private readonly automationConfigService: AutomationConfigService,
+    private automationConfigService: AutomationConfigService,
     private simpleBrightnessControl: SimpleBrightnessControlService,
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private hardwareBrightnessControl: HardwareBrightnessControlService,
+    private appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef
   ) {
+    this.cctControlEnabled = toSignal(
+      this.appSettingsService.settings.pipe(map((s) => s.cctControlEnabled)),
+      { initialValue: false }
+    );
     const automationsConfig = toSignal(
       this.automationConfigService.configs.pipe(map((c) => c.BRIGHTNESS_AUTOMATIONS))
     );

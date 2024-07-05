@@ -1,5 +1,5 @@
 <div class="label" *ngIf="config">
-  <div class="colortemp-container" @hshrink *ngIf="config?.changeColorTemperature">
+  <div class="colortemp-container" @hshrink *ngIf="config?.changeColorTemperature && cctControlEnabled">
     <div class="colortemp-icon" [style.background-color]="getCSSColorForCCT(config.colorTemperature)"></div>
     <span>{{ config.colorTemperature }} K</span>
   </div>

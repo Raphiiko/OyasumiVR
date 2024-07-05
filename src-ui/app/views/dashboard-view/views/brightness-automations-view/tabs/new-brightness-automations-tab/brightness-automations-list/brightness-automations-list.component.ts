@@ -9,6 +9,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { combineLatest, map } from 'rxjs';
 import { BrightnessCctAutomationService } from '../../../../../../../services/brightness-cct-automation.service';
 import { fade } from '../../../../../../../utils/animations';
+import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 
 @Component({
   selector: 'app-brightness-automations-list',
@@ -21,6 +22,7 @@ export class BrightnessAutomationsListComponent implements OnInit {
     AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS
   );
   @Output() editEvent = new EventEmitter<BrightnessEvent>();
+  protected cctControlEnabled = false;
 
   protected events: Array<{
     name: BrightnessEvent;
@@ -38,10 +40,16 @@ export class BrightnessAutomationsListComponent implements OnInit {
   constructor(
     private automationConfigService: AutomationConfigService,
     private brightnessCctAutomations: BrightnessCctAutomationService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private appSettingsService: AppSettingsService
   ) {}
 
   ngOnInit() {
+    this.appSettingsService.settings
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((settings) => {
+        this.cctControlEnabled = settings.cctControlEnabled;
+      });
     this.events.forEach((event) => {
       combineLatest([
         this.brightnessCctAutomations.isBrightnessTransitionActive(event.name),
