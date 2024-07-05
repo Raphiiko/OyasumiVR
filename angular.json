@@ -14,7 +14,8 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "standalone": false
         }
       },
       "root": "",
@@ -22,12 +23,17 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular/build:application",
           "options": {
-            "outputPath": "dist/oyasumivr",
+            "outputHashing": "media",
+            "outputPath": {
+              "base": "dist/oyasumivr",
+              "browser": ""
+            },
             "index": "src-ui/index.html",
-            "main": "src-ui/main.ts",
-            "polyfills": "src-ui/polyfills.ts",
+            "polyfills": [
+              "src-ui/polyfills.ts"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -44,7 +50,8 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "src-ui/styles"
+                "src-ui/styles",
+                "."
               ]
             },
             "allowedCommonJsDependencies": [
@@ -54,7 +61,8 @@
               "cookie",
               "set-cookie-parser",
               "typescript-debounce-decorator"
-            ]
+            ],
+            "browser": "src-ui/main.ts"
           },
           "configurations": {
             "production": {
@@ -68,9 +76,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -79,7 +85,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "oyasumivr:build:production"
@@ -91,7 +97,7 @@
           "defaultConfiguration": "development"
         },
         "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "builder": "@angular/build:extract-i18n",
           "options": {
             "buildTarget": "oyasumivr:build"
           }

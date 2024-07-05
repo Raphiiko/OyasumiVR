@@ -113,41 +113,6 @@
       "softwareBrightness": {
         "description": "調整 VR 頭顯影像的亮度",
         "title": "更改軟體亮度為"
-      },
-      "transition": {
-        "description": "平滑地調整到所需的亮度值",
-        "title": "逐步調整亮度"
-      },
-      "transitionTime": {
-        "description": "調整到新亮度設定所需的時間",
-        "title": "調整時間"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
-          "title": "風扇超速安全保護",
-          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "maxBrightness": {
-          "description": "在 OyasumiVR 中設定最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "permitRiskRange": {
-          "description": "避免將亮度設定超過150%",
-          "title": "限制在安全亮度範圍內",
-          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "在此處，你可以找到適用於你特定 VR 頭戴式顯示器的所有亮度相關設定",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -181,7 +146,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "亮度自動調整",
       "brightness": "亮度",
       "hardwareBrightness": "硬體亮度",
       "softwareBrightness": "軟體亮度"
@@ -1314,6 +1278,32 @@
           "title": "載入翻譯檔案"
         },
         "title": "語言與翻譯"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
+          "title": "風扇超速安全保護",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "maxBrightness": {
+          "description": "在 OyasumiVR 中設定最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "permitRiskRange": {
+          "description": "避免將亮度設定超過150%",
+          "title": "限制在安全亮度範圍內",
+          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

@@ -1,7 +1,218 @@
-<div class="bg" @fade></div>
+<div class="bg" @fade (click)="close.emit()"></div>
 <button class="btn-close" @fadeRight (click)="close.emit()">
   <i class="material-icons-outlined">arrow_forward_ios</i>
 </button>
 <div class="pane" @fadeRight>
-  <h2>WEWLAD</h2>
+  <div class="header-row">
+    <div class="header-row-toggle">
+      <label class="switch-toggle">
+        <input
+          type="checkbox"
+          [checked]="config().enabled"
+          (change)="toggleEnabled()"
+        />
+        <span class="switch-toggle-slider"></span>
+      </label>
+    </div>
+    <div class="header-row-title">
+      <span translate>brightness-automations.brightnessAutomations.detailsTitle</span>
+      <span>
+        {{ 'brightness-automations.brightnessAutomations.' + eventId() + '.title' | translate }}
+      </span>
+    </div>
+  </div>
+  <div class="setting-category">
+    <h3 translate>brightness-automations.brightnessAutomations.changeBrightness.category</h3>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>brightness-automations.brightnessAutomations.changeBrightness.title</span>
+          <span translate
+          >brightness-automations.brightnessAutomations.changeBrightness.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle" [class.disabled]="!config().changeColorTemperature">
+            <input
+              type="checkbox"
+              [checked]="config().changeBrightness"
+              (change)="toggleChangeBrightness()"
+              [disabled]="!config().changeColorTemperature"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row-group" @vshrink *ngIf="config().changeBrightness">
+        <div class="setting-row" @vshrink *ngIf="!advancedMode() && config().changeBrightness">
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.brightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightness('SIMPLE', 'CURRENT')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.SIMPLE.min"
+              [max]="brightnessBounds.SIMPLE.max"
+              [value]="config().brightness"
+              (valueChange)="
+              updateBrightness('SIMPLE', $event)
+            "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.SIMPLE"
+              [snapDistance]="brightnessSnapDistance.SIMPLE"
+              [class.anim-vshake]="
+              vshakeElements.includes('SIMPLE_BRIGHTNESS')
+            "
+            ></app-slider-setting>
+          </div>
+        </div>
+        <div class="setting-row" @vshrink *ngIf="advancedMode() && config().changeBrightness">
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.softwareBrightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightness('SOFTWARE', 'CURRENT')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.SOFTWARE.min"
+              [max]="brightnessBounds.SOFTWARE.max"
+              [value]="config().softwareBrightness"
+              (valueChange)="
+              updateBrightness('SOFTWARE', $event)
+            "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.SOFTWARE"
+              [snapDistance]="brightnessSnapDistance.SOFTWARE"
+              [class.anim-vshake]="
+              vshakeElements.includes('SOFTWARE_BRIGHTNESS')
+            "
+            ></app-slider-setting>
+          </div>
+        </div>
+        <div class="setting-row" @vshrink *ngIf="advancedMode() && config().changeBrightness">
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.hardwareBrightness.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <button
+              class="btn btn-copy btn-secondary"
+              tooltip="brightness-automations.brightnessAutomations.copyBrightness"
+              tooltipMode="left"
+              (click)="updateBrightness('HARDWARE', 'CURRENT')"
+            >
+              <i class="material-icons">copy_all</i>
+            </button>
+            <app-slider-setting
+              unit="%"
+              [min]="brightnessBounds.HARDWARE.min"
+              [max]="brightnessBounds.HARDWARE.max"
+              [value]="config().hardwareBrightness"
+              (valueChange)="
+              updateBrightness('HARDWARE', $event)
+            "
+              [step]="1"
+              [snapValues]="brightnessSnapValues.HARDWARE"
+              [snapDistance]="brightnessSnapDistance.HARDWARE"
+              [class.anim-vshake]="
+              vshakeElements.includes('HARDWARE_BRIGHTNESS')
+            "
+            ></app-slider-setting>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="setting-category">
+    <div class="setting-category-title-row">
+      <h3 translate>brightness-automations.brightnessAutomations.changeTemperature.category</h3>
+      <span class="warning-icon" [tooltip]="'brightness-automations.brightnessAutomations.changeTemperature.warning'"
+            [tooltipMode]="'left'" [tooltipTextAlign]="'left'">
+        <i class="material-symbols-outlined">warning</i>
+      </span>
+    </div>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>brightness-automations.brightnessAutomations.changeTemperature.title</span>
+          <span translate
+          >brightness-automations.brightnessAutomations.changeTemperature.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle" [class.disabled]="!config().changeBrightness">
+            <input
+              type="checkbox"
+              [checked]="config().changeColorTemperature"
+              (change)="toggleChangeColorTemperature()"
+              [disabled]="!config().changeBrightness"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row-group" @vshrink *ngIf="config().changeColorTemperature">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.temperature.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <app-color-temperature-input-setting [value]="config().colorTemperature"
+                                                 (valueChange)="updateColorTemperature($event)"></app-color-temperature-input-setting>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="setting-category">
+    <h3 translate>brightness-automations.brightnessAutomations.miscConfig</h3>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>brightness-automations.brightnessAutomations.transition.title</span>
+          <span translate>brightness-automations.brightnessAutomations.transition.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config().transition"
+              (change)="toggleTransition()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="setting-row-group" @vshrink *ngIf="config().transition">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>brightness-automations.brightnessAutomations.transitionTime.title</span>
+            <span translate>brightness-automations.brightnessAutomations.transitionTime.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-duration-input-setting [value]="config().transitionTime"
+                                        (valueChange)="updateTransitionTime($event)"></app-duration-input-setting>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

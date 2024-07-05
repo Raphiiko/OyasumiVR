@@ -17,7 +17,6 @@ import { BrightnessAutomationsConfig } from '../../../../models/automations';
   animations: [hshrink()],
 })
 export class BrightnessAutomationsViewComponent {
-  activeTab: 'BRIGHTNESS_AUTOMATIONS' | 'HMD_SETTINGS' = 'BRIGHTNESS_AUTOMATIONS';
   advancedMode = false;
 
   constructor(

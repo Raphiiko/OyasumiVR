@@ -1,16 +1,16 @@
-export type SetBrightnessReason =
+export type SetBrightnessOrCCTReason =
   | 'SLEEP_MODE_ENABLE'
   | 'SLEEP_MODE_DISABLE'
   | 'SLEEP_PREPARATION'
   | 'AT_SUNSET'
   | 'AT_SUNRISE';
 
-export interface SetBrightnessOptions {
+export interface SetBrightnessOrCCTOptions {
   cancelActiveTransition: boolean;
-  logReason: SetBrightnessReason | null;
+  logReason: SetBrightnessOrCCTReason | null;
 }
 
-export const SET_BRIGHTNESS_OPTIONS_DEFAULTS: SetBrightnessOptions = {
+export const SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS: SetBrightnessOrCCTOptions = {
   cancelActiveTransition: true,
   logReason: null,
 };

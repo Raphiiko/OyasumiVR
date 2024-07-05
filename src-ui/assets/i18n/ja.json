@@ -150,41 +150,6 @@
       "softwareBrightness": {
         "description": "HMDに表示される映像の明るさを調整します",
         "title": "ソフトウェアの明るさを変更する"
-      },
-      "transition": {
-        "description": "輝度を徐々に遷移させる",
-        "title": "なめらかな遷移"
-      },
-      "transitionTime": {
-        "description": "遷移するのにかかる時間",
-        "title": "遷移時間"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
-          "title": "過熱防止機能",
-          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します",
-          "title": "最大輝度"
-        },
-        "permitRiskRange": {
-          "description": "150%を超えないように制限します。",
-          "title": "安全な輝度レベルに制限",
-          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "特定のHMDに対して設定ができます。",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します。",
-          "title": "最大輝度"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -218,13 +183,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "輝度自動化",
       "brightness": "輝度",
       "hardwareBrightness": "ハードウェアの輝度",
       "softwareBrightness": "ソフトウェアの明るさ"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyondの自動化",
       "fanSpeed": "ファン速度"
     },
     "color-picker-modal": {
@@ -1584,6 +1547,32 @@
           "title": "翻訳ファイルを読み込む"
         },
         "title": "言語・翻訳"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
+          "title": "過熱防止機能",
+          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        },
+        "maxBrightness": {
+          "description": "OyasumiVRが設定する最大輝度の値を制限します",
+          "title": "最大輝度"
+        },
+        "permitRiskRange": {
+          "description": "150%を超えないように制限します。",
+          "title": "安全な輝度レベルに制限",
+          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "OyasumiVRが設定する最大輝度の値を制限します。",
+          "title": "最大輝度"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

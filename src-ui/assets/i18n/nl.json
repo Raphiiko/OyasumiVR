@@ -150,41 +150,6 @@
       "softwareBrightness": {
         "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
         "title": "Zet de software helderheid naar"
-      },
-      "transition": {
-        "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid",
-        "title": "Vloeiende overgang"
-      },
-      "transitionTime": {
-        "description": "Hoe lang de vloeiende overgang zal duren",
-        "title": "Overgangsduur"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
-          "title": "Overdrive ventilator veiligheid",
-          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
-        },
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "permitRiskRange": {
-          "description": "Voorkomt dat je de helderheid boven 150% zet",
-          "title": "Beperk tot veilige schermhelderheidswaarden",
-          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier kan je alle instellingen vinden mbt schermhelderheid voor jou specifieke VR headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -218,13 +183,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Helderheid Automatiseringen",
       "brightness": "Helderheid",
       "hardwareBrightness": "Hardware Helderheid",
       "softwareBrightness": "Software Helderheid"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automatiseringen",
       "fanSpeed": "Ventilator Snelheid"
     },
     "color-picker-modal": {
@@ -1584,6 +1547,32 @@
           "title": "Laad vertalingsbestand"
         },
         "title": "Taal & Vertalen"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
+          "title": "Overdrive ventilator veiligheid",
+          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
+        },
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "permitRiskRange": {
+          "description": "Voorkomt dat je de helderheid boven 150% zet",
+          "title": "Beperk tot veilige schermhelderheidswaarden",
+          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

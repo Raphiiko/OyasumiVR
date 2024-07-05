@@ -116,41 +116,6 @@
       "softwareBrightness": {
         "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
         "title": "Cambia el brillo del software a"
-      },
-      "transition": {
-        "description": "Transición suave al valor de brillo deseado",
-        "title": "Ajuste el brillo gradualmente"
-      },
-      "transitionTime": {
-        "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo.",
-        "title": "Tiempo de transición"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
-          "title": "Seguridad del ventilador Overdrive",
-          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
-        },
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "permitRiskRange": {
-          "description": "Impide ajustar el brillo por encima del 150%.",
-          "title": "Limitar a niveles de brillo seguros",
-          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
-        },
-        "title": "Más allá de la pantalla grande"
-      },
-      "description": "Aquí encontrarás cualquier ajuste relacionado con el brillo para tu casco de RV específico.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -184,7 +149,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automatización del brillo",
       "brightness": "Brillo",
       "hardwareBrightness": "Hardware Brillo",
       "softwareBrightness": "Software Brillo"
@@ -1317,6 +1281,32 @@
           "title": "Cargar archivo de traducción"
         },
         "title": "Idiomas y traducción"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
+          "title": "Seguridad del ventilador Overdrive",
+          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
+        },
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "permitRiskRange": {
+          "description": "Impide ajustar el brillo por encima del 150%.",
+          "title": "Limitar a niveles de brillo seguros",
+          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
+        },
+        "title": "Más allá de la pantalla grande"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

@@ -18,7 +18,7 @@
           (click)="editEvent.emit(event.name)"
         ></app-brightness-automation-config-label>
         <label class="switch-toggle">
-          <input type="checkbox" [checked]="config[event.name].enabled" />
+          <input type="checkbox" [checked]="config[event.name].enabled" (change)="toggleEvent(event.name)"/>
           <span class="switch-toggle-slider"></span>
         </label>
       </div>

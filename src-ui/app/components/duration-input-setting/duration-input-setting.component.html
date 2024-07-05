@@ -1,0 +1,15 @@
+<div class="wrapper" (clickOutside)="inputOpen = false">
+  <input type="text" [value]="displayValue()" readonly (mouseenter)="mouseEnter('INPUT')" (mouseleave)="mouseLeave('INPUT')" [disabled]="disabled">
+  <div class="input-container" *ngIf="inputOpen" @fade (mouseenter)="mouseEnter('CONTAINER')" (mouseleave)="mouseLeave('CONTAINER')">
+    <div class="input-container-labels">
+      <span>H</span>
+      <span>M</span>
+      <span>S</span>
+    </div>
+    <div class="input-container-inputs">
+      <input type="number" [value]="hours()" min="0" max="24" (input)="setHours(hourInput.value)" #hourInput>
+      <input type="number" [value]="minutes()" min="0" max="60" (input)="setMinutes(minuteInput.value)" #minuteInput>
+      <input type="number" [value]="seconds()" min="0" max="60" (input)="setSeconds(secondInput.value)" #secondInput>
+    </div>
+  </div>
+</div>

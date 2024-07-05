@@ -227,7 +227,7 @@
       <div
         class="active-effect"
         @fade
-        *ngIf="brightnessAutomation.anyTransitionActive | async"
+        *ngIf="brightnessAutomation.anyBrightnessTransitionActive | async"
       ></div>
     </div>
 
@@ -312,6 +312,13 @@
         <i class="material-icons-round">notification_important</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'brightnessCct']">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">brightness_6</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.brightnessCct</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">

@@ -41,6 +41,9 @@ export interface AppSettings {
   mqttUsername: string | null;
   mqttPassword: string | null;
   mqttSecureSocket: boolean;
+  // Brightness & CCT
+  cctControlEnabled: boolean;
+  cctSoftwareMode: boolean;
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
@@ -111,6 +114,8 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttPassword: null,
   mqttSecureSocket: false,
   openVrInitDelayFix: false,
+  cctControlEnabled: true,
+  cctSoftwareMode: false,
 };
 
 export type ExecutableReferenceStatus =

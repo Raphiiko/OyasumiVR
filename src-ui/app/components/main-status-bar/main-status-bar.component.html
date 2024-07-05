@@ -81,30 +81,10 @@
         }}</span>
       </div>
     </ng-container>
-    <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
-      <div
-        class="pill bsb-fanctl clickable"
-        *ngVar="{ hover: false }; let state"
-        (mouseenter)="state.hover = true"
-        (mouseleave)="state.hover = false"
-        [tooltip]="'comp.main-status-bar.bsbFanSpeed.tooltip'"
-        [tooltipMode]="'top'"
-        [tooltipMargin]="8"
-        (click)="openBSBFanSpeedControlModal()"
-        @hshrink
-      >
-        <div class="pill-icon" @hshrink>
-          <i class="material-symbols-outlined icon-filled">mode_fan</i>
-        </div>
-        <span @hshrink *ngIf="state.hover"
-          >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
-        >
-        <span>{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
-      </div>
-    </ng-container>
+
     <ng-container *ngIf="pulsoid.heartRate | async">
       <div
-        class="pill heartrate"
+        class="pill heartrate "
         *ngVar="{ hover: false }; let state"
         (mouseenter)="state.hover = true"
         (mouseleave)="state.hover = false"
@@ -120,12 +100,55 @@
         <span @hshrink *ngIf="state.hover"
           >{{ 'comp.main-status-bar.heartrate' | translate }}:&nbsp;</span
         >
-        <span>{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
+        <span class="monospace">{{ pulsoid.heartRate | async }}&nbsp;BPM</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
+      <div
+        class="pill bsb-fanctl clickable "
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.bsbFanSpeed.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openBSBFanSpeedControlModal()"
+        @hshrink
+      >
+        <div class="pill-icon" @hshrink>
+          <i class="material-symbols-outlined icon-filled">mode_fan</i>
+        </div>
+        <span @hshrink *ngIf="state.hover"
+          >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
+        >
+        <span class="monospace">{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="cctControlEnabled">
+      <div
+        class="pill cct-control clickable"
+        *ngVar="{ hover: false }; let state"
+        (mouseenter)="state.hover = true"
+        (mouseleave)="state.hover = false"
+        [tooltip]="'comp.main-status-bar.cctControl.tooltip'"
+        [tooltipMode]="'top'"
+        [tooltipMargin]="8"
+        (click)="openCCTControlModal()"
+        @hshrink
+        [class.breathing]="brightnessCctAutomations.anyCCTTransitionActive | async"
+      >
+        <div class="pill-icon" @hshrink>
+          <div class="colortemp-icon" [style.background-color]="cctControl.cctCSSColor"></div>
+        </div>
+        <span @hshrink *ngIf="state.hover"
+          >{{ 'comp.main-status-bar.cctControl.label' | translate }}:&nbsp;</span
+        >
+        <span class="monospace">{{ cctControl.cctStream | async }}K</span>
       </div>
     </ng-container>
     <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === false">
       <div
-        class="pill brightness-simple clickable"
+        class="pill brightness-simple clickable "
         *ngVar="{ hover: false }; let state"
         (mouseenter)="state.hover = true"
         (mouseleave)="state.hover = false"
@@ -134,7 +157,7 @@
         [tooltipMargin]="8"
         (click)="openBrightnessControlModal()"
         @hshrink
-        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
+        [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">brightness_medium</i>
@@ -142,7 +165,7 @@
         <span @hshrink *ngIf="state.hover"
           >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
         >
-        <span>{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        <span class="monospace">{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
       </div>
     </ng-container>
     <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === true">
@@ -156,16 +179,18 @@
         [tooltipMargin]="8"
         (click)="openBrightnessControlModal()"
         @hshrink
-        [class.breathing]="brightnessAutomations.anyTransitionActive | async"
+        [class.breathing]="brightnessCctAutomations.anyBrightnessTransitionActive | async"
       >
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">monitor</i>
         </div>
-        <span [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
-          >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
-        >
-        <span><b>&nbsp;|&nbsp;</b></span>
-        <span>{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        <span>
+          <span class="monospace" [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
+            >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+          >
+          <span><b>&nbsp;|&nbsp;</b></span>
+          <span class="monospace">{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        </span>
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">image</i>
         </div>

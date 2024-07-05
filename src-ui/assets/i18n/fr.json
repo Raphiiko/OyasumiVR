@@ -57,14 +57,6 @@
     "brightnessAutomations": {
       "brightness": {
         "title": "Changer la luminosité pour"
-      },
-      "transition": {
-        "description": "Transitionne en douceur vers la luminosité paramétrée",
-        "title": "Ajuster la luminosité graduellement"
-      },
-      "transitionTime": {
-        "description": "En combien de temps la transition de luminosité s'effectue",
-        "title": "Temps de transition"
       }
     },
     "title": "Automatisation de luminosité"
@@ -78,9 +70,6 @@
     }
   },
   "comp": {
-    "brightness-control-modal": {
-      "automationsTooltip": "Automatisation de luminosité"
-    },
     "confirm-modal": {
       "defaultTitle": "Confirmer"
     },

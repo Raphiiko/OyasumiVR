@@ -150,41 +150,6 @@
       "softwareBrightness": {
         "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
         "title": "조절할 소프트웨어 밝기"
-      },
-      "transition": {
-        "description": "원하는 밝기까지 조금씩 부드럽게 조절해요.",
-        "title": "점진적 밝기 조절"
-      },
-      "transitionTime": {
-        "description": "원하는 밝기까지 조절될 때까지 걸리는 시간이에요.",
-        "title": "변화 시간"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "밝기 값이 100% 이상일 때 팬 속도를 강제로 100%로 설정해요.",
-          "title": "과부하 팬 안정화",
-          "warning": "이 기능은 공식 Bigscreen Beyond 드라이버의 안전 팬 파라미터를 모방합니다. 이 기능은 사용자의 책임 하에 비활성화하세요."
-        },
-        "maxBrightness": {
-          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
-          "title": "최대 밝기"
-        },
-        "permitRiskRange": {
-          "description": "밝기를 150% 이상으로 설정하는 것을 방지해요.",
-          "title": "안전한 밝기 수준으로 제한",
-          "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "여기에서 특정 VR 헤드셋의 밝기 관련 설정을 확인할 수 있어요.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
-          "title": "최대 밝기"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -218,13 +183,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "밝기 자동화",
       "brightness": "밝기",
       "hardwareBrightness": "하드웨어 밝기",
       "softwareBrightness": "소프트웨어 밝기"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond 자동화",
       "fanSpeed": "팬 속도"
     },
     "color-picker-modal": {
@@ -1584,6 +1547,32 @@
           "title": "번역 파일 불러오기"
         },
         "title": "언어 & 번역"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "밝기 값이 100% 이상일 때 팬 속도를 강제로 100%로 설정해요.",
+          "title": "과부하 팬 안정화",
+          "warning": "이 기능은 공식 Bigscreen Beyond 드라이버의 안전 팬 파라미터를 모방합니다. 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "permitRiskRange": {
+          "description": "밝기를 150% 이상으로 설정하는 것을 방지해요.",
+          "title": "안전한 밝기 수준으로 제한",
+          "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

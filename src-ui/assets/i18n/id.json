@@ -66,14 +66,6 @@
       "copyBrightness": "Salin nilai\nkecerahan saat ini",
       "softwareBrightness": {
         "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
-      },
-      "transition": {
-        "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan",
-        "title": "Atur kecerahan bertahap"
-      },
-      "transitionTime": {
-        "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru",
-        "title": "Durasi transisi"
       }
     },
     "mode": {
@@ -102,7 +94,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automasi Kecerahan",
       "brightness": "Kecerahan"
     },
     "confirm-modal": {

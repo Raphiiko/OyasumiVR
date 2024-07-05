@@ -47,4 +47,10 @@ export class BrightnessAutomationsListComponent implements OnInit {
         this.config = config;
       });
   }
+
+  toggleEvent(name: BrightnessEvent) {
+    this.automationConfigService.updateAutomationConfig('BRIGHTNESS_AUTOMATIONS', {
+      [name]: { ...this.config[name], enabled: !this.config[name].enabled },
+    });
+  }
 }

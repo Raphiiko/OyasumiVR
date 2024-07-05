@@ -150,41 +150,6 @@
       "softwareBrightness": {
         "description": "调整 VR 头显的图像亮度",
         "title": "将软件亮度更改为"
-      },
-      "transition": {
-        "description": "平滑地过渡到所需的亮度值",
-        "title": "逐步调整亮度"
-      },
-      "transitionTime": {
-        "description": "过渡到新亮度设置所需的时间",
-        "title": "过渡时间"
-      }
-    },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "当亮度调整至超过 150% 的值时，强制将风扇速度设置为 100%",
-          "title": "风扇安全限制",
-          "warning": "此功能模仿官方 Bigscreen Beyond 驱动程序的相关参数。\n 请注意，禁用此功能可能会损坏你的头戴设备，并导致你失去保修资格。\n只有在你自愿承担风险的情况下才禁用此功能。"
-        },
-        "maxBrightness": {
-          "description": "限制 OyasumiVR 将设置的最大亮度值。",
-          "title": "最大亮度"
-        },
-        "permitRiskRange": {
-          "description": "防止将亮度设置得高于 150%",
-          "title": "将屏幕亮度限制在安全范围",
-          "warning": "禁用这个功能所产生的行为不被制造商所支持！\n\n 请注意，禁用此功能可能会损坏你的头戴设备，并导致你失去保修资格。\n只有在你自愿承担风险的情况下才禁用此功能"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "在这里，你可以找到与你的特定 VR 头戴设备的亮度相关的设置。",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "限制 OyasumiVR 将设置的最大亮度值。",
-          "title": "最大亮度"
-        },
-        "title": "Valve Index"
       }
     },
     "mode": {
@@ -218,13 +183,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "自动化亮度调整",
       "brightness": "亮度",
       "hardwareBrightness": "硬件亮度",
       "softwareBrightness": "软件亮度"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond 自动化",
       "fanSpeed": "风扇速度"
     },
     "color-picker-modal": {
@@ -1584,6 +1547,32 @@
           "title": "加载翻译文件"
         },
         "title": "语言和翻译"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "当亮度调整至超过 150% 的值时，强制将风扇速度设置为 100%",
+          "title": "风扇安全限制",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驱动程序的相关参数。\n 请注意，禁用此功能可能会损坏你的头戴设备，并导致你失去保修资格。\n只有在你自愿承担风险的情况下才禁用此功能。"
+        },
+        "maxBrightness": {
+          "description": "限制 OyasumiVR 将设置的最大亮度值。",
+          "title": "最大亮度"
+        },
+        "permitRiskRange": {
+          "description": "防止将亮度设置得高于 150%",
+          "title": "将屏幕亮度限制在安全范围",
+          "warning": "禁用这个功能所产生的行为不被制造商所支持！\n\n 请注意，禁用此功能可能会损坏你的头戴设备，并导致你失去保修资格。\n只有在你自愿承担风险的情况下才禁用此功能"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "限制 OyasumiVR 将设置的最大亮度值。",
+          "title": "最大亮度"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

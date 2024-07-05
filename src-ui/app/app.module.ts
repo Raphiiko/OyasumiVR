@@ -10,7 +10,7 @@ import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
@@ -109,7 +109,7 @@ import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/s
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
 import { SoftwareBrightnessControlService } from './services/brightness-control/software-brightness-control.service';
-import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
+import { BrightnessCctAutomationService } from './services/brightness-cct-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
@@ -173,7 +173,6 @@ import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { OscControlService } from './services/osc-control/osc-control.service';
 import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
-import { BrightnessHmdSettingsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-hmd-settings-tab/brightness-hmd-settings-tab.component';
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
 import { HmdAutomationsBigscreenBeyondTabComponent } from './views/dashboard-view/views/hmd-automations-view/tabs/hmd-automations-bigscreen-beyond-tab/hmd-automations-bigscreen-beyond-tab.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
@@ -220,10 +219,15 @@ import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/vie
 import { VrcAvatarSelectButtonComponent } from './components/vrc-avatar-select-button/vrc-avatar-select-button.component';
 import { VrcAvatarSelectModalComponent } from './components/vrc-avatar-select-modal/vrc-avatar-select-modal.component';
 import { VRChatAvatarAutomationsService } from './services/vrchat-avatar-automations.service';
-import { NewBrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/new-brightness-automations-tab.component';
+import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-tab.component';
 import { BrightnessAutomationConfigLabelComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-config-label/brightness-automation-config-label.component';
 import { BrightnessAutomationsListComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-list/brightness-automations-list.component';
 import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-details/brightness-automation-details.component';
+import { DurationInputSettingComponent } from './components/duration-input-setting/duration-input-setting.component';
+import { ColorTemperatureInputSettingComponent } from './components/color-temperature-input-setting/color-temperature-input-setting.component';
+import { CCTControlService } from './services/cct-control/cct-control.service';
+import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
+import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 
 [
   localeEN,
@@ -336,7 +340,6 @@ export function createTranslateLoader(http: HttpClient) {
     HotkeySelectorModalComponent,
     SettingsStatusInfoViewComponent,
     SnowverlayComponent,
-    BrightnessHmdSettingsTabComponent,
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
@@ -358,17 +361,21 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatAvatarAutomationsViewComponent,
     VrcAvatarSelectButtonComponent,
     VrcAvatarSelectModalComponent,
-    NewBrightnessAutomationsTabComponent,
+    BrightnessAutomationsTabComponent,
     BrightnessAutomationConfigLabelComponent,
     BrightnessAutomationsListComponent,
     BrightnessAutomationDetailsComponent,
+    DurationInputSettingComponent,
+    ColorTemperatureInputSettingComponent,
+    CCTControlModalComponent,
+    SettingsBrightnessCctViewComponent,
   ],
+  exports: [SelectBoxComponent],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule,
     MomentModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
@@ -385,8 +392,7 @@ export function createTranslateLoader(http: HttpClient) {
     NgPipesModule,
     FormsModule,
   ],
-  providers: [ThemeService, TStringTranslatePipe],
-  exports: [SelectBoxComponent],
+  providers: [ThemeService, TStringTranslatePipe, provideHttpClient(withInterceptorsFromDi())],
 })
 export class AppModule {
   constructor(
@@ -465,7 +471,8 @@ export class AppModule {
     // Shutdown automations
     private shutdownAutomationsService: ShutdownAutomationsService,
     // Brightness control automations
-    private brightnessControlAutomationService: BrightnessControlAutomationService,
+    private brightnessControlAutomationService: BrightnessCctAutomationService,
+    private cctControlService: CCTControlService,
     // Render resolution automations
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
@@ -596,6 +603,7 @@ export class AppModule {
             ),
             // Initialize Brightness Control
             await Promise.all([
+              this.logInit('CCTControlService initialization', this.cctControlService.init()),
               this.logInit(
                 'HardwareBrightnessControlService initialization',
                 this.hardwareBrightnessControlService.init()

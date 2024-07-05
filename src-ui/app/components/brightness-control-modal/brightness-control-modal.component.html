@@ -49,8 +49,8 @@
     </div>
   </div>
 
-  <div
-    class="footer-row"
+  <a
+    class="automations-link"
     *ngIf="
       !router.isActive('/dashboard/brightnessAutomations', {
         paths: 'subset',
@@ -59,17 +59,10 @@
         matrixParams: 'ignored'
       })
     "
-    @vshrink
+    [routerLink]="['/dashboard/brightnessAutomations']"
+    (click)="close()"
+    @hshrink
   >
-    <a
-      class="shortcut-automations"
-      [routerLink]="['/dashboard/brightnessAutomations']"
-      [routerLinkActive]="'active'"
-      [tooltip]="'comp.brightness-control-modal.automationsTooltip'"
-      [tooltipMode]="'left'"
-      (click)="close()"
-    >
-      <i class="material-icons">settings</i>
-    </a>
-  </div>
+    <i class="material-icons">settings</i>
+  </a>
 </div>
