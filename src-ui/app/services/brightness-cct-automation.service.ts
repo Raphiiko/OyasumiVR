@@ -17,7 +17,7 @@ import {
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
-import { BrightnessEventAutomationConfig } from '../models/automations';
+import { BrightnessEvent, BrightnessEventAutomationConfig } from '../models/automations';
 import { OpenVRService } from './openvr.service';
 import {
   EventLogCCTChanged,
@@ -32,24 +32,17 @@ import { SoftwareBrightnessControlService } from './brightness-control/software-
 import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
 
-type BrightnessAutomationType =
-  | 'SLEEP_MODE_ENABLE'
-  | 'SLEEP_MODE_DISABLE'
-  | 'SLEEP_PREPARATION'
-  | 'AT_SUNSET'
-  | 'AT_SUNRISE';
-
 @Injectable({
   providedIn: 'root',
 })
 export class BrightnessCctAutomationService {
   private lastActivatedBrightnessTransition = new BehaviorSubject<{
     tasks: CancellableTask[];
-    automation: BrightnessAutomationType;
+    automation: BrightnessEvent;
   } | null>(null);
   private lastActivatedCCTTransition = new BehaviorSubject<{
     tasks: CancellableTask[];
-    automation: BrightnessAutomationType;
+    automation: BrightnessEvent;
   } | null>(null);
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
@@ -127,7 +120,7 @@ export class BrightnessCctAutomationService {
       .subscribe();
   }
 
-  public isBrightnessTransitionActive(automation: BrightnessAutomationType): Observable<boolean> {
+  public isBrightnessTransitionActive(automation: BrightnessEvent): Observable<boolean> {
     return this.lastActivatedBrightnessTransition.pipe(
       switchMap((lastActivatedTransition) => {
         if (lastActivatedTransition?.automation !== automation) return of(false);
@@ -144,7 +137,7 @@ export class BrightnessCctAutomationService {
     );
   }
 
-  public isCCTTransitionActive(automation: BrightnessAutomationType): Observable<boolean> {
+  public isCCTTransitionActive(automation: BrightnessEvent): Observable<boolean> {
     return this.lastActivatedCCTTransition.pipe(
       switchMap((transition) => {
         if (transition?.automation !== automation) return of(false);
@@ -158,14 +151,14 @@ export class BrightnessCctAutomationService {
   }
 
   private async onAutomationTrigger(
-    automationType: BrightnessAutomationType,
+    automationType: BrightnessEvent,
     config: BrightnessEventAutomationConfig,
     forceInstant = false
   ) {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
     // Determine the log reason
-    const eventLogReasonMap: Record<BrightnessAutomationType, SetBrightnessOrCCTReason> = {
+    const eventLogReasonMap: Record<BrightnessEvent, SetBrightnessOrCCTReason> = {
       SLEEP_MODE_ENABLE: 'SLEEP_MODE_ENABLE',
       SLEEP_MODE_DISABLE: 'SLEEP_MODE_DISABLE',
       SLEEP_PREPARATION: 'SLEEP_PREPARATION',

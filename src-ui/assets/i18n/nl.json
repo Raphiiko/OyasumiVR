@@ -416,8 +416,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -534,8 +532,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -588,8 +584,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {

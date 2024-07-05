@@ -31,6 +31,7 @@ import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-s
 import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
 import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
 import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
+import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
 
 @Component({
   selector: 'app-event-log-entry',
@@ -70,6 +71,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogBSBFanSpeedChangedEntryParser(),
     new EventLogBSBLedChangedEntryParser(),
     new EventLogVRChatAvatarChangedEntryParser(),
+    new EventLogCCTChangedEntryParser(),
   ];
 
   constructor(

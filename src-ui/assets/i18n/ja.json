@@ -416,8 +416,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
@@ -534,8 +532,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
@@ -588,8 +584,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {

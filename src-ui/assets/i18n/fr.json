@@ -140,12 +140,6 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          }
-        },
         "msiAfterburnerProfileSet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -160,12 +154,6 @@
           "title": {
             "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
             "custom": "Résolution d'affichage de SteamVR passée à {value}"
-          }
-        },
-        "simpleBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -198,12 +186,6 @@
             "osc-control": "Le mode sommeil a été activé via OSC"
           },
           "title": "Mode sommeil activé"
-        },
-        "softwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {

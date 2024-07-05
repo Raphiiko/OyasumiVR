@@ -346,8 +346,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -462,8 +460,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -509,8 +505,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {

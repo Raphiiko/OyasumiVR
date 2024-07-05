@@ -401,6 +401,17 @@
           },
           "title": "Bigscreen Beyond RGB Led set to {color}"
         },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset color temperature set to {icon} {temperature}K",
+            "transition": "Headset color temperature transitioning to {icon} {temperature}K"
+          }
+        },
         "changedAudioDeviceVolume": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -461,8 +472,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -579,8 +590,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -633,8 +644,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {

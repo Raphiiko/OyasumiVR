@@ -416,8 +416,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
@@ -534,8 +532,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
@@ -588,8 +584,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因为已关闭睡眠模式",
-            "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {

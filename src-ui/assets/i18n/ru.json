@@ -416,8 +416,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Так как режим сна был отключен",
-            "SLEEP_MODE_ENABLED": "Так как режим сна был включен",
             "SLEEP_PREPARATION": "Так как Вы готовились ко сну"
           },
           "title": {
@@ -534,8 +532,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Так как режим сна был отключен",
-            "SLEEP_MODE_ENABLED": "Так как режим сна был включен",
             "SLEEP_PREPARATION": "Так как Вы готовились ко сну"
           },
           "title": {
@@ -588,8 +584,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Так как режим сна был отключен",
-            "SLEEP_MODE_ENABLED": "Так как режим сна был включен",
             "SLEEP_PREPARATION": "Так как Вы готовились ко сну"
           },
           "title": {

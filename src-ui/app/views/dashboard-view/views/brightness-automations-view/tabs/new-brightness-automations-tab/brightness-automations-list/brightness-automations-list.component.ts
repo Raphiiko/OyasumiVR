@@ -6,12 +6,15 @@ import {
 } from '../../../../../../../models/automations';
 import { AutomationConfigService } from '../../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
+import { BrightnessCctAutomationService } from '../../../../../../../services/brightness-cct-automation.service';
+import { fade } from '../../../../../../../utils/animations';
 
 @Component({
   selector: 'app-brightness-automations-list',
   templateUrl: './brightness-automations-list.component.html',
   styleUrls: ['./brightness-automations-list.component.scss'],
+  animations: [fade()],
 })
 export class BrightnessAutomationsListComponent implements OnInit {
   protected config: BrightnessAutomationsConfig = structuredClone(
@@ -34,10 +37,21 @@ export class BrightnessAutomationsListComponent implements OnInit {
 
   constructor(
     private automationConfigService: AutomationConfigService,
+    private brightnessCctAutomations: BrightnessCctAutomationService,
     private destroyRef: DestroyRef
   ) {}
 
   ngOnInit() {
+    this.events.forEach((event) => {
+      combineLatest([
+        this.brightnessCctAutomations.isBrightnessTransitionActive(event.name),
+        this.brightnessCctAutomations.isCCTTransitionActive(event.name),
+      ])
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe(([brightnessActive, cctActive]) => {
+          event.inProgress = brightnessActive || cctActive;
+        });
+    });
     this.automationConfigService.configs
       .pipe(
         takeUntilDestroyed(this.destroyRef),

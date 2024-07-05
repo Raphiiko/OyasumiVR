@@ -233,8 +233,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },
@@ -330,8 +328,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           },
           "title": {
@@ -374,8 +370,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },

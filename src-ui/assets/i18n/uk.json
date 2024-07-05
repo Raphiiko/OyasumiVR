@@ -416,8 +416,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
-            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
             "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
           },
           "title": {
@@ -534,8 +532,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
-            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
             "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
           },
           "title": {
@@ -588,8 +584,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Оскільки сплячий режим було вимкнено",
-            "SLEEP_MODE_ENABLED": "Оскільки сплячий режим був увімкнений",
             "SLEEP_PREPARATION": "Оскільки ви готувалися до сну"
           },
           "title": {
