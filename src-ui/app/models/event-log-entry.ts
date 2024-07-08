@@ -41,7 +41,8 @@ export type EventLogEntry =
   | EventLogUnmutedAudioDevice
   | EventLogBSBFanSpeedChanged
   | EventLogBSBLedChanged
-  | EventLogVRChatAvatarChanged;
+  | EventLogVRChatAvatarChanged
+  | EventLogCCTChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -72,6 +73,7 @@ export type EventLogType =
   | 'unmutedAudioDevice'
   | 'bsbFanSpeedChanged'
   | 'bsbLedChanged'
+  | 'cctChanged'
   | 'vrchatAvatarChanged';
 
 export interface EventLogBase {
@@ -132,7 +134,12 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -140,7 +147,12 @@ export interface EventLogHardwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
   type: 'softwareBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -148,7 +160,25 @@ export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSimpleBrightnessChanged extends EventLogBase {
   type: 'simpleBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
+  transition: boolean;
+  value: number;
+  transitionTime: number;
+}
+
+export interface EventLogCCTChanged extends EventLogBase {
+  type: 'cctChanged';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;

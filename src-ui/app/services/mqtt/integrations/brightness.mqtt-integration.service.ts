@@ -6,9 +6,9 @@ import { SoftwareBrightnessControlService } from '../../brightness-control/softw
 import { distinctUntilChanged } from 'rxjs';
 import { MqttNumberProperty, MqttToggleProperty } from '../../../models/mqtt';
 import { AutomationConfigService } from '../../automation-config.service';
-import { BrightnessControlAdvancedModeAutomationConfig } from '../../../models/automations';
 import { isEqual } from 'lodash';
 import { ensurePrecision } from '../../../utils/number-utils';
+import { BrightnessAutomationsConfig } from '../../../models/automations';
 
 @Injectable({
   providedIn: 'root',
@@ -127,9 +127,9 @@ export class BrightnessMqttIntegrationService {
     this.mqtt
       .getCommandStreamForProperty<MqttToggleProperty>('advancedBrightnessMode')
       .subscribe((command) => {
-        this.automationConfigService.updateAutomationConfig<BrightnessControlAdvancedModeAutomationConfig>(
-          'BRIGHTNESS_CONTROL_ADVANCED_MODE',
-          { enabled: command.current.value }
+        this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
+          'BRIGHTNESS_AUTOMATIONS',
+          { advancedMode: command.current.value }
         );
       });
   }

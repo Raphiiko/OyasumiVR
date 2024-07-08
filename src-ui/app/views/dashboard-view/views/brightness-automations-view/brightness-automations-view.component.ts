@@ -7,8 +7,8 @@ import {
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { hshrink } from '../../../../utils/animations';
 import { AutomationConfigService } from '../../../../services/automation-config.service';
-import { BrightnessControlAdvancedModeAutomationConfig } from '../../../../models/automations';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { BrightnessAutomationsConfig } from '../../../../models/automations';
 
 @Component({
   selector: 'app-brightness-automations-view',
@@ -17,7 +17,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   animations: [hshrink()],
 })
 export class BrightnessAutomationsViewComponent {
-  activeTab: 'BRIGHTNESS_AUTOMATIONS' | 'HMD_SETTINGS' = 'BRIGHTNESS_AUTOMATIONS';
   advancedMode = false;
 
   constructor(
@@ -25,7 +24,7 @@ export class BrightnessAutomationsViewComponent {
     private automationConfigService: AutomationConfigService
   ) {
     this.automationConfigService.configs.pipe(takeUntilDestroyed()).subscribe((configs) => {
-      this.advancedMode = configs.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+      this.advancedMode = configs.BRIGHTNESS_AUTOMATIONS.advancedMode;
     });
   }
 
@@ -41,9 +40,9 @@ export class BrightnessAutomationsViewComponent {
   }
 
   async toggleAdvancedMode() {
-    await this.automationConfigService.updateAutomationConfig<BrightnessControlAdvancedModeAutomationConfig>(
-      'BRIGHTNESS_CONTROL_ADVANCED_MODE',
-      { enabled: !this.advancedMode }
+    await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
+      'BRIGHTNESS_AUTOMATIONS',
+      { advancedMode: !this.advancedMode }
     );
   }
 }

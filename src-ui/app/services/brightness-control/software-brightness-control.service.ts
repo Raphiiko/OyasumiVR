@@ -4,7 +4,10 @@ import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
 import { invoke } from '@tauri-apps/api';
-import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import {
+  SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
+  SetBrightnessOrCCTOptions,
+} from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 
 export const DEFAULT_SOFTWARE_BRIGHTNESS_GAMMA = 0.55;
@@ -52,9 +55,9 @@ export class SoftwareBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       const task = new CancellableTask();
       task.start();
@@ -97,9 +100,9 @@ export class SoftwareBrightnessControlService {
 
   async setBrightness(
     percentage: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ) {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     if (percentage == this.brightness) return;
     this._brightness.next(percentage);

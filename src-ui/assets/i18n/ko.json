@@ -138,84 +138,17 @@
     "whitelist": "플레이어 화이트리스트"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "수면 모드가 비활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요.",
-          "onSleepEnable": "수면 모드가 활성화된 경우 SteamVR 또는 OyasumiVR이 시작 될 때 이 밝기 값을 바로 설정해요."
-        },
-        "title": "시작시 밝기 적용"
-      },
-      "brightness": {
-        "title": "조절할 밝기"
-      },
-      "copyBrightness": "현재\n밝기 값 복사",
-      "description": "잠들거나 일어날 때와 같이 다양한 시간에 OyasumiVR이 VR 헤드셋의 밝기를 자동으로 조정하도록 설정해요.",
-      "hardwareBrightness": {
-        "description": "디스플레이 자체의 밝기를 조절해요.",
-        "title": "조절할 하드웨어 밝기"
-      },
-      "onSleepDisable": {
-        "description": "밝기를 조절해요",
-        "title": "수면 모드 비활성화 시"
-      },
-      "onSleepEnable": {
-        "description": "밝기를 조절해요",
-        "title": "수면 모드 활성화 시"
-      },
-      "onSleepPreparation": {
-        "description": "밝기를 조절해요",
-        "title": "수면 준비 시작 시"
-      },
-      "onStartup": {
-        "description": "밝기를 조절해요",
-        "title": "OyasumiVR 또는 SteamVR 시작 시"
-      },
-      "sleepAutomations": "수면 자동화",
-      "sleepPreparation": {
-        "description": "OyasumiVR의 오버레이에서 버튼을 눌러 수면 준비를 할 수 있어요. 이 버튼은 잠자기 전에 미리 밝기를 낮추는 등 수면 준비 자동화 기능이 하나 이상 활성화되어 있을 때 표시됩니다.",
-        "title": "수면 준비"
-      },
-      "softwareBrightness": {
-        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
-        "title": "조절할 소프트웨어 밝기"
-      },
-      "startupAutomations": "시작 자동화",
-      "transition": {
-        "description": "원하는 밝기까지 조금씩 부드럽게 조절해요.",
-        "title": "점진적 밝기 조절"
-      },
-      "transitionTime": {
-        "description": "원하는 밝기까지 조절될 때까지 걸리는 시간이에요.",
-        "title": "변화 시간"
-      }
+    "brightness": {
+      "title": "조절할 밝기"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "밝기 값이 100% 이상일 때 팬 속도를 강제로 100%로 설정해요.",
-          "title": "과부하 팬 안정화",
-          "warning": "이 기능은 공식 Bigscreen Beyond 드라이버의 안전 팬 파라미터를 모방합니다. 이 기능은 사용자의 책임 하에 비활성화하세요."
-        },
-        "maxBrightness": {
-          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
-          "title": "최대 밝기"
-        },
-        "permitRiskRange": {
-          "description": "밝기를 150% 이상으로 설정하는 것을 방지해요.",
-          "title": "안전한 밝기 수준으로 제한",
-          "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "여기에서 특정 VR 헤드셋의 밝기 관련 설정을 확인할 수 있어요.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
-          "title": "최대 밝기"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "현재\n밝기 값 복사",
+    "hardwareBrightness": {
+      "description": "디스플레이 자체의 밝기를 조절해요.",
+      "title": "조절할 하드웨어 밝기"
+    },
+    "softwareBrightness": {
+      "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
+      "title": "조절할 소프트웨어 밝기"
     },
     "mode": {
       "advanced": "고급 모드",
@@ -248,13 +181,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "밝기 자동화",
       "brightness": "밝기",
       "hardwareBrightness": "하드웨어 밝기",
       "softwareBrightness": "소프트웨어 밝기"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond 자동화",
       "fanSpeed": "팬 속도"
     },
     "color-picker-modal": {
@@ -483,8 +414,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -601,8 +530,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -655,8 +582,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
-            "SLEEP_MODE_ENABLED": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -1614,6 +1539,32 @@
           "title": "번역 파일 불러오기"
         },
         "title": "언어 & 번역"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "밝기 값이 100% 이상일 때 팬 속도를 강제로 100%로 설정해요.",
+          "title": "과부하 팬 안정화",
+          "warning": "이 기능은 공식 Bigscreen Beyond 드라이버의 안전 팬 파라미터를 모방합니다. 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "permitRiskRange": {
+          "description": "밝기를 150% 이상으로 설정하는 것을 방지해요.",
+          "title": "안전한 밝기 수준으로 제한",
+          "warning": "이 기능은 제조사에서 지원하지 않습니다.\n\n헤드셋이 손상될 수 있다는 점에 유의하세요: 이 기능은 사용자의 책임 하에 비활성화하세요."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
+          "title": "최대 밝기"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

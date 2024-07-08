@@ -13,28 +13,7 @@
       <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>
     </div>
   </div>
-  <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
-      (click)="activeTab = 'BRIGHTNESS_AUTOMATIONS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.automations</div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'HMD_SETTINGS'"
-      (click)="activeTab = 'HMD_SETTINGS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.hmdSettings</div>
-    </div>
-  </div>
   <div class="pane-content">
-    <app-brightness-automations-tab
-      [advancedMode]="advancedMode"
-      *ngIf="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
-    ></app-brightness-automations-tab>
-    <app-brightness-hmd-settings-tab *ngIf="activeTab === 'HMD_SETTINGS'">
-    </app-brightness-hmd-settings-tab>
+    <app-brightness-automations-tab></app-brightness-automations-tab>
   </div>
 </div>

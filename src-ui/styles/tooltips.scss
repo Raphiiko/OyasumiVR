@@ -53,6 +53,24 @@
     }
   }
 
+  &.ovr-tooltip-text-align-left {
+    .ovr-tooltip-container {
+      text-align: left;
+    }
+  }
+
+  &.ovr-tooltip-text-align-right {
+    .ovr-tooltip-container {
+      text-align: right;
+    }
+  }
+
+  &.ovr-tooltip-text-align-center {
+    .ovr-tooltip-container {
+      text-align: center;
+    }
+  }
+
   &-container {
     opacity: 0;
     position: absolute;
@@ -69,7 +87,6 @@
     color: var(--color-text-1);
     font-weight: 400;
     white-space: normal;
-    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;

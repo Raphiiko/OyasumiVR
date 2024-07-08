@@ -101,84 +101,17 @@
     "whitelist": "玩家白名單"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "如果睡眠模式未啟用，則在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值",
-          "onSleepEnable": "如果睡眠模式已啟用，請在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值"
-        },
-        "title": "啟動時應用亮度設定"
-      },
-      "brightness": {
-        "title": "將亮度改為"
-      },
-      "copyBrightness": "複製\n當前亮度值",
-      "description": "讓 OyasumiVR 在不同的時間自動調整 VR 頭顯的亮度，比如睡覺或起床時",
-      "hardwareBrightness": {
-        "description": "調整顯示器本身的亮度",
-        "title": "更改硬體亮度為"
-      },
-      "onSleepDisable": {
-        "description": "調整亮度",
-        "title": "當我醒來時"
-      },
-      "onSleepEnable": {
-        "description": "調整亮度",
-        "title": "當我進入睡眠模式時"
-      },
-      "onSleepPreparation": {
-        "description": "調整亮度",
-        "title": "當我準備入睡時"
-      },
-      "onStartup": {
-        "description": "調整亮度",
-        "title": "當 OyasumiVR 或 SteamVR 啟動時"
-      },
-      "sleepAutomations": "睡眠自動化",
-      "sleepPreparation": {
-        "description": "你可以按下 OyasumiVR 疊層畫面畫面中的按鈕，為入睡做準備。當你啟用了一個或多個睡眠準備自動操作（比如這個）時，就會顯示這個按鈕。使用這個按鈕可以在入睡前開始調暗亮度",
-        "title": "睡眠準備"
-      },
-      "softwareBrightness": {
-        "description": "調整 VR 頭顯影像的亮度",
-        "title": "更改軟體亮度為"
-      },
-      "startupAutomations": "啟動自動化",
-      "transition": {
-        "description": "平滑地調整到所需的亮度值",
-        "title": "逐步調整亮度"
-      },
-      "transitionTime": {
-        "description": "調整到新亮度設定所需的時間",
-        "title": "調整時間"
-      }
+    "brightness": {
+      "title": "將亮度改為"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
-          "title": "風扇超速安全保護",
-          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "maxBrightness": {
-          "description": "在 OyasumiVR 中設定最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "permitRiskRange": {
-          "description": "避免將亮度設定超過150%",
-          "title": "限制在安全亮度範圍內",
-          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "在此處，你可以找到適用於你特定 VR 頭戴式顯示器的所有亮度相關設定",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "複製\n當前亮度值",
+    "hardwareBrightness": {
+      "description": "調整顯示器本身的亮度",
+      "title": "更改硬體亮度為"
+    },
+    "softwareBrightness": {
+      "description": "調整 VR 頭顯影像的亮度",
+      "title": "更改軟體亮度為"
     },
     "mode": {
       "advanced": "進階模式",
@@ -211,7 +144,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "亮度自動調整",
       "brightness": "亮度",
       "hardwareBrightness": "硬體亮度",
       "softwareBrightness": "軟體亮度"
@@ -409,8 +341,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -525,8 +455,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -572,8 +500,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由於睡眠模式被停用",
-            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -1344,6 +1270,32 @@
           "title": "載入翻譯檔案"
         },
         "title": "語言與翻譯"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
+          "title": "風扇超速安全保護",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "maxBrightness": {
+          "description": "在 OyasumiVR 中設定最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "permitRiskRange": {
+          "description": "避免將亮度設定超過150%",
+          "title": "限制在安全亮度範圍內",
+          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

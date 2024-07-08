@@ -9,6 +9,7 @@
   height: 1.5em;
   border-radius: 1.5em;
   overflow: hidden;
+  transition: all 0.15s ease;
 
   input {
     opacity: 0;
@@ -230,6 +231,10 @@ input {
   &:focus {
     outline: none;
   }
+}
+
+input[type='time'] {
+  text-align: center;
 }
 
 input[type='number'],

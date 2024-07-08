@@ -21,6 +21,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   14: from13to14,
   15: from14to15,
   16: from15to16,
+  17: from16to17,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -77,6 +78,61 @@ async function saveBackup(oldData: any) {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from16to17(data: any): any {
+  data.version = 17;
+  data.BRIGHTNESS_AUTOMATIONS = structuredClone(AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS);
+  data.BRIGHTNESS_AUTOMATIONS.advancedMode = data.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+  data.BRIGHTNESS_AUTOMATIONS.enabled = true;
+  data.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE = {
+    enabled: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled,
+    changeBrightness: true,
+    changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.enabled
+      ? false
+      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE.changeColorTemperature,
+    brightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.brightness,
+    softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.softwareBrightness,
+    hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.hardwareBrightness,
+    transition: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transition,
+    transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE.transitionTime,
+    colorTemperature:
+      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_ENABLE.colorTemperature,
+  };
+  data.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE = {
+    enabled: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled,
+    changeBrightness: true,
+    changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.enabled
+      ? false
+      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE.changeColorTemperature,
+    brightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.brightness,
+    softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.softwareBrightness,
+    hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.hardwareBrightness,
+    transition: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transition,
+    transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE.transitionTime,
+    colorTemperature:
+      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_MODE_DISABLE.colorTemperature,
+  };
+  data.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION = {
+    enabled: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
+    changeBrightness: true,
+    changeColorTemperature: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled
+      ? false
+      : AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.changeColorTemperature,
+    brightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.brightness,
+    softwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.softwareBrightness,
+    hardwareBrightness: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.hardwareBrightness,
+    transition: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.transition,
+    transitionTime: data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.transitionTime,
+    colorTemperature:
+      AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.colorTemperature,
+  };
+
+  delete data.BRIGHTNESS_CONTROL_ADVANCED_MODE;
+  delete data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;
+  delete data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
+  delete data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION;
   return data;
 }
 
@@ -232,13 +288,13 @@ function from8to9(data: any): any {
   delete data.IMAGE_BRIGHTNESS_ON_SLEEP_MODE_DISABLE;
   // Insert new configuration defaults
   data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE
+    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE']
   );
   data.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE
+    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE']
   );
   data.SET_BRIGHTNESS_ON_SLEEP_PREPARATION = structuredClone(
-    AUTOMATION_CONFIGS_DEFAULT.SET_BRIGHTNESS_ON_SLEEP_PREPARATION
+    (AUTOMATION_CONFIGS_DEFAULT as any)['SET_BRIGHTNESS_ON_SLEEP_PREPARATION']
   );
   // Attempt to migrate old on sleep enable automations
   if (displayBrightnessOnEnableConfig?.enabled) {
