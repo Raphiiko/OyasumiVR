@@ -53,7 +53,6 @@ export class CCTControlService {
               !!devices.length &&
               devices.find((d) => d.index === 0)?.class === 'HMD';
             if (ready && !this.hardwareReady) {
-              console.log({ ready, hardwareReady: this.hardwareReady });
               this.hardwareReady = ready;
               this.setCCT(this.cct, SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, true);
             }
