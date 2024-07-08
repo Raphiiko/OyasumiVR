@@ -14,20 +14,17 @@
     </div>
   </div>
 
-  <a
-    class="automations-link"
-    *ngIf="
-      !router.isActive('/dashboard/hmdAutomations', {
-        paths: 'subset',
-        queryParams: 'subset',
-        fragment: 'ignored',
-        matrixParams: 'ignored'
-      })
+  <div class="link-bar" @hshrink
+       *ngIf="!isActive('/dashboard/hmdAutomations')">
+    <a
+      class="link"
+      *ngIf="
+      !isActive('/dashboard/hmdAutomations')
     "
-    [routerLink]="['/dashboard/hmdAutomations']"
-    (click)="close()"
-    @hshrink
-  >
-    <i class="material-icons">settings</i>
-  </a>
+      [routerLink]="['dashboard', 'hmdAutomations']"
+      (click)="close()"
+    >
+      <i class="material-symbols-outlined icon-filled">settings</i>
+    </a>
+  </div>
 </div>

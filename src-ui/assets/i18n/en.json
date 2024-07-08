@@ -138,61 +138,58 @@
     "whitelist": "Player Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "AT_SUNRISE": {
-        "title": "At sunrise"
+    "AT_SUNRISE": {
+      "title": "At sunrise"
+    },
+    "AT_SUNSET": {
+      "title": "At sunset"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "When I wake up"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "When I go to sleep"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "When I prepare to go to sleep"
+    },
+    "activation": {
+      "category": "Activation"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "The time of day when the sun rises",
+        "title": "Time of sunrise"
       },
-      "AT_SUNSET": {
-        "title": "At sunset"
-      },
-      "SLEEP_MODE_DISABLE": {
-        "title": "When I wake up"
-      },
-      "SLEEP_MODE_ENABLE": {
-        "title": "When I go to sleep"
-      },
-      "SLEEP_PREPARATION": {
-        "title": "When I prepare to go to sleep"
-      },
-      "brightness": {
-        "title": "Change the brightness to"
-      },
-      "changeBrightness": {
-        "category": "Brightness",
-        "description": "Adjust your VR headset's brightness value",
-        "title": "Change brightness"
-      },
-      "changeTemperature": {
-        "category": "Color temperature",
-        "description": "Adjust the color temperature of the image shown in your VR headset",
-        "title": "Change color temperature",
-        "warning": "Adjusting color temperature is only supported on some native SteamVR headsets.\n\nKnown working HMDs:\n • Valve Index\n • HTC Vive (Pro)\n • Bigscreen Beyond"
-      },
-      "copyBrightness": "Copy current\nbrightness value",
-      "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
-      "detailsTitle": "Event",
-      "events": "Events",
-      "hardwareBrightness": {
-        "description": "Adjusts the brightness of the display itself",
-        "title": "Change the hardware brightness to"
-      },
-      "miscConfig": "Other options",
-      "softwareBrightness": {
-        "description": "Adjusts the brightness of the image shown in your VR headset",
-        "title": "Change the software brightness to"
-      },
-      "temperature": {
-        "title": "Change the color temperature to"
-      },
-      "transition": {
-        "description": "Have the brightness and/or color temperature smoothly transition over time",
-        "title": "Smoothly transition"
-      },
-      "transitionTime": {
-        "description": "How long it should take for the changes to complete",
-        "title": "Transition time"
+      "SUNSET": {
+        "description": "The time of day when the sun sets",
+        "title": "Time of sunset"
       }
     },
+    "autoDetermineSunsetSunrise": "Automatically estimate time",
+    "brightness": {
+      "title": "Change the brightness to"
+    },
+    "changeBrightness": {
+      "category": "Brightness",
+      "description": "Adjust your VR headset's brightness value",
+      "title": "Change brightness"
+    },
+    "changeTemperature": {
+      "category": "Color temperature",
+      "description": "Adjust the color temperature of the image shown in your VR headset",
+      "title": "Change color temperature",
+      "warning": "Adjusting color temperature is only supported on some native SteamVR headsets.\n\nKnown working HMDs:\n • Valve Index\n • HTC Vive (Pro)\n • Bigscreen Beyond"
+    },
+    "copyBrightness": "Copy current\nbrightness value",
+    "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
+    "detailsTitle": "Event",
+    "events": "Events",
+    "hardwareBrightness": {
+      "description": "Adjusts the brightness of the display itself",
+      "title": "Change the hardware brightness to"
+    },
+    "miscConfig": "Other options",
     "mode": {
       "advanced": "Advanced Mode",
       "simple": "Simple Mode"
@@ -201,11 +198,26 @@
       "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
-    "tabs": {
-      "automations": "Automations",
-      "hmdSettings": "HMD Settings"
+    "onlyWhenSleepModeDisabled": {
+      "description": "Only run this automation while the sleep mode is disabled",
+      "title": "Only while sleep mode is disabled"
     },
-    "title": "Brightness Automations"
+    "softwareBrightness": {
+      "description": "Adjusts the brightness of the image shown in your VR headset",
+      "title": "Change the software brightness to"
+    },
+    "temperature": {
+      "title": "Change the color temperature to"
+    },
+    "title": "Brightness Automations",
+    "transition": {
+      "description": "Have the brightness and/or color temperature smoothly transition over time",
+      "title": "Smoothly transition"
+    },
+    "transitionTime": {
+      "description": "How long it should take for the changes to complete",
+      "title": "Transition time"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",

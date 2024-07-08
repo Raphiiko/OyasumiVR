@@ -4,6 +4,7 @@ import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
+import { marked } from 'marked';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -128,11 +129,19 @@ export type BrightnessEvent = (typeof BrightnessEvents)[number];
 
 export type BrightnessAutomationsConfig = AutomationConfig & {
   advancedMode: boolean;
-} & {
-  [key in BrightnessEvent]: BrightnessEventAutomationConfig;
+  AT_SUNSET: SunBrightnessEventAutomationConfig;
+  AT_SUNRISE: SunBrightnessEventAutomationConfig;
+  SLEEP_PREPARATION: GenericBrightnessEventAutomationConfig;
+  SLEEP_MODE_ENABLE: GenericBrightnessEventAutomationConfig;
+  SLEEP_MODE_DISABLE: GenericBrightnessEventAutomationConfig;
 };
 
-export interface BrightnessEventAutomationConfig extends AutomationConfig {
+export type BrightnessEventAutomationConfig =
+  | GenericBrightnessEventAutomationConfig
+  | SunBrightnessEventAutomationConfig;
+
+export interface GenericBrightnessEventAutomationConfig extends AutomationConfig {
+  type?: undefined;
   changeBrightness: boolean;
   changeColorTemperature: boolean;
   brightness: number;
@@ -143,8 +152,11 @@ export interface BrightnessEventAutomationConfig extends AutomationConfig {
   colorTemperature: number;
 }
 
-export interface SunsetBrightnessEventAutomationConfig extends BrightnessEventAutomationConfig {
+export interface SunBrightnessEventAutomationConfig
+  extends Omit<GenericBrightnessEventAutomationConfig, 'type'> {
+  type: 'SUN';
   onlyWhenSleepDisabled: boolean;
+  activationTime: string | null;
 }
 
 // RESOLUTION AUTOMATIONS
@@ -481,7 +493,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       softwareBrightness: 50,
       hardwareBrightness: 100,
       transition: true,
-      transitionTime: 1000 * 60 * 5,
+      transitionTime: 10000,
       colorTemperature: 3500,
     },
     SLEEP_MODE_ENABLE: {
@@ -507,6 +519,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       colorTemperature: 6600,
     },
     AT_SUNSET: {
+      type: 'SUN',
       enabled: false,
       changeBrightness: true,
       changeColorTemperature: true,
@@ -514,10 +527,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       softwareBrightness: 80,
       hardwareBrightness: 100,
       transition: true,
-      transitionTime: 1000 * 60 * 5,
+      transitionTime: 10000,
       colorTemperature: 1800,
+      onlyWhenSleepDisabled: true,
+      activationTime: null,
     },
     AT_SUNRISE: {
+      type: 'SUN',
       enabled: false,
       changeBrightness: true,
       changeColorTemperature: true,
@@ -525,8 +541,10 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       softwareBrightness: 100,
       hardwareBrightness: 100,
       transition: true,
-      transitionTime: 1000 * 60 * 5,
+      transitionTime: 10000,
       colorTemperature: 6600,
+      onlyWhenSleepDisabled: true,
+      activationTime: null,
     },
   },
   // RESOLUTION AUTOMATIONS

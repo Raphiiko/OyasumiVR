@@ -138,19 +138,17 @@
     "whitelist": "플레이어 화이트리스트"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "조절할 밝기"
-      },
-      "copyBrightness": "현재\n밝기 값 복사",
-      "hardwareBrightness": {
-        "description": "디스플레이 자체의 밝기를 조절해요.",
-        "title": "조절할 하드웨어 밝기"
-      },
-      "softwareBrightness": {
-        "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
-        "title": "조절할 소프트웨어 밝기"
-      }
+    "brightness": {
+      "title": "조절할 밝기"
+    },
+    "copyBrightness": "현재\n밝기 값 복사",
+    "hardwareBrightness": {
+      "description": "디스플레이 자체의 밝기를 조절해요.",
+      "title": "조절할 하드웨어 밝기"
+    },
+    "softwareBrightness": {
+      "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
+      "title": "조절할 소프트웨어 밝기"
     },
     "mode": {
       "advanced": "고급 모드",

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   BrightnessAutomationsConfig,
@@ -10,6 +10,7 @@ import { combineLatest, map } from 'rxjs';
 import { BrightnessCctAutomationService } from '../../../../../../../services/brightness-cct-automation.service';
 import { fade } from '../../../../../../../utils/animations';
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
+import { BrightnessEventViewModel } from '../brightness-automations-tab.component';
 
 @Component({
   selector: 'app-brightness-automations-list',
@@ -21,21 +22,9 @@ export class BrightnessAutomationsListComponent implements OnInit {
   protected config: BrightnessAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS
   );
-  @Output() editEvent = new EventEmitter<BrightnessEvent>();
+  @Input() events!: Array<BrightnessEventViewModel>;
+  @Output() editEvent = new EventEmitter<BrightnessEventViewModel>();
   protected cctControlEnabled = false;
-
-  protected events: Array<{
-    name: BrightnessEvent;
-    inProgress: boolean;
-    icon: string;
-    iconFilled?: boolean;
-  }> = [
-    { name: 'SLEEP_MODE_ENABLE', inProgress: false, icon: 'bedtime' },
-    { name: 'SLEEP_MODE_DISABLE', inProgress: false, icon: 'bedtime_off' },
-    { name: 'SLEEP_PREPARATION', inProgress: false, icon: 'bed' },
-    { name: 'AT_SUNSET', inProgress: false, icon: 'wb_twilight' },
-    { name: 'AT_SUNRISE', inProgress: false, icon: 'wb_twilight', iconFilled: true },
-  ];
 
   constructor(
     private automationConfigService: AutomationConfigService,

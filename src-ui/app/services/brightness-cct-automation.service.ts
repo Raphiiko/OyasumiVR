@@ -4,8 +4,10 @@ import { SleepService } from './sleep.service';
 import {
   BehaviorSubject,
   combineLatest,
+  delay,
   distinctUntilChanged,
   firstValueFrom,
+  interval,
   map,
   merge,
   Observable,
@@ -14,11 +16,15 @@ import {
   startWith,
   switchMap,
   take,
+  tap,
 } from 'rxjs';
 import { CancellableTask } from '../utils/cancellable-task';
 import { EventLogService } from './event-log.service';
-import { BrightnessEvent, BrightnessEventAutomationConfig } from '../models/automations';
-import { OpenVRService } from './openvr.service';
+import {
+  BrightnessAutomationsConfig,
+  BrightnessEvent,
+  BrightnessEventAutomationConfig,
+} from '../models/automations';
 import {
   EventLogCCTChanged,
   EventLogHardwareBrightnessChanged,
@@ -31,6 +37,9 @@ import { HardwareBrightnessControlService } from './brightness-control/hardware-
 import { SoftwareBrightnessControlService } from './brightness-control/software-brightness-control.service';
 import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
+import { invoke } from '@tauri-apps/api';
+import { error } from 'tauri-plugin-log-api';
+import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +53,9 @@ export class BrightnessCctAutomationService {
     tasks: CancellableTask[];
     automation: BrightnessEvent;
   } | null>(null);
+  private autoSunsetTime?: string;
+  private autoSunriseTime?: string;
+  private sleepMode: boolean = false;
 
   public readonly anyBrightnessTransitionActive = this.lastActivatedBrightnessTransition.pipe(
     switchMap((transition) =>
@@ -83,7 +95,6 @@ export class BrightnessCctAutomationService {
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private cctControl: CCTControlService,
     private eventLog: EventLogService,
-    private openvr: OpenVRService,
     private sleepPreparation: SleepPreparationService
   ) {}
 
@@ -91,6 +102,7 @@ export class BrightnessCctAutomationService {
     // Run automations when the sleep mode changes
     this.sleepService.mode
       .pipe(
+        tap((mode) => (this.sleepMode = mode)),
         skip(1),
         distinctUntilChanged(),
         switchMap(async (sleepMode) => {
@@ -118,6 +130,50 @@ export class BrightnessCctAutomationService {
         )
       )
       .subscribe();
+    // Listen for minute starts
+    await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
+    // Automatically fetch sunset/sunrise times when none are configured
+    interval(1000 * 60 * 5)
+      .pipe(
+        startWith(null),
+        delay(2000),
+        switchMap(() => this.automationConfigService.configs.pipe(take(1)))
+      )
+      .subscribe(async (configs) => {
+        // Check if the sunset/sunrise times are already configured
+        const config = configs.BRIGHTNESS_AUTOMATIONS;
+        if (config.AT_SUNRISE.activationTime !== null && config.AT_SUNSET.activationTime !== null)
+          return;
+        // Fetch the sunset/sunrise times if needed
+        if (!this.autoSunsetTime || !this.autoSunriseTime) {
+          try {
+            const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
+            this.autoSunriseTime = sunrise;
+            this.autoSunsetTime = sunset;
+          } catch (e) {
+            error('[BrightnessCctAutomationService] Failed to fetch sunrise/sunset times: ' + e);
+            return;
+          }
+        }
+        // Update the config if needed
+        const patch: Partial<BrightnessAutomationsConfig> = {};
+        if (config.AT_SUNRISE.activationTime === null) {
+          patch.AT_SUNRISE = {
+            ...config.AT_SUNRISE,
+            activationTime: this.autoSunriseTime,
+          };
+        }
+        if (config.AT_SUNSET.activationTime === null) {
+          patch.AT_SUNSET = {
+            ...config.AT_SUNSET,
+            activationTime: this.autoSunsetTime,
+          };
+        }
+        await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
+          'BRIGHTNESS_AUTOMATIONS',
+          patch
+        );
+      });
   }
 
   public isBrightnessTransitionActive(automation: BrightnessEvent): Observable<boolean> {
@@ -284,6 +340,35 @@ export class BrightnessCctAutomationService {
           } as EventLogSimpleBrightnessChanged);
         }
       }
+    }
+  }
+
+  private async onMinuteTick() {
+    // Run automation when the sunset/sunrise times trigger
+    const configs = await firstValueFrom(this.automationConfigService.configs);
+    const config = configs.BRIGHTNESS_AUTOMATIONS;
+    if (!config.AT_SUNSET.enabled && !config.AT_SUNRISE.enabled) return;
+    const d = new Date();
+    const currentHour = d.getHours();
+    const currentMinute = d.getMinutes();
+    const currentTime = `${currentHour.toString(10).padStart(2, '0')}:${currentMinute
+      .toString(10)
+      .padStart(2, '0')}`;
+    const sunriseTime = config.AT_SUNRISE.activationTime ?? this.autoSunriseTime;
+    const sunsetTime = config.AT_SUNSET.activationTime ?? this.autoSunsetTime;
+    if (
+      config.AT_SUNSET.enabled &&
+      ((config.AT_SUNSET.onlyWhenSleepDisabled && !this.sleepMode) || this.sleepMode) &&
+      sunsetTime === currentTime
+    ) {
+      await this.onAutomationTrigger('AT_SUNSET', config.AT_SUNSET);
+    }
+    if (
+      config.AT_SUNRISE.enabled &&
+      ((config.AT_SUNRISE.onlyWhenSleepDisabled && !this.sleepMode) || this.sleepMode) &&
+      sunriseTime === currentTime
+    ) {
+      await this.onAutomationTrigger('AT_SUNRISE', config.AT_SUNRISE);
     }
   }
 }

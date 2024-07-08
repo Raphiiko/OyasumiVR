@@ -42,4 +42,13 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> imp
       wrapperDefaultClass: 'modal-wrapper-brightness-control',
     };
   }
+
+  protected isActive(path: string) {
+    return this.router.isActive(path, {
+      paths: 'subset',
+      queryParams: 'subset',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    });
+  }
 }

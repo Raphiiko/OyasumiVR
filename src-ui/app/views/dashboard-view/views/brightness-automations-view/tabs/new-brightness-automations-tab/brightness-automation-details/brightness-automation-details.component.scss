@@ -37,6 +37,22 @@
   }
 }
 
+.btn-copy {
+  background-color: var(--color-surface-0);
+  width: 2.5em;
+  height: 2.5em;
+  border: transparent 1px solid;
+
+  i {
+    color: var(--color-text-1);
+    font-size: 1.5em;
+  }
+
+  &:hover {
+    border-color: var(--color-surface-2);
+  }
+}
+
 .pane {
   background: var(--color-surface-3);
   width: calc(100% - 10em);

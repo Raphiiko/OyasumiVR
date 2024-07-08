@@ -138,19 +138,17 @@
     "whitelist": "ホワイトリスト"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "輝度を変更"
-      },
-      "copyBrightness": "現在の明るさの値をコピーする",
-      "hardwareBrightness": {
-        "description": "ディスプレイの輝度を調整します",
-        "title": "ハードウェアの輝度を調整する"
-      },
-      "softwareBrightness": {
-        "description": "HMDに表示される映像の明るさを調整します",
-        "title": "ソフトウェアの明るさを変更する"
-      }
+    "brightness": {
+      "title": "輝度を変更"
+    },
+    "copyBrightness": "現在の明るさの値をコピーする",
+    "hardwareBrightness": {
+      "description": "ディスプレイの輝度を調整します",
+      "title": "ハードウェアの輝度を調整する"
+    },
+    "softwareBrightness": {
+      "description": "HMDに表示される映像の明るさを調整します",
+      "title": "ソフトウェアの明るさを変更する"
     },
     "mode": {
       "advanced": "高度",

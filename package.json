@@ -75,7 +75,7 @@
     "lodash": "^4.17.21",
     "marked": "^4.2.2",
     "material-icons": "^1.12.1",
-    "material-symbols": "^0.17.0",
+    "material-symbols": "^0.21.0",
     "moment": "^2.29.4",
     "mqtt": "^5.5.3",
     "ngx-moment": "^6.0.2",

@@ -138,19 +138,17 @@
     "whitelist": "Speler Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "Zet de helderheid naar"
-      },
-      "copyBrightness": "Kopieer huidig helderheidsniveau",
-      "hardwareBrightness": {
-        "description": "Past de helderheid van het fysieke scherm aan",
-        "title": "Zet de hardware helderheid naar"
-      },
-      "softwareBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
-        "title": "Zet de software helderheid naar"
-      }
+    "brightness": {
+      "title": "Zet de helderheid naar"
+    },
+    "copyBrightness": "Kopieer huidig helderheidsniveau",
+    "hardwareBrightness": {
+      "description": "Past de helderheid van het fysieke scherm aan",
+      "title": "Zet de hardware helderheid naar"
+    },
+    "softwareBrightness": {
+      "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
+      "title": "Zet de software helderheid naar"
     },
     "mode": {
       "advanced": "Geavanceerde Modus",

@@ -138,19 +138,17 @@
     "whitelist": "玩家白名单"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "将亮度改为"
-      },
-      "copyBrightness": "复制当前亮度值",
-      "hardwareBrightness": {
-        "description": "调整显示屏本身的亮度",
-        "title": "将硬件亮度更改为"
-      },
-      "softwareBrightness": {
-        "description": "调整 VR 头显的图像亮度",
-        "title": "将软件亮度更改为"
-      }
+    "brightness": {
+      "title": "将亮度改为"
+    },
+    "copyBrightness": "复制当前亮度值",
+    "hardwareBrightness": {
+      "description": "调整显示屏本身的亮度",
+      "title": "将硬件亮度更改为"
+    },
+    "softwareBrightness": {
+      "description": "调整 VR 头显的图像亮度",
+      "title": "将软件亮度更改为"
     },
     "mode": {
       "advanced": "高级模式",

@@ -4,12 +4,12 @@ import { fade } from '../../utils/animations';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-color-temperature-input-setting',
-  templateUrl: './color-temperature-input-setting.component.html',
-  styleUrl: './color-temperature-input-setting.component.scss',
+  selector: 'app-cct-input-setting',
+  templateUrl: './cct-input-setting.component.html',
+  styleUrl: './cct-input-setting.component.scss',
   animations: [fade()],
 })
-export class ColorTemperatureInputSettingComponent {
+export class CCTInputSettingComponent {
   protected inputOpen = true;
   value = model<number>(6600);
   displayValue = computed(() => Math.floor(this.value()) + 'K');

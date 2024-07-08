@@ -138,19 +138,17 @@
     "whitelist": "Белый список игроков"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "Измените яркость на"
-      },
-      "copyBrightness": "Копировать текущее\nзначение яркости",
-      "hardwareBrightness": {
-        "description": "Регулирует яркость самого дисплея",
-        "title": "Изменить аппаратную яркость на"
-      },
-      "softwareBrightness": {
-        "description": "Управляет яркостью изображения, отображаемого в Вашей VR гарнитуре",
-        "title": "Программно изменить яркость на"
-      }
+    "brightness": {
+      "title": "Измените яркость на"
+    },
+    "copyBrightness": "Копировать текущее\nзначение яркости",
+    "hardwareBrightness": {
+      "description": "Регулирует яркость самого дисплея",
+      "title": "Изменить аппаратную яркость на"
+    },
+    "softwareBrightness": {
+      "description": "Управляет яркостью изображения, отображаемого в Вашей VR гарнитуре",
+      "title": "Программно изменить яркость на"
     },
     "mode": {
       "advanced": "Продвинутый режим",

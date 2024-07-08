@@ -1,6 +1,8 @@
 <app-brightness-automations-list (editEvent)="editEvent = $event"
+                                 [events]="events"
                                  [class.details-open]="!!editEvent"></app-brightness-automations-list>
 <app-brightness-automation-details @triggerChildren *ngIf="editEvent"
                                    (close)="editEvent = undefined"
-                                   [eventId]="editEvent!"
+                                   [eventId]="editEvent!.name"
+                                   [sunMode]="editEvent!.sunMode"
 ></app-brightness-automation-details>

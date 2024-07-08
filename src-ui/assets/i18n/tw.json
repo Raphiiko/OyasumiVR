@@ -101,7 +101,6 @@
     "whitelist": "玩家白名單"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
       "brightness": {
         "title": "將亮度改為"
       },
@@ -113,8 +112,7 @@
       "softwareBrightness": {
         "description": "調整 VR 頭顯影像的亮度",
         "title": "更改軟體亮度為"
-      }
-    },
+      },
     "mode": {
       "advanced": "進階模式",
       "simple": "簡單模式"

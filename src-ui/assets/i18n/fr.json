@@ -54,10 +54,8 @@
     "whitelist": "Liste blanche"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "Changer la luminosité pour"
-      }
+    "brightness": {
+      "title": "Changer la luminosité pour"
     },
     "title": "Automatisation de luminosité"
   },

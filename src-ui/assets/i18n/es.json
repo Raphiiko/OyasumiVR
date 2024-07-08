@@ -104,7 +104,6 @@
     "whitelist": "Jugador Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
       "brightness": {
         "title": "Cambia el brillo a"
       },
@@ -116,8 +115,7 @@
       "softwareBrightness": {
         "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
         "title": "Cambia el brillo del software a"
-      }
-    },
+      },
     "mode": {
       "advanced": "Modo avanzado",
       "simple": "Modo simple"

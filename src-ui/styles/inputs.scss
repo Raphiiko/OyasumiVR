@@ -233,6 +233,10 @@ input {
   }
 }
 
+input[type='time'] {
+  text-align: center;
+}
+
 input[type='number'],
 input[type='text'],
 input[type='password'],

@@ -1,8 +1,18 @@
-import { Component, computed, DestroyRef, input, OnInit, output, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  Input,
+  input,
+  OnInit,
+  output,
+  Signal,
+} from '@angular/core';
 import { fade, fadeRight, vshrink } from '../../../../../../../utils/animations';
 import {
   BrightnessEvent,
   BrightnessEventAutomationConfig,
+  SunBrightnessEventAutomationConfig,
 } from '../../../../../../../models/automations';
 import { AutomationConfigService } from '../../../../../../../services/automation-config.service';
 import { map } from 'rxjs';
@@ -11,6 +21,8 @@ import { HardwareBrightnessControlService } from '../../../../../../../services/
 import { SimpleBrightnessControlService } from '../../../../../../../services/brightness-control/simple-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
+import { invoke } from '@tauri-apps/api';
+import { error } from 'tauri-plugin-log-api';
 
 interface BrightnessBounds {
   min: number;
@@ -48,6 +60,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     HARDWARE: 5,
   };
   protected vshakeElements: string[] = [];
+  @Input() sunMode: 'SUNSET' | 'SUNRISE' | undefined;
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -91,21 +104,26 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     switch (type) {
       case 'SIMPLE': {
         if (value === 'CURRENT') value = this.simpleBrightnessControl.brightness;
-        pConfig.brightness = value;
+        pConfig.brightness = Math.round(value);
         break;
       }
       case 'SOFTWARE': {
         if (value === 'CURRENT') value = this.softwareBrightnessControl.brightness;
-        pConfig.softwareBrightness = value;
+        pConfig.softwareBrightness = Math.round(value);
         break;
       }
       case 'HARDWARE': {
         if (value === 'CURRENT') value = this.hardwareBrightnessControl.brightness;
-        pConfig.hardwareBrightness = value;
+        pConfig.hardwareBrightness = Math.round(value);
         break;
       }
     }
     await this.updateConfig(pConfig);
+    this.vshakeElements.push('BRIGHTNESS_' + type);
+    setTimeout(() => {
+      const index = this.vshakeElements.indexOf('BRIGHTNESS_' + type);
+      if (index >= 0) this.vshakeElements.splice(index, 1);
+    }, 300);
   }
 
   protected async toggleChangeBrightness() {
@@ -142,5 +160,45 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     await this.updateConfig({
       colorTemperature: $event,
     });
+  }
+
+  protected asSunConfig(config: BrightnessEventAutomationConfig) {
+    if (config.type === 'SUN') return config as SunBrightnessEventAutomationConfig;
+    throw new Error('Tried casting non-sun config to sun config');
+  }
+
+  protected async toggleOnlyWhenSleepDisabled() {
+    await this.updateConfig({
+      onlyWhenSleepDisabled: !this.asSunConfig(this.config()).onlyWhenSleepDisabled,
+    });
+  }
+
+  protected async updateActivationTime(value: string) {
+    if (!value.match(/[0-9]{2}:[0-9]{2}/)) return;
+    await this.updateConfig({
+      activationTime: value,
+    });
+  }
+
+  protected async autoDetermineActivationTime() {
+    try {
+      const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
+      switch (this.sunMode) {
+        case 'SUNSET':
+          await this.updateActivationTime(sunset);
+          break;
+        case 'SUNRISE': {
+          await this.updateActivationTime(sunrise);
+          break;
+        }
+      }
+      this.vshakeElements.push('ACTIVATION_TIME');
+      setTimeout(() => {
+        const index = this.vshakeElements.indexOf('ACTIVATION_TIME');
+        if (index >= 0) this.vshakeElements.splice(index, 1);
+      }, 300);
+    } catch (e) {
+      error('[BrightnessAutomationDetails] Failed to get sunrise/sunset time: ' + e);
+    }
   }
 }

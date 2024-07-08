@@ -1,13 +1,13 @@
 <div class="setting-category">
-  <p translate>brightness-automations.brightnessAutomations.description</p>
-  <h2 translate>brightness-automations.brightnessAutomations.events</h2>
+  <p translate>brightness-automations.description</p>
+  <h2 translate>brightness-automations.events</h2>
   <div class="settings">
     <div class="setting-row" *ngFor="let event of events">
       <div class="setting-row-icon">
         <i class="material-symbols-outlined" [class.icon-filled]="event.iconFilled">{{ event.icon }}</i>
       </div>
       <div class="setting-row-label" translate>
-        <span>{{ 'brightness-automations.brightnessAutomations.' + event.name + '.title' | translate }}</span>
+        <span>{{ 'brightness-automations.' + event.name + '.title' | translate }}</span>
         <span></span>
       </div>
       <div class="setting-row-action">
@@ -16,7 +16,7 @@
           [advancedMode]="config.advancedMode"
           [cctControlEnabled]="cctControlEnabled"
           [config]="config[event.name]"
-          (click)="editEvent.emit(event.name)"
+          (click)="editEvent.emit(event)"
         ></app-brightness-automation-config-label>
         <label class="switch-toggle">
           <input type="checkbox" [checked]="config[event.name].enabled" (change)="toggleEvent(event.name)"/>
