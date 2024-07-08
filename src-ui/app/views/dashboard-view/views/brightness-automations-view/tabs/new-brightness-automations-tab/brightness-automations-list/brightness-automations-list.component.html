@@ -4,7 +4,9 @@
   <div class="settings">
     <div class="setting-row" *ngFor="let event of events">
       <div class="setting-row-icon">
-        <i class="material-symbols-outlined" [class.icon-filled]="event.iconFilled">{{ event.icon }}</i>
+        <i class="material-symbols-outlined" [class.icon-filled]="event.iconFilled">{{
+          event.icon
+        }}</i>
       </div>
       <div class="setting-row-label" translate>
         <span>{{ 'brightness-automations.' + event.name + '.title' | translate }}</span>
@@ -19,7 +21,11 @@
           (click)="editEvent.emit(event)"
         ></app-brightness-automation-config-label>
         <label class="switch-toggle">
-          <input type="checkbox" [checked]="config[event.name].enabled" (change)="toggleEvent(event.name)"/>
+          <input
+            type="checkbox"
+            [checked]="config[event.name].enabled"
+            (change)="toggleEvent(event.name)"
+          />
           <span class="switch-toggle-slider"></span>
         </label>
       </div>

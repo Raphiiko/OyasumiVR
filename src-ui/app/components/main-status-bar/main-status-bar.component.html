@@ -84,7 +84,7 @@
 
     <ng-container *ngIf="pulsoid.heartRate | async">
       <div
-        class="pill heartrate "
+        class="pill heartrate"
         *ngVar="{ hover: false }; let state"
         (mouseenter)="state.hover = true"
         (mouseleave)="state.hover = false"
@@ -105,7 +105,7 @@
     </ng-container>
     <ng-container *ngIf="(bigscreenBeyondFanAutomation.bsbConnected | async) === true">
       <div
-        class="pill bsb-fanctl clickable "
+        class="pill bsb-fanctl clickable"
         *ngVar="{ hover: false }; let state"
         (mouseenter)="state.hover = true"
         (mouseleave)="state.hover = false"
@@ -121,7 +121,9 @@
         <span @hshrink *ngIf="state.hover"
           >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
         >
-        <span class="monospace">{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span>
+        <span class="monospace"
+          >{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span
+        >
       </div>
     </ng-container>
     <ng-container *ngIf="cctControlEnabled">
@@ -148,7 +150,7 @@
     </ng-container>
     <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === false">
       <div
-        class="pill brightness-simple clickable "
+        class="pill brightness-simple clickable"
         *ngVar="{ hover: false }; let state"
         (mouseenter)="state.hover = true"
         (mouseleave)="state.hover = false"
@@ -165,7 +167,9 @@
         <span @hshrink *ngIf="state.hover"
           >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
         >
-        <span class="monospace">{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+        <span class="monospace"
+          >{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+        >
       </div>
     </ng-container>
     <ng-container *ngIf="(simpleBrightnessControl.advancedMode | async) === true">
@@ -185,11 +189,15 @@
           <i class="material-icons-round">monitor</i>
         </div>
         <span>
-          <span class="monospace" [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
+          <span
+            class="monospace"
+            [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
             >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
           >
           <span><b>&nbsp;|&nbsp;</b></span>
-          <span class="monospace">{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span>
+          <span class="monospace"
+            >{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+          >
         </span>
         <div class="pill-icon" @hshrink>
           <i class="material-icons-round">image</i>

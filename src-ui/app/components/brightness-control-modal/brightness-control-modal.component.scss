@@ -19,12 +19,12 @@
       ellipse at 40% 0%,
       color-mix(in srgb, var(--a) 6%, transparent) 0,
       transparent 75%
-  ),
-  radial-gradient(
+    ),
+    radial-gradient(
       ellipse at 60% 0%,
       color-mix(in srgb, var(--b) 6%, transparent) 0,
       transparent 75%
-  );
+    );
   @include pane-radial-gradient(#fff);
   display: flex;
   flex-direction: row-reverse;
@@ -109,7 +109,7 @@ app-brightness-control-slider {
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     text-decoration: none;
     flex: 1;
 

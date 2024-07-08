@@ -5,7 +5,7 @@
 }
 
 app-brightness-automations-list {
-  transition: all .15s ease;
+  transition: all 0.15s ease;
   &.details-open {
     transform: translateX(-5em);
   }

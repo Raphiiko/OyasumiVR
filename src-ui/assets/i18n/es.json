@@ -104,18 +104,18 @@
     "whitelist": "Jugador Whitelist"
   },
   "brightness-automations": {
-      "brightness": {
-        "title": "Cambia el brillo a"
-      },
-      "copyBrightness": "Copia actual\nvalor de luminosidad",
-      "hardwareBrightness": {
-        "description": "Ajusta el brillo de la pantalla.",
-        "title": "Cambia el brillo del hardware a"
-      },
-      "softwareBrightness": {
-        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
-        "title": "Cambia el brillo del software a"
-      },
+    "brightness": {
+      "title": "Cambia el brillo a"
+    },
+    "copyBrightness": "Copia actual\nvalor de luminosidad",
+    "hardwareBrightness": {
+      "description": "Ajusta el brillo de la pantalla.",
+      "title": "Cambia el brillo del hardware a"
+    },
+    "softwareBrightness": {
+      "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
+      "title": "Cambia el brillo del software a"
+    },
     "mode": {
       "advanced": "Modo avanzado",
       "simple": "Modo simple"

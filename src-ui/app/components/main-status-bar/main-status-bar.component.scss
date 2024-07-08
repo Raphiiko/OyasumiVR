@@ -217,7 +217,6 @@ $background-color: var(--color-surface-2);
       box-shadow: inset 0 0 5px 0 color-mix(in srgb, var(--color-primary) 70%, transparent);
     }
   }
-
 }
 
 .snowverlay {
@@ -357,9 +356,9 @@ $background-color: var(--color-surface-2);
   }
   05% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
   10% {
@@ -367,16 +366,16 @@ $background-color: var(--color-surface-2);
   }
   50% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66
     );
   }
   70% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
 }

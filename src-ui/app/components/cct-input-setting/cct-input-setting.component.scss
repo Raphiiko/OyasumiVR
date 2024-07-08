@@ -22,15 +22,13 @@
   text-align: center;
   cursor: pointer;
   anchor-name: --input-el;
-  transition: opacity .15s ease;
+  transition: opacity 0.15s ease;
   color: black;
   font-weight: 600;
 
   &:active {
     opacity: 0.8;
   }
-
-
 }
 
 .input-container {

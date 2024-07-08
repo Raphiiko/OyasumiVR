@@ -14,13 +14,10 @@
     </div>
   </div>
 
-  <div class="link-bar" @hshrink
-       *ngIf="!isActive('/dashboard/hmdAutomations')">
+  <div class="link-bar" @hshrink *ngIf="!isActive('/dashboard/hmdAutomations')">
     <a
       class="link"
-      *ngIf="
-      !isActive('/dashboard/hmdAutomations')
-    "
+      *ngIf="!isActive('/dashboard/hmdAutomations')"
       [routerLink]="['dashboard', 'hmdAutomations']"
       (click)="close()"
     >

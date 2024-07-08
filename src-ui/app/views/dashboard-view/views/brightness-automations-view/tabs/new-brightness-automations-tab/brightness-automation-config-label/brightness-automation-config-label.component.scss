@@ -24,7 +24,7 @@
   }
 
   .icon {
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     color: var(--color-text-2);
     display: flex;
     flex-direction: row;
@@ -64,7 +64,7 @@
     align-items: flex-end;
     justify-content: center;
     width: 3.75em;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     &:not(:first-child) {
       margin-left: 0.5em;
     }

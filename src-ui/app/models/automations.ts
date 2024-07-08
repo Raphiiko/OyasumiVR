@@ -4,7 +4,6 @@ import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
-import { marked } from 'marked';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)

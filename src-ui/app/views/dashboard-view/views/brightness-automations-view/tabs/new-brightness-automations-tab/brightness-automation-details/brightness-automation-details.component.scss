@@ -28,7 +28,7 @@
   left: 5.5em;
   cursor: pointer;
   border-radius: var(--surface-border-radius);
-  transition: all .15s ease;
+  transition: all 0.15s ease;
   &:hover {
     background: rgba(black, 0.4);
   }

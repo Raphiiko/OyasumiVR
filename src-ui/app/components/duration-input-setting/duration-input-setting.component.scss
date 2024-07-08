@@ -5,7 +5,7 @@
   text-align: center;
   cursor: pointer;
   anchor-name: --input-el;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
 
   &:active {
     opacity: 0.8;
@@ -30,13 +30,12 @@
   margin-right: 0.5em;
   align-self: anchor-center;
 
-
-  &-labels, &-inputs {
+  &-labels,
+  &-inputs {
     display: flex;
     flex-direction: row;
     align-items: center;
     width: 100%;
-
   }
 
   &-labels {
