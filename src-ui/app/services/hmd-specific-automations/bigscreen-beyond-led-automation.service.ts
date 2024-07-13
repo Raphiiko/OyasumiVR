@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  debounceTime,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -64,14 +65,24 @@ export class BigscreenBeyondLedAutomationService {
         )
       )
       .subscribe();
+    // Handle LED color when the HMD is being connected
+    this.connected
+      .pipe(distinctUntilChanged(), debounceTime(500), filter(Boolean))
+      .subscribe(() => this.onHmdConnect());
     // Setup the automations
     this.sleepService.mode
       .pipe(distinctUntilChanged(), skip(1))
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
-    this.connected.pipe(filter(Boolean), distinctUntilChanged()).subscribe(async () => {
-      await this.onSleepModeChange(await firstValueFrom(this.sleepService.mode));
-    });
+  }
+
+  private async onHmdConnect() {
+    const sleepMode = await firstValueFrom(this.sleepService.mode);
+    if (sleepMode && this.config.onSleepEnable) {
+      await this.setLedColor(this.config.onSleepEnableRgb, false);
+    } else if (!sleepMode && this.config.onSleepDisable) {
+      await this.setLedColor(this.config.onSleepDisableRgb, false);
+    }
   }
 
   private async onSleepModeChange(sleepMode: boolean) {

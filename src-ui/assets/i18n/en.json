@@ -198,6 +198,7 @@
       "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
+    "onHmdConnectInfo": "When you enable both the \"At sunset\" and \"At sunrise\" automations, they will automatically run when you connect your headset, depending on the time of day. If not, the values from the \"When I go to sleep\" and \"When I wake up\" automations will be used instead!",
     "onlyWhenSleepModeDisabled": {
       "description": "Only run this automation while the sleep mode is disabled",
       "title": "Only while sleep mode is disabled"

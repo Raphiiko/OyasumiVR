@@ -226,7 +226,9 @@ import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/vie
 import { DurationInputSettingComponent } from './components/duration-input-setting/duration-input-setting.component';
 import { CCTControlService } from './services/cct-control/cct-control.service';
 import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
-import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
+import {
+  SettingsBrightnessCctViewComponent,
+} from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
 
 [

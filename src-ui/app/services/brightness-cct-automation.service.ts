@@ -4,14 +4,17 @@ import { SleepService } from './sleep.service';
 import {
   BehaviorSubject,
   combineLatest,
+  debounceTime,
   delay,
   distinctUntilChanged,
+  filter,
   firstValueFrom,
   interval,
   map,
   merge,
   Observable,
   of,
+  pairwise,
   skip,
   startWith,
   switchMap,
@@ -40,6 +43,7 @@ import { SetBrightnessOrCCTReason } from './brightness-control/brightness-contro
 import { invoke } from '@tauri-apps/api';
 import { error } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
+import { OpenVRService } from './openvr.service';
 
 @Injectable({
   providedIn: 'root',
@@ -95,10 +99,21 @@ export class BrightnessCctAutomationService {
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private cctControl: CCTControlService,
     private eventLog: EventLogService,
-    private sleepPreparation: SleepPreparationService
+    private sleepPreparation: SleepPreparationService,
+    private openvr: OpenVRService
   ) {}
 
   async init() {
+    // Run automations when the HMD gets connected
+    this.openvr.devices
+      .pipe(
+        map((devices) => devices.find((d) => d.class === 'HMD')?.serialNumber ?? null),
+        distinctUntilChanged(),
+        pairwise(),
+        filter(([prev, current]) => prev === null && current !== null),
+        debounceTime(3000)
+      )
+      .subscribe(() => this.onHmdConnect());
     // Run automations when the sleep mode changes
     this.sleepService.mode
       .pipe(
@@ -206,10 +221,49 @@ export class BrightnessCctAutomationService {
     );
   }
 
+  private async onHmdConnect() {
+    const config = await firstValueFrom(this.automationConfigService.configs).then(
+      (c) => c.BRIGHTNESS_AUTOMATIONS
+    );
+    // If sunrise/sunset times are both enabled, use the relevant values configured for those
+    if (
+      config.AT_SUNSET.enabled &&
+      config.AT_SUNRISE.enabled &&
+      config.AT_SUNSET.activationTime &&
+      config.AT_SUNRISE.activationTime
+    ) {
+      const d = new Date();
+      const currentHour = d.getHours();
+      const currentMinute = d.getMinutes();
+      const [sunriseHour, sunriseMinute] = config.AT_SUNRISE.activationTime.split(':');
+      const [sunsetHour, sunsetMinute] = config.AT_SUNSET.activationTime.split(':');
+      const currentTime = currentHour * 3600 + currentMinute * 60;
+      const sunriseTime = parseInt(sunriseHour) * 3600 + parseInt(sunriseMinute) * 60;
+      const sunsetTime = parseInt(sunsetHour) * 3600 + parseInt(sunsetMinute) * 60;
+      const timesInverted = sunriseTime >= sunsetTime;
+      const firstTime = timesInverted ? sunsetTime : sunriseTime;
+      const secondTime = timesInverted ? sunriseTime : sunsetTime;
+      let runAutomation: BrightnessEvent;
+      if (currentTime < firstTime || currentTime >= secondTime) {
+        runAutomation = timesInverted ? 'AT_SUNRISE' : 'AT_SUNSET';
+      } else {
+        runAutomation = timesInverted ? 'AT_SUNSET' : 'AT_SUNRISE';
+      }
+      await this.onAutomationTrigger(runAutomation, config[runAutomation], true, false);
+    }
+    // Otherwise, use the values configured for the sleep mode automations (if they're enabled)
+    else if (await firstValueFrom(this.sleepService.mode)) {
+      await this.onAutomationTrigger('SLEEP_MODE_ENABLE', config.SLEEP_MODE_ENABLE, true, false);
+    } else {
+      await this.onAutomationTrigger('SLEEP_MODE_DISABLE', config.SLEEP_MODE_DISABLE, true, false);
+    }
+  }
+
   private async onAutomationTrigger(
     automationType: BrightnessEvent,
     config: BrightnessEventAutomationConfig,
-    forceInstant = false
+    forceInstant = false,
+    logging = true
   ) {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
@@ -238,7 +292,7 @@ export class BrightnessCctAutomationService {
         await this.cctControl.setCCT(config.colorTemperature, { logReason });
       }
       const eventLogReason = eventLogReasonMap[automationType];
-      if (eventLogReason) {
+      if (logging && eventLogReason) {
         this.eventLog.logEvent({
           type: 'cctChanged',
           reason: eventLogReason,
@@ -314,7 +368,7 @@ export class BrightnessCctAutomationService {
         }
       }
       const eventLogReason = eventLogReasonMap[automationType];
-      if (eventLogReason) {
+      if (logging && eventLogReason) {
         if (advancedMode) {
           this.eventLog.logEvent({
             type: 'softwareBrightnessChanged',
@@ -358,15 +412,15 @@ export class BrightnessCctAutomationService {
     const sunsetTime = config.AT_SUNSET.activationTime ?? this.autoSunsetTime;
     if (
       config.AT_SUNSET.enabled &&
-      ((config.AT_SUNSET.onlyWhenSleepDisabled && !this.sleepMode) || this.sleepMode) &&
-      sunsetTime === currentTime
+      sunsetTime === currentTime &&
+      (!config.AT_SUNSET.onlyWhenSleepDisabled || !this.sleepMode)
     ) {
       await this.onAutomationTrigger('AT_SUNSET', config.AT_SUNSET);
     }
     if (
       config.AT_SUNRISE.enabled &&
-      ((config.AT_SUNRISE.onlyWhenSleepDisabled && !this.sleepMode) || this.sleepMode) &&
-      sunriseTime === currentTime
+      sunriseTime === currentTime &&
+      (!config.AT_SUNRISE.onlyWhenSleepDisabled || !this.sleepMode)
     ) {
       await this.onAutomationTrigger('AT_SUNRISE', config.AT_SUNRISE);
     }

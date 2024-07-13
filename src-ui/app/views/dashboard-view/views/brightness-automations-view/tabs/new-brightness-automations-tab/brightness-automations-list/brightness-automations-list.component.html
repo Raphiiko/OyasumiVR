@@ -5,8 +5,8 @@
     <div class="setting-row" *ngFor="let event of events">
       <div class="setting-row-icon">
         <i class="material-symbols-outlined" [class.icon-filled]="event.iconFilled">{{
-          event.icon
-        }}</i>
+            event.icon
+          }}</i>
       </div>
       <div class="setting-row-label" translate>
         <span>{{ 'brightness-automations.' + event.name + '.title' | translate }}</span>
@@ -30,5 +30,16 @@
         </label>
       </div>
     </div>
+  </div>
+</div>
+<div
+  class="alert"
+>
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-symbols-outlined">info</i>
+  </div>
+  <div class="alert-content">
+    <span translate>brightness-automations.onHmdConnectInfo</span>
   </div>
 </div>

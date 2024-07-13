@@ -109,10 +109,6 @@
       "description": "調整顯示器本身的亮度",
       "title": "更改硬體亮度為"
     },
-    "softwareBrightness": {
-      "description": "調整 VR 頭顯影像的亮度",
-      "title": "更改軟體亮度為"
-    },
     "mode": {
       "advanced": "進階模式",
       "simple": "簡單模式"
@@ -121,9 +117,9 @@
       "message": "當使用 OyasumiVR 來控制 VR 頭戴式顯示器的亮度時，可以選擇兩種不同的控制方法：軟體控制與硬體控制。\n\n軟體控制適用於所有類型的頭戴式顯示器，它透過調整影像的亮度來改變顯示器的亮度。\n\n硬體控制則只適用於特定支援的顯示器（如 Valve Index、Bigscreen Beyond），此方法會直接在支援的範圍內調整顯示器顯示的亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體和硬體亮度控制之間進行切換，或者在不支援硬體亮度的情況下只控制軟體亮度。\n\n如果你偏好直接控制，進階模式允許你分別獨立控制軟體和硬體亮度，讓你可以為每一種設置確切的亮度值。",
       "title": "亮度控制模式"
     },
-    "tabs": {
-      "automations": "自動化",
-      "hmdSettings": "頭顯設定"
+    "softwareBrightness": {
+      "description": "調整 VR 頭顯影像的亮度",
+      "title": "更改軟體亮度為"
     },
     "title": "亮度自動調整"
   },

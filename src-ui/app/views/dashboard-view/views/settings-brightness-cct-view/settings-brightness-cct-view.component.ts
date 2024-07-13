@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../models/settings';
 import { AppSettingsService } from '../../../../services/app-settings.service';
 import { HardwareBrightnessControlService } from '../../../../services/brightness-control/hardware-brightness-control.service';
@@ -13,7 +13,7 @@ import { clamp } from '../../../../utils/number-utils';
   templateUrl: './settings-brightness-cct-view.component.html',
   styleUrl: './settings-brightness-cct-view.component.scss',
 })
-export class SettingsBrightnessCctViewComponent {
+export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
 
   constructor(

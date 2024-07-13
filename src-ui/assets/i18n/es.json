@@ -112,10 +112,6 @@
       "description": "Ajusta el brillo de la pantalla.",
       "title": "Cambia el brillo del hardware a"
     },
-    "softwareBrightness": {
-      "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
-      "title": "Cambia el brillo del software a"
-    },
     "mode": {
       "advanced": "Modo avanzado",
       "simple": "Modo simple"
@@ -124,9 +120,9 @@
       "message": "OyasumiVR dispone de dos métodos para controlar el brillo de tu casco de RV: Control por software y control por hardware:\n\nEl control por software está disponible para todos los cascos. Ajusta el brillo de tu casco de RV ajustando el brillo de la imagen.\n\nEl control por hardware sólo está disponible para los cascos compatibles (Valve Index, Bigscreen Beyond). Ajusta el brillo de la pantalla de tus cascos directamente dentro del rango soportado.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo por software y por hardware, o sólo el brillo por software si el brillo por hardware no está soportado.\n\nSi prefieres el control directo, el modo avanzado te permite controlar tanto el brillo del software como el del hardware por separado, permitiéndote establecer los valores exactos de brillo para cada uno.",
       "title": "Modo de control de brillo"
     },
-    "tabs": {
-      "automations": "Automatizaciones",
-      "hmdSettings": "Ajustes HMD"
+    "softwareBrightness": {
+      "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
+      "title": "Cambia el brillo del software a"
     },
     "title": "Automatización del brillo"
   },
