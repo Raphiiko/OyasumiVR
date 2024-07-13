@@ -230,6 +230,7 @@ import {
   SettingsBrightnessCctViewComponent,
 } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
+import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
 
 [
   localeEN,
@@ -371,6 +372,7 @@ export function createTranslateLoader(http: HttpClient) {
     CCTInputSettingComponent,
     CCTControlModalComponent,
     SettingsBrightnessCctViewComponent,
+    BrightnessAdvancedModeToggleComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [

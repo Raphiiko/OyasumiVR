@@ -1,0 +1,11 @@
+<div class="advanced-toggle">
+  <div class="advanced-toggle-clickable" (click)="toggleAdvancedMode()">
+    <label class="switch-toggle">
+      <input type="checkbox" [checked]="advancedMode" disabled />
+      <span class="switch-toggle-slider"></span>
+    </label>
+    <span @hshrink *ngIf="!advancedMode" translate>brightness-automations.mode.simple</span>
+    <span @hshrink *ngIf="advancedMode" translate>brightness-automations.mode.advanced</span>
+  </div>
+  <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>
+</div>
