@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { OBB } from 'three/examples/jsm/math/OBB';
+import { OBB } from 'three/examples/jsm/math/OBB.js';
 import { SleepingPose } from '../models/sleeping-pose';
 import { flatten } from 'lodash';
 
