@@ -23,9 +23,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
 
+## [1.13.3]
+
 ### Fixed
 
+- Battery level based power automations turning off devices above the threshold
 - Certain types of selection in input fields (e.g. Ctrl+A) being blocked
+
+### Changed
+- Window titlebar icons
 
 ## [1.13.2]
 
