@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Battery level based power automations turning off devices above the threshold
+- Certain types of selection in input fields (e.g. Ctrl+A) being blocked
 
 ## [1.13.2]
 
