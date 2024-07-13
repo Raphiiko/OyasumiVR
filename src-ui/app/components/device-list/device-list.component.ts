@@ -278,7 +278,6 @@ export class DeviceListComponent implements OnInit {
   }
 
   async rightClickBulkPowerLighthouseDevices() {
-    console.log('TRIGGER');
     this.showLHStatePopover = !this.showLHStatePopover;
   }
 

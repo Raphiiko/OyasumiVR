@@ -1,6 +1,13 @@
-<button class="btn btn-secondary" (click)="fetchAvatars()">Fetch Avatars</button>
 <pre>
-  <code>
-    {{ avatars | json }}
-  </code>
+  {{ colorTemp }}K
+</pre>
+<app-slider
+  [min]="1000"
+  [max]="6600"
+  [step]="100"
+  [value]="colorTemp"
+  (valueChange)="setColorTemp($event)"
+></app-slider>
+<pre>
+  {{ result | json }}
 </pre>

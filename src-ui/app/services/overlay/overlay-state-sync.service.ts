@@ -99,7 +99,7 @@ export class OverlayStateSyncService {
       ),
     },
     brightnessState: {
-      advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
+      advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.advancedMode,
       brightness: 100,
       hardwareBrightness: 100,
       softwareBrightness: 100,
@@ -201,7 +201,7 @@ export class OverlayStateSyncService {
             'SLEEPING_ANIMATIONS',
             'SHUTDOWN_AUTOMATIONS',
             'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
-            'BRIGHTNESS_CONTROL_ADVANCED_MODE',
+            'BRIGHTNESS_AUTOMATIONS',
             'SYSTEM_MIC_MUTE_AUTOMATIONS',
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
@@ -261,7 +261,7 @@ export class OverlayStateSyncService {
               .length > 0;
         }
         {
-          state.brightnessState!.advancedMode = configs.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+          state.brightnessState!.advancedMode = configs.BRIGHTNESS_AUTOMATIONS.advancedMode;
         }
         {
           state.settings!.systemMicIndicatorEnabled =

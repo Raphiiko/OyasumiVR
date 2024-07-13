@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
 import { OscService } from '../../services/osc.service';
-import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
+import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -145,7 +145,7 @@ export class DashboardNavbarComponent implements OnInit {
     private osc: OscService,
     protected router: Router,
     protected background: BackgroundService,
-    protected brightnessAutomation: BrightnessControlAutomationService,
+    protected brightnessAutomation: BrightnessCctAutomationService,
     private modalService: ModalService,
     private destroyRef: DestroyRef
   ) {

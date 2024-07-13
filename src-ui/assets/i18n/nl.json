@@ -138,84 +138,13 @@
     "whitelist": "Speler Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus inactief is",
-          "onSleepEnable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus actief is"
-        },
-        "title": "Helderheid bij opstarten"
-      },
-      "brightness": {
-        "title": "Zet de helderheid naar"
-      },
-      "copyBrightness": "Kopieer huidig helderheidsniveau",
-      "description": "Laat OyasumiVR automatisch het helderheidsniveau van je VR headset aanpassen, zoals wanneer je in slaap valt of wanneer je wakker wordt.",
-      "hardwareBrightness": {
-        "description": "Past de helderheid van het fysieke scherm aan",
-        "title": "Zet de hardware helderheid naar"
-      },
-      "onSleepDisable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik wakker word"
-      },
-      "onSleepEnable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik ga slapen"
-      },
-      "onSleepPreparation": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik me voorbereid om te gaan slapen"
-      },
-      "onStartup": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer OyasumiVR of SteamVR opstart"
-      },
-      "sleepAutomations": "Slaap Automatiseringen",
-      "sleepPreparation": {
-        "description": "Je kan je slaap voorbereiden door op de knop te drukken in OyasumiVR's overlay. De knop hier voor zal bruikbaar worden als je één of meerdere automatiseringen voor slaap voorbereiding, zoals deze, hebt geactiveerd. Je kunt dit gebruiken om alvast het helderheidsniveau te dimmen voordat je in slaap valt.",
-        "title": "Slaap Voorbereiding"
-      },
-      "softwareBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
-        "title": "Zet de software helderheid naar"
-      },
-      "startupAutomations": "Opstart Automatiseringen",
-      "transition": {
-        "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid",
-        "title": "Vloeiende overgang"
-      },
-      "transitionTime": {
-        "description": "Hoe lang de vloeiende overgang zal duren",
-        "title": "Overgangsduur"
-      }
+    "brightness": {
+      "title": "Zet de helderheid naar"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
-          "title": "Overdrive ventilator veiligheid",
-          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
-        },
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "permitRiskRange": {
-          "description": "Voorkomt dat je de helderheid boven 150% zet",
-          "title": "Beperk tot veilige schermhelderheidswaarden",
-          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier kan je alle instellingen vinden mbt schermhelderheid voor jou specifieke VR headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "Kopieer huidig helderheidsniveau",
+    "hardwareBrightness": {
+      "description": "Past de helderheid van het fysieke scherm aan",
+      "title": "Zet de hardware helderheid naar"
     },
     "mode": {
       "advanced": "Geavanceerde Modus",
@@ -225,9 +154,9 @@
       "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
     },
-    "tabs": {
-      "automations": "Automatiseringen",
-      "hmdSettings": "HMD Instellingen"
+    "softwareBrightness": {
+      "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
+      "title": "Zet de software helderheid naar"
     },
     "title": "Helderheid Automatiseringen"
   },
@@ -248,13 +177,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Helderheid Automatiseringen",
       "brightness": "Helderheid",
       "hardwareBrightness": "Hardware Helderheid",
       "softwareBrightness": "Software Helderheid"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automatiseringen",
       "fanSpeed": "Ventilator Snelheid"
     },
     "color-picker-modal": {
@@ -483,8 +410,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -601,8 +526,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -655,8 +578,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -1614,6 +1535,32 @@
           "title": "Laad vertalingsbestand"
         },
         "title": "Taal & Vertalen"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
+          "title": "Overdrive ventilator veiligheid",
+          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
+        },
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "permitRiskRange": {
+          "description": "Voorkomt dat je de helderheid boven 150% zet",
+          "title": "Beperk tot veilige schermhelderheidswaarden",
+          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

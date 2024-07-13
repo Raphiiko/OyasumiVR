@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { VRChatService } from '../vrchat.service';
 import {
-  async,
+  asyncScheduler,
   combineLatest,
   debounceTime,
   delay,
@@ -77,11 +77,11 @@ export class StatusChangeForPlayerCountAutomationService {
         // Stop if we don't need to make any changes
         filter((newStatus) => Boolean(newStatus.status || newStatus.statusMessage)),
         // Throttle to prevent spamming, just in case. (This should already be handled at the service level).
-        throttleTime(500, async, { leading: true, trailing: true })
+        throttleTime(500, asyncScheduler, { leading: true, trailing: true })
       )
       .subscribe(async (newStatus) => {
         // Set new status
-        let success = await this.vrchat
+        const success = await this.vrchat
           .setStatus(newStatus.status, newStatus.statusMessage)
           .catch(() => false);
         if (success) {

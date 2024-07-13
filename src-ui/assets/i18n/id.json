@@ -59,59 +59,19 @@
     "whitelist": "Whitelist Player"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Jika mode tidur tidak aktif, atur nilai kecerahan ini secara langsung saat SteamVR atau OyasumiVR dimulai.",
-          "onSleepEnable": "Jika mode tidur aktif, atur nilai kecerahan ini secara langsung saat SteamVR atau OyasumiVR dimulai."
-        },
-        "title": "Terapkan kecerahan saat startup"
-      },
-      "brightness": {
-        "title": "Atur Kecerahan ke"
-      },
-      "copyBrightness": "Salin nilai\nkecerahan saat ini",
-      "description": "Buat OyasumiVR secara otomatis menyesuaikan kecerahan headset VR Anda pada berbagai waktu, seperti saat Anda pergi tidur, atau saat Anda bangun.",
-      "onSleepDisable": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Ketika saya bangun"
-      },
-      "onSleepEnable": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Ketika saya mulai tidur"
-      },
-      "onSleepPreparation": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Saat aku bersiap untuk tidur"
-      },
-      "onStartup": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Saat OyasumiVR atau SteamVR dimulai"
-      },
-      "sleepAutomations": "Otomatisasi Tidur",
-      "sleepPreparation": {
-        "description": "Anda bisa bersiap untuk tidur dengan menekan tombol di overlay OyasumiVR. Tombol ini akan ditampilkan ketika Anda mengaktifkan satu atau lebih otomatisasi saat persiapan tidur, seperti ini. Gunakan ini untuk mulai meredupkan kecerahan sebelum Anda tertidur.",
-        "title": "Persiapan Tidur"
-      },
-      "softwareBrightness": {
-        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
-      },
-      "startupAutomations": "Otomatisasi Permulaan",
-      "transition": {
-        "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan",
-        "title": "Atur kecerahan bertahap"
-      },
-      "transitionTime": {
-        "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru",
-        "title": "Durasi transisi"
-      }
+    "brightness": {
+      "title": "Atur Kecerahan ke"
     },
+    "copyBrightness": "Salin nilai\nkecerahan saat ini",
     "mode": {
       "advanced": "Mode lanjutan",
       "simple": "Mode simpel"
     },
     "modeInfoModal": {
       "title": "Mode Kontrol Kecerahan"
+    },
+    "softwareBrightness": {
+      "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
     },
     "title": "Automasi Kecerahan"
   },
@@ -132,7 +92,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automasi Kecerahan",
       "brightness": "Kecerahan"
     },
     "confirm-modal": {
@@ -272,8 +231,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },
@@ -369,8 +326,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           },
           "title": {
@@ -413,8 +368,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },

@@ -1,0 +1,52 @@
+@import 'shadows';
+
+.wrapper {
+  position: relative;
+  &:after {
+    content: '';
+    z-index: 100000;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    opacity: 0.25;
+    background: linear-gradient(210deg, rgba(255, 255, 255, 1) 0%, rgba(0, 0, 0, 1) 100%);
+    border-radius: 0.5em;
+    pointer-events: none;
+  }
+}
+
+.wrapper > input {
+  width: 5.5em;
+  text-align: center;
+  cursor: pointer;
+  anchor-name: --input-el;
+  transition: opacity 0.15s ease;
+  color: black;
+  font-weight: 600;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.input-container {
+  @include shadow(5, true);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--surface-border-radius);
+  overflow: hidden;
+  border: 0.15em solid var(--color-surface-3);
+  background: rgba(black, 0.125);
+  backdrop-filter: blur(4px);
+  padding: 1em;
+  position: absolute;
+  position-anchor: --input-el;
+  right: anchor(left);
+  margin-right: 0.5em;
+  align-self: anchor-center;
+  width: 20em;
+}

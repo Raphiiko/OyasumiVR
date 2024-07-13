@@ -104,84 +104,13 @@
     "whitelist": "Jugador Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Si el modo de suspensión está inactivo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicie.",
-          "onSleepEnable": "Si el modo de suspensión está activo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicien."
-        },
-        "title": "Aplicar brillo al iniciar"
-      },
-      "brightness": {
-        "title": "Cambia el brillo a"
-      },
-      "copyBrightness": "Copia actual\nvalor de luminosidad",
-      "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
-      "hardwareBrightness": {
-        "description": "Ajusta el brillo de la pantalla.",
-        "title": "Cambia el brillo del hardware a"
-      },
-      "onSleepDisable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me despierto"
-      },
-      "onSleepEnable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me voy a dormir"
-      },
-      "onSleepPreparation": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me preparo para dormir"
-      },
-      "onStartup": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando empiece OyasumiVR o SteamVR"
-      },
-      "sleepAutomations": "Automatizaciones del sueño",
-      "sleepPreparation": {
-        "description": "Puedes prepararte para irte a dormir pulsando un botón en la superposición de OyasumiVR. El botón para esto se mostrará cuando tengas una o más automatizaciones de preparación para dormir activas, como esta. Utilízalo para empezar a atenuar el brillo antes de quedarte dormido.",
-        "title": "Preparación para dormir"
-      },
-      "softwareBrightness": {
-        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
-        "title": "Cambia el brillo del software a"
-      },
-      "startupAutomations": "Automatizaciones de arranque",
-      "transition": {
-        "description": "Transición suave al valor de brillo deseado",
-        "title": "Ajuste el brillo gradualmente"
-      },
-      "transitionTime": {
-        "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo.",
-        "title": "Tiempo de transición"
-      }
+    "brightness": {
+      "title": "Cambia el brillo a"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
-          "title": "Seguridad del ventilador Overdrive",
-          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
-        },
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "permitRiskRange": {
-          "description": "Impide ajustar el brillo por encima del 150%.",
-          "title": "Limitar a niveles de brillo seguros",
-          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
-        },
-        "title": "Más allá de la pantalla grande"
-      },
-      "description": "Aquí encontrarás cualquier ajuste relacionado con el brillo para tu casco de RV específico.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "Copia actual\nvalor de luminosidad",
+    "hardwareBrightness": {
+      "description": "Ajusta el brillo de la pantalla.",
+      "title": "Cambia el brillo del hardware a"
     },
     "mode": {
       "advanced": "Modo avanzado",
@@ -191,9 +120,9 @@
       "message": "OyasumiVR dispone de dos métodos para controlar el brillo de tu casco de RV: Control por software y control por hardware:\n\nEl control por software está disponible para todos los cascos. Ajusta el brillo de tu casco de RV ajustando el brillo de la imagen.\n\nEl control por hardware sólo está disponible para los cascos compatibles (Valve Index, Bigscreen Beyond). Ajusta el brillo de la pantalla de tus cascos directamente dentro del rango soportado.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo por software y por hardware, o sólo el brillo por software si el brillo por hardware no está soportado.\n\nSi prefieres el control directo, el modo avanzado te permite controlar tanto el brillo del software como el del hardware por separado, permitiéndote establecer los valores exactos de brillo para cada uno.",
       "title": "Modo de control de brillo"
     },
-    "tabs": {
-      "automations": "Automatizaciones",
-      "hmdSettings": "Ajustes HMD"
+    "softwareBrightness": {
+      "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
+      "title": "Cambia el brillo del software a"
     },
     "title": "Automatización del brillo"
   },
@@ -214,7 +143,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automatización del brillo",
       "brightness": "Brillo",
       "hardwareBrightness": "Hardware Brillo",
       "softwareBrightness": "Software Brillo"
@@ -412,8 +340,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -528,8 +454,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -575,8 +499,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -1347,6 +1269,32 @@
           "title": "Cargar archivo de traducción"
         },
         "title": "Idiomas y traducción"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
+          "title": "Seguridad del ventilador Overdrive",
+          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
+        },
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "permitRiskRange": {
+          "description": "Impide ajustar el brillo por encima del 150%.",
+          "title": "Limitar a niveles de brillo seguros",
+          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
+        },
+        "title": "Más allá de la pantalla grande"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

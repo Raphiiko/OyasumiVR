@@ -1,27 +1,41 @@
 <div class="brightness-slider-bar-row">
-  <i class="material-icons brightness-level-icon" *ngIf="icons === 'BRIGHTNESS'">brightness_5</i>
+  <i class="material-icons brightness-level-icon" *ngIf="mode === 'BRIGHTNESS'">brightness_5</i>
+  <i class="material-symbols-outlined brightness-level-icon" *ngIf="mode === 'CCT'"
+    >thermometer_minus</i
+  >
   <i
     class="material-symbols-outlined brightness-level-icon icon-filled"
-    *ngIf="icons === 'FAN_SPEED'"
+    *ngIf="mode === 'FAN_SPEED'"
     >mode_fan_off</i
   >
-  <div class="brightness-slider-bar" (mousedown)="onDragStart($event)">
+  <div class="brightness-slider-bar" (mousedown)="onDragStart($event)" [class.cct]="mode === 'CCT'">
     <div
       class="brightness-slider-bar-inner"
       [class.dragging]="dragging"
       [class.transition-active]="transitionActive"
       [style.width]="innerWidth"
     >
-      <div class="brightness-slider-bar-label"
-        ><span>{{ (dragging ? dragValue : value) | number : '1.0-0' }}%</span></div
-      >
+      <div class="brightness-slider-bar-label">
+        <span *ngIf="['BRIGHTNESS', 'FAN_SPEED'].includes(mode)"
+          >{{ (dragging ? dragValue : value) | number : '1.0-0' }} %</span
+        >
+        <div
+          *ngIf="['CCT'].includes(mode)"
+          class="colortemp-icon"
+          [style.background-color]="cctColor"
+        ></div>
+        <span *ngIf="['CCT'].includes(mode)">{{ dragging ? dragValue : value }}K</span>
+      </div>
     </div>
     <div class="brightness-slider-bar-range-guide" #rangeGuideEl></div>
   </div>
-  <i class="material-icons brightness-level-icon" *ngIf="icons === 'BRIGHTNESS'">brightness_7</i>
+  <i class="material-icons brightness-level-icon" *ngIf="mode === 'BRIGHTNESS'">brightness_7</i>
+  <i class="material-symbols-outlined brightness-level-icon" *ngIf="mode === 'CCT'"
+    >thermometer_add</i
+  >
   <i
     class="material-symbols-outlined brightness-level-icon icon-filled"
-    *ngIf="icons === 'FAN_SPEED'"
+    *ngIf="mode === 'FAN_SPEED'"
     >mode_fan</i
   >
 </div>

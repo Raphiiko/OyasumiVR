@@ -138,85 +138,58 @@
     "whitelist": "Player Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "If sleep mode is inactive, set this brightness value directly when SteamVR or OyasumiVR starts.",
-          "onSleepEnable": "If sleep mode is active, set this brightness value directly when SteamVR or OyasumiVR starts."
-        },
-        "title": "Apply brightness on startup"
+    "AT_SUNRISE": {
+      "title": "At sunrise"
+    },
+    "AT_SUNSET": {
+      "title": "At sunset"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "When I wake up"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "When I go to sleep"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "When I prepare to go to sleep"
+    },
+    "activation": {
+      "category": "Activation"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "The time of day when the sun rises",
+        "title": "Time of sunrise"
       },
-      "brightness": {
-        "title": "Change the brightness to"
-      },
-      "copyBrightness": "Copy current\nbrightness value",
-      "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
-      "hardwareBrightness": {
-        "description": "Adjusts the brightness of the display itself",
-        "title": "Change the hardware brightness to"
-      },
-      "onSleepDisable": {
-        "description": "Adjust the brightness",
-        "title": "When I wake up"
-      },
-      "onSleepEnable": {
-        "description": "Adjust the brightness",
-        "title": "When I go to sleep"
-      },
-      "onSleepPreparation": {
-        "description": "Adjust the brightness",
-        "title": "When I prepare to go to sleep"
-      },
-      "onStartup": {
-        "description": "Adjust the brightness",
-        "title": "When OyasumiVR or SteamVR starts"
-      },
-      "sleepAutomations": "Sleep Automations",
-      "sleepPreparation": {
-        "description": "You can prepare to go to sleep by pressing a button in OyasumiVR's overlay. The button for this will be shown when you have one or more sleep preparation automations active, like this one. Use this to already start dimming the brightness before you fall asleep.",
-        "title": "Sleep Preparation"
-      },
-      "softwareBrightness": {
-        "description": "Adjusts the brightness of the image shown in your VR headset",
-        "title": "Change the software brightness to"
-      },
-      "startupAutomations": "Startup Automations",
-      "transition": {
-        "description": "Smoothly transition to your desired brightness value",
-        "title": "Adjust brightness gradually"
-      },
-      "transitionTime": {
-        "description": "How long it should take to transition to the new brightness setting",
-        "title": "Transition time"
+      "SUNSET": {
+        "description": "The time of day when the sun sets",
+        "title": "Time of sunset"
       }
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Force the fan to 100% at brightness values above 100%",
-          "title": "Overdrive fan safety",
-          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
-        },
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "permitRiskRange": {
-          "description": "Prevents you from setting the brightness above 150%",
-          "title": "Limit to safe brightness levels",
-          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Here you'll find any brightness related settings for your specific VR Headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "title": "Valve Index"
-      }
+    "autoDetermineSunsetSunrise": "Automatically estimate time",
+    "brightness": {
+      "title": "Change the brightness to"
     },
+    "changeBrightness": {
+      "category": "Brightness",
+      "description": "Adjust your VR headset's brightness value",
+      "title": "Change brightness"
+    },
+    "changeTemperature": {
+      "category": "Color temperature",
+      "description": "Adjust the color temperature of the image shown in your VR headset",
+      "title": "Change color temperature",
+      "warning": "Adjusting color temperature is only supported on some native SteamVR headsets.\n\nKnown working HMDs:\n • Valve Index\n • HTC Vive (Pro)\n • Bigscreen Beyond"
+    },
+    "copyBrightness": "Copy current\nbrightness value",
+    "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
+    "detailsTitle": "Event",
+    "events": "Events",
+    "hardwareBrightness": {
+      "description": "Adjusts the brightness of the display itself",
+      "title": "Change the hardware brightness to"
+    },
+    "miscConfig": "Other options",
     "mode": {
       "advanced": "Advanced Mode",
       "simple": "Simple Mode"
@@ -225,11 +198,27 @@
       "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
-    "tabs": {
-      "automations": "Automations",
-      "hmdSettings": "HMD Settings"
+    "onHmdConnectInfo": "When you enable both the \"At sunset\" and \"At sunrise\" automations, they will automatically run when you connect your headset, depending on the time of day. If not, the values from the \"When I go to sleep\" and \"When I wake up\" automations will be used instead!",
+    "onlyWhenSleepModeDisabled": {
+      "description": "Only run this automation while the sleep mode is disabled",
+      "title": "Only while sleep mode is disabled"
     },
-    "title": "Brightness Automations"
+    "softwareBrightness": {
+      "description": "Adjusts the brightness of the image shown in your VR headset",
+      "title": "Change the software brightness to"
+    },
+    "temperature": {
+      "title": "Change the color temperature to"
+    },
+    "title": "Brightness Automations",
+    "transition": {
+      "description": "Have the brightness and/or color temperature smoothly transition over time",
+      "title": "Smoothly transition"
+    },
+    "transitionTime": {
+      "description": "How long it should take for the changes to complete",
+      "title": "Transition time"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
@@ -248,14 +237,15 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Brightness Automations",
       "brightness": "Brightness",
       "hardwareBrightness": "Hardware Brightness",
       "softwareBrightness": "Software Brightness"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automations",
       "fanSpeed": "Fan Speed"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "Color Temperature"
     },
     "color-picker-modal": {
       "title": "Pick Colour"
@@ -311,6 +301,7 @@
       "resolutionAutomations": "Resolution Automations",
       "settings": {
         "advanced": "Advanced Settings",
+        "brightnessCct": "Brightness & CCT Settings",
         "general": "General Settings",
         "hotkeys": "Hotkey Settings",
         "integrations": "Integrations",
@@ -423,6 +414,17 @@
           },
           "title": "Bigscreen Beyond RGB Led set to {color}"
         },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset color temperature set to {icon} {temperature}K",
+            "transition": "Headset color temperature transitioning to {icon} {temperature}K"
+          }
+        },
         "changedAudioDeviceVolume": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -483,8 +485,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -601,8 +603,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -655,8 +657,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -759,6 +761,10 @@
         "label": "Fan Speed",
         "tooltip": "Bigscreen Beyond Fan Speed"
       },
+      "cctControl": {
+        "label": "CCT",
+        "tooltip": "Color Temperature Control"
+      },
       "heartrate": "Heart Rate",
       "inactive": "Inactive",
       "loggedOut": "Logged out",
@@ -846,7 +852,7 @@
         "sleep": "Sleep"
       },
       "addCommand": "Add",
-      "addParameter": "New parameter",
+      "addParameter": "Add parameter",
       "commandCounter": "{count, plural, one {1 Command} other {# Commands}}",
       "commands": {
         "COMMAND": {
@@ -1133,8 +1139,8 @@
       "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
       "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
       "invalidSyntax": "Invalid syntax.",
-      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "maxParameterCountExceeded": "Maximum allowed parameter count per command is {value}.",
+      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "stringTooLong": "String value must not exceed {value} character limit.",
       "tooManyCommands": "An OSC script cannot have more than {value} actions.",
       "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
@@ -1617,6 +1623,41 @@
           "title": "Load translation file"
         },
         "title": "Language & Translation"
+      }
+    },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Force the fan to 100% at brightness values above 100%",
+          "title": "Overdrive fan safety",
+          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
+        },
+        "maxBrightness": {
+          "description": "Limit the maximum brightness value that OyasumiVR will set.",
+          "title": "Maximum Brightness"
+        },
+        "permitRiskRange": {
+          "description": "Prevents you from setting the brightness above 150%",
+          "title": "Limit to safe brightness levels",
+          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "enabled": {
+          "description": "Disable this if you use other applications to control your display's color temperature (e.g. LuxVR or OVR Advanced Settings)",
+          "title": "Enable color temperature control"
+        },
+        "title": "Color Temperature"
+      },
+      "description": "Here you'll find any settings related to brightness and color temperature.",
+      "title": "Brightness & CCT",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limit the maximum brightness value that OyasumiVR will set.",
+          "title": "Maximum Brightness"
+        },
+        "title": "Valve Index"
       }
     },
     "general": {

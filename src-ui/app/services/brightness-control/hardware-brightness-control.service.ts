@@ -19,7 +19,10 @@ import { isEqual } from 'lodash';
 import { info } from 'tauri-plugin-log-api';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
-import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import {
+  SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
+  SetBrightnessOrCCTOptions,
+} from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 import { BigscreenBeyondHardwareBrightnessControlDriver } from './hardware-brightness-drivers/bigscreen-beyond-hardware-brightness-control-driver';
 import { AppSettingsService } from '../app-settings.service';
@@ -104,9 +107,9 @@ export class HardwareBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       const task = new CancellableTask();
       task.start();
@@ -149,10 +152,10 @@ export class HardwareBrightnessControlService {
 
   async setBrightness(
     percentage: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS,
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
     force = false
   ) {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     const driver = await firstValueFrom(this.driver);
     if (!driver) return;
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
