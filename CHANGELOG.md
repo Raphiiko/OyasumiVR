@@ -8,11 +8,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Exposed HMD activity level over MQTT as "HMD On Head" (Experimental).
+- Color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
+- Color temperature control to the current brightness automations.
+- Sunset/Sunrise based automations for brightness and color temperature.
+
+### Changed
+
+- Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
+- (Headset specific) brightness and cct settings were moved to their own settings page.
+
+### Removed
+
+- Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
+
+### Fixed
+
+- Certain types of selection in input fields (e.g. Ctrl+A) being blocked
 
 ## [1.13.2]
 
 ### Fixed
+
 - The status message not updating when the visibility remained the same
 - The status message not setting to an empty value
 
