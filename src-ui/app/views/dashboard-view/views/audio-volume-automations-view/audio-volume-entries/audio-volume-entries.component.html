@@ -2,10 +2,10 @@
   <div class="setting-row">
     <div class="setting-row-label">
       <span translate *ngIf="!automations.length"
-        >audio-volume-automations.devices.title.noDevices</span
+      >audio-volume-automations.devices.title.noDevices</span
       >
       <span translate *ngIf="automations.length"
-        >audio-volume-automations.devices.title.hasDevices</span
+      >audio-volume-automations.devices.title.hasDevices</span
       >
       <span translate>audio-volume-automations.devices.description</span>
     </div>
@@ -51,8 +51,8 @@
         </div>
         <span>{{ automation.audioDeviceRef.name.display }}</span>
         <span *ngIf="automation.audioDeviceRef.name.driver">{{
-          automation.audioDeviceRef.name.driver
-        }}</span>
+            automation.audioDeviceRef.name.driver
+          }}</span>
       </div>
       <div class="setting-row-action">
         <app-select-box
@@ -72,8 +72,9 @@
         </button>
       </div>
     </div>
-    <div class="setting-row-group" *ngIf="automation.type === 'SET_VOLUME'" @vshrink>
-      <div class="setting-row">
+    <div class="setting-row-group"
+         *ngIf="(automationType === 'onSleepEnable' || automationType === 'onSleepDisable') || automation.type === 'SET_VOLUME'" @vshrink>
+      <div class="setting-row" *ngIf="automation.type === 'SET_VOLUME'" @vshrink>
         <div class="setting-row-label">
           <span translate>audio-volume-automations.volume.title</span>
           <span translate>audio-volume-automations.volume.description</span>
@@ -84,6 +85,22 @@
             [value]="automation.volume"
             (valueChange)="setVolume(automation, $event)"
           ></app-slider-setting>
+        </div>
+      </div>
+      <div class="setting-row" *ngIf="automationType === 'onSleepEnable' || automationType === 'onSleepDisable'">
+        <div class="setting-row-label" translate>
+          <span translate>audio-volume-automations.applyOnStart.title</span>
+          <span translate>{{ 'audio-volume-automations.applyOnStart.description.' + automationType | translate }}</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="automation.applyOnStart"
+              (change)="toggleApplyOnStart(automation)"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
         </div>
       </div>
     </div>

@@ -357,6 +357,7 @@ export type AudioVolumeAutomation =
 
 export interface BaseAudioVolumeAutomation {
   type: AudioVolumeAutomationType;
+  applyOnStart: boolean;
   audioDeviceRef: {
     persistentId: string;
     type: AudioDeviceType;

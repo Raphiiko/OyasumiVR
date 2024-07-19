@@ -23,6 +23,7 @@ import {
   animations: [vshrink()],
 })
 export class AudioVolumeEntriesComponent implements OnInit {
+  @Input() automationType?: 'onSleepEnable' | 'onSleepDisable' | 'onSleepPreparation';
   @Input() automations: AudioVolumeAutomation[] = [];
   @Output() automationsChange: EventEmitter<AudioVolumeAutomation[]> = new EventEmitter();
   collapsed = true;
@@ -104,6 +105,7 @@ export class AudioVolumeEntriesComponent implements OnInit {
         this.automations.push({
           type: 'SET_VOLUME',
           volume: Math.round(res.device.volume * 100),
+          applyOnStart: true,
           audioDeviceRef: {
             persistentId: res.device.persistentId!,
             type: res.device.deviceType,
@@ -123,5 +125,10 @@ export class AudioVolumeEntriesComponent implements OnInit {
 
   trackAutomationBy(index: number, automation: AudioVolumeAutomation) {
     return automation.audioDeviceRef.persistentId;
+  }
+
+  toggleApplyOnStart(automation: AudioVolumeAutomation) {
+    automation.applyOnStart = !automation.applyOnStart;
+    this.automationsChange.emit(this.automations);
   }
 }

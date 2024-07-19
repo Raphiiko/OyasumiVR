@@ -8,6 +8,7 @@
       <app-audio-volume-entries
         [automations]="config.onSleepEnableAutomations"
         (automationsChange)="onAutomationsChange('onSleepEnable', $event)"
+        [automationType]="'onSleepEnable'"
       ></app-audio-volume-entries>
     </div>
     <div class="setting-category">
@@ -16,6 +17,7 @@
       <app-audio-volume-entries
         [automations]="config.onSleepDisableAutomations"
         (automationsChange)="onAutomationsChange('onSleepDisable', $event)"
+        [automationType]="'onSleepDisable'"
       ></app-audio-volume-entries>
     </div>
     <div class="setting-category">
@@ -24,6 +26,7 @@
       <app-audio-volume-entries
         [automations]="config.onSleepPreparationAutomations"
         (automationsChange)="onAutomationsChange('onSleepPreparation', $event)"
+        [automationType]="'onSleepPreparation'"
       ></app-audio-volume-entries>
     </div>
   </div>

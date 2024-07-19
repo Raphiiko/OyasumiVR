@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color temperature control to the current brightness automations.
 - Sunset/Sunrise based automations for brightness and color temperature.
 - Option for the shutdown sequence being triggered by being alone to only trigger while the sleep mode is enabled.
+- Option for audio volume automations to apply on start.
 
 ### Changed
 

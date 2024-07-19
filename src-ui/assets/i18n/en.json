@@ -23,6 +23,9 @@
     "automations": {
       "label": "{count, plural, one {1 Automation} other {# Automations}}"
     },
+    "config": {
+      "title": "Configuration"
+    },
     "description": "Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent others from disturbing your sleep.",
     "devices": {
       "description": "Select an audio device to automate its volume level",
@@ -55,6 +58,13 @@
     "volume": {
       "description": "What volume level to set for the audio device when this automation runs",
       "title": "Volume"
+    },
+    "applyOnStart": {
+      "title": "Apply on start",
+      "description": {
+        "onSleepEnable": "Run this automation when OyasumiVR starts with the sleep mode enabled",
+        "onSleepDisable": "Run this automation when OyasumiVR starts with the sleep mode disabled"
+      }
     }
   },
   "auto-invite-request-accept": {
@@ -1988,6 +1998,10 @@
         "description": "How long you need to have been alone for before the shutdown sequence runs",
         "title": "Duration threshold"
       },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "Only trigger the shutdown sequence this way while the sleep mode is enabled",
+        "title": "Only while I'm asleep"
+      },
       "whenAloneTimeWindow": {
         "description": "Only allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
@@ -2003,10 +2017,6 @@
       "whenAsleepTimeWindow": {
         "description": "Only allow shutdown to trigger between certain hours of day",
         "title": "Activation Window"
-      },
-      "whenAloneOnlyWhenSleepModeEnabled": {
-        "title": "Only while I'm asleep",
-        "description": "Only trigger the shutdown sequence this way while the sleep mode is enabled"
       }
     }
   },
