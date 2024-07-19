@@ -168,6 +168,16 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
+  async toggleTriggerWhenAloneOnlyWhenSleepModeActive() {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      {
+        triggerWhenAloneOnlyWhenSleepModeActive:
+          !this.config.triggerWhenAloneOnlyWhenSleepModeActive,
+      }
+    );
+  }
+
   async toggleWhenAloneActivationWindow() {
     // Toggle the activation window
     const config: Partial<ShutdownAutomationsConfig> = {

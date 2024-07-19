@@ -357,6 +357,7 @@ export type AudioVolumeAutomation =
 
 export interface BaseAudioVolumeAutomation {
   type: AudioVolumeAutomationType;
+  applyOnStart: boolean;
   audioDeviceRef: {
     persistentId: string;
     type: AudioDeviceType;
@@ -430,6 +431,7 @@ export interface ShutdownAutomationsConfig extends AutomationConfig {
   triggerOnSleepActivationWindowEnd: [number, number];
   triggerWhenAlone: boolean;
   triggerWhenAloneDuration: number;
+  triggerWhenAloneOnlyWhenSleepModeActive: boolean;
   triggerWhenAloneActivationWindow: boolean;
   triggerWhenAloneActivationWindowStart: [number, number];
   triggerWhenAloneActivationWindowEnd: [number, number];
@@ -753,6 +755,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     triggerOnSleepActivationWindowEnd: [7, 0],
     triggerWhenAlone: false,
     triggerWhenAloneDuration: 15 * 60 * 1000,
+    triggerWhenAloneOnlyWhenSleepModeActive: true,
     triggerWhenAloneActivationWindow: false,
     triggerWhenAloneActivationWindowStart: [23, 0],
     triggerWhenAloneActivationWindowEnd: [7, 0],

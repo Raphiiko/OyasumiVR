@@ -65,13 +65,13 @@ export class TurnOffDevicesOnBatteryLevelAutomationService {
       case 'Controller':
         if (!this.config.turnOffControllers) return;
         if (this.config.turnOffControllersOnlyDuringSleepMode && !sleepMode) return;
-        if (currentLevel > this.config.turnOffControllersAtLevel) return;
+        if (currentLevel * 100 > this.config.turnOffControllersAtLevel) return;
         threshold = this.config.turnOffControllersAtLevel;
         break;
       case 'GenericTracker':
         if (!this.config.turnOffTrackers) return;
         if (this.config.turnOffTrackersOnlyDuringSleepMode && !sleepMode) return;
-        if (currentLevel > this.config.turnOffTrackersAtLevel) return;
+        if (currentLevel * 100 > this.config.turnOffTrackersAtLevel) return;
         threshold = this.config.turnOffTrackersAtLevel;
         break;
       default:

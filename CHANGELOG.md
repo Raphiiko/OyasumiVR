@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
 - Color temperature control to the current brightness automations.
 - Sunset/Sunrise based automations for brightness and color temperature.
+- Option for the shutdown sequence being triggered by being alone to only trigger while the sleep mode is enabled.
+- Option for audio volume automations to apply on start.
 
 ### Changed
 
@@ -23,9 +25,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
 
+## [1.13.3]
+
 ### Fixed
 
+- Battery level based power automations turning off devices above the threshold
 - Certain types of selection in input fields (e.g. Ctrl+A) being blocked
+
+### Changed
+- Window titlebar icons
 
 ## [1.13.2]
 
