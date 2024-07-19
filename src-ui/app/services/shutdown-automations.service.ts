@@ -111,6 +111,7 @@ export class ShutdownAutomationsService {
           const keys: Array<keyof ShutdownAutomationsConfig> = [
             'triggerWhenAlone',
             'triggerWhenAloneDuration',
+            'triggerWhenAloneOnlyWhenSleepModeActive',
             'triggerWhenAloneActivationWindow',
             'triggerWhenAloneActivationWindowStart',
             'triggerWhenAloneActivationWindowEnd',
@@ -231,6 +232,7 @@ export class ShutdownAutomationsService {
               this.config.triggerWhenAloneActivationWindowEnd
             )
         ),
+        filter(() => this.config.triggerWhenAloneOnlyWhenSleepModeActive || !this.sleepMode),
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )

@@ -166,6 +166,23 @@
           </label>
         </div>
       </div>
+
+      <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
+        <div class="setting-row-label" translate>
+          <span translate>shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.title</span>
+          <span translate>shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.description</span>
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.triggerWhenAloneOnlyWhenSleepModeActive"
+              (change)="toggleTriggerWhenAloneOnlyWhenSleepModeActive()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
     </div>
   </div>
 </div>
