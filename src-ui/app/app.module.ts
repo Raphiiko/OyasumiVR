@@ -226,11 +226,10 @@ import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/vie
 import { DurationInputSettingComponent } from './components/duration-input-setting/duration-input-setting.component';
 import { CCTControlService } from './services/cct-control/cct-control.service';
 import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
-import {
-  SettingsBrightnessCctViewComponent,
-} from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
+import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
 import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
+import { FBTAvatarReloadHotfixService } from './services/hotfixes/f-b-t-avatar-reload-hotfix.service';
 
 [
   localeEN,
@@ -490,7 +489,9 @@ export class AppModule {
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
     private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService,
     private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService,
-    private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService
+    private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService,
+    // Hotfixes
+    private fbtAvatarReloadHotfixService: FBTAvatarReloadHotfixService
   ) {
     this.init();
   }
@@ -778,6 +779,10 @@ export class AppModule {
             this.logInit(
               'VRChatAvatarAutomationsService initialization',
               this.vrchatAvatarAutomationsService.init()
+            ),
+            this.logInit(
+              'FBTAvatarReloadHotfixService initialization',
+              this.fbtAvatarReloadHotfixService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);

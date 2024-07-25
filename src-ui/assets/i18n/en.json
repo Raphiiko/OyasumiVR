@@ -20,6 +20,13 @@
       "SET_VOLUME": "Change Volume",
       "UNMUTE": "Unmute"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "Run this automation when OyasumiVR starts with the sleep mode disabled",
+        "onSleepEnable": "Run this automation when OyasumiVR starts with the sleep mode enabled"
+      },
+      "title": "Apply on start"
+    },
     "automations": {
       "label": "{count, plural, one {1 Automation} other {# Automations}}"
     },
@@ -58,13 +65,6 @@
     "volume": {
       "description": "What volume level to set for the audio device when this automation runs",
       "title": "Volume"
-    },
-    "applyOnStart": {
-      "title": "Apply on start",
-      "description": {
-        "onSleepEnable": "Run this automation when OyasumiVR starts with the sleep mode enabled",
-        "onSleepDisable": "Run this automation when OyasumiVR starts with the sleep mode disabled"
-      }
     }
   },
   "auto-invite-request-accept": {
@@ -1249,6 +1249,13 @@
           "title": "Foot Lock"
         },
         "general": {
+          "advanced": {
+            "avatarReloadHotfix": {
+              "title": "Hotfix for using avatar animations with FBT",
+              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>"
+            },
+            "title": "Advanced Options"
+          },
           "footLock": {
             "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled.",
             "title": "Foot Lock"

@@ -14,6 +14,7 @@ import {
   map,
   pairwise,
   startWith,
+  Subject,
 } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepingPose } from '../../models/sleeping-pose';
@@ -28,6 +29,7 @@ export class SleepingAnimationsAutomationService {
   private config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
+  private retrigger$ = new Subject<void>();
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -50,6 +52,8 @@ export class SleepingAnimationsAutomationService {
     combineLatest([
       // Pose changes
       this.sleep.pose,
+      // External retriggers
+      this.retrigger$.pipe(startWith(void 0)),
       // Retrigger when automation is enabled
       this.automationConfig.configs.pipe(
         map((configs) => configs.SLEEPING_ANIMATIONS.enabled),
@@ -146,5 +150,9 @@ export class SleepingAnimationsAutomationService {
 
   async forcePose(pose: SleepingPose) {
     this.sleep.forcePose(pose);
+  }
+
+  async retrigger() {
+    this.retrigger$.next();
   }
 }
