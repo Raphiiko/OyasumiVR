@@ -230,6 +230,7 @@ import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
 import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
 import { FBTAvatarReloadHotfixService } from './services/hotfixes/f-b-t-avatar-reload-hotfix.service';
+import { AvatarContextService } from './services/avatar-context.service';
 
 [
   localeEN,
@@ -441,6 +442,7 @@ export class AppModule {
     private mqttService: MqttService,
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
+    private avatarContextService: AvatarContextService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -550,9 +552,16 @@ export class AppModule {
           // Initialize "base" services
           await Promise.all([
             this.logInit('OpenVRService initialization', this.openvrService.init()),
-            this.logInit('OscService initialization', this.oscService.init()).then(() =>
-              this.logInit('OscControlService initialization', this.oscControlService.init())
-            ),
+            this.logInit('OscService initialization', this.oscService.init())
+              .then(() =>
+                this.logInit('OscControlService initialization', this.oscControlService.init())
+              )
+              .then(() =>
+                this.logInit(
+                  'AvatarContextService initialization',
+                  this.avatarContextService.init()
+                )
+              ),
             this.logInit('SleepService initialization', this.sleepService.init()),
             this.logInit('VRChatService initialization', this.vrchatService.init()),
             this.logInit('VRChatLogService initialization', this.vrchatLogService.init()),

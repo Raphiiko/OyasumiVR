@@ -91,18 +91,22 @@ export class SleepingAnimationsAutomationService {
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
         // Combine OSC scripts
         const script: OscScript = { version: 2, commands: [] };
+        // Foot unlock script
         const enableFootUnlock = !!(
-          this.config.releaseFootLockOnPoseChange &&
-          this.config.oscScripts.FOOT_UNLOCK &&
-          this.config.oscScripts.FOOT_UNLOCK
+          this.config.releaseFootLockOnPoseChange && this.config.oscScripts.FOOT_UNLOCK
+        );
+        const enableFootLock = !!(
+          this.config.releaseFootLockOnPoseChange && this.config.oscScripts.FOOT_LOCK
         );
         if (enableFootUnlock) script.commands.push(...this.config.oscScripts.FOOT_UNLOCK!.commands);
+        // Pose script
         let scriptTime = 0;
         if (this.config.oscScripts[pose]) {
           scriptTime = getOscScriptDuration(this.config.oscScripts[pose]!);
           script.commands.push(...this.config.oscScripts[pose]!.commands);
         }
-        if (enableFootUnlock) {
+        // Foot lock script
+        if (enableFootLock) {
           const minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
           if (minimumDelayRemainder > 0) {
             script.commands.push({ type: 'SLEEP', duration: minimumDelayRemainder });
