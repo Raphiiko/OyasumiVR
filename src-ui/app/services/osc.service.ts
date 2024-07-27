@@ -201,12 +201,11 @@ export class OscService {
       .map((parameter) => `${parameter.type} => ${parameter.value}`)
       .join(', ');
 
-    const addresses = [];
-    addresses.push(...this.getAddressAliasesForAvatarContext(address));
-    if (!addresses.includes(address)) addresses.push(address);
+    const addresses = [...this.getAddressAliasesForAvatarContext(address)];
+    if (!addresses.length) addresses.push(address);
 
     for (const oscAddr of addresses) {
-      debug(`[OSC] Sending {${parametersString}} to ${oscAddr}`);
+      info(`[OSC] Sending {${parametersString}} to ${oscAddr}`);
 
       await invoke('osc_send_command', {
         addr,
