@@ -15,11 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Sunset/Sunrise based automations for brightness and color temperature.
 - Option for the shutdown sequence being triggered by being alone to only trigger while the sleep mode is enabled.
 - Option for audio volume automations to apply on start.
+- OSC Scripts can now also write to VRChat parameters that have been automatically renamed by VRCFury or Modular Avatar
+- Optional workaround for VRChat not automatically reloading your avatar after all trackers have been turned off.
 
 ### Changed
 
 - Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
 - (Headset specific) brightness and cct settings were moved to their own settings page.
+- OSC scripts will automatically convert spaces in addresses to underscores to match VRChat behaviour for parameter renaming.
 
 ### Removed
 

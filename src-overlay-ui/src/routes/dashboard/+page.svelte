@@ -132,7 +132,7 @@
 
 		&.non-overlay {
 			// Background for testing outside of VR
-			background-image: url('https://media.discordapp.net/attachments/576683979298570246/1127657024654671932/VRChat_2023-06-12_20-46-39.988_4320x7680.png?width=1440&height=810');
+			background-image: url('https://static.wikia.nocookie.net/vrchat-legends/images/6/64/The_Great_Pug_Bar.jpg');
 		}
 	}
 
