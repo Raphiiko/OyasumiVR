@@ -112,6 +112,10 @@
   &.power-off {
     --spinner-color: var(--color-alert-error);
   }
+
+  &.power-unknown {
+    --spinner-color: var(--color-text-1);
+  }
 }
 
 .category-icon {

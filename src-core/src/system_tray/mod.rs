@@ -66,12 +66,25 @@ pub fn handle_system_tray_events<R: Runtime>(
 pub fn handle_window_events<R: Runtime>() -> impl Fn(GlobalWindowEvent<R>) + Send + Sync + 'static {
     |event| {
         if let tauri::WindowEvent::CloseRequested { api, .. } = event.event() {
+            let window = event.window();
             let manager_guard = tauri::async_runtime::block_on(SYSTEMTRAY_MANAGER.lock());
             let manager = manager_guard.as_ref().unwrap();
-            if manager.close_to_tray {
-                event.window().hide().unwrap();
-                api.prevent_close();
-            }
+            handle_window_close_request(window, Some(api), manager.close_to_tray);
         }
+    }
+}
+
+pub fn handle_window_close_request<R: Runtime>(
+    window: &tauri::Window<R>,
+    api: Option<&tauri::CloseRequestApi>,
+    close_to_tray: bool,
+) {
+    if close_to_tray {
+        window.hide().unwrap();
+        if let Some(api) = api {
+            api.prevent_close();
+        }
+    } else if api.is_none() {
+        window.close().unwrap();
     }
 }

@@ -39,6 +39,7 @@
           'gpuAutomations',
           'resolutionAutomations',
           'audioVolumeAutomations',
+          'systemMicMuteAutomations',
           'hmdAutomations'
         ])
       "
@@ -62,7 +63,8 @@
           'statusAutomations',
           'autoInviteRequestAccept',
           'vrchatMicMuteAutomations',
-          'joinNotifications',
+          'vrchatAvatarAutomations',
+          'joinNotifications'
         ])
       "
     >
@@ -102,6 +104,7 @@
       [class.active]="
         pathIsActive([
           'settings/general',
+          'settings/brightnessCct',
           'settings/vrchat',
           'settings/notifications',
           'settings/hotkeys',
@@ -171,6 +174,13 @@
       <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatMicMuteAutomations</div>
     </div>
 
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'vrchatAvatarAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-symbols-outlined">groups_3</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.vrchatAvatarAutomations</div>
+    </div>
+
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'joinNotifications'">
       <div class="menu-item-icon-prefix">
         <i class="material-symbols-outlined icon-filled">person_alert</i>
@@ -219,7 +229,7 @@
       <div
         class="active-effect"
         @fade
-        *ngIf="brightnessAutomation.anyTransitionActive | async"
+        *ngIf="brightnessAutomation.anyBrightnessTransitionActive | async"
       ></div>
     </div>
 
@@ -263,7 +273,7 @@
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'chaperoneAutomations'">
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">view_in_ar</i>
+        <i class="material-symbols-outlined">guardian</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.chaperoneAutomations</div>
     </div>
@@ -304,6 +314,17 @@
         <i class="material-icons-round">notification_important</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'brightnessCct']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">brightness_6</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.brightnessCct</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">

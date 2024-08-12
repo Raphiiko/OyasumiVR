@@ -3,6 +3,7 @@ import { OscScript } from './osc-script';
 import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
+import { PersistedAvatar } from './vrchat';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -32,10 +33,7 @@ export type AutomationType =
   | 'SLEEPING_ANIMATIONS'
   | 'VRCHAT_MIC_MUTE_AUTOMATIONS'
   // BRIGHTNESS AUTOMATIONS
-  | 'BRIGHTNESS_CONTROL_ADVANCED_MODE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE'
-  | 'SET_BRIGHTNESS_ON_SLEEP_PREPARATION'
+  | 'BRIGHTNESS_AUTOMATIONS'
   // RESOLUTION AUTOMATIONS
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE'
   | 'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE'
@@ -51,13 +49,15 @@ export type AutomationType =
   | 'SHUTDOWN_AUTOMATIONS'
   | 'AUTO_ACCEPT_INVITE_REQUESTS'
   | 'CHANGE_STATUS_BASED_ON_PLAYER_COUNT'
+  | 'CHANGE_STATUS_GENERAL_EVENTS'
   | 'SYSTEM_MIC_MUTE_AUTOMATIONS'
   | 'NIGHTMARE_DETECTION'
+  | 'VRCHAT_AVATAR_AUTOMATIONS'
   | 'BIGSCREEN_BEYOND_FAN_CONTROL'
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 14;
+  version: 17;
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
   MSI_AFTERBURNER: MSIAfterburnerAutomationConfig;
   // SLEEP MODE AUTOMATIONS
@@ -84,10 +84,7 @@ export interface AutomationConfigs {
   SLEEPING_ANIMATIONS: SleepingAnimationsAutomationConfig;
   VRCHAT_MIC_MUTE_AUTOMATIONS: VRChatMicMuteAutomationsConfig;
   // BRIGHTNESS AUTOMATIONS
-  BRIGHTNESS_CONTROL_ADVANCED_MODE: BrightnessControlAdvancedModeAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: SetBrightnessAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: SetBrightnessAutomationConfig;
-  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: Omit<SetBrightnessAutomationConfig, 'applyOnStart'>;
+  BRIGHTNESS_AUTOMATIONS: BrightnessAutomationsConfig;
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: RenderResolutionOnSleepModeAutomationConfig;
   RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE: RenderResolutionOnSleepModeAutomationConfig;
@@ -103,10 +100,12 @@ export interface AutomationConfigs {
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
+  CHANGE_STATUS_GENERAL_EVENTS: ChangeStatusGeneralEventsAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
   NIGHTMARE_DETECTION: NightmareDetectionAutomationsConfig;
   BIGSCREEN_BEYOND_FAN_CONTROL: BigscreenBeyondFanControlAutomationsConfig;
   BIGSCREEN_BEYOND_RGB_CONTROL: BigscreenBeyondRgbControlAutomationsConfig;
+  VRCHAT_AVATAR_AUTOMATIONS: VRChatAvatarAutomationsConfig;
 }
 
 export interface AutomationConfig {
@@ -118,15 +117,45 @@ export interface AutomationConfig {
 //
 
 // BRIGHTNESS AUTOMATIONS
-export interface BrightnessControlAdvancedModeAutomationConfig extends AutomationConfig {}
+export const BrightnessEvents = [
+  'SLEEP_MODE_ENABLE',
+  'SLEEP_MODE_DISABLE',
+  'SLEEP_PREPARATION',
+  'AT_SUNSET',
+  'AT_SUNRISE',
+] as const;
+export type BrightnessEvent = (typeof BrightnessEvents)[number];
 
-export interface SetBrightnessAutomationConfig extends AutomationConfig {
+export type BrightnessAutomationsConfig = AutomationConfig & {
+  advancedMode: boolean;
+  AT_SUNSET: SunBrightnessEventAutomationConfig;
+  AT_SUNRISE: SunBrightnessEventAutomationConfig;
+  SLEEP_PREPARATION: GenericBrightnessEventAutomationConfig;
+  SLEEP_MODE_ENABLE: GenericBrightnessEventAutomationConfig;
+  SLEEP_MODE_DISABLE: GenericBrightnessEventAutomationConfig;
+};
+
+export type BrightnessEventAutomationConfig =
+  | GenericBrightnessEventAutomationConfig
+  | SunBrightnessEventAutomationConfig;
+
+export interface GenericBrightnessEventAutomationConfig extends AutomationConfig {
+  type?: undefined;
+  changeBrightness: boolean;
+  changeColorTemperature: boolean;
   brightness: number;
   softwareBrightness: number;
   hardwareBrightness: number;
   transition: boolean;
   transitionTime: number;
-  applyOnStart: boolean;
+  colorTemperature: number;
+}
+
+export interface SunBrightnessEventAutomationConfig
+  extends Omit<GenericBrightnessEventAutomationConfig, 'type'> {
+  type: 'SUN';
+  onlyWhenSleepDisabled: boolean;
+  activationTime: string | null;
 }
 
 // RESOLUTION AUTOMATIONS
@@ -259,6 +288,7 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   unlockFeetOnAutomationDisable: boolean;
   releaseFootLockOnPoseChange: boolean;
   footLockReleaseWindow: number;
+  enableAvatarReloadOnFBTDisableHotfix: boolean;
 }
 
 export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_TALK';
@@ -274,8 +304,29 @@ export interface VRChatMicMuteAutomationsConfig extends AutomationConfig {
 export interface ChangeStatusBasedOnPlayerCountAutomationConfig extends AutomationConfig {
   limit: number;
   statusBelowLimit: UserStatus;
+  statusBelowLimitEnabled: boolean;
+  statusMessageBelowLimit: string;
+  statusMessageBelowLimitEnabled: boolean;
   statusAtLimitOrAbove: UserStatus;
+  statusAtLimitOrAboveEnabled: boolean;
+  statusMessageAtLimitOrAbove: string;
+  statusMessageAtLimitOrAboveEnabled: boolean;
   onlyIfSleepModeEnabled: boolean;
+}
+
+export interface ChangeStatusGeneralEventsAutomationConfig extends AutomationConfig {
+  changeStatusOnSleepModeEnable: boolean;
+  statusOnSleepModeEnable: UserStatus;
+  changeStatusMessageOnSleepModeEnable: boolean;
+  statusMessageOnSleepModeEnable: string;
+  changeStatusOnSleepModeDisable: boolean;
+  statusOnSleepModeDisable: UserStatus;
+  changeStatusMessageOnSleepModeDisable: boolean;
+  statusMessageOnSleepModeDisable: string;
+  changeStatusOnSleepPreparation: boolean;
+  statusOnSleepPreparation: UserStatus;
+  changeStatusMessageOnSleepPreparation: boolean;
+  statusMessageOnSleepPreparation: string;
 }
 
 // WINDOWS POWER POLICY AUTOMATIONS
@@ -286,6 +337,7 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 // MISCELLANEOUS AUTOMATIONS
 
 export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
+
 export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
   playerIds: string[];
   onlyDuringSleepMode: boolean;
@@ -306,6 +358,7 @@ export type AudioVolumeAutomation =
 
 export interface BaseAudioVolumeAutomation {
   type: AudioVolumeAutomationType;
+  applyOnStart: boolean;
   audioDeviceRef: {
     persistentId: string;
     type: AudioDeviceType;
@@ -371,11 +424,18 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
 
 export interface ShutdownAutomationsConfig extends AutomationConfig {
+  triggersEnabled: boolean;
   triggerOnSleep: boolean;
-  sleepDuration: number;
-  activationWindow: boolean;
-  activationWindowStart: [number, number];
-  activationWindowEnd: [number, number];
+  triggerOnSleepDuration: number;
+  triggerOnSleepActivationWindow: boolean;
+  triggerOnSleepActivationWindowStart: [number, number];
+  triggerOnSleepActivationWindowEnd: [number, number];
+  triggerWhenAlone: boolean;
+  triggerWhenAloneDuration: number;
+  triggerWhenAloneOnlyWhenSleepModeActive: boolean;
+  triggerWhenAloneActivationWindow: boolean;
+  triggerWhenAloneActivationWindowStart: [number, number];
+  triggerWhenAloneActivationWindowEnd: [number, number];
   quitSteamVR: boolean;
   turnOffControllers: boolean;
   turnOffTrackers: boolean;
@@ -411,41 +471,83 @@ export interface BigscreenBeyondRgbControlAutomationsConfig extends AutomationCo
   onSleepPreparationRgb: [number, number, number];
 }
 
+export interface VRChatAvatarAutomationsConfig extends AutomationConfig {
+  onSleepEnable: PersistedAvatar | null;
+  onSleepDisable: PersistedAvatar | null;
+  onSleepPreparation: PersistedAvatar | null;
+}
+
 //
 // DEFAULT
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 14,
+  version: 17,
   // BRIGHTNESS AUTOMATIONS
-  BRIGHTNESS_CONTROL_ADVANCED_MODE: {
-    enabled: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE: {
-    enabled: false,
-    brightness: 20,
-    softwareBrightness: 20,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 1000 * 60 * 5,
-    applyOnStart: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_MODE_DISABLE: {
-    enabled: false,
-    brightness: 100,
-    softwareBrightness: 100,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 10000,
-    applyOnStart: false,
-  },
-  SET_BRIGHTNESS_ON_SLEEP_PREPARATION: {
-    enabled: false,
-    brightness: 50,
-    softwareBrightness: 50,
-    hardwareBrightness: 100,
-    transition: true,
-    transitionTime: 30000,
+  BRIGHTNESS_AUTOMATIONS: {
+    enabled: true,
+    advancedMode: false,
+    SLEEP_PREPARATION: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 50,
+      softwareBrightness: 50,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 3500,
+    },
+    SLEEP_MODE_ENABLE: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 20,
+      softwareBrightness: 20,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 1800,
+    },
+    SLEEP_MODE_DISABLE: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 100,
+      softwareBrightness: 100,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 6600,
+    },
+    AT_SUNSET: {
+      type: 'SUN',
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 80,
+      softwareBrightness: 80,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 1800,
+      onlyWhenSleepDisabled: true,
+      activationTime: null,
+    },
+    AT_SUNRISE: {
+      type: 'SUN',
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 100,
+      softwareBrightness: 100,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 6600,
+      onlyWhenSleepDisabled: true,
+      activationTime: null,
+    },
   },
   // RESOLUTION AUTOMATIONS
   RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE: {
@@ -582,6 +684,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     unlockFeetOnAutomationDisable: true,
     releaseFootLockOnPoseChange: true,
     footLockReleaseWindow: 600,
+    enableAvatarReloadOnFBTDisableHotfix: false,
     oscScripts: {},
   },
   JOIN_NOTIFICATIONS: {
@@ -607,8 +710,29 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
     limit: 2,
     statusBelowLimit: UserStatus.JoinMe,
+    statusBelowLimitEnabled: true,
+    statusMessageBelowLimit: '',
+    statusMessageBelowLimitEnabled: false,
     statusAtLimitOrAbove: UserStatus.Busy,
+    statusAtLimitOrAboveEnabled: true,
+    statusMessageAtLimitOrAbove: '',
+    statusMessageAtLimitOrAboveEnabled: false,
     onlyIfSleepModeEnabled: false,
+  },
+  CHANGE_STATUS_GENERAL_EVENTS: {
+    enabled: true,
+    changeStatusOnSleepModeEnable: false,
+    statusOnSleepModeEnable: UserStatus.AskMe,
+    changeStatusMessageOnSleepModeEnable: false,
+    statusMessageOnSleepModeEnable: '',
+    changeStatusOnSleepModeDisable: false,
+    statusOnSleepModeDisable: UserStatus.Active,
+    changeStatusMessageOnSleepModeDisable: false,
+    statusMessageOnSleepModeDisable: '',
+    changeStatusOnSleepPreparation: false,
+    statusOnSleepPreparation: UserStatus.JoinMe,
+    changeStatusMessageOnSleepPreparation: false,
+    statusMessageOnSleepPreparation: '',
   },
   // INVITE AUTOMATIONS
   AUTO_ACCEPT_INVITE_REQUESTS: {
@@ -625,11 +749,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
   // SHUTDOWN AUTOMATIONS
   SHUTDOWN_AUTOMATIONS: {
     enabled: true,
+    triggersEnabled: true,
     triggerOnSleep: false,
-    sleepDuration: 15 * 60 * 1000,
-    activationWindow: false,
-    activationWindowStart: [23, 0],
-    activationWindowEnd: [7, 0],
+    triggerOnSleepDuration: 15 * 60 * 1000,
+    triggerOnSleepActivationWindow: false,
+    triggerOnSleepActivationWindowStart: [23, 0],
+    triggerOnSleepActivationWindowEnd: [7, 0],
+    triggerWhenAlone: false,
+    triggerWhenAloneDuration: 15 * 60 * 1000,
+    triggerWhenAloneOnlyWhenSleepModeActive: true,
+    triggerWhenAloneActivationWindow: false,
+    triggerWhenAloneActivationWindowStart: [23, 0],
+    triggerWhenAloneActivationWindowEnd: [7, 0],
     quitSteamVR: true,
     turnOffControllers: true,
     turnOffTrackers: true,
@@ -696,5 +827,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onSleepDisableRgb: [0, 255, 0],
     onSleepPreparation: false,
     onSleepPreparationRgb: [128, 0, 0],
+  },
+  VRCHAT_AVATAR_AUTOMATIONS: {
+    enabled: true,
+    onSleepEnable: null,
+    onSleepDisable: null,
+    onSleepPreparation: null,
   },
 };

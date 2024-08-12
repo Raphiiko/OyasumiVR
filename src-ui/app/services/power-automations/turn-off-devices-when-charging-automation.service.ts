@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { map } from 'rxjs';
@@ -16,7 +16,7 @@ import { EventLogService } from '../event-log.service';
   providedIn: 'root',
 })
 export class TurnOffDevicesWhenChargingAutomationService {
-  config: TurnOffDevicesWhenChargingAutomationConfig = cloneDeep(
+  config: TurnOffDevicesWhenChargingAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
   chargingDevices: number[] = [];

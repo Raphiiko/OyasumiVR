@@ -114,7 +114,7 @@
           <div class="setting-row-label" translate>
             <span translate>settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title</span>
             <span translate
-            >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
+              >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
             >
           </div>
           <div class="setting-row-action">
@@ -181,7 +181,7 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-            >settings.general.startWithSteamVR.howTo
+              >settings.general.startWithSteamVR.howTo
             </button>
           </div>
         </div>
@@ -232,33 +232,15 @@
                 <input
                   type="checkbox"
                   [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
-                  (change)="setDiscordActivityOnlyWhenVRChatIsRunning(!appSettings.discordActivityOnlyWhileVRChatIsRunning)"
+                  (change)="
+                    setDiscordActivityOnlyWhenVRChatIsRunning(
+                      !appSettings.discordActivityOnlyWhileVRChatIsRunning
+                    )
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="setting-category">
-      <h2 translate>settings.general.miscellaneous.title</h2>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>settings.general.miscellaneous.overlayGpuFix.title</span>
-            <span translate>settings.general.miscellaneous.overlayGpuFix.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="appSettings.overlayGpuFix"
-                (change)="setOverlayGpuFix(!appSettings.overlayGpuFix)"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
           </div>
         </div>
       </div>

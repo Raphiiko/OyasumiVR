@@ -6,6 +6,7 @@ import {
   asyncScheduler,
   concatMap,
   filter,
+  map,
   pairwise,
   startWith,
   Subject,
@@ -35,6 +36,9 @@ export class TrackerControllerMqttIntegrationService {
     this.openvr.devices
       .pipe(
         startWith([] as OVRDevice[]),
+        map((devices) =>
+          devices.filter((d) => d.class === 'GenericTracker' || d.class === 'Controller')
+        ),
         throttleTime(1000, asyncScheduler, { leading: true, trailing: true }),
         pairwise(),
         concatMap(async ([prevDevices, devices]) => {
@@ -72,7 +76,7 @@ export class TrackerControllerMqttIntegrationService {
             break;
           default:
             name = `Controller`;
-            return;
+            break;
         }
         break;
       case 'GenericTracker':
@@ -95,6 +99,7 @@ export class TrackerControllerMqttIntegrationService {
       topicPath: `device/${roleId}`,
       displayName: 'Role',
       device: deviceDesc,
+      available: !!device.handleType,
       value: device.handleType ?? 'null',
     });
 
@@ -128,8 +133,8 @@ export class TrackerControllerMqttIntegrationService {
       id,
       topicPath: `device/${id}`,
       displayName: 'Power',
-      value: device.canPowerOff,
-      available: device.canPowerOff,
+      value: device.canPowerOff && !device.isTurningOff,
+      available: device.canPowerOff && !device.isTurningOff,
       device: deviceDesc,
     });
 
@@ -146,14 +151,14 @@ export class TrackerControllerMqttIntegrationService {
   }
 
   private async removeDevice(device: OVRDevice) {
-    await this.mqtt.setPropertyAvailability(
-      this.sanitizedId(device.class, device.serialNumber),
-      false
-    );
-    await this.mqtt.setPropertyAvailability(
-      this.sanitizedId(device.class, device.serialNumber, BATTERY_SUFFIX),
-      false
-    );
+    const id = this.sanitizedId(device.class, device.serialNumber);
+    const batteryId = this.sanitizedId(device.class, device.serialNumber, BATTERY_SUFFIX);
+    const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
+    const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
+    await this.mqtt.disposeProperty(id);
+    await this.mqtt.disposeProperty(batteryId);
+    await this.mqtt.disposeProperty(chargingId);
+    await this.mqtt.disposeProperty(roleId);
     this.deviceRemoved.next(device);
   }
 
@@ -163,9 +168,10 @@ export class TrackerControllerMqttIntegrationService {
     const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
     const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
 
-    await this.mqtt.setPropertyAvailability(id, device.canPowerOff);
+    await this.mqtt.setPropertyAvailability(id, device.canPowerOff && !device.isTurningOff);
     await this.mqtt.setPropertyAvailability(batteryId, device.canPowerOff);
     await this.mqtt.setPropertyAvailability(chargingId, device.canPowerOff);
+    await this.mqtt.setPropertyAvailability(roleId, !!device.handleType);
 
     await this.mqtt.setTogglePropertyValue(id, device.canPowerOff);
     await this.mqtt.setSensorPropertyValue(

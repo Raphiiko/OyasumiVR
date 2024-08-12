@@ -25,6 +25,7 @@ export type EventLogEntry =
   | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
   | EventLogStatusChangedOnPlayerCountChange
+  | EventLogStatusChangedOnGeneralEvent
   | EventLogSleepDetectorEnableCancelled
   | EventLogRenderResolutionChanged
   | EventLogChaperoneFadeDistanceChanged
@@ -39,7 +40,9 @@ export type EventLogEntry =
   | EventLogMutedAudioDevice
   | EventLogUnmutedAudioDevice
   | EventLogBSBFanSpeedChanged
-  | EventLogBSBLedChanged;
+  | EventLogBSBLedChanged
+  | EventLogVRChatAvatarChanged
+  | EventLogCCTChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -54,6 +57,7 @@ export type EventLogType =
   | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
   | 'statusChangedOnPlayerCountChange'
+  | 'statusChangedOnGeneralEvent'
   | 'sleepDetectorEnableCancelled'
   | 'renderResolutionChanged'
   | 'chaperoneFadeDistanceChanged'
@@ -68,7 +72,9 @@ export type EventLogType =
   | 'mutedAudioDevice'
   | 'unmutedAudioDevice'
   | 'bsbFanSpeedChanged'
-  | 'bsbLedChanged';
+  | 'bsbLedChanged'
+  | 'cctChanged'
+  | 'vrchatAvatarChanged';
 
 export interface EventLogBase {
   id: string;
@@ -76,9 +82,16 @@ export interface EventLogBase {
   time: number;
 }
 
+export type EventLogShutdownSequenceStartedReason =
+  | 'MANUAL'
+  | 'HOTKEY'
+  | 'SLEEP_TRIGGER'
+  | 'VRC_ALONE_TRIGGER'
+  | 'MQTT';
+
 export interface EventLogShutdownSequenceStarted extends EventLogBase {
   type: 'shutdownSequenceStarted';
-  reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER';
+  reason: EventLogShutdownSequenceStartedReason;
   stages: ShutdownSequenceStage[];
 }
 
@@ -121,7 +134,12 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -129,7 +147,12 @@ export interface EventLogHardwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
   type: 'softwareBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -137,7 +160,25 @@ export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
 
 export interface EventLogSimpleBrightnessChanged extends EventLogBase {
   type: 'simpleBrightnessChanged';
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
+  transition: boolean;
+  value: number;
+  transitionTime: number;
+}
+
+export interface EventLogCCTChanged extends EventLogBase {
+  type: 'cctChanged';
+  reason:
+    | 'SLEEP_MODE_ENABLED'
+    | 'SLEEP_MODE_DISABLED'
+    | 'SLEEP_PREPARATION'
+    | 'AT_SUNSET'
+    | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -153,8 +194,19 @@ export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {
   type: 'statusChangedOnPlayerCountChange';
   reason: 'BELOW_LIMIT' | 'AT_LIMIT_OR_ABOVE';
   threshold: number;
-  newStatus: UserStatus;
+  newStatus?: UserStatus;
   oldStatus: UserStatus;
+  newStatusMessage?: string;
+  oldStatusMessage: string;
+}
+
+export interface EventLogStatusChangedOnGeneralEvent extends EventLogBase {
+  type: 'statusChangedOnGeneralEvent';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  newStatus?: UserStatus;
+  oldStatus: UserStatus;
+  newStatusMessage?: string;
+  oldStatusMessage: string;
 }
 
 export interface EventLogSleepDetectorEnableCancelled extends EventLogBase {
@@ -237,4 +289,10 @@ export interface EventLogBSBLedChanged extends EventLogBase {
   type: 'bsbLedChanged';
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
   color: [number, number, number];
+}
+
+export interface EventLogVRChatAvatarChanged extends EventLogBase {
+  type: 'vrchatAvatarChanged';
+  avatarName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

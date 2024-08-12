@@ -3,10 +3,18 @@ import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
 import { invoke } from '@tauri-apps/api/tauri';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
-import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
-import { cloneDeep, orderBy } from 'lodash';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  Observable,
+  skip,
+  startWith,
+} from 'rxjs';
+import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 
@@ -33,13 +41,25 @@ export class OpenVRService {
     this.appSettings.settings.subscribe((settings) => {
       this.deviceNicknames = settings.deviceNicknames;
     });
+    this.appSettings.settings
+      .pipe(
+        map((settings) => settings.openVrInitDelayFix),
+        startWith(false),
+        distinctUntilChanged(),
+        skip(1)
+      )
+      .subscribe((fixEnabled) => {
+        this.applyOpenVrInitDelayFix(fixEnabled);
+        if (fixEnabled) info('[OpenVR] Applying OpenVR Initialization delay fix');
+        else info('[OpenVR] Removing OpenVR initialization delay fix');
+      });
     await Promise.all([
       listen<DeviceUpdateEvent>('OVR_DEVICE_UPDATE', (event) =>
         this.onDeviceUpdate(event.payload.device)
       ),
       listen<OpenVRStatus>('OVR_STATUS_UPDATE', (event) => this.onStatusUpdate(event.payload)),
       listen<any>('OVR_POSE_UPDATE', (event) => {
-        const poses = cloneDeep(this._devicePoses.value);
+        const poses = structuredClone(this._devicePoses.value);
         const {
           index,
           quaternion,
@@ -137,7 +157,7 @@ export class OpenVRService {
 
   public async setDeviceNickname(device: OVRDevice, nickname: string) {
     const settings = await firstValueFrom(this.appSettings.settings);
-    const deviceNicknames = cloneDeep(settings.deviceNicknames);
+    const deviceNicknames = structuredClone(settings.deviceNicknames);
     nickname = nickname.trim();
     if (nickname) {
       deviceNicknames['OVRDEVICE_' + device.serialNumber] = nickname;
@@ -147,5 +167,9 @@ export class OpenVRService {
     this.appSettings.updateSettings({
       deviceNicknames,
     });
+  }
+
+  private async applyOpenVrInitDelayFix(enabled: boolean) {
+    await invoke('openvr_set_init_delay_fix', { enabled });
   }
 }

@@ -55,6 +55,13 @@
       font-size: 0.6em;
     }
   }
+
+  &.disabled {
+    .setting-row {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
 }
 
 .settings {

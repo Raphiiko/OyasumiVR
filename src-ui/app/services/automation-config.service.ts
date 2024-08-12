@@ -9,7 +9,7 @@ import {
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
 import { Store } from 'tauri-plugin-store-api';
 import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
-import { cloneDeep } from 'lodash';
+
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
 import { listen } from '@tauri-apps/api/event';
 
@@ -38,7 +38,7 @@ export class AutomationConfigService {
       switch (payload.automationId) {
         case 'SHUTDOWN_AUTOMATIONS':
           await this.updateAutomationConfig<ShutdownAutomationsConfig>(payload.automationId, {
-            triggerOnSleep: payload.enabled,
+            triggersEnabled: payload.enabled,
           });
           break;
         default:
@@ -51,7 +51,7 @@ export class AutomationConfigService {
     automation: AutomationType,
     config: Partial<T>
   ) {
-    const configs: AutomationConfigs = cloneDeep(this._configs.value);
+    const configs: AutomationConfigs = structuredClone(this._configs.value);
     configs[automation] = Object.assign({}, configs[automation], config) as any;
     this._configs.next(configs);
   }

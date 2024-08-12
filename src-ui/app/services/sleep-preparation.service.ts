@@ -18,11 +18,14 @@ export class SleepPreparationService {
   public readonly sleepPreparationAvailable = this.automationConfigService.configs.pipe(
     map((configs) =>
       [
+        configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusOnSleepPreparation,
+        configs.CHANGE_STATUS_GENERAL_EVENTS.changeStatusMessageOnSleepPreparation,
+        configs.VRCHAT_AVATAR_AUTOMATIONS.onSleepPreparation,
         (configs.OSC_GENERAL.onSleepPreparation?.commands.length ?? 0) > 0,
         configs.AUTO_ACCEPT_INVITE_REQUESTS.presetOnSleepPreparation !== null,
         configs.BIGSCREEN_BEYOND_FAN_CONTROL.onSleepPreparation,
         configs.BIGSCREEN_BEYOND_RGB_CONTROL.onSleepPreparation,
-        configs.SET_BRIGHTNESS_ON_SLEEP_PREPARATION.enabled,
+        configs.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.enabled,
         configs.AUDIO_DEVICE_AUTOMATIONS.onSleepPreparationAutomations.length > 0,
         configs.VRCHAT_MIC_MUTE_AUTOMATIONS.onSleepPreparation !== 'NONE',
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationState !== 'NONE',

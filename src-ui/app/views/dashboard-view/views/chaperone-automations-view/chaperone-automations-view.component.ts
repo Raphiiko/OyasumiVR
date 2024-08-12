@@ -6,7 +6,7 @@ import {
   AutomationType,
   ChaperoneFadeDistanceOnSleepModeAutomationConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { debounce } from 'typescript-debounce-decorator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -17,12 +17,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   animations: [],
 })
 export class ChaperoneAutomationsViewComponent implements OnInit {
-  protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE
-  );
-  protected onSleepModeDisableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig = cloneDeep(
-    AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE
-  );
+  protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =
+    structuredClone(AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE);
+  protected onSleepModeDisableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =
+    structuredClone(AUTOMATION_CONFIGS_DEFAULT.CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE);
 
   constructor(
     private openvr: OpenVRService,

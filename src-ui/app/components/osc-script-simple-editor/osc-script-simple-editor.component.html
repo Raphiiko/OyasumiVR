@@ -35,49 +35,86 @@
       </div>
       <div class="simple-command-index">{{ i + 1 }}.</div>
       <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
-      <app-select-box
-        [type]="'SMALL'"
-        [selected]="getSelectedParameterTypeForCommand(command)"
-        [items]="parameterTypeSelectItems"
-        (selectedChange)="setSelectedParameterTypeForCommand(command, $event!)"
-        [showPlaceholderInDropdown]="false"
-        class="simple-command-type-input"
-      ></app-select-box>
-      <app-select-box
-        class="simple-command-boolean-input"
-        *ngIf="command.parameterType === 'BOOLEAN'"
-        [type]="'SMALL'"
-        [selected]="getSelectedBooleanValueForCommand(command)"
-        [items]="[
-          { id: 'true', label: 'true' },
-          { id: 'false', label: 'false' }
-        ]"
-        (selectedChange)="setBoolValue(command, $event!)"
-        [showPlaceholderInDropdown]="false"
-      ></app-select-box>
-      <div
-        class="input-wrapper simple-command-integer-input"
-        *ngIf="command.parameterType === 'INT'"
-      >
-        <input
-          type="number"
-          step="1"
-          min="0"
-          max="255"
-          [value]="command.value"
-          (change)="setIntValue(command, $event)"
-        />
-      </div>
-      <div
-        class="input-wrapper simple-command-float-input"
-        *ngIf="command.parameterType === 'FLOAT'"
-      >
-        <input
-          type="number"
-          step="0.001"
-          [value]="command.value"
-          (change)="setFloatValue(command, $event)"
-        />
+      <div class="simple-command-parameters-container">
+        <div
+          *ngFor="let parameter of command.parameters; let j = index"
+          class="simple-command-parameter-row"
+          @vshrink
+        >
+          <app-select-box
+            [type]="'SMALL'"
+            [selected]="getCommandParameterType(command, j)"
+            [items]="parameterTypeSelectItems"
+            (selectedChange)="setCommandParameterType(command, j, $event!)"
+            [showPlaceholderInDropdown]="false"
+            class="simple-command-type-input"
+          ></app-select-box>
+          <app-select-box
+            class="simple-command-boolean-input"
+            *ngIf="getCommandParameterType(command, j)?.id === 'BOOLEAN'"
+            [type]="'SMALL'"
+            [selected]="{ id: parameter.value, label: parameter.value }"
+            [items]="[
+              { id: 'true', label: 'true' },
+              { id: 'false', label: 'false' }
+            ]"
+            (selectedChange)="setBoolValue(command, j, $event!)"
+            [showPlaceholderInDropdown]="false"
+          ></app-select-box>
+          <div
+            class="input-wrapper simple-command-integer-input"
+            *ngIf="getCommandParameterType(command, j)?.id === 'INT'"
+          >
+            <input
+              type="number"
+              step="1"
+              min="0"
+              max="255"
+              [value]="parameter.value"
+              (change)="setIntValue(command, j, $event)"
+            />
+          </div>
+          <div
+            class="input-wrapper simple-command-float-input"
+            *ngIf="getCommandParameterType(command, j)?.id === 'FLOAT'"
+          >
+            <input
+              type="number"
+              step="0.001"
+              [value]="parameter.value"
+              (change)="setFloatValue(command, j, $event)"
+            />
+          </div>
+          <div
+            class="input-wrapper simple-command-string-input"
+            *ngIf="getCommandParameterType(command, j)?.id === 'STRING'"
+          >
+            <input
+              type="text"
+              [max]="MAX_STRING_VALUE_LENGTH"
+              [value]="parameter.value"
+              (change)="setStringValue(command, j, $event)"
+            />
+          </div>
+          <button
+            class="btn simple-command-remove-button"
+            *ngIf="command.parameters.length > 1"
+            (click)="removeParameter(i, j)"
+            @hshrink
+          >
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+        <div>
+          <button
+            class="btn btn-secondary btn-add-parameter"
+            *ngIf="command.parameters.length < MAX_PARAMETERS_PER_COMMAND"
+            (click)="addParameter(i)"
+          >
+            <i class="material-icons">add</i>
+            <span translate>comp.osc-script-simple-editor.addParameter</span>
+          </button>
+        </div>
       </div>
       <div class="input-wrapper simple-command-address-input">
         <input

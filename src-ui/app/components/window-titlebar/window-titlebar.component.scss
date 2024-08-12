@@ -1,0 +1,84 @@
+:host {
+  background-color: var(--color-surface-0);
+  //background: red;
+  height: 32px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  user-select: none;
+  z-index: 10000;
+}
+
+.title-area {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-left: 8px;
+  height: 100%;
+  flex: 1;
+  color: var(--color-text-3);
+
+  .title {
+    font-weight: 300;
+    b {
+      font-weight: 500;
+    }
+  }
+
+  .version,
+  .version-extra {
+    color: var(--color-surface-4);
+    transition: all 0.5s ease;
+    &:hover {
+      color: var(--color-surface-5);
+    }
+  }
+
+  .version-extra {
+    color: var(--color-surface-5);
+  }
+}
+
+.action-area {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.titlebar-button {
+  background: transparent;
+  color: var(--color-text-3);
+  border: none;
+  height: 100%;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  width: 35px;
+
+  &:hover {
+    background: var(--color-surface-2);
+  }
+
+  &:active {
+    background: var(--color-surface-3);
+  }
+
+  &.btn-close {
+    &:hover,
+    &:active {
+      background: var(--color-caution);
+      color: white;
+    }
+  }
+
+  i.material-symbols-outlined,
+  i.material-icons {
+    font-size: 1.2em !important;
+  }
+}

@@ -141,11 +141,24 @@ pub async fn get_device_power_state(
 ) -> Result<LighthousePowerState, LighthouseError> {
     let characteristic = match get_power_characteristic(device_id.clone()).await {
         Ok(characteristic) => characteristic,
-        Err(err) => return Err(err),
+        Err(err) => {
+            return Err(err);
+        }
     };
+    let characteristic_props = match characteristic.properties().await {
+        Ok(props) => props,
+        Err(err) => {
+            return Err(LighthouseError::FailedToGetCharacteristicProperties(err));
+        }
+    };
+    if !characteristic_props.read {
+        return Err(LighthouseError::CharacteristicDoesNotSupportRead);
+    }
     let value = match characteristic.read().await {
         Ok(value) => value,
-        Err(err) => return Err(LighthouseError::FailedToReadCharacteristic(err)),
+        Err(err) => {
+            return Err(LighthouseError::FailedToReadCharacteristic(err));
+        }
     };
     if value.len() != 1 {
         return Err(LighthouseError::InvalidCharacteristicValue);

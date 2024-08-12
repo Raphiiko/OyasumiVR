@@ -10,3 +10,7 @@ export function pTimeout<T>(
   });
   return Promise.race([promise, timeout]) as Promise<T>;
 }
+
+export function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}

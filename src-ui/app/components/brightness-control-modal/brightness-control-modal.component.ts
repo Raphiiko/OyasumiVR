@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { fadeUp, vshrink } from '../../utils/animations';
+import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
 import { HardwareBrightnessControlService } from '../../services/brightness-control/hardware-brightness-control.service';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   selector: 'app-brightness-control-modal',
   templateUrl: './brightness-control-modal.component.html',
   styleUrls: ['./brightness-control-modal.component.scss'],
-  animations: [fadeUp(), vshrink()],
+  animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class BrightnessControlModalComponent
   extends BaseModalComponent<void, void>
@@ -40,10 +40,10 @@ export class BrightnessControlModalComponent
     super();
     automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS.advancedMode),
         takeUntilDestroyed()
       )
-      .subscribe((advancedMode) => (this.advancedMode = advancedMode.enabled));
+      .subscribe((advancedMode) => (this.advancedMode = advancedMode));
     hardwareBrightnessControl.driverIsAvailable
       .pipe(
         takeUntilDestroyed(),
@@ -85,5 +85,14 @@ export class BrightnessControlModalComponent
     return {
       wrapperDefaultClass: 'modal-wrapper-brightness-control',
     };
+  }
+
+  protected isActive(path: string) {
+    return this.router.isActive(path, {
+      paths: 'subset',
+      queryParams: 'subset',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    });
   }
 }

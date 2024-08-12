@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   TurnOnLighthousesOnSteamVRStartAutomationConfig,
@@ -26,7 +26,7 @@ import { LighthouseDevice } from '../../models/lighthouse-device';
   providedIn: 'root',
 })
 export class TurnOnLighthousesOnSteamVRStartAutomationService {
-  config: TurnOnLighthousesOnSteamVRStartAutomationConfig = cloneDeep(
+  config: TurnOnLighthousesOnSteamVRStartAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_ON_LIGHTHOUSES_ON_STEAMVR_START
   );
 
@@ -61,7 +61,8 @@ export class TurnOnLighthousesOnSteamVRStartAutomationService {
           (d) =>
             (d.powerState === 'sleep' ||
               d.powerState === 'standby' ||
-              d.powerState === 'booting') &&
+              d.powerState === 'booting' ||
+              d.powerState === 'unknown') &&
             !this.lighthouse.isDeviceIgnored(d)
         );
         if (devices.length) {

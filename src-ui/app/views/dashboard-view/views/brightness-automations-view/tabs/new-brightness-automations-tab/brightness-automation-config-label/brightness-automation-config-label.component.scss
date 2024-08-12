@@ -1,0 +1,94 @@
+.label {
+  $radius: 0.5em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  outline: none;
+  background: var(--color-surface-0);
+  border-radius: $radius;
+  color: var(--color-text-2);
+  border: 1px solid var(--color-surface-2);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 0.5em;
+
+  &:hover {
+    background: var(--color-surface-1);
+    .icon {
+      color: var(--color-text-0);
+    }
+  }
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+  .icon {
+    transition: all 0.15s ease;
+    color: var(--color-text-2);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5em;
+    i.material-symbols-outlined {
+      font-size: 1.25em;
+    }
+  }
+
+  .colortemp-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    .colortemp-icon {
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 999999px;
+      background: orange;
+      margin-right: 0.25em;
+    }
+
+    span {
+      font-size: 0.9em;
+      overflow: hidden;
+      width: 3.75em;
+      white-space: nowrap;
+    }
+  }
+
+  .brightness-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    width: 3.75em;
+    transition: all 0.15s ease;
+    &:not(:first-child) {
+      margin-left: 0.5em;
+    }
+
+    .brightness-value {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-end;
+
+      span {
+        font-size: 0.9em;
+        color: var(--color-text-1);
+      }
+
+      i {
+        margin-left: 0.2em;
+        font-size: 1.25em;
+        color: var(--color-text-4);
+      }
+    }
+  }
+}
+
+.monospace {
+  font-family: 'Fira Code', monospace !important;
+}

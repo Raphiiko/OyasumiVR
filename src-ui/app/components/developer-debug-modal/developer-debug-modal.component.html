@@ -3,13 +3,6 @@
   <div class="tab-bar">
     <div
       class="tab"
-      [class.active]="activeTab === 'MISC_TESTING'"
-      (click)="activeTab = 'MISC_TESTING'"
-    >
-      <div class="tab-label">Miscellaneous Testing</div>
-    </div>
-    <div
-      class="tab"
       [class.active]="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
       (click)="activeTab = 'SLEEP_DETECTION_DEBUGGER'"
     >
@@ -17,19 +10,16 @@
     </div>
     <div
       class="tab"
-      [class.active]="activeTab === 'AUDIO_DEVICE'"
-      (click)="activeTab = 'AUDIO_DEVICE'"
+      [class.active]="activeTab === 'MISC_TESTING'"
+      (click)="activeTab = 'MISC_TESTING'"
     >
-      <div class="tab-label">Audio Device Testing</div>
+      <div class="tab-label">Miscellaneous Testing</div>
     </div>
   </div>
   <div class="pane-content">
     <app-debug-sleep-detection-debugger
       *ngIf="activeTab === 'SLEEP_DETECTION_DEBUGGER'"
     ></app-debug-sleep-detection-debugger>
-    <app-debug-audio-device-debugger
-      *ngIf="activeTab === 'AUDIO_DEVICE'"
-    ></app-debug-audio-device-debugger>
     <app-misc-testing *ngIf="activeTab === 'MISC_TESTING'" [modal]="this"></app-misc-testing>
   </div>
 </div>

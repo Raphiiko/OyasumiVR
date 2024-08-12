@@ -5,7 +5,7 @@ import {
   JoinNotificationsMode,
   SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SleepService } from '../sleep.service';
 import { filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { LimitedUser } from 'vrchat';
@@ -17,7 +17,7 @@ import { VRChatService } from '../vrchat.service';
   providedIn: 'root',
 })
 export class SleepModeDisableOnPlayerJoinLeaveAutomationService {
-  private config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig = cloneDeep(
+  private config: SleepModeDisableOnPlayerJoinOrLeaveAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE
   );
   private ownVRChatDisplayName = '';

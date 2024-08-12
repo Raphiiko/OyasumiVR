@@ -7,7 +7,7 @@ import {
 } from '../models/ovr-input-event';
 import { listen } from '@tauri-apps/api/event';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { OVRDevice } from '../models/ovr-device';
 import { OVRActionBinding } from '../models/ovr-action-binding';
 import { OpenVRService } from './openvr.service';
@@ -29,7 +29,7 @@ export class OpenVRInputService {
 
   async init() {
     await listen<OVRInputEvent>('OVR_INPUT_EVENT_DIGITAL', (event) => {
-      const state = cloneDeep(this._state.value);
+      const state = structuredClone(this._state.value);
       const devices = state[event.payload.action];
       if (event.payload.pressed && !devices.some((d) => d.index === event.payload.device.index)) {
         devices.push(event.payload.device);

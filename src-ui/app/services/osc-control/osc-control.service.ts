@@ -17,6 +17,7 @@ import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
 import { AppSettingsService } from '../app-settings.service';
 import { VRCMuteSelfParamOscMethod } from './methods/vrc-mute-self-param.osc-method';
+import { AvatarContextService } from '../avatar-context.service';
 
 @Injectable({
   providedIn: 'root',
@@ -32,11 +33,12 @@ export class OscControlService {
     lighthouseConsole: LighthouseConsoleService,
     lighthouse: LighthouseService,
     eventLog: EventLogService,
-    appSettings: AppSettingsService
+    appSettings: AppSettingsService,
+    avatarContext: AvatarContextService
   ) {
     this.methods.push(
       ...[
-        new AvatarChangeOscMethod(osc, this),
+        new AvatarChangeOscMethod(osc, this, avatarContext),
         new SleepModeOscMethod(osc, sleep),
         new SleepDetectionOscMethod(osc, automationConfig),
         new AutoAcceptVRCInviteRequestsOscMethod(osc, automationConfig),

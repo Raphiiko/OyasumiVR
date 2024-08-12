@@ -1,6 +1,8 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { info } from 'tauri-plugin-log-api';
+import { error, info } from 'tauri-plugin-log-api';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { message } from '@tauri-apps/api/dialog';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -11,6 +13,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   6: from5to6,
   7: from6to7,
   8: from7to8,
+  9: from8to9,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -25,11 +28,28 @@ export function migrateAppSettings(data: any): AppSettings {
     );
   }
   while (currentVersion < APP_SETTINGS_DEFAULT.version) {
-    data = migrations[++currentVersion](data);
+    try {
+      data = migrations[++currentVersion](data);
+    } catch (e) {
+      error(
+        "[app-settings-migrations] Couldn't migrate to version " +
+          currentVersion +
+          '. Backing up configuration and resetting to the latest version. : ' +
+          e
+      );
+      saveBackup(structuredClone(data));
+      data = resetToLatest(data);
+      currentVersion = data.version;
+      message(
+        'Your application settings could not to be migrated to the new version of OyasumiVR, and have therefore been reset. Apologies for the inconvenience.\n\nPlease report this issue to the developer so this issue may be fixed in the future. Thank you!',
+        { title: 'Migration Error (App Settings)' }
+      );
+      continue;
+    }
     currentVersion = data.version;
     info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
-  data = mergeWith(cloneDeep(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -37,9 +57,30 @@ export function migrateAppSettings(data: any): AppSettings {
   return data as AppSettings;
 }
 
+async function saveBackup(oldData: any) {
+  await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
+    dir: BaseDirectory.AppData,
+  });
+}
+
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(APP_SETTINGS_DEFAULT);
+  data = structuredClone(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from8to9(data: any): any {
+  data.version = 9;
+  data.notificationsEnabled = {
+    types: (data.notificationsEnabled?.types ?? []).map((t: string) => {
+      switch (t) {
+        case 'AUTO_UPDATED_STATUS_PLAYERCOUNT':
+          return 'AUTO_UPDATED_VRC_STATUS';
+        default:
+          return t;
+      }
+    }),
+  };
   return data;
 }
 

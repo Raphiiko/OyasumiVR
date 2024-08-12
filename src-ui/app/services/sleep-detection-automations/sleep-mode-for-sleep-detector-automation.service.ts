@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepModeEnableForSleepDetectorAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import {
   BehaviorSubject,
   distinctUntilChanged,
@@ -23,6 +23,7 @@ import { EventLogService } from '../event-log.service';
 import { OpenVRInputService } from '../openvr-input.service';
 import { OVRInputEventAction } from '../../models/ovr-input-event';
 import { SleepingPose } from '../../models/sleeping-pose';
+import { TelemetryService } from '../telemetry.service';
 
 export type SleepDetectorStateReportHandlingResult =
   | 'AUTOMATION_DISABLED'
@@ -51,7 +52,7 @@ export class SleepModeForSleepDetectorAutomationService {
   private lastPose: SleepingPose = 'UNKNOWN';
   private lastUprightPose = 0;
   private sleepCheckNotificationId: string | null = null;
-  private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = cloneDeep(
+  private enableConfig: SleepModeEnableForSleepDetectorAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR
   );
   private _lastStateReport: BehaviorSubject<SleepDetectorStateReport | null> =
@@ -78,7 +79,8 @@ export class SleepModeForSleepDetectorAutomationService {
     private notifications: NotificationService,
     private translate: TranslateService,
     private eventLog: EventLogService,
-    private openvrInputService: OpenVRInputService
+    private openvrInputService: OpenVRInputService,
+    private telemetry: TelemetryService
   ) {}
 
   async init() {
@@ -245,6 +247,9 @@ export class SleepModeForSleepDetectorAutomationService {
           calibrationValue: distanceInLast10Seconds,
         }
       );
+      await this.telemetry.trackEvent('SLEEP_DETECTOR_CALIBRATED', {
+        calibrationValue: distanceInLast10Seconds,
+      });
     }
     return distanceInLast10Seconds;
   }

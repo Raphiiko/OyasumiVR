@@ -60,10 +60,30 @@
   "auto-invite-request-accept": {
     "addFriends": "Vrienden toevoegen",
     "blacklist": "Speler Blacklist",
+    "clearPlayers": "Leegmaken",
+    "conditions": {
+      "description": "Hier kan je voorwaarden configureren voor OyasumiVR om invite requests automatisch te accepteren.",
+      "title": "Voorwaarden"
+    },
     "description": "OyasumiVR kan invite requests die je ontvangt automatisch accepteren. Door het gebruiken van een speler whitelist of blacklist, kan je ervoor zorgen dat je alleen invite requests accepteert van vrienden die jij zelf kiest.",
+    "loadPreset": "Laad Opgeslagen Preset",
     "loadingFriends": "Vrienden worden geladen...",
     "noPlayersAdded": "Je hebt nog geen spelers toegevoegd aan de lijst.",
     "options": {
+      "changeListPreset": {
+        "onSleepDisable": {
+          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word uitgeschakeld",
+          "title": "Laad een preset wanneer ik wakker word"
+        },
+        "onSleepEnable": {
+          "description": "Laad een opgeslagen preset voor de speler lijst wanneer de slaap modus word ingeschakeld",
+          "title": "Laad een preset wanneer ik in slaap val"
+        },
+        "onSleepPreparation": {
+          "description": "Laad een opgeslagen preset wanneer je je voorbereid om naar bed te gaan",
+          "title": "Laad een preset wanneer je je voorbereid om naar bed te gaan"
+        }
+      },
       "enable": {
         "description": "Accepteer automatisch invite requests die je van vrienden ontvangt.",
         "title": "Activeren"
@@ -86,9 +106,22 @@
         },
         "title": "Lijst Modus"
       },
+      "onlyBelowPlayerCount": {
+        "description": "Dit is inclusief jezelf",
+        "title": "Alleen als er minder dan <strong>{count, plural, one {#</strong> speler in je wereld is} other {#</strong> spelers in je wereld zijn}}"
+      },
       "onlyIfSleepModeEnabled": {
         "title": "Alleen als de slaap modus is geactiveerd"
+      },
+      "presetOptions": {
+        "options": {
+          "NONE": "Niets wijzigen"
+        }
       }
+    },
+    "otherAutomations": {
+      "description": "Hier kan je overige automatiseringen vinden die automatisch de werking van deze functie beinvloeden.",
+      "title": "Overige Automatiseringen"
     },
     "removeModal": {
       "message": "Weet je zeker dat je ''{name}'' van de lijst wilt verwijderen?",
@@ -98,90 +131,20 @@
       "message": "Weet je zeker dat je iedereen van de lijst wilt verwijderen?",
       "title": "Bevestig verwijderen"
     },
+    "savePreset": "Opslaan Als Preset",
     "title": "Invite Requests Automatisch Accepteren",
     "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
     "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
     "whitelist": "Speler Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus inactief is",
-          "onSleepEnable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus actief is"
-        },
-        "title": "Helderheid bij opstarten"
-      },
-      "brightness": {
-        "title": "Zet de helderheid naar"
-      },
-      "copyBrightness": "Kopieer huidig helderheidsniveau",
-      "description": "Laat OyasumiVR automatisch het helderheidsniveau van je VR headset aanpassen, zoals wanneer je in slaap valt of wanneer je wakker wordt.",
-      "hardwareBrightness": {
-        "description": "Past de helderheid van het fysieke scherm aan",
-        "title": "Zet de hardware helderheid naar"
-      },
-      "onSleepDisable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik wakker word"
-      },
-      "onSleepEnable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik ga slapen"
-      },
-      "onSleepPreparation": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik me voorbereid om te gaan slapen"
-      },
-      "onStartup": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer OyasumiVR of SteamVR opstart"
-      },
-      "sleepAutomations": "Slaap Automatiseringen",
-      "sleepPreparation": {
-        "description": "Je kan je slaap voorbereiden door op de knop te drukken in OyasumiVR's overlay. De knop hier voor zal bruikbaar worden als je één of meerdere automatiseringen voor slaap voorbereiding, zoals deze, hebt geactiveerd. Je kunt dit gebruiken om alvast het helderheidsniveau te dimmen voordat je in slaap valt.",
-        "title": "Slaap Voorbereiding"
-      },
-      "softwareBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
-        "title": "Zet de software helderheid naar"
-      },
-      "startupAutomations": "Opstart Automatiseringen",
-      "transition": {
-        "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid",
-        "title": "Vloeiende overgang"
-      },
-      "transitionTime": {
-        "description": "Hoe lang de vloeiende overgang zal duren",
-        "title": "Overgangsduur"
-      }
+    "brightness": {
+      "title": "Zet de helderheid naar"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
-          "title": "Overdrive ventilator veiligheid",
-          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
-        },
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "permitRiskRange": {
-          "description": "Voorkomt dat je de helderheid boven 150% zet",
-          "title": "Beperk tot veilige schermhelderheidswaarden",
-          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier kan je alle instellingen vinden mbt schermhelderheid voor jou specifieke VR headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "Kopieer huidig helderheidsniveau",
+    "hardwareBrightness": {
+      "description": "Past de helderheid van het fysieke scherm aan",
+      "title": "Zet de hardware helderheid naar"
     },
     "mode": {
       "advanced": "Geavanceerde Modus",
@@ -191,9 +154,9 @@
       "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
     },
-    "tabs": {
-      "automations": "Automatiseringen",
-      "hmdSettings": "HMD Instellingen"
+    "softwareBrightness": {
+      "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
+      "title": "Zet de software helderheid naar"
     },
     "title": "Helderheid Automatiseringen"
   },
@@ -214,13 +177,11 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Helderheid Automatiseringen",
       "brightness": "Helderheid",
       "hardwareBrightness": "Hardware Helderheid",
       "softwareBrightness": "Software Helderheid"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automatiseringen",
       "fanSpeed": "Ventilator Snelheid"
     },
     "color-picker-modal": {
@@ -268,6 +229,7 @@
       "gpuAutomations": "GPU Automatiseringen",
       "hardwareAutomations": "Hardware Automatiseringen",
       "hmdAutomations": "HMD Specifieke Automatiseringen",
+      "joinNotifications": "Join Notificaties",
       "miscAutomations": "Overige Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
@@ -291,6 +253,7 @@
       "statusAutomations": "Status Automatiseringen",
       "systemMicMuteAutomations": "Systeem Microfoon Dempings Automatiseringen",
       "vrcAutomations": "VRChat Automatiseringen",
+      "vrchatAvatarAutomations": "Avatar Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
     "device-edit-modal": {
@@ -337,6 +300,15 @@
         "Waist": "Middel",
         "WristLeft": "Linker Pols",
         "WristRight": "Rechter Pols"
+      },
+      "forceOnBootingWarning": {
+        "message": "Het lijkt er op dat dit base station al aan staat.\n\nAls je een base station aan forceert terwijl deze al aan staat, zal deze meestal vast komen te zitten in de \"opstart\" modus. Als dit je gebeurd, kan je dit fixen door  hem terug naar slaap of standby modus te zetten, en dan weer aan te zetten.\n\nWeet je zeker dat je dit base stations aan wilt forceren?",
+        "title": "Waarschuwing"
+      },
+      "lhForceState": {
+        "on": "Forceer Aan",
+        "sleep": "Forceer Slaap",
+        "standby": "Forceer Standby"
       },
       "lighthouseStatus": {
         "booting": "Aan het starten",
@@ -438,8 +410,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -548,14 +518,14 @@
           "reason": {
             "HOTKEY": "Geactiveerd door een hotkey",
             "MANUAL": "Handmatig gestart",
-            "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was"
+            "MQTT": "Getriggered via MQTT",
+            "SLEEP_TRIGGER": "Omdat je lang genoeg aan het slapen was",
+            "VRC_ALONE_TRIGGER": "Omdat je voor lang genoeg alleen in je wereld was."
           },
           "title": "De afsluit procedure is gestart"
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -575,10 +545,16 @@
               "SLEEP_MODE_DISABLE_AFTER_TIME": "Omdat de slapa modus lang genoeg actief was",
               "SLEEP_MODE_DISABLE_AT_TIME": "Op de ingestelde tijd",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Omdat een controller of tracker is ingeschakeld",
+              "SLEEP_MODE_DISABLE_ON_PLAYER_JOIN_OR_LEAVE": {
+                "join": "Omdat {name} je wereld heeft gejoint",
+                "leave": "Omdat {name} je wereld heeft verlaten"
+              },
+              "SLEEP_MODE_DISABLE_ON_UPRIGHT_POSE": "Omdat je lang genoeg rechtop zat",
               "unknown": "Door een onbekende automatisering"
             },
             "hotkey": "Je hebt de slaap modus uitgeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig uitgeschakeld",
+            "mqtt": "Je hebt de slaap modus uitgeschakeld via MQTT",
             "osc-control": "De slaap modus werdt uitgeschakeld via OSC"
           },
           "title": "Slaap modus uitgeschakeld"
@@ -595,20 +571,27 @@
             },
             "hotkey": "Je hebt de slaap modus ingeschakeld door de hotkey te gebruiken",
             "manual": "Je hebt de slaap modus handmatig ingeschakeld",
+            "mqtt": "Je hebt de slaap modus ingeschakeld via MQTT",
             "osc-control": "De slaap modus werdt ingeschakeld via OSC"
           },
           "title": "Slaap modus ingeschakeld"
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
             "set": "Headset software helderheid naar {value} gezet",
             "transition": "Headset software helderheid gaat over naar {value}"
           }
+        },
+        "statusChangedOnGeneralEvent": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Status gewijzigd van ''{oldStatus}'' naar ''{newStatus}''"
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
@@ -642,6 +625,14 @@
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": "Demping van geluidsapparaat \"{deviceName}\" verwijderd"
+        },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": "Je VRChat avatar is veranderd naar \"{avatarName}\""
         },
         "windowsPowerPolicySet": {
           "reason": {
@@ -692,6 +683,10 @@
       "heartrate": "Hartslag",
       "inactive": "Inactief",
       "loggedOut": "Uitgelogd",
+      "mqttStatus": {
+        "label": "MQTT",
+        "tooltip": "Instellingen: Integraties"
+      },
       "sleepMode": {
         "label": "Slaap Modus",
         "tooltip": "Schakel Slaap Modus"
@@ -711,6 +706,48 @@
       "vrchat": {
         "tooltip": "Instellingen: Integraties"
       }
+    },
+    "mqtt-config-modal": {
+      "brokerHost": {
+        "description": "De hostname of het IP address waarop je je MQTT broker kan bereiken.",
+        "title": "Host"
+      },
+      "brokerPort": {
+        "description": "De poort van de websocket waarop je je MQTT broker kan bereiken.",
+        "title": "Poort"
+      },
+      "brokerSetupNote": "Let op dat Home Assistant niet standaard een MQTT broker geconfigureerd heeft. Als je niet al een MQTT broker opgezet hebt met Home Assistant, volg dan hun <a href=\"https://www.home-assistant.io/integrations/mqtt/\" target=\"_blank\">documentatie</a> eerst om dat te regelen.",
+      "description": "OyasumiVR kan met Home Assistant communiceren via MQTT. Stel hier onder de toegangsgegevens in van je MQTT broker.",
+      "mqttEnabled": {
+        "description": "Schakel de MQTT integratie in of uit.",
+        "test": "Test Verbinding",
+        "title": "Integratie Inschakelen"
+      },
+      "password": {
+        "description": "Het wachtwoord om je te authenticeren met je MQTT broker (optional)",
+        "title": "Wachtwoord"
+      },
+      "ssl": {
+        "description": "Of de verbinding met je MQTT broker versleuteld moet worden met SSL.",
+        "title": "Secure SSL"
+      },
+      "testConnection": {
+        "description": "Test of OyasumiVR kan verbinden met je MQTT broker met de onderstaande gegevens",
+        "test": "Test Verbinding",
+        "title": "Test Verbinding"
+      },
+      "testConnectionResult": {
+        "error": "Verbinding mislukt!",
+        "errorMessage": "De volgende fout werd gerapporteerd:\n{error}",
+        "success": "Verbinding gelukt!",
+        "title": "Test Resultaat"
+      },
+      "title": "MQTT Configuratie",
+      "username": {
+        "description": "De gebruikersnaam om je te authenticeren met je MQTT broker (optional)",
+        "title": "Gebruikersnaam"
+      },
+      "websocketNote": "MQTT over Websockets is het enige protocol dat word ondersteund: Zorg er voor dat je broker websocket ondersteuning ingeschakeld heeft. Standaard MQTT over TCP word <i>niet</i> ondersteund!"
     },
     "osc-script-code-editor": {
       "format": "Formatteren",
@@ -744,6 +781,32 @@
       "errorCounter": "{count, plural, one {1 Validatie Error} other {# Validatie Errors}}",
       "test": "Test"
     },
+    "player-list-preset-modal": {
+      "confirmDelete": {
+        "message": "Weet je zeker dat je de preset \"{name}\" wilt verwijderen? Er {count, plural, one {staat 1 speler} other {staan # spelers}} op de lijst.",
+        "title": "Afsluit procedure starten"
+      },
+      "confirmOverwrite": {
+        "message": "Weet je zeker dat je preset \"{name}\" wilt overschrijven?",
+        "title": "Afsluit procedure starten"
+      },
+      "currentPresets": "Huidige Presets",
+      "delete": "Verwijder Preset",
+      "load": "Laad Preset",
+      "namePlaceholder": "Preset naam",
+      "noPresets": "Je hebt nog geen opgeslagen presets",
+      "overwrite": "Overschrijf Preset",
+      "preset": {
+        "subtitle": "Lijst met {count, plural, one {1 speler} other {# spelers}}"
+      },
+      "title": {
+        "load": "Lijst Laden",
+        "save": "Lijst Opslaan"
+      }
+    },
+    "player-list": {
+      "title": "Speler Lijst"
+    },
     "select-box": {
       "defaultPlaceholder": "Selecteer..."
     },
@@ -757,6 +820,19 @@
       "title": "Update Beschikbaar",
       "updateLater": "Niet nu",
       "updateNow": "Installeer v{version}"
+    },
+    "vrc-avatar-select-button": {
+      "select": "Selecteer"
+    },
+    "vrc-avatar-select-modal": {
+      "noAvatars": "Er konden geen avatars worden opgehaald. Je zult eerst wat avatars als favoriet moeten markeren, of zelf moeten uploaden naar VRChat.",
+      "ownAvatars": "Geupload",
+      "refreshAvatars": "Ververs Avatars",
+      "refreshWarning": {
+        "message": "Omdat het opnieuw ophalen van al je avatars grotere hoeveelheden requests naar VRChat kan sturen, valt het aan te raden alleen te doen als je nieuwe avatars verwacht. Als je dit te vaak doet kan je geratelimit worden.\n\nWeet je zeker dat je je avatars opnieuw op wilt halen?",
+        "title": "Avatars verversen?"
+      },
+      "title": "Selecteer Avatar"
     },
     "vrchat-login-modal": {
       "disclaimers": {
@@ -918,6 +994,52 @@
     },
     "title": "HMD Specifieke Automatiseringen"
   },
+  "join-notifications": {
+    "description": "Stuur een notificatie bericht of geluid wanneer een andere speler je wereld betreed of verlaat. Dit kan handig zijn als je wilt dat OyasumiVR je wakker maakt als iemand je joint.",
+    "joinNotifications": {
+      "description": "Stuur een notificatie wanneer een speler je wereld betreed",
+      "title": "Join Notificaties"
+    },
+    "joinSoundVolume": {
+      "description": "Het volume van het geluidseffect dat speelt wanneer een speler je wereld betreed of verlaat.",
+      "title": "Geluids Volume"
+    },
+    "joinSounds": {
+      "description": "Speel een geluid wanneer een speler je wereld betreed.",
+      "title": "Geluid bij betreding"
+    },
+    "leaveNotifications": {
+      "description": "Stuur een notificatie wanneer een speler je wereld verlaat",
+      "title": "Leave Notificaties"
+    },
+    "leaveSounds": {
+      "description": "Speel een geluid wanneer een speler je wereld verlaat.",
+      "title": "Geluid bij verlating"
+    },
+    "modeOptions": {
+      "BLACKLIST": "Spelers niet op de lijst",
+      "DISABLED": "Voor niemand",
+      "EVERYONE": "Van iedereen",
+      "FRIEND": "Voor vrienden",
+      "WHITELIST": "Spelers op de lijst"
+    },
+    "notification": {
+      "join": "{name} heeft je wereld betreden",
+      "leave": "{name} heeft je wereld verlaten"
+    },
+    "onlyWhenLeftAlone": {
+      "description": "Alleen wanneer je alleen in je wereld word gelaten",
+      "title": "Alleen als je alleen word gelaten"
+    },
+    "onlyWhenPreviouslyAlone": {
+      "description": "Alleen wanneer je alleen was voordat de andere speler joinde",
+      "title": "Alleen als je eerst alleen was"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "Alleen als de slaap modus is geactiveerd"
+    },
+    "title": "Join Notificaties"
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
     "oscScriptEditorErrors": {
@@ -992,8 +1114,8 @@
     "turningOffTrackers": {
       "content": "Je trackers worden uitgeschakeld"
     },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Je VRChat status is veranderd naar ''{newStatus}''"
+    "vrcStatusChanged": {
+      "content": "Je VRChat status is veranderd naar \"{newStatus}\""
     }
   },
   "oscAutomations": {
@@ -1082,9 +1204,7 @@
           "title": "Status Automatiseringen"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 minuut} other {# minuten}}",
-          "seconds": "{seconds, plural, one {1 seconde} other {# seconden}}",
-          "subtitle": "Wanneer je slaapt voor {time}",
+          "subtitle": "{triggerCount, plural, one {1 automatische trigger} other {# automatische triggers}} geconfigureerd",
           "title": "Automatische Afsluit Procedure"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1282,9 +1402,17 @@
           },
           "title": "Memory Watcher"
         },
+        "openVrInitDelayFix": {
+          "description": "Als je deze fix inschakelt, zal OyasumiVR een vertraging toepassen bij het initialiseren met OpenVR. Dit kan helpen als je problemen hebt met het crashen van SteamVR, of bij het starten van SteamVR wanneer OyasumiVR al draait.",
+          "title": "Schakel OpenVR initialisatie vertraging in"
+        },
         "oscServerEnabled": {
           "description": "Hiermee kun je de ingebouwde OSC en OSCQuery servers uitschakelen. Let op dat deze keuze word bewaard, en dat verschillende features van OyasumiVR niet meer zullen werken, zonder waarschuwing. Deze optie bestaat alleen voor foutopsporing, en zou niet uitgeschakeld moeten worden tijdens standaard gebruik.",
           "title": "OSC & OSCQuery Servers Inschakelen"
+        },
+        "overlayGpuFix": {
+          "description": "Als je problemen ervaart met de SteamVR overlay, kan deze optie mogelijk een oplossing bieden op sommige systemen (bijvoorbeeld die met een hybrid graphics). Het aanpassen van deze optie zal de overlay herstarten.",
+          "title": "Grafische fix voor de SteamVR Overlay"
         },
         "title": "Oplossingen & Foutopsporing",
         "vrManifestReregister": {
@@ -1409,6 +1537,32 @@
         "title": "Taal & Vertalen"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
+          "title": "Overdrive ventilator veiligheid",
+          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
+        },
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "permitRiskRange": {
+          "description": "Voorkomt dat je de helderheid boven 150% zet",
+          "title": "Beperk tot veilige schermhelderheidswaarden",
+          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen.",
@@ -1465,13 +1619,6 @@
           "title": "Voorkeurs modus voor uitzetten"
         },
         "title": "Aansturing van SteamVR Base Stations"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Als je problemen ervaart met de SteamVR overlay, kan deze optie mogelijk een oplossing bieden op sommige systemen (bijvoorbeeld die met een hybrid graphics). Het aanpassen van deze optie zal de overlay herstarten.",
-          "title": "Grafische fix voor de SteamVR Overlay"
-        },
-        "title": "Overige opties"
       },
       "overlay": {
         "binding": {
@@ -1563,10 +1710,15 @@
       "title": "Hotkey Instellingen"
     },
     "integrations": {
+      "configure": "Configureer",
       "connect": "Koppel",
       "copy": "Kopieer link naar klembord",
       "description": "Sommige features van OyasumiVR kunnen gebruik maken van externe services. Als je OyasumiVR wilt koppelen met een externe service, dan zit je op de goede plek!",
       "disconnect": "Loskoppelen",
+      "homeAssistant": {
+        "description": "Door OyasumiVR met Home Assistant te verbinden, kun je integreren met de rest van je smart home. Hiermee kan je verschillende slimme apparaten bedienen en je eigen krachtige automatiseringen bouwen.",
+        "title": "Home Assistant (via MQTT)"
+      },
       "providerLink": "Provider Website",
       "pulsoid": {
         "description": "Stelt je hartslag data beschikbaar aan OyasumiVR, welke gebruikt kan worden voor verschillende automatiseringen.<br><i>Deze integratie vereist een eenmalige aankoop van Pulsoid's OyasumiVR integratie, of dat je een actief Pulsoid \"BRO\" abbonnement hebt. Check dat je een compatibel apparaat hebt voordat je het aanschaft.</i>",
@@ -1586,9 +1738,9 @@
             "description": "Ontvang een notificatie wanneer OyasumiVR automatisch iemands invite request heeft geaccepteerd",
             "title": "Invite Request Automatisch Geaccepteerd"
           },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Ontvang een notificatie wanneer OyasumiVR automatisch je VRChat status heeft aangepast",
-            "title": "VRChat Status Aangepast (Speler Limiet)"
+          "AUTO_UPDATED_VRC_STATUS": {
+            "description": "Krijg een notificatie wanner Oyasumi automatisch je VRChat status heeft veranderd",
+            "title": "VRChat Status Veranderd"
           },
           "SLEEP_MODE_DISABLED": {
             "description": "Ontvang een notificatie wanneer de slaap modus wordt uitgeschakeld",
@@ -1653,6 +1805,7 @@
       "login": "Log in",
       "ok": "Ok",
       "open": "Open",
+      "refresh": "Ververs",
       "save": "Opslaan"
     },
     "time": {
@@ -1665,7 +1818,7 @@
       "message": "Weet je zeker dat je de afsluit procedure nu wilt starten?",
       "title": "Afsluit procedure starten"
     },
-    "description": "Als je het fijn vind om in VR in slaap te vallen, maar niet de hele nacht in VR wilt slapen, kan je gebruik maken van Oyasumi's afsluit procedure. Deze feature sluit verschillende dingen automatisch af zodra je in slaap bent gevallen, zodat je makkelijk buiten vr door kunt slapen.",
+    "description": "Als je graag in slaap valt in VR, maar niet de hele nacht in VR wilt blijven, kan je OyasumiVR's afsluit procedure gebruiken. Deze functie stopt automatisch je game, apparaten, en sluit je computer af, zodat je gemakkelijk door kan slapen buiten VR. Je kan dit handmatig aanroepen, of een van de verschillende automatiseringen gebruiken. Bijvoorbeeld wanneer je in slaap bent gevallen!",
     "noOptionsSelected": "De afsluit procedure heeft op dit moment geen effect, omdat je geen enkele actie hebt geselecteerd. Kies hier onder tenminste één actie om te zorgen dat de afsluit procedure iets doet.",
     "overlay": {
       "cancel": "Annuleer",
@@ -1702,7 +1855,7 @@
         "title": "Stop SteamVR"
       },
       "run": "Start Afsluit Procedure",
-      "title": "Afsluit Instellingen",
+      "title": "Afsluit Procedure Acties",
       "turnOffBaseStations": {
         "description": "Dit zet alle base stations uit die nog aan staan",
         "title": "Zet base stations uit"
@@ -1719,16 +1872,36 @@
         "title": "Zet trackers uit"
       }
     },
+    "tabs": {
+      "settings": "Instellingen",
+      "triggers": "Triggers"
+    },
     "title": "Afsluit Procedure",
     "triggers": {
-      "title": "Automatische Triggers",
+      "enabled": {
+        "description": "Schakel deze optie uit om te voorkomen dat de afsluit procedure door een van de onderstaande triggers automatisch word gestart.",
+        "title": "Automatische Triggers Inschakelen"
+      },
+      "triggers": "Automatische Triggers",
+      "whenAlone": {
+        "description": "Activeer de afsluit procedure wanneer je voor een bepaalde tijd alleen in je VRChat wereld bent gelaten. Dit triggert alleen als je je eerder in gezelschap bevond.",
+        "title": "Activeer wanneer je alleen bent gelaten"
+      },
+      "whenAloneDuration": {
+        "description": "Hoe lang je alleen moet zijn voordat de afsluit procedure word gestart",
+        "title": "Duratie"
+      },
+      "whenAloneTimeWindow": {
+        "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden",
+        "title": "Tijdsvenster"
+      },
       "whenAsleep": {
         "description": "Activeer de afsluit procedure wanneer de slaap modus lang genoeg is ingeschakeld",
         "title": "Activeer wanneer ik slaap"
       },
       "whenAsleepDuration": {
         "description": "Hoe lang de slaap modus ingeschakeld moet zijn voordat de afsluit procedure wordt gestart",
-        "title": "Wanneer ik slaap voor"
+        "title": "Duratie"
       },
       "whenAsleepTimeWindow": {
         "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden",
@@ -1749,7 +1922,9 @@
       "atTime": "Om een specifieke tijd",
       "description": "Automatisch de slaap modus uitschakelen",
       "onDevicePowerOn": "Wanneer een apparaat wordt aangezet",
-      "onSteamVRStop": "Wanneer SteamVR stopt"
+      "onPlayerJoinOrLeave": "Wanneer een VRChat speler je wereld betreed of verlaat",
+      "onSteamVRStop": "Wanneer SteamVR stopt",
+      "onUprightPose": "Wanneer je recht op zit/staat na gelegen te hebben."
     },
     "enableAutomations": {
       "atBatteryPercentage": "Wanneer het batterijniveau van een apparaat onder <strong>{value}%</strong> valt",
@@ -1780,6 +1955,39 @@
         "time": "Tijd",
         "title": "Slaap modus uitschakelen"
       },
+      "disableForPlayerJoinLeave": {
+        "description": "Schakel de slaap modus uit wanneer een (specifieke) speler joint, of je wereld verlaat. Dit kan handig zijn als je wakker wilt worden wanneer er een specifiek iemand joint terwijl je slaapt, of wanneer je alleen word gelaten.",
+        "onJoin": {
+          "title": "Trigger wanneer een speler joint"
+        },
+        "onLeave": {
+          "title": "Trigger wanneer een speler je verlaat"
+        },
+        "onlyWhenLeftAlone": {
+          "description": "Trigger alleen als je alleen in je wereld word gelaten",
+          "title": "Alleen"
+        },
+        "onlyWhenPreviouslyAlone": {
+          "description": "Trigger alleen als je alleen in je wereld was voordat de andere speler er bij kwam",
+          "title": "Alleen als je eerst alleen was"
+        },
+        "title": "Slaap modus uitschakelen",
+        "triggerOptions": {
+          "BLACKLIST": "Spelers niet op de lijst",
+          "DISABLED": "Voor niemand",
+          "EVERYONE": "Van iedereen",
+          "FRIEND": "Voor vrienden",
+          "WHITELIST": "Spelers op de lijst"
+        }
+      },
+      "disableForUprightPose": {
+        "description": "Schakel de slaap modus uit wanneer je een tijd recht op zit na gelegen te hebben.",
+        "duration": {
+          "description": "Hoe lang je recht op moet zitten voordat de slaap modus word uitgeschakeld",
+          "title": "Tijdsduratie"
+        },
+        "title": "Slaap modus uitschakelen"
+      },
       "disableOnDevicePowerOn": {
         "Controller": "Een controller",
         "GenericTracker": "Een tracker",
@@ -1807,6 +2015,14 @@
           "action": "Kalibreer",
           "description": "Je moet minstens een keer kalibreren voordat je de slaap detectie goed kan gebruiken.",
           "title": "Kalibratie"
+        },
+        "considerControllerPresence": {
+          "description": "Wanneer dit aan staat, zal de slaap detector ook naar je controller inputs kijken.",
+          "title": "Controller input gebruiken"
+        },
+        "considerSleepingPose": {
+          "description": "Wanneer dit aan staat, zal de slaap detector ook naar je slaap houding kijken.",
+          "title": "Slaap houding gebruiken"
         },
         "description": "Met deze feature zal OyasumiVR automatisch de slaap modus inschakelen wanneer je in slaap bent gevallen. Dit is gebaseerd op de beweging van je VR headset.",
         "detectionWindow": {
@@ -1895,30 +2111,94 @@
         "title": "Kalibratie van slaap detectie"
       }
     },
+    "sleepDetection": {
+      "advanced": {
+        "description": "Hier kan je wat diepere aspecten van de slaap detector configureren. Over het algemeen is het aan te raden deze instellingen op hun standaard waarden te laten.",
+        "title": "Geavanceerde Tweaks"
+      },
+      "automation": {
+        "calibrationPending": {
+          "calibrate": "Calibreer Nu",
+          "title": "<Strong>In afwachting van calibratie:</strong> Voordat je de slaap detectie gebruikt, moet je een keer calibreren om de nauwkeurigheid te verbeteren."
+        },
+        "description": "Schakel de slaap modus automatisch in als OyasumiVR denkt dat je slaapt",
+        "title": "Slaap Detectie"
+      },
+      "configuration": {
+        "title": "Configuratie"
+      },
+      "description": "Slaap detectie is de beoogde manier in OyasumiVR om de slaap modus te activeren. Deze functie activeert automatisch de slaap modus wanneer het vermoed dat je slaapt, gebaseerd op verschillende factoren, zoals de beweging van je VR headset en je controller inputs."
+    },
+    "tab": {
+      "detection": "Detectie",
+      "disabling": "Slaap Modus Uitschakelen",
+      "enabling": "Slaap Modus Inschakelen"
+    },
     "title": "Slaap Detectie"
   },
   "sleepAnimations": {
     "title": "Slaap Animaties"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Verander je status naar",
-      "title": "Op het limiet of erboven"
-    },
-    "behaviourWarning": "Aanpassingen van de status zijn niet zichtbaar voor jouwzelf. Ook voor andere spelers kan het even duren voordat de statusverandering zichtbaar is. Dit is een limitatie van VRChat zelf en kan niet worden opgelost door OyasumiVR.",
+    "behaviourWarning": "Status veranderingen van OyasumiVR zullen niet meteen voor jou zichtbaar zijn. Voor andere spelers kan het ook even duren voordat de status word geupdate. Dit komt door VRChat's cache gedrag. Hoewel het niet meteen zichtbaar is, kan je er wel van uit gaan dat je status is veranderd.",
     "behaviourWarningFAQ": "Hier zijn wat antwoorden voor vragen die je misschien nog hebt over status automatiseringen:\n\nV: Kan ik nog steeds automatisch invite requests accepteren, ook als VRChat zelf niet aangeeft dat mijn status op blauw staat?\nA: In het geval dat OyasumiVR je status op blauw zet, zal het de taak van het automatisch accepteren van invite requests overnemen van VRChat zelf.\n\nV: Mn vrienden kunnen niet op mn joinen omdat mijn status voor hun niet veranderd!\nA: Status updates kunnen even duren voordat anderen ze kunnen zien. Als ze je willen joinen maar dat niet kunnen, kunnen ze het forceren om je status te updaten door je profiel te openen in het grotere menu.",
-    "belowLimit": {
-      "description": "Verander je status naar",
-      "title": "Onder het limiet"
+    "general": {
+      "description": "Hier kan je OyasumiVR configureren om je VRChat status te updaten met verschillende gebeurtenissen. Als voorbeeld, kun je je status aanpassen wanneer je in slaap bent gevallen, of wakker word!",
+      "onSleepDisable": {
+        "description": {
+          "status": "Verander mijn status naar",
+          "statusMessage": "Verander mijn status bericht naar"
+        },
+        "script": "Slaap Modus Uitgeschakeld",
+        "title": "Wanneer ik wakker word"
+      },
+      "onSleepEnable": {
+        "description": {
+          "status": "Verander mijn status naar",
+          "statusMessage": "Verander mijn status bericht naar"
+        },
+        "script": "Slaap Modus Ingeschakeld",
+        "title": "Wanneer ik ga slapen"
+      },
+      "onSleepPreparation": {
+        "description": {
+          "status": "Verander mijn status naar",
+          "statusMessage": "Verander mijn status bericht naar"
+        },
+        "script": "Slaap Voorbereiding",
+        "title": "Wanneer ik me voorbereid om te gaan slapen"
+      }
     },
-    "description": "OyasumiVR kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
-    "disableToEdit": "Deactiveer status automatiseringen voordat je de instellingen aanpast.",
-    "enable": "Activeer Status Automatiseringen",
-    "exampleUse": "Voorbeeld: Wanneer iemand op je joint, verander je je status automatisch naar oranje of rood.\nWanneer die persoon dan weer vertrekt, verander je je status weer terug naar blauw, zodat iemand anders weer kan joinen.",
     "moreInfo": "Meer info",
-    "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
-    "playerLimit": "Speler limiet",
-    "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Verander je status naar",
+          "statusMessage": "Verander mijn status bericht naar"
+        },
+        "title": "Op het limiet of erboven"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Verander je status naar",
+          "statusMessage": "Verander mijn status bericht naar"
+        },
+        "title": "Onder het limiet"
+      },
+      "description": "OyasumiVR kan je VRChat status automatisch aanpassen op basis van de hoeveelheid spelers in je wereld, om te voorkomen dat er meer spelers op je joinen dan je wilt.",
+      "disableToEdit": "Schakel deze automatisering a.u.b. uit voordat je de configuratie aanpast.",
+      "enable": {
+        "description": "Verander automatisch je status op basis van de hoeveelheid spelers in je VRChat wereld.",
+        "title": "Schakel speler limiet status automatiseringen in"
+      },
+      "onlyIfSleepModeEnabled": "Alleen als de slaap modus is geactiveerd",
+      "playerLimit": "Speler limiet",
+      "playerLimitLabel": "{count, plural, one {1 speler} other {# spelers}} (inclusief jezelf)"
+    },
+    "tabs": {
+      "general": "Algemeen",
+      "playerLimit": "Speler limiet"
+    },
     "title": "Status Automatiseringen"
   },
   "systemMicMuteAutomations": {
@@ -2048,6 +2328,25 @@
       }
     }
   },
+  "vrchatAvatarAutomations": {
+    "description": "Hier kan je OyasumiVR configureren om automatisch je VRChat avatar te veranderen bij verschillende gebeurtenissen. Dit kan handig zijn als je van avatar wilt wisselen wanneer je in slaap valt, of wakker word!",
+    "onSleepDisable": {
+      "description": "Verander mijn avatar naar",
+      "script": "Slaap Modus Uitgeschakeld",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "description": "Verander mijn avatar naar",
+      "script": "Slaap Modus Ingeschakeld",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "description": "Verander mijn avatar naar",
+      "script": "Slaap Voorbereiding",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "title": "Avatar Automatiseringen"
+  },
   "vrchatMicMuteAutomations": {
     "automations": {
       "title": "Automatiseringen"
@@ -2061,6 +2360,7 @@
       "title": "Regel microfoon demping",
       "unmute": "Microfoon niet dempen"
     },
+    "description": "Schakel automatisch de demping van je microfoon in of uit in VRChat, wanneer je in slaap valt, of wakker word! Dit kan handig zijn als je wilt voorkomen dat anderen je horen snurken ;)\n\nLet op dat dit vereist dat OSC ingeschakeld is in VRChat, en dat je \"Microphone Behaviour\" in VRChat op \"Toggle\" moet staan.",
     "muteOptions": {
       "MUTE": "Dempen",
       "NONE": "Geen",

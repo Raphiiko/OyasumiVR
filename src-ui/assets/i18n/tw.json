@@ -20,9 +20,6 @@
       "SET_VOLUME": "變更音量",
       "UNMUTE": "解除靜音"
     },
-    "automations": {
-      "label": "{count, plural, one {1 Automation} other {# Automations}}"
-    },
     "description": "當你入睡或醒來時，自動改變音訊裝置的音量！如果你想防止他人打擾你的睡眠，這將非常有用。",
     "devices": {
       "description": "選擇音訊裝置，自動調節音量大小",
@@ -104,84 +101,13 @@
     "whitelist": "玩家白名單"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "如果睡眠模式未啟用，則在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值",
-          "onSleepEnable": "如果睡眠模式已啟用，請在 SteamVR 或 OyasumiVR 啟動時直接設定此亮度值"
-        },
-        "title": "啟動時應用亮度設定"
-      },
-      "brightness": {
-        "title": "將亮度改為"
-      },
-      "copyBrightness": "複製\n當前亮度值",
-      "description": "讓 OyasumiVR 在不同的時間自動調整 VR 頭顯的亮度，比如睡覺或起床時",
-      "hardwareBrightness": {
-        "description": "調整顯示器本身的亮度",
-        "title": "更改硬體亮度為"
-      },
-      "onSleepDisable": {
-        "description": "調整亮度",
-        "title": "當我醒來時"
-      },
-      "onSleepEnable": {
-        "description": "調整亮度",
-        "title": "當我進入睡眠模式時"
-      },
-      "onSleepPreparation": {
-        "description": "調整亮度",
-        "title": "當我準備入睡時"
-      },
-      "onStartup": {
-        "description": "調整亮度",
-        "title": "當 OyasumiVR 或 SteamVR 啟動時"
-      },
-      "sleepAutomations": "睡眠自動化",
-      "sleepPreparation": {
-        "description": "你可以按下 OyasumiVR 疊層畫面畫面中的按鈕，為入睡做準備。當你啟用了一個或多個睡眠準備自動操作（比如這個）時，就會顯示這個按鈕。使用這個按鈕可以在入睡前開始調暗亮度",
-        "title": "睡眠準備"
-      },
-      "softwareBrightness": {
-        "description": "調整 VR 頭顯影像的亮度",
-        "title": "更改軟體亮度為"
-      },
-      "startupAutomations": "啟動自動化",
-      "transition": {
-        "description": "平滑地調整到所需的亮度值",
-        "title": "逐步調整亮度"
-      },
-      "transitionTime": {
-        "description": "調整到新亮度設定所需的時間",
-        "title": "調整時間"
-      }
+    "brightness": {
+      "title": "將亮度改為"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
-          "title": "風扇超速安全保護",
-          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "maxBrightness": {
-          "description": "在 OyasumiVR 中設定最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "permitRiskRange": {
-          "description": "避免將亮度設定超過150%",
-          "title": "限制在安全亮度範圍內",
-          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "在此處，你可以找到適用於你特定 VR 頭戴式顯示器的所有亮度相關設定",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
-          "title": "最大亮度"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "複製\n當前亮度值",
+    "hardwareBrightness": {
+      "description": "調整顯示器本身的亮度",
+      "title": "更改硬體亮度為"
     },
     "mode": {
       "advanced": "進階模式",
@@ -191,9 +117,9 @@
       "message": "當使用 OyasumiVR 來控制 VR 頭戴式顯示器的亮度時，可以選擇兩種不同的控制方法：軟體控制與硬體控制。\n\n軟體控制適用於所有類型的頭戴式顯示器，它透過調整影像的亮度來改變顯示器的亮度。\n\n硬體控制則只適用於特定支援的顯示器（如 Valve Index、Bigscreen Beyond），此方法會直接在支援的範圍內調整顯示器顯示的亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體和硬體亮度控制之間進行切換，或者在不支援硬體亮度的情況下只控制軟體亮度。\n\n如果你偏好直接控制，進階模式允許你分別獨立控制軟體和硬體亮度，讓你可以為每一種設置確切的亮度值。",
       "title": "亮度控制模式"
     },
-    "tabs": {
-      "automations": "自動化",
-      "hmdSettings": "頭顯設定"
+    "softwareBrightness": {
+      "description": "調整 VR 頭顯影像的亮度",
+      "title": "更改軟體亮度為"
     },
     "title": "亮度自動調整"
   },
@@ -214,7 +140,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "亮度自動調整",
       "brightness": "亮度",
       "hardwareBrightness": "硬體亮度",
       "softwareBrightness": "軟體亮度"
@@ -412,8 +337,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -528,8 +451,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "因為已停用睡眠模式",
-            "SLEEP_MODE_ENABLED": "因為已啟用睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -575,8 +496,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "由於睡眠模式被停用",
-            "SLEEP_MODE_ENABLED": "由於啟用了睡眠模式",
             "SLEEP_PREPARATION": "當你準備入睡時"
           },
           "title": {
@@ -933,9 +852,6 @@
     },
     "turningOffTrackers": {
       "content": "關閉你的定位器"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "你的 VRChat 狀態已設定為 「{newStatus}」"
     }
   },
   "oscAutomations": {
@@ -1024,9 +940,6 @@
           "title": "狀態自動化"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} 分鐘",
-          "seconds": "{seconds} 秒",
-          "subtitle": "睡眠 {time} 後",
           "title": "自動關機"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1228,6 +1141,10 @@
           "description": "關閉該選項將禁用內建的 OSC 和 OSCQuery 伺服器。該選項會在重啟後繼續存在。請注意，如果關閉該選項，OyasumiVR 的多項功能將停止工作，且不會發出警告。此選項純粹用於除錯目的，一般使用時不應關閉。",
           "title": "啟用 OSC 和 OSCQuery 伺服器"
         },
+        "overlayGpuFix": {
+          "description": "I如果你在打開 SteamVR 疊層畫面界面時遇到問題，啟用此選項可以解決某些系統（如混合顯示卡系統）上的問題。變更此選項將重啟疊層畫面",
+          "title": "SteamVR 疊層畫面的圖形修正"
+        },
         "title": "修復與疑難排解",
         "vrManifestReregister": {
           "action": "重新註冊列表",
@@ -1351,6 +1268,32 @@
         "title": "語言與翻譯"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "當亮度值超過 100% 時，強制將風扇轉速設為 100%",
+          "title": "風扇超速安全保護",
+          "warning": "此功能模仿官方 Bigscreen Beyond 驅動程式的安全風扇參數。僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "maxBrightness": {
+          "description": "在 OyasumiVR 中設定最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "permitRiskRange": {
+          "description": "避免將亮度設定超過150%",
+          "title": "限制在安全亮度範圍內",
+          "warning": "此功能並未得到製造商的支援。\n\n請注意，這可能會損壞你的頭戴式顯示器：僅在你自願承擔風險的情況下禁用此功能"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "設定 OyasumiVR 將設定的最大亮度值上限",
+          "title": "最大亮度"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR 需要管理員權限才能控制 GPU 的功耗限制。\n如果啟用此功能，OyasumiVR 將在啟動時請求管理員權限",
@@ -1392,13 +1335,6 @@
           "title": "首選的斷電狀態"
         },
         "title": "SteamVR 基地台電源控制"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "I如果你在打開 SteamVR 疊層畫面界面時遇到問題，啟用此選項可以解決某些系統（如混合顯示卡系統）上的問題。變更此選項將重啟疊層畫面",
-          "title": "SteamVR 疊層畫面的圖形修正"
-        },
-        "title": "其他"
       },
       "overlay": {
         "binding": {
@@ -1513,10 +1449,6 @@
             "description": "在 Oyasumi 自動接受他人的邀請請求時收到通知",
             "title": "自動接受邀請請求"
           },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "在 Oyasumi 自動更新你的 VRChat 狀態時收到通知",
-            "title": "VRChat 狀態更新（玩家限制自動化）"
-          },
           "SLEEP_MODE_DISABLED": {
             "description": "在睡眠模式被停用時收到通知",
             "title": "已停用睡眠模式"
@@ -1592,7 +1524,6 @@
       "message": "你確定要現在啟動關機程序嗎？",
       "title": "你確定嗎？"
     },
-    "description": "如果喜歡在 VR 中入睡，但又不想整晚都在 VR 中睡覺，可以使用 OyasumiVR 的關閉程序。一旦你打瞌睡，該功能就會自動優雅地關閉，這樣你就可以順利地在 VR 外繼續睡眠了",
     "noOptionsSelected": "由於你沒有選擇要在關機程序中運行的操作，因此運行它不會有任何效果。為使該功能發揮作用，請至少選擇以下選項之一",
     "overlay": {
       "cancel": "立即取消",
@@ -1629,7 +1560,6 @@
         "title": "退出 SteamVR"
       },
       "run": "運行序列",
-      "title": "關機設定",
       "turnOffBaseStations": {
         "description": "關閉任何仍在活動的基地台",
         "title": "關掉基地台"
@@ -1648,14 +1578,12 @@
     },
     "title": "關機程序",
     "triggers": {
-      "title": "自動觸發",
       "whenAsleep": {
         "description": "當睡眠模式被啟用一定時間後，啟動關機程序",
         "title": "在我睡覺時啟動"
       },
       "whenAsleepDuration": {
-        "description": "睡眠模式啟用後，在關機程序執行之前應該持續多長時間",
-        "title": "睡眠時間"
+        "description": "睡眠模式啟用後，在關機程序執行之前應該持續多長時間"
       },
       "whenAsleepTimeWindow": {
         "description": "只允許在一天中的某些時間段觸發關機",
@@ -1667,9 +1595,9 @@
     "disableAutomations": {
       "afterTime": {
         "description": {
-          "hours": "在 {hours, plural, one {1 小時} other {# 小時}} 後",
-          "hoursAndMinutes": "在 {hours, plural, one {1 小時} other {# 小時}} 及 {minutes, plural, one {1 分鐘} other {# 分鐘}} 後",
-          "minutes": "在 {minutes, plural, one {1 分鐘} other {# 分鐘}} 後"
+          "hours": "在 {hours}小時 後",
+          "hoursAndMinutes": "在 {hours}小時 及 {minutes}分鐘 後",
+          "minutes": "在 {minutes}分鐘 後"
         },
         "title": "在特定時間後"
       },
@@ -1828,24 +1756,26 @@
     "title": "睡眠動畫"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "將你的狀態設定為",
-      "title": "高於限制人數"
-    },
-    "behaviourWarning": "OyasumiVR 的狀態變更對玩家是不可見。 即使對於其他玩家，狀態更新也可能需要一些時間才能顯示出來。 這是 VRChat 的限制，OyasumiVR 無法修復",
     "behaviourWarningFAQ": "在這裡，你可以找到關於狀態變更行為的一些問題的答案：\n\n問：即使 VRChat 沒有顯示我處於藍色狀態，我仍然可以自動接受邀請請求嗎？\n答：如果你有 OyasumiVR 將你的狀態設定為藍色（加入我），它將接管自動接受你收到的任何邀請加入請求。\n\n問：其他玩家無法加入我，因為我的狀態對他們來說沒有更新。\n答：狀態更新可能需要一段時間才會顯示給其他玩家。 如果他們想加入但不能，他們可以透過在主選單中中打開你的個人資料來強制刷新你的狀態",
-    "belowLimit": {
-      "description": "將你的狀態設定為",
-      "title": "低於限制人數"
-    },
-    "description": "OyasumiVR 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
-    "disableToEdit": "請在進行任何變更之前關閉狀態自動化",
-    "enable": "開啟狀態自動化",
-    "exampleUse": "使用範例：當有人加入你時，自動將你的狀態切換為橙色或紅色！\n當他們離開而你又獨自一人時，自動將你的狀態切換回藍色以便其他人可以加入你",
     "moreInfo": "更多資訊",
-    "onlyIfSleepModeEnabled": "只有在睡眠模式開啟的時候",
-    "playerLimit": "玩家人數限制",
-    "playerLimitLabel": "{count} 位玩家（包括你）",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "將你的狀態設定為"
+        },
+        "title": "高於限制人數"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "將你的狀態設定為"
+        },
+        "title": "低於限制人數"
+      },
+      "description": "OyasumiVR 可以根據你的世界中有多少玩家自動設定你的狀態\n從而限制你房間的人數",
+      "onlyIfSleepModeEnabled": "只有在睡眠模式開啟的時候",
+      "playerLimit": "玩家人數限制",
+      "playerLimitLabel": "{count} 位玩家（包括你）"
+    },
     "title": "狀態 自動化"
   },
   "systemMicMuteAutomations": {

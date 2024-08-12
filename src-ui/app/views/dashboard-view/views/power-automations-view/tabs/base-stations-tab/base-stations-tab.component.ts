@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { cloneDeep } from 'lodash';
+
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   AutomationConfigs,
@@ -18,7 +18,7 @@ import { noop, vshrink } from 'src-ui/app/utils/animations';
   animations: [vshrink(), noop()],
 })
 export class BaseStationsTabComponent implements OnInit {
-  automationConfigs: AutomationConfigs = cloneDeep(AUTOMATION_CONFIGS_DEFAULT);
+  automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
   lighthouseStatus: LighthouseStatus = 'uninitialized';
   lighthousePowerControlDisabled = false;
 

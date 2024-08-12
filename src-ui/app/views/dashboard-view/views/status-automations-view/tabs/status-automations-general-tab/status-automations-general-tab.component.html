@@ -1,0 +1,197 @@
+<div class="setting-category">
+  <p translate>status-automations.general.description</p>
+  <div class="alert warning" *ngIf="!loggedIn" @vshrink>
+    <div class="alert-bg"></div>
+    <div class="alert-icon">
+      <i class="material-icons"> warning </i>
+    </div>
+    <div class="alert-content">
+      <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+      <button class="btn btn-secondary" (click)="login()" translate>shared.modals.login</button>
+    </div>
+  </div>
+  <div class="settings">
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>status-automations.general.onSleepEnable.title</span>
+        <span translate>status-automations.general.onSleepEnable.description.status</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusOnSleepModeEnable"
+            (change)="
+              updateConfig({ changeStatusOnSleepModeEnable: !config.changeStatusOnSleepModeEnable })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <app-select-box
+          class="status-dropdown"
+          [type]="'SMALL'"
+          [items]="statusOptions"
+          [selected]="onSleepEnableStatusOption"
+          (selectedChange)="setStatusOption('ON_SLEEP_ENABLE', $event)"
+          [disabled]="!config.changeStatusOnSleepModeEnable"
+        ></app-select-box>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span></span>
+        <span translate>status-automations.general.onSleepEnable.description.statusMessage</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusMessageOnSleepModeEnable"
+            (change)="
+              updateConfig({
+                changeStatusMessageOnSleepModeEnable: !config.changeStatusMessageOnSleepModeEnable
+              })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <input
+          type="text"
+          [disabled]="!config.changeStatusMessageOnSleepModeEnable"
+          maxlength="32"
+          [value]="config.statusMessageOnSleepModeEnable"
+          (input)="updateStatusMessage('ON_SLEEP_ENABLE', onSleepEnableStatusMessageInput.value)"
+          #onSleepEnableStatusMessageInput
+        />
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>status-automations.general.onSleepDisable.title</span>
+        <span translate>status-automations.general.onSleepDisable.description.status</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusOnSleepModeDisable"
+            (change)="
+              updateConfig({
+                changeStatusOnSleepModeDisable: !config.changeStatusOnSleepModeDisable
+              })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <app-select-box
+          class="status-dropdown"
+          [type]="'SMALL'"
+          [items]="statusOptions"
+          [selected]="onSleepDisableStatusOption"
+          (selectedChange)="setStatusOption('ON_SLEEP_DISABLE', $event)"
+          [disabled]="!config.changeStatusOnSleepModeDisable"
+        ></app-select-box>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span></span>
+        <span translate>status-automations.general.onSleepDisable.description.statusMessage</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusMessageOnSleepModeDisable"
+            (change)="
+              updateConfig({
+                changeStatusMessageOnSleepModeDisable: !config.changeStatusMessageOnSleepModeDisable
+              })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <input
+          type="text"
+          [disabled]="!config.changeStatusMessageOnSleepModeDisable"
+          maxlength="32"
+          [value]="config.statusMessageOnSleepModeDisable"
+          (input)="updateStatusMessage('ON_SLEEP_DISABLE', onSleepDisableStatusMessageInput.value)"
+          #onSleepDisableStatusMessageInput
+        />
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span translate>status-automations.general.onSleepPreparation.title</span>
+        <span translate>status-automations.general.onSleepPreparation.description.status</span>
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusOnSleepPreparation"
+            (change)="
+              updateConfig({
+                changeStatusOnSleepPreparation: !config.changeStatusOnSleepPreparation
+              })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <app-select-box
+          class="status-dropdown"
+          [type]="'SMALL'"
+          [items]="statusOptions"
+          [selected]="onSleepPreparationStatusOption"
+          (selectedChange)="setStatusOption('ON_SLEEP_PREPARATION', $event)"
+          [disabled]="!config.changeStatusOnSleepPreparation"
+        ></app-select-box>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-row-label" translate>
+        <span></span>
+        <span translate
+          >status-automations.general.onSleepPreparation.description.statusMessage</span
+        >
+      </div>
+      <div class="setting-row-action">
+        <label class="switch-toggle">
+          <input
+            type="checkbox"
+            [checked]="config.changeStatusMessageOnSleepPreparation"
+            (change)="
+              updateConfig({
+                changeStatusMessageOnSleepPreparation: !config.changeStatusMessageOnSleepPreparation
+              })
+            "
+          />
+          <span class="switch-toggle-slider"></span>
+        </label>
+        <input
+          type="text"
+          [disabled]="!config.changeStatusMessageOnSleepPreparation"
+          maxlength="32"
+          [value]="config.statusMessageOnSleepPreparation"
+          (input)="
+            updateStatusMessage('ON_SLEEP_PREPARATION', onSleepPreparationStatusMessageInput.value)
+          "
+          #onSleepPreparationStatusMessageInput
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="alert warning" style="margin-top: 1em">
+  <div class="alert-bg"></div>
+  <div class="alert-icon">
+    <i class="material-icons"> warning </i>
+  </div>
+  <div class="alert-content">
+    <span>{{ 'status-automations.behaviourWarning' | translate }}</span>
+    <button class="btn btn-secondary" (click)="showFAQ()" translate style="margin-left: 1em">
+      status-automations.moreInfo
+    </button>
+  </div>
+</div>

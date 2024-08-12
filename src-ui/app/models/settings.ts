@@ -2,7 +2,7 @@ import { LighthouseDevicePowerState } from './lighthouse-device';
 import { PlayerListPreset } from './player-list-preset';
 
 export interface AppSettings {
-  version: 8;
+  version: 9;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -23,6 +23,7 @@ export interface AppSettings {
   oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
+  openVrInitDelayFix: boolean;
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
@@ -40,6 +41,9 @@ export interface AppSettings {
   mqttUsername: string | null;
   mqttPassword: string | null;
   mqttSecureSocket: boolean;
+  // Brightness & CCT
+  cctControlEnabled: boolean;
+  cctSoftwareMode: boolean;
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
@@ -66,14 +70,14 @@ export type HotkeyId =
 export const NotificationTypes = [
   'SLEEP_MODE_ENABLED',
   'SLEEP_MODE_DISABLED',
-  'AUTO_UPDATED_STATUS_PLAYERCOUNT',
+  'AUTO_UPDATED_VRC_STATUS',
   'AUTO_ACCEPTED_INVITE_REQUEST',
 ] as const;
 
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 8,
+  version: 9,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
@@ -109,6 +113,9 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttUsername: null,
   mqttPassword: null,
   mqttSecureSocket: false,
+  openVrInitDelayFix: false,
+  cctControlEnabled: true,
+  cctSoftwareMode: false,
 };
 
 export type ExecutableReferenceStatus =

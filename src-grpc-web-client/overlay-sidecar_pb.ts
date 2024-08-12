@@ -336,21 +336,21 @@ export interface OyasumiSidecarAutomationsState_SleepingAnimations {
  */
 export interface OyasumiSidecarAutomationsState_ShutdownAutomations {
   /**
-   * @generated from protobuf field: bool sleep_trigger_enabled = 1;
+   * @generated from protobuf field: bool triggers_enabled = 1;
    */
-  sleepTriggerEnabled: boolean;
+  triggersEnabled: boolean;
   /**
-   * @generated from protobuf field: uint32 time_delay = 2;
-   */
-  timeDelay: number;
-  /**
-   * @generated from protobuf field: bool running = 3;
+   * @generated from protobuf field: bool running = 2;
    */
   running: boolean;
   /**
-   * @generated from protobuf field: bool can_start = 4;
+   * @generated from protobuf field: bool can_start = 3;
    */
   canStart: boolean;
+  /**
+   * @generated from protobuf field: uint32 triggers_configured = 4;
+   */
+  triggersConfigured: number;
 }
 /**
  * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_SleepModeEnableForSleepDetector
@@ -2013,16 +2013,21 @@ export const OyasumiSidecarAutomationsState_SleepingAnimations =
 class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageType<OyasumiSidecarAutomationsState_ShutdownAutomations> {
   constructor() {
     super('OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_ShutdownAutomations', [
-      { no: 1, name: 'sleep_trigger_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-      { no: 2, name: 'time_delay', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
-      { no: 3, name: 'running', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
-      { no: 4, name: 'can_start', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 1, name: 'triggers_enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'running', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 3, name: 'can_start', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 4, name: 'triggers_configured', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
     ]);
   }
   create(
     value?: PartialMessage<OyasumiSidecarAutomationsState_ShutdownAutomations>
   ): OyasumiSidecarAutomationsState_ShutdownAutomations {
-    const message = { sleepTriggerEnabled: false, timeDelay: 0, running: false, canStart: false };
+    const message = {
+      triggersEnabled: false,
+      running: false,
+      canStart: false,
+      triggersConfigured: 0,
+    };
     globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
     if (value !== undefined)
       reflectionMergePartial<OyasumiSidecarAutomationsState_ShutdownAutomations>(
@@ -2043,17 +2048,17 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     while (reader.pos < end) {
       let [fieldNo, wireType] = reader.tag();
       switch (fieldNo) {
-        case /* bool sleep_trigger_enabled */ 1:
-          message.sleepTriggerEnabled = reader.bool();
+        case /* bool triggers_enabled */ 1:
+          message.triggersEnabled = reader.bool();
           break;
-        case /* uint32 time_delay */ 2:
-          message.timeDelay = reader.uint32();
-          break;
-        case /* bool running */ 3:
+        case /* bool running */ 2:
           message.running = reader.bool();
           break;
-        case /* bool can_start */ 4:
+        case /* bool can_start */ 3:
           message.canStart = reader.bool();
+          break;
+        case /* uint32 triggers_configured */ 4:
+          message.triggersConfigured = reader.uint32();
           break;
         default:
           let u = options.readUnknownField;
@@ -2079,15 +2084,16 @@ class OyasumiSidecarAutomationsState_ShutdownAutomations$Type extends MessageTyp
     writer: IBinaryWriter,
     options: BinaryWriteOptions
   ): IBinaryWriter {
-    /* bool sleep_trigger_enabled = 1; */
-    if (message.sleepTriggerEnabled !== false)
-      writer.tag(1, WireType.Varint).bool(message.sleepTriggerEnabled);
-    /* uint32 time_delay = 2; */
-    if (message.timeDelay !== 0) writer.tag(2, WireType.Varint).uint32(message.timeDelay);
-    /* bool running = 3; */
-    if (message.running !== false) writer.tag(3, WireType.Varint).bool(message.running);
-    /* bool can_start = 4; */
-    if (message.canStart !== false) writer.tag(4, WireType.Varint).bool(message.canStart);
+    /* bool triggers_enabled = 1; */
+    if (message.triggersEnabled !== false)
+      writer.tag(1, WireType.Varint).bool(message.triggersEnabled);
+    /* bool running = 2; */
+    if (message.running !== false) writer.tag(2, WireType.Varint).bool(message.running);
+    /* bool can_start = 3; */
+    if (message.canStart !== false) writer.tag(3, WireType.Varint).bool(message.canStart);
+    /* uint32 triggers_configured = 4; */
+    if (message.triggersConfigured !== 0)
+      writer.tag(4, WireType.Varint).uint32(message.triggersConfigured);
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;

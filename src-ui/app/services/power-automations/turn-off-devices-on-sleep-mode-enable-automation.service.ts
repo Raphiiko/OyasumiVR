@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { OpenVRService } from '../openvr.service';
 import { filter, firstValueFrom, map, skip } from 'rxjs';
@@ -17,7 +17,7 @@ import { error } from 'tauri-plugin-log-api';
   providedIn: 'root',
 })
 export class TurnOffDevicesOnSleepModeEnableAutomationService {
-  config: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
+  config: TurnOffDevicesOnSleepModeEnableAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   );
 

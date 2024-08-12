@@ -1,6 +1,6 @@
 use ovr_overlay::input::{ActionHandle, ActionSetHandle};
 use serde::{Deserialize, Serialize};
-use strum_macros::{IntoStaticStr, EnumIter};
+use strum_macros::{EnumIter, IntoStaticStr};
 
 pub struct OpenVRAction {
     pub name: String,
@@ -128,7 +128,9 @@ pub struct OVRDevice {
     pub hardware_revision: Option<String>,
     pub manufacturer_name: Option<String>,
     pub model_number: Option<String>,
-    pub handle_type: Option<OVRHandleType>
+    pub handle_type: Option<OVRHandleType>,
+    pub hmd_on_head: Option<bool>,
+    pub debug_hmd_activity: Option<String>,
 }
 
 #[derive(Clone, Serialize, Deserialize)]
@@ -162,7 +164,7 @@ pub enum OVRHandleType {
     Waist,
     Chest,
     Camera,
-    Keyboard
+    Keyboard,
 }
 
 impl OVRHandleType {
@@ -189,8 +191,8 @@ impl OVRHandleType {
             OVRHandleType::Waist => "/user/waist",
             OVRHandleType::Chest => "/user/chest",
             OVRHandleType::Camera => "/user/camera",
-            OVRHandleType::Keyboard => "/user/keyboard"
-          }
+            OVRHandleType::Keyboard => "/user/keyboard",
+        }
     }
 }
 

@@ -98,6 +98,22 @@ export class SettingsStatusInfoViewComponent {
             key: 'Devices',
             value: openvr.devices.pipe(map((devices) => devices.length + '')),
           },
+          {
+            key: 'HMD On Head',
+            value: openvr.devices.pipe(
+              map((devices) =>
+                devices.find((d) => d.class === 'HMD')?.hmdOnHead ? 'True' : 'False'
+              )
+            ),
+          },
+          {
+            key: 'HMD Activity (Debug)',
+            value: openvr.devices.pipe(
+              map(
+                (devices) => devices.find((d) => d.class === 'HMD')?.debugHmdActivity ?? 'No Value'
+              )
+            ),
+          },
         ],
       },
       {

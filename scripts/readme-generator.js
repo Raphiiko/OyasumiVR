@@ -35,9 +35,9 @@ function parseTexts(raw) {
 function ensureDefaultsInSource(langData) {
   const en = langData.find((l) => l.lang === 'en');
   const clonedLangData = _.cloneDeep(langData);
-  // Add empty strings for nonexistent texts and tokens
   clonedLangData.forEach((lang) => {
     if (lang.lang === 'en') return;
+    // Add empty strings for nonexistent texts and tokens
     Object.entries(en.texts).forEach(([key, value]) => {
       if (!lang.texts[key]) {
         lang.texts[key] = '';
@@ -46,6 +46,17 @@ function ensureDefaultsInSource(langData) {
     Object.entries(en.tokens).forEach(([key, value]) => {
       if (!lang.tokens[key]) {
         lang.tokens[key] = '';
+      }
+    });
+    // Remove texts and tokens that are not in the EN file
+    Object.keys(lang.texts).forEach((key) => {
+      if (!en.texts[key]) {
+        delete lang.texts[key];
+      }
+    });
+    Object.keys(lang.tokens).forEach((key) => {
+      if (!en.tokens[key]) {
+        delete lang.tokens[key];
       }
     });
     // If tokens or texts were missing, overwrite the source files with placeholders
@@ -95,6 +106,79 @@ function loadLanguageData() {
   return langData;
 }
 
+function getTranslationContributors(mode /*: 'markdown' | 'steam'*/) {
+  const contributors = JSON.parse(
+    fs.readFileSync('./docs/translation_contributors.json').toString()
+  );
+  let result = '';
+  const languages = _.groupBy(contributors, 'langCode');
+  switch (mode) {
+    case 'markdown': {
+      Object.values(languages).forEach((contributors) => {
+        result += `\n- ${contributors[0].langNameNative}`;
+        if (
+          contributors[0].langNameEnglish &&
+          contributors[0].langNameNative !== contributors[0].langNameEnglish
+        )
+          result += ` (${contributors[0].langNameEnglish})`;
+        if (contributors.length > 1) {
+          result += ': Community contributions by';
+        } else if (contributors[0].name !== 'Raphiiko') {
+          result += ': Community contribution by';
+        } else {
+          result += ': by';
+        }
+        contributors.forEach((contributor, index) => {
+          const name = contributor.url
+            ? `[${contributor.name}](${contributor.url})`
+            : contributor.name;
+          if (index === contributors.length - 1 && contributors.length > 1) {
+            result += ` and ${name}`;
+          } else if (index === contributors.length - 2 || contributors.length === 1) {
+            result += ` ${name}`;
+          } else {
+            result += ` ${name},`;
+          }
+        });
+        result += `.`;
+      });
+      break;
+    }
+    case 'steam': {
+      result += '[list]';
+      Object.values(languages).forEach((contributors) => {
+        result += `\r\n[*]${contributors[0].langNameNative}`;
+        if (
+          contributors[0].langNameEnglish &&
+          contributors[0].langNameNative !== contributors[0].langNameEnglish
+        )
+          result += ` (${contributors[0].langNameEnglish})`;
+        if (contributors.length > 1) {
+          result += ': Community contributions by';
+        } else if (contributors[0].name !== 'Raphiiko') {
+          result += ': Community contribution by';
+        } else {
+          result += ': by';
+        }
+        contributors.forEach((contributor, index) => {
+          const name = contributor.name;
+          if (index === contributors.length - 1 && contributors.length > 1) {
+            result += ` and ${name}`;
+          } else if (index === contributors.length - 2 || contributors.length === 1) {
+            result += ` ${name}`;
+          } else {
+            result += ` ${name},`;
+          }
+        });
+        result += '.';
+      });
+      result += '\r\n[/list]';
+      break;
+    }
+  }
+  return result.trim();
+}
+
 function generateMarkdownReadmes(langData) {
   const template = fs.readFileSync('./docs/readmes/src/readme_template.md').toString();
   for (const { lang, tokens, texts } of langData) {
@@ -105,6 +189,10 @@ function generateMarkdownReadmes(langData) {
     Object.entries(tokens).forEach(([key, value]) => {
       localized = localized.replaceAll(`{{token.${key}}}`, value);
     });
+    localized = localized.replaceAll(
+      '{{TRANSLATION_CONTRIBUTORS_LIST}}',
+      getTranslationContributors('markdown')
+    );
     fs.writeFileSync(`./docs/readmes/generated/README_${lang.toUpperCase()}.md`, localized);
   }
 }
@@ -124,12 +212,13 @@ function generateSteamStoreDescriptions(langData) {
       sanitizedValue = sanitizedValue.replace(/<a\b[^>]*>(.*?)<\/a>/gi, '$1');
       // Remove markdown links
       sanitizedValue = sanitizedValue.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '$1');
+
       // Replace html and markdown formatting
       sanitizedValue = sanitizedValue
         .replaceAll(/\*\*(.+)\*\*/g, '[b]$1[/b]')
         .replaceAll(/_(.+)_/g, '[i]$1[/i]')
         .replaceAll('<MARKDOWN-BR>', ' ')
-        .replaceAll('<br>', '\n')
+        .replaceAll(/<br\s*\/?>/g, '\n')
         .replaceAll('<ul>', '[list]')
         .replaceAll('</ul>', '[/list]')
         .replaceAll(/\s*<li>\s*/g, '\n[*]')
@@ -138,13 +227,18 @@ function generateSteamStoreDescriptions(langData) {
         .replaceAll('</b>', '[/b]')
         .replaceAll('<i>', '[i]')
         .replaceAll('</i>', '[/i]')
-        .replaceAll(/(\r\n|\r|\n){3,}/g, '\n\n')
-        .replaceAll('\r', '');
+        .replaceAll(/\n*<\/?(table|tr|td)(\s+colspan="[0-9]+")?>\n*/g, '')
+        .replaceAll('\r', '')
+        .replaceAll(/(\r\n|\r|\n){1,}\s+(\r\n|\r|\n){1,}/g, '\n');
       localizedDescription = localizedDescription.replaceAll(key, sanitizedValue);
     });
     Object.entries(tokens).forEach(([key, value]) => {
       localizedDescription = localizedDescription.replaceAll(`{{token.${key}}}`, value);
     });
+    localizedDescription = localizedDescription.replaceAll(
+      '{{TRANSLATION_CONTRIBUTORS_LIST}}',
+      getTranslationContributors('steam')
+    );
     const output = JSON.parse(JSON.stringify(outputTemplate));
     output['app[content][about]'] = localizedDescription;
     output['language'] = tokens['steamLang'];

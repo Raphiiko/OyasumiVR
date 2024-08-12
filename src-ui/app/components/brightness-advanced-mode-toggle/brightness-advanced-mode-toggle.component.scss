@@ -1,0 +1,46 @@
+.advanced-toggle {
+  font-size: 0.6em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: var(--color-surface-0);
+  border-radius: var(--surface-border-radius);
+
+  &-clickable {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5em 0.75em;
+    transition: all 0.15s ease;
+    cursor: pointer;
+
+    &:active {
+      opacity: 0.75;
+    }
+  }
+
+  .help-icon {
+    font-size: 1.2em;
+    color: var(--color-text-3);
+    transition: all 0.15s ease;
+    line-height: 0;
+    padding: 0.5em 0.75em 0.5em 0;
+
+    &:hover {
+      cursor: pointer;
+      color: var(--color-text-2);
+    }
+
+    &:active {
+      color: var(--color-text-3);
+    }
+  }
+
+  span {
+    white-space: nowrap;
+  }
+
+  label {
+    margin-right: 0.5em;
+  }
+}

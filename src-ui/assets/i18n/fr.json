@@ -54,25 +54,8 @@
     "whitelist": "Liste blanche"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "brightness": {
-        "title": "Changer la luminosité pour"
-      },
-      "onSleepDisable": {
-        "title": "Quand je me réveille"
-      },
-      "onSleepEnable": {
-        "title": "Quand je vais dormir"
-      },
-      "sleepAutomations": "Automatisations de sommeil",
-      "transition": {
-        "description": "Transitionne en douceur vers la luminosité paramétrée",
-        "title": "Ajuster la luminosité graduellement"
-      },
-      "transitionTime": {
-        "description": "En combien de temps la transition de luminosité s'effectue",
-        "title": "Temps de transition"
-      }
+    "brightness": {
+      "title": "Changer la luminosité pour"
     },
     "title": "Automatisation de luminosité"
   },
@@ -85,9 +68,6 @@
     }
   },
   "comp": {
-    "brightness-control-modal": {
-      "automationsTooltip": "Automatisation de luminosité"
-    },
     "confirm-modal": {
       "defaultTitle": "Confirmer"
     },
@@ -158,12 +138,6 @@
             "set": "Limite de consommation pour ''{device}'' définie à {limit}"
           }
         },
-        "hardwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          }
-        },
         "msiAfterburnerProfileSet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
@@ -178,12 +152,6 @@
           "title": {
             "auto": "Résolution d'affichage de SteamVR passée à 'auto'",
             "custom": "Résolution d'affichage de SteamVR passée à {value}"
-          }
-        },
-        "simpleBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
           }
         },
         "sleepDetectorEnableCancelled": {
@@ -216,12 +184,6 @@
             "osc-control": "Le mode sommeil a été activé via OSC"
           },
           "title": "Mode sommeil activé"
-        },
-        "softwareBrightnessChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "Car le mode sommeil a été désactivé",
-            "SLEEP_MODE_ENABLED": "Car le mode sommeil a été activé"
-          }
         },
         "statusChangedOnPlayerCountChange": {
           "reason": {
@@ -824,24 +786,26 @@
     "title": "Détection de sommeil"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Changer votre statut pour",
-      "title": "A la limite ou au delà"
-    },
-    "behaviourWarning": "Les changement de statut par OyasumiVR ne sont pas visibles par le joueur. Même pour les autres joueurs, il peut y avoir un délai avant la mise à jour du statut. Cela est dû à une limitation de VRChat et ne peut pas être corrigé par OyasumiVR.",
     "behaviourWarningFAQ": "Vous pouvez trouver réponse à vos questions sur le changement de statut ici:\n\nQ: Est-ce que les demandes seront automatiquement acceptées, même si VRChat ne montre pas que je suis en statut 'bleu'?\nR:Si OyasumiVR change votre statut à 'bleu' (join me), le programme prendra la main et acceptera automatiquement les requêtes que vous recevez.\n\nQ:Les joueurs ne peuvent pas me rejoindre car mon statut ne se met pas à jour pour eux.\nR: Les mises à jour de statut peuvent avoir un délai avant d'être affichées aux autres utilisateurs. S'ils veulent vous rejoindre mais ne peuvent pas, ils peuvent forcer la mise à jour de votre statut en ouvrant votre profil dans le menu principal.",
-    "belowLimit": {
-      "description": "Changer votre statut pour",
-      "title": "Sous la limite"
-    },
-    "description": "OyasumiVR peut limiter le nombre de personnes vous rejoignant en changeant votre statut\n      basé sur le nombre de joueurs dans votre instance.",
-    "disableToEdit": "Merci de désactiver les automatisations de statut avant tout changement.",
-    "enable": "Activer les automatisations de statut",
-    "exampleUse": "Exemple: Lorsque quelqu'un vous rejoint, votre statut sera changé d'orange à rouge.\n Lorsqu'une personne quitte votre instance et vous vous retrouvez seul(e), votre statut sera automatiquement changé en bleu pour que quelqu'un d'autre puisse vous rejoindre.",
     "moreInfo": "Plus d'informations",
-    "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
-    "playerLimit": "Limite de joueurs",
-    "playerLimitLabel": "{count, plural, one {1 jouer} other {# joueurs}}",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Changer votre statut pour"
+        },
+        "title": "A la limite ou au delà"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Changer votre statut pour"
+        },
+        "title": "Sous la limite"
+      },
+      "description": "OyasumiVR peut limiter le nombre de personnes vous rejoignant en changeant votre statut\n      basé sur le nombre de joueurs dans votre instance.",
+      "onlyIfSleepModeEnabled": "Seulement quand le mode sommeil est activé",
+      "playerLimit": "Limite de joueurs",
+      "playerLimitLabel": "{count, plural, one {1 jouer} other {# joueurs}}"
+    },
     "title": "Automatisations de statut"
   },
   "systemMicMuteAutomations": {

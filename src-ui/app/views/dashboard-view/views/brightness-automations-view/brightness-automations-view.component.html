@@ -1,40 +1,9 @@
 <div class="pane">
   <div class="pane-title">
     <span translate>brightness-automations.title</span>
-    <div class="advanced-toggle">
-      <div class="advanced-toggle-clickable" (click)="toggleAdvancedMode()">
-        <label class="switch-toggle">
-          <input type="checkbox" [checked]="advancedMode" disabled />
-          <span class="switch-toggle-slider"></span>
-        </label>
-        <span @hshrink *ngIf="!advancedMode" translate>brightness-automations.mode.simple</span>
-        <span @hshrink *ngIf="advancedMode" translate>brightness-automations.mode.advanced</span>
-      </div>
-      <i class="material-icons-round help-icon" (click)="showModeInfoModal()">help</i>
-    </div>
-  </div>
-  <div class="tab-bar">
-    <div
-      class="tab"
-      [class.active]="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
-      (click)="activeTab = 'BRIGHTNESS_AUTOMATIONS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.automations</div>
-    </div>
-    <div
-      class="tab"
-      [class.active]="activeTab === 'HMD_SETTINGS'"
-      (click)="activeTab = 'HMD_SETTINGS'"
-    >
-      <div class="tab-label" translate>brightness-automations.tabs.hmdSettings</div>
-    </div>
+    <app-brightness-advanced-mode-toggle></app-brightness-advanced-mode-toggle>
   </div>
   <div class="pane-content">
-    <app-brightness-automations-tab
-      [advancedMode]="advancedMode"
-      *ngIf="activeTab === 'BRIGHTNESS_AUTOMATIONS'"
-    ></app-brightness-automations-tab>
-    <app-brightness-hmd-settings-tab *ngIf="activeTab === 'HMD_SETTINGS'">
-    </app-brightness-hmd-settings-tab>
+    <app-brightness-automations-tab></app-brightness-automations-tab>
   </div>
 </div>

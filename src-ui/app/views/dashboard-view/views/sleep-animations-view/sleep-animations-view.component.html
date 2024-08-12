@@ -284,5 +284,38 @@
         </div>
       </div>
     </div>
+    <div class="setting-category">
+      <h3 translate>oscAutomations.sleepingAnimations.options.general.advanced.title</h3>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate
+              >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadHotfix.title</span
+            >
+            <span
+              [innerHtml]="
+                'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadHotfix.description'
+                  | translate
+              "
+            ></span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.enableAvatarReloadOnFBTDisableHotfix"
+                (change)="
+                  updateConfig({
+                    enableAvatarReloadOnFBTDisableHotfix:
+                      !config.enableAvatarReloadOnFBTDisableHotfix
+                  })
+                "
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

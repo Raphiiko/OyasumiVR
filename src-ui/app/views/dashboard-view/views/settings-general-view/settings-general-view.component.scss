@@ -19,7 +19,7 @@
   display: inline-grid;
   grid-gap: 0.5em 1em;
   grid-auto-flow: column;
-  grid-template-rows: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 
   .radio-button-label {
     white-space: nowrap;

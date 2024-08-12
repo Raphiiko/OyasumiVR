@@ -1,5 +1,6 @@
 .pane {
-  max-height: calc(100vh - 4em);
+  margin-top: 16px;
+  max-height: calc(100vh - 4em - 32px);
 }
 
 .pane-content {
@@ -35,6 +36,7 @@
     font-weight: 700;
     color: var(--color-caution);
   }
+
   &-body {
     white-space: pre;
   }

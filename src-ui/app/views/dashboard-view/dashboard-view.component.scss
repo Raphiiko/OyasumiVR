@@ -10,7 +10,7 @@
   grid-template-columns: 225px 1fr;
   grid-template-rows: minmax(0, 1fr);
   grid-gap: 1em;
-  padding: 1em;
+  padding: 0 1em 1em 1em;
   height: 100%;
   width: 100%;
   overflow: hidden;
@@ -32,6 +32,7 @@
   z-index: -1;
   opacity: 0.1;
   overflow: hidden;
+  border-radius: var(--window-border-radius);
 
   img {
     width: 100%;

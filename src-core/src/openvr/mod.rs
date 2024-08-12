@@ -7,6 +7,7 @@ mod gesture_detector;
 mod models;
 mod sleep_detector;
 mod supersampling;
+mod colortemp_analog;
 
 use crate::{
     globals::STEAM_APP_KEY,
@@ -45,6 +46,7 @@ lazy_static! {
     static ref OVR_STATUS: Mutex<OpenVRStatus> = Mutex::new(OpenVRStatus::Inactive);
     static ref OVR_ACTIVE: Mutex<bool> = Mutex::new(false);
     static ref OVR_INPUT_CONTEXT: Mutex<OpenVRInputContext> = Mutex::default();
+    static ref OVR_INIT_DELAY_FIX: Mutex<bool> = Mutex::new(false);
 }
 
 pub async fn init() {
@@ -76,6 +78,12 @@ pub async fn task() {
                 }
                 // Update the status
                 update_status(OpenVRStatus::Initializing).await;
+                // If we need to delay the initialization, do so
+                if *OVR_INIT_DELAY_FIX.lock().await {
+                    tokio::time::sleep(Duration::from_secs(5)).await;
+                } else {
+                    tokio::time::sleep(Duration::from_secs(1)).await;
+                }
                 // Try to initialize OpenVR
                 let ctx = match ovr::Context::init(
                     ovr::sys::EVRApplicationType::VRApplication_Background,

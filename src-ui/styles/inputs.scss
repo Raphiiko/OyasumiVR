@@ -9,6 +9,7 @@
   height: 1.5em;
   border-radius: 1.5em;
   overflow: hidden;
+  transition: all 0.15s ease;
 
   input {
     opacity: 0;
@@ -232,6 +233,10 @@ input {
   }
 }
 
+input[type='time'] {
+  text-align: center;
+}
+
 input[type='number'],
 input[type='text'],
 input[type='password'],
@@ -242,9 +247,15 @@ input[type='time'] {
   padding: 0.5em;
   background: var(--color-surface-3);
   color: var(--color-text-1);
+  transition: all 0.15s ease;
 
   &.small {
     height: 2.5em;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 }
 

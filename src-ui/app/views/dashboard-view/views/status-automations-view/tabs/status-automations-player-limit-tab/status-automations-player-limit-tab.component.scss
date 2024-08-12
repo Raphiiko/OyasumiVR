@@ -1,0 +1,59 @@
+.alert {
+  &:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    span {
+      flex: 1;
+    }
+
+    button {
+      flex-shrink: 0;
+    }
+  }
+}
+
+.limit-setting {
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  app-player-count-sleep-visualization {
+    margin-bottom: 1em;
+  }
+
+  &-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    &-slider {
+      flex: 1;
+    }
+
+    &-numeric-input {
+      margin-left: 1em;
+      flex-shrink: 0;
+    }
+  }
+
+  &-description {
+    text-align: center;
+  }
+}
+
+input[type='text'],
+.status-dropdown {
+  width: 12em;
+  font-size: 1em;
+}
+
+input[type='text'] {
+  background: var(--color-surface-2);
+}

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { cloneDeep } from 'lodash';
+
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   TurnOffLighthousesOnSteamVRStopAutomationConfig,
@@ -27,7 +27,7 @@ import { LighthouseDevice } from '../../models/lighthouse-device';
   providedIn: 'root',
 })
 export class TurnOffLighthousesOnSteamVRStopAutomationService {
-  config: TurnOffLighthousesOnSteamVRStopAutomationConfig = cloneDeep(
+  config: TurnOffLighthousesOnSteamVRStopAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_LIGHTHOUSES_ON_STEAMVR_STOP
   );
 
@@ -63,7 +63,9 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
           this.appSettings.settings.pipe(map((s) => s.lighthousePowerOffState))
         );
         const devices = (await firstValueFrom(this.lighthouse.devices)).filter(
-          (d) => d.powerState === 'on' && !this.lighthouse.isDeviceIgnored(d)
+          (d) =>
+            (d.powerState === 'on' || d.powerState === 'unknown') &&
+            !this.lighthouse.isDeviceIgnored(d)
         );
         if (devices.length) {
           this.eventLog.logEvent({
@@ -72,8 +74,8 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
             devices: 'ALL',
             state: powerOffState,
           } as EventLogLighthouseSetPowerState);
+          devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, powerOffState));
         }
-        devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, powerOffState));
       });
     // Listen for newly discovered lighthouses
     this.lighthouse.devices
@@ -97,23 +99,17 @@ export class TurnOffLighthousesOnSteamVRStopAutomationService {
       .subscribe();
   }
 
-  private async handleNewDevice(device: LighthouseDevice, attempt = 0) {
+  private async handleNewDevice(device: LighthouseDevice) {
     if (!this.config.enabled) return;
     if ((await firstValueFrom(this.openvr.status)) !== 'INACTIVE') return;
     switch (device.powerState) {
+      case 'unknown':
       case 'on':
       case 'booting': {
         const offPowerState = await firstValueFrom(
           this.appSettings.settings.pipe(map((settings) => settings.lighthousePowerOffState))
         );
         await this.lighthouse.setPowerState(device, offPowerState);
-        break;
-      }
-      case 'unknown': {
-        // Attempt again in two seconds
-        if (attempt < 5) {
-          setTimeout(() => this.handleNewDevice(device, attempt + 1), 2000);
-        }
         break;
       }
       case 'sleep':

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  debounceTime,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -17,7 +18,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   BigscreenBeyondRgbControlAutomationsConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { CancellableTask } from '../../utils/cancellable-task';
@@ -30,7 +31,7 @@ import { EventLogBSBLedChanged } from '../../models/event-log-entry';
 })
 export class BigscreenBeyondLedAutomationService {
   private connected = new BehaviorSubject(false);
-  private config: BigscreenBeyondRgbControlAutomationsConfig = cloneDeep(
+  private config: BigscreenBeyondRgbControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_RGB_CONTROL
   );
   private transitionTask?: CancellableTask;
@@ -64,14 +65,24 @@ export class BigscreenBeyondLedAutomationService {
         )
       )
       .subscribe();
+    // Handle LED color when the HMD is being connected
+    this.connected
+      .pipe(distinctUntilChanged(), debounceTime(500), filter(Boolean))
+      .subscribe(() => this.onHmdConnect());
     // Setup the automations
     this.sleepService.mode
       .pipe(distinctUntilChanged(), skip(1))
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
-    this.connected.pipe(filter(Boolean), distinctUntilChanged()).subscribe(async () => {
-      await this.onSleepModeChange(await firstValueFrom(this.sleepService.mode));
-    });
+  }
+
+  private async onHmdConnect() {
+    const sleepMode = await firstValueFrom(this.sleepService.mode);
+    if (sleepMode && this.config.onSleepEnable) {
+      await this.setLedColor(this.config.onSleepEnableRgb, false);
+    } else if (!sleepMode && this.config.onSleepDisable) {
+      await this.setLedColor(this.config.onSleepDisableRgb, false);
+    }
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
@@ -82,26 +93,26 @@ export class BigscreenBeyondLedAutomationService {
         reason: 'SLEEP_MODE_ENABLED',
         color: this.config.onSleepEnableRgb,
       } as EventLogBSBLedChanged);
-      await this.setLedColor(this.config.onSleepEnableRgb);
+      await this.setLedColor(this.config.onSleepEnableRgb, false);
     } else if (!sleepMode && this.config.onSleepDisable) {
       this.eventLog.logEvent({
         type: 'bsbLedChanged',
         reason: 'SLEEP_MODE_DISABLED',
         color: this.config.onSleepDisableRgb,
       } as EventLogBSBLedChanged);
-      await this.setLedColor(this.config.onSleepDisableRgb);
+      await this.setLedColor(this.config.onSleepDisableRgb, false);
     }
   }
 
   private async onSleepPreparation() {
     if (!this.connected.value) return;
     if (this.config.onSleepPreparation) {
-      await this.setLedColor(this.config.onSleepPreparationRgb);
       this.eventLog.logEvent({
         type: 'bsbLedChanged',
         reason: 'SLEEP_PREPARATION',
         color: this.config.onSleepPreparationRgb,
       } as EventLogBSBLedChanged);
+      await this.setLedColor(this.config.onSleepPreparationRgb, false);
     }
   }
 

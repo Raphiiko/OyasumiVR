@@ -16,7 +16,7 @@ import { TelemetryService } from 'src-ui/app/services/telemetry.service';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { cloneDeep } from 'lodash';
+
 import { LANGUAGES } from '../../../../globals';
 import { vshrink } from '../../../../utils/animations';
 import {
@@ -32,7 +32,7 @@ import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
   animations: [vshrink()],
 })
 export class SettingsGeneralViewComponent implements OnInit {
-  appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   languages = LANGUAGES;
   lighthouseConsoleStatus: ExecutableReferenceStatus = 'UNKNOWN';
   lighthouseConsolePathAlert?: {
@@ -41,7 +41,7 @@ export class SettingsGeneralViewComponent implements OnInit {
     loadingIndicator?: boolean;
   };
   lighthouseConsolePathInputChange: Subject<string> = new Subject();
-  telemetrySettings: TelemetrySettings = cloneDeep(TELEMETRY_SETTINGS_DEFAULT);
+  telemetrySettings: TelemetrySettings = structuredClone(TELEMETRY_SETTINGS_DEFAULT);
   lighthousePowerOffModeOptions: SelectBoxItem[] = [
     {
       id: 'standby',
@@ -195,10 +195,6 @@ export class SettingsGeneralViewComponent implements OnInit {
 
   setTelemetryEnabled(enabled: boolean) {
     this.telemetry.updateSettings({ enabled });
-  }
-
-  setOverlayGpuFix(enabled: boolean) {
-    this.settingsService.updateSettings({ overlayGpuFix: enabled });
   }
 
   setExitInSystemTray(exitInSystemTray: boolean) {

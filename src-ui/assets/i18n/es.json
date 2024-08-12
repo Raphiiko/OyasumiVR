@@ -104,84 +104,13 @@
     "whitelist": "Jugador Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Si el modo de suspensión está inactivo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicie.",
-          "onSleepEnable": "Si el modo de suspensión está activo, establece este valor de brillo directamente cuando SteamVR u OyasumiVR se inicien."
-        },
-        "title": "Aplicar brillo al iniciar"
-      },
-      "brightness": {
-        "title": "Cambia el brillo a"
-      },
-      "copyBrightness": "Copia actual\nvalor de luminosidad",
-      "description": "Haz que OyasumiVR ajuste automáticamente el brillo de tu casco de RV en distintos momentos, como cuando te vas a dormir o cuando te despiertas.",
-      "hardwareBrightness": {
-        "description": "Ajusta el brillo de la pantalla.",
-        "title": "Cambia el brillo del hardware a"
-      },
-      "onSleepDisable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me despierto"
-      },
-      "onSleepEnable": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me voy a dormir"
-      },
-      "onSleepPreparation": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando me preparo para dormir"
-      },
-      "onStartup": {
-        "description": "Ajustar el brillo",
-        "title": "Cuando empiece OyasumiVR o SteamVR"
-      },
-      "sleepAutomations": "Automatizaciones del sueño",
-      "sleepPreparation": {
-        "description": "Puedes prepararte para irte a dormir pulsando un botón en la superposición de OyasumiVR. El botón para esto se mostrará cuando tengas una o más automatizaciones de preparación para dormir activas, como esta. Utilízalo para empezar a atenuar el brillo antes de quedarte dormido.",
-        "title": "Preparación para dormir"
-      },
-      "softwareBrightness": {
-        "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
-        "title": "Cambia el brillo del software a"
-      },
-      "startupAutomations": "Automatizaciones de arranque",
-      "transition": {
-        "description": "Transición suave al valor de brillo deseado",
-        "title": "Ajuste el brillo gradualmente"
-      },
-      "transitionTime": {
-        "description": "Cuánto tiempo debería tardar la transición a la nueva configuración de brillo.",
-        "title": "Tiempo de transición"
-      }
+    "brightness": {
+      "title": "Cambia el brillo a"
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
-          "title": "Seguridad del ventilador Overdrive",
-          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
-        },
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "permitRiskRange": {
-          "description": "Impide ajustar el brillo por encima del 150%.",
-          "title": "Limitar a niveles de brillo seguros",
-          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
-        },
-        "title": "Más allá de la pantalla grande"
-      },
-      "description": "Aquí encontrarás cualquier ajuste relacionado con el brillo para tu casco de RV específico.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
-          "title": "Brillo máximo"
-        },
-        "title": "Valve Index"
-      }
+    "copyBrightness": "Copia actual\nvalor de luminosidad",
+    "hardwareBrightness": {
+      "description": "Ajusta el brillo de la pantalla.",
+      "title": "Cambia el brillo del hardware a"
     },
     "mode": {
       "advanced": "Modo avanzado",
@@ -191,9 +120,9 @@
       "message": "OyasumiVR dispone de dos métodos para controlar el brillo de tu casco de RV: Control por software y control por hardware:\n\nEl control por software está disponible para todos los cascos. Ajusta el brillo de tu casco de RV ajustando el brillo de la imagen.\n\nEl control por hardware sólo está disponible para los cascos compatibles (Valve Index, Bigscreen Beyond). Ajusta el brillo de la pantalla de tus cascos directamente dentro del rango soportado.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo por software y por hardware, o sólo el brillo por software si el brillo por hardware no está soportado.\n\nSi prefieres el control directo, el modo avanzado te permite controlar tanto el brillo del software como el del hardware por separado, permitiéndote establecer los valores exactos de brillo para cada uno.",
       "title": "Modo de control de brillo"
     },
-    "tabs": {
-      "automations": "Automatizaciones",
-      "hmdSettings": "Ajustes HMD"
+    "softwareBrightness": {
+      "description": "Ajusta el brillo de la imagen mostrada en tu casco de realidad virtual",
+      "title": "Cambia el brillo del software a"
     },
     "title": "Automatización del brillo"
   },
@@ -214,7 +143,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automatización del brillo",
       "brightness": "Brillo",
       "hardwareBrightness": "Hardware Brillo",
       "softwareBrightness": "Software Brillo"
@@ -412,8 +340,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivad",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -528,8 +454,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Como el modo de sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Como el modo de sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -575,8 +499,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Cuando el modo sueño estaba desactivado",
-            "SLEEP_MODE_ENABLED": "Cuando el modo sueño estaba activado",
             "SLEEP_PREPARATION": "Mientras te preparabas para dormir"
           },
           "title": {
@@ -933,9 +855,6 @@
     },
     "turningOffTrackers": {
       "content": "Apagar los trackers"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Tu estado de VRChat se ha establecido en ''{newStatus}''"
     }
   },
   "oscAutomations": {
@@ -1024,9 +943,6 @@
           "title": "Automatizaciones de estado"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes, plural, one {1 minuto} other {# minutos}}",
-          "seconds": "{seconds, plural, one {1 segundo} other {# segundos}}",
-          "subtitle": "Al dormir durante {time}",
           "title": "Apagado automático"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1228,6 +1144,10 @@
           "description": "Al desactivar esta opción, se desactivan los servidores OSC y OSCQuery integrados. Esta opción persiste entre reinicios. Tenga en cuenta que varias características de OyasumiVR dejarán de funcionar si desactiva esta opción, sin advertencias. Esta opción existe puramente para propósitos de depuración y no debe ser desactivada durante el uso general.",
           "title": "Habilitar servidores OSC y OSCQuery"
         },
+        "overlayGpuFix": {
+          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición.",
+          "title": "Corrección de gráficos para SteamVR Overlay"
+        },
         "title": "Correcciones y solución de problemas",
         "vrManifestReregister": {
           "action": "Retregistro manifiesto",
@@ -1351,6 +1271,32 @@
         "title": "Idiomas y traducción"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forzar el ventilador al 100% con valores de luminosidad superiores al 100%",
+          "title": "Seguridad del ventilador Overdrive",
+          "warning": "Esta función imita los parámetros de ventilador seguro del controlador oficial Bigscreen Beyond. Desactiva esta funcionalidad bajo tu propia responsabilidad."
+        },
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "permitRiskRange": {
+          "description": "Impide ajustar el brillo por encima del 150%.",
+          "title": "Limitar a niveles de brillo seguros",
+          "warning": "El fabricante no admite esta función.\n\nTenga en cuenta que podría dañar sus auriculares: Desactive esta función bajo su propia responsabilidad."
+        },
+        "title": "Más allá de la pantalla grande"
+      },
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limita el valor máximo de brillo que OyasumiVR establecerá.",
+          "title": "Brillo máximo"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR necesita privilegios de administrador para poder controlar los límites de potencia de tu GPU. Si habilitas esta opción, OyasumiVR te pedirá privilegios de administrador cuando se inicie.",
@@ -1392,13 +1338,6 @@
           "title": "Estado de apagado preferido"
         },
         "title": "Control de potencia de la estación base SteamVR"
-      },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición.",
-          "title": "Corrección de gráficos para SteamVR Overlay"
-        },
-        "title": "Miscellaneous"
       },
       "overlay": {
         "binding": {
@@ -1513,10 +1452,6 @@
             "description": "Recibe una notificación cuando OyasumiVR acepte automáticamente la solicitud de invitación de alguien.",
             "title": "Solicitud de invitación aceptada automáticamente"
           },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Recibe una notificación cuando OyasumiVR haya actualizado automáticamente tu estado en VRChat.",
-            "title": "Actualización del estado de VRChat (Automatización del límite de jugadores)"
-          },
           "SLEEP_MODE_DISABLED": {
             "description": "Recibir una notificación cuando se desactiva el modo de suspensión",
             "title": "Modo dormir desactivado"
@@ -1592,7 +1527,6 @@
       "message": "¿Estás seguro de que quieres activar la secuencia de apagado ahora mismo?",
       "title": "¿Estás seguro?"
     },
-    "description": "Si te gusta dormirte en RV, pero no quieres hacerlo durante toda la noche, puedes utilizar la secuencia de apagado de OyasumiVR. Esta función se apaga automáticamente cuando te has quedado dormido, para que puedas seguir durmiendo sin problemas fuera de la RV.",
     "noOptionsSelected": "Como no tienes ninguna acción seleccionada para ejecutar durante la secuencia de apagado, ejecutarla no tendrá ningún efecto. Para que esta función haga algo, elija al menos una de las opciones siguientes.",
     "overlay": {
       "cancel": "Cancelar ahora",
@@ -1629,7 +1563,6 @@
         "title": "Cerrar SteamVR"
       },
       "run": "Secuencia de ejecución",
-      "title": "Ajustes de apagado",
       "turnOffBaseStations": {
         "description": "Apaga las estaciones base que siguen activas",
         "title": "Apagar las estaciones base"
@@ -1648,14 +1581,12 @@
     },
     "title": "Secuencia de apagado",
     "triggers": {
-      "title": "Activadores automáticos",
       "whenAsleep": {
         "description": "Activar la secuencia de apagado cuando el modo de suspensión ha estado activado durante un cierto tiempo.",
         "title": "Activar cuando estoy dormido"
       },
       "whenAsleepDuration": {
-        "description": "Cuánto tiempo debe estar activo el modo de suspensión antes de que se ejecute la secuencia de apagado.",
-        "title": "Duración del sueño"
+        "description": "Cuánto tiempo debe estar activo el modo de suspensión antes de que se ejecute la secuencia de apagado."
       },
       "whenAsleepTimeWindow": {
         "description": "Permitir la desconexión sólo a determinadas horas del día",
@@ -1828,24 +1759,26 @@
     "title": "Animaciones para dormir"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Establezca su estado en",
-      "title": "En el límite o por encima"
-    },
-    "behaviourWarning": "Los cambios de estado de OyasumiVR no son visibles para el jugador. Incluso para otros jugadores, puede tardar un poco en mostrarse una actualización de estado. Esto es una limitación del VRChat y no puede ser arreglado por OyasumiVR.",
     "behaviourWarningFAQ": "Aquí puedes encontrar las respuestas a algunas preguntas que puedas tener sobre el comportamiento de cambio de estado:\n\nQ: ¿Puedo aceptar automáticamente las solicitudes de invitación, incluso si VRChat no muestra que estoy en azul? (join me), se encargará de aceptar automáticamente las solicitudes de invitación que reciba.\n\nQ: La gente no puede unirse a mí porque mi estado no se actualiza para ellos.\nA: Las actualizaciones de estado pueden tardar un poco en mostrarse a otros usuarios. Si quieren unirse a ti pero no pueden, pueden forzar la actualización de tu estado abriendo tu perfil en el menú principal.",
-    "belowLimit": {
-      "description": "Establece tu estado en",
-      "title": "Por debajo del límite"
-    },
-    "description": "OyasumiVR puede limitar la cantidad de personas que se unen a usted, mediante el establecimiento automático de su estado\n      en función del número de jugadores que haya en tu mundo.",
-    "disableToEdit": "Desactive las automatizaciones de estado antes de realizar cualquier cambio.",
-    "enable": "Activar automatizaciones de estado",
-    "exampleUse": "Ejemplo de uso: Cuando alguien se una a ti, ¡cambia automáticamente tu estado a naranja o rojo!\nCuando se vayan y vuelvas a estar solo, cambia automáticamente tu estado a azul para que otra persona pueda unirse a ti.",
     "moreInfo": "Más información",
-    "onlyIfSleepModeEnabled": "Sólo cuando el modo dormir está activado",
-    "playerLimit": "Límite de jugadores",
-    "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Establezca su estado en"
+        },
+        "title": "En el límite o por encima"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Establece tu estado en"
+        },
+        "title": "Por debajo del límite"
+      },
+      "description": "OyasumiVR puede limitar la cantidad de personas que se unen a usted, mediante el establecimiento automático de su estado\n      en función del número de jugadores que haya en tu mundo.",
+      "onlyIfSleepModeEnabled": "Sólo cuando el modo dormir está activado",
+      "playerLimit": "Límite de jugadores",
+      "playerLimitLabel": "{count, plural, one {1 jugador}, other {# jugadores}} (incluido tú)"
+    },
     "title": "Automatizaciones de estado"
   },
   "systemMicMuteAutomations": {

@@ -144,6 +144,11 @@ $background-color: var(--color-surface-2);
     }
   }
 
+  .monospace {
+    font-family: 'Fira Code', monospace !important;
+    transform: translateY(0.1em);
+  }
+
   span {
     display: flex;
     flex-direction: row;
@@ -240,6 +245,7 @@ $background-color: var(--color-surface-2);
 .steamvr-status,
 .brightness-simple,
 .bsb-fanctl,
+.cct-control,
 .heartrate {
   span:not(:last-child) {
     opacity: 0.5;
@@ -261,6 +267,7 @@ $background-color: var(--color-surface-2);
 
   .pill-icon {
     margin: 0;
+
     img {
       height: 1.2em;
     }
@@ -298,6 +305,16 @@ $background-color: var(--color-surface-2);
 
   &.active {
     border-color: var(--color-primary);
+  }
+}
+
+.cct-control {
+  .colortemp-icon {
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 999999px;
+    background: orange;
+    margin-right: 0.25em;
   }
 }
 
@@ -339,9 +356,9 @@ $background-color: var(--color-surface-2);
   }
   05% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
   10% {
@@ -349,16 +366,16 @@ $background-color: var(--color-surface-2);
   }
   50% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66,
-        $lowest + ($highest - $lowest) * 0.66
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66,
+      $lowest + ($highest - $lowest) * 0.66
     );
   }
   70% {
     transform: scale3d(
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33,
-        $lowest + ($highest - $lowest) * 0.33
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33,
+      $lowest + ($highest - $lowest) * 0.33
     );
   }
 }

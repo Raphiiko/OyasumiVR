@@ -4,6 +4,7 @@ import { AutomationConfigService } from './automation-config.service';
 import {
   asyncScheduler,
   BehaviorSubject,
+  combineLatest,
   delay,
   distinctUntilChanged,
   filter,
@@ -20,7 +21,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, ShutdownAutomationsConfig } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
@@ -29,10 +30,12 @@ import { invoke } from '@tauri-apps/api';
 import {
   EventLogShutdownSequenceCancelled,
   EventLogShutdownSequenceStarted,
+  EventLogShutdownSequenceStartedReason,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
 import { TranslateService } from '@ngx-translate/core';
+import { VRChatService } from './vrchat.service';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [
@@ -48,11 +51,14 @@ export const ShutdownSequenceStageOrder = [
   providedIn: 'root',
 })
 export class ShutdownAutomationsService {
-  private config: ShutdownAutomationsConfig = cloneDeep(
+  private config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   private sleepMode = false;
   private sleepModeLastSet = 0;
+  private aloneSince = 0;
+  private isAlone = false;
+  private wasNotAlone = false;
   private _stage = new BehaviorSubject<ShutdownSequenceStage>('IDLE');
   public stage = this._stage.asObservable();
   private cancelFlag = false;
@@ -66,7 +72,8 @@ export class ShutdownAutomationsService {
     private lighthouseConsole: LighthouseConsoleService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private vrchat: VRChatService
   ) {}
 
   async init() {
@@ -74,18 +81,45 @@ export class ShutdownAutomationsService {
     this.automationConfigService.configs
       .pipe(
         map((configs) => configs.SHUTDOWN_AUTOMATIONS),
-        tap((config) => (this.config = config)),
+        tap((config) => (this.config = config))
+      )
+      .subscribe();
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SHUTDOWN_AUTOMATIONS),
         // Reset the 'last set' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
         pairwise(),
-        filter(
-          ([oldConfig, newConfig]) =>
-            oldConfig.triggerOnSleep !== newConfig.triggerOnSleep ||
-            oldConfig.activationWindow !== newConfig.activationWindow ||
-            !isEqual(oldConfig.activationWindowStart, newConfig.activationWindowStart) ||
-            !isEqual(oldConfig.activationWindowEnd, newConfig.activationWindowEnd) ||
-            oldConfig.sleepDuration !== newConfig.sleepDuration
-        ),
+        filter(([oldConfig, newConfig]) => {
+          const keys: Array<keyof ShutdownAutomationsConfig> = [
+            'triggerOnSleep',
+            'triggerOnSleepDuration',
+            'triggerOnSleepActivationWindow',
+            'triggerOnSleepActivationWindowStart',
+            'triggerOnSleepActivationWindowEnd',
+          ];
+          return keys.some((key) => !isEqual(oldConfig[key], newConfig[key]));
+        }),
         tap(() => (this.sleepModeLastSet = Date.now()))
+      )
+      .subscribe();
+    this.automationConfigService.configs
+      .pipe(
+        map((configs) => configs.SHUTDOWN_AUTOMATIONS),
+        // Reset the 'last set' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
+        pairwise(),
+        filter(([oldConfig, newConfig]) => {
+          const keys: Array<keyof ShutdownAutomationsConfig> = [
+            'triggerWhenAlone',
+            'triggerWhenAloneDuration',
+            'triggerWhenAloneOnlyWhenSleepModeActive',
+            'triggerWhenAloneActivationWindow',
+            'triggerWhenAloneActivationWindowStart',
+            'triggerWhenAloneActivationWindowEnd',
+          ];
+          return keys.some((key) => !isEqual(oldConfig[key], newConfig[key]));
+        }),
+        filter(() => this.isAlone),
+        tap(() => (this.aloneSince = Date.now()))
       )
       .subscribe();
     // Track sleep mode being set
@@ -93,8 +127,24 @@ export class ShutdownAutomationsService {
       this.sleepMode = mode;
       this.sleepModeLastSet = Date.now();
     });
-    // Trigger when asleep long enough
+    // Track being alone
+    combineLatest([this.vrchat.world, this.vrchat.vrchatProcessActive])
+      .pipe(
+        tap(([world, active]) => {
+          if (world.playerCount > 1) this.wasNotAlone = true;
+          if (!active) this.wasNotAlone = false;
+        }),
+        map(([world, active]) => (active && world.loaded ? world.playerCount : 0)),
+        distinctUntilChanged(),
+        map((playerCount) => playerCount === 1 && this.wasNotAlone)
+      )
+      .subscribe((alone) => {
+        this.isAlone = alone;
+        if (alone) this.aloneSince = Date.now();
+      });
+    // Handle automated triggers
     await this.handleTriggerOnSleep();
+    await this.handleTriggerWhenAlone();
     // Trigger through overlay
     await listen('startShutdownSequence', () => {
       this.runSequence('MANUAL');
@@ -127,7 +177,7 @@ export class ShutdownAutomationsService {
     });
   }
 
-  async runSequence(reason: 'MANUAL' | 'HOTKEY' | 'SLEEP_TRIGGER') {
+  async runSequence(reason: EventLogShutdownSequenceStartedReason) {
     const stages = this.getApplicableStages();
     if (this._stage.value !== 'IDLE' || !stages.length) return;
     this.eventLog.logEvent({
@@ -148,21 +198,45 @@ export class ShutdownAutomationsService {
     interval(1000)
       .pipe(
         filter(() => this._stage.value === 'IDLE'),
+        filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerOnSleep),
         filter(() => this.sleepMode),
-        filter(() => Date.now() - this.sleepModeLastSet >= this.config.sleepDuration),
+        filter(() => Date.now() - this.sleepModeLastSet >= this.config.triggerOnSleepDuration),
         filter(
           () =>
-            !this.config.activationWindow ||
+            !this.config.triggerOnSleepActivationWindow ||
             this.isInActivationWindow(
-              this.config.activationWindowStart,
-              this.config.activationWindowEnd
+              this.config.triggerOnSleepActivationWindowStart,
+              this.config.triggerOnSleepActivationWindowEnd
             )
         ),
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )
       .subscribe(() => this.runSequence('SLEEP_TRIGGER'));
+  }
+
+  private async handleTriggerWhenAlone() {
+    interval(1000)
+      .pipe(
+        filter(() => this._stage.value === 'IDLE'),
+        filter(() => this.config.triggersEnabled),
+        filter(() => this.config.triggerWhenAlone),
+        filter(() => this.isAlone),
+        filter(() => Date.now() - this.aloneSince >= this.config.triggerWhenAloneDuration),
+        filter(
+          () =>
+            !this.config.triggerWhenAloneActivationWindow ||
+            this.isInActivationWindow(
+              this.config.triggerWhenAloneActivationWindowStart,
+              this.config.triggerWhenAloneActivationWindowEnd
+            )
+        ),
+        filter(() => this.config.triggerWhenAloneOnlyWhenSleepModeActive || !this.sleepMode),
+        // Only trigger once every 5 minutes at most
+        throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
+      )
+      .subscribe(() => this.runSequence('VRC_ALONE_TRIGGER'));
   }
 
   private isInActivationWindow(

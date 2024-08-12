@@ -243,6 +243,7 @@ public class OvrManager {
   {
     if (_dashboardOverlay != null)
     {
+
       CloseDashboard();
     }
 
@@ -268,6 +269,11 @@ public class OvrManager {
 
   public void ToggleDashboard(ETrackedControllerRole role)
   {
+    var index = OpenVR.System.GetTrackedDeviceIndexForControllerRole(role);
+    if (index is >= 1 and < OpenVR.k_unMaxTrackedDeviceCount)
+    {
+      OpenVR.System.TriggerHapticPulse(index, 0, 65535);
+    }
     if (_dashboardOverlay == null)
     {
       OpenDashboard(role);
@@ -404,5 +410,4 @@ public class OvrManager {
       Role = role;
     }
   }
-
 }

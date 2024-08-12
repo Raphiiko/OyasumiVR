@@ -15,12 +15,22 @@ import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
-import { cloneDeep, shuffle } from 'lodash';
+import { shuffle } from 'lodash';
 import { warn } from 'tauri-plugin-log-api';
+import translationContributors from '../../../../../../docs/translation_contributors.json';
 
 interface SupporterTier {
   name: string;
   supporters: string[];
+}
+
+interface TranslationContributor {
+  name: string;
+  url?: string;
+  langCode: string;
+  flagCode?: string;
+  langNameNative: string;
+  langNameEnglish: string;
 }
 
 @Component({
@@ -31,6 +41,7 @@ interface SupporterTier {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
+  protected translationContributors: TranslationContributor[] = translationContributors;
   private supportersScrolling = false;
 
   version?: string;
@@ -43,7 +54,28 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     'OYASUMIVR_SUPPORTERS'
   );
 
-  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {}
+  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {
+    // Change flags in translation contributors for CN compliance.
+    if (FLAVOUR === 'STEAM_CN') {
+      const cnComplianceFix = (author: TranslationContributor): TranslationContributor => {
+        if (author.flagCode === 'tw') author.flagCode = 'hk';
+        if (author.langCode === 'tw') author.langCode = 'hk';
+        return author;
+      };
+
+      this.translationContributors = this.translationContributors.map(cnComplianceFix);
+    }
+
+    // Rotate translation contributors matrix diagonally
+    function mirrorMatrixDiagonally<T>(arr: T[], columns: number): T[] {
+      const newArr = new Array<T>(arr.length);
+      const rows = Math.ceil(arr.length / columns);
+      for (let i = 0; i < arr.length; i++)
+        newArr[(i % rows) * columns + Math.floor(i / rows)] = arr[i];
+      return newArr;
+    }
+    this.translationContributors = mirrorMatrixDiagonally(this.translationContributors, 3);
+  }
 
   async ngOnInit() {
     this.version = await getVersion();
@@ -71,7 +103,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ignore failure, we'll just not show the list.
       }
     } else {
-      supporters = cloneDeep(supporters);
+      supporters = structuredClone(supporters);
       supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
       await this.supporterCache.set(supporters);
     }

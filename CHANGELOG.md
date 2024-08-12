@@ -9,15 +9,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Exposed HMD activity level over MQTT as "HMD On Head" (Experimental).
+- Color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
+- Color temperature control to the current brightness automations.
+- Sunset/Sunrise based automations for brightness and color temperature.
+- Option for the shutdown sequence being triggered by being alone to only trigger while the sleep mode is enabled.
+- Option for audio volume automations to apply on start.
+- OSC Scripts can now also write to VRChat parameters that have been automatically renamed by VRCFury or Modular Avatar
+- Optional workaround for VRChat not automatically reloading your avatar after all trackers have been turned off.
+
+### Changed
+
+- Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
+- (Headset specific) brightness and cct settings were moved to their own settings page.
+- OSC scripts will automatically convert spaces in addresses to underscores to match VRChat behaviour for parameter renaming.
+
+### Removed
+
+- Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
+
+## [1.13.3]
+
+### Fixed
+
+- Battery level based power automations turning off devices above the threshold
+- Certain types of selection in input fields (e.g. Ctrl+A) being blocked
+
+### Changed
+- Window titlebar icons
+
+## [1.13.2]
+
+### Fixed
+
+- The status message not updating when the visibility remained the same
+- The status message not setting to an empty value
+
+## [1.13.1]
+
+### Fixed
+
+- Some modals automatically closing right after opening them
+- Some modals being rendered incorrectly
+
+## [1.13.0]
+
+### Added
+
+- Integration with Home Assistant via MQTT
+- Function for VRChat player join/leave notifications
+- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
+- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
+- Option for changing your VRChat status description in the player limit status automations.
 - Option to load and save VRChat player lists as presets for automatic invite request acceptance.
 - Option to limit automatically accepting invite request based on the number of players in the world.
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
-- Function for VRChat player join/leave notifications
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
-- OVRToolkit as a notification provider
-- Integration with Home Assistant via MQTT
+- Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
+- Ukrainian language support (Community contribution by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/))
 - Additional configuration options for the sleep detector (controller presence, sleeping pose)
+- Options for forcing the power state of base stations (Right click the power button).
+- Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
+- Optional fix to delay initializing OyasumiVR with OpenVR.
+- OVRToolkit as a notification provider
+- Support for string parameters in OSC scripts (Community contribution by [Fanyatsu](https://fanyat.su/))
+- Support for sending multiple parameters in OSC scripts (Community contribution by [Fanyatsu](https://fanyat.su/))
 
 ### Changed
 
@@ -25,12 +82,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made device edit dialog always show the device serial number in its title.
 - Improved sleep detection by considering the sleeping pose
 - Improved layouts for sleep detection configuration views
+- When the overlay menu is opened while the controller is not tracked, the overlay will open in front of you instead.
+- Custom window titlebar
 
 ### Fixed
 
 - CJK fonts not properly being loaded in some parts of the overlay UI
 - Brightness overlay not covering full view of some high FOV headsets (e.g. Pimax)
 - Bigscreen Beyond fan speed often being reset
+- VRChat accounts with 2FA being logged out after 7 days. (Now 30 days, if you store credentials)
+- The overlay menu sometimes not showing when being opened
+- Improved handling of failed configuration migrations
 
 ## [1.12.8]
 
@@ -183,7 +245,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Automations for controlling the volume and mute state of all system audio devices.
-- Russian language support (Community contribution by [Kanjir0](https://twitter.com/Kanjiro_vrc))
+- Russian language support (Community contribution by [Kanjir0](https://x.com/Kanjiro_vrc))
 - Hardware mode for the overlay mic mute indicator's voice activity, for use with other games than VRChat.
 - A credential saving option for remembering your VRChat credentials.
 - Automation for disabling the sleep mode after its been enabled for a specified amount of time.
@@ -213,7 +275,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Updated missing and improved existing Simplified Chinese translations (by [雾雨花精灵](https://github.com/flower-elf)
-  and [i0nTempest](https://twitter.com/i0ntempest)).
+  and [i0nTempest](https://x.com/i0ntempest)).
 - Default bindings sometimes triggering haptics for some users.
 - Improved search performance in the friend selection modal for automatically accepting invite requests.
 
@@ -258,8 +320,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Deadlock in logic for reading possible input bindings.
-- Updated missing Spanish translations (by [aacal666](https://twitter.com/aacalde666))
-- Updated missing Indonesian translations (by [a9ito](https://twitter.com/a9ito))
+- Updated missing Spanish translations (by [aacal666](https://x.com/aacalde666))
+- Updated missing Indonesian translations (by [a9ito](https://x.com/a9ito))
 
 ## [1.10.1]
 
@@ -273,7 +335,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Missing Japanese translations (by [なき](https://twitter.com/NoYu_idea)).
+- Missing Japanese translations (by [なき](https://x.com/NoYu_idea)).
 - Missing Dutch translations.
 - UI issues with some duration unit selectors.
 
@@ -333,12 +395,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Allow limiting sleep detection to certain hours of the day.
 - Automation toggle for sleep detection (by [góngo](https://github.com/TheMrGong))
 - OSC address for toggling the sleep detection automation.
-- Spanish language support (Community contribution by [aacal666](https://twitter.com/aacalde666))
-- Indonesian language support (Community contribution by [a9ito](https://twitter.com/a9ito))
+- Spanish language support (Community contribution by [aacal666](https://x.com/aacalde666))
+- Indonesian language support (Community contribution by [a9ito](https://x.com/a9ito))
 - Support for a release on [Steam](https://store.steampowered.com/)
 - VR Manifest for registering OyasumiVR with SteamVR.
 - Sleeping animations preset for GoGo Loco 1.8.0+
-- Cute drawings (by [Jun](https://twitter.com/JunHakase)) to the sleep toggle card in the overview
+- Cute drawings (by [Jun](https://x.com/JunHakase)) to the sleep toggle card in the overview
 
 ### Changed
 
@@ -497,7 +559,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Various improvements to the Japanese translations (by [なき](https://twitter.com/NoYu_idea))
+- Various improvements to the Japanese translations (by [なき](https://x.com/NoYu_idea))
 - Various small bugs
 
 ## [1.4.1]

@@ -12,6 +12,12 @@ use substring::Substring;
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
+pub async fn openvr_set_init_delay_fix(enabled: bool) {
+    *super::OVR_INIT_DELAY_FIX.lock().await = enabled;
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_devices() -> Vec<OVRDevice> {
     super::devices::get_devices().await
 }
@@ -58,6 +64,14 @@ pub async fn openvr_set_fade_distance(fade_distance: f32) -> Result<(), String> 
 #[oyasumivr_macros::command_profiling]
 pub async fn openvr_get_fade_distance() -> Result<f32, String> {
     super::chaperone::get_fade_distance().await
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
+pub async fn openvr_set_analog_color_temp(
+    temperature: Option<u32>,
+) -> Result<(f64, f64, f64), String> {
+    super::colortemp_analog::set_color_temp(temperature).await
 }
 
 #[tauri::command]

@@ -7,7 +7,7 @@ import {
   TurnOffDevicesOnSleepModeEnableAutomationConfig,
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { OVRDeviceClass } from '../../../../../../models/ovr-device';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -20,13 +20,13 @@ import { vshrink } from '../../../../../../utils/animations';
   animations: [vshrink()],
 })
 export class ControllersAndTrackersTabComponent implements OnInit {
-  protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = cloneDeep(
+  protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_SLEEP_MODE_ENABLE
   );
-  protected onChargeConfig: TurnOffDevicesWhenChargingAutomationConfig = cloneDeep(
+  protected onChargeConfig: TurnOffDevicesWhenChargingAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_WHEN_CHARGING
   );
-  protected onBatteryLevelConfig: TurnOffDevicesOnBatteryLevelAutomationConfig = cloneDeep(
+  protected onBatteryLevelConfig: TurnOffDevicesOnBatteryLevelAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.TURN_OFF_DEVICES_ON_BATTERY_LEVEL
   );
   protected activateSleepWhenControllersTurnedOff = false;

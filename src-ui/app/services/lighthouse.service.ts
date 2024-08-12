@@ -17,7 +17,6 @@ import {
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
-import { cloneDeep } from 'lodash';
 
 const DEFAULT_SCAN_DURATION = 8;
 export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
@@ -102,13 +101,18 @@ export class LighthouseService {
     await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
   }
 
-  public async setPowerState(device: LighthouseDevice, powerState: LighthouseDevicePowerState) {
-    if (powerState === device.powerState) return;
-    device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
-      ? powerState
-      : undefined;
-    this._devices.next(this._devices.value);
-    await invoke('lighthouse_set_device_power_state', { deviceId: device.id, powerState });
+  public async setPowerState(
+    device: LighthouseDevice,
+    powerState: LighthouseDevicePowerState,
+    force = false
+  ) {
+    if (!force) {
+      device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
+        ? powerState
+        : undefined;
+      this._devices.next(this._devices.value);
+    }
+    invoke('lighthouse_set_device_power_state', { deviceId: device.id, powerState });
     // Wait for state to change (timeout after 10 seconds)
     await firstValueFrom(
       merge(
@@ -183,7 +187,7 @@ export class LighthouseService {
 
   public async setDeviceNickname(device: LighthouseDevice, nickname: string) {
     const settings = await firstValueFrom(this.appSettings.settings);
-    const deviceNicknames = cloneDeep(settings.deviceNicknames);
+    const deviceNicknames = structuredClone(settings.deviceNicknames);
     nickname = nickname.trim();
     if (nickname) {
       deviceNicknames['LIGHTHOUSE_' + device.id] = nickname;
@@ -197,7 +201,7 @@ export class LighthouseService {
 
   async ignoreDevice(device: LighthouseDevice, ignore: boolean) {
     const settings = await firstValueFrom(this.appSettings.settings);
-    const ignoredLighthouses = cloneDeep(settings.ignoredLighthouses);
+    const ignoredLighthouses = structuredClone(settings.ignoredLighthouses);
     if (ignore && !ignoredLighthouses.includes(device.id)) ignoredLighthouses.push(device.id);
     else if (!ignore && ignoredLighthouses.includes(device.id))
       ignoredLighthouses.splice(ignoredLighthouses.indexOf(device.id), 1);

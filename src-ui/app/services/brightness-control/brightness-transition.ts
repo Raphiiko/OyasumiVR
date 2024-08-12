@@ -1,11 +1,11 @@
 import { CancellableTask } from '../../utils/cancellable-task';
 import { clamp, smoothLerp } from '../../utils/number-utils';
 import { info, warn } from 'tauri-plugin-log-api';
-import { SetBrightnessOptions, SetBrightnessReason } from './brightness-control-models';
+import { SetBrightnessOrCCTOptions, SetBrightnessOrCCTReason } from './brightness-control-models';
 
 interface BrightnessTransitionTaskOptions {
   frequency: number;
-  logReason: SetBrightnessReason | null;
+  logReason: SetBrightnessOrCCTReason | null;
 }
 
 const DEFAULT_BRIGHTNESS_TRANSITION_TASK_OPTIONS: BrightnessTransitionTaskOptions = {
@@ -20,7 +20,7 @@ export class BrightnessTransitionTask extends CancellableTask {
     public readonly type: 'HARDWARE' | 'SOFTWARE' | 'SIMPLE',
     private setBrightness: (
       percentage: number,
-      options?: Partial<SetBrightnessOptions>
+      options?: Partial<SetBrightnessOrCCTOptions>
     ) => Promise<void>,
     private getBrightness: () => Promise<number | undefined>,
     private getBrightnessBounds: () => Promise<[number, number]>,

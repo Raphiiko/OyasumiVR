@@ -5,7 +5,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   SleepingAnimationsAutomationConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import {
   combineLatest,
   debounceTime,
@@ -14,6 +14,7 @@ import {
   map,
   pairwise,
   startWith,
+  Subject,
 } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { SleepingPose } from '../../models/sleeping-pose';
@@ -25,9 +26,10 @@ import { getOscScriptDuration } from '../../utils/osc-script-utils';
   providedIn: 'root',
 })
 export class SleepingAnimationsAutomationService {
-  private config: SleepingAnimationsAutomationConfig = cloneDeep(
+  private config: SleepingAnimationsAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SLEEPING_ANIMATIONS
   );
+  private retrigger$ = new Subject<void>();
 
   constructor(
     private automationConfig: AutomationConfigService,
@@ -50,6 +52,8 @@ export class SleepingAnimationsAutomationService {
     combineLatest([
       // Pose changes
       this.sleep.pose,
+      // External retriggers
+      this.retrigger$.pipe(startWith(void 0)),
       // Retrigger when automation is enabled
       this.automationConfig.configs.pipe(
         map((configs) => configs.SLEEPING_ANIMATIONS.enabled),
@@ -86,19 +90,23 @@ export class SleepingAnimationsAutomationService {
         if (!this.config.enabled) return;
         if (this.config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) return;
         // Combine OSC scripts
-        const script: OscScript = { version: 1, commands: [] };
+        const script: OscScript = { version: 2, commands: [] };
+        // Foot unlock script
         const enableFootUnlock = !!(
-          this.config.releaseFootLockOnPoseChange &&
-          this.config.oscScripts.FOOT_UNLOCK &&
-          this.config.oscScripts.FOOT_UNLOCK
+          this.config.releaseFootLockOnPoseChange && this.config.oscScripts.FOOT_UNLOCK
+        );
+        const enableFootLock = !!(
+          this.config.releaseFootLockOnPoseChange && this.config.oscScripts.FOOT_LOCK
         );
         if (enableFootUnlock) script.commands.push(...this.config.oscScripts.FOOT_UNLOCK!.commands);
+        // Pose script
         let scriptTime = 0;
         if (this.config.oscScripts[pose]) {
           scriptTime = getOscScriptDuration(this.config.oscScripts[pose]!);
           script.commands.push(...this.config.oscScripts[pose]!.commands);
         }
-        if (enableFootUnlock) {
+        // Foot lock script
+        if (enableFootLock) {
           const minimumDelayRemainder = this.config.footLockReleaseWindow - scriptTime;
           if (minimumDelayRemainder > 0) {
             script.commands.push({ type: 'SLEEP', duration: minimumDelayRemainder });
@@ -146,5 +154,9 @@ export class SleepingAnimationsAutomationService {
 
   async forcePose(pose: SleepingPose) {
     this.sleep.forcePose(pose);
+  }
+
+  async retrigger() {
+    this.retrigger$.next();
   }
 }

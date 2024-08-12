@@ -1,4 +1,4 @@
-import { Component, DestroyRef } from '@angular/core';
+import { Component } from '@angular/core';
 import { message, open as openFile } from '@tauri-apps/api/dialog';
 import { readTextFile } from '@tauri-apps/api/fs';
 import {
@@ -27,13 +27,12 @@ import { relaunch } from '@tauri-apps/api/process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
-import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 import { SetDebugTranslationsRequest } from '../../../../../../src-grpc-web-client/overlay-sidecar_pb';
 import { OpenVRService } from 'src-ui/app/services/openvr.service';
 import { AppSettingsService } from '../../../../services/app-settings.service';
-import { OscService } from '../../../../services/osc.service';
 import { FLAVOUR } from '../../../../../build';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-settings-advanced-view',
@@ -60,6 +59,8 @@ export class SettingsAdvancedViewComponent {
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
   oscServerEnabled = true;
+  overlayGpuFix = false;
+  openVrInitDelayFix = false;
 
   constructor(
     private router: Router,
@@ -68,19 +69,13 @@ export class SettingsAdvancedViewComponent {
     private eventLogService: EventLogService,
     private ipcService: IPCService,
     protected openvr: OpenVRService,
-    private destroyRef: DestroyRef,
-    private settingsService: AppSettingsService,
-    private oscService: OscService
+    private settingsService: AppSettingsService
   ) {
-    this.settingsService.settings
-      .pipe(
-        takeUntilDestroyed(),
-        map((s) => s.oscServerEnabled),
-        distinctUntilChanged()
-      )
-      .subscribe((oscServerEnabled) => {
-        this.oscServerEnabled = oscServerEnabled;
-      });
+    this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
+      this.oscServerEnabled = settings.oscServerEnabled;
+      this.overlayGpuFix = settings.overlayGpuFix;
+      this.openVrInitDelayFix = settings.openVrInitDelayFix;
+    });
   }
 
   isPersistentStorageItemChecked(key: string) {
@@ -182,7 +177,7 @@ export class SettingsAdvancedViewComponent {
         },
       })
       .subscribe(async (data) => {
-        if (!data.confirmed) return;
+        if (!data?.confirmed) return;
         info('[Settings] User triggered clearing of persistent storage');
         let askForRelaunch = false;
         await Promise.all(
@@ -247,7 +242,7 @@ export class SettingsAdvancedViewComponent {
               cancelButtonText: 'settings.advanced.persistentData.relaunchModal.later',
             })
             .subscribe(async (data) => {
-              if (!data.confirmed) return;
+              if (!data?.confirmed) return;
               await relaunch();
             });
         }
@@ -332,5 +327,13 @@ export class SettingsAdvancedViewComponent {
     this.settingsService.updateSettings({
       oscServerEnabled: enabled,
     });
+  }
+
+  setOverlayGpuFix(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayGpuFix: enabled });
+  }
+
+  setOpenVrInitDelayFix(enabled: boolean) {
+    this.settingsService.updateSettings({ openVrInitDelayFix: enabled });
   }
 }

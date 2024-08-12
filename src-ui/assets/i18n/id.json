@@ -59,59 +59,19 @@
     "whitelist": "Whitelist Player"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Jika mode tidur tidak aktif, atur nilai kecerahan ini secara langsung saat SteamVR atau OyasumiVR dimulai.",
-          "onSleepEnable": "Jika mode tidur aktif, atur nilai kecerahan ini secara langsung saat SteamVR atau OyasumiVR dimulai."
-        },
-        "title": "Terapkan kecerahan saat startup"
-      },
-      "brightness": {
-        "title": "Atur Kecerahan ke"
-      },
-      "copyBrightness": "Salin nilai\nkecerahan saat ini",
-      "description": "Buat OyasumiVR secara otomatis menyesuaikan kecerahan headset VR Anda pada berbagai waktu, seperti saat Anda pergi tidur, atau saat Anda bangun.",
-      "onSleepDisable": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Ketika saya bangun"
-      },
-      "onSleepEnable": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Ketika saya mulai tidur"
-      },
-      "onSleepPreparation": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Saat aku bersiap untuk tidur"
-      },
-      "onStartup": {
-        "description": "Sesuaikan kecerahan",
-        "title": "Saat OyasumiVR atau SteamVR dimulai"
-      },
-      "sleepAutomations": "Otomatisasi Tidur",
-      "sleepPreparation": {
-        "description": "Anda bisa bersiap untuk tidur dengan menekan tombol di overlay OyasumiVR. Tombol ini akan ditampilkan ketika Anda mengaktifkan satu atau lebih otomatisasi saat persiapan tidur, seperti ini. Gunakan ini untuk mulai meredupkan kecerahan sebelum Anda tertidur.",
-        "title": "Persiapan Tidur"
-      },
-      "softwareBrightness": {
-        "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
-      },
-      "startupAutomations": "Otomatisasi Permulaan",
-      "transition": {
-        "description": "Transisi mulus ke nilai kecerahan yang Anda inginkan",
-        "title": "Atur kecerahan bertahap"
-      },
-      "transitionTime": {
-        "description": "Berapa lama waktu yang diperlukan untuk bertransisi ke pengaturan kecerahan yang baru",
-        "title": "Durasi transisi"
-      }
+    "brightness": {
+      "title": "Atur Kecerahan ke"
     },
+    "copyBrightness": "Salin nilai\nkecerahan saat ini",
     "mode": {
       "advanced": "Mode lanjutan",
       "simple": "Mode simpel"
     },
     "modeInfoModal": {
       "title": "Mode Kontrol Kecerahan"
+    },
+    "softwareBrightness": {
+      "description": "Menyesuaikan kecerahan gambar yang ditampilkan di headset VR Anda"
     },
     "title": "Automasi Kecerahan"
   },
@@ -132,7 +92,6 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Automasi Kecerahan",
       "brightness": "Kecerahan"
     },
     "confirm-modal": {
@@ -272,8 +231,6 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },
@@ -369,8 +326,6 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Saat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Saat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           },
           "title": {
@@ -413,8 +368,6 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Disaat mode tidur dimatikan",
-            "SLEEP_MODE_ENABLED": "Disaat mode tidur dinyalakan",
             "SLEEP_PREPARATION": "Saat Anda bersiap untuk tidur"
           }
         },
@@ -705,9 +658,6 @@
     },
     "turningOffTrackers": {
       "content": "Mematikan tracker Anda"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Status VRChat Anda telah diatur ke ''{newStatus}''"
     }
   },
   "oscAutomations": {
@@ -789,9 +739,6 @@
           "title": "Status Otomatisasi"
         },
         "shutdownAutomations": {
-          "minutes": "{minutes} menit",
-          "seconds": "{seconds} detik",
-          "subtitle": "Ketika tertidur selama {time}",
           "title": "Shutdown Otomatis"
         },
         "sleepModeEnableForSleepDetector": {
@@ -967,6 +914,12 @@
   },
   "settings": {
     "advanced": {
+      "fixes": {
+        "overlayGpuFix": {
+          "description": "Jika Anda mengalami masalah saat membuka overlay SteamVR, mengaktifkan opsi ini dapat memperbaiki masalah pada beberapa sistem (misalnya sistem dengan grafis hibrid). Mengubah opsi ini akan memulai ulang overlay.",
+          "title": "Perbaikan grafis untuk SteamVR Overlay"
+        }
+      },
       "logs": {
         "openFolder": {
           "action": "Buka folder log",
@@ -1094,13 +1047,6 @@
         },
         "title": "Kontrol Daya Base Station SteamVR"
       },
-      "miscellaneous": {
-        "overlayGpuFix": {
-          "description": "Jika Anda mengalami masalah saat membuka overlay SteamVR, mengaktifkan opsi ini dapat memperbaiki masalah pada beberapa sistem (misalnya sistem dengan grafis hibrid). Mengubah opsi ini akan memulai ulang overlay.",
-          "title": "Perbaikan grafis untuk SteamVR Overlay"
-        },
-        "title": "Lain-lain"
-      },
       "overlay": {
         "binding": {
           "description": "Tombol mana yang memicu menu overlay dapat dikonfigurasi dalam menu bindings SteamVR.",
@@ -1188,10 +1134,6 @@
             "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis menerima permintaan undangan dari seseorang",
             "title": "Permintaan Undangan yang Diterima Secara Otomatis"
           },
-          "AUTO_UPDATED_STATUS_PLAYERCOUNT": {
-            "description": "Dapatkan pemberitahuan ketika OyasumiVR secara otomatis memperbarui status VRChat Anda",
-            "title": "Status VRChat Diperbarui (Otomatisasi Batas Pemain)"
-          },
           "SLEEP_MODE_DISABLED": {
             "description": "Dapatkan pemberitahuan ketika mode tidur dinonaktifkan",
             "title": "Mode Tidur Dimatikan"
@@ -1257,7 +1199,6 @@
       "message": "Apakah Anda yakin ingin mengaktifkan urutan shutdown sekarang?",
       "title": "Apa kamu yakin?"
     },
-    "description": "Jika Anda menikmati tertidur dalam VR, tetapi tidak ingin tidur dalam VR sepanjang malam, Anda dapat menggunakan urutan shutdown OyasumiVR. Fitur ini secara otomatis mati dengan mulus setelah Anda tertidur, sehingga Anda dapat melanjutkan tidur dengan lancar di luar VR.",
     "noOptionsSelected": "Karena Anda tidak memiliki tindakan yang dipilih untuk dijalankan selama urutan penonaktifan, maka menjalankannya tidak akan memberikan efek apa pun. Agar fitur ini dapat melakukan sesuatu, pilih setidaknya salah satu opsi di bawah ini.",
     "overlay": {
       "cancel": "Batalkan",
@@ -1294,7 +1235,6 @@
         "title": "Keluar SteamVR"
       },
       "run": "Jalankan urutan",
-      "title": "Pengaturan shutdown",
       "turnOffBaseStations": {
         "description": "Mematikan semua base stations yang masih aktif",
         "title": "Matikan base stations"
@@ -1313,14 +1253,12 @@
     },
     "title": "Urutan Shutdown",
     "triggers": {
-      "title": "Trigger Otomatis",
       "whenAsleep": {
         "description": "Mengaktifkan urutan shutdown ketika mode tidur telah diaktifkan selama jangka waktu tertentu",
         "title": "Aktifkan jika saya mulai tidur"
       },
       "whenAsleepDuration": {
-        "description": "Berapa lama mode tidur harus aktif sebelum urutan shutdown berjalan",
-        "title": "Durasi Tidur"
+        "description": "Berapa lama mode tidur harus aktif sebelum urutan shutdown berjalan"
       },
       "whenAsleepTimeWindow": {
         "description": "Hanya izinkan shutdown untuk dipicu di antara jam-jam tertentu dalam sehari",
@@ -1479,24 +1417,26 @@
     "title": "Animasi Tidur"
   },
   "status-automations": {
-    "atLimitOrAbove": {
-      "description": "Ubah statusmu ke",
-      "title": "Di batas limit atau diatasnya"
-    },
-    "behaviourWarning": "Perubahan status oleh OyasumiVR tidak terlihat oleh pemain. Bahkan untuk pemain lain, perlu sedikit waktu untuk menampilkan pembaruan status. Ini adalah keterbatasan VRChat dan tidak dapat diperbaiki oleh OyasumiVR.",
     "behaviourWarningFAQ": "Di sini Anda dapat menemukan jawaban atas beberapa pertanyaan yang mungkin Anda miliki tentang perilaku perubahan status:\n\nT: Apakah saya masih bisa secara otomatis menerima permintaan undangan, meskipun VRChat tidak menunjukkan bahwa saya berwarna biru?\nJ: Jika Anda mengatur status OyasumiVR menjadi biru (join me), OyasumiVR akan mengambil alih tanggung jawab untuk secara otomatis menerima permintaan undangan yang Anda terima.\n\nT: Orang-orang tidak dapat bergabung dengan saya karena status saya tidak diperbarui untuk mereka.\nJ: Pembaruan status dapat memakan waktu beberapa saat untuk ditampilkan ke pengguna lain. Jika mereka ingin bergabung dengan Anda tetapi tidak bisa, mereka dapat memaksa status Anda untuk disegarkan dengan membuka profil Anda di menu utama.",
-    "belowLimit": {
-      "description": "Ubah statusmu ke",
-      "title": "Dibawah limit"
-    },
-    "description": "OyasumiVR dapat membatasi jumlah orang yang bergabung dengan Anda, dengan secara otomatis mengatur status Anda\n      berdasarkan jumlah pemain yang ada di dunia Anda.",
-    "disableToEdit": "Harap nonaktifkan otomatisasi status sebelum Anda membuat perubahan apa pun.",
-    "enable": "Mengaktifkan Otomatisasi Status",
-    "exampleUse": "Contoh penggunaan: Ketika seseorang bergabung dengan Anda, secara otomatis mengubah status Anda menjadi oranye atau merah!\nKetika mereka pergi dan Anda sendirian lagi, secara otomatis ubah status Anda kembali menjadi biru sehingga orang lain dapat bergabung dengan Anda.",
     "moreInfo": "Info lanjut",
-    "onlyIfSleepModeEnabled": "Hanya jika mode tidur diaktifkan",
-    "playerLimit": "Limit Player",
-    "playerLimitLabel": "{count} player (termasuk kamu)",
+    "playerLimit": {
+      "atLimitOrAbove": {
+        "description": {
+          "status": "Ubah statusmu ke"
+        },
+        "title": "Di batas limit atau diatasnya"
+      },
+      "belowLimit": {
+        "description": {
+          "status": "Ubah statusmu ke"
+        },
+        "title": "Dibawah limit"
+      },
+      "description": "OyasumiVR dapat membatasi jumlah orang yang bergabung dengan Anda, dengan secara otomatis mengatur status Anda\n      berdasarkan jumlah pemain yang ada di dunia Anda.",
+      "onlyIfSleepModeEnabled": "Hanya jika mode tidur diaktifkan",
+      "playerLimit": "Limit Player",
+      "playerLimitLabel": "{count} player (termasuk kamu)"
+    },
     "title": "Otomatisasi Status"
   },
   "systemMicMuteAutomations": {

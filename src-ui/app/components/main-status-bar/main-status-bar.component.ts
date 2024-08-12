@@ -12,7 +12,7 @@ import { SoftwareBrightnessControlService } from '../../services/brightness-cont
 import { SimpleBrightnessControlService } from '../../services/brightness-control/simple-brightness-control.service';
 import { ModalService } from '../../services/modal.service';
 import { BrightnessControlModalComponent } from '../brightness-control-modal/brightness-control-modal.component';
-import { BrightnessControlAutomationService } from '../../services/brightness-control/brightness-control-automation.service';
+import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
 import { PulsoidService } from '../../services/integrations/pulsoid.service';
 import { Router } from '@angular/router';
 import { SystemMicMuteAutomationService } from 'src-ui/app/services/system-mic-mute-automation.service';
@@ -21,6 +21,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BigscreenBeyondFanAutomationService } from 'src-ui/app/services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 import { BSBFanSpeedControlModalComponent } from '../bsb-fan-speed-control-modal/bsb-fan-speed-control-modal.component';
 import { MqttService } from '../../services/mqtt/mqtt.service';
+import { CCTControlService } from '../../services/cct-control/cct-control.service';
+import { CCTControlModalComponent } from '../cct-control-modal/cct-control-modal.component';
 
 @Component({
   selector: 'app-main-status-bar',
@@ -33,9 +35,11 @@ export class MainStatusBarComponent implements OnInit {
   protected user = this.vrchat.user;
   private brightnessControlModalOpen = false;
   private bsbFanSpeedControlModalOpen = false;
+  private cctControlModalOpen = false;
   protected snowverlayAvailable = new Date().getDate() >= 18 && new Date().getMonth() == 11;
   protected snowverlayActive = false;
   protected mqttStatus: 'DISABLED' | 'CONNECTED' | 'DISCONNECTED' | 'ERROR' = 'DISABLED';
+  protected cctControlEnabled = false;
 
   constructor(
     private sleepService: SleepService,
@@ -52,14 +56,16 @@ export class MainStatusBarComponent implements OnInit {
     protected hardwareBrightnessControl: HardwareBrightnessControlService,
     protected softwareBrightnessControl: SoftwareBrightnessControlService,
     protected simpleBrightnessControl: SimpleBrightnessControlService,
-    protected brightnessAutomations: BrightnessControlAutomationService,
+    protected brightnessCctAutomations: BrightnessCctAutomationService,
     protected pulsoid: PulsoidService,
-    protected bigscreenBeyondFanAutomation: BigscreenBeyondFanAutomationService
+    protected bigscreenBeyondFanAutomation: BigscreenBeyondFanAutomationService,
+    protected cctControl: CCTControlService
   ) {}
 
   ngOnInit(): void {
     this.settings.settings.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((settings) => {
       this.snowverlayActive = !settings.hideSnowverlay && this.snowverlayAvailable;
+      this.cctControlEnabled = settings.cctControlEnabled;
     });
     this.mqttService.clientStatus.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((status) => {
       this.mqttStatus = status;
@@ -145,5 +151,19 @@ export class MainStatusBarComponent implements OnInit {
     this.settings.updateSettings({
       hideSnowverlay: this.snowverlayActive,
     });
+  }
+
+  async openCCTControlModal() {
+    if (this.cctControlModalOpen) {
+      this.modalService.closeModal('CCTControlModal');
+      return;
+    }
+    this.cctControlModalOpen = true;
+    await firstValueFrom(
+      this.modalService.addModal(CCTControlModalComponent, undefined, {
+        id: 'CCTControlModal',
+      })
+    );
+    this.cctControlModalOpen = false;
   }
 }

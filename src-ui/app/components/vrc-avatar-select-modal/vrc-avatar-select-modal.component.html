@@ -1,0 +1,46 @@
+<div class="pane modal modal-lg" @fadeUp>
+  <div class="pane-title" translate> comp.vrc-avatar-select-modal.title</div>
+  <div class="tab-bar" *ngIf="categories.length" @vshrink>
+    <div
+      class="tab"
+      *ngFor="let category of categories"
+      [class.active]="activeCategory === category"
+      (click)="setActiveCategory(category)"
+    >
+      {{ category | translate }}
+    </div>
+  </div>
+  <div class="pane-content loading" *ngIf="activeCategory === 'LOADING'" @vshrink>
+    <div class="large-spinner"></div>
+  </div>
+  <div class="pane-content no-avatars" *ngIf="activeCategory === 'NO_AVATARS'" @vshrink>
+    <span translate>comp.vrc-avatar-select-modal.noAvatars</span>
+  </div>
+  <div
+    class="pane-content no-padding"
+    *ngIf="activeCategory !== 'LOADING' && activeCategory !== 'NO_AVATARS'"
+    @vshrink
+  >
+    <div class="avatars">
+      <div class="avatar" *ngFor="let avatar of results" (click)="selectResult(avatar)">
+        <div class="avatar-image">
+          <img
+            draggable="false"
+            onerror="this.style.display='none'"
+            loading="lazy"
+            [imgSmoothLoader]="avatar.imageUrl | imageCache : 3600 * 6"
+          />
+        </div>
+        <div class="avatar-name" [title]="avatar.name">
+          <span>{{ avatar.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pane-actions stretch">
+    <button class="btn btn-secondary" (click)="refresh()" translate
+      >comp.vrc-avatar-select-modal.refreshAvatars</button
+    >
+    <button class="btn btn-secondary" (click)="close()" translate> shared.modals.cancel</button>
+  </div>
+</div>

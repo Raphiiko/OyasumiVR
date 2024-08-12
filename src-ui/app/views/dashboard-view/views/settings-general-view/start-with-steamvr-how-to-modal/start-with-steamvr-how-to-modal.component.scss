@@ -1,5 +1,11 @@
 @import 'shadows';
 
+.pane {
+  margin-top: 16px;
+  max-height: calc(100vh - 4em - 32px);
+  width: 50em;
+}
+
 .pane-content {
   white-space: pre-wrap;
   overflow-y: auto;
@@ -28,9 +34,4 @@
       height: 100%;
     }
   }
-}
-
-.pane {
-  max-height: calc(100% - 4em);
-  width: 50em;
 }

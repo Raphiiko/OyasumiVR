@@ -17,6 +17,7 @@
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
+  border-radius: var(--window-border-radius);
 
   &.in {
     opacity: 1;
@@ -42,6 +43,7 @@
   align-items: center;
   justify-content: flex-end;
   backdrop-filter: blur(5px);
+  border-radius: var(--window-border-radius);
 
   &.in {
     opacity: 1;
@@ -65,6 +67,7 @@
   align-items: flex-end;
   justify-content: flex-end;
   pointer-events: none;
+  border-radius: var(--window-border-radius);
 
   &.in {
     opacity: 1;

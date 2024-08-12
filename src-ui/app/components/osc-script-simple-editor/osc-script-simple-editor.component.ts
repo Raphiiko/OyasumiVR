@@ -6,7 +6,7 @@ import {
   OscScriptCommandAction,
   OscScriptSleepAction,
 } from '../../models/osc-script';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { SelectBoxItem } from '../select-box/select-box.component';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
 import { TString } from '../../models/translatable-string';
@@ -14,6 +14,7 @@ import { floatPrecision } from '../../utils/number-utils';
 import { debounceTime, startWith, Subject, tap } from 'rxjs';
 import { OscService } from '../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MAX_PARAMETERS_PER_COMMAND, MAX_STRING_VALUE_LENGTH } from '../../utils/osc-script-utils';
 
 interface ValidationError {
   actionIndex: number;
@@ -28,10 +29,10 @@ interface ValidationError {
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
   private validationTrigger: Subject<void> = new Subject<void>();
-  protected _script: OscScript = { version: 1, commands: [] };
+  protected _script: OscScript = { version: 2, commands: [] };
   @Input() set script(script: OscScript) {
     if (isEqual(script, this._script)) return;
-    this._script = cloneDeep(script);
+    this._script = structuredClone(script);
     this.validationTrigger.next();
   }
 
@@ -77,7 +78,14 @@ export class OscScriptSimpleEditorComponent implements OnInit {
       id: 'FLOAT',
       label: 'Float',
     },
+    {
+      id: 'STRING',
+      label: 'String',
+    },
   ];
+
+  protected readonly MAX_PARAMETERS_PER_COMMAND = MAX_PARAMETERS_PER_COMMAND;
+  protected readonly MAX_STRING_VALUE_LENGTH = MAX_STRING_VALUE_LENGTH;
 
   constructor(private osc: OscService, private destroyRef: DestroyRef) {}
 
@@ -103,8 +111,12 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this._script.commands.push({
           type: 'COMMAND',
           address: '',
-          parameterType: 'BOOLEAN',
-          value: 'true',
+          parameters: [
+            {
+              type: 'BOOLEAN',
+              value: 'true',
+            },
+          ],
         });
         break;
       case 'SLEEP':
@@ -117,18 +129,31 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.validationTrigger.next();
   }
 
+  addParameter(commandIndex: number) {
+    const command = this._script.commands[commandIndex] as OscScriptCommandAction;
+    command.parameters.push({
+      type: 'BOOLEAN',
+      value: 'true',
+    });
+  }
+
+  removeParameter(commandIndex: number, parameterIndex: number) {
+    const command = this._script.commands[commandIndex] as OscScriptCommandAction;
+    command.parameters.splice(parameterIndex, 1);
+  }
+
   setSleepDuration(command: OscScriptSleepAction, event: Event) {
     command.duration = parseInt((event.target as HTMLInputElement).value);
     this.validationTrigger.next();
   }
 
-  setIntValue(command: OscScriptCommandAction, event: Event) {
-    command.value = (event.target as HTMLInputElement).value;
+  setIntValue(command: OscScriptCommandAction, parameterIndex: number, event: Event) {
+    command.parameters[parameterIndex].value = (event.target as HTMLInputElement).value;
     this.validationTrigger.next();
   }
 
-  setFloatValue(command: OscScriptCommandAction, event: Event) {
-    command.value = (event.target as HTMLInputElement).value;
+  setFloatValue(command: OscScriptCommandAction, parameterIndex: number, event: Event) {
+    command.parameters[parameterIndex].value = (event.target as HTMLInputElement).value;
     this.validationTrigger.next();
   }
 
@@ -137,35 +162,51 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     this.validationTrigger.next();
   }
 
-  setBoolValue(command: OscScriptCommandAction, event: SelectBoxItem) {
-    command.value = event.id;
+  setBoolValue(
+    command: OscScriptCommandAction,
+    parameterIndex: number,
+    selectBoxItem: SelectBoxItem
+  ) {
+    command.parameters[parameterIndex].value = selectBoxItem.id;
     this.validationTrigger.next();
   }
 
-  getSelectedParameterTypeForCommand(command: OscScriptCommandAction): SelectBoxItem | undefined {
-    return this.parameterTypeSelectItems.find((item) => item.id === command.parameterType);
+  setStringValue(command: OscScriptCommandAction, parameterIndex: number, event: Event) {
+    command.parameters[parameterIndex].value = (event.target as HTMLInputElement).value;
+    this.validationTrigger.next();
   }
 
-  setSelectedParameterTypeForCommand(command: OscScriptCommandAction, item: SelectBoxItem) {
-    command.parameterType = item.id as OscParameterType;
-    switch (command.parameterType) {
+  getCommandParameterType(
+    command: OscScriptCommandAction,
+    parameterIndex: number
+  ): SelectBoxItem | undefined {
+    return this.parameterTypeSelectItems.find(
+      (item) => item.id === command.parameters[parameterIndex].type
+    );
+  }
+
+  setCommandParameterType(
+    command: OscScriptCommandAction,
+    parameterIndex: number,
+    item: SelectBoxItem
+  ) {
+    const parameter = command.parameters[parameterIndex];
+    parameter.type = item.id as OscParameterType;
+    switch (parameter.type) {
       case 'INT':
-        command.value = '1';
+        parameter.value = '1';
         break;
       case 'FLOAT':
-        command.value = '1.0';
+        parameter.value = '1.0';
         break;
       case 'BOOLEAN':
-        command.value = 'true';
+        parameter.value = 'true';
+        break;
+      case 'STRING':
+        parameter.value = '';
         break;
     }
     this.validationTrigger.next();
-  }
-
-  getSelectedBooleanValueForCommand(command: OscScriptCommandAction) {
-    return command.parameterType === 'BOOLEAN' && command.value === 'true'
-      ? { id: 'true', label: 'true' }
-      : { id: 'false', label: 'false' };
   }
 
   removeCommand(command: OscScriptSleepAction | OscScriptCommandAction) {
@@ -199,33 +240,47 @@ export class OscScriptSimpleEditorComponent implements OnInit {
               });
             }
           }
-          switch (command.parameterType) {
-            case 'INT': {
-              const intValue = parseInt(command.value);
-              if (isNaN(intValue) || intValue < 0 || intValue > 255) {
-                this.errors.push({
-                  actionIndex,
-                  message: 'misc.oscScriptEditorErrors.intOutOfBounds',
-                });
+          command.parameters.forEach((parameter) => {
+            switch (parameter.type) {
+              case 'INT': {
+                const intValue = parseInt(parameter.value);
+                if (isNaN(intValue) || intValue < 0 || intValue > 255) {
+                  this.errors.push({
+                    actionIndex,
+                    message: 'misc.oscScriptEditorErrors.intOutOfBounds',
+                  });
+                }
+                break;
               }
-              break;
-            }
-            case 'FLOAT': {
-              const floatValue = parseFloat(command.value);
-              if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
-                this.errors.push({
-                  actionIndex,
-                  message: 'misc.oscScriptEditorErrors.floatOutOfBounds',
-                });
-              } else if (floatPrecision(floatValue) > 3) {
-                this.errors.push({
-                  actionIndex,
-                  message: 'misc.oscScriptEditorErrors.floatTooPrecise',
-                });
+              case 'FLOAT': {
+                const floatValue = parseFloat(parameter.value);
+                if (isNaN(floatValue) || floatValue < -1.0 || floatValue > 1.0) {
+                  this.errors.push({
+                    actionIndex,
+                    message: 'misc.oscScriptEditorErrors.floatOutOfBounds',
+                  });
+                } else if (floatPrecision(floatValue) > 3) {
+                  this.errors.push({
+                    actionIndex,
+                    message: 'misc.oscScriptEditorErrors.floatTooPrecise',
+                  });
+                }
+                break;
               }
-              break;
+              case 'STRING': {
+                if (parameter.value.length > this.MAX_STRING_VALUE_LENGTH) {
+                  this.errors.push({
+                    actionIndex,
+                    message: {
+                      string: 'misc.oscScriptEditorErrors.stringTooLong',
+                      values: { value: this.MAX_STRING_VALUE_LENGTH + '' },
+                    },
+                  });
+                }
+                break;
+              }
             }
-          }
+          });
           break;
         case 'SLEEP':
           if (command.duration === null || command.duration === undefined) {
@@ -279,7 +334,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
     if (!event) return;
     const el: HTMLElement = event.target as HTMLElement;
     const x = el.offsetLeft + el.offsetWidth + 6;
-    const y = el.offsetTop - 9;
+    const y = el.offsetTop;
     this.tooltipPosition = { x, y };
   }
 }
