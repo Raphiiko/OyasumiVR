@@ -3,11 +3,11 @@
     "author": {
       "role": "Entwickler"
     },
-    "contributions": "Beiträge",
     "contributionType": {
       "feature": "Funktion",
       "soundFx": "Sound Effekt"
     },
+    "contributions": "Beiträge",
     "discordInvite": "Discord Server",
     "projectLinks": "Projekt Verlinkungen",
     "sourceLink": "Quellcode @ GitHub",
@@ -20,8 +20,14 @@
       "SET_VOLUME": "Lautstärke ändern",
       "UNMUTE": "Stummschaltung aufheben"
     },
+    "applyOnStart": {
+      "title": "Beim Start anwenden"
+    },
     "automations": {
       "label": "{count, plural, one {1 Automatisierung} other {# Automatisierungen}}"
+    },
+    "config": {
+      "title": "Einstellung"
     },
     "description": "Passt die Lautstärke deiner Audiogeräte automatisch an, wenn du einschläfst oder aufwachst. Das kann nützlich sein, wenn du verhindern willst, dass andere dich beim Schlafen stören",
     "devices": {
@@ -61,10 +67,19 @@
     "addFriends": "Freunde hinzufügen",
     "blacklist": "Spieler-Blacklist",
     "clearPlayers": "Spieler löschen",
+    "conditions": {
+      "title": "Voraussetzungen"
+    },
     "description": "OyasumiVR kann Einladugsanfragen automatisch für dich annehmen. Indem du die White- oder Blacklist benutzt, kannst du sicherstellen, dass nur Anfragen von Freunden die du auswählst automatisch angenommen werden.",
+    "loadPreset": "Gespeicherte Voreinstellungen Laden",
     "loadingFriends": "Freunde werden geladen...",
     "noPlayersAdded": "Es sind aktuell keine Spieler in die Liste eingetragen.",
     "options": {
+      "changeListPreset": {
+        "onSleepDisable": {
+          "title": "Voreinstellungen beim aufwachen laden"
+        }
+      },
       "enable": {
         "description": "Automatisch Einladugsanfragen von Freunden annehmen.",
         "title": "Einschalten"
@@ -87,9 +102,15 @@
         },
         "title": "Listenmodus"
       },
+      "onlyBelowPlayerCount": {
+        "description": "Dich inkludiert"
+      },
       "onlyIfSleepModeEnabled": {
         "title": "Nur wenn der Schlafmodus aktiviert ist"
       }
+    },
+    "otherAutomations": {
+      "title": "Andere Automationen"
     },
     "removeModal": {
       "message": "Bist du dir sicher, dass du \"{name}\" von deiner Liste entfernen willst?",
@@ -99,91 +120,61 @@
       "message": "Bist du dir sicher, dass du alle Spieler von deiner Liste entfernen willst?",
       "title": "Entfernen bestätigen"
     },
+    "savePreset": "Als Voreinstellung speichern",
     "title": "Automatisch Einladungsanfragen annehmen",
     "userOnBusyStatus": "Du kannst keine Einladungsanfragen von Spielern annehmen, während dein Status beschäftigt (rot) ist.",
     "userOnJoinMeStatus": "VRChat nimmt automatisch alle Einladungsanfragen an, unabhängig von deinen Einstellung, da dein Status auf Tritt mir bei (blau) gesetzt ist.",
     "whitelist": "Spieler Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Wenn der Schlafmodus inaktiv ist, setze diesen Helligkeitswert direkt wenn SteamVR oder OyasumiVR starten.",
-          "onSleepEnable": "Wenn der Schlafmodus aktiv ist, setze diesen Helligkeitswert direkt wenn SteamVR oder OyasumiVR starten."
-        },
-        "title": "Helligkeit beim Start setzen"
+    "AT_SUNRISE": {
+      "title": "Bei Sonnenaufgang"
+    },
+    "AT_SUNSET": {
+      "title": "Bei Sonnenuntergang"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "Wenn ich aufwache"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "Wenn ich einschlafe"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "Wenn ich mich fürs Schlafen vorbereite"
+    },
+    "activation": {
+      "category": "Aktivierung"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "Tageszeit des Sonnenaufgangs",
+        "title": "Zeit des Sonnenaufgangs"
       },
-      "brightness": {
-        "title": "Helligkeit ändern zu"
-      },
-      "copyBrightness": "Aktuellen Helligkeitswert kopieren",
-      "description": "Erlaube OyasumiVR die Helligkeit deines VR-Headsets zu unterschiedlichen Zeiten einzustellen, zum Beispiel wenn du einschläfsts oder aufwachsts.",
-      "hardwareBrightness": {
-        "description": "Verstellt die Helligkeit des Displays selbst",
-        "title": "Hardware-Helligkeit ändern zu"
-      },
-      "onSleepDisable": {
-        "description": "Helligkeit ändern",
-        "title": "Wenn ich aufwache"
-      },
-      "onSleepEnable": {
-        "description": "Helligkeit ändern",
-        "title": "Wenn ich einschlafe"
-      },
-      "onSleepPreparation": {
-        "description": "Helligkeit ändern",
-        "title": "Wenn ich mich fürs Schlafen vorbereite"
-      },
-      "onStartup": {
-        "description": "Helligkeit ändern",
-        "title": "Wenn OyasumiVR oder SteamVR starten"
-      },
-      "sleepAutomations": "Schlafautomatisierungen",
-      "sleepPreparation": {
-        "description": "Du kannst dich durch das Drücken eines Knopfes im OyasumiVR Overlay aufs Schlafen vorbereiten. Der Knopf dafür, wird dir angezeigt wenn du eine oder mehrere Schlafvorbereitungsautomatisierungen wie diese aktiviert hast. Du kannst das benutzen, um die Helligkeit bereits bevor du einschläfst zu dimmen.",
-        "title": "Schlafvorbereitung"
-      },
-      "softwareBrightness": {
-        "description": "Verstellt die Helligkeit des Bilds, dass dir in deinem Headset angezeigt wird",
-        "title": "Setze Softwarehelligkeit auf"
-      },
-      "startupAutomations": "Startautomatisierungen",
-      "transition": {
-        "description": "Flüssig in den gewollten Helligkeitszustand übergehen",
-        "title": "Helligkeit allmählich anpassen"
-      },
-      "transitionTime": {
-        "description": "Wie lange soll es dauern in den neuen Helligkeitszustand überzugehen",
-        "title": "Übergangszeit"
+      "SUNSET": {
+        "description": "Tageszeit des Sonnenuntergangs",
+        "title": "Zeit des Sonnenuntergangs"
       }
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Den Lüfter zu 100% bei Helligkeitswerten über 100% zwingen",
-          "title": "Lüfter Overdrive-Sicherheit",
-          "warning": "Diese Funktion immitiert dich Lüftersicherheitsparameter des offiziellen Bigscreen Beyond Treibers. Schalte sie nur auf eigenes Risiko aus."
-        },
-        "maxBrightness": {
-          "description": "Limitiere den maximalen Helligkeitswert den OyasumiVR setzen kann.",
-          "title": "Maximale Helligkeit"
-        },
-        "permitRiskRange": {
-          "description": "Verhindert die Helligkeit über 150% zu setzen",
-          "title": "Helligkeit auf sichere Werte begrenzen",
-          "warning": "Die Funktion wird vom Hersteller nicht unterstützt.\n\nBitte sei dir bewusst, dass es dein Headset beschädigen kann: Deaktiviere diese Funktionalität nur auf dein eigenes Risiko."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier findest du alle Helligkeitsbezogenen Einstellungen für dein speziefisches Headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limitiere den maximalen Helligkeitswert den OyasumiVR setzen kann.",
-          "title": "Maximale Helligkeit"
-        },
-        "title": "Valve Index"
-      }
+    "autoDetermineSunsetSunrise": "Automatische Zeiterkennung",
+    "brightness": {
+      "title": "Helligkeit ändern auf"
     },
+    "changeBrightness": {
+      "category": "Helligkeit",
+      "description": "An die Helligkeitseinstellungen des VR-Headsets anpassen",
+      "title": "Helligkeit ändern"
+    },
+    "changeTemperature": {
+      "category": "Farbtemperatur",
+      "title": "Farbtemperatur ändern"
+    },
+    "detailsTitle": "Event",
+    "events": "Events",
+    "hardwareBrightness": {
+      "description": "Bildschirmhelligkeit anpassen",
+      "title": "Bildschirmhelligkeit ändern zu"
+    },
+    "miscConfig": "Andere Optionen",
     "mode": {
       "advanced": "Erweiterter Modus",
       "simple": "Einfacher modus"
@@ -192,11 +183,22 @@
       "message": "OyasumiVR hat zwei Methoden um die Helligkeit deines VR Headsets anzupassen: Softwaresteuerung und Hardwaresteuerung:\n\nSoftwaresteuerung ist für jedes Headset verfügbar. Sie beeinflusst die Helligkeit deines Headsets indem sie die Helligkeit des Bildes anpasst.\n\nHardwaresteuerung ist nur für kompatible Headset verfügbar (Valve Index, Bigscreen Beyond). Sie beeinflusst die Helligkeit deines Headsets indem sie direkt die Helligkeit des Displays in deinem Headset innerhalb der unterstützten Reichweite anpasst.\n\nIm einfachen Modus wechselt OyasumiVR flüssig zwischen Hardware- und Softwaresteuerung, oder benutzt nur Softwaresteuerung falls Hardwaresteuerung nicht unterstützt ist.\n\nWenn du direkte Kontrolle bevorzugsts, kannst du im erweiterten Modus sowohl Hardware- als auch Softwaresteuerung seperat auf die exakt von dir gewünschten Werte einstellen.",
       "title": "Helligkeitssteuerungsmodus"
     },
-    "tabs": {
-      "automations": "Automatisierungen",
-      "hmdSettings": "Headset-Einstellungen"
+    "onlyWhenSleepModeDisabled": {
+      "title": "Nur wenn der Schlafmodus aktiviert ist ausführen"
     },
-    "title": "Helligkeitsautomatisierungen"
+    "softwareBrightness": {
+      "title": "Softwarehelligkeit ändern zu"
+    },
+    "temperature": {
+      "title": "Farbtemperatur ändern zu"
+    },
+    "title": "Helligkeitsautomatisierungen",
+    "transition": {
+      "title": "Flüssiger Übergang"
+    },
+    "transitionTime": {
+      "title": "Übergangszeit"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR kann die Aktivationsdistanz von SteamVRs Chaperone automatisch anpassen währed der Schlafmodus aktiv oder inaktiv ist",
@@ -215,14 +217,15 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Helligkeitsautomatisierungen",
       "brightness": "Helligkeit",
       "hardwareBrightness": "Hardware-Helligkeit",
       "softwareBrightness": "Software-Helligkeit"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automatisierungen",
       "fanSpeed": "Lüftergeschwindigkeit"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "Farbtemperatur"
     },
     "color-picker-modal": {
       "title": "Farbe auswählen"
@@ -232,6 +235,7 @@
     },
     "controller-binding": {
       "dropdown": {
+        "description": "Tastenzuweisungseinstellungen öffnen",
         "desktop": "Desktop-Modus",
         "vr": "SteamVR-Modus"
       },
@@ -268,6 +272,7 @@
       "gpuAutomations": "GPU-Automatisierungen",
       "hardwareAutomations": "Hardware-Automatisierungen",
       "hmdAutomations": "Headset spezifische Automatisierungen",
+      "joinNotifications": "Beitrittsbenachtichtigungen",
       "miscAutomations": "Andere Automatisierungen",
       "nightmareDetection": "Albtraumerkennung",
       "oscAutomations": "OSC-Automatisierungen",
@@ -276,6 +281,7 @@
       "resolutionAutomations": "Auflösungsautomatisierungen",
       "settings": {
         "advanced": "Erweiterte Einstellungen",
+        "brightnessCct": "Helligkeit und CCT Einstellungen",
         "general": "Generelle Einstellungen",
         "hotkeys": "Tastenbelegung",
         "integrations": "Integrationen",
@@ -291,6 +297,7 @@
       "statusAutomations": "Status-Automatisierungen",
       "systemMicMuteAutomations": "System-Stummschaltungsautomatisierungen",
       "vrcAutomations": "VRChat-Automatisierungen",
+      "vrchatAvatarAutomations": "Avatar Automationen",
       "vrchatMicMuteAutomations": "VRChat-Stummschaltungsautomatisierungen"
     },
     "device-edit-modal": {
@@ -311,6 +318,9 @@
         "Lighthouse": "Basisstationen",
         "other": "Andere"
       },
+      "deviceName": {
+        "lighthouseV2": "V2 Lighthouse"
+      },
       "deviceRole": {
         "AnkleLeft": "Linker Knöchel",
         "AnkleRight": "Rechter Knöchel",
@@ -320,15 +330,29 @@
         "ElbowRight": "Rechter Ellenbogen",
         "FootLeft": "Linker Fuß",
         "FootRight": "Rechter Fuß",
+        "Gamepad": "Gamepad",
+        "HandPrimary": "Dominante Hand",
+        "HandSecondary": "Andere Hand",
         "Head": "Kopf",
         "Keyboard": "Tastatur",
         "KneeLeft": "Linkes Knie",
         "KneeRight": "Rechtes Knie",
         "ShoulderLeft": "Linke Schulter",
         "ShoulderRight": "Rechte Schulter",
+        "Stylus": "Stylus",
+        "Treadmill": "Laufband",
         "Waist": "Hüfte",
         "WristLeft": "Linkes Handgelenk",
         "WristRight": "Rechtes Handgelenk"
+      },
+      "forceOnBootingWarning": {
+        "message": "Es schein, als ob die Basisstation schon aktiviert ist.",
+        "title": "Warnung"
+      },
+      "lhForceState": {
+        "on": "Einschalten Erzwingen",
+        "sleep": "Schlafen Erzwingen",
+        "standby": "Standby Erwingen"
       },
       "lighthouseStatus": {
         "booting": "Startet",
@@ -369,6 +393,13 @@
             "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
           },
           "title": "Bigscreen Beyond RGB Led auf {color} gesetzt"
+        },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLE": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
         },
         "changedAudioDeviceVolume": {
           "reason": {
@@ -425,8 +456,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
-            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_MODE_DISABLE": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLE": "Da der Schlafmodus eingeschaltet war",
             "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
           },
           "title": {
@@ -540,8 +571,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
-            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_MODE_DISABLE": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLE": "Da der Schlafmodus eingeschaltet war",
             "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
           }
         },
@@ -555,6 +586,7 @@
               "NIGHTMARE_DETECTION": "Da erkannt wurde, dass du einen Albtraum haben könntest",
               "SLEEP_MODE_CHANGE_ON_STEAMVR_STATUS": "Da SteamVR geschlossen wurde",
               "SLEEP_MODE_DISABLE_AFTER_TIME": "Da der Schlafmodus lang genug eingeschaltet war",
+              "SLEEP_MODE_DISABLE_AT_TIME": "Bei der festgelegten Zeit",
               "SLEEP_MODE_DISABLE_ON_DEVICE_POWER_ON": "Da ein Gerät eingeschaltet war",
               "unknown": "Durch eine unbekannte Automatisierung"
             },
@@ -568,6 +600,7 @@
           "reason": {
             "automation": {
               "SLEEP_MODE_ENABLE_AT_BATTERY_PERCENTAGE": "Da eine Gerätebatterie den Schwellwert erreicht hat",
+              "SLEEP_MODE_ENABLE_AT_TIME": "Bei festgelegter Zeit",
               "SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR": "Da du geschlafen hast",
               "SLEEP_MODE_ENABLE_ON_CONTROLLERS_POWERED_OFF": "Da alle deine Controller ausgeschaltet waren",
               "SLEEP_MODE_ENABLE_ON_HEART_RATE_CALM_PERIOD": "Da dein Puls lange genug ruhig war",
@@ -576,6 +609,13 @@
           }
         },
         "softwareBrightnessChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLE": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
+        "statusChangedOnGeneralEvent": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
             "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
@@ -606,6 +646,13 @@
             "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
           }
         },
+        "vrchatAvatarChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
+            "SLEEP_MODE_ENABLED": "Da der Schlafmodus eingeschaltet war",
+            "SLEEP_PREPARATION": "Da du dich aufs Schlafen vorbereitet hast"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Da der Schlafmodus ausgeschaltet war",
@@ -629,7 +676,6 @@
       "noFriends": "Deine Freundesliste ist leer",
       "noFriendsSelected": "Keine Freunde ausgewählt",
       "noResultsFor": "Keine Ergebnisse für \"{query}\"",
-      "searchPlaceholder": "",
       "title": "Freunde auswählen"
     },
     "hotkey-selector-modal": {
@@ -648,9 +694,17 @@
         "label": "Lüftergeschwindigkeit",
         "tooltip": "Bigscreen Beyond Lüftergeschwindigkeit"
       },
+      "cctControl": {
+        "label": "CCT",
+        "tooltip": "Farbtemperatur Kontrolle"
+      },
       "heartrate": "Puls",
       "inactive": "Inaktiv",
       "loggedOut": "Ausgeloggt",
+      "mqttStatus": {
+        "label": "MQTT",
+        "tooltip": "Einstellungen Integrationen"
+      },
       "sleepMode": {
         "label": "Schlafmodus",
         "tooltip": "Schlafmodus umschalten"
@@ -661,48 +715,192 @@
         "INITIALIZING": "Wartet"
       },
       "systemMicMuted": {
-        "label": "Stummgeschaltet"
+        "label": "Stummgeschaltet",
+        "tooltip": {
+          "NAVIGATE": "System Eingabegerät: Automationen",
+          "TOGGLE_MUTE": "System Eingabegerät: Entstummen"
+        }
+      },
+      "vrchat": {
+        "tooltip": "Einstellungen: Integrationen"
       }
+    },
+    "mqtt-config-modal": {
+      "brokerHost": {
+        "title": "Host"
+      },
+      "brokerPort": {
+        "title": "Port"
+      },
+      "mqttEnabled": {
+        "test": "Verbindung testen",
+        "title": "Integration aktivieren"
+      },
+      "password": {
+        "title": "Passwort"
+      },
+      "ssl": {
+        "title": "SSL sichern"
+      },
+      "testConnection": {
+        "test": "Verbindung testen",
+        "title": "Verbindung testen"
+      },
+      "testConnectionResult": {
+        "error": "Verbindung fehlgeschlagen",
+        "success": "Verbindung erfolgreich!",
+        "title": "Testergebnis"
+      },
+      "title": "MQTT Einstellungen",
+      "username": {
+        "title": "Spielername"
+      }
+    },
+    "osc-script-code-editor": {
+      "format": "Format",
+      "syntaxGuide": "Syntax Anleitung",
+      "test": "Test",
+      "title": "OSC Script Bearbeiter"
+    },
+    "osc-script-modal": {
+      "script": "Script",
+      "simple": "Einfach",
+      "title": "OSC Script"
+    },
+    "osc-script-simple-editor": {
+      "action": {
+        "none": "Keine Aktionen wurden bisher umgesetzt.",
+        "osc": "OSC",
+        "sleep": "Schlaf"
+      },
+      "addCommand": "Hinzufügen",
+      "addParameter": "Parameter hinzufügen",
+      "commands": {
+        "COMMAND": {
+          "description": "OSC Befehl ausführen",
+          "title": "OSC Befehl"
+        },
+        "SLEEP": {
+          "description": "Für eine bestimmte Zeit warten",
+          "title": "Schlaf"
+        }
+      },
+      "test": "Test"
+    },
+    "player-list-preset-modal": {
+      "confirmDelete": {
+        "title": "Bist du sicher?"
+      },
+      "confirmOverwrite": {
+        "title": "Bist du sicher?"
+      },
+      "currentPresets": "Momentane Voreinstellung",
+      "delete": "Voreinstellung löschen",
+      "load": "Voreinstellung laden",
+      "namePlaceholder": "Name voreinstellen",
+      "overwrite": "Voreinstellungen überschreiben",
+      "title": {
+        "load": "Spieler Liste laden",
+        "save": "Spieler Liste speichern"
+      }
+    },
+    "player-list": {
+      "title": "Spieler Liste"
+    },
+    "select-box": {
+      "defaultPlaceholder": "Auswählen..."
+    },
+    "start-with-steamvr-how-to-modal": {
+      "title": "OyasumiVR mit SteamVR starten"
     },
     "update-modal": {
       "title": "Update verfügbar",
       "updateLater": "Nicht jetzt",
       "updateNow": "v{version} installieren"
     },
+    "vrc-avatar-select-button": {
+      "select": "Auswählen"
+    },
+    "vrc-avatar-select-modal": {
+      "ownAvatars": "Hochladen",
+      "refreshAvatars": "Avatare hochladen",
+      "title": "Avatar auswählen"
+    },
     "vrchat-login-modal": {
+      "errors": {
+        "INVALID_CREDENTIALS": "Die Anmeldedaten sind inkorrekt"
+      },
       "password": "Passwort",
       "rememberCredentials": "Angemeldet bleiben",
       "title": "In VRChat einloggen",
       "username": "VRChat Username/E-mail"
+    },
+    "vrchat-login-tfa-modal": {
+      "description": "Dein VRC account ist 2FA geschützt. Bitte gebe den Code hierfür ein:",
+      "errors": {
+        "INVALID_FORMAT": "Ein gültiger 2FA Code hat 6 Nummern. Bitte überprüfe deine Eingabe.",
+        "LAST_CODE_INVALID": "Der 2FA Code war inkorrekt"
+      },
+      "logginInAs": "Du bist in VRChat eingelogt als:",
+      "title": "Zwei Faktor Authentifizierung"
     }
   },
   "discord": {
+    "details": "VR Schlaf Software",
+    "label": {
+      "awake": "Nie wieder müde",
+      "sleeping": "Schalfenszeit"
+    },
     "state": {
+      "awake": "Wach",
       "sleeping": "Bereitschaft"
     }
   },
   "gpu-automations": {
     "automations": "Schlafautomatisierungen",
+    "disable": "Grafikkarten Automationen Deaktivieren",
     "elevationSidecarModal": {
       "cancel": "Nur dieses Mal",
-      "confirm": "Immer"
+      "confirm": "Immer",
+      "title": "Adminrechte geben"
     },
+    "enable": "Grafikkarten Automationen aktivieren",
     "msiAfterburner": {
-      "profile": "Profil {index}"
+      "executable": {
+        "title": "Einstellungen"
+      },
+      "none": "Keine",
+      "profile": "Profil {index}",
+      "sleepModeDisable": {
+        "title": "Wenn der Schlafmodus deaktiviert ist"
+      }
     },
     "powerLimiting": {
       "activatingSleepMode": {
         "title": "Wenn ich einschlafe"
       },
+      "currentPowerLimit": "Derzeitiges Energielimit",
       "deactivatingSleepMode": {
         "title": "Wenn ich aufwache"
-      }
+      },
+      "gpuUnsupported": "Grafikkarte nicht unterstützt",
+      "inputDefault": "Zum normalen Grafikkartenlimit zurücksetzen",
+      "noGPUSelected": "Keine Grafikkarte ausgewählt",
+      "noGPUs": "Keine NVIDIA Grafikkarte in deinen System gefunden"
+    },
+    "tabs": {
+      "msiAfterburner": "MSI Afterburner",
+      "powerLimiting": "Energielimit"
     },
     "title": "GPU-Automatisierungen"
   },
   "hmd-automations": {
     "bigscreenBeyond": {
       "fanControl": {
+        "allowUnsafeFanSpeed": {
+          "description": "Verhinder, dass deine Lüftergeschwindigkeit unter 40% fällt",
+          "title": "Limit deiner Lüftergeschwindigkeit"
+        },
         "onSleepDisable": {
           "title": "Wenn ich aufwache"
         },
@@ -723,13 +921,57 @@
         },
         "onSleepPreparation": {
           "title": "Wenn ich mich fürs Schlafen vorbereite"
-        }
+        },
+        "title": "RGB Led"
       }
     },
     "tabs": {
       "bigscreenBeyond": "Bigscreen Beyond"
     },
     "title": "Headset spezifische Automatisierungen"
+  },
+  "join-notifications": {
+    "joinNotifications": {
+      "title": "Beitrittsbenachrichtigung"
+    },
+    "joinSoundVolume": {
+      "title": "Lautstärke"
+    },
+    "joinSounds": {
+      "title": "Beitrittsgeräusch"
+    },
+    "leaveNotifications": {
+      "title": "Benachrichtigung bei Verlassen"
+    },
+    "leaveSounds": {
+      "title": "Geräusche bei Verlassen"
+    },
+    "modeOptions": {
+      "BLACKLIST": "Spieler nicht auf der Liste",
+      "DISABLED": "Für niemanden",
+      "EVERYONE": "Für jeden",
+      "FRIEND": "Für Freunde",
+      "WHITELIST": "Spieler auf der Liste"
+    },
+    "notification": {
+      "join": "{name} ist deiner Welt beigetreten",
+      "leave": "{name} hat deine Welt verlassen"
+    },
+    "onlyWhenLeftAlone": {
+      "title": "Nur wenn alleine"
+    },
+    "onlyWhenSleepModeActive": {
+      "title": "Nur wenn der Schlafmodus aktiviert ist"
+    },
+    "title": "Beitrittsbenachrichtigung"
+  },
+  "misc": {
+    "oscScriptEditorErrors": {
+      "addressRequired": "Eine OSC Adresse ist notwendig",
+      "durationRequired": "Schalfzeitraum muss festgelegt werden",
+      "invalidSyntax": "Ungültiger Syntax",
+      "noFloatMilliseconds": "Millisekunden müssen als volle Zahl eingegeben werden"
+    }
   },
   "nightmare-detection": {
     "automations": {
@@ -752,9 +994,6 @@
     },
     "turningOffTrackers": {
       "content": "Deine Tracker werden ausgeschaltet"
-    },
-    "vrcStatusChangedPlayerCount": {
-      "content": "Dein VRChat wurde zu ''{newStatus}'' geändert"
     }
   },
   "oscAutomations": {
@@ -825,28 +1064,79 @@
         "controllers": {
           "powerOffConflict": {
             "action": "Schlaferkennung"
-          }
+          },
+          "title": "Einen Kontroller ausschalten"
+        },
+        "title": "Batteriestand",
+        "trackers": {
+          "description": "Wenn die Batterie niedriger ist als",
+          "onlyDuringSleepMode": {
+            "description": "Tracker nur im Schlafmodus ausschalten",
+            "title": "Nur im Schlafmodus einschalten"
+          },
+          "title": "Einen Tracker ausschalten"
         }
       },
+      "onCharge": {
+        "optionControllers": {
+          "description": "Wenn es lädt",
+          "title": "Einen Kontroller ausschalten"
+        },
+        "optionTrackers": {
+          "description": "Wenn es lädt",
+          "title": "Einen Tracker ausschalten"
+        },
+        "title": "Wenn es lädt"
+      },
       "onSleepModeEnable": {
+        "optionControllers": "Alle Kontroller ausschalten",
+        "optionTrackers": "Alle Tracker ausschalten",
         "title": "Wenn ich einschlafe"
       }
     },
     "enableLighthouseControl": "Einschalten",
+    "lighthousePowerOff": {
+      "onSteamVRStop": {
+        "title": "Wenn SteamVR herunterfährt"
+      },
+      "title": "Alle Basisstationen ausschalten"
+    },
+    "lighthousePowerOn": {
+      "onOyasumiStart": {
+        "title": "Wenn OyasumiVR startet"
+      },
+      "onSteamVRStart": {
+        "title": "Wenn SteamVR startet"
+      },
+      "title": "Basisstationen anschalten"
+    },
     "tabs": {
-      "baseStations": "Basisstationen"
+      "baseStations": "Basisstationen",
+      "windowsPowerPolicy": "Energieeinstellungen"
     },
     "title": "Energie-Automatisierungen",
     "windowsPowerPolicy": {
-      "automations": "Automatisierungen"
+      "automations": "Automatisierungen",
+      "sleepModeDisable": {
+        "description": "Folgende Windows Energieeinstellungen festlegen",
+        "title": "Wenn Schlafmodus deaktiviert ist"
+      },
+      "sleepModeEnable": {
+        "description": "lgende Windows Energieeinstellungen festlegen"
+      }
     }
   },
   "resolution-automations": {
     "onSleepDisable": {
+      "description": "Render Auflösung anpassen",
       "title": "Wenn ich aufwache"
     },
     "onSleepEnable": {
+      "description": "Render Auflösung anpassen",
       "title": "Wenn ich einschlafe"
+    },
+    "renderResolution": {
+      "auto": "Auto"
     },
     "title": "Auflösungsautomatisierungen"
   },
@@ -854,14 +1144,48 @@
     "advanced": {
       "fixes": {
         "memoryWatcher": {
-          "action": "Einschalten"
+          "action": "Einschalten",
+          "modal": {
+            "error": {
+              "title": "Bereits aktiv"
+            }
+          },
+          "title": "Speicherüberwachung"
         }
+      },
+      "persistentData": {
+        "dataType": {
+          "eventLog": {
+            "title": "Event Log"
+          },
+          "imageCache": {
+            "title": "Bilderzwischenspeicher"
+          },
+          "integrations": {
+            "title": "Integrations Daten"
+          },
+          "logs": {
+            "title": "Log Files"
+          },
+          "miscData": {
+            "title": "Andere Daten"
+          },
+          "vrcData": {
+            "title": "VRchat Daten"
+          }
+        },
+        "relaunchModal": {
+          "later": "Ich werde es später tuen",
+          "relaunch": "OyasumiVR jetzt starten",
+          "title": "OyasumiVR neustarten"
+        },
+        "title": "Bestehende Daten"
       },
       "title": "Erweiterte Einstellungen",
       "translation": {
         "contribute": {
           "docs": "Lerne wie",
-          "title": ""
+          "title": "Hilf uns durch Übersetzungen!"
         },
         "editor": {
           "action": "Editor starten",
@@ -876,44 +1200,138 @@
         "title": "Sprache & Übersetzung"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "title": "Lüftergeschwindigkeit überschreiben"
+        },
+        "maxBrightness": {
+          "title": "Maximale Helligkeit"
+        },
+        "permitRiskRange": {
+          "title": "Limit zur sicheren Helligkeit"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "title": "Farbtemperatur"
+      },
+      "title": "Helligkeit und CCT",
+      "valveIndex": {
+        "maxBrightness": {
+          "title": "Maximale Helligkeit"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
+      "adminPrivileges": {
+        "label": "Frag nach Adminrechten beim Hochfahren",
+        "title": "Adminrechte"
+      },
       "discord": {
         "activityMode": {
           "options": {
-            "DISABLED": "Deaktiviert"
-          }
-        }
+            "DISABLED": "Deaktiviert",
+            "ENABLED": "Einschalten",
+            "ONLY_ASLEEP": "Nur während des Schlafes"
+          },
+          "title": "Discord Rich Presence"
+        },
+        "activityModeVRCCondition": {
+          "title": "Nur zeigen während VRChat läuft"
+        },
+        "title": "Discord"
+      },
+      "language": {
+        "title": "Sprache"
+      },
+      "lighthouseConsole": {
+        "status": {
+          "INVALID_FILENAME": "Die angegebene Location ist inkorrekt"
+        },
+        "title": "Lighthouse Konsole"
       },
       "lighthousePowerControl": {
+        "enable": {
+          "title": "Energiekontrolle aktivieren"
+        },
         "powerOffMode": {
+          "sleep": {
+            "description": "Laser und Motoren ausschalten",
+            "title": "Schlafen"
+          },
           "standby": {
+            "description": "Laser ausschalten",
             "title": "Stand-by"
-          }
+          },
+          "title": "Bevorzugter Status (An/Aus)"
         }
+      },
+      "overlay": {
+        "title": "Overlav"
       },
       "sleepMode": {
         "startupBehaviour": {
           "option": {
             "disabled": {
+              "description": "Als inaktiv starten",
               "title": "Inaktiv"
             },
             "enabled": {
+              "description": "Als aktiv starten",
               "title": "Aktiv"
+            },
+            "persist": {
+              "description": "Letzte Einstellung merken",
+              "title": "Gespeicherter Status"
             }
-          }
+          },
+          "title": "Start Status"
         },
         "title": "Schlafmodus"
       },
+      "startStop": {
+        "title": "Start und Stop"
+      },
+      "startWithSteamVR": {
+        "howTo": "Wie macht man"
+      },
       "stopWithSteamVR": {
+        "label": "Mit SteamVR schließen",
         "options": {
-          "DISABLED": "Deaktiviert"
+          "AFTERDELAY": "Nach 2 Minuten",
+          "DISABLED": "Deaktiviert",
+          "IMMEDIATELY": "Direkt"
         }
+      },
+      "systemTray": {
+        "close": {
+          "label": "Mit Taskleiste schließen"
+        },
+        "start": {
+          "label": "In Taskleiste starten"
+        },
+        "title": "Taskleiste"
+      },
+      "telemetry": {
+        "label": "Sende anonymisierte Nutzerdaten",
+        "title": "Telemetrie"
       },
       "title": "Generelle Einstellungen"
     },
     "hotkeys": {
       "action": {
-        "HOTKEY_TOGGLE_SLEEP_MODE": "Schlafmodus umschalten"
+        "HOTKEY_DISABLE_SLEEP_MODE": "Schlafmodus deaktivieren",
+        "HOTKEY_ENABLE_SLEEP_MODE": "Schlafmodus aktivieren",
+        "HOTKEY_RUN_SHUTDOWN_SEQUENCE": "Herunterfahrsequenz starten",
+        "HOTKEY_RUN_SLEEP_PREPARATION": "Schlafen Vorbereiten",
+        "HOTKEY_TOGGLE_LIGHTHOUSE_DEVICES": "Basisstationen umschalten",
+        "HOTKEY_TOGGLE_SLEEP_MODE": "Schlafmodus umschalten",
+        "HOTKEY_TURN_OFF_CONTROLLER_DEVICES": "Kontroller ausschalten",
+        "HOTKEY_TURN_OFF_LIGHTHOUSE_DEVICES": "Basisstationen ausschalten",
+        "HOTKEY_TURN_OFF_TRACKER_DEVICES": "Tracker einschalten",
+        "HOTKEY_TURN_ON_LIGHTHOUSE_DEVICES": "Basisstationen einschalten"
       },
       "title": "Tastenbelegung"
     },
@@ -944,16 +1362,38 @@
         }
       }
     },
+    "tabs": {
+      "settings": "Einstellungen"
+    },
     "title": "Ausschaltsequenz"
   },
   "sleep-detection": {
+    "sleepDetection": {
+      "automation": {
+        "title": "Schlaferkennung"
+      }
+    },
     "title": "Schlaferkennung"
   },
   "sleepAnimations": {
     "title": "Schlafanimationen"
   },
   "status-automations": {
-    "onlyIfSleepModeEnabled": "Nur wenn der Schlafmodus aktiviert ist",
+    "general": {
+      "onSleepDisable": {
+        "title": "Wenn ich aufwache"
+      },
+      "onSleepEnable": {
+        "title": "Wenn ich einschlafe"
+      },
+      "onSleepPreparation": {
+        "script": "Schlafvorbereitung",
+        "title": "Wenn ich mich fürs Schlafen vorbereite"
+      }
+    },
+    "playerLimit": {
+      "onlyIfSleepModeEnabled": "Nur wenn der Schlafmodus aktiviert ist"
+    },
     "title": "Status-Automatisierungen"
   },
   "systemMicMuteAutomations": {
@@ -973,19 +1413,34 @@
     },
     "title": "System-Stummschaltungsautomatisierungen"
   },
+  "vrchatAvatarAutomations": {
+    "onSleepDisable": {
+      "title": "Wenn ich aufwache"
+    },
+    "onSleepEnable": {
+      "title": "Wenn ich einschlafe"
+    },
+    "onSleepPreparation": {
+      "script": "Schlafvorbereitung",
+      "title": "Wenn ich mich fürs Schlafen vorbereite"
+    }
+  },
   "vrchatMicMuteAutomations": {
     "automations": {
       "title": "Automatisierungen"
     },
     "muteOptions": {
       "MUTE": "Stummschalten",
+      "NONE": "Keines",
       "UNMUTE": "Stummschaltung aufheben"
     },
     "onSleepPreparation": {
       "title": "Wenn ich mich fürs Schlafen vorbereite"
     },
     "status": {
-      "muted": "Stummgeschaltet"
+      "muted": "Stummgeschaltet",
+      "unknown": "Unbekannt",
+      "unmuted": "Entstummen"
     },
     "title": "VRChat-Stummschaltungsautomatisierungen"
   }
