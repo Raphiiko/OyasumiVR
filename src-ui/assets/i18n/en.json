@@ -1251,8 +1251,8 @@
         "general": {
           "advanced": {
             "avatarReloadHotfix": {
-              "title": "Hotfix for using avatar animations with FBT",
-              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>"
+              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
+              "title": "Hotfix for using avatar animations with FBT"
             },
             "title": "Advanced Options"
           },
