@@ -20,8 +20,18 @@
       "SET_VOLUME": "更改音量",
       "UNMUTE": "开启"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "在睡眠模式启用时禁用OyasumiVR时运行此自动化",
+        "onSleepEnable": "在睡眠模式启用时启动OyasumiVR时运行此自动化"
+      },
+      "title": "启动时应用"
+    },
     "automations": {
       "label": "{count} 个自动化"
+    },
+    "config": {
+      "title": "设置"
     },
     "description": "当你入睡（或醒来）时，自动改变音频设备的音量！如果你想防止他人打扰你的睡眠，这将会非常有用。",
     "devices": {
@@ -138,14 +148,58 @@
     "whitelist": "玩家白名单"
   },
   "brightness-automations": {
+    "AT_SUNRISE": {
+      "title": "在日出时"
+    },
+    "AT_SUNSET": {
+      "title": "在日落时"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "当我醒来时"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "当我入睡时"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "当我准备入睡时"
+    },
+    "activation": {
+      "category": "激活自动化"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "日出时间",
+        "title": "日出时间"
+      },
+      "SUNSET": {
+        "description": "日落时间",
+        "title": "日落时间"
+      }
+    },
+    "autoDetermineSunsetSunrise": "自动估算时间",
     "brightness": {
       "title": "将亮度改为"
     },
+    "changeBrightness": {
+      "category": "亮度",
+      "description": "调整你的VR设备的亮度值",
+      "title": "更改亮度"
+    },
+    "changeTemperature": {
+      "category": "色温",
+      "description": "调整你的VR设备所显示图像的色温",
+      "title": "更改色温",
+      "warning": "调整色温功能仅支持某些原生SteamVR头戴设备。\n\n已知支持的头戴设备：\n• Valve Index\n• HTC Vive (Pro)\n• Bigscreen Beyond"
+    },
     "copyBrightness": "复制当前亮度值",
+    "description": "让OyasumiVR在不同时间自动调整你的VR头戴设备的亮度和/或色温，比如在你入睡时或醒来时！",
+    "detailsTitle": "事件",
+    "events": "事件",
     "hardwareBrightness": {
       "description": "调整显示屏本身的亮度",
       "title": "将硬件亮度更改为"
     },
+    "miscConfig": "其他选项",
     "mode": {
       "advanced": "高级模式",
       "simple": "简单模式"
@@ -154,11 +208,27 @@
       "message": "OyasumiVR 有两种控制 VR 头戴设备亮度的方法：软件控制和硬件控制：\n\n 软件控制适用于所有头戴设备。它通过调整软件内的亮度来调整你的 VR 头戴设备的亮度。\n\n 硬件控制只适用于支持的头戴设备（Valve Index，Bigscreen Beyond）。它直接在支持的范围内调整你的头戴设备的显示屏亮度。\n\n 在简单模式下，如果不支持硬件亮度，OyasumiVR 将平滑地过渡到控制软件和硬件亮度，或者只控制软件亮度。\n\n 如果你更喜欢直接控制，高级模式允许你分别控制软件和硬件亮度，从而允许你为每个设备设置精确的亮度值。",
       "title": "亮度调节模式"
     },
+    "onHmdConnectInfo": "当你同时启用“在日落时”和“在日出时”自动化时，它们会根据一天中的时间在你连接头戴设备时自动运行。如果未启用，则会使用“我入睡时”和“我醒来时”自动化中的值！",
+    "onlyWhenSleepModeDisabled": {
+      "description": "仅在睡眠模式禁用时运行此自动化",
+      "title": "仅在睡眠模式禁用时"
+    },
     "softwareBrightness": {
       "description": "调整 VR 头显的图像亮度",
       "title": "将软件亮度更改为"
     },
-    "title": "亮度自动化"
+    "temperature": {
+      "title": "将色温更改为"
+    },
+    "title": "亮度自动化",
+    "transition": {
+      "description": "使亮度和/或色温随时间平滑过渡",
+      "title": "平滑过渡"
+    },
+    "transitionTime": {
+      "description": "完成更改所需的时间",
+      "title": "过渡时间"
+    }
   },
   "chaperone-automations": {
     "description": "在开启（或关闭）睡眠模式时，OyasumiVR 可以自动调整 SteamVR 的保护墙的淡出距离。",
@@ -183,6 +253,9 @@
     },
     "bsb-fan-speed-control-modal": {
       "fanSpeed": "风扇速度"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "色温"
     },
     "color-picker-modal": {
       "title": "选择颜色"
@@ -238,6 +311,7 @@
       "resolutionAutomations": "分辨率",
       "settings": {
         "advanced": "高级选项",
+        "brightnessCct": "亮度和色温设置",
         "general": "常规设置",
         "hotkeys": "快捷键设置",
         "integrations": "集成插件",
@@ -329,7 +403,7 @@
             "blacklist": "由于该玩家没有被列入黑名单",
             "whitelist": "由于该玩家被列入白名单"
           },
-          "title": "自动接受了来自''{displayName} 的加入请求 "
+          "title": "自动接受了来自''{displayName} 的加入请求"
         },
         "bsbFanSpeedChanged": {
           "reason": {
@@ -349,6 +423,17 @@
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": "Bigscreen Beyond RGB Led 设置为 {color}"
+        },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
+            "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
+          },
+          "title": {
+            "set": "头戴设备色温设置为 {icon} {temperature}K",
+            "transition": "头戴设备色温过渡到 {icon} {temperature}K"
+          }
         },
         "changedAudioDeviceVolume": {
           "reason": {
@@ -410,6 +495,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
@@ -526,6 +613,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
@@ -578,6 +667,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "因为已关闭睡眠模式",
+            "SLEEP_MODE_ENABLE": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
           "title": {
@@ -680,6 +771,10 @@
         "label": "屏幕亮度",
         "tooltip": "Bigscreen Beyond 屏幕亮度"
       },
+      "cctControl": {
+        "label": "色温控制",
+        "tooltip": "色温控制"
+      },
       "heartrate": "心率",
       "inactive": "已关闭",
       "loggedOut": "未登录",
@@ -767,6 +862,7 @@
         "sleep": "等待"
       },
       "addCommand": "新增",
+      "addParameter": "添加参数",
       "commandCounter": "{count}条指令",
       "commands": {
         "COMMAND": {
@@ -783,7 +879,7 @@
     },
     "player-list-preset-modal": {
       "confirmDelete": {
-        "message": "你确定要删除名为''{name}''的预设吗？它包含{count}个玩家。 ",
+        "message": "你确定要删除名为''{name}''的预设吗？它包含{count}个玩家。",
         "title": "你确定吗？"
       },
       "confirmOverwrite": {
@@ -875,7 +971,7 @@
     "automations": "自动化操作",
     "disable": "关闭 GPU 自动化",
     "disabled": {
-      "disabled": "OyasumiVR 允许你自动调整 GPU 的功耗限制 \n 这样你就可以在睡觉时节省用电量 \n\nGPU 自动化目前仅适用于 NVIDIA GPU\n暂不支持 AMD 和 Intel GPU ",
+      "disabled": "OyasumiVR 允许你自动调整 GPU 的功耗限制 \n 这样你就可以在睡觉时节省用电量 \n\nGPU 自动化目前仅适用于 NVIDIA GPU\n暂不支持 AMD 和 Intel GPU",
       "noSidecar": "为了让 OyasumiVR 能够控制 GPU 的功耗，它需要管理员权限。请点击下方按钮授予 OyasumiVR 管理员权限"
     },
     "elevationSidecarModal": {
@@ -1053,7 +1149,9 @@
       "floatTooPrecise": "该值最多只能有小数点后 3 位的精准度",
       "intOutOfBounds": "该值必须是 0 到 255 之间的有效整数",
       "invalidSyntax": "无效语法",
+      "maxParameterCountExceeded": "每个命令允许的最大参数数量为 {value}",
       "noFloatMilliseconds": "毫秒值必须为整数",
+      "stringTooLong": "字符串值不得超过 {value} 字符限制",
       "tooManyCommands": "OSC 脚本不能有超过 {value} 个操作。",
       "totalDurationTooLong": "脚本操作总持续时间不能超过 10 秒。"
     }
@@ -1151,6 +1249,13 @@
           "title": "脚部 (移动) 锁定"
         },
         "general": {
+          "advanced": {
+            "avatarReloadHotfix": {
+              "description": "如果你想在OyasumiVR关闭全身追踪器后使用头像动画，请启用此选项。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">这是什么，为什么需要它？</a>",
+              "title": "使用全身追踪的头像动画热修复"
+            },
+            "title": "高级选项"
+          },
           "footLock": {
             "description": "脚部锁定在启用时通常会阻止玩家移动或旋转",
             "title": "脚部 (移动) 锁定"
@@ -1555,6 +1660,15 @@
         },
         "title": "Bigscreen Beyond"
       },
+      "cctControl": {
+        "enabled": {
+          "description": "如果你使用其他应用程序来控制显示器的色温（例如 LuxVR 或 OVR Advanced Settings），请禁用此选项",
+          "title": "启用色温控制"
+        },
+        "title": "色温"
+      },
+      "description": "在这里你会找到与亮度和色温相关的所有设置",
+      "title": "亮度和色温",
       "valveIndex": {
         "maxBrightness": {
           "description": "限制 OyasumiVR 将设置的最大亮度值。",
@@ -1890,6 +2004,10 @@
       "whenAloneDuration": {
         "description": "在关机序列运行前，需要独自待多长时间。",
         "title": "持续时间"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "仅在睡眠模式启用时以这种方式触发关机序列",
+        "title": "仅在我入睡时"
       },
       "whenAloneTimeWindow": {
         "description": "只在一天中的特定时间内允许触发关机序列。",
