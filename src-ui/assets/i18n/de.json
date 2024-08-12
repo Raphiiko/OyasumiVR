@@ -977,6 +977,11 @@
     "automations": {
       "title": "Automatisierungen"
     },
+    "playSound": {
+      "volume": {
+        "test": "Test"
+      }
+    },
     "title": "Albtraumerkennung"
   },
   "notifications": {
@@ -1009,6 +1014,13 @@
         "title": "Wenn ich mich fürs Schlafen vorbereite"
       }
     },
+    "sleepingAnimations": {
+      "options": {
+        "positions": {
+          "UNKNOWN": "Unbekannt"
+        }
+      }
+    },
     "title": "OSC-Automatisierungen"
   },
   "overlay": {
@@ -1022,6 +1034,7 @@
         "autoAcceptInviteRequests": {
           "mode": {
             "Blacklist": "Blacklist",
+            "Disabled": "Für jeden",
             "Whitelist": "Whitelist"
           },
           "title": "Automatisch Einladungsanfragen annehmen"
@@ -1062,6 +1075,10 @@
     "devicePowerOff": {
       "onBatteryLevel": {
         "controllers": {
+          "description": "Wenn die Batterie niedriger ist als",
+          "onlyDuringSleepMode": {
+            "title": "Nur im Schlafmodus einschalten"
+          },
           "powerOffConflict": {
             "action": "Schlaferkennung"
           },
@@ -1152,6 +1169,9 @@
           },
           "title": "Speicherüberwachung"
         }
+      },
+      "logs": {
+        "title": "Log Files"
       },
       "persistentData": {
         "dataType": {
@@ -1339,7 +1359,10 @@
       "title": "Integrationen"
     },
     "notifications": {
-      "title": "Benachrichtigungseinstellungen"
+      "title": "Benachrichtigungseinstellungen",
+      "volume": {
+        "test": "Test"
+      }
     },
     "statusInfo": {
       "title": "Status-Information"
@@ -1350,16 +1373,30 @@
     }
   },
   "shared": {
+    "common": {
+      "none": "Keine"
+    },
     "modals": {
       "confirm": "Bestätigen"
     }
   },
   "shutdown-automations": {
+    "confirm-modal": {
+      "title": "Bist du sicher?"
+    },
     "sequence": {
+      "powerDownWindows": {
+        "options": {
+          "SLEEP": "Schlaf"
+        }
+      },
       "quitSteamVR": {
         "conflict": {
           "goToSettings": "Generelle Einstellungen"
         }
+      },
+      "turnOffBaseStations": {
+        "title": "Alle Basisstationen ausschalten"
       }
     },
     "tabs": {
@@ -1368,9 +1405,26 @@
     "title": "Ausschaltsequenz"
   },
   "sleep-detection": {
+    "modals": {
+      "disableForPlayerJoinLeave": {
+        "onlyWhenLeftAlone": {
+          "title": "Nur wenn alleine"
+        },
+        "triggerOptions": {
+          "BLACKLIST": "Spieler nicht auf der Liste",
+          "DISABLED": "Für niemanden",
+          "EVERYONE": "Für jeden",
+          "FRIEND": "Für Freunde",
+          "WHITELIST": "Spieler auf der Liste"
+        }
+      }
+    },
     "sleepDetection": {
       "automation": {
         "title": "Schlaferkennung"
+      },
+      "configuration": {
+        "title": "Einstellung"
       }
     },
     "title": "Schlaferkennung"
@@ -1397,7 +1451,13 @@
     "title": "Status-Automatisierungen"
   },
   "systemMicMuteAutomations": {
+    "config": {
+      "title": "Einstellung"
+    },
     "controllerBinding": {
+      "onSleepModeDisable": {
+        "title": "Wenn der Schlafmodus deaktiviert ist"
+      },
       "onSleepPreparation": {
         "title": "Wenn ich mich fürs Schlafen vorbereite"
       }
@@ -1407,6 +1467,9 @@
       "UNMUTE": "Stummschaltung aufheben"
     },
     "stateAutomations": {
+      "onSleepModeDisable": {
+        "title": "Wenn der Schlafmodus deaktiviert ist"
+      },
       "onSleepPreparation": {
         "title": "Wenn ich mich fürs Schlafen vorbereite"
       }
@@ -1423,16 +1486,23 @@
     "onSleepPreparation": {
       "script": "Schlafvorbereitung",
       "title": "Wenn ich mich fürs Schlafen vorbereite"
-    }
+    },
+    "title": "Avatar Automationen"
   },
   "vrchatMicMuteAutomations": {
     "automations": {
       "title": "Automatisierungen"
     },
+    "config": {
+      "title": "Einstellung"
+    },
     "muteOptions": {
       "MUTE": "Stummschalten",
       "NONE": "Keines",
       "UNMUTE": "Stummschaltung aufheben"
+    },
+    "onSleepModeDisable": {
+      "title": "Wenn der Schlafmodus deaktiviert ist"
     },
     "onSleepPreparation": {
       "title": "Wenn ich mich fürs Schlafen vorbereite"
