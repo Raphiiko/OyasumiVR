@@ -199,13 +199,18 @@ export class ShutdownAutomationsService {
   private async handleTriggerOnSleep() {
     interval(1000)
       .pipe(
-        filter(() => this._stage.value === 'IDLE'),
+        // Only trigger if this trigger is enabled
         filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerOnSleep),
+        // Only trigger if the shutdown sequence isn't running
+        filter(() => this._stage.value === 'IDLE'),
+        // Only trigger if the sleep mode is active
         filter(() => this.sleepMode),
         // Only trigger if we haven't already triggered this sleep (resets once sleep mode disables)
         filter(() => !this.triggeredThisSleep),
+        // Only trigger if the sleep mode has been active for long enough
         filter(() => Date.now() - this.sleepModeLastSet >= this.config.triggerOnSleepDuration),
+        // Only trigger if we're in the activation window, if it's configured
         filter(
           () =>
             !this.config.triggerOnSleepActivationWindow ||
@@ -213,9 +218,7 @@ export class ShutdownAutomationsService {
               this.config.triggerOnSleepActivationWindowStart,
               this.config.triggerOnSleepActivationWindowEnd
             )
-        ),
-        // Only trigger once every 5 minutes at most
-        throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
+        )
       )
       .subscribe(() => {
         this.triggeredThisSleep = true;
