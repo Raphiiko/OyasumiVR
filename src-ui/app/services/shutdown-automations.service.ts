@@ -56,6 +56,7 @@ export class ShutdownAutomationsService {
   );
   private sleepMode = false;
   private sleepModeLastSet = 0;
+  private triggeredThisSleep = false;
   private aloneSince = 0;
   private isAlone = false;
   private wasNotAlone = false;
@@ -105,7 +106,7 @@ export class ShutdownAutomationsService {
     this.automationConfigService.configs
       .pipe(
         map((configs) => configs.SHUTDOWN_AUTOMATIONS),
-        // Reset the 'last set' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
+        // Reset the 'alone since' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
         pairwise(),
         filter(([oldConfig, newConfig]) => {
           const keys: Array<keyof ShutdownAutomationsConfig> = [
@@ -125,6 +126,7 @@ export class ShutdownAutomationsService {
     // Track sleep mode being set
     this.sleepService.mode.pipe(distinctUntilChanged()).subscribe((mode) => {
       this.sleepMode = mode;
+      if (!this.sleepMode) this.triggeredThisSleep = false;
       this.sleepModeLastSet = Date.now();
     });
     // Track being alone
@@ -201,6 +203,8 @@ export class ShutdownAutomationsService {
         filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerOnSleep),
         filter(() => this.sleepMode),
+        // Only trigger if we haven't already triggered this sleep (resets once sleep mode disables)
+        filter(() => !this.triggeredThisSleep),
         filter(() => Date.now() - this.sleepModeLastSet >= this.config.triggerOnSleepDuration),
         filter(
           () =>
@@ -213,7 +217,10 @@ export class ShutdownAutomationsService {
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )
-      .subscribe(() => this.runSequence('SLEEP_TRIGGER'));
+      .subscribe(() => {
+        this.triggeredThisSleep = true;
+        this.runSequence('SLEEP_TRIGGER');
+      });
   }
 
   private async handleTriggerWhenAlone() {

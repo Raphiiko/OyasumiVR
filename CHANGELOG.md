@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
+- Shutdown sequence being triggered over and over by the sleep mode trigger, when not using it to shut down or reboot the PC.
 
 ## [1.13.3]
 
@@ -40,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Certain types of selection in input fields (e.g. Ctrl+A) being blocked
 
 ### Changed
+
 - Window titlebar icons
 
 ## [1.13.2]
