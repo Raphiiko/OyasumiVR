@@ -28,6 +28,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
 
+### Fixed
+
+- Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
+
 ## [1.13.3]
 
 ### Fixed

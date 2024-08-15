@@ -91,4 +91,10 @@ export class DurationInputSettingComponent {
       if (Object.values(this.mouseInside).every((v) => !v)) this.inputOpen = false;
     }, 200);
   }
+
+  mouseClickInput() {
+    if (this.inputOpen && this.hourInput?.nativeElement) {
+      this.hourInput.nativeElement.focus();
+    }
+  }
 }
