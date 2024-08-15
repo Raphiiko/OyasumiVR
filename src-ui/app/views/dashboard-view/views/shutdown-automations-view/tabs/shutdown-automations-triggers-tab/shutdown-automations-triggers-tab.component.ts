@@ -80,12 +80,19 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     if (isNaN(hours)) hours = 0;
     if (isNaN(minutes)) minutes = 0;
     if (isNaN(seconds)) seconds = 0;
+    if (hours > 12) {
+        throw new Error("Invalid hour input. Please use hh:mm:ss format.");
+    } else if (hours === 12) {
+        hours = 12;
+    } else {
+        hours = (hours % 12);
+    }
     const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
-      'SHUTDOWN_AUTOMATIONS',
-      {
-        triggerOnSleepDuration: duration,
-      }
+        'SHUTDOWN_AUTOMATIONS',
+        {
+            triggerOnSleepDuration: duration,
+        }
     );
   }
 

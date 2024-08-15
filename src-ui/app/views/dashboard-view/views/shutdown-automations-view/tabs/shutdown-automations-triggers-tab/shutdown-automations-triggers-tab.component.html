@@ -46,8 +46,8 @@
         <div class="setting-row-action">
           <div class="input-wrapper">
             <input
-              type="time"
-              step="1"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="onSleepDurationString"
               (change)="onSleepDurationChange(onSleepDurationInput.value)"
               #onSleepDurationInput
@@ -64,18 +64,18 @@
         <div class="setting-row-action">
           <div class="input-wrapper" *ngIf="config.triggerOnSleepActivationWindow" @fade>
             <input
-              type="time"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="onSleepActivationWindowStart"
-              (change)="
-                onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)
-              "
+              (change)="onChangeOnSleepActivationWindowStart(onSleepActivationWindowStartInput.value)"
               #onSleepActivationWindowStartInput
             />
           </div>
           <span *ngIf="config.triggerOnSleepActivationWindow" @fade> to </span>
           <div class="input-wrapper" *ngIf="config.triggerOnSleepActivationWindow" @fade>
             <input
-              type="time"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="onSleepActivationWindowEnd"
               (change)="onChangeOnSleepActivationWindowEnd(onSleepActivationWindowEndInput.value)"
               #onSleepActivationWindowEndInput
@@ -119,8 +119,8 @@
         <div class="setting-row-action">
           <div class="input-wrapper">
             <input
-              type="time"
-              step="1"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="whenAloneDurationString"
               (change)="whenAloneDurationChange(whenAloneDurationInput.value)"
               #whenAloneDurationInput
@@ -137,22 +137,20 @@
         <div class="setting-row-action">
           <div class="input-wrapper" *ngIf="config.triggerWhenAloneActivationWindow" @fade>
             <input
-              type="time"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="whenAloneActivationWindowStart"
-              (change)="
-                onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)
-              "
+              (change)="onChangeWhenAloneActivationWindowStart(whenAloneActivationWindowStartInput.value)"
               #whenAloneActivationWindowStartInput
             />
           </div>
           <span *ngIf="config.triggerWhenAloneActivationWindow" @fade> to </span>
           <div class="input-wrapper" *ngIf="config.triggerWhenAloneActivationWindow" @fade>
             <input
-              type="time"
+              type="text"
+              placeholder="hh:mm:ss"
               [value]="whenAloneActivationWindowEnd"
-              (change)="
-                onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)
-              "
+              (change)="onChangeWhenAloneActivationWindowEnd(whenAloneActivationWindowEndInput.value)"
               #whenAloneActivationWindowEndInput
             />
           </div>
