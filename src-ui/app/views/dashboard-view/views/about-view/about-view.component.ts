@@ -66,15 +66,27 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
       this.translationContributors = this.translationContributors.map(cnComplianceFix);
     }
 
-    // Rotate translation contributors matrix diagonally
-    function mirrorMatrixDiagonally<T>(arr: T[], columns: number): T[] {
-      const newArr = new Array<T>(arr.length);
-      const rows = Math.ceil(arr.length / columns);
-      for (let i = 0; i < arr.length; i++)
-        newArr[(i % rows) * columns + Math.floor(i / rows)] = arr[i];
-      return newArr;
+    function reorderList<T>(arr: T[], colCount: number): T[] {
+      // Determine the number of items in each column (row fill order)
+      const itemsInCol: number[] = [];
+      const rowCount = Math.ceil(arr.length / colCount);
+      for (let i = 0; i < colCount; i++)
+        itemsInCol.push(i < arr.length % colCount ? rowCount : rowCount - 1);
+
+      // Put the items in columns (column fill order)
+      const columns: T[][] = itemsInCol.reduce((acc, e, i, source) => {
+        const offset = source.slice(0, i).reduce((_acc, _e) => _acc + _e, 0);
+        acc[i] = arr.slice(offset, offset + e);
+        return acc;
+      }, [] as T[][]);
+
+      // Reconstruct the array from the columns
+      return new Array<T>(arr.length)
+        .fill(undefined as T)
+        .map((_, index) => columns[index % colCount][Math.floor(index / colCount)]);
     }
-    this.translationContributors = mirrorMatrixDiagonally(this.translationContributors, 3);
+
+    this.translationContributors = reorderList(this.translationContributors, 3);
   }
 
   async ngOnInit() {
