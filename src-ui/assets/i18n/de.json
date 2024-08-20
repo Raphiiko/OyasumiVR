@@ -220,7 +220,7 @@
     "temperature": {
       "title": "Farbtemperatur ändern zu"
     },
-    "title": "Helligkeitsautomatisierungen",
+    "title": "Helligkeits-Automatisierungen",
     "transition": {
       "description": "Die Helligkeit und Farbtemperatur ändert sich gleichmäßig  zu den von dir angegebenen Wert",
       "title": "Flüssiger Übergang"
@@ -297,25 +297,25 @@
       "about": "Über OyasumiVR",
       "audioVolumeAutomations": "Lautstärke-Automatisierungen",
       "autoInviteRequestAccept": "Automatisch Einladungsanfragen annehmen",
-      "brightnessAutomations": "Helligkeitsautomatisierungen",
+      "brightnessAutomations": "Helligkeits-Automatisierungen",
       "chaperoneAutomations": "Chaperone-Automatisierungen",
       "gpuAutomations": "Grafikkarten-Automatisierungen",
       "hardwareAutomations": "Hardware-Automatisierungen",
       "hmdAutomations": "Headset spezifische Automatisierungen",
-      "joinNotifications": "Beitrittsbenachtichtigungen",
+      "joinNotifications": "Beitrittsbenachrichtigungen",
       "miscAutomations": "Andere Automatisierungen",
       "nightmareDetection": "Albtraumerkennung",
       "oscAutomations": "OSC-Automatisierungen",
       "overview": "Übersicht",
       "powerAutomations": "Energie-Automatisierungen",
-      "resolutionAutomations": "Auflösungsautomatisierungen",
+      "resolutionAutomations": "Auflösung",
       "settings": {
         "advanced": "Erweiterte Einstellungen",
         "brightnessCct": "Helligkeit und CCT Einstellungen",
-        "general": "Generelle Einstellungen",
+        "general": "Allgemeine Einstellungen",
         "hotkeys": "Tastenbelegung",
         "integrations": "Integrationen",
-        "notifications": "Benachrichtigungseinstellungen",
+        "notifications": "Benachrichtigungen",
         "statusInfo": "Status-Information",
         "subMenu": "Einstellungen",
         "updates": "Updates",
@@ -325,10 +325,10 @@
       "sleepAnimations": "Schlafanimationen",
       "sleepDetection": "Schlaferkennung",
       "statusAutomations": "Status-Automatisierungen",
-      "systemMicMuteAutomations": "System-Stummschaltungsautomatisierungen",
+      "systemMicMuteAutomations": "Stummschalten (System)",
       "vrcAutomations": "VRChat-Automatisierungen",
       "vrchatAvatarAutomations": "Avatar Automationen",
-      "vrchatMicMuteAutomations": "VRChat-Stummschaltungsautomatisierungen"
+      "vrchatMicMuteAutomations": "Stummschalten (VRChat)"
     },
     "device-edit-modal": {
       "deviceNickname": {
@@ -1301,7 +1301,7 @@
             "Disabled": "Für jeden",
             "Whitelist": "Whitelist"
           },
-          "subtitle": "mode}: {playerCount, plural, one {1 friend} other {# friends}}",
+          "subtitle": "{mode}: {playerCount, plural, one {1 friend} other {# friends}}",
           "title": "Automatisch Einladungsanfragen annehmen"
         },
         "changeStatusBasedOnPlayerCount": {
@@ -1309,7 +1309,7 @@
           "title": "Status-Automatisierungen"
         },
         "shutdownAutomations": {
-          "subtitle": "{triggerCount, plural, one {1 automatic trigger} other {# automatic triggers} festgelegt",
+          "subtitle": "{triggerCount, plural, one {1 automatic trigger} other {# automatic triggers}} festgelegt",
           "title": "Automatisches Herunterfahren"
         },
         "sleepModeEnableForSleepDetector": {
@@ -1907,7 +1907,7 @@
       "none": "Keine"
     },
     "logo": {
-      "tagline": "VR Schlaf-Unterstützung"
+      "tagline": "VR Sleeping Utilities"
     },
     "misc": {
       "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
