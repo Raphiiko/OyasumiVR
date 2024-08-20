@@ -1204,7 +1204,7 @@
           "title": "Статус автоматизації"
         },
         "shutdownAutomations": {
-          "subtitle": "{{triggerCount, plural, one {1 автоматичний трігер} other {#автоматичних тригерів}} налаштовано",
+          "subtitle": "{triggerCount, plural, one {1 автоматичний трігер} other {#автоматичних тригерів}} налаштовано",
           "title": "Автоматичне вимкнення"
         },
         "sleepModeEnableForSleepDetector": {
