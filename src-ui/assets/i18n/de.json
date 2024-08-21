@@ -302,7 +302,7 @@
       "gpuAutomations": "Grafikkarten-Automatisierungen",
       "hardwareAutomations": "Hardware-Automatisierungen",
       "hmdAutomations": "Headset spezifische Automatisierungen",
-      "joinNotifications": "Beitrittsbenachrichtigungen",
+      "joinNotifications": "Beitritts-Benachrichtigung",
       "miscAutomations": "Andere Automatisierungen",
       "nightmareDetection": "Albtraumerkennung",
       "oscAutomations": "OSC-Automatisierungen",
@@ -1345,8 +1345,8 @@
       },
       "shutdownSequence": {
         "dialog": {
-          "message": "Bist du sicher, dass du die Herunterfahrensequenz starten willst?\n\nDu kannst dich die Aktionen der Sequenz im Hauptmenu des OyasumiVR Fenster.",
-          "start": "Herunterfahren starten",
+          "message": "Bist du sicher, dass du die Herunterfahrensequenz starten willst?\n\nDu kannst die Aktionen der Sequenz im Hauptmenu des OyasumiVR Fenster einsehen.",
+          "start": "Herunterfahren",
           "title": "Herunterfahrsequenz"
         }
       }
