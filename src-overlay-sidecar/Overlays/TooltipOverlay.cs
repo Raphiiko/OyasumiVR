@@ -14,7 +14,7 @@ public class TooltipOverlay : BaseWebOverlay {
   private string? _text = "";
 
   public TooltipOverlay() :
-    base("/tooltip", 512, "co.raphii.oyasumi:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay")
+    base("/tooltip", 512, "co.raphii.oyasumivr:TooltipOverlay_" + Guid.NewGuid(), "OyasumiVR Tooltip Overlay")
   {
     OpenVR.Overlay.SetOverlayWidthInMeters(OverlayHandle, 0.35f);
     OpenVR.Overlay.SetOverlaySortOrder(OverlayHandle, 150);

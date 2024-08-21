@@ -30,13 +30,13 @@ public static class Program {
     {
       if (args.Length < 1 || !int.TryParse(args[0], out coreGrpcPort))
       {
-        Log.Error("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
 
       if (args.Length < 2 || !int.TryParse(args[1], out mainProcessId))
       {
-        Log.Error("Usage: overlay-sidecar.exe <core grpc port> <core process id>");
+        Log.Error("Usage: oyasumivr-overlay-sidecar.exe <core grpc port> <core process id>");
         return;
       }
     }

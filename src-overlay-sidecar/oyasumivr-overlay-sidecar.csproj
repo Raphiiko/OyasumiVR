@@ -11,6 +11,7 @@
     <SelfContained>true</SelfContained>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <RootNamespace>oyasumivr-overlay-sidecar</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
