@@ -100,30 +100,33 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
   }
 
   protected async updateBrightness(type: BrightnessType, value: number | 'CURRENT') {
+    const copyCurrent = value === 'CURRENT';
     const pConfig: Partial<BrightnessEventAutomationConfig> = {};
     switch (type) {
       case 'SIMPLE': {
-        if (value === 'CURRENT') value = this.simpleBrightnessControl.brightness;
-        pConfig.brightness = Math.round(value);
+        if (copyCurrent) value = this.simpleBrightnessControl.brightness;
+        pConfig.brightness = Math.round(value as number);
         break;
       }
       case 'SOFTWARE': {
-        if (value === 'CURRENT') value = this.softwareBrightnessControl.brightness;
-        pConfig.softwareBrightness = Math.round(value);
+        if (copyCurrent) value = this.softwareBrightnessControl.brightness;
+        pConfig.softwareBrightness = Math.round(value as number);
         break;
       }
       case 'HARDWARE': {
-        if (value === 'CURRENT') value = this.hardwareBrightnessControl.brightness;
-        pConfig.hardwareBrightness = Math.round(value);
+        if (copyCurrent) value = this.hardwareBrightnessControl.brightness;
+        pConfig.hardwareBrightness = Math.round(value as number);
         break;
       }
     }
     await this.updateConfig(pConfig);
-    this.vshakeElements.push('BRIGHTNESS_' + type);
-    setTimeout(() => {
-      const index = this.vshakeElements.indexOf('BRIGHTNESS_' + type);
-      if (index >= 0) this.vshakeElements.splice(index, 1);
-    }, 300);
+    if (copyCurrent) {
+      this.vshakeElements.push('BRIGHTNESS_' + type);
+      setTimeout(() => {
+        const index = this.vshakeElements.indexOf('BRIGHTNESS_' + type);
+        if (index >= 0) this.vshakeElements.splice(index, 1);
+      }, 300);
+    }
   }
 
   protected async toggleChangeBrightness() {

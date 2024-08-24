@@ -15,8 +15,6 @@ import { CCTControlService } from '../../services/cct-control/cct-control.servic
   animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class CCTControlModalComponent extends BaseModalComponent<void, void> implements OnInit {
-  cctBounds = [1000, 10000];
-
   protected readonly setCCT = new Subject<number>();
 
   constructor(
