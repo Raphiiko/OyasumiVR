@@ -56,6 +56,14 @@ export const DEFAULT_OYASUMI_STATE: OyasumiSidecarState = {
 		hardwareMinBrightness: 20,
 		hardwareMaxBrightness: 160
 	},
+	cctState: {
+		enabled: true,
+		value: 6600,
+		min: 1000,
+		max: 10000,
+		transitioning: false,
+		transitionTarget: 6600
+	},
 	sleepPreparationAvailable: false,
 	sleepPreparationTimedOut: false,
 	systemMicMuted: false

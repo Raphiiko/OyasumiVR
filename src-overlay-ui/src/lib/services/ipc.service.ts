@@ -168,6 +168,15 @@ class IPCService {
 		});
 	}
 
+	public async setColorTemperature(value: number): Promise<void> {
+		this.state.update((state) => {
+			state = cloneDeep(state);
+			state.cctState!.value = value;
+			window.OyasumiIPCOut.sendEventDouble('setColorTemperature', value);
+			return state;
+		});
+	}
+
 	public async prepareForSleep() {
 		await window.OyasumiIPCOut.sendEventVoid('prepareForSleep');
 	}

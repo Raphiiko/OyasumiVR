@@ -42,6 +42,7 @@
     "just-throttle": "^4.2.0",
     "lodash-es": "^4.17.21",
     "material-icons": "^1.13.8",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "tailwindcss-multi": "^0.4.6"
   }
 }

@@ -9,7 +9,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Exposed HMD activity level over MQTT as "HMD On Head" (Experimental).
 - Color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
 - Color temperature control to the current brightness automations.
 - Sunset/Sunrise based automations for brightness and color temperature.
@@ -17,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option for audio volume automations to apply on start.
 - OSC Scripts can now also write to VRChat parameters that have been automatically renamed by VRCFury or Modular Avatar
 - Optional workaround for VRChat not automatically reloading your avatar after all trackers have been turned off.
+- Exposed HMD activity level over MQTT as "HMD On Head" (Experimental).
+- German language support (thanks to community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85))
 
 ### Changed
 

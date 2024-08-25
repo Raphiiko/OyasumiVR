@@ -17,7 +17,7 @@ public class DashboardOverlay : BaseWebOverlay {
   public event Action? OnClose;
 
   public DashboardOverlay() :
-    base("/dashboard", 1024, "co.raphii.oyasumi:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
+    base("/dashboard", 1024, "co.raphii.oyasumivr:DashboardOverlay_" + Guid.NewGuid(), "OyasumiVR Dashboard Overlay")
   {
     Browser!.JavascriptObjectRepository.Register("OyasumiIPCOut_Dashboard", this);
     _tooltipOverlay = new TooltipOverlay();

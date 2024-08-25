@@ -1293,6 +1293,7 @@
       "simple": "Brightness",
       "software": "Software Brightness"
     },
+    "colorTemp": "Color Temperature",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1340,7 +1341,11 @@
           "automations": "Automations",
           "deviceControl": "Device Control",
           "prepareForSleep": "Prepare for sleep",
-          "shutdown": "Shutdown Sequence"
+          "shutdown": "Shutdown Sequence",
+          "sliderMode": {
+            "BRIGHTNESS": "Brightness Control",
+            "COLOR_TEMP": "Color Temperature Control"
+          }
         }
       },
       "shutdownSequence": {

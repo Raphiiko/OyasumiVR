@@ -128,6 +128,10 @@ export interface OyasumiSidecarState {
    * @generated from protobuf field: bool system_mic_muted = 11;
    */
   systemMicMuted: boolean;
+  /**
+   * @generated from protobuf field: OyasumiOverlaySidecar.OyasumiSidecarCCTState cct_state = 12;
+   */
+  cctState?: OyasumiSidecarCCTState;
 }
 /**
  * No longer required, but reserved for future settings
@@ -433,6 +437,35 @@ export interface OyasumiSidecarBrightnessState {
    * @generated from protobuf field: double hardware_max_brightness = 13;
    */
   hardwareMaxBrightness: number;
+}
+/**
+ * @generated from protobuf message OyasumiOverlaySidecar.OyasumiSidecarCCTState
+ */
+export interface OyasumiSidecarCCTState {
+  /**
+   * @generated from protobuf field: bool enabled = 1;
+   */
+  enabled: boolean;
+  /**
+   * @generated from protobuf field: uint32 value = 2;
+   */
+  value: number;
+  /**
+   * @generated from protobuf field: uint32 min = 3;
+   */
+  min: number;
+  /**
+   * @generated from protobuf field: uint32 max = 4;
+   */
+  max: number;
+  /**
+   * @generated from protobuf field: bool transitioning = 5;
+   */
+  transitioning: boolean;
+  /**
+   * @generated from protobuf field: uint32 transition_target = 6;
+   */
+  transitionTarget: number;
 }
 /**
  * @generated from protobuf enum OyasumiOverlaySidecar.OyasumiSidecarAutomationsState_AutoAcceptInviteRequests_Mode
@@ -962,6 +995,7 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
       { no: 9, name: 'sleep_preparation_available', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 10, name: 'sleep_preparation_timed_out', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
       { no: 11, name: 'system_mic_muted', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 12, name: 'cct_state', kind: 'message', T: () => OyasumiSidecarCCTState },
     ]);
   }
   create(value?: PartialMessage<OyasumiSidecarState>): OyasumiSidecarState {
@@ -1042,6 +1076,14 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
         case /* bool system_mic_muted */ 11:
           message.systemMicMuted = reader.bool();
           break;
+        case /* OyasumiOverlaySidecar.OyasumiSidecarCCTState cct_state */ 12:
+          message.cctState = OyasumiSidecarCCTState.internalBinaryRead(
+            reader,
+            reader.uint32(),
+            options,
+            message.cctState
+          );
+          break;
         default:
           let u = options.readUnknownField;
           if (u === 'throw')
@@ -1112,6 +1154,13 @@ class OyasumiSidecarState$Type extends MessageType<OyasumiSidecarState> {
     /* bool system_mic_muted = 11; */
     if (message.systemMicMuted !== false)
       writer.tag(11, WireType.Varint).bool(message.systemMicMuted);
+    /* OyasumiOverlaySidecar.OyasumiSidecarCCTState cct_state = 12; */
+    if (message.cctState)
+      OyasumiSidecarCCTState.internalBinaryWrite(
+        message.cctState,
+        writer.tag(12, WireType.LengthDelimited).fork(),
+        options
+      ).join();
     let u = options.writeUnknownFields;
     if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
     return writer;
@@ -2414,6 +2463,106 @@ class OyasumiSidecarBrightnessState$Type extends MessageType<OyasumiSidecarBrigh
  * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarBrightnessState
  */
 export const OyasumiSidecarBrightnessState = new OyasumiSidecarBrightnessState$Type();
+// @generated message type with reflection information, may provide speed optimized methods
+class OyasumiSidecarCCTState$Type extends MessageType<OyasumiSidecarCCTState> {
+  constructor() {
+    super('OyasumiOverlaySidecar.OyasumiSidecarCCTState', [
+      { no: 1, name: 'enabled', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 2, name: 'value', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+      { no: 3, name: 'min', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+      { no: 4, name: 'max', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+      { no: 5, name: 'transitioning', kind: 'scalar', T: 8 /*ScalarType.BOOL*/ },
+      { no: 6, name: 'transition_target', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
+    ]);
+  }
+  create(value?: PartialMessage<OyasumiSidecarCCTState>): OyasumiSidecarCCTState {
+    const message = {
+      enabled: false,
+      value: 0,
+      min: 0,
+      max: 0,
+      transitioning: false,
+      transitionTarget: 0,
+    };
+    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
+    if (value !== undefined) reflectionMergePartial<OyasumiSidecarCCTState>(this, message, value);
+    return message;
+  }
+  internalBinaryRead(
+    reader: IBinaryReader,
+    length: number,
+    options: BinaryReadOptions,
+    target?: OyasumiSidecarCCTState
+  ): OyasumiSidecarCCTState {
+    let message = target ?? this.create(),
+      end = reader.pos + length;
+    while (reader.pos < end) {
+      let [fieldNo, wireType] = reader.tag();
+      switch (fieldNo) {
+        case /* bool enabled */ 1:
+          message.enabled = reader.bool();
+          break;
+        case /* uint32 value */ 2:
+          message.value = reader.uint32();
+          break;
+        case /* uint32 min */ 3:
+          message.min = reader.uint32();
+          break;
+        case /* uint32 max */ 4:
+          message.max = reader.uint32();
+          break;
+        case /* bool transitioning */ 5:
+          message.transitioning = reader.bool();
+          break;
+        case /* uint32 transition_target */ 6:
+          message.transitionTarget = reader.uint32();
+          break;
+        default:
+          let u = options.readUnknownField;
+          if (u === 'throw')
+            throw new globalThis.Error(
+              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
+            );
+          let d = reader.skip(wireType);
+          if (u !== false)
+            (u === true ? UnknownFieldHandler.onRead : u)(
+              this.typeName,
+              message,
+              fieldNo,
+              wireType,
+              d
+            );
+      }
+    }
+    return message;
+  }
+  internalBinaryWrite(
+    message: OyasumiSidecarCCTState,
+    writer: IBinaryWriter,
+    options: BinaryWriteOptions
+  ): IBinaryWriter {
+    /* bool enabled = 1; */
+    if (message.enabled !== false) writer.tag(1, WireType.Varint).bool(message.enabled);
+    /* uint32 value = 2; */
+    if (message.value !== 0) writer.tag(2, WireType.Varint).uint32(message.value);
+    /* uint32 min = 3; */
+    if (message.min !== 0) writer.tag(3, WireType.Varint).uint32(message.min);
+    /* uint32 max = 4; */
+    if (message.max !== 0) writer.tag(4, WireType.Varint).uint32(message.max);
+    /* bool transitioning = 5; */
+    if (message.transitioning !== false) writer.tag(5, WireType.Varint).bool(message.transitioning);
+    /* uint32 transition_target = 6; */
+    if (message.transitionTarget !== 0)
+      writer.tag(6, WireType.Varint).uint32(message.transitionTarget);
+    let u = options.writeUnknownFields;
+    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
+    return writer;
+  }
+}
+/**
+ * @generated MessageType for protobuf message OyasumiOverlaySidecar.OyasumiSidecarCCTState
+ */
+export const OyasumiSidecarCCTState = new OyasumiSidecarCCTState$Type();
 /**
  * @generated ServiceType for protobuf service OyasumiOverlaySidecar.OyasumiOverlaySidecar
  */
