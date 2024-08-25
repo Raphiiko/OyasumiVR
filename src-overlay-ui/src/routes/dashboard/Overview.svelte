@@ -212,7 +212,7 @@
 			</Card>
 			{#if cctState.enabled}
 				<Clickable
-					tooltip={$t('t.overlay.dashboard.overview.tooltip.sliderMode.' + sliderModeButtonMode)}
+					tooltip={$t('t.overlay.dashboard.overview.tooltip.sliderMode.' + $sliderModeButtonMode)}
 					on:click={() => sliderMode.set($sliderModeButtonMode)}
 				>
 					<Card class="col-span-1 w-full h-full relative" clickable={true}>
