@@ -36,7 +36,7 @@ public class OverlayPointer {
     OpenVR.Overlay.SetOverlaySortOrder(_leftPointer.OverlayHandle, 150);
     OpenVR.Overlay.SetOverlaySortOrder(_rightPointer.OverlayHandle, 150);
     // Load pointer image into overlays
-    var pointerImage = Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("overlay-sidecar.Resources.pointer.png"));
+    var pointerImage = Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("oyasumivr-overlay-sidecar.Resources.pointer.png"));
     var intPtr = Marshal.AllocHGlobal(pointerImage.Item1.Length);
     Marshal.Copy(pointerImage.Item1, 0, intPtr, pointerImage.Item1.Length);
     OpenVR.Overlay.SetOverlayRaw(_rightPointer.OverlayHandle, intPtr, (uint)pointerImage.Item2,

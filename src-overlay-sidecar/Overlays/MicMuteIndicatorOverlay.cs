@@ -29,9 +29,9 @@ public class MicMuteIndicatorOverlay : RenderableOverlay {
   {
     // Load image resources
     _muteImage =
-      Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("oyasumi-overlay-sidecar.Resources.mic_mute.png"));
+      Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("oyasumivr-overlay-sidecar.Resources.mic_mute.png"));
     _unmuteImage =
-      Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("oyasumi-overlay-sidecar.Resources.mic_unmute.png"));
+      Utils.ConvertPngToRgba(Utils.LoadEmbeddedFile("oyasumivr-overlay-sidecar.Resources.mic_unmute.png"));
     _textureWriter = new TextureWriter(512);
     // Create the overlay
     OpenVR.Overlay.CreateOverlay("co.raphii.oyasumivr:MicMuteIndicatorOverlay", "OyasumiVR Mic Mute Indicator Overlay",
