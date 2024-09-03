@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
-import { invoke } from '@tauri-apps/api';
+import { OpenVRService } from '../../../services/openvr.service';
+import { firstValueFrom, take } from 'rxjs';
+import { writeText } from '@tauri-apps/api/clipboard';
 
 @Component({
   selector: 'app-misc-testing',
@@ -10,15 +12,16 @@ import { invoke } from '@tauri-apps/api';
 export class MiscTestingComponent implements OnInit {
   @Input() modal?: BaseModalComponent<any, any>;
 
-  constructor() {}
+  constructor(private openvr: OpenVRService) {}
 
   ngOnInit(): void {}
 
-  colorTemp = 6600;
   result: any;
+  ovrData: any = {};
 
-  async setColorTemp(temp: number) {
-    this.colorTemp = temp;
-    this.result = await invoke('openvr_set_analog_color_temp', { temperature: this.colorTemp });
+  async pullOvrData() {
+    this.ovrData = await firstValueFrom(this.openvr.devices.pipe(take(1)));
+    await writeText(JSON.stringify(this.ovrData, null, 2));
+    alert('OVR data copied to clipboard');
   }
 }
