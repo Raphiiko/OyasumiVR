@@ -1,13 +1,2 @@
-<pre>
-  {{ colorTemp }}K
-</pre>
-<app-slider
-  [min]="1000"
-  [max]="6600"
-  [step]="100"
-  [value]="colorTemp"
-  (valueChange)="setColorTemp($event)"
-></app-slider>
-<pre>
-  {{ result | json }}
-</pre>
+<button class="btn btn-primary" (click)="pullOvrData()">PULL OVR DATA</button>
+<pre>{{ovrData | json}}</pre>
