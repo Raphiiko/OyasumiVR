@@ -1,4 +1,4 @@
-<div class="pane">
+<div class="pane" *ngIf="type">
   <div class="label" @hshrink *ngFor="let label of hoverAction ? [hoverAction] : []">
     <span>{{ label | translate }}</span>
   </div>
@@ -16,6 +16,7 @@
       (mouseenter)="setHoverAction('comp.device-list.lhForceState.standby')"
       (mouseleave)="hoverAction = ''"
       (click)="action.emit('standby')"
+      *ngIf="type === 'lighthouseV2'"
     >
       <i class="material-icons">mode_standby</i>
     </button>

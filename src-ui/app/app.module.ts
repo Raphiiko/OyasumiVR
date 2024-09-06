@@ -232,6 +232,7 @@ import { CCTInputSettingComponent } from './components/cct-input-setting/cct-inp
 import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
 import { FBTAvatarReloadHotfixService } from './services/hotfixes/f-b-t-avatar-reload-hotfix.service';
 import { AvatarContextService } from './services/avatar-context.service';
+import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 
 [
   localeEN,
@@ -375,6 +376,7 @@ export function createTranslateLoader(http: HttpClient) {
     CCTControlModalComponent,
     SettingsBrightnessCctViewComponent,
     BrightnessAdvancedModeToggleComponent,
+    LighthouseV1IdWizardModalComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [

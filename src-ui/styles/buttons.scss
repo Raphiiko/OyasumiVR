@@ -53,6 +53,9 @@ button.btn-power {
     opacity: 0;
   }
 
+  &.power-attention {
+    color: var(--color-alert-warning);
+  }
   &.power-off {
     color: var(--color-alert-error);
   }

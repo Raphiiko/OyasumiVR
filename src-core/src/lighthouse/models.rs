@@ -1,3 +1,4 @@
+use bluest::{Device, DeviceId};
 use serde::{ser::SerializeStruct, Deserialize, Serialize, Serializer};
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -22,6 +23,7 @@ pub enum LighthousePowerState {
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "camelCase")]
 pub enum LighthouseDeviceType {
+    LighthouseV1, // V1 Base Station (HTC)
     LighthouseV2, // V2 Base Station (Valve)
 }
 
@@ -33,6 +35,7 @@ pub enum LighthouseError {
     FailedToGetCharacteristics(bluest::Error),
     CharacteristicNotFound,
     FailedToReadCharacteristic(bluest::Error),
+    FailedToWriteCharacteristic(bluest::Error),
     InvalidCharacteristicValue,
     CharacteristicDoesNotSupportRead,
     FailedToGetCharacteristicProperties(bluest::Error),
@@ -76,6 +79,10 @@ impl Serialize for LighthouseError {
                 error.serialize_field("error", "FailedToReadCharacteristic")?;
                 error.serialize_field("message", &Some(e.to_string()))?;
             }
+            LighthouseError::FailedToWriteCharacteristic(e) => {
+                error.serialize_field("error", "FailedToWriteCharacteristic")?;
+                error.serialize_field("message", &Some(e.to_string()))?;
+            }
             LighthouseError::InvalidCharacteristicValue => {
                 error.serialize_field("error", "InvalidCharacteristicValue")?;
                 error.serialize_field("message", &None::<String>)?;
@@ -95,10 +102,19 @@ impl Serialize for LighthouseError {
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "camelCase")]
-pub struct LighthouseDevice {
+pub struct LighthouseDeviceModel {
     pub id: String,
-    pub device_name: Option<String>,
+    pub device_name: String,
     pub power_state: LighthousePowerState,
+    pub device_type: LighthouseDeviceType,
+    pub v1_timeout: Option<u16>,
+}
+
+#[derive(Debug, Clone)]
+pub struct LighthouseDevice {
+    pub id: DeviceId,
+    pub bt_device: Device,
+    pub device_name: String,
     pub device_type: LighthouseDeviceType,
 }
 
@@ -120,7 +136,7 @@ pub struct LighthouseStatusChangedEvent {
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 pub struct LighthouseDeviceDiscoveredEvent {
-    pub device: LighthouseDevice,
+    pub device: LighthouseDeviceModel,
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -128,4 +144,5 @@ pub struct LighthouseDeviceDiscoveredEvent {
 pub struct LighthouseDevicePowerStateChangedEvent {
     pub device_id: String,
     pub power_state: LighthousePowerState,
+    pub v1_timeout: Option<u16>,
 }

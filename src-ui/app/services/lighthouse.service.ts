@@ -13,10 +13,12 @@ import {
   merge,
   Observable,
   of,
+  shareReplay,
   take,
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
+import { pRetry } from '../utils/promise-utils';
 
 const DEFAULT_SCAN_DURATION = 8;
 export type LighthouseStatus = 'uninitialized' | 'noAdapter' | 'adapterError' | 'ready';
@@ -36,6 +38,7 @@ interface LighthouseDeviceDiscoveredEvent {
 interface LighthouseDevicePowerStateChangedEvent {
   deviceId: string;
   powerState: LighthouseDevicePowerState;
+  v1Timeout: number | null;
 }
 
 @Injectable({
@@ -53,6 +56,7 @@ export class LighthouseService {
   public readonly devices: Observable<LighthouseDevice[]> = this._devices.asObservable();
   private deviceNicknames: { [id: string]: string } = {};
   private ignoredDevices: string[] = [];
+  private v1Identifiers: { [id: string]: string } = {};
 
   constructor(private appSettings: AppSettingsService) {}
 
@@ -72,6 +76,7 @@ export class LighthouseService {
     );
     this.appSettings.settings.subscribe((settings) => {
       this.deviceNicknames = settings.deviceNicknames;
+      this.v1Identifiers = settings.v1LighthouseIdentifiers;
       this.ignoredDevices = settings.ignoredLighthouses;
     });
     this.appSettings.settings
@@ -106,13 +111,32 @@ export class LighthouseService {
     powerState: LighthouseDevicePowerState,
     force = false
   ) {
+    // If the device is a V1 and we don't have the identifier, don't send the command
+    let v1Identifier = undefined;
+    if (device.deviceType === 'lighthouseV1') {
+      if (!this.v1Identifiers[device.id]) {
+        return;
+      }
+      v1Identifier = parseInt(this.v1Identifiers[device.id], 16);
+    }
+    // Handle force flag
     if (!force) {
       device.transitioningToPowerState = ['on', 'sleep', 'standby'].includes(powerState)
         ? powerState
         : undefined;
       this._devices.next(this._devices.value);
     }
-    invoke('lighthouse_set_device_power_state', { deviceId: device.id, powerState });
+    // Set the power state
+    await pRetry(
+      () =>
+        invoke('lighthouse_set_device_power_state', {
+          deviceId: device.id,
+          powerState,
+          v1Identifier,
+        }),
+      3,
+      500
+    );
     // Wait for state to change (timeout after 10 seconds)
     await firstValueFrom(
       merge(
@@ -166,6 +190,7 @@ export class LighthouseService {
       if (index === -1) return;
     }
     devices[index].powerState = event.powerState;
+    devices[index].v1Timeout = event.v1Timeout;
     this._devices.next(devices);
   }
 
@@ -199,7 +224,7 @@ export class LighthouseService {
     });
   }
 
-  async ignoreDevice(device: LighthouseDevice, ignore: boolean) {
+  public async ignoreDevice(device: LighthouseDevice, ignore: boolean) {
     const settings = await firstValueFrom(this.appSettings.settings);
     const ignoredLighthouses = structuredClone(settings.ignoredLighthouses);
     if (ignore && !ignoredLighthouses.includes(device.id)) ignoredLighthouses.push(device.id);
@@ -210,7 +235,82 @@ export class LighthouseService {
     });
   }
 
-  isDeviceIgnored(device: LighthouseDevice) {
+  public isDeviceIgnored(device: LighthouseDevice) {
     return this.ignoredDevices.includes(device.id);
+  }
+
+  public testV1LighthouseIdentifier(
+    device: LighthouseDevice,
+    identifier: string
+  ): Observable<number | 'SUCCESS' | 'INVALID' | 'ERROR'> {
+    const steps = 7;
+    let step = 0;
+    return new Observable<number | 'SUCCESS' | 'INVALID' | 'ERROR'>((subscriber) => {
+      (async () => {
+        const writeTimeoutValue = (timeout: number, retries = 2, retryDelay = 1000) => {
+          return pRetry(
+            () =>
+              invoke('lighthouse_set_device_power_state', {
+                deviceId: device.id,
+                v1Identifier: timeout === 0 ? undefined : parseInt(identifier, 16),
+                v1Timeout: timeout,
+                powerState: timeout === 0 ? 'on' : 'sleep',
+              }),
+            retries,
+            retryDelay
+          );
+        };
+        const waitForTimeoutValue = async (value: number, timeout = 10000) => {
+          return firstValueFrom(
+            merge(
+              interval(100).pipe(
+                filter(() =>
+                  this._devices.value.some((d) => d.id === device.id && d.v1Timeout === value)
+                ),
+                map(() => true)
+              ),
+              of(false).pipe(delay(timeout))
+            ).pipe(take(1))
+          );
+        };
+
+        try {
+          // Try first value
+          subscriber.next(++step / steps);
+          await writeTimeoutValue(42069);
+          subscriber.next(++step / steps);
+          if (!(await waitForTimeoutValue(42069))) {
+            subscriber.next('INVALID');
+            return;
+          }
+          // Try second value
+          subscriber.next(++step / steps);
+          await writeTimeoutValue(1337);
+          subscriber.next(++step / steps);
+          if (!(await waitForTimeoutValue(1337))) {
+            subscriber.next('INVALID');
+            return;
+          }
+          // Try resetting the timeout value
+          subscriber.next(++step / steps);
+          await writeTimeoutValue(0);
+          subscriber.next(++step / steps);
+          if (!(await waitForTimeoutValue(0))) {
+            subscriber.next('INVALID');
+            return;
+          }
+          // Success!
+          subscriber.next('SUCCESS');
+        } catch (e) {
+          subscriber.next('ERROR');
+        } finally {
+          subscriber.complete();
+        }
+      })();
+    }).pipe(shareReplay(1));
+  }
+
+  public deviceNeedsIdentifier(device: LighthouseDevice) {
+    return !this.v1Identifiers.hasOwnProperty(device.id);
   }
 }
