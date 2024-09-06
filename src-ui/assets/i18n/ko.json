@@ -1603,7 +1603,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "이 기능을 활성화하면 OyasumiVR을 사용하여 베이스스테이션의 전원을 끄고 켤 수 있어요. 블루투스가 필요하며 V2 베이스 스테이션만 지원해요.",
           "title": "전원 제어 활성화"
         },
         "powerOffMode": {

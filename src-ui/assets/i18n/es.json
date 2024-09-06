@@ -1322,7 +1322,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "Si se activa, podrás apagar y encender tus estaciones base usando OyasumiVR. Requiere bluetooth y solo es compatible con estaciones base V2.",
           "title": "Activar control de potencia"
         },
         "powerOffMode": {

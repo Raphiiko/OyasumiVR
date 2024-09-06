@@ -1603,7 +1603,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "Als deze functie aan staat, kun je met OyasumiVR je base stations uit en aanzetten. Dit heeft Bluetooth nodig, en ondersteunt alleen V2 base stations.",
           "title": "Aansturing inschakelen"
         },
         "powerOffMode": {

@@ -1030,7 +1030,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "Jika diaktifkan, Anda akan dapat mematikan dan menghidupkan base station menggunakan OyasumiVR. Memerlukan bluetooth, dan hanya mendukung base station V2.",
           "title": "Mengaktifkan kontrol daya"
         },
         "powerOffMode": {

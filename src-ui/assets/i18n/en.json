@@ -339,7 +339,13 @@
         "description": "Ignored basestations will be hidden and are not affected by any automations",
         "title": "Ignore Basestation"
       },
-      "title": "Edit Device: {deviceId}"
+      "title": "Edit Device: {deviceId}",
+      "v1Identifier": {
+        "change": "Change ID",
+        "description": "OyasumiVR needs to know the ID of a V1 base station in order to control it",
+        "set": "Set ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -349,6 +355,7 @@
         "other": "Others"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -760,6 +767,46 @@
     },
     "hotkey-selector": {
       "select": "Set Hotkey"
+    },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "Detecting identifier...",
+        "instructions": "If no identifier can be detected automatically, please input the identifier manually instead.",
+        "steps": {
+          "connectDevice": "Connect tracked device",
+          "connectDeviceDesc": "Connect a lighthouse tracked headset, controller, or tracker...",
+          "detectBasestation": "Detect base station",
+          "detectBasestationDesc": "Make sure a headset, controller, or tracker can see the base station",
+          "deviceDetected": "Device detected",
+          "running": "Running",
+          "startSteamVR": "Start SteamVR",
+          "waitingForSteamVR": "Waiting for SteamVR to start..."
+        }
+      },
+      "detectAutomatically": "Detect Automatically",
+      "inputManually": "Input Manually",
+      "intro": {
+        "message": "OyasumiVR needs to know your base station's identifier to control it."
+      },
+      "manualInput": {
+        "formatDescription": "The identifier is 8 characters long, and consists of numbers 0-9 and letters A-F.",
+        "message": "You can find the identifier on the back of your base station."
+      },
+      "success": {
+        "subtitle": "You can now control your base station!",
+        "title": "Identifier Set"
+      },
+      "title": "Identifier Required",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "Your lighthouse ID could not be automatically detected. Please enter it manually.",
+          "invalidId": "The submitted lighthouse ID is likely invalid.\nPlease double check the code on the back of your device.",
+          "verificationFailed": "The lighthouse ID could not be verified. Please check if your base station is plugged in and within range of your PC."
+        },
+        "idAutodetected": "Possible identifier detected",
+        "verifying": "Verifying ID"
+      },
+      "verifyIdAction": "Verify ID"
     },
     "main-status-bar": {
       "active": "Active",
@@ -1722,7 +1769,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires bluetooth, and supports V2 base stations only.",
+          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires your PC to have bluetooth enabled.",
           "title": "Enable power control"
         },
         "powerOffMode": {
@@ -1918,6 +1965,7 @@
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
+      "back": "Back",
       "cancel": "Cancel",
       "close": "Close",
       "confirm": "Confirm",

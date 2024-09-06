@@ -26,6 +26,7 @@
           [class.power-unknown]="
             powerButtonState === 'turn_on_off' || powerButtonState === 'turn_on_off_busy'
           "
+          [class.power-attention]="powerButtonState === 'attention'"
           *ngIf="powerButtonState !== 'hide'"
           [disabled]="powerButtonState === 'turn_off_busy' || powerButtonState === 'turn_on_busy'"
           [@fade]
@@ -39,6 +40,7 @@
             >power_settings_new</i
           >
           <i class="material-icons" *ngIf="powerButtonState === 'turn_on_off'">settings_power</i>
+          <i class="material-icons" *ngIf="powerButtonState === 'attention'">key</i>
           <div
             class="small-spinner"
             [class.power-off]="powerButtonState === 'turn_off_busy'"
@@ -55,6 +57,7 @@
           <app-device-list-lh-state-popover
             (action)="onForceLHState($event)"
             [style.position-anchor]="powerButtonAnchorId"
+            [type]="_lighthouseDevice?.deviceType"
           >
           </app-device-list-lh-state-popover>
         </div>

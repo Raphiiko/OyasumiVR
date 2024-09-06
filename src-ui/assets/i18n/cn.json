@@ -1717,7 +1717,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "如果启用，你将能够使用 OyasumiVR 关闭和开启你的基站。需要使用蓝牙，并且只支持 V2 基站。",
           "title": "启用电源控制"
         },
         "powerOffMode": {

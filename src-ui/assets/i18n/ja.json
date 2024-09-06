@@ -1603,7 +1603,6 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "有効にするとベースステーションの電源をオンオフできるようになります。Bluetoothを必要とし、V2ベースステーションのみをサポートします",
           "title": "電源制御を有効にする"
         },
         "powerOffMode": {
