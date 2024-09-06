@@ -96,8 +96,6 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 <b>ベースステーション</b>
 <br>
 SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。
-<br><br>
-<i>現在はV2 Lighthouseのみがサポートされています。</i>
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU自動化

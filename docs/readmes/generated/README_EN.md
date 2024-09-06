@@ -178,9 +178,7 @@ Save some electricity by automatically setting Windows' Power Policy when you go
     <td>
 <b>Base Stations</b>
 <br>
-Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go.
-<br><br>
-<i>Currently only V2 Lighthouses are supported.</i> 
+Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>

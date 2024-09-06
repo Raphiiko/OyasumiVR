@@ -175,9 +175,7 @@ OyasumiVR拥有自己的SteamVR叠加层界面，可以让你在VR里玩游戏�
     <td>
 <b>基站</b>
 <br>
-让OyasumiVR与SteamVR一起打开和关闭你的基站。有点像SteamVR自己的基站电源管理，但是<b>它与任何HMD兼容！</b>只要你的PC支持蓝牙并且在基站的信号范围内，这个功能就可以正常使用。
-<br><br>
-<i>目前只支持V2版本的Lighthouse。</i> 
+让OyasumiVR与SteamVR一起打开和关闭你的基站。有点像SteamVR自己的基站电源管理，但是<b>它与任何HMD兼容！</b>只要你的PC支持蓝牙并且在基站的信号范围内，这个功能就可以正常使用。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>

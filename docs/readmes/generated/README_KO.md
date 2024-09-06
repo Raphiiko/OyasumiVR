@@ -178,9 +178,7 @@ OyasumiVR에는 자체 SteamVR 오버레이가 제공되어 VR 내에서 일부 
     <td>
 <b>베이스스테이션</b>
 <br>
-OyasumiVR이 SteamVR과 함께 베이스 스테이션을 키거나 끄도록 할 수 있어요. SteamVR의 자체 베이스스테이션 전원 관리와 비슷하지만 <b>모든 HMD에 호환됩니다. </b> PC가 블루투스를 지원하고 베이스스테이션의 범위 내에 있으면 바로 사용할 수 있습니다.
-<br><br>
-<i>현재 V2 라이트하우스만 지원됩니다.</i> 
+OyasumiVR이 SteamVR과 함께 베이스 스테이션을 키거나 끄도록 할 수 있어요. SteamVR의 자체 베이스스테이션 전원 관리와 비슷하지만 <b>모든 HMD에 호환됩니다. </b> PC가 블루투스를 지원하고 베이스스테이션의 범위 내에 있으면 바로 사용할 수 있습니다. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>

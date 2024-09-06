@@ -178,9 +178,7 @@ OyasumiVR 配備了自己的 SteamVR 疊層畫面，允許你在虛擬實境中�
     <td>
 <b>基地台</b>
 <br>
-讓 OyasumiVR 與 SteamVR 一起自動開關基地台。這有點像 SteamVR 自己的基地台電源管理，但**與任何 HMD 相容**！只要你的 PC 支援藍牙，並且處於基地台的範圍內，就可以使用。
-<br><br>
-<i>目前僅支援 V2 Lighthouse 基地台。</i> 
+讓 OyasumiVR 與 SteamVR 一起自動開關基地台。這有點像 SteamVR 自己的基地台電源管理，但**與任何 HMD 相容**！只要你的 PC 支援藍牙，並且處於基地台的範圍內，就可以使用。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>

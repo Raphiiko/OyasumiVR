@@ -96,8 +96,6 @@ Hemat listrik dengan mengatur Kebijakan Daya Windows secara otomatis saat Anda t
 <b>Base Station</b>
 <br>
 Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya.
-<br><br>
-<i>Saat ini hanya V2 Lighthouse yang didukung.</i>
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 Otomatisasi GPU
