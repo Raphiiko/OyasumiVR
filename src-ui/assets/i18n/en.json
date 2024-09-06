@@ -1769,7 +1769,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires bluetooth, and supports V2 base stations only.",
+          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires your PC to have bluetooth enabled.",
           "title": "Enable power control"
         },
         "powerOffMode": {
