@@ -311,6 +311,6 @@ export class LighthouseService {
   }
 
   public deviceNeedsIdentifier(device: LighthouseDevice) {
-    return !this.v1Identifiers.hasOwnProperty(device.id);
+    return device.deviceType === 'lighthouseV1' && !this.v1Identifiers[device.id];
   }
 }
