@@ -339,7 +339,13 @@
         "description": "被忽略的基站将被彻底隐藏，不会受到任何自动化操作的影响",
         "title": "忽略基站"
       },
-      "title": "编辑设备: {deviceId}"
+      "title": "编辑设备: {deviceId}",
+      "v1Identifier": {
+        "change": "更改 ID",
+        "description": "OyasumiVR需要V1基站的ID来控制它",
+        "set": "设置ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -349,6 +355,7 @@
         "other": "其他"
       },
       "deviceName": {
+        "lighthouseV1": "Lighthouse V1",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -760,6 +767,46 @@
     },
     "hotkey-selector": {
       "select": "设置快捷键"
+    },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "正在检测标识符...",
+        "instructions": "如果无法自动检测到标识符，请手动输入标识符",
+        "steps": {
+          "connectDevice": "连接跟踪设备",
+          "connectDeviceDesc": "连接一个 Lighthouse 跟踪的头戴设备、控制器或追踪器...",
+          "detectBasestation": "检测基站",
+          "detectBasestationDesc": "确保头戴设备、控制器或追踪器能够看到基站",
+          "deviceDetected": "设备已检测",
+          "running": "正在运行",
+          "startSteamVR": "启动 SteamVR",
+          "waitingForSteamVR": "正在等待 SteamVR 启动..."
+        }
+      },
+      "detectAutomatically": "自动检测",
+      "inputManually": "手动输入",
+      "intro": {
+        "message": "OyasumiVR 需要知道你的基站的标识符来控制它"
+      },
+      "manualInput": {
+        "formatDescription": "标识符为 8 位字符，由数字 0-9 和字母 A-F 组成",
+        "message": "你可以在基站背面找到标识符"
+      },
+      "success": {
+        "subtitle": "你现在可以控制你的基站了！",
+        "title": "标识符已设置"
+      },
+      "title": "需要标识符",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "无法自动检测 Lighthouse ID，请手动输入",
+          "invalidId": "提交的 Lighthouse ID 可能无效。\n请仔细检查设备背面的代码。",
+          "verificationFailed": "无法验证 Lighthouse ID。请检查基站是否已连接并在 PC 范围内。"
+        },
+        "idAutodetected": "可能检测到的标识符",
+        "verifying": "正在验证 ID"
+      },
+      "verifyIdAction": "验证 ID"
     },
     "main-status-bar": {
       "active": "已开启",
@@ -1293,6 +1340,7 @@
       "simple": "亮度",
       "software": "软件亮度"
     },
+    "colorTemp": "色温",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1340,7 +1388,11 @@
           "automations": "自动化",
           "deviceControl": "设备控制",
           "prepareForSleep": "为睡眠做好准备",
-          "shutdown": "执行关机序列"
+          "shutdown": "执行关机序列",
+          "sliderMode": {
+            "BRIGHTNESS": "亮度调整",
+            "COLOR_TEMP": "色温控制"
+          }
         }
       },
       "shutdownSequence": {
@@ -1717,6 +1769,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
+          "description": "如果启用，你将可以使用 OyasumiVR 开启或关闭基站。需要 PC 启用蓝牙功能",
           "title": "启用电源控制"
         },
         "powerOffMode": {
@@ -1912,6 +1965,7 @@
       "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号"
     },
     "modals": {
+      "back": "返回",
       "cancel": "取消",
       "close": "关闭",
       "confirm": "确认",
