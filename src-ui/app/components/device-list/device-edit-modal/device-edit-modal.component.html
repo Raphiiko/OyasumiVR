@@ -32,7 +32,7 @@
           </label>
         </div>
       </div>
-      <div class="setting-row" *ngIf="lighthouseDevice">
+      <div class="setting-row" *ngIf="lighthouseDevice?.deviceType === 'lighthouseV1'">
         <div class="setting-row-label" translate>
           <span translate>comp.device-edit-modal.v1Identifier.title</span>
           <span translate>comp.device-edit-modal.v1Identifier.description</span>
