@@ -42,13 +42,13 @@
             class="btn"
             (click)="openLighthouseV1IdWizard()"
             [ngClass]="
-              lighthouseService.deviceNeedsIdentifier(lighthouseDevice)
+              lighthouseService.deviceNeedsIdentifier(lighthouseDevice!)
                 ? 'btn-primary'
                 : 'btn-secondary'
             "
           >
             {{
-              (lighthouseService.deviceNeedsIdentifier(lighthouseDevice)
+              (lighthouseService.deviceNeedsIdentifier(lighthouseDevice!)
                 ? 'comp.device-edit-modal.v1Identifier.set'
                 : 'comp.device-edit-modal.v1Identifier.change'
               ) | translate
