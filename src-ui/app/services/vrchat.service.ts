@@ -695,10 +695,12 @@ export class VRChatService {
           break;
         }
         case 'OnPlayerLeft':
-          this._world.next({
+          const context = {
             ...structuredClone(this._world.value),
             playerCount: Math.max(this._world.value.playerCount - 1, 0),
-          });
+          };
+          if (event.displayName === this._user.value?.displayName) context.loaded = false;
+          this._world.next(context);
           break;
         case 'OnLocationChange':
           this._world.next({

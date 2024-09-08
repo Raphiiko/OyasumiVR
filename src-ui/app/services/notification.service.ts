@@ -66,6 +66,7 @@ export class NotificationService {
   public async send(content: string, duration = 3000): Promise<string | null> {
     try {
       const settings = await firstValueFrom(this.appSettingsService.settings);
+      info(`[Notification] Sending notification (${duration}ms): "${content}"`);
       switch (settings.notificationProvider) {
         case 'OYASUMIVR':
           return await this.sendOyasumiNotification(content, duration);
