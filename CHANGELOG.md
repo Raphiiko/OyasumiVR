@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
 - Shutdown sequence being triggered over and over by the sleep mode trigger, when not using it to shut down or reboot the PC.
+- Issue where leave notifications would trigger for every other player when leaving a world.
 
 ## [1.13.3]
 
