@@ -78,12 +78,12 @@ fn main() {
         .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
         .run(|handler, event| match event {
-            tauri::RunEvent::Exit { .. } => {
-                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                    handler.track_event("app_exited", None);
-                    handler.flush_events_blocking();
-                }
-            }
+            // tauri::RunEvent::Exit { .. } => {
+            //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+            //         handler.track_event("app_exited", None);
+            //         handler.flush_events_blocking();
+            //     }
+            // }
             _ => {}
         })
 }

@@ -225,7 +225,19 @@ export class BrightnessCctAutomationService {
     const config = await firstValueFrom(this.automationConfigService.configs).then(
       (c) => c.BRIGHTNESS_AUTOMATIONS
     );
-    // If sunrise/sunset times are both enabled, use the relevant values configured for those
+    let brightnessAutomation:
+      | 'AT_SUNSET'
+      | 'AT_SUNRISE'
+      | 'SLEEP_MODE_ENABLE'
+      | 'SLEEP_MODE_DISABLE'
+      | undefined;
+    let cctAutomation:
+      | 'AT_SUNSET'
+      | 'AT_SUNRISE'
+      | 'SLEEP_MODE_ENABLE'
+      | 'SLEEP_MODE_DISABLE'
+      | undefined;
+    // If sunrise/sunset times are both enabled, use their settings for brightness and CCT, if configured.
     if (
       config.AT_SUNSET.enabled &&
       config.AT_SUNRISE.enabled &&
@@ -249,21 +261,61 @@ export class BrightnessCctAutomationService {
       } else {
         runAutomation = timesInverted ? 'AT_SUNSET' : 'AT_SUNRISE';
       }
-      await this.onAutomationTrigger(runAutomation, config[runAutomation], true, false);
+      if (config[runAutomation].changeBrightness) brightnessAutomation = runAutomation;
+      if (config[runAutomation].changeColorTemperature) cctAutomation = runAutomation;
     }
     // Otherwise, use the values configured for the sleep mode automations (if they're enabled)
-    else if (await firstValueFrom(this.sleepService.mode)) {
-      await this.onAutomationTrigger('SLEEP_MODE_ENABLE', config.SLEEP_MODE_ENABLE, true, false);
-    } else {
-      await this.onAutomationTrigger('SLEEP_MODE_DISABLE', config.SLEEP_MODE_DISABLE, true, false);
-    }
+    const sleepMode = await firstValueFrom(this.sleepService.mode);
+    // Brightness
+    if (
+      !brightnessAutomation &&
+      sleepMode &&
+      config.SLEEP_MODE_ENABLE.enabled &&
+      config.SLEEP_MODE_ENABLE.changeBrightness
+    )
+      brightnessAutomation = 'SLEEP_MODE_ENABLE';
+    else if (
+      !brightnessAutomation &&
+      !sleepMode &&
+      config.SLEEP_MODE_DISABLE.enabled &&
+      config.SLEEP_MODE_DISABLE.changeBrightness
+    )
+      brightnessAutomation = 'SLEEP_MODE_DISABLE';
+    // CCT
+    if (
+      !cctAutomation &&
+      sleepMode &&
+      config.SLEEP_MODE_ENABLE.enabled &&
+      config.SLEEP_MODE_ENABLE.changeColorTemperature
+    )
+      cctAutomation = 'SLEEP_MODE_ENABLE';
+    else if (
+      !cctAutomation &&
+      !sleepMode &&
+      config.SLEEP_MODE_DISABLE.enabled &&
+      config.SLEEP_MODE_DISABLE.changeColorTemperature
+    )
+      cctAutomation = 'SLEEP_MODE_DISABLE';
+    if (brightnessAutomation)
+      this.onAutomationTrigger(
+        brightnessAutomation,
+        config[brightnessAutomation],
+        true,
+        false,
+        true,
+        false
+      );
+    if (cctAutomation)
+      this.onAutomationTrigger(cctAutomation, config[cctAutomation], true, false, false, true);
   }
 
   private async onAutomationTrigger(
     automationType: BrightnessEvent,
     config: BrightnessEventAutomationConfig,
     forceInstant = false,
-    logging = true
+    logging = true,
+    runBrightness = true,
+    runCCT = true
   ) {
     // Stop if the automation is disabled
     if (!config.enabled || (!config.changeBrightness && !config.changeColorTemperature)) return;
@@ -277,7 +329,7 @@ export class BrightnessCctAutomationService {
     };
     const logReason: SetBrightnessOrCCTReason = eventLogReasonMap[automationType];
     // Handle CCT
-    if (config.changeColorTemperature) {
+    if (config.changeColorTemperature && runCCT) {
       this.cctControl.cancelActiveTransition();
       // Apply the CCT changes
       if (!forceInstant && config.transition) {
@@ -303,7 +355,7 @@ export class BrightnessCctAutomationService {
       }
     }
     // Handle Brightness
-    if (config.changeBrightness) {
+    if (config.changeBrightness && runBrightness) {
       this.simpleBrightnessControl.cancelActiveTransition();
       this.hardwareBrightnessControl.cancelActiveTransition();
       this.softwareBrightnessControl.cancelActiveTransition();
