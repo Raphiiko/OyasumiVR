@@ -21,7 +21,7 @@ import { AutomationConfigService } from '../automation-config.service';
 @Injectable({
   providedIn: 'root',
 })
-export class FBTAvatarReloadHotfixService {
+export class FBTAvatarReloadWorkaroundService {
   private enabled = false;
 
   constructor(
@@ -34,7 +34,7 @@ export class FBTAvatarReloadHotfixService {
 
   async init() {
     this.automationConfig.configs
-      .pipe(map((configs) => configs.SLEEPING_ANIMATIONS.enableAvatarReloadOnFBTDisableHotfix))
+      .pipe(map((configs) => configs.SLEEPING_ANIMATIONS.enableAvatarReloadOnFBTDisableWorkaround))
       .subscribe((enabled) => (this.enabled = enabled));
     this.openvr.devices
       .pipe(

@@ -32,11 +32,17 @@ export interface SleepingAnimationPreset {
 const MMM_SLEEP_SYSTEM_2_2_PRESET: SleepingAnimationPreset = {
   id: 'MMM_SLEEP_SYSTEM_2_2',
   name: 'ごろ寝システム(EX)',
-  versions: '2.2 - 2.3',
+  versions: '2.2 - 3.0.2',
   author: 'みんみんみーん',
   infoLinks: [
     { label: 'ごろ寝システム (booth.pm)', url: 'https://booth.pm/ko/items/2886739' },
     { label: 'ごろ寝システムEX (booth.pm)', url: 'https://booth.pm/en/items/4233545' },
+  ],
+  notes: [
+    {
+      type: 'WARNING',
+      text: 'misc.GORONE_LEGACY_PRESET_WARNING',
+    },
   ],
   oscScripts: {
     SIDE_BACK: parseOscScriptFromCode(`
@@ -191,8 +197,8 @@ b false /avatar/parameters/Go/Stationary
 };
 
 export const SLEEPING_ANIMATION_PRESETS: SleepingAnimationPreset[] = [
-  MMM_SLEEP_SYSTEM_2_2_PRESET,
   GOGO_LOCO_1_8_0_PRESET,
   GOGO_LOCO_LEGACY_1_7_1_PRESET,
   GOGO_LOCO_LEGACY_PRESET,
+  MMM_SLEEP_SYSTEM_2_2_PRESET,
 ];

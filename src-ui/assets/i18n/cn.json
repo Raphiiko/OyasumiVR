@@ -1297,10 +1297,6 @@
         },
         "general": {
           "advanced": {
-            "avatarReloadHotfix": {
-              "description": "如果你想在OyasumiVR关闭全身追踪器后使用头像动画，请启用此选项。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">这是什么，为什么需要它？</a>",
-              "title": "使用全身追踪的头像动画热修复"
-            },
             "title": "高级选项"
           },
           "footLock": {

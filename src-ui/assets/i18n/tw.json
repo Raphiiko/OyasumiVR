@@ -1250,10 +1250,6 @@
         },
         "general": {
           "advanced": {
-            "avatarReloadHotfix": {
-              "description": "如果你想在 OyasumiVR 關閉全身追蹤器後仍能使用頭像動畫，請啟用此選項。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">這是什麼？為什麼需要這個修正？</a>",
-              "title": "在 FBT 中使用角色動畫的修補程式"
-            },
             "title": "進階選項"
           },
           "footLock": {
