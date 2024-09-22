@@ -230,8 +230,8 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> 由 <a href="https://twitter.com/minminmeeean">みんみんみーん</a> 制作
-    <br>(由 minminmiin 制作的睡眠系统 v2.2 - 2.3)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> 由 <a href="https://twitter.com/minminmeeean">みんみんみーん</a> 制作
+    <br>(由 minminmiin 制作的睡眠系统 v2.2 - 3.0.2)
     <br><a href="https://booth.pm/en/items/4233545">EX版本</a> 也得到了支持！
   </li>
   <li>

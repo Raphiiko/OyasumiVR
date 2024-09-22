@@ -112,8 +112,8 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>（みんみんみーん的 Sleep System v2.2 - 2.3）
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>（みんみんみーん的 Sleep System v2.2 - 3.0.2）
     <br><a href="https://booth.pm/en/items/4233545">EX 版本</a> 也支援！
   </li>
   <li>
