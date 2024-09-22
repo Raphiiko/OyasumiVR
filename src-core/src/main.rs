@@ -40,9 +40,7 @@ use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
-use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-use telemetry::TELEMETRY_ENABLED;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
