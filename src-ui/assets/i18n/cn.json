@@ -1185,6 +1185,7 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "这个默认设置使用的解决方法存在一些问题。 如果你不能使用 GoGo Loco 的新版本，请使用这个默认设置。 即使是这样，依然建议你将模型更新到最新的 GoGo Loco",
+    "GORONE_LEGACY_PRESET_WARNING": "此预设中的 v4.0 及以上版本已经包含了转向功能，并且与此预设不兼容。如果你的模型使用了此预设的旧版本，它仍然可用",
     "oscScriptEditorErrors": {
       "addressNoSlash": "有效的 OSC 数值必须以 “/” 符号开头。",
       "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字符。",
@@ -1297,6 +1298,10 @@
         },
         "general": {
           "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "如果你想在 OyasumiVR 关闭全身追踪器后继续使用模型动画，请启用此选项。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">这是什么，为什么需要它？</a>",
+              "title": "全身追踪器模型动画使用的解决方案"
+            },
             "title": "高级选项"
           },
           "footLock": {
