@@ -9,6 +9,8 @@ import {
 import {
   combineLatest,
   debounceTime,
+  delay,
+  distinctUntilChanged,
   filter,
   firstValueFrom,
   map,
@@ -21,6 +23,8 @@ import { SleepingPose } from '../../models/sleeping-pose';
 import { OscService } from '../osc.service';
 import { OscScript } from '../../models/osc-script';
 import { getOscScriptDuration } from '../../utils/osc-script-utils';
+import { VRChatService } from '../vrchat.service';
+import { AvatarContextService } from '../avatar-context.service';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +39,9 @@ export class SleepingAnimationsAutomationService {
     private automationConfig: AutomationConfigService,
     private openvr: OpenVRService,
     private sleep: SleepService,
-    private osc: OscService
+    private osc: OscService,
+    private vrchat: VRChatService,
+    private avatarContext: AvatarContextService
   ) {}
 
   async init() {
@@ -69,21 +75,8 @@ export class SleepingAnimationsAutomationService {
         filter(([oldSleepMode, newSleepMode]) => !oldSleepMode && newSleepMode),
         startWith(false)
       ),
-      // Retrigger when all trackers are turned off
-      this.openvr.devices.pipe(
-        startWith([]),
-        pairwise(),
-        filter(([oldDevices, newDevices]) => {
-          const trackersInOldDevices = !!oldDevices.find(
-            (d) => d.class === 'GenericTracker' && d.canPowerOff
-          );
-          const trackersInNewDevices = !!newDevices.find(
-            (d) => d.class === 'GenericTracker' && d.canPowerOff
-          );
-          return trackersInOldDevices && !trackersInNewDevices;
-        }),
-        startWith([])
-      ),
+      // Retrigger when the avatar is changed
+      this.avatarContext.avatarContext.pipe(filter(Boolean), delay(3000)),
     ])
       .pipe(debounceTime(0))
       .subscribe(async ([pose]) => {

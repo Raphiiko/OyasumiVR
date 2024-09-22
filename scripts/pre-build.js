@@ -1,5 +1,4 @@
 import fs from 'fs';
-import { mkdirp } from 'mkdirp';
 import { blurhashToCss } from 'blurhash-to-css';
 import sharp from 'sharp';
 import { encode } from 'blurhash';
@@ -58,3 +57,23 @@ encodeImageToBlurhash('./src-ui/assets/splashscreen/splash.jpg').then((hash) => 
 //
 fs.copyFileSync('CHANGELOG.md', 'src-ui/assets/CHANGELOG.md');
 fs.copyFileSync('src-core/icons/Square150x150Logo.png', 'src-ui/assets/img/icon_150x150.png');
+
+//
+// Generate notification sound types
+//
+const sounds = fs
+  .readdirSync('src-core/resources/sounds')
+  .filter((f) => f.endsWith('.ogg'))
+  .map((f) => f.substring(0, f.length - 4));
+// TS (UI)
+let typeFile = 'src-ui/app/models/notification-sounds.generated.ts';
+let typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\nexport type NotificationSound = \n${sounds
+  .map((s) => `  | '${s}'`)
+  .join('\n')};\n`;
+fs.writeFileSync(typeFile, typeContent);
+// Rust (Core)
+typeFile = 'src-core/src/os/sounds_gen.rs';
+typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\npub static SOUND_FILES: &[&str] = &[\n${sounds
+  .map((s) => `    "${s}",`)
+  .join('\n')}\n];\n`;
+fs.writeFileSync(typeFile, typeContent);

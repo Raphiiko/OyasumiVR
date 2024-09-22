@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
 - (Headset specific) brightness and cct settings were moved to their own settings page.
 - OSC scripts will automatically convert spaces in addresses to underscores to match VRChat behaviour for parameter renaming.
+- Various notification sounds
 
 ### Removed
 

@@ -83,6 +83,7 @@ export class FBTAvatarReloadWorkaroundService {
     await this.osc.send_int('/input/QuickMenuToggleLeft', 0);
 
     // Inform sleeping automations to reapply
+    await sleep(3000);
     await this.sleepAnimations.retrigger();
 
     info('[FBTAvatarReloadHotfix] Hotfix applied');
