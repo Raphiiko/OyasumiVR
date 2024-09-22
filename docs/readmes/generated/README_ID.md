@@ -233,8 +233,8 @@ Terdapat preset bawaan untuk aset locomotion yang populer, termasuk:
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>

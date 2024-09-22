@@ -10,6 +10,7 @@ import { error, info, warn } from 'tauri-plugin-log-api';
 import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
+import { NotificationSound } from '../models/notification-sounds.generated';
 
 interface XSOMessage {
   messageType: number;
@@ -25,13 +26,6 @@ interface XSOMessage {
   useBase64Icon: boolean;
   sourceApp: string;
 }
-
-export type NotificationSound =
-  | 'notification_bell'
-  | 'notification_block'
-  | 'notification_reverie'
-  | 'mic_mute'
-  | 'mic_unmute';
 
 @Injectable({
   providedIn: 'root',

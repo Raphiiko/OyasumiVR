@@ -230,7 +230,7 @@ import { CCTControlModalComponent } from './components/cct-control-modal/cct-con
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
 import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
 import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
-import { FBTAvatarReloadHotfixService } from './services/hotfixes/f-b-t-avatar-reload-hotfix.service';
+import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-avatar-reload-workaround.service';
 import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 
@@ -497,7 +497,7 @@ export class AppModule {
     private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService,
     private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService,
     // Hotfixes
-    private fbtAvatarReloadHotfixService: FBTAvatarReloadHotfixService
+    private fbtAvatarReloadWorkaroundService: FBTAvatarReloadWorkaroundService
   ) {
     this.init();
   }
@@ -795,7 +795,7 @@ export class AppModule {
             ),
             this.logInit(
               'FBTAvatarReloadHotfixService initialization',
-              this.fbtAvatarReloadHotfixService.init()
+              this.fbtAvatarReloadWorkaroundService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);

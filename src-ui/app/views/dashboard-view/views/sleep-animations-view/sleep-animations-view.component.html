@@ -290,11 +290,11 @@
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate
-              >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadHotfix.title</span
+              >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title</span
             >
             <span
               [innerHtml]="
-                'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadHotfix.description'
+                'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
                   | translate
               "
             ></span>
@@ -303,11 +303,11 @@
             <label class="switch-toggle">
               <input
                 type="checkbox"
-                [checked]="config.enableAvatarReloadOnFBTDisableHotfix"
+                [checked]="config.enableAvatarReloadOnFBTDisableWorkaround"
                 (change)="
                   updateConfig({
-                    enableAvatarReloadOnFBTDisableHotfix:
-                      !config.enableAvatarReloadOnFBTDisableHotfix
+                    enableAvatarReloadOnFBTDisableWorkaround:
+                      !config.enableAvatarReloadOnFBTDisableWorkaround
                   })
                 "
               />

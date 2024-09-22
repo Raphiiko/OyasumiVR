@@ -134,7 +134,7 @@ export class SleepModeForSleepDetectorAutomationService {
         type: 'sleepDetectorEnableCancelled',
       });
       this._lastStateReportHandlingResult.next('SLEEP_CHECK_USER_AWAKE');
-      await this.notifications.playSound('notification_block');
+      await this.notifications.playSound('material_hero_simple-celebration-01');
       await this.notifications.send(
         this.translate.instant('notifications.sleepCheckCancel.content')
       );

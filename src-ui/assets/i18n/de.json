@@ -1250,10 +1250,6 @@
         },
         "general": {
           "advanced": {
-            "avatarReloadHotfix": {
-              "description": "Aktiviere dies, wenn du Avataranimationen ,nachdem du dein FBT deaktiviert hast, verwenden willst.<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
-              "title": "Hotfix für die Verwendung von Avatar Animationen mti FBT"
-            },
             "title": "Erweiterte Einstellungen"
           },
           "footLock": {

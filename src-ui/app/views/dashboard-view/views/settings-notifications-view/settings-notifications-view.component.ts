@@ -90,7 +90,7 @@ export class SettingsNotificationsViewComponent implements OnInit {
   }
 
   protected async testSound() {
-    await this.notifications.playSound('notification_block');
+    await this.notifications.playSound('material_hero_simple-celebration-01');
     this.playingTestSound = true;
     if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
     this.playingTestSoundTimeout = setTimeout(() => {

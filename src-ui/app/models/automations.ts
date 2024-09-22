@@ -288,7 +288,7 @@ export interface SleepingAnimationsAutomationConfig extends AutomationConfig {
   unlockFeetOnAutomationDisable: boolean;
   releaseFootLockOnPoseChange: boolean;
   footLockReleaseWindow: number;
-  enableAvatarReloadOnFBTDisableHotfix: boolean;
+  enableAvatarReloadOnFBTDisableWorkaround: boolean;
 }
 
 export type VRChatVoiceMode = 'TOGGLE' | 'PUSH_TO_TALK';
@@ -684,7 +684,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     unlockFeetOnAutomationDisable: true,
     releaseFootLockOnPoseChange: true,
     footLockReleaseWindow: 600,
-    enableAvatarReloadOnFBTDisableHotfix: false,
+    enableAvatarReloadOnFBTDisableWorkaround: false,
     oscScripts: {},
   },
   JOIN_NOTIFICATIONS: {

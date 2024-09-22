@@ -23,10 +23,10 @@ export class AvatarChangeOscMethod extends OscMethod<string> {
 
   async handleOSCMessage(message: OSCMessage) {
     const { value: avatarId } = message.values[0] as OSCStringValue;
-    if (this.value === avatarId) return;
     await this.setValue(avatarId);
-    // Trigger resync of all VRChat parameters
+    // Resync all VRC parameters
     await this.oscControl.resyncAllVRCParameters();
+    // Rebuild the avatar context
     await this.avatarContextService.buildAvatarContext('VRCHAT');
   }
 }

@@ -1185,6 +1185,7 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
+    "GORONE_LEGACY_PRESET_WARNING": "Versions v4.0 and up of this prefab already contain turning functionality, and are not compatible with this preset. This preset is still available if your avatar uses older versions of this prefab.",
     "oscScriptEditorErrors": {
       "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
       "addressNotASCII": "A valid OSC address must only contain ASCII characters.",
@@ -1297,9 +1298,9 @@
         },
         "general": {
           "advanced": {
-            "avatarReloadHotfix": {
-              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Hotfix-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
-              "title": "Hotfix for using avatar animations with FBT"
+            "avatarReloadWorkaround": {
+              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
+              "title": "Workaround for using avatar animations with FBT"
             },
             "title": "Advanced Options"
           },
