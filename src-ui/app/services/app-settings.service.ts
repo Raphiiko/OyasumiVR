@@ -76,7 +76,6 @@ export class AppSettingsService {
   public updateSettings(settings: Partial<AppSettings>) {
     const newSettings = Object.assign(structuredClone(this._settings.value), settings);
     if (isEqual(newSettings, this._settings.value)) return;
-    console.log('UPDATED SETTINGS 1', structuredClone(this._settings.value.oneTimeFlags));
     this._settings.next(newSettings);
   }
 
@@ -89,7 +88,6 @@ export class AppSettingsService {
     const oneTimeFlags = [...this._settings.value.oneTimeFlags];
     if (set) oneTimeFlags.push(flag);
     else if (oneTimeFlags.indexOf(flag) > -1) oneTimeFlags.splice(oneTimeFlags.indexOf(flag), 1);
-    console.log('UPDATING ONE TIME FLAGS', oneTimeFlags);
     this.updateSettings({ oneTimeFlags: uniq(oneTimeFlags) });
   }
 

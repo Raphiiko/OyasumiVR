@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api';
 import { listen } from '@tauri-apps/api/event';
 import {
+  asyncScheduler,
   BehaviorSubject,
   debounceTime,
   delay,
@@ -15,6 +16,7 @@ import {
   of,
   shareReplay,
   take,
+  throttleTime,
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
@@ -98,6 +100,17 @@ export class LighthouseService {
           await invoke('lighthouse_reset');
         }
       });
+    this._devices
+      .pipe(
+        filter((d) => d.length >= 6),
+        throttleTime(60000, asyncScheduler, {
+          leading: true,
+          trailing: true,
+        })
+      )
+      .subscribe(() =>
+        this.appSettings.promptDialogForOneTimeFlag('BASESTATION_COUNT_WARNING_DIALOG')
+      );
   }
 
   async scan() {
