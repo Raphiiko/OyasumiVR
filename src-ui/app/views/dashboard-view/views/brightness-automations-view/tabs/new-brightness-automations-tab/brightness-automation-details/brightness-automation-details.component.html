@@ -24,11 +24,11 @@
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>{{
-              'brightness-automations.activationTime.' + sunMode + '.title' | translate
-            }}</span>
+                'brightness-automations.activationTime.' + sunMode + '.title' | translate
+              }}</span>
             <span translate>{{
-              'brightness-automations.activationTime.' + sunMode + '.description' | translate
-            }}</span>
+                'brightness-automations.activationTime.' + sunMode + '.description' | translate
+              }}</span>
           </div>
           <div class="setting-row-action">
             <button
@@ -177,9 +177,9 @@
       <h3 translate>brightness-automations.changeTemperature.category</h3>
       <span
         class="warning-icon"
-        [tooltip]="'brightness-automations.changeTemperature.warning'"
-        [tooltipMode]="'left'"
-        [tooltipTextAlign]="'left'"
+        *ngIf="!appSettingsService.oneTimeFlagSet('CCT_CONTROL_WARNING_DIALOG')"
+        @fade
+        (click)="appSettingsService.promptDialogForOneTimeFlag('CCT_CONTROL_WARNING_DIALOG')"
       >
         <i class="material-symbols-outlined">warning</i>
       </span>

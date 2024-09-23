@@ -188,8 +188,7 @@
     "changeTemperature": {
       "category": "色温",
       "description": "调整你的VR设备所显示图像的色温",
-      "title": "更改色温",
-      "warning": "调整色温功能仅支持某些原生SteamVR头戴设备。\n\n已知支持的头戴设备：\n• Valve Index\n• HTC Vive (Pro)\n• Bigscreen Beyond"
+      "title": "更改色温"
     },
     "copyBrightness": "复制当前亮度值",
     "description": "让OyasumiVR在不同时间自动调整你的VR头戴设备的亮度和/或色温，比如在你入睡时或醒来时！",

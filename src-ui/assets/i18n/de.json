@@ -188,8 +188,7 @@
     "changeTemperature": {
       "category": "Farbtemperatur",
       "description": "Passe die Farbtemperatur des im VR-Headset sichtbaren Bildes an",
-      "title": "Farbtemperatur ändern",
-      "warning": "Anpassungen der Farbtemperatur sind nur von manchen SteamVR nativ unterstützten VR-Headsets möglich\n\nFunktionierende VR-Headsets sind:\n- Valve Index\n- HTC Vive (Pro)\n- Bigscreen Beyond"
+      "title": "Farbtemperatur ändern"
     },
     "copyBrightness": "Kopiere den derzeitigen Helligkeitswert",
     "description": "OyasumiVR kann automatisch Helligkeit sowie Farbtemperaturen deines VR-Headsets zu bestimten Zeitpunkten anpassen (Schlafen und Aufwecken)",

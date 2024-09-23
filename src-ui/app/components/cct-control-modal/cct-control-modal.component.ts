@@ -7,6 +7,7 @@ import { asyncScheduler, Subject, switchMap, throttleTime } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { CCTControlService } from '../../services/cct-control/cct-control.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
   selector: 'app-cct-control-modal',
@@ -21,7 +22,8 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> imp
     protected cctControl: CCTControlService,
     protected router: Router,
     public automationConfigService: AutomationConfigService,
-    private destroyRef: DestroyRef
+    private destroyRef: DestroyRef,
+    private appSettings: AppSettingsService
   ) {
     super();
     this.setCCT
@@ -33,7 +35,9 @@ export class CCTControlModalComponent extends BaseModalComponent<void, void> imp
       .subscribe();
   }
 
-  ngOnInit(): void {}
+  async ngOnInit(): Promise<void> {
+    await this.appSettings.promptDialogForOneTimeFlag('CCT_CONTROL_WARNING_DIALOG');
+  }
 
   override getOptionsOverride(): Partial<ModalOptions> {
     return {
