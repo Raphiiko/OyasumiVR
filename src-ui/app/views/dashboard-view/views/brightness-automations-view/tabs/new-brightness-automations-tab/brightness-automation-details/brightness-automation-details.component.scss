@@ -29,9 +29,11 @@
   cursor: pointer;
   border-radius: var(--surface-border-radius);
   transition: all 0.15s ease;
+
   &:hover {
     background: rgba(black, 0.4);
   }
+
   &:active {
     opacity: 0.8;
   }
@@ -83,14 +85,17 @@
     align-items: flex-start;
     justify-content: center;
     padding: 0 1em;
+
     span:first-child {
       font-size: 1.3em;
     }
+
     span:last-child {
       font-size: 1em;
       color: var(--color-text-2);
     }
   }
+
   &-toggle {
     padding: 0 1em;
     flex-shrink: 0;
@@ -108,10 +113,22 @@
   justify-content: space-between;
 
   .warning-icon {
+    cursor: pointer;
+    transition: all .15s ease;
     color: var(--color-warning);
     margin-right: 0.5em;
+
     i.material-symbols-outlined {
       font-size: 1.5em;
+    }
+
+    &:hover {
+      transform: translateY(-0.1em);
+    }
+
+    &:active {
+      transform: translateY(0);
+      opacity: 0.6;
     }
   }
 }

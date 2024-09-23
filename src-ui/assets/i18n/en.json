@@ -188,8 +188,7 @@
     "changeTemperature": {
       "category": "Color temperature",
       "description": "Adjust the color temperature of the image shown in your VR headset",
-      "title": "Change color temperature",
-      "warning": "Adjusting color temperature is only supported on some native SteamVR headsets.\n\nKnown working HMDs:\n • Valve Index\n • HTC Vive (Pro)\n • Bigscreen Beyond"
+      "title": "Change color temperature"
     },
     "copyBrightness": "Copy current\nbrightness value",
     "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
@@ -1186,6 +1185,13 @@
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
     "GORONE_LEGACY_PRESET_WARNING": "Versions v4.0 and up of this prefab already contain turning functionality, and are not compatible with this preset. This preset is still available if your avatar uses older versions of this prefab.",
+    "oneTimeFlagDialogs": {
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "Please note that display color temperature control is only available with certain native SteamVR headsets, e.g. the Valve Index, Bigscreen Beyond, or HTC Vive (Pro).\n\nIf you do not use one of these headsets, this feature likely will have no effect for you.\n\nYou can disable display color temperature control in the settings if you want to.",
+        "title": "Feature Availability"
+      },
+      "acknowledge": "I understand"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
       "addressNotASCII": "A valid OSC address must only contain ASCII characters.",

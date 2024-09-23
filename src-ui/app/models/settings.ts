@@ -1,5 +1,6 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { PlayerListPreset } from './player-list-preset';
+import { OneTimeFlag } from './one-time-flags';
 
 export interface AppSettings {
   version: 9;
@@ -27,6 +28,7 @@ export interface AppSettings {
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
   openVrInitDelayFix: boolean;
+  oneTimeFlags: OneTimeFlag[];
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
@@ -120,6 +122,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   openVrInitDelayFix: false,
   cctControlEnabled: true,
   cctSoftwareMode: false,
+  oneTimeFlags: [],
 };
 
 export type ExecutableReferenceStatus =

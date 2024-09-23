@@ -67,7 +67,7 @@ export class BrightnessAutomationDetailsComponent implements OnInit {
     private simpleBrightnessControl: SimpleBrightnessControlService,
     private softwareBrightnessControl: SoftwareBrightnessControlService,
     private hardwareBrightnessControl: HardwareBrightnessControlService,
-    private appSettingsService: AppSettingsService,
+    protected appSettingsService: AppSettingsService,
     private destroyRef: DestroyRef
   ) {
     this.cctControlEnabled = toSignal(
