@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Option for the shutdown sequence to only trigger for being alone in your instance while the sleep mode is enabled
 - Option for audio volume automations to apply on start
 - Support for VRChat parameters in OSC scripts that have been automatically renamed by VRCFury or Modular Avatar
+- Event log filters
 - Workaround for VRChat not automatically reloading your avatar after all trackers have been turned off
 - German language support (thanks to community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85))
 - Exposed HMD activity level over MQTT

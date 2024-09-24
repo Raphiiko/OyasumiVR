@@ -72,7 +72,7 @@ import { SliderComponent } from './components/slider/slider.component';
 import { EventLogService } from './services/event-log.service';
 import { debug, error, info, warn } from 'tauri-plugin-log-api';
 import { EventLogComponent } from './components/event-log/event-log.component';
-import { EventLogEntryComponent } from './components/event-log-entry/event-log-entry.component';
+import { EventLogEntryComponent } from './components/event-log/event-log-entry/event-log-entry.component';
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
 import localeEN from '@angular/common/locales/en';
 import localeFR from '@angular/common/locales/fr';
@@ -233,6 +233,7 @@ import { BrightnessAdvancedModeToggleComponent } from './components/brightness-a
 import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-avatar-reload-workaround.service';
 import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
 
 [
   localeEN,
@@ -377,6 +378,7 @@ export function createTranslateLoader(http: HttpClient) {
     SettingsBrightnessCctViewComponent,
     BrightnessAdvancedModeToggleComponent,
     LighthouseV1IdWizardModalComponent,
+    EventLogFilterDialogComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
