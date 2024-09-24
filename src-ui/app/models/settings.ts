@@ -1,5 +1,7 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { PlayerListPreset } from './player-list-preset';
+import { OneTimeFlag } from './one-time-flags';
+import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
   version: 9;
@@ -18,12 +20,17 @@ export interface AppSettings {
   deviceNicknames: {
     [deviceId: string]: string;
   };
+  v1LighthouseIdentifiers: {
+    [deviceId: string]: string;
+  };
   ignoredLighthouses: string[];
   hotkeys: { [hotkeyId: string]: string[] };
   oscServerEnabled: boolean;
   playerListPresets: PlayerListPreset[];
   hideSnowverlay: boolean;
   openVrInitDelayFix: boolean;
+  oneTimeFlags: OneTimeFlag[];
+  eventLogTypesHidden: EventLogType[];
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
@@ -41,6 +48,9 @@ export interface AppSettings {
   mqttUsername: string | null;
   mqttPassword: string | null;
   mqttSecureSocket: boolean;
+  // Brightness & CCT
+  cctControlEnabled: boolean;
+  cctSoftwareMode: boolean;
   // HW Specific
   valveIndexMaxBrightness: number; // User limit
   bigscreenBeyondMaxBrightness: number; // User limit
@@ -94,6 +104,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   generalNotificationVolume: 100,
   deviceNicknames: {},
   ignoredLighthouses: [],
+  v1LighthouseIdentifiers: {},
   hotkeys: {},
   hideSnowverlay: false,
   oscServerEnabled: true,
@@ -111,6 +122,10 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   mqttPassword: null,
   mqttSecureSocket: false,
   openVrInitDelayFix: false,
+  cctControlEnabled: true,
+  cctSoftwareMode: false,
+  oneTimeFlags: [],
+  eventLogTypesHidden: [],
 };
 
 export type ExecutableReferenceStatus =

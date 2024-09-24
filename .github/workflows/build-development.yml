@@ -20,7 +20,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 20.15
           cache: npm
       - name: Initialize the project
         run: npm run ci
@@ -32,6 +32,11 @@ jobs:
         run: npm run set-flavour DEV
       - name: Set build id
         run: npm run set-build-id
+      - name: Setup LLVM
+        uses: ZhongRuoyu/setup-llvm@v0
+        with:
+          github-token: ${{ github.token }}
+          llvm-version: 17
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:

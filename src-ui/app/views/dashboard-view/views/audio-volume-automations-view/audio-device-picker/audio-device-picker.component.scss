@@ -1,7 +1,12 @@
 .pane {
-  height: calc(100% - 4em);
+  margin-top: 16px;
+  max-height: calc(100vh - 4em - 32px);
   margin-right: 2em;
   width: 24em;
+}
+
+.tab-bar {
+  flex-shrink: 0;
 }
 
 .tab {

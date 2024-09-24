@@ -5,7 +5,7 @@ import {
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -46,7 +46,7 @@ export class JoinNotificationsViewComponent implements OnInit {
   leaveNotificationOption: SelectBoxItem | undefined;
   joinSoundOption: SelectBoxItem | undefined;
   leaveSoundOption: SelectBoxItem | undefined;
-  config: JoinNotificationsAutomationsConfig = cloneDeep(
+  config: JoinNotificationsAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS
   );
   protected playingTestSound = false;
@@ -147,7 +147,10 @@ export class JoinNotificationsViewComponent implements OnInit {
   }
 
   async testSound() {
-    await this.notifications.playSound('notification_reverie', this.config.joinSoundVolume / 100);
+    await this.notifications.playSound(
+      'material_alarm_gentle_short_1',
+      this.config.joinSoundVolume / 100
+    );
     this.playingTestSound = true;
     if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
     this.playingTestSoundTimeout = setTimeout(() => {

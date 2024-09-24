@@ -21,7 +21,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { AUTOMATION_CONFIGS_DEFAULT, ShutdownAutomationsConfig } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
@@ -51,11 +51,12 @@ export const ShutdownSequenceStageOrder = [
   providedIn: 'root',
 })
 export class ShutdownAutomationsService {
-  private config: ShutdownAutomationsConfig = cloneDeep(
+  private config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   private sleepMode = false;
   private sleepModeLastSet = 0;
+  private triggeredThisSleep = false;
   private aloneSince = 0;
   private isAlone = false;
   private wasNotAlone = false;
@@ -105,12 +106,13 @@ export class ShutdownAutomationsService {
     this.automationConfigService.configs
       .pipe(
         map((configs) => configs.SHUTDOWN_AUTOMATIONS),
-        // Reset the 'last set' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
+        // Reset the 'alone since' in case any of the trigger parameters change, so the user doesn't get any unwanted surprises
         pairwise(),
         filter(([oldConfig, newConfig]) => {
           const keys: Array<keyof ShutdownAutomationsConfig> = [
             'triggerWhenAlone',
             'triggerWhenAloneDuration',
+            'triggerWhenAloneOnlyWhenSleepModeActive',
             'triggerWhenAloneActivationWindow',
             'triggerWhenAloneActivationWindowStart',
             'triggerWhenAloneActivationWindowEnd',
@@ -124,6 +126,7 @@ export class ShutdownAutomationsService {
     // Track sleep mode being set
     this.sleepService.mode.pipe(distinctUntilChanged()).subscribe((mode) => {
       this.sleepMode = mode;
+      if (!this.sleepMode) this.triggeredThisSleep = false;
       this.sleepModeLastSet = Date.now();
     });
     // Track being alone
@@ -196,11 +199,18 @@ export class ShutdownAutomationsService {
   private async handleTriggerOnSleep() {
     interval(1000)
       .pipe(
-        filter(() => this._stage.value === 'IDLE'),
+        // Only trigger if this trigger is enabled
         filter(() => this.config.triggersEnabled),
         filter(() => this.config.triggerOnSleep),
+        // Only trigger if the shutdown sequence isn't running
+        filter(() => this._stage.value === 'IDLE'),
+        // Only trigger if the sleep mode is active
         filter(() => this.sleepMode),
+        // Only trigger if we haven't already triggered this sleep (resets once sleep mode disables)
+        filter(() => !this.triggeredThisSleep),
+        // Only trigger if the sleep mode has been active for long enough
         filter(() => Date.now() - this.sleepModeLastSet >= this.config.triggerOnSleepDuration),
+        // Only trigger if we're in the activation window, if it's configured
         filter(
           () =>
             !this.config.triggerOnSleepActivationWindow ||
@@ -208,11 +218,12 @@ export class ShutdownAutomationsService {
               this.config.triggerOnSleepActivationWindowStart,
               this.config.triggerOnSleepActivationWindowEnd
             )
-        ),
-        // Only trigger once every 5 minutes at most
-        throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
+        )
       )
-      .subscribe(() => this.runSequence('SLEEP_TRIGGER'));
+      .subscribe(() => {
+        this.triggeredThisSleep = true;
+        this.runSequence('SLEEP_TRIGGER');
+      });
   }
 
   private async handleTriggerWhenAlone() {
@@ -231,6 +242,7 @@ export class ShutdownAutomationsService {
               this.config.triggerWhenAloneActivationWindowEnd
             )
         ),
+        filter(() => this.config.triggerWhenAloneOnlyWhenSleepModeActive || !this.sleepMode),
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )

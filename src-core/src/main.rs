@@ -40,9 +40,7 @@ use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
-use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-use telemetry::TELEMETRY_ENABLED;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
@@ -78,12 +76,12 @@ fn main() {
         .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
         .run(|handler, event| match event {
-            tauri::RunEvent::Exit { .. } => {
-                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                    handler.track_event("app_exited", None);
-                    handler.flush_events_blocking();
-                }
-            }
+            // tauri::RunEvent::Exit { .. } => {
+            //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+            //         handler.track_event("app_exited", None);
+            //         handler.flush_events_blocking();
+            //     }
+            // }
             _ => {}
         })
 }
@@ -123,6 +121,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_is_dashboard_visible,
         openvr::commands::openvr_reregister_manifest,
         openvr::commands::openvr_set_init_delay_fix,
+        openvr::commands::openvr_set_analog_color_temp,
         hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         hardware::beyond::commands::bigscreen_beyond_set_led_color,
@@ -148,9 +147,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::set_hardware_mic_activivation_threshold,
         os::commands::is_vrchat_active,
         os::commands::activate_memory_watcher,
-        osc::commands::osc_send_bool,
-        osc::commands::osc_send_float,
-        osc::commands::osc_send_int,
+        osc::commands::osc_send_command,
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
         osc::commands::stop_osc_server,
@@ -193,6 +190,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
+        commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,

@@ -64,9 +64,15 @@
 .simple-command {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
+  gap: 0.5em;
   padding: 0.5em 1em;
   background: var(--color-surface-1);
+
+  & > * {
+    display: flex;
+    min-height: 2.5em;
+  }
 
   &:not(:first-child) {
     border-top: 1px solid var(--color-surface-3);
@@ -96,16 +102,23 @@
   &-index {
     font-weight: 600;
     margin-right: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   &-action {
     margin-right: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 
   &-type-input,
   &-boolean-input,
   &-integer-input,
-  &-float-input {
+  &-float-input,
+  &-string-input {
     margin-right: 0.5em;
     width: 8em;
 
@@ -113,6 +126,10 @@
       padding: 0.25em 1em;
       width: 100%;
     }
+  }
+
+  &-string-input {
+    width: 24em;
   }
 
   &-address-input {
@@ -126,7 +143,6 @@
 
   &-remove-button {
     padding: 0;
-    margin-left: 1em;
 
     i.material-icons {
       margin: 0;
@@ -137,6 +153,21 @@
     input {
       width: 5em;
     }
+  }
+
+  &-parameters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  &-parameter-row {
+    display: flex;
+    align-items: center;
+  }
+
+  .btn-add-parameter {
+    min-height: 2.5em;
   }
 }
 

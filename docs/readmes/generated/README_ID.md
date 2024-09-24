@@ -73,7 +73,7 @@ Jika Anda ingin ikut mengobrol, bergabunglah dengan <a href="https://discord.gg/
     </table>
 </p>
 <p align="center">
-    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/597f53c7-73b8-46bb-a118-96dccae6730c" width="640">
+    <img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/563abe4d-2a8d-43e2-9515-39ea8d772d09" width="640">
 </p>
 
 ## Download & Instal
@@ -97,6 +97,7 @@ OyasumiVR dapat **mendeteksi saat Anda tertidur**, dan membantu Anda dalam berba
 - 🔅 Meredupkan kecerahan headset Anda
 - ✨ Memicu animasi avatar berdasarkan pose tidur Anda
 - 📩 Menangani permintaan undangan secara otomatis
+- 🔵 Automating your VRChat status
 - 🎤 Membisukan mikrofon saat Anda tertidur
 - 🛠 Mengotomatiskan berbagai pengaturan SteamVR
 
@@ -129,9 +130,12 @@ Jika deteksi otomatis bukan yang Anda cari, ada berbagai otomatisasi alternatif 
   <li>Tingkat baterai kontroler & tracker</li>
   <li>Status daya kontroler & tracker</li>
   <li>Status SteamVR</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul> 
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/cfe464c4-129b-4441-a54c-5ec489b002e2"></td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/48775fe7-2646-4d0b-ba8c-f7d7eb3a5d86"></td>
   </tr>
 </table>
 
@@ -174,11 +178,21 @@ Hemat listrik dengan mengatur Kebijakan Daya Windows secara otomatis saat Anda t
     <td>
 <b>Base Station</b>
 <br>
-Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya.
-<br><br>
-<i>Saat ini hanya V2 Lighthouse yang didukung.</i> 
+Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
+  </tr>
+</table>
+
+### 🎮 Device Control
+<table>
+  <tr>
+    <td>
+OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+<br><br>
+Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click! 
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
 </table>
 
@@ -219,8 +233,8 @@ Terdapat preset bawaan untuk aset locomotion yang populer, termasuk:
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>
@@ -243,17 +257,43 @@ Atau, picu animasi Anda sendiri dengan editor skrip OSC yang disertakan!
 <br>
 Secara otomatis menerima permintaan undangan dari teman tertentu saat Anda tidur! Anda dapat menambahkan teman yang ingin Anda masukkan ke whitelist, atau bahkan memblokir teman tertentu agar permintaan mereka tidak diterima secara otomatis dengan blacklist.
     </td>    
-    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/a3778498-b3e4-464a-af91-1f9b74bf134e"></td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0b96c76a-4ecb-415d-a446-0430f9e0c233"></td>
   </tr>
   <tr>
     <td>
-🔵 <b>Otomatisasi Status</b>
+🔵 <b>Status Automations</b>
 <br>
-Secara otomatis mengubah status Anda berdasarkan jumlah pemain di dunia Anda:
+OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
 <br><br>
-Beralihlah ke warna biru saat Anda tidur sendirian agar teman Anda dapat bergabung dengan Anda, dan beralihlah ke warna oranye saat ada cukup banyak orang di sekitar Anda!
+Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
+  </tr>
+  <tr>
+    <td>
+🔔 <b>Join Notifications</b>
+<br>
+OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
+
+It can configured to only notify you in specific situations, like only:
+<br>
+<ul>
+  <li>For your friends</li>
+  <li>For certain specific players</li>
+  <li>When you're being left alone</li>
+  <li>When you're no longer alone</li>
+</ul>
+    </td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
+  </tr>
+  <tr>
+    <td>
+🏃 <b>Avatar Automations</b>
+<br>
+You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
+Useful if you have a specific avatar you use for sleeping.
+    </td>
+    <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
   </tr>
   <tr>
     <td>
@@ -272,18 +312,25 @@ Ini adalah fitur yang lebih canggih yang dapat Anda gunakan untuk memicu fitur t
 <table>
   <tr>
     <td>
-Pernahkah Anda ingin tertidur dalam VR, tetapi tidak bisa terus berada dalam VR sepanjang malam? Urutan shutdown bisa Anda siapkan!
+Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
 <br><br>
-Urutan shutdown dapat dipicu secara otomatis apabila Anda telah tertidur selama jangka waktu tertentu. Tergantung pada tindakan yang Anda konfigurasikan, tindakan tersebut akan melakukan salah satu dari yang berikut ini:
+While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
 <br><br>
 <ul>
-  <li>Mematikan semua kontroler dan/atau Tracker kamu</li>
-  <li>Mematikan Base Stationmu</li>
-  <li>Keluar SteamVR <i>(fan beberapa game/software yang kamu jalankan)</i></li>
-  <li>Mematikan Windows</li>
+  <li>When you've been asleep for a certain amount of time. </li>
+  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
 </ul>
 <br>
-Sekarang Anda dapat tertidur lelap dalam VR, mengetahui bahwa semuanya akan mati setelah Anda tertidur!
+Depending on which actions you configure, it will do any of the following:
+<br><br>
+<ul>
+  <li>Turn off your controllers and/or Trackers</li>
+  <li>Turn off your Base Stations</li>
+  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
+  <li>Shut down Windows</li>
+</ul>
+<br>
+With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
@@ -405,6 +452,86 @@ Secara otomatis menyesuaikan jarak pudar chaperone SteamVR saat Anda tidur. Jika
   </tr>
 </table>
 
+### 🏠 Home Assistant Integration
+
+<table>
+  <tr>
+    <td colspan="2">
+<img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
+OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
+For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+<br><br>
+Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+    </td>
+    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
+  </tr>
+<tr>
+  <td>
+    <b>OyasumiVR Features</b>
+    <ul>
+      <li>Sleep Mode (Switch)</li>
+      <li>Shutdown Sequence (Button)</li>
+      <li>Sleep Preparation (Button)</li>
+      <li>Heart Rate (Sensor)</li>
+      <li>Sleeping Position (Sensor)</li>
+      <li>
+        Base Station
+        <ul>
+          <li>Power (Switch)</li>
+          <li>Power State (Sensor)</li>
+        </ul>
+      </li>
+      <li>
+        HMD Brightness
+        <ul>
+          <li>Advanced Mode (Switch)</li>
+          <li>Simple Brightness (Number)</li>
+          <li>Software Brightness (Number)</li>
+          <li>Hardware Brightness (Number)</li>
+        </ul>
+      </li>
+    </ul>
+  </td>
+  <td colspan="2">
+    <b>VRChat Features</b>
+    <ul>
+      <li>VRChat Running (Sensor)</li>
+      <li>Player Name (Sensor)</li>
+      <li># Players In World (Sensor)</li>
+      <li>Status Visibility (Sensor)</li>
+      <li>World Instance ID (Sensor)</li>
+    </ul>
+  </td>
+</tr>
+<tr>
+  <td>
+    <b>SteamVR Features</b>
+    <ul>
+      <li>VR Headset Model (Sensor)</li>
+      <li>SteamVR Running (Sensor)</li>
+      <li>
+        Controller & Tracker
+        <ul>
+          <li>Power (Switch) (Only Powering Off)</li>
+          <li>Charging State (Sensor)</li>
+          <li>Battery Level (Sensor)</li>
+          <li>Device Roles (Sensor)</li>
+        </ul>
+      </li>
+    </ul>
+    <br />
+  </td>
+  <td colspan="2">
+    <b>Bigscreen Beyond Features</b>
+    <ul>
+      <li>Fan Speed (Number)</li>
+      <li>RGB LED (Light)</li>
+      <li>Brightness (Number)</li>
+    </ul>
+  </td>
+</tr>
+</table>
+
 ## Translasi & Lokalisasi
 
 OyasumiVR saat ini mendukung bahasa-bahasa berikut:
@@ -416,8 +543,9 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
 - Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
-- Українська (Ukrainian): Community contribution by [senkodev](https://x.com/senkodev).
+- Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

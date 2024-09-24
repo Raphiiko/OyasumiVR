@@ -16,15 +16,18 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   NightmareDetectionAutomationsConfig,
 } from '../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
+import { NotificationSound } from '../models/notification-sounds.generated';
+
+export const NIGHTMARE_DETECTION_NOTIFICATION_SOUND: NotificationSound = 'material_alarm_gentle';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NightmareDetectionAutomationService {
-  private config: NightmareDetectionAutomationsConfig = cloneDeep(
+  private config: NightmareDetectionAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION
   );
   private sleepModeLastEnabled = Date.now();
@@ -98,7 +101,10 @@ export class NightmareDetectionAutomationService {
       });
     }
     if (this.config.playSound) {
-      await this.notification.playSound('notification_reverie', this.config.soundVolume / 100);
+      await this.notification.playSound(
+        NIGHTMARE_DETECTION_NOTIFICATION_SOUND,
+        this.config.soundVolume / 100
+      );
     }
   }
 }

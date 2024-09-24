@@ -6,6 +6,12 @@ import { fadeUp } from '../../../utils/animations';
 import { TranslateService } from '@ngx-translate/core';
 import { OpenVRService } from '../../../services/openvr.service';
 import { LighthouseService } from '../../../services/lighthouse.service';
+import { ModalService } from '../../../services/modal.service';
+import {
+  LighthouseV1IdWizardModalComponent,
+  LighthouseV1IdWizardModalInputModel,
+  LighthouseV1IdWizardModalOutputModel,
+} from '../../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 
 export interface DeviceEditModalInputModel {
   deviceType?: 'LIGHTHOUSE' | 'OPENVR';
@@ -34,7 +40,8 @@ export class DeviceEditModalComponent
   constructor(
     private translate: TranslateService,
     private openvr: OpenVRService,
-    private lighthouseService: LighthouseService
+    private modal: ModalService,
+    protected lighthouseService: LighthouseService
   ) {
     super();
   }
@@ -120,5 +127,15 @@ export class DeviceEditModalComponent
         return 'Unknown Device';
       }
     }
+  }
+
+  openLighthouseV1IdWizard() {
+    this.modal
+      .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
+        LighthouseV1IdWizardModalComponent,
+        { device: this.lighthouseDevice! },
+        { closeOnEscape: false }
+      )
+      .subscribe();
   }
 }

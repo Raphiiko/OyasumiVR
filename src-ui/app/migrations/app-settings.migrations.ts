@@ -1,4 +1,4 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
 import { error, info } from 'tauri-plugin-log-api';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
@@ -37,7 +37,7 @@ export function migrateAppSettings(data: any): AppSettings {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(data));
+      saveBackup(structuredClone(data));
       data = resetToLatest(data);
       currentVersion = data.version;
       message(
@@ -49,7 +49,7 @@ export function migrateAppSettings(data: any): AppSettings {
     currentVersion = data.version;
     info(`[app-settings-migrations] Migrated app settings to version ${currentVersion + ''}`);
   }
-  data = mergeWith(cloneDeep(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(APP_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -65,7 +65,7 @@ async function saveBackup(oldData: any) {
 
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(APP_SETTINGS_DEFAULT);
+  data = structuredClone(APP_SETTINGS_DEFAULT);
   return data;
 }
 

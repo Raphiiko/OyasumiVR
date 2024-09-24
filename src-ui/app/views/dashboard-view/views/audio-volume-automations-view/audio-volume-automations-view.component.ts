@@ -4,7 +4,7 @@ import {
   AudioVolumeAutomation,
   AUTOMATION_CONFIGS_DEFAULT,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -15,7 +15,7 @@ import { map } from 'rxjs';
   styleUrls: ['./audio-volume-automations-view.component.scss'],
 })
 export class AudioVolumeAutomationsViewComponent implements OnInit {
-  config: AudioDeviceAutomationsConfig = cloneDeep(
+  config: AudioDeviceAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.AUDIO_DEVICE_AUTOMATIONS
   );
 

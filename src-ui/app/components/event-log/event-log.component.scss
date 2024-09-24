@@ -82,22 +82,35 @@
   }
 }
 
-.btn-clear {
+.btn-header {
   overflow: hidden;
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   margin-right: -0.5em;
   font-size: 0.75em;
   height: 2em;
+  border: 0.15em solid transparent;
+  transition: all .15s ease;
+
+  &:not(:last-child) {
+    margin-right: 0.5em;
+  }
 
   i.material-icons-round {
-    font-size: 0.9em;
+    font-size: 1em;
     margin: 0 -0.5em;
   }
 
   .label {
     margin-left: 0.5em;
     white-space: nowrap;
+    font-size: 0.9em;
+    transform: translateY(0.05em);
+  }
+
+  &.active {
+    border-color: var(--color-primary);
   }
 }

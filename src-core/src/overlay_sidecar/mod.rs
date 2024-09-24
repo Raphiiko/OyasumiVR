@@ -21,7 +21,7 @@ pub async fn init() {
     *SIDECAR_MANAGER.lock().await = Some(SidecarManager::new(
         "OVERLAY".to_string(),
         "resources/dotnet-sidecars/".to_string(),
-        "overlay-sidecar.exe".to_string(),
+        "oyasumivr-overlay-sidecar.exe".to_string(),
         tx,
         true,
         vec![],

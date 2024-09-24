@@ -3,7 +3,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   ShutdownAutomationsConfig,
 } from '../../../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fade, vshrink } from '../../../../../../utils/animations';
@@ -15,15 +15,13 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   animations: [fade(), vshrink()],
 })
 export class ShutdownAutomationsTriggersTabComponent implements OnInit {
-  protected config: ShutdownAutomationsConfig = cloneDeep(
+  protected config: ShutdownAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS
   );
   protected onSleepActivationWindowStart = '00:00';
   protected onSleepActivationWindowEnd = '00:00';
   protected whenAloneActivationWindowStart = '00:00';
   protected whenAloneActivationWindowEnd = '00:00';
-  protected onSleepDurationString = '00:00:00';
-  protected whenAloneDurationString = '00:00:00';
 
   constructor(private automationConfigs: AutomationConfigService, private destroyRef: DestroyRef) {}
 
@@ -32,14 +30,12 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
         this.config = configs.SHUTDOWN_AUTOMATIONS;
-        this.onSleepDurationString = this.durationToString(this.config.triggerOnSleepDuration);
         this.onSleepActivationWindowStart = this.config.triggerOnSleepActivationWindowStart
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
         this.onSleepActivationWindowEnd = this.config.triggerOnSleepActivationWindowEnd
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
-        this.whenAloneDurationString = this.durationToString(this.config.triggerWhenAloneDuration);
         this.whenAloneActivationWindowStart = this.config.triggerWhenAloneActivationWindowStart
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
@@ -75,12 +71,7 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
-  async onSleepDurationChange(value: string) {
-    let [hours, minutes, seconds] = value.split(':').map((v) => parseInt(v));
-    if (isNaN(hours)) hours = 0;
-    if (isNaN(minutes)) minutes = 0;
-    if (isNaN(seconds)) seconds = 0;
-    const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+  async onSleepDurationChange(duration: number) {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
@@ -89,12 +80,7 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
-  async whenAloneDurationChange(value: string) {
-    let [hours, minutes, seconds] = value.split(':').map((v) => parseInt(v));
-    if (isNaN(hours)) hours = 0;
-    if (isNaN(minutes)) minutes = 0;
-    if (isNaN(seconds)) seconds = 0;
-    const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+  async whenAloneDurationChange(duration: number) {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
@@ -145,10 +131,10 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     };
     // Reset the window back to default when turning off the activation window
     if (!config.triggerOnSleepActivationWindow) {
-      config.triggerOnSleepActivationWindowStart = cloneDeep(
+      config.triggerOnSleepActivationWindowStart = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindowStart
       );
-      config.triggerOnSleepActivationWindowEnd = cloneDeep(
+      config.triggerOnSleepActivationWindowEnd = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerOnSleepActivationWindowEnd
       );
     }
@@ -168,6 +154,16 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
+  async toggleTriggerWhenAloneOnlyWhenSleepModeActive() {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      {
+        triggerWhenAloneOnlyWhenSleepModeActive:
+          !this.config.triggerWhenAloneOnlyWhenSleepModeActive,
+      }
+    );
+  }
+
   async toggleWhenAloneActivationWindow() {
     // Toggle the activation window
     const config: Partial<ShutdownAutomationsConfig> = {
@@ -175,10 +171,10 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     };
     // Reset the window back to default when turning off the activation window
     if (!config.triggerWhenAloneActivationWindow) {
-      config.triggerWhenAloneActivationWindowStart = cloneDeep(
+      config.triggerWhenAloneActivationWindowStart = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerWhenAloneActivationWindowStart
       );
-      config.triggerWhenAloneActivationWindowEnd = cloneDeep(
+      config.triggerWhenAloneActivationWindowEnd = structuredClone(
         AUTOMATION_CONFIGS_DEFAULT.SHUTDOWN_AUTOMATIONS.triggerWhenAloneActivationWindowEnd
       );
     }

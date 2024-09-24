@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { VRChatService } from '../vrchat.service';
 import {
-  async,
+  asyncScheduler,
   combineLatest,
   debounceTime,
   delay,
@@ -11,7 +11,7 @@ import {
   throttleTime,
 } from 'rxjs';
 import { AutomationConfigService } from '../automation-config.service';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import {
   AUTOMATION_CONFIGS_DEFAULT,
   ChangeStatusBasedOnPlayerCountAutomationConfig,
@@ -27,7 +27,7 @@ import { TranslateService } from '@ngx-translate/core';
   providedIn: 'root',
 })
 export class StatusChangeForPlayerCountAutomationService {
-  private config: ChangeStatusBasedOnPlayerCountAutomationConfig = cloneDeep(
+  private config: ChangeStatusBasedOnPlayerCountAutomationConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.CHANGE_STATUS_BASED_ON_PLAYER_COUNT
   );
   private sleepMode = false;
@@ -44,7 +44,7 @@ export class StatusChangeForPlayerCountAutomationService {
   async init() {
     // Pull in data
     this.automationConfig.configs.subscribe((configs) => {
-      this.config = cloneDeep(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
+      this.config = structuredClone(configs.CHANGE_STATUS_BASED_ON_PLAYER_COUNT);
     });
     this.sleep.mode.subscribe((mode) => (this.sleepMode = mode));
 
@@ -77,32 +77,36 @@ export class StatusChangeForPlayerCountAutomationService {
         // Stop if we don't need to make any changes
         filter((newStatus) => Boolean(newStatus.status || newStatus.statusMessage)),
         // Throttle to prevent spamming, just in case. (This should already be handled at the service level).
-        throttleTime(500, async, { leading: true, trailing: true })
+        throttleTime(500, asyncScheduler, { leading: true, trailing: true })
       )
       .subscribe(async (newStatus) => {
         // Set new status
-        await this.vrchat.setStatus(newStatus.status, newStatus.statusMessage);
-        if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
-          await this.notifications.send(
-            this.translate.instant('notifications.vrcStatusChanged.content', {
-              newStatus: (
-                (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
-                ' (' +
-                (newStatus.status ?? newStatus.oldStatus) +
-                ')'
-              ).trim(),
-            })
-          );
+        const success = await this.vrchat
+          .setStatus(newStatus.status, newStatus.statusMessage)
+          .catch(() => false);
+        if (success) {
+          if (await this.notifications.notificationTypeEnabled('AUTO_UPDATED_VRC_STATUS')) {
+            await this.notifications.send(
+              this.translate.instant('notifications.vrcStatusChanged.content', {
+                newStatus: (
+                  (newStatus.statusMessage ?? newStatus.oldStatusMessage) +
+                  ' (' +
+                  (newStatus.status ?? newStatus.oldStatus) +
+                  ')'
+                ).trim(),
+              })
+            );
+          }
+          this.eventLog.logEvent({
+            type: 'statusChangedOnPlayerCountChange',
+            reason: newStatus.reason,
+            threshold: this.config.limit,
+            newStatus: newStatus.status,
+            oldStatus: newStatus.oldStatus,
+            newStatusMessage: newStatus.statusMessage,
+            oldStatusMessage: newStatus.oldStatusMessage,
+          } as EventLogStatusChangedOnPlayerCountChange);
         }
-        this.eventLog.logEvent({
-          type: 'statusChangedOnPlayerCountChange',
-          reason: newStatus.reason,
-          threshold: this.config.limit,
-          newStatus: newStatus.status,
-          oldStatus: newStatus.oldStatus,
-          newStatusMessage: newStatus.statusMessage,
-          oldStatusMessage: newStatus.oldStatusMessage,
-        } as EventLogStatusChangedOnPlayerCountChange);
       });
   }
 

@@ -81,6 +81,14 @@
     "langNameEnglish": "Ukrainian"
   },
   {
+    "name": "Fanyatsu",
+    "url": "https://fanyat.su/",
+    "langCode": "uk",
+    "flagCode": "ua",
+    "langNameNative": "Українська",
+    "langNameEnglish": "Ukrainian"
+  },
+  {
     "name": "Kanjir0",
     "url": "https://twitter.com/Kanjiro_vrc",
     "langCode": "ru",
@@ -99,6 +107,20 @@
     "langCode": "ru",
     "langNameNative": "Русский",
     "langNameEnglish": "Russian"
+  },
+  {
+    "name": "Nicer Dicer",
+    "url": "https://github.com/XNicerDicerX",
+    "langCode": "de",
+    "langNameNative": "Deutsch",
+    "langNameEnglish": "German"
+  },
+  {
+    "name": "Aron",
+    "url": "https://github.com/imaron85",
+    "langCode": "de",
+    "langNameNative": "Deutsch",
+    "langNameEnglish": "German"
   },
   {
     "name": "Raphiiko",

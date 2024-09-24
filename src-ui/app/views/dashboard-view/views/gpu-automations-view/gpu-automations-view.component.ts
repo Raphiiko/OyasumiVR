@@ -103,7 +103,7 @@ export class GpuAutomationsViewComponent implements OnInit {
           cancelButtonText: 'gpu-automations.elevationSidecarModal.cancel',
         })
         .subscribe((data) => {
-          if (data.confirmed) {
+          if (data?.confirmed) {
             this.settingsService.updateSettings({ askForAdminOnStart: true });
           }
           this.sidecar.start();

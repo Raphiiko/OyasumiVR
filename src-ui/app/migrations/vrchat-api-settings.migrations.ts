@@ -1,4 +1,4 @@
-import { cloneDeep, mergeWith } from 'lodash';
+import { mergeWith } from 'lodash';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { error, info } from 'tauri-plugin-log-api';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
@@ -30,7 +30,7 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
           '. Backing up configuration and resetting to the latest version. : ' +
           e
       );
-      saveBackup(cloneDeep(data));
+      saveBackup(structuredClone(data));
       data = resetToLatest(data);
       currentVersion = data.version;
       message(
@@ -46,7 +46,7 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
       }`
     );
   }
-  data = mergeWith(cloneDeep(VRCHAT_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+  data = mergeWith(structuredClone(VRCHAT_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
     if (Array.isArray(objValue)) {
       return srcValue;
     }
@@ -69,6 +69,6 @@ function from1To2(data: any): any {
 
 function resetToLatest(data: any): any {
   // Reset to latest
-  data = cloneDeep(VRCHAT_API_SETTINGS_DEFAULT);
+  data = structuredClone(VRCHAT_API_SETTINGS_DEFAULT);
   return data;
 }

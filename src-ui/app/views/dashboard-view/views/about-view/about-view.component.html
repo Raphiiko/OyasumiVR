@@ -25,11 +25,11 @@
           <div class="name">Raphii</div>
           <div class="twitter">
             <i class="fa-brands fa-twitter"></i>
-            <a href="https://twitter.com/Raphiiko" target="_blank">@Raphiiko</a>
+            <a href="https://twitter.com/Raphiiko" target="_blank">&#64;Raphiiko</a>
           </div>
           <div class="discord">
             <i class="fa-brands fa-discord"></i>
-            <span>@raphiiko</span>
+            <span>&#64;raphiiko</span>
           </div>
           <div class="github">
             <i class="fa-brands fa-github"></i>
@@ -50,6 +50,12 @@
         <div class="contributor-list-entry">
           <span
             ><a href="https://github.com/TheMrGong" target="_blank">góngo</a> |
+            <span translate>about.contributionType.feature</span></span
+          >
+        </div>
+        <div class="contributor-list-entry">
+          <span
+            ><a href="https://fanyat.su" target="_blank">Fanyatsu</a> |
             <span translate>about.contributionType.feature</span></span
           >
         </div>
@@ -93,30 +99,18 @@
     </div>
   </div>
   <div class="row">
-    <div class="left">
+    <div class="translation-author-list">
       <div
         class="translation-author-list-entry"
-        *ngFor="let contributor of leftTranslationContributors"
+        *ngFor="let contributor of translationContributors"
       >
         <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
-        {{ contributor.langNameNative }} |
+        <span>{{ contributor.langNameNative }}</span>
+        <span>&nbsp;|&nbsp;</span>
         <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
           contributor.name
         }}</a
         ><span *ngIf="!contributor.url">{{ contributor.name }}</span>
-      </div>
-    </div>
-    <div class="right">
-      <div
-        class="translation-author-list-entry"
-        *ngFor="let contributor of rightTranslationContributors"
-      >
-        <a *ngIf="contributor.url" [href]="contributor.url" target="_blank">{{
-          contributor.name
-        }}</a
-        ><span *ngIf="!contributor.url">{{ contributor.name }}</span> |
-        {{ contributor.langNameNative }}
-        <span [ngClass]="['fi', 'fi-' + (contributor.flagCode ?? contributor.langCode)]"></span>
       </div>
     </div>
   </div>

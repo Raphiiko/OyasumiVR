@@ -9,24 +9,83 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Display color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
+- Automations for display color temperature
+- Sunset/Sunrise based automations for brightness and color temperature.
+- Support for V1 Lighthouses (Vive Base stations)
+- Option for the shutdown sequence to only trigger for being alone in your instance while the sleep mode is enabled
+- Option for audio volume automations to apply on start
+- Support for VRChat parameters in OSC scripts that have been automatically renamed by VRCFury or Modular Avatar
+- Event log filters
+- Workaround for VRChat not automatically reloading your avatar after all trackers have been turned off
+- German language support (thanks to community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85))
+- Exposed HMD activity level over MQTT
+
+### Changed
+
+- Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
+- (Headset specific) brightness and color temperature settings were moved to their own settings page.
+- OSC scripts will automatically convert spaces in addresses to underscores to match VRChat behaviour for parameter renaming.
+- Various notification sounds
+
+### Removed
+
+- Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
+
+### Fixed
+
+- Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
+- Shutdown sequence being triggered over and over by the sleep mode trigger, when not using it to shut down or reboot the PC.
+- Issue where leave notifications would trigger for every other player when leaving a world.
+
+## [1.13.3]
+
+### Fixed
+
+- Battery level based power automations turning off devices above the threshold
+- Certain types of selection in input fields (e.g. Ctrl+A) being blocked
+
+### Changed
+
+- Window titlebar icons
+
+## [1.13.2]
+
+### Fixed
+
+- The status message not updating when the visibility remained the same
+- The status message not setting to an empty value
+
+## [1.13.1]
+
+### Fixed
+
+- Some modals automatically closing right after opening them
+- Some modals being rendered incorrectly
+
+## [1.13.0]
+
+### Added
+
+- Integration with Home Assistant via MQTT
+- Function for VRChat player join/leave notifications
+- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
+- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
+- Option for changing your VRChat status description in the player limit status automations.
 - Option to load and save VRChat player lists as presets for automatic invite request acceptance.
 - Option to limit automatically accepting invite request based on the number of players in the world.
-- Ukranian language support (Community contribution by [senkodev](https://x.com/senkodev))
 - Automations for switching between various player list presets for automatic invite request acceptance.
 - Automation for disabling the sleep mode when you've been upright for long enough after laying down.
-- Function for VRChat player join/leave notifications
 - Automation for automatically disabling the sleep mode when a (certain) VRChat user joins or leaves your world.
-- OVRToolkit as a notification provider
-- Integration with Home Assistant via MQTT
+- Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
+- Ukrainian language support (Community contribution by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/))
 - Additional configuration options for the sleep detector (controller presence, sleeping pose)
 - Options for forcing the power state of base stations (Right click the power button).
 - Support for base stations that don't report their status. (Newer lighthouses sold through Valve, likely manufactured by HTC)
-- Automation trigger for the shutdown sequence to run when you've been left alone in your VRChat world instance for a certain amount of time.
-- Custom window titlebar
-- Optional fix to delay initializing OyasumiVR with OpenVR. (Can potentially help with SteamVR being unstable while starting when OyasumiVR is already running)
-- Option for changing your VRChat status description in the player limit status automations.
-- Automations for changing your VRChat status based on the sleep mode & sleep preparation.
-- Avatar automations for changing your VRChat avatar when you fall asleep, wake up, or prepare for bed.
+- Optional fix to delay initializing OyasumiVR with OpenVR.
+- OVRToolkit as a notification provider
+- Support for string parameters in OSC scripts (Community contribution by [Fanyatsu](https://fanyat.su/))
+- Support for sending multiple parameters in OSC scripts (Community contribution by [Fanyatsu](https://fanyat.su/))
 
 ### Changed
 
@@ -35,6 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improved sleep detection by considering the sleeping pose
 - Improved layouts for sleep detection configuration views
 - When the overlay menu is opened while the controller is not tracked, the overlay will open in front of you instead.
+- Custom window titlebar
 
 ### Fixed
 

@@ -1,7 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { VRChatMicMuteAutomationService } from '../../../services/osc-automations/vrchat-mic-mute-automation.service';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
-import { VRChatService } from '../../../services/vrchat.service';
+import { OpenVRService } from '../../../services/openvr.service';
+import { firstValueFrom, take } from 'rxjs';
+import { writeText } from '@tauri-apps/api/clipboard';
+import { AppSettingsService } from '../../../services/app-settings.service';
 
 @Component({
   selector: 'app-misc-testing',
@@ -11,17 +13,20 @@ import { VRChatService } from '../../../services/vrchat.service';
 export class MiscTestingComponent implements OnInit {
   @Input() modal?: BaseModalComponent<any, any>;
 
-  constructor(
-    protected automation: VRChatMicMuteAutomationService,
-    protected vrchat: VRChatService
-  ) {}
+  constructor(private openvr: OpenVRService, protected appSettings: AppSettingsService) {}
 
   ngOnInit(): void {}
 
-  avatars: any = null;
+  result: any;
+  ovrData: any = {};
 
-  async fetchAvatars() {
-    this.avatars = await this.vrchat.listAvatars();
-    console.log('FETCHED AVATARS', this.avatars);
+  async pullOvrData() {
+    this.ovrData = await firstValueFrom(this.openvr.devices.pipe(take(1)));
+    await writeText(JSON.stringify(this.ovrData, null, 2));
+    alert('OVR data copied to clipboard');
+  }
+
+  clearV1Ids() {
+    this.appSettings.updateSettings({ v1LighthouseIdentifiers: {} });
   }
 }

@@ -6,10 +6,10 @@ import {
   AudioVolumeAutomation,
   AUTOMATION_CONFIGS_DEFAULT,
 } from '../models/automations';
-import { cloneDeep, isEqual } from 'lodash';
+import { isEqual } from 'lodash';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
-import { distinctUntilChanged, firstValueFrom, map, skip } from 'rxjs';
+import { delay, distinctUntilChanged, firstValueFrom, map, of, skip, switchMap, take } from 'rxjs';
 import { AudioDeviceParsedName } from '../models/audio-device';
 import { info } from 'tauri-plugin-log-api';
 import { EventLogService } from './event-log.service';
@@ -23,7 +23,7 @@ import {
   providedIn: 'root',
 })
 export class AudioDeviceAutomationsService {
-  private config: AudioDeviceAutomationsConfig = cloneDeep(
+  private config: AudioDeviceAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.AUDIO_DEVICE_AUTOMATIONS
   );
 
@@ -40,6 +40,33 @@ export class AudioDeviceAutomationsService {
     this.automationConfigService.configs.subscribe((configs) => {
       this.config = configs.AUDIO_DEVICE_AUTOMATIONS;
     });
+    // Run automations on OyasumiVR start
+    of(null)
+      .pipe(
+        delay(2000),
+        switchMap(() => this.sleepService.mode.pipe(take(1))),
+        map(
+          (sleepMode) =>
+            [
+              sleepMode
+                ? this.config.onSleepEnableAutomations
+                : this.config.onSleepDisableAutomations,
+              sleepMode,
+            ] as [AudioVolumeAutomation[], boolean]
+        ),
+        map(
+          ([automations, sleepMode]) =>
+            [automations.filter((a) => a.applyOnStart), sleepMode] as [
+              AudioVolumeAutomation[],
+              boolean
+            ]
+        )
+      )
+      .subscribe(([automations, sleepMode]) => {
+        for (const automation of automations) {
+          this.runAutomation(automation, sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED');
+        }
+      });
     // Run automations on sleep mode change
     this.sleepService.mode.pipe(skip(1), distinctUntilChanged()).subscribe(async (sleepMode) => {
       const automations = sleepMode
@@ -73,7 +100,7 @@ export class AudioDeviceAutomationsService {
         distinctUntilChanged((previous, current) => isEqual(previous, current))
       )
       .subscribe(async () => {
-        const config = cloneDeep(
+        const config = structuredClone(
           (await firstValueFrom(this.automationConfigService.configs)).AUDIO_DEVICE_AUTOMATIONS
         );
         const automations = [

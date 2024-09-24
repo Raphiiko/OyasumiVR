@@ -17,7 +17,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   VRChatMicMuteAutomationsConfig,
 } from '../../models/automations';
-import { cloneDeep, isArray } from 'lodash';
+import { isArray } from 'lodash';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { EventLogService } from '../event-log.service';
@@ -34,7 +34,7 @@ const WRITE_ADDR = '/input/Voice';
 export class VRChatMicMuteAutomationService {
   private _muted = new BehaviorSubject<boolean | null>(null);
   public muted = this._muted.asObservable();
-  private config: VRChatMicMuteAutomationsConfig = cloneDeep(
+  private config: VRChatMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS
   );
   private http!: Client;

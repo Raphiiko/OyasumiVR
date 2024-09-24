@@ -38,6 +38,12 @@ export class TranslationEditorViewComponent {
   protected entriesTranslatedPercentage = 100;
   protected changeMade = new Subject<void>();
 
+  protected paginationSize = 100;
+  protected paginationStart = 0;
+  protected get paginationEnd() {
+    return Math.min(this.paginationStart + this.paginationSize, this.entries.length);
+  }
+
   constructor(
     private translationEditService: TranslationEditService,
     private router: Router,
@@ -130,14 +136,15 @@ export class TranslationEditorViewComponent {
           }
         )
       );
-      if (!result.confirmed) return;
+      if (!result?.confirmed) return;
     }
     this.entries = [];
     this.translationEditService.reset();
     await this.router.navigate(['translation', 'loader']);
   }
 
-  onTranslationChange(entry: TranslationRowEntry, locale: string, value: any) {
+  onTranslationChange(entry: TranslationRowEntry, locale: string, event: Event | string) {
+    const value = typeof event === 'string' ? event : (event.target as HTMLInputElement).value;
     entry.values[locale] = value;
     this.translationEditService.updateEntryValue(entry.key, locale, value);
     this.changesMade = true;
@@ -190,5 +197,16 @@ export class TranslationEditorViewComponent {
       return !!(e.values[this.locale!] ?? '').trim();
     }).length;
     this.entriesTranslatedPercentage = Math.floor((this.entriesTranslated / entries) * 100);
+  }
+
+  goPreviousPage() {
+    if (this.paginationStart <= 0) return;
+    this.paginationStart -= this.paginationSize;
+    this.paginationStart = Math.max(0, this.paginationStart);
+  }
+
+  goNextPage() {
+    if (this.paginationEnd >= this.entries.length) return;
+    this.paginationStart += this.paginationSize;
   }
 }

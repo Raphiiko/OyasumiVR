@@ -2,17 +2,29 @@ import fs from 'fs';
 
 async function handleMove(args) {
   const keyPrev = args[1];
-  const keyNew = args[2];
+  let keyNew = args[2];
   getLangFilePaths().forEach((langFile) => {
     let langFileContent = JSON.parse(fs.readFileSync(langFile, 'utf8'));
     const langFileContentFlattened = flattenObj(langFileContent);
-    if (langFileContentFlattened[keyPrev]) {
-      langFileContentFlattened[keyNew] = langFileContentFlattened[keyPrev];
-      delete langFileContentFlattened[keyPrev];
-      langFileContent = unflattenObj(langFileContentFlattened);
-      fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
-      console.log('Moved key ' + keyPrev + ' to ' + keyNew + ' in ' + langFile);
+    if (keyPrev.endsWith('.')) {
+      if (!keyNew.endsWith('.')) keyNew += '.';
+      Object.entries(structuredClone(langFileContentFlattened)).forEach(([key, value]) => {
+        if (key.startsWith(keyPrev)) {
+          const newKey = keyNew + key.slice(keyPrev.length);
+          langFileContentFlattened[newKey] = value;
+          delete langFileContentFlattened[key];
+          console.log('Moved key ' + key + ' to ' + newKey + ' in ' + langFile);
+        }
+      });
+    } else {
+      if (langFileContentFlattened[keyPrev]) {
+        langFileContentFlattened[keyNew] = langFileContentFlattened[keyPrev];
+        delete langFileContentFlattened[keyPrev];
+        console.log('Moved key ' + keyPrev + ' to ' + keyNew + ' in ' + langFile);
+      }
     }
+    langFileContent = unflattenObj(langFileContentFlattened);
+    fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
   });
 }
 
@@ -43,7 +55,9 @@ async function handleUnset(args) {
 async function handleClean() {
   const enFile = getLangFilePath('en');
   let enFileContent = JSON.parse(fs.readFileSync(enFile, 'utf8'));
-  const enFileContentFlattened = flattenObj(enFileContent);
+  const enFileContentFlattened = Object.fromEntries(
+    Object.entries(flattenObj(enFileContent)).filter(([k]) => !k.includes('!'))
+  );
   getLangFilePaths()
     .filter((f) => f !== enFile)
     .forEach((langFile) => {
@@ -53,7 +67,8 @@ async function handleClean() {
           (entry) =>
             Object.keys(enFileContentFlattened).includes(entry[0]) &&
             entry[1] !== '{PLACEHOLDER}' &&
-            entry[1]?.trim() !== ''
+            entry[1]?.trim() !== '' &&
+            !entry[0].includes('!')
         )
       );
       let keysCleaned =
@@ -79,15 +94,15 @@ async function printTranslationCoverage() {
     const keysTranslated = keys.filter((key) => !!langFileContentFlattened[key]);
     const lang = path.split('/').pop().split('.').shift();
     acc[lang] = {
-      translations: keysTranslated.length + '/' + keys.length,
-      completion: Math.round((keysTranslated.length / keys.length) * 100) + '%',
+      'Coverage (#)': keysTranslated.length + '/' + keys.length,
+      'Coverage (%)': Math.round((keysTranslated.length / keys.length) * 100) + '%',
     };
     return acc;
   }, {});
   // Sort coverage object on completion
   coverage = Object.fromEntries(
     Object.entries(coverage).sort((a, b) => {
-      return parseInt(b[1].completion) - parseInt(a[1].completion);
+      return parseInt(b[1]['Coverage (%)']) - parseInt(a[1]['Coverage (%)']);
     })
   );
   console.log('Translation coverage:');

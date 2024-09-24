@@ -1,11 +1,21 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { EventLogService } from '../../services/event-log.service';
 import { BehaviorSubject, combineLatest, map, Observable, tap } from 'rxjs';
-import { EventLogEntry } from '../../models/event-log-entry';
+import { EventLogEntry, EventLogType } from '../../models/event-log-entry';
 import { fade, hshrink, noop, vshrink } from '../../utils/animations';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { ConfirmModalComponent } from '../confirm-modal/confirm-modal.component';
+import {
+  ConfirmModalComponent,
+  ConfirmModalInputModel,
+  ConfirmModalOutputModel,
+} from '../confirm-modal/confirm-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  EventLogFilterDialogComponent,
+  EventLogFilterDialogInputModel,
+  EventLogFilterDialogOutputModel,
+} from './event-log-filter-dialog/event-log-filter-dialog.component';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
   selector: 'app-event-log',
@@ -21,20 +31,34 @@ export class EventLogComponent implements OnInit, AfterViewInit {
   protected logsInView: Observable<EventLogEntry[]>;
   animationPause = true;
   clearHover = false;
+  filterHover = false;
+  filters = new BehaviorSubject<EventLogType[]>([]);
 
   constructor(
     private eventLog: EventLogService,
     private cdr: ChangeDetectorRef,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private appSettings: AppSettingsService
   ) {
-    this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount]).pipe(
+    this.logsInView = combineLatest([this.eventLog.eventLog, this.showCount, this.filters]).pipe(
       takeUntilDestroyed(),
-      tap(([log]) => {
-        this.entries = log.logs.length;
+      map(
+        ([log, showCount, filters]) =>
+          [log.logs.filter((log) => !filters.includes(log.type)), showCount, filters] as [
+            EventLogEntry[],
+            number,
+            EventLogType[]
+          ]
+      ),
+      tap(([logs]) => {
+        this.entries = logs.length;
         this.cdr.detectChanges();
       }),
-      map(([log, showCount]) => log.logs.slice(0, showCount))
+      map(([logs, showCount]) => logs.slice(0, showCount))
     );
+    this.appSettings.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
+      this.filters.next(settings.eventLogTypesHidden);
+    });
   }
 
   ngOnInit(): void {}
@@ -65,14 +89,28 @@ export class EventLogComponent implements OnInit, AfterViewInit {
 
   clearLog() {
     this.modalService
-      .addModal(ConfirmModalComponent, {
+      .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
         title: 'comp.event-log.clearLogModal.title',
         message: 'comp.event-log.clearLogModal.message',
       })
       .subscribe((data) => {
-        if (data.confirmed) {
+        if (data?.confirmed) {
           this.eventLog.clearLog();
         }
+      });
+  }
+
+  openFilterDialog() {
+    this.modalService
+      .addModal<EventLogFilterDialogInputModel, EventLogFilterDialogOutputModel>(
+        EventLogFilterDialogComponent,
+        {
+          hiddenLogTypes: [...this.filters.value],
+        }
+      )
+      .subscribe((data) => {
+        if (data) this.filters.next(data.hiddenLogTypes);
+        this.appSettings.updateSettings({ eventLogTypesHidden: this.filters.value });
       });
   }
 }

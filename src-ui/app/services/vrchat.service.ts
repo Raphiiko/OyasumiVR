@@ -18,7 +18,7 @@ import {
   Observable,
   Subject,
 } from 'rxjs';
-import { cloneDeep, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { serialize as serializeCookie } from 'cookie';
 import { getVersion } from '../utils/app-utils';
 import { VRChatEventHandlerManager } from './vrchat-events/vrchat-event-handler';
@@ -237,7 +237,7 @@ export class VRChatService {
     info(`[VRChat] Logged in: ${this._user.value?.displayName}`);
   }
 
-  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<void> {
+  async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
     // Throw if we don't have a current user
     const userId = this._user.value?.id;
     if (!userId) {
@@ -247,26 +247,24 @@ export class VRChatService {
     // Sanitize status message if needed
     statusMessage =
       statusMessage === null ? null : statusMessage.replace(/\s+/g, ' ').trim().slice(0, 32);
-    // Don't do anything if the status is not changing
-    if (status && this._user.value?.status === status) return;
-    // Don't do anything if the status message is not changing
-    if (statusMessage && this._user.value?.statusDescription === statusMessage) return;
+    const statusChange = status !== null && this._user.value?.status !== status;
+    const statusMessageChange =
+      statusMessage !== null && this._user.value?.statusDescription !== statusMessage;
+    // Don't do anything if there would be no changes
+    if (!statusChange && !statusMessageChange) return false;
     // Log status change
-    if (status && statusMessage) {
+    if (status !== null && statusMessage !== null) {
       info(`[VRChat] Changing status to '${statusMessage}' ('${status}')`);
-    } else if (status) {
+    } else if (status !== null) {
       info(`[VRChat] Changing status to '${status}'`);
-    } else if (statusMessage) {
+    } else if (statusMessage !== null) {
       info(`[VRChat] Changing status message to '${statusMessage}'`);
-    } else {
-      return;
     }
-
     // Send status change request
     try {
       const body: Record<string, string> = {};
-      if (status) body['status'] = status;
-      if (statusMessage) body['statusDescription'] = statusMessage;
+      if (status !== null) body['status'] = status;
+      if (statusMessage !== null) body['statusDescription'] = statusMessage;
       const result = await this.apiCallQueue.queueTask<Response<unknown>>(
         {
           typeId: 'STATUS_CHANGE',
@@ -283,7 +281,9 @@ export class VRChatService {
       if (!result.result?.ok) throw result.result;
     } catch (e) {
       error(`[VRChat] Failed to update status: ${JSON.stringify(e)}`);
+      return false;
     }
+    return true;
   }
 
   public showLoginModal(autoLogin = false) {
@@ -299,7 +299,7 @@ export class VRChatService {
   }
 
   public patchCurrentUser(user: Partial<CurrentUser>) {
-    const currentUser = cloneDeep(this._user.value);
+    const currentUser = structuredClone(this._user.value);
     if (!currentUser) return;
     Object.assign(currentUser, user);
     this._user.next(currentUser);
@@ -687,22 +687,25 @@ export class VRChatService {
       switch (event.type) {
         case 'OnPlayerJoined': {
           const context = {
-            ...cloneDeep(this._world.value),
+            ...structuredClone(this._world.value),
             playerCount: this._world.value.playerCount + 1,
           };
           if (event.displayName === this._user.value?.displayName) context.loaded = true;
           this._world.next(context);
           break;
         }
-        case 'OnPlayerLeft':
-          this._world.next({
-            ...cloneDeep(this._world.value),
+        case 'OnPlayerLeft': {
+          const context = {
+            ...structuredClone(this._world.value),
             playerCount: Math.max(this._world.value.playerCount - 1, 0),
-          });
+          };
+          if (event.displayName === this._user.value?.displayName) context.loaded = false;
+          this._world.next(context);
           break;
+        }
         case 'OnLocationChange':
           this._world.next({
-            ...cloneDeep(this._world.value),
+            ...structuredClone(this._world.value),
             playerCount: 0,
             instanceId: event.instanceId,
             loaded: false,
@@ -961,7 +964,7 @@ export class VRChatService {
   }
 
   private async updateSettings(settings: Partial<VRChatApiSettings>) {
-    const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    const newSettings = Object.assign(structuredClone(this._settings.value), settings);
     this._settings.next(newSettings);
     await this.saveSettings();
   }

@@ -1,6 +1,7 @@
 mod audio_devices;
 pub mod commands;
 mod models;
+mod sounds_gen;
 
 use log::{error, info};
 use soloud::*;
@@ -17,6 +18,7 @@ use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
 use winapi::um::powrprof::{PowerEnumerate, PowerReadFriendlyName};
 
 use self::audio_devices::manager::AudioDeviceManager;
+use lazy_static::lazy_static;
 
 lazy_static! {
     static ref SOUNDS: std::sync::Mutex<HashMap<String, Vec<u8>>> =
@@ -73,15 +75,7 @@ async fn watch_processes() {
 
 pub async fn load_sounds() {
     let mut sounds = SOUNDS.lock().unwrap();
-    vec![
-        "notification_bell",
-        "notification_block",
-        "notification_reverie",
-        "mic_mute",
-        "mic_unmute",
-    ]
-    .iter()
-    .for_each(|sound| {
+    sounds_gen::SOUND_FILES.iter().for_each(|sound| {
         sounds.insert(
             String::from(*sound),
             std::fs::read(format!("resources/sounds/{}.ogg", sound)).expect(

@@ -29,6 +29,7 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 - 🔅 调暗你头显的亮度
 - ✨ 根据你的睡姿触发模型的不同动画
 - 📩 自动处理加入请求
+- 🔵 Automating your VRChat status
 - 🎤 当你睡着时关闭你的麦克风
 - 🛠️ 自动化各种各样的操作，例如关闭你的设备，或者调整你的GPU功耗限制
 
@@ -50,6 +51,9 @@ OyasumiVR可以根据你的动作自动检测你何时入睡！只需一次校�
   <li>根据控制器和追踪器的电量启用/禁用睡眠模式</li>
   <li>根据控制器和追踪器的开关状态来启用/禁用睡眠模式</li>
   <li>根据SteamVR的状态来进行模式切换</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
@@ -80,8 +84,6 @@ OyasumiVR拥有自己的SteamVR叠加层界面，可以让你在VR里玩游戏�
 <b>基站</b>
 <br>
 让OyasumiVR与SteamVR一起打开和关闭你的基站。有点像SteamVR自己的基站电源管理，但是<b>它与任何HMD兼容！</b>只要你的PC支持蓝牙并且在基站的信号范围内，这个功能就可以正常使用。
-<br><br>
-<i>目前只支持V2版本的Lighthouse。</i>
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU自动化
@@ -111,8 +113,8 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> 由 <a href="https://twitter.com/minminmeeean">みんみんみーん</a> 制作
-    <br>(由 minminmiin 制作的睡眠系统 v2.2 - 2.3)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> 由 <a href="https://twitter.com/minminmeeean">みんみんみーん</a> 制作
+    <br>(由 minminmiin 制作的睡眠系统 v2.2 - 3.0.2)
     <br><a href="https://booth.pm/en/items/4233545">EX版本</a> 也得到了支持！
   </li>
   <li>
@@ -127,13 +129,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 <br>
 当你睡觉时，自动处理朋友们的加入请求！你可以将你想让他们进入的朋友添加到白名单，或者使用黑名单阻止某些朋友的请求被自动接受。
 
-{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
-🔵 <b>状态自动化</b>
-<br>
-根据世界中的人数自动改变你的状态：
-<br><br>
-当你独自睡觉时切换到蓝色（加入我），这样你的朋友可以加入你，当周围有足够的人时切换到橙色（询问我）！
-
 {{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
 🔧 <b>OSC自动化</b>
 <br>
@@ -143,20 +138,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ 关机序列
-
-{{SHUTDOWN_SEQUENCE_BODY}}
-你是否曾经想在VR中入睡，但又不想整夜待在VR中？关机序列可以帮你解决这个问题！
-<br><br>
-当你睡着一段时间后，这个功能可以被自动触发。根据你的配置，它可能会执行以下操作：
-<br><br>
-<ul>
-  <li>关闭你的控制器和追踪器</li>
-  <li>关闭你的基站</li>
-  <li>退出SteamVR <i>（以及任何正在运行的游戏或叠加层）</i></li>
-  <li>关闭你的电脑</li>
-</ul>
-<br>
-现在你可以安心地在VR中入睡，在你熟睡后，你选择的设备都会关闭！
 
 {{BRIGHTNESS_AUTOMATIONS_HEADER}}
 🔅 亮度自动化
@@ -279,36 +260,109 @@ OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何�
 OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。
 
 {{SUPPORT_OYASUMIVR_HEADER}}
-
+赞助Oyasumi VR
 
 {{SUPPORT_OYASUMIVR_BODY}}
+Oyasumi VR 完全且永久免费。不过，如果你愿意支持我继续开发 Oyasumi VR, 欢迎你在这些地方赞助我：
 
+<a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
+<a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
+
+{{DEVICE_CONTROL_HEADER}}
+🎮 设备控制
+
+{{DEVICE_CONTROL_BODY}}
+Oyasumi VR 可以让你轻松控制许多 SteamVR 设备，例如控制器、追踪器和基站。
+<br><br>
+只需点击一次，你就可以轻松确认电池电量、充电状态，或者开关你的基站。
+
+{{VRCHAT_AUTOMATIONS_BODY_STATUS_AUTOMATIONS}}
+🔵 <b>自动化状态</b>
+<br>
+Oyasumi VR 支持多种方式来控制你的 VRChat 状态以及在线签名，允许当你睡着或醒来时触发！
+<br><br>
+或者，Oyasumi VR 也可以在房间内到达特定人数时触发更改状态。例如：当你独自睡觉时开启蓝灯，当房间超过指定人数时改为橙灯。
+
+{{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
+🔔 <b>加入通知</b>
+<br>
+Oyasumi VR 可以在他人加入或者退出时通知你。当你需要在特定情境醒来时可以使用。
+
+{{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
+🏃 <b>模型自动化</b>
+<br>
+Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自动切换模型！如果你有专门睡觉用的模型，这应该很方便。
+
+{{SHUTDOWN_SEQUENCE_BODY}}
+想在VR里睡着，但是又不想整夜开着VR？我们支持自动关机序列！
+<br><br>
+你当然可以手动触发关机序列，不过也有一些自动的触发器供你设置：
+<br><br>
+<ul>
+  <li>当你睡着一定时间后 </li>
+  <li>当你一个人在房间一定时间后 </li>
+</ul>
+<br>
+您也可以选择满足条件后的动作：
+<br><br>
+<ul>
+  <li>关闭控制器 / 追踪器</li>
+  <li>关闭基站</li>
+  <li>关闭SteamVR <i>(以及SteamVR游戏和覆盖层)</i></li>
+  <li>关闭Windows</li>
+</ul>
+<br>
+当设置好关机序列后，你就可以在VR里安心睡着而不需要担心你的电费了！
 
 {{BRIGHTNESS_AUTOMATIONS_BODY}}
-
+你可以设置睡着和醒来时的亮度自动化。
+OyasumiVR 可以平滑地过渡您的头显亮度，在你睡着时渐渐调暗亮度而不会惊醒你。
+<br><br>
+OyasumiVR 支持调节软件和硬件亮度（如果你的头显支持，例如Valve Index或者Bigscreen Beyond）。除了一些预设以外，你也可以在SteamVR覆盖层上自定义具体的亮度等级。
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-
+🎤 麦克风自动化
 
 {{VRCHAT_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-
+<b>VRChat 麦克风自动化</b><br>
+OyasumiVR 可以在你醒来或者睡着时自动开麦或者闭麦
+<br><br>如果你不想自己的呼噜吵到别人，这应该很有用。
 
 {{SYSTEM_MICROPHONE_MUTE_AUTOMATIONS_BODY}}
-
+<b>系统麦克风静音自动化</b><br>
+OyasumiVR 也可以做到在系统级别静音你的麦克风。
+当然也可以做到按键切换静音和按住说话。
+<br><br>
+此功能也可以开启一个VR的静音指示器覆盖层，以及绑定一个控制器按钮来完全替代VR游戏内的静音开关。
 
 {{AUDIO_VOLUME_AUTOMATIONS_HEADER}}
-
+🔉 音量自动化
 
 {{AUDIO_VOLUME_AUTOMATIONS_BODY}}
-
+在你睡着或醒来时自动调节系统音量！这可以防止你被其他玩家或者应用程序吵醒。
 
 {{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
-
+🚨 头显自动化
 
 {{HMD_SPECIFIC_AUTOMATIONS_BODY}}
+OyasumiVR 支持控制多种头显的功能，目前包括：
+<br><br>
+<b>Bigscreen Beyond</b>
+<ul>
+<li>RGB灯控制</li>
+<li>风扇速度控制</li>
+</ul>
 
+{{MQTT_CONTROL_HEADER}}
+🏠 智能家庭控制
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
+
+{{MQTT_CONTROL_BODY}}
+
+
+{{MQTT_CONTROL_FEATURES}}
 
 
 {{TELEMETRY_HEADER}}

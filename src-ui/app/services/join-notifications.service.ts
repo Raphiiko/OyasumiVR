@@ -4,13 +4,14 @@ import {
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
 } from '../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { VRChatService } from './vrchat.service';
 import { NotificationService } from './notification.service';
 import {
   concatMap,
+  delay,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -29,7 +30,7 @@ import { v4 as uuid } from 'uuid';
   providedIn: 'root',
 })
 export class JoinNotificationsService {
-  private config: JoinNotificationsAutomationsConfig = cloneDeep(
+  private config: JoinNotificationsAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS
   );
   private ownVRChatDisplayName = '';
@@ -102,7 +103,7 @@ export class JoinNotificationsService {
     this.vrchat.world
       .pipe(
         skip(1),
-        distinctUntilChanged((a, b) => a.instanceId === b.instanceId)
+        distinctUntilChanged((a, b) => a.instanceId === b.instanceId && a.loaded === b.loaded)
       )
       .subscribe(() => {
         this.queuedNotifications = [];
@@ -116,6 +117,7 @@ export class JoinNotificationsService {
           this.queuedNotifications.push(notificationId);
           return val;
         }),
+        delay(500), // Allows queued notifications to be cancelled before they fire in case of a world change
         concatMap(async (val) => {
           // Skip if it's ID is not queued
           if (!this.queuedNotifications.includes(val.id ?? '')) return;

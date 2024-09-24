@@ -26,9 +26,11 @@ import { noop, vshrink } from '../../utils/animations';
 export class PlayerListComponent implements OnInit {
   @Input() title: TString = 'comp.player-list.title';
   @Output() playerIdsChange = new EventEmitter<string[]>();
+
   @Input() set playerIds(value: string[]) {
     this.refreshPlayerList(value);
   }
+
   playerList: LimitedUser[] = [];
   loggedIn = false;
 
@@ -107,9 +109,7 @@ export class PlayerListComponent implements OnInit {
         },
       })
       .subscribe(async (data) => {
-        if (data.confirmed) {
-          this.playerIds = [];
-        }
+        if (data?.confirmed) this.playerIds = [];
       });
   }
 

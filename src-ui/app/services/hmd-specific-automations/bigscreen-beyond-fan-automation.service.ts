@@ -18,7 +18,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   BigscreenBeyondFanControlAutomationsConfig,
 } from '../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
@@ -40,10 +40,10 @@ const MIN_SAFE_FAN_SPEED = 40;
 export class BigscreenBeyondFanAutomationService {
   private _connected = new BehaviorSubject(false);
   public bsbConnected = this._connected.asObservable();
-  private config: BigscreenBeyondFanControlAutomationsConfig = cloneDeep(
+  private config: BigscreenBeyondFanControlAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.BIGSCREEN_BEYOND_FAN_CONTROL
   );
-  private appSettings: AppSettings = cloneDeep(APP_SETTINGS_DEFAULT);
+  private appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);
   private _fanSpeed = new BehaviorSubject<number>(50);
   public fanSpeed = this._fanSpeed.asObservable();
   private _fanSafetyActive = new BehaviorSubject(false);
@@ -80,22 +80,29 @@ export class BigscreenBeyondFanAutomationService {
         })
       )
       .subscribe();
-    // Attempt to set the fan speed to the value saved by the beyond driver utility, whenever the headset is detected
+    // Handle fan speed when the HMD is being connected
     this._connected
       .pipe(distinctUntilChanged(), debounceTime(500), filter(Boolean))
-      .subscribe(async () => {
-        const savedFanSpeed = await this.getBeyondDriverSavedFanSpeed();
-        if (savedFanSpeed !== null) await this.setFanSpeed(savedFanSpeed, true);
-      });
+      .subscribe(() => this.onHmdConnect());
     // Setup the automations
     this.handleFanSafety();
     this.sleepService.mode
       .pipe(distinctUntilChanged(), skip(1))
       .subscribe((sleepMode) => this.onSleepModeChange(sleepMode));
     this.sleepPreparation.onSleepPreparation.subscribe(() => this.onSleepPreparation());
-    this._connected.pipe(filter(Boolean), distinctUntilChanged()).subscribe(async () => {
-      await this.onSleepModeChange(await firstValueFrom(this.sleepService.mode));
-    });
+  }
+
+  private async onHmdConnect() {
+    const sleepMode = await firstValueFrom(this.sleepService.mode);
+    let setFanValue;
+    if (this.config.onSleepEnable && sleepMode) {
+      setFanValue = this.config.onSleepEnableFanSpeed;
+    } else if (this.config.onSleepDisable && !sleepMode) {
+      setFanValue = this.config.onSleepDisableFanSpeed;
+    } else {
+      setFanValue = await this.getBeyondDriverSavedFanSpeed();
+    }
+    if (setFanValue !== null) await this.setFanSpeed(setFanValue, true);
   }
 
   private async onSleepModeChange(sleepMode: boolean) {

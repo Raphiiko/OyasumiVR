@@ -15,7 +15,7 @@ import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
-import { cloneDeep, shuffle } from 'lodash';
+import { shuffle } from 'lodash';
 import { warn } from 'tauri-plugin-log-api';
 import translationContributors from '../../../../../../docs/translation_contributors.json';
 
@@ -41,13 +41,7 @@ interface TranslationContributor {
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
-  protected leftTranslationContributors: TranslationContributor[] = translationContributors.slice(
-    0,
-    Math.ceil(translationContributors.length / 2)
-  );
-  protected rightTranslationContributors: TranslationContributor[] = translationContributors.slice(
-    Math.ceil(translationContributors.length / 2)
-  );
+  protected translationContributors: TranslationContributor[] = translationContributors;
   private supportersScrolling = false;
 
   version?: string;
@@ -69,9 +63,30 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         return author;
       };
 
-      this.leftTranslationContributors = this.leftTranslationContributors.map(cnComplianceFix);
-      this.rightTranslationContributors = this.rightTranslationContributors.map(cnComplianceFix);
+      this.translationContributors = this.translationContributors.map(cnComplianceFix);
     }
+
+    function reorderList<T>(arr: T[], colCount: number): T[] {
+      // Determine the number of items in each column (row fill order)
+      const itemsInCol: number[] = [];
+      const rowCount = Math.ceil(arr.length / colCount);
+      for (let i = 0; i < colCount; i++)
+        itemsInCol.push(i < arr.length % colCount ? rowCount : rowCount - 1);
+
+      // Put the items in columns (column fill order)
+      const columns: T[][] = itemsInCol.reduce((acc, e, i, source) => {
+        const offset = source.slice(0, i).reduce((_acc, _e) => _acc + _e, 0);
+        acc[i] = arr.slice(offset, offset + e);
+        return acc;
+      }, [] as T[][]);
+
+      // Reconstruct the array from the columns
+      return new Array<T>(arr.length)
+        .fill(undefined as T)
+        .map((_, index) => columns[index % colCount][Math.floor(index / colCount)]);
+    }
+
+    this.translationContributors = reorderList(this.translationContributors, 3);
   }
 
   async ngOnInit() {
@@ -100,7 +115,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
         // Ignore failure, we'll just not show the list.
       }
     } else {
-      supporters = cloneDeep(supporters);
+      supporters = structuredClone(supporters);
       supporters.forEach((tier) => (tier.supporters = shuffle(tier.supporters)));
       await this.supporterCache.set(supporters);
     }

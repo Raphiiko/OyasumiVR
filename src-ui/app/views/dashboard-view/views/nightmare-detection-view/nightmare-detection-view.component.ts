@@ -5,13 +5,14 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   NightmareDetectionAutomationsConfig,
 } from '../../../../models/automations';
-import { cloneDeep } from 'lodash';
+
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { clamp } from '../../../../utils/number-utils';
 import { hshrink } from '../../../../utils/animations';
 import { NotificationService } from '../../../../services/notification.service';
+import { NIGHTMARE_DETECTION_NOTIFICATION_SOUND } from '../../../../services/nightmare-detection-automation.service';
 
 @Component({
   selector: 'app-nightmare-detection-view',
@@ -20,7 +21,7 @@ import { NotificationService } from '../../../../services/notification.service';
   animations: [hshrink()],
 })
 export class NightmareDetectionViewComponent implements OnInit {
-  protected config: NightmareDetectionAutomationsConfig = cloneDeep(
+  protected config: NightmareDetectionAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION
   );
   protected durationUnitOptions: SelectBoxItem[] = [
@@ -68,13 +69,16 @@ export class NightmareDetectionViewComponent implements OnInit {
   }
 
   async testSound() {
-    await this.notifications.playSound('notification_reverie', this.config.soundVolume / 100);
+    await this.notifications.playSound(
+      NIGHTMARE_DETECTION_NOTIFICATION_SOUND,
+      this.config.soundVolume / 100
+    );
     this.playingTestSound = true;
     if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
     this.playingTestSoundTimeout = setTimeout(() => {
       this.playingTestSound = false;
       this.playingTestSoundTimeout = undefined;
-    }, 8000);
+    }, 21000);
   }
 
   async onChangeDuration(value: number, unit?: SelectBoxItem) {

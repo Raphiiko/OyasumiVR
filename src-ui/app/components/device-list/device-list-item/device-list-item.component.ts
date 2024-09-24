@@ -11,7 +11,7 @@ import { EventLogService } from '../../../services/event-log.service';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
-import { firstValueFrom } from 'rxjs';
+import { distinctUntilChanged, firstValueFrom, map, skip } from 'rxjs';
 import {
   DeviceEditModalComponent,
   DeviceEditModalInputModel,
@@ -25,6 +25,12 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../confirm-modal/confirm-modal.component';
+import {
+  LighthouseV1IdWizardModalComponent,
+  LighthouseV1IdWizardModalInputModel,
+  LighthouseV1IdWizardModalOutputModel,
+} from '../../lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { isEqual } from 'lodash';
 
 @Component({
   selector: 'app-device-list-item',
@@ -82,6 +88,9 @@ export class DeviceListItemComponent implements OnInit {
         break;
     }
     this.powerButtonState = (() => {
+      if (this.lighthouse.deviceNeedsIdentifier(device)) {
+        return 'attention';
+      }
       if (device.transitioningToPowerState) {
         switch (device.transitioningToPowerState) {
           case 'on':
@@ -127,6 +136,7 @@ export class DeviceListItemComponent implements OnInit {
   status: string | null = null;
   powerButtonState:
     | 'hide'
+    | 'attention'
     | 'turn_on_off'
     | 'turn_on_off_busy'
     | 'turn_off'
@@ -158,6 +168,16 @@ export class DeviceListItemComponent implements OnInit {
     this.lighthouse.devices.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
       if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
     });
+    this.appSettings.settings
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        map((s) => s.v1LighthouseIdentifiers),
+        distinctUntilChanged((a, b) => isEqual(a, b)),
+        skip(1)
+      )
+      .subscribe(() => {
+        if (this._lighthouseDevice) this.lighthouseDevice = this._lighthouseDevice;
+      });
   }
 
   async onForceLHState(state: LighthouseDevicePowerState) {
@@ -185,7 +205,7 @@ export class DeviceListItemComponent implements OnInit {
   }
 
   rightClickDevicePowerButton() {
-    if (this._lighthouseDevice) {
+    if (this._lighthouseDevice && !this.lighthouse.deviceNeedsIdentifier(this._lighthouseDevice)) {
       this.showLHStatePopover = !this.showLHStatePopover;
     }
   }
@@ -214,6 +234,16 @@ export class DeviceListItemComponent implements OnInit {
       } as EventLogTurnedOffOpenVRDevices);
     }
     if (this.mode === 'lighthouse') {
+      if (this.lighthouse.deviceNeedsIdentifier(this._lighthouseDevice!)) {
+        this.modalService
+          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
+            LighthouseV1IdWizardModalComponent,
+            { device: this._lighthouseDevice! },
+            { closeOnEscape: false }
+          )
+          .subscribe();
+        return;
+      }
       switch (this._lighthouseDevice!.powerState) {
         case 'on': {
           const state = (await firstValueFrom(this.appSettings.settings)).lighthousePowerOffState;

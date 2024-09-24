@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
-import { cloneDeep } from 'lodash';
+
 import { invoke } from '@tauri-apps/api';
 import { trackEvent } from '@aptabase/tauri';
 
@@ -69,7 +69,7 @@ export class TelemetryService {
   }
 
   async updateSettings(settings: Partial<TelemetrySettings>) {
-    const newSettings = Object.assign(cloneDeep(this._settings.value), settings);
+    const newSettings = Object.assign(structuredClone(this._settings.value), settings);
     this._settings.next(newSettings);
     await this.saveSettings();
   }
