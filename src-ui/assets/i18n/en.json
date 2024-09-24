@@ -740,8 +740,65 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "title": "Filter Event Logs",
+      "selectDescription": "Select the types of entries you want to see in the event log",
+      "selectAll": "Select All",
+      "selectNone": "Select None",
+      "filters": {
+        "SLEEP_MODE": {
+          "title": "Sleep Mode",
+          "description": "Events related to the sleep mode and sleep detection"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "title": "Windows Power Policy",
+          "description": "Events related to changes in the Windows power policy"
+        },
+        "BRIGHTNESS_CCT": {
+          "title": "Brightness & CCT",
+          "description": "Events related to controlling the brightness and color temperature of your VR headset"
+        },
+        "DEVICE_POWER": {
+          "title": "Device Power",
+          "description": "Events related to turning on and off devices such as trackers, controllers and base stations"
+        },
+        "GPU_CONTROL": {
+          "title": "GPU Control",
+          "description": "Events related to controlling aspects of your graphics card"
+        },
+        "VRCHAT_STATUS": {
+          "title": "VRChat Status",
+          "description": "Events related to changes in your VRChat status"
+        },
+        "VRCHAT_INVITES": {
+          "title": "VRChat Invite Requests",
+          "description": "Events related to VRChat invites and invite requests"
+        },
+        "VRCHAT_AVATAR": {
+          "title": "VRChat Avatar",
+          "description": "Events related to OyasumiVR changing your VRChat avatar"
+        },
+        "AUDIO_CONTROL": {
+          "title": "Audio Control",
+          "description": "Events related to controlling microphones and other audio devices"
+        },
+        "STEAMVR_SETTINGS": {
+          "title": "SteamVR Settings",
+          "description": "Events related to changes in SteamVR settings, such as render resolution and fade distance"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "title": "Shutdown Sequence",
+          "description": "Events related to the shutdown sequence"
+        },
+        "BSB_CONTROL": {
+          "title": "Bigscreen Beyond",
+          "description": "Events related to controlling the Bigscreen Beyond"
+        }
+      }
+    },
     "event-log": {
       "clearLog": "Clear",
+      "openFilters": "Filter Events",
       "clearLogModal": {
         "message": "Are you sure you want to clear the event log? This cannot be undone.",
         "title": "Confirm clear"

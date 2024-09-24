@@ -1,6 +1,7 @@
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { PlayerListPreset } from './player-list-preset';
 import { OneTimeFlag } from './one-time-flags';
+import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
   version: 9;
@@ -29,6 +30,7 @@ export interface AppSettings {
   hideSnowverlay: boolean;
   openVrInitDelayFix: boolean;
   oneTimeFlags: OneTimeFlag[];
+  eventLogTypesHidden: EventLogType[];
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuFix: boolean;
@@ -123,6 +125,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   cctControlEnabled: true,
   cctSoftwareMode: false,
   oneTimeFlags: [],
+  eventLogTypesHidden: [],
 };
 
 export type ExecutableReferenceStatus =
