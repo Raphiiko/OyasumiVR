@@ -1248,7 +1248,7 @@
         "title": "警告"
       },
       "CCT_CONTROL_WARNING_DIALOG": {
-        "message": "请注意，色温控制仅适用于某些原生的 SteamVR 头显，例如Valve Index、Bigscreen Beyond 或 HTC Vive（Pro）。\n\n如果你不使用这些头显，这个功能可能对你来说没什么效果。\n\n如果你觉得这比较多余，那么可以在设置中禁用色温控制。",
+        "message": "请注意，色温控制仅适用于某些原生的 SteamVR 头显，例如Valve Index、Bigscreen Beyond 或 HTC Vive（Pro）。\n\n如果你不使用这些头显，这个功能可能对你来说没什么效果。\n\n因此，如果你觉得这比较多余，那么可以在设置中禁用色温控制。",
         "title": "功能可用性"
       },
       "acknowledge": "我知道了"
