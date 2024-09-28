@@ -230,14 +230,21 @@ export class BrightnessCctAutomationService {
       | 'AT_SUNRISE'
       | 'SLEEP_MODE_ENABLE'
       | 'SLEEP_MODE_DISABLE'
+      | 'HMD_CONNECT'
       | undefined;
     let cctAutomation:
       | 'AT_SUNSET'
       | 'AT_SUNRISE'
       | 'SLEEP_MODE_ENABLE'
       | 'SLEEP_MODE_DISABLE'
+      | 'HMD_CONNECT'
       | undefined;
-    // If sunrise/sunset times are both enabled, use their settings for brightness and CCT, if configured.
+    // If HMD connect is enabled, use its settings for brightness and CCT, if configured.
+    if (config.HMD_CONNECT.enabled) {
+      if (config.HMD_CONNECT.changeBrightness) brightnessAutomation = 'HMD_CONNECT';
+      if (config.HMD_CONNECT.changeColorTemperature) cctAutomation = 'HMD_CONNECT';
+    }
+    // Otherwise If sunrise/sunset times are both enabled, use their settings for brightness and CCT, if configured.
     if (
       config.AT_SUNSET.enabled &&
       config.AT_SUNRISE.enabled &&
@@ -261,8 +268,10 @@ export class BrightnessCctAutomationService {
       } else {
         runAutomation = timesInverted ? 'AT_SUNSET' : 'AT_SUNRISE';
       }
-      if (config[runAutomation].changeBrightness) brightnessAutomation = runAutomation;
-      if (config[runAutomation].changeColorTemperature) cctAutomation = runAutomation;
+      if (!brightnessAutomation && config[runAutomation].changeBrightness)
+        brightnessAutomation = runAutomation;
+      if (!cctAutomation && config[runAutomation].changeColorTemperature)
+        cctAutomation = runAutomation;
     }
     // Otherwise, use the values configured for the sleep mode automations (if they're enabled)
     const sleepMode = await firstValueFrom(this.sleepService.mode);
@@ -326,6 +335,7 @@ export class BrightnessCctAutomationService {
       SLEEP_PREPARATION: 'SLEEP_PREPARATION',
       AT_SUNRISE: 'AT_SUNRISE',
       AT_SUNSET: 'AT_SUNSET',
+      HMD_CONNECT: 'HMD_CONNECT',
     };
     const logReason: SetBrightnessOrCCTReason = eventLogReasonMap[automationType];
     // Handle CCT

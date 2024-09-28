@@ -310,9 +310,9 @@
       "resolutionAutomations": "分辨率",
       "settings": {
         "advanced": "高级选项",
-        "brightnessCct": "亮度和色温设置",
-        "general": "常规设置",
-        "hotkeys": "快捷键设置",
+        "brightnessCct": "亮度与色温",
+        "general": "常规",
+        "hotkeys": "快捷键",
         "integrations": "集成插件",
         "notifications": "通知",
         "statusInfo": "调试信息",
@@ -341,8 +341,8 @@
       "title": "编辑设备: {deviceId}",
       "v1Identifier": {
         "change": "更改 ID",
-        "description": "OyasumiVR需要V1基站的ID来控制它",
-        "set": "设置ID",
+        "description": "OyasumiVR 需要V1基站的ID来控制它",
+        "set": "设置 ID",
         "title": "Lighthouse V1 ID"
       }
     },
@@ -355,7 +355,7 @@
       },
       "deviceName": {
         "lighthouseV1": "Lighthouse V1",
-        "lighthouseV2": "V2 Lighthouse"
+        "lighthouseV2": "Lighthouse V2"
       },
       "deviceRole": {
         "AnkleLeft": "左脚踝",
@@ -428,7 +428,7 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
-          "title": "Bigscreen Beyond RGB Led 设置为 {color}"
+          "title": "Bigscreen Beyond RGB Led 已设置为 {color}"
         },
         "cctChanged": {
           "reason": {
@@ -447,7 +447,7 @@
             "SLEEP_MODE_ENABLED": "因为已开启睡眠模式",
             "SLEEP_PREPARATION": "因为检测到你准备睡觉了"
           },
-          "title": "设备''{deviceName}''的音量已被设置为 {percentage}"
+          "title": "设备''{deviceName}''的音量已设置为 {percentage}"
         },
         "changedSystemMicControllerButtonBehavior": {
           "reason": {
@@ -740,6 +740,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "与音频设备相关的事件",
+          "title": "音频控制"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "与 VR 头显的亮度和色温相关的事件",
+          "title": "亮度与色温"
+        },
+        "BSB_CONTROL": {
+          "description": "与 Bigscreen Beyond 相关的事件",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "与设备开关（如追踪器、控制器和基站）相关的事件",
+          "title": "设备电源"
+        },
+        "GPU_CONTROL": {
+          "description": "与显卡控制相关的事件",
+          "title": "GPU 控制事件"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "与关机序列相关的事件",
+          "title": "关机序列"
+        },
+        "SLEEP_MODE": {
+          "description": "与睡眠模式和睡眠检测相关的事件",
+          "title": "睡眠模式"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "与 SteamVR 设置（如渲染分辨率和淡入淡出）变化相关的事件",
+          "title": "SteamVR 相关"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "与 VRChat 模型切换相关的事件",
+          "title": "VRChat 模型事件"
+        },
+        "VRCHAT_INVITES": {
+          "description": "与你的 VRChat 好友邀请相关的事件",
+          "title": "VRChat 邀请请求"
+        },
+        "VRCHAT_STATUS": {
+          "description": "与 VRChat 状态变化相关的事件",
+          "title": "VRChat 状态变更"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "与 Windows 电源策略变化相关的事件",
+          "title": "Windows 电源策略"
+        }
+      },
+      "selectAll": "全选",
+      "selectDescription": "选择你想在事件日志中查看的事件类型",
+      "selectNone": "全不选",
+      "title": "筛选事件日志"
+    },
     "event-log": {
       "clearLog": "清除",
       "clearLogModal": {
@@ -747,6 +803,7 @@
         "title": "确认清除"
       },
       "no-logs": "还没有事件被记录下来 \n 事件记录最多保存 48 小时",
+      "openFilters": "事件过滤器",
       "show-more": "显示更多",
       "title": "事件"
     },
@@ -1183,13 +1240,24 @@
     "title": "加入通知"
   },
   "misc": {
-    "GOGO_LOCO_LEGACY_PRESET_WARNING": "这个默认设置使用的解决方法存在一些问题。 如果你不能使用 GoGo Loco 的新版本，请使用这个默认设置。 即使是这样，依然建议你将模型更新到最新的 GoGo Loco",
+    "GOGO_LOCO_LEGACY_PRESET_WARNING": "这个预设使用的处理方法存在一些问题。 如果你不能使用 GoGo Loco 的新版本，请使用这个预设。 即使是这样，依然建议你将模型更新到最新的 GoGo Loco 版本",
     "GORONE_LEGACY_PRESET_WARNING": "此预设中的 v4.0 及以上版本已经包含了转向功能，并且与此预设不兼容。如果你的模型使用了此预设的旧版本，它仍然可用",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "看起来你连接了很多基站！\n\n请注意，大多数蓝牙适配器只能同时处理7个已连接设备（包括耳机等其他蓝牙设备）超出部分的稳定性没有任何保证。\n\n请记住，如果你同时连接过多的基站，或者连接了太多其他的蓝牙设备，OyasumiVR 可能会在尝试控制基站时遇到麻烦。",
+        "title": "警告"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "请注意，色温控制仅适用于某些原生的 SteamVR 头显，例如Valve Index、Bigscreen Beyond 或 HTC Vive（Pro）。\n\n如果你不使用这些头显，这个功能可能对你来说没什么效果。\n\n因此，如果你觉得这比较多余，那么可以在设置中禁用色温控制。",
+        "title": "功能可用性"
+      },
+      "acknowledge": "我知道了"
+    },
     "oscScriptEditorErrors": {
-      "addressNoSlash": "有效的 OSC 数值必须以 “/” 符号开头。",
-      "addressNotASCII": "有效的 OSC 数值只能包含 ASCII 字符。",
-      "addressRequired": "需要 OSC 数值",
-      "durationRequired": "需要睡眠持续时间数值",
+      "addressNoSlash": "有效的 OSC 参数必须以 “/” 符号开头。",
+      "addressNotASCII": "有效的 OSC 参数只能包含 ASCII 字符。",
+      "addressRequired": "需要 OSC 参数",
+      "durationRequired": "必须提供睡眠持续时间",
       "durationTooLong": "睡眠持续时间不能超过 5 秒",
       "durationTooShort": "睡眠持续时间必须至少为 1 毫秒",
       "floatOutOfBounds": "该值必须是介于 -1.0 和 1.0 之间的有效浮点值",
@@ -1298,8 +1366,8 @@
         "general": {
           "advanced": {
             "avatarReloadWorkaround": {
-              "description": "如果你想在 OyasumiVR 关闭全身追踪器后继续使用模型动画，请启用此选项。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">这是什么，为什么需要它？</a>",
-              "title": "全身追踪器模型动画使用的解决方案"
+              "description": "如果你想在 OyasumiVR 关闭全身追踪器后重新使用你的睡眠动画，请启用此选项。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">这是什么？</a>",
+              "title": "关闭全身追踪器后继续使用模型动画"
             },
             "title": "高级选项"
           },
@@ -1479,7 +1547,7 @@
       "title": "关闭基站"
     },
     "lighthousePowerOn": {
-      "description": "让 OyasumiVR 自动开启你的基站。",
+      "description": "让 OyasumiVR 自动打开你的基站。",
       "onOyasumiStart": {
         "description": "当 OyasumiVR 启动时，自动打开你的基站",
         "title": "当 OyasumiVR 启动时"
@@ -1796,7 +1864,7 @@
           "title": "仅当 VRChat 运行时显示叠加层界面"
         },
         "overlayMenu": {
-          "description": "如果想完全禁用 OyasumiVR 的叠加层界面，可以将其关闭",
+          "description": "如果想完全禁用 OyasumiVR 的叠加层界面，可以在这里将其关闭",
           "title": "启用叠加层界面"
         },
         "title": "叠加层"
@@ -2531,7 +2599,7 @@
       "title": "麦克风状态设置",
       "unmute": "打开\n麦克风"
     },
-    "description": "当你在 VRChat 中入睡或醒来时，自动关闭（或打开）你的麦克风！这在你想防止他人听到你的打鼾声时可能会很有用 :)\n\n 请注意，为了使此功能正常工作，你需要在 VRChat 中启用 OSC，并将你的麦克风行为设置为\" 切换 \"。",
+    "description": "当你在 VRChat 中入睡（或醒来）时，自动关闭（或打开）你的麦克风！这在你想防止别人听到你的打鼾声时可能会很有用 :)\n\n 请注意，为了使此功能正常工作，你需要在 VRChat 中启用 OSC，并将你的麦克风行为设置为\" 切换 \"。",
     "muteOptions": {
       "MUTE": "关闭",
       "NONE": "无",

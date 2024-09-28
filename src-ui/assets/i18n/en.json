@@ -163,6 +163,9 @@
     "SLEEP_PREPARATION": {
       "title": "When I prepare to go to sleep"
     },
+    "HMD_CONNECT": {
+      "title": "When my headset connects to SteamVR"
+    },
     "activation": {
       "category": "Activation"
     },
@@ -741,69 +744,69 @@
       }
     },
     "event-log-filter-dialog": {
-      "title": "Filter Event Logs",
-      "selectDescription": "Select the types of entries you want to see in the event log",
-      "selectAll": "Select All",
-      "selectNone": "Select None",
       "filters": {
-        "SLEEP_MODE": {
-          "title": "Sleep Mode",
-          "description": "Events related to the sleep mode and sleep detection"
-        },
-        "WINDOWS_POWER_POLICY": {
-          "title": "Windows Power Policy",
-          "description": "Events related to changes in the Windows power policy"
+        "AUDIO_CONTROL": {
+          "description": "Events related to controlling microphones and other audio devices",
+          "title": "Audio Control"
         },
         "BRIGHTNESS_CCT": {
-          "title": "Brightness & CCT",
-          "description": "Events related to controlling the brightness and color temperature of your VR headset"
-        },
-        "DEVICE_POWER": {
-          "title": "Device Power",
-          "description": "Events related to turning on and off devices such as trackers, controllers and base stations"
-        },
-        "GPU_CONTROL": {
-          "title": "GPU Control",
-          "description": "Events related to controlling aspects of your graphics card"
-        },
-        "VRCHAT_STATUS": {
-          "title": "VRChat Status",
-          "description": "Events related to changes in your VRChat status"
-        },
-        "VRCHAT_INVITES": {
-          "title": "VRChat Invite Requests",
-          "description": "Events related to VRChat invites and invite requests"
-        },
-        "VRCHAT_AVATAR": {
-          "title": "VRChat Avatar",
-          "description": "Events related to OyasumiVR changing your VRChat avatar"
-        },
-        "AUDIO_CONTROL": {
-          "title": "Audio Control",
-          "description": "Events related to controlling microphones and other audio devices"
-        },
-        "STEAMVR_SETTINGS": {
-          "title": "SteamVR Settings",
-          "description": "Events related to changes in SteamVR settings, such as render resolution and fade distance"
-        },
-        "SHUTDOWN_SEQUENCE": {
-          "title": "Shutdown Sequence",
-          "description": "Events related to the shutdown sequence"
+          "description": "Events related to controlling the brightness and color temperature of your VR headset",
+          "title": "Brightness & CCT"
         },
         "BSB_CONTROL": {
-          "title": "Bigscreen Beyond",
-          "description": "Events related to controlling the Bigscreen Beyond"
+          "description": "Events related to controlling the Bigscreen Beyond",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "Events related to turning on and off devices such as trackers, controllers and base stations",
+          "title": "Device Power"
+        },
+        "GPU_CONTROL": {
+          "description": "Events related to controlling aspects of your graphics card",
+          "title": "GPU Control"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "Events related to the shutdown sequence",
+          "title": "Shutdown Sequence"
+        },
+        "SLEEP_MODE": {
+          "description": "Events related to the sleep mode and sleep detection",
+          "title": "Sleep Mode"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "Events related to changes in SteamVR settings, such as render resolution and fade distance",
+          "title": "SteamVR Settings"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "Events related to OyasumiVR changing your VRChat avatar",
+          "title": "VRChat Avatar"
+        },
+        "VRCHAT_INVITES": {
+          "description": "Events related to VRChat invites and invite requests",
+          "title": "VRChat Invite Requests"
+        },
+        "VRCHAT_STATUS": {
+          "description": "Events related to changes in your VRChat status",
+          "title": "VRChat Status"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Events related to changes in the Windows power policy",
+          "title": "Windows Power Policy"
         }
-      }
+      },
+      "selectAll": "Select All",
+      "selectDescription": "Select the types of entries you want to see in the event log",
+      "selectNone": "Select None",
+      "title": "Filter Event Logs"
     },
     "event-log": {
       "clearLog": "Clear",
-      "openFilters": "Filter Events",
       "clearLogModal": {
         "message": "Are you sure you want to clear the event log? This cannot be undone.",
         "title": "Confirm clear"
       },
       "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "openFilters": "Filter Events",
       "show-more": "Show More",
       "title": "Events"
     },

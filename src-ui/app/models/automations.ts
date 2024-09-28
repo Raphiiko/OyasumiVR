@@ -123,6 +123,7 @@ export const BrightnessEvents = [
   'SLEEP_PREPARATION',
   'AT_SUNSET',
   'AT_SUNRISE',
+  'HMD_CONNECT',
 ] as const;
 export type BrightnessEvent = (typeof BrightnessEvents)[number];
 
@@ -133,6 +134,7 @@ export type BrightnessAutomationsConfig = AutomationConfig & {
   SLEEP_PREPARATION: GenericBrightnessEventAutomationConfig;
   SLEEP_MODE_ENABLE: GenericBrightnessEventAutomationConfig;
   SLEEP_MODE_DISABLE: GenericBrightnessEventAutomationConfig;
+  HMD_CONNECT: GenericBrightnessEventAutomationConfig;
 };
 
 export type BrightnessEventAutomationConfig =
@@ -547,6 +549,17 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       colorTemperature: 6600,
       onlyWhenSleepDisabled: true,
       activationTime: null,
+    },
+    HMD_CONNECT: {
+      enabled: false,
+      changeBrightness: true,
+      changeColorTemperature: true,
+      brightness: 100,
+      softwareBrightness: 100,
+      hardwareBrightness: 100,
+      transition: true,
+      transitionTime: 10000,
+      colorTemperature: 6600,
     },
   },
   // RESOLUTION AUTOMATIONS

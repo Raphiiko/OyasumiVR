@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit } from '@angular/core';
 import { BrightnessEvent } from '../../../../../../models/automations';
 import { triggerChildren } from '../../../../../../utils/animations';
+import { AppSettingsService } from '../../../../../../services/app-settings.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
+import KonamiCode from 'konami-code-js';
 
 export interface BrightnessEventViewModel {
   name: BrightnessEvent;
@@ -16,7 +20,7 @@ export interface BrightnessEventViewModel {
   styleUrls: ['./brightness-automations-tab.component.scss'],
   animations: [triggerChildren()],
 })
-export class BrightnessAutomationsTabComponent {
+export class BrightnessAutomationsTabComponent implements OnInit, OnDestroy {
   protected editEvent?: BrightnessEventViewModel;
 
   protected events: Array<BrightnessEventViewModel> = [
@@ -32,4 +36,26 @@ export class BrightnessAutomationsTabComponent {
       sunMode: 'SUNRISE',
     },
   ];
+
+  private konami: KonamiCode | undefined;
+
+  constructor(private appSettings: AppSettingsService, private destroyRef: DestroyRef) {}
+
+  ngOnInit() {
+    this.appSettings
+      .oneTimeFlagSetAsync('BRIGHTNESS_AUTOMATION_ON_HMD_CONNECT_EVENT_FEATURE')
+      .pipe(takeUntilDestroyed(this.destroyRef), filter(Boolean))
+      .subscribe(() => {
+        this.events.push({ name: 'HMD_CONNECT', inProgress: false, icon: 'head_mounted_device' });
+      });
+
+    this.konami = new KonamiCode(() => {
+      this.konami?.disable();
+      this.appSettings.setOneTimeFlag('BRIGHTNESS_AUTOMATION_ON_HMD_CONNECT_EVENT_FEATURE');
+    });
+  }
+
+  ngOnDestroy() {
+    this.konami?.disable();
+  }
 }
