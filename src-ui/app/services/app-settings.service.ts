@@ -4,6 +4,7 @@ import {
   asyncScheduler,
   BehaviorSubject,
   firstValueFrom,
+  map,
   Observable,
   skip,
   switchMap,
@@ -81,6 +82,9 @@ export class AppSettingsService {
 
   public oneTimeFlagSet(flag: OneTimeFlag): boolean {
     return this._settings.value.oneTimeFlags.includes(flag);
+  }
+  public oneTimeFlagSetAsync(flag: OneTimeFlag): Observable<boolean> {
+    return this._settings.pipe(map((settings) => settings.oneTimeFlags.includes(flag)));
   }
 
   public setOneTimeFlag(flag: OneTimeFlag, set = true): void {

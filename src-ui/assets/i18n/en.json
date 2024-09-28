@@ -163,6 +163,9 @@
     "SLEEP_PREPARATION": {
       "title": "When I prepare to go to sleep"
     },
+    "HMD_CONNECT": {
+      "title": "When my headset connects to SteamVR"
+    },
     "activation": {
       "category": "Activation"
     },

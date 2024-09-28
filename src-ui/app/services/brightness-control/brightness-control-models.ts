@@ -3,7 +3,8 @@ export type SetBrightnessOrCCTReason =
   | 'SLEEP_MODE_DISABLE'
   | 'SLEEP_PREPARATION'
   | 'AT_SUNSET'
-  | 'AT_SUNRISE';
+  | 'AT_SUNRISE'
+  | 'HMD_CONNECT';
 
 export interface SetBrightnessOrCCTOptions {
   cancelActiveTransition: boolean;
