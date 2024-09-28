@@ -99,7 +99,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
       try {
         const client = await getClient();
         const response = await client.get<{ [tier: string]: string[] }>(
-          'https://europe-west1-oyasumivr.cloudfunctions.net/getSupporters'
+          'https://getsupporters-fgf7bxmuba-ew.a.run.app'
         );
         if (response.ok) {
           await this.supporterCache.set(
