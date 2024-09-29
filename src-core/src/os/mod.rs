@@ -3,27 +3,28 @@ pub mod commands;
 mod models;
 mod sounds_gen;
 
+use self::audio_devices::manager::AudioDeviceManager;
+use lazy_static::lazy_static;
 use log::{error, info};
-use soloud::*;
+use rodio::{source::Source, Decoder};
+use rodio::{OutputStream, Sink};
 use std::collections::HashMap;
 use std::ffi::OsString;
+use std::fs::File;
+use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
 use std::ptr::null_mut;
 use std::slice;
 use std::time::Duration;
+use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
 use winapi::shared::guiddef::GUID;
 use winapi::shared::minwindef::{DWORD, UCHAR, ULONG};
 use winapi::um::powersetting::{PowerGetActiveScheme, PowerSetActiveScheme};
 use winapi::um::powrprof::{PowerEnumerate, PowerReadFriendlyName};
 
-use self::audio_devices::manager::AudioDeviceManager;
-use lazy_static::lazy_static;
-
 lazy_static! {
-    static ref SOUNDS: std::sync::Mutex<HashMap<String, Vec<u8>>> =
-        std::sync::Mutex::new(HashMap::new());
-    static ref SOLOUD: std::sync::Mutex<Soloud> = std::sync::Mutex::new(Soloud::default().unwrap());
+    static ref PLAY_SOUND_TX: Mutex<Option<Sender<(String, f32)>>> = Mutex::default();
     static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
     static ref VRCHAT_ACTIVE: Mutex<bool> = Mutex::new(false);
     static ref MEMORY_WATCHER_ACTIVE: Mutex<bool> = Mutex::new(false);
@@ -73,19 +74,66 @@ async fn watch_processes() {
     }
 }
 
-pub async fn load_sounds() {
-    let mut sounds = SOUNDS.lock().unwrap();
-    sounds_gen::SOUND_FILES.iter().for_each(|sound| {
-        sounds.insert(
-            String::from(*sound),
-            std::fs::read(format!("resources/sounds/{}.ogg", sound)).expect(
-                format!(
-                    "Could not find sound file at path: {}",
-                    format!("resources/sounds/{}.ogg", sound).as_str()
-                )
-                .as_str(),
-            ),
-        );
+pub async fn init_sound_playback() {
+    // Create channel
+    let (tx, mut rx) = tokio::sync::mpsc::channel::<(String, f32)>(32);
+    *PLAY_SOUND_TX.lock().await = Some(tx);
+
+    // Spawn task to play sounds
+    tokio::task::spawn(async move {
+        // Load sound files
+        let mut sounds = HashMap::new();
+        sounds_gen::SOUND_FILES.iter().for_each(|sound| {
+            let path = format!("resources/sounds/{}.ogg", sound);
+            let file = match File::open(path.clone()) {
+                Ok(f) => f,
+                Err(e) => {
+                    error!("[Core] Failed to open sound file: {}", e);
+                    return;
+                }
+            };
+            let reader = BufReader::new(file);
+            let source = match Decoder::new(reader) {
+                Ok(s) => s.buffered(),
+                Err(e) => {
+                    error!(
+                        "[Core] Failed to decode sound file at path ({}): {}",
+                        path.clone(),
+                        e
+                    );
+                    return;
+                }
+            };
+            sounds.insert(String::from(*sound), source);
+        });
+        // Play sounds when requested
+        while let Some((sound, volume)) = rx.recv().await {
+            if let Some(source) = sounds.get(&sound) {
+                // Initialize output stream
+                let (_stream, stream_handle) = match OutputStream::try_default() {
+                    Ok((stream, handle)) => (stream, handle),
+                    Err(e) => {
+                        error!("[Core] Failed to initialize audio output stream: {}", e);
+                        return;
+                    }
+                };
+                // Play sound
+                let source = source.clone();
+                let sink = match Sink::try_new(&stream_handle) {
+                    Ok(s) => s,
+                    Err(e) => {
+                        error!("[Core] Failed to create audio sink: {}", e);
+                        return;
+                    }
+                };
+                sink.set_volume(volume);
+                sink.append(source.clone());
+                // sink.detach();
+                sink.sleep_until_end();
+            } else {
+                error!("[Core] Sound not found: {}", sound);
+            }
+        }
     });
 }
 
