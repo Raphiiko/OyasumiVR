@@ -96,6 +96,7 @@
               <app-slider-setting
                 [unit]="'%'"
                 [max]="200"
+                [snapValues]="[50,100,150]"
                 [value]="config.soundVolume"
                 (valueChange)="setSoundVolume($event)"
               ></app-slider-setting>
