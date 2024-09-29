@@ -134,7 +134,7 @@ export class JoinNotificationsService {
           // Send sound
           if (val.sound) {
             await this.notification.playSound(
-              'notification_reverie',
+              'material_alarm_gentle_short_1',
               this.config.joinSoundVolume / 100
             );
           }

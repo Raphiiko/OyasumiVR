@@ -75,7 +75,7 @@ fn main() {
         .invoke_handler(configure_command_handlers())
         .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
-        .run(|handler, event| match event {
+        .run(|_, event| match event {
             // tauri::RunEvent::Exit { .. } => {
             //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
             //         handler.track_event("app_exited", None);
@@ -334,8 +334,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     system_tray::init().await;
     // Initialize Image Cache
     image_cache::init(cache_dir).await;
-    // Load sounds
-    os::load_sounds().await;
+    // Init sound playback
+    os::init_sound_playback().await;
     // Initialize audio device manager
     os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth
