@@ -154,6 +154,9 @@
     "AT_SUNSET": {
       "title": "Bei Sonnenuntergang"
     },
+    "HMD_CONNECT": {
+      "title": "Wenn das Headset mit SteamVR verbunden wird"
+    },
     "SLEEP_MODE_DISABLE": {
       "title": "Wenn ich aufwache"
     },
@@ -338,7 +341,13 @@
         "description": "Ignorierte Basisstationen werden versteckt und sind nicht von Automatisierungen betroffen",
         "title": "Basisstationen ignorieren"
       },
-      "title": "Gerät bearbeiten: {deviceid}"
+      "title": "Gerät bearbeiten: {deviceid}",
+      "v1Identifier": {
+        "change": "ID ändern",
+        "description": "OyasumiVR muss die ID von deinen V1 Basis Stationen wissen um diese zu kontrollieren",
+        "set": "ID festlegen",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -348,6 +357,7 @@
         "other": "Andere"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -733,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "Ereignisse mit Bezug zur Kontrolle des Eingabegerätes oder anderer Audio Geräte",
+          "title": "Audiokontrolle"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "Events mit Bezug zur Kontrolle der Helligkeit und der Farbtemperatur deines VR Headsets",
+          "title": "Helligkeit und CCT"
+        },
+        "BSB_CONTROL": {
+          "description": "Events mit Bezug zur Kontrolle der Bigscreen Beyond",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "Events mit Bezug zum Aus- und Anschalten von Geräten (wie zum Beispiel Tracker, Kontroller und Basisstationen)",
+          "title": "Geräteakku"
+        },
+        "GPU_CONTROL": {
+          "description": "Events mit Bezug zur Kontrolle der Grafikkarte",
+          "title": "Grafikkarten Kontrolle"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "Events mit Bezug zur Herunterfahrsequenz",
+          "title": "Herunterfahrsequenz"
+        },
+        "SLEEP_MODE": {
+          "description": "Events mit Bezug zum Schlafmodus und der Schlaferkennung",
+          "title": "Schlafmodus"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "Events mit Bezug zu Änderungen der SteamVR Einstellungen, wie zum Beispiel Auflösung und Fade Distanz",
+          "title": "SteamVR Einstellungen"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "Events mit Bezug zu OyasumiVRs Änderungen zu deinem VRChat Avatar",
+          "title": "Vrchat Avatar"
+        },
+        "VRCHAT_INVITES": {
+          "description": "Events bezüglich der VRChat Einladungen und Einladungsanfragen",
+          "title": "Vrchat Einladeanfragen"
+        },
+        "VRCHAT_STATUS": {
+          "description": "Events mit Bezug zu Änderungen vom VRChat Status",
+          "title": "VRChat Status"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Events mit Bezug zu Änderungen im Windows Energieplan",
+          "title": "Windows Energieplan"
+        }
+      },
+      "selectAll": "Alles Auswählen",
+      "selectDescription": "Wähle die Einträge aus, die du im Event Log",
+      "selectNone": "Nichts Auswählen",
+      "title": "Event Logs filtern"
+    },
     "event-log": {
       "clearLog": "Leeren",
       "clearLogModal": {
@@ -740,6 +806,7 @@
         "title": "Leeren bestätigen"
       },
       "no-logs": "Es wurden noch keine Events geloggt.\nLogs werden für maximal 48 Studen gespeichert.",
+      "openFilters": "Events filtern",
       "show-more": "Zeige mehr",
       "title": "Events"
     },
@@ -759,6 +826,46 @@
     },
     "hotkey-selector": {
       "select": "Hotkey setzen"
+    },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "Suche Identifier...",
+        "instructions": "Wenn kein Identifier automatisch gefunden werden kann, dann gebe diesen bitte manuel ein.",
+        "steps": {
+          "connectDevice": "Verbrundene getrackte Geräte",
+          "connectDeviceDesc": "Verbinden eines durch Lighthouse  getrackten Headsets, Kontrolle oder Tracker",
+          "detectBasestation": "Basisstationen erkennen",
+          "detectBasestationDesc": "Stelle sicher, dass du Headset, Kontroller oder Tracker die Basisstationen sehen können",
+          "deviceDetected": "Geräte erkannt",
+          "running": "Läuft",
+          "startSteamVR": "Starte SteamVR",
+          "waitingForSteamVR": "Warte auf den Start von SteamVr..."
+        }
+      },
+      "detectAutomatically": "Automatisch Feststellen",
+      "inputManually": "Manuell Eingeben",
+      "intro": {
+        "message": "OyasumiVR muss  den Identifier deiner Basisstationen"
+      },
+      "manualInput": {
+        "formatDescription": "Der Identifier ist 8 Charaktere lang und besteht aus den Nummern 0 - 9 und den Buchstaben A - F",
+        "message": "Du kannst den Identifier auf der Rückseite deiner Basisstationen finden"
+      },
+      "success": {
+        "subtitle": "Du kannst nun deine Basisstationen kontrollieren",
+        "title": "Identifier festgelegt"
+      },
+      "title": "Identifier Benötigt",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "Deine Lighthouse ID konnte nicht automatisch festgestellt werden. Bitte gebe diese manuell ein",
+          "invalidId": "Die übermittelte Lighthouse ID ist wahrscheinlich ungültig.",
+          "verificationFailed": "Die Lighthouse ID konnte nicht verifiziert werden. Bitte checke, ob die Basisstation eingestöpselt und in Reichweite ist"
+        },
+        "idAutodetected": "Möglicher Identifier festgestellt",
+        "verifying": "verifiziere ID"
+      },
+      "verifyIdAction": "ID verifizieren"
     },
     "main-status-bar": {
       "active": "Aktiv",
@@ -1137,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Die Voreinstellung verwendet einen Workaround, der derzeit ein paar Fehler hat. Bitte nutze diese Voreinstellungen nur, wenn du die neueren GoGo Loco Voreinstellungen nicht verwenden kannst. Solltest du einen Avatar mit einer älteren Version verwenden, solltest du diesen auf die aktuellste GoGo Loco Version updaten",
+    "GORONE_LEGACY_PRESET_WARNING": "Version v4.0 und höher dieser Voreinstellung beinhalten bereits Drehfunktionen und sind nicht kompatibel mit dieser Voreinstellung. Die Voreinstellung ist immernoch verfühbar wenn dein Avatar eine ältere Version dieser Voreinstellung verwendet",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind.",
+        "title": "Warnung"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "Bitte beachten , dass die Steuerung der Farbtemperatur der Anzeige nur mit bestimmten nativen SteamVR-Headsets verfügbar ist, z. B. dem Valve Index, Bigscreen Beyond oder HTC Vive (Pro).\n\nWenn keines dieser Headsets verwenden, wird diese Funktion wahrscheinlich keine Auswirkungen für Sie haben.\n\nSie können die Steuerung der Farbtemperatur in den Einstellungen deaktivieren, wenn Sie dies wünschen.",
+        "title": "Feature Verfügbarkeit"
+      },
+      "acknowledge": "Ich verstehe"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "Eine gültige OSC Adresse muss immer mit dem '/' Symbol starten.",
       "addressNotASCII": "Eine gültige OSC Adresse enthält nur ASCII Charaktere.",
@@ -1249,6 +1368,10 @@
         },
         "general": {
           "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "Aktiviere dies, wenn du die Avatar Animationen verwenden willst nachdem OyasumiVR deine Full Body Tracker ausgeschaltet hat <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
+              "title": "Workaround für Avatar Animationen mit FBT"
+            },
             "title": "Erweiterte Einstellungen"
           },
           "footLock": {
@@ -1288,6 +1411,7 @@
       "simple": "Helligkeit",
       "software": "Software-Helligkeit"
     },
+    "colorTemp": "Farbtemperatur",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1335,7 +1459,11 @@
           "automations": "Automatisierungen",
           "deviceControl": "Gerätekontrolle",
           "prepareForSleep": "Auf Schlaf vorbereiten",
-          "shutdown": "Herunterfahrsequenz"
+          "shutdown": "Herunterfahrsequenz",
+          "sliderMode": {
+            "BRIGHTNESS": "Helligkeitssteuerung",
+            "COLOR_TEMP": "Farbtemperatur Kontrolle"
+          }
         }
       },
       "shutdownSequence": {
@@ -1712,6 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
+          "description": "Wenn aktiviert  kannst du die Energie zu den Basisstationen durch OyasumiVR aus- und anzuschalten. Dein PC muss Bluetooth aktiviert haben.",
           "title": "Energiekontrolle aktivieren"
         },
         "powerOffMode": {
@@ -1907,6 +2036,7 @@
       "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
     },
     "modals": {
+      "back": "Zurück",
       "cancel": "Abbrechen",
       "close": "Schließen",
       "confirm": "Bestätigen",

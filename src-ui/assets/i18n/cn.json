@@ -154,6 +154,9 @@
     "AT_SUNSET": {
       "title": "在日落时"
     },
+    "HMD_CONNECT": {
+      "title": "当我的头戴设备连接到 SteamVR 时"
+    },
     "SLEEP_MODE_DISABLE": {
       "title": "当我醒来时"
     },
