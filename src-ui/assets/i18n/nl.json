@@ -154,6 +154,9 @@
     "AT_SUNSET": {
       "title": "Bij zonsondergang"
     },
+    "HMD_CONNECT": {
+      "title": "Wanneer mijn headset verbind met SteamVR"
+    },
     "SLEEP_MODE_DISABLE": {
       "title": "Wanneer ik wakker word"
     },
