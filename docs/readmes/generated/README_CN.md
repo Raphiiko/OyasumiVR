@@ -182,6 +182,7 @@ OyasumiVR拥有自己的SteamVR叠加层界面，可以让你在VR里玩游戏�
 </table>
 
 ### 🎮 设备控制
+
 <table>
   <tr>
     <td>
@@ -323,17 +324,26 @@ Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自
   </tr>
 </table>
 
-### 🔅 亮度自动化
+### 🔅 Display Brightness & Color Temperature Automations
 
 <table>
   <tr>
     <td>
-你可以设置睡着和醒来时的亮度自动化。
-OyasumiVR 可以平滑地过渡您的头显亮度，在你睡着时渐渐调暗亮度而不会惊醒你。
+🌆 <b>Brightness</b>
+<br>
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-OyasumiVR 支持调节软件和硬件亮度（如果你的头显支持，例如Valve Index或者Bigscreen Beyond）。除了一些预设以外，你也可以在SteamVR覆盖层上自定义具体的亮度等级。
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+<br><br>
+🌡️ <b>Color Temperature</b>
+<br>
+OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+<br><br>
+With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+<br><br>
+<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
+    <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
@@ -567,6 +577,11 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 ### 亮度自动化
 
 头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
+
+### Color Temperature Automations
+
+Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
+It might work on other headsets, but your mileage may vary.
 
 ## 使用的技术和工具
 

@@ -185,6 +185,7 @@ SteamVRと共にベースステーションの電源を操作します。SteamVR
 </table>
 
 ### 🎮 Device Control
+
 <table>
   <tr>
     <td>
@@ -336,16 +337,26 @@ With the shutdown sequence configured, you can fall asleep soundly in VR, knowin
   </tr>
 </table>
 
-### 🔅 明るさの自動化
+### 🔅 Display Brightness & Color Temperature Automations
 
 <table>
   <tr>
     <td>
-睡眠時と起床時の明るさを自動化します。HMDの輝度を徐々に落とすことができるので、急な明るさの変化で目を覚ます心配もありません！
+🌆 <b>Brightness</b>
+<br>
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-ソフトウェアの明るさだけでなく、HMDが対応している場合はハードウェア輝度も制御できます(Valve Index, Bigscreen Beyond)。オーバーレイから輝度レベルを簡単にコントロールすることも可能です！
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+<br><br>
+🌡️ <b>Color Temperature</b>
+<br>
+OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+<br><br>
+With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+<br><br>
+<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
+    <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
@@ -587,6 +598,11 @@ OyasumiVRから直接電力制限を実行できるのはNVIDIAカードのみ�
 HMDのハードウェア輝度のコントロールはValve IndexとBigscreen Beyondのみサポートされています。
 
 ソフトウェアの明るさは全てのHMDで利用可能です。
+
+### Color Temperature Automations
+
+Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
+It might work on other headsets, but your mileage may vary.
 
 ## ビルド
 
