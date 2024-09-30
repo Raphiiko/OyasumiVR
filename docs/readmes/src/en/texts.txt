@@ -207,13 +207,23 @@ Depending on which actions you configure, it will do any of the following:
 <br>
 With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
 
-{{BRIGHTNESS_AUTOMATIONS_HEADER}}
-🔅 Brightness Automations
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
+🔅 Display Brightness & Color Temperature Automations
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
+🌆 <b>Brightness</b>
+<br>
 Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
 It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+<br><br>
+🌡️ <b>Color Temperature</b>
+<br>
+OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+<br><br>
+With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+<br><br>
+<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 🎤 Microphone Mute Automations
@@ -407,6 +417,15 @@ Brightness Automations
 Controlling the hardware brightness of the VR headset's display is currently only supported on the Valve Index, and the Bigscreen Beyond.
 
 Image brightness control is available on all headsets.
+
+{{SUPPORTED_HARDWARE_CCT_HEADER}}
+Color Temperature Automations
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}
+Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
+It might work on other headsets, but your mileage may vary.
+
+{{SUPPORTED_HARDWARE_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 
 {{BUILT_WITH_HEADER}}
 Built With

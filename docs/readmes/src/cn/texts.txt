@@ -139,9 +139,6 @@ OyasumiVR可以检测你的睡眠姿势，并触发你模型上不同的动画�
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ 关机序列
 
-{{BRIGHTNESS_AUTOMATIONS_HEADER}}
-🔅 亮度自动化
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心率自动化（依赖Pulsoid服务）
 
@@ -314,12 +311,6 @@ Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自
 <br>
 当设置好关机序列后，你就可以在VR里安心睡着而不需要担心你的电费了！
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-你可以设置睡着和醒来时的亮度自动化。
-OyasumiVR 可以平滑地过渡您的头显亮度，在你睡着时渐渐调暗亮度而不会惊醒你。
-<br><br>
-OyasumiVR 支持调节软件和硬件亮度（如果你的头显支持，例如Valve Index或者Bigscreen Beyond）。除了一些预设以外，你也可以在SteamVR覆盖层上自定义具体的亮度等级。
-
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 🎤 麦克风自动化
 
@@ -359,10 +350,22 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
 头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
+
+
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
+
+
 {{MQTT_CONTROL_BODY}}
 
 
 {{MQTT_CONTROL_FEATURES}}
+
+
+{{SUPPORTED_HARDWARE_CCT_HEADER}}
+
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}
 
 
 {{TELEMETRY_HEADER}}

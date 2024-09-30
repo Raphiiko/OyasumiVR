@@ -185,6 +185,7 @@ OyasumiVR может включать и выключать Ваши базов�
 </table>
 
 ### 🎮 Device Control
+
 <table>
   <tr>
     <td>
@@ -336,16 +337,26 @@ With the shutdown sequence configured, you can fall asleep soundly in VR, knowin
   </tr>
 </table>
 
-### 🔅 Автоматизация Яркости
+### 🔅 Display Brightness & Color Temperature Automations
 
 <table>
   <tr>
     <td>
-Автоматизируйте яркость, когда вы спите и просыпаетесь. OyasumiVR может плавно изменять яркость вашей VR-гарнитуры, поэтому она постепенно снижается, пока вы спите, не разбудив вас.
+🌆 <b>Brightness</b>
+<br>
+Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
 <br><br>
-Это позволяет Вам контролировать как программную яркость, так и аппаратную яркость, если ваша гарнитура это поддерживает (например, Valve Index или Bigscreen Beyond). Помимо предоставления вам нескольких средств автоматизации, вы можете легко управлять уровнями яркости прямо из оверлея SteamVR!
+It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+<br><br>
+🌡️ <b>Color Temperature</b>
+<br>
+OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+<br><br>
+With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+<br><br>
+<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
+    <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
@@ -586,6 +597,11 @@ _(\*) Tundra трекеры имеют большую задержу отчет�
 Управление аппаратной яркостью дисплея VR гарнитуры в настоящее время поддерживается только в Valve Index и Bigscreen Beyond.
 
 Управление яркостью изображения доступно на всех гарнитурах.
+
+### Color Temperature Automations
+
+Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
+It might work on other headsets, but your mileage may vary.
 
 ## ПО использованное при разработке
 

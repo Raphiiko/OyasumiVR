@@ -138,9 +138,6 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ 關機程序
 
-{{BRIGHTNESS_AUTOMATIONS_HEADER}}
-🔅 亮度自動化
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ 心跳率自動化 (Pulsoid 整合)
 
@@ -287,7 +284,10 @@ OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develo
 {{SHUTDOWN_SEQUENCE_BODY}}
 
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
+
+
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
 
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
@@ -321,6 +321,12 @@ OyasumiVR 是使用 [MIT 授權](https://github.com/Raphiiko/Oyasumi/blob/develo
 
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_CCT_HEADER}}
+
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}
 
 
 {{TELEMETRY_HEADER}}
