@@ -1,6 +1,6 @@
 import { FLAVOUR } from '../build';
 
-export const SPLASH_MIN_DURATION = 2000;
+export const SPLASH_MIN_DURATION = 3000;
 export const SETTINGS_KEY_AUTOMATION_CONFIGS = 'AUTOMATION_CONFIGS';
 export const SETTINGS_KEY_VRCHAT_API = 'VRCHAT_API';
 export const SETTINGS_KEY_APP_SETTINGS = 'APP_SETTINGS';
@@ -27,6 +27,7 @@ export const NG_LOCALE_MAP: { [s: string]: string } = {
   id: 'id',
   ru: 'ru',
   uk: 'uk',
+  de: 'de',
 };
 export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = [
   {
@@ -77,6 +78,10 @@ export const LANGUAGES: Array<{ code: string; label: string; flag?: string }> = 
     code: 'uk',
     label: 'Українська',
     flag: 'ua',
+  },
+  {
+    code: 'de',
+    label: 'Deutsch',
   },
 ];
 

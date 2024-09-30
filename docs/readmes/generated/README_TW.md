@@ -178,9 +178,7 @@ OyasumiVR 配備了自己的 SteamVR 疊層畫面，允許你在虛擬實境中�
     <td>
 <b>基地台</b>
 <br>
-讓 OyasumiVR 與 SteamVR 一起自動開關基地台。這有點像 SteamVR 自己的基地台電源管理，但**與任何 HMD 相容**！只要你的 PC 支援藍牙，並且處於基地台的範圍內，就可以使用。
-<br><br>
-<i>目前僅支援 V2 Lighthouse 基地台。</i> 
+讓 OyasumiVR 與 SteamVR 一起自動開關基地台。這有點像 SteamVR 自己的基地台電源管理，但**與任何 HMD 相容**！只要你的 PC 支援藍牙，並且處於基地台的範圍內，就可以使用。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
@@ -235,8 +233,8 @@ OyasumiVR 可以偵測你睡覺時的姿勢，並在你的角色上觸發相應�
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>（みんみんみーん的 Sleep System v2.2 - 2.3）
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>（みんみんみーん的 Sleep System v2.2 - 3.0.2）
     <br><a href="https://booth.pm/en/items/4233545">EX 版本</a> 也支援！
   </li>
   <li>
@@ -547,6 +545,7 @@ Here is a list of features exposed that you'll be able to read, or control, thro
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

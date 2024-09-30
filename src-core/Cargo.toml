@@ -1,6 +1,6 @@
 [package]
 name = "oyasumivr"
-version = "1.13.3"
+version = "1.14.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
@@ -34,7 +34,7 @@ mime_guess = "2.0.4"
 substring = "1.4.5"
 bytes = "1.4.0"
 nalgebra = "0.32.2"
-soloud = "1.0.2"
+rodio = "0.19.0"
 time = "0.3.15"
 tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
@@ -92,6 +92,9 @@ regex = "1.10.2"
 hidapi = "2.6.0"
 steamlocate = "1.2.1"
 discord-sdk = "0.3.6"
+ipgeolocate = "0.3.6"
+public-ip = "0.2.2"
+suncalc = "0.4.0"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
@@ -100,7 +103,15 @@ rev = "2949a3f"
 
 [dependencies.tauri]
 version = "1.6.1"
-features = [ "window-unminimize", "window-start-dragging", "window-show", "window-hide", "window-close", "window-unmaximize", "window-minimize", "window-maximize",
+features = [
+  "window-unminimize",
+  "window-start-dragging",
+  "window-show",
+  "window-hide",
+  "window-close",
+  "window-unmaximize",
+  "window-minimize",
+  "window-maximize",
   "global-shortcut-all",
   "clipboard-write-text",
   "cli",
@@ -125,7 +136,7 @@ features = [ "window-unminimize", "window-start-dragging", "window-show", "windo
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "b7e51d0"
+rev = "5d3f832d6c4e9e669af96f282ff4698d62541790"
 # path = "../../ovr_overlay_oyasumi"
 features = ["ovr_system", "ovr_settings"]
 

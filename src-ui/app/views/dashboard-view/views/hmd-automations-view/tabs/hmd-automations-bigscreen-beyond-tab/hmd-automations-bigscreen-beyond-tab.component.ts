@@ -10,7 +10,7 @@ import {
 
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../../../../../models/settings';
 import { hshrink } from '../../../../../../utils/animations';
-import { SET_BRIGHTNESS_OPTIONS_DEFAULTS } from '../../../../../../services/brightness-control/brightness-control-models';
+import { SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS } from '../../../../../../services/brightness-control/brightness-control-models';
 import { HardwareBrightnessControlService } from '../../../../../../services/brightness-control/hardware-brightness-control.service';
 
 const MIN_SAFE_FAN_SPEED = 40;
@@ -127,7 +127,7 @@ export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
     // Set brightness to same value to reset fan safety if needed
     this.hardwareBrightness.setBrightness(
       this.hardwareBrightness.brightness,
-      SET_BRIGHTNESS_OPTIONS_DEFAULTS,
+      SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
       true
     );
   }

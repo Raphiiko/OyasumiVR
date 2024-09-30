@@ -1,377 +1,379 @@
 <div class="pane">
   <div class="pane-title" translate>systemMicMuteAutomations.title</div>
   <div class="pane-content">
-    <p translate>systemMicMuteAutomations.description</p>
-    <div class="setting-category">
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>systemMicMuteAutomations.audioDevice.title</span>
-            <span translate>systemMicMuteAutomations.audioDevice.description</span>
+    <div class="setting-view-container">
+      <p translate>systemMicMuteAutomations.description</p>
+      <div class="setting-category">
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>systemMicMuteAutomations.audioDevice.title</span>
+              <span translate>systemMicMuteAutomations.audioDevice.description</span>
+            </div>
+            <div class="setting-row-action">
+              <div class="audio-device-row">
+                <ng-container *ngVar="systemMicMuteAutomationService.isMicMuted | async as muted">
+                  <button
+                    class="btn btn-mute-toggle"
+                    *ngIf="muted !== null"
+                    @fade
+                    (click)="systemMicMuteAutomationService.toggleMute()"
+                  >
+                    <i class="material-icons muted" *ngIf="muted === true">mic_off</i>
+                    <i class="material-icons unmuted" *ngIf="muted === false">mic</i>
+                  </button>
+                </ng-container>
+                <app-select-box
+                  class="device-dropdown"
+                  [items]="audioDeviceOptions"
+                  [selected]="audioDeviceOption"
+                  (selectedChange)="onChangeAudioDevice($event)"
+                ></app-select-box>
+              </div>
+            </div>
           </div>
-          <div class="setting-row-action">
-            <div class="audio-device-row">
-              <ng-container *ngVar="systemMicMuteAutomationService.isMicMuted | async as muted">
-                <button
-                  class="btn btn-mute-toggle"
-                  *ngIf="muted !== null"
-                  @fade
-                  (click)="systemMicMuteAutomationService.toggleMute()"
-                >
-                  <i class="material-icons muted" *ngIf="muted === true">mic_off</i>
-                  <i class="material-icons unmuted" *ngIf="muted === false">mic</i>
-                </button>
-              </ng-container>
+        </div>
+      </div>
+      <div class="setting-category">
+        <h3 translate>systemMicMuteAutomations.stateAutomations.title</h3>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>systemMicMuteAutomations.stateAutomations.onSleepModeEnable.title</span>
+              <span translate
+              >systemMicMuteAutomations.stateAutomations.onSleepModeEnable.description</span
+              >
+            </div>
+            <div class="setting-row-action">
               <app-select-box
-                class="device-dropdown"
-                [items]="audioDeviceOptions"
-                [selected]="audioDeviceOption"
-                (selectedChange)="onChangeAudioDevice($event)"
+                type="SMALL"
+                class="action-dropdown"
+                [items]="muteActionOptions"
+                [selected]="onSleepEnableMuteOption"
+                (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
+              ></app-select-box>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+            <span translate
+            >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.title</span
+            >
+              <span translate
+              >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                type="SMALL"
+                class="action-dropdown"
+                [items]="muteActionOptions"
+                [selected]="onSleepDisableMuteOption"
+                (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
+              ></app-select-box>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+            <span translate
+            >systemMicMuteAutomations.stateAutomations.onSleepPreparation.title</span
+            >
+              <span translate
+              >systemMicMuteAutomations.stateAutomations.onSleepPreparation.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                type="SMALL"
+                class="action-dropdown"
+                [items]="muteActionOptions"
+                [selected]="onSleepPreparationMuteOption"
+                (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
               ></app-select-box>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="setting-category">
-      <h3 translate>systemMicMuteAutomations.stateAutomations.title</h3>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>systemMicMuteAutomations.stateAutomations.onSleepModeEnable.title</span>
-            <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepModeEnable.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="action-dropdown"
-              [items]="muteActionOptions"
-              [selected]="onSleepEnableMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_ENABLE', $event)"
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.title</span
-            >
-            <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="action-dropdown"
-              [items]="muteActionOptions"
-              [selected]="onSleepDisableMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_DISABLE', $event)"
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepPreparation.title</span
-            >
-            <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepPreparation.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="action-dropdown"
-              [items]="muteActionOptions"
-              [selected]="onSleepPreparationMuteOption"
-              (selectedChange)="onChangeMuteOption('ON_SLEEP_PREPARATION', $event)"
-            ></app-select-box>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="setting-category">
-      <h3 translate>systemMicMuteAutomations.vrchat.title</h3>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.title</span>
-            <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.description</span>
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="action-dropdown"
-              [items]="worldJoinBehaviourOptions"
-              [selected]="worldJoinBehaviourOption"
-              (selectedChange)="onChangeWorldJoinBehaviourOption($event)"
-            ></app-select-box>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="setting-category">
-      <h3 translate>systemMicMuteAutomations.overlayIndicator.title</h3>
-      <p translate>systemMicMuteAutomations.overlayIndicator.description</p>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>systemMicMuteAutomations.overlayIndicator.enabled.title</span>
-            <span translate>systemMicMuteAutomations.overlayIndicator.enabled.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.overlayMuteIndicator"
-                (change)="onChangeOverlayMuteIndicator()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-row-group" @vshrink *ngIf="config.overlayMuteIndicator">
-          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+      <div class="setting-category">
+        <h3 translate>systemMicMuteAutomations.vrchat.title</h3>
+        <div class="settings">
+          <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.overlayIndicator.opacity.title</span>
-              <span translate>systemMicMuteAutomations.overlayIndicator.opacity.description</span>
+              <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.title</span>
+              <span translate>systemMicMuteAutomations.vrchat.worldJoinBehaviour.description</span>
             </div>
             <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="'%'"
-                [min]="5"
-                [max]="100"
-                [value]="config.overlayMuteIndicatorOpacity"
-                (valueChange)="onChangeOverlayMuteIndicatorOpacity($event)"
-              >
-              </app-slider-setting>
+              <app-select-box
+                type="SMALL"
+                class="action-dropdown"
+                [items]="worldJoinBehaviourOptions"
+                [selected]="worldJoinBehaviourOption"
+                (selectedChange)="onChangeWorldJoinBehaviourOption($event)"
+              ></app-select-box>
             </div>
           </div>
-          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+        </div>
+      </div>
+      <div class="setting-category">
+        <h3 translate>systemMicMuteAutomations.overlayIndicator.title</h3>
+        <p translate>systemMicMuteAutomations.overlayIndicator.description</p>
+        <div class="settings">
+          <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.overlayIndicator.fade.title</span>
-              <span translate>systemMicMuteAutomations.overlayIndicator.fade.description</span>
+              <span translate>systemMicMuteAutomations.overlayIndicator.enabled.title</span>
+              <span translate>systemMicMuteAutomations.overlayIndicator.enabled.description</span>
             </div>
             <div class="setting-row-action">
               <label class="switch-toggle">
                 <input
                   type="checkbox"
-                  [checked]="config.overlayMuteIndicatorFade"
-                  (change)="onChangeOverlayMuteIndicatorFade()"
+                  [checked]="config.overlayMuteIndicator"
+                  (change)="onChangeOverlayMuteIndicator()"
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
             </div>
           </div>
-          <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
-            <div class="setting-row-label" translate>
+          <div class="setting-row-group" @vshrink *ngIf="config.overlayMuteIndicator">
+            <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.overlayIndicator.opacity.title</span>
+                <span translate>systemMicMuteAutomations.overlayIndicator.opacity.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-slider-setting
+                  [unit]="'%'"
+                  [min]="5"
+                  [max]="100"
+                  [value]="config.overlayMuteIndicatorOpacity"
+                  (valueChange)="onChangeOverlayMuteIndicatorOpacity($event)"
+                >
+                </app-slider-setting>
+              </div>
+            </div>
+            <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.overlayIndicator.fade.title</span>
+                <span translate>systemMicMuteAutomations.overlayIndicator.fade.description</span>
+              </div>
+              <div class="setting-row-action">
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="config.overlayMuteIndicatorFade"
+                    (change)="onChangeOverlayMuteIndicatorFade()"
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+              </div>
+            </div>
+            <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
+              <div class="setting-row-label" translate>
               <span translate
-                >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title</span
+              >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title</span
               >
-              <span translate
+                <span translate
                 >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.description</span
-              >
+                >
+              </div>
+              <div class="setting-row-action">
+                <app-select-box
+                  type="SMALL"
+                  class="action-dropdown"
+                  [items]="voiceActivationModeOptions"
+                  [selected]="voiceActivationModeOption"
+                  (selectedChange)="onChangeVoiceActivationMode($event)"
+                ></app-select-box>
+              </div>
             </div>
-            <div class="setting-row-action">
-              <app-select-box
-                type="SMALL"
-                class="action-dropdown"
-                [items]="voiceActivationModeOptions"
-                [selected]="voiceActivationModeOption"
-                (selectedChange)="onChangeVoiceActivationMode($event)"
-              ></app-select-box>
-            </div>
-          </div>
-          <div
-            class="setting-row"
-            [class.disabled]="!config.overlayMuteIndicator"
-            @vshrink
-            *ngIf="config.voiceActivationMode === 'HARDWARE'"
-          >
-            <div class="setting-row-label" translate>
+            <div
+              class="setting-row"
+              [class.disabled]="!config.overlayMuteIndicator"
+              @vshrink
+              *ngIf="config.voiceActivationMode === 'HARDWARE'"
+            >
+              <div class="setting-row-label" translate>
               <span translate
-                >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title</span
+              >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title</span
               >
-              <span translate
+                <span translate
                 >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.description</span
-              >
-            </div>
-            <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="'%'"
-                [style.--overlay-width]="'32em'"
-                [style]="'AUDIO_LEVEL'"
-                [value]="config.hardwareVoiceActivationThreshold"
-                (valueChange)="onChangeHardwareVoiceActivationThreshold($event)"
-                #voiceActivationThresholdSlider
-              >
-              </app-slider-setting>
+                >
+              </div>
+              <div class="setting-row-action">
+                <app-slider-setting
+                  [unit]="'%'"
+                  [style.--overlay-width]="'32em'"
+                  [style]="'AUDIO_LEVEL'"
+                  [value]="config.hardwareVoiceActivationThreshold"
+                  (valueChange)="onChangeHardwareVoiceActivationThreshold($event)"
+                  #voiceActivationThresholdSlider
+                >
+                </app-slider-setting>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="setting-category">
-      <h3 translate>systemMicMuteAutomations.controllerBinding.title</h3>
-      <p translate>systemMicMuteAutomations.controllerBinding.description</p>
-      <div class="alert">
-        <div class="alert-bg"></div>
-        <div class="alert-icon">
-          <i class="material-icons">warning</i>
-        </div>
-        <div class="alert-content flex-row">
-          <div translate>systemMicMuteAutomations.controllerBinding.conflictWarning</div>
-        </div>
-      </div>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>systemMicMuteAutomations.controllerBinding.enabled.title</span>
-            <span translate>systemMicMuteAutomations.controllerBinding.enabled.description</span>
+      <div class="setting-category">
+        <h3 translate>systemMicMuteAutomations.controllerBinding.title</h3>
+        <p translate>systemMicMuteAutomations.controllerBinding.description</p>
+        <div class="alert">
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons">warning</i>
           </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.controllerBinding"
-                (change)="onChangeControllerBinding()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
+          <div class="alert-content flex-row">
+            <div translate>systemMicMuteAutomations.controllerBinding.conflictWarning</div>
           </div>
         </div>
-        <div class="setting-row-group" @vshrink *ngIf="config.controllerBinding">
-          <div class="setting-row" [class.disabled]="!config.controllerBinding">
+        <div class="settings">
+          <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.controllerBinding.binding.title</span>
-              <span translate>systemMicMuteAutomations.controllerBinding.binding.description</span>
+              <span translate>systemMicMuteAutomations.controllerBinding.enabled.title</span>
+              <span translate>systemMicMuteAutomations.controllerBinding.enabled.description</span>
             </div>
             <div class="setting-row-action">
-              <app-controller-binding
-                [actionKey]="OVRInputEventAction.MuteMicrophone"
-              ></app-controller-binding>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.controllerBinding"
+                  (change)="onChangeControllerBinding()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
             </div>
           </div>
-          <div class="setting-row" [class.disabled]="!config.controllerBinding">
-            <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.controllerBinding.mode.title</span>
-              <span translate>systemMicMuteAutomations.controllerBinding.mode.description</span>
+          <div class="setting-row-group" @vshrink *ngIf="config.controllerBinding">
+            <div class="setting-row" [class.disabled]="!config.controllerBinding">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.controllerBinding.binding.title</span>
+                <span translate>systemMicMuteAutomations.controllerBinding.binding.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-controller-binding
+                  [actionKey]="OVRInputEventAction.MuteMicrophone"
+                ></app-controller-binding>
+              </div>
             </div>
-            <div class="setting-row-action">
-              <app-select-box
-                type="SMALL"
-                class="action-dropdown"
-                [items]="controlButtonBehaviorOptions"
-                [selected]="controlButtonBehaviorOption"
-                (selectedChange)="onChangeControlButtonBehaviorOption($event)"
-              ></app-select-box>
+            <div class="setting-row" [class.disabled]="!config.controllerBinding">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.controllerBinding.mode.title</span>
+                <span translate>systemMicMuteAutomations.controllerBinding.mode.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-select-box
+                  type="SMALL"
+                  class="action-dropdown"
+                  [items]="controlButtonBehaviorOptions"
+                  [selected]="controlButtonBehaviorOption"
+                  (selectedChange)="onChangeControlButtonBehaviorOption($event)"
+                ></app-select-box>
+              </div>
             </div>
-          </div>
-          <div class="setting-row" [class.disabled]="!config.controllerBinding">
-            <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.controllerBinding.currentMode.title</span>
-              <span translate
+            <div class="setting-row" [class.disabled]="!config.controllerBinding">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.controllerBinding.currentMode.title</span>
+                <span translate
                 >systemMicMuteAutomations.controllerBinding.currentMode.description</span
-              >
-            </div>
-            <div class="setting-row-action">
+                >
+              </div>
+              <div class="setting-row-action">
               <span class="current-controller-behavior"
-                ><b>{{
+              ><b>{{
                   'systemMicMuteAutomations.controllerBinding.currentMode.' +
-                    (systemMicMuteAutomationService.effectiveControllerBehaviour | async)
+                  (systemMicMuteAutomationService.effectiveControllerBehaviour | async)
                     | translate
                 }}</b></span
               >
+              </div>
+            </div>
+            <div class="setting-row" [class.disabled]="!config.controllerBinding">
+              <div class="setting-row-label" translate>
+                <span translate>systemMicMuteAutomations.controllerBinding.volume.title</span>
+                <span translate>systemMicMuteAutomations.controllerBinding.volume.description</span>
+              </div>
+              <div class="setting-row-action">
+                <app-slider-setting
+                  [unit]="'%'"
+                  [value]="config.muteSoundVolume"
+                  [max]="200"
+                  [snapValues]="[50, 100, 150]"
+                  (valueChange)="onChangeMuteSoundVolume($event)"
+                >
+                </app-slider-setting>
+              </div>
+            </div>
+          </div>
+        </div>
+        <h3 @fade *ngIf="config.controllerBinding" translate
+        >systemMicMuteAutomations.controllerBinding.automations</h3
+        >
+        <div class="settings" @fade *ngIf="config.controllerBinding">
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
+            <div class="setting-row-label" translate>
+            <span translate
+            >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title</span
+            >
+              <span translate
+              >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                type="SMALL"
+                class="button-mode-dropdown"
+                [items]="controlButtonBehaviorAutomationOptions"
+                [selected]="onSleepEnableControlButtonBehaviorOption"
+                (selectedChange)="
+                onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_ENABLE', $event)
+              "
+              ></app-select-box>
             </div>
           </div>
           <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.controllerBinding.volume.title</span>
-              <span translate>systemMicMuteAutomations.controllerBinding.volume.description</span>
+            <span translate
+            >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title</span
+            >
+              <span translate
+              >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description</span
+              >
             </div>
             <div class="setting-row-action">
-              <app-slider-setting
-                [unit]="'%'"
-                [value]="config.muteSoundVolume"
-                [max]="200"
-                [snapValues]="[50, 100, 150]"
-                (valueChange)="onChangeMuteSoundVolume($event)"
-              >
-              </app-slider-setting>
-            </div>
-          </div>
-        </div>
-      </div>
-      <h3 @fade *ngIf="config.controllerBinding" translate
-        >systemMicMuteAutomations.controllerBinding.automations</h3
-      >
-      <div class="settings" @fade *ngIf="config.controllerBinding">
-        <div class="setting-row" [class.disabled]="!config.controllerBinding">
-          <div class="setting-row-label" translate>
-            <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title</span
-            >
-            <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="button-mode-dropdown"
-              [items]="controlButtonBehaviorAutomationOptions"
-              [selected]="onSleepEnableControlButtonBehaviorOption"
-              (selectedChange)="
-                onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_ENABLE', $event)
-              "
-            ></app-select-box>
-          </div>
-        </div>
-        <div class="setting-row" [class.disabled]="!config.controllerBinding">
-          <div class="setting-row-label" translate>
-            <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title</span
-            >
-            <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="button-mode-dropdown"
-              [expandUp]="true"
-              [items]="controlButtonBehaviorAutomationOptions"
-              [selected]="onSleepDisableControlButtonBehaviorOption"
-              (selectedChange)="
+              <app-select-box
+                type="SMALL"
+                class="button-mode-dropdown"
+                [expandUp]="true"
+                [items]="controlButtonBehaviorAutomationOptions"
+                [selected]="onSleepDisableControlButtonBehaviorOption"
+                (selectedChange)="
                 onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_DISABLE', $event)
               "
-            ></app-select-box>
+              ></app-select-box>
+            </div>
           </div>
-        </div>
-        <div class="setting-row" [class.disabled]="!config.controllerBinding">
-          <div class="setting-row-label" translate>
+          <div class="setting-row" [class.disabled]="!config.controllerBinding">
+            <div class="setting-row-label" translate>
             <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepPreparation.title</span
+            >systemMicMuteAutomations.controllerBinding.onSleepPreparation.title</span
             >
-            <span translate
+              <span translate
               >systemMicMuteAutomations.controllerBinding.onSleepPreparation.description</span
-            >
-          </div>
-          <div class="setting-row-action">
-            <app-select-box
-              type="SMALL"
-              class="button-mode-dropdown"
-              [expandUp]="true"
-              [items]="controlButtonBehaviorAutomationOptions"
-              [selected]="onSleepPreparationControlButtonBehaviorOption"
-              (selectedChange)="
+              >
+            </div>
+            <div class="setting-row-action">
+              <app-select-box
+                type="SMALL"
+                class="button-mode-dropdown"
+                [expandUp]="true"
+                [items]="controlButtonBehaviorAutomationOptions"
+                [selected]="onSleepPreparationControlButtonBehaviorOption"
+                (selectedChange)="
                 onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_PREPARATION', $event)
               "
-            ></app-select-box>
+              ></app-select-box>
+            </div>
           </div>
         </div>
       </div>

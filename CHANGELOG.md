@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0]
+
+### Added
+
+- Display color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)
+- Automations for display color temperature
+- Sunset/Sunrise based automations for brightness and color temperature.
+- Support for V1 Lighthouses (Vive Base stations)
+- Option for the shutdown sequence to only trigger for being alone in your instance while the sleep mode is enabled
+- Option for audio volume automations to apply on start
+- Support for VRChat parameters in OSC scripts that have been automatically renamed by VRCFury or Modular Avatar
+- Event log filters
+- Workaround for VRChat not automatically reloading your avatar after all trackers have been turned off
+- German language support (thanks to community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85))
+- Exposed HMD activity level over MQTT
+
+### Changed
+
+- Automations for brightness/CCT, render resolution, chaperone fade distance, BSB fan speed and BSB led color now automatically apply their set values when a HMD is connected.
+- (Headset specific) brightness and color temperature settings were moved to their own settings page.
+- OSC scripts will automatically convert spaces in addresses to underscores to match VRChat behaviour for parameter renaming.
+- Various notification sounds
+
+### Removed
+
+- Option for the brightness automations based on sleep mode to run on SteamVR launch. This now happens automatically when a HMD is connected.
+
+### Fixed
+
+- Duration inputs for shutdown sequence triggers being broken on systems using a 12-hour clock.
+- Shutdown sequence being triggered over and over by the sleep mode trigger, when not using it to shut down or reboot the PC.
+- Issue where leave notifications would trigger for every other player when leaving a world.
+
 ## [1.13.3]
 
 ### Fixed
@@ -13,6 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Certain types of selection in input fields (e.g. Ctrl+A) being blocked
 
 ### Changed
+
 - Window titlebar icons
 
 ## [1.13.2]

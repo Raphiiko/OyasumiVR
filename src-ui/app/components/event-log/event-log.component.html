@@ -2,7 +2,19 @@
   <div class="pane-title">
     <span translate>comp.event-log.title</span>
     <button
-      class="btn btn-secondary btn-clear"
+      class="btn btn-secondary btn-header"
+      (mouseover)="filterHover = true"
+      (mouseleave)="filterHover = false"
+      [class.active]="(filters | async)?.length ?? 0 > 0"
+      (click)="openFilterDialog()"
+    >
+      <span>&nbsp;</span>
+      <i class="material-icons-round">filter_list</i>
+      <span>&nbsp;</span>
+      <span translate @hshrink *ngIf="filterHover" class="label">comp.event-log.openFilters</span>
+    </button>
+    <button
+      class="btn btn-secondary btn-header"
       (mouseover)="clearHover = true"
       (mouseleave)="clearHover = false"
       (click)="clearLog()"

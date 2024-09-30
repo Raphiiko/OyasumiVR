@@ -2,10 +2,9 @@ use super::{
     audio_devices::device::AudioDeviceDto,
     get_friendly_name_for_windows_power_policy,
     models::{Output, WindowsPowerPolicy},
-    SOLOUD, SOUNDS, VRCHAT_ACTIVE,
+    VRCHAT_ACTIVE,
 };
 use log::{error, info};
-use soloud::{audio, AudioExt, LoadExt};
 use tauri::api::process::{Command, CommandEvent};
 
 #[tauri::command]
@@ -14,27 +13,15 @@ pub async fn play_sound(name: String, volume: f32) {
     if volume == 0.0 {
         return;
     }
-    std::thread::spawn(move || {
-        let mut wav = audio::Wav::default();
-        {
-            let sound_data_guard = SOUNDS.lock().unwrap();
-            let sound_data = sound_data_guard.get(&name).unwrap();
-            wav.load_mem(sound_data).unwrap();
+    let guard = super::PLAY_SOUND_TX.lock().await;
+    let tx = match guard.as_ref() {
+        Some(tx) => tx,
+        None => {
+            error!("[Core] Could not play sound, as sound player was not initialized");
+            return;
         }
-        {
-            let sl = SOLOUD.lock().unwrap();
-            sl.play_ex(&wav, volume, 0.0, false, unsafe {
-                soloud::Handle::from_raw(0)
-            });
-        }
-        loop {
-            std::thread::sleep(std::time::Duration::from_millis(100));
-            let sl = SOLOUD.lock().unwrap();
-            if sl.active_voice_count() == 0 {
-                break;
-            }
-        }
-    });
+    };
+    let _ = tx.send((name, volume)).await;
 }
 
 #[tauri::command]

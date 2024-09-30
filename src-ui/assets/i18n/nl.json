@@ -20,8 +20,18 @@
       "SET_VOLUME": "Volume Aanpassen",
       "UNMUTE": "Niet dempen"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "Draai deze automatisering wanneer OyasumiVR start met de slaap modus uitgeschakeld",
+        "onSleepEnable": "Draai deze automatisering wanneer OyasumiVR start met de slaap modus ingeschakeld"
+      },
+      "title": "Toepassen na starten"
+    },
     "automations": {
       "label": "{count, plural, one {1 Automatisering} other {# Automatiseringen}}"
+    },
+    "config": {
+      "title": "Configuratie"
     },
     "description": "Verander automatisch het volume van je geluidsapparaten wanneer je in slaap valt, of wakker word! Dit kan handig zijn als je wilt voorkomen dat mensen je storen terwijl je slaapt.",
     "devices": {
@@ -138,85 +148,60 @@
     "whitelist": "Speler Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus inactief is",
-          "onSleepEnable": "Zet dit helderheidsniveau wanneer SteamVR of OyasumiVR opstart en de slaap modus actief is"
-        },
-        "title": "Helderheid bij opstarten"
+    "AT_SUNRISE": {
+      "title": "Bij zonsopkomst"
+    },
+    "AT_SUNSET": {
+      "title": "Bij zonsondergang"
+    },
+    "HMD_CONNECT": {
+      "title": "Wanneer mijn headset verbind met SteamVR"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "Wanneer ik wakker word"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "Wanneer ik ga slapen"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "activation": {
+      "category": "Activatie"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "De tijd wanneer de zon op komt",
+        "title": "Zonsopkomst"
       },
-      "brightness": {
-        "title": "Zet de helderheid naar"
-      },
-      "copyBrightness": "Kopieer huidig helderheidsniveau",
-      "description": "Laat OyasumiVR automatisch het helderheidsniveau van je VR headset aanpassen, zoals wanneer je in slaap valt of wanneer je wakker wordt.",
-      "hardwareBrightness": {
-        "description": "Past de helderheid van het fysieke scherm aan",
-        "title": "Zet de hardware helderheid naar"
-      },
-      "onSleepDisable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik wakker word"
-      },
-      "onSleepEnable": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik ga slapen"
-      },
-      "onSleepPreparation": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer ik me voorbereid om te gaan slapen"
-      },
-      "onStartup": {
-        "description": "Pas het helderheidsniveau aan",
-        "title": "Wanneer OyasumiVR of SteamVR opstart"
-      },
-      "sleepAutomations": "Slaap Automatiseringen",
-      "sleepPreparation": {
-        "description": "Je kan je slaap voorbereiden door op de knop te drukken in OyasumiVR's overlay. De knop hier voor zal bruikbaar worden als je één of meerdere automatiseringen voor slaap voorbereiding, zoals deze, hebt geactiveerd. Je kunt dit gebruiken om alvast het helderheidsniveau te dimmen voordat je in slaap valt.",
-        "title": "Slaap Voorbereiding"
-      },
-      "softwareBrightness": {
-        "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
-        "title": "Zet de software helderheid naar"
-      },
-      "startupAutomations": "Opstart Automatiseringen",
-      "transition": {
-        "description": "Schakel niet meteen, maar vloeiend over naar de nieuwe helderheid",
-        "title": "Vloeiende overgang"
-      },
-      "transitionTime": {
-        "description": "Hoe lang de vloeiende overgang zal duren",
-        "title": "Overgangsduur"
+      "SUNSET": {
+        "description": "De tijd wanneer de zon onder gaat",
+        "title": "Zonsondergang"
       }
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
-          "title": "Overdrive ventilator veiligheid",
-          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
-        },
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "permitRiskRange": {
-          "description": "Voorkomt dat je de helderheid boven 150% zet",
-          "title": "Beperk tot veilige schermhelderheidswaarden",
-          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Hier kan je alle instellingen vinden mbt schermhelderheid voor jou specifieke VR headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
-          "title": "Maximale Helderheid"
-        },
-        "title": "Valve Index"
-      }
+    "autoDetermineSunsetSunrise": "Automatisch de tijd bepalen",
+    "brightness": {
+      "title": "Zet de helderheid naar"
     },
+    "changeBrightness": {
+      "category": "Helderheid",
+      "description": "Pas je VR headset's helderheid's niveau aan",
+      "title": "Verander helderheid"
+    },
+    "changeTemperature": {
+      "category": "Kleur temperatuur",
+      "description": "Pas de kleur temperatuur aan van het beeld in je VR headset",
+      "title": "Pas kleur temperatuur aan"
+    },
+    "copyBrightness": "Kopieer huidig helderheidsniveau",
+    "description": "Laat OyasumiVR automatisch de helderheid en/of kleur temperatuur van je VR headset aanpassen op verschillende momenten, zoals wanneer je in slaap valt, of wakker word!",
+    "detailsTitle": "Moment",
+    "events": "Logboek",
+    "hardwareBrightness": {
+      "description": "Past de helderheid van het fysieke scherm aan",
+      "title": "Zet de hardware helderheid naar"
+    },
+    "miscConfig": "Andere opties",
     "mode": {
       "advanced": "Geavanceerde Modus",
       "simple": "Simpele Modus"
@@ -225,11 +210,27 @@
       "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
     },
-    "tabs": {
-      "automations": "Automatiseringen",
-      "hmdSettings": "HMD Instellingen"
+    "onHmdConnectInfo": "Wanneer je beide de \"Bij zonsondergang\" en \"Bij zonsopkomst\" automatiseringen aan zet, zullen ze automatisch worden toegepast wanneer je je VR headset aan sluit, afhankelijk van de tijd. Doe je dit niet, dan zullen de waardes van de \"Wanneer ik ga slapen\" en \"Wanneer ik wakker word\" automatiseringen gebruikt worden.",
+    "onlyWhenSleepModeDisabled": {
+      "description": "Draai deze automatiswering alleen wanneer de slaap modus is uitgeschakeld",
+      "title": "Alleen wanneer de slaap modus is uitgeschakeld"
     },
-    "title": "Helderheid Automatiseringen"
+    "softwareBrightness": {
+      "description": "Past de helderheid aan van het beeld dat in je VR headset word getoont",
+      "title": "Zet de software helderheid naar"
+    },
+    "temperature": {
+      "title": "Verander de kleur temperatuur naar"
+    },
+    "title": "Helderheid Automatiseringen",
+    "transition": {
+      "description": "Laat de helderheid en/of kleur temperatuur over gaan naar de nieuwe waarden",
+      "title": "Vloeiende transitie"
+    },
+    "transitionTime": {
+      "description": "Hoe lang de transitie moet duren",
+      "title": "Transitie tijd"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR kan automatisch de activatie afstand van SteamVR's chaperone aanpassen wanneer de slaap modus wordt ingeschakeld of uitgeschakeld.",
@@ -248,14 +249,15 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Helderheid Automatiseringen",
       "brightness": "Helderheid",
       "hardwareBrightness": "Hardware Helderheid",
       "softwareBrightness": "Software Helderheid"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automatiseringen",
       "fanSpeed": "Ventilator Snelheid"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "Kleur Temperatuur"
     },
     "color-picker-modal": {
       "title": "Kies een kleur"
@@ -311,6 +313,7 @@
       "resolutionAutomations": "Resolutie Automatiseringen",
       "settings": {
         "advanced": "Geavanceerde Instellingen",
+        "brightnessCct": "Helderheid & CCT Instellingen",
         "general": "Algemene Instellingen",
         "hotkeys": "Hotkey Instellingen",
         "integrations": "Integraties",
@@ -338,7 +341,13 @@
         "description": "Genegeerde basestations zullen worden verborgen en worden niet aangestuurd door automatiseringen",
         "title": "Negeer Basestation"
       },
-      "title": "Bewerk Device: {deviceId}"
+      "title": "Bewerk Device: {deviceId}",
+      "v1Identifier": {
+        "change": "Verander ID",
+        "description": "Om een V1 base station te kunnen besturen, moet OyasumiVR het ID er van weten.",
+        "set": "ID Instellen",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -348,6 +357,7 @@
         "other": "Overige"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -423,6 +433,17 @@
           },
           "title": "Bigscreen Beyond RGB Led naar {color} gezet"
         },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "set": "Headset kleur temperatuur aangepast naar {icon} {temperature}K",
+            "transition": "Headset kleur temperatuur gaat over  naar {icon} {temperature}K"
+          }
+        },
         "changedAudioDeviceVolume": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
@@ -483,8 +504,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -601,8 +622,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -655,8 +676,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
-            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_MODE_DISABLE": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLE": "Omdat de slaap modus is ingeschakeld",
             "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
           },
           "title": {
@@ -722,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "Events gerelateerd aan microfoons en andere audio apparaten",
+          "title": "Geluids Besturing"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "Events gerelateerd aan het besturen van de helderheid en kleur temperatuur van je VR headset",
+          "title": "Helderheid & CCT"
+        },
+        "BSB_CONTROL": {
+          "description": "Events gerelateerd aan de besturing van de Bigscreen Beyond",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "Events gerelateerd aan het aan en uit zetten van apparaten zoals trackers, controllers, en base stations",
+          "title": "Apparaat Besturing"
+        },
+        "GPU_CONTROL": {
+          "description": "Events gerelateerd aan de besturing van je grafische kaart",
+          "title": "GPU Besturing"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "Events gerelateerd aan de afsluit procedure",
+          "title": "Afsluit Procedure"
+        },
+        "SLEEP_MODE": {
+          "description": "Events gerelateerd aan de slaap modus en slaap detectie",
+          "title": "Slaap Modus"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "Events gerelateerd aan veranderingen van SteamVR instellingen, zoals render resolutie en chaperone afstand.",
+          "title": "SteamVR Instellingen"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "Events gerelateerd aan het instellen van je VRChat avatar",
+          "title": "VRChat Avatar"
+        },
+        "VRCHAT_INVITES": {
+          "description": "Events gerelateerd aan VRChat invites en invite requests",
+          "title": "VRChat Invite Requests"
+        },
+        "VRCHAT_STATUS": {
+          "description": "Events gerelateerd aan veranderingen in je VRChat status",
+          "title": "VRChat Status"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Events gerelateerd aan veranderingen in de Windows power policy",
+          "title": "Windows Power Policy"
+        }
+      },
+      "selectAll": "Selecteer Alles",
+      "selectDescription": "Selecteer de type logs die je wilt zien in het event log",
+      "selectNone": "Selecteer Niets",
+      "title": "Filter Event Logs"
+    },
     "event-log": {
       "clearLog": "Wissen",
       "clearLogModal": {
@@ -729,6 +806,7 @@
         "title": "Bevestig wissen"
       },
       "no-logs": "Er zijn nog geen logboek items.\nLogs worden bewaard voor een maximum van 48 uur.",
+      "openFilters": "Filter Events",
       "show-more": "Toon meer",
       "title": "Logboek"
     },
@@ -749,6 +827,46 @@
     "hotkey-selector": {
       "select": "Hotkey Instellen"
     },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "Identifier aan het detecteren...",
+        "instructions": "Als er geen identifier automatisch kan worden gedetecteerd, vul dan de identifier a.u.b. handmatig in.",
+        "steps": {
+          "connectDevice": "Verbind trackbaar apparaat",
+          "connectDeviceDesc": "Verbind een headset, controller, of tracker, die met het lighthouse systeem getracked kan worden...",
+          "detectBasestation": "Detecteer base station",
+          "detectBasestationDesc": "Zorg er voor dat een headset, controller, of tracker het base station kan zien",
+          "deviceDetected": "Apparaat gedetecteerd",
+          "running": "Draait",
+          "startSteamVR": "Start SteamVR",
+          "waitingForSteamVR": "Aan het wachten tot SteamVR start..."
+        }
+      },
+      "detectAutomatically": "Detecteer Automatisch",
+      "inputManually": "Vul Handmatig In",
+      "intro": {
+        "message": "OyasumiVR moet de identifier van je base station weten om hem te kunnen besturen."
+      },
+      "manualInput": {
+        "formatDescription": "De identifier is 8 tekens lang, en bestaat alleen uit de nummers 0-9 en letters A-F.",
+        "message": "Je kan de identifier vinden op de achterkant van je base station"
+      },
+      "success": {
+        "subtitle": "Je kunt nu je base station besturen!",
+        "title": "Identifier ingesteld"
+      },
+      "title": "Identifier Benodigd",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "Het lighthouse ID kon niet automatisch worden gedetecteerd. Vul deze a.u.b. handmatig in.",
+          "invalidId": "Het ingevulde lighthouse ID is waarschijnlijk ongeldig. Dubbelcheck even de code op de achterkant van je apparaat.",
+          "verificationFailed": "Het lighthouse ID kon niet worden geverifieerd. Check a.u.b. of je basis station is ingeplugt, en binnen bereik is van je PC."
+        },
+        "idAutodetected": "Mogelijke identifier gedetecteerd",
+        "verifying": "ID Verifieren"
+      },
+      "verifyIdAction": "Verifieer ID"
+    },
     "main-status-bar": {
       "active": "Actief",
       "brightness": {
@@ -758,6 +876,10 @@
       "bsbFanSpeed": {
         "label": "Ventilator Snelheid",
         "tooltip": "Bigscreen Beyond Ventilator Snelheid"
+      },
+      "cctControl": {
+        "label": "CCT",
+        "tooltip": "Kleur Temperatuur Besturing"
       },
       "heartrate": "Hartslag",
       "inactive": "Inactief",
@@ -846,6 +968,7 @@
         "sleep": "Wacht"
       },
       "addCommand": "Voeg Toe",
+      "addParameter": "Parameter toevoegen",
       "commandCounter": "{value, plural, one {1 Commando} other {# Commandos}}",
       "commands": {
         "COMMAND": {
@@ -1121,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
+    "GORONE_LEGACY_PRESET_WARNING": "Versies v4.0 van deze prefab bevatten al functionaliteit om automatisch om te rollen, en zijn niet compatible met deze preset. Deze preset is alleen nog beschikbaar als je avatar oudere versies van deze prefab gebruikt.",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt.",
+        "title": "Waarschuwing"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "Let op dat het aanpassen van de kleur temperatuur alleen beschikbaar is op sommige native SteamVR headsets, zoals de Valve Index, Bigscreen Beyond, of HTC Vive (Pro).\n\nAls een andere headset gebruikt, is de kans groot dat deze feature geen effect zal hebben.\n\nJe kan kleur temperatuur besturing uitschakelen in de instellingen als je dat wilt.",
+        "title": "Feature Beschikbaarheid"
+      },
+      "acknowledge": "Ik begrijp het"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "Een correct OSC adres begint altijd met een '/' symbool.",
       "addressNotASCII": "Een correct OSC adres mag alleen ASCII karakters bevatten.",
@@ -1132,7 +1267,9 @@
       "floatTooPrecise": "Een float mag niet meer dan 3 decimalen hebben.",
       "intOutOfBounds": "Een integer moet een waarde hebben tussen 0 en 255.",
       "invalidSyntax": "Incorrecte syntax.",
+      "maxParameterCountExceeded": "Het maximum toegestane parameters per commando is {value}.",
       "noFloatMilliseconds": "Milliseconden mogen geen decimalen hebben.",
+      "stringTooLong": "String waarde mag niet boven het limiet van {value} karakters uitkomen.",
       "tooManyCommands": "Een OSC script mag niet meer dan {value} acties bevatten.",
       "totalDurationTooLong": "De totale duratie van een script mag niet langer zijn dan 10 seconden."
     }
@@ -1230,6 +1367,13 @@
           "title": "Voeten vastzetten"
         },
         "general": {
+          "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "Schakel dit in als je graag slaap animaties wilt gebruiken nadat OyaumiVR je full body trackers heeft uitgeschakeld.  <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">Wat is dit en waarom is het nodig?</a>",
+              "title": "Oplossing voor avatar animaties gebruiken icm FBT"
+            },
+            "title": "Geavanceerde Opties"
+          },
           "footLock": {
             "description": "Het vastzetten van de voeten voorkomt meestal dat de avatar kan bewegen of met de speler mee kan draaien.",
             "title": "Voeten vastzetten"
@@ -1267,6 +1411,7 @@
       "simple": "Helderheid",
       "software": "Software Helderheid"
     },
+    "colorTemp": "Kleur Temperatuur",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1314,7 +1459,11 @@
           "automations": "Automatiseringen",
           "deviceControl": "Apparaat Beheer",
           "prepareForSleep": "Slaapvoorbereiding",
-          "shutdown": "Afsluit Procedure"
+          "shutdown": "Afsluit Procedure",
+          "sliderMode": {
+            "BRIGHTNESS": "Helderheids Besturing",
+            "COLOR_TEMP": "Kleur Temperatuur Besturing"
+          }
         }
       },
       "shutdownSequence": {
@@ -1616,6 +1765,41 @@
         "title": "Taal & Vertalen"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Forceer de ventilator op 100% voor schermhelderheidswaarden boven 100%.",
+          "title": "Overdrive ventilator veiligheid",
+          "warning": "Deze feature beperkt de ventilator snelheden tot dezelfde veilige waarden als die van de officiele Bigscreen Beyond driver. Zet dit alleen uit op eigen risico."
+        },
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "permitRiskRange": {
+          "description": "Voorkomt dat je de helderheid boven 150% zet",
+          "title": "Beperk tot veilige schermhelderheidswaarden",
+          "warning": "Deze mogelijkheid wordt niet ondersteund door de fabrikant.\n\nWees je er van bewust dat het je headset kan beschadigen: Zet dit alleen uit op eigen risico."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "enabled": {
+          "description": "Schakel dit uit als je andere software gebruikt om de kleur temperatuur van je scherm aan te passen (bijvoorbeeld LuxVR of OVR Advanced Settings)",
+          "title": "Kleur temperatuur besturing inschakelen"
+        },
+        "title": "Kleur Temperatuur"
+      },
+      "description": "Hier vind je alle instellingen gerelateerd aan beeld helderheid en kleur temperatuur.",
+      "title": "Helderheid & CCT",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limiteer de maximum helderheid die OyasumiVR zal instellen.",
+          "title": "Maximale Helderheid"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR heeft beheerders rechten nodig om de stroom limieten van je videokaart te kunnen beheren. Als je dit aanzet, zal OyasumiVR bij het opstarten altijd om beheerders rechten vragen.",
@@ -1656,7 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "Als deze functie aan staat, kun je met OyasumiVR je base stations uit en aanzetten. Dit heeft Bluetooth nodig, en ondersteunt alleen V2 base stations.",
+          "description": "Door dit in te schakelen zul je je base stations in en uit kunnen schakelen met OyasumiVR. Vereist dat Bluetooth is ingeschakeld op je PC.",
           "title": "Aansturing inschakelen"
         },
         "powerOffMode": {
@@ -1852,6 +2036,7 @@
       "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "modals": {
+      "back": "Terug",
       "cancel": "Annuleren",
       "close": "Sluiten",
       "confirm": "Bevestig",
@@ -1943,6 +2128,10 @@
       "whenAloneDuration": {
         "description": "Hoe lang je alleen moet zijn voordat de afsluit procedure word gestart",
         "title": "Duratie"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "Alleen de afsluit procedure starten wanneer de slaap modus is ingeschakeld",
+        "title": "Alleen wanneer ik slaap"
       },
       "whenAloneTimeWindow": {
         "description": "De afsluit procedure wordt alleen automatisch gestart tussen deze tijden",

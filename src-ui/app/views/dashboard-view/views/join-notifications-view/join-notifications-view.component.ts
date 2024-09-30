@@ -147,13 +147,17 @@ export class JoinNotificationsViewComponent implements OnInit {
   }
 
   async testSound() {
-    await this.notifications.playSound('notification_reverie', this.config.joinSoundVolume / 100);
+    if (this.playingTestSound) return;
+    await this.notifications.playSound(
+      'material_alarm_gentle_short_1',
+      this.config.joinSoundVolume / 100
+    );
     this.playingTestSound = true;
     if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
     this.playingTestSoundTimeout = setTimeout(() => {
       this.playingTestSound = false;
       this.playingTestSoundTimeout = undefined;
-    }, 8000);
+    }, 3000);
   }
 
   asJoinNotificationsMode(id: string | undefined) {

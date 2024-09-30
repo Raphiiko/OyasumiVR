@@ -96,8 +96,6 @@ Save some electricity by automatically setting Windows' Power Policy when you go
 <b>Base Stations</b>
 <br>
 Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go.
-<br><br>
-<i>Currently only V2 Lighthouses are supported.</i>
 
 {{DEVICE_CONTROL_HEADER}}
 🎮 Device Control
@@ -135,8 +133,8 @@ There are built-in presets for popular locomotion assets, including:
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <MARKDOWN-BR>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <MARKDOWN-BR>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <MARKDOWN-BR><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>

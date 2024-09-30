@@ -178,9 +178,7 @@ Save some electricity by automatically setting Windows' Power Policy when you go
     <td>
 <b>Base Stations</b>
 <br>
-Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go.
-<br><br>
-<i>Currently only V2 Lighthouses are supported.</i> 
+Have OyasumiVR turn your base stations on and off together with SteamVR. A bit like SteamVR's own base station power management, but <b>compatible with any HMD!</b> As long as your PC supports Bluetooth and is in range of the base stations, you're good to go. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
@@ -235,8 +233,8 @@ There are built-in presets for popular locomotion assets, including:
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>
@@ -547,6 +545,7 @@ OyasumiVR currently supports the following languages:
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

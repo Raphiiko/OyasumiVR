@@ -130,10 +130,6 @@
 
     &-title-row {
       @apply flex flex-row items-center mb-4;
-      .material-icons {
-        @apply text-2xl text-white text-center inline-block;
-        flex-shrink: 0;
-      }
 
       span {
         @apply text-2xl text-white text-center inline-block;
@@ -208,9 +204,7 @@
 <div class="brightness-slider-container relative" class:disabled={disabled} class:transitioning={isTransitioning}>
   <div class="w-full h-full absolute top-0 left-0 bg-black blur-3xl opacity-r50 rounded-full z-0" />
   <div class="brightness-slider-title-row z-10">
-    <!--    <i class="material-icons brightness-level-icon glow-80">brightness_5</i>-->
     <span class="glow-80">{label}</span>
-    <!--    <i class="material-icons brightness-level-icon glow-80">brightness_7</i>-->
   </div>
   <div class="brightness-slider-bar-area z-10" on:mousedown={startDragging} class:dragging={dragging}>
     <div class="brightness-slider-bar-pre glow-80" style="flex: {renderProgression * 100}"></div>

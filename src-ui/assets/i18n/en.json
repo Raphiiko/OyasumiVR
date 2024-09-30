@@ -20,8 +20,18 @@
       "SET_VOLUME": "Change Volume",
       "UNMUTE": "Unmute"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "Run this automation when OyasumiVR starts with the sleep mode disabled",
+        "onSleepEnable": "Run this automation when OyasumiVR starts with the sleep mode enabled"
+      },
+      "title": "Apply on start"
+    },
     "automations": {
       "label": "{count, plural, one {1 Automation} other {# Automations}}"
+    },
+    "config": {
+      "title": "Configuration"
     },
     "description": "Automatically change the volume of your audio devices when you fall asleep, or wake up! This can be useful if you want to prevent others from disturbing your sleep.",
     "devices": {
@@ -138,85 +148,60 @@
     "whitelist": "Player Whitelist"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "If sleep mode is inactive, set this brightness value directly when SteamVR or OyasumiVR starts.",
-          "onSleepEnable": "If sleep mode is active, set this brightness value directly when SteamVR or OyasumiVR starts."
-        },
-        "title": "Apply brightness on startup"
+    "AT_SUNRISE": {
+      "title": "At sunrise"
+    },
+    "AT_SUNSET": {
+      "title": "At sunset"
+    },
+    "HMD_CONNECT": {
+      "title": "When my headset connects to SteamVR"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "When I wake up"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "When I go to sleep"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "When I prepare to go to sleep"
+    },
+    "activation": {
+      "category": "Activation"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "The time of day when the sun rises",
+        "title": "Time of sunrise"
       },
-      "brightness": {
-        "title": "Change the brightness to"
-      },
-      "copyBrightness": "Copy current\nbrightness value",
-      "description": "Have OyasumiVR automatically adjust the brightness of your VR headset at various times, like when you go to sleep, or when you wake up.",
-      "hardwareBrightness": {
-        "description": "Adjusts the brightness of the display itself",
-        "title": "Change the hardware brightness to"
-      },
-      "onSleepDisable": {
-        "description": "Adjust the brightness",
-        "title": "When I wake up"
-      },
-      "onSleepEnable": {
-        "description": "Adjust the brightness",
-        "title": "When I go to sleep"
-      },
-      "onSleepPreparation": {
-        "description": "Adjust the brightness",
-        "title": "When I prepare to go to sleep"
-      },
-      "onStartup": {
-        "description": "Adjust the brightness",
-        "title": "When OyasumiVR or SteamVR starts"
-      },
-      "sleepAutomations": "Sleep Automations",
-      "sleepPreparation": {
-        "description": "You can prepare to go to sleep by pressing a button in OyasumiVR's overlay. The button for this will be shown when you have one or more sleep preparation automations active, like this one. Use this to already start dimming the brightness before you fall asleep.",
-        "title": "Sleep Preparation"
-      },
-      "softwareBrightness": {
-        "description": "Adjusts the brightness of the image shown in your VR headset",
-        "title": "Change the software brightness to"
-      },
-      "startupAutomations": "Startup Automations",
-      "transition": {
-        "description": "Smoothly transition to your desired brightness value",
-        "title": "Adjust brightness gradually"
-      },
-      "transitionTime": {
-        "description": "How long it should take to transition to the new brightness setting",
-        "title": "Transition time"
+      "SUNSET": {
+        "description": "The time of day when the sun sets",
+        "title": "Time of sunset"
       }
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "Force the fan to 100% at brightness values above 100%",
-          "title": "Overdrive fan safety",
-          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
-        },
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "permitRiskRange": {
-          "description": "Prevents you from setting the brightness above 150%",
-          "title": "Limit to safe brightness levels",
-          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "Here you'll find any brightness related settings for your specific VR Headset.",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "Limit the maximum brightness value that OyasumiVR will set.",
-          "title": "Maximum Brightness"
-        },
-        "title": "Valve Index"
-      }
+    "autoDetermineSunsetSunrise": "Automatically estimate time",
+    "brightness": {
+      "title": "Change the brightness to"
     },
+    "changeBrightness": {
+      "category": "Brightness",
+      "description": "Adjust your VR headset's brightness value",
+      "title": "Change brightness"
+    },
+    "changeTemperature": {
+      "category": "Color temperature",
+      "description": "Adjust the color temperature of the image shown in your VR headset",
+      "title": "Change color temperature"
+    },
+    "copyBrightness": "Copy current\nbrightness value",
+    "description": "Have OyasumiVR automatically adjust the brightness and/or color temperature of your VR headset at various times, like when you go to sleep, or when you wake up!",
+    "detailsTitle": "Event",
+    "events": "Events",
+    "hardwareBrightness": {
+      "description": "Adjusts the brightness of the display itself",
+      "title": "Change the hardware brightness to"
+    },
+    "miscConfig": "Other options",
     "mode": {
       "advanced": "Advanced Mode",
       "simple": "Simple Mode"
@@ -225,11 +210,27 @@
       "message": "OyasumiVR has two methods of controlling the brightness of your VR headset: Software control and hardware control:\n\nSoftware control is available for every headset. It adjusts the brightness of your VR headset by adjusting the brightness of the image.\n\nHardware control is only available for supported headsets (Valve Index, Bigscreen Beyond). It adjusts the brightness of your headset's display directly within the supported range.\n\nIn simple mode, OyasumiVR will smoothly transition between controlling software and hardware brightness, or just software brightness if hardware brightness is unsupported.\n\nIf you prefer direct control, advanced mode allows you to control both software- and hardware brightness separately from each other, allowing you to set exact brightness values for each.",
       "title": "Brightness Control Mode"
     },
-    "tabs": {
-      "automations": "Automations",
-      "hmdSettings": "HMD Settings"
+    "onHmdConnectInfo": "When you enable both the \"At sunset\" and \"At sunrise\" automations, they will automatically run when you connect your headset, depending on the time of day. If not, the values from the \"When I go to sleep\" and \"When I wake up\" automations will be used instead!",
+    "onlyWhenSleepModeDisabled": {
+      "description": "Only run this automation while the sleep mode is disabled",
+      "title": "Only while sleep mode is disabled"
     },
-    "title": "Brightness Automations"
+    "softwareBrightness": {
+      "description": "Adjusts the brightness of the image shown in your VR headset",
+      "title": "Change the software brightness to"
+    },
+    "temperature": {
+      "title": "Change the color temperature to"
+    },
+    "title": "Brightness Automations",
+    "transition": {
+      "description": "Have the brightness and/or color temperature smoothly transition over time",
+      "title": "Smoothly transition"
+    },
+    "transitionTime": {
+      "description": "How long it should take for the changes to complete",
+      "title": "Transition time"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
@@ -248,14 +249,15 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "Brightness Automations",
       "brightness": "Brightness",
       "hardwareBrightness": "Hardware Brightness",
       "softwareBrightness": "Software Brightness"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyond Automations",
       "fanSpeed": "Fan Speed"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "Color Temperature"
     },
     "color-picker-modal": {
       "title": "Pick Colour"
@@ -311,6 +313,7 @@
       "resolutionAutomations": "Resolution Automations",
       "settings": {
         "advanced": "Advanced Settings",
+        "brightnessCct": "Brightness & CCT Settings",
         "general": "General Settings",
         "hotkeys": "Hotkey Settings",
         "integrations": "Integrations",
@@ -338,7 +341,13 @@
         "description": "Ignored basestations will be hidden and are not affected by any automations",
         "title": "Ignore Basestation"
       },
-      "title": "Edit Device: {deviceId}"
+      "title": "Edit Device: {deviceId}",
+      "v1Identifier": {
+        "change": "Change ID",
+        "description": "OyasumiVR needs to know the ID of a V1 base station in order to control it",
+        "set": "Set ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -348,6 +357,7 @@
         "other": "Others"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -423,6 +433,17 @@
           },
           "title": "Bigscreen Beyond RGB Led set to {color}"
         },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Headset color temperature set to {icon} {temperature}K",
+            "transition": "Headset color temperature transitioning to {icon} {temperature}K"
+          }
+        },
         "changedAudioDeviceVolume": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -483,8 +504,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -601,8 +622,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -655,8 +676,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
@@ -722,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "Events related to controlling microphones and other audio devices",
+          "title": "Audio Control"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "Events related to controlling the brightness and color temperature of your VR headset",
+          "title": "Brightness & CCT"
+        },
+        "BSB_CONTROL": {
+          "description": "Events related to controlling the Bigscreen Beyond",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "Events related to turning on and off devices such as trackers, controllers and base stations",
+          "title": "Device Power"
+        },
+        "GPU_CONTROL": {
+          "description": "Events related to controlling aspects of your graphics card",
+          "title": "GPU Control"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "Events related to the shutdown sequence",
+          "title": "Shutdown Sequence"
+        },
+        "SLEEP_MODE": {
+          "description": "Events related to the sleep mode and sleep detection",
+          "title": "Sleep Mode"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "Events related to changes in SteamVR settings, such as render resolution and fade distance",
+          "title": "SteamVR Settings"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "Events related to OyasumiVR changing your VRChat avatar",
+          "title": "VRChat Avatar"
+        },
+        "VRCHAT_INVITES": {
+          "description": "Events related to VRChat invites and invite requests",
+          "title": "VRChat Invite Requests"
+        },
+        "VRCHAT_STATUS": {
+          "description": "Events related to changes in your VRChat status",
+          "title": "VRChat Status"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Events related to changes in the Windows power policy",
+          "title": "Windows Power Policy"
+        }
+      },
+      "selectAll": "Select All",
+      "selectDescription": "Select the types of entries you want to see in the event log",
+      "selectNone": "Select None",
+      "title": "Filter Event Logs"
+    },
     "event-log": {
       "clearLog": "Clear",
       "clearLogModal": {
@@ -729,6 +806,7 @@
         "title": "Confirm clear"
       },
       "no-logs": "No events have been logged yet.\nLogs are kept for at most 48 hours.",
+      "openFilters": "Filter Events",
       "show-more": "Show More",
       "title": "Events"
     },
@@ -749,6 +827,46 @@
     "hotkey-selector": {
       "select": "Set Hotkey"
     },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "Detecting identifier...",
+        "instructions": "If no identifier can be detected automatically, please input the identifier manually instead.",
+        "steps": {
+          "connectDevice": "Connect tracked device",
+          "connectDeviceDesc": "Connect a lighthouse tracked headset, controller, or tracker...",
+          "detectBasestation": "Detect base station",
+          "detectBasestationDesc": "Make sure a headset, controller, or tracker can see the base station",
+          "deviceDetected": "Device detected",
+          "running": "Running",
+          "startSteamVR": "Start SteamVR",
+          "waitingForSteamVR": "Waiting for SteamVR to start..."
+        }
+      },
+      "detectAutomatically": "Detect Automatically",
+      "inputManually": "Input Manually",
+      "intro": {
+        "message": "OyasumiVR needs to know your base station's identifier to control it."
+      },
+      "manualInput": {
+        "formatDescription": "The identifier is 8 characters long, and consists of numbers 0-9 and letters A-F.",
+        "message": "You can find the identifier on the back of your base station."
+      },
+      "success": {
+        "subtitle": "You can now control your base station!",
+        "title": "Identifier Set"
+      },
+      "title": "Identifier Required",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "Your lighthouse ID could not be automatically detected. Please enter it manually.",
+          "invalidId": "The submitted lighthouse ID is likely invalid.\nPlease double check the code on the back of your device.",
+          "verificationFailed": "The lighthouse ID could not be verified. Please check if your base station is plugged in and within range of your PC."
+        },
+        "idAutodetected": "Possible identifier detected",
+        "verifying": "Verifying ID"
+      },
+      "verifyIdAction": "Verify ID"
+    },
     "main-status-bar": {
       "active": "Active",
       "brightness": {
@@ -758,6 +876,10 @@
       "bsbFanSpeed": {
         "label": "Fan Speed",
         "tooltip": "Bigscreen Beyond Fan Speed"
+      },
+      "cctControl": {
+        "label": "CCT",
+        "tooltip": "Color Temperature Control"
       },
       "heartrate": "Heart Rate",
       "inactive": "Inactive",
@@ -1122,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
+    "GORONE_LEGACY_PRESET_WARNING": "Versions v4.0 and up of this prefab already contain turning functionality, and are not compatible with this preset. This preset is still available if your avatar uses older versions of this prefab.",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
+        "title": "Warning"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "Please note that display color temperature control is only available with certain native SteamVR headsets, e.g. the Valve Index, Bigscreen Beyond, or HTC Vive (Pro).\n\nIf you do not use one of these headsets, this feature likely will have no effect for you.\n\nYou can disable display color temperature control in the settings if you want to.",
+        "title": "Feature Availability"
+      },
+      "acknowledge": "I understand"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "A valid OSC address must always start with a '/' symbol.",
       "addressNotASCII": "A valid OSC address must only contain ASCII characters.",
@@ -1133,8 +1267,8 @@
       "floatTooPrecise": "The value can only have a precision of 3 decimals maximum.",
       "intOutOfBounds": "The value must be a valid integer between 0 and 255.",
       "invalidSyntax": "Invalid syntax.",
-      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "maxParameterCountExceeded": "Maximum allowed parameter count per command is {value}.",
+      "noFloatMilliseconds": "Millisecond values have to be defined as a whole number.",
       "stringTooLong": "String value must not exceed {value} character limit.",
       "tooManyCommands": "An OSC script cannot have more than {value} actions.",
       "totalDurationTooLong": "The total script duration cannot exceed 10 seconds."
@@ -1233,6 +1367,13 @@
           "title": "Foot Lock"
         },
         "general": {
+          "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "Enable this if you want to use avatar animations after OyasumiVR has turned off your full body trackers. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">What is this and why is it needed?</a>",
+              "title": "Workaround for using avatar animations with FBT"
+            },
+            "title": "Advanced Options"
+          },
           "footLock": {
             "description": "A foot lock commonly prevents the player from moving or rotating when it is enabled.",
             "title": "Foot Lock"
@@ -1270,6 +1411,7 @@
       "simple": "Brightness",
       "software": "Software Brightness"
     },
+    "colorTemp": "Color Temperature",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1317,7 +1459,11 @@
           "automations": "Automations",
           "deviceControl": "Device Control",
           "prepareForSleep": "Prepare for sleep",
-          "shutdown": "Shutdown Sequence"
+          "shutdown": "Shutdown Sequence",
+          "sliderMode": {
+            "BRIGHTNESS": "Brightness Control",
+            "COLOR_TEMP": "Color Temperature Control"
+          }
         }
       },
       "shutdownSequence": {
@@ -1619,6 +1765,41 @@
         "title": "Language & Translation"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "Force the fan to 100% at brightness values above 100%",
+          "title": "Overdrive fan safety",
+          "warning": "This feature mimics the safe fan parameters of the official Bigscreen Beyond driver. Only disable this functionality at your own risk."
+        },
+        "maxBrightness": {
+          "description": "Limit the maximum brightness value that OyasumiVR will set.",
+          "title": "Maximum Brightness"
+        },
+        "permitRiskRange": {
+          "description": "Prevents you from setting the brightness above 150%",
+          "title": "Limit to safe brightness levels",
+          "warning": "This feature is not supported by the manufacturer.\n\nPlease be aware this might damage your headset: Only disable this functionality at your own risk."
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "enabled": {
+          "description": "Disable this if you use other applications to control your display's color temperature (e.g. LuxVR or OVR Advanced Settings)",
+          "title": "Enable color temperature control"
+        },
+        "title": "Color Temperature"
+      },
+      "description": "Here you'll find any settings related to brightness and color temperature.",
+      "title": "Brightness & CCT",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "Limit the maximum brightness value that OyasumiVR will set.",
+          "title": "Maximum Brightness"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVR needs administrator privileges to be able to control your GPU's power limits. If you enable this, OyasumiVR will ask for administrator privileges when it starts up.",
@@ -1659,7 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires bluetooth, and supports V2 base stations only.",
+          "description": "If enabled, you will be able to power your base stations off and on using OyasumiVR. Requires your PC to have bluetooth enabled.",
           "title": "Enable power control"
         },
         "powerOffMode": {
@@ -1855,6 +2036,7 @@
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
+      "back": "Back",
       "cancel": "Cancel",
       "close": "Close",
       "confirm": "Confirm",
@@ -1946,6 +2128,10 @@
       "whenAloneDuration": {
         "description": "How long you need to have been alone for before the shutdown sequence runs",
         "title": "Duration threshold"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "Only trigger the shutdown sequence this way while the sleep mode is enabled",
+        "title": "Only while I'm asleep"
       },
       "whenAloneTimeWindow": {
         "description": "Only allow shutdown to trigger between certain hours of day",

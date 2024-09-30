@@ -10,7 +10,7 @@ import { VarDirective } from './directives/var.directive';
 import { AboutViewComponent } from './views/dashboard-view/views/about-view/about-view.component';
 import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { OverviewViewComponent } from './views/dashboard-view/views/overview-view/overview-view.component';
 import { SleepModeEnableOnControllersPoweredOffAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-on-controllers-powered-off-automation.service';
 import { SleepModeEnableAtBatteryPercentageAutomationService } from './services/sleep-detection-automations/sleep-mode-enable-at-battery-percentage-automation.service';
@@ -72,7 +72,7 @@ import { SliderComponent } from './components/slider/slider.component';
 import { EventLogService } from './services/event-log.service';
 import { debug, error, info, warn } from 'tauri-plugin-log-api';
 import { EventLogComponent } from './components/event-log/event-log.component';
-import { EventLogEntryComponent } from './components/event-log-entry/event-log-entry.component';
+import { EventLogEntryComponent } from './components/event-log/event-log-entry/event-log-entry.component';
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
 import localeEN from '@angular/common/locales/en';
 import localeFR from '@angular/common/locales/fr';
@@ -84,6 +84,7 @@ import localeES from '@angular/common/locales/es';
 import localeID from '@angular/common/locales/id';
 import localeRU from '@angular/common/locales/ru';
 import localeUK from '@angular/common/locales/uk';
+import localeDE from '@angular/common/locales/de';
 import { ResolutionAutomationsViewComponent } from './views/dashboard-view/views/resolution-automations-view/resolution-automations-view.component';
 import { RenderResolutionAutomationService } from './services/render-resolution-automation.service';
 import { ChaperoneFadeDistanceAutomationService } from './services/fade-distance-automation.service';
@@ -109,7 +110,7 @@ import { ShutdownAutomationsViewComponent } from './views/dashboard-view/views/s
 import { ShutdownAutomationsService } from './services/shutdown-automations.service';
 import { ShutdownSequenceOverlayComponent } from './components/shutdown-sequence-overlay/shutdown-sequence-overlay.component';
 import { SoftwareBrightnessControlService } from './services/brightness-control/software-brightness-control.service';
-import { BrightnessControlAutomationService } from './services/brightness-control/brightness-control-automation.service';
+import { BrightnessCctAutomationService } from './services/brightness-cct-automation.service';
 import { DeveloperDebugModalComponent } from './components/developer-debug-modal/developer-debug-modal.component';
 import { DeveloperDebugService } from './services/developer-debug/developer-debug.service';
 import { MomentModule } from 'ngx-moment';
@@ -121,7 +122,6 @@ import { NotificationService } from './services/notification.service';
 import { WindowsPowerPolicyTabComponent } from './views/dashboard-view/views/power-automations-view/tabs/windows-power-policy-tab/windows-power-policy-tab.component';
 import { SetWindowsPowerPolicyOnSleepModeAutomationService } from './services/power-automations/set-windows-power-policy-on-sleep-mode-automation.service';
 import { SteamService } from './services/steam.service';
-import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-automations-tab/brightness-automations-tab.component';
 import { TooltipDirective } from './directives/tooltip.directive';
 import { SimpleBrightnessControlService } from './services/brightness-control/simple-brightness-control.service';
 import { DebugSleepDetectionDebuggerComponent } from './components/developer-debug-modal/debug-sleep-detection-debugger/debug-sleep-detection-debugger.component';
@@ -139,7 +139,6 @@ import { VRChatMicMuteAutomationService } from './services/osc-automations/vrcha
 import { MiscTestingComponent } from './components/developer-debug-modal/misc-testing/misc-testing.component';
 import { VRChatMicMuteAutomationsViewComponent } from './views/dashboard-view/views/vrchat-mic-mute-automations-view/vrchat-mic-mute-automations-view.component';
 import { TurnOffDevicesOnBatteryLevelAutomationService } from './services/power-automations/turn-off-devices-on-battery-level-automation.service';
-import { DebugAudioDeviceDebuggerComponent } from './components/developer-debug-modal/debug-audio-device-debugger/debug-audio-device-debugger.component';
 import { AudioDeviceService } from './services/audio-device.service';
 import { SystemMicMuteAutomationsViewComponent } from './views/dashboard-view/views/system-mic-mute-automations-view/system-mic-mute-automations-view.component';
 import { SystemMicMuteAutomationService } from './services/system-mic-mute-automation.service';
@@ -175,7 +174,6 @@ import { ask } from '@tauri-apps/api/dialog';
 import { exit } from '@tauri-apps/api/process';
 import { OscControlService } from './services/osc-control/osc-control.service';
 import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
-import { BrightnessHmdSettingsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/brightness-hmd-settings-tab/brightness-hmd-settings-tab.component';
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
 import { HmdAutomationsBigscreenBeyondTabComponent } from './views/dashboard-view/views/hmd-automations-view/tabs/hmd-automations-bigscreen-beyond-tab/hmd-automations-bigscreen-beyond-tab.component';
 import { ColorPickerComponent } from './components/color-picker/color-picker.component';
@@ -222,6 +220,20 @@ import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/vie
 import { VrcAvatarSelectButtonComponent } from './components/vrc-avatar-select-button/vrc-avatar-select-button.component';
 import { VrcAvatarSelectModalComponent } from './components/vrc-avatar-select-modal/vrc-avatar-select-modal.component';
 import { VRChatAvatarAutomationsService } from './services/vrchat-avatar-automations.service';
+import { BrightnessAutomationsTabComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-tab.component';
+import { BrightnessAutomationConfigLabelComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-config-label/brightness-automation-config-label.component';
+import { BrightnessAutomationsListComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automations-list/brightness-automations-list.component';
+import { BrightnessAutomationDetailsComponent } from './views/dashboard-view/views/brightness-automations-view/tabs/new-brightness-automations-tab/brightness-automation-details/brightness-automation-details.component';
+import { DurationInputSettingComponent } from './components/duration-input-setting/duration-input-setting.component';
+import { CCTControlService } from './services/cct-control/cct-control.service';
+import { CCTControlModalComponent } from './components/cct-control-modal/cct-control-modal.component';
+import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
+import { CCTInputSettingComponent } from './components/cct-input-setting/cct-input-setting.component';
+import { BrightnessAdvancedModeToggleComponent } from './components/brightness-advanced-mode-toggle/brightness-advanced-mode-toggle.component';
+import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-avatar-reload-workaround.service';
+import { AvatarContextService } from './services/avatar-context.service';
+import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
+import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
 
 [
   localeEN,
@@ -234,6 +246,7 @@ import { VRChatAvatarAutomationsService } from './services/vrchat-avatar-automat
   localeID,
   localeRU,
   localeUK,
+  localeDE,
 ].forEach((locale) => registerLocaleData(locale));
 
 export function createTranslateLoader(http: HttpClient) {
@@ -293,7 +306,6 @@ export function createTranslateLoader(http: HttpClient) {
     GpuPowerlimitingPaneComponent,
     MsiAfterburnerPaneComponent,
     BrightnessAutomationsViewComponent,
-    BrightnessAutomationsTabComponent,
     SliderSettingComponent,
     SliderComponent,
     EventLogComponent,
@@ -320,7 +332,6 @@ export function createTranslateLoader(http: HttpClient) {
     StartWithSteamVRHowToModalComponent,
     MiscTestingComponent,
     VRChatMicMuteAutomationsViewComponent,
-    DebugAudioDeviceDebuggerComponent,
     SystemMicMuteAutomationsViewComponent,
     ControllerBindingComponent,
     TranslationLoaderViewComponent,
@@ -336,7 +347,6 @@ export function createTranslateLoader(http: HttpClient) {
     HotkeySelectorModalComponent,
     SettingsStatusInfoViewComponent,
     SnowverlayComponent,
-    BrightnessHmdSettingsTabComponent,
     HmdAutomationsViewComponent,
     HmdAutomationsBigscreenBeyondTabComponent,
     ColorPickerComponent,
@@ -358,13 +368,24 @@ export function createTranslateLoader(http: HttpClient) {
     VRChatAvatarAutomationsViewComponent,
     VrcAvatarSelectButtonComponent,
     VrcAvatarSelectModalComponent,
+    BrightnessAutomationsTabComponent,
+    BrightnessAutomationConfigLabelComponent,
+    BrightnessAutomationsListComponent,
+    BrightnessAutomationDetailsComponent,
+    DurationInputSettingComponent,
+    CCTInputSettingComponent,
+    CCTControlModalComponent,
+    SettingsBrightnessCctViewComponent,
+    BrightnessAdvancedModeToggleComponent,
+    LighthouseV1IdWizardModalComponent,
+    EventLogFilterDialogComponent,
   ],
+  exports: [SelectBoxComponent],
   imports: [
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule,
     MomentModule,
     TranslateModule.forRoot({
       defaultLanguage: 'en',
@@ -381,8 +402,7 @@ export function createTranslateLoader(http: HttpClient) {
     NgPipesModule,
     FormsModule,
   ],
-  providers: [ThemeService, TStringTranslatePipe],
-  exports: [SelectBoxComponent],
+  providers: [ThemeService, TStringTranslatePipe, provideHttpClient(withInterceptorsFromDi())],
 })
 export class AppModule {
   constructor(
@@ -428,6 +448,7 @@ export class AppModule {
     private mqttService: MqttService,
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
+    private avatarContextService: AvatarContextService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -461,7 +482,8 @@ export class AppModule {
     // Shutdown automations
     private shutdownAutomationsService: ShutdownAutomationsService,
     // Brightness control automations
-    private brightnessControlAutomationService: BrightnessControlAutomationService,
+    private brightnessControlAutomationService: BrightnessCctAutomationService,
+    private cctControlService: CCTControlService,
     // Render resolution automations
     private renderResolutionAutomationService: RenderResolutionAutomationService,
     // Chaperone fade dinstance automations
@@ -475,7 +497,9 @@ export class AppModule {
     private nightmareDetectionAutomationService: NightmareDetectionAutomationService,
     private bigscreenBeyondLedAutomationService: BigscreenBeyondLedAutomationService,
     private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService,
-    private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService
+    private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService,
+    // Hotfixes
+    private fbtAvatarReloadWorkaroundService: FBTAvatarReloadWorkaroundService
   ) {
     this.init();
   }
@@ -534,9 +558,16 @@ export class AppModule {
           // Initialize "base" services
           await Promise.all([
             this.logInit('OpenVRService initialization', this.openvrService.init()),
-            this.logInit('OscService initialization', this.oscService.init()).then(() =>
-              this.logInit('OscControlService initialization', this.oscControlService.init())
-            ),
+            this.logInit('OscService initialization', this.oscService.init())
+              .then(() =>
+                this.logInit('OscControlService initialization', this.oscControlService.init())
+              )
+              .then(() =>
+                this.logInit(
+                  'AvatarContextService initialization',
+                  this.avatarContextService.init()
+                )
+              ),
             this.logInit('SleepService initialization', this.sleepService.init()),
             this.logInit('VRChatService initialization', this.vrchatService.init()),
             this.logInit('VRChatLogService initialization', this.vrchatLogService.init()),
@@ -592,6 +623,7 @@ export class AppModule {
             ),
             // Initialize Brightness Control
             await Promise.all([
+              this.logInit('CCTControlService initialization', this.cctControlService.init()),
               this.logInit(
                 'HardwareBrightnessControlService initialization',
                 this.hardwareBrightnessControlService.init()
@@ -762,6 +794,10 @@ export class AppModule {
             this.logInit(
               'VRChatAvatarAutomationsService initialization',
               this.vrchatAvatarAutomationsService.init()
+            ),
+            this.logInit(
+              'FBTAvatarReloadHotfixService initialization',
+              this.fbtAvatarReloadWorkaroundService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);

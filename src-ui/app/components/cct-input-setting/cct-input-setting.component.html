@@ -1,0 +1,28 @@
+<div class="wrapper" (clickOutside)="inputOpen = false">
+  <input
+    type="text"
+    [value]="displayValue()"
+    readonly
+    (mouseenter)="mouseEnter('INPUT')"
+    (mouseleave)="mouseLeave('INPUT')"
+    [disabled]="disabled"
+    [style.background-color]="cctColor"
+  />
+  <div
+    class="input-container"
+    *ngIf="inputOpen"
+    @fade
+    (mouseenter)="mouseEnter('CONTAINER')"
+    (mouseleave)="mouseLeave('CONTAINER')"
+  >
+    <app-slider
+      [min]="1000"
+      [max]="10000"
+      [snapValues]="[6600]"
+      [snapDistance]="200"
+      [value]="value()"
+      [step]="50"
+      (valueChange)="updateValue($event)"
+    ></app-slider>
+  </div>
+</div>

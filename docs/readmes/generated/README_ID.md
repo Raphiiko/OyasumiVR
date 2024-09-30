@@ -178,9 +178,7 @@ Hemat listrik dengan mengatur Kebijakan Daya Windows secara otomatis saat Anda t
     <td>
 <b>Base Station</b>
 <br>
-Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya.
-<br><br>
-<i>Saat ini hanya V2 Lighthouse yang didukung.</i> 
+Mintalah OyasumiVR untuk menghidupkan dan mematikan base station Anda bersama dengan SteamVR. Sedikit mirip dengan manajemen daya stasiun pangkalan SteamVR sendiri, tetapi <b>kompatibel dengan HMD apa pun!</b> Selama PC Anda mendukung Bluetooth dan berada dalam jangkauan base station, Anda siap menggunakannya. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
@@ -235,8 +233,8 @@ Terdapat preset bawaan untuk aset locomotion yang populer, termasuk:
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <br><a href="https://booth.pm/en/items/4233545">EX version</a> also supported!
   </li>
   <li>
@@ -547,6 +545,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

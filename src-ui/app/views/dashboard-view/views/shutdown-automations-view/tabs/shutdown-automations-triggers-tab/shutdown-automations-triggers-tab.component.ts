@@ -22,8 +22,6 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
   protected onSleepActivationWindowEnd = '00:00';
   protected whenAloneActivationWindowStart = '00:00';
   protected whenAloneActivationWindowEnd = '00:00';
-  protected onSleepDurationString = '00:00:00';
-  protected whenAloneDurationString = '00:00:00';
 
   constructor(private automationConfigs: AutomationConfigService, private destroyRef: DestroyRef) {}
 
@@ -32,14 +30,12 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((configs) => {
         this.config = configs.SHUTDOWN_AUTOMATIONS;
-        this.onSleepDurationString = this.durationToString(this.config.triggerOnSleepDuration);
         this.onSleepActivationWindowStart = this.config.triggerOnSleepActivationWindowStart
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
         this.onSleepActivationWindowEnd = this.config.triggerOnSleepActivationWindowEnd
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
-        this.whenAloneDurationString = this.durationToString(this.config.triggerWhenAloneDuration);
         this.whenAloneActivationWindowStart = this.config.triggerWhenAloneActivationWindowStart
           .map((v) => v.toString().padStart(2, '0'))
           .join(':');
@@ -75,12 +71,7 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
-  async onSleepDurationChange(value: string) {
-    let [hours, minutes, seconds] = value.split(':').map((v) => parseInt(v));
-    if (isNaN(hours)) hours = 0;
-    if (isNaN(minutes)) minutes = 0;
-    if (isNaN(seconds)) seconds = 0;
-    const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+  async onSleepDurationChange(duration: number) {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
@@ -89,12 +80,7 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
     );
   }
 
-  async whenAloneDurationChange(value: string) {
-    let [hours, minutes, seconds] = value.split(':').map((v) => parseInt(v));
-    if (isNaN(hours)) hours = 0;
-    if (isNaN(minutes)) minutes = 0;
-    if (isNaN(seconds)) seconds = 0;
-    const duration = (hours * 3600 + minutes * 60 + seconds) * 1000;
+  async whenAloneDurationChange(duration: number) {
     await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
       'SHUTDOWN_AUTOMATIONS',
       {
@@ -164,6 +150,16 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
       'SHUTDOWN_AUTOMATIONS',
       {
         triggerWhenAlone: !this.config.triggerWhenAlone,
+      }
+    );
+  }
+
+  async toggleTriggerWhenAloneOnlyWhenSleepModeActive() {
+    await this.automationConfigs.updateAutomationConfig<ShutdownAutomationsConfig>(
+      'SHUTDOWN_AUTOMATIONS',
+      {
+        triggerWhenAloneOnlyWhenSleepModeActive:
+          !this.config.triggerWhenAloneOnlyWhenSleepModeActive,
       }
     );
   }

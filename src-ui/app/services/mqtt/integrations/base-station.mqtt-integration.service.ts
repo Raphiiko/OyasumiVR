@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
 import { LighthouseService } from '../../lighthouse.service';
-import { concatMap, filter, pairwise, startWith, Subject, takeUntil } from 'rxjs';
+import { concatMap, filter, map, pairwise, startWith, Subject, takeUntil } from 'rxjs';
 import { LighthouseDevice } from '../../../models/lighthouse-device';
 import { MqttDiscoveryConfigDevice, MqttToggleProperty } from '../../../models/mqtt';
 
@@ -30,6 +30,7 @@ export class BaseStationMqttIntegrationService {
     this.lighthouseService.devices
       .pipe(
         startWith([] as LighthouseDevice[]),
+        map((devices) => devices.filter((d) => this.lighthouseService.deviceNeedsIdentifier(d))),
         pairwise(),
         concatMap(async ([prevDevices, devices]) => {
           await this.handleDeviceChanges(prevDevices, devices);

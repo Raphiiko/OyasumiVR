@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { fadeUp, vshrink } from '../../utils/animations';
+import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
 import { ModalOptions } from '../../services/modal.service';
 import { AutomationConfigService } from '../../services/automation-config.service';
@@ -12,7 +12,7 @@ import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific
   selector: 'app-bsb-fan-speed-control-modal',
   templateUrl: './bsb-fan-speed-control-modal.component.html',
   styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
-  animations: [fadeUp(), vshrink()],
+  animations: [fadeUp(), vshrink(), hshrink()],
 })
 export class BSBFanSpeedControlModalComponent
   extends BaseModalComponent<void, void>
@@ -51,5 +51,14 @@ export class BSBFanSpeedControlModalComponent
     return {
       wrapperDefaultClass: 'modal-wrapper-brightness-control',
     };
+  }
+
+  protected isActive(path: string) {
+    return this.router.isActive(path, {
+      paths: 'subset',
+      queryParams: 'subset',
+      fragment: 'ignored',
+      matrixParams: 'ignored',
+    });
   }
 }

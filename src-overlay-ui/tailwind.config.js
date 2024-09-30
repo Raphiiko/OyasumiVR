@@ -1,10 +1,9 @@
 /** @type {import("tailwindcss").Config} */
 export default {
-  mode: "jit",
-  purge: ["./src/**/*.svelte"],
-  theme: {
-    extend: {}
-  },
-  plugins: []
+	mode: 'jit',
+	purge: ['./src/**/*.svelte'],
+	theme: {
+		extend: {}
+	},
+	plugins: [require('tailwindcss-multi')]
 };
-

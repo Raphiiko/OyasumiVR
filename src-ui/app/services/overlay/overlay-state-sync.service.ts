@@ -40,6 +40,7 @@ import { HardwareBrightnessControlService } from '../brightness-control/hardware
 import { SoftwareBrightnessControlService } from '../brightness-control/software-brightness-control.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { SystemMicMuteAutomationService } from '../system-mic-mute-automation.service';
+import { CCTControlService } from '../cct-control/cct-control.service';
 
 @Injectable({
   providedIn: 'root',
@@ -99,7 +100,7 @@ export class OverlayStateSyncService {
       ),
     },
     brightnessState: {
-      advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled,
+      advancedMode: AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.advancedMode,
       brightness: 100,
       hardwareBrightness: 100,
       softwareBrightness: 100,
@@ -113,6 +114,14 @@ export class OverlayStateSyncService {
       hardwareMinBrightness: 20,
       hardwareMaxBrightness: 160,
     },
+    cctState: {
+      enabled: APP_SETTINGS_DEFAULT.cctControlEnabled,
+      value: 6600,
+      min: 1000,
+      max: 10000,
+      transitioning: false,
+      transitionTarget: 6600,
+    },
     sleepPreparationAvailable: false,
     sleepPreparationTimedOut: false,
     systemMicMuted: false,
@@ -123,6 +132,7 @@ export class OverlayStateSyncService {
     private vrchatService: VRChatService,
     private ipcService: IPCService,
     private automationConfig: AutomationConfigService,
+    private cctService: CCTControlService,
     private appSettings: AppSettingsService,
     private shutdownAutomationsService: ShutdownAutomationsService,
     private openvr: OpenVRService,
@@ -143,6 +153,7 @@ export class OverlayStateSyncService {
     this.updateState_WhenOVRDevicesChange();
     this.updateState_WhenAppSettingsChange();
     this.updateState_WhenBrightnessStateChanges();
+    this.updateState_WhenCCTStateChanges();
     this.updateState_WhenSleepPreparationStateChanges();
     this.updateState_WhenSystemMicMuteStateChanges();
   }
@@ -201,7 +212,7 @@ export class OverlayStateSyncService {
             'SLEEPING_ANIMATIONS',
             'SHUTDOWN_AUTOMATIONS',
             'SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR',
-            'BRIGHTNESS_CONTROL_ADVANCED_MODE',
+            'BRIGHTNESS_AUTOMATIONS',
             'SYSTEM_MIC_MUTE_AUTOMATIONS',
           ];
           return configIds.some((configId) => !isEqual(oldConfigs[configId], newConfigs[configId]));
@@ -261,7 +272,7 @@ export class OverlayStateSyncService {
               .length > 0;
         }
         {
-          state.brightnessState!.advancedMode = configs.BRIGHTNESS_CONTROL_ADVANCED_MODE.enabled;
+          state.brightnessState!.advancedMode = configs.BRIGHTNESS_AUTOMATIONS.advancedMode;
         }
         {
           state.settings!.systemMicIndicatorEnabled =
@@ -391,6 +402,30 @@ export class OverlayStateSyncService {
           state.brightnessState!.softwareBrightnessTransitionTarget = transition.targetBrightness;
         this.state.next(state);
       });
+  }
+
+  private updateState_WhenCCTStateChanges() {
+    this.appSettings.settings
+      .pipe(
+        map((settings) => settings.cctControlEnabled),
+        distinctUntilChanged()
+      )
+      .subscribe((enabled) => {
+        const state = structuredClone(this.state.value);
+        state.cctState!.enabled = enabled;
+        this.state.next(state);
+      });
+    this.cctService.cctStream.pipe(distinctUntilChanged()).subscribe((value) => {
+      const state = structuredClone(this.state.value);
+      state.cctState!.value = value;
+      this.state.next(state);
+    });
+    this.cctService.activeTransition.pipe(distinctUntilChanged()).subscribe((transition) => {
+      const state = structuredClone(this.state.value);
+      state.cctState!.transitioning = !!transition;
+      if (transition) state.cctState!.transitionTarget = transition.targetCCT;
+      this.state.next(state);
+    });
   }
 
   private updateState_WhenSleepPreparationStateChanges() {

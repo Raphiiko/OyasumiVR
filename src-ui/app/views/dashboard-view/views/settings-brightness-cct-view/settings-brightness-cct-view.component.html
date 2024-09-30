@@ -1,0 +1,126 @@
+<div class="pane">
+  <div class="pane-title">
+    <span translate>settings.brightnessCct.title</span>
+    <app-brightness-advanced-mode-toggle></app-brightness-advanced-mode-toggle>
+  </div>
+  <div class="pane-content">
+    <div class="setting-view-container">
+      <p translate>settings.brightnessCct.description</p>
+      <div class="setting-category">
+        <h2 translate>settings.brightnessCct.cctControl.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.brightnessCct.cctControl.enabled.title</span>
+              <span translate>settings.brightnessCct.cctControl.enabled.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.cctControlEnabled"
+                  (change)="toggleCCTControl()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-category">
+        <h2 translate>settings.brightnessCct.valveIndex.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.brightnessCct.valveIndex.maxBrightness.title</span>
+              <span translate>settings.brightnessCct.valveIndex.maxBrightness.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="valveIndexMin"
+                [max]="valveIndexMax"
+                [value]="appSettings.valveIndexMaxBrightness"
+                (valueChange)="changeValveIndexMaxBrightness($event)"
+                unit="%"
+              ></app-slider-setting>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="setting-category">
+        <h2 translate>settings.brightnessCct.bigscreenBeyond.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.brightnessCct.bigscreenBeyond.maxBrightness.title</span>
+              <span translate>settings.brightnessCct.bigscreenBeyond.maxBrightness.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="bigscreenBeyondMin"
+                [max]="bigscreenBeyondMax"
+                [value]="appSettings.bigscreenBeyondMaxBrightness"
+                (valueChange)="changeBigscreenBeyondMaxBrightness($event)"
+                unit="%"
+              ></app-slider-setting>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+            <span class="row-title">
+              <span translate>settings.brightnessCct.bigscreenBeyond.permitRiskRange.title</span>
+              <span
+                class="experimental-flag"
+                [tooltip]="'settings.brightnessCct.bigscreenBeyond.permitRiskRange.warning'"
+                [tooltipMode]="'right'"
+              >
+                <i class="material-icons">warning</i>
+              </span>
+            </span>
+              <span translate
+              >settings.brightnessCct.bigscreenBeyond.permitRiskRange.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="!appSettings.bigscreenBeyondUnsafeBrightness"
+                  (change)="toggleBigscreenBeyondUnsafeBrightness()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+            <span class="row-title">
+              <span translate>settings.brightnessCct.bigscreenBeyond.forceFanSafety.title</span>
+              <span
+                class="experimental-flag"
+                [tooltip]="'settings.brightnessCct.bigscreenBeyond.forceFanSafety.warning'"
+                [tooltipMode]="'right'"
+              >
+                <i class="material-icons">warning</i>
+              </span>
+            </span>
+              <span translate>settings.brightnessCct.bigscreenBeyond.forceFanSafety.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="appSettings.bigscreenBeyondBrightnessFanSafety"
+                  (change)="toggleBigscreenBeyondForceFanBrightnessSafety()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

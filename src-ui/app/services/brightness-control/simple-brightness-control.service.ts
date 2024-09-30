@@ -17,7 +17,10 @@ import { HardwareBrightnessControlService } from './hardware-brightness-control.
 import { SoftwareBrightnessControlService } from './software-brightness-control.service';
 import { lerp } from '../../utils/number-utils';
 import { clamp } from 'lodash';
-import { SET_BRIGHTNESS_OPTIONS_DEFAULTS, SetBrightnessOptions } from './brightness-control-models';
+import {
+  SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
+  SetBrightnessOrCCTOptions,
+} from './brightness-control-models';
 import { listen } from '@tauri-apps/api/event';
 
 @Injectable({
@@ -50,8 +53,8 @@ export class SimpleBrightnessControlService {
     // Set brightness when switching to simple mode
     this.automationConfigService.configs
       .pipe(
-        map((configs) => configs.BRIGHTNESS_CONTROL_ADVANCED_MODE),
-        tap((config) => this._advancedMode.next(config.enabled)),
+        map((configs) => configs.BRIGHTNESS_AUTOMATIONS),
+        tap((config) => this._advancedMode.next(config.advancedMode)),
         skip(1)
       )
       .subscribe(async (advancedMode) => {
@@ -84,9 +87,9 @@ export class SimpleBrightnessControlService {
   transitionBrightness(
     percentage: number,
     duration: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ): CancellableTask {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     if (this._brightness.value === percentage) {
       const task = new CancellableTask();
       task.start();
@@ -127,9 +130,9 @@ export class SimpleBrightnessControlService {
 
   async setBrightness(
     percentage: number,
-    options: Partial<SetBrightnessOptions> = SET_BRIGHTNESS_OPTIONS_DEFAULTS
+    options: Partial<SetBrightnessOrCCTOptions> = SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS
   ) {
-    const opt = { ...SET_BRIGHTNESS_OPTIONS_DEFAULTS, ...(options ?? {}) };
+    const opt = { ...SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS, ...(options ?? {}) };
     percentage = clamp(percentage, 0, 100);
     if (opt.cancelActiveTransition) this.cancelActiveTransition();
     this._brightness.next(percentage);

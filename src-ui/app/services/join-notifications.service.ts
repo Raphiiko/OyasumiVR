@@ -11,6 +11,7 @@ import { VRChatService } from './vrchat.service';
 import { NotificationService } from './notification.service';
 import {
   concatMap,
+  delay,
   distinctUntilChanged,
   filter,
   firstValueFrom,
@@ -102,7 +103,7 @@ export class JoinNotificationsService {
     this.vrchat.world
       .pipe(
         skip(1),
-        distinctUntilChanged((a, b) => a.instanceId === b.instanceId)
+        distinctUntilChanged((a, b) => a.instanceId === b.instanceId && a.loaded === b.loaded)
       )
       .subscribe(() => {
         this.queuedNotifications = [];
@@ -116,6 +117,7 @@ export class JoinNotificationsService {
           this.queuedNotifications.push(notificationId);
           return val;
         }),
+        delay(500), // Allows queued notifications to be cancelled before they fire in case of a world change
         concatMap(async (val) => {
           // Skip if it's ID is not queued
           if (!this.queuedNotifications.includes(val.id ?? '')) return;
@@ -132,7 +134,7 @@ export class JoinNotificationsService {
           // Send sound
           if (val.sound) {
             await this.notification.playSound(
-              'notification_reverie',
+              'material_alarm_gentle_short_1',
               this.config.joinSoundVolume / 100
             );
           }

@@ -1,30 +1,35 @@
 <div class="pane main">
   <div class="pane-title" translate>audio-volume-automations.title</div>
   <div class="pane-content">
-    <p translate>audio-volume-automations.description</p>
-    <div class="setting-category">
-      <h3 translate>audio-volume-automations.onSleepEnable.title</h3>
-      <p translate>audio-volume-automations.onSleepEnable.description</p>
-      <app-audio-volume-entries
-        [automations]="config.onSleepEnableAutomations"
-        (automationsChange)="onAutomationsChange('onSleepEnable', $event)"
-      ></app-audio-volume-entries>
-    </div>
-    <div class="setting-category">
-      <h3 translate>audio-volume-automations.onSleepDisable.title</h3>
-      <p translate>audio-volume-automations.onSleepDisable.description</p>
-      <app-audio-volume-entries
-        [automations]="config.onSleepDisableAutomations"
-        (automationsChange)="onAutomationsChange('onSleepDisable', $event)"
-      ></app-audio-volume-entries>
-    </div>
-    <div class="setting-category">
-      <h3 translate>audio-volume-automations.onSleepPreparation.title</h3>
-      <p translate>audio-volume-automations.onSleepPreparation.description</p>
-      <app-audio-volume-entries
-        [automations]="config.onSleepPreparationAutomations"
-        (automationsChange)="onAutomationsChange('onSleepPreparation', $event)"
-      ></app-audio-volume-entries>
+    <div class="setting-view-container">
+      <p translate>audio-volume-automations.description</p>
+      <div class="setting-category">
+        <h3 translate>audio-volume-automations.onSleepEnable.title</h3>
+        <p translate>audio-volume-automations.onSleepEnable.description</p>
+        <app-audio-volume-entries
+          [automations]="config.onSleepEnableAutomations"
+          (automationsChange)="onAutomationsChange('onSleepEnable', $event)"
+          [automationType]="'onSleepEnable'"
+        ></app-audio-volume-entries>
+      </div>
+      <div class="setting-category">
+        <h3 translate>audio-volume-automations.onSleepDisable.title</h3>
+        <p translate>audio-volume-automations.onSleepDisable.description</p>
+        <app-audio-volume-entries
+          [automations]="config.onSleepDisableAutomations"
+          (automationsChange)="onAutomationsChange('onSleepDisable', $event)"
+          [automationType]="'onSleepDisable'"
+        ></app-audio-volume-entries>
+      </div>
+      <div class="setting-category">
+        <h3 translate>audio-volume-automations.onSleepPreparation.title</h3>
+        <p translate>audio-volume-automations.onSleepPreparation.description</p>
+        <app-audio-volume-entries
+          [automations]="config.onSleepPreparationAutomations"
+          (automationsChange)="onAutomationsChange('onSleepPreparation', $event)"
+          [automationType]="'onSleepPreparation'"
+        ></app-audio-volume-entries>
+      </div>
     </div>
   </div>
 </div>

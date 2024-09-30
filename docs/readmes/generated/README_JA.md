@@ -178,9 +178,7 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
     <td>
 <b>ベースステーション</b>
 <br>
-SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。
-<br><br>
-<i>現在はV2 Lighthouseのみがサポートされています。</i> 
+SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
@@ -235,7 +233,7 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
     <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
     &nbsp;
   </li>
@@ -547,6 +545,7 @@ OyasumiVRは現在、以下の言語に対応しています。
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

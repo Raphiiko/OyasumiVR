@@ -39,12 +39,13 @@
           'gpuAutomations',
           'resolutionAutomations',
           'audioVolumeAutomations',
+          'systemMicMuteAutomations',
           'hmdAutomations'
         ])
       "
     >
       <div class="menu-item-icon-prefix">
-        <img draggable="false" src="/assets/img/vr-cardboard-solid.svg" class="hardware-icon" />
+        <i class="material-symbols-outlined">head_mounted_device</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.hardwareAutomations</div>
       <div class="menu-item-submenu-icon"
@@ -103,6 +104,7 @@
       [class.active]="
         pathIsActive([
           'settings/general',
+          'settings/brightnessCct',
           'settings/vrchat',
           'settings/notifications',
           'settings/hotkeys',
@@ -130,7 +132,7 @@
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'about'">
       <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">info</i>
+        <i class="material-symbols-outlined">info</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.about</div>
     </div>
@@ -227,7 +229,7 @@
       <div
         class="active-effect"
         @fade
-        *ngIf="brightnessAutomation.anyTransitionActive | async"
+        *ngIf="brightnessAutomation.anyBrightnessTransitionActive | async"
       ></div>
     </div>
 
@@ -312,6 +314,17 @@
         <i class="material-icons-round">notification_important</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.notifications</div>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLinkActive]="'active'"
+      [routerLink]="['settings', 'brightnessCct']"
+    >
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">brightness_6</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.settings.brightnessCct</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="['settings', 'hotkeys']">

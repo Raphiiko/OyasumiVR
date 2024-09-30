@@ -44,15 +44,10 @@
           <span translate>shutdown-automations.triggers.whenAsleepDuration.description</span>
         </div>
         <div class="setting-row-action">
-          <div class="input-wrapper">
-            <input
-              type="time"
-              step="1"
-              [value]="onSleepDurationString"
-              (change)="onSleepDurationChange(onSleepDurationInput.value)"
-              #onSleepDurationInput
-            />
-          </div>
+          <app-duration-input-setting
+            [value]="config.triggerOnSleepDuration"
+            (valueChange)="onSleepDurationChange($event)"
+          ></app-duration-input-setting>
         </div>
       </div>
 
@@ -117,15 +112,10 @@
           <span translate>shutdown-automations.triggers.whenAloneDuration.description</span>
         </div>
         <div class="setting-row-action">
-          <div class="input-wrapper">
-            <input
-              type="time"
-              step="1"
-              [value]="whenAloneDurationString"
-              (change)="whenAloneDurationChange(whenAloneDurationInput.value)"
-              #whenAloneDurationInput
-            />
-          </div>
+          <app-duration-input-setting
+            [value]="config.triggerWhenAloneDuration"
+            (valueChange)="whenAloneDurationChange($event)"
+          ></app-duration-input-setting>
         </div>
       </div>
 
@@ -161,6 +151,27 @@
               type="checkbox"
               [checked]="config.triggerWhenAloneActivationWindow"
               (change)="toggleWhenAloneActivationWindow()"
+            />
+            <span class="switch-toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row" [class.disabled]="!config.triggerWhenAlone">
+        <div class="setting-row-label" translate>
+          <span translate
+            >shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.title</span
+          >
+          <span translate
+            >shutdown-automations.triggers.whenAloneOnlyWhenSleepModeEnabled.description</span
+          >
+        </div>
+        <div class="setting-row-action">
+          <label class="switch-toggle">
+            <input
+              type="checkbox"
+              [checked]="config.triggerWhenAloneOnlyWhenSleepModeActive"
+              (change)="toggleTriggerWhenAloneOnlyWhenSleepModeActive()"
             />
             <span class="switch-toggle-slider"></span>
           </label>

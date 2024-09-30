@@ -20,8 +20,18 @@
       "SET_VOLUME": "音量変更",
       "UNMUTE": "ミュート解除"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "睡眠モードが無効状態で起動した際に実行します",
+        "onSleepEnable": "睡眠モードが有効状態で起動した際に実行します"
+      },
+      "title": "起動時に適用"
+    },
     "automations": {
       "label": "{count}つの自動化"
+    },
+    "config": {
+      "title": "設定"
     },
     "description": "オーディオデバイスの音量を自動的に変更します。騒音で起こされたくない場合に使用します。",
     "devices": {
@@ -32,7 +42,7 @@
       }
     },
     "onSleepDisable": {
-      "description": "睡眠モードがが無効化された際にオーディオデバイスの音量を変更します",
+      "description": "睡眠モードが無効化された際にオーディオデバイスの音量を変更します",
       "title": "起床時"
     },
     "onSleepEnable": {
@@ -138,85 +148,60 @@
     "whitelist": "ホワイトリスト"
   },
   "brightness-automations": {
-    "brightnessAutomations": {
-      "applyOnStart": {
-        "description": {
-          "onSleepDisable": "睡眠モードが無効の場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します",
-          "onSleepEnable": "睡眠モードが有効の場合、SteamVRまたはOyasumiVRが起動したときにこの輝度値を直接設定します"
-        },
-        "title": "起動時に適用"
+    "AT_SUNRISE": {
+      "title": "日の出時"
+    },
+    "AT_SUNSET": {
+      "title": "日没時"
+    },
+    "HMD_CONNECT": {
+      "title": "HMDがSteamVRに接続されたとき"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "起床時"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "睡眠時"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "就寝準備時"
+    },
+    "activation": {
+      "category": "有効化"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "日の出の時刻",
+        "title": "日の出時刻"
       },
-      "brightness": {
-        "title": "輝度を変更"
-      },
-      "copyBrightness": "現在の明るさの値をコピーする",
-      "description": "様々なタイミングでHMDの明るさを調整します。",
-      "hardwareBrightness": {
-        "description": "ディスプレイの輝度を調整します",
-        "title": "ハードウェアの輝度を調整する"
-      },
-      "onSleepDisable": {
-        "description": "明るさの調整",
-        "title": "起床時"
-      },
-      "onSleepEnable": {
-        "description": "明るさの調整",
-        "title": "睡眠時"
-      },
-      "onSleepPreparation": {
-        "description": "明るさの調整",
-        "title": "就寝準備時"
-      },
-      "onStartup": {
-        "description": "明るさの調整",
-        "title": "OyasumiVRやSteamVRが起動したとき"
-      },
-      "sleepAutomations": "睡眠時の自動化",
-      "sleepPreparation": {
-        "description": "設定するとオーバーレイからこのボタンを押下できるようになります。就寝の準備として輝度を徐々に落とすことができます。",
-        "title": "就寝準備"
-      },
-      "softwareBrightness": {
-        "description": "HMDに表示される映像の明るさを調整します",
-        "title": "ソフトウェアの明るさを変更する"
-      },
-      "startupAutomations": "起動の自動化",
-      "transition": {
-        "description": "輝度を徐々に遷移させる",
-        "title": "なめらかな遷移"
-      },
-      "transitionTime": {
-        "description": "遷移するのにかかる時間",
-        "title": "遷移時間"
+      "SUNSET": {
+        "description": "日没の時刻",
+        "title": "日没時刻"
       }
     },
-    "hmdSettings": {
-      "bigscreenBeyond": {
-        "forceFanSafety": {
-          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
-          "title": "過熱防止機能",
-          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します",
-          "title": "最大輝度"
-        },
-        "permitRiskRange": {
-          "description": "150%を超えないように制限します。",
-          "title": "安全な輝度レベルに制限",
-          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
-        },
-        "title": "Bigscreen Beyond"
-      },
-      "description": "特定のHMDに対して設定ができます。",
-      "valveIndex": {
-        "maxBrightness": {
-          "description": "OyasumiVRが設定する最大輝度の値を制限します。",
-          "title": "最大輝度"
-        },
-        "title": "Valve Index"
-      }
+    "autoDetermineSunsetSunrise": "自動的に時刻を推定する",
+    "brightness": {
+      "title": "輝度を変更"
     },
+    "changeBrightness": {
+      "category": "輝度",
+      "description": "HMDの輝度を調整",
+      "title": "輝度を変更"
+    },
+    "changeTemperature": {
+      "category": "色温度",
+      "description": "HMDに表示される映像の色温度を調整",
+      "title": "色温度を変更"
+    },
+    "copyBrightness": "現在の明るさの値をコピーする",
+    "description": "HMDの輝度や色温度を調整します",
+    "detailsTitle": "イベント",
+    "events": "イベント",
+    "hardwareBrightness": {
+      "description": "ディスプレイの輝度を調整します",
+      "title": "ハードウェアの輝度を調整する"
+    },
+    "miscConfig": "その他の設定",
     "mode": {
       "advanced": "高度",
       "simple": "シンプル"
@@ -225,11 +210,27 @@
       "message": "ソフトウェア側とハードウェア側を制御する2つの方法があります。\n\nソフトウェア制御は画面に表示される映像の明るさを調整します。これは全てのHMDで利用可能です。\n\nハードウェア制御はHMDの輝度を直接調整します。サポートされているHMD(Valve Index, Bigscreen Beyond)でのみ利用可能です。\n\nシンプルモードではソフトウェアとハードウェアの明るさのバランスを自動的に変更します。ただし、サポート外のHMDを使用している場合はソフトウェア側のみ制御されます。\n\n高度なモードではそれぞれ任意の値が設定可能です。",
       "title": "輝度調整モード"
     },
-    "tabs": {
-      "automations": "自動化",
-      "hmdSettings": "HMD設定"
+    "onHmdConnectInfo": "「日没時」「日の出時」を有効にすると時間帯に応じて自動化できます。この項目が無効の場合、「睡眠時」「起床時」の自動化が適用されます。",
+    "onlyWhenSleepModeDisabled": {
+      "description": "睡眠モードが無効な場合のみ実行",
+      "title": "睡眠モード無効時のみ"
     },
-    "title": "明るさの自動化"
+    "softwareBrightness": {
+      "description": "HMDに表示される映像の明るさを調整します",
+      "title": "ソフトウェアの明るさを変更する"
+    },
+    "temperature": {
+      "title": "色温度を変更"
+    },
+    "title": "明るさの自動化",
+    "transition": {
+      "description": "輝度や色温度を時間をかけてスムーズに変更",
+      "title": "スムーズに遷移"
+    },
+    "transitionTime": {
+      "description": "変更を完了するまでにかかる時間",
+      "title": "遷移時間"
+    }
   },
   "chaperone-automations": {
     "description": "SteamVRのガーディアンのフェード距離を自動的に調整します。",
@@ -248,14 +249,15 @@
   },
   "comp": {
     "brightness-control-modal": {
-      "automationsTooltip": "輝度自動化",
       "brightness": "輝度",
       "hardwareBrightness": "ハードウェアの輝度",
       "softwareBrightness": "ソフトウェアの明るさ"
     },
     "bsb-fan-speed-control-modal": {
-      "automationsTooltip": "Bigscreen Beyondの自動化",
       "fanSpeed": "ファン速度"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "色温度"
     },
     "color-picker-modal": {
       "title": "色を選択"
@@ -311,6 +313,7 @@
       "resolutionAutomations": "解像度",
       "settings": {
         "advanced": "詳細設定",
+        "brightnessCct": "輝度と色温度の設定",
         "general": "一般設定",
         "hotkeys": "ショートカットキー設定",
         "integrations": "外部連携",
@@ -332,13 +335,19 @@
     "device-edit-modal": {
       "deviceNickname": {
         "description": "このデバイスのカスタム名をオプションで設定",
-        "title": "ニックネーム"
+        "title": "カスタム名"
       },
       "ignoreLighthouse": {
-        "description": "無視されたベースステーションは非表示にされ、どんな自動化の影響も受けません",
+        "description": "無視されたベースステーションは非表示にされ、自動化の影響を受けなくなります",
         "title": "ベースステーションを無視"
       },
-      "title": "デバイスの編集: {deviceId}"
+      "title": "デバイスの編集: {deviceId}",
+      "v1Identifier": {
+        "change": "IDを変更",
+        "description": "V1ベースステーションを制御するためにはそのIDを認識する必要があります",
+        "set": "IDを設定",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -348,6 +357,7 @@
         "other": "その他"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -411,8 +421,8 @@
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
-            "adjusted": "Bigscreen Beyondファン速度が{setPercentage}%に設定されました（安全のために{requestedPercentage}%から調整されました）",
-            "exact": "Bigscreen Beyondファン速度が{setPercentage}%に設定されました"
+            "adjusted": "Bigscreen Beyondファン速度を{setPercentage}%に設定（安全のために{requestedPercentage}%から修正されました）",
+            "exact": "Bigscreen Beyondファン速度を{setPercentage}%に設定"
           }
         },
         "bsbLedChanged": {
@@ -421,7 +431,18 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
-          "title": "Bigscreen Beyond RGB LEDが{color}に設定されました"
+          "title": "Bigscreen Beyond RGB LEDを{color}に設定"
+        },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLE": "睡眠モードが有効になった",
+            "SLEEP_PREPARATION": "就寝準備をした"
+          },
+          "title": {
+            "set": "HMDの色温度を{icon}{temperature}Kに設定",
+            "transition": "HMDの色温度を{icon}{temperature}Kに遷移中"
+          }
         },
         "changedAudioDeviceVolume": {
           "reason": {
@@ -483,8 +504,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLE": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLE": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
@@ -496,7 +517,7 @@
           "ALL": {
             "on": {
               "reasons": {
-                "HOTKEY": "ショートカットキーが押されたため",
+                "HOTKEY": "ショートカットキーが押下されたため",
                 "MANUAL": "手動でオンにした",
                 "OYASUMI_START": "OyasumiVRの起動に合わせて",
                 "STEAMVR_START": "SteamVRの起動に合わせて",
@@ -601,8 +622,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLE": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLE": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
@@ -655,8 +676,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
-            "SLEEP_MODE_DISABLED": "睡眠モードが無効になった",
-            "SLEEP_MODE_ENABLED": "睡眠モードが有効になった",
+            "SLEEP_MODE_DISABLE": "睡眠モードが無効になった",
+            "SLEEP_MODE_ENABLE": "睡眠モードが有効になった",
             "SLEEP_PREPARATION": "就寝準備をした"
           },
           "title": {
@@ -689,12 +710,12 @@
             "SLEEP_MODE_ENABLED": "睡眠モードが有効になった"
           },
           "title": {
-            "ALL": "全ての機器の電源を切った",
-            "CONTROLLER": "コントローラーをオフにした",
-            "CONTROLLERS": "複数のコントローラーをオフにした",
-            "TRACKER": "トラッカーをオフにした",
-            "TRACKERS": "複数のトラッカーをオフにした",
-            "VARIOUS": "複数の機器の電源を切った"
+            "ALL": "全ての機器の電源をオフ",
+            "CONTROLLER": "コントローラーをオフ",
+            "CONTROLLERS": "複数のコントローラーをオフ",
+            "TRACKER": "トラッカーをオフ",
+            "TRACKERS": "複数のトラッカーをオフ",
+            "VARIOUS": "複数の機器の電源をオフ"
           }
         },
         "unmutedAudioDevice": {
@@ -722,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "マイクやその他のオーディオデバイスの制御に関連するログ",
+          "title": "オーディオ制御"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "HMDの輝度や色温度の制御に関連するログ",
+          "title": "輝度と色温度"
+        },
+        "BSB_CONTROL": {
+          "description": "Bigscreen Beyondの制御に関連するログ",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "デバイスの電源操作に関連するログ",
+          "title": "機器の電源"
+        },
+        "GPU_CONTROL": {
+          "description": "GPUの各種設定に関連するログ",
+          "title": "GPU制御"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "シャットダウンシーケンスに関連するログ",
+          "title": "シャットダウンシーケンス"
+        },
+        "SLEEP_MODE": {
+          "description": "睡眠モードおよび睡眠検出に関連するログ",
+          "title": "睡眠モード"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "SteamVR設定の変更（レンダリング解像度やフェード距離など）に関連するログ",
+          "title": "SteamVR設定"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "VRChatアバターの変更に関連するログ",
+          "title": "VRChatアバター"
+        },
+        "VRCHAT_INVITES": {
+          "description": "VRChatのReq Inや承認に関連するログ",
+          "title": "VRChat通知"
+        },
+        "VRCHAT_STATUS": {
+          "description": "VRChatのステータス変更に関連するログ",
+          "title": "VRChatステータス"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Windowsの電源プラン変更に関連するログ",
+          "title": "Windows電源プラン"
+        }
+      },
+      "selectAll": "すべて選択",
+      "selectDescription": "イベントログで表示したいエントリーの種類を選択",
+      "selectNone": "すべて解除",
+      "title": "イベントログのフィルター"
+    },
     "event-log": {
       "clearLog": "消去",
       "clearLogModal": {
@@ -729,6 +806,7 @@
         "title": "消去の確認"
       },
       "no-logs": "ログは最大48時間保存されます",
+      "openFilters": "フィルター",
       "show-more": "詳細",
       "title": "イベント"
     },
@@ -749,6 +827,46 @@
     "hotkey-selector": {
       "select": "ショートカットキーの設定"
     },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "識別子を検出中……",
+        "instructions": "識別子を自動的に検出できない場合は、手動で入力してください。",
+        "steps": {
+          "connectDevice": "トラッキングデバイスを接続",
+          "connectDeviceDesc": "Lighthouseトラッキング対応のHMD、コントローラー、またはトラッカーを接続してください……",
+          "detectBasestation": "ベースステーションを検出",
+          "detectBasestationDesc": "HMD, コントローラーまたはトラッカーがベースステーションを認識できることを確認してください",
+          "deviceDetected": "デバイスが検出されました",
+          "running": "実行中",
+          "startSteamVR": "SteamVRを起動",
+          "waitingForSteamVR": "SteamVRの起動を待機中……"
+        }
+      },
+      "detectAutomatically": "自動検出",
+      "inputManually": "手動入力",
+      "intro": {
+        "message": "ベースステーションを制御するには、その識別子を認識する必要があります。"
+      },
+      "manualInput": {
+        "formatDescription": "識別子は8文字の長さで、0-9の数字およびA-Fの文字で構成されています。",
+        "message": "識別子はベースステーションの背面に記載されています。"
+      },
+      "success": {
+        "subtitle": "ベースステーションを制御できるようになりました！",
+        "title": "識別子が設定されました"
+      },
+      "title": "識別子の設定が必要です",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "Lighthouse IDを自動的に検出できませんでした。手動で入力してください。",
+          "invalidId": "入力されたLighthouse IDが無効である可能性があります。\nデバイスの背面に記載されたコードを再確認してください。",
+          "verificationFailed": "Lighthouse IDを確認できませんでした。ベースステーションが接続されており、PCに認識されているか確認してください。"
+        },
+        "idAutodetected": "検出された識別子の候補",
+        "verifying": "IDを確認中"
+      },
+      "verifyIdAction": "IDを確認"
+    },
     "main-status-bar": {
       "active": "有効",
       "brightness": {
@@ -758,6 +876,10 @@
       "bsbFanSpeed": {
         "label": "ファン速度",
         "tooltip": "Bigscreen Beyondファン速度"
+      },
+      "cctControl": {
+        "label": "色温度",
+        "tooltip": "色温度コントロール"
       },
       "heartrate": "心拍数",
       "inactive": "無効",
@@ -846,6 +968,7 @@
         "sleep": "睡眠"
       },
       "addCommand": "追加",
+      "addParameter": "パラメータ追加",
       "commandCounter": "{value} コマンド",
       "commands": {
         "COMMAND": {
@@ -1121,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
+    "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能と互換性がありません。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "ベースステーションの数が多いようです！\n\nほとんどのBluetoothアダプターは、ヘッドフォンや他の周辺機器などのBluetoothデバイスを含め、同時に7つの接続しか処理できません。\n\n多くのベースステーションを接続している、または他のBluetoothデバイスを接続している場合、OyasumiVRがすべてのベースステーションを正しく制御できない可能性があります。",
+        "title": "警告"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "ディスプレイの色温度制御は、一部のHMD（例: Valve Index, Bigscreen Beyond, HTC Vive Pro）でのみ利用可能です。\n\nこれらのHMDを使用していない場合は効果がありません。\n\n必要ない場合は、設定からディスプレイの色温度制御を無効にできます。",
+        "title": "アナウンス"
+      },
+      "acknowledge": "理解しました"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "有効なOSCアドレスは、常に'/'記号で始まる必要があります。",
       "addressNotASCII": "有効なOSCアドレスは、ASCII文字のみ含めることができます。",
@@ -1132,7 +1267,9 @@
       "floatTooPrecise": "値の精度は最大で小数点以下3桁までです。",
       "intOutOfBounds": "値は0から255の間の有効な整数でなければなりません。",
       "invalidSyntax": "無効な構文です。",
+      "maxParameterCountExceeded": "コマンドごとに許可される最大パラメーター数は{value}です。",
       "noFloatMilliseconds": "ミリ秒値は整数で定義されなければなりません。",
+      "stringTooLong": "文字列の値は{value}文字を超えてはなりません。",
       "tooManyCommands": "OSCスクリプトは、{value}以上のアクションを持つことはできません。",
       "totalDurationTooLong": "スクリプトの総時間は10秒を超えてはなりません。"
     }
@@ -1230,6 +1367,13 @@
           "title": "フットロック"
         },
         "general": {
+          "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "フルボディトラッカーをオフにした後でも、アバターのアニメーションを使用したい場合はこれを有効にしてください。<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">これは何ですか？なぜ必要なのですか？</a>",
+              "title": "FBTでアバターアニメーションを使用するための回避策"
+            },
+            "title": "高度な機能"
+          },
           "footLock": {
             "description": "フットロックを有効にするとアバターの意図しない回転を防げます。",
             "title": "フットロック"
@@ -1267,6 +1411,7 @@
       "simple": "輝度",
       "software": "ソフトウェアの明るさ"
     },
+    "colorTemp": "色温度",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1314,7 +1459,11 @@
           "automations": "自動化",
           "deviceControl": "デバイス制御",
           "prepareForSleep": "就寝準備",
-          "shutdown": "シャットダウン機能"
+          "shutdown": "シャットダウン機能",
+          "sliderMode": {
+            "BRIGHTNESS": "輝度コントロール",
+            "COLOR_TEMP": "色温度コントロール"
+          }
         }
       },
       "shutdownSequence": {
@@ -1616,6 +1765,41 @@
         "title": "言語・翻訳"
       }
     },
+    "brightnessCct": {
+      "bigscreenBeyond": {
+        "forceFanSafety": {
+          "description": "輝度が100%を超える場合、ファン速度を強制的に100%にします。",
+          "title": "過熱防止機能",
+          "warning": "この機能は公式のBigscreen Beyondドライバーの安全なファンパラメータを模倣します。この制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        },
+        "maxBrightness": {
+          "description": "OyasumiVRが設定する最大輝度の値を制限します",
+          "title": "最大輝度"
+        },
+        "permitRiskRange": {
+          "description": "150%を超えないように制限します。",
+          "title": "安全な輝度レベルに制限",
+          "warning": "この機能はメーカーによってサポートされていません。\n\nこの制限を無効にするとHMDを損傷する可能性があります。自己責任にてご利用ください。"
+        },
+        "title": "Bigscreen Beyond"
+      },
+      "cctControl": {
+        "enabled": {
+          "description": "他のアプリケーション（例: LuxVRやOVR Advanced Settings）でディスプレイの色温度を制御している場合は、これを無効にしてください。",
+          "title": "色温度制御を有効にする"
+        },
+        "title": "色温度"
+      },
+      "description": "輝度や色温度に関連する設定を行えます。",
+      "title": "輝度と色温度",
+      "valveIndex": {
+        "maxBrightness": {
+          "description": "OyasumiVRが設定する最大輝度の値を制限します。",
+          "title": "最大輝度"
+        },
+        "title": "Valve Index"
+      }
+    },
     "general": {
       "adminPrivileges": {
         "description": "OyasumiVRがGPUの電力制限を制御するためには管理者権限が必要です。有効にするとOyasumiVRは起動時に管理者権限を要求するようになります",
@@ -1656,7 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
-          "description": "有効にするとベースステーションの電源をオンオフできるようになります。Bluetoothを必要とし、V2ベースステーションのみをサポートします",
+          "description": "ベースステーションの電源を制御できます。PCのBluetooth機能を有効にする必要があります。",
           "title": "電源制御を有効にする"
         },
         "powerOffMode": {
@@ -1852,6 +2036,7 @@
       "vrcLoginRequired": "VRChatアカウントでログインする必要があります。"
     },
     "modals": {
+      "back": "戻る",
       "cancel": "キャンセル",
       "close": "閉じる",
       "confirm": "確認",
@@ -1943,6 +2128,10 @@
       "whenAloneDuration": {
         "description": "実行に必要な一人でいた継続時間",
         "title": "検知タイマー"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "睡眠モードが有効なときのみ、この方法でシャットダウンシーケンスを実行します",
+        "title": "睡眠時のみ"
       },
       "whenAloneTimeWindow": {
         "description": "特定の時間帯にのみ有効にする",

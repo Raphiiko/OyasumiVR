@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api';
 import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
-import { debug, error } from 'tauri-plugin-log-api';
+import { debug, error, info } from 'tauri-plugin-log-api';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
 import {
@@ -19,6 +19,7 @@ import {
 } from 'rxjs';
 import { OscMethod } from './osc-control/osc-method';
 import { AppSettingsService } from './app-settings.service';
+import { AvatarContext } from '../models/avatar-context';
 
 @Injectable({
   providedIn: 'root',
@@ -50,6 +51,7 @@ export class OscService {
   private readonly _oscMethods: BehaviorSubject<OscMethod<unknown>[]> = new BehaviorSubject<
     OscMethod<unknown>[]
   >([]);
+  private avatarContext: AvatarContext | null = null;
 
   constructor(private appSettings: AppSettingsService) {}
 
@@ -93,8 +95,14 @@ export class OscService {
       this._vrchatOscAddress.next(event.payload);
     });
     await listen<string | null>('VRC_OSCQUERY_ADDRESS_CHANGED', (event) => {
-      this._vrchatOscQueryAddress.next(event.payload);
+      if (this._vrchatOscQueryAddress.value !== event.payload) {
+        this._vrchatOscQueryAddress.next(event.payload);
+      }
     });
+  }
+
+  public updateAvatarContext(context: AvatarContext | null) {
+    this.avatarContext = context;
   }
 
   private async startOscServer(): Promise<{ oscAddress: string; oscQueryAddress: string } | null> {
@@ -178,9 +186,10 @@ export class OscService {
   async send_command(address: string, parameters: OscParameter[]) {
     const addr = this._vrchatOscAddress.value;
     if (!addr) return;
+    // Replace spaces with underscores in address (This is default VRC behaviour for parameters, and spaces aren't supported in addresses according to the OSC spec anyways)
+    address = address.trim().replace(/\s+/g, '_');
 
     const _parameters = structuredClone(parameters); // copy parameter array because some parameters may be modified before sending
-
     _parameters.forEach((parameter) => {
       // handle "\n" in string values to insert newlines
       if (parameter.type === 'STRING') {
@@ -192,14 +201,19 @@ export class OscService {
       .map((parameter) => `${parameter.type} => ${parameter.value}`)
       .join(', ');
 
-    debug(`[OSC] Sending {${parametersString}} to ${address}`);
+    const addresses = [...this.getAddressAliasesForAvatarContext(address)];
+    if (!addresses.length) addresses.push(address);
 
-    await invoke('osc_send_command', {
-      addr,
-      oscAddr: address,
-      types: _parameters.map((parameter) => parameter.type),
-      values: _parameters.map((parameter) => parameter.value),
-    });
+    for (const oscAddr of addresses) {
+      info(`[OSC] Sending {${parametersString}} to ${oscAddr}`);
+
+      await invoke('osc_send_command', {
+        addr,
+        oscAddr,
+        types: _parameters.map((parameter) => parameter.type),
+        values: _parameters.map((parameter) => parameter.value),
+      });
+    }
   }
 
   queueScript(script: OscScript, replaceId?: string) {
@@ -237,8 +251,9 @@ export class OscService {
     const osc_address = await invoke<string | null>('get_vrchat_osc_address');
     if (osc_address !== this._vrchatOscAddress.value) this._vrchatOscAddress.next(osc_address);
     const oscquery_address = await invoke<string | null>('get_vrchat_oscquery_address');
-    if (oscquery_address !== this._vrchatOscQueryAddress.value)
+    if (oscquery_address !== this._vrchatOscQueryAddress.value) {
       this._vrchatOscQueryAddress.next(oscquery_address);
+    }
   }
 
   private mapToOscMethod(method: OscMethod<unknown>): {
@@ -255,5 +270,12 @@ export class OscService {
       value: method.options.access === 'Write' ? undefined : method.getValue() + '',
       description: method.options.description,
     };
+  }
+
+  private getAddressAliasesForAvatarContext(address: string): string[] {
+    if (!this.avatarContext) return [];
+    if (!address.startsWith('/avatar/parameters')) return [];
+    if (this.avatarContext.type !== 'VRCHAT') return [];
+    return this.avatarContext.parameters.find((p) => p.address === address)?.modularAliases ?? [];
   }
 }

@@ -40,9 +40,7 @@ use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
-use tauri_plugin_aptabase::EventTracker;
 use tauri_plugin_log::{LogTarget, RotationStrategy};
-use telemetry::TELEMETRY_ENABLED;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
@@ -77,13 +75,13 @@ fn main() {
         .invoke_handler(configure_command_handlers())
         .build(tauri::generate_context!())
         .expect("An error occurred while running the application")
-        .run(|handler, event| match event {
-            tauri::RunEvent::Exit { .. } => {
-                if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                    handler.track_event("app_exited", None);
-                    handler.flush_events_blocking();
-                }
-            }
+        .run(|_, event| match event {
+            // tauri::RunEvent::Exit { .. } => {
+            //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+            //         handler.track_event("app_exited", None);
+            //         handler.flush_events_blocking();
+            //     }
+            // }
             _ => {}
         })
 }
@@ -123,6 +121,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         openvr::commands::openvr_is_dashboard_visible,
         openvr::commands::openvr_reregister_manifest,
         openvr::commands::openvr_set_init_delay_fix,
+        openvr::commands::openvr_set_analog_color_temp,
         hardware::beyond::commands::bigscreen_beyond_is_connected,
         hardware::beyond::commands::bigscreen_beyond_set_brightness,
         hardware::beyond::commands::bigscreen_beyond_set_led_color,
@@ -191,6 +190,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
+        commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
@@ -334,8 +334,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     system_tray::init().await;
     // Initialize Image Cache
     image_cache::init(cache_dir).await;
-    // Load sounds
-    os::load_sounds().await;
+    // Init sound playback
+    os::init_sound_playback().await;
     // Initialize audio device manager
     os::init_audio_device_manager().await;
     // Initialize Lighthouse Bluetooth

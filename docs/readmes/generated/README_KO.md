@@ -178,9 +178,7 @@ OyasumiVR에는 자체 SteamVR 오버레이가 제공되어 VR 내에서 일부 
     <td>
 <b>베이스스테이션</b>
 <br>
-OyasumiVR이 SteamVR과 함께 베이스 스테이션을 키거나 끄도록 할 수 있어요. SteamVR의 자체 베이스스테이션 전원 관리와 비슷하지만 <b>모든 HMD에 호환됩니다. </b> PC가 블루투스를 지원하고 베이스스테이션의 범위 내에 있으면 바로 사용할 수 있습니다.
-<br><br>
-<i>현재 V2 라이트하우스만 지원됩니다.</i> 
+OyasumiVR이 SteamVR과 함께 베이스 스테이션을 키거나 끄도록 할 수 있어요. SteamVR의 자체 베이스스테이션 전원 관리와 비슷하지만 <b>모든 HMD에 호환됩니다. </b> PC가 블루투스를 지원하고 베이스스테이션의 범위 내에 있으면 바로 사용할 수 있습니다. 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/f624681d-7e52-4b83-900d-6d7f7b45428d"></td>
   </tr>
@@ -235,8 +233,8 @@ OyasumiVR은 사용자가 어떤 수면 자세를 취하고 있는지 감지하�
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
-    <br>(Sleep System v2.2 - 2.3 by minminmiin)
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <br>(Sleep System v2.2 - 3.0.2 by minminmiin)
     <br><a href="https://booth.pm/en/items/4233545">EX 버전</a>도 지원해요!
   </li>
   <li>
@@ -547,6 +545,7 @@ OyasumiVR은 현재 다음 언어를 지원하고 있어요:
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).
 - Українська (Ukrainian): Community contributions by [senkodev](https://x.com/senkodev) and [Fanyatsu](https://fanyat.su/).
 - Русский (Russian): Community contributions by [Kanjir0](https://twitter.com/Kanjiro_vrc), [Pacmard](https://github.com/pacmard) and Dimrical.
+- Deutsch (German): Community contributions by [Nicer Dicer](https://github.com/XNicerDicerX) and [Aron](https://github.com/imaron85).
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 

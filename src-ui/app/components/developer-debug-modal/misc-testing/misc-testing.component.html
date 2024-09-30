@@ -1,6 +1,4 @@
-<button class="btn btn-secondary" (click)="fetchAvatars()">Fetch Avatars</button>
-<pre>
-  <code>
-    {{ avatars | json }}
-  </code>
-</pre>
+<button class="btn btn-primary" (click)="clearV1Ids()">Clear V1 Ids</button>
+<button class="btn btn-primary" (click)="pullOvrData()">PULL OVR DATA</button>
+<pre>{{ ovrData | json }}</pre>
+<pre>{{ (appSettings.settings | async)?.v1LighthouseIdentifiers | json }}</pre>

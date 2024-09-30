@@ -55,6 +55,26 @@
       --inner-background-color: #ffffff25;
     }
 
+    &.cct {
+      overflow: hidden;
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 80%;
+        top: 20%;
+        left: 0;
+        background: var(--gradient-cct);
+        -webkit-mask-image: linear-gradient(to bottom, transparent, black 100%);
+        -webkit-mask-repeat: no-repeat;
+      }
+
+      .brightness-slider-bar-label {
+        filter: drop-shadow(0 0 0.5em black);
+      }
+    }
+
     &-inner {
       position: absolute;
       width: 0;
@@ -84,6 +104,7 @@
       align-items: center;
       justify-content: flex-end;
       font-weight: 700;
+      white-space: nowrap;
     }
 
     &-range-guide {
@@ -92,6 +113,14 @@
       left: 2.5em;
       height: 100%;
       width: calc(100% - 3.75em);
+    }
+
+    .colortemp-icon {
+      width: 0.5em;
+      height: 0.5em;
+      border-radius: 999999px;
+      background: orange;
+      margin-right: 0.25em;
     }
   }
 }

@@ -96,8 +96,6 @@ HMDの動きを分析して寝落ちを自動で検出します！一度キャ�
 <b>ベースステーション</b>
 <br>
 SteamVRと共にベースステーションの電源を操作します。SteamVR独自の電源管理のようなものですが、どのHMDにも対応します！PCがBluetoothに対応し、ベースステーションの範囲にあれば機能します。
-<br><br>
-<i>現在はV2 Lighthouseのみがサポートされています。</i>
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU自動化
@@ -127,7 +125,7 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 <br><br>
 <ul>
   <li>
-    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 2.3</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
+    <a href="https://minminmart.booth.pm/items/2886739">ごろ寝システム v2.2 - 3.0.2</a> by <a href="https://twitter.com/minminmeeean">みんみんみーん</a>
     <br><a href="https://booth.pm/en/items/4233545">EX</a> にも対応！
     &nbsp;
   </li>

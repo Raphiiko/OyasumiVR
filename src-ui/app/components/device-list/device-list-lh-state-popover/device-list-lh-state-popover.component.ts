@@ -1,6 +1,9 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { hshrink } from '../../../utils/animations';
-import { LighthouseDevicePowerState } from '../../../models/lighthouse-device';
+import {
+  LighthouseDevicePowerState,
+  LighthouseDeviceType,
+} from '../../../models/lighthouse-device';
 
 @Component({
   selector: 'app-device-list-lh-state-popover',
@@ -12,6 +15,7 @@ export class DeviceListLhStatePopoverComponent implements OnInit {
   hoverAction = '';
   active = false;
   @Output() action = new EventEmitter<LighthouseDevicePowerState>();
+  @Input() type?: LighthouseDeviceType;
 
   ngOnInit() {
     setTimeout(() => (this.active = true), 150);
