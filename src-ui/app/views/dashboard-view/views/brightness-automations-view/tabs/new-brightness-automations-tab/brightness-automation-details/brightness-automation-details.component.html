@@ -1,7 +1,9 @@
 <div class="bg" @fade (click)="close.emit()"></div>
-<button class="btn-close" @fadeRight (click)="close.emit()">
-  <i class="material-icons-outlined">arrow_forward_ios</i>
-</button>
+<div class="btn-close-container">
+  <button class="btn-close" @fadeRight (click)="close.emit()">
+    <i class="material-icons-outlined">arrow_forward_ios</i>
+  </button>
+</div>
 <div class="pane" @fadeRight>
   <div class="header-row">
     <div class="header-row-toggle">

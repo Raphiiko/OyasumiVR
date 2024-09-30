@@ -1,8 +1,10 @@
-<app-brightness-automations-list
-  (editEvent)="editEvent = $event"
-  [events]="events"
-  [class.details-open]="!!editEvent"
-></app-brightness-automations-list>
+<div class="setting-view-container">
+  <app-brightness-automations-list
+    (editEvent)="editEvent = $event"
+    [events]="events"
+    [class.details-open]="!!editEvent"
+  ></app-brightness-automations-list>
+</div>
 <app-brightness-automation-details
   @triggerChildren
   *ngIf="editEvent"

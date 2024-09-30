@@ -1,80 +1,82 @@
 <div class="pane-content">
-  <div class="description-row">
-    <p [innerHtml]="'gpu-automations.msiAfterburner.description' | translate"></p>
-    <img draggable="false" src="/assets/img/afterburner_icon.png" />
-  </div>
-  <h3 translate>gpu-automations.msiAfterburner.executable.title</h3>
-  <p [innerHtml]="'gpu-automations.msiAfterburner.executable.description' | translate"></p>
-  <div class="file-path-bar">
-    <div class="file-path-bar-path">
-      <input
-        type="text"
-        [value]="config.msiAfterburnerPath"
-        (keyup)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
-        #msiAfterburnerPathInput
-      />
+  <div class="setting-view-container">
+    <div class="description-row">
+      <p [innerHtml]="'gpu-automations.msiAfterburner.description' | translate"></p>
+      <img draggable="false" src="/assets/img/afterburner_icon.png" />
     </div>
-    <button class="file-path-bar-btn-browse" (click)="browseForMsiAfterburner()">
-      <i class="material-icons">folder</i>
-    </button>
-  </div>
-  <div
-    class="alert"
-    [class.success]="msiAfterburnerPathAlert.type === 'SUCCESS'"
-    [class.error]="msiAfterburnerPathAlert.type === 'ERROR'"
-    *ngIf="msiAfterburnerPathAlert"
-    @vshrink
-  >
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons" *ngIf="!msiAfterburnerPathAlert.loadingIndicator">
-        check_circle_outline
-      </i>
-      <div class="small-spinner" *ngIf="msiAfterburnerPathAlert.loadingIndicator"></div>
-    </div>
-    <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | translate"></div>
-  </div>
-  <h3>Automations</h3>
-  <div class="settings">
-    <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>gpu-automations.msiAfterburner.sleepModeEnable.title</span>
-        <span translate>gpu-automations.msiAfterburner.sleepModeEnable.description</span>
+    <h3 translate>gpu-automations.msiAfterburner.executable.title</h3>
+    <p [innerHtml]="'gpu-automations.msiAfterburner.executable.description' | translate"></p>
+    <div class="file-path-bar">
+      <div class="file-path-bar-path">
+        <input
+          type="text"
+          [value]="config.msiAfterburnerPath"
+          (keyup)="msiAfterburnerPathInputChange.next(msiAfterburnerPathInput.value)"
+          #msiAfterburnerPathInput
+        />
       </div>
-      <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          [items]="profileOptions"
-          [selected]="onEnableProfile"
-          (selectedChange)="changeProfile('ON_ENABLE', $event!)"
-        ></app-select-box>
-      </div>
-    </div>
-    <div class="setting-row">
-      <div class="setting-row-label" translate>
-        <span translate>gpu-automations.msiAfterburner.sleepModeDisable.title</span>
-        <span translate>gpu-automations.msiAfterburner.sleepModeDisable.description</span>
-      </div>
-      <div class="setting-row-action">
-        <app-select-box
-          type="SMALL"
-          [items]="profileOptions"
-          [selected]="onDisableProfile"
-          (selectedChange)="changeProfile('ON_DISABLE', $event!)"
-        ></app-select-box>
-      </div>
-    </div>
-  </div>
-  <div class="alert">
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons">warning</i>
-    </div>
-    <div class="alert-content flex-row">
-      <div translate>gpu-automations.msiAfterburner.enabledWarning</div>
-      <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
-        gpu-automations.disable
+      <button class="file-path-bar-btn-browse" (click)="browseForMsiAfterburner()">
+        <i class="material-icons">folder</i>
       </button>
+    </div>
+    <div
+      class="alert"
+      [class.success]="msiAfterburnerPathAlert.type === 'SUCCESS'"
+      [class.error]="msiAfterburnerPathAlert.type === 'ERROR'"
+      *ngIf="msiAfterburnerPathAlert"
+      @vshrink
+    >
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons" *ngIf="!msiAfterburnerPathAlert.loadingIndicator">
+          check_circle_outline
+        </i>
+        <div class="small-spinner" *ngIf="msiAfterburnerPathAlert.loadingIndicator"></div>
+      </div>
+      <div class="alert-content" [innerHTML]="msiAfterburnerPathAlert.text | translate"></div>
+    </div>
+    <h3>Automations</h3>
+    <div class="settings">
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>gpu-automations.msiAfterburner.sleepModeEnable.title</span>
+          <span translate>gpu-automations.msiAfterburner.sleepModeEnable.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            type="SMALL"
+            [items]="profileOptions"
+            [selected]="onEnableProfile"
+            (selectedChange)="changeProfile('ON_ENABLE', $event!)"
+          ></app-select-box>
+        </div>
+      </div>
+      <div class="setting-row">
+        <div class="setting-row-label" translate>
+          <span translate>gpu-automations.msiAfterburner.sleepModeDisable.title</span>
+          <span translate>gpu-automations.msiAfterburner.sleepModeDisable.description</span>
+        </div>
+        <div class="setting-row-action">
+          <app-select-box
+            type="SMALL"
+            [items]="profileOptions"
+            [selected]="onDisableProfile"
+            (selectedChange)="changeProfile('ON_DISABLE', $event!)"
+          ></app-select-box>
+        </div>
+      </div>
+    </div>
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons">warning</i>
+      </div>
+      <div class="alert-content flex-row">
+        <div translate>gpu-automations.msiAfterburner.enabledWarning</div>
+        <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
+          gpu-automations.disable
+        </button>
+      </div>
     </div>
   </div>
 </div>

@@ -35,6 +35,12 @@
 ///
 /// Settings Layout
 ///
+.setting-view-container {
+  width: 100%;
+  margin: 0 auto;
+  max-width: 80em;
+}
+
 .setting-category {
   &:not(:first-child) {
     margin-top: 1em;

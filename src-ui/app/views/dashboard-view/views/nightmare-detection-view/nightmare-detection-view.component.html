@@ -1,105 +1,107 @@
 <div class="pane">
   <div class="pane-title" translate>nightmare-detection.title</div>
   <div class="pane-content">
-    <div class="setting-category">
-      <p [innerHTML]="'nightmare-detection.description' | translate"></p>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>nightmare-detection.bpmThreshold.title</span>
-            <span translate>nightmare-detection.bpmThreshold.description</span>
+    <div class="setting-view-container">
+      <div class="setting-category">
+        <p [innerHTML]="'nightmare-detection.description' | translate"></p>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>nightmare-detection.bpmThreshold.title</span>
+              <span translate>nightmare-detection.bpmThreshold.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [unit]="'nightmare-detection.bpmThreshold.unit' | translate"
+                [min]="60"
+                [max]="200"
+                [step]="1"
+                [value]="config.heartRateThreshold"
+                (valueChange)="updateThreshold($event)"
+              ></app-slider-setting>
+            </div>
           </div>
-          <div class="setting-row-action">
-            <app-slider-setting
-              [unit]="'nightmare-detection.bpmThreshold.unit' | translate"
-              [min]="60"
-              [max]="200"
-              [step]="1"
-              [value]="config.heartRateThreshold"
-              (valueChange)="updateThreshold($event)"
-            ></app-slider-setting>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>nightmare-detection.duration.title</span>
-            <span translate>nightmare-detection.duration.description</span>
-          </div>
-          <div class="setting-row-action">
-            <app-slider-setting
-              [min]="1"
-              [snapValues]="[15, 30, 45]"
-              [snapDistance]="5"
-              [max]="59"
-              [step]="1"
-              [value]="durationValue"
-              (valueChange)="onChangeDuration($event, durationUnitOption)"
-            ></app-slider-setting>
-            <app-select-box
-              class="status-dropdown"
-              [type]="'SMALL'"
-              [items]="durationUnitOptions"
-              [selected]="durationUnitOption"
-              [showPlaceholderInDropdown]="false"
-              (selectedChange)="onChangeDuration(durationValue, $event)"
-              #transitionUnitOnEnable
-            ></app-select-box>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>nightmare-detection.duration.title</span>
+              <span translate>nightmare-detection.duration.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-slider-setting
+                [min]="1"
+                [snapValues]="[15, 30, 45]"
+                [snapDistance]="5"
+                [max]="59"
+                [step]="1"
+                [value]="durationValue"
+                (valueChange)="onChangeDuration($event, durationUnitOption)"
+              ></app-slider-setting>
+              <app-select-box
+                class="status-dropdown"
+                [type]="'SMALL'"
+                [items]="durationUnitOptions"
+                [selected]="durationUnitOption"
+                [showPlaceholderInDropdown]="false"
+                (selectedChange)="onChangeDuration(durationValue, $event)"
+                #transitionUnitOnEnable
+              ></app-select-box>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="setting-category">
-      <h3 translate>nightmare-detection.automations.title</h3>
-      <p translate>nightmare-detection.automations.description</p>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>nightmare-detection.disableSleepMode.title</span>
-            <span translate>nightmare-detection.disableSleepMode.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.disableSleepMode"
-                (change)="toggleDisableSleepMode()"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>nightmare-detection.playSound.title</span>
-            <span translate>nightmare-detection.playSound.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input type="checkbox" [checked]="config.playSound" (change)="togglePlaySound()" />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-row-group">
-          <div class="setting-row" [class.disabled]="!config.playSound">
+      <div class="setting-category">
+        <h3 translate>nightmare-detection.automations.title</h3>
+        <p translate>nightmare-detection.automations.description</p>
+        <div class="settings">
+          <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>nightmare-detection.playSound.volume.title</span>
-              <span translate>nightmare-detection.playSound.volume.description</span>
+              <span translate>nightmare-detection.disableSleepMode.title</span>
+              <span translate>nightmare-detection.disableSleepMode.description</span>
             </div>
             <div class="setting-row-action">
-              <button class="btn btn-secondary" (click)="testSound()">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="config.disableSleepMode"
+                  (change)="toggleDisableSleepMode()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>nightmare-detection.playSound.title</span>
+              <span translate>nightmare-detection.playSound.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input type="checkbox" [checked]="config.playSound" (change)="togglePlaySound()" />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row" [class.disabled]="!config.playSound">
+              <div class="setting-row-label" translate>
+                <span translate>nightmare-detection.playSound.volume.title</span>
+                <span translate>nightmare-detection.playSound.volume.description</span>
+              </div>
+              <div class="setting-row-action">
+                <button class="btn btn-secondary" (click)="testSound()">
                 <span translate @hshrink *ngIf="!playingTestSound"
-                  >nightmare-detection.playSound.volume.test</span
+                >nightmare-detection.playSound.volume.test</span
                 >
-                <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
-              </button>
-              <app-slider-setting
-                [unit]="'%'"
-                [max]="200"
-                [snapValues]="[50,100,150]"
-                [value]="config.soundVolume"
-                (valueChange)="setSoundVolume($event)"
-              ></app-slider-setting>
+                  <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
+                </button>
+                <app-slider-setting
+                  [unit]="'%'"
+                  [max]="200"
+                  [snapValues]="[50,100,150]"
+                  [value]="config.soundVolume"
+                  (valueChange)="setSoundVolume($event)"
+                ></app-slider-setting>
+              </div>
             </div>
           </div>
         </div>
