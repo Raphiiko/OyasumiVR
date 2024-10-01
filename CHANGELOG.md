@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- A dependency crashing OyasumiVR when attempting to calculate the sunrise/sunset times.
+
 ## [1.14.0]
 
 ### Added
