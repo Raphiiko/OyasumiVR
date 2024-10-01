@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0]
+
 ### Added
 
 - Display color temperature control for native SteamVR headsets (e.g. Vive (Pro), Valve Index, Bigscreen Beyond)

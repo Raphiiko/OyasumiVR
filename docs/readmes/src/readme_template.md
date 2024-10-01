@@ -137,6 +137,7 @@
 </table>
 
 ### {{DEVICE_CONTROL_HEADER}}
+
 <table>
   <tr>
     <td>
@@ -220,14 +221,14 @@
   </tr>
 </table>
 
-### {{BRIGHTNESS_AUTOMATIONS_HEADER}}
+### {{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
 
 <table>
   <tr>
     <td>
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
     </td>
-    <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/6b901813-d8b9-41c3-bfaf-59b0a11bf2a8"></td>
+    <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
@@ -352,6 +353,10 @@
 ### {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+### {{SUPPORTED_HARDWARE_CCT_HEADER}}
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}
 
 ## {{BUILT_WITH_HEADER}}
 

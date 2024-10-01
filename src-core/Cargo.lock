@@ -3012,8 +3012,7 @@ dependencies = [
 [[package]]
 name = "ipgeolocate"
 version = "0.3.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "03ef02a710095765c2af4fe51101c5177c17f910bb1d0d51aae1589e6da6d6cc"
+source = "git+https://github.com/Raphiiko/ipgeolocate_oyasumi.git?rev=5f24925#5f24925b56d5645d5160facfb51f3197826b3b96"
 dependencies = [
  "futures",
  "reqwest",

@@ -1,151 +1,154 @@
 <div class="pane main">
   <div class="pane-title" translate>join-notifications.title</div>
   <div class="pane-content">
-    <p translate>join-notifications.description</p>
-    <div class="alert warning" *ngIf="(vrchat.user | async) === null" @vshrink>
-      <div class="alert-bg"></div>
-      <div class="alert-icon">
-        <i class="material-icons"> warning </i>
-      </div>
-      <div class="alert-content">
-        <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
-        <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
-          >shared.modals.login</button
-        >
-      </div>
-    </div>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.joinNotifications.title</span>
-          <span translate>join-notifications.joinNotifications.description</span>
+    <div class="setting-view-container">
+      <p translate>join-notifications.description</p>
+      <div class="alert warning" *ngIf="(vrchat.user | async) === null" @vshrink>
+        <div class="alert-bg"></div>
+        <div class="alert-icon">
+          <i class="material-icons"> warning </i>
         </div>
-        <div class="setting-row-action">
-          <app-select-box
-            class="preset-select-box"
-            [type]="'SMALL'"
-            [items]="notificationOptions"
-            [selected]="joinNotificationOption"
-            (selectedChange)="setJoinNotificationModeOption(asJoinNotificationsMode($event?.id))"
-          ></app-select-box>
+        <div class="alert-content">
+          <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
+          <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
+          >shared.modals.login
+          </button
+          >
         </div>
       </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.joinSounds.title</span>
-          <span translate>join-notifications.joinSounds.description</span>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.joinNotifications.title</span>
+            <span translate>join-notifications.joinNotifications.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="notificationOptions"
+              [selected]="joinNotificationOption"
+              (selectedChange)="setJoinNotificationModeOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
         </div>
-        <div class="setting-row-action">
-          <app-select-box
-            class="preset-select-box"
-            [type]="'SMALL'"
-            [items]="notificationOptions"
-            [selected]="joinSoundOption"
-            (selectedChange)="setJoinSoundModeOption(asJoinNotificationsMode($event?.id))"
-          ></app-select-box>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.joinSounds.title</span>
+            <span translate>join-notifications.joinSounds.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="notificationOptions"
+              [selected]="joinSoundOption"
+              (selectedChange)="setJoinSoundModeOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
         </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.onlyWhenPreviouslyAlone.title</span>
-          <span translate>join-notifications.onlyWhenPreviouslyAlone.description</span>
-        </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.onlyWhenPreviouslyAlone"
-              (change)="toggleOnlyWhenPreviouslyAlone()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.leaveNotifications.title</span>
-          <span translate>join-notifications.leaveNotifications.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            class="preset-select-box"
-            [type]="'SMALL'"
-            [items]="notificationOptions"
-            [selected]="leaveNotificationOption"
-            (selectedChange)="setLeaveNotificationModeOption(asJoinNotificationsMode($event?.id))"
-          ></app-select-box>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.leaveSounds.title</span>
-          <span translate>join-notifications.leaveSounds.description</span>
-        </div>
-        <div class="setting-row-action">
-          <app-select-box
-            class="preset-select-box"
-            [type]="'SMALL'"
-            [items]="notificationOptions"
-            [selected]="leaveSoundOption"
-            (selectedChange)="setLeaveSoundModeOption(asJoinNotificationsMode($event?.id))"
-          ></app-select-box>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.onlyWhenPreviouslyAlone.title</span>
+            <span translate>join-notifications.onlyWhenPreviouslyAlone.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyWhenPreviouslyAlone"
+                (change)="toggleOnlyWhenPreviouslyAlone()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
         </div>
       </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.onlyWhenLeftAlone.title</span>
-          <span translate>join-notifications.onlyWhenLeftAlone.description</span>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.leaveNotifications.title</span>
+            <span translate>join-notifications.leaveNotifications.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="notificationOptions"
+              [selected]="leaveNotificationOption"
+              (selectedChange)="setLeaveNotificationModeOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
         </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.onlyWhenLeftAlone"
-              (change)="toggleOnlyWhenLeftAlone()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.leaveSounds.title</span>
+            <span translate>join-notifications.leaveSounds.description</span>
+          </div>
+          <div class="setting-row-action">
+            <app-select-box
+              class="preset-select-box"
+              [type]="'SMALL'"
+              [items]="notificationOptions"
+              [selected]="leaveSoundOption"
+              (selectedChange)="setLeaveSoundModeOption(asJoinNotificationsMode($event?.id))"
+            ></app-select-box>
+          </div>
+        </div>
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.onlyWhenLeftAlone.title</span>
+            <span translate>join-notifications.onlyWhenLeftAlone.description</span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyWhenLeftAlone"
+                (change)="toggleOnlyWhenLeftAlone()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="settings">
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.onlyWhenSleepModeActive.title</span>
-          <span></span>
+      <div class="settings">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.onlyWhenSleepModeActive.title</span>
+            <span></span>
+          </div>
+          <div class="setting-row-action">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="config.onlyDuringSleepMode"
+                (change)="toggleOnlyDuringSleepMode()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+          </div>
         </div>
-        <div class="setting-row-action">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="config.onlyDuringSleepMode"
-              (change)="toggleOnlyDuringSleepMode()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-      <div class="setting-row">
-        <div class="setting-row-label" translate>
-          <span translate>join-notifications.joinSoundVolume.title</span>
-          <span translate>join-notifications.joinSoundVolume.description</span>
-        </div>
-        <div class="setting-row-action">
-          <button class="btn btn-secondary" (click)="testSound()">
+        <div class="setting-row">
+          <div class="setting-row-label" translate>
+            <span translate>join-notifications.joinSoundVolume.title</span>
+            <span translate>join-notifications.joinSoundVolume.description</span>
+          </div>
+          <div class="setting-row-action">
+            <button class="btn btn-secondary" (click)="testSound()">
             <span translate @hshrink *ngIf="!playingTestSound"
-              >nightmare-detection.playSound.volume.test</span
+            >nightmare-detection.playSound.volume.test</span
             >
-            <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
-          </button>
-          <app-slider-setting
-            [unit]="'%'"
-            [max]="200"
-            [snapValues]="[50, 100, 150]"
-            [value]="config.joinSoundVolume"
-            (valueChange)="setJoinSoundVolume($event)"
-          ></app-slider-setting>
+              <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
+            </button>
+            <app-slider-setting
+              [unit]="'%'"
+              [max]="200"
+              [snapValues]="[50, 100, 150]"
+              [value]="config.joinSoundVolume"
+              (valueChange)="setJoinSoundVolume($event)"
+            ></app-slider-setting>
+          </div>
         </div>
       </div>
     </div>

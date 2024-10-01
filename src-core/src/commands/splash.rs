@@ -20,6 +20,8 @@ pub async fn close_splashscreen(window: tauri::Window) {
         .unwrap()
         .start_in_tray
     {
-        window.get_window("main").unwrap().show().unwrap();
+        let window = window.get_window("main").unwrap();
+        window.show().unwrap();
+        window.set_focus().unwrap();
     }
 }

@@ -8,143 +8,145 @@
 </div>
 <!--ENABLED PANE-->
 <div class="pane-content pane-enabled" *ngIf="panel === 'ENABLED'" @noop>
-  <div class="top-row">
-    <div>
-      <p translate>gpu-automations.powerLimiting.description</p>
-      <p translate *ngIf="gpuDevices.length">gpu-automations.powerLimiting.selectGPU</p>
-      <div class="alert warning" *ngIf="!gpuDevices.length" @vshrink>
-        <div class="alert-bg"></div>
-        <div class="alert-icon">
-          <i class="material-icons">warning</i>
+  <div class="setting-view-container">
+    <div class="top-row">
+      <div>
+        <p translate>gpu-automations.powerLimiting.description</p>
+        <p translate *ngIf="gpuDevices.length">gpu-automations.powerLimiting.selectGPU</p>
+        <div class="alert warning" *ngIf="!gpuDevices.length" @vshrink>
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons">warning</i>
+          </div>
+          <div class="alert-content flex-row">
+            <span translate>gpu-automations.powerLimiting.noGPUs</span>
+          </div>
         </div>
-        <div class="alert-content flex-row">
-          <span translate>gpu-automations.powerLimiting.noGPUs</span>
-        </div>
-      </div>
-      <div class="gpu-select">
-        <label class="radio-button" *ngFor="let device of gpuDevices">
-          <input
-            type="radio"
-            name="sleep-enable-gpu-device"
-            [value]="device.id"
-            [checked]="device.selected"
-            (click)="gpuAutomations.selectPowerLimitingDevice(device)"
-          />
-          <span class="radio-button-dot"></span>
-          <span class="radio-button-label">
+        <div class="gpu-select">
+          <label class="radio-button" *ngFor="let device of gpuDevices">
+            <input
+              type="radio"
+              name="sleep-enable-gpu-device"
+              [value]="device.id"
+              [checked]="device.selected"
+              (click)="gpuAutomations.selectPowerLimitingDevice(device)"
+            />
+            <span class="radio-button-dot"></span>
+            <span class="radio-button-label">
             <span>{{ device.name }}</span>
           </span>
-        </label>
-      </div>
+          </label>
+        </div>
 
-      <div class="alert error" *ngIf="selectedGpu?.supportsPowerLimiting === false" @vshrink>
-        <div class="alert-bg"></div>
-        <div class="alert-icon">
-          <i class="material-icons">error</i>
-        </div>
-        <div class="alert-content flex-row">
-          <span translate>gpu-automations.powerLimiting.gpuPowerLimitsUnsupported</span>
+        <div class="alert error" *ngIf="selectedGpu?.supportsPowerLimiting === false" @vshrink>
+          <div class="alert-bg"></div>
+          <div class="alert-icon">
+            <i class="material-icons">error</i>
+          </div>
+          <div class="alert-content flex-row">
+            <span translate>gpu-automations.powerLimiting.gpuPowerLimitsUnsupported</span>
+          </div>
         </div>
       </div>
-    </div>
-    <div
-      class="pane gpu-current-info"
-      [class.disabled]="!selectedGpu || !selectedGpu.supportsPowerLimiting"
-      @vshrink
-    >
-      <div class="pane-content">
-        <h3 translate>gpu-automations.powerLimiting.currentPowerLimit</h3>
-        <div class="power-limit-bar">
-          <div
-            class="power-limit-bar-fill"
-            [class.default]="selectedGpu?.powerLimit === selectedGpu?.defaultPowerLimit"
-            [style.width]="
+      <div
+        class="pane gpu-current-info"
+        [class.disabled]="!selectedGpu || !selectedGpu.supportsPowerLimiting"
+        @vshrink
+      >
+        <div class="pane-content">
+          <h3 translate>gpu-automations.powerLimiting.currentPowerLimit</h3>
+          <div class="power-limit-bar">
+            <div
+              class="power-limit-bar-fill"
+              [class.default]="selectedGpu?.powerLimit === selectedGpu?.defaultPowerLimit"
+              [style.width]="
               (((selectedGpu?.powerLimit || 1) / (selectedGpu?.maxPowerLimit || 1)) * 100 | floor) +
               '%'
             "
-            [style.justify-content]="selectedGpu ? 'flex-end' : 'center'"
-          >
+              [style.justify-content]="selectedGpu ? 'flex-end' : 'center'"
+            >
             <span *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting">
               {{ selectedGpu.powerLimit }}W &#11825;
               {{
                 ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor
               }}%
             </span>
-            <span *ngIf="!selectedGpu" translate>gpu-automations.powerLimiting.noGPUSelected</span>
-            <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate
+              <span *ngIf="!selectedGpu" translate>gpu-automations.powerLimiting.noGPUSelected</span>
+              <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate
               >gpu-automations.powerLimiting.gpuUnsupported</span
-            >
+              >
+            </div>
+          </div>
+          <div class="power-limit-labels" *ngIf="selectedGpu" @vshrink>
+            <span>{{ selectedGpu.minPowerLimit ?? '-' }}W</span>
+            <span>{{ selectedGpu.maxPowerLimit ?? '-' }}W</span>
           </div>
         </div>
-        <div class="power-limit-labels" *ngIf="selectedGpu" @vshrink>
-          <span>{{ selectedGpu.minPowerLimit ?? '-' }}W</span>
-          <span>{{ selectedGpu.maxPowerLimit ?? '-' }}W</span>
+      </div>
+    </div>
+    <h2 translate>gpu-automations.automations</h2>
+    <div
+      class="automation-grid"
+      [class.disabled]="!selectedGpu || !selectedGpu.supportsPowerLimiting"
+    >
+      <div class="pane">
+        <div class="pane-content">
+          <div class="title">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepEnableAutomationEnabled"
+                (change)="gpuAutomations.togglePowerLimitOnSleepEnabledAutomation()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+            <h3 translate>gpu-automations.powerLimiting.activatingSleepMode.title</h3>
+          </div>
+          <p translate>gpu-automations.powerLimiting.activatingSleepMode.description</p>
+          <app-power-limit-input
+            [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
+            [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
+            [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
+            [powerLimit]="powerLimitOnSleepEnable"
+            (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })"
+          ></app-power-limit-input>
+        </div>
+      </div>
+      <div class="pane">
+        <div class="pane-content">
+          <div class="title">
+            <label class="switch-toggle">
+              <input
+                type="checkbox"
+                [checked]="onSleepDisableAutomationEnabled"
+                (change)="gpuAutomations.togglePowerLimitOnSleepDisabledAutomation()"
+              />
+              <span class="switch-toggle-slider"></span>
+            </label>
+            <h3 translate>gpu-automations.powerLimiting.deactivatingSleepMode.title</h3>
+          </div>
+          <p translate>gpu-automations.powerLimiting.deactivatingSleepMode.description</p>
+          <app-power-limit-input
+            [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
+            [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
+            [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
+            [powerLimit]="powerLimitOnSleepDisable"
+            (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })"
+          ></app-power-limit-input>
         </div>
       </div>
     </div>
-  </div>
-  <h2 translate>gpu-automations.automations</h2>
-  <div
-    class="automation-grid"
-    [class.disabled]="!selectedGpu || !selectedGpu.supportsPowerLimiting"
-  >
-    <div class="pane">
-      <div class="pane-content">
-        <div class="title">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="onSleepEnableAutomationEnabled"
-              (change)="gpuAutomations.togglePowerLimitOnSleepEnabledAutomation()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-          <h3 translate>gpu-automations.powerLimiting.activatingSleepMode.title</h3>
-        </div>
-        <p translate>gpu-automations.powerLimiting.activatingSleepMode.description</p>
-        <app-power-limit-input
-          [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
-          [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
-          [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
-          [powerLimit]="powerLimitOnSleepEnable"
-          (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })"
-        ></app-power-limit-input>
+    <div class="alert">
+      <div class="alert-bg"></div>
+      <div class="alert-icon">
+        <i class="material-icons">warning</i>
       </div>
-    </div>
-    <div class="pane">
-      <div class="pane-content">
-        <div class="title">
-          <label class="switch-toggle">
-            <input
-              type="checkbox"
-              [checked]="onSleepDisableAutomationEnabled"
-              (change)="gpuAutomations.togglePowerLimitOnSleepDisabledAutomation()"
-            />
-            <span class="switch-toggle-slider"></span>
-          </label>
-          <h3 translate>gpu-automations.powerLimiting.deactivatingSleepMode.title</h3>
-        </div>
-        <p translate>gpu-automations.powerLimiting.deactivatingSleepMode.description</p>
-        <app-power-limit-input
-          [minPowerLimit]="selectedGpu?.minPowerLimit ?? -1"
-          [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
-          [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
-          [powerLimit]="powerLimitOnSleepDisable"
-          (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })"
-        ></app-power-limit-input>
+      <div class="alert-content flex-row">
+        <div translate>gpu-automations.powerLimiting.enabledWarning</div>
+        <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
+          gpu-automations.disable
+        </button>
       </div>
-    </div>
-  </div>
-  <div class="alert">
-    <div class="alert-bg"></div>
-    <div class="alert-icon">
-      <i class="material-icons">warning</i>
-    </div>
-    <div class="alert-content flex-row">
-      <div translate>gpu-automations.powerLimiting.enabledWarning</div>
-      <button class="btn btn-secondary" (click)="gpuAutomations.disable()" translate>
-        gpu-automations.disable
-      </button>
     </div>
   </div>
 </div>

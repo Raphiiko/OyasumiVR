@@ -151,14 +151,6 @@ GPUの電力を制限してPCの消費電力を節約します。希望の消費
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ シャットダウン機能
 
-{{BRIGHTNESS_AUTOMATIONS_HEADER}}
-🔅 明るさの自動化
-
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
-睡眠時と起床時の明るさを自動化します。HMDの輝度を徐々に落とすことができるので、急な明るさの変化で目を覚ます心配もありません！
-<br><br>
-ソフトウェアの明るさだけでなく、HMDが対応している場合はハードウェア輝度も制御できます(Valve Index, Bigscreen Beyond)。オーバーレイから輝度レベルを簡単にコントロールすることも可能です！
-
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 🎤 マイクミュートの自動化
 
@@ -348,6 +340,12 @@ OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blo
 {{SHUTDOWN_SEQUENCE_BODY}}
 
 
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
+
+
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
+
+
 {{MQTT_CONTROL_HEADER}}
 
 
@@ -355,3 +353,9 @@ OyasumiVR is available under the [MIT](https://github.com/Raphiiko/OyasumiVR/blo
 
 
 {{MQTT_CONTROL_FEATURES}}
+
+
+{{SUPPORTED_HARDWARE_CCT_HEADER}}
+
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}

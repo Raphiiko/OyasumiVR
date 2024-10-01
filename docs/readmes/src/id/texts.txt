@@ -151,9 +151,6 @@ Ini adalah fitur yang lebih canggih yang dapat Anda gunakan untuk memicu fitur t
 {{SHUTDOWN_SEQUENCE_HEADER}}
 ⛔ Urutan Shutdown
 
-{{BRIGHTNESS_AUTOMATIONS_HEADER}}
-🔅 Otomatisasi Brightness
-
 {{HEART_RATE_AUTOMATIONS_HEADER}}
 ♥️ Otomatisasi Denyut Jantung (Integrasi Pulsoid)
 
@@ -294,7 +291,10 @@ OyasumiVR tersedia di bawah bagian lisensi [MIT](https://github.com/Raphiiko/Oya
 {{SHUTDOWN_SEQUENCE_BODY}}
 
 
-{{BRIGHTNESS_AUTOMATIONS_BODY}}
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
+
+
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
 
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
@@ -328,6 +328,12 @@ OyasumiVR tersedia di bawah bagian lisensi [MIT](https://github.com/Raphiiko/Oya
 
 
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
+
+
+{{SUPPORTED_HARDWARE_CCT_HEADER}}
+
+
+{{SUPPORTED_HARDWARE_CCT_BODY}}
 
 
 {{TELEMETRY_HEADER}}

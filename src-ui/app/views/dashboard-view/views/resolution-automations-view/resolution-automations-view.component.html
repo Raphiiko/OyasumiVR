@@ -1,136 +1,138 @@
 <div class="pane">
   <div class="pane-title" translate>resolution-automations.title</div>
   <div class="pane-content">
-    <div class="setting-category">
-      <p translate>resolution-automations.description</p>
-      <div class="settings">
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>resolution-automations.onSleepEnable.title</span>
-            <span translate>resolution-automations.onSleepEnable.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="onSleepModeEnableConfig.enabled"
-                (change)="
+    <div class="setting-view-container">
+      <div class="setting-category">
+        <p translate>resolution-automations.description</p>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>resolution-automations.onSleepEnable.title</span>
+              <span translate>resolution-automations.onSleepEnable.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="onSleepModeEnableConfig.enabled"
+                  (change)="
                   setAutomationEnabled(
                     'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE',
                     !onSleepModeEnableConfig.enabled
                   )
                 "
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-row-group">
-          <div class="setting-row" [class.disabled]="!onSleepModeEnableConfig.enabled">
-            <div class="setting-row-label" translate>
-              <span translate>resolution-automations.renderResolution.title</span>
-              <span></span>
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
             </div>
-            <div class="setting-row-action">
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row" [class.disabled]="!onSleepModeEnableConfig.enabled">
+              <div class="setting-row-label" translate>
+                <span translate>resolution-automations.renderResolution.title</span>
+                <span></span>
+              </div>
+              <div class="setting-row-action">
               <span translate *ngIf="onSleepModeEnableConfig.resolution !== null"
-                >resolution-automations.renderResolution.custom</span
+              >resolution-automations.renderResolution.custom</span
               >
-              <span translate *ngIf="onSleepModeEnableConfig.resolution === null"
+                <span translate *ngIf="onSleepModeEnableConfig.resolution === null"
                 >resolution-automations.renderResolution.auto</span
-              >
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="onSleepModeEnableConfig.resolution !== null"
-                  (change)="
+                >
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="onSleepModeEnableConfig.resolution !== null"
+                    (change)="
                     setRenderResolution(
                       'RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE',
                       onSleepEnableMode.checked ? onSleepEnableSlider.value : null
                     )
                   "
-                  #onSleepEnableMode
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-              <app-slider-setting
-                [disabled]="onSleepModeEnableConfig.resolution === null"
-                unit="%"
-                [value]="onSleepModeEnableConfig.resolution ?? 150"
-                (valueChange)="
+                    #onSleepEnableMode
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+                <app-slider-setting
+                  [disabled]="onSleepModeEnableConfig.resolution === null"
+                  unit="%"
+                  [value]="onSleepModeEnableConfig.resolution ?? 150"
+                  (valueChange)="
                   setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_ENABLE', $event)
                 "
-                [min]="20"
-                [max]="500"
-                [step]="1"
-                [snapValues]="[150]"
-                [snapDistance]="25"
-                #onSleepEnableSlider
-              ></app-slider-setting>
+                  [min]="20"
+                  [max]="500"
+                  [step]="1"
+                  [snapValues]="[150]"
+                  [snapDistance]="25"
+                  #onSleepEnableSlider
+                ></app-slider-setting>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>resolution-automations.onSleepDisable.title</span>
-            <span translate>resolution-automations.onSleepDisable.description</span>
-          </div>
-          <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="onSleepModeDisableConfig.enabled"
-                (change)="
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>resolution-automations.onSleepDisable.title</span>
+              <span translate>resolution-automations.onSleepDisable.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="onSleepModeDisableConfig.enabled"
+                  (change)="
                   setAutomationEnabled(
                     'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE',
                     !onSleepModeDisableConfig.enabled
                   )
                 "
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="setting-row-group">
-          <div class="setting-row" [class.disabled]="!onSleepModeDisableConfig.enabled">
-            <div class="setting-row-label" translate>
-              <span translate>resolution-automations.renderResolution.title</span>
-              <span></span>
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
             </div>
-            <div class="setting-row-action">
+          </div>
+          <div class="setting-row-group">
+            <div class="setting-row" [class.disabled]="!onSleepModeDisableConfig.enabled">
+              <div class="setting-row-label" translate>
+                <span translate>resolution-automations.renderResolution.title</span>
+                <span></span>
+              </div>
+              <div class="setting-row-action">
               <span translate *ngIf="onSleepModeDisableConfig.resolution !== null"
-                >resolution-automations.renderResolution.custom</span
+              >resolution-automations.renderResolution.custom</span
               >
-              <span translate *ngIf="onSleepModeDisableConfig.resolution === null"
+                <span translate *ngIf="onSleepModeDisableConfig.resolution === null"
                 >resolution-automations.renderResolution.auto</span
-              >
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="onSleepModeDisableConfig.resolution !== null"
-                  (change)="
+                >
+                <label class="switch-toggle">
+                  <input
+                    type="checkbox"
+                    [checked]="onSleepModeDisableConfig.resolution !== null"
+                    (change)="
                     setRenderResolution(
                       'RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE',
                       onSleepDisableMode.checked ? onSleepDisableSlider.value : null
                     )
                   "
-                  #onSleepDisableMode
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-              <app-slider-setting
-                [disabled]="onSleepModeDisableConfig.resolution === null"
-                unit="%"
-                [value]="onSleepModeDisableConfig.resolution ?? 150"
-                (valueChange)="
+                    #onSleepDisableMode
+                  />
+                  <span class="switch-toggle-slider"></span>
+                </label>
+                <app-slider-setting
+                  [disabled]="onSleepModeDisableConfig.resolution === null"
+                  unit="%"
+                  [value]="onSleepModeDisableConfig.resolution ?? 150"
+                  (valueChange)="
                   setRenderResolution('RENDER_RESOLUTION_ON_SLEEP_MODE_DISABLE', $event)
                 "
-                [min]="20"
-                [max]="500"
-                [step]="1"
-                [snapValues]="[150]"
-                [snapDistance]="25"
-                #onSleepDisableSlider
-              ></app-slider-setting>
+                  [min]="20"
+                  [max]="500"
+                  [step]="1"
+                  [snapValues]="[150]"
+                  [snapDistance]="25"
+                  #onSleepDisableSlider
+                ></app-slider-setting>
+              </div>
             </div>
           </div>
         </div>
