@@ -48,8 +48,14 @@ export class TelemetryService {
     });
 
     window.addEventListener('error', (e) => {
-      this.trackEvent('ui_js_error', {
+      const errorData = JSON.stringify({
+        filename: e.filename,
+        lineno: e.lineno,
+        colno: e.colno,
         message: e.message,
+      });
+      this.trackEvent('ui_js_error', {
+        errorData,
       });
     });
   }
