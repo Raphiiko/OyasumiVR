@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.14.1]
+## [1.14.2]
+
+### Changed
+
+- Updated Russian translations
+- Updated Korean translations
 
 ### Fixed
 
