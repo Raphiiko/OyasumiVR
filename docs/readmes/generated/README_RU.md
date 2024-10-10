@@ -8,13 +8,13 @@
 
 <p align="center">
     <a><img alt="Последняя Версия" src="https://img.shields.io/github/v/tag/Raphiiko/Oyasumi?color=informational&label=version&sort=semver"></a>
-    <a><img alt="Development Build Status" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
+    <a><img alt="Статус Dev сборки" src="https://github.com/Raphiiko/Oyasumi/actions/workflows/build-development.yml/badge.svg"/></a>
     <a href="https://github.com/Raphiiko/Oyasumi/blob/develop/LICENSE"><img alt="Лицензия" src="https://img.shields.io/github/license/Raphiiko/Oyasumi"></a>
     <br>
     <a href="https://discord.gg/7MqdPJhYxC"><img alt="Discord Badge" src="https://img.shields.io/discord/1023672078672609382?color=5865f2&label=Discord&logo=discord&logoColor=https%3A%2F%2Fshields.io%2Fcategory%2Fother"/></a>
-    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Steam Page" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
-    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="BOOTH.pm Page" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
-    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Gumroad Page" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
+    <a href="https://store.steampowered.com/app/2538150/OyasumiVR__VR_Sleeping_Utilities"><img alt="Страница Steam" src="https://img.shields.io/badge/Store-Steam-black?logo=steam"/></a>
+    <a href="https://raphiiko.booth.pm/items/4216880"><img alt="Страница BOOTH.pm" src="https://img.shields.io/badge/Store-Booth.pm-red"/></a>
+    <a href="https://raphiiko.gumroad.com/l/oyasumi?layout=profile"><img alt="Страница Gumroad" src="https://img.shields.io/badge/Store-Gumroad-important"/></a>
     <br>
     <a href="https://ko-fi.com/raphii"><img alt="Ko-fi Page" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
     <a href="https://patreon.com/Raphii"><img alt="Patreon Page" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
@@ -184,14 +184,14 @@ OyasumiVR может включать и выключать Ваши базов�
   </tr>
 </table>
 
-### 🎮 Device Control
+### 🎮 Управление устройствами
 
 <table>
   <tr>
     <td>
-OyasumiVR can allow you to easily control many of your SteamVR devices, from controllers, to trackers, to base stations.
+OyasumiVR позволяет легко управлять множеством ваших устройств SteamVR. Контроллерами, трекерами, и базовыми станциями.
 <br><br>
-Easily read detailed battery level and charge status for your controllers and trackers, or turn your base stations on and off with a single click! 
+Легко узнавайте подробную информацию об уровне заряда батареи и состоянии зарядки ваших контроллеров и трекеров или включайте и выключайте базовые станции одним щелчком мыши! 
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7c6a6f7d-fa5a-44e0-bc0f-b690e26dad31"></td>
   </tr>
@@ -262,37 +262,37 @@ OyasumiVR имеет встроенные пресеты для популярн
   </tr>
   <tr>
     <td>
-🔵 <b>Status Automations</b>
+🔵 <b>Автоматизации статуса</b>
 <br>
-OyasumiVR offers multiple automations for controlling your VRChat visibility and status message, like when you fall asleep, or wake up!
+OyasumiVR предлагает множество средств автоматизации для управления Вашим статусом VRChat и сообщениями статуса, например, когда Вы засыпаете или просыпаетесь!
 <br><br>
-Additionally, you can have OyasumiVR automatically switch your status based on the amount of people around you in VRChat. For example: Switch to blue when you are sleeping alone so your friends can join you, and switch to orange when there's enough people around!
+Кроме того, вы можете настроить OyasumiVR на автоматическое изменение вашего статуса в зависимости от количества людей вокруг Вас в VRChat. Например: переключитесь на синий, когда вы спите одни, чтобы ваши друзья могли присоединиться к вам, и переключитесь на оранжевый, когда вокруг достаточно людей!
     </td>    
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/8ff25c9c-8888-4c12-b149-1f68db17eb01"></td>
   </tr>
   <tr>
     <td>
-🔔 <b>Join Notifications</b>
+🔔 <b>Уведомления о входе</b>
 <br>
-OyasumiVR can notify you when people join or leave your VRChat world. This is useful if you want to be woken up in certain situations.
+OyasumiVR может уведомлять Вас, когда люди присоединяются к Вашему миру VRChat или покидают его. Это полезно, если Вы хотите, чтобы Вас разбудили в определенных ситуациях.
 
-It can configured to only notify you in specific situations, like only:
+Его можно настроить так, чтобы уведомлять Вас только в определенных ситуациях, например:
 <br>
 <ul>
-  <li>For your friends</li>
-  <li>For certain specific players</li>
-  <li>When you're being left alone</li>
-  <li>When you're no longer alone</li>
+  <li>Для Ваших друзей</li>
+  <li>Для определенных людей</li>
+  <li>Когда вы остались одни</li>
+  <li>Когда вы больше не одни</li>
 </ul>
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/bc2e2f9b-9ee5-402c-a7a7-8b998af7d81f"></td>
   </tr>
   <tr>
     <td>
-🏃 <b>Avatar Automations</b>
+🏃 <b>Автоматизации аватара</b>
 <br>
-You can have OyasumiVR automatically switch your avatar when you prepare for bed, when you fall asleep, or when you wake up!
-Useful if you have a specific avatar you use for sleeping.
+Вы можете настроить OyasumiVR на автоматическое переключение вашего аватара, когда вы готовитесь ко сну, когда засыпаете или просыпаетесь!
+Полезно, если у вас есть определенный аватар, который вы используете для сна.
     </td>
     <td width="380" colspan="2"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/e492c6e7-ddda-44ba-b62a-768b01729bdd"></td>
   </tr>
@@ -313,48 +313,48 @@ Useful if you have a specific avatar you use for sleeping.
 <table>
   <tr>
     <td>
-Ever wanted to fall asleep in VR, but not stay in VR all night? The shutdown sequence has you covered!
+Вам когда-нибудь хотелось заснуть в VR, но не оставаться в VR всю ночь? Последовательность выключения - идеальна для Вас!
 <br><br>
-While you can trigger the shutdown sequence manually, there are several automated triggers you can configure:
+Вы можете запустить последовательность выключения вручную, а также существует несколько автоматических триггеров, которые Вы можете настроить:
 <br><br>
-<ul>
-  <li>When you've been asleep for a certain amount of time. </li>
-  <li>When you're left alone in your VRChat world for a certain amount of time.</li>
+<ул>
+  <li>Когда Вы спали определенное количество времени. </li>
+  <li>Когда Вы остаетесь одни в мире VRChat на определенное время.</li>
 </ul>
 <br>
-Depending on which actions you configure, it will do any of the following:
+В зависимости от Ваших настроек, последовательность выключения может выполнять любое из следующего:
 <br><br>
-<ul>
-  <li>Turn off your controllers and/or Trackers</li>
-  <li>Turn off your Base Stations</li>
-  <li>Quit SteamVR <i>(And any running game or overlay along with it)</i></li>
-  <li>Shut down Windows</li>
+<ул>
+  <li>Отключение контроллеров и/или трекеров.</li>
+  <li>Отключение базовых станций</li>
+  <li>Выход из SteamVR <i>(и любой запущенной игры или оверлея вместе с ним)</i></li>
+  <li>Завершение работы Windows</li>
 </ul>
 <br>
-With the shutdown sequence configured, you can fall asleep soundly in VR, knowing that everything will shut down when you don't need to be in VR anymore!
+Настроив последовательность выключения, Вы можете спокойно заснуть в виртуальной реальности, зная, что все выключится, когда Вам больше не хочется находиться в виртуальной реальности!
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/4254eb51-6d40-4200-a8ef-af97279a9072"></td>
   </tr>
 </table>
 
-### 🔅 Display Brightness & Color Temperature Automations
+### 🔅 Автоматизация яркости и цветовой температуры дисплея
 
 <table>
   <tr>
     <td>
-🌆 <b>Brightness</b>
+🌆 <b>Яркость</b>
 <br>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+Автоматизируйте яркость, когда Вы спите и просыпаетесь. OyasumiVR может плавно изменять яркость дисплея вашей VR-гарнитуры, поэтому она постепенно снижается, не разбудив вас.
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+Вы можете контролировать как программную яркость, так и аппаратную яркость, если Ваша гарнитура это поддерживает (например, Valve Index или Bigscreen Beyond). Помимо предоставления Вам нескольких средств автоматизации, вы можете легко управлять уровнями яркости прямо из оверлея SteamVR!
 <br><br>
-🌡️ <b>Color Temperature</b>
+🌡️ <b>Цветовая температура</b>
 <br>
-OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+OyasumiVR также может управлять цветовой температурой дисплея вашей VR-гарнитуры. Уменьшая синий свет, вы снижаете нагрузку на глаза в поздние часы и облегчаете засыпание.
 <br><br>
-With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+С помощью триггеров заката и рассвета OyasumiVR может автоматически регулировать цветовую температуру Вашего дисплея в соответствии со временем суток.
 <br><br>
-<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
+<i>Обратите внимание, что эта функция поддерживается только на некоторых гарнитурах SteamVR, таких как Valve Index, Bigscreen Beyond и HTC Vive (Pro).</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
@@ -463,81 +463,81 @@ OyasumiVR имеет различные средства автоматизац�
   </tr>
 </table>
 
-### 🏠 Home Assistant Integration
+### 🏠 Интеграция Home Assistant
 
 <table>
   <tr>
     <td colspan="2">
 <img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
-OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
-For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+OyasumiVR может предоставлять Home Assistant многие свои функции, а также функции SteamVR через MQTT! Это позволяет Вам интегрировать OyasumiVR с различными интеллектуальными устройствами, которые могут быть у Вас дома, а также создавать собственные мощные средства автоматизации в Home Assistant.
+Например, Вы можете использовать это, чтобы автоматически выключать умное освещение, когда Вы засыпаете, или включать его снова, когда это необходимо!
 <br><br>
-Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+Вот список доступных функций, которые вы сможете отслеживать или контролировать через Home Assistant:
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
   </tr>
 <tr>
   <td>
-    <b>OyasumiVR Features</b>
+    <b>Функции OyasumiVR</b>
     <ul>
-      <li>Sleep Mode (Switch)</li>
-      <li>Shutdown Sequence (Button)</li>
-      <li>Sleep Preparation (Button)</li>
-      <li>Heart Rate (Sensor)</li>
-      <li>Sleeping Position (Sensor)</li>
+      <li>Режим сна (Переключатель)</li>
+      <li>Последовательность выключения (Кнопка)</li>
+      <li>Подготовка ко сну (Кнопка)</li>
+      <li>Частота сердечных сокращений (Сенсор)</li>
+      <li>Поза сна (Сенсор)</li>
       <li>
-        Base Station
+        Базовые станции
         <ul>
-          <li>Power (Switch)</li>
-          <li>Power State (Sensor)</li>
+          <li>Питание (Переключатель)</li>
+          <li>Состояние питания (Сенсор)</li>
         </ul>
       </li>
       <li>
-        HMD Brightness
+        Яркость VR-гарнитуры
         <ul>
-          <li>Advanced Mode (Switch)</li>
-          <li>Simple Brightness (Number)</li>
-          <li>Software Brightness (Number)</li>
-          <li>Hardware Brightness (Number)</li>
+          <li>Продвинутый режим (Переключатель)</li>
+          <li>Простая яркость (Число)</li>
+          <li>Программная яркость (Число)</li>
+          <li>Аппаратная яркость (Число)</li>
         </ul>
       </li>
     </ul>
   </td>
   <td colspan="2">
-    <b>VRChat Features</b>
+    <b>Функции VRChat</b>
     <ul>
-      <li>VRChat Running (Sensor)</li>
-      <li>Player Name (Sensor)</li>
-      <li># Players In World (Sensor)</li>
-      <li>Status Visibility (Sensor)</li>
-      <li>World Instance ID (Sensor)</li>
+      <li>VRChat запущен (Сенсор)</li>
+      <li>Имя игрока (Сенсор)</li>
+      <li>Число игроков в мире (Сенсор)</li>
+      <li>Статус (Сенсор)</li>
+      <li>ID инстанса мира (Сенсор)</li>
     </ul>
   </td>
 </tr>
 <tr>
   <td>
-    <b>SteamVR Features</b>
+    <b>Функции SteamVR</b>
     <ul>
-      <li>VR Headset Model (Sensor)</li>
-      <li>SteamVR Running (Sensor)</li>
+      <li>Модель VR-гарнитуры (Сенсор)</li>
+      <li>SteamVR запущен (Сенсор)</li>
       <li>
-        Controller & Tracker
+        Контроллеры & Трекеры
         <ul>
-          <li>Power (Switch) (Only Powering Off)</li>
-          <li>Charging State (Sensor)</li>
-          <li>Battery Level (Sensor)</li>
-          <li>Device Roles (Sensor)</li>
+          <li>Питание (Переключатель) (Только выключение)</li>
+          <li>Статус зарядки (Сенсор)</li>
+          <li>Уровень заряда (Сенсор)</li>
+          <li>Роли устройств (Сенсор)</li>
         </ul>
       </li>
     </ul>
     <br />
   </td>
   <td colspan="2">
-    <b>Bigscreen Beyond Features</b>
+    <b>Функции Bigscreen Beyond</b>
     <ul>
-      <li>Fan Speed (Number)</li>
-      <li>RGB LED (Light)</li>
-      <li>Brightness (Number)</li>
+      <li>Скорость вентилятора (Число)</li>
+      <li>RGB LED (Свет)</li>
+      <li>Яркость (Число)</li>
     </ul>
   </td>
 </tr>
@@ -598,10 +598,10 @@ _(\*) Tundra трекеры имеют большую задержу отчет�
 
 Управление яркостью изображения доступно на всех гарнитурах.
 
-### Color Temperature Automations
+### Автоматизация цветовой температуры
 
-Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
-It might work on other headsets, but your mileage may vary.
+Управление цветовой температурой дисплея гарнитуры VR в настоящее время поддерживается только на некоторых гарнитурах SteamVR, таких как Valve Index, Bigscreen Beyond и HTC Vive (Pro).
+Это может работать на других гарнитурах, но результат может отличаться.
 
 ## ПО использованное при разработке
 

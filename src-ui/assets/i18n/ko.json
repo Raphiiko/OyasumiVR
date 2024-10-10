@@ -20,8 +20,18 @@
       "SET_VOLUME": "볼륨 변경",
       "UNMUTE": "음소거 해제"
     },
+    "applyOnStart": {
+      "description": {
+        "onSleepDisable": "수면 모드가 비활성화된 상태에서 OyasumiVR이 시작되면 이 자동화 기능을 실행해요.",
+        "onSleepEnable": "수면 모드가 활성화된 상태에서 OyasumiVR이 시작되면 이 자동화 기능을 실행해요."
+      },
+      "title": "시작 시 적용"
+    },
     "automations": {
       "label": "자동화 {count}개"
+    },
+    "config": {
+      "title": "설정"
     },
     "description": "잠들거나 일어날 때 오디오 장치의 볼륨을 자동으로 변경해보세요! 이 기능은 다른 사람이 수면을 방해하는 것을 방지하고 싶을 때 유용합니다.",
     "devices": {
@@ -138,14 +148,60 @@
     "whitelist": "플레이어 화이트리스트"
   },
   "brightness-automations": {
+    "AT_SUNRISE": {
+      "title": "해가 뜰 때"
+    },
+    "AT_SUNSET": {
+      "title": "해가 질 때"
+    },
+    "HMD_CONNECT": {
+      "title": "헤드셋이 SteamVR에 연결되었을 때"
+    },
+    "SLEEP_MODE_DISABLE": {
+      "title": "수면 모드 비활성화 시"
+    },
+    "SLEEP_MODE_ENABLE": {
+      "title": "수면 모드 활성화 시"
+    },
+    "SLEEP_PREPARATION": {
+      "title": "수면 준비 시작 시"
+    },
+    "activation": {
+      "category": "활성화"
+    },
+    "activationTime": {
+      "SUNRISE": {
+        "description": "해가 뜨는 시간",
+        "title": "일출 시간"
+      },
+      "SUNSET": {
+        "description": "해가 지는 시간",
+        "title": "일몰 시간"
+      }
+    },
+    "autoDetermineSunsetSunrise": "자동으로 시간 예측",
     "brightness": {
       "title": "조절할 밝기"
     },
+    "changeBrightness": {
+      "category": "밝기",
+      "description": "VR 헤드셋의 밝기를 조절해요.",
+      "title": "밝기 변경"
+    },
+    "changeTemperature": {
+      "category": "색온도",
+      "description": "VR 헤드셋에 표시되는 이미지의 색온도를 조절해요.",
+      "title": "색온도 변경"
+    },
     "copyBrightness": "현재\n밝기 값 복사",
+    "description": "잠들 때나 일어날 때 등 다양한 시간에 맞춰 OyasumiVR이 자동으로 VR 헤드셋의 밝기와 색온도를 조절하도록 설정해보세요!",
+    "detailsTitle": "이벤트",
+    "events": "이벤트",
     "hardwareBrightness": {
       "description": "디스플레이 자체의 밝기를 조절해요.",
       "title": "조절할 하드웨어 밝기"
     },
+    "miscConfig": "기타 옵션",
     "mode": {
       "advanced": "고급 모드",
       "simple": "단순 모드"
@@ -154,11 +210,27 @@
       "message": "OyasumiVR에는 VR 헤드셋의 밝기를 제어하는 두 가지 방식이 있어요: 각각 소프트웨어 제어 방식과 하드웨어 제어 방식이에요:\n\n소프트웨어 제어는 모든 헤드셋에서 사용할 수 있어요. 이미지의 밝기를 조절하여 VR 헤드셋의 밝기를 조절합니다.\n\n하드웨어 제어는 지원되는 헤드셋( Valve Index, Bigscreen Beyond)에서만 사용할 수 있어요. 지원되는 범위 내에서 헤드셋 디스플레이의 밝기를 직접 조절합니다.\n\n단순 모드에서는 OyasumiVR이 소프트웨어와 하드웨어 밝기를 유연하게 제어하며, 하드웨어 밝기가 지원되지 않는 경우 소프트웨어 밝기로만 제어합니다. \n\n직접적인 제어를 선호하는 경우 고급 모드를 사용하면 소프트웨어와 하드웨어 밝기를 각각 개별적으로 제어할 수 있어 각각에 대한 정확한 밝기 값을 설정할 수 있습니다.",
       "title": "밝기 제어 모드"
     },
+    "onHmdConnectInfo": "“해가 질 때”와 “해가 뜰 때”를 모두 활성화하면 하루 중 시간에 따라 헤드셋이 연결되었을 때 자동으로 실행되어요. 그렇지 않은 경우 “수면 모드 활성화 시” 및 “수면 모드 비활성화 시”의 설정값이 대신 적용되어요!",
+    "onlyWhenSleepModeDisabled": {
+      "description": "수면 모드가 비활성화된 상태에서만 이 자동화 기능을 실행해요.",
+      "title": "수면 모드가 비활성화된 경우에만"
+    },
     "softwareBrightness": {
       "description": "VR 헤드셋에 표시되는 이미지의 밝기를 조절해요.",
       "title": "조절할 소프트웨어 밝기"
     },
-    "title": "밝기 자동화"
+    "temperature": {
+      "title": "변경할 색온도"
+    },
+    "title": "밝기 자동화",
+    "transition": {
+      "description": "시간이 지남에 따라 밝기와 색온도가 부드럽게 전환되도록 해요.",
+      "title": "부드러운 전환"
+    },
+    "transitionTime": {
+      "description": "변경이 완료되는 데 걸리는 시간",
+      "title": "전환 시간"
+    }
   },
   "chaperone-automations": {
     "description": "OyasumiVR은 수면 모드가 활성화되거나 비활성화될 때 SteamVR의 경계 표시가 흐려지는 거리를 자동으로 조정할 수 있어요.",
@@ -183,6 +255,9 @@
     },
     "bsb-fan-speed-control-modal": {
       "fanSpeed": "팬 속도"
+    },
+    "cct-control-modal": {
+      "colorTemperature": "색온도"
     },
     "color-picker-modal": {
       "title": "색상 선택"
@@ -238,6 +313,7 @@
       "resolutionAutomations": "해상도 자동화",
       "settings": {
         "advanced": "고급 설정",
+        "brightnessCct": "밝기 & 색온도 설정",
         "general": "일반 설정",
         "hotkeys": "단축키 설정",
         "integrations": "연동",
@@ -265,7 +341,13 @@
         "description": "무시한 베이스스테이션은 숨겨지며 자동화의 영향을 받지 않아요.",
         "title": "베이스스테이션 무시"
       },
-      "title": "장치 수정: {deviceId}"
+      "title": "장치 수정: {deviceId}",
+      "v1Identifier": {
+        "change": "ID 변경",
+        "description": "OyasumiVR이 V1 베이스스테이션을 제어하려면 해당 ID를 알아야 해요.",
+        "set": "ID 설정",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -275,6 +357,7 @@
         "other": "기타"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 Lighthouse"
       },
       "deviceRole": {
@@ -350,6 +433,17 @@
           },
           "title": "Bigscreen Beyond의 RGB Led를 {color}(으)로 설정함"
         },
+        "cctChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLE": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_ENABLE": "수면 모드가 활성화되어 설정을 변경했어요.",
+            "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
+          },
+          "title": {
+            "set": "헤드셋의 색온도를 {icon} {temperature}K로 설정함",
+            "transition": "헤드셋의 색온도를 {icon} {temperature}K로 점차 변화시킴"
+          }
+        },
         "changedAudioDeviceVolume": {
           "reason": {
             "SLEEP_MODE_DISABLED": "수면 모드가 비활성화되어 설정을 변경했어요.",
@@ -410,6 +504,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_ENABLE": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -526,6 +622,8 @@
         },
         "simpleBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_ENABLE": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -578,6 +676,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "SLEEP_MODE_DISABLE": "수면 모드가 비활성화되어 설정을 변경했어요.",
+            "SLEEP_MODE_ENABLE": "수면 모드가 활성화되어 설정을 변경했어요.",
             "SLEEP_PREPARATION": "수면 준비가 시작되어 설정을 변경했어요."
           },
           "title": {
@@ -643,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "마이크 및 기타 오디오 장치 제어와 관련된 이벤트",
+          "title": "오디오 제어"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "VR 헤드셋의 밝기 및 색온도 제어와 관련된 이벤트",
+          "title": "밝기 & 색온도"
+        },
+        "BSB_CONTROL": {
+          "description": "Bigscreen Beyond 제어와 관련된 이벤트",
+          "title": "Bigscreen Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "트래커, 컨트롤러 및 베이스스테이션과 같은 장치의 전원을 켜고 끄는 것과 관련된 이벤트",
+          "title": "장치 전원"
+        },
+        "GPU_CONTROL": {
+          "description": "그래픽 카드의 다양한 기능을 제어하는 것과 관련된 이벤트",
+          "title": "GPU 제어"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "종료 시퀀스와 관련된 이벤트",
+          "title": "종료 시퀀스"
+        },
+        "SLEEP_MODE": {
+          "description": "수면 모드 및 수면 감지와 관련된 이벤트",
+          "title": "수면 모드"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "렌더 해상도 및 페이드 거리 조절 등, SteamVR 설정 변경과 관련된 이벤트",
+          "title": "SteamVR 설정"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "OyasumiVR의 VRChat 아바타 변경 관련된 이벤트",
+          "title": "VRChat 아바타"
+        },
+        "VRCHAT_INVITES": {
+          "description": "VRChat 인바이트 및 인바이트 리퀘스트와 관련된 이벤트",
+          "title": "VRChat 인바이트 리퀘스트"
+        },
+        "VRCHAT_STATUS": {
+          "description": "VRChat 스테이터스와 관련된 이벤트",
+          "title": "VRChat 스테이터스"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "Windows 전원 관리 정책과 관련된 이벤트",
+          "title": "Windows 전원 정책"
+        }
+      },
+      "selectAll": "전부 선택",
+      "selectDescription": "이벤트 로그에서 보고 싶은 항목 유형을 선택하세요.",
+      "selectNone": "전부 해제",
+      "title": "이벤트 로그 필터링"
+    },
     "event-log": {
       "clearLog": "비우기",
       "clearLogModal": {
@@ -650,6 +806,7 @@
         "title": "비우기 확인"
       },
       "no-logs": "아직 아무 이벤트도 기록되지 않았어요.\n로그는 최대 48시간 보관되어요.",
+      "openFilters": "이벤트 필터",
       "show-more": "더보기",
       "title": "이벤트"
     },
@@ -670,6 +827,46 @@
     "hotkey-selector": {
       "select": "단축키 설정"
     },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "식별자 감지중...",
+        "instructions": "자동으로 식별자를 감지할 수 없으면, 대신 식별자를 수동으로 입력해주세요.",
+        "steps": {
+          "connectDevice": "추적 장치 연결",
+          "connectDeviceDesc": "lighthouse 추적 헤드셋, 컨트롤러 또는 트래커를 연결해주세요...",
+          "detectBasestation": "베이스스테이션 감지",
+          "detectBasestationDesc": "헤드셋, 컨트롤러 또는 트래커가 베이스스테이션을 볼 수 있는지 확인해주세요.",
+          "deviceDetected": "장치 감지됨",
+          "running": "실행중",
+          "startSteamVR": "SteamVR 시작",
+          "waitingForSteamVR": "SteamVR 시작 대기 중이에요..."
+        }
+      },
+      "detectAutomatically": "자동 감지",
+      "inputManually": "수동 입력",
+      "intro": {
+        "message": "OyasumiVR이 베이스스테이션을 제어하려면 해당 식별자를 알아야 해요."
+      },
+      "manualInput": {
+        "formatDescription": "식별자의 길이는 8자이고 숫자 0-9와 문자 A-F로 구성되어요.",
+        "message": "식별자는 베이스스테이션의 뒷면에서 찾을 수 있어요."
+      },
+      "success": {
+        "subtitle": "이제 베이스스테이션을 제어할 수 있어요!",
+        "title": "식별자 설정"
+      },
+      "title": "식별자 필요",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "lighthouse ID를 자동으로 감지할 수 없었어요. 수동으로 입력해주세요.",
+          "invalidId": "입력하신 lighthouse ID가 유효하지 않을 수 있어요.\n장치 뒷면의 코드를 다시 확인해주세요.",
+          "verificationFailed": "lighthouse ID를 확인할 수 없어요. 베이스 스테이션이 연결되어 있고 PC의 범위 내에 있는지 확인해주세요."
+        },
+        "idAutodetected": "사용 가능한 식별자 감지됨",
+        "verifying": "ID 검증 중"
+      },
+      "verifyIdAction": "ID 검증"
+    },
     "main-status-bar": {
       "active": "활성화 됨",
       "brightness": {
@@ -679,6 +876,10 @@
       "bsbFanSpeed": {
         "label": "팬 속도",
         "tooltip": "Bigscreen Beyond 팬 속도"
+      },
+      "cctControl": {
+        "label": "색온도",
+        "tooltip": "색온도 제어"
       },
       "heartrate": "심박수",
       "inactive": "비활성화 됨",
@@ -767,6 +968,7 @@
         "sleep": "수면"
       },
       "addCommand": "추가",
+      "addParameter": "매개변수 추가",
       "commandCounter": "{value} 커멘드",
       "commands": {
         "COMMAND": {
@@ -1042,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "이 프리셋은 몇 가지 문제가 있는 워크어라운드를 사용하고 있어요. 새로은 GoGo Loco 프리셋을 사용할 수 없는 경우에만 이 프리셋을 사용하도록 부닥드립니다. 또한 당신의 아바타가 구버전의 Gogo Loco를 사용하고 있다면 최신 버전의 Gogo Loco 버전으로 업데이트하는 것을 추천해요.",
+    "GORONE_LEGACY_PRESET_WARNING": "이 프리팹의 v4.0 이상 버전에는 이미 회전 기능이 포함되어 있으며 이 프리셋과 호환되지 않아요. 아바타가 이전 버전의 이 프리팹을 사용하는 경우에 이 프리셋을 계속 사용할 수 있어요.",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "베이스 스테이션이 많은 것 같아요!\n\n대부분의 블루투스 어댑터는 헤드폰 및 기타 주변기기와 같은 다른 블루투스 장치를 포함하여 최대 7개까지만 동시에 연결할 수 있다는 점에 유의해주세요.\n\n동시에 너무 많은 베이스 스테이션을 연결하거나 다른 블루투스 장치를 너무 많이 연결하면 OyasumiVR이 모든 베이스 스테이션을 제어하는 데 문제가 생길 수 있으니, 이 점도 기억해주세요!",
+        "title": "경고"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "디스플레이 색온도 조절 기능은 Valve Index, Bigscreen Beyond, HTC Vive(Pro)와 같은 일부 SteamVR 헤드셋에서만 사용할 수 있어요.\n\n이 헤드셋을 사용하지 않으면 이 기능이 작동하지 않을 수 있어요.\n\n원하시면 설정에서 디스플레이 색온도 조절 기능을 비활성화할 수 있어요.",
+        "title": "기능 사용 가능성"
+      },
+      "acknowledge": "이해했어요"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "유효한 OSC 주소는 항상 '/' 기호로 시작해야 해요.",
       "addressNotASCII": "유효한 OSC 주소는 ASCII 문자만 포함할 수 있어요.",
@@ -1053,7 +1267,9 @@
       "floatTooPrecise": "값의 정확도는 최대 소수점 이하 3자리까지에요.",
       "intOutOfBounds": "값은 0에서 255 사이의 유효한 정수여야 해요.",
       "invalidSyntax": "잘못된 구문이에요.",
+      "maxParameterCountExceeded": "커맨드당 허용되는 최대 매개변수 수는 {value}예요.",
       "noFloatMilliseconds": "밀리초 값은 정수로 정의되어야 해요.",
+      "stringTooLong": "문자열 값은 {value}자 이하로 입력해야 해요.",
       "tooManyCommands": "OSC 스크립트는 {value} 이상의 액션을 가질 수 없어요.",
       "totalDurationTooLong": "스크립트의 총 시간은 10초를 초과할 수 없어요."
     }
@@ -1151,6 +1367,13 @@
           "title": "다리 잠금"
         },
         "general": {
+          "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "이 기능을 활성화하면 OyasumiVR이 풀 바디 트래커를 끈 후에 아바타 애니메이션을 사용할 수 있어요. <a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">이게 뭐고, 왜 필요한 거죠?</a>",
+              "title": "FBT와 함께 아바타 애니메이션을 사용하도록 우회"
+            },
+            "title": "고급 옵션"
+          },
           "footLock": {
             "description": "다리 잠금을 활성화하면 플레이어의 움직임이나 뒤척임을 방지해요.",
             "title": "다리 잠금"
@@ -1188,6 +1411,7 @@
       "simple": "밝기",
       "software": "소프트웨어 밝기"
     },
+    "colorTemp": "색온도",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1235,7 +1459,11 @@
           "automations": "자동화",
           "deviceControl": "장치 제어",
           "prepareForSleep": "수면 준비",
-          "shutdown": "종료 시퀀스"
+          "shutdown": "종료 시퀀스",
+          "sliderMode": {
+            "BRIGHTNESS": "밝기 제어",
+            "COLOR_TEMP": "색온도 제어"
+          }
         }
       },
       "shutdownSequence": {
@@ -1555,6 +1783,15 @@
         },
         "title": "Bigscreen Beyond"
       },
+      "cctControl": {
+        "enabled": {
+          "description": "디스플레이 색온도를 조절하는 다른 애플리케이션(예: LuxVR, OVR Advanced Settings)을 사용한다면 이 기능을 비활성화해주세요.",
+          "title": "색온도 제어 활성화"
+        },
+        "title": "색온도"
+      },
+      "description": "여기에서는 밝기와 색온도와 관련된 설정을 찾을 수 있어요.",
+      "title": "밝기 & 색온도",
       "valveIndex": {
         "maxBrightness": {
           "description": "OyasumiVR이 설정할 최대 밝기 값을 제한해요.",
@@ -1603,6 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
+          "description": "활성화하면 OyasumiVR을 사용해 베이스스테이션의 전원을 끄고 켤 수 있어요. PC에서 블루투스가 활성화되어 있어야 해요.",
           "title": "전원 제어 활성화"
         },
         "powerOffMode": {
@@ -1798,6 +2036,7 @@
       "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "modals": {
+      "back": "뒤로",
       "cancel": "취소",
       "close": "닫기",
       "confirm": "확인",
@@ -1889,6 +2128,10 @@
       "whenAloneDuration": {
         "description": "종료 시퀀스가 실행되기 전에 혼자 있어야 하는 시간",
         "title": "기간 기준값"
+      },
+      "whenAloneOnlyWhenSleepModeEnabled": {
+        "description": "수면 모드가 활성화된 상태에서만 종료 시퀀스를 실행해요.",
+        "title": "잠든 동안에만"
       },
       "whenAloneTimeWindow": {
         "description": "하루 중 특정 시간대에만 해당 기능이 실행되도록 허용해요",
