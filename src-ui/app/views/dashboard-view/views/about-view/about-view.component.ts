@@ -138,9 +138,9 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
             list.style.opacity = '100%';
             return;
           }
-          list.scrollLeft += 0.5;
+          list.scrollLeft += 1;
           if (list.scrollLeft < list.scrollWidth - list.clientWidth) {
-            requestAnimationFrame(() => scrollToEnd());
+            setTimeout(() => scrollToEnd(), 16);
           } else {
             setTimeout(() => {
               list.style.opacity = '0%';

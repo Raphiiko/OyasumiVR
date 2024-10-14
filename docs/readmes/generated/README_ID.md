@@ -550,7 +550,7 @@ OyasumiVR saat ini mendukung bahasa-bahasa berikut:
 - 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
 - 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
 - 繁體中文 (Traditional Chinese): Community contribution by [狐Kon](https://github.com/XoF-eLtTiL).
-- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf) and [いんく](https://twitter.com/sayonara_natsu).
+- 简体中文 (Simplified Chinese): Community contributions by [狐Kon](https://github.com/XoF-eLtTiL), [雾雨花精灵](https://github.com/flower-elf), [いんく](https://twitter.com/sayonara_natsu) and [Yingxue](https://github.com/a1175815821).
 - Français (French): Community contribution by [neuroblack](https://github.com/neuroblack).
 - Español (Spanish): Community contribution by [aacal666](https://twitter.com/aacalde666).
 - Bahasa Indonesia (Indonesian): Community contribution by [a9ito](https://twitter.com/a9ito).

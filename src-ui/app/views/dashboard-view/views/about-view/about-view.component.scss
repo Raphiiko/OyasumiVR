@@ -249,6 +249,10 @@
   overflow: hidden;
   margin-left: -1em;
 
+  * {
+    white-space: nowrap;
+  }
+
   .supporters-label {
     flex-shrink: 0;
     font-size: 1.5em;
