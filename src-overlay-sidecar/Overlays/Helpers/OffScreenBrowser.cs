@@ -1,5 +1,7 @@
 // Source: https://github.com/vrcx-team/VRCX/blob/master/OffScreenBrowser.cs
 
+using SharpDX.Mathematics.Interop;
+
 namespace overlay_sidecar;
 
 using CefSharp;
@@ -12,25 +14,32 @@ using System.Runtime.InteropServices;
 using System.Threading;
 
 public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
-  private readonly ReaderWriterLockSlim _paintBufferLock;
-  private GCHandle _paintBuffer;
-  private int _width;
-  private int _height;
+  private Texture2D? _texture;
   private long _lastPaint;
   public long LastPaint => _lastPaint;
 
   public OffScreenBrowser(string address, int width, int height)
     : base(
       address,
-      new BrowserSettings()
-      {
-        WindowlessFrameRate = 60,
-        WebGl = CefState.Enabled,
-        DefaultEncoding = "UTF-8"
-      }
+      automaticallyCreateBrowser: false
     )
   {
-    _paintBufferLock = new ReaderWriterLockSlim();
+    var windowInfo = new WindowInfo();
+    windowInfo.SetAsWindowless(IntPtr.Zero);
+    windowInfo.WindowlessRenderingEnabled = true;
+    windowInfo.SharedTextureEnabled = true;
+    windowInfo.Width = width;
+    windowInfo.Height = height;
+
+    var browserSettings = new BrowserSettings()
+    {
+      WindowlessFrameRate = 60,
+      WebGl = CefState.Enabled,
+      DefaultEncoding = "UTF-8"
+    };
+
+    CreateBrowser(windowInfo, browserSettings);
+
     Size = new System.Drawing.Size(width, height);
     RenderHandler = this;
   }
@@ -40,72 +49,19 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
     RenderHandler = null;
     if (IsDisposed) return;
     base.Dispose();
-
-    _paintBufferLock.EnterWriteLock();
-    try
-    {
-      if (_paintBuffer.IsAllocated) _paintBuffer.Free();
-    }
-    finally
-    {
-      _paintBufferLock.ExitWriteLock();
-    }
-
-    _paintBufferLock.Dispose();
   }
 
-  public void RenderToTexture(Texture2D texture)
+  public void UpdateTexture(Texture2D texture)
   {
-    _paintBufferLock.EnterReadLock();
-    try
-    {
-      if (_width > 0 &&
-          _height > 0)
-      {
-        var context = texture.Device.ImmediateContext;
-        var dataBox = context.MapSubresource(
-          texture,
-          0,
-          MapMode.WriteDiscard,
-          MapFlags.None
-        );
-        if (dataBox.IsEmpty == false)
-        {
-          var sourcePtr = _paintBuffer.AddrOfPinnedObject();
-          var destinationPtr = dataBox.DataPointer;
-          var pitch = _width * 4;
-          var rowPitch = dataBox.RowPitch;
-          if (pitch == rowPitch)
-            WinApi.CopyMemory(
-              destinationPtr,
-              sourcePtr,
-              (uint)(_width * _height * 4)
-            );
-          else
-            for (var y = _height; y > 0; --y)
-            {
-              WinApi.CopyMemory(
-                destinationPtr,
-                sourcePtr,
-                (uint)pitch
-              );
-              sourcePtr += pitch;
-              destinationPtr += rowPitch;
-            }
-        }
-        context.UnmapSubresource(texture, 0);
-      }
-    }
-    finally
-
-    {
-      _paintBufferLock.ExitReadLock();
-    }
+    _texture = texture;
   }
 
   ScreenInfo? IRenderHandler.GetScreenInfo()
   {
-    return null;
+    return new ScreenInfo
+    {
+      DeviceScaleFactor = 1.0F
+    };
   }
 
   bool IRenderHandler.GetScreenPoint(int viewX, int viewY, out int screenX, out int screenY)
@@ -120,8 +76,30 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
     return new Rect(0, 0, Size.Width, Size.Height);
   }
 
-  void IRenderHandler.OnAcceleratedPaint(PaintElementType type, Rect dirtyRect, IntPtr sharedHandle)
+  void IRenderHandler.OnAcceleratedPaint(PaintElementType type, Rect dirtyRect, AcceleratedPaintInfo paintInfo)
   {
+    if (type != PaintElementType.View) return;
+    if (OvrManager.Instance.D3D11Device1 == null) return;
+    if (_texture == null) return;
+
+    using var cefTexture =
+      OvrManager.Instance.D3D11Device1.OpenSharedResource1<Texture2D>(paintInfo.SharedTextureHandle);
+    var context = OvrManager.Instance.D3D11Device.ImmediateContext;
+    context.CopyResource(cefTexture, _texture);
+
+    Query query = OvrManager.Instance.D3D11Query;
+    context.End(query);
+    context.Flush();
+
+    RawBool q = context.GetData<RawBool>(query, AsynchronousFlags.DoNotFlush);
+
+    while (!q)
+    {
+      Thread.Yield();
+      q = context.GetData<RawBool>(query, AsynchronousFlags.DoNotFlush);
+    }
+
+    _lastPaint = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
   }
 
   void IRenderHandler.OnCursorChange(IntPtr cursor, CursorType type, CursorInfo customCursorInfo)
@@ -134,35 +112,6 @@ public class OffScreenBrowser : ChromiumWebBrowser, IRenderHandler {
 
   void IRenderHandler.OnPaint(PaintElementType type, Rect dirtyRect, IntPtr buffer, int width, int height)
   {
-    if (type != PaintElementType.View) return;
-    _paintBufferLock.EnterWriteLock();
-    try
-    {
-      if (_width != width ||
-          _height != height)
-      {
-        _width = width;
-        _height = height;
-        if (_paintBuffer.IsAllocated) _paintBuffer.Free();
-
-        _paintBuffer = GCHandle.Alloc(
-          new byte[_width * _height * 4],
-          GCHandleType.Pinned
-        );
-      }
-
-      WinApi.CopyMemory(
-        _paintBuffer.AddrOfPinnedObject(),
-        buffer,
-        (uint)(width * height * 4)
-      );
-
-      _lastPaint = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-    }
-    finally
-    {
-      _paintBufferLock.ExitWriteLock();
-    }
   }
 
   void IRenderHandler.OnPopupShow(bool show)
