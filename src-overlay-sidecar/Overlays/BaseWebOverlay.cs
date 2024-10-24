@@ -71,11 +71,11 @@ public class BaseWebOverlay : RenderableOverlay {
             ArraySize = 1,
             Format = Format.B8G8R8A8_UNorm,
             SampleDescription = new SampleDescription(1, 0),
-            Usage = ResourceUsage.Dynamic,
-            BindFlags = BindFlags.ShaderResource,
-            CpuAccessFlags = CpuAccessFlags.Write
+            BindFlags = BindFlags.ShaderResource
           }
         );
+
+        Browser!.UpdateTexture(_texture);
       }
       catch (SharpDXException err)
       {
@@ -210,8 +210,7 @@ public class BaseWebOverlay : RenderableOverlay {
     // Stop here if we are not ready, already disposed, or if the browser hasn't painted anything new for the past second or so.
     if (_texture == null || Disposed || Browser == null ||
         DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint >= 1000) return;
-    // Render the browser to the texture
-    Browser.RenderToTexture(_texture);
+
     var texture = new Texture_t
     {
       handle = _texture.NativePointer

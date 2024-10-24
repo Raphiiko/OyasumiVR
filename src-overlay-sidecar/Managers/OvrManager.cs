@@ -6,6 +6,11 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using Valve.VR;
 using Device = SharpDX.Direct3D11.Device;
+using Device1 = SharpDX.Direct3D11.Device1;
+using Device2 = SharpDX.Direct3D11.Device2;
+using Device3 = SharpDX.Direct3D11.Device3;
+using Device4 = SharpDX.Direct3D11.Device4;
+using Device5 = SharpDX.Direct3D11.Device5;
 
 namespace overlay_sidecar;
 
@@ -24,6 +29,9 @@ public class OvrManager {
   private MicMuteIndicatorOverlay? _micMuteIndicatorOverlay;
   private bool _active;
   private Device? _device;
+  private Device1? _device1;
+  private DeviceMultithread? _deviceMultithread;
+  private Query? _query;
   private Dictionary<string, List<OvrInputDevice>> inputActions = new();
   public event EventHandler<Dictionary<string, List<OvrInputDevice>>> OnInputActionsChanged;
 
@@ -35,6 +43,8 @@ public class OvrManager {
   public OverlayPointer? OverlayPointer => _overlayPointer;
 
   public Device D3D11Device => _device!;
+  public Device1? D3D11Device1 => _device1;
+  public Query D3D11Query => _query!;
 
   private OvrManager()
   {
@@ -65,6 +75,18 @@ public class OvrManager {
             DeviceCreationFlags.BgraSupport)
           : new Device(DriverType.Hardware,
             DeviceCreationFlags.BgraSupport);
+        UpgradeDevice();
+
+        _device1 = _device.QueryInterface<Device1>();
+
+        _deviceMultithread = _device.QueryInterfaceOrNull<DeviceMultithread>();
+        _deviceMultithread?.SetMultithreadProtected(true);
+
+        _query = new Query(_device, new QueryDescription
+        {
+          Type = QueryType.Event,
+          Flags = QueryFlags.None
+        });
       }
       catch (SharpDXException err)
       {
@@ -79,6 +101,45 @@ public class OvrManager {
       }
 
       break;
+    }
+  }
+
+  // Upgrades the device to the newest supported interface.
+  private void UpgradeDevice()
+  {
+    Device5 device5 = _device!.QueryInterfaceOrNull<Device5>();
+    if (device5 != null)
+    {
+      _device.Dispose();
+      _device = device5;
+      return;
+    }
+    Device4 device4 = _device.QueryInterfaceOrNull<Device4>();
+    if (device4 != null)
+    {
+      _device.Dispose();
+      _device = device4;
+      return;
+    }
+    Device3 device3 = _device.QueryInterfaceOrNull<Device3>();
+    if (device3 != null)
+    {
+      _device.Dispose();
+      _device = device3;
+      return;
+    }
+    Device2 device2 = _device.QueryInterfaceOrNull<Device2>();
+    if (device2 != null)
+    {
+      _device.Dispose();
+      _device = device2;
+      return;
+    }
+    Device1 device1 = _device.QueryInterfaceOrNull<Device1>();
+    if (device1 != null)
+    {
+      _device.Dispose();
+      _device = device1;
     }
   }
 
