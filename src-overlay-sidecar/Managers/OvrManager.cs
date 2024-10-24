@@ -10,6 +10,7 @@ using Device1 = SharpDX.Direct3D11.Device1;
 using Device2 = SharpDX.Direct3D11.Device2;
 using Device3 = SharpDX.Direct3D11.Device3;
 using Device4 = SharpDX.Direct3D11.Device4;
+using Device5 = SharpDX.Direct3D11.Device5;
 
 namespace overlay_sidecar;
 
