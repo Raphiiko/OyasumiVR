@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
-
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
+
+## [1.14.4]
+
+### Fixed
+
+- OyasumiVR crashing when parsing VRChat logs produced during the two hours of DST ending.
 
 ## [1.14.3]
 
