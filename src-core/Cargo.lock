@@ -4197,7 +4197,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr"
-version = "1.14.3"
+version = "1.14.4"
 dependencies = [
  "async-recursion",
  "bluest",
@@ -4270,7 +4270,7 @@ dependencies = [
 
 [[package]]
 name = "oyasumivr-shared"
-version = "1.14.3"
+version = "1.14.4"
 dependencies = [
  "winapi",
 ]
