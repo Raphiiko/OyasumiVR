@@ -58,10 +58,15 @@ fn get_latest_log_path() -> Option<String> {
         .map(|entry| String::from(entry.path.to_str().unwrap()))
 }
 
-fn parse_datetime_from_line(line: String) -> u64 {
+fn parse_datetime_from_line(line: String) -> Option<u64> {
     let localtime = NaiveDateTime::parse_from_str(&line[0..19], "%Y.%m.%d %H:%M:%S").unwrap();
-    let time = Local.from_local_datetime(&localtime).unwrap();
-    time.timestamp_millis() as u64
+    // In the case of a DST rollback, we pick the latest possible time
+    // During this hour, the logs will still be parsed in order, but their timestamps will be out of order.
+    let time = Local.from_local_datetime(&localtime).latest();
+    match time {
+        Some(v) => Some(v.timestamp_millis() as u64),
+        None => return None,
+    }
 }
 
 async fn process_log_line(line: String, initial_load: bool) {
@@ -81,8 +86,12 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             return true;
         }
         let display_name = line[offset..].to_string();
+        let time = match parse_datetime_from_line(line) {
+            Some(v) => v,
+            None => return true,
+        };
         let event = VRCLogEvent {
-            time: parse_datetime_from_line(line),
+            time: time,
             event: String::from("OnPlayerJoined"),
             data: display_name,
             initial_load,
@@ -112,8 +121,12 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             return true;
         }
         let display_name = line[offset..].to_string();
+        let time = match parse_datetime_from_line(line) {
+            Some(v) => v,
+            None => return true,
+        };
         let event = VRCLogEvent {
-            time: parse_datetime_from_line(line),
+            time: time,
             event: String::from("OnPlayerLeft"),
             data: display_name,
             initial_load,
@@ -143,8 +156,12 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             return true;
         }
         let instance_id = line[offset..].to_string();
+        let time = match parse_datetime_from_line(line) {
+            Some(v) => v,
+            None => return true,
+        };
         let event = VRCLogEvent {
-            time: parse_datetime_from_line(line),
+            time: time,
             event: String::from("OnLocationChange"),
             data: instance_id,
             initial_load,
@@ -203,7 +220,7 @@ fn start_log_watch_task(path: String) -> CancellationToken {
                         initial_load: true,
                     },
                 )
-                    .await;
+                .await;
                 first_run = false;
             }
         }
