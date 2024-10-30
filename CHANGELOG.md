@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
+
+### Fixed
+
+- Linking your Pulsoid account through the Pulsoid integration no longer functioning.
 
 ## [1.14.4]
 
