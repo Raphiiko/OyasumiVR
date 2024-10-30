@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
-import { warn } from 'tauri-plugin-log-api';
+import { info, warn } from 'tauri-plugin-log-api';
 import { PulsoidService } from './integrations/pulsoid.service';
 
 @Injectable({
@@ -12,13 +12,18 @@ export class DeepLinkService {
   async init() {
     await listen<string>('onDeepLinkCall', async (event) => {
       let url: URL | null = null;
+      info(`[DeepLinkService] Received deep link call: ${event.payload}`);
       try {
         url = new URL(event.payload);
       } catch (e) {
         await warn(`[DeepLinkService] Failed to parse deep link URL: ${event.payload}`);
         return;
       }
-      await this.handleDeepLinkCall(url);
+      try {
+        await this.handleDeepLinkCall(url);
+      } catch (e) {
+        await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${event.payload}`);
+      }
     });
   }
 
@@ -26,7 +31,7 @@ export class DeepLinkService {
     let pathname = url.pathname;
     // Remove any leading slashes
     while (pathname.startsWith('/')) pathname = pathname.substring(1);
-    const route = pathname.split('/');
+    const route = [url.hostname, ...pathname.split('/')];
     switch (route[0]) {
       case 'integration':
         if (route.length < 2) break;
@@ -41,6 +46,8 @@ export class DeepLinkService {
           url.hash.substring(1)
         );
         break;
+      default:
+        await warn(`[DeepLinkService] Couldn't handle deep link type: ${route[0]}`);
     }
   }
 
@@ -63,6 +70,8 @@ export class DeepLinkService {
       case 'pulsoid':
         await this.pulsoid.handleDeepLink(path, params, fragmentParams);
         break;
+      default:
+        await warn(`[DeepLinkService] Couldn't handle deep link for integration: ${integration}`);
     }
   }
 }
