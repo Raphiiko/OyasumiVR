@@ -59,7 +59,7 @@ export class TelemetryService {
       if (this.trackedJSErrors.includes(errorData)) return;
       this.trackedJSErrors.push(errorData);
       this.trackEvent('ui_js_error', {
-        message: e.message,
+        errorData,
       });
     });
   }
