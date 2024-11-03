@@ -690,7 +690,7 @@ export class VRChatService {
             ...structuredClone(this._world.value),
             playerCount: this._world.value.playerCount + 1,
           };
-          if (event.displayName === this._user.value?.displayName) context.loaded = true;
+          if (event.userId === this._user.value?.id) context.loaded = true;
           this._world.next(context);
           break;
         }
@@ -699,7 +699,7 @@ export class VRChatService {
             ...structuredClone(this._world.value),
             playerCount: Math.max(this._world.value.playerCount - 1, 0),
           };
-          if (event.displayName === this._user.value?.displayName) context.loaded = false;
+          if (event.userId === this._user.value?.id) context.loaded = false;
           this._world.next(context);
           break;
         }

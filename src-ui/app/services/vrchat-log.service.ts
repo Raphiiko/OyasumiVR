@@ -33,22 +33,28 @@ export class VRChatLogService {
       case 'InitialLoadComplete':
         this._initialLoadComplete.next(true);
         break;
-      case 'OnPlayerJoined':
+      case 'OnPlayerJoined': {
+        const { displayName, userId } = this.parseNameAndId(event.data);
         this._logEvents.next({
           type: 'OnPlayerJoined',
           timestamp: moment.unix(event.time).toDate(),
-          displayName: event.data,
           initialLoad: event.initialLoad,
+          displayName,
+          userId,
         });
         break;
-      case 'OnPlayerLeft':
+      }
+      case 'OnPlayerLeft': {
+        const { displayName, userId } = this.parseNameAndId(event.data);
         this._logEvents.next({
           type: 'OnPlayerLeft',
           timestamp: moment.unix(event.time).toDate(),
-          displayName: event.data,
           initialLoad: event.initialLoad,
+          displayName,
+          userId,
         });
         break;
+      }
       case 'OnLocationChange':
         this._logEvents.next({
           type: 'OnLocationChange',
@@ -56,6 +62,25 @@ export class VRChatLogService {
           instanceId: event.data,
           initialLoad: event.initialLoad,
         });
+    }
+  }
+
+  private parseNameAndId(data: string): { displayName: string; userId: string } {
+    const parts = data.split(' ');
+    if (
+      parts.length > 1 &&
+      parts[parts.length - 1].startsWith('(') &&
+      parts[parts.length - 1].endsWith(')')
+    ) {
+      return {
+        displayName: parts.slice(0, parts.length - 1).join(' '),
+        userId: parts[parts.length - 1].slice(1, -1),
+      };
+    } else {
+      return {
+        displayName: data,
+        userId: '',
+      };
     }
   }
 }
