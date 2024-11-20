@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
+### Fixed
+
+- Possible crash when encountering time issues on log cleanup
+
 ## [1.14.6]
 
 ### Fixed
