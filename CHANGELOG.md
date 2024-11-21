@@ -11,10 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
+## [1.14.7]
+
 ### Fixed
 
+- Deep link parsing being broken, once again
 - Possible crash when encountering time issues on log cleanup
-- Deep link parsing being broken, once again 
 
 ## [1.14.6]
 
