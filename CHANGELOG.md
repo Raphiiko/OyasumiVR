@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Possible crash when encountering time issues on log cleanup
+- Deep link parsing being broken, once again 
 
 ## [1.14.6]
 
