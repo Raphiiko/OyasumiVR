@@ -29,10 +29,9 @@ export class DeepLinkService {
 
   private async handleDeepLinkCall(url: URL) {
     let pathname = url.pathname;
-    console.log(url);
     // Remove any leading slashes
     while (pathname.startsWith('/')) pathname = pathname.substring(1);
-    const route = [url.hostname, ...pathname.split('/')];
+    const route = [url.hostname, ...pathname.split('/')].map((p) => p.trim()).filter(Boolean);
     switch (route[0]) {
       case 'integration':
         if (route.length < 2) break;
@@ -49,6 +48,9 @@ export class DeepLinkService {
         break;
       default:
         await warn(`[DeepLinkService] Couldn't handle deep link type: ${route[0]}`);
+        await warn(`[DeepLinkService] - href: ${url.href}`);
+        await warn(`[DeepLinkService] - hostname: ${url.hostname}`);
+        await warn(`[DeepLinkService] - pathname: ${url.pathname}`);
     }
   }
 
