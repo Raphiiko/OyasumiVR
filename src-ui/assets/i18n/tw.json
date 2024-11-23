@@ -154,6 +154,9 @@
     "AT_SUNSET": {
       "title": "在日落時"
     },
+    "HMD_CONNECT": {
+      "title": "當我的頭戴式裝置連接到 SteamVR"
+    },
     "SLEEP_MODE_DISABLE": {
       "title": "當我醒來時"
     },
@@ -338,7 +341,13 @@
         "description": "被忽略的基地台將被隱藏，不受任何自動化的影響",
         "title": "忽略基地台"
       },
-      "title": "編輯裝置： {deviceId}"
+      "title": "編輯裝置： {deviceId}",
+      "v1Identifier": {
+        "change": "更改 ID",
+        "description": "OyasumiVR 需要知道 V1 基站的 ID 以進行控制",
+        "set": "設置 ID",
+        "title": "Lighthouse V1 ID"
+      }
     },
     "device-list": {
       "category": {
@@ -348,6 +357,7 @@
         "other": "其他"
       },
       "deviceName": {
+        "lighthouseV1": "V1 Lighthouse",
         "lighthouseV2": "V2 基地台"
       },
       "deviceRole": {
@@ -733,6 +743,62 @@
         }
       }
     },
+    "event-log-filter-dialog": {
+      "filters": {
+        "AUDIO_CONTROL": {
+          "description": "與控制麥克風及其他音訊裝置相關的事件",
+          "title": "音訊控制"
+        },
+        "BRIGHTNESS_CCT": {
+          "description": "與控制 VR 頭戴裝置亮度和色溫相關的事件",
+          "title": "亮度與 CCT"
+        },
+        "BSB_CONTROL": {
+          "description": "與控制大螢幕 Beyond 相關的事件",
+          "title": "大螢幕 Beyond"
+        },
+        "DEVICE_POWER": {
+          "description": "與開關裝置（如追蹤器、控制器和基站）相關的事件",
+          "title": "裝置電源"
+        },
+        "GPU_CONTROL": {
+          "description": "與控制顯卡相關的事件",
+          "title": "GPU 控制"
+        },
+        "SHUTDOWN_SEQUENCE": {
+          "description": "與關機程序相關的事件",
+          "title": "關機程序"
+        },
+        "SLEEP_MODE": {
+          "description": "與睡眠模式及睡眠檢測相關的事件",
+          "title": "睡眠模式"
+        },
+        "STEAMVR_SETTINGS": {
+          "description": "與更改 SteamVR 設定（如渲染解析度及淡出距離）相關的事件",
+          "title": "SteamVR 設定"
+        },
+        "VRCHAT_AVATAR": {
+          "description": "與 OyasumiVR 更改您的 VRChat 模型相關的事件",
+          "title": "VRChat 模型"
+        },
+        "VRCHAT_INVITES": {
+          "description": "與 VRChat 邀請及邀請請求相關的事件",
+          "title": "VRChat 邀請請求"
+        },
+        "VRCHAT_STATUS": {
+          "description": "與更改您的 VRChat 狀態相關的事件",
+          "title": "VRChat 狀態"
+        },
+        "WINDOWS_POWER_POLICY": {
+          "description": "與更改 Windows 電源策略相關的事件",
+          "title": "Windows 電源策略"
+        }
+      },
+      "selectAll": "全選",
+      "selectDescription": "選擇您希望在事件日誌中看到的條目類型",
+      "selectNone": "全部取消選擇",
+      "title": "篩選事件日誌"
+    },
     "event-log": {
       "clearLog": "清除",
       "clearLogModal": {
@@ -740,6 +806,7 @@
         "title": "確認清除"
       },
       "no-logs": "還沒有事件被記錄下來。記錄最多保存48小時",
+      "openFilters": "篩選事件",
       "show-more": "顯示更多",
       "title": "事件"
     },
@@ -759,6 +826,46 @@
     },
     "hotkey-selector": {
       "select": "設定快捷鍵"
+    },
+    "lv1-id-wizard-modal": {
+      "automaticDetection": {
+        "detecting": "正在檢測識別碼...",
+        "instructions": "如果無法自動檢測到識別碼，請手動輸入識別碼。",
+        "steps": {
+          "connectDevice": "連接追蹤設備",
+          "connectDeviceDesc": "連接一個 Lighthouse 追蹤的頭戴裝置、控制器或追蹤器...",
+          "detectBasestation": "檢測基站",
+          "detectBasestationDesc": "確保頭戴裝置、控制器或追蹤器可以看到基站",
+          "deviceDetected": "已檢測到設備",
+          "running": "正在運行",
+          "startSteamVR": "啟動 SteamVR",
+          "waitingForSteamVR": "等待 SteamVR 啟動..."
+        }
+      },
+      "detectAutomatically": "自動檢測",
+      "inputManually": "手動輸入",
+      "intro": {
+        "message": "OyasumiVR 需要知道您的基站識別碼才能進行控制。"
+      },
+      "manualInput": {
+        "formatDescription": "識別碼為 8 個字符長，由數字 0-9 和字母 A-F 組成。",
+        "message": "您可以在基站背面找到識別碼。"
+      },
+      "success": {
+        "subtitle": "您現在可以控制您的基站了！",
+        "title": "識別碼已設置"
+      },
+      "title": "需要識別碼",
+      "verifyId": {
+        "error": {
+          "detectionFailed": "無法自動檢測到您的 Lighthouse ID。請手動輸入它。",
+          "invalidId": "提交的 Lighthouse ID 可能無效。\n請仔細檢查您設備背面的代碼。",
+          "verificationFailed": "無法驗證 Lighthouse ID。請檢查您的基站是否已插入電源並在您的電腦範圍內。"
+        },
+        "idAutodetected": "已檢測到可能的識別碼",
+        "verifying": "驗證識別碼中"
+      },
+      "verifyIdAction": "驗證識別碼"
     },
     "main-status-bar": {
       "active": "啟動",
@@ -1137,6 +1244,18 @@
   },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此預設檔使用的解決方法存在一些問題。 如果你不能使用較新的 GoGo Loco 預設，請僅使用此預設檔。 如果你的角色仍然使用舊版本的 GoGo Loco，建議你將你的角色更新使用最新的 GoGo Loco 版本",
+    "GORONE_LEGACY_PRESET_WARNING": "v4.0 及以上版本的此預製件已包含轉向功能，與此預設不兼容。如果您的模型使用的是較舊版本的預製件，該預設仍然可用。",
+    "oneTimeFlagDialogs": {
+      "BASESTATION_COUNT_WARNING_DIALOG": {
+        "message": "看起來您有很多基站！\n\n請注意，大多數藍牙適配器只能處理 7 個同時連接，包括耳機和其他外圍設備等其他藍牙設備。\n\n請記住，如果您同時插入了太多基站，或者有太多其他藍牙設備連接，OyasumiVR 可能無法控制所有基站。",
+        "title": "警告"
+      },
+      "CCT_CONTROL_WARNING_DIALOG": {
+        "message": "請注意，顯示器色溫控制僅適用於某些原生 SteamVR 頭戴裝置，例如 Valve Index、大螢幕 Beyond 或 HTC Vive（Pro）。\n\n如果您未使用這些頭戴裝置，該功能可能對您無效。\n\n如果需要，您可以在設定中禁用顯示器色溫控制。",
+        "title": "功能可用性"
+      },
+      "acknowledge": "我了解"
+    },
     "oscScriptEditorErrors": {
       "addressNoSlash": "有效的 OSC 數值必須以“/”符號開頭",
       "addressNotASCII": "有效的 OSC 數值只能包含 ASCII 字元",
@@ -1249,6 +1368,10 @@
         },
         "general": {
           "advanced": {
+            "avatarReloadWorkaround": {
+              "description": "如果您希望在 OyasumiVR 關閉全身追蹤器後使用模型動畫，請啟用此功能。\n<a href=\"https://github.com/Raphiiko/OyasumiVR/wiki/Workaround-for-using-avatar-animations-with-FBT\" target=\"_blank\">這是什麼以及為什麼需要它？</a>",
+              "title": "全身追蹤模型動畫工作解決方案"
+            },
             "title": "進階選項"
           },
           "footLock": {
@@ -1288,6 +1411,7 @@
       "simple": "亮度",
       "software": "軟體亮度"
     },
+    "colorTemp": "色溫",
     "dashboard": {
       "automations": {
         "autoAcceptInviteRequests": {
@@ -1335,7 +1459,11 @@
           "automations": "自動化",
           "deviceControl": "裝置控制",
           "prepareForSleep": "準備睡覺",
-          "shutdown": "關機程序"
+          "shutdown": "關機程序",
+          "sliderMode": {
+            "BRIGHTNESS": "亮度控制",
+            "COLOR_TEMP": "色溫控制"
+          }
         }
       },
       "shutdownSequence": {
@@ -1712,6 +1840,7 @@
       },
       "lighthousePowerControl": {
         "enable": {
+          "description": "如果啟用，您將可以使用 OyasumiVR 開啟或關閉您的基站。需要您的電腦啟用藍牙功能。",
           "title": "啟用電源控制"
         },
         "powerOffMode": {
@@ -1907,6 +2036,7 @@
       "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "modals": {
+      "back": "返回",
       "cancel": "取消",
       "close": "關閉",
       "confirm": "確認",
