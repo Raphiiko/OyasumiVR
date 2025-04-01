@@ -23,7 +23,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v3
         with:
-          node-version: 20.15
+          node-version: 22.14
           cache: npm
       - name: Initialize the project
         run: npm run ci

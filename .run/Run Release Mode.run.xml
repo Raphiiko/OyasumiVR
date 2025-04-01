@@ -5,7 +5,8 @@
     <scripts>
       <script value="start" />
     </scripts>
-    <node-interpreter value="project" />
+    <node-interpreter value="$USER_HOME$/AppData/Roaming/fnm/aliases/default/node" />
+    <package-manager value="npm" />
     <envs />
     <method v="2" />
   </configuration>
