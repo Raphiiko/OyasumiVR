@@ -4,6 +4,7 @@ using CefSharp;
 using Google.Protobuf;
 using GrcpOverlaySidecar;
 using GrcpOyasumiCore;
+using overlay_sidecar.Browsers;
 using Serilog;
 using SharpDX;
 using SharpDX.Direct3D11;
@@ -12,9 +13,10 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class BaseWebOverlay : RenderableOverlay {
+public class BaseWebOverlay : RenderableOverlay
+{
   public static string DebugTranslations = "";
-  public OffScreenBrowser? Browser;
+  public OffscreenBrowser? Browser;
   protected bool UiReady;
   protected bool Disposed;
   private readonly bool _requiresState;
@@ -23,7 +25,7 @@ public class BaseWebOverlay : RenderableOverlay {
 
   public ulong OverlayHandle => _overlayHandle!.Value;
 
-  protected BaseWebOverlay(string path, int resolution, string overlayKey, string overlayName,
+  protected BaseWebOverlay(string path, uint resolution, string overlayKey, string overlayName,
     bool requiresState = true)
   {
     var uiUrl = (Program.InDevMode()
@@ -54,44 +56,10 @@ public class BaseWebOverlay : RenderableOverlay {
     OvrManager.Instance.RegisterOverlay(this);
   }
 
-  private async void Init(int resolution)
+  private async void Init(uint resolution)
   {
-    var timings = new[] { 16, 100, 200, 500, 1000 };
-    for (var attempt = 0;; attempt++)
-    {
-      try
-      {
-        _texture = new Texture2D(
-          OvrManager.Instance.D3D11Device,
-          new Texture2DDescription
-          {
-            Width = resolution,
-            Height = resolution,
-            MipLevels = 1,
-            ArraySize = 1,
-            Format = Format.B8G8R8A8_UNorm,
-            SampleDescription = new SampleDescription(1, 0),
-            BindFlags = BindFlags.ShaderResource
-          }
-        );
-
-        Browser!.UpdateTexture(_texture);
-      }
-      catch (SharpDXException err)
-      {
-        if (attempt >= timings.Length)
-        {
-          Log.Error("Could not create overlay: " + err);
-          Dispose();
-          return;
-        }
-
-        await Task.Delay(timings[attempt]);
-        continue;
-      }
-
-      break;
-    }
+    _texture = await Utils.InitTexture2D(resolution, !Program.GpuAccelerated);
+    Browser!.SetTextureTarget(_texture);
   }
 
   public void Dispose()
@@ -211,6 +179,7 @@ public class BaseWebOverlay : RenderableOverlay {
     if (_texture == null || Disposed || Browser == null ||
         DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Browser.LastPaint >= 1000) return;
 
+    Browser.Render();
     var texture = new Texture_t
     {
       handle = _texture.NativePointer

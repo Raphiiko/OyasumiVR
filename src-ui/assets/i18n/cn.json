@@ -1608,77 +1608,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "本节包含一些与解决问题和故障排除有关的操作。除非你知道自己在做什么，或者在获得支持时被要求使用这些操作，否则一般不应该使用它们。",
-        "devTools": {
-          "action": "打开界面调试工具",
-          "description": "打开界面调试工具",
-          "title": "打开界面调试工具"
-        },
-        "memoryWatcher": {
-          "action": "打开",
-          "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过 1000 MB，将显示错误对话框，并记录额外的日志信息",
-          "modal": {
-            "error": {
-              "message": "内存监视器已经被打开了",
-              "title": "错误"
-            },
-            "success": {
-              "message": "已打开内存监视器",
-              "title": "成功"
-            }
-          },
-          "title": "内存监视器"
-        },
-        "openVrInitDelayFix": {
-          "description": "启用此选项将在本软件与 OpenVR 一起被初始化时添加启动延迟。如果你在 OyasumiVR 已经运行的情况下启动 SteamVR，但遇到阻止启动的问题，这可以帮到你。",
-          "title": "启用 OpenVR 初始化延迟"
-        },
-        "oscServerEnabled": {
-          "description": "此选项纯粹用于调试目的，一般情况下不应关闭。\n 若关闭此选项，将禁用内置的 OSC 和 OSCQuery 服务器，并且修改在重启后仍然生效。\n 请注意，如果你关闭此选项，OyasumiVR 的几个功能将停止工作，且不会有任何警告。",
-          "title": "启用 OSC 和 OSCQuery 服务器"
-        },
-        "overlayGpuFix": {
-          "description": "如果你在打开 SteamVR 叠加层界面时遇到问题，启用此选项可以解决某些系统（如双显卡系统）上的问题。更改此选项将重启叠加层界面。",
-          "title": "针对 SteamVR 叠加层异常的修复选项"
-        },
-        "title": "问题修复与故障排除",
-        "vrManifestReregister": {
-          "action": "重新注册",
-          "description": "在 SteamVR 上重新注册程序的清单数据",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这不是错误！请重启 OyasumiVR。",
-              "title": "未注册的清单数据"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "无法删除清单，请查看日志以了解详情。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "UNKNOWN": {
-              "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。",
-              "title": "未能成功注册程序的清单数据"
-            },
-            "success": {
-              "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。",
-              "title": "已重新注册程序的清单数据"
-            }
-          },
-          "title": "重新注册 SteamVR 的应用程序清单"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "打开日志文件夹",
@@ -1754,7 +1683,6 @@
         "editor": {
           "action": "启动编辑器",
           "description": "启动 OyasumiVR 的翻译编辑器，编辑和创建翻译内容",
-          "experimental": "编辑器仍处于试验阶段，暂时仅提供英文版。虽然你现在已经可以使用它了，但它在很大程度上仍处于开发阶段。目前，你可能会发现一些问题。",
           "title": "界面翻译文本编辑器"
         },
         "loadFile": {
@@ -1763,6 +1691,63 @@
           "title": "加载翻译文件"
         },
         "title": "语言和翻译"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "打开界面调试工具",
+          "description": "打开界面调试工具",
+          "title": "打开界面调试工具"
+        },
+        "memoryWatcher": {
+          "action": "打开",
+          "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过 1000 MB，将显示错误对话框，并记录额外的日志信息",
+          "modal": {
+            "error": {
+              "message": "内存监视器已经被打开了",
+              "title": "错误"
+            },
+            "success": {
+              "message": "已打开内存监视器",
+              "title": "成功"
+            }
+          },
+          "title": "内存监视器"
+        },
+        "vrManifestReregister": {
+          "action": "重新注册",
+          "description": "在 SteamVR 上重新注册程序的清单数据",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "由于你使用的是 OyasumiVR 的非合格版本（例如 Steam 版本），程序清单数据已被取消注册，这不是错误！请重启 OyasumiVR。",
+              "title": "未注册的清单数据"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "清单数据已成功删除，但无法重新添加它们。请重启 OyasumiVR 并查看日志。",
+              "title": "未能成功注册程序的清单数据"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "无法检查 OyasumiVR 的清单数据是否已在 SteamVR 中注册。请重启 OyasumiVR 并查看日志。",
+              "title": "未能成功注册程序的清单数据"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR 没有在 SteamVR 上注册过，请重新启动 OyasumiVR。",
+              "title": "未能成功注册程序的清单数据"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "无法删除清单，请查看日志以了解详情。",
+              "title": "未能成功注册程序的清单数据"
+            },
+            "UNKNOWN": {
+              "message": "由于未知错误，OyasumiVR 的清单数据无法在 SteamVR 中重新注册。请重启 OyasumiVR 并查看日志。",
+              "title": "未能成功注册程序的清单数据"
+            },
+            "success": {
+              "message": "OyasumiVR 的清单数据已成功在 SteamVR 重新注册。",
+              "title": "已重新注册程序的清单数据"
+            }
+          },
+          "title": "重新注册 SteamVR 的应用程序清单"
+        }
       }
     },
     "brightnessCct": {

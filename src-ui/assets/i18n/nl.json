@@ -1608,77 +1608,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "Dit stuk bevat wat opties mbt het oplossen en vinden van problemen met OyasumiVR. Over het algemeen zou je deze niet moeten gebruiken, tenzij je weet waar je mee bezig bent, of omdat je dit gevraagd word wanneer je ondersteuning krijgt van de ontwikkelaar.",
-        "devTools": {
-          "action": "Open DevTools",
-          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
-          "title": "Open Developer Tools"
-        },
-        "memoryWatcher": {
-          "action": "Activeer",
-          "description": "Activeer de memory watcher om alle child processen te monitoren. Er zal een error venster worden getoond als er een proces meer dan een gigabyte aan geheugen gebruikt, en er wordt extra informatie gelogd.",
-          "modal": {
-            "error": {
-              "message": "De memory watcher was al actief.",
-              "title": "Al actief."
-            },
-            "success": {
-              "message": "De memory watcher is geactiveerd!",
-              "title": "Memory Watcher Geactiveerd"
-            }
-          },
-          "title": "Memory Watcher"
-        },
-        "openVrInitDelayFix": {
-          "description": "Als je deze fix inschakelt, zal OyasumiVR een vertraging toepassen bij het initialiseren met OpenVR. Dit kan helpen als je problemen hebt met het crashen van SteamVR, of bij het starten van SteamVR wanneer OyasumiVR al draait.",
-          "title": "Schakel OpenVR initialisatie vertraging in"
-        },
-        "oscServerEnabled": {
-          "description": "Hiermee kun je de ingebouwde OSC en OSCQuery servers uitschakelen. Let op dat deze keuze word bewaard, en dat verschillende features van OyasumiVR niet meer zullen werken, zonder waarschuwing. Deze optie bestaat alleen voor foutopsporing, en zou niet uitgeschakeld moeten worden tijdens standaard gebruik.",
-          "title": "OSC & OSCQuery Servers Inschakelen"
-        },
-        "overlayGpuFix": {
-          "description": "Als je problemen ervaart met de SteamVR overlay, kan deze optie mogelijk een oplossing bieden op sommige systemen (bijvoorbeeld die met een hybrid graphics). Het aanpassen van deze optie zal de overlay herstarten.",
-          "title": "Grafische fix voor de SteamVR Overlay"
-        },
-        "title": "Oplossingen & Foutopsporing",
-        "vrManifestReregister": {
-          "action": "Herregistreer Manifest",
-          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Als je een build van OyasumiVR gebruikt die niet in aanmerking komt (e.g. de Steam versie), dan is de registratie van het application manifest ongedaan gemaakt, maar niet opnieuw geregistreerd. Dit is geen fout! Herstart OyasumiVR a.u.b.",
-              "title": "Application manifest gederegistreerd"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "Het manifest was verwijderd, maar kon niet terug toegevoegd worden. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "Het kon niet worden gecheckt of OyasumiVR's manifest al was geregistreerd met SteamVR. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR had geen geregistreerd manifest met SteamVR. Het manifest is niet (her)geregistreerd. Herstart a.u.b. OyasumiVR.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
-              "title": "Herregistratie van VR Application Manifest Mislukt"
-            },
-            "success": {
-              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
-              "title": "VR Application Manifest Hergeregistreerd"
-            }
-          },
-          "title": "Herregistreet SteamVR application manifest"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "Open Map",
@@ -1754,7 +1683,6 @@
         "editor": {
           "action": "Start Editor",
           "description": "Start OyasumiVR's vertalingseditor voor het bewerken en maken van vertalingen",
-          "experimental": "Deze module is nog in een experimentele fase, en alleen beschikbaar in het Engels. Hoewel je hem kan uitproberen, is hij nog in ontwikkeling. Je kunt dus nog wat problemen en missende functionaliteiten verwachten.",
           "title": "Vertalingseditor"
         },
         "loadFile": {
@@ -1763,6 +1691,63 @@
           "title": "Laad vertalingsbestand"
         },
         "title": "Taal & Vertalen"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "Open DevTools",
+          "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
+          "title": "Open Developer Tools"
+        },
+        "memoryWatcher": {
+          "action": "Activeer",
+          "description": "Activeer de memory watcher om alle child processen te monitoren. Er zal een error venster worden getoond als er een proces meer dan een gigabyte aan geheugen gebruikt, en er wordt extra informatie gelogd.",
+          "modal": {
+            "error": {
+              "message": "De memory watcher was al actief.",
+              "title": "Al actief."
+            },
+            "success": {
+              "message": "De memory watcher is geactiveerd!",
+              "title": "Memory Watcher Geactiveerd"
+            }
+          },
+          "title": "Memory Watcher"
+        },
+        "vrManifestReregister": {
+          "action": "Herregistreer Manifest",
+          "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "Als je een build van OyasumiVR gebruikt die niet in aanmerking komt (e.g. de Steam versie), dan is de registratie van het application manifest ongedaan gemaakt, maar niet opnieuw geregistreerd. Dit is geen fout! Herstart OyasumiVR a.u.b.",
+              "title": "Application manifest gederegistreerd"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "Het manifest was verwijderd, maar kon niet terug toegevoegd worden. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "Het kon niet worden gecheckt of OyasumiVR's manifest al was geregistreerd met SteamVR. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR had geen geregistreerd manifest met SteamVR. Het manifest is niet (her)geregistreerd. Herstart a.u.b. OyasumiVR.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "Het manifest kon niet worden verwijderd. Check a.u.b. de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "UNKNOWN": {
+              "message": "OyasumiVR's manifest kon niet worden hergeregistreerd met SteamVR door een onbekende fout. Herstart a.u.b. OyasumiVR en check de log bestanden.",
+              "title": "Herregistratie van VR Application Manifest Mislukt"
+            },
+            "success": {
+              "message": "OyasumiVR's Manifest is met success hergeregistreerd met SteamVR.",
+              "title": "VR Application Manifest Hergeregistreerd"
+            }
+          },
+          "title": "Herregistreet SteamVR application manifest"
+        }
       }
     },
     "brightnessCct": {

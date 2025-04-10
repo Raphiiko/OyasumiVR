@@ -1608,77 +1608,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "此部分包含一些與修復問題和疑難排解相關的選項和操作。通常情況下，除非你知道自己在做什麼，或者在獲得支援時被要求使用這些選項，否則不應使用這些選項。",
-        "devTools": {
-          "action": "開啟開發工具",
-          "description": "打開用於除錯的 Edge 開發工具",
-          "title": "開啟開發者工具"
-        },
-        "memoryWatcher": {
-          "action": "啟動",
-          "description": "啟動記憶體監視器，監控所有子進程。如果任何進程的記憶體使用量超過千百萬位元組，將顯示錯誤對話框，並記錄額外資訊",
-          "modal": {
-            "error": {
-              "message": "記憶體監視器已經啟動。",
-              "title": "已啟動"
-            },
-            "success": {
-              "message": "記憶體監視器已經啟動！",
-              "title": "記憶體監視器已啟動"
-            }
-          },
-          "title": "記憶體監視器"
-        },
-        "openVrInitDelayFix": {
-          "description": "啟用此修正將增加 OyasumiVR 與 OpenVR 初始化的延遲。如果你遇到 SteamVR 當機或在 OyasumiVR 已執行時啟動 SteamVR 時遇到錯誤的問題，這將會有所幫助。",
-          "title": "啟用 OpenVR 初始化延遲"
-        },
-        "oscServerEnabled": {
-          "description": "關閉該選項將禁用內建的 OSC 和 OSCQuery 伺服器。該選項會在重啟後繼續存在。請注意，如果關閉該選項，OyasumiVR 的多項功能將停止工作，且不會發出警告。此選項純粹用於除錯目的，一般使用時不應關閉。",
-          "title": "啟用 OSC 和 OSCQuery 伺服器"
-        },
-        "overlayGpuFix": {
-          "description": "I如果你在打開 SteamVR 疊層畫面界面時遇到問題，啟用此選項可以解決某些系統（如混合顯示卡系統）上的問題。變更此選項將重啟疊層畫面",
-          "title": "SteamVR 疊層畫面的圖形修正"
-        },
-        "title": "修復與疑難排解",
-        "vrManifestReregister": {
-          "action": "重新註冊列表",
-          "description": "重新註冊 OyasumiVR 的 VR 應用列表與 SteamVR。",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "由於使用非合格版本的 OyasumiVR（例如 Steam 版本），應用列表已取消註冊，但未重新註冊。這不是錯誤！請重新啟動 OyasumiVR。",
-              "title": "應用列表取消註冊"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "列表已刪除，但無法重新添加。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "重新註冊 VR 應用列表失敗"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "無法檢查 OyasumiVR 的列表是否已在 SteamVR 中註冊。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "重新註冊 VR 應用列表失敗"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR 在 SteamVR 中未註冊列表。它未被（重新）註冊。請重新啟動 OyasumiVR。",
-              "title": "重新註冊 VR 應用列表失敗"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "列表無法刪除。請檢查日誌。",
-              "title": "重新註冊 VR 應用列表失敗"
-            },
-            "UNKNOWN": {
-              "message": "由於未知錯誤，OyasumiVR 的列表無法重新註冊至 SteamVR。請重新啟動 OyasumiVR 並檢查日誌。",
-              "title": "重新註冊 VR 應用列表失敗"
-            },
-            "success": {
-              "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
-              "title": "VR 應用列表已成功重新註冊"
-            }
-          },
-          "title": "重新註冊 SteamVR 應用列表"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "打開日誌資料夾",
@@ -1754,7 +1683,6 @@
         "editor": {
           "action": "啟動編輯器",
           "description": "啟動 OyasumiVR 的翻譯編輯器，以編輯和創建翻譯",
-          "experimental": "此模組仍處於實驗階段，僅提供英文版本。儘管你可以試用，但它仍在開發中。目前，你可能會遇到問題和功能缺失。",
           "title": "翻譯編輯器"
         },
         "loadFile": {
@@ -1763,6 +1691,63 @@
           "title": "載入翻譯檔案"
         },
         "title": "語言與翻譯"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "開啟開發工具",
+          "description": "打開用於除錯的 Edge 開發工具",
+          "title": "開啟開發者工具"
+        },
+        "memoryWatcher": {
+          "action": "啟動",
+          "description": "啟動記憶體監視器，監控所有子進程。如果任何進程的記憶體使用量超過千百萬位元組，將顯示錯誤對話框，並記錄額外資訊",
+          "modal": {
+            "error": {
+              "message": "記憶體監視器已經啟動。",
+              "title": "已啟動"
+            },
+            "success": {
+              "message": "記憶體監視器已經啟動！",
+              "title": "記憶體監視器已啟動"
+            }
+          },
+          "title": "記憶體監視器"
+        },
+        "vrManifestReregister": {
+          "action": "重新註冊列表",
+          "description": "重新註冊 OyasumiVR 的 VR 應用列表與 SteamVR。",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "由於使用非合格版本的 OyasumiVR（例如 Steam 版本），應用列表已取消註冊，但未重新註冊。這不是錯誤！請重新啟動 OyasumiVR。",
+              "title": "應用列表取消註冊"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "列表已刪除，但無法重新添加。請重新啟動 OyasumiVR 並檢查日誌。",
+              "title": "重新註冊 VR 應用列表失敗"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "無法檢查 OyasumiVR 的列表是否已在 SteamVR 中註冊。請重新啟動 OyasumiVR 並檢查日誌。",
+              "title": "重新註冊 VR 應用列表失敗"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR 在 SteamVR 中未註冊列表。它未被（重新）註冊。請重新啟動 OyasumiVR。",
+              "title": "重新註冊 VR 應用列表失敗"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "列表無法刪除。請檢查日誌。",
+              "title": "重新註冊 VR 應用列表失敗"
+            },
+            "UNKNOWN": {
+              "message": "由於未知錯誤，OyasumiVR 的列表無法重新註冊至 SteamVR。請重新啟動 OyasumiVR 並檢查日誌。",
+              "title": "重新註冊 VR 應用列表失敗"
+            },
+            "success": {
+              "message": "OyasumiVR 的列表已成功重新註冊至 SteamVR。",
+              "title": "VR 應用列表已成功重新註冊"
+            }
+          },
+          "title": "重新註冊 SteamVR 應用列表"
+        }
       }
     },
     "brightnessCct": {

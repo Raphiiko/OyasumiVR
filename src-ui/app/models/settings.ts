@@ -4,7 +4,7 @@ import { OneTimeFlag } from './one-time-flags';
 import { EventLogType } from './event-log-entry';
 
 export interface AppSettings {
-  version: 9;
+  version: 10;
   // General Settings
   userLanguage: string;
   userLanguagePicked: boolean;
@@ -33,7 +33,7 @@ export interface AppSettings {
   eventLogTypesHidden: EventLogType[];
   // Overlay
   overlayMenuEnabled: boolean;
-  overlayGpuFix: boolean;
+  overlayGpuAcceleration: boolean;
   overlayMenuOnlyOpenWhenVRChatIsRunning: boolean;
   // Lighthouse
   lighthousePowerControl: boolean;
@@ -84,7 +84,7 @@ export const NotificationTypes = [
 export type NotificationType = (typeof NotificationTypes)[number];
 
 export const APP_SETTINGS_DEFAULT: AppSettings = {
-  version: 9,
+  version: 10,
   userLanguage: 'en',
   userLanguagePicked: false,
   askForAdminOnStart: false,
@@ -99,7 +99,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   notificationsEnabled: { types: [...NotificationTypes] as NotificationType[] },
   quitWithSteamVR: 'DISABLED',
   overlayMenuEnabled: true,
-  overlayGpuFix: false,
+  overlayGpuAcceleration: true,
   overlayMenuOnlyOpenWhenVRChatIsRunning: false,
   generalNotificationVolume: 100,
   deviceNicknames: {},

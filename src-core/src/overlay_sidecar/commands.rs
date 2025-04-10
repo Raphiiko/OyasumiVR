@@ -6,13 +6,13 @@ use crate::{
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
-pub async fn start_overlay_sidecar(gpu_fix: bool) {
+pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
     match crate::utils::cli_sidecar_overlay_mode().await {
         // In release mode, start the sidecar like normal
         OverlaySidecarMode::Release => {
             let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
             let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
-            sidecar_manager.set_arg("--gpu-fix", gpu_fix, true).await;
+            sidecar_manager.set_arg("--disable-gpu-acceleration", !gpu_acceleration, true).await;
             sidecar_manager.start_or_restart().await;
         }
         // In development mode, we expect the sidecar to be started in development mode manually

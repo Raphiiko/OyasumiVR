@@ -1608,77 +1608,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "トラブルシューティングに関連するいくつかのオプションとアクションが含まれています。通常時に利用するものではありません。",
-        "devTools": {
-          "action": "開発者ツールを開く",
-          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
-          "title": "開発者ツールを開く"
-        },
-        "memoryWatcher": {
-          "action": "有効化",
-          "description": "全ての子プロセスを監視するためにメモリ監視を有効化します。プロセスが1GB以上のメモリを使用するとエラーダイアログが表示され、追加情報がログに記録されます",
-          "modal": {
-            "error": {
-              "message": "メモリ監視は既に有効です。",
-              "title": "既に有効"
-            },
-            "success": {
-              "message": "メモリ監視が有効化されました！",
-              "title": "メモリ監視が有効"
-            }
-          },
-          "title": "メモリ監視"
-        },
-        "openVrInitDelayFix": {
-          "description": "OyasumiVRがOpenVRを初期化する際に遅延を追加します。OyasumiVRが既に実行されている場合にSteamVRがクラッシュする問題が解決する可能性があります",
-          "title": "OpenVR初期化に遅延を追加する"
-        },
-        "oscServerEnabled": {
-          "description": "オフにすると組み込みのOSCおよびOSCQueryサーバーが無効になり、いくつかのOyasumiVRの機能が警告なしに機能しなくなります。この機能は主にデバッグ目的であり、通常時はオフにするべきではありません。また、このオプションは再起動しても維持されます",
-          "title": "OSCおよびOSCQueryサーバーを有効にする"
-        },
-        "overlayGpuFix": {
-          "description": "SteamVRオーバーレイを開く際に問題が発生する場合、このオプションを有効にすると一部のシステム（ハイブリッドグラフィックスを持つシステムなど）で問題が解決する可能性があります。変更時にオーバーレイは再起動されます",
-          "title": "SteamVRオーバーレイのグラフィックス修正"
-        },
-        "title": "修正とトラブルシューティング",
-        "vrManifestReregister": {
-          "action": "マニフェストの再登録",
-          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "OyasumiVRの非対応ビルド（たとえば、Steam版）を使用しているため、アプリケーションマニフェストは登録解除されましたが、再登録されませんでした。これはエラーではありません。OyasumiVRを再起動してください。",
-              "title": "アプリケーションマニフェストの登録解除"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "マニフェストは削除されましたが、新たに追加できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "マニフェストがすでに登録されているか確認できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "マニフェストが登録されていませんでした。OyasumiVRを再起動してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "マニフェストを削除できませんでした。ログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "UNKNOWN": {
-              "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。",
-              "title": "VRアプリケーションマニフェストの再登録失敗"
-            },
-            "success": {
-              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
-              "title": "VRアプリケーションマニフェストの再登録成功"
-            }
-          },
-          "title": "SteamVRアプリケーションマニフェストの再登録"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "フォルダを開く",
@@ -1754,7 +1683,6 @@
         "editor": {
           "action": "エディタを起動",
           "description": "OyasumiVRの翻訳エディタを起動して、翻訳の編集と作成を行います",
-          "experimental": "このモジュールはまだ実験的な段階にあり、英語のみ利用可能です。現時点では問題や機能不足の可能性があります。",
           "title": "翻訳エディタ"
         },
         "loadFile": {
@@ -1763,6 +1691,63 @@
           "title": "翻訳ファイルを読み込む"
         },
         "title": "言語・翻訳"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "開発者ツールを開く",
+          "description": "デバッグ目的でEdgeの開発者ツールを開きます",
+          "title": "開発者ツールを開く"
+        },
+        "memoryWatcher": {
+          "action": "有効化",
+          "description": "全ての子プロセスを監視するためにメモリ監視を有効化します。プロセスが1GB以上のメモリを使用するとエラーダイアログが表示され、追加情報がログに記録されます",
+          "modal": {
+            "error": {
+              "message": "メモリ監視は既に有効です。",
+              "title": "既に有効"
+            },
+            "success": {
+              "message": "メモリ監視が有効化されました！",
+              "title": "メモリ監視が有効"
+            }
+          },
+          "title": "メモリ監視"
+        },
+        "vrManifestReregister": {
+          "action": "マニフェストの再登録",
+          "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "OyasumiVRの非対応ビルド（たとえば、Steam版）を使用しているため、アプリケーションマニフェストは登録解除されましたが、再登録されませんでした。これはエラーではありません。OyasumiVRを再起動してください。",
+              "title": "アプリケーションマニフェストの登録解除"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "マニフェストは削除されましたが、新たに追加できませんでした。OyasumiVRを再起動してログを確認してください。",
+              "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "マニフェストがすでに登録されているか確認できませんでした。OyasumiVRを再起動してログを確認してください。",
+              "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "マニフェストが登録されていませんでした。OyasumiVRを再起動してください。",
+              "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "マニフェストを削除できませんでした。ログを確認してください。",
+              "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "UNKNOWN": {
+              "message": "マニフェストは未知のエラーのために再登録できませんでした。OyasumiVRを再起動してログを確認してください。",
+              "title": "VRアプリケーションマニフェストの再登録失敗"
+            },
+            "success": {
+              "message": "OyasumiVRのマニフェストはSteamVRに正常に再登録されました。",
+              "title": "VRアプリケーションマニフェストの再登録成功"
+            }
+          },
+          "title": "SteamVRアプリケーションマニフェストの再登録"
+        }
       }
     },
     "brightnessCct": {

@@ -59,7 +59,7 @@ export class SettingsAdvancedViewComponent {
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
   oscServerEnabled = true;
-  overlayGpuFix = false;
+  overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
 
   constructor(
@@ -73,7 +73,7 @@ export class SettingsAdvancedViewComponent {
   ) {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.oscServerEnabled = settings.oscServerEnabled;
-      this.overlayGpuFix = settings.overlayGpuFix;
+      this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
       this.openVrInitDelayFix = settings.openVrInitDelayFix;
     });
   }
@@ -329,8 +329,8 @@ export class SettingsAdvancedViewComponent {
     });
   }
 
-  setOverlayGpuFix(enabled: boolean) {
-    this.settingsService.updateSettings({ overlayGpuFix: enabled });
+  setOverlayGpuAcceleration(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayGpuAcceleration: enabled });
   }
 
   setOpenVrInitDelayFix(enabled: boolean) {

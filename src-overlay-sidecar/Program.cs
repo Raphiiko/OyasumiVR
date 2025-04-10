@@ -8,7 +8,7 @@ using Serilog;
 namespace overlay_sidecar;
 
 public static class Program {
-  public static bool GpuFix = false;
+  public static bool GpuAccelerated = true;
   public static SidecarMode Mode = SidecarMode.Release;
 
   public static void Main(string[] args)
@@ -41,10 +41,10 @@ public static class Program {
       }
     }
 
-    if (args.Any(arg => arg == "--gpu-fix"))
+    if (args.Any(arg => arg == "--disable-gpu-acceleration"))
     {
-      Log.Information("Launching with GPU fix enabled");
-      GpuFix = true;
+      Log.Information("Launching with GPU acceleration disabled");
+      GpuAccelerated = false;
     }
 
     // Initialize

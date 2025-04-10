@@ -1608,77 +1608,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "이 섹션에서는 문제 해결 및 문제 해결과 관련된 몇 가지 옵션과 조치를 설명해요. 일반적으로 자신이 무엇을 하고 있는지 모르거나 지원을 받을 때 이러한 조치를 사용하라는 요청을 받지 않는 한 이러한 조치를 사용해서는 안 됩니다.",
-        "devTools": {
-          "action": "DevTools 열기",
-          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
-          "title": "개발자 도구 열기"
-        },
-        "memoryWatcher": {
-          "action": "활성화",
-          "description": "모든 하위 프로세스를 모니터링하려면 메모리 감시기를 활성화하세요. 프로세스의 메모리 사용량이 1GB를 초과하는 경우 오류 대화 상자가 표시되고 추가 정보가 기록됩니다.",
-          "modal": {
-            "error": {
-              "message": "메모리 감시기가 이미 활성화되어 있습니다.",
-              "title": "이미 활성화 됨"
-            },
-            "success": {
-              "message": "메모리 감시기가 활성화되었습니다!",
-              "title": "메모리 감시기 활성화 됨"
-            }
-          },
-          "title": "메모리 감시기"
-        },
-        "openVrInitDelayFix": {
-          "description": "활성화하면 OpenVR으로 OyasumiVR을 초기화하는 데 약간의 지연 시간이 더해져요. 이는 OyasumiVR이 이미 실행 중인 상태에서 SteamVR을 시작할 때 충돌하거나 오류가 발생하는 문제를 겪는 경우에 도움이 될 수 있어요.",
-          "title": "OpenVR 초기화 지연 활성화"
-        },
-        "oscServerEnabled": {
-          "description": "이 기능을 끄면 내장된 OSC 및 OSCQuery 서버가 비활성화됩니다. 이 설정은 재시작할 때에도 유지됩니다. 이 설정은 디버깅 목적으로만 존재하며 일반적인 사용 중에는 해제해서는 안 됩니다.",
-          "title": "OSC & OSCQuery 서버 활성화"
-        },
-        "overlayGpuFix": {
-          "description": "SteamVR 오버레이를 열 때 문제가 발생하는 경우, 이 옵션을 활성화하면 일부 시스템(예: 하이브리드 그래픽)에서 문제가 해결될 수 있어요. 이 옵션을 변경하면 오버레이가 다시 시작됩니다.",
-          "title": "SteamVR 오버레이의 그래픽 문제 해결"
-        },
-        "title": "수정 및 문제 해결",
-        "vrManifestReregister": {
-          "action": "매니페스트 재등록",
-          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "OyasumiVR(예: Steam 버전)의 부적격 빌드를 사용 중이므로 응용 프로그램 매니페스트가 등록 취소되었지만 재등록되지 않았어요. 오류가 아닙니다! OyasumiVR을 다시 시작해 주세요.",
-              "title": "응용프로그램 매니페스트가 등록 해제됨"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "매니페스트가 제거되었지만 다시 추가할 수 없어요. 오야스미VR을 다시 시작하고 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "OyasumiVR의 매니페스트가 이미 스팀VR에 등록되어 있는지 확인할 수 없어요. 오야스미VR을 다시 시작하고 로그를 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "스팀VR에 등록된 OyasumiVR의 매니페스트가 없어요. (재)등록되지 않았습니다. OyasumiVR을 다시 시작해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "UNKNOWN": {
-              "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 실패"
-            },
-            "success": {
-              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
-              "title": "VR 애플리케이션 매니페스트 재등록 됨"
-            }
-          },
-          "title": "SteamVR 애플리케이션 매니페스트 재등록"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "로그 폴더 열기",
@@ -1754,7 +1683,6 @@
         "editor": {
           "action": "에디터 실행",
           "description": "OyasumiVR의 번역 에디터를 실행하여 번역 파일을 편집하거나 생성해요.",
-          "experimental": "이 모듈은 아직 실험 단계에 있고, 영어로만 제공되어요. 시험해 볼 수 있지만, 아직 개발 중에 있습니다. 현재로서는 아직 문제와 누락된 기능이 있을 수 있어요.",
           "title": "번역 에디터"
         },
         "loadFile": {
@@ -1763,6 +1691,63 @@
           "title": "번역 파일 불러오기"
         },
         "title": "언어 & 번역"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "DevTools 열기",
+          "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
+          "title": "개발자 도구 열기"
+        },
+        "memoryWatcher": {
+          "action": "활성화",
+          "description": "모든 하위 프로세스를 모니터링하려면 메모리 감시기를 활성화하세요. 프로세스의 메모리 사용량이 1GB를 초과하는 경우 오류 대화 상자가 표시되고 추가 정보가 기록됩니다.",
+          "modal": {
+            "error": {
+              "message": "메모리 감시기가 이미 활성화되어 있습니다.",
+              "title": "이미 활성화 됨"
+            },
+            "success": {
+              "message": "메모리 감시기가 활성화되었습니다!",
+              "title": "메모리 감시기 활성화 됨"
+            }
+          },
+          "title": "메모리 감시기"
+        },
+        "vrManifestReregister": {
+          "action": "매니페스트 재등록",
+          "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "OyasumiVR(예: Steam 버전)의 부적격 빌드를 사용 중이므로 응용 프로그램 매니페스트가 등록 취소되었지만 재등록되지 않았어요. 오류가 아닙니다! OyasumiVR을 다시 시작해 주세요.",
+              "title": "응용프로그램 매니페스트가 등록 해제됨"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "매니페스트가 제거되었지만 다시 추가할 수 없어요. 오야스미VR을 다시 시작하고 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "OyasumiVR의 매니페스트가 이미 스팀VR에 등록되어 있는지 확인할 수 없어요. 오야스미VR을 다시 시작하고 로그를 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "스팀VR에 등록된 OyasumiVR의 매니페스트가 없어요. (재)등록되지 않았습니다. OyasumiVR을 다시 시작해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "매니페스트를 제거할 수 없습니다. 로그를 확인해 주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "UNKNOWN": {
+              "message": "알 수 없는 오류로 인해 OyasumiVR의 매니페스트를 SteamVR에 재등록하지 못하였어요. OyasumiVR을 다시 시작하고 로그를 확인해주세요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 실패"
+            },
+            "success": {
+              "message": "OyasumiVR의 매니페스트가 SteamVR에 재등록되었어요.",
+              "title": "VR 애플리케이션 매니페스트 재등록 됨"
+            }
+          },
+          "title": "SteamVR 애플리케이션 매니페스트 재등록"
+        }
       }
     },
     "brightnessCct": {

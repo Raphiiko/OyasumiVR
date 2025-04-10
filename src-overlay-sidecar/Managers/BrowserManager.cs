@@ -1,4 +1,5 @@
 using CefSharp;
+using overlay_sidecar.Browsers;
 
 namespace overlay_sidecar;
 
@@ -10,12 +11,12 @@ public class BrowserManager {
   {
   }
 
-  public void PreInitializeBrowser(int width, int height)
+  public void PreInitializeBrowser(uint width, uint height)
   {
     FreeBrowser(GetBrowser("about:blank", width, height));
   }
 
-  public OffScreenBrowser GetBrowser(string url, int width, int height)
+  public OffscreenBrowser GetBrowser(string url, uint width, uint height)
   {
     lock (_browsers)
     {
@@ -29,14 +30,14 @@ public class BrowserManager {
         }
       }
 
-      var browser = new OffScreenBrowser(url, width, height);
+      OffscreenBrowser browser = Program.GpuAccelerated ? new AcceleratedOffscreenBrowser(url, width, height) : new NonAcceleratedOffscreenBrowser(url, width, height);
       _browsers.Add(new CachedBrowser(browser, false, width, height));
 
       return browser;
     }
   }
 
-  public void FreeBrowser(OffScreenBrowser browser)
+  public void FreeBrowser(OffscreenBrowser browser)
   {
     lock (_browsers)
     {
@@ -54,12 +55,12 @@ public class BrowserManager {
   }
 
   class CachedBrowser {
-    public OffScreenBrowser Browser;
+    public OffscreenBrowser Browser;
     public bool IsFree;
-    public int Width;
-    public int Height;
+    public uint Width;
+    public uint Height;
 
-    public CachedBrowser(OffScreenBrowser browser, bool isFree, int width, int height)
+    public CachedBrowser(OffscreenBrowser browser, bool isFree, uint width, uint height)
     {
       Browser = browser;
       IsFree = isFree;

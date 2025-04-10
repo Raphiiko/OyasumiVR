@@ -14,6 +14,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   7: from6to7,
   8: from7to8,
   9: from8to9,
+  10: from9to10,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -66,6 +67,13 @@ async function saveBackup(oldData: any) {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = structuredClone(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from9to10(data: any): any {
+  data.version = 10;
+  data.overlayGpuAcceleration = !(data.overlayGpuFix ?? false);
+  delete data.overlayGpuFix;
   return data;
 }
 

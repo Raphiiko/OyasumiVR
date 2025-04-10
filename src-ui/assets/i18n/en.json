@@ -1608,76 +1608,20 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "This section contains some options and actions related to fixing problems and troubleshooting. You generally shouldn't use these unless you know what you are doing, or if you're being asked to use these when getting support",
-        "devTools": {
-          "action": "Open DevTools",
-          "description": "Opens the Edge Developer Tools, for debugging purposes",
-          "title": "Open Developer Tools"
-        },
-        "memoryWatcher": {
-          "action": "Activate",
-          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged",
-          "modal": {
-            "error": {
-              "message": "The memory watcher was already active.",
-              "title": "Already Active"
-            },
-            "success": {
-              "message": "The memory watcher has been activated!",
-              "title": "Memory Watcher Activated"
-            }
-          },
-          "title": "Memory Watcher"
-        },
+      "application": {
         "openVrInitDelayFix": {
-          "description": "Enabling this fix will add a delay to OyasumiVR initializing with OpenVR. This can help if you're experiencing issues with SteamVR crashing or encountering errors when starting it while OyasumiVR is already running.",
-          "title": "Enable OpenVR initialization delay"
+          "description": "Enabling this will make OyasumiVR wait a bit to interact with SteamVR once it has been detected, giving SteamVR some extra time to start. If you're experiencing issues with launching SteamVR while OyasumiVR is already running, this can help.",
+          "title": "Delay OpenVR Initialization"
         },
         "oscServerEnabled": {
-          "description": "Turning this off disables the built-in OSC and OSCQuery servers. This option persists between restarts. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
-          "title": "Enable OSC & OSCQuery Servers"
+          "description": "Turning this off disables the built-in OSC and OSCQuery servers. Note that several features of OyasumiVR will stop working if you turn this off, with no warnings. This option purely exists for debugging purposes and should not be turned off during general use.",
+          "title": "OSC & OSCQuery Servers"
         },
-        "overlayGpuFix": {
-          "description": "If you are experiencing issues with opening the SteamVR overlay, enabling this option could fix the issue on some systems (e.g. those with hybrid graphics). Changing this option will restart the overlay.",
-          "title": "Graphics fix for SteamVR Overlay"
+        "overlayGpuAcceleration": {
+          "description": "If you are experiencing issues with the overlay not rendering properly, disabling this option could fix the issue on some systems (e.g. those with hybrid graphics).",
+          "title": "VR Overlay GPU Acceleration"
         },
-        "title": "Fixes & Troubleshooting",
-        "vrManifestReregister": {
-          "action": "Reregister Manifest",
-          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR.",
-              "title": "Application manifest unregistered"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "The manifest could not be removed. Please check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs.",
-              "title": "Reregistration of VR Application Manifest Failed"
-            },
-            "success": {
-              "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR.",
-              "title": "VR Application Manifest Reregistered"
-            }
-          },
-          "title": "Reregister SteamVR application manifest"
-        }
+        "title": "Application"
       },
       "logs": {
         "openFolder": {
@@ -1754,7 +1698,6 @@
         "editor": {
           "action": "Launch Editor",
           "description": "Launch OyasumiVR's translation editor for editing and creating translations",
-          "experimental": "This module is still in an experimental stage, and is available in English only. While you can try it out, it is very much still in development. For now, you can still expect to find issues and missing functionality.",
           "title": "Translation Editor"
         },
         "loadFile": {
@@ -1763,6 +1706,65 @@
           "title": "Load translation file"
         },
         "title": "Language & Translation"
+      },
+      "troubleshooting": {
+        "description": "This section contains some options related to troubleshooting. You generally shouldn't need to use these unless you're being asked to use them when getting support.",
+        "devTools": {
+          "action": "Open DevTools",
+          "description": "Opens the Edge Developer Tools, for debugging purposes",
+          "title": "Open Developer Tools"
+        },
+        "memoryWatcher": {
+          "action": "Activate",
+          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged",
+          "modal": {
+            "error": {
+              "message": "The memory watcher was already active.",
+              "title": "Already Active"
+            },
+            "success": {
+              "message": "The memory watcher has been activated!",
+              "title": "Memory Watcher Activated"
+            }
+          },
+          "title": "Memory Watcher"
+        },
+        "title": "Troubleshooting",
+        "vrManifestReregister": {
+          "action": "Reregister Manifest",
+          "description": "Reregisters OyasumiVR's VR application manifest with SteamVR",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "As you're using a non-eligible build of OyasumiVR (e.g. the Steam version), the application manifest has been unregistered, but not reregistered. This is not an error! Please restart OyasumiVR.",
+              "title": "Application manifest unregistered"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "The manifest was removed, but it could not be added back. Please restart OyasumiVR and check the logs.",
+              "title": "Reregistration of VR Application Manifest Failed"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "It could not be checked if OyasumiVR's manifest was already registered with SteamVR. Please restart OyasumiVR and check the logs.",
+              "title": "Reregistration of VR Application Manifest Failed"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR had no manifest registered with SteamVR. It has not been (re)registered. Please restart OyasumiVR.",
+              "title": "Reregistration of VR Application Manifest Failed"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "The manifest could not be removed. Please check the logs.",
+              "title": "Reregistration of VR Application Manifest Failed"
+            },
+            "UNKNOWN": {
+              "message": "OyasumiVR's manifest could not be reregistered with SteamVR due to an unknown error. Please restart OyasumiVR and check the logs.",
+              "title": "Reregistration of VR Application Manifest Failed"
+            },
+            "success": {
+              "message": "OyasumiVR's Manifest has successfully been reregistered with SteamVR.",
+              "title": "VR Application Manifest Reregistered"
+            }
+          },
+          "title": "Reregister SteamVR application manifest"
+        }
       }
     },
     "brightnessCct": {

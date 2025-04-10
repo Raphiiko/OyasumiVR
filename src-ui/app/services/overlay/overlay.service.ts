@@ -34,8 +34,8 @@ export class OverlayService {
     this.appSettingsService.settings
       .pipe(
         take(1),
-        map((config) => config.overlayGpuFix),
-        switchMap((gpuFix) => this.startOrRestartSidecar(gpuFix))
+        map((config) => config.overlayGpuAcceleration),
+        switchMap((gpuAcceleration) => this.startOrRestartSidecar(gpuAcceleration))
       )
       .subscribe();
     // Respond to settings changes
@@ -50,8 +50,8 @@ export class OverlayService {
             this.ipcService.getOverlaySidecarClient()?.closeOverlayMenu({} as Empty);
           }
           // When changing the GPU fix setting, restart the sidecar
-          if (current.overlayGpuFix !== previous.overlayGpuFix) {
-            this.startOrRestartSidecar(current.overlayGpuFix);
+          if (current.overlayGpuAcceleration !== previous.overlayGpuAcceleration) {
+            this.startOrRestartSidecar(current.overlayGpuAcceleration);
           }
           // When enabling the overlay menu only open when VRChat is running setting, close the overlay menu if it's open
           if (
@@ -104,7 +104,7 @@ export class OverlayService {
       });
   }
 
-  private async startOrRestartSidecar(gpuFix: boolean) {
-    await invoke('start_overlay_sidecar', { gpuFix });
+  private async startOrRestartSidecar(gpuAcceleration: boolean) {
+    await invoke('start_overlay_sidecar', { gpuAcceleration });
   }
 }
