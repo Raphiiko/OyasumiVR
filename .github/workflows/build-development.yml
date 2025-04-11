@@ -40,7 +40,7 @@ jobs:
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
-          toolchain: 1.86.0
+          toolchain: 1.85.0
           default: true
       - name: Install Protoc
         uses: arduino/setup-protoc@v2
