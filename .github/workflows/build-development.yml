@@ -32,11 +32,11 @@ jobs:
         run: npm run set-flavour DEV
       - name: Set build id
         run: npm run set-build-id
-      - name: Setup LLVM
-        uses: ZhongRuoyu/setup-llvm@v0
-        with:
-          github-token: ${{ github.token }}
-          llvm-version: 17
+#      - name: Setup LLVM
+#        uses: ZhongRuoyu/setup-llvm@v0
+#        with:
+#          github-token: ${{ github.token }}
+#          llvm-version: 18
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
