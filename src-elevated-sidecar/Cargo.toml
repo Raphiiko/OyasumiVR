@@ -18,7 +18,7 @@ reqwest = "0.11.12"
 sysinfo = "0.27.2"
 codesigned = { git = "https://github.com/rustysec/codesigned-rs" }
 log = "0.4.17"
-simplelog = "^0.12.0"
+simplelog = "^0.12.2"
 directories = "4.0.1"
 tonic = "0.9"
 tonic-web = "0.9.2"
