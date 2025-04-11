@@ -63,14 +63,14 @@ jobs:
       - name: Set flavour to STEAM
         run: npm run set-flavour STEAM
       - name: Build OyasumiVR (STEAM Flavour)
-        run: npm run tauri -- build -b none --debug
+        run: npm run tauri build -- -b none --debug
       - name: Copy STEAM build
         shell: bash
         run: chmod +x ./scripts/steam/2-move-build-steam.sh && ./scripts/steam/2-move-build-steam.sh
       - name: Set flavour to STEAM_CN
         run: npm run set-flavour STEAM_CN
       - name: Build OyasumiVR (STEAM_CN Flavour)
-        run: npm run tauri -- build -b none
+        run: npm run tauri build -- -b none
       - name: Copy STEAM_CN build
         shell: bash
         run: chmod +x ./scripts/steam/3-move-build-steam-cn.sh && ./scripts/steam/3-move-build-steam-cn.sh
