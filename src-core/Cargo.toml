@@ -11,6 +11,8 @@ edition = "2021"
 [build-dependencies]
 tauri-build = { version = "1.5.1", features = [] }
 tonic-build = { version = "0.11.0", features = [] }
+toml = "0.8.19"
+reqwest = { version = "0.12.9", features = ["blocking"] }
 
 [dependencies]
 oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
@@ -89,7 +91,7 @@ config = "0.14.0"
 oyasumivr_macros = { path = "./macros" }
 regex = "1.10.2"
 hidapi = "2.6.0"
-steamlocate = "1.2.1"
+steamlocate = "2.0.1"
 discord-sdk = "0.3.6"
 public-ip = "0.2.2"
 suncalc = "0.4.0"
@@ -100,8 +102,14 @@ rev = "5f24925"
 
 [dependencies.oyasumivr_oscquery]
 git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "2949a3f"
-# path = "../../oyasumivr-oscquery"
+rev = "47c00b5fab8d7a45ba3254873ca7886f84483560"
+# path = "../../oyasumivr_oscquery"
+
+[dependencies.ovr_overlay]
+git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
+rev = "a2afdea5fa9171b0151f8da271fcdd7cdc2beb41"
+# path = "../../ovr_overlay_oyasumi"
+features = ["ovr_system", "ovr_settings"]
 
 [dependencies.tauri]
 version = "1.6.1"
@@ -135,12 +143,6 @@ features = [
   "updater",
   "devtools",
 ]
-
-[dependencies.ovr_overlay]
-git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "a2afdea5fa9171b0151f8da271fcdd7cdc2beb41"
-# path = "../../ovr_overlay_oyasumi"
-features = ["ovr_system", "ovr_settings"]
 
 [features]
 # by default Tauri runs in production mode

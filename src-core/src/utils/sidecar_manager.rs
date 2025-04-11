@@ -72,6 +72,7 @@ impl SidecarManager {
         }
     }
 
+    #[allow(dead_code)]
     pub async fn set_args(&mut self, args: Vec<String>) {
         *self.args.lock().await = args;
     }

@@ -120,24 +120,6 @@ pub async fn cli_sidecar_overlay_mode() -> models::OverlaySidecarMode {
     }
 }
 
-pub async fn cli_sidecar_mdns_mode() -> models::MdnsSidecarMode {
-    let default = "release";
-    let match_guard = TAURI_CLI_MATCHES.lock().await;
-    let mode = match match_guard.as_ref().unwrap().args.get("mdns-sidecar-mode") {
-        Some(data) => data.value.as_str().unwrap_or(default),
-        None => default,
-    };
-    // Determine the correct mode
-    match mode {
-        "dev" => models::MdnsSidecarMode::Dev,
-        "release" => models::MdnsSidecarMode::Release,
-        _ => {
-            error!("[Core] Invalid mdns sidecar mode specified. Defaulting to release mode.");
-            models::MdnsSidecarMode::Release
-        }
-    }
-}
-
 pub fn convert_char_array_to_string(slice: &[c_char]) -> Option<String> {
     let trimmed_array: Vec<u8> = slice
         .iter()

@@ -7,12 +7,9 @@ package OyasumiCore;
 service OyasumiCore {
   rpc OnOverlaySidecarStart (OverlaySidecarStartArgs) returns (Empty) {}
   rpc OnElevatedSidecarStart (ElevatedSidecarStartArgs) returns (Empty) {}
-  rpc OnMDNSSidecarStart (MDNSSidecarStartArgs) returns (Empty) {}
   rpc SendEvent (EventParams) returns (Empty) {}
   rpc GetHTTPServerPort (Empty) returns (HTTPServerPort) {}
   rpc AddNotification (AddNotificationRequest) returns (AddNotificationResponse) {}
-  rpc SetVRChatOSCAddress (SetAddressRequest) returns (Empty) {}
-  rpc SetVRChatOSCQueryAddress (SetAddressRequest) returns (Empty) {}
 }
 
 message HTTPServerPort {
@@ -33,10 +30,6 @@ message ElevatedSidecarStartArgs {
   optional uint32 old_pid = 4;
 }
 
-message MDNSSidecarStartArgs {
-  uint32 pid = 1;
-}
-
 message EventParams {
   string event_name = 1;
   oneof event_data {
@@ -55,11 +48,6 @@ message AddNotificationRequest {
 
 message AddNotificationResponse {
   optional string notification_id = 1;
-}
-
-message SetAddressRequest {
-  string host = 1;
-  uint32 port = 2;
 }
 
 message Empty {}
