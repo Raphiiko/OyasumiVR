@@ -34,7 +34,7 @@ substring = "1.4.5"
 bytes = "1.4.0"
 nalgebra = "0.32.2"
 rodio = "0.19.0"
-time = "0.3.15"
+time = "0.3.41"
 tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
