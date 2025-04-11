@@ -14,7 +14,6 @@ import { invoke } from '@tauri-apps/api';
 import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
 import { writeText } from '@tauri-apps/api/clipboard';
-import { MdnsSidecarService } from 'src-ui/app/services/mdns-sidecar.service';
 
 @Component({
   selector: 'app-settings-status-info-view',
@@ -38,7 +37,6 @@ export class SettingsStatusInfoViewComponent {
     osc: OscService,
     elevatedSidecar: ElevatedSidecarService,
     overlaySidecar: OverlayService,
-    mdnsSidecar: MdnsSidecarService,
     openvr: OpenVRService,
     ipc: IPCService,
     fontLoader: FontLoaderService,
@@ -61,14 +59,6 @@ export class SettingsStatusInfoViewComponent {
           {
             key: 'Overlay Sidecar',
             value: overlaySidecar.sidecarStarted.pipe(
-              map((s) => {
-                return s ? 'Running' : 'Not running';
-              })
-            ),
-          },
-          {
-            key: 'MDNS Sidecar',
-            value: mdnsSidecar.sidecarStarted.pipe(
               map((s) => {
                 return s ? 'Running' : 'Not running';
               })

@@ -16,7 +16,6 @@ mod hardware;
 mod http;
 mod image_cache;
 mod lighthouse;
-mod mdns_sidecar;
 mod migrations;
 mod openvr;
 mod os;
@@ -163,7 +162,6 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
-        mdns_sidecar::commands::mdns_sidecar_started,
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
@@ -348,8 +346,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     elevated_sidecar::init().await;
     // Initialize overlay sidecar module
     overlay_sidecar::init().await;
-    // Initialize mdns sidecar module
-    mdns_sidecar::init().await;
     // Initialize Discord module
     discord::init().await;
     // Setup start of minute cronjob

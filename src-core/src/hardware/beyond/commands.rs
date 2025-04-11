@@ -12,21 +12,36 @@ pub async fn bigscreen_beyond_is_connected() -> bool {
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn bigscreen_beyond_get_saved_preferences() -> Result<Option<String>, String> {
-    let mut steamdir = match SteamDir::locate() {
-        Some(dir) => dir,
-        None => {
-            warn!("[Core] Failed to locate Steam installation directory");
+    let steamdir = match SteamDir::locate() {
+        Ok(dir) => dir,
+        Err(e) => {
+            warn!(
+                "[Core] Failed to locate Steam installation directory: {}",
+                e
+            );
             return Ok(None);
         }
     };
-    let app = match steamdir.app(&2467050) {
-        Some(app) => app,
-        None => {
-            warn!("[Core] Failed to locate Bigscreen Beyond Driver installation directory");
+    let (app, library) = match steamdir.find_app(2467050) {
+        Ok(app) => match app {
+            Some(app) => app,
+            None => {
+                warn!("[Core] Bigscreen Beyond Driver not found in Steam library");
+                return Ok(None);
+            }
+        },
+        Err(e) => {
+            warn!(
+                "[Core] Failed to locate Bigscreen Beyond Driver installation directory: {}",
+                e
+            );
             return Ok(None);
         }
     };
-    let path = app.path.join("bin").join("beyond_settings.json");
+    let path = library
+        .resolve_app_dir(&app)
+        .join("bin")
+        .join("beyond_settings.json");
     if !path.exists() || !path.is_file() {
         return Ok(None);
     }

@@ -9,7 +9,6 @@ import type { AddNotificationResponse } from './oyasumi-core_pb';
 import type { AddNotificationRequest } from './oyasumi-core_pb';
 import type { HTTPServerPort } from './oyasumi-core_pb';
 import type { EventParams } from './oyasumi-core_pb';
-import type { MDNSSidecarStartArgs } from './oyasumi-core_pb';
 import type { ElevatedSidecarStartArgs } from './oyasumi-core_pb';
 import { stackIntercept } from '@protobuf-ts/runtime-rpc';
 import type { Empty } from './oyasumi-core_pb';
@@ -34,13 +33,6 @@ export interface IOyasumiCoreClient {
     input: ElevatedSidecarStartArgs,
     options?: RpcOptions
   ): UnaryCall<ElevatedSidecarStartArgs, Empty>;
-  /**
-   * @generated from protobuf rpc: OnMDNSSidecarStart(OyasumiCore.MDNSSidecarStartArgs) returns (OyasumiCore.Empty);
-   */
-  onMDNSSidecarStart(
-    input: MDNSSidecarStartArgs,
-    options?: RpcOptions
-  ): UnaryCall<MDNSSidecarStartArgs, Empty>;
   /**
    * @generated from protobuf rpc: SendEvent(OyasumiCore.EventParams) returns (OyasumiCore.Empty);
    */
@@ -114,27 +106,10 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
     );
   }
   /**
-   * @generated from protobuf rpc: OnMDNSSidecarStart(OyasumiCore.MDNSSidecarStartArgs) returns (OyasumiCore.Empty);
-   */
-  onMDNSSidecarStart(
-    input: MDNSSidecarStartArgs,
-    options?: RpcOptions
-  ): UnaryCall<MDNSSidecarStartArgs, Empty> {
-    const method = this.methods[2],
-      opt = this._transport.mergeOptions(options);
-    return stackIntercept<MDNSSidecarStartArgs, Empty>(
-      'unary',
-      this._transport,
-      method,
-      opt,
-      input
-    );
-  }
-  /**
    * @generated from protobuf rpc: SendEvent(OyasumiCore.EventParams) returns (OyasumiCore.Empty);
    */
   sendEvent(input: EventParams, options?: RpcOptions): UnaryCall<EventParams, Empty> {
-    const method = this.methods[3],
+    const method = this.methods[2],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<EventParams, Empty>('unary', this._transport, method, opt, input);
   }
@@ -142,7 +117,7 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
    * @generated from protobuf rpc: GetHTTPServerPort(OyasumiCore.Empty) returns (OyasumiCore.HTTPServerPort);
    */
   getHTTPServerPort(input: Empty, options?: RpcOptions): UnaryCall<Empty, HTTPServerPort> {
-    const method = this.methods[4],
+    const method = this.methods[3],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<Empty, HTTPServerPort>('unary', this._transport, method, opt, input);
   }
@@ -153,7 +128,7 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
     input: AddNotificationRequest,
     options?: RpcOptions
   ): UnaryCall<AddNotificationRequest, AddNotificationResponse> {
-    const method = this.methods[5],
+    const method = this.methods[4],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<AddNotificationRequest, AddNotificationResponse>(
       'unary',
@@ -170,7 +145,7 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
     input: SetAddressRequest,
     options?: RpcOptions
   ): UnaryCall<SetAddressRequest, Empty> {
-    const method = this.methods[6],
+    const method = this.methods[5],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetAddressRequest, Empty>('unary', this._transport, method, opt, input);
   }
@@ -181,7 +156,7 @@ export class OyasumiCoreClient implements IOyasumiCoreClient, ServiceInfo {
     input: SetAddressRequest,
     options?: RpcOptions
   ): UnaryCall<SetAddressRequest, Empty> {
-    const method = this.methods[7],
+    const method = this.methods[6],
       opt = this._transport.mergeOptions(options);
     return stackIntercept<SetAddressRequest, Empty>('unary', this._transport, method, opt, input);
   }

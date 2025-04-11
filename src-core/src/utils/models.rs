@@ -10,8 +10,3 @@ pub enum OverlaySidecarMode {
     Release,
 }
 
-#[derive(strum_macros::Display)]
-pub enum MdnsSidecarMode {
-    Dev,
-    Release,
-}

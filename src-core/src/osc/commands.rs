@@ -10,6 +10,8 @@ use std::{
 use tokio::sync::Mutex;
 use tokio_util::sync::CancellationToken;
 
+const MDNS_SIDECAR_PATH: &str = "resources/oyasumivr-mdns-sidecar.exe";
+
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SupportedOscType {
     INT,
@@ -48,6 +50,11 @@ pub async fn stop_osc_server() {
         // Terminate OSCQuery server
         match oyasumivr_oscquery::server::deinit().await {
             Err(err) => error!("[Core] Could not terminate OSCQuery server: {:#?}", err),
+            _ => {}
+        };
+        // Terminate OSCQuery client
+        match oyasumivr_oscquery::client::deinit().await {
+            Err(err) => error!("[Core] Could not terminate OSCQuery client: {:#?}", err),
             _ => {}
         };
     }
@@ -90,19 +97,39 @@ pub async fn start_osc_server() -> Option<(String, String)> {
     let cancellation_token = super::spawn_receiver_task().await;
     *CANCELLATION_TOKEN.lock().await = Some(cancellation_token);
     // Start the OSCQuery server
-    let osc_query_addr =
-        oyasumivr_oscquery::server::init("OyasumiVR", "127.0.0.1", osc_addr_port, false).await;
-    if osc_query_addr.is_err() {
-        error!(
-            "[Core] Could not initialize OSCQuery server: {:#?}",
-            osc_query_addr.err()
-        );
-        return None;
-    };
-    let osc_query_addr = osc_query_addr.unwrap();
-    let osc_query_addr_string = format!("{}:{}", osc_query_addr.0, osc_query_addr.1);
+    let osc_query_addr_string =
+        match oyasumivr_oscquery::server::init("OyasumiVR", osc_addr_port, MDNS_SIDECAR_PATH).await
+        {
+            Ok((addr, port)) => {
+                info!("[Core] OSCQuery server listening on {}:{}", addr, port);
+                format!("{}:{}", addr, port)
+            }
+            Err(e) => {
+                error!("[Core] Failed to start OSCQuery server: {:#?}", e);
+                stop_osc_server().await;
+                return None;
+            }
+        };
     oyasumivr_oscquery::server::receive_vrchat_avatar_parameters().await;
-    crate::mdns_sidecar::start_mdns_sidecar(osc_addr_port, osc_query_addr.1).await;
+    if let Err(e) = oyasumivr_oscquery::server::advertise().await {
+        error!("[Core] Failed to advertise OSCQuery server: {:#?}", e);
+        stop_osc_server().await;
+        let _ = oyasumivr_oscquery::server::deinit().await;
+        return None;
+    }
+    // Setup the OSCQuery client
+    match oyasumivr_oscquery::client::init(MDNS_SIDECAR_PATH).await {
+        Ok(_) => {
+            info!("[Core] OSCQuery client initialized");
+        }
+        Err(e) => {
+            error!("[Core] Failed to initialize OSCQuery client: {:#?}", e);
+            stop_osc_server().await;
+            let _ = oyasumivr_oscquery::client::deinit().await;
+            let _ = oyasumivr_oscquery::server::deinit().await;
+            return None;
+        }
+    }
     // Return bound address
     Some((osc_addr_string, osc_query_addr_string))
 }

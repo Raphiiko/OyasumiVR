@@ -62,15 +62,6 @@ export interface ElevatedSidecarStartArgs {
   oldPid?: number;
 }
 /**
- * @generated from protobuf message OyasumiCore.MDNSSidecarStartArgs
- */
-export interface MDNSSidecarStartArgs {
-  /**
-   * @generated from protobuf field: uint32 pid = 1;
-   */
-  pid: number;
-}
-/**
  * @generated from protobuf message OyasumiCore.EventParams
  */
 export interface EventParams {
@@ -376,68 +367,6 @@ class ElevatedSidecarStartArgs$Type extends MessageType<ElevatedSidecarStartArgs
  * @generated MessageType for protobuf message OyasumiCore.ElevatedSidecarStartArgs
  */
 export const ElevatedSidecarStartArgs = new ElevatedSidecarStartArgs$Type();
-// @generated message type with reflection information, may provide speed optimized methods
-class MDNSSidecarStartArgs$Type extends MessageType<MDNSSidecarStartArgs> {
-  constructor() {
-    super('OyasumiCore.MDNSSidecarStartArgs', [
-      { no: 1, name: 'pid', kind: 'scalar', T: 13 /*ScalarType.UINT32*/ },
-    ]);
-  }
-  create(value?: PartialMessage<MDNSSidecarStartArgs>): MDNSSidecarStartArgs {
-    const message = { pid: 0 };
-    globalThis.Object.defineProperty(message, MESSAGE_TYPE, { enumerable: false, value: this });
-    if (value !== undefined) reflectionMergePartial<MDNSSidecarStartArgs>(this, message, value);
-    return message;
-  }
-  internalBinaryRead(
-    reader: IBinaryReader,
-    length: number,
-    options: BinaryReadOptions,
-    target?: MDNSSidecarStartArgs
-  ): MDNSSidecarStartArgs {
-    let message = target ?? this.create(),
-      end = reader.pos + length;
-    while (reader.pos < end) {
-      let [fieldNo, wireType] = reader.tag();
-      switch (fieldNo) {
-        case /* uint32 pid */ 1:
-          message.pid = reader.uint32();
-          break;
-        default:
-          let u = options.readUnknownField;
-          if (u === 'throw')
-            throw new globalThis.Error(
-              `Unknown field ${fieldNo} (wire type ${wireType}) for ${this.typeName}`
-            );
-          let d = reader.skip(wireType);
-          if (u !== false)
-            (u === true ? UnknownFieldHandler.onRead : u)(
-              this.typeName,
-              message,
-              fieldNo,
-              wireType,
-              d
-            );
-      }
-    }
-    return message;
-  }
-  internalBinaryWrite(
-    message: MDNSSidecarStartArgs,
-    writer: IBinaryWriter,
-    options: BinaryWriteOptions
-  ): IBinaryWriter {
-    /* uint32 pid = 1; */
-    if (message.pid !== 0) writer.tag(1, WireType.Varint).uint32(message.pid);
-    let u = options.writeUnknownFields;
-    if (u !== false) (u == true ? UnknownFieldHandler.onWrite : u)(this.typeName, message, writer);
-    return writer;
-  }
-}
-/**
- * @generated MessageType for protobuf message OyasumiCore.MDNSSidecarStartArgs
- */
-export const MDNSSidecarStartArgs = new MDNSSidecarStartArgs$Type();
 // @generated message type with reflection information, may provide speed optimized methods
 class EventParams$Type extends MessageType<EventParams> {
   constructor() {
@@ -800,7 +729,6 @@ export const Empty = new Empty$Type();
 export const OyasumiCore = new ServiceType('OyasumiCore.OyasumiCore', [
   { name: 'OnOverlaySidecarStart', options: {}, I: OverlaySidecarStartArgs, O: Empty },
   { name: 'OnElevatedSidecarStart', options: {}, I: ElevatedSidecarStartArgs, O: Empty },
-  { name: 'OnMDNSSidecarStart', options: {}, I: MDNSSidecarStartArgs, O: Empty },
   { name: 'SendEvent', options: {}, I: EventParams, O: Empty },
   { name: 'GetHTTPServerPort', options: {}, I: Empty, O: HTTPServerPort },
   { name: 'AddNotification', options: {}, I: AddNotificationRequest, O: AddNotificationResponse },
