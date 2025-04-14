@@ -332,10 +332,6 @@ export class DeviceListComponent implements OnInit {
     } as EventLogTurnedOffOpenVRDevices);
   }
 
-  async scanForLighthouses() {
-    this.lighthouse.scan();
-  }
-
   onClickOutsideLHStatePopover($event: MouseEvent) {
     const targetId = ($event.target as HTMLElement).id;
     if (targetId !== 'btn-lh-bulk-power') {

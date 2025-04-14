@@ -401,7 +401,6 @@
         "unknown": "Unknown Status"
       },
       "noDevices": "No devices detected",
-      "scanForLighthouses": "Scan",
       "title": "Devices",
       "turnOffAll": "ALL"
     },

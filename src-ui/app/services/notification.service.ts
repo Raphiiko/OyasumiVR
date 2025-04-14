@@ -263,9 +263,13 @@ export class NotificationService {
         info(`[NotificationService] OVRToolkit websocket connection closed`);
         return;
       case 'ERROR':
-        error(
-          `[NotificationService] OVRToolkit websocket connection error: ${JSON.stringify(message)}`
-        );
+        if (message) {
+          error(
+            `[NotificationService] OVRToolkit websocket connection error: ${JSON.stringify(
+              message
+            )}`
+          );
+        }
         return;
       case 'MESSAGE':
         // Maybe do something with received messages in the future
