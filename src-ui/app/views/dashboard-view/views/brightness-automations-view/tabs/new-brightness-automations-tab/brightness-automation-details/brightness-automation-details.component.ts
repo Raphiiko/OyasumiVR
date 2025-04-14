@@ -32,10 +32,11 @@ interface BrightnessBounds {
 type BrightnessType = 'SIMPLE' | 'SOFTWARE' | 'HARDWARE';
 
 @Component({
-  selector: 'app-brightness-automation-details',
-  templateUrl: './brightness-automation-details.component.html',
-  styleUrls: ['./brightness-automation-details.component.scss'],
-  animations: [fade(), fadeRight(), vshrink()],
+    selector: 'app-brightness-automation-details',
+    templateUrl: './brightness-automation-details.component.html',
+    styleUrls: ['./brightness-automation-details.component.scss'],
+    animations: [fade(), fadeRight(), vshrink()],
+    standalone: false
 })
 export class BrightnessAutomationDetailsComponent implements OnInit {
   close = output<void>();

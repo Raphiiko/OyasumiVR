@@ -5,9 +5,10 @@ import { ModalService } from 'src-ui/app/services/modal.service';
 import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.component';
 
 @Component({
-  selector: 'app-osc-script-button',
-  templateUrl: './osc-script-button.component.html',
-  styleUrls: ['./osc-script-button.component.scss'],
+    selector: 'app-osc-script-button',
+    templateUrl: './osc-script-button.component.html',
+    styleUrls: ['./osc-script-button.component.scss'],
+    standalone: false
 })
 export class OscScriptButtonComponent implements OnInit {
   @Input() label = '';

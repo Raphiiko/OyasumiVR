@@ -18,9 +18,10 @@ import { clamp, ensurePrecision, floatPrecision } from '../../utils/number-utils
 export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
 
 @Component({
-  selector: 'app-slider',
-  templateUrl: './slider.component.html',
-  styleUrls: ['./slider.component.scss'],
+    selector: 'app-slider',
+    templateUrl: './slider.component.html',
+    styleUrls: ['./slider.component.scss'],
+    standalone: false
 })
 export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() min = 0;

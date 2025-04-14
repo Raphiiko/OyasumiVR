@@ -10,10 +10,11 @@ import { CCTControlService } from '../../services/cct-control/cct-control.servic
 import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
-  selector: 'app-cct-control-modal',
-  templateUrl: './cct-control-modal.component.html',
-  styleUrls: ['./cct-control-modal.component.scss'],
-  animations: [fadeUp(), vshrink(), hshrink()],
+    selector: 'app-cct-control-modal',
+    templateUrl: './cct-control-modal.component.html',
+    styleUrls: ['./cct-control-modal.component.scss'],
+    animations: [fadeUp(), vshrink(), hshrink()],
+    standalone: false
 })
 export class CCTControlModalComponent extends BaseModalComponent<void, void> implements OnInit {
   protected readonly setCCT = new Subject<number>();

@@ -39,14 +39,14 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^18.0.5",
-    "@angular/common": "^18.0.5",
-    "@angular/compiler": "^18.0.5",
-    "@angular/core": "^18.0.5",
-    "@angular/forms": "^18.0.5",
-    "@angular/platform-browser": "^18.0.5",
-    "@angular/platform-browser-dynamic": "^18.0.5",
-    "@angular/router": "^18.0.5",
+    "@angular/animations": "^19.2.6",
+    "@angular/common": "^19.2.6",
+    "@angular/compiler": "^19.2.6",
+    "@angular/core": "^19.2.6",
+    "@angular/forms": "^19.2.6",
+    "@angular/platform-browser": "^19.2.6",
+    "@angular/platform-browser-dynamic": "^19.2.6",
+    "@angular/router": "^19.2.6",
     "@aptabase/tauri": "^0.4.1",
     "@fontsource/fira-code": "^4.5.12",
     "@fontsource/noto-sans-jp": "^4.5.12",
@@ -93,7 +93,7 @@
     "uplot": "^1.6.24",
     "uuid": "^9.0.0",
     "vrchat": "github:Raphiiko/vrchatapi-javascript#oyasumi-patch",
-    "zone.js": "^0.14.7"
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-eslint/builder": "^18.0.1",
@@ -101,15 +101,16 @@
     "@angular-eslint/eslint-plugin-template": "^18.0.1",
     "@angular-eslint/schematics": "^18.0.1",
     "@angular-eslint/template-parser": "^18.0.1",
-    "@angular/build": "^18.0.6",
-    "@angular/cli": "^18.0.6",
-    "@angular/compiler-cli": "^18.0.5",
+    "@angular/build": "^19.2.7",
+    "@angular/cli": "^19.2.7",
+    "@angular/compiler-cli": "^19.2.6",
     "@protobuf-ts/plugin": "^2.9.0",
     "@tauri-apps/cli": "^1.5.11",
     "@types/cookie": "^0.6.0",
     "@types/konami-code-js": "^0.8.3",
     "@types/lodash": "^4.14.188",
     "@types/marked": "^4.0.7",
+    "@types/node": "^22.14.1",
     "@types/set-cookie-parser": "^2.4.2",
     "@types/three": "^0.146.0",
     "@types/uuid": "^8.3.4",
@@ -127,7 +128,7 @@
     "recursive-copy": "^2.0.14",
     "rimraf": "^5.0.1",
     "sharp": "^0.32.1",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   },
   "husky": {
     "hooks": {

@@ -8,10 +8,11 @@ import { TString } from 'src-ui/app/models/translatable-string';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-gpu-powerlimiting-pane',
-  templateUrl: './gpu-powerlimiting-pane.component.html',
-  styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
-  animations: [vshrink(), noop()],
+    selector: 'app-gpu-powerlimiting-pane',
+    templateUrl: './gpu-powerlimiting-pane.component.html',
+    styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
+    animations: [vshrink(), noop()],
+    standalone: false
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {
   protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';

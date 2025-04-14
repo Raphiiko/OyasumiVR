@@ -11,10 +11,11 @@ import {
 import { PersistedAvatar } from '../../../../models/vrchat';
 
 @Component({
-  selector: 'app-vrchat-avatar-automations-view',
-  templateUrl: './vrchat-avatar-automations-view.component.html',
-  styleUrls: ['./vrchat-avatar-automations-view.component.scss'],
-  animations: [vshrink()],
+    selector: 'app-vrchat-avatar-automations-view',
+    templateUrl: './vrchat-avatar-automations-view.component.html',
+    styleUrls: ['./vrchat-avatar-automations-view.component.scss'],
+    animations: [vshrink()],
+    standalone: false
 })
 export class VRChatAvatarAutomationsViewComponent implements OnInit {
   loggedIn = false;

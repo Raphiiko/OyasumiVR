@@ -16,10 +16,11 @@ export interface BatteryPercentageEnableSleepModeModalOutputModel {
 }
 
 @Component({
-  selector: 'app-battery-percentage-enable-sleepmode-modal',
-  templateUrl: './battery-percentage-enable-sleep-mode-modal.component.html',
-  styleUrls: ['./battery-percentage-enable-sleep-mode-modal.component.scss'],
-  animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
+    selector: 'app-battery-percentage-enable-sleepmode-modal',
+    templateUrl: './battery-percentage-enable-sleep-mode-modal.component.html',
+    styleUrls: ['./battery-percentage-enable-sleep-mode-modal.component.scss'],
+    animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
+    standalone: false
 })
 export class BatteryPercentageEnableSleepModeModalComponent
   extends BaseModalComponent<

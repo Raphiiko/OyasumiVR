@@ -6,10 +6,11 @@ import {
 import { fade, vshrink } from 'src-ui/app/utils/animations';
 
 @Component({
-  selector: 'app-shutdown-sequence-overlay',
-  templateUrl: './shutdown-sequence-overlay.component.html',
-  styleUrls: ['./shutdown-sequence-overlay.component.scss'],
-  animations: [fade(), vshrink('vshrinkSlow', '.6s ease')],
+    selector: 'app-shutdown-sequence-overlay',
+    templateUrl: './shutdown-sequence-overlay.component.html',
+    styleUrls: ['./shutdown-sequence-overlay.component.scss'],
+    animations: [fade(), vshrink('vshrinkSlow', '.6s ease')],
+    standalone: false
 })
 export class ShutdownSequenceOverlayComponent {
   stages: ShutdownSequenceStage[] = [];

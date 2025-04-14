@@ -14,10 +14,11 @@ import { filter } from 'rxjs';
 import { fade, vshrink } from '../../../../../../utils/animations';
 
 @Component({
-  selector: 'app-sleep-detection-detection-tab',
-  templateUrl: './sleep-detection-detection-tab.component.html',
-  styleUrls: ['./sleep-detection-detection-tab.component.scss'],
-  animations: [fade(), vshrink()],
+    selector: 'app-sleep-detection-detection-tab',
+    templateUrl: './sleep-detection-detection-tab.component.html',
+    styleUrls: ['./sleep-detection-detection-tab.component.scss'],
+    animations: [fade(), vshrink()],
+    standalone: false
 })
 export class SleepDetectionDetectionTabComponent
   extends SleepDetectionTabComponent

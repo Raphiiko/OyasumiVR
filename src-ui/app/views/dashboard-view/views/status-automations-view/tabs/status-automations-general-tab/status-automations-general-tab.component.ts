@@ -19,9 +19,10 @@ import {
 import { ModalService } from '../../../../../../services/modal.service';
 
 @Component({
-  selector: 'app-status-automations-general-tab',
-  templateUrl: './status-automations-general-tab.component.html',
-  styleUrls: ['./status-automations-general-tab.component.scss'],
+    selector: 'app-status-automations-general-tab',
+    templateUrl: './status-automations-general-tab.component.html',
+    styleUrls: ['./status-automations-general-tab.component.scss'],
+    standalone: false
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
   UserStatus = UserStatus;

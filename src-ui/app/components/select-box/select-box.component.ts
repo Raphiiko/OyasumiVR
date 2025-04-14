@@ -12,10 +12,11 @@ export interface SelectBoxItem<T = string> {
 }
 
 @Component({
-  selector: 'app-select-box',
-  templateUrl: './select-box.component.html',
-  styleUrls: ['./select-box.component.scss'],
-  animations: [fadeDown(), fadeUp()],
+    selector: 'app-select-box',
+    templateUrl: './select-box.component.html',
+    styleUrls: ['./select-box.component.scss'],
+    animations: [fadeDown(), fadeUp()],
+    standalone: false
 })
 export class SelectBoxComponent implements OnInit {
   @Input() type: 'SMALL' | 'NORMAL' = 'NORMAL';

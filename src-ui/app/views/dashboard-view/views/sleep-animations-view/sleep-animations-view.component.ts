@@ -23,10 +23,11 @@ import { SleepingAnimationPresetModalComponent } from '../../../../components/sl
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-sleep-animations-view',
-  templateUrl: './sleep-animations-view.component.html',
-  styleUrls: ['./sleep-animations-view.component.scss'],
-  animations: [noop(), vshrink(), hshrink()],
+    selector: 'app-sleep-animations-view',
+    templateUrl: './sleep-animations-view.component.html',
+    styleUrls: ['./sleep-animations-view.component.scss'],
+    animations: [noop(), vshrink(), hshrink()],
+    standalone: false
 })
 export class SleepAnimationsViewComponent implements OnInit {
   oscOptionsExpanded = false;

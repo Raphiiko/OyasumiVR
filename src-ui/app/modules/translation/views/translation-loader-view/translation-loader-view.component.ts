@@ -8,9 +8,10 @@ import { readTextFile } from '@tauri-apps/api/fs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-translation-loader-view',
-  templateUrl: './translation-loader-view.component.html',
-  styleUrls: ['./translation-loader-view.component.scss'],
+    selector: 'app-translation-loader-view',
+    templateUrl: './translation-loader-view.component.html',
+    styleUrls: ['./translation-loader-view.component.scss'],
+    standalone: false
 })
 export class TranslationLoaderViewComponent {
   protected state: 'INITIALIZING' | 'INITIALIZED' | 'ERROR' | 'STARTING' = 'INITIALIZING';

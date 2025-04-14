@@ -22,10 +22,11 @@ import {
 import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
 
 @Component({
-  selector: 'app-status-automations-player-limit-tab',
-  templateUrl: './status-automations-player-limit-tab.component.html',
-  styleUrls: ['./status-automations-player-limit-tab.component.scss'],
-  animations: [vshrink(), noop(), hshrink()],
+    selector: 'app-status-automations-player-limit-tab',
+    templateUrl: './status-automations-player-limit-tab.component.html',
+    styleUrls: ['./status-automations-player-limit-tab.component.scss'],
+    animations: [vshrink(), noop(), hshrink()],
+    standalone: false
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
   UserStatus = UserStatus;

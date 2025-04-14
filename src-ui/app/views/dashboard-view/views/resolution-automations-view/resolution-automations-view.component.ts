@@ -11,10 +11,11 @@ import { debounce } from 'typescript-debounce-decorator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-resolution-automations-view',
-  templateUrl: './resolution-automations-view.component.html',
-  styleUrls: ['./resolution-automations-view.component.scss'],
-  animations: [],
+    selector: 'app-resolution-automations-view',
+    templateUrl: './resolution-automations-view.component.html',
+    styleUrls: ['./resolution-automations-view.component.scss'],
+    animations: [],
+    standalone: false
 })
 export class ResolutionAutomationsViewComponent implements OnInit {
   protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = structuredClone(

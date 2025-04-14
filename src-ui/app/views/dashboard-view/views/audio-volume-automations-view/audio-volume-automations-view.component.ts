@@ -10,9 +10,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
 @Component({
-  selector: 'app-audio-volume-automations-view',
-  templateUrl: './audio-volume-automations-view.component.html',
-  styleUrls: ['./audio-volume-automations-view.component.scss'],
+    selector: 'app-audio-volume-automations-view',
+    templateUrl: './audio-volume-automations-view.component.html',
+    styleUrls: ['./audio-volume-automations-view.component.scss'],
+    standalone: false
 })
 export class AudioVolumeAutomationsViewComponent implements OnInit {
   config: AudioDeviceAutomationsConfig = structuredClone(

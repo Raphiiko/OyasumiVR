@@ -18,10 +18,11 @@ interface PresetOptions {
   onSleepPreparation: SelectBoxItem;
 }
 @Component({
-  selector: 'app-auto-invite-request-accept-view',
-  templateUrl: './auto-invite-request-accept-view.component.html',
-  styleUrls: ['./auto-invite-request-accept-view.component.scss'],
-  animations: [vshrink(), noop(), hshrink()],
+    selector: 'app-auto-invite-request-accept-view',
+    templateUrl: './auto-invite-request-accept-view.component.html',
+    styleUrls: ['./auto-invite-request-accept-view.component.scss'],
+    animations: [vshrink(), noop(), hshrink()],
+    standalone: false
 })
 export class AutoInviteRequestAcceptViewComponent implements OnInit {
   loggedIn = false;
