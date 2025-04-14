@@ -21,7 +21,7 @@ fn main() {
             "#[derive(serde::Serialize)]",
         )
         // Compile protobuf files
-        .compile(
+        .compile_protos(
             &[
                 "../proto/oyasumi-core.proto",
                 "../proto/elevated-sidecar.proto",

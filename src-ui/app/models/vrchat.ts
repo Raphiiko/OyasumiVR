@@ -1,4 +1,4 @@
-import { Avatar } from 'vrchat/dist';
+import type { Avatar } from 'vrchat/dist';
 
 export interface WorldContext {
   playerCount: number;

@@ -1,7 +1,7 @@
 import { ShutdownSequenceStage } from '../services/shutdown-automations.service';
 import { LighthouseDevicePowerState } from './lighthouse-device';
 import { SleepModeStatusChangeReason } from './sleep-mode';
-import { UserStatus } from 'vrchat/dist';
+import type { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 
 export type EventLog = {

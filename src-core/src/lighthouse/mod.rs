@@ -307,13 +307,13 @@ pub async fn set_device_power_state(
         LighthouseDeviceType::LighthouseV2 => {
             match state {
                 LighthousePowerState::Sleep => {
-                    characteristic.write_without_response(&[0x00]).await;
+                    let _ = characteristic.write_without_response(&[0x00]).await;
                 }
                 LighthousePowerState::Standby => {
-                    characteristic.write_without_response(&[0x02]).await;
+                    let _ = characteristic.write_without_response(&[0x02]).await;
                 }
                 LighthousePowerState::On => {
-                    characteristic.write_without_response(&[0x01]).await;
+                    let _ = characteristic.write_without_response(&[0x01]).await;
                 }
                 LighthousePowerState::Booting | LighthousePowerState::Unknown => {
                     warn!("[Core] Attempted to set lighthouse device power to an invalid state");

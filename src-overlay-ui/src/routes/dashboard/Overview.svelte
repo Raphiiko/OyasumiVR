@@ -58,7 +58,7 @@
 	<!-- LOGO HEADER -->
 	<div
 		class="flex flex-col items-center justify-center w-full px-[80px] mb-4"
-		transition:blurFly={{ duration: animationSpeed, y: flyYTransform }}
+		transition:blurFly|global={{ duration: animationSpeed, y: flyYTransform }}
 	>
 		<img src={logo} alt="Oyasumi Logo" class="glow-100" />
 	</div>
@@ -68,7 +68,7 @@
 		<!-- SLEEP MODE TOGGLE -->
 		<div
 			class="col-span-3 col-start-1 col-end-3 row-start-1 row-end-1 w-full h-full"
-			transition:blurFly={{
+			transition:blurFly|global={{
 				duration: animationSpeed,
 				y: flyYTransform,
 				delay: staggerOffset
@@ -92,7 +92,7 @@
 		</div>
 		<!-- SLEEP PREPARATION-->
 		<div
-			transition:blurFly={{
+			transition:blurFly|global={{
 				duration: animationSpeed,
 				y: flyYTransform,
 				delay: staggerOffset * 2
@@ -118,7 +118,7 @@
 		</div>
 		<!-- AUTOMATION CONFIG -->
 		<div
-			transition:blurFly={{
+			transition:blurFly|global={{
 				duration: animationSpeed,
 				y: flyYTransform,
 				delay: staggerOffset * 3
@@ -139,7 +139,7 @@
 		</div>
 		<!-- DEVICE CONTROL -->
 		<div
-			transition:blurFly={{
+			transition:blurFly|global={{
 				duration: animationSpeed,
 				y: flyYTransform,
 				delay: staggerOffset * 4
@@ -162,7 +162,7 @@
 		</div>
 		<!-- SHUTDOWN SEQUENCE -->
 		<div
-			transition:blurFly={{
+			transition:blurFly|global={{
 				duration: animationSpeed,
 				y: flyYTransform,
 				delay: staggerOffset * 5
@@ -185,7 +185,7 @@
 	<!-- STATUS BAR -->
 	<div
 		class="mt-6 z-10 grid grid-cols-6 gap-6"
-		transition:blurFly={{
+		transition:blurFly|global={{
 			duration: animationSpeed,
 			y: flyYTransform,
 			delay: staggerOffset * 6
@@ -195,7 +195,7 @@
 			<Card class={cctState.enabled ? 'col-span-5' : 'col-span-6'}>
 				<div class="flex flex-row items-center p-3 text-xl font-semibold">
 					{#if $vrcLoggedIn}
-						<div class="flex-shrink-0 flex flex-row items-center" transition:fade>
+						<div class="flex-shrink-0 flex flex-row items-center" transition:fade|global>
 							<div
 								class="rounded-full w-4 h-4 mr-2 glow transition-all
                     vrc-status-color-{$state.vrcStatus}
@@ -218,7 +218,7 @@
 					<Card class="col-span-1 w-full h-full relative" clickable={true}>
 						{#if $sliderModeButtonMode === 'COLOR_TEMP'}
 							<div
-								transition:fade|local={{
+								transition:fade={{
 									duration: 100
 								}}
 								class="flex flex-row items-center justify-center w-full h-full absolute top-0 left-0"
@@ -227,7 +227,7 @@
 							</div>
 						{:else if $sliderModeButtonMode === 'BRIGHTNESS'}
 							<div
-								transition:fade|local={{
+								transition:fade={{
 									duration: 100
 								}}
 								class="flex flex-row items-center justify-center w-full h-full absolute top-0 left-0"
@@ -243,7 +243,7 @@
 	<!-- BRIGHTNESS SLIDERS -->
 	<div
 		class="relative w-full h-60"
-		transition:blurFly={{
+		transition:blurFly|global={{
 			duration: animationSpeed,
 			y: flyYTransform,
 			delay: staggerOffset * 7
@@ -252,7 +252,7 @@
 		{#if $sliderMode === 'BRIGHTNESS'}
 			<div
 				class="mt-6 z-0 absolute top-0 left-0 w-full"
-				transition:blurFly|local={{
+				transition:blurFly={{
 					duration: animationSpeed,
 					y: flyYTransform
 				}}
@@ -262,7 +262,7 @@
 		{:else if $sliderMode === 'COLOR_TEMP'}
 			<div
 				class="mt-6 z-0 absolute top-0 left-0 w-full"
-				transition:blurFly|local={{
+				transition:blurFly={{
 					duration: animationSpeed,
 					y: flyYTransform
 				}}
