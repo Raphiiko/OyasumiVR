@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 
+### Changed
+
+- Added continuous scanning for lighthouses to replace manual scanning. 
+
 ## [1.14.7]
 
 ### Fixed

@@ -401,7 +401,6 @@
         "unknown": "未知狀態"
       },
       "noDevices": "沒有偵測到控制器或定位器",
-      "scanForLighthouses": "掃描",
       "title": "裝置",
       "turnOffAll": "全部"
     },

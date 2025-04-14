@@ -401,7 +401,6 @@
         "unknown": "未知状态"
       },
       "noDevices": "没有检测到控制器或追踪器",
-      "scanForLighthouses": "扫描设备",
       "title": "设备",
       "turnOffAll": "全部"
     },

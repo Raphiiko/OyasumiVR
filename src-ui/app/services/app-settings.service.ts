@@ -32,10 +32,13 @@ export class AppSettingsService {
     APP_SETTINGS_DEFAULT
   );
   settings: Observable<AppSettings> = this._settings.asObservable();
+  public get settingsSync(): AppSettings {
+    return this._settings.value;
+  }
   private _loadedDefaults: BehaviorSubject<boolean | undefined> = new BehaviorSubject<
     boolean | undefined
   >(undefined);
-  loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
+  public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
   constructor(private translateService: TranslateService, private modalService: ModalService) {}
 
