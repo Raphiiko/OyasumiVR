@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 .ovr-tooltip {
   --offset: 4px;
@@ -78,7 +78,7 @@
     top: 0;
     left: 0;
     border-radius: var(--surface-border-radius);
-    @include shadow(5, true);
+    @include shadows.shadow(5, true);
     overflow: hidden;
     border: 0.15em solid var(--color-surface-3);
     backdrop-filter: blur(4px);

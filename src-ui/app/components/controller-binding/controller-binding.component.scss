@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 .binding-btn {
   display: flex;
@@ -127,7 +127,7 @@
     border-color: var(--color-surface-2);
     border-radius: 0.5em;
     transition: all 0.15s;
-    @include shadow(5, true);
+    @include shadows.shadow(5, true);
     overflow: hidden;
 
     &-description {
