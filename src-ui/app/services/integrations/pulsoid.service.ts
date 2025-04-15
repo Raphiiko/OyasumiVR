@@ -5,7 +5,7 @@ import {
   SETTINGS_FILE,
   SETTINGS_KEY_PULSOID_API,
 } from '../../globals';
-import { shell } from '@tauri-apps/api';
+import {  } from '@tauri-apps/api';
 import { ModalService } from '../modal.service';
 import {
   ConfirmModalComponent,
@@ -25,14 +25,15 @@ import {
   switchMap,
   timeout,
 } from 'rxjs';
-import { Client, getClient } from '@tauri-apps/api/http';
-import { Store } from 'tauri-plugin-store-api';
+import { Client, getClient } from '@tauri-apps/plugin-http';
+import { Store } from '@tauri-apps/plugin-store';
 
 import {
   PULSOID_API_SETTINGS_DEFAULT,
   PulsoidApiSettings,
 } from '../../models/pulsoid-api-settings';
 import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
+import * as shell from "@tauri-apps/plugin-shell"
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
 

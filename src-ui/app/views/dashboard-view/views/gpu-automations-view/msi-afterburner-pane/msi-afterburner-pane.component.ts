@@ -5,7 +5,7 @@ import {
   AppSettings,
   ExecutableReferenceStatus,
 } from '../../../../../models/settings';
-import { open as openFile } from '@tauri-apps/api/dialog';
+import { open as openFile } from '@tauri-apps/plugin-dialog';
 
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import {

@@ -6,7 +6,7 @@ import {
   VRChatAvatarContext,
   VRChatAvatarParameter,
 } from '../models/avatar-context';
-import { Client, getClient } from '@tauri-apps/api/http';
+import { Client, getClient } from '@tauri-apps/plugin-http';
 import { OSCQSerializedNode } from '../models/osc-query-serialized-node';
 import { warn } from 'tauri-plugin-log-api';
 import { OscService } from './osc.service';

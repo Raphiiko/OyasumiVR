@@ -3,7 +3,7 @@ import { QuitWithSteamVRMode } from '../models/settings';
 import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { debounceTime, EMPTY, filter, firstValueFrom, of, pairwise, switchMap } from 'rxjs';
-import { exit } from '@tauri-apps/api/process';
+import { exit } from '@tauri-apps/plugin-process';
 import { info } from 'tauri-plugin-log-api';
 
 @Injectable({

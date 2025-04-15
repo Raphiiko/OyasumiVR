@@ -1,7 +1,7 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
 import {
   BehaviorSubject,

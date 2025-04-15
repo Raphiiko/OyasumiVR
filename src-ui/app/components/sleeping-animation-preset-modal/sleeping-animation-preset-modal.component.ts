@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { SleepingAnimationPreset } from '../../models/sleeping-animation-presets';
-import { open } from '@tauri-apps/api/shell';
+import { open } from '@tauri-apps/plugin-shell';
 import { fadeUp } from '../../utils/animations';
 
 interface SleepingAnimationPresetModalInputModel {

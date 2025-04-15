@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { message, open as openFile } from '@tauri-apps/api/dialog';
-import { readTextFile } from '@tauri-apps/api/fs';
+import { message, open as openFile } from '@tauri-apps/plugin-dialog';
+import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
   CACHE_FILE,
   SETTINGS_FILE,
@@ -12,7 +12,7 @@ import {
   SETTINGS_KEY_THEMING_SETTINGS,
   SETTINGS_KEY_VRCHAT_API,
 } from '../../../../globals';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error, info } from 'tauri-plugin-log-api';
@@ -23,7 +23,7 @@ import {
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { invoke } from '@tauri-apps/api';
-import { relaunch } from '@tauri-apps/api/process';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';

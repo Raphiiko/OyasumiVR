@@ -13,7 +13,7 @@ import { BUILD_ID, FLAVOUR } from '../../../../../build';
 import { CachedValue } from '../../../../utils/cached-value';
 import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { getClient } from '@tauri-apps/api/http';
+import { getClient } from '@tauri-apps/plugin-http';
 import { vshrink } from '../../../../utils/animations';
 import { shuffle } from 'lodash';
 import { warn } from 'tauri-plugin-log-api';

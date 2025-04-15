@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { OpenVRService } from '../../../services/openvr.service';
 import { firstValueFrom, take } from 'rxjs';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { AppSettingsService } from '../../../services/app-settings.service';
 
 @Component({

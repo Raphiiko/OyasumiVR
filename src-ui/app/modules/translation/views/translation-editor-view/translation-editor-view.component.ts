@@ -10,7 +10,7 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { combineLatest, debounceTime, firstValueFrom, Subject } from 'rxjs';
-import { message } from '@tauri-apps/api/dialog';
+import { message } from '@tauri-apps/plugin-dialog';
 import { TranslationSuggestion } from '../../models/translation-suggestion';
 import { vshrink } from '../../../../utils/animations';
 

@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
 import { SETTINGS_FILE, SETTINGS_KEY_SLEEP_MODE } from '../globals';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { SleepingPose } from '../models/sleeping-pose';
 import { uniq } from 'lodash';
 import { OpenVRService } from './openvr.service';

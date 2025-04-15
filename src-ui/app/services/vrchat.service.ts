@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@tauri-apps/api/http';
+import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@tauri-apps/plugin-http';
 import type { CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_VRCHAT_API } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';

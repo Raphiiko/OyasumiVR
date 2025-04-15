@@ -1,8 +1,8 @@
 import { mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
 import { error, info } from 'tauri-plugin-log-api';
-import { message } from '@tauri-apps/api/dialog';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { message } from '@tauri-apps/plugin-dialog';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,

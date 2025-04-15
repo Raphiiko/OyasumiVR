@@ -9,4 +9,3 @@ pub enum OverlaySidecarMode {
     Dev,
     Release,
 }
-

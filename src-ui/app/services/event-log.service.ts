@@ -7,7 +7,7 @@ import {
 } from '../models/event-log-entry';
 import { async, BehaviorSubject, Observable, throttleTime } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { EVENT_LOG_FILE } from '../globals';
 
 import { migrateEventLog } from '../migrations/event-log.migrations';

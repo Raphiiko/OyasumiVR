@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { warn } from 'tauri-plugin-log-api';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { hshrink } from 'src-ui/app/utils/animations';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
 import { VRChatService } from '../../../../services/vrchat.service';

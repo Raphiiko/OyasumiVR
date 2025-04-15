@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, interval, Observable, switchMap, take } from 'rxjs';
-import { checkUpdate, installUpdate, UpdateManifest } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
+import { checkUpdate, installUpdate, UpdateManifest } from '@tauri-apps/plugin-updater';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { listen } from '@tauri-apps/api/event';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';

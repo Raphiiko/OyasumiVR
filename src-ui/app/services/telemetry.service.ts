@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_TELEMETRY_SETTINGS } from '../globals';
 import {
   asyncScheduler,

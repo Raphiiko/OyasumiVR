@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UpdateManifest } from '@tauri-apps/api/updater';
+import { UpdateManifest } from '@tauri-apps/plugin-updater';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
 import { fadeUp, hshrink } from '../../utils/animations';

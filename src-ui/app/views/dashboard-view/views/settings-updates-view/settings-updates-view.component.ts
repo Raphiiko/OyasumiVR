@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { UpdateManifest } from '@tauri-apps/api/updater';
+import { UpdateManifest } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from 'rxjs';
 import { marked } from 'marked';
 import { HttpClient } from '@angular/common/http';

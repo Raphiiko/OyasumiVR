@@ -3,130 +3,75 @@
   "build": {
     "beforeBuildCommand": "npm run build:pre",
     "beforeDevCommand": "npm run start:ui",
-    "devPath": "http://localhost:4200",
-    "distDir": "../dist/oyasumivr",
-    "withGlobalTauri": true
+    "frontendDist": "../dist/oyasumivr",
+    "devUrl": "http://localhost:4200"
   },
-  "package": {
-    "productName": "OyasumiVR",
-    "version": "1.15.0"
-  },
-  "tauri": {
-    "allowlist": {
-      "clipboard": {
-        "writeText": true
-      },
-      "fs": {
-        "readFile": true,
-        "readDir": true,
-        "writeFile": true,
-        "exists": true,
-        "scope": [
-          "$HOME/AppData/LocalLow/VRChat/**/*",
-          "$RESOURCE/*"
-        ]
-      },
-      "path": {
-        "all": true
-      },
-      "shell": {
-        "execute": true,
-        "open": true
-      },
-      "dialog": {
-        "open": true,
-        "message": true,
-        "save": true
-      },
-      "process": {
-        "exit": true,
-        "relaunch": true
-      },
-      "http": {
-        "request": true,
-        "scope": [
-          "https://*",
-          "http://*"
-        ]
-      },
-      "notification": {
-        "all": true
-      },
-      "globalShortcut": {
-        "all": true
-      },
-      "window": {
-        "all": false,
-        "close": true,
-        "hide": true,
-        "show": true,
-        "maximize": true,
-        "minimize": true,
-        "unmaximize": true,
-        "unminimize": true,
-        "startDragging": true
+  "bundle": {
+    "active": true,
+    "category": "Utility",
+    "copyright": "Copyright (c) 2022 Raphiiko",
+    "targets": [
+      "nsis"
+    ],
+    "resources": [
+      "./openvr_api.dll",
+      "./flags.toml",
+      "./steam_api64.dll",
+      "./resources/**/*"
+    ],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "publisher": "Raphiiko",
+    "windows": {
+      "certificateThumbprint": null,
+      "digestAlgorithm": "sha256",
+      "timestampUrl": "",
+      "nsis": {
+        "languages": [
+          "English",
+          "French",
+          "Japanese",
+          "Dutch",
+          "Korean",
+          "SimpChinese",
+          "TradChinese",
+          "Indonesian",
+          "Spanish"
+        ],
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "images/installer_header.bmp",
+        "sidebarImage": "images/installer_sidebar.bmp",
+        "displayLanguageSelector": true,
+        "installMode": "both"
       }
     },
-    "bundle": {
-      "active": true,
-      "category": "Utility",
-      "copyright": "Copyright (c) 2022 Raphiiko",
+    "longDescription": "",
+    "macOS": {
+      "entitlements": null,
+      "exceptionDomain": "",
+      "frameworks": [],
+      "providerShortName": null,
+      "signingIdentity": null
+    },
+    "shortDescription": "OyasumiVR",
+    "linux": {
       "deb": {
         "depends": []
-      },
-      "resources": [
-        "./openvr_api.dll",
-        "./flags.toml",
-        "./steam_api64.dll",
-        "./resources/**/*"
-      ],
-      "icon": [
-        "icons/32x32.png",
-        "icons/128x128.png",
-        "icons/128x128@2x.png",
-        "icons/icon.icns",
-        "icons/icon.ico"
-      ],
-      "publisher": "Raphiiko",
-      "identifier": "co.raphii.oyasumi",
-      "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
-      "shortDescription": "OyasumiVR",
-      "targets": [
-        "nsis",
-        "updater"
-      ],
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": "",
-        "nsis": {
-          "license": "../LICENSE.md",
-          "installerIcon": "icons/icon.ico",
-          "headerImage": "images/installer_header.bmp",
-          "sidebarImage": "images/installer_sidebar.bmp",
-          "displayLanguageSelector": true,
-          "installMode": "both",
-          "languages": [
-            "English",
-            "French",
-            "Japanese",
-            "Dutch",
-            "Korean",
-            "SimpChinese",
-            "TradChinese",
-            "Indonesian",
-            "Spanish"
-          ]
-        }
       }
     },
+    "licenseFile": "../LICENSE.md",
+    "createUpdaterArtifacts": "v1Compatible"
+  },
+  "productName": "OyasumiVR",
+  "mainBinaryName": "OyasumiVR",
+  "version": "1.15.0",
+  "identifier": "co.raphii.oyasumi",
+  "plugins": {
     "cli": {
       "description": "OyasumiVR - VR Sleep Utilities",
       "longDescription": "",
@@ -171,22 +116,15 @@
         }
       ]
     },
-    "security": {
-      "csp": null,
-      "dangerousUseHttpScheme": true
-    },
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
     "updater": {
-      "active": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVGOEI4QTQ2Rjk1NEMwNTUKUldSVndGVDVSb3FMN3hIanNsbVVDdVk1MkE2MVpVWERJeTdUVVRzZ1JpanVQTmNXYWJGVHhUSVIK",
       "endpoints": [
         "https://gist.githubusercontent.com/Raphiiko/16ed38d8ccd9282675d04478f887f76f/raw"
-      ],
-      "dialog": false,
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVGOEI4QTQ2Rjk1NEMwNTUKUldSVndGVDVSb3FMN3hIanNsbVVDdVk1MkE2MVpVWERJeTdUVVRzZ1JpanVQTmNXYWJGVHhUSVIK"
-    },
+      ]
+    }
+  },
+  "app": {
+    "withGlobalTauri": true,
     "windows": [
       {
         "fullscreen": false,
@@ -201,7 +139,8 @@
         "center": true,
         "theme": "Dark",
         "transparent": true,
-        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "useHttpsScheme": false
       },
       {
         "width": 700,
@@ -216,8 +155,16 @@
         "skipTaskbar": true,
         "minimizable": false,
         "alwaysOnTop": true,
-        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)"
+        "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)",
+        "useHttpsScheme": false
       }
-    ]
+    ],
+    "trayIcon": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true
+    },
+    "security": {
+      "csp": null
+    }
   }
 }

@@ -26,7 +26,7 @@ import { NvmlService } from './nvml.service';
 import { NvmlDevice } from '../models/nvml-device';
 import { SleepService } from './sleep.service';
 import { error, info, warn } from 'tauri-plugin-log-api';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
 import { EventLogService } from './event-log.service';

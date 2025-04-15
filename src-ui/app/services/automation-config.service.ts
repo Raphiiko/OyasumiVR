@@ -7,7 +7,7 @@ import {
   ShutdownAutomationsConfig,
 } from '../models/automations';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
 
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';

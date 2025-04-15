@@ -13,7 +13,7 @@ import { FontLoaderService } from '../../../../services/font-loader.service';
 import { invoke } from '@tauri-apps/api';
 import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 
 @Component({
     selector: 'app-settings-status-info-view',

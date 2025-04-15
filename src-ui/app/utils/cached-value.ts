@@ -1,5 +1,5 @@
 import { CACHE_FILE } from '../globals';
-import { Store } from 'tauri-plugin-store-api';
+import { Store } from '@tauri-apps/plugin-store';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 
 interface CachedValueEntry<T> {

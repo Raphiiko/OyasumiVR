@@ -10,7 +10,7 @@ edition = "2021"
 
 [build-dependencies]
 reqwest = { version = "0.12.15", features = ["blocking"] }
-tauri-build = { version = "1.5.1", features = [] }
+tauri-build = { version = "2.2", features = [] }
 toml = "0.8.20"
 tonic-build = { version = "0.13.0", features = [] }
 
@@ -54,10 +54,17 @@ substring = "1.4.5"
 suncalc = "0.4.0"
 sysinfo = "0.26.9"
 system_shutdown = "4.0.1"
+tauri-plugin-clipboard-manager = "2"
 tauri-plugin-deep-link = "0.1.2"
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2"
+tauri-plugin-http = "2"
+tauri-plugin-log = { version = "2" }
+tauri-plugin-notification = "2"
+tauri-plugin-process = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-single-instance = { version = "2" }
+tauri-plugin-store = "2"
 tempfile = "3.6.0"
 time = "0.3.41"
 tokio = { version = "1.28.0", features = ["full"] }
@@ -110,36 +117,9 @@ git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
 rev = "47c00b5fab8d7a45ba3254873ca7886f84483560"
 
 [dependencies.tauri]
-version = "1.6.1"
+version = "2.5"
 features = [
-  "window-unminimize",
-  "window-start-dragging",
-  "window-show",
-  "window-hide",
-  "window-close",
-  "window-unmaximize",
-  "window-minimize",
-  "window-maximize",
-  "global-shortcut-all",
-  "clipboard-write-text",
-  "cli",
-  "fs-write-file",
-  "dialog-save",
-  "path-all",
-  "process-relaunch",
-  "system-tray",
-  "dialog-message",
-  "dialog-open",
-  "fs-exists",
-  "fs-read-dir",
-  "fs-read-file",
-  "http-request",
-  "notification-all",
-  "process-exit",
-  "shell-execute",
-  "shell-open",
-  "updater",
-  "devtools",
+  "devtools", "tray-icon",
 ]
 
 [features]
@@ -156,3 +136,7 @@ codegen-units = 1 # Compile crates one after another so the compiler can optimiz
 lto = true        # Enables link to optimizations
 opt-level = "s"   # Optimize for binary size
 strip = true      # Remove debug symbols
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-updater = "2"

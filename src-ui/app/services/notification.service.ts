@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getVersion } from '../utils/app-utils';
 import { invoke } from '@tauri-apps/api';
-import * as DesktopNotifications from '@tauri-apps/api/notification';
+import * as DesktopNotifications from '@tauri-apps/plugin-notification';
 import { AppSettingsService } from './app-settings.service';
 import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
 import { APP_ICON_ARR, APP_ICON_B64 } from '../globals';
