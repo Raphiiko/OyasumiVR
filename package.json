@@ -105,7 +105,7 @@
     "@angular/cli": "^19.2.7",
     "@angular/compiler-cli": "^19.2.6",
     "@protobuf-ts/plugin": "^2.9.0",
-    "@tauri-apps/cli": "^1.5.11",
+    "@tauri-apps/cli": "^2.5.0",
     "@types/cookie": "^0.6.0",
     "@types/konami-code-js": "^0.8.3",
     "@types/lodash": "^4.14.188",

@@ -54,9 +54,7 @@ substring = "1.4.5"
 suncalc = "0.4.0"
 sysinfo = "0.26.9"
 system_shutdown = "4.0.1"
-tauri-plugin-aptabase = "0.5"
 tauri-plugin-deep-link = "0.1.2"
-tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
