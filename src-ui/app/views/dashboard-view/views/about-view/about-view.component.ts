@@ -34,10 +34,11 @@ interface TranslationContributor {
 }
 
 @Component({
-  selector: 'app-about-view',
-  templateUrl: './about-view.component.html',
-  styleUrls: ['./about-view.component.scss'],
-  animations: [vshrink()],
+    selector: 'app-about-view',
+    templateUrl: './about-view.component.html',
+    styleUrls: ['./about-view.component.scss'],
+    animations: [vshrink()],
+    standalone: false
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;

@@ -1,20 +1,20 @@
-@import 'material-icons/iconfont/material-icons.css';
-@import '@fortawesome/fontawesome-free/css/all.css';
-@import 'flag-icons/css/flag-icons.min.css';
-@import 'material-symbols';
-@import 'themes.scss';
-@import 'typography.scss';
-@import 'panes.scss';
-@import 'buttons.scss';
-@import 'inputs.scss';
-@import 'alerts.scss';
-@import 'spinners.scss';
-@import 'tab-bar.scss';
-@import 'modals.scss';
-@import 'misc.scss';
-@import 'responsive.scss';
-@import 'animations.scss';
-@import 'tooltips.scss';
+@use 'material-icons/iconfont/material-icons.css';
+@use '@fortawesome/fontawesome-free/css/all.css';
+@use 'flag-icons/css/flag-icons.min.css';
+@use 'material-symbols/index.css';
+@use 'themes.scss';
+@use 'typography.scss';
+@use 'panes.scss';
+@use 'buttons.scss';
+@use 'inputs.scss';
+@use 'alerts.scss';
+@use 'spinners.scss';
+@use 'tab-bar.scss';
+@use 'modals.scss';
+@use 'misc.scss';
+@use 'responsive.scss';
+@use 'animations.scss';
+@use 'tooltips.scss';
 
 html,
 body {

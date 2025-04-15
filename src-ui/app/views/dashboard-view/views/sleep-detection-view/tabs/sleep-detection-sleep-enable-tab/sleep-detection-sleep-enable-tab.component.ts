@@ -13,9 +13,10 @@ import { HeartRateCalmPeriodEnableSleepModeModalComponent } from '../../modals/h
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-sleep-detection-sleep-enable-tab',
-  templateUrl: './sleep-detection-sleep-enable-tab.component.html',
-  styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
+    selector: 'app-sleep-detection-sleep-enable-tab',
+    templateUrl: './sleep-detection-sleep-enable-tab.component.html',
+    styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
+    standalone: false
 })
 export class SleepDetectionSleepEnableTabComponent
   extends SleepDetectionTabComponent

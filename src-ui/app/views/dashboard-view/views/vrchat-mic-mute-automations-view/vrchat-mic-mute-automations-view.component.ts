@@ -9,10 +9,11 @@ import { VRChatMicMuteAutomationService } from '../../../../services/osc-automat
 import { hshrink } from 'src-ui/app/utils/animations';
 
 @Component({
-  selector: 'app-vrchat-mic-mute-automations-view',
-  templateUrl: './vrchat-mic-mute-automations-view.component.html',
-  styleUrls: ['./vrchat-mic-mute-automations-view.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-vrchat-mic-mute-automations-view',
+    templateUrl: './vrchat-mic-mute-automations-view.component.html',
+    styleUrls: ['./vrchat-mic-mute-automations-view.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {
   muteActionOptions: SelectBoxItem[] = [

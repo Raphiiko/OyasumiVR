@@ -34,9 +34,10 @@ import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
 @Component({
-  selector: 'app-event-log-entry',
-  templateUrl: './event-log-entry.component.html',
-  styleUrls: ['./event-log-entry.component.scss'],
+    selector: 'app-event-log-entry',
+    templateUrl: './event-log-entry.component.html',
+    styleUrls: ['./event-log-entry.component.scss'],
+    standalone: false
 })
 export class EventLogEntryComponent implements OnInit, OnChanges {
   parser?: EventLogEntryParser<any>;

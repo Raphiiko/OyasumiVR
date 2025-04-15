@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 .select-box-wrapper {
   display: flex;
@@ -44,7 +44,7 @@
     }
 
     &.active {
-      @include shadow(2, true);
+      @include shadows.shadow(2, true);
 
       &:hover {
         background: var(--color-surface-4);
@@ -75,7 +75,7 @@
     border-radius: 0.5em;
     background: var(--color-surface-2);
     border: 1px solid var(--color-surface-1);
-    @include shadow(2, true);
+    @include shadows.shadow(2, true);
     max-height: 20em;
     overflow-y: overlay;
     z-index: 200;

@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 :host {
   position: relative;
@@ -21,7 +21,7 @@ button.btn {
   border-radius: 0.5em;
   background: var(--color-surface-2);
   border: 1px solid var(--color-surface-1);
-  @include shadow(2, true);
+  @include shadows.shadow(2, true);
   max-height: 20em;
   overflow-y: overlay;
 

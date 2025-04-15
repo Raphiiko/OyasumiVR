@@ -17,10 +17,11 @@ export interface PlayerListPresetModalOutputModel {
   playerIds?: string[];
 }
 @Component({
-  selector: 'app-player-list-preset-modal',
-  templateUrl: './player-list-preset-modal.component.html',
-  styleUrls: ['./player-list-preset-modal.component.scss'],
-  animations: [fadeUp(), vshrink()],
+    selector: 'app-player-list-preset-modal',
+    templateUrl: './player-list-preset-modal.component.html',
+    styleUrls: ['./player-list-preset-modal.component.scss'],
+    animations: [fadeUp(), vshrink()],
+    standalone: false
 })
 export class PlayerListPresetModalComponent
   extends BaseModalComponent<PlayerListPresetModalInputModel, PlayerListPresetModalOutputModel>

@@ -16,7 +16,7 @@
 	{#if !!brightnessState}
 		{#if !brightnessState?.advancedMode}
 			<div
-				transition:blurFly|local={{
+				transition:blurFly={{
 					duration: animationSpeed,
 					y: flyYTransform
 				}}
@@ -35,7 +35,7 @@
 			</div>
 		{:else}
 			<div
-				transition:blurFly|local={{
+				transition:blurFly={{
 					duration: animationSpeed,
 					y: flyYTransform
 				}}

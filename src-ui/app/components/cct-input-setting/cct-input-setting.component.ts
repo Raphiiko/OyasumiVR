@@ -4,10 +4,11 @@ import { fade } from '../../utils/animations';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-cct-input-setting',
-  templateUrl: './cct-input-setting.component.html',
-  styleUrl: './cct-input-setting.component.scss',
-  animations: [fade()],
+    selector: 'app-cct-input-setting',
+    templateUrl: './cct-input-setting.component.html',
+    styleUrl: './cct-input-setting.component.scss',
+    animations: [fade()],
+    standalone: false
 })
 export class CCTInputSettingComponent {
   protected inputOpen = true;

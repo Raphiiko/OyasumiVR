@@ -16,45 +16,43 @@ export interface LighthouseV1IdWizardModalInputModel {
 export interface LighthouseV1IdWizardModalOutputModel {}
 
 @Component({
-  selector: 'app-lighthouse-v1-id-wizard-modal',
-  templateUrl: './lighthouse-v1-id-wizard-modal.component.html',
-  styleUrls: ['./lighthouse-v1-id-wizard-modal.component.scss'],
-  animations: [
-    fadeUp(),
-    vshrink(),
-    fade(),
-    fade('slowFade', '1s ease'),
-    trigger('imgShrink', [
-      transition(':enter', [
-        style({
-          width: 0,
-          minWidth: 0,
-          opacity: 0,
-          flex: 0,
-          'margin-left': 0,
-          'margin-right': 0,
-          'padding-left': 0,
-          'padding-right': 0,
-        }),
-        animate('0.7s cubic-bezier(0.45, 0, 0.55, 1)'),
-      ]),
-      transition(':leave', [
-        animate(
-          '0.7s cubic-bezier(0.45, 0, 0.55, 1)',
-          style({
-            width: 0,
-            minWidth: 0,
-            opacity: 0,
-            flex: 0,
-            'margin-left': 0,
-            'margin-right': 0,
-            'padding-left': 0,
-            'padding-right': 0,
-          })
-        ),
-      ]),
-    ]),
-  ],
+    selector: 'app-lighthouse-v1-id-wizard-modal',
+    templateUrl: './lighthouse-v1-id-wizard-modal.component.html',
+    styleUrls: ['./lighthouse-v1-id-wizard-modal.component.scss'],
+    animations: [
+        fadeUp(),
+        vshrink(),
+        fade(),
+        fade('slowFade', '1s ease'),
+        trigger('imgShrink', [
+            transition(':enter', [
+                style({
+                    width: 0,
+                    minWidth: 0,
+                    opacity: 0,
+                    flex: 0,
+                    'margin-left': 0,
+                    'margin-right': 0,
+                    'padding-left': 0,
+                    'padding-right': 0,
+                }),
+                animate('0.7s cubic-bezier(0.45, 0, 0.55, 1)'),
+            ]),
+            transition(':leave', [
+                animate('0.7s cubic-bezier(0.45, 0, 0.55, 1)', style({
+                    width: 0,
+                    minWidth: 0,
+                    opacity: 0,
+                    flex: 0,
+                    'margin-left': 0,
+                    'margin-right': 0,
+                    'padding-left': 0,
+                    'padding-right': 0,
+                })),
+            ]),
+        ]),
+    ],
+    standalone: false
 })
 export class LighthouseV1IdWizardModalComponent
   extends BaseModalComponent<

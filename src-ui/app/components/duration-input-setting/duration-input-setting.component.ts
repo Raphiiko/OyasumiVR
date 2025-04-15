@@ -3,10 +3,11 @@ import { clamp } from '../../utils/number-utils';
 import { fade } from '../../utils/animations';
 
 @Component({
-  selector: 'app-duration-input-setting',
-  templateUrl: './duration-input-setting.component.html',
-  styleUrl: './duration-input-setting.component.scss',
-  animations: [fade()],
+    selector: 'app-duration-input-setting',
+    templateUrl: './duration-input-setting.component.html',
+    styleUrl: './duration-input-setting.component.scss',
+    animations: [fade()],
+    standalone: false
 })
 export class DurationInputSettingComponent {
   value = model<number>(0);

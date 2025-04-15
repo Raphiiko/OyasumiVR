@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 :host {
   display: flex;
@@ -124,7 +124,7 @@
   flex: 1;
 
   &-avatar {
-    @include shadow(4, true);
+    @include shadows.shadow(4, true);
     overflow: hidden;
     border-radius: 999999999px;
     width: 10em;

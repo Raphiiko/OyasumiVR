@@ -1,5 +1,5 @@
-@import 'shadows';
-@import 'effects';
+@use 'shadows';
+@use 'effects';
 
 :host {
   display: block;
@@ -11,7 +11,7 @@
   width: 40em;
   backdrop-filter: blur(4px);
   border-radius: var(--surface-border-radius);
-  @include shadow(5, true);
+  @include shadows.shadow(5, true);
   overflow: hidden;
   border: 0.15em solid var(--color-surface-3);
   background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
@@ -25,7 +25,7 @@
       color-mix(in srgb, var(--b) 6%, transparent) 0,
       transparent 75%
     );
-  @include pane-radial-gradient(#fff);
+  @include effects.pane-radial-gradient(#fff);
   display: flex;
   flex-direction: row-reverse;
   align-items: center;

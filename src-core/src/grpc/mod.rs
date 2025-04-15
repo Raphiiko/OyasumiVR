@@ -76,9 +76,7 @@ pub async fn init_web_server() -> u16 {
     };
     let server = Server::builder()
         .accept_http1(true)
-        .add_service(tonic_web::enable(OyasumiCoreServer::new(
-            OyasumiCoreServerImpl::default(),
-        )));
+        .add_service(OyasumiCoreServer::new(OyasumiCoreServerImpl::default()));
     let port = match listener.local_addr() {
         Ok(addr) => addr.port(),
         Err(e) => {

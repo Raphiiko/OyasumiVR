@@ -46,10 +46,11 @@ const STATUS_SORT_ORDER: Record<UserStatus, number> = {
 };
 
 @Component({
-  selector: 'app-friend-selection-modal',
-  templateUrl: './friend-selection-modal.component.html',
-  styleUrls: ['./friend-selection-modal.component.scss'],
-  animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
+    selector: 'app-friend-selection-modal',
+    templateUrl: './friend-selection-modal.component.html',
+    styleUrls: ['./friend-selection-modal.component.scss'],
+    animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
+    standalone: false
 })
 export class FriendSelectionModalComponent
   extends BaseModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>

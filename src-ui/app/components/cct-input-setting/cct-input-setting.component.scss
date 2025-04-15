@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 .wrapper {
   position: relative;
@@ -32,7 +32,7 @@
 }
 
 .input-container {
-  @include shadow(5, true);
+  @include shadows.shadow(5, true);
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -72,8 +72,8 @@
 	}
 </script>
 
-<div transition:scale>
-	<div class="flex flex-col items-center justify-center w-[500px]" transition:blur>
+<div transition:scale|global>
+	<div class="flex flex-col items-center justify-center w-[500px]" transition:blur|global>
 		<!-- HEADER -->
 		<div class="w-full relative h-14">
 			<div

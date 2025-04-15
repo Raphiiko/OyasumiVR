@@ -36,7 +36,7 @@ fn configure_tonic_build() {
             "#[derive(serde::Serialize)]",
         )
         // Compile protobuf files
-        .compile(
+        .compile_protos(
             &[
                 "../proto/oyasumi-core.proto",
                 "../proto/overlay-sidecar.proto",

@@ -26,10 +26,11 @@ import {
 import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
 
 @Component({
-  selector: 'app-settings-general-view',
-  templateUrl: './settings-general-view.component.html',
-  styleUrls: ['./settings-general-view.component.scss'],
-  animations: [vshrink()],
+    selector: 'app-settings-general-view',
+    templateUrl: './settings-general-view.component.html',
+    styleUrls: ['./settings-general-view.component.scss'],
+    animations: [vshrink()],
+    standalone: false
 })
 export class SettingsGeneralViewComponent implements OnInit {
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);

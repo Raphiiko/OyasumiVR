@@ -119,15 +119,16 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
 type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 
 @Component({
-  selector: 'app-dashboard-navbar',
-  templateUrl: './dashboard-navbar.component.html',
-  styleUrls: ['./dashboard-navbar.component.scss'],
-  animations: [
-    fade(),
-    // slideMenu('rootMenu', '.2s ease', true),
-    blurMenu('rootMenu', '.2s ease'),
-    slideMenu('subMenu', '.2s ease', false),
-  ],
+    selector: 'app-dashboard-navbar',
+    templateUrl: './dashboard-navbar.component.html',
+    styleUrls: ['./dashboard-navbar.component.scss'],
+    animations: [
+        fade(),
+        // slideMenu('rootMenu', '.2s ease', true),
+        blurMenu('rootMenu', '.2s ease'),
+        slideMenu('subMenu', '.2s ease', false),
+    ],
+    standalone: false
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;

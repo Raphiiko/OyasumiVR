@@ -147,8 +147,8 @@
 	const dispatch = createEventDispatcher();
 </script>
 
-<div transition:scale>
-	<div class="flex flex-col items-center justify-center w-[500px]" transition:blur>
+<div transition:scale|global>
+	<div class="flex flex-col items-center justify-center w-[500px]" transition:blur|global>
 		<div class="w-full relative h-14">
 			<div
 				class="absolute top-0 left-0 w-full h-full p-4 text-white text-2xl dark-glow-80 flex flex-row items-center justify-center"

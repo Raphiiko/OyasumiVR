@@ -35,10 +35,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-  selector: 'app-settings-advanced-view',
-  templateUrl: './settings-advanced-view.component.html',
-  styleUrls: ['./settings-advanced-view.component.scss'],
-  animations: [],
+    selector: 'app-settings-advanced-view',
+    templateUrl: './settings-advanced-view.component.html',
+    styleUrls: ['./settings-advanced-view.component.scss'],
+    animations: [],
+    standalone: false
 })
 export class SettingsAdvancedViewComponent {
   private settingsStore = new Store(SETTINGS_FILE);

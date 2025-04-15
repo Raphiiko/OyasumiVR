@@ -14,10 +14,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../../../utils/animations';
 
 @Component({
-  selector: 'app-controllers-and-trackers-tab',
-  templateUrl: './controllers-and-trackers-tab.component.html',
-  styleUrls: ['./controllers-and-trackers-tab.component.scss'],
-  animations: [vshrink()],
+    selector: 'app-controllers-and-trackers-tab',
+    templateUrl: './controllers-and-trackers-tab.component.html',
+    styleUrls: ['./controllers-and-trackers-tab.component.scss'],
+    animations: [vshrink()],
+    standalone: false
 })
 export class ControllersAndTrackersTabComponent implements OnInit {
   protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = structuredClone(

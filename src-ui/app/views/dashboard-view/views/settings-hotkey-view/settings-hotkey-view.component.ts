@@ -6,9 +6,10 @@ interface HotkeyAction {
 }
 
 @Component({
-  selector: 'app-settings-hotkey-view',
-  templateUrl: './settings-hotkey-view.component.html',
-  styleUrls: ['./settings-hotkey-view.component.scss'],
+    selector: 'app-settings-hotkey-view',
+    templateUrl: './settings-hotkey-view.component.html',
+    styleUrls: ['./settings-hotkey-view.component.scss'],
+    standalone: false
 })
 export class SettingsHotkeyViewComponent {
   actions: HotkeyAction[] = [

@@ -12,10 +12,11 @@ import { AppSettingsService } from '../../../../services/app-settings.service';
 import { getVersion } from '../../../../utils/app-utils';
 
 @Component({
-  selector: 'app-settings-updates-view',
-  templateUrl: './settings-updates-view.component.html',
-  styleUrls: ['./settings-updates-view.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-settings-updates-view',
+    templateUrl: './settings-updates-view.component.html',
+    styleUrls: ['./settings-updates-view.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class SettingsUpdatesViewComponent implements OnInit {
   protected updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
