@@ -10,10 +10,11 @@ import { MqttConfigModalComponent } from '../../../../components/mqtt-config-mod
 import { MqttService } from '../../../../services/mqtt/mqtt.service';
 
 @Component({
-  selector: 'app-settings-integrations-view',
-  templateUrl: './settings-integrations-view.component.html',
-  styleUrls: ['./settings-integrations-view.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-settings-integrations-view',
+    templateUrl: './settings-integrations-view.component.html',
+    styleUrls: ['./settings-integrations-view.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class SettingsIntegrationsViewComponent {
   deobfuscated: string[] = [];

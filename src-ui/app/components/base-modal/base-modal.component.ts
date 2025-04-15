@@ -4,8 +4,9 @@ import { ModalOptions } from '../../services/modal.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-base-modal',
-  template: ``,
+    selector: 'app-base-modal',
+    template: ``,
+    standalone: false
 })
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class BaseModalComponent<ModalInput extends { [k: string]: any } | void, ModalOutput> {

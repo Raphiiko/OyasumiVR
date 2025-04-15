@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 .pane {
   margin-top: 16px;
@@ -24,7 +24,7 @@
     --width: 45em;
     width: var(--width);
     height: calc(594 / 798 * var(--width));
-    @include shadow(5, true);
+    @include shadows.shadow(5, true);
 
     video {
       position: absolute;

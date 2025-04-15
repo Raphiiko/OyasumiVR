@@ -8,10 +8,11 @@ import { OpenVRService, OpenVRStatus } from '../../services/openvr.service';
 import { fadeDown } from '../../utils/animations';
 
 @Component({
-  selector: 'app-controller-binding',
-  templateUrl: './controller-binding.component.html',
-  styleUrls: ['./controller-binding.component.scss'],
-  animations: [fadeDown()],
+    selector: 'app-controller-binding',
+    templateUrl: './controller-binding.component.html',
+    styleUrls: ['./controller-binding.component.scss'],
+    animations: [fadeDown()],
+    standalone: false
 })
 export class ControllerBindingComponent implements OnInit {
   @Input() actionKey?: OVRInputEventAction;

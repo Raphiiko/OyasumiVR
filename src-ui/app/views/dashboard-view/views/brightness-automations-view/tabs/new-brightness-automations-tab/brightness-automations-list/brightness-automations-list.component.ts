@@ -13,10 +13,11 @@ import { AppSettingsService } from '../../../../../../../services/app-settings.s
 import { BrightnessEventViewModel } from '../brightness-automations-tab.component';
 
 @Component({
-  selector: 'app-brightness-automations-list',
-  templateUrl: './brightness-automations-list.component.html',
-  styleUrls: ['./brightness-automations-list.component.scss'],
-  animations: [fade()],
+    selector: 'app-brightness-automations-list',
+    templateUrl: './brightness-automations-list.component.html',
+    styleUrls: ['./brightness-automations-list.component.scss'],
+    animations: [fade()],
+    standalone: false
 })
 export class BrightnessAutomationsListComponent implements OnInit {
   protected config: BrightnessAutomationsConfig = structuredClone(

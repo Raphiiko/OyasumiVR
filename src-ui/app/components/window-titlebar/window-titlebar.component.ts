@@ -5,9 +5,10 @@ import { BUILD_ID, FLAVOUR } from '../../../build';
 import { invoke } from '@tauri-apps/api';
 
 @Component({
-  selector: 'app-window-titlebar',
-  templateUrl: './window-titlebar.component.html',
-  styleUrls: ['./window-titlebar.component.scss'],
+    selector: 'app-window-titlebar',
+    templateUrl: './window-titlebar.component.html',
+    styleUrls: ['./window-titlebar.component.scss'],
+    standalone: false
 })
 export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';

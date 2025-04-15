@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 :host {
   display: block;
@@ -28,7 +28,7 @@ $unit-width: 2em;
 
   &.overlay-active {
     input {
-      @include shadow(2, true);
+      @include shadows.shadow(2, true);
     }
   }
 
@@ -75,7 +75,7 @@ $overlay-border: 0.15em;
     0 - $overlay-padding
   );
   border-radius: var(--surface-border-radius);
-  @include shadow(5, true);
+  @include shadows.shadow(5, true);
   overflow: hidden;
   border: $overlay-border solid var(--color-surface-3);
   backdrop-filter: blur(4px);

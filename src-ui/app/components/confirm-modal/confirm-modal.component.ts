@@ -16,10 +16,11 @@ export interface ConfirmModalOutputModel {
 }
 
 @Component({
-  selector: 'app-confirm-modal',
-  templateUrl: './confirm-modal.component.html',
-  styleUrls: ['./confirm-modal.component.scss'],
-  animations: [fadeUp()],
+    selector: 'app-confirm-modal',
+    templateUrl: './confirm-modal.component.html',
+    styleUrls: ['./confirm-modal.component.scss'],
+    animations: [fadeUp()],
+    standalone: false
 })
 export class ConfirmModalComponent
   extends BaseModalComponent<ConfirmModalInputModel, ConfirmModalOutputModel>

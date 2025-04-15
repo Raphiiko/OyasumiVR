@@ -18,10 +18,11 @@ import { parseOscScriptFromCode } from '../../utils/osc-script-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-osc-script-code-editor',
-  templateUrl: './osc-script-code-editor.component.html',
-  styleUrls: ['./osc-script-code-editor.component.scss'],
-  animations: [fade(), hshrink(), noop()],
+    selector: 'app-osc-script-code-editor',
+    templateUrl: './osc-script-code-editor.component.html',
+    styleUrls: ['./osc-script-code-editor.component.scss'],
+    animations: [fade(), hshrink(), noop()],
+    standalone: false
 })
 export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
   @ViewChild('editor') editorRef!: ElementRef;

@@ -13,10 +13,11 @@ interface UpdateModalInputModel {
 interface UpdateModalOutputModel {}
 
 @Component({
-  selector: 'app-update-modal',
-  templateUrl: './update-modal.component.html',
-  styleUrls: ['./update-modal.component.scss'],
-  animations: [hshrink(), fadeUp()],
+    selector: 'app-update-modal',
+    templateUrl: './update-modal.component.html',
+    styleUrls: ['./update-modal.component.scss'],
+    animations: [hshrink(), fadeUp()],
+    standalone: false
 })
 export class UpdateModalComponent
   extends BaseModalComponent<UpdateModalInputModel, UpdateModalOutputModel>

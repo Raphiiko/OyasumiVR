@@ -17,10 +17,11 @@ const MIN_SAFE_FAN_SPEED = 40;
 const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPreparation'];
 
 @Component({
-  selector: 'app-hmd-automations-bigscreen-beyond-tab',
-  templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
-  styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-hmd-automations-bigscreen-beyond-tab',
+    templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
+    styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
   protected readonly fanAutomationEnableKeys = AUTOMATION_ENABLE_KEYS as Array<

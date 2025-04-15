@@ -6,10 +6,11 @@ import {
 } from '../../../models/lighthouse-device';
 
 @Component({
-  selector: 'app-device-list-lh-state-popover',
-  templateUrl: './device-list-lh-state-popover.component.html',
-  styleUrls: ['./device-list-lh-state-popover.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-device-list-lh-state-popover',
+    templateUrl: './device-list-lh-state-popover.component.html',
+    styleUrls: ['./device-list-lh-state-popover.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class DeviceListLhStatePopoverComponent implements OnInit {
   hoverAction = '';

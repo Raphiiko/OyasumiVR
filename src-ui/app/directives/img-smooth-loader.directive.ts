@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 
 @Directive({
-  // eslint-disable-next-line @angular-eslint/directive-selector
-  selector: '[imgSmoothLoader]',
+    // eslint-disable-next-line @angular-eslint/directive-selector
+    selector: '[imgSmoothLoader]',
+    standalone: false
 })
 export class ImgSmoothLoaderDirective implements OnChanges {
   @Input('imgSmoothLoader') imageUrl?: string | null;

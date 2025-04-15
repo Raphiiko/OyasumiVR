@@ -11,7 +11,10 @@ import { ModalService } from '../../../../../services/modal.service';
 import { TranslateService } from '@ngx-translate/core';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export abstract class SleepDetectionTabComponent implements OnInit {
   protected automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
   protected automationConfigService = inject(AutomationConfigService);

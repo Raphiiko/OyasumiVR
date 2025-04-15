@@ -33,10 +33,11 @@ import {
 import { isEqual } from 'lodash';
 
 @Component({
-  selector: 'app-device-list-item',
-  templateUrl: './device-list-item.component.html',
-  styleUrls: ['./device-list-item.component.scss'],
-  animations: [fade(), vshrink(), hshrink()],
+    selector: 'app-device-list-item',
+    templateUrl: './device-list-item.component.html',
+    styleUrls: ['./device-list-item.component.scss'],
+    animations: [fade(), vshrink(), hshrink()],
+    standalone: false
 })
 export class DeviceListItemComponent implements OnInit {
   @Input() icon: string | undefined;

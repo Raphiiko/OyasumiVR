@@ -15,10 +15,11 @@ import { NotificationService } from '../../../../services/notification.service';
 import { NIGHTMARE_DETECTION_NOTIFICATION_SOUND } from '../../../../services/nightmare-detection-automation.service';
 
 @Component({
-  selector: 'app-nightmare-detection-view',
-  templateUrl: './nightmare-detection-view.component.html',
-  styleUrls: ['./nightmare-detection-view.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-nightmare-detection-view',
+    templateUrl: './nightmare-detection-view.component.html',
+    styleUrls: ['./nightmare-detection-view.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class NightmareDetectionViewComponent implements OnInit {
   protected config: NightmareDetectionAutomationsConfig = structuredClone(

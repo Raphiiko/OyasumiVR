@@ -12,10 +12,11 @@ export interface UprightPoseDisableSleepModeModalOutputModel {
 }
 
 @Component({
-  selector: 'app-upright-pose-disable-sleepmode-modal',
-  templateUrl: './upright-pose-disable-sleep-mode-modal.component.html',
-  styleUrls: ['./upright-pose-disable-sleep-mode-modal.component.scss'],
-  animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
+    selector: 'app-upright-pose-disable-sleepmode-modal',
+    templateUrl: './upright-pose-disable-sleep-mode-modal.component.html',
+    styleUrls: ['./upright-pose-disable-sleep-mode-modal.component.scss'],
+    animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
+    standalone: false
 })
 export class UprightPoseDisableSleepModeModalComponent
   extends BaseModalComponent<

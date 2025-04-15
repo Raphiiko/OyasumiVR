@@ -40,10 +40,11 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
 }
 
 @Component({
-  selector: 'app-device-list',
-  templateUrl: './device-list.component.html',
-  styleUrls: ['./device-list.component.scss'],
-  animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+    selector: 'app-device-list',
+    templateUrl: './device-list.component.html',
+    styleUrls: ['./device-list.component.scss'],
+    animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+    standalone: false
 })
 export class DeviceListComponent implements OnInit {
   deviceCategories: Array<DisplayCategory> = [];

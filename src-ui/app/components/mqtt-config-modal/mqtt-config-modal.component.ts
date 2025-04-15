@@ -10,10 +10,11 @@ import pMinDelay from 'p-min-delay';
 import { error } from 'tauri-plugin-log-api';
 
 @Component({
-  selector: 'app-mqtt-config-modal',
-  templateUrl: './mqtt-config-modal.component.html',
-  styleUrls: ['./mqtt-config-modal.component.scss'],
-  animations: [fadeUp(), hshrink(), vshrink()],
+    selector: 'app-mqtt-config-modal',
+    templateUrl: './mqtt-config-modal.component.html',
+    styleUrls: ['./mqtt-config-modal.component.scss'],
+    animations: [fadeUp(), hshrink(), vshrink()],
+    standalone: false
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {
   config = MqttService.mapAppSettingsToMqttConfig(structuredClone(APP_SETTINGS_DEFAULT));

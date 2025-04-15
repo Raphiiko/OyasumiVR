@@ -1,5 +1,5 @@
-@import 'shadows';
-@import 'effects';
+@use 'shadows';
+@use 'effects';
 
 .brightness-slider {
   &-bar-row {
@@ -34,12 +34,12 @@
     justify-content: flex-start;
     height: 2.5em;
     border-radius: 9999999px;
-    @include shadow(5, true);
+    @include shadows.shadow(5, true);
     border: 0.15em solid var(--color-surface-4);
     backdrop-filter: blur(4px);
     background-color: color-mix(in srgb, var(--color-surface-1) 0%, transparent);
     color: var(--color-text-1);
-    @include pane-radial-gradient(#fff, #fff, 3%);
+    @include effects.pane-radial-gradient(#fff, #fff, 3%);
     transition: all 0.15s ease;
     --inner-background-color: #ffffff19;
 
@@ -84,7 +84,7 @@
       border-radius: 9999999px;
       background-color: var(--inner-background-color);
       border: 0.15em solid color-mix(in srgb, var(--color-surface-5) 50%, var(--color-surface-4));
-      @include shadow(5, true);
+      @include shadows.shadow(5, true);
       transition: background-color 0.15s ease;
 
       &:not(.dragging):not(.transition-active) {

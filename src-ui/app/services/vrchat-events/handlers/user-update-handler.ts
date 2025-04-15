@@ -1,5 +1,5 @@
 import { VRChatEventHandler } from '../vrchat-event-handler';
-import { LimitedUser } from 'vrchat/dist';
+import type { LimitedUser } from 'vrchat/dist';
 import { VRChatService } from '../../vrchat.service';
 
 export class UserUpdateHandler implements VRChatEventHandler {
@@ -13,7 +13,7 @@ export class UserUpdateHandler implements VRChatEventHandler {
       userId: string;
       user: Omit<
         LimitedUser,
-        'developerType' | 'friendKey' | 'isFriend' | 'last_platform' | 'location'
+        'developerType' | 'friendKey' | 'isFriend' | 'last_platform' | 'location' | 'last_login'
       > & { currentAvatar: string; currentAvatarAssetUrl: string };
     } = JSON.parse(contentString);
     // Update the current user

@@ -1,6 +1,6 @@
 import { VRChatEventHandler } from '../vrchat-event-handler';
 import { VRChatService } from '../../vrchat.service';
-import { Notification } from 'vrchat/dist';
+import type { Notification } from 'vrchat/dist';
 
 export class NotificationHandler implements VRChatEventHandler {
   type = 'notification';

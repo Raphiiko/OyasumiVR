@@ -90,8 +90,8 @@
 			</div>
 		{/if}
 		{#if shutdownSequenceDialog.shown}
-			<div class="stack-frame" transition:blur>
-				<div transition:scale>
+			<div class="stack-frame" transition:blur|global>
+				<div transition:scale|global>
 					<Dialog
 						title="t.overlay.dashboard.shutdownSequence.dialog.title"
 						message="t.overlay.dashboard.shutdownSequence.dialog.message"
@@ -107,10 +107,10 @@
 			</div>
 		{/if}
 		{#if shutdownSequenceDialog.inProgress}
-			<div class="stack-frame" transition:blur>
+			<div class="stack-frame" transition:blur|global>
 				<div class="w-[600px] h-[500px] bg-black blur-3xl opacity-80 rounded-full" />
 			</div>
-			<div class="stack-frame" transition:blur>
+			<div class="stack-frame" transition:blur|global>
 				<div class="flex flex-col items-center justify-center">
 					<span class="text-4xl text-white glow-100"
 						>{$t('t.shutdown-automations.overlay.title')}</span

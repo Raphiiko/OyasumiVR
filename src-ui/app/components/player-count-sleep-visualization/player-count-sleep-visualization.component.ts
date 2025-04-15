@@ -2,10 +2,11 @@ import { Component, Input } from '@angular/core';
 import { hshrink } from '../../utils/animations';
 
 @Component({
-  selector: 'app-player-count-sleep-visualization',
-  templateUrl: './player-count-sleep-visualization.component.html',
-  styleUrls: ['./player-count-sleep-visualization.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-player-count-sleep-visualization',
+    templateUrl: './player-count-sleep-visualization.component.html',
+    styleUrls: ['./player-count-sleep-visualization.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class PlayerCountSleepVisualizationComponent {
   @Input() public count = 0;

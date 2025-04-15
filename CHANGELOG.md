@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added continuous scanning for lighthouses to replace manual scanning. 
 
+### Fixed
+
+- "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly.  
+
 ## [1.14.7]
 
 ### Fixed

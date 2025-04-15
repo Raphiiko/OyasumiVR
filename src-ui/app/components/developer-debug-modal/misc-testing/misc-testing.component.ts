@@ -6,9 +6,10 @@ import { writeText } from '@tauri-apps/api/clipboard';
 import { AppSettingsService } from '../../../services/app-settings.service';
 
 @Component({
-  selector: 'app-misc-testing',
-  templateUrl: './misc-testing.component.html',
-  styleUrls: ['./misc-testing.component.scss'],
+    selector: 'app-misc-testing',
+    templateUrl: './misc-testing.component.html',
+    styleUrls: ['./misc-testing.component.scss'],
+    standalone: false
 })
 export class MiscTestingComponent implements OnInit {
   @Input() modal?: BaseModalComponent<any, any>;

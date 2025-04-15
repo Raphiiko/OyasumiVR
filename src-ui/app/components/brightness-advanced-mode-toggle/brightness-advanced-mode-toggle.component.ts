@@ -11,10 +11,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { hshrink } from '../../utils/animations';
 
 @Component({
-  selector: 'app-brightness-advanced-mode-toggle',
-  templateUrl: './brightness-advanced-mode-toggle.component.html',
-  styleUrl: './brightness-advanced-mode-toggle.component.scss',
-  animations: [hshrink()],
+    selector: 'app-brightness-advanced-mode-toggle',
+    templateUrl: './brightness-advanced-mode-toggle.component.html',
+    styleUrl: './brightness-advanced-mode-toggle.component.scss',
+    animations: [hshrink()],
+    standalone: false
 })
 export class BrightnessAdvancedModeToggleComponent {
   advancedMode = false;

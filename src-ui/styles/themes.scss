@@ -1,5 +1,5 @@
-@import 'node_modules/sass-material-colors/sass/sass-material-colors';
-@import 'shadows.scss';
+@use 'node_modules/sass-material-colors/sass/sass-material-colors';
+@use 'shadows.scss';
 
 @mixin baseTheme() {
   --color-primary: #3aa8b5;

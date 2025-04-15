@@ -16,10 +16,11 @@ import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
 import { writeText } from '@tauri-apps/api/clipboard';
 
 @Component({
-  selector: 'app-settings-status-info-view',
-  templateUrl: './settings-status-info-view.component.html',
-  styleUrls: ['./settings-status-info-view.component.scss'],
-  animations: [hshrink()],
+    selector: 'app-settings-status-info-view',
+    templateUrl: './settings-status-info-view.component.html',
+    styleUrls: ['./settings-status-info-view.component.scss'],
+    animations: [hshrink()],
+    standalone: false
 })
 export class SettingsStatusInfoViewComponent {
   categories: Array<{

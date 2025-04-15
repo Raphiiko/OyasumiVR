@@ -10,10 +10,11 @@ import { ConfirmModalComponent } from '../../../../components/confirm-modal/conf
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  selector: 'app-gpu-automations-view',
-  templateUrl: './gpu-automations-view.component.html',
-  styleUrls: ['./gpu-automations-view.component.scss'],
-  animations: [vshrink(), fade(), noop(), hshrink()],
+    selector: 'app-gpu-automations-view',
+    templateUrl: './gpu-automations-view.component.html',
+    styleUrls: ['./gpu-automations-view.component.scss'],
+    animations: [vshrink(), fade(), noop(), hshrink()],
+    standalone: false
 })
 export class GpuAutomationsViewComponent implements OnInit {
   activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';

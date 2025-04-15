@@ -11,9 +11,10 @@ import { WindowsService } from '../../../../../../services/windows.service';
 import { combineLatest, tap } from 'rxjs';
 
 @Component({
-  selector: 'app-windows-power-policy-tab',
-  templateUrl: './windows-power-policy-tab.component.html',
-  styleUrls: ['./windows-power-policy-tab.component.scss'],
+    selector: 'app-windows-power-policy-tab',
+    templateUrl: './windows-power-policy-tab.component.html',
+    styleUrls: ['./windows-power-policy-tab.component.scss'],
+    standalone: false
 })
 export class WindowsPowerPolicyTabComponent implements OnInit {
   protected policyOptions: SelectBoxItem[] = [
