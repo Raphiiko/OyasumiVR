@@ -10,7 +10,7 @@ import {
 import { EventLogService } from '../event-log.service';
 import { OVRDevice, OVRDeviceClass } from '../../models/ovr-device';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { SleepService } from '../sleep.service';
 

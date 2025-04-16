@@ -25,7 +25,7 @@ import {
   SystemMicMuteControllerBindingBehavior,
 } from '../models/automations';
 import { isEqual } from 'lodash';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { OVRInputEventAction } from '../models/ovr-input-event';
 import { NotificationService } from './notification.service';

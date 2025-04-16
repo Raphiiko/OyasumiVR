@@ -22,7 +22,7 @@ import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { EventLogService } from '../event-log.service';
 import { EventLogChangedVRChatMicMuteState } from '../../models/event-log-entry';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { fetch } from '@tauri-apps/plugin-http';
 
 const READ_ADDR = '/avatar/parameters/MuteSelf';

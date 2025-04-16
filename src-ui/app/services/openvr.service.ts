@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 

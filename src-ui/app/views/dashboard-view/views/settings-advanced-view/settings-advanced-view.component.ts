@@ -15,7 +15,7 @@ import {
 import { LazyStore, Store } from '@tauri-apps/plugin-store';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,

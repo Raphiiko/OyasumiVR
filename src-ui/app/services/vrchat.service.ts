@@ -28,7 +28,7 @@ import { TaskQueue } from '../utils/task-queue';
 import { AvatarEx, WorldContext } from '../models/vrchat';
 import { VRChatLogService } from './vrchat-log.service';
 import { CachedValue } from '../utils/cached-value';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import {
   decryptStorageData,
   deserializeStorageCryptoKey,

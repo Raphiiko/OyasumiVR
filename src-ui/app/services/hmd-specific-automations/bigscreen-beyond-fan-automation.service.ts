@@ -28,7 +28,7 @@ import { clamp } from '../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';
 import { HardwareBrightnessControlService } from '../brightness-control/hardware-brightness-control.service';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 import { EventLogService } from '../event-log.service';
 import { EventLogBSBFanSpeedChanged } from '../../models/event-log-entry';
 

@@ -2,7 +2,7 @@ import { OscMethod } from '../osc-method';
 import { OscService } from '../../osc.service';
 import { OSCBoolValue, OSCMessage } from '../../../models/osc-message';
 import { SleepService } from '../../sleep.service';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { switchMap } from 'rxjs';
 
 export class SleepModeOscMethod extends OscMethod<boolean> {

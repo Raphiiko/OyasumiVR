@@ -1,4 +1,4 @@
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 import { EVENT_LOG_DEFAULT, EventLog } from '../models/event-log-entry';
 import { message } from '@tauri-apps/plugin-dialog';

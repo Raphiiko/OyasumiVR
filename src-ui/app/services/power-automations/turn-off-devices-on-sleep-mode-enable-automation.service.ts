@@ -11,7 +11,7 @@ import { LighthouseConsoleService } from '../lighthouse-console.service';
 import { SleepService } from '../sleep.service';
 import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',

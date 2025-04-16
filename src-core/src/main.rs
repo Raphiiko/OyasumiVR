@@ -1,7 +1,4 @@
-#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[macro_use(lazy_static)]
 extern crate lazy_static;
@@ -60,7 +57,7 @@ fn main() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(configure_tauri_plugin_aptabase())
+        // .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             let matches = app.cli().matches().unwrap();
             tauri::async_runtime::block_on(async {

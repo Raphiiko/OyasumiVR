@@ -25,7 +25,7 @@ import { GPUDevice, GPUPowerLimit } from '../models/gpu-device';
 import { NvmlService } from './nvml.service';
 import { NvmlDevice } from '../models/nvml-device';
 import { SleepService } from './sleep.service';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { ElevatedSidecarService } from './elevated-sidecar.service';

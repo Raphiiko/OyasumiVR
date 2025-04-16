@@ -2,7 +2,7 @@ import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import {
   EventLogLighthouseSetPowerState,
   EventLogTurnedOffOpenVRDevices,
@@ -33,11 +33,11 @@ import {
 import { isEqual } from 'lodash';
 
 @Component({
-    selector: 'app-device-list-item',
-    templateUrl: './device-list-item.component.html',
-    styleUrls: ['./device-list-item.component.scss'],
-    animations: [fade(), vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-device-list-item',
+  templateUrl: './device-list-item.component.html',
+  styleUrls: ['./device-list-item.component.scss'],
+  animations: [fade(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class DeviceListItemComponent implements OnInit {
   @Input() icon: string | undefined;

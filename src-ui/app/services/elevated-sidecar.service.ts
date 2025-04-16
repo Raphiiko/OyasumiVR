@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
 import { AppSettingsService } from './app-settings.service';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',

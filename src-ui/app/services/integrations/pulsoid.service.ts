@@ -12,7 +12,7 @@ import {
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../components/confirm-modal/confirm-modal.component';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import {
   BehaviorSubject,
   distinctUntilChanged,

@@ -7,7 +7,7 @@ import {
   OverlayMenuOpenRequest,
   OyasumiSidecarControllerRole,
 } from '../../../../src-grpc-web-client/overlay-sidecar_pb';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { AppSettingsService } from '../app-settings.service';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 

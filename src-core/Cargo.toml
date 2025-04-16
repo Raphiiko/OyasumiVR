@@ -67,12 +67,12 @@ tauri-plugin-process = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
 tauri-plugin-store = "2"
-tauri-plugin-aptabase = "1.0"
+tauri-plugin-aptabase = { git = "https://github.com/aptabase/tauri-plugin-aptabase" }
 tempfile = "3.6.0"
 time = "0.3.41"
-tokio = { version = "1.28.0", features = ["full"] }
+tokio = { version = "1.41.0", features = ["full"] }
 tokio-stream = { version = "0.1.14", features = ["full"] }
-tokio-util = "0.7.8"
+tokio-util = "0.7.12"
 tonic = "0.13.0"
 tonic-web = "0.13.0"
 url = "2.3.1"

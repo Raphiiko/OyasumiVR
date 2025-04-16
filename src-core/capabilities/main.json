@@ -1,5 +1,5 @@
 {
-  "identifier": "default",
+  "identifier": "main",
   "description": "permissions that were migrated from v1",
   "local": true,
   "windows": [
@@ -26,6 +26,7 @@
     "core:window:allow-hide",
     "core:window:allow-close",
     "core:window:allow-start-dragging",
+    "core:window:allow-set-focus",
     "shell:allow-execute",
     "shell:allow-open",
     "dialog:allow-open",
@@ -61,6 +62,7 @@
     "process:default",
     "fs:default",
     "shell:default",
-    "deep-link:default"
+    "deep-link:default",
+    "log:default"
   ]
 }

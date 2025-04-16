@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { FLAVOUR } from '../../build';
 import { BehaviorSubject, distinctUntilChanged, filter } from 'rxjs';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 export const SteamAchievements = {
   START_OYASUMIVR: 'START_OYASUMIVR',

@@ -8,7 +8,7 @@ import {
   TurnOffDevicesWhenChargingAutomationConfig,
 } from '../../models/automations';
 import { LighthouseConsoleService } from '../lighthouse-console.service';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 import { EventLogTurnedOffOpenVRDevices } from '../../models/event-log-entry';
 import { EventLogService } from '../event-log.service';
 

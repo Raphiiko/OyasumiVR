@@ -4,7 +4,7 @@ import { OpenVRService } from './openvr.service';
 import { AppSettingsService } from './app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice } from '../models/ovr-device';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { ExecutableReferenceStatus } from '../models/settings';
 import { listen } from '@tauri-apps/api/event';
 

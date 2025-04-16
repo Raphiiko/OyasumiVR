@@ -40,7 +40,7 @@ import { HardwareBrightnessControlService } from './brightness-control/hardware-
 import { SoftwareBrightnessControlService } from './brightness-control/software-brightness-control.service';
 import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from './openvr.service';
 import { invoke } from '@tauri-apps/api/core';

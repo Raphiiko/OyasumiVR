@@ -21,7 +21,7 @@ import { OpenVRService } from './openvr.service';
 import { OVRDevicePose } from '../models/ovr-device';
 import { SleepingPoseDetector } from '../utils/sleeping-pose-detector';
 import * as THREE from 'three';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { EventLogService } from './event-log.service';

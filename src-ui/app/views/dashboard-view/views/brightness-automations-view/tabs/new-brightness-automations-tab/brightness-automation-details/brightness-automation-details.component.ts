@@ -22,7 +22,7 @@ import { SimpleBrightnessControlService } from '../../../../../../../services/br
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 import { invoke } from '@tauri-apps/api/core';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 
 interface BrightnessBounds {
   min: number;

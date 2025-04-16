@@ -3,7 +3,7 @@ import { invoke } from '@tauri-apps/api/core';
 import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';
-import { debug, error, info } from 'tauri-plugin-log-api';
+import { debug, error, info } from '@tauri-apps/plugin-log';
 import { listen } from '@tauri-apps/api/event';
 import { OSCMessage, OSCMessageRaw, parseOSCMessage } from '../models/osc-message';
 import {

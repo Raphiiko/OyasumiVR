@@ -1,6 +1,6 @@
 import { mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 import { message } from '@tauri-apps/plugin-dialog';
 

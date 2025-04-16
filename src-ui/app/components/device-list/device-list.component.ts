@@ -9,7 +9,7 @@ import {
   EventLogTurnedOffOpenVRDevices,
 } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
@@ -40,11 +40,11 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
 }
 
 @Component({
-    selector: 'app-device-list',
-    templateUrl: './device-list.component.html',
-    styleUrls: ['./device-list.component.scss'],
-    animations: [vshrink(), triggerChildren(), fade(), hshrink()],
-    standalone: false
+  selector: 'app-device-list',
+  templateUrl: './device-list.component.html',
+  styleUrls: ['./device-list.component.scss'],
+  animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+  standalone: false,
 })
 export class DeviceListComponent implements OnInit {
   deviceCategories: Array<DisplayCategory> = [];

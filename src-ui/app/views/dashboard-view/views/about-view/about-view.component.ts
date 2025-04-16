@@ -15,7 +15,7 @@ import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { vshrink } from '../../../../utils/animations';
 import { shuffle } from 'lodash';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 import translationContributors from '../../../../../../docs/translation_contributors.json';
 import { fetch } from '@tauri-apps/plugin-http';
 
