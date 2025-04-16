@@ -1,5 +1,5 @@
 {
-  "identifier": "migrated",
+  "identifier": "default",
   "description": "permissions that were migrated from v1",
   "local": true,
   "windows": [
@@ -43,6 +43,8 @@
       ]
     },
     "notification:default",
+    "updater:default",
+    "global-shortcut:default",
     "global-shortcut:allow-is-registered",
     "global-shortcut:allow-register",
     "global-shortcut:allow-register-all",
@@ -58,6 +60,7 @@
     "notification:default",
     "process:default",
     "fs:default",
-    "shell:default"
+    "shell:default",
+    "deep-link:default"
   ]
 }

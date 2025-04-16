@@ -71,7 +71,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('automation-config.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

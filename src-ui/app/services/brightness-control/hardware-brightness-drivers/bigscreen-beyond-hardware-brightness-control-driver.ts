@@ -13,7 +13,7 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { AppSettings } from '../../../models/settings';
 import { listen } from '@tauri-apps/api/event';
 import { warn } from 'tauri-plugin-log-api';

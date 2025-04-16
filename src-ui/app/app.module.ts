@@ -39,8 +39,6 @@ import { DeviceListItemComponent } from './components/device-list/device-list-it
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-import { UpdateService } from './services/update.service';
-import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
@@ -61,7 +59,7 @@ import { ImageCachePipe } from './pipes/image-cache.pipe';
 import { InviteAutomationsService } from './services/invite-automations.service';
 import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
 import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
@@ -233,6 +231,7 @@ import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-a
 import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
+import { getCurrentWindow } from '@tauri-apps/api/window';
 
 [
   localeEN,
@@ -289,7 +288,6 @@ export function createTranslateLoader(http: HttpClient) {
     DropdownButtonComponent,
     OscScriptSimpleEditorComponent,
     ConfirmModalComponent,
-    UpdateModalComponent,
     LanguageSelectModalComponent,
     SettingsGeneralViewComponent,
     SettingsNotificationsViewComponent,
@@ -412,7 +410,6 @@ export class AppModule {
     private oscService: OscService,
     private oscControlService: OscControlService,
     private elevatedSidecarService: ElevatedSidecarService,
-    private updateService: UpdateService,
     private telemetryService: TelemetryService,
     private appSettingsService: AppSettingsService,
     private modalService: ModalService,
@@ -812,7 +809,7 @@ export class AppModule {
           ].join('\n'),
           {
             title: 'OyasumiVR failed to start',
-            type: 'error',
+            kind: 'error',
             okLabel: 'Join the Discord for support',
             cancelLabel: 'Quit OyasumiVR',
           }
@@ -825,6 +822,11 @@ export class AppModule {
     }
     // Close the splash screen after initialization
     await invoke('close_splashscreen');
+    // Show the main window
+    // TODO: Only do this if start in tray is not enabled
+    const window = getCurrentWindow();
+    await window.show();
+    await window.setFocus();
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);
     if (!settings.userLanguagePicked) {
@@ -834,8 +836,6 @@ export class AppModule {
         })
       );
     }
-    // Only initialize update service after language selection
-    await this.updateService.init();
   }
 
   async preloadAssets() {

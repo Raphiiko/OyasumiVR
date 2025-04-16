@@ -6,10 +6,10 @@ import {
   VRChatAvatarContext,
   VRChatAvatarParameter,
 } from '../models/avatar-context';
-import { Client, getClient } from '@tauri-apps/plugin-http';
 import { OSCQSerializedNode } from '../models/osc-query-serialized-node';
 import { warn } from 'tauri-plugin-log-api';
 import { OscService } from './osc.service';
+import { fetch } from '@tauri-apps/plugin-http';
 
 @Injectable({
   providedIn: 'root',
@@ -17,12 +17,10 @@ import { OscService } from './osc.service';
 export class AvatarContextService {
   private readonly _avatarContext = new BehaviorSubject<AvatarContext | null>(null);
   public readonly avatarContext = this._avatarContext.asObservable();
-  private http!: Client;
 
   constructor(private osc: OscService) {}
 
   public async init() {
-    this.http = await getClient();
     this.osc.vrchatOscQueryAddress.pipe(distinctUntilChanged()).subscribe((oscqAddr) => {
       this.buildAvatarContext('VRCHAT', oscqAddr);
     });
@@ -49,8 +47,8 @@ export class AvatarContextService {
     // Get OSCQuery data
     let node: OSCQSerializedNode;
     try {
-      const resp = await this.http.get<OSCQSerializedNode>(`http://${oscqAddr}/`);
-      node = resp.data;
+      const resp = await fetch(`http://${oscqAddr}/`);
+      node = await resp.json();
     } catch (e) {
       warn('[OSC] Failed to fetch OSCQuery node from VRChat: ' + e);
       if (this._avatarContext.value !== null) this._avatarContext.next(null);

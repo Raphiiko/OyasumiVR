@@ -1697,21 +1697,6 @@
           "description": "Öffne Edge Entwicklertools zum Debuggen",
           "title": "Öffne Entwicklertools"
         },
-        "memoryWatcher": {
-          "action": "Einschalten",
-          "description": "Aktiviere den Speicherüberwacher um alle Unterprozesse zu kontrollieren. Eine Fehleranzeige wird angezeigt, wenn ein Przess einen GB an Arbeitsspeicher überschreitet (zusätzliche Informationen werden im Verlauf verfügbar sein)",
-          "modal": {
-            "error": {
-              "message": "Der Speicherüberwacher war bereits aktiv",
-              "title": "Bereits aktiv"
-            },
-            "success": {
-              "message": "Der Speicherüberwacher wurde aktiviert",
-              "title": "Speicherüberwacher aktiviert"
-            }
-          },
-          "title": "Speicherüberwachung"
-        },
         "vrManifestReregister": {
           "action": "Neuangelegtes Manifest",
           "description": "Neuangelegte OyasumiVR Anwendungs Manifest mit SteamVR",

@@ -1697,21 +1697,6 @@
           "description": "디버깅 목적으로 Edge의 개발자 도구를 엽니다.",
           "title": "개발자 도구 열기"
         },
-        "memoryWatcher": {
-          "action": "활성화",
-          "description": "모든 하위 프로세스를 모니터링하려면 메모리 감시기를 활성화하세요. 프로세스의 메모리 사용량이 1GB를 초과하는 경우 오류 대화 상자가 표시되고 추가 정보가 기록됩니다.",
-          "modal": {
-            "error": {
-              "message": "메모리 감시기가 이미 활성화되어 있습니다.",
-              "title": "이미 활성화 됨"
-            },
-            "success": {
-              "message": "메모리 감시기가 활성화되었습니다!",
-              "title": "메모리 감시기 활성화 됨"
-            }
-          },
-          "title": "메모리 감시기"
-        },
         "vrManifestReregister": {
           "action": "매니페스트 재등록",
           "description": "OyasumiVR의 VR 애플리케이션 매니페스트를 SteamVR에 재등록하여요.",

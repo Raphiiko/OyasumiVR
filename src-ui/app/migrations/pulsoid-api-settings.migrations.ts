@@ -55,7 +55,7 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('pulsoid-api-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

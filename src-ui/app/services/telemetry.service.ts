@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_TELEMETRY_SETTINGS } from '../globals';
 import {
   asyncScheduler,
@@ -13,14 +13,14 @@ import {
 import { TELEMETRY_SETTINGS_DEFAULT, TelemetrySettings } from '../models/telemetry-settings';
 import { migrateTelemetrySettings } from '../migrations/telemetry-settings.migrations';
 
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { trackEvent } from '@aptabase/tauri';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TelemetryService {
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private _settings: BehaviorSubject<TelemetrySettings> = new BehaviorSubject<TelemetrySettings>(
     TELEMETRY_SETTINGS_DEFAULT
   );
@@ -65,7 +65,7 @@ export class TelemetryService {
   }
 
   async loadSettings() {
-    let settings: TelemetrySettings | null = await this.store.get<TelemetrySettings>(
+    let settings: TelemetrySettings | undefined = await this.store.get<TelemetrySettings>(
       SETTINGS_KEY_TELEMETRY_SETTINGS
     );
     settings = settings ? migrateTelemetrySettings(settings) : this._settings.value;

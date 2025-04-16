@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
 import { SETTINGS_FILE, SETTINGS_KEY_SLEEP_MODE } from '../globals';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { SleepingPose } from '../models/sleeping-pose';
 import { uniq } from 'lodash';
 import { OpenVRService } from './openvr.service';
@@ -33,7 +33,7 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class SleepService {
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private _mode: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
   public mode: Observable<boolean> = this._mode.asObservable().pipe(
     filter((v) => v !== null),

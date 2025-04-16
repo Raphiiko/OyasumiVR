@@ -1,3 +1,5 @@
+use crate::globals::TAURI_APP_HANDLE;
+
 use super::{
     audio_devices::device::AudioDeviceDto,
     get_friendly_name_for_windows_power_policy,
@@ -5,7 +7,7 @@ use super::{
     VRCHAT_ACTIVE,
 };
 use log::{error, info};
-use tauri::api::process::{Command, CommandEvent};
+use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
@@ -40,11 +42,15 @@ pub async fn is_vrchat_active() -> bool {
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, String> {
-    let command = tauri::api::process::Command::new(command).args(args);
+    let command = {
+        let handle = TAURI_APP_HANDLE.lock().await;
+        handle.as_ref().unwrap().shell().command(command).args(args)
+    };
+
     let (mut rx, _child) = match command.spawn() {
         Ok(child) => child,
         Err(error) => match error {
-            tauri::api::Error::Io(io_err) => match io_err.kind() {
+            Error::Io(io_err) => match io_err.kind() {
                 std::io::ErrorKind::NotFound => {
                     error!("[Core] [run_command] Executable not found: {}", io_err);
                     return Err(String::from("NOT_FOUND"));
@@ -73,10 +79,10 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
     while let Some(event) = rx.recv().await {
         match &event {
             CommandEvent::Stdout(line) => {
-                stdout.push(line.clone());
+                stdout.push(String::from_utf8_lossy(line).to_string());
             }
             CommandEvent::Stderr(line) => {
-                stderr.push(line.clone());
+                stderr.push(String::from_utf8_lossy(line).to_string());
             }
             CommandEvent::Terminated(payload) => {
                 status = payload.code.unwrap_or(-1);
@@ -96,7 +102,12 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 pub async fn show_in_folder(path: String) {
     #[cfg(target_os = "windows")]
     {
-        Command::new("explorer")
+        let handle = TAURI_APP_HANDLE.lock().await;
+        handle
+            .as_ref()
+            .unwrap()
+            .shell()
+            .command("explorer")
             .args(["/select,", &path]) // The comma after select is not a typo
             .spawn()
             .unwrap();
@@ -314,16 +325,4 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
         }
     };
     manager.set_mic_activity_device_id(device_id).await;
-}
-
-#[tauri::command]
-#[oyasumivr_macros::command_profiling]
-pub async fn activate_memory_watcher() -> bool {
-    let mut watcher_active_guard = super::MEMORY_WATCHER_ACTIVE.lock().await;
-    if *watcher_active_guard {
-        return false;
-    }
-    info!("[Core] Activating memory watcher");
-    *watcher_active_guard = true;
-    true
 }

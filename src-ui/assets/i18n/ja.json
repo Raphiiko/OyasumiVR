@@ -1697,21 +1697,6 @@
           "description": "デバッグ目的でEdgeの開発者ツールを開きます",
           "title": "開発者ツールを開く"
         },
-        "memoryWatcher": {
-          "action": "有効化",
-          "description": "全ての子プロセスを監視するためにメモリ監視を有効化します。プロセスが1GB以上のメモリを使用するとエラーダイアログが表示され、追加情報がログに記録されます",
-          "modal": {
-            "error": {
-              "message": "メモリ監視は既に有効です。",
-              "title": "既に有効"
-            },
-            "success": {
-              "message": "メモリ監視が有効化されました！",
-              "title": "メモリ監視が有効"
-            }
-          },
-          "title": "メモリ監視"
-        },
         "vrManifestReregister": {
           "action": "マニフェストの再登録",
           "description": "OyasumiVRのアプリケーションマニフェストをSteamVRに再登録します",

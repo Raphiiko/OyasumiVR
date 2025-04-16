@@ -1713,21 +1713,6 @@
           "description": "Opens the Edge Developer Tools, for debugging purposes",
           "title": "Open Developer Tools"
         },
-        "memoryWatcher": {
-          "action": "Activate",
-          "description": "Activate the memory watcher to monitor all child processes. An error dialog will be shown if any processes exceed a gigabyte of memory usage, and extra information will be logged",
-          "modal": {
-            "error": {
-              "message": "The memory watcher was already active.",
-              "title": "Already Active"
-            },
-            "success": {
-              "message": "The memory watcher has been activated!",
-              "title": "Memory Watcher Activated"
-            }
-          },
-          "title": "Memory Watcher"
-        },
         "title": "Troubleshooting",
         "vrManifestReregister": {
           "action": "Reregister Manifest",

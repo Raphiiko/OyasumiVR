@@ -21,7 +21,7 @@ import { HardwareBrightnessControlService } from '../../../../../../../services/
 import { SimpleBrightnessControlService } from '../../../../../../../services/brightness-control/simple-brightness-control.service';
 import { SoftwareBrightnessControlService } from '../../../../../../../services/brightness-control/software-brightness-control.service';
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { error } from 'tauri-plugin-log-api';
 
 interface BrightnessBounds {
@@ -32,11 +32,11 @@ interface BrightnessBounds {
 type BrightnessType = 'SIMPLE' | 'SOFTWARE' | 'HARDWARE';
 
 @Component({
-    selector: 'app-brightness-automation-details',
-    templateUrl: './brightness-automation-details.component.html',
-    styleUrls: ['./brightness-automation-details.component.scss'],
-    animations: [fade(), fadeRight(), vshrink()],
-    standalone: false
+  selector: 'app-brightness-automation-details',
+  templateUrl: './brightness-automation-details.component.html',
+  styleUrls: ['./brightness-automation-details.component.scss'],
+  animations: [fade(), fadeRight(), vshrink()],
+  standalone: false,
 })
 export class BrightnessAutomationDetailsComponent implements OnInit {
   close = output<void>();

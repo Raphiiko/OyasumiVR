@@ -1697,21 +1697,6 @@
           "description": "Opent de Edge Developer Tools, om fouten mee op te sporen",
           "title": "Open Developer Tools"
         },
-        "memoryWatcher": {
-          "action": "Activeer",
-          "description": "Activeer de memory watcher om alle child processen te monitoren. Er zal een error venster worden getoond als er een proces meer dan een gigabyte aan geheugen gebruikt, en er wordt extra informatie gelogd.",
-          "modal": {
-            "error": {
-              "message": "De memory watcher was al actief.",
-              "title": "Al actief."
-            },
-            "success": {
-              "message": "De memory watcher is geactiveerd!",
-              "title": "Memory Watcher Geactiveerd"
-            }
-          },
-          "title": "Memory Watcher"
-        },
         "vrManifestReregister": {
           "action": "Herregistreer Manifest",
           "description": "Herregistreert OyasumiVR's VR application manifest met SteamVR",

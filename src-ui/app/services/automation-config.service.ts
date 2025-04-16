@@ -7,7 +7,7 @@ import {
   ShutdownAutomationsConfig,
 } from '../models/automations';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
 
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
@@ -17,7 +17,7 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class AutomationConfigService {
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private _configs: BehaviorSubject<AutomationConfigs> = new BehaviorSubject<AutomationConfigs>(
     AUTOMATION_CONFIGS_DEFAULT
   );
@@ -57,7 +57,7 @@ export class AutomationConfigService {
   }
 
   async loadConfigs() {
-    let configs: AutomationConfigs | null = await this.store.get<AutomationConfigs>(
+    let configs: AutomationConfigs | undefined = await this.store.get<AutomationConfigs>(
       SETTINGS_KEY_AUTOMATION_CONFIGS
     );
     configs = configs ? migrateAutomationConfigs(configs) : this._configs.value;

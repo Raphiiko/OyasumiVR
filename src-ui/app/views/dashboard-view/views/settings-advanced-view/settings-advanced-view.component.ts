@@ -12,7 +12,7 @@ import {
   SETTINGS_KEY_THEMING_SETTINGS,
   SETTINGS_KEY_VRCHAT_API,
 } from '../../../../globals';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore, Store } from '@tauri-apps/plugin-store';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error, info } from 'tauri-plugin-log-api';
@@ -22,7 +22,7 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
@@ -35,15 +35,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-settings-advanced-view',
-    templateUrl: './settings-advanced-view.component.html',
-    styleUrls: ['./settings-advanced-view.component.scss'],
-    animations: [],
-    standalone: false
+  selector: 'app-settings-advanced-view',
+  templateUrl: './settings-advanced-view.component.html',
+  styleUrls: ['./settings-advanced-view.component.scss'],
+  animations: [],
+  standalone: false,
 })
 export class SettingsAdvancedViewComponent {
-  private settingsStore = new Store(SETTINGS_FILE);
-  private cacheStore = new Store(CACHE_FILE);
+  private settingsStore = new LazyStore(SETTINGS_FILE);
+  private cacheStore = new LazyStore(CACHE_FILE);
   persistentStorageItems: Array<{
     key: string;
   }> = [
@@ -142,7 +142,7 @@ export class SettingsAdvancedViewComponent {
       error(`[DebugSettings] Could not load translations from file: ${JSON.stringify(e)}`);
       await message('Translations could not be loaded:\n' + e, {
         title: 'Error loading translations',
-        type: 'error',
+        kind: 'error',
       });
       return;
     }
@@ -298,27 +298,6 @@ export class SettingsAdvancedViewComponent {
   }
 
   protected readonly open = open;
-
-  async activateMemoryWatcher() {
-    this.memoryWatcherActive = true;
-    if (await invoke<boolean>('activate_memory_watcher')) {
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'settings.advanced.fixes.memoryWatcher.modal.success.title',
-          message: 'settings.advanced.fixes.memoryWatcher.modal.success.message',
-          showCancel: false,
-        })
-        .subscribe();
-    } else {
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'settings.advanced.fixes.memoryWatcher.modal.error.title',
-          message: 'settings.advanced.fixes.memoryWatcher.modal.error.message',
-          showCancel: false,
-        })
-        .subscribe();
-    }
-  }
 
   async openDevTools() {
     await invoke('open_dev_tools');

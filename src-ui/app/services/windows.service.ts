@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { EventLogService } from './event-log.service';
 import { EventLogWindowsPowerPolicySet } from '../models/event-log-entry';
 import { error } from 'tauri-plugin-log-api';

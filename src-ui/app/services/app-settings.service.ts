@@ -10,7 +10,7 @@ import {
   switchMap,
   throttleTime,
 } from 'rxjs';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_APP_SETTINGS } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
@@ -27,7 +27,7 @@ import {
   providedIn: 'root',
 })
 export class AppSettingsService {
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private _settings: BehaviorSubject<AppSettings> = new BehaviorSubject<AppSettings>(
     APP_SETTINGS_DEFAULT
   );
@@ -54,7 +54,9 @@ export class AppSettingsService {
   }
 
   async loadSettings() {
-    let settings: AppSettings | null = await this.store.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
+    let settings: AppSettings | undefined = await this.store.get<AppSettings>(
+      SETTINGS_KEY_APP_SETTINGS
+    );
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);

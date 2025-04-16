@@ -60,7 +60,7 @@ export function migrateAppSettings(data: any): AppSettings {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

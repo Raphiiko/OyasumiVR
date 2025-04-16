@@ -50,7 +50,7 @@ export function migrateEventLog(log: EventLog): EventLog {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('event-log.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

@@ -1,5 +1,5 @@
 import { CACHE_FILE } from '../globals';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 
 interface CachedValueEntry<T> {
@@ -9,7 +9,7 @@ interface CachedValueEntry<T> {
 }
 
 export class CachedValue<T> {
-  private static store = new Store(CACHE_FILE);
+  private static store = new LazyStore(CACHE_FILE);
   lastSet = -1;
   private initialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -77,7 +77,7 @@ export class CachedValue<T> {
     await CachedValue.store
       .get<CachedValueEntry<T>>('CachedValue_' + this.persistenceKey)
       .then((value) => {
-        if (value === null) return;
+        if (!value) return;
         this.value = value.value;
         this.lastSet = value.lastSet;
       });

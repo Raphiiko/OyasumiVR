@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { getVersion } from '../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from '../../../build';
-import { invoke } from '@tauri-apps/api';
-const appWindow = getCurrentWebviewWindow()
+import { invoke } from '@tauri-apps/api/core';
+const appWindow = getCurrentWebviewWindow();
 
 @Component({
-    selector: 'app-window-titlebar',
-    templateUrl: './window-titlebar.component.html',
-    styleUrls: ['./window-titlebar.component.scss'],
-    standalone: false
+  selector: 'app-window-titlebar',
+  templateUrl: './window-titlebar.component.html',
+  styleUrls: ['./window-titlebar.component.scss'],
+  standalone: false,
 })
 export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';

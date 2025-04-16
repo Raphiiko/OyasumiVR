@@ -57,7 +57,7 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('telemetry-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

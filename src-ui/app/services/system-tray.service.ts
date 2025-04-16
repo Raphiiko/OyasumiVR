@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from './app-settings.service';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 
 const CLOSE_TO_SYSTEM_TRAY_COMMAND = 'set_close_to_system_tray';
 const START_IN_SYSTEM_TRAY_COMMAND = 'set_start_in_system_tray';

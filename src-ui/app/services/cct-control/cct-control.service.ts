@@ -14,7 +14,7 @@ import {
 } from '../brightness-control/brightness-control-models';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { info } from 'tauri-plugin-log-api';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
 import { OpenVRService } from '../openvr.service';
 import { clamp } from '../../utils/number-utils';

@@ -1697,21 +1697,6 @@
           "description": "Abre las herramientas de desarrollo Edge, con fines de depuración",
           "title": "Abrir herramientas de desarrollo"
         },
-        "memoryWatcher": {
-          "action": "Activado",
-          "description": "Activa el vigilante de memoria para monitorizar todos los procesos hijos. Se mostrará un cuadro de diálogo de error si algún proceso supera un gigabyte de uso de memoria, y se registrará información adicional",
-          "modal": {
-            "error": {
-              "message": "El vigilante de la memoria ya estaba activo.",
-              "title": "Ya esta activo"
-            },
-            "success": {
-              "message": "El vigilante de memoria ha sido activado!",
-              "title": "Vigilante de memoria activado"
-            }
-          },
-          "title": "Vigilante de memoria"
-        },
         "vrManifestReregister": {
           "action": "Retregistro manifiesto",
           "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",

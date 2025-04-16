@@ -34,7 +34,7 @@ import {
   EventLogChangedSystemMicMuteState,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { VRChatService } from './vrchat.service';
 
 @Injectable({

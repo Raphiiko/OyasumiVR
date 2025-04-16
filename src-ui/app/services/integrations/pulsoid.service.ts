@@ -5,7 +5,7 @@ import {
   SETTINGS_FILE,
   SETTINGS_KEY_PULSOID_API,
 } from '../../globals';
-import {  } from '@tauri-apps/api';
+import {} from '@tauri-apps/api/core';
 import { ModalService } from '../modal.service';
 import {
   ConfirmModalComponent,
@@ -25,15 +25,15 @@ import {
   switchMap,
   timeout,
 } from 'rxjs';
-import { Client, getClient } from '@tauri-apps/plugin-http';
-import { Store } from '@tauri-apps/plugin-store';
+import { fetch } from '@tauri-apps/plugin-http';
+import { LazyStore } from '@tauri-apps/plugin-store';
 
 import {
   PULSOID_API_SETTINGS_DEFAULT,
   PulsoidApiSettings,
 } from '../../models/pulsoid-api-settings';
 import { migratePulsoidApiSettings } from '../../migrations/pulsoid-api-settings.migrations';
-import * as shell from "@tauri-apps/plugin-shell"
+import * as shell from '@tauri-apps/plugin-shell';
 
 const HISTORY_LENGTH = 1000 * 60 * 60 * 12; // 12 hours
 
@@ -62,9 +62,8 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
   providedIn: 'root',
 })
 export class PulsoidService {
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private csrfCache: string[] = [];
-  private client?: Client;
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
   private _heartRate = new BehaviorSubject<number>(0);
@@ -86,7 +85,6 @@ export class PulsoidService {
   constructor(private modalService: ModalService) {}
 
   async init() {
-    this.client = await getClient();
     await this.loadSettings();
     await this.manageSocketConnection();
     this.heartRate.pipe(filter(Boolean)).subscribe((heartRate) => {
@@ -227,7 +225,7 @@ export class PulsoidService {
     if (!this.settings.value.accessToken) throw new Error('No token set available');
     return this.getApiUrl('profile').pipe(
       switchMap((url) =>
-        this.client!.get<PulsoidProfile>(url, {
+        fetch(url, {
           headers: {
             Authorization: `Bearer ${this.settings.value?.accessToken}`,
           },
@@ -238,7 +236,7 @@ export class PulsoidService {
         if (!response.ok) throw response;
         return response;
       }),
-      map((response) => response.data)
+      switchMap((response) => response.json() as Promise<PulsoidProfile>)
     );
   }
 
@@ -248,7 +246,7 @@ export class PulsoidService {
   }
 
   private async loadSettings() {
-    let settings: PulsoidApiSettings | null = await this.store.get<PulsoidApiSettings>(
+    let settings: PulsoidApiSettings | undefined = await this.store.get<PulsoidApiSettings>(
       SETTINGS_KEY_PULSOID_API
     );
     settings = settings ? migratePulsoidApiSettings(settings) : this.settings.value;

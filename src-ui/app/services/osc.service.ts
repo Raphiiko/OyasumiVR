@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { OscParameter, OscScript, OscScriptSleepAction } from '../models/osc-script';
 import { flatten } from 'lodash';
 import { TaskQueue } from '../utils/task-queue';

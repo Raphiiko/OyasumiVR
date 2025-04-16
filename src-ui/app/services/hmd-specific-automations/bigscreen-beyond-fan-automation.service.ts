@@ -23,7 +23,7 @@ import { AutomationConfigService } from '../automation-config.service';
 import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { clamp } from '../../utils/number-utils';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../../models/settings';
 import { AppSettingsService } from '../app-settings.service';

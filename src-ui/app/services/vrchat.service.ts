@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Body, Client, getClient, HttpOptions, Response, ResponseType } from '@tauri-apps/plugin-http';
+import { ClientOptions, fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import type { CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
-import { Store } from '@tauri-apps/plugin-store';
+import { LazyStore } from '@tauri-apps/plugin-store';
 import { SETTINGS_FILE, SETTINGS_KEY_VRCHAT_API } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
@@ -36,7 +36,7 @@ import {
   generateStorageCryptoKey,
   serializeStorageCryptoKey,
 } from '../utils/crypto';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 
 const BASE_URL = 'https://api.vrchat.cloud/api/1';
@@ -46,12 +46,25 @@ const MAX_UPLOADED_AVATARS = 1000;
 
 export type VRChatServiceStatus = 'PRE_INIT' | 'LOGGED_OUT' | 'LOGGED_IN';
 
+async function fetch(
+  input: URL | Request | string,
+  init?: RequestInit & ClientOptions
+): Promise<Response> {
+  info(`[VRChat] API Request: ${input}`);
+  try {
+    const response = await tauriFetch(input, init);
+    return response;
+  } catch (e) {
+    error(`[VRChat] HTTP Request Error: ${e}`);
+    throw e;
+  }
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class VRChatService {
-  private http!: Client;
-  private store = new Store(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE);
   private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
   public settings = this._settings.asObservable();
   private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(
@@ -120,7 +133,6 @@ export class VRChatService {
   }
 
   async init() {
-    this.http = await this.patchHttpClient(await getClient());
     // Load settings from disk
     await this.loadSettings();
     // Construct user agent
@@ -204,23 +216,21 @@ export class VRChatService {
     if (!authCookie || (authCookieExpiry && authCookieExpiry < Date.now() / 1000))
       throw new Error('Called verify2FA() before successfully calling login()');
     const headers = this.getDefaultHeaders();
-    const response = await this.http.post(
-      `${BASE_URL}/auth/twofactorauth/${method}/verify`,
-      Body.json({ code }),
-      {
-        headers,
-        responseType: ResponseType.JSON,
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/twofactorauth/${method}/verify`, {
+      method: 'POST',
+      body: JSON.stringify({ code }),
+      headers,
+    });
     // If we received a 401, the code was likely incorrect
+    const responseData = await response.json().catch(() => {});
     if (response.status === 400) {
-      if ((response.data as any)?.verified === false) {
+      if (responseData?.verified === false) {
         warn(`[VRChat] 2FA Verification failed: Invalid code`);
         throw 'INVALID_CODE';
       }
     }
     // If it's not ok, it's unexpected
-    if (!response.ok || (response.data as any)?.verified === false) {
+    if (!response.ok || responseData?.verified === false) {
       error(
         `[VRChat] Received unexpected response from /auth/twofactorauth/${method}/verify: ${JSON.stringify(
           response
@@ -265,11 +275,13 @@ export class VRChatService {
       const body: Record<string, string> = {};
       if (status !== null) body['status'] = status;
       if (statusMessage !== null) body['statusDescription'] = statusMessage;
-      const result = await this.apiCallQueue.queueTask<Response<unknown>>(
+      const result = await this.apiCallQueue.queueTask<Response>(
         {
           typeId: 'STATUS_CHANGE',
           runnable: () => {
-            return this.http.put(`${BASE_URL}/users/${userId}`, Body.json(body), {
+            return fetch(`${BASE_URL}/users/${userId}`, {
+              method: 'PUT',
+              body: JSON.stringify(body),
               headers: this.getDefaultHeaders(),
             });
           },
@@ -321,16 +333,13 @@ export class VRChatService {
     // Send
     info(`[VRChat] Deleting notification 'notificationId'`);
     try {
-      const result = await this.apiCallQueue.queueTask<Response<Notification>>({
+      const result = await this.apiCallQueue.queueTask<Response>({
         typeId: 'DELETE_NOTIFICATION',
         runnable: () => {
-          return this.http.put(
-            `${BASE_URL}/auth/user/notifications/${notificationId}/hide`,
-            undefined,
-            {
-              headers: this.getDefaultHeaders(),
-            }
-          );
+          return fetch(`${BASE_URL}/auth/user/notifications/${notificationId}/hide`, {
+            method: 'PUT',
+            headers: this.getDefaultHeaders(),
+          });
         },
       });
       if (result.error) throw result.error;
@@ -354,10 +363,12 @@ export class VRChatService {
       throw new Error('Cannot invite a user when the current world instance is unknown');
     }
     // Send
-    await this.apiCallQueue.queueTask<Response<Notification>>({
+    await this.apiCallQueue.queueTask<Response>({
       typeId: 'INVITE',
       runnable: () => {
-        return this.http.post(`${BASE_URL}/invite/${inviteeId}`, Body.json({ instanceId }), {
+        return fetch(`${BASE_URL}/invite/${inviteeId}`, {
+          body: JSON.stringify({ instanceId }),
+          method: 'POST',
           headers: this.getDefaultHeaders(),
         });
       },
@@ -421,7 +432,9 @@ export class VRChatService {
     await this.apiCallQueue.queueTask({
       typeId: 'SELECT_AVATAR',
       runnable: () => {
-        return this.http.put(`${BASE_URL}/avatars/${avatarId}/select`, Body.json({}), {
+        return fetch(`${BASE_URL}/avatars/${avatarId}/select`, {
+          method: 'PUT',
+          body: JSON.stringify({}),
           headers: this.getDefaultHeaders(),
         });
       },
@@ -587,16 +600,16 @@ export class VRChatService {
     let rateLimitRetries = 0;
     for (let offset = 0; offset < options.maxEntries!; offset += nextOffset) {
       nextOffset = 100;
-      const response = await this.apiCallQueue.queueTask<Response<T[]>>({
+      const response = await this.apiCallQueue.queueTask<Response>({
         typeId: options.apiCallTypeId,
         runnable: () => {
-          return this.http.get(options.url, {
+          const queryParams = new URLSearchParams({
+            offset: offset.toString(),
+            n: '100',
+            ...options.query,
+          }).toString();
+          return fetch(`${options.url}?${queryParams}`, {
             headers: this.getDefaultHeaders(),
-            query: {
-              offset: offset.toString(),
-              n: '100',
-              ...options.query,
-            },
           });
         },
       });
@@ -619,9 +632,10 @@ export class VRChatService {
       // Handle results
       if (response.result?.ok) {
         // Add entries to list
-        entries.push(...response.result.data);
+        const data: T[] = await response.result.json();
+        entries.push(...data);
         // If we got some entries, continue fetching
-        if (response.result.data.length > 0) continue;
+        if (data.length > 0) continue;
         break;
       } else {
         throw new Error(
@@ -629,7 +643,7 @@ export class VRChatService {
             (response.result
               ? JSON.stringify({
                   status: response.result.status,
-                  data: response.result.data,
+                  data: response.result.body,
                   error: response.error,
                 })
               : 'No Response: ' + response.error)
@@ -841,17 +855,16 @@ export class VRChatService {
       }
     }
     // Request the current user
-    const response = await this.http.get<CurrentUser | { requiresTwoFactorAuth: string[] }>(
-      `${BASE_URL}/auth/user`,
-      {
-        headers,
-        responseType: ResponseType.JSON,
-      }
-    );
+    const response = await fetch(`${BASE_URL}/auth/user`, {
+      headers,
+    });
+    const responseData: CurrentUser | { requiresTwoFactorAuth: string[] } = await response
+      .json()
+      .catch(() => {});
     // If we received a 401, there is probably an error included
     if (response.status === 401) {
       // Try parse the error message
-      const message: string = (response.data as any)?.error?.message;
+      const message: string = (responseData as any)?.error?.message ?? '';
       // Check for known errors
       switch (message) {
         case '"It looks like you\'re logging in from somewhere new! Check your email for a message from VRChat."':
@@ -877,8 +890,8 @@ export class VRChatService {
     // Process any auth cookie if we get any (even if we still need to verify 2FA)
     await this.parseResponseCookies(response);
     // Handle 2FA required response
-    if (response.data.hasOwnProperty('requiresTwoFactorAuth')) {
-      const data = response.data as { requiresTwoFactorAuth: string[] };
+    if (responseData.hasOwnProperty('requiresTwoFactorAuth')) {
+      const data = responseData as { requiresTwoFactorAuth: string[] };
       const methods = data.requiresTwoFactorAuth.map((method) => method.toLowerCase());
       info(
         `[VRChat] 2FA Required for login. (methods=${JSON.stringify(data.requiresTwoFactorAuth)})`
@@ -893,7 +906,7 @@ export class VRChatService {
       throw '2FA_TOTP_REQUIRED'; // Should never happen
     }
     // Cache the user
-    const user = response.data as CurrentUser;
+    const user = responseData as CurrentUser;
     this._currentUserCache.set(user);
     this._userStatusLastUpdated.next(Date.now());
     // Otherwise, return the fetched user
@@ -909,9 +922,8 @@ export class VRChatService {
     return { Cookie: cookies.join('; '), 'User-Agent': this.userAgent };
   }
 
-  private async parseResponseCookies(response: Response<any>) {
-    if (!response.rawHeaders['set-cookie']) return;
-    const cookieHeaders = response.rawHeaders['set-cookie'];
+  private async parseResponseCookies(response: Response) {
+    const cookieHeaders = response.headers.getSetCookie();
     for (const cookieHeader of cookieHeaders) {
       const cookies = parseSetCookieHeader(cookieHeader);
       for (const cookie of cookies) {
@@ -935,7 +947,7 @@ export class VRChatService {
   }
 
   private async loadSettings() {
-    let settings: VRChatApiSettings | null = await this.store.get<VRChatApiSettings>(
+    let settings: VRChatApiSettings | undefined = await this.store.get<VRChatApiSettings>(
       SETTINGS_KEY_VRCHAT_API
     );
     settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
@@ -972,31 +984,6 @@ export class VRChatService {
   private async saveSettings() {
     await this.store.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
     await this.store.save();
-  }
-
-  private async patchHttpClient(client: Client): Promise<Client> {
-    const isDev = (await getVersion()) === '0.0.0';
-    const next = client.request.bind(client);
-
-    async function requestWrapper<T>(options: HttpOptions): Promise<Response<T>> {
-      info(`[VRChat] API Request: ${options.url}`);
-      if (isDev) console.log(`[DEBUG] [VRChat] API Request: ${options.method} ${options.url}`);
-      try {
-        const response = await next<T>(options);
-        if (isDev)
-          console.log(
-            `[DEBUG] [VRChat] API Response (${response.status}): ${options.method} ${options.url} ` +
-              response
-          );
-        return response;
-      } catch (e) {
-        error(`[VRChat] HTTP Request Error: ${e}`);
-        throw e;
-      }
-    }
-
-    client.request = requestWrapper.bind(client);
-    return client;
   }
 
   receivedUserUpdate() {

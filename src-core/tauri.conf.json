@@ -116,6 +116,11 @@
         }
       ]
     },
+    "deep-link": {
+      "desktop": {
+        "schemes": ["oyasumivr"]
+      }
+    },
     "updater": {
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEVGOEI4QTQ2Rjk1NEMwNTUKUldSVndGVDVSb3FMN3hIanNsbVVDdVk1MkE2MVpVWERJeTdUVVRzZ1JpanVQTmNXYWJGVHhUSVIK",
       "endpoints": [
