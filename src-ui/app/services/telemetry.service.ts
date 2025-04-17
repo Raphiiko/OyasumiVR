@@ -37,6 +37,7 @@ export class TelemetryService {
         map((settings) => settings.enabled),
         distinctUntilChanged(),
         throttleTime(2000, asyncScheduler, { leading: false, trailing: true }),
+        distinctUntilChanged(),
         switchMap(async (enable) => {
           await invoke('set_telemetry_enabled', { enable });
         })

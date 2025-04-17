@@ -27,6 +27,7 @@
     "core:window:allow-close",
     "core:window:allow-start-dragging",
     "core:window:allow-set-focus",
+    "core:app:allow-default-window-icon",
     "shell:allow-execute",
     "shell:allow-open",
     "dialog:allow-open",
@@ -63,6 +64,7 @@
     "fs:default",
     "shell:default",
     "deep-link:default",
-    "log:default"
+    "log:default",
+    "aptabase:allow-track-event"
   ]
 }

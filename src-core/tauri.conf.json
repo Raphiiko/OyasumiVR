@@ -10,15 +10,8 @@
     "active": true,
     "category": "Utility",
     "copyright": "Copyright (c) 2022 Raphiiko",
-    "targets": [
-      "nsis"
-    ],
-    "resources": [
-      "./openvr_api.dll",
-      "./flags.toml",
-      "./steam_api64.dll",
-      "./resources/**/*"
-    ],
+    "targets": ["nsis"],
+    "resources": ["./openvr_api.dll", "./flags.toml", "./steam_api64.dll", "./resources/**/*"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -85,10 +78,7 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         },
         {
           "name": "overlay-sidecar-mode",
@@ -97,10 +87,7 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         },
         {
           "name": "mdns-sidecar-mode",
@@ -109,10 +96,7 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         }
       ]
     },
@@ -164,12 +148,14 @@
         "useHttpsScheme": false
       }
     ],
-    "trayIcon": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
     "security": {
       "csp": null
+    },
+    "trayIcon": {
+      "id": "oyasumivr-tray",
+      "iconPath": "icons/icon.ico",
+      "showMenuOnLeftClick": false,
+      "tooltip": "OyasumiVR"
     }
   }
 }

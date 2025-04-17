@@ -7110,13 +7110,12 @@ dependencies = [
 
 [[package]]
 name = "tauri-plugin-aptabase"
-version = "1.0.0"
-source = "git+https://github.com/aptabase/tauri-plugin-aptabase#969a2055064b88123760fee59a47aaa533aa4f25"
+version = "0.5.1"
+source = "git+https://github.com/aptabase/tauri-plugin-aptabase?rev=f9f199fe007f95ceace5403c065e9ff99cb08a21#f9f199fe007f95ceace5403c065e9ff99cb08a21"
 dependencies = [
- "futures",
  "log",
  "os_info",
- "rand 0.9.0",
+ "rand 0.8.5",
  "reqwest 0.12.15",
  "serde",
  "serde_json",

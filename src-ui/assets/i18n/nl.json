@@ -1,4 +1,8 @@
 {
+  "systemTray": {
+    "sleepMode": "Slaap Modus",
+    "quit": "Stop OyasumiVR"
+  },
   "about": {
     "author": {
       "role": "Ontwikkelaar"

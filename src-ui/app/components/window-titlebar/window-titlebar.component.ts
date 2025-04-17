@@ -28,9 +28,7 @@ export class WindowTitlebarComponent implements OnInit {
   }
 
   async close() {
-    // In Tauri V1, the appWindow.close() call does not get intercepted by the window close event handler.
-    // This will be changed in Tauri V2, in which this workaround will no longer be necessary: https://github.com/tauri-apps/tauri/issues/5288
-    await invoke('request_app_window_close');
+    await appWindow.close();
   }
 
   protected readonly FLAVOUR = FLAVOUR;

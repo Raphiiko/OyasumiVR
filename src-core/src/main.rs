@@ -19,6 +19,7 @@ mod os;
 mod osc;
 mod overlay_sidecar;
 mod steam;
+mod system_tray;
 mod telemetry;
 mod utils;
 mod vrc_log_parser;
@@ -57,7 +58,7 @@ fn main() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_store::Builder::default().build())
-        // .plugin(configure_tauri_plugin_aptabase())
+        .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             let matches = app.cli().matches().unwrap();
             tauri::async_runtime::block_on(async {
@@ -75,123 +76,9 @@ fn main() {
             Ok(())
         })
         .invoke_handler(configure_command_handlers())
-        .build(tauri::generate_context!())
+        .on_window_event(system_tray::handle_window_events)
+        .run(tauri::generate_context!())
         .expect("An error occurred while running the application")
-        .run(|_, event| match event {
-            // tauri::RunEvent::Exit { .. } => {
-            //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-            //         handler.track_event("app_exited", None);
-            //         handler.flush_events_blocking();
-            //     }
-            // }
-            _ => {}
-        })
-}
-
-async fn load_configs() {
-    match Config::builder()
-        .add_source(config::File::with_name("flags"))
-        .build()
-    {
-        Ok(flags) => {
-            *FLAGS.lock().await = Some(flags);
-        }
-        Err(e) => match e {
-            config::ConfigError::NotFound(_) => {
-                warn!("[Core] Could not find flags config. Using default values.");
-            }
-            _ => {
-                warn!("[Core] Could not load flags config: {:#?}", e);
-            }
-        },
-    };
-}
-
-fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
-    tauri::generate_handler![
-        openvr::commands::openvr_get_devices,
-        openvr::commands::openvr_status,
-        openvr::commands::openvr_get_analog_gain,
-        openvr::commands::openvr_set_analog_gain,
-        openvr::commands::openvr_get_supersample_scale,
-        openvr::commands::openvr_set_supersample_scale,
-        openvr::commands::openvr_get_fade_distance,
-        openvr::commands::openvr_set_fade_distance,
-        openvr::commands::openvr_set_image_brightness,
-        openvr::commands::openvr_launch_binding_configuration,
-        openvr::commands::openvr_get_binding_origins,
-        openvr::commands::openvr_is_dashboard_visible,
-        openvr::commands::openvr_reregister_manifest,
-        openvr::commands::openvr_set_init_delay_fix,
-        openvr::commands::openvr_set_analog_color_temp,
-        hardware::beyond::commands::bigscreen_beyond_is_connected,
-        hardware::beyond::commands::bigscreen_beyond_set_brightness,
-        hardware::beyond::commands::bigscreen_beyond_set_led_color,
-        hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
-        hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
-        os::commands::run_command,
-        os::commands::play_sound,
-        os::commands::show_in_folder,
-        os::commands::quit_steamvr,
-        os::commands::get_windows_power_policies,
-        os::commands::set_windows_power_policy,
-        os::commands::active_windows_power_policy,
-        os::commands::windows_shutdown,
-        os::commands::windows_reboot,
-        os::commands::windows_sleep,
-        os::commands::windows_logout,
-        os::commands::windows_hibernate,
-        os::commands::get_audio_devices,
-        os::commands::set_audio_device_volume,
-        os::commands::set_audio_device_mute,
-        os::commands::set_mic_activity_device_id,
-        os::commands::set_hardware_mic_activity_enabled,
-        os::commands::set_hardware_mic_activivation_threshold,
-        os::commands::is_vrchat_active,
-        osc::commands::osc_send_command,
-        osc::commands::osc_valid_addr,
-        osc::commands::start_osc_server,
-        osc::commands::stop_osc_server,
-        osc::commands::get_vrchat_osc_address,
-        osc::commands::get_vrchat_oscquery_address,
-        osc::commands::add_osc_method,
-        osc::commands::set_osc_method_value,
-        osc::commands::set_osc_receive_address_whitelist,
-        elevated_sidecar::commands::elevated_sidecar_started,
-        elevated_sidecar::commands::start_elevated_sidecar,
-        elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
-        elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
-        overlay_sidecar::commands::start_overlay_sidecar,
-        overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
-        overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
-        vrc_log_parser::commands::init_vrc_log_watcher,
-        discord::commands::discord_update_activity,
-        discord::commands::discord_clear_activity,
-        http::commands::get_http_server_port,
-        image_cache::commands::clean_image_cache,
-        lighthouse::commands::lighthouse_start_scan,
-        lighthouse::commands::lighthouse_get_devices,
-        lighthouse::commands::lighthouse_set_device_power_state,
-        lighthouse::commands::lighthouse_get_device_power_state,
-        lighthouse::commands::lighthouse_get_status,
-        lighthouse::commands::lighthouse_get_scanning_status,
-        lighthouse::commands::lighthouse_reset,
-        steam::commands::steam_active,
-        steam::commands::steam_achievement_get,
-        steam::commands::steam_achievement_set,
-        commands::log_utils::clear_log_files,
-        commands::afterburner::msi_afterburner_set_profile,
-        commands::notifications::xsoverlay_send_message,
-        commands::splash::close_splashscreen,
-        commands::nvml::nvml_status,
-        commands::nvml::nvml_get_devices,
-        commands::nvml::nvml_set_power_management_limit,
-        commands::debug::open_dev_tools,
-        commands::time::get_sunrise_sunset_time,
-        grpc::commands::get_core_grpc_port,
-        grpc::commands::get_core_grpc_web_port,
-        telemetry::commands::set_telemetry_enabled,
-    ]
 }
 
 fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
@@ -343,6 +230,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     overlay_sidecar::init().await;
     // Initialize Discord module
     discord::init().await;
+    // Initialize system tray
+    system_tray::init().await;
     // Setup start of minute cronjob
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
@@ -365,6 +254,7 @@ async fn app_setup(app_handle: tauri::AppHandle) {
             "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
         );
     }
+
     // Start profiling if we're in debug mode
     #[cfg(debug_assertions)]
     {
@@ -377,6 +267,113 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     }
 }
 
+async fn load_configs() {
+    match Config::builder()
+        .add_source(config::File::with_name("flags"))
+        .build()
+    {
+        Ok(flags) => {
+            *FLAGS.lock().await = Some(flags);
+        }
+        Err(e) => match e {
+            config::ConfigError::NotFound(_) => {
+                warn!("[Core] Could not find flags config. Using default values.");
+            }
+            _ => {
+                warn!("[Core] Could not load flags config: {:#?}", e);
+            }
+        },
+    };
+}
+
 fn on_cron_minute_start(_: &str) {
     tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+}
+
+fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
+    tauri::generate_handler![
+        openvr::commands::openvr_get_devices,
+        openvr::commands::openvr_status,
+        openvr::commands::openvr_get_analog_gain,
+        openvr::commands::openvr_set_analog_gain,
+        openvr::commands::openvr_get_supersample_scale,
+        openvr::commands::openvr_set_supersample_scale,
+        openvr::commands::openvr_get_fade_distance,
+        openvr::commands::openvr_set_fade_distance,
+        openvr::commands::openvr_set_image_brightness,
+        openvr::commands::openvr_launch_binding_configuration,
+        openvr::commands::openvr_get_binding_origins,
+        openvr::commands::openvr_is_dashboard_visible,
+        openvr::commands::openvr_reregister_manifest,
+        openvr::commands::openvr_set_init_delay_fix,
+        openvr::commands::openvr_set_analog_color_temp,
+        hardware::beyond::commands::bigscreen_beyond_is_connected,
+        hardware::beyond::commands::bigscreen_beyond_set_brightness,
+        hardware::beyond::commands::bigscreen_beyond_set_led_color,
+        hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
+        hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
+        os::commands::run_command,
+        os::commands::play_sound,
+        os::commands::show_in_folder,
+        os::commands::quit_steamvr,
+        os::commands::get_windows_power_policies,
+        os::commands::set_windows_power_policy,
+        os::commands::active_windows_power_policy,
+        os::commands::windows_shutdown,
+        os::commands::windows_reboot,
+        os::commands::windows_sleep,
+        os::commands::windows_logout,
+        os::commands::windows_hibernate,
+        os::commands::get_audio_devices,
+        os::commands::set_audio_device_volume,
+        os::commands::set_audio_device_mute,
+        os::commands::set_mic_activity_device_id,
+        os::commands::set_hardware_mic_activity_enabled,
+        os::commands::set_hardware_mic_activivation_threshold,
+        os::commands::is_vrchat_active,
+        osc::commands::osc_send_command,
+        osc::commands::osc_valid_addr,
+        osc::commands::start_osc_server,
+        osc::commands::stop_osc_server,
+        osc::commands::get_vrchat_osc_address,
+        osc::commands::get_vrchat_oscquery_address,
+        osc::commands::add_osc_method,
+        osc::commands::set_osc_method_value,
+        osc::commands::set_osc_receive_address_whitelist,
+        elevated_sidecar::commands::elevated_sidecar_started,
+        elevated_sidecar::commands::start_elevated_sidecar,
+        elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
+        elevated_sidecar::commands::elevated_sidecar_get_grpc_port,
+        overlay_sidecar::commands::start_overlay_sidecar,
+        overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
+        overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
+        system_tray::commands::set_close_to_system_tray,
+        vrc_log_parser::commands::init_vrc_log_watcher,
+        discord::commands::discord_update_activity,
+        discord::commands::discord_clear_activity,
+        http::commands::get_http_server_port,
+        image_cache::commands::clean_image_cache,
+        lighthouse::commands::lighthouse_start_scan,
+        lighthouse::commands::lighthouse_get_devices,
+        lighthouse::commands::lighthouse_set_device_power_state,
+        lighthouse::commands::lighthouse_get_device_power_state,
+        lighthouse::commands::lighthouse_get_status,
+        lighthouse::commands::lighthouse_get_scanning_status,
+        lighthouse::commands::lighthouse_reset,
+        steam::commands::steam_active,
+        steam::commands::steam_achievement_get,
+        steam::commands::steam_achievement_set,
+        commands::log_utils::clear_log_files,
+        commands::afterburner::msi_afterburner_set_profile,
+        commands::notifications::xsoverlay_send_message,
+        commands::splash::close_splashscreen,
+        commands::nvml::nvml_status,
+        commands::nvml::nvml_get_devices,
+        commands::nvml::nvml_set_power_management_limit,
+        commands::debug::open_dev_tools,
+        commands::time::get_sunrise_sunset_time,
+        grpc::commands::get_core_grpc_port,
+        grpc::commands::get_core_grpc_web_port,
+        telemetry::commands::set_telemetry_enabled,
+    ]
 }

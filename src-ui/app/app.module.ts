@@ -511,13 +511,13 @@ export class AppModule {
       await info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
+      await error(`[Init] Running '${action}' failed: ` + e);
       await trackEvent('app_init_error', {
         action,
         error: `${e}`,
         timeout: TIMEOUT,
         metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
       });
-      await error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
   }
@@ -539,13 +539,13 @@ export class AppModule {
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
             this.logInit('EventLogService initialization', this.eventLog.init()),
-            this.logInit('SystemTrayService initialization', this.systemTrayService.init()),
             this.logInit(
               'AutomationConfigService initialization',
               this.automationConfigService.init()
             ),
             this.logInit('DeepLinkService initialization', this.deepLinkService.init()),
           ]);
+          await this.logInit('SystemTrayService initialization', this.systemTrayService.init());
           // Initialize telemetry
           await Promise.all([
             this.logInit('TelemetryService initialization', this.telemetryService.init()),
@@ -823,10 +823,11 @@ export class AppModule {
     // Close the splash screen after initialization
     await invoke('close_splashscreen');
     // Show the main window
-    // TODO: Only do this if start in tray is not enabled
-    const window = getCurrentWindow();
-    await window.show();
-    await window.setFocus();
+    if (!this.appSettingsService.settingsSync.startInSystemTray) {
+      const window = getCurrentWindow();
+      await window.show();
+      await window.setFocus();
+    }
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);
     if (!settings.userLanguagePicked) {
