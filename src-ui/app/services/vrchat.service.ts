@@ -64,7 +64,7 @@ async function fetch(
   providedIn: 'root',
 })
 export class VRChatService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
   public settings = this._settings.asObservable();
   private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(

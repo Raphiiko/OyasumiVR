@@ -42,8 +42,8 @@ import { firstValueFrom } from 'rxjs';
   standalone: false,
 })
 export class SettingsAdvancedViewComponent {
-  private settingsStore = new LazyStore(SETTINGS_FILE);
-  private cacheStore = new LazyStore(CACHE_FILE);
+  private settingsStore = new LazyStore(SETTINGS_FILE, { autoSave: false });
+  private cacheStore = new LazyStore(CACHE_FILE, { autoSave: false });
   persistentStorageItems: Array<{
     key: string;
   }> = [

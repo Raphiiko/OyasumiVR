@@ -62,7 +62,7 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
   providedIn: 'root',
 })
 export class PulsoidService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private csrfCache: string[] = [];
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;

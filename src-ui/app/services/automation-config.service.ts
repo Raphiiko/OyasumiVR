@@ -17,7 +17,7 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class AutomationConfigService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _configs: BehaviorSubject<AutomationConfigs> = new BehaviorSubject<AutomationConfigs>(
     AUTOMATION_CONFIGS_DEFAULT
   );

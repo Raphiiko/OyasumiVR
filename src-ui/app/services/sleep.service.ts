@@ -33,7 +33,7 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class SleepService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _mode: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
   public mode: Observable<boolean> = this._mode.asObservable().pipe(
     filter((v) => v !== null),

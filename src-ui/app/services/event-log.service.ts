@@ -18,7 +18,7 @@ const MAX_LOG_AGE = 48 * 60 * 60 * 1000;
   providedIn: 'root',
 })
 export class EventLogService {
-  private store = new LazyStore(EVENT_LOG_FILE);
+  private store = new LazyStore(EVENT_LOG_FILE, { autoSave: false });
   private _eventLog: BehaviorSubject<EventLog> = new BehaviorSubject<EventLog>(
     structuredClone(EVENT_LOG_DEFAULT)
   );

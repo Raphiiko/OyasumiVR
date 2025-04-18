@@ -16,7 +16,7 @@ const THEMING_SETTINGS_DEFAULT: ThemingSettings = {
   providedIn: 'root',
 })
 export class ThemeService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _settings: ThemingSettings = { ...THEMING_SETTINGS_DEFAULT };
   public get settings(): ThemingSettings {
     return { ...this._settings };

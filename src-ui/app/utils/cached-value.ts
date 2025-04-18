@@ -9,7 +9,7 @@ interface CachedValueEntry<T> {
 }
 
 export class CachedValue<T> {
-  private static store = new LazyStore(CACHE_FILE);
+  private static store = new LazyStore(CACHE_FILE, { autoSave: false });
   lastSet = -1;
   private initialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
@@ -45,6 +45,7 @@ export class CachedValue<T> {
   }
 
   async clear() {
+    if (this.value === undefined && this.lastSet === -1) return;
     this.value = undefined;
     this.lastSet = -1;
     await this.clearFromDisk();
@@ -52,7 +53,7 @@ export class CachedValue<T> {
 
   get(): T | undefined {
     const ttlExpired = this.lastSet + this.ttl < Date.now();
-    if (ttlExpired && this.persistenceKey) this.clearFromDisk();
+    if (ttlExpired && this.persistenceKey) this.clear();
     return ttlExpired ? undefined : this.value;
   }
 

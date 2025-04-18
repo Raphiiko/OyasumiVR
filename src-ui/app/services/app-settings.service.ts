@@ -27,7 +27,7 @@ import {
   providedIn: 'root',
 })
 export class AppSettingsService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _settings: BehaviorSubject<AppSettings> = new BehaviorSubject<AppSettings>(
     APP_SETTINGS_DEFAULT
   );

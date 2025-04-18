@@ -20,7 +20,7 @@ import { trackEvent } from '@aptabase/tauri';
   providedIn: 'root',
 })
 export class TelemetryService {
-  private store = new LazyStore(SETTINGS_FILE);
+  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _settings: BehaviorSubject<TelemetrySettings> = new BehaviorSubject<TelemetrySettings>(
     TELEMETRY_SETTINGS_DEFAULT
   );
