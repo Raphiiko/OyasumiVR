@@ -3,6 +3,7 @@ import { message, open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
   CACHE_FILE,
+  CACHE_STORE,
   SETTINGS_FILE,
   SETTINGS_KEY_APP_SETTINGS,
   SETTINGS_KEY_AUTOMATION_CONFIGS,
@@ -11,6 +12,7 @@ import {
   SETTINGS_KEY_TELEMETRY_SETTINGS,
   SETTINGS_KEY_THEMING_SETTINGS,
   SETTINGS_KEY_VRCHAT_API,
+  SETTINGS_STORE,
 } from '../../../../globals';
 import { LazyStore, Store } from '@tauri-apps/plugin-store';
 import { Router } from '@angular/router';
@@ -42,8 +44,6 @@ import { firstValueFrom } from 'rxjs';
   standalone: false,
 })
 export class SettingsAdvancedViewComponent {
-  private settingsStore = new LazyStore(SETTINGS_FILE, { autoSave: false });
-  private cacheStore = new LazyStore(CACHE_FILE, { autoSave: false });
   persistentStorageItems: Array<{
     key: string;
   }> = [
@@ -107,7 +107,7 @@ export class SettingsAdvancedViewComponent {
   }
 
   async clearStore(storeType: 'SETTINGS' | 'CACHE', key?: string) {
-    const store = storeType === 'SETTINGS' ? this.settingsStore : this.cacheStore;
+    const store = storeType === 'SETTINGS' ? SETTINGS_STORE : CACHE_STORE;
     if (!key) {
       await store.clear();
     } else {
@@ -186,28 +186,28 @@ export class SettingsAdvancedViewComponent {
             switch (item) {
               case 'appSettings':
                 info('[Settings] Clearing app settings');
-                await this.settingsStore.delete(SETTINGS_KEY_APP_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 askForRelaunch = true;
                 break;
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
-                await this.settingsStore.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await this.settingsStore.delete(SETTINGS_KEY_SLEEP_MODE);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
                 askForRelaunch = true;
                 break;
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
-                await this.settingsStore.delete(SETTINGS_KEY_VRCHAT_API);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 askForRelaunch = true;
                 break;
               case 'integrations':
                 info('[Settings] Clearing integration data');
-                await this.settingsStore.delete(SETTINGS_KEY_PULSOID_API);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 askForRelaunch = true;
                 break;
               case 'appCache':
                 info('[Settings] Clearing application cache');
-                await this.cacheStore.clear();
+                await CACHE_STORE.clear();
                 askForRelaunch = true;
                 break;
               case 'imageCache':
@@ -216,8 +216,8 @@ export class SettingsAdvancedViewComponent {
                 break;
               case 'miscData':
                 info('[Settings] Clearing misc data');
-                await this.settingsStore.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await this.settingsStore.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
@@ -230,8 +230,8 @@ export class SettingsAdvancedViewComponent {
             }
           })
         );
-        await this.settingsStore.save();
-        await this.cacheStore.save();
+        await SETTINGS_STORE.save();
+        await CACHE_STORE.save();
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {

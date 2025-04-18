@@ -13,8 +13,7 @@ import {
   Subject,
 } from 'rxjs';
 import { SleepModeStatusChangeReason } from '../models/sleep-mode';
-import { SETTINGS_FILE, SETTINGS_KEY_SLEEP_MODE } from '../globals';
-import { LazyStore } from '@tauri-apps/plugin-store';
+import { SETTINGS_KEY_SLEEP_MODE, SETTINGS_STORE } from '../globals';
 import { SleepingPose } from '../models/sleeping-pose';
 import { uniq } from 'lodash';
 import { OpenVRService } from './openvr.service';
@@ -33,7 +32,6 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class SleepService {
-  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _mode: BehaviorSubject<boolean | null> = new BehaviorSubject<boolean | null>(null);
   public mode: Observable<boolean> = this._mode.asObservable().pipe(
     filter((v) => v !== null),
@@ -72,7 +70,7 @@ export class SleepService {
     let mode: boolean;
     switch (settings.sleepModeStartupBehaviour) {
       case 'PERSIST':
-        mode = (await this.store.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false;
+        mode = (await SETTINGS_STORE.get<boolean>(SETTINGS_KEY_SLEEP_MODE)) || false;
         break;
       case 'ACTIVE':
         mode = true;
@@ -109,8 +107,8 @@ export class SleepService {
       reason: reason,
     } as EventLogSleepModeEnabled);
     this._mode.next(true);
-    await this.store.set(SETTINGS_KEY_SLEEP_MODE, true);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, true);
+    await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_ENABLED')) {
       await this.notifications.send(
         this.translate.instant('notifications.sleepModeEnabled.content')
@@ -127,8 +125,8 @@ export class SleepService {
       reason,
     } as EventLogSleepModeDisabled);
     this._mode.next(false);
-    await this.store.set(SETTINGS_KEY_SLEEP_MODE, false);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_SLEEP_MODE, false);
+    await SETTINGS_STORE.save();
     if (await this.notifications.notificationTypeEnabled('SLEEP_MODE_DISABLED')) {
       await this.notifications.send(
         this.translate.instant('notifications.sleepModeDisabled.content')

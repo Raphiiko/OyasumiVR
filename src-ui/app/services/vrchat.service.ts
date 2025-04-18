@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { ClientOptions, fetch as tauriFetch } from '@tauri-apps/plugin-http';
 import type { CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
-import { LazyStore } from '@tauri-apps/plugin-store';
-import { SETTINGS_FILE, SETTINGS_KEY_VRCHAT_API } from '../globals';
+import { SETTINGS_KEY_VRCHAT_API, SETTINGS_STORE } from '../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../migrations/vrchat-api-settings.migrations';
 import {
@@ -64,7 +63,6 @@ async function fetch(
   providedIn: 'root',
 })
 export class VRChatService {
-  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private _settings = new BehaviorSubject<VRChatApiSettings>(VRCHAT_API_SETTINGS_DEFAULT);
   public settings = this._settings.asObservable();
   private _status: BehaviorSubject<VRChatServiceStatus> = new BehaviorSubject<VRChatServiceStatus>(
@@ -947,7 +945,7 @@ export class VRChatService {
   }
 
   private async loadSettings() {
-    let settings: VRChatApiSettings | undefined = await this.store.get<VRChatApiSettings>(
+    let settings: VRChatApiSettings | undefined = await SETTINGS_STORE.get<VRChatApiSettings>(
       SETTINGS_KEY_VRCHAT_API
     );
     settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
@@ -982,8 +980,8 @@ export class VRChatService {
   }
 
   private async saveSettings() {
-    await this.store.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_VRCHAT_API, this._settings.value);
+    await SETTINGS_STORE.save();
   }
 
   receivedUserUpdate() {

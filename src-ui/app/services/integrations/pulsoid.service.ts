@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import {
   PULSOID_CLIENT_ID,
   PULSOID_REDIRECT_URI,
-  SETTINGS_FILE,
   SETTINGS_KEY_PULSOID_API,
+  SETTINGS_STORE,
 } from '../../globals';
 import {} from '@tauri-apps/api/core';
 import { ModalService } from '../modal.service';
@@ -26,7 +26,6 @@ import {
   timeout,
 } from 'rxjs';
 import { fetch } from '@tauri-apps/plugin-http';
-import { LazyStore } from '@tauri-apps/plugin-store';
 
 import {
   PULSOID_API_SETTINGS_DEFAULT,
@@ -62,7 +61,6 @@ export type HeartbeatRecord = [number, number]; // [timestamp, heartRate]
   providedIn: 'root',
 })
 export class PulsoidService {
-  private store = new LazyStore(SETTINGS_FILE, { autoSave: false });
   private csrfCache: string[] = [];
   private settings = new BehaviorSubject<PulsoidApiSettings>(PULSOID_API_SETTINGS_DEFAULT);
   private socket?: WebSocket;
@@ -246,7 +244,7 @@ export class PulsoidService {
   }
 
   private async loadSettings() {
-    let settings: PulsoidApiSettings | undefined = await this.store.get<PulsoidApiSettings>(
+    let settings: PulsoidApiSettings | undefined = await SETTINGS_STORE.get<PulsoidApiSettings>(
       SETTINGS_KEY_PULSOID_API
     );
     settings = settings ? migratePulsoidApiSettings(settings) : this.settings.value;
@@ -269,8 +267,8 @@ export class PulsoidService {
   }
 
   private async saveSettings() {
-    await this.store.set(SETTINGS_KEY_PULSOID_API, this.settings.value);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_PULSOID_API, this.settings.value);
+    await SETTINGS_STORE.save();
   }
 
   private async manageSocketConnection() {
