@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { listen } from '@tauri-apps/api/event';
 import { info, warn } from '@tauri-apps/plugin-log';
 import { PulsoidService } from './integrations/pulsoid.service';
 import { onOpenUrl } from '@tauri-apps/plugin-deep-link';

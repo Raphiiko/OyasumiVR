@@ -39,9 +39,11 @@
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>systemMicMuteAutomations.stateAutomations.onSleepModeEnable.title</span>
               <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepModeEnable.description</span
+                >systemMicMuteAutomations.stateAutomations.onSleepModeEnable.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.stateAutomations.onSleepModeEnable.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -56,11 +58,11 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.title</span
-            >
               <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.description</span
+                >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.stateAutomations.onSleepModeDisable.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -75,11 +77,11 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >systemMicMuteAutomations.stateAutomations.onSleepPreparation.title</span
-            >
               <span translate
-              >systemMicMuteAutomations.stateAutomations.onSleepPreparation.description</span
+                >systemMicMuteAutomations.stateAutomations.onSleepPreparation.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.stateAutomations.onSleepPreparation.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -169,11 +171,11 @@
             </div>
             <div class="setting-row" [class.disabled]="!config.overlayMuteIndicator">
               <div class="setting-row-label" translate>
-              <span translate
-              >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title</span
-              >
                 <span translate
-                >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.description</span
+                  >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.title</span
+                >
+                <span translate
+                  >systemMicMuteAutomations.overlayIndicator.voiceActivityMode.description</span
                 >
               </div>
               <div class="setting-row-action">
@@ -193,11 +195,11 @@
               *ngIf="config.voiceActivationMode === 'HARDWARE'"
             >
               <div class="setting-row-label" translate>
-              <span translate
-              >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title</span
-              >
                 <span translate
-                >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.description</span
+                  >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.title</span
+                >
+                <span translate
+                  >systemMicMuteAutomations.overlayIndicator.hardwareVoiceActivityThreshold.description</span
                 >
               </div>
               <div class="setting-row-action">
@@ -248,7 +250,9 @@
             <div class="setting-row" [class.disabled]="!config.controllerBinding">
               <div class="setting-row-label" translate>
                 <span translate>systemMicMuteAutomations.controllerBinding.binding.title</span>
-                <span translate>systemMicMuteAutomations.controllerBinding.binding.description</span>
+                <span translate
+                  >systemMicMuteAutomations.controllerBinding.binding.description</span
+                >
               </div>
               <div class="setting-row-action">
                 <app-controller-binding
@@ -275,17 +279,17 @@
               <div class="setting-row-label" translate>
                 <span translate>systemMicMuteAutomations.controllerBinding.currentMode.title</span>
                 <span translate
-                >systemMicMuteAutomations.controllerBinding.currentMode.description</span
+                  >systemMicMuteAutomations.controllerBinding.currentMode.description</span
                 >
               </div>
               <div class="setting-row-action">
-              <span class="current-controller-behavior"
-              ><b>{{
-                  'systemMicMuteAutomations.controllerBinding.currentMode.' +
-                  (systemMicMuteAutomationService.effectiveControllerBehaviour | async)
-                    | translate
-                }}</b></span
-              >
+                <span class="current-controller-behavior"
+                  ><b>{{
+                    'systemMicMuteAutomations.controllerBinding.currentMode.' +
+                      (systemMicMuteAutomationService.effectiveControllerBehaviour | async)
+                      | translate
+                  }}</b></span
+                >
               </div>
             </div>
             <div class="setting-row" [class.disabled]="!config.controllerBinding">
@@ -307,16 +311,16 @@
           </div>
         </div>
         <h3 @fade *ngIf="config.controllerBinding" translate
-        >systemMicMuteAutomations.controllerBinding.automations</h3
+          >systemMicMuteAutomations.controllerBinding.automations</h3
         >
         <div class="settings" @fade *ngIf="config.controllerBinding">
           <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
-            <span translate
-            >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title</span
-            >
               <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description</span
+                >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.controllerBinding.onSleepModeEnable.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -326,18 +330,18 @@
                 [items]="controlButtonBehaviorAutomationOptions"
                 [selected]="onSleepEnableControlButtonBehaviorOption"
                 (selectedChange)="
-                onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_ENABLE', $event)
-              "
+                  onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_ENABLE', $event)
+                "
               ></app-select-box>
             </div>
           </div>
           <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
-            <span translate
-            >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title</span
-            >
               <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description</span
+                >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.controllerBinding.onSleepModeDisable.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -348,18 +352,18 @@
                 [items]="controlButtonBehaviorAutomationOptions"
                 [selected]="onSleepDisableControlButtonBehaviorOption"
                 (selectedChange)="
-                onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_DISABLE', $event)
-              "
+                  onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_DISABLE', $event)
+                "
               ></app-select-box>
             </div>
           </div>
           <div class="setting-row" [class.disabled]="!config.controllerBinding">
             <div class="setting-row-label" translate>
-            <span translate
-            >systemMicMuteAutomations.controllerBinding.onSleepPreparation.title</span
-            >
               <span translate
-              >systemMicMuteAutomations.controllerBinding.onSleepPreparation.description</span
+                >systemMicMuteAutomations.controllerBinding.onSleepPreparation.title</span
+              >
+              <span translate
+                >systemMicMuteAutomations.controllerBinding.onSleepPreparation.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -370,8 +374,8 @@
                 [items]="controlButtonBehaviorAutomationOptions"
                 [selected]="onSleepPreparationControlButtonBehaviorOption"
                 (selectedChange)="
-                onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_PREPARATION', $event)
-              "
+                  onChangeControlButtonBehaviorAutomationOption('ON_SLEEP_PREPARATION', $event)
+                "
               ></app-select-box>
             </div>
           </div>

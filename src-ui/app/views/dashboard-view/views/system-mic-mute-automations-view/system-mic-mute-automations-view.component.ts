@@ -20,11 +20,11 @@ import { SliderSettingComponent } from '../../../../components/slider-setting/sl
 import { listen, UnlistenFn } from '@tauri-apps/api/event';
 
 @Component({
-    selector: 'app-system-mic-mute-automations-view',
-    templateUrl: './system-mic-mute-automations-view.component.html',
-    styleUrls: ['./system-mic-mute-automations-view.component.scss'],
-    animations: [vshrink(), fade()],
-    standalone: false
+  selector: 'app-system-mic-mute-automations-view',
+  templateUrl: './system-mic-mute-automations-view.component.html',
+  styleUrls: ['./system-mic-mute-automations-view.component.scss'],
+  animations: [vshrink(), fade()],
+  standalone: false,
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
   config: SystemMicMuteAutomationsConfig = structuredClone(

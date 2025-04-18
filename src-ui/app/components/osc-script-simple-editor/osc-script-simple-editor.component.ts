@@ -22,11 +22,11 @@ interface ValidationError {
 }
 
 @Component({
-    selector: 'app-osc-script-simple-editor',
-    templateUrl: './osc-script-simple-editor.component.html',
-    styleUrls: ['./osc-script-simple-editor.component.scss'],
-    animations: [vshrink(), noop(), hshrink(), fade()],
-    standalone: false
+  selector: 'app-osc-script-simple-editor',
+  templateUrl: './osc-script-simple-editor.component.html',
+  styleUrls: ['./osc-script-simple-editor.component.scss'],
+  animations: [vshrink(), noop(), hshrink(), fade()],
+  standalone: false,
 })
 export class OscScriptSimpleEditorComponent implements OnInit {
   private validationTrigger: Subject<void> = new Subject<void>();

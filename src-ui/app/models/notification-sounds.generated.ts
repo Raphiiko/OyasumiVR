@@ -1,5 +1,5 @@
 /* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */
-export type NotificationSound = 
+export type NotificationSound =
   | 'material_alarm_gentle'
   | 'material_alarm_gentle_short_1'
   | 'material_alarm_gentle_short_2'

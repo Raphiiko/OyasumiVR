@@ -11,15 +11,15 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-primary btn-copy" translate (click)="copyToClipboard()">
-            <span @hshrink *ngIf="!copiedToClipboard.includes('ALL_DATA')">
-              <i class="material-icons">copy_all</i>
-              <span translate>settings.statusInfo.copy.action</span>
-            </span>
+              <span @hshrink *ngIf="!copiedToClipboard.includes('ALL_DATA')">
+                <i class="material-icons">copy_all</i>
+                <span translate>settings.statusInfo.copy.action</span>
+              </span>
               <i
                 class="material-icons success"
                 *ngIf="copiedToClipboard.includes('ALL_DATA')"
                 @hshrink
-              >check</i
+                >check</i
               >
             </button>
           </div>
@@ -33,15 +33,19 @@
             <div class="setting-row-action"></div>
           </div>
           <div class="setting-row-group">
-            <div class="setting-row" [class.compact]="compact" *ngFor="let entry of category.entries">
+            <div
+              class="setting-row"
+              [class.compact]="compact"
+              *ngFor="let entry of category.entries"
+            >
               <div class="setting-row-label" translate>
                 <span>{{ entry.key | tsTranslate }}</span>
                 <span></span>
               </div>
               <div class="setting-row-action">
-              <span
-              ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
-              >
+                <span
+                  ><b>{{ (entry.value | async) ?? '' | tsTranslate }}</b></span
+                >
               </div>
             </div>
           </div>

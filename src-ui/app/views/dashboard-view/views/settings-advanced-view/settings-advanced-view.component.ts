@@ -2,9 +2,7 @@ import { Component } from '@angular/core';
 import { message, open as openFile } from '@tauri-apps/plugin-dialog';
 import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
-  CACHE_FILE,
   CACHE_STORE,
-  SETTINGS_FILE,
   SETTINGS_KEY_APP_SETTINGS,
   SETTINGS_KEY_AUTOMATION_CONFIGS,
   SETTINGS_KEY_PULSOID_API,
@@ -14,7 +12,6 @@ import {
   SETTINGS_KEY_VRCHAT_API,
   SETTINGS_STORE,
 } from '../../../../globals';
-import { LazyStore, Store } from '@tauri-apps/plugin-store';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { error, info } from '@tauri-apps/plugin-log';

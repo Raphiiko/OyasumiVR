@@ -22,11 +22,11 @@ import { Router } from '@angular/router';
 import { fade, vshrink } from '../../../../../../utils/animations';
 
 @Component({
-    selector: 'app-shutdown-automations-settings-tab',
-    templateUrl: './shutdown-automations-settings-tab.component.html',
-    styleUrls: ['./shutdown-automations-settings-tab.component.scss'],
-    animations: [fade(), vshrink()],
-    standalone: false
+  selector: 'app-shutdown-automations-settings-tab',
+  templateUrl: './shutdown-automations-settings-tab.component.html',
+  styleUrls: ['./shutdown-automations-settings-tab.component.scss'],
+  animations: [fade(), vshrink()],
+  standalone: false,
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {
   protected config: ShutdownAutomationsConfig = structuredClone(

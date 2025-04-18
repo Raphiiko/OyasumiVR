@@ -1,5 +1,4 @@
-import { CACHE_FILE, CACHE_STORE } from '../globals';
-import { LazyStore } from '@tauri-apps/plugin-store';
+import { CACHE_STORE } from '../globals';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 
 interface CachedValueEntry<T> {
@@ -18,8 +17,9 @@ export class CachedValue<T> {
       await CACHE_STORE.clear();
     } else {
       // Clear expired cache entries only
-      const entries: [key: string, value: CachedValueEntry<unknown>][] =
-        await CACHE_STORE.entries<CachedValueEntry<unknown>>();
+      const entries: [key: string, value: CachedValueEntry<unknown>][] = await CACHE_STORE.entries<
+        CachedValueEntry<unknown>
+      >();
       for (const entry of entries) {
         const ttlExpired = entry[1].lastSet + entry[1].ttl < Date.now();
         if (ttlExpired) await CACHE_STORE.delete(entry[0]);
@@ -58,13 +58,11 @@ export class CachedValue<T> {
 
   private async saveToDisk() {
     if (!this.persistenceKey || this.value === undefined) return;
-    await CACHE_STORE
-      .set('CachedValue_' + this.persistenceKey, {
-        value: this.value,
-        lastSet: this.lastSet,
-        ttl: this.ttl,
-      })
-      .then(() => CACHE_STORE.save());
+    await CACHE_STORE.set('CachedValue_' + this.persistenceKey, {
+      value: this.value,
+      lastSet: this.lastSet,
+      ttl: this.ttl,
+    }).then(() => CACHE_STORE.save());
   }
 
   private async clearFromDisk() {
@@ -74,12 +72,12 @@ export class CachedValue<T> {
 
   private async loadFromDisk() {
     if (!this.persistenceKey) return;
-    await CACHE_STORE
-      .get<CachedValueEntry<T>>('CachedValue_' + this.persistenceKey)
-      .then((value) => {
+    await CACHE_STORE.get<CachedValueEntry<T>>('CachedValue_' + this.persistenceKey).then(
+      (value) => {
         if (!value) return;
         this.value = value.value;
         this.lastSet = value.lastSet;
-      });
+      }
+    );
   }
 }

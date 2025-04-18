@@ -3,10 +3,10 @@ import { AutomationConfigService } from '../../../../services/automation-config.
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-brightness-automations-view',
-    templateUrl: './brightness-automations-view.component.html',
-    styleUrls: ['./brightness-automations-view.component.scss'],
-    standalone: false
+  selector: 'app-brightness-automations-view',
+  templateUrl: './brightness-automations-view.component.html',
+  styleUrls: ['./brightness-automations-view.component.scss'],
+  standalone: false,
 })
 export class BrightnessAutomationsViewComponent {
   advancedMode = false;

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from './app-settings.service';
-import { TrayIcon, TrayIconEvent, TrayIconOptions } from '@tauri-apps/api/tray';
+import { TrayIcon } from '@tauri-apps/api/tray';
 import { Menu } from '@tauri-apps/api/menu';
 import { getVersion } from '../utils/app-utils';
 import { BUILD_ID } from 'src-ui/build';
@@ -16,7 +16,6 @@ import {
 import { SleepService } from './sleep.service';
 import { TranslateService } from '@ngx-translate/core';
 import { error } from '@tauri-apps/plugin-log';
-import { listen } from '@tauri-apps/api/event';
 import { invoke } from '@tauri-apps/api/core';
 
 const CLOSE_TO_SYSTEM_TRAY_COMMAND = 'set_close_to_system_tray';

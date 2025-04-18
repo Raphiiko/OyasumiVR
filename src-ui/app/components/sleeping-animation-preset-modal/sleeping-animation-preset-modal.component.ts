@@ -9,11 +9,11 @@ interface SleepingAnimationPresetModalInputModel {
 }
 
 @Component({
-    selector: 'app-sleeping-animation-preset-modal',
-    templateUrl: './sleeping-animation-preset-modal.component.html',
-    styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
-    animations: [fadeUp()],
-    standalone: false
+  selector: 'app-sleeping-animation-preset-modal',
+  templateUrl: './sleeping-animation-preset-modal.component.html',
+  styleUrls: ['./sleeping-animation-preset-modal.component.scss'],
+  animations: [fadeUp()],
+  standalone: false,
 })
 export class SleepingAnimationPresetModalComponent
   extends BaseModalComponent<SleepingAnimationPresetModalInputModel, void>

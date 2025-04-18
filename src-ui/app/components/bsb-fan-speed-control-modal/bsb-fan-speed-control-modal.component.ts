@@ -9,11 +9,11 @@ import { Router } from '@angular/router';
 import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific-automations/bigscreen-beyond-fan-automation.service';
 
 @Component({
-    selector: 'app-bsb-fan-speed-control-modal',
-    templateUrl: './bsb-fan-speed-control-modal.component.html',
-    styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
-    animations: [fadeUp(), vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-bsb-fan-speed-control-modal',
+  templateUrl: './bsb-fan-speed-control-modal.component.html',
+  styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
+  animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class BSBFanSpeedControlModalComponent
   extends BaseModalComponent<void, void>

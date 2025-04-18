@@ -5,7 +5,6 @@ import {
   SETTINGS_KEY_PULSOID_API,
   SETTINGS_STORE,
 } from '../../globals';
-import {} from '@tauri-apps/api/core';
 import { ModalService } from '../modal.service';
 import {
   ConfirmModalComponent,

@@ -15,10 +15,10 @@ import { UprightPoseDisableSleepModeModalComponent } from '../../modals/upright-
 import { PlayerJoinLeaveDisableSleepModeModalComponent } from '../../modals/player-join-leave-disable-sleepmode-modal/player-join-leave-disable-sleep-mode-modal.component';
 
 @Component({
-    selector: 'app-sleep-detection-sleep-disable-tab',
-    templateUrl: './sleep-detection-sleep-disable-tab.component.html',
-    styleUrls: ['./sleep-detection-sleep-disable-tab.component.scss'],
-    standalone: false
+  selector: 'app-sleep-detection-sleep-disable-tab',
+  templateUrl: './sleep-detection-sleep-disable-tab.component.html',
+  styleUrls: ['./sleep-detection-sleep-disable-tab.component.scss'],
+  standalone: false,
 })
 export class SleepDetectionSleepDisableTabComponent
   extends SleepDetectionTabComponent

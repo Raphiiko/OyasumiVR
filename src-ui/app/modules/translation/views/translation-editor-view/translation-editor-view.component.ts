@@ -25,11 +25,11 @@ interface TranslationRowEntry {
 }
 
 @Component({
-    selector: 'app-translation-editor-view',
-    templateUrl: './translation-editor-view.component.html',
-    styleUrls: ['./translation-editor-view.component.scss'],
-    animations: [vshrink()],
-    standalone: false
+  selector: 'app-translation-editor-view',
+  templateUrl: './translation-editor-view.component.html',
+  styleUrls: ['./translation-editor-view.component.scss'],
+  animations: [vshrink()],
+  standalone: false,
 })
 export class TranslationEditorViewComponent {
   protected entries: TranslationRowEntry[] = [];

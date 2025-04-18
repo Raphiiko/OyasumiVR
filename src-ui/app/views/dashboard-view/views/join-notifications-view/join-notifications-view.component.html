@@ -11,9 +11,8 @@
         <div class="alert-content">
           <span>{{ 'shared.misc.vrcLoginRequired' | translate }}</span>
           <button class="btn btn-secondary" (click)="vrchat.showLoginModal()" translate
-          >shared.modals.login
-          </button
-          >
+            >shared.modals.login
+          </button>
         </div>
       </div>
       <div class="settings">
@@ -136,9 +135,9 @@
           </div>
           <div class="setting-row-action">
             <button class="btn btn-secondary" (click)="testSound()">
-            <span translate @hshrink *ngIf="!playingTestSound"
-            >nightmare-detection.playSound.volume.test</span
-            >
+              <span translate @hshrink *ngIf="!playingTestSound"
+                >nightmare-detection.playSound.volume.test</span
+              >
               <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
             </button>
             <app-slider-setting

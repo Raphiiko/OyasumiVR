@@ -12,11 +12,11 @@ export interface HotkeySelectorOutputModel {
 }
 
 @Component({
-    selector: 'app-hotkey-selector-modal',
-    templateUrl: './hotkey-selector-modal.component.html',
-    styleUrls: ['./hotkey-selector-modal.component.scss'],
-    animations: [fadeUp()],
-    standalone: false
+  selector: 'app-hotkey-selector-modal',
+  templateUrl: './hotkey-selector-modal.component.html',
+  styleUrls: ['./hotkey-selector-modal.component.scss'],
+  animations: [fadeUp()],
+  standalone: false,
 })
 export class HotkeySelectorModalComponent
   extends BaseModalComponent<HotkeySelectorInputModel, HotkeySelectorOutputModel>

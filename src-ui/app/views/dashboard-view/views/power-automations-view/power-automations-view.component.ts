@@ -6,11 +6,11 @@ import { ActivatedRoute } from '@angular/router';
 type PowerAutomationsTab = 'CONTROLLERS_AND_TRACKERS' | 'BASE_STATIONS' | 'WINDOWS_POWER_POLICY';
 
 @Component({
-    selector: 'app-power-automations-view',
-    templateUrl: './power-automations-view.component.html',
-    styleUrls: ['./power-automations-view.component.scss'],
-    animations: [noop()],
-    standalone: false
+  selector: 'app-power-automations-view',
+  templateUrl: './power-automations-view.component.html',
+  styleUrls: ['./power-automations-view.component.scss'],
+  animations: [noop()],
+  standalone: false,
 })
 export class PowerAutomationsViewComponent implements OnInit {
   activeTab: PowerAutomationsTab = 'CONTROLLERS_AND_TRACKERS';

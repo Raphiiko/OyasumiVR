@@ -3,7 +3,6 @@ import { firstValueFrom } from 'rxjs';
 import { marked } from 'marked';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FLAVOUR } from 'src-ui/build';
 import { hshrink } from 'src-ui/app/utils/animations';
 import { AppSettingsService } from '../../../../services/app-settings.service';

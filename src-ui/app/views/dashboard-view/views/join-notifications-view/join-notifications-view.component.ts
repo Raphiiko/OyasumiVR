@@ -14,11 +14,11 @@ import { hshrink } from 'src-ui/app/utils/animations';
 import { VRChatService } from '../../../../services/vrchat.service';
 
 @Component({
-    selector: 'app-join-notifications-view',
-    templateUrl: './join-notifications-view.component.html',
-    styleUrls: ['./join-notifications-view.component.scss'],
-    animations: [hshrink()],
-    standalone: false
+  selector: 'app-join-notifications-view',
+  templateUrl: './join-notifications-view.component.html',
+  styleUrls: ['./join-notifications-view.component.scss'],
+  animations: [hshrink()],
+  standalone: false,
 })
 export class JoinNotificationsViewComponent implements OnInit {
   notificationOptions: SelectBoxItem[] = [
