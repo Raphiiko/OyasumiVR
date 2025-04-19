@@ -44,7 +44,7 @@ export class SystemTrayService {
       this.translateService.onLangChange.pipe(startWith(this.translateService.currentLang)),
     ])
       .pipe(debounceTime(50))
-      .subscribe(([_sleepMode]) => this.rebuildMenu());
+      .subscribe(() => this.rebuildMenu());
     // await listen<'Left' | 'Right' | string>('system_tray_click', (event) => {});
     // await listen<'Left' | 'Right' | string>('system_tray_double_click', (event) => {});
     this.appSettingsService.settings

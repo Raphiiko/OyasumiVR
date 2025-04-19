@@ -11,7 +11,7 @@ export class DeepLinkService {
 
   async init() {
     await onOpenUrl(async (urls) => {
-      for (let strurl of urls) {
+      for (const strurl of urls) {
         let url: URL | null = null;
         info(`[DeepLinkService] Received deep link call: ${strurl}`);
         try {

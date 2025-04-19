@@ -100,7 +100,7 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
       try {
         const response = await fetch('https://getsupporters-fgf7bxmuba-ew.a.run.app');
         if (response.ok) {
-          let data: { [tier: string]: string[] } = await response.json();
+          const data: { [tier: string]: string[] } = await response.json();
           await this.supporterCache.set(
             Object.entries(data).map((entry) => ({
               name: entry[0],

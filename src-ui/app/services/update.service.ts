@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, interval, Observable, switchMap, take } from 'rxjs';
+import { BehaviorSubject, filter, interval, switchMap, take } from 'rxjs';
 import { relaunch } from '@tauri-apps/plugin-process';
-import { listen } from '@tauri-apps/api/event';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
-import { getVersion } from '../utils/app-utils';
 import { FLAVOUR } from '../../build';
 import { info } from '@tauri-apps/plugin-log';
-import { check, Update } from '@tauri-apps/plugin-updater';
+import { Update } from '@tauri-apps/plugin-updater';
 
 @Injectable({
   providedIn: 'root',
