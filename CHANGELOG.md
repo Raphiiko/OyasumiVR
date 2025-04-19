@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
+- Sleep mode toggle to system tray menu
+- Localized system tray menu
 
 ### Changed
 
 - Added continuous scanning for lighthouses to replace manual scanning. 
+- Migrated to Tauri v2, and upgraded various dependencies.
 
 ### Fixed
 
