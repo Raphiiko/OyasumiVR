@@ -11,8 +11,43 @@
           />
           <span *ngIf="FLAVOUR === 'DEV'" translate>settings.updates.updatesDisabled.DEV</span>
           <span *ngIf="FLAVOUR === 'STEAM' || FLAVOUR === 'STEAM_CN'" translate
-            >settings.updates.updatesDisabled.STEAM</span
+          >settings.updates.updatesDisabled.STEAM</span
           >
+        </div>
+        <div class="update-checker" *ngIf="FLAVOUR === 'STANDALONE'">
+          <button
+            class="btn"
+            [class.btn-secondary]="!updateAvailable.update"
+            [class.btn-primary]="updateAvailable.update"
+            (click)="updateOrCheck()"
+            [disabled]="updateOrCheckInProgress"
+          >
+            <div class="small-spinner" *ngIf="updateOrCheckInProgress" @hshrink></div>
+            <span
+              *ngIf="!updateOrCheckInProgress"
+              [translate]="
+              updateAvailable.update
+                ? 'settings.updates.install'
+                : 'settings.updates.checkForUpdates'
+            "
+              [translateParams]="{ version: updateAvailable.update?.version || '' }"
+              @hshrink
+            ></span>
+          </button>
+          <p *ngIf="!updateAvailable.checked" translate="settings.updates.notChecked"></p>
+          <p
+            *ngIf="updateAvailable.checked && updateAvailable.update"
+            translate="settings.updates.updateAvailable"
+            [translateParams]="{
+            currentVersion: version,
+            latestVersion: updateAvailable.update.version
+          }"
+          ></p>
+          <p
+            *ngIf="updateAvailable.checked && !updateAvailable.update"
+            translate="settings.updates.noUpdate"
+            [translateParams]="{ version: version }"
+          ></p>
         </div>
       </div>
       <div class="setting-category">

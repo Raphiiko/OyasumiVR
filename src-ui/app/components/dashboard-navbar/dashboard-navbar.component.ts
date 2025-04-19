@@ -13,6 +13,7 @@ import { BrightnessCctAutomationService } from '../../services/brightness-cct-au
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UpdateService } from 'src-ui/app/services/update.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -134,6 +135,7 @@ export class DashboardNavbarComponent implements OnInit {
   gpuAutomationsErrors: Observable<boolean>;
   lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
+  updateAvailable: Observable<boolean>;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
@@ -141,12 +143,14 @@ export class DashboardNavbarComponent implements OnInit {
     private nvml: NvmlService,
     private sidecar: ElevatedSidecarService,
     private osc: OscService,
+    private updateService: UpdateService,
     protected router: Router,
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessCctAutomationService,
     private modalService: ModalService,
     private destroyRef: DestroyRef
   ) {
+    this.updateAvailable = this.updateService.updateAvailable.pipe(map((a) => !!a.update));
     this.lighthouseConsoleErrors = this.lighthouse.consoleStatus.pipe(
       takeUntilDestroyed(this.destroyRef),
       map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),

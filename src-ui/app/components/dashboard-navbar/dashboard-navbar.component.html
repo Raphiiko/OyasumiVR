@@ -122,6 +122,9 @@
       <div class="menu-item-icon-suffix" @fade *ngIf="settingErrors | async">
         <i class="material-icons-round">error_outline</i>
       </div>
+      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
+        <i class="material-icons-round">notification_important</i>
+      </div>
       <div class="menu-item-submenu-icon">
         <i class="material-icons-round">arrow_forward_ios</i>
       </div>
@@ -336,6 +339,9 @@
         <i class="material-icons-round">update</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.updates</div>
+      <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
+        <i class="material-icons-round">notification_important</i>
+      </div>
     </div>
 
     <div

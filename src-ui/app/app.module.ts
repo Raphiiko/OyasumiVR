@@ -232,6 +232,8 @@ import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
 import { getCurrentWindow } from '@tauri-apps/api/window';
+import { UpdateService } from './services/update.service';
+import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 
 [
   localeEN,
@@ -265,6 +267,7 @@ export function createTranslateLoader(http: HttpClient) {
     ImageFallbackDirective,
     AboutViewComponent,
     OverviewViewComponent,
+    UpdateModalComponent,
     SleepDetectionViewComponent,
     SleepDetectorCalibrationModalComponent,
     TimeEnableSleepModeModalComponent,
@@ -444,6 +447,7 @@ export class AppModule {
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
     private avatarContextService: AvatarContextService,
+    private updateService: UpdateService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -837,6 +841,8 @@ export class AppModule {
         })
       );
     }
+    // Only initialize update service after language selection
+    await this.updateService.init();
   }
 
   async preloadAssets() {
