@@ -25,7 +25,7 @@ import {
   SystemMicMuteControllerBindingBehavior,
 } from '../models/automations';
 import { isEqual } from 'lodash';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { OVRInputEventAction } from '../models/ovr-input-event';
 import { NotificationService } from './notification.service';
@@ -34,7 +34,7 @@ import {
   EventLogChangedSystemMicMuteState,
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { VRChatService } from './vrchat.service';
 
 @Injectable({

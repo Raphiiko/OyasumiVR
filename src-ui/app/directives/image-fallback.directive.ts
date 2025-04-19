@@ -1,8 +1,8 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
 @Directive({
-    selector: 'img[appImgFallback]',
-    standalone: false
+  selector: 'img[appImgFallback]',
+  standalone: false,
 })
 export class ImageFallbackDirective {
   @Input() appImgFallback = '';

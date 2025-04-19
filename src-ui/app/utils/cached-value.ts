@@ -1,5 +1,4 @@
-import { CACHE_FILE } from '../globals';
-import { Store } from 'tauri-plugin-store-api';
+import { CACHE_STORE } from '../globals';
 import { BehaviorSubject, filter, firstValueFrom } from 'rxjs';
 
 interface CachedValueEntry<T> {
@@ -9,24 +8,24 @@ interface CachedValueEntry<T> {
 }
 
 export class CachedValue<T> {
-  private static store = new Store(CACHE_FILE);
   lastSet = -1;
   private initialized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   static async cleanCache(includeNonExpired = false) {
     if (includeNonExpired) {
       // Clear entire cache
-      await CachedValue.store.clear();
+      await CACHE_STORE.clear();
     } else {
       // Clear expired cache entries only
-      const entries: [key: string, value: CachedValueEntry<unknown>][] =
-        await CachedValue.store.entries<CachedValueEntry<unknown>>();
+      const entries: [key: string, value: CachedValueEntry<unknown>][] = await CACHE_STORE.entries<
+        CachedValueEntry<unknown>
+      >();
       for (const entry of entries) {
         const ttlExpired = entry[1].lastSet + entry[1].ttl < Date.now();
-        if (ttlExpired) await CachedValue.store.delete(entry[0]);
+        if (ttlExpired) await CACHE_STORE.delete(entry[0]);
       }
     }
-    await CachedValue.store.save();
+    await CACHE_STORE.save();
   }
 
   constructor(private value: T | undefined, private ttl: number, private persistenceKey?: string) {
@@ -45,6 +44,7 @@ export class CachedValue<T> {
   }
 
   async clear() {
+    if (this.value === undefined && this.lastSet === -1) return;
     this.value = undefined;
     this.lastSet = -1;
     await this.clearFromDisk();
@@ -52,34 +52,32 @@ export class CachedValue<T> {
 
   get(): T | undefined {
     const ttlExpired = this.lastSet + this.ttl < Date.now();
-    if (ttlExpired && this.persistenceKey) this.clearFromDisk();
+    if (ttlExpired && this.persistenceKey) this.clear();
     return ttlExpired ? undefined : this.value;
   }
 
   private async saveToDisk() {
     if (!this.persistenceKey || this.value === undefined) return;
-    await CachedValue.store
-      .set('CachedValue_' + this.persistenceKey, {
-        value: this.value,
-        lastSet: this.lastSet,
-        ttl: this.ttl,
-      })
-      .then(() => CachedValue.store.save());
+    await CACHE_STORE.set('CachedValue_' + this.persistenceKey, {
+      value: this.value,
+      lastSet: this.lastSet,
+      ttl: this.ttl,
+    }).then(() => CACHE_STORE.save());
   }
 
   private async clearFromDisk() {
     if (!this.persistenceKey) return;
-    await CachedValue.store.delete(this.persistenceKey).then(() => CachedValue.store.save());
+    await CACHE_STORE.delete(this.persistenceKey).then(() => CACHE_STORE.save());
   }
 
   private async loadFromDisk() {
     if (!this.persistenceKey) return;
-    await CachedValue.store
-      .get<CachedValueEntry<T>>('CachedValue_' + this.persistenceKey)
-      .then((value) => {
-        if (value === null) return;
+    await CACHE_STORE.get<CachedValueEntry<T>>('CachedValue_' + this.persistenceKey).then(
+      (value) => {
+        if (!value) return;
         this.value = value.value;
         this.lastSet = value.lastSet;
-      });
+      }
+    );
   }
 }

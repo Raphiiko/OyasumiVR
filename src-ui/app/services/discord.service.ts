@@ -8,7 +8,7 @@ import {
   map,
   throttleTime,
 } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { TranslateService } from '@ngx-translate/core';
 import { VRChatService } from './vrchat.service';
 import { AppSettingsService } from './app-settings.service';

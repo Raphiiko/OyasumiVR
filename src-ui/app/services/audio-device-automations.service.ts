@@ -11,7 +11,7 @@ import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { delay, distinctUntilChanged, firstValueFrom, map, of, skip, switchMap, take } from 'rxjs';
 import { AudioDeviceParsedName } from '../models/audio-device';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { EventLogService } from './event-log.service';
 import {
   EventLogChangedAudioDeviceVolume,

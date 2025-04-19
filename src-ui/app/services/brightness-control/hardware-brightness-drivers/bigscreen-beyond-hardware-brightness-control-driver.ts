@@ -13,10 +13,10 @@ import {
   startWith,
   switchMap,
 } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { AppSettings } from '../../../models/settings';
 import { listen } from '@tauri-apps/api/event';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 
 export const BIGSCREEN_BEYOND_HARDWARE_BRIGHTNESS_CONTROL_DRIVER_BOUNDS: HardwareBrightnessControlDriverBounds =
   {

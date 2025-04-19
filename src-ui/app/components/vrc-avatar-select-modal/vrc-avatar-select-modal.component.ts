@@ -14,11 +14,11 @@ export interface VrcAvatarSelectModalOutput {
 }
 
 @Component({
-    selector: 'app-vrc-avatar-select-modal',
-    templateUrl: './vrc-avatar-select-modal.component.html',
-    styleUrls: ['./vrc-avatar-select-modal.component.scss'],
-    animations: [fadeUp(), vshrink()],
-    standalone: false
+  selector: 'app-vrc-avatar-select-modal',
+  templateUrl: './vrc-avatar-select-modal.component.html',
+  styleUrls: ['./vrc-avatar-select-modal.component.scss'],
+  animations: [fadeUp(), vshrink()],
+  standalone: false,
 })
 export class VrcAvatarSelectModalComponent
   extends BaseModalComponent<VrcAvatarSelectModalInput, VrcAvatarSelectModalOutput>

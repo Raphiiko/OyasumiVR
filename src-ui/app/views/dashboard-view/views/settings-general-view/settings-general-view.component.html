@@ -16,9 +16,9 @@
             />
             <span class="radio-button-dot"></span>
             <span class="radio-button-label">
-            <span class="fi fi-{{ language.flag || language.code }}"></span>
-            <span>{{ language.label }}</span>
-          </span>
+              <span class="fi fi-{{ language.flag || language.code }}"></span>
+              <span>{{ language.label }}</span>
+            </span>
           </label>
         </div>
       </div>
@@ -115,7 +115,7 @@
             <div class="setting-row-label" translate>
               <span translate>settings.general.overlay.onlyOpenMenuWhenVRChatRunning.title</span>
               <span translate
-              >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
+                >settings.general.overlay.onlyOpenMenuWhenVRChatRunning.description</span
               >
             </div>
             <div class="setting-row-action">
@@ -124,10 +124,10 @@
                   type="checkbox"
                   [checked]="appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning"
                   (change)="
-                  setOverlayMenuOnlyOpenWhenVRChatIsRunning(
-                    !appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning
-                  )
-                "
+                    setOverlayMenuOnlyOpenWhenVRChatIsRunning(
+                      !appSettings.overlayMenuOnlyOpenWhenVRChatIsRunning
+                    )
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -158,7 +158,9 @@
           <div class="setting-row">
             <div class="setting-row-label" translate>
               <span translate>settings.general.lighthousePowerControl.powerOffMode.title</span>
-              <span translate>settings.general.lighthousePowerControl.powerOffMode.description</span>
+              <span translate
+                >settings.general.lighthousePowerControl.powerOffMode.description</span
+              >
             </div>
             <div class="setting-row-action">
               <app-select-box
@@ -182,7 +184,7 @@
             </div>
             <div class="setting-row-action">
               <button class="btn btn-secondary" (click)="showStartWithSteamVRHowToModal()" translate
-              >settings.general.startWithSteamVR.howTo
+                >settings.general.startWithSteamVR.howTo
               </button>
             </div>
           </div>
@@ -234,10 +236,10 @@
                     type="checkbox"
                     [checked]="appSettings.discordActivityOnlyWhileVRChatIsRunning"
                     (change)="
-                    setDiscordActivityOnlyWhenVRChatIsRunning(
-                      !appSettings.discordActivityOnlyWhileVRChatIsRunning
-                    )
-                  "
+                      setDiscordActivityOnlyWhenVRChatIsRunning(
+                        !appSettings.discordActivityOnlyWhileVRChatIsRunning
+                      )
+                    "
                   />
                   <span class="switch-toggle-slider"></span>
                 </label>

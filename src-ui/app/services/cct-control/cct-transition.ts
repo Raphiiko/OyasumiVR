@@ -1,6 +1,6 @@
 import { CancellableTask } from '../../utils/cancellable-task';
 import { clamp, smoothLerp } from '../../utils/number-utils';
-import { info, warn } from 'tauri-plugin-log-api';
+import { info, warn } from '@tauri-apps/plugin-log';
 import {
   SetBrightnessOrCCTOptions,
   SetBrightnessOrCCTReason,

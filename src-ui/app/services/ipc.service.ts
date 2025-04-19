@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { GrpcWebFetchTransport } from '@protobuf-ts/grpcweb-transport';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import { BehaviorSubject } from 'rxjs';
 import { OyasumiElevatedSidecarClient } from 'src-grpc-web-client/elevated-sidecar_pb.client';

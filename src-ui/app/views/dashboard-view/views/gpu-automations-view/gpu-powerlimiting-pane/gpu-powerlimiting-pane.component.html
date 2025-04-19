@@ -33,8 +33,8 @@
             />
             <span class="radio-button-dot"></span>
             <span class="radio-button-label">
-            <span>{{ device.name }}</span>
-          </span>
+              <span>{{ device.name }}</span>
+            </span>
           </label>
         </div>
 
@@ -60,20 +60,22 @@
               class="power-limit-bar-fill"
               [class.default]="selectedGpu?.powerLimit === selectedGpu?.defaultPowerLimit"
               [style.width]="
-              (((selectedGpu?.powerLimit || 1) / (selectedGpu?.maxPowerLimit || 1)) * 100 | floor) +
-              '%'
-            "
+                (((selectedGpu?.powerLimit || 1) / (selectedGpu?.maxPowerLimit || 1)) * 100
+                  | floor) + '%'
+              "
               [style.justify-content]="selectedGpu ? 'flex-end' : 'center'"
             >
-            <span *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting">
-              {{ selectedGpu.powerLimit }}W &#11825;
-              {{
-                ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor
-              }}%
-            </span>
-              <span *ngIf="!selectedGpu" translate>gpu-automations.powerLimiting.noGPUSelected</span>
+              <span *ngIf="selectedGpu && selectedGpu.supportsPowerLimiting">
+                {{ selectedGpu.powerLimit }}W &#11825;
+                {{
+                  ((selectedGpu.powerLimit || 0) / (selectedGpu.maxPowerLimit || 1)) * 100 | floor
+                }}%
+              </span>
+              <span *ngIf="!selectedGpu" translate
+                >gpu-automations.powerLimiting.noGPUSelected</span
+              >
               <span *ngIf="selectedGpu && !selectedGpu.supportsPowerLimiting" translate
-              >gpu-automations.powerLimiting.gpuUnsupported</span
+                >gpu-automations.powerLimiting.gpuUnsupported</span
               >
             </div>
           </div>
@@ -108,7 +110,9 @@
             [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
             [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
             [powerLimit]="powerLimitOnSleepEnable"
-            (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })"
+            (powerLimitChange)="
+              powerLimitChange.next({ automation: 'SLEEP_ENABLE', limit: $event })
+            "
           ></app-power-limit-input>
         </div>
       </div>
@@ -131,7 +135,9 @@
             [maxPowerLimit]="selectedGpu?.maxPowerLimit ?? -1"
             [defaultPowerLimit]="selectedGpu?.defaultPowerLimit ?? -1"
             [powerLimit]="powerLimitOnSleepDisable"
-            (powerLimitChange)="powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })"
+            (powerLimitChange)="
+              powerLimitChange.next({ automation: 'SLEEP_DISABLE', limit: $event })
+            "
           ></app-power-limit-input>
         </div>
       </div>

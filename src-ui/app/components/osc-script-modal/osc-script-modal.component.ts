@@ -13,11 +13,11 @@ interface OscScriptModalOutputModel {
 }
 
 @Component({
-    selector: 'app-osc-script-modal',
-    templateUrl: './osc-script-modal.component.html',
-    styleUrls: ['./osc-script-modal.component.scss'],
-    animations: [fadeUp()],
-    standalone: false
+  selector: 'app-osc-script-modal',
+  templateUrl: './osc-script-modal.component.html',
+  styleUrls: ['./osc-script-modal.component.scss'],
+  animations: [fadeUp()],
+  standalone: false,
 })
 export class OscScriptModalComponent
   extends BaseModalComponent<OscScriptModalInputModel, OscScriptModalOutputModel>

@@ -6,11 +6,11 @@ import { HotkeyService } from 'src-ui/app/services/hotkey.service';
 import { Subscription } from 'rxjs';
 
 @Component({
-    selector: 'app-hotkey-selector',
-    templateUrl: './hotkey-selector.component.html',
-    styleUrls: ['./hotkey-selector.component.scss'],
-    animations: [hshrink(), noop()],
-    standalone: false
+  selector: 'app-hotkey-selector',
+  templateUrl: './hotkey-selector.component.html',
+  styleUrls: ['./hotkey-selector.component.scss'],
+  animations: [hshrink(), noop()],
+  standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
   @Input() action?: string;

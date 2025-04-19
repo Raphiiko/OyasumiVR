@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { TString } from '../models/translatable-string';
 
 @Pipe({
-    name: 'tsTranslate',
-    pure: false,
-    standalone: false
+  name: 'tsTranslate',
+  pure: false,
+  standalone: false,
 })
 export class TStringTranslatePipe implements PipeTransform {
   constructor(private translate: TranslateService) {}

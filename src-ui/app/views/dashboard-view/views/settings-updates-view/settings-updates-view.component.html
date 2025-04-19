@@ -17,8 +17,8 @@
         <div class="update-checker" *ngIf="FLAVOUR === 'STANDALONE'">
           <button
             class="btn"
-            [class.btn-secondary]="!updateAvailable.manifest"
-            [class.btn-primary]="updateAvailable.manifest"
+            [class.btn-secondary]="!updateAvailable.update"
+            [class.btn-primary]="updateAvailable.update"
             (click)="updateOrCheck()"
             [disabled]="updateOrCheckInProgress"
           >
@@ -26,25 +26,25 @@
             <span
               *ngIf="!updateOrCheckInProgress"
               [translate]="
-              updateAvailable.manifest
+              updateAvailable.update
                 ? 'settings.updates.install'
                 : 'settings.updates.checkForUpdates'
             "
-              [translateParams]="{ version: updateAvailable.manifest?.version || '' }"
+              [translateParams]="{ version: updateAvailable.update?.version || '' }"
               @hshrink
             ></span>
           </button>
           <p *ngIf="!updateAvailable.checked" translate="settings.updates.notChecked"></p>
           <p
-            *ngIf="updateAvailable.checked && updateAvailable.manifest"
+            *ngIf="updateAvailable.checked && updateAvailable.update"
             translate="settings.updates.updateAvailable"
             [translateParams]="{
             currentVersion: version,
-            latestVersion: updateAvailable.manifest.version
+            latestVersion: updateAvailable.update.version
           }"
           ></p>
           <p
-            *ngIf="updateAvailable.checked && !updateAvailable.manifest"
+            *ngIf="updateAvailable.checked && !updateAvailable.update"
             translate="settings.updates.noUpdate"
             [translateParams]="{ version: version }"
           ></p>

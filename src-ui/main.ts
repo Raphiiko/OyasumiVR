@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { attachConsole, error, info } from 'tauri-plugin-log-api';
+import { attachConsole, error, info } from '@tauri-apps/plugin-log';
 import { getVersion } from './app/utils/app-utils';
 import { FLAVOUR } from './build';
 import { disableDefaultContextMenu } from './app/utils/browser-utils';

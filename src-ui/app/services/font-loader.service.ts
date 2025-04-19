@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { fontLoader } from 'src-shared-ts/src/font-loader';
 import { TranslateService } from '@ngx-translate/core';
 

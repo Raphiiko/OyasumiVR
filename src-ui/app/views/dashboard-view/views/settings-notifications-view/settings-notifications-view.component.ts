@@ -13,11 +13,11 @@ import { NotificationService } from 'src-ui/app/services/notification.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
 
 @Component({
-    selector: 'app-settings-notifications-view',
-    templateUrl: './settings-notifications-view.component.html',
-    styleUrls: ['./settings-notifications-view.component.scss'],
-    animations: [vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-settings-notifications-view',
+  templateUrl: './settings-notifications-view.component.html',
+  styleUrls: ['./settings-notifications-view.component.scss'],
+  animations: [vshrink(), hshrink()],
+  standalone: false,
 })
 export class SettingsNotificationsViewComponent implements OnInit {
   protected notificationTypes: NotificationType[] = [...NotificationTypes] as NotificationType[];

@@ -22,11 +22,11 @@ export interface DeviceEditModalInputModel {
 export interface DeviceEditModalOutputModel {}
 
 @Component({
-    selector: 'app-device-edit-modal',
-    templateUrl: './device-edit-modal.component.html',
-    styleUrls: ['./device-edit-modal.component.scss'],
-    animations: [fadeUp()],
-    standalone: false
+  selector: 'app-device-edit-modal',
+  templateUrl: './device-edit-modal.component.html',
+  styleUrls: ['./device-edit-modal.component.scss'],
+  animations: [fadeUp()],
+  standalone: false,
 })
 export class DeviceEditModalComponent
   extends BaseModalComponent<DeviceEditModalInputModel, DeviceEditModalOutputModel>

@@ -11,7 +11,6 @@ pub async fn discord_update_activity(
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
-pub async fn discord_clear_activity(
-) -> bool {
+pub async fn discord_clear_activity() -> bool {
     super::clear_activity().await
 }

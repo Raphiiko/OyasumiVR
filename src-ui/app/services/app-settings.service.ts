@@ -10,8 +10,7 @@ import {
   switchMap,
   throttleTime,
 } from 'rxjs';
-import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE, SETTINGS_KEY_APP_SETTINGS } from '../globals';
+import { SETTINGS_KEY_APP_SETTINGS, SETTINGS_STORE } from '../globals';
 import { isEqual, uniq } from 'lodash';
 import { migrateAppSettings } from '../migrations/app-settings.migrations';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,7 +26,6 @@ import {
   providedIn: 'root',
 })
 export class AppSettingsService {
-  private store = new Store(SETTINGS_FILE);
   private _settings: BehaviorSubject<AppSettings> = new BehaviorSubject<AppSettings>(
     APP_SETTINGS_DEFAULT
   );
@@ -54,7 +52,9 @@ export class AppSettingsService {
   }
 
   async loadSettings() {
-    let settings: AppSettings | null = await this.store.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
+    let settings: AppSettings | undefined = await SETTINGS_STORE.get<AppSettings>(
+      SETTINGS_KEY_APP_SETTINGS
+    );
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);
@@ -73,8 +73,8 @@ export class AppSettingsService {
   }
 
   async saveSettings() {
-    await this.store.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_APP_SETTINGS, this._settings.value);
+    await SETTINGS_STORE.save();
   }
 
   public updateSettings(settings: Partial<AppSettings>) {

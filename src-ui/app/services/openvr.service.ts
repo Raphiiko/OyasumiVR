@@ -1,7 +1,7 @@
 import { ApplicationRef, Injectable } from '@angular/core';
 import { listen } from '@tauri-apps/api/event';
 import { DeviceUpdateEvent } from '../models/events';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { OVRDevice, OVRDevicePose } from '../models/ovr-device';
 import {
   BehaviorSubject,
@@ -14,7 +14,7 @@ import {
 } from 'rxjs';
 import { orderBy } from 'lodash';
 import { AppSettingsService } from './app-settings.service';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 export type OpenVRStatus = 'INACTIVE' | 'INITIALIZING' | 'INITIALIZED';
 

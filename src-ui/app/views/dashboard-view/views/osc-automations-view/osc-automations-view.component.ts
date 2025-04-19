@@ -10,10 +10,10 @@ import { OscScript } from '../../../../models/osc-script';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-osc-automations-view',
-    templateUrl: './osc-automations-view.component.html',
-    styleUrls: ['./osc-automations-view.component.scss'],
-    standalone: false
+  selector: 'app-osc-automations-view',
+  templateUrl: './osc-automations-view.component.html',
+  styleUrls: ['./osc-automations-view.component.scss'],
+  standalone: false,
 })
 export class OscAutomationsViewComponent implements OnInit {
   protected config: OscGeneralAutomationConfig = structuredClone(

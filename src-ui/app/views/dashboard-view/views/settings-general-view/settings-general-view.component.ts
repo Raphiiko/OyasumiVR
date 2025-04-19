@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { open as openFile } from '@tauri-apps/api/dialog';
+import { open as openFile } from '@tauri-apps/plugin-dialog';
 import {
   APP_SETTINGS_DEFAULT,
   AppSettings,
@@ -26,11 +26,11 @@ import {
 import { OVRInputEventAction } from 'src-ui/app/models/ovr-input-event';
 
 @Component({
-    selector: 'app-settings-general-view',
-    templateUrl: './settings-general-view.component.html',
-    styleUrls: ['./settings-general-view.component.scss'],
-    animations: [vshrink()],
-    standalone: false
+  selector: 'app-settings-general-view',
+  templateUrl: './settings-general-view.component.html',
+  styleUrls: ['./settings-general-view.component.scss'],
+  animations: [vshrink()],
+  standalone: false,
 })
 export class SettingsGeneralViewComponent implements OnInit {
   appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);

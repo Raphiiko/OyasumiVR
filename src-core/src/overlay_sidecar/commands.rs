@@ -12,7 +12,9 @@ pub async fn start_overlay_sidecar(gpu_acceleration: bool) {
         OverlaySidecarMode::Release => {
             let mut sidecar_manager_guard = super::SIDECAR_MANAGER.lock().await;
             let sidecar_manager = sidecar_manager_guard.as_mut().unwrap();
-            sidecar_manager.set_arg("--disable-gpu-acceleration", !gpu_acceleration, true).await;
+            sidecar_manager
+                .set_arg("--disable-gpu-acceleration", !gpu_acceleration, true)
+                .await;
             sidecar_manager.start_or_restart().await;
         }
         // In development mode, we expect the sidecar to be started in development mode manually

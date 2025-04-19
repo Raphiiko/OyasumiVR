@@ -9,10 +9,10 @@ import { SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS } from '../../../../services/bri
 import { clamp } from '../../../../utils/number-utils';
 
 @Component({
-    selector: 'app-settings-brightness-cct-view',
-    templateUrl: './settings-brightness-cct-view.component.html',
-    styleUrl: './settings-brightness-cct-view.component.scss',
-    standalone: false
+  selector: 'app-settings-brightness-cct-view',
+  templateUrl: './settings-brightness-cct-view.component.html',
+  styleUrl: './settings-brightness-cct-view.component.scss',
+  standalone: false,
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);

@@ -5,8 +5,8 @@ import {
   SleepModeForSleepDetectorAutomationService,
 } from '../sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
 import { filter, firstValueFrom, interval, Subject, Subscription } from 'rxjs';
-import { message, save } from '@tauri-apps/api/dialog';
-import { writeTextFile } from '@tauri-apps/api/fs';
+import { message, save } from '@tauri-apps/plugin-dialog';
+import { writeTextFile } from '@tauri-apps/plugin-fs';
 
 export class SleepDetectionDebugger {
   private automationConfig = inject(AutomationConfigService);

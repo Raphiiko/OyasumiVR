@@ -9,11 +9,11 @@ import { hshrink, noop } from '../../utils/animations';
 import { PersistedAvatar } from '../../models/vrchat';
 
 @Component({
-    selector: 'app-vrc-avatar-select-button',
-    templateUrl: './vrc-avatar-select-button.component.html',
-    styleUrls: ['./vrc-avatar-select-button.component.scss'],
-    animations: [noop(), hshrink()],
-    standalone: false
+  selector: 'app-vrc-avatar-select-button',
+  templateUrl: './vrc-avatar-select-button.component.html',
+  styleUrls: ['./vrc-avatar-select-button.component.scss'],
+  animations: [noop(), hshrink()],
+  standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {
   @Input() avatar: PersistedAvatar | null = null;

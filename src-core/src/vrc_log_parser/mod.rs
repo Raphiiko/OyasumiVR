@@ -5,13 +5,12 @@ use chrono::{Local, NaiveDateTime, TimeZone};
 use log::{debug, info, trace, warn};
 use serde::{Deserialize, Serialize};
 use std::{
-    fs::File,
+    fs::{read_dir, File},
     io::{BufRead, BufReader},
     os::windows::prelude::MetadataExt,
     sync::Arc,
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tauri::api::path::home_dir;
 use tokio_util::sync::CancellationToken;
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -27,11 +26,10 @@ static mut MUTE_LOG_DIR_NO_EXIST_WARNINGS: bool = false;
 
 fn get_latest_log_path() -> Option<String> {
     // Get all files in the log directory
-    let dir = tauri::api::dir::read_dir(
-        home_dir()
+    let dir = read_dir(
+        dirs::home_dir()
             .unwrap()
             .join("AppData\\LocalLow\\VRChat\\VRChat"),
-        false,
     );
     // If log directory doesn't exist, return no path
     unsafe {
@@ -46,16 +44,16 @@ fn get_latest_log_path() -> Option<String> {
     }
     // Get the latest log file
     dir.unwrap()
-        .iter()
+        .filter_map(|entry| entry.ok())
         // Only get log files
         .filter(|entry| {
-            let name = entry.name.as_ref().unwrap();
+            let name = entry.file_name().to_string_lossy().to_string();
             name.starts_with("output_log_") && name.ends_with(".txt")
         })
         // Find most recent log file
-        .max_by_key(|entry| entry.path.metadata().unwrap().creation_time())
+        .max_by_key(|entry| entry.path().metadata().unwrap().creation_time())
         // Get the path for it
-        .map(|entry| String::from(entry.path.to_str().unwrap()))
+        .map(|entry| String::from(entry.path().to_str().unwrap()))
 }
 
 fn parse_datetime_from_line(line: String) -> Option<u64> {

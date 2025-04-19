@@ -4,7 +4,7 @@ import { BehaviorSubject, concatMap, debounceTime, distinctUntilChanged, map, sk
 import { AppSettingsService } from '../app-settings.service';
 import { AppSettings } from '../../models/settings';
 import { isEqual } from 'lodash';
-import { info, warn } from 'tauri-plugin-log-api';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { MqttConfig, MqttStatus } from '../../models/mqtt';
 
 @Injectable({
