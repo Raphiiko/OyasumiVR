@@ -13,11 +13,11 @@ import { BUILD_ID, FLAVOUR } from '../../../../../build';
 import { CachedValue } from '../../../../utils/cached-value';
 import { filter, interval } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { getClient } from '@tauri-apps/api/http';
 import { vshrink } from '../../../../utils/animations';
 import { shuffle } from 'lodash';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 import translationContributors from '../../../../../../docs/translation_contributors.json';
+import { fetch } from '@tauri-apps/plugin-http';
 
 interface SupporterTier {
   name: string;
@@ -34,11 +34,11 @@ interface TranslationContributor {
 }
 
 @Component({
-    selector: 'app-about-view',
-    templateUrl: './about-view.component.html',
-    styleUrls: ['./about-view.component.scss'],
-    animations: [vshrink()],
-    standalone: false
+  selector: 'app-about-view',
+  templateUrl: './about-view.component.html',
+  styleUrls: ['./about-view.component.scss'],
+  animations: [vshrink()],
+  standalone: false,
 })
 export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
   protected readonly FLAVOUR = FLAVOUR;
@@ -98,13 +98,11 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     let supporters = this.supporterCache.get();
     if (supporters === undefined) {
       try {
-        const client = await getClient();
-        const response = await client.get<{ [tier: string]: string[] }>(
-          'https://getsupporters-fgf7bxmuba-ew.a.run.app'
-        );
+        const response = await fetch('https://getsupporters-fgf7bxmuba-ew.a.run.app');
         if (response.ok) {
+          const data: { [tier: string]: string[] } = await response.json();
           await this.supporterCache.set(
-            Object.entries(response.data).map((entry) => ({
+            Object.entries(data).map((entry) => ({
               name: entry[0],
               supporters: shuffle(entry[1]),
             }))

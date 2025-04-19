@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { NG_LOCALE_MAP } from '../globals';
 
 @Pipe({
-    name: 'localizedDate',
-    pure: false,
-    standalone: false
+  name: 'localizedDate',
+  pure: false,
+  standalone: false,
 })
 export class LocalizedDatePipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}

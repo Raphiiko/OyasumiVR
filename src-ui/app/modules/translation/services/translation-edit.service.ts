@@ -4,8 +4,8 @@ import { TranslationEntries, TranslationEntry } from '../models/translation-entr
 import { DownloadableTranslation } from '../models/downloadable-translation';
 import { Router } from '@angular/router';
 import { TranslationEditUtils } from '../utils/translation-edit-utils';
-import { message, save } from '@tauri-apps/api/dialog';
-import { writeTextFile } from '@tauri-apps/api/fs';
+import { message, save } from '@tauri-apps/plugin-dialog';
+import { writeTextFile } from '@tauri-apps/plugin-fs';
 import { TranslationSuggestion } from '../models/translation-suggestion';
 
 @Injectable({

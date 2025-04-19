@@ -16,11 +16,11 @@
                   type="checkbox"
                   [checked]="onSleepModeEnableConfig.enabled"
                   (change)="
-                  setAutomationEnabled(
-                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
-                    !onSleepModeEnableConfig.enabled
-                  )
-                "
+                    setAutomationEnabled(
+                      'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE',
+                      !onSleepModeEnableConfig.enabled
+                    )
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -37,8 +37,8 @@
                   unit="m"
                   [value]="onSleepModeEnableConfig.fadeDistance"
                   (valueChange)="
-                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
-                "
+                    setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_ENABLE', $event)
+                  "
                   [min]="0"
                   [max]="1.4"
                   [step]="0.01"
@@ -60,11 +60,11 @@
                   type="checkbox"
                   [checked]="onSleepModeDisableConfig.enabled"
                   (change)="
-                  setAutomationEnabled(
-                    'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
-                    !onSleepModeDisableConfig.enabled
-                  )
-                "
+                    setAutomationEnabled(
+                      'CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE',
+                      !onSleepModeDisableConfig.enabled
+                    )
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -81,8 +81,8 @@
                   unit="m"
                   [value]="onSleepModeDisableConfig.fadeDistance"
                   (valueChange)="
-                  setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
-                "
+                    setFadeDistance('CHAPERONE_FADE_DISTANCE_ON_SLEEP_MODE_DISABLE', $event)
+                  "
                   [min]="0"
                   [max]="1.4"
                   [step]="0.01"

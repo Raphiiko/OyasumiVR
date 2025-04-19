@@ -5,7 +5,6 @@ import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
 import { NvmlService } from '../../services/nvml.service';
 import { ElevatedSidecarService } from '../../services/elevated-sidecar.service';
-import { UpdateService } from '../../services/update.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
@@ -14,6 +13,7 @@ import { BrightnessCctAutomationService } from '../../services/brightness-cct-au
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UpdateService } from 'src-ui/app/services/update.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
   return trigger(name, [
@@ -119,38 +119,38 @@ function blurMenu(name = 'blurMenu', length = '.2s ease') {
 type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 
 @Component({
-    selector: 'app-dashboard-navbar',
-    templateUrl: './dashboard-navbar.component.html',
-    styleUrls: ['./dashboard-navbar.component.scss'],
-    animations: [
-        fade(),
-        // slideMenu('rootMenu', '.2s ease', true),
-        blurMenu('rootMenu', '.2s ease'),
-        slideMenu('subMenu', '.2s ease', false),
-    ],
-    standalone: false
+  selector: 'app-dashboard-navbar',
+  templateUrl: './dashboard-navbar.component.html',
+  styleUrls: ['./dashboard-navbar.component.scss'],
+  animations: [
+    fade(),
+    // slideMenu('rootMenu', '.2s ease', true),
+    blurMenu('rootMenu', '.2s ease'),
+    slideMenu('subMenu', '.2s ease', false),
+  ],
+  standalone: false,
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
   gpuAutomationsErrors: Observable<boolean>;
-  updateAvailable: Observable<boolean>;
   lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
+  updateAvailable: Observable<boolean>;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
     private gpuAutomations: GpuAutomationsService,
     private nvml: NvmlService,
     private sidecar: ElevatedSidecarService,
-    private update: UpdateService,
     private osc: OscService,
+    private updateService: UpdateService,
     protected router: Router,
     protected background: BackgroundService,
     protected brightnessAutomation: BrightnessCctAutomationService,
     private modalService: ModalService,
     private destroyRef: DestroyRef
   ) {
-    this.updateAvailable = this.update.updateAvailable.pipe(map((a) => !!a.manifest));
+    this.updateAvailable = this.updateService.updateAvailable.pipe(map((a) => !!a.update));
     this.lighthouseConsoleErrors = this.lighthouse.consoleStatus.pipe(
       takeUntilDestroyed(this.destroyRef),
       map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),

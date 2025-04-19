@@ -10,11 +10,11 @@ export interface DropdownItem {
 }
 
 @Component({
-    selector: 'app-dropdown-button',
-    templateUrl: './dropdown-button.component.html',
-    styleUrls: ['./dropdown-button.component.scss'],
-    animations: [fadeDown()],
-    standalone: false
+  selector: 'app-dropdown-button',
+  templateUrl: './dropdown-button.component.html',
+  styleUrls: ['./dropdown-button.component.scss'],
+  animations: [fadeDown()],
+  standalone: false,
 })
 export class DropdownButtonComponent implements OnInit {
   @Input() disabled = false;

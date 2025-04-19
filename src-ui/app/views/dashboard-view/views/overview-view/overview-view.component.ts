@@ -7,11 +7,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SleepPreparationService } from '../../../../services/sleep-preparation.service';
 
 @Component({
-    selector: 'app-overview-view',
-    templateUrl: './overview-view.component.html',
-    styleUrls: ['./overview-view.component.scss'],
-    animations: [noop(), fade(), hshrink()],
-    standalone: false
+  selector: 'app-overview-view',
+  templateUrl: './overview-view.component.html',
+  styleUrls: ['./overview-view.component.scss'],
+  animations: [noop(), fade(), hshrink()],
+  standalone: false,
 })
 export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;

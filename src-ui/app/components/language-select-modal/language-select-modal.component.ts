@@ -5,11 +5,11 @@ import { LANGUAGES } from 'src-ui/app/globals';
 import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
-    selector: 'app-language-select-modal',
-    templateUrl: './language-select-modal.component.html',
-    styleUrls: ['./language-select-modal.component.scss'],
-    animations: [fadeUp()],
-    standalone: false
+  selector: 'app-language-select-modal',
+  templateUrl: './language-select-modal.component.html',
+  styleUrls: ['./language-select-modal.component.scss'],
+  animations: [fadeUp()],
+  standalone: false,
 })
 export class LanguageSelectModalComponent extends BaseModalComponent<void, void> {
   languages = LANGUAGES;

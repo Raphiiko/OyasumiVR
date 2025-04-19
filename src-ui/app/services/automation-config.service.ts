@@ -7,8 +7,7 @@ import {
   ShutdownAutomationsConfig,
 } from '../models/automations';
 import { asyncScheduler, BehaviorSubject, Observable, skip, switchMap, throttleTime } from 'rxjs';
-import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE, SETTINGS_KEY_AUTOMATION_CONFIGS } from '../globals';
+import { SETTINGS_KEY_AUTOMATION_CONFIGS, SETTINGS_STORE } from '../globals';
 
 import { migrateAutomationConfigs } from '../migrations/automation-configs.migrations';
 import { listen } from '@tauri-apps/api/event';
@@ -17,7 +16,6 @@ import { listen } from '@tauri-apps/api/event';
   providedIn: 'root',
 })
 export class AutomationConfigService {
-  private store = new Store(SETTINGS_FILE);
   private _configs: BehaviorSubject<AutomationConfigs> = new BehaviorSubject<AutomationConfigs>(
     AUTOMATION_CONFIGS_DEFAULT
   );
@@ -57,7 +55,7 @@ export class AutomationConfigService {
   }
 
   async loadConfigs() {
-    let configs: AutomationConfigs | null = await this.store.get<AutomationConfigs>(
+    let configs: AutomationConfigs | undefined = await SETTINGS_STORE.get<AutomationConfigs>(
       SETTINGS_KEY_AUTOMATION_CONFIGS
     );
     configs = configs ? migrateAutomationConfigs(configs) : this._configs.value;
@@ -66,7 +64,7 @@ export class AutomationConfigService {
   }
 
   async saveConfigs() {
-    await this.store.set(SETTINGS_KEY_AUTOMATION_CONFIGS, this._configs.value);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_AUTOMATION_CONFIGS, this._configs.value);
+    await SETTINGS_STORE.save();
   }
 }

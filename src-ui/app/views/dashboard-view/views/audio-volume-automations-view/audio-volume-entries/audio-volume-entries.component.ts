@@ -17,11 +17,11 @@ import {
 } from 'src-ui/app/models/automations';
 
 @Component({
-    selector: 'app-audio-volume-entries',
-    templateUrl: './audio-volume-entries.component.html',
-    styleUrls: ['./audio-volume-entries.component.scss'],
-    animations: [vshrink()],
-    standalone: false
+  selector: 'app-audio-volume-entries',
+  templateUrl: './audio-volume-entries.component.html',
+  styleUrls: ['./audio-volume-entries.component.scss'],
+  animations: [vshrink()],
+  standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {
   @Input() automationType?: 'onSleepEnable' | 'onSleepDisable' | 'onSleepPreparation';

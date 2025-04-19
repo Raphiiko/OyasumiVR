@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { VRChatLogEvent } from '../models/vrchat-log-event';
 import * as moment from 'moment';
 import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 
 interface RawLogEvent {
   time: number;

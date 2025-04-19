@@ -7,14 +7,14 @@ import { APP_SETTINGS_DEFAULT } from '../../models/settings';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
 import pMinDelay from 'p-min-delay';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 
 @Component({
-    selector: 'app-mqtt-config-modal',
-    templateUrl: './mqtt-config-modal.component.html',
-    styleUrls: ['./mqtt-config-modal.component.scss'],
-    animations: [fadeUp(), hshrink(), vshrink()],
-    standalone: false
+  selector: 'app-mqtt-config-modal',
+  templateUrl: './mqtt-config-modal.component.html',
+  styleUrls: ['./mqtt-config-modal.component.scss'],
+  animations: [fadeUp(), hshrink(), vshrink()],
+  standalone: false,
 })
 export class MqttConfigModalComponent extends BaseModalComponent<void, void> implements OnInit {
   config = MqttService.mapAppSettingsToMqttConfig(structuredClone(APP_SETTINGS_DEFAULT));

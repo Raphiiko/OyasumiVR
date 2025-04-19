@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { warn } from 'tauri-plugin-log-api';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { warn } from '@tauri-apps/plugin-log';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { hshrink } from 'src-ui/app/utils/animations';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
 import { VRChatService } from '../../../../services/vrchat.service';
@@ -10,11 +10,11 @@ import { MqttConfigModalComponent } from '../../../../components/mqtt-config-mod
 import { MqttService } from '../../../../services/mqtt/mqtt.service';
 
 @Component({
-    selector: 'app-settings-integrations-view',
-    templateUrl: './settings-integrations-view.component.html',
-    styleUrls: ['./settings-integrations-view.component.scss'],
-    animations: [hshrink()],
-    standalone: false
+  selector: 'app-settings-integrations-view',
+  templateUrl: './settings-integrations-view.component.html',
+  styleUrls: ['./settings-integrations-view.component.scss'],
+  animations: [hshrink()],
+  standalone: false,
 })
 export class SettingsIntegrationsViewComponent {
   deobfuscated: string[] = [];

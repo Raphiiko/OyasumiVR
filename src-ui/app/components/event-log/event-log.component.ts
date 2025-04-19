@@ -18,11 +18,11 @@ import {
 import { AppSettingsService } from '../../services/app-settings.service';
 
 @Component({
-    selector: 'app-event-log',
-    templateUrl: './event-log.component.html',
-    styleUrls: ['./event-log.component.scss'],
-    animations: [vshrink(), noop(), fade(), hshrink()],
-    standalone: false
+  selector: 'app-event-log',
+  templateUrl: './event-log.component.html',
+  styleUrls: ['./event-log.component.scss'],
+  animations: [vshrink(), noop(), fade(), hshrink()],
+  standalone: false,
 })
 export class EventLogComponent implements OnInit, AfterViewInit {
   private readonly pageSize = 10;

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { CancellableTask } from '../../utils/cancellable-task';
 import { BrightnessTransitionTask } from './brightness-transition';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import {
   SET_BRIGHTNESS_OR_CCT_OPTIONS_DEFAULTS,
   SetBrightnessOrCCTOptions,

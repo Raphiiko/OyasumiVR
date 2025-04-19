@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api/tauri';
+import { invoke } from '@tauri-apps/api/core';
 import { NvmlDevice as NvmlDevice } from '../models/nvml-device';
 import { BehaviorSubject, delay, filter, interval, Observable, startWith, switchMap } from 'rxjs';
 import { ElevatedSidecarService } from './elevated-sidecar.service';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 export type NvmlStatus =
   | 'Initializing'

@@ -1,8 +1,8 @@
 import { mergeWith } from 'lodash';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 import { PULSOID_API_SETTINGS_DEFAULT, PulsoidApiSettings } from '../models/pulsoid-api-settings';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
-import { message } from '@tauri-apps/api/dialog';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
+import { message } from '@tauri-apps/plugin-dialog';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -55,7 +55,7 @@ export function migratePulsoidApiSettings(data: any): PulsoidApiSettings {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('pulsoid-api-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

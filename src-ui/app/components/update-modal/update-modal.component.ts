@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UpdateManifest } from '@tauri-apps/api/updater';
+import { Update } from '@tauri-apps/plugin-updater';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
 import { UpdateService } from '../../services/update.service';
 import { fadeUp, hshrink } from '../../utils/animations';
@@ -7,7 +7,7 @@ import { getVersion } from '../../utils/app-utils';
 import { FLAVOUR } from '../../../build';
 
 interface UpdateModalInputModel {
-  manifest?: UpdateManifest;
+  update?: Update;
 }
 
 interface UpdateModalOutputModel {}
@@ -23,11 +23,11 @@ export class UpdateModalComponent
   extends BaseModalComponent<UpdateModalInputModel, UpdateModalOutputModel>
   implements OnInit, UpdateModalInputModel
 {
-  manifest?: UpdateManifest;
+  update?: Update;
   currentVersion = '';
   installing = false;
 
-  constructor(private update: UpdateService) {
+  constructor(private updateService: UpdateService) {
     super();
   }
 
@@ -37,13 +37,13 @@ export class UpdateModalComponent
 
   async updateLater() {
     if (!this.installing) {
-      await this.close();
+      this.close();
     }
   }
 
   async install() {
     this.installing = true;
-    await this.update.installUpdate();
+    await this.updateService.installUpdate();
   }
 
   protected readonly FLAVOUR = FLAVOUR;

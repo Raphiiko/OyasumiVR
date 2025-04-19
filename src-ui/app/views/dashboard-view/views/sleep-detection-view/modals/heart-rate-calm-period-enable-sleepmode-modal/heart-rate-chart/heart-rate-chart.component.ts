@@ -9,10 +9,10 @@ import { Chart, TooltipModel } from 'chart.js/auto';
 import 'chartjs-adapter-moment';
 
 @Component({
-    selector: 'app-heart-rate-chart',
-    templateUrl: './heart-rate-chart.component.html',
-    styleUrls: ['./heart-rate-chart.component.scss'],
-    standalone: false
+  selector: 'app-heart-rate-chart',
+  templateUrl: './heart-rate-chart.component.html',
+  styleUrls: ['./heart-rate-chart.component.scss'],
+  standalone: false,
 })
 export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy {
   private chartData: {

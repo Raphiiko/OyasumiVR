@@ -11,11 +11,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 
 @Component({
-    selector: 'app-brightness-control-modal',
-    templateUrl: './brightness-control-modal.component.html',
-    styleUrls: ['./brightness-control-modal.component.scss'],
-    animations: [fadeUp(), vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-brightness-control-modal',
+  templateUrl: './brightness-control-modal.component.html',
+  styleUrls: ['./brightness-control-modal.component.scss'],
+  animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class BrightnessControlModalComponent
   extends BaseModalComponent<void, void>

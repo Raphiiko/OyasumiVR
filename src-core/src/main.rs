@@ -1,7 +1,4 @@
-#![cfg_attr(
-    all(not(debug_assertions), target_os = "windows"),
-    windows_subsystem = "windows"
-)]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 #[macro_use(lazy_static)]
 extern crate lazy_static;
@@ -38,27 +35,37 @@ use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
 use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
-use tauri::{plugin::TauriPlugin, AppHandle, Manager, Wry};
-use tauri_plugin_log::{LogTarget, RotationStrategy};
+use tauri::{plugin::TauriPlugin, Manager, Wry};
+use tauri_plugin_cli::CliExt;
+use tauri_plugin_log::RotationStrategy;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 fn main() {
-    tauri_plugin_deep_link::prepare("co.raphii.oyasumi.deeplink");
     // Construct Oyasumi Tauri application
     tauri::Builder::default()
-        .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(tauri_plugin_fs_extra::init())
-        .plugin(configure_tauri_plugin_log())
         .plugin(configure_tauri_plugin_single_instance())
+        .plugin(tauri_plugin_deep_link::init())
+        .plugin(configure_tauri_plugin_log())
+        .plugin(tauri_plugin_cli::init())
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_process::init())
+        .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_clipboard_manager::init())
+        .plugin(tauri_plugin_global_shortcut::Builder::new().build())
+        .plugin(tauri_plugin_http::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
+        .plugin(tauri_plugin_store::Builder::default().build())
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
-            configure_tauri_plugin_deep_link(app.handle());
-            let matches = app.get_cli_matches().unwrap();
+            let matches = app.cli().matches().unwrap();
             tauri::async_runtime::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
             match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
-                app.handle(),
+                app.handle().clone(),
             ))) {
                 Ok(_) => {}
                 Err(e) => {
@@ -68,21 +75,196 @@ fn main() {
             }
             Ok(())
         })
-        .system_tray(system_tray::init_system_tray())
-        .on_system_tray_event(system_tray::handle_system_tray_events())
-        .on_window_event(system_tray::handle_window_events())
         .invoke_handler(configure_command_handlers())
-        .build(tauri::generate_context!())
+        .on_window_event(system_tray::handle_window_events)
+        .run(tauri::generate_context!())
         .expect("An error occurred while running the application")
-        .run(|_, event| match event {
-            // tauri::RunEvent::Exit { .. } => {
-            //     if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-            //         handler.track_event("app_exited", None);
-            //         handler.flush_events_blocking();
-            //     }
-            // }
-            _ => {}
+}
+
+fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
+    tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+        // Focus main window when user attempts to launch a second instance.
+        let window = app.get_webview_window("main").unwrap();
+        if let Ok(is_visible) = window.is_visible() {
+            // Window is minimized to tray, show it
+            if !is_visible {
+                window.show().unwrap();
+            }
+            // Focus the window
+            window.set_focus().unwrap();
+        }
+    })
+}
+
+fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
+    tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
+        .with_panic_hook(Box::new(|client, info, msg| {
+            let location = info
+                .location()
+                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
+                .unwrap_or_else(|| "".to_string());
+
+            // Upload crash report if telemetry is enabled
+            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
+                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
+                let _ = client.track_event(
+                    "rust_panic",
+                    Some(json!({
+                      "info": format!("{} ({})", msg, location),
+                    })),
+                );
+            }
+
+            // Write msg and location to file
+            let panic_log_path = {
+                let full_path = std::env::current_exe().unwrap();
+                full_path.parent().unwrap().to_path_buf().join("panic.log")
+            };
+            println!("Writing panic log to {:#?}", panic_log_path);
+            let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
+        }))
+        .build()
+}
+
+fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
+    let mut builder = tauri_plugin_log::Builder::default()
+        .format(move |out, message, record| {
+            let format = time::format_description::parse(
+                "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
+            )
+            .unwrap();
+            out.finish(format_args!(
+                "{}[{}] {}",
+                time::OffsetDateTime::now_utc().format(&format).unwrap(),
+                record.level(),
+                message
+            ))
         })
+        .rotation_strategy(RotationStrategy::KeepAll);
+
+    // #[cfg(debug_assertions)]
+    // {
+    builder = builder
+        .level(LevelFilter::Info)
+        .target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Webview,
+        ))
+        .target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Stdout,
+        ))
+        .target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::LogDir { file_name: None },
+        ));
+    // }
+
+    builder.build()
+}
+
+async fn app_setup(app_handle: tauri::AppHandle) {
+    info!(
+        "[Core] Starting OyasumiVR in {} mode",
+        crate::utils::cli_core_mode().await
+    );
+    // Ensure the working directory is the installation directory
+    let executable_path = {
+        let full_path = std::env::current_exe().unwrap();
+        full_path.parent().unwrap().to_path_buf()
+    };
+    info!("[Core] Setting working directory to: {:?}", executable_path);
+    std::env::set_current_dir(&executable_path).unwrap();
+    // Run any migrations first
+    migrations::run_migrations().await;
+    // Load configs
+    load_configs().await;
+    // Set up app reference
+    *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
+    let window = app_handle.get_webview_window("main").unwrap();
+    // Open devtools if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        window.open_devtools();
+    }
+    // Disable swipe navigation in main window
+    window
+        .with_webview(|webview| unsafe {
+            let settings = webview
+                .controller()
+                .CoreWebView2()
+                .unwrap()
+                .Settings()
+                .unwrap();
+            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
+            settings.SetIsSwipeNavigationEnabled(false).unwrap();
+        })
+        .unwrap();
+    // Get dependencies
+    let cache_dir = app_handle.path().app_cache_dir().unwrap();
+    // Initialize utility module
+    utils::init();
+    // Initialize Steam module
+    steam::init().await;
+    // Initialize HTTP server
+    http::init().await;
+    // Initialize gRPC server
+    grpc::init_server().await;
+    grpc::init_web_server().await;
+    // Initialize OSC
+    osc::init().await;
+    // Initialize OpenVR Manager
+    openvr::init().await;
+    // Initialize Image Cache
+    image_cache::init(cache_dir).await;
+    // Init sound playback
+    os::init_sound_playback().await;
+    // Initialize audio device manager
+    os::init_audio_device_manager().await;
+    // Initialize Lighthouse Bluetooth
+    lighthouse::init().await;
+    // Initialize Hardware modules
+    hardware::init().await;
+    // Initialize log commands
+    commands::log_utils::init(app_handle.path().app_log_dir().unwrap()).await;
+    // Initialize elevated sidecar module
+    elevated_sidecar::init().await;
+    // Initialize overlay sidecar module
+    overlay_sidecar::init().await;
+    // Initialize Discord module
+    discord::init().await;
+    // Initialize system tray
+    system_tray::init().await;
+    // Setup start of minute cronjob
+    let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
+    cron.seconds("0");
+    CronJob::start_job_threaded(cron);
+    // If we have admin privileges, prelaunch the elevation sidecar
+    if is_elevated() {
+        info!("[Core] Main process is running with elevation. Pre-launching elevated sidecar...");
+        // Wait for grpc server to start so we can pass the port
+        loop {
+            let core_grpc_port = grpc::SERVER_PORT.lock().await;
+            // Once we have the port, start the sidecar
+            if core_grpc_port.is_some() {
+                drop(core_grpc_port);
+                elevated_sidecar::commands::start_elevated_sidecar().await;
+                break;
+            }
+        }
+    } else {
+        info!(
+            "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
+        );
+    }
+
+    // Start profiling if we're in debug mode
+    #[cfg(debug_assertions)]
+    {
+        utils::profiling::enable_profiling();
+    }
+    // Start profiling if the flag for it is set
+    #[cfg(not(debug_assertions))]
+    if globals::is_flag_set("ENABLE_PROFILING").await {
+        utils::profiling::enable_profiling();
+    }
 }
 
 async fn load_configs() {
@@ -104,7 +286,11 @@ async fn load_configs() {
     };
 }
 
-fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
+fn on_cron_minute_start(_: &str) {
+    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+}
+
+fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
     tauri::generate_handler![
         openvr::commands::openvr_get_devices,
         openvr::commands::openvr_status,
@@ -145,7 +331,6 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         os::commands::set_hardware_mic_activity_enabled,
         os::commands::set_hardware_mic_activivation_threshold,
         os::commands::is_vrchat_active,
-        os::commands::activate_memory_watcher,
         osc::commands::osc_send_command,
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
@@ -155,9 +340,6 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         osc::commands::add_osc_method,
         osc::commands::set_osc_method_value,
         osc::commands::set_osc_receive_address_whitelist,
-        system_tray::commands::set_close_to_system_tray,
-        system_tray::commands::set_start_in_system_tray,
-        system_tray::commands::request_app_window_close,
         elevated_sidecar::commands::elevated_sidecar_started,
         elevated_sidecar::commands::start_elevated_sidecar,
         elevated_sidecar::commands::elevated_sidecar_get_grpc_web_port,
@@ -165,6 +347,7 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         overlay_sidecar::commands::start_overlay_sidecar,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_web_port,
         overlay_sidecar::commands::overlay_sidecar_get_grpc_port,
+        system_tray::commands::set_close_to_system_tray,
         vrc_log_parser::commands::init_vrc_log_watcher,
         discord::commands::discord_update_activity,
         discord::commands::discord_clear_activity,
@@ -193,195 +376,4 @@ fn configure_command_handlers() -> impl Fn(tauri::Invoke) {
         grpc::commands::get_core_grpc_web_port,
         telemetry::commands::set_telemetry_enabled,
     ]
-}
-
-fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
-    tauri_plugin_aptabase::Builder::new(APTABASE_APP_KEY)
-        .with_panic_hook(Box::new(|client, info, msg| {
-            let location = info
-                .location()
-                .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
-                .unwrap_or_else(|| "".to_string());
-
-            // Upload crash report if telemetry is enabled
-            if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {
-                println!("Uploading panic data to Aptabase: {} ({})", msg, location);
-                client.track_event(
-                    "rust_panic",
-                    Some(json!({
-                      "info": format!("{} ({})", msg, location),
-                    })),
-                );
-            }
-
-            // Write msg and location to file
-            let panic_log_path = {
-                let full_path = std::env::current_exe().unwrap();
-                full_path.parent().unwrap().to_path_buf().join("panic.log")
-            };
-            println!("Writing panic log to {:#?}", panic_log_path);
-            let _ = std::fs::write(panic_log_path, format!("{} ({})\n", msg, location));
-        }))
-        .build()
-}
-
-fn configure_tauri_plugin_deep_link(app_handle: AppHandle) {
-    if let Err(e) = tauri_plugin_deep_link::register("oyasumivr", move |request| {
-        dbg!(&request);
-        app_handle.emit_all("onDeepLinkCall", request).unwrap();
-    }) {
-        warn!("[Core] Could not register schema for handling deep links. Functionality requiring deep links will not work properly. Error: {:#?}", e);
-    };
-}
-
-fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    #[cfg(debug_assertions)]
-    const LOG_TARGETS: [LogTarget; 3] = [LogTarget::LogDir, LogTarget::Stdout, LogTarget::Webview];
-    #[cfg(debug_assertions)]
-    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
-    #[cfg(not(debug_assertions))]
-    const LOG_TARGETS: [LogTarget; 2] = [LogTarget::LogDir, LogTarget::Stdout];
-    #[cfg(not(debug_assertions))]
-    const LOG_LEVEL: LevelFilter = LevelFilter::Info;
-
-    tauri_plugin_log::Builder::default()
-        .format(move |out, message, record| {
-            let format = time::format_description::parse(
-                "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
-            )
-            .unwrap();
-            out.finish(format_args!(
-                "{}[{}] {}",
-                time::OffsetDateTime::now_utc().format(&format).unwrap(),
-                record.level(),
-                message
-            ))
-        })
-        .level(LOG_LEVEL)
-        .targets(LOG_TARGETS)
-        .rotation_strategy(RotationStrategy::KeepAll)
-        .build()
-}
-
-fn configure_tauri_plugin_single_instance() -> TauriPlugin<Wry> {
-    tauri_plugin_single_instance::init(|app, _argv, _cwd| {
-        // Focus main window when user attempts to launch a second instance.
-        let window = app.get_window("main").unwrap();
-        if let Ok(is_visible) = window.is_visible() {
-            if !is_visible {
-                window.show().unwrap();
-            }
-            window.set_focus().unwrap();
-        }
-    })
-}
-
-async fn app_setup(app_handle: tauri::AppHandle) {
-    info!(
-        "[Core] Starting OyasumiVR in {} mode",
-        crate::utils::cli_core_mode().await
-    );
-    // Ensure the working directory is the installation directory
-    let executable_path = {
-        let full_path = std::env::current_exe().unwrap();
-        full_path.parent().unwrap().to_path_buf()
-    };
-    info!("[Core] Setting working directory to: {:?}", executable_path);
-    std::env::set_current_dir(&executable_path).unwrap();
-    // Run any migrations first
-    migrations::run_migrations().await;
-    // Load configs
-    load_configs().await;
-    // Set up app reference
-    *TAURI_APP_HANDLE.lock().await = Some(app_handle.clone());
-    let window = app_handle.get_window("main").unwrap();
-    // Open devtools if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        window.open_devtools();
-    }
-    // Disable swipe navigation in main window
-    window
-        .with_webview(|webview| unsafe {
-            let settings = webview
-                .controller()
-                .CoreWebView2()
-                .unwrap()
-                .Settings()
-                .unwrap();
-            let settings: ICoreWebView2Settings6 = mem::transmute(settings);
-            settings.SetIsSwipeNavigationEnabled(false).unwrap();
-        })
-        .unwrap();
-    // Get dependencies
-    let cache_dir = app_handle.path_resolver().app_cache_dir().unwrap();
-    // Initialize utility module
-    utils::init();
-    // Initialize Steam module
-    steam::init().await;
-    // Initialize HTTP server
-    http::init().await;
-    // Initialize gRPC server
-    grpc::init_server().await;
-    grpc::init_web_server().await;
-    // Initialize OSC
-    osc::init().await;
-    // Initialize OpenVR Manager
-    openvr::init().await;
-    // Initialize the system tray manager
-    system_tray::init().await;
-    // Initialize Image Cache
-    image_cache::init(cache_dir).await;
-    // Init sound playback
-    os::init_sound_playback().await;
-    // Initialize audio device manager
-    os::init_audio_device_manager().await;
-    // Initialize Lighthouse Bluetooth
-    lighthouse::init().await;
-    // Initialize Hardware modules
-    hardware::init().await;
-    // Initialize log commands
-    commands::log_utils::init(app_handle.path_resolver().app_log_dir().unwrap()).await;
-    // Initialize elevated sidecar module
-    elevated_sidecar::init().await;
-    // Initialize overlay sidecar module
-    overlay_sidecar::init().await;
-    // Initialize Discord module
-    discord::init().await;
-    // Setup start of minute cronjob
-    let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
-    cron.seconds("0");
-    CronJob::start_job_threaded(cron);
-    // If we have admin privileges, prelaunch the elevation sidecar
-    if is_elevated() {
-        info!("[Core] Main process is running with elevation. Pre-launching elevated sidecar...");
-        // Wait for grpc server to start so we can pass the port
-        loop {
-            let core_grpc_port = grpc::SERVER_PORT.lock().await;
-            // Once we have the port, start the sidecar
-            if core_grpc_port.is_some() {
-                drop(core_grpc_port);
-                elevated_sidecar::commands::start_elevated_sidecar().await;
-                break;
-            }
-        }
-    } else {
-        info!(
-            "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
-        );
-    }
-    // Start profiling if we're in debug mode
-    #[cfg(debug_assertions)]
-    {
-        utils::profiling::enable_profiling();
-    }
-    // Start profiling if the flag for it is set
-    #[cfg(not(debug_assertions))]
-    if globals::is_flag_set("ENABLE_PROFILING").await {
-        utils::profiling::enable_profiling();
-    }
-}
-
-fn on_cron_minute_start(_: &str) {
-    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }

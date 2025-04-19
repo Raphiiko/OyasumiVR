@@ -5,7 +5,7 @@
   <div class="pane-content">
     <p
       translate="comp.update-modal.message"
-      [translateParams]="{ newVersion: manifest?.version, currentVersion: currentVersion }"
+      [translateParams]="{ newVersion: update?.version, currentVersion: update?.currentVersion}"
     ></p>
     <div class="steam-ad" *ngIf="FLAVOUR === 'STANDALONE'">
       <div class="steam-ad-logo">
@@ -29,7 +29,7 @@
         *ngIf="!installing"
         @hshrink
         translate
-        [translateParams]="{ version: manifest?.version }"
+        [translateParams]="{ version: update?.version }"
       >
         comp.update-modal.updateNow
       </span>

@@ -12,11 +12,11 @@ import { LighthouseService, LighthouseStatus } from 'src-ui/app/services/lightho
 import { noop, vshrink } from 'src-ui/app/utils/animations';
 
 @Component({
-    selector: 'app-base-stations-tab',
-    templateUrl: './base-stations-tab.component.html',
-    styleUrls: ['./base-stations-tab.component.scss'],
-    animations: [vshrink(), noop()],
-    standalone: false
+  selector: 'app-base-stations-tab',
+  templateUrl: './base-stations-tab.component.html',
+  styleUrls: ['./base-stations-tab.component.scss'],
+  animations: [vshrink(), noop()],
+  standalone: false,
 })
 export class BaseStationsTabComponent implements OnInit {
   automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);

@@ -22,8 +22,8 @@ import { SleepService } from '../sleep.service';
 import { SleepPreparationService } from '../sleep-preparation.service';
 import { EventLogService } from '../event-log.service';
 import { EventLogChangedVRChatMicMuteState } from '../../models/event-log-entry';
-import { info } from 'tauri-plugin-log-api';
-import { Client, getClient } from '@tauri-apps/api/http';
+import { info } from '@tauri-apps/plugin-log';
+import { fetch } from '@tauri-apps/plugin-http';
 
 const READ_ADDR = '/avatar/parameters/MuteSelf';
 const WRITE_ADDR = '/input/Voice';
@@ -37,7 +37,6 @@ export class VRChatMicMuteAutomationService {
   private config: VRChatMicMuteAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.VRCHAT_MIC_MUTE_AUTOMATIONS
   );
-  private http!: Client;
 
   constructor(
     private osc: OscService,
@@ -48,8 +47,6 @@ export class VRChatMicMuteAutomationService {
   ) {}
 
   async init() {
-    this.http = await getClient();
-
     this.automationConfigs.configs.subscribe((configs) => {
       this.config = configs.VRCHAT_MIC_MUTE_AUTOMATIONS;
     });
@@ -154,16 +151,15 @@ export class VRChatMicMuteAutomationService {
     const oscqAddr = await firstValueFrom(this.osc.vrchatOscQueryAddress);
     if (!oscqAddr) return false;
     try {
-      const resp = await this.http.get<{ VALUE?: boolean[] }>(
-        `http://${oscqAddr}/avatar/parameters/MuteSelf`
-      );
+      const resp = await fetch(`http://${oscqAddr}/avatar/parameters/MuteSelf`);
+      const data: { VALUE?: boolean[] } = await resp.json().catch(() => {});
       if (
-        resp.data.VALUE &&
-        isArray(resp.data.VALUE) &&
-        resp.data.VALUE.length &&
-        typeof resp.data.VALUE[0] === 'boolean'
+        data.VALUE &&
+        isArray(data.VALUE) &&
+        data.VALUE.length &&
+        typeof data.VALUE[0] === 'boolean'
       ) {
-        this._muted.next(Boolean(resp.data.VALUE[0]));
+        this._muted.next(Boolean(data.VALUE[0]));
         return true;
       }
       return false;

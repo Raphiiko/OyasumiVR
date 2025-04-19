@@ -14,11 +14,11 @@ export interface HeartRateCalmPeriodEnableSleepModeModalOutputModel {
 }
 
 @Component({
-    selector: 'app-heart-rate-calm-period-enable-sleepmode-modal',
-    templateUrl: './heart-rate-calm-period-enable-sleep-mode-modal.component.html',
-    styleUrls: ['./heart-rate-calm-period-enable-sleep-mode-modal.component.scss'],
-    animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-    standalone: false
+  selector: 'app-heart-rate-calm-period-enable-sleepmode-modal',
+  templateUrl: './heart-rate-calm-period-enable-sleep-mode-modal.component.html',
+  styleUrls: ['./heart-rate-calm-period-enable-sleep-mode-modal.component.scss'],
+  animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  standalone: false,
 })
 export class HeartRateCalmPeriodEnableSleepModeModalComponent
   extends BaseModalComponent<

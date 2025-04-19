@@ -1,43 +1,98 @@
 import { Injectable } from '@angular/core';
 import { AppSettingsService } from './app-settings.service';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs';
-import { invoke } from '@tauri-apps/api';
+import { TrayIcon } from '@tauri-apps/api/tray';
+import { Menu } from '@tauri-apps/api/menu';
+import { getVersion } from '../utils/app-utils';
+import { BUILD_ID } from 'src-ui/build';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  firstValueFrom,
+  map,
+  startWith,
+} from 'rxjs';
+import { SleepService } from './sleep.service';
+import { TranslateService } from '@ngx-translate/core';
+import { error } from '@tauri-apps/plugin-log';
+import { invoke } from '@tauri-apps/api/core';
 
 const CLOSE_TO_SYSTEM_TRAY_COMMAND = 'set_close_to_system_tray';
-const START_IN_SYSTEM_TRAY_COMMAND = 'set_start_in_system_tray';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SystemTrayService {
-  constructor(private readonly _appSettingsService: AppSettingsService) {}
+  private readonly _tray = new BehaviorSubject<TrayIcon | null>(null);
 
-  async init() {
-    // Update exit in system tray behaviour following the setting.
-    this._appSettingsService.settings
+  constructor(
+    private readonly appSettingsService: AppSettingsService,
+    private readonly sleepService: SleepService,
+    private readonly translateService: TranslateService
+  ) {}
+
+  public async init() {
+    const tray = await TrayIcon.getById('oyasumivr-tray');
+    if (!tray) {
+      error('[SystemTrayService] Tray icon not found');
+      throw new Error('Tray icon not found');
+    }
+    this._tray.next(tray);
+    combineLatest([
+      this.sleepService.mode,
+      this.translateService.onLangChange.pipe(startWith(this.translateService.currentLang)),
+    ])
+      .pipe(debounceTime(50))
+      .subscribe(() => this.rebuildMenu());
+    // await listen<'Left' | 'Right' | string>('system_tray_click', (event) => {});
+    // await listen<'Left' | 'Right' | string>('system_tray_double_click', (event) => {});
+    this.appSettingsService.settings
       .pipe(
         map((settings) => settings.exitInSystemTray),
         distinctUntilChanged(),
         debounceTime(100)
       )
-      .subscribe((exitInSystemTray) => this.updateCloseToSystemTray(exitInSystemTray));
-
-    // Update start in system tray behaviour following the settings.
-    // Send command only upon loading settings, in order to hide or show the window upon startup.
-    this._appSettingsService.settings
-      .pipe(
-        map((settings) => settings.startInSystemTray),
-        distinctUntilChanged(),
-        debounceTime(100)
-      )
-      .subscribe((startInSystemTray) => this.updateStartInSystemTray(startInSystemTray));
+      .subscribe(async (enabled) => {
+        await invoke(CLOSE_TO_SYSTEM_TRAY_COMMAND, { enabled });
+      });
   }
 
-  private async updateCloseToSystemTray(enabled: boolean) {
-    await invoke(CLOSE_TO_SYSTEM_TRAY_COMMAND, { enabled });
+  private async rebuildMenu(): Promise<void> {
+    if (this._tray.value == null) return;
+    const menu = await this.buildMenu();
+    this._tray.value?.setMenu(menu);
   }
 
-  private async updateStartInSystemTray(enabled: boolean) {
-    await invoke(START_IN_SYSTEM_TRAY_COMMAND, { enabled });
+  private async buildMenu(): Promise<Menu> {
+    return Menu.new({
+      items: [
+        {
+          text: `OyasumiVR v${await getVersion()} (${BUILD_ID})`,
+          enabled: false,
+        },
+        {
+          item: 'Separator',
+        },
+        {
+          text: this.translateService.instant('systemTray.sleepMode'),
+          checked: await firstValueFrom(this.sleepService.mode),
+          action: async () => {
+            if (await firstValueFrom(this.sleepService.mode)) {
+              this.sleepService.disableSleepMode({ type: 'MANUAL' });
+            } else {
+              this.sleepService.enableSleepMode({ type: 'MANUAL' });
+            }
+          },
+        },
+        {
+          item: 'Separator',
+        },
+        {
+          text: this.translateService.instant('systemTray.quit'),
+          item: 'Quit',
+        },
+      ],
+    });
   }
 }

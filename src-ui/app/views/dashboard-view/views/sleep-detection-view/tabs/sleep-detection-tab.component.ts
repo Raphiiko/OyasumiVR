@@ -12,8 +12,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { OVRDeviceClass } from '../../../../../models/ovr-device';
 
 @Component({
-    template: '',
-    standalone: false
+  template: '',
+  standalone: false,
 })
 export abstract class SleepDetectionTabComponent implements OnInit {
   protected automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);

@@ -25,11 +25,11 @@ import { CCTControlService } from '../../services/cct-control/cct-control.servic
 import { CCTControlModalComponent } from '../cct-control-modal/cct-control-modal.component';
 
 @Component({
-    selector: 'app-main-status-bar',
-    templateUrl: './main-status-bar.component.html',
-    styleUrls: ['./main-status-bar.component.scss'],
-    animations: [hshrink(), noop()],
-    standalone: false
+  selector: 'app-main-status-bar',
+  templateUrl: './main-status-bar.component.html',
+  styleUrls: ['./main-status-bar.component.scss'],
+  animations: [hshrink(), noop()],
+  standalone: false,
 })
 export class MainStatusBarComponent implements OnInit {
   protected sleepMode = this.sleepService.mode;

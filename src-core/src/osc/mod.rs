@@ -46,7 +46,9 @@ async fn spawn_oscquery_client_task() {
             if let Some((host, port)) = oyasumivr_oscquery::client::get_vrchat_osc_address().await {
                 set_vr_chat_osc_address(host, port).await;
             }
-            if let Some((host, port)) = oyasumivr_oscquery::client::get_vrchat_oscquery_address().await {
+            if let Some((host, port)) =
+                oyasumivr_oscquery::client::get_vrchat_oscquery_address().await
+            {
                 set_vr_chat_osc_query_address(host, port).await;
             }
         }

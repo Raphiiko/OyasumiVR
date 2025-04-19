@@ -1,7 +1,7 @@
 import { OscMethod } from '../osc-method';
 import { OscService } from '../../osc.service';
 import { OSCBoolValue, OSCMessage } from '../../../models/osc-message';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 import { distinctUntilChanged, map, switchMap } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
 

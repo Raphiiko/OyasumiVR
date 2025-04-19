@@ -1,6 +1,6 @@
 import { OSCMessage } from 'src-ui/app/models/osc-message';
 import { OscService } from '../osc.service';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 
 export interface OscMethodOptions<T> {
   description: string;

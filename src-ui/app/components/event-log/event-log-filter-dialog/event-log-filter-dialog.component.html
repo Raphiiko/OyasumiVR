@@ -1,7 +1,5 @@
 <div class="pane modal modal-xl" @fadeUp>
-  <div class="pane-title" translate>
-    comp.event-log-filter-dialog.title
-  </div>
+  <div class="pane-title" translate> comp.event-log-filter-dialog.title </div>
   <div class="pane-content">
     <div class="action-row">
       <p class="description" translate>comp.event-log-filter-dialog.selectDescription</p>
@@ -15,13 +13,20 @@
     <div class="filter-container">
       <div class="filter" *ngFor="let filter of filters" (click)="toggleFilter(filter.id)">
         <div class="filter-icon">
-          <div class="material-symbols-outlined" *ngIf="selectedFilters.includes(filter.id)">radio_button_checked</div>
-          <div class="material-symbols-outlined" *ngIf="!selectedFilters.includes(filter.id)">radio_button_unchecked
+          <div class="material-symbols-outlined" *ngIf="selectedFilters.includes(filter.id)"
+            >radio_button_checked</div
+          >
+          <div class="material-symbols-outlined" *ngIf="!selectedFilters.includes(filter.id)"
+            >radio_button_unchecked
           </div>
         </div>
         <div class="filter-labels">
-          <span>{{ 'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | translate }}</span>
-          <span>{{ 'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | translate }}</span>
+          <span>{{
+            'comp.event-log-filter-dialog.filters.' + filter.id + '.title' | translate
+          }}</span>
+          <span>{{
+            'comp.event-log-filter-dialog.filters.' + filter.id + '.description' | translate
+          }}</span>
         </div>
       </div>
     </div>

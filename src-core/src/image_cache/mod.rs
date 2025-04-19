@@ -1,13 +1,17 @@
 pub mod commands;
 
-use hyper::{
-    Body, Request, Response,
-};
+use hyper::{Body, Request, Response};
 use log::{error, info};
 use mime::Mime;
 use serde_json::json;
+use std::{
+    collections::HashMap,
+    convert::Infallible,
+    ffi::OsString,
+    path::{Path, PathBuf},
+    str::FromStr,
+};
 use tokio::sync::Mutex;
-use std::{collections::HashMap, convert::Infallible, ffi::OsString, path::{Path, PathBuf}, str::FromStr};
 use urlencoding::decode;
 
 lazy_static! {
@@ -20,7 +24,6 @@ pub async fn init(cache_dir: PathBuf) {
     image_cache.clean(true);
     *INSTANCE.lock().await = Some(image_cache);
 }
-
 
 #[derive(Debug, Clone)]
 pub struct ImageCache {

@@ -1,0 +1,9 @@
+{
+  "identifier": "splashscreen",
+  "description": "permissions that were migrated from v1",
+  "local": true,
+  "windows": ["splashscreen"],
+  "permissions": [
+    "core:default"
+  ]
+}

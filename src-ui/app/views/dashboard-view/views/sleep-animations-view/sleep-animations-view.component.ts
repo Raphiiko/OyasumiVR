@@ -18,16 +18,16 @@ import { SleepingAnimationsAutomationService } from '../../../../services/osc-au
 import { SleepService } from '../../../../services/sleep.service';
 import { ModalService } from '../../../../services/modal.service';
 import { OscScript } from '../../../../models/osc-script';
-import { open } from '@tauri-apps/api/shell';
+import { open } from '@tauri-apps/plugin-shell';
 import { SleepingAnimationPresetModalComponent } from '../../../../components/sleeping-animation-preset-modal/sleeping-animation-preset-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-sleep-animations-view',
-    templateUrl: './sleep-animations-view.component.html',
-    styleUrls: ['./sleep-animations-view.component.scss'],
-    animations: [noop(), vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-sleep-animations-view',
+  templateUrl: './sleep-animations-view.component.html',
+  styleUrls: ['./sleep-animations-view.component.scss'],
+  animations: [noop(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class SleepAnimationsViewComponent implements OnInit {
   oscOptionsExpanded = false;

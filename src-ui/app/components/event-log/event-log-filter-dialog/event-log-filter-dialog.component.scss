@@ -8,7 +8,6 @@
   overflow-y: auto;
 }
 
-
 .action-row {
   display: flex;
   flex-direction: row;
@@ -45,7 +44,7 @@
   border-radius: var(--surface-border-radius);
   cursor: pointer;
   border: transparent 1px solid;
-  transition: all .15s ease;
+  transition: all 0.15s ease;
 
   &:hover {
     border: var(--color-surface-4) 1px solid;
@@ -62,7 +61,7 @@
 
   &-icon {
     display: flex;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     flex-direction: row;
     align-items: center;
     justify-content: center;

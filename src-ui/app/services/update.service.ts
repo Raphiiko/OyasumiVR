@@ -1,46 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, interval, Observable, switchMap, take } from 'rxjs';
-import { checkUpdate, installUpdate, UpdateManifest } from '@tauri-apps/api/updater';
-import { relaunch } from '@tauri-apps/api/process';
-import { listen } from '@tauri-apps/api/event';
+import { BehaviorSubject, filter, interval, switchMap, take } from 'rxjs';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { ConfirmModalComponent } from '../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { UpdateModalComponent } from '../components/update-modal/update-modal.component';
-import { getVersion } from '../utils/app-utils';
-import { info } from 'tauri-plugin-log-api';
 import { FLAVOUR } from '../../build';
+import { info } from '@tauri-apps/plugin-log';
+import { Update } from '@tauri-apps/plugin-updater';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UpdateService {
-  private _updateAvailable: BehaviorSubject<{ checked: boolean; manifest?: UpdateManifest }> =
-    new BehaviorSubject<{ checked: boolean; manifest?: UpdateManifest }>({ checked: false });
-  public updateAvailable: Observable<{ checked: boolean; manifest?: UpdateManifest }> =
-    this._updateAvailable.asObservable();
+  private _updateAvailable = new BehaviorSubject<{ checked: boolean; update?: Update }>({
+    checked: false,
+  });
+  public updateAvailable = this._updateAvailable.asObservable();
 
   constructor(private modalService: ModalService) {}
 
   async init() {
-    listen('tauri://update-status', (res) => {
-      const event: { error?: any; status: 'ERROR' | 'PENDING' | 'DONE' } = res.payload as any;
-      if (event.status === 'DONE') {
-        info(`[Update] Update complete. Relaunching...`);
-        relaunch();
-        return;
-      }
-      if (event.status === 'ERROR') {
-        info(`[Update] Update error occurred: ${event.error}`);
-        this.modalService
-          .addModal(ConfirmModalComponent, {
-            title: 'updater.modals.error.title',
-            message: 'updater.modals.error.title',
-            confirmButtonText: 'shared.modals.ok',
-            showCancel: false,
-          })
-          .subscribe();
-      }
-    });
     if (FLAVOUR === 'STANDALONE') {
       // Check for updates on start
       await this.checkForUpdate(true);
@@ -66,24 +45,23 @@ export class UpdateService {
     }
     // Check for updates
     info(`[Update] Checking for updates...`);
-    const { shouldUpdate, manifest } = await checkUpdate();
-    if (shouldUpdate && manifest) {
+    // const update = (await check()) ?? undefined;
+    const update = { version: '1.2.3', currentVersion: '1.2.2' } as Update;
+    if (update) {
       info(
-        `[Update] Update available! New version: ${
-          manifest.version
-        }, Current version: ${await getVersion()}`
+        `[Update] Update available! New version: ${update.version}, Current version: ${update.currentVersion}`
       );
     }
     this._updateAvailable.next({
       checked: true,
-      manifest: (shouldUpdate && manifest) || undefined,
+      update,
     });
-    if (shouldUpdate && showDialog) {
+    if (update && showDialog) {
       this.modalService
         .addModal(
           UpdateModalComponent,
           {
-            manifest,
+            update,
           },
           {
             closeOnEscape: false,
@@ -94,8 +72,31 @@ export class UpdateService {
   }
 
   async installUpdate() {
+    const update = this._updateAvailable.value?.update;
+    if (!update) return;
     info(`[Update] Installing update...`);
-    await installUpdate();
-    await relaunch();
+    try {
+      update.downloadAndInstall((event) => {
+        switch (event.event) {
+          case 'Started':
+          case 'Progress':
+            break;
+          case 'Finished':
+            info(`[Update] Update complete. Relaunching...`);
+            relaunch();
+            return;
+        }
+      });
+    } catch (error) {
+      info(`[Update] Update error occurred: ${error}`);
+      this.modalService
+        .addModal(ConfirmModalComponent, {
+          title: 'updater.modals.error.title',
+          message: 'updater.modals.error.title',
+          confirmButtonText: 'shared.modals.ok',
+          showCancel: false,
+        })
+        .subscribe();
+    }
   }
 }

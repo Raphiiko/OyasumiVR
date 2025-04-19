@@ -14,11 +14,11 @@ interface VRChatLoginModalInputModel {
 interface VRChatLoginModalOutputModel {}
 
 @Component({
-    selector: 'app-vrchat-login-modal',
-    templateUrl: './vrchat-login-modal.component.html',
-    styleUrls: ['./vrchat-login-modal.component.scss'],
-    animations: [fadeUp(), vshrink(), hshrink()],
-    standalone: false
+  selector: 'app-vrchat-login-modal',
+  templateUrl: './vrchat-login-modal.component.html',
+  styleUrls: ['./vrchat-login-modal.component.scss'],
+  animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class VRChatLoginModalComponent
   extends BaseModalComponent<VRChatLoginModalInputModel, VRChatLoginModalOutputModel>

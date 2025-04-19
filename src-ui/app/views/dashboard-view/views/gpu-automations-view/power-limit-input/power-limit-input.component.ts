@@ -3,11 +3,11 @@ import { GPUPowerLimit } from '../../../../../models/gpu-device';
 import { vshrink } from '../../../../../utils/animations';
 
 @Component({
-    selector: 'app-power-limit-input',
-    templateUrl: './power-limit-input.component.html',
-    styleUrls: ['./power-limit-input.component.scss'],
-    animations: [vshrink()],
-    standalone: false
+  selector: 'app-power-limit-input',
+  templateUrl: './power-limit-input.component.html',
+  styleUrls: ['./power-limit-input.component.scss'],
+  animations: [vshrink()],
+  standalone: false,
 })
 export class PowerLimitInputComponent implements OnInit {
   @Input() minPowerLimit = -1;

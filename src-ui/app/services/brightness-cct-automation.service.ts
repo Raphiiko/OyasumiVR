@@ -40,10 +40,10 @@ import { HardwareBrightnessControlService } from './brightness-control/hardware-
 import { SoftwareBrightnessControlService } from './brightness-control/software-brightness-control.service';
 import { CCTControlService } from './cct-control/cct-control.service';
 import { SetBrightnessOrCCTReason } from './brightness-control/brightness-control-models';
-import { invoke } from '@tauri-apps/api';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { listen } from '@tauri-apps/api/event';
 import { OpenVRService } from './openvr.service';
+import { invoke } from '@tauri-apps/api/core';
 
 @Injectable({
   providedIn: 'root',
@@ -175,13 +175,13 @@ export class BrightnessCctAutomationService {
         if (config.AT_SUNRISE.activationTime === null) {
           patch.AT_SUNRISE = {
             ...config.AT_SUNRISE,
-            activationTime: this.autoSunriseTime,
+            activationTime: this.autoSunriseTime ?? null,
           };
         }
         if (config.AT_SUNSET.activationTime === null) {
           patch.AT_SUNSET = {
             ...config.AT_SUNSET,
-            activationTime: this.autoSunsetTime,
+            activationTime: this.autoSunsetTime ?? null,
           };
         }
         await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(

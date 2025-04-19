@@ -8,10 +8,10 @@ import { DeveloperDebugService } from '../../../services/developer-debug/develop
 import { AutomationConfigService } from '../../../services/automation-config.service';
 
 @Component({
-    selector: 'app-debug-sleep-detection-debugger',
-    templateUrl: './debug-sleep-detection-debugger.component.html',
-    styleUrls: ['./debug-sleep-detection-debugger.component.scss'],
-    standalone: false
+  selector: 'app-debug-sleep-detection-debugger',
+  templateUrl: './debug-sleep-detection-debugger.component.html',
+  styleUrls: ['./debug-sleep-detection-debugger.component.scss'],
+  standalone: false,
 })
 export class DebugSleepDetectionDebuggerComponent implements OnInit, AfterViewInit {
   resolutionItems: ({ interval?: number } & SelectBoxItem)[] = [

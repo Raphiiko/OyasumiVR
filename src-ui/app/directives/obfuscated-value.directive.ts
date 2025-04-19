@@ -1,8 +1,8 @@
 import { AfterViewInit, Directive, ElementRef, Input, OnChanges } from '@angular/core';
 
 @Directive({
-    selector: '[obfuscatedValue]',
-    standalone: false
+  selector: '[obfuscatedValue]',
+  standalone: false,
 })
 export class ObfuscatedValueDirective implements AfterViewInit, OnChanges {
   @Input('obfuscatedValue') value?: string;

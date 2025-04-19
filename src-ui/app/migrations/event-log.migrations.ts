@@ -1,8 +1,8 @@
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 
 import { EVENT_LOG_DEFAULT, EventLog } from '../models/event-log-entry';
-import { message } from '@tauri-apps/api/dialog';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { message } from '@tauri-apps/plugin-dialog';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -50,7 +50,7 @@ export function migrateEventLog(log: EventLog): EventLog {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('event-log.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

@@ -13,11 +13,11 @@ export interface DurationDisableSleepModeModalOutputModel {
 }
 
 @Component({
-    selector: 'app-duration-disable-sleepmode-modal',
-    templateUrl: './duration-disable-sleep-mode-modal.component.html',
-    styleUrls: ['./duration-disable-mode-modal.component.scss'],
-    animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
-    standalone: false
+  selector: 'app-duration-disable-sleepmode-modal',
+  templateUrl: './duration-disable-sleep-mode-modal.component.html',
+  styleUrls: ['./duration-disable-mode-modal.component.scss'],
+  animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  standalone: false,
 })
 export class DurationDisableSleepModeModalComponent
   extends BaseModalComponent<

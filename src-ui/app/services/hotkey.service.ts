@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
-import { isRegistered, register, unregister, unregisterAll } from '@tauri-apps/api/globalShortcut';
-import { error, warn } from 'tauri-plugin-log-api';
+import {
+  isRegistered,
+  register,
+  unregister,
+  unregisterAll,
+} from '@tauri-apps/plugin-global-shortcut';
+import { error, warn } from '@tauri-apps/plugin-log';
 import { map, Observable, Subject, take } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 

@@ -100,7 +100,7 @@ pub fn set_led_color(device: &HidDevice, r: u8, g: u8, b: u8) -> Result<(), Stri
                 e
             );
             return Ok(());
-//             return Err("DEVICE_WRITE_ERROR".to_string());
+            //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }
 }
@@ -121,7 +121,7 @@ pub fn set_fan_speed(device: &HidDevice, speed: u8) -> Result<(), String> {
                 e
             );
             return Ok(());
-//             return Err("DEVICE_WRITE_ERROR".to_string());
+            //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }
 }
@@ -147,7 +147,7 @@ pub fn set_brightness(device: &HidDevice, brightness: u16) -> Result<(), String>
                 e
             );
             return Ok(());
-//             return Err("DEVICE_WRITE_ERROR".to_string());
+            //             return Err("DEVICE_WRITE_ERROR".to_string());
         }
     }
 }

@@ -1697,21 +1697,6 @@
           "description": "打開用於除錯的 Edge 開發工具",
           "title": "開啟開發者工具"
         },
-        "memoryWatcher": {
-          "action": "啟動",
-          "description": "啟動記憶體監視器，監控所有子進程。如果任何進程的記憶體使用量超過千百萬位元組，將顯示錯誤對話框，並記錄額外資訊",
-          "modal": {
-            "error": {
-              "message": "記憶體監視器已經啟動。",
-              "title": "已啟動"
-            },
-            "success": {
-              "message": "記憶體監視器已經啟動！",
-              "title": "記憶體監視器已啟動"
-            }
-          },
-          "title": "記憶體監視器"
-        },
         "vrManifestReregister": {
           "action": "重新註冊列表",
           "description": "重新註冊 OyasumiVR 的 VR 應用列表與 SteamVR。",

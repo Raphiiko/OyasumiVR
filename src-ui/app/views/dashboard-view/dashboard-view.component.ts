@@ -4,11 +4,11 @@ import { fade } from '../../utils/animations';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-dashboard-view',
-    templateUrl: './dashboard-view.component.html',
-    styleUrls: ['./dashboard-view.component.scss'],
-    animations: [fade('fade', '1s ease')],
-    standalone: false
+  selector: 'app-dashboard-view',
+  templateUrl: './dashboard-view.component.html',
+  styleUrls: ['./dashboard-view.component.scss'],
+  animations: [fade('fade', '1s ease')],
+  standalone: false,
 })
 export class DashboardViewComponent implements OnInit {
   protected backgroundImage: string | null = null;

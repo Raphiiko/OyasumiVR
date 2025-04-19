@@ -4,7 +4,7 @@ import { SleepPreparationService } from './sleep-preparation.service';
 import { SleepService } from './sleep.service';
 import { ShutdownAutomationsService } from './shutdown-automations.service';
 import { filter, firstValueFrom, map, take } from 'rxjs';
-import { warn } from 'tauri-plugin-log-api';
+import { warn } from '@tauri-apps/plugin-log';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { LighthouseService } from './lighthouse.service';
 import { OpenVRService } from './openvr.service';

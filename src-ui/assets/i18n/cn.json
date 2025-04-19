@@ -1697,21 +1697,6 @@
           "description": "打开界面调试工具",
           "title": "打开界面调试工具"
         },
-        "memoryWatcher": {
-          "action": "打开",
-          "description": "打开内存监视器以监控所有子进程的内存使用量。如果任何进程的内存占用超过 1000 MB，将显示错误对话框，并记录额外的日志信息",
-          "modal": {
-            "error": {
-              "message": "内存监视器已经被打开了",
-              "title": "错误"
-            },
-            "success": {
-              "message": "已打开内存监视器",
-              "title": "成功"
-            }
-          },
-          "title": "内存监视器"
-        },
         "vrManifestReregister": {
           "action": "重新注册",
           "description": "在 SteamVR 上重新注册程序的清单数据",

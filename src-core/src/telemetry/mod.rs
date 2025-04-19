@@ -26,7 +26,7 @@ pub async fn init_telemetry(handle: &tauri::AppHandle) {
     let flavour = serde_json::to_string(&BUILD_FLAVOUR)
         .unwrap()
         .to_uppercase();
-    handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
+    let _ = handle.track_event("app_started", Some(json!({ "flavour": flavour.clone() })));
     // Send heartbeats roughly every 24 hours (to keep the current session alive)
     tokio::task::spawn(async {
         let mut start_time = Instant::now();
@@ -38,7 +38,7 @@ pub async fn init_telemetry(handle: &tauri::AppHandle) {
                 if TELEMETRY_ENABLED.load(Ordering::Relaxed) {
                     let handle = crate::globals::TAURI_APP_HANDLE.lock().await;
                     if let Some(handle) = handle.as_ref() {
-                        handle.track_event("app_heartbeat", None);
+                        let _ = handle.track_event("app_heartbeat", None);
                     }
                 }
             }

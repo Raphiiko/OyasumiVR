@@ -10,17 +10,17 @@ import { OverlayService } from '../../../../services/overlay/overlay.service';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { IPCService } from '../../../../services/ipc.service';
 import { FontLoaderService } from '../../../../services/font-loader.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 
 @Component({
-    selector: 'app-settings-status-info-view',
-    templateUrl: './settings-status-info-view.component.html',
-    styleUrls: ['./settings-status-info-view.component.scss'],
-    animations: [hshrink()],
-    standalone: false
+  selector: 'app-settings-status-info-view',
+  templateUrl: './settings-status-info-view.component.html',
+  styleUrls: ['./settings-status-info-view.component.scss'],
+  animations: [hshrink()],
+  standalone: false,
 })
 export class SettingsStatusInfoViewComponent {
   categories: Array<{

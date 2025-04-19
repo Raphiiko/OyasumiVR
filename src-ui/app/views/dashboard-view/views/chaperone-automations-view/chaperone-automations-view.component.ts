@@ -11,11 +11,11 @@ import { debounce } from 'typescript-debounce-decorator';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-    selector: 'app-chaperone-automations-view',
-    templateUrl: './chaperone-automations-view.component.html',
-    styleUrls: ['./chaperone-automations-view.component.scss'],
-    animations: [],
-    standalone: false
+  selector: 'app-chaperone-automations-view',
+  templateUrl: './chaperone-automations-view.component.html',
+  styleUrls: ['./chaperone-automations-view.component.scss'],
+  animations: [],
+  standalone: false,
 })
 export class ChaperoneAutomationsViewComponent implements OnInit {
   protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =
