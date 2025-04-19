@@ -14,8 +14,6 @@ tauri-build = { version = "2.2", features = [] }
 toml = "0.8.20"
 tonic-build = { version = "0.13.0", features = [] }
 
-# TODO: PIN DEPENDENCIES TO A MINOR VERSION
-
 [dependencies]
 async-recursion = "1.0.5"
 bluest = { version = "0.6.7", features = ["serde"] }
@@ -55,18 +53,18 @@ substring = "1.4.5"
 suncalc = "0.4.0"
 sysinfo = "0.26.9"
 system_shutdown = "4.0.1"
-tauri-plugin-cli = "2"
-tauri-plugin-clipboard-manager = "2"
-tauri-plugin-deep-link = "2"
-tauri-plugin-dialog = "2"
-tauri-plugin-fs = "2"
-tauri-plugin-http = { version = "2", features = ["unsafe-headers"] }
-tauri-plugin-log = { version = "2" }
-tauri-plugin-notification = "2"
-tauri-plugin-process = "2"
-tauri-plugin-shell = "2"
-tauri-plugin-single-instance = { version = "2", features = ["deep-link"] }
-tauri-plugin-store = "2"
+tauri-plugin-cli = "2.2"
+tauri-plugin-clipboard-manager = "2.2"
+tauri-plugin-deep-link = "2.2"
+tauri-plugin-dialog = "2.2"
+tauri-plugin-fs = "2.2"
+tauri-plugin-http = { version = "2.4", features = ["unsafe-headers"] }
+tauri-plugin-log = { version = "2.4" }
+tauri-plugin-notification = "2.2"
+tauri-plugin-process = "2.2"
+tauri-plugin-shell = "2.2"
+tauri-plugin-single-instance = { version = "2.2", features = ["deep-link"] }
+tauri-plugin-store = "2.2"
 tauri-plugin-aptabase = { git = "https://github.com/aptabase/tauri-plugin-aptabase", rev = "f9f199fe007f95ceace5403c065e9ff99cb08a21" }
 tempfile = "3.6.0"
 time = "0.3.41"
