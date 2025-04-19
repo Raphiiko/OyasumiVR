@@ -36,8 +36,8 @@ if (version === 'DEV') version = '0.0.0';
 
 // Tauri config json
 const tauriConfJson = JSON.parse(readFileSync('src-core/tauri.conf.json').toString());
-tauriConfJson.package.version = version;
-tauriConfJson.tauri.windows = tauriConfJson.tauri.windows.map((window) => {
+tauriConfJson.version = version;
+tauriConfJson.app.windows = tauriConfJson.app.windows.map((window) => {
   window.userAgent = `OyasumiVR/${
     version === '0.0.0' ? 'DEV' : version
   } (https://github.com/Raphiiko/OyasumiVR)`;
