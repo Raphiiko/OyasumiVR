@@ -6,13 +6,9 @@
       </div>
       <div class="header-bar-info" (click)="editDevice()">
         <div class="device-name" translate>{{ deviceName }}</div>
-        <div class="device-serial" *ngIf="!deviceNickname && deviceRole"
-          >{{ 'comp.device-list.deviceRole.' + deviceRole | translate }}
+        <div class="device-subtitle" [class.nickname]="deviceHasNickname">
+          {{ deviceSubtitle ?? '' | translate }}
         </div>
-        <div class="device-serial" *ngIf="!deviceNickname && !deviceRole"
-          >{{ deviceIdentifier }}
-        </div>
-        <div class="device-nickname" *ngIf="deviceNickname">{{ deviceNickname }}</div>
       </div>
       <div class="header-bar-spacer"></div>
       <div class="header-bar-action" *ngIf="!isDeviceIgnored">
