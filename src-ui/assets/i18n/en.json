@@ -1,7 +1,8 @@
 {
   "systemTray": {
     "sleepMode": "Sleep Mode",
-    "quit": "Quit OyasumiVR"
+    "quit": "Quit OyasumiVR",
+    "prepareForSleep": "Prepare for sleep"
   },
   "about": {
     "author": {

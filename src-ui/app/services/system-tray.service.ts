@@ -17,6 +17,7 @@ import { SleepService } from './sleep.service';
 import { TranslateService } from '@ngx-translate/core';
 import { error } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
+import { SleepPreparationService } from './sleep-preparation.service';
 
 const CLOSE_TO_SYSTEM_TRAY_COMMAND = 'set_close_to_system_tray';
 
@@ -29,6 +30,7 @@ export class SystemTrayService {
   constructor(
     private readonly appSettingsService: AppSettingsService,
     private readonly sleepService: SleepService,
+    private readonly sleepPreparationService: SleepPreparationService,
     private readonly translateService: TranslateService
   ) {}
 
@@ -41,6 +43,8 @@ export class SystemTrayService {
     this._tray.next(tray);
     combineLatest([
       this.sleepService.mode,
+      this.sleepPreparationService.sleepPreparationAvailable,
+      this.sleepPreparationService.sleepPreparationTimedOut,
       this.translateService.onLangChange.pipe(startWith(this.translateService.currentLang)),
     ])
       .pipe(debounceTime(50))
@@ -83,6 +87,15 @@ export class SystemTrayService {
             } else {
               this.sleepService.enableSleepMode({ type: 'MANUAL' });
             }
+          },
+        },
+        {
+          text: this.translateService.instant('systemTray.prepareForSleep'),
+          enabled:
+            (await firstValueFrom(this.sleepPreparationService.sleepPreparationAvailable)) &&
+            !(await firstValueFrom(this.sleepPreparationService.sleepPreparationTimedOut)),
+          action: async () => {
+            await this.sleepPreparationService.prepareForSleep();
           },
         },
         {
