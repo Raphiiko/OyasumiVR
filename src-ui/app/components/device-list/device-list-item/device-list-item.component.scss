@@ -32,18 +32,17 @@
     // .device-name {
     // }
 
-    .device-serial {
+    .device-subtitle {
       color: var(--color-text-4);
-    }
-
-    .device-nickname {
-      width: 100%;
-      overflow: hidden;
-      color: var(--color-text-4);
-      font-weight: 700;
-      white-space: nowrap;
-      min-height: 0;
-      text-overflow: ellipsis;
+      &.nickname {
+        width: 100%;
+        overflow: hidden;
+        color: var(--color-text-4);
+        font-weight: 700;
+        white-space: nowrap;
+        min-height: 0;
+        text-overflow: ellipsis;
+      }
     }
 
     &:hover {

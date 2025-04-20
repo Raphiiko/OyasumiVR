@@ -92,8 +92,8 @@ export class DeviceListComponent implements OnInit {
 
   processOpenVRDevices(devices: OVRDevice[]) {
     // Filter out non-controller and non-tracker devices
-    devices = devices.filter(
-      (device) => device.class === 'Controller' || device.class === 'GenericTracker'
+    devices = devices.filter((device) =>
+      ['HMD', 'Controller', 'GenericTracker'].includes(device.class)
     );
     // Add missing device categories
     uniq(devices.map((device) => device.class))
@@ -151,10 +151,11 @@ export class DeviceListComponent implements OnInit {
         return 'controller';
       case 'GenericTracker':
         return 'tracker';
+      case 'HMD':
+        return 'hmd';
       case 'TrackingReference':
       case 'DisplayRedirect':
       case 'Invalid':
-      case 'HMD':
       default:
         return undefined;
     }
@@ -223,7 +224,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   sortDeviceCategories() {
-    const sortKeys = ['OpenVR-Controller', 'OpenVR-GenericTracker', 'Lighthouse'];
+    const sortKeys = ['OpenVR-HMD', 'OpenVR-Controller', 'OpenVR-GenericTracker', 'Lighthouse'];
     const getKey = (category: DisplayCategory) => {
       switch (category.type) {
         case 'OpenVR':
@@ -238,6 +239,8 @@ export class DeviceListComponent implements OnInit {
 
   getCategoryLabelForOpenVRDeviceClass(deviceClass: OVRDeviceClass): string {
     switch (deviceClass) {
+      case 'HMD':
+        return 'comp.device-list.category.HMD';
       case 'Controller':
         return 'comp.device-list.category.Controller';
       case 'GenericTracker':

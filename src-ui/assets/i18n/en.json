@@ -1,7 +1,8 @@
 {
   "systemTray": {
     "sleepMode": "Sleep Mode",
-    "quit": "Quit OyasumiVR"
+    "quit": "Quit OyasumiVR",
+    "prepareForSleep": "Prepare for sleep"
   },
   "about": {
     "author": {
@@ -355,6 +356,7 @@
     },
     "device-list": {
       "category": {
+        "HMD": "Headset",
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
         "Lighthouse": "Base Stations",
