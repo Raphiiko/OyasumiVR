@@ -221,11 +221,9 @@ export class VRChatService {
     });
     // If we received a 401, the code was likely incorrect
     const responseData = await response.json().catch(() => {});
-    if (response.status === 400) {
-      if (responseData?.verified === false) {
-        warn(`[VRChat] 2FA Verification failed: Invalid code`);
-        throw 'INVALID_CODE';
-      }
+    if (response.status === 400 && responseData?.verified === false) {
+      warn(`[VRChat] 2FA Verification failed: Invalid code`);
+      throw 'INVALID_CODE';
     }
     // If it's not ok, it's unexpected
     if (!response.ok || responseData?.verified === false) {
@@ -917,7 +915,11 @@ export class VRChatService {
     if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
     if (settings.twoFactorCookie)
       cookies.push(serializeCookie('twoFactorAuth', settings.twoFactorCookie));
-    return { Cookie: cookies.join('; '), 'User-Agent': this.userAgent };
+    return {
+      Cookie: cookies.join('; '),
+      'User-Agent': this.userAgent,
+      'Content-Type': 'application/json',
+    };
   }
 
   private async parseResponseCookies(response: Response) {
