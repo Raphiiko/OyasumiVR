@@ -59,6 +59,10 @@ export class ModalService {
     modalRef.componentRef.instance.close();
   }
 
+  isModalOpen(id: string): boolean {
+    return this.modalStack.some((m) => m.options.id === id);
+  }
+
   addModal<ModalInput extends { [k: string]: any } | void = any, ModalOutput = any>(
     modalComponent: Type<BaseModalComponent<ModalInput, ModalOutput>>,
     input?: ModalInput,

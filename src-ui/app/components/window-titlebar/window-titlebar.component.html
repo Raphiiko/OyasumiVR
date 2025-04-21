@@ -16,6 +16,20 @@
   </span>
 </div>
 <div class="action-area">
+  <button
+    class="titlebar-button btn-message-center"
+    [tooltip]="'message-center.tooltip'"
+    [tooltipMode]="'bottom'"
+    (click)="messageCenter.toggle()"
+  >
+    <i class="material-symbols-outlined icon-filled">mode_comment</i>
+    <div class="message-center-badge-bg" *ngIf="(messageCenter.messages | async)?.length" @fade>
+      <div class="message-center-badge"></div>
+    </div>
+  </button>
+  <div class="action-spacer">
+    <span class="separator">|</span>
+  </div>
   <button class="titlebar-button btn-minimize" (click)="minimize()">
     <i class="material-symbols-outlined">remove</i>
   </button>

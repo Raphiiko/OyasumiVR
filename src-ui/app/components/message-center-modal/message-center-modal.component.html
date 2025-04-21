@@ -1,0 +1,16 @@
+<div @fade class="mc-container">
+  <div class="mc-header">
+    <span class="mc-title" translate>Message Center</span>
+  </div>
+  <div class="mc-items">
+    @for (item of messageCenter.messages | async; track item.id) {
+      <app-message-center-item @vshrink></app-message-center-item>
+    }
+    @for (item of messageCenter.messages | async; track item.id) {
+      <app-message-center-item @vshrink></app-message-center-item>
+    }
+    @for (item of messageCenter.messages | async; track item.id) {
+      <app-message-center-item @vshrink></app-message-center-item>
+    }
+  </div>
+</div>

@@ -4,6 +4,9 @@
     "quit": "Quit OyasumiVR",
     "prepareForSleep": "Prepare for sleep"
   },
+  "message-center": {
+    "tooltip": "Message Center"
+  },
   "about": {
     "author": {
       "role": "Developer"

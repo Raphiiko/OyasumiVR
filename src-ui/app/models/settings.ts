@@ -31,6 +31,8 @@ export interface AppSettings {
   openVrInitDelayFix: boolean;
   oneTimeFlags: OneTimeFlag[];
   eventLogTypesHidden: EventLogType[];
+  // Message center
+  hiddenMessageIds: string[];
   // Overlay
   overlayMenuEnabled: boolean;
   overlayGpuAcceleration: boolean;
@@ -126,6 +128,7 @@ export const APP_SETTINGS_DEFAULT: AppSettings = {
   cctSoftwareMode: false,
   oneTimeFlags: [],
   eventLogTypesHidden: [],
+  hiddenMessageIds: [],
 };
 
 export type ExecutableReferenceStatus =

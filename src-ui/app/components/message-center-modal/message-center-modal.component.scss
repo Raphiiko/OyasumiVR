@@ -1,0 +1,22 @@
+.mc-container {
+  width: 100%;
+  height: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  margin-top: 32px;
+}
+
+.mc-header {
+  margin-top: 2em;
+  padding: 2em 0;
+  span {
+    font-size: 3em;
+    font-weight: 200;
+  }
+}
+
+.mc-items {
+  
+}

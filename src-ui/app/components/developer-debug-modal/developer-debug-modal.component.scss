@@ -3,8 +3,12 @@
 
 .modal {
   width: calc(100% - 6em);
-  height: calc(100% - 6em);
+  height: calc(100% - 6em - 32px);
   margin: 3em;
+}
+
+.pane {
+  margin-top: 64px;
 }
 
 .pane-content {
