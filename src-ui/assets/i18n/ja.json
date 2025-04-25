@@ -118,7 +118,7 @@
       },
       "onlyBelowPlayerCount": {
         "description": "これにはあなた自身も含まれます",
-        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人以下の場合にのみ"
+        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
       },
       "onlyIfSleepModeEnabled": {
         "title": "睡眠モード有効時のみ"
@@ -695,7 +695,7 @@
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達した",
-            "BELOW_LIMIT": "ワールド人数が{threshold}人以下になった"
+            "BELOW_LIMIT": "ワールド人数が{threshold}人未満になった"
           },
           "title": "VRChatステータスを{oldStatus}から{newStatus}に変更"
         },
