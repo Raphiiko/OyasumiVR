@@ -324,29 +324,30 @@ Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自
   </tr>
 </table>
 
-### 🔅 Display Brightness & Color Temperature Automations
+### 🔅 显示亮度与色温自动化
 
 <table>
   <tr>
     <td>
-🌆 <b>Brightness</b>
+🌆 <b>亮度</b>
 <br>
-Automate your brightness for when you sleep and wake up. OyasumiVR can smoothly transition your VR headset's brightness, so it falls down gradually as you sleep without waking you up.
+为您的睡眠和醒来时自动调整亮度。OyasumiVR 可以平滑地调整您的 VR 头显亮度，让它在您睡觉时逐渐降低，而不会将您吵醒。
 <br><br>
-It allows you to control both software brightness, as well as hardware brightness if your headset supports it (e.g. Valve Index or Bigscreen Beyond). In addition to providing you with several automations, you can easily control your brightness levels right from the SteamVR overlay menu!
+它允许您控制软件亮度，以及如果您的头显支持的话（如 Valve Index 或 Bigscreen Beyond），也可以控制硬件亮度。除了提供多种自动化选项外，您还可以通过 SteamVR 覆盖菜单轻松控制亮度。
 <br><br>
-🌡️ <b>Color Temperature</b>
+🌡️ <b>色温</b>
 <br>
-OyasumiVR can also control the color temperature of your VR headset's display. By reducing blue light, it can help reduce eye strain during the late hours, and make it easier to fall asleep.
+OyasumiVR 还可以控制 VR 头显显示器的色温。通过减少蓝光，它可以帮助减轻夜间眼睛疲劳，并促进更容易入睡。
 <br><br>
-With the sunset and sunrise triggers, you can have OyasumiVR automatically adjust the color temperature of your display to match the time of day.
+通过日落和日出触发器，您可以让 OyasumiVR 自动调整显示器的色温，以适应一天中的不同时间。
 <br><br>
-<i>Note that this feature is only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).</i>
+<i>请注意，此功能仅支持一些原生 SteamVR 头显，如 Valve Index、Bigscreen Beyond 和 HTC Vive (Pro)。</i>
     </td>
     <td width="380"><img src="https://github.com/user-attachments/assets/bfa3fd71-9ec1-4d61-8255-8a716b2ea09c"></td>
   </tr>
 
 </table>
+
 
 ### 🎤 麦克风自动化
 
@@ -450,16 +451,16 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
   </tr>
 </table>
 
-### 🏠 智能家庭控制
+### 🏠 智能家居控制
 
 <table>
   <tr>
     <td colspan="2">
 <img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
-OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
-For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+OyasumiVR 可以通过 MQTT 将自己的许多功能以及 SteamVR 的功能暴露给 Home Assistant！这让你能够将 OyasumiVR 与家中的智能设备连接，并在 Home Assistant 中构建强大的自动化。
+例如，你可以设置在入睡时自动关闭智能灯光，或者在需要时重新打开它们！
 <br><br>
-Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+以下是你可以通过 Home Assistant 控制或读取的功能列表：
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
   </tr>
@@ -578,10 +579,9 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
-### Color Temperature Automations
+### 色温自动化
 
-Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
-It might work on other headsets, but your mileage may vary.
+目前，控制 VR 头显显示屏的色温仅在部分原生 SteamVR 头显上支持，例如 Valve Index、Bigscreen Beyond 和 HTC Vive (Pro)。 它可能在其他头显上也能工作，但效果可能有所不同。
 
 ## 使用的技术和工具
 
@@ -607,15 +607,17 @@ OyasumiVR并未得到VRChat的认可，也不反映VRChat官方或任何参与�
 
 OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。
 
+这是该段的翻译：
+
 ## Aptabase
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
 
-OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+OyasumiVR 的遥测数据由 [Aptabase](https://aptabase.com) 提供，Aptabase 是一个开源、隐私优先且简洁的移动和桌面应用分析工具。选择 Aptabase 是因为它能通过提供崩溃报告和匿名使用统计数据，帮助 OyasumiVR 的开发，同时尽可能尊重您的隐私。
 
-The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+遥测数据完全匿名，不会发送任何可识别个人身份的信息。其唯一目的是提供上述的崩溃报告，以及一些基本的匿名使用统计数据，例如应用启动次数和语言偏好设置。这些数据仅用于查找和修复 bug，以及对 OyasumiVR 的其他一般改进。
 
-You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+您可以在 OyasumiVR 的常规设置中选择退出遥测功能。有关更多（技术）信息，请查看（非常简短的！）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
 
 ## 支持
 
