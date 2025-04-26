@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { message, open as openFile } from '@tauri-apps/api/dialog';
-import { readTextFile } from '@tauri-apps/api/fs';
+import { message, open as openFile } from '@tauri-apps/plugin-dialog';
+import { readTextFile } from '@tauri-apps/plugin-fs';
 import {
-  CACHE_FILE,
-  SETTINGS_FILE,
+  CACHE_STORE,
   SETTINGS_KEY_APP_SETTINGS,
   SETTINGS_KEY_AUTOMATION_CONFIGS,
   SETTINGS_KEY_PULSOID_API,
@@ -11,19 +10,19 @@ import {
   SETTINGS_KEY_TELEMETRY_SETTINGS,
   SETTINGS_KEY_THEMING_SETTINGS,
   SETTINGS_KEY_VRCHAT_API,
+  SETTINGS_STORE,
 } from '../../../../globals';
-import { Store } from 'tauri-plugin-store-api';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { error, info } from 'tauri-plugin-log-api';
+import { error, info } from '@tauri-apps/plugin-log';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
   ConfirmModalOutputModel,
 } from '../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from 'src-ui/app/services/modal.service';
-import { invoke } from '@tauri-apps/api';
-import { relaunch } from '@tauri-apps/api/process';
+import { invoke } from '@tauri-apps/api/core';
+import { relaunch } from '@tauri-apps/plugin-process';
 import { EventLogService } from '../../../../services/event-log.service';
 import { appLogDir } from '@tauri-apps/api/path';
 import { IPCService } from '../../../../services/ipc.service';
@@ -39,10 +38,9 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './settings-advanced-view.component.html',
   styleUrls: ['./settings-advanced-view.component.scss'],
   animations: [],
+  standalone: false,
 })
 export class SettingsAdvancedViewComponent {
-  private settingsStore = new Store(SETTINGS_FILE);
-  private cacheStore = new Store(CACHE_FILE);
   persistentStorageItems: Array<{
     key: string;
   }> = [
@@ -59,7 +57,7 @@ export class SettingsAdvancedViewComponent {
   checkedPersistentStorageItems: string[] = [];
   memoryWatcherActive = FLAVOUR === 'DEV';
   oscServerEnabled = true;
-  overlayGpuFix = false;
+  overlayGpuAcceleration = true;
   openVrInitDelayFix = false;
 
   constructor(
@@ -73,7 +71,7 @@ export class SettingsAdvancedViewComponent {
   ) {
     this.settingsService.settings.pipe(takeUntilDestroyed()).subscribe((settings) => {
       this.oscServerEnabled = settings.oscServerEnabled;
-      this.overlayGpuFix = settings.overlayGpuFix;
+      this.overlayGpuAcceleration = settings.overlayGpuAcceleration;
       this.openVrInitDelayFix = settings.openVrInitDelayFix;
     });
   }
@@ -106,7 +104,7 @@ export class SettingsAdvancedViewComponent {
   }
 
   async clearStore(storeType: 'SETTINGS' | 'CACHE', key?: string) {
-    const store = storeType === 'SETTINGS' ? this.settingsStore : this.cacheStore;
+    const store = storeType === 'SETTINGS' ? SETTINGS_STORE : CACHE_STORE;
     if (!key) {
       await store.clear();
     } else {
@@ -141,7 +139,7 @@ export class SettingsAdvancedViewComponent {
       error(`[DebugSettings] Could not load translations from file: ${JSON.stringify(e)}`);
       await message('Translations could not be loaded:\n' + e, {
         title: 'Error loading translations',
-        type: 'error',
+        kind: 'error',
       });
       return;
     }
@@ -185,28 +183,28 @@ export class SettingsAdvancedViewComponent {
             switch (item) {
               case 'appSettings':
                 info('[Settings] Clearing app settings');
-                await this.settingsStore.delete(SETTINGS_KEY_APP_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_APP_SETTINGS);
                 askForRelaunch = true;
                 break;
               case 'automationSettings':
                 info('[Settings] Clearing automation settings');
-                await this.settingsStore.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
-                await this.settingsStore.delete(SETTINGS_KEY_SLEEP_MODE);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_AUTOMATION_CONFIGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_SLEEP_MODE);
                 askForRelaunch = true;
                 break;
               case 'vrcData':
                 info('[Settings] Clearing VRChat data');
-                await this.settingsStore.delete(SETTINGS_KEY_VRCHAT_API);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_VRCHAT_API);
                 askForRelaunch = true;
                 break;
               case 'integrations':
                 info('[Settings] Clearing integration data');
-                await this.settingsStore.delete(SETTINGS_KEY_PULSOID_API);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_PULSOID_API);
                 askForRelaunch = true;
                 break;
               case 'appCache':
                 info('[Settings] Clearing application cache');
-                await this.cacheStore.clear();
+                await CACHE_STORE.clear();
                 askForRelaunch = true;
                 break;
               case 'imageCache':
@@ -215,8 +213,8 @@ export class SettingsAdvancedViewComponent {
                 break;
               case 'miscData':
                 info('[Settings] Clearing misc data');
-                await this.settingsStore.delete(SETTINGS_KEY_THEMING_SETTINGS);
-                await this.settingsStore.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_THEMING_SETTINGS);
+                await SETTINGS_STORE.delete(SETTINGS_KEY_TELEMETRY_SETTINGS);
                 break;
               case 'logs':
                 info('[Settings] Clearing log files');
@@ -229,8 +227,8 @@ export class SettingsAdvancedViewComponent {
             }
           })
         );
-        await this.settingsStore.save();
-        await this.cacheStore.save();
+        await SETTINGS_STORE.save();
+        await CACHE_STORE.save();
         info('[Settings] Finished clearing of persistent storage');
         this.checkedPersistentStorageItems = [];
         if (askForRelaunch) {
@@ -298,27 +296,6 @@ export class SettingsAdvancedViewComponent {
 
   protected readonly open = open;
 
-  async activateMemoryWatcher() {
-    this.memoryWatcherActive = true;
-    if (await invoke<boolean>('activate_memory_watcher')) {
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'settings.advanced.fixes.memoryWatcher.modal.success.title',
-          message: 'settings.advanced.fixes.memoryWatcher.modal.success.message',
-          showCancel: false,
-        })
-        .subscribe();
-    } else {
-      this.modalService
-        .addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(ConfirmModalComponent, {
-          title: 'settings.advanced.fixes.memoryWatcher.modal.error.title',
-          message: 'settings.advanced.fixes.memoryWatcher.modal.error.message',
-          showCancel: false,
-        })
-        .subscribe();
-    }
-  }
-
   async openDevTools() {
     await invoke('open_dev_tools');
   }
@@ -329,8 +306,8 @@ export class SettingsAdvancedViewComponent {
     });
   }
 
-  setOverlayGpuFix(enabled: boolean) {
-    this.settingsService.updateSettings({ overlayGpuFix: enabled });
+  setOverlayGpuAcceleration(enabled: boolean) {
+    this.settingsService.updateSettings({ overlayGpuAcceleration: enabled });
   }
 
   setOpenVrInitDelayFix(enabled: boolean) {

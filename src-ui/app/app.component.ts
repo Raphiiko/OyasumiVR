@@ -13,6 +13,7 @@ import { TelemetryService } from './services/telemetry.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   animations: [routeAnimations, fade()],
+  standalone: false,
 })
 export class AppComponent implements OnInit {
   showSnowverlay = false;

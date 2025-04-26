@@ -9,7 +9,7 @@ import {
   EventLogTurnedOffOpenVRDevices,
 } from '../../models/event-log-entry';
 import { EventLogService } from '../../services/event-log.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { LighthouseDevice, LighthouseDevicePowerState } from 'src-ui/app/models/lighthouse-device';
 import { LighthouseService } from 'src-ui/app/services/lighthouse.service';
@@ -44,6 +44,7 @@ interface LighthouseDisplayCategory extends BaseDisplayCategory {
   templateUrl: './device-list.component.html',
   styleUrls: ['./device-list.component.scss'],
   animations: [vshrink(), triggerChildren(), fade(), hshrink()],
+  standalone: false,
 })
 export class DeviceListComponent implements OnInit {
   deviceCategories: Array<DisplayCategory> = [];
@@ -91,8 +92,8 @@ export class DeviceListComponent implements OnInit {
 
   processOpenVRDevices(devices: OVRDevice[]) {
     // Filter out non-controller and non-tracker devices
-    devices = devices.filter(
-      (device) => device.class === 'Controller' || device.class === 'GenericTracker'
+    devices = devices.filter((device) =>
+      ['HMD', 'Controller', 'GenericTracker'].includes(device.class)
     );
     // Add missing device categories
     uniq(devices.map((device) => device.class))
@@ -150,10 +151,11 @@ export class DeviceListComponent implements OnInit {
         return 'controller';
       case 'GenericTracker':
         return 'tracker';
+      case 'HMD':
+        return 'hmd';
       case 'TrackingReference':
       case 'DisplayRedirect':
       case 'Invalid':
-      case 'HMD':
       default:
         return undefined;
     }
@@ -222,7 +224,7 @@ export class DeviceListComponent implements OnInit {
   }
 
   sortDeviceCategories() {
-    const sortKeys = ['OpenVR-Controller', 'OpenVR-GenericTracker', 'Lighthouse'];
+    const sortKeys = ['OpenVR-HMD', 'OpenVR-Controller', 'OpenVR-GenericTracker', 'Lighthouse'];
     const getKey = (category: DisplayCategory) => {
       switch (category.type) {
         case 'OpenVR':
@@ -237,6 +239,8 @@ export class DeviceListComponent implements OnInit {
 
   getCategoryLabelForOpenVRDeviceClass(deviceClass: OVRDeviceClass): string {
     switch (deviceClass) {
+      case 'HMD':
+        return 'comp.device-list.category.HMD';
       case 'Controller':
         return 'comp.device-list.category.Controller';
       case 'GenericTracker':
@@ -330,10 +334,6 @@ export class DeviceListComponent implements OnInit {
       reason: 'MANUAL',
       devices: 'ALL',
     } as EventLogTurnedOffOpenVRDevices);
-  }
-
-  async scanForLighthouses() {
-    this.lighthouse.scan();
   }
 
   onClickOutsideLHStatePopover($event: MouseEvent) {

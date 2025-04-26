@@ -2,15 +2,16 @@ import { Component } from '@angular/core';
 import { TranslationEditService } from '../../services/translation-edit.service';
 import { DownloadableTranslation } from '../../models/downloadable-translation';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import { error } from 'tauri-plugin-log-api';
-import { message, open as openFile } from '@tauri-apps/api/dialog';
-import { readTextFile } from '@tauri-apps/api/fs';
+import { error } from '@tauri-apps/plugin-log';
+import { message, open as openFile } from '@tauri-apps/plugin-dialog';
+import { readTextFile } from '@tauri-apps/plugin-fs';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-translation-loader-view',
   templateUrl: './translation-loader-view.component.html',
   styleUrls: ['./translation-loader-view.component.scss'],
+  standalone: false,
 })
 export class TranslationLoaderViewComponent {
   protected state: 'INITIALIZING' | 'INITIALIZED' | 'ERROR' | 'STARTING' = 'INITIALIZING';
@@ -129,7 +130,7 @@ export class TranslationLoaderViewComponent {
       error(`Could not load translations from url: ${JSON.stringify(e)}`);
       await message('Translations could not be loaded:\n' + e, {
         title: 'Error loading translations',
-        type: 'error',
+        kind: 'error',
       });
       return;
     }
@@ -156,7 +157,7 @@ export class TranslationLoaderViewComponent {
       error(`Could not load translations from file: ${JSON.stringify(e)}`);
       await message('Translations could not be loaded:\n' + e, {
         title: 'Error loading translations',
-        type: 'error',
+        kind: 'error',
       });
       return null;
     }

@@ -60,11 +60,12 @@ pub async fn init_web_server() -> u16 {
             return 0;
         }
     };
-    let server = Server::builder()
-        .accept_http1(true)
-        .add_service(tonic_web::enable(OyasumiElevatedSidecarServer::new(
-            OyasumiElevatedSidecarServerImpl::default(),
-        )));
+    let server =
+        Server::builder()
+            .accept_http1(true)
+            .add_service(OyasumiElevatedSidecarServer::new(
+                OyasumiElevatedSidecarServerImpl::default(),
+            ));
     let port = match listener.local_addr() {
         Ok(addr) => addr.port(),
         Err(e) => {

@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './resolution-automations-view.component.html',
   styleUrls: ['./resolution-automations-view.component.scss'],
   animations: [],
+  standalone: false,
 })
 export class ResolutionAutomationsViewComponent implements OnInit {
   protected onSleepModeEnableConfig: RenderResolutionOnSleepModeAutomationConfig = structuredClone(

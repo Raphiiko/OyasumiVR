@@ -3,7 +3,7 @@ import { VRChatService } from './vrchat.service';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { Notification, NotificationType, UserStatus } from 'vrchat';
-import { info, warn } from 'tauri-plugin-log-api';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { firstValueFrom } from 'rxjs';
 import { EventLogService } from './event-log.service';
 import { EventLogAcceptedInviteRequest } from '../models/event-log-entry';

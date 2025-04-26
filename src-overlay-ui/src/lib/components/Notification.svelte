@@ -12,8 +12,8 @@
 </script>
 
 <main
-  in:fade={{ duration: 800 }}
-  out:blur={{ duration: 1000 }}
+  in:fade|global={{ duration: 800 }}
+  out:blur|global={{ duration: 1000 }}
 >
   <Card
     class="w-[400px] overflow-visible"
@@ -31,7 +31,7 @@
       <!-- Content -->
       <div
         class="notification-content col-span-full row-span-full flex flex-col justify-start items-center text-white"
-        in:slide={{ duration: 800 }}
+        in:slide|global={{ duration: 800 }}
       >
         <img
           src={logo}
@@ -40,8 +40,8 @@
         />
         <div
           class="h-[1px] w-[300px] relative bg-white bg-opacity-20 drop-shadow-[0_0_4px_rgba(255,255,255,100%)] rounded-xl overflow-hidden"
-          in:blur={{ duration: 200, delay: 400 }}
-          out:blur={{ duration: 400, delay: 200 }}
+          in:blur|global={{ duration: 200, delay: 400 }}
+          out:blur|global={{ duration: 400, delay: 200 }}
         >
           <div
             class="h-[1px] w-0 bg-white left-0 top-0 absolute"
@@ -53,8 +53,8 @@
         </div>
         <span
           class="text-sm text-center m-4 whitespace-pre-line"
-          in:blur={{ duration: 400, delay: 600 }}
-          out:blur={{ duration: 400 }}>{message}</span
+          in:blur|global={{ duration: 400, delay: 600 }}
+          out:blur|global={{ duration: 400 }}>{message}</span
         >
       </div>
   </Card>

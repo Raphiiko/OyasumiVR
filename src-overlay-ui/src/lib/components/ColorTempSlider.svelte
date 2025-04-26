@@ -73,9 +73,9 @@
 	<div class="w-full h-full absolute top-0 left-0 bg-black blur-3xl opacity-r50 rounded-full z-0" />
 	<div class="brightness-slider-title-row z-10">
 		{#if !dragging}
-			<span class="glow-80" transition:fade={{ duration: 100 }}>{label}</span>
+			<span class="glow-80" transition:fade|global={{ duration: 100 }}>{label}</span>
 		{:else}
-			<span class="glow-80" transition:fade={{ duration: 100 }}>{renderValue}</span>
+			<span class="glow-80" transition:fade|global={{ duration: 100 }}>{renderValue}</span>
 		{/if}
 	</div>
 	<div class="brightness-slider-bar-area z-10" on:mousedown={startDragging} class:dragging>

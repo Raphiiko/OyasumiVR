@@ -1,8 +1,8 @@
 import { mergeWith } from 'lodash';
 import { AUTOMATION_CONFIGS_DEFAULT, AutomationConfigs } from '../models/automations';
-import { error, info } from 'tauri-plugin-log-api';
-import { message } from '@tauri-apps/api/dialog';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
+import { error, info } from '@tauri-apps/plugin-log';
+import { message } from '@tauri-apps/plugin-dialog';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -71,7 +71,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('automation-config.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 

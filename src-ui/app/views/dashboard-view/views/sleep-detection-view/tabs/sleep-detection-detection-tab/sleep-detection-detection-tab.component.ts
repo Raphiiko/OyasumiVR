@@ -18,6 +18,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './sleep-detection-detection-tab.component.html',
   styleUrls: ['./sleep-detection-detection-tab.component.scss'],
   animations: [fade(), vshrink()],
+  standalone: false,
 })
 export class SleepDetectionDetectionTabComponent
   extends SleepDetectionTabComponent

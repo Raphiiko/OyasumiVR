@@ -6,6 +6,7 @@ import { NG_LOCALE_MAP } from '../globals';
 @Pipe({
   name: 'localizedDate',
   pure: false,
+  standalone: false,
 })
 export class LocalizedDatePipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}

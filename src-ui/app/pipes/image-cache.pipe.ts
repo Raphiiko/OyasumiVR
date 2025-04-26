@@ -4,6 +4,7 @@ import { ImageCacheService } from '../services/image-cache.service';
 @Pipe({
   name: 'imageCache',
   pure: false,
+  standalone: false,
 })
 export class ImageCachePipe implements PipeTransform {
   constructor(private imageCache: ImageCacheService) {}

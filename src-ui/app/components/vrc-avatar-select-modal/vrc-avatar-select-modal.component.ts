@@ -18,6 +18,7 @@ export interface VrcAvatarSelectModalOutput {
   templateUrl: './vrc-avatar-select-modal.component.html',
   styleUrls: ['./vrc-avatar-select-modal.component.scss'],
   animations: [fadeUp(), vshrink()],
+  standalone: false,
 })
 export class VrcAvatarSelectModalComponent
   extends BaseModalComponent<VrcAvatarSelectModalInput, VrcAvatarSelectModalOutput>

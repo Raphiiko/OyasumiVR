@@ -21,6 +21,7 @@ import {
   templateUrl: './audio-volume-entries.component.html',
   styleUrls: ['./audio-volume-entries.component.scss'],
   animations: [vshrink()],
+  standalone: false,
 })
 export class AudioVolumeEntriesComponent implements OnInit {
   @Input() automationType?: 'onSleepEnable' | 'onSleepDisable' | 'onSleepPreparation';

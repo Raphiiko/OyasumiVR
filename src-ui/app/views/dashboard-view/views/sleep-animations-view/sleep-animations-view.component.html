@@ -26,7 +26,10 @@
                 (selectedChange)="selectPreset($event!.id!)"
                 style="min-width: 15em"
               ></app-select-box>
-              <button class="btn collapse-toggle" (click)="oscOptionsExpanded = !oscOptionsExpanded">
+              <button
+                class="btn collapse-toggle"
+                (click)="oscOptionsExpanded = !oscOptionsExpanded"
+              >
                 <i class="material-icons">
                   {{ oscOptionsExpanded ? 'expand_less' : 'expand_more' }}
                 </i>
@@ -59,8 +62,8 @@
               <div class="option-label">
                 <span translate>oscAutomations.sleepingAnimations.options.positions.title</span>
                 <span translate>
-                oscAutomations.sleepingAnimations.options.positions.description
-              </span>
+                  oscAutomations.sleepingAnimations.options.positions.description
+                </span>
               </div>
               <div class="option-actions">
                 <app-osc-script-button
@@ -89,8 +92,8 @@
               <div class="option-label">
                 <span translate>oscAutomations.sleepingAnimations.options.footLock.title</span>
                 <span translate>
-                oscAutomations.sleepingAnimations.options.footLock.description
-              </span>
+                  oscAutomations.sleepingAnimations.options.footLock.description
+                </span>
               </div>
               <div class="option-actions">
                 <app-osc-script-button
@@ -124,8 +127,10 @@
                 >
                   <i class="material-icons">play_arrow</i>
                   <span>
-                  {{ 'oscAutomations.sleepingAnimations.options.positions.' + action | translate }}
-                </span>
+                    {{
+                      'oscAutomations.sleepingAnimations.options.positions.' + action | translate
+                    }}
+                  </span>
                 </button>
               </div>
               <div class="manual-control-row">
@@ -137,8 +142,8 @@
                 >
                   <i class="material-icons">play_arrow</i>
                   <span>
-                  {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
-                </span>
+                    {{ 'oscAutomations.sleepingAnimations.options.footLock.' + action | translate }}
+                  </span>
                 </button>
               </div>
             </div>
@@ -151,11 +156,11 @@
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
-            >
               <span translate
-              >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
+                >oscAutomations.sleepingAnimations.options.general.onlySwitchAnimations</span
+              >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.onlyIfSleepModeEnabled</span
               >
             </div>
             <div class="setting-row-action">
@@ -163,7 +168,9 @@
                 <input
                   type="checkbox"
                   [checked]="config.onlyIfSleepModeEnabled"
-                  (change)="updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })"
+                  (change)="
+                    updateConfig({ onlyIfSleepModeEnabled: !config.onlyIfSleepModeEnabled })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -177,9 +184,9 @@
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
-            >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.lockFeetOnSleepModeEnable</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -188,8 +195,8 @@
                   type="checkbox"
                   [checked]="config.lockFeetOnSleepModeEnable"
                   (change)="
-                  updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
-                "
+                    updateConfig({ lockFeetOnSleepModeEnable: !config.lockFeetOnSleepModeEnable })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -197,9 +204,9 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
-            >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.unlockFeetOnSleepModeDisable</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -208,10 +215,10 @@
                   type="checkbox"
                   [checked]="config.unlockFeetOnSleepModeDisable"
                   (change)="
-                  updateConfig({
-                    unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
-                  })
-                "
+                    updateConfig({
+                      unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
+                    })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -219,9 +226,9 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
-            >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.unlockFeetOnAutomationDisable</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -230,10 +237,10 @@
                   type="checkbox"
                   [checked]="config.unlockFeetOnAutomationDisable"
                   (change)="
-                  updateConfig({
-                    unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
-                  })
-                "
+                    updateConfig({
+                      unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
+                    })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -241,9 +248,9 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
-            >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.releaseFootLockOnPoseChange</span
+              >
               <span></span>
             </div>
             <div class="setting-row-action">
@@ -252,10 +259,10 @@
                   type="checkbox"
                   [checked]="config.releaseFootLockOnPoseChange"
                   (change)="
-                  updateConfig({
-                    releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
-                  })
-                "
+                    updateConfig({
+                      releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
+                    })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
@@ -264,9 +271,9 @@
           <div class="setting-row-group">
             <div class="setting-row" [class.disabled]="!config.releaseFootLockOnPoseChange">
               <div class="setting-row-label" translate>
-              <span translate
-              >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
-              >
+                <span translate
+                  >oscAutomations.sleepingAnimations.options.general.footLockReleaseWindow</span
+                >
                 <span></span>
               </div>
               <div class="setting-row-action">
@@ -290,14 +297,14 @@
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span translate
-            >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title</span
-            >
+              <span translate
+                >oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.title</span
+              >
               <span
                 [innerHtml]="
-                'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
-                  | translate
-              "
+                  'oscAutomations.sleepingAnimations.options.general.advanced.avatarReloadWorkaround.description'
+                    | translate
+                "
               ></span>
             </div>
             <div class="setting-row-action">
@@ -306,11 +313,11 @@
                   type="checkbox"
                   [checked]="config.enableAvatarReloadOnFBTDisableWorkaround"
                   (change)="
-                  updateConfig({
-                    enableAvatarReloadOnFBTDisableWorkaround:
-                      !config.enableAvatarReloadOnFBTDisableWorkaround
-                  })
-                "
+                    updateConfig({
+                      enableAvatarReloadOnFBTDisableWorkaround:
+                        !config.enableAvatarReloadOnFBTDisableWorkaround
+                    })
+                  "
                 />
                 <span class="switch-toggle-slider"></span>
               </label>

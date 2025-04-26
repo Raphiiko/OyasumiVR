@@ -17,6 +17,7 @@ import { getCSSColorForCCT } from 'src-shared-ts/src/cct-utils';
   selector: 'app-brightness-control-slider',
   templateUrl: './brightness-control-slider.component.html',
   styleUrls: ['./brightness-control-slider.component.scss'],
+  standalone: false,
 })
 export class BrightnessControlSliderComponent implements OnInit, OnChanges {
   @Input() min = 0;

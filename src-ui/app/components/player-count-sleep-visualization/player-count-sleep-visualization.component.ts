@@ -6,6 +6,7 @@ import { hshrink } from '../../utils/animations';
   templateUrl: './player-count-sleep-visualization.component.html',
   styleUrls: ['./player-count-sleep-visualization.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class PlayerCountSleepVisualizationComponent {
   @Input() public count = 0;

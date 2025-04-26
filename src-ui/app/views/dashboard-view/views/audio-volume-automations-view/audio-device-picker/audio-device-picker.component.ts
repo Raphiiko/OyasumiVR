@@ -18,6 +18,7 @@ export interface AudioDevicePickerOutput {
   templateUrl: './audio-device-picker.component.html',
   styleUrls: ['./audio-device-picker.component.scss'],
   animations: [fadeRight('fadeRight', '0.3s ease')],
+  standalone: false,
 })
 export class AudioDevicePickerComponent extends BaseModalComponent<
   AudioDevicePickerInput,

@@ -5,9 +5,11 @@ using Valve.VR;
 
 namespace overlay_sidecar;
 
-public class TextureWriter {
+public class TextureWriter
+{
   private readonly ReaderWriterLockSlim _paintBufferLock;
   private GCHandle _paintBuffer;
+
   private Texture2D? _texture;
   private uint _resolution;
   private bool _initialized;
@@ -50,7 +52,7 @@ public class TextureWriter {
         var rowPitch = dataBox.RowPitch;
         if (pitch == rowPitch)
         {
-          WinApi.CopyMemory(
+          WinApi.RtlMoveMemory(
             destinationPtr,
             sourcePtr,
             _resolution * _resolution * 4
@@ -60,7 +62,7 @@ public class TextureWriter {
         {
           for (var y = _resolution; y > 0; --y)
           {
-            WinApi.CopyMemory(
+            WinApi.RtlMoveMemory(
               destinationPtr,
               sourcePtr,
               pitch
@@ -90,7 +92,7 @@ public class TextureWriter {
       {
         var paintBufferPtr = _paintBuffer.AddrOfPinnedObject();
         var dataPtr = dataHandle.AddrOfPinnedObject();
-        WinApi.CopyMemory(paintBufferPtr, dataPtr, _resolution * _resolution * 4);
+        WinApi.RtlMoveMemory(paintBufferPtr, dataPtr, _resolution * _resolution * 4);
       }
       else
       {
@@ -108,7 +110,7 @@ public class TextureWriter {
   {
     try
     {
-      _texture = await Utils.InitTexture2D(_resolution);
+      _texture = await Utils.InitTexture2D(_resolution, true);
     }
     catch
     {

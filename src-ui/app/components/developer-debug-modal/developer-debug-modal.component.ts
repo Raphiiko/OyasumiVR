@@ -8,6 +8,7 @@ import { DeveloperDebugService } from '../../services/developer-debug/developer-
   templateUrl: './developer-debug-modal.component.html',
   styleUrls: ['./developer-debug-modal.component.scss'],
   animations: [fadeUp()],
+  standalone: false,
 })
 export class DeveloperDebugModalComponent
   extends BaseModalComponent<any, any>

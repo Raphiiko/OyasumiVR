@@ -20,6 +20,7 @@ export interface ConfirmModalOutputModel {
   templateUrl: './confirm-modal.component.html',
   styleUrls: ['./confirm-modal.component.scss'],
   animations: [fadeUp()],
+  standalone: false,
 })
 export class ConfirmModalComponent
   extends BaseModalComponent<ConfirmModalInputModel, ConfirmModalOutputModel>

@@ -19,6 +19,7 @@ import { NIGHTMARE_DETECTION_NOTIFICATION_SOUND } from '../../../../services/nig
   templateUrl: './nightmare-detection-view.component.html',
   styleUrls: ['./nightmare-detection-view.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class NightmareDetectionViewComponent implements OnInit {
   protected config: NightmareDetectionAutomationsConfig = structuredClone(

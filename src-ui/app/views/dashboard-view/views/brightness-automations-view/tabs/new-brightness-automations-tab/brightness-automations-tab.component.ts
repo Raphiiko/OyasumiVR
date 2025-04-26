@@ -19,6 +19,7 @@ export interface BrightnessEventViewModel {
   templateUrl: './brightness-automations-tab.component.html',
   styleUrls: ['./brightness-automations-tab.component.scss'],
   animations: [triggerChildren()],
+  standalone: false,
 })
 export class BrightnessAutomationsTabComponent implements OnInit, OnDestroy {
   protected editEvent?: BrightnessEventViewModel;

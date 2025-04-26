@@ -2,6 +2,7 @@ import { Directive, ElementRef, HostListener } from '@angular/core';
 
 @Directive({
   selector: '[appTextareaAutoResize]',
+  standalone: false,
 })
 export class TextareaAutoResizeDirective {
   private elementRef: ElementRef;

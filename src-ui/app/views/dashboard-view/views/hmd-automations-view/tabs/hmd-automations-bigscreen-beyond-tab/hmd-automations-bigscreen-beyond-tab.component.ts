@@ -21,6 +21,7 @@ const AUTOMATION_ENABLE_KEYS = ['onSleepEnable', 'onSleepDisable', 'onSleepPrepa
   templateUrl: './hmd-automations-bigscreen-beyond-tab.component.html',
   styleUrls: ['./hmd-automations-bigscreen-beyond-tab.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class HmdAutomationsBigscreenBeyondTabComponent implements OnInit {
   protected readonly fanAutomationEnableKeys = AUTOMATION_ENABLE_KEYS as Array<

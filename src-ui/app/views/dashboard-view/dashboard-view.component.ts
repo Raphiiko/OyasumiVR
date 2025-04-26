@@ -8,6 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './dashboard-view.component.html',
   styleUrls: ['./dashboard-view.component.scss'],
   animations: [fade('fade', '1s ease')],
+  standalone: false,
 })
 export class DashboardViewComponent implements OnInit {
   protected backgroundImage: string | null = null;

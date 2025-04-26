@@ -18,6 +18,7 @@ interface VRChatLoginTFAModalOutputModel {
   templateUrl: './vrchat-login-tfa-modal.component.html',
   styleUrls: ['./vrchat-login-tfa-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class VRChatLoginTFAModalComponent
   extends BaseModalComponent<VRChatLoginTFAModalInputModel, VRChatLoginTFAModalOutputModel>

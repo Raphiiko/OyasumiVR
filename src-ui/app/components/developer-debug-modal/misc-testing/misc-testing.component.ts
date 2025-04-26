@@ -2,13 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../../base-modal/base-modal.component';
 import { OpenVRService } from '../../../services/openvr.service';
 import { firstValueFrom, take } from 'rxjs';
-import { writeText } from '@tauri-apps/api/clipboard';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { AppSettingsService } from '../../../services/app-settings.service';
 
 @Component({
   selector: 'app-misc-testing',
   templateUrl: './misc-testing.component.html',
   styleUrls: ['./misc-testing.component.scss'],
+  standalone: false,
 })
 export class MiscTestingComponent implements OnInit {
   @Input() modal?: BaseModalComponent<any, any>;

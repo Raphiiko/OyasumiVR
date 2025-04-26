@@ -1,5 +1,5 @@
-@import 'node_modules/sass-material-colors/sass/sass-material-colors';
-@import 'shadows.scss';
+@use 'shadows.scss' as shadows;
+@use 'node_modules/material-colors/dist/colors.scss' as materialColors;
 
 @mixin baseTheme() {
   --color-primary: #3aa8b5;
@@ -228,24 +228,24 @@
   --theme-name: 'light';
 
   @for $i from 1 through 5 {
-    --shadow-#{$i}: #{build-shadow($i, true, false)};
-    --shadow-inset-#{$i}: #{build-shadow($i, true, true)};
+    --shadow-#{$i}: #{shadows.build-shadow($i, true, false)};
+    --shadow-inset-#{$i}: #{shadows.build-shadow($i, true, true)};
   }
 
-  --color-info: #{material-color('blue', '500')};
-  --color-info-hover: #{material-color('blue', '400')};
+  --color-info: #{materialColors.$md-blue-500};
+  --color-info-hover: #{materialColors.$md-blue-400};
   --color-on-info: white;
 
-  --color-caution: #{material-color('red', '600')};
-  --color-caution-hover: #{material-color('red', '500')};
+  --color-caution: #{materialColors.$md-red-600};
+  --color-caution-hover: #{materialColors.$md-red-500};
   --color-on-caution: white;
 
-  --color-warning: #{material-color('amber', '600')};
-  --color-warning-hover: #{material-color('amber', '500')};
-  --color-on-warning: #{material-color('grey', '900')};
+  --color-warning: #{materialColors.$md-amber-600};
+  --color-warning-hover: #{materialColors.$md-amber-500};
+  --color-on-warning: #{materialColors.$md-grey-900};
 
-  --color-success: #{material-color('light-green', '500')};
-  --color-success-hover: #{material-color('light-green', '400')};
+  --color-success: #{materialColors.$md-light-green-500};
+  --color-success-hover: #{materialColors.$md-light-green-400};
   --color-on-success: white;
 }
 
@@ -269,24 +269,24 @@
   --color-text-5: #010e16;
 
   @for $i from 1 through 5 {
-    --shadow-#{$i}: #{build-shadow($i, true, false)};
-    --shadow-inset-#{$i}: #{build-shadow($i, true, true)};
+    --shadow-#{$i}: #{shadows.build-shadow($i, true, false)};
+    --shadow-inset-#{$i}: #{shadows.build-shadow($i, true, true)};
   }
 
-  --color-info: #{material-color('blue', '900')};
-  --color-info-hover: #{material-color('blue', '800')};
+  --color-info: #{materialColors.$md-blue-900};
+  --color-info-hover: #{materialColors.$md-blue-800};
   --color-on-info: white;
 
-  --color-caution: #{material-color('red', '900')};
-  --color-caution-hover: #{material-color('red', '800')};
+  --color-caution: #{materialColors.$md-red-900};
+  --color-caution-hover: #{materialColors.$md-red-800};
   --color-on-caution: white;
 
-  --color-warning: #{material-color('amber', '900')};
-  --color-warning-hover: #{material-color('amber', '800')};
+  --color-warning: #{materialColors.$md-amber-900};
+  --color-warning-hover: #{materialColors.$md-amber-800};
   --color-on-warning: white;
 
-  --color-success: #{material-color('light-green', '900')};
-  --color-success-hover: #{material-color('light-green', '800')};
+  --color-success: #{materialColors.$md-light-green-900};
+  --color-success-hover: #{materialColors.$md-light-green-800};
   --color-on-success: white;
 }
 

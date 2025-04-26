@@ -38,6 +38,7 @@ export type EventLogFilter = (typeof EventLogFilters)[number];
   templateUrl: './event-log-filter-dialog.component.html',
   styleUrl: './event-log-filter-dialog.component.scss',
   animations: [fadeUp()],
+  standalone: false,
 })
 export class EventLogFilterDialogComponent
   extends BaseModalComponent<EventLogFilterDialogInputModel, EventLogFilterDialogOutputModel>

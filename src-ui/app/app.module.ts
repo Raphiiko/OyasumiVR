@@ -39,8 +39,6 @@ import { DeviceListItemComponent } from './components/device-list/device-list-it
 import { SleepingAnimationsAutomationService } from './services/osc-automations/sleeping-animations-automation.service';
 import { ElevatedSidecarService } from './services/elevated-sidecar.service';
 import { ConfirmModalComponent } from './components/confirm-modal/confirm-modal.component';
-import { UpdateService } from './services/update.service';
-import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 import { TelemetryService } from './services/telemetry.service';
 import { LanguageSelectModalComponent } from './components/language-select-modal/language-select-modal.component';
 import { AppSettingsService } from './services/app-settings.service';
@@ -61,7 +59,7 @@ import { ImageCachePipe } from './pipes/image-cache.pipe';
 import { InviteAutomationsService } from './services/invite-automations.service';
 import { GpuPowerlimitingPaneComponent } from './views/dashboard-view/views/gpu-automations-view/gpu-powerlimiting-pane/gpu-powerlimiting-pane.component';
 import { MsiAfterburnerPaneComponent } from './views/dashboard-view/views/gpu-automations-view/msi-afterburner-pane/msi-afterburner-pane.component';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { SleepModeChangeOnSteamVRStatusAutomationService } from './services/sleep-detection-automations/sleep-mode-change-on-steamvr-status-automation.service';
 import { ImageFallbackDirective } from './directives/image-fallback.directive';
 import { SleepModeForSleepDetectorAutomationService } from './services/sleep-detection-automations/sleep-mode-for-sleep-detector-automation.service';
@@ -70,7 +68,7 @@ import { BrightnessAutomationsViewComponent } from './views/dashboard-view/views
 import { SliderSettingComponent } from './components/slider-setting/slider-setting.component';
 import { SliderComponent } from './components/slider/slider.component';
 import { EventLogService } from './services/event-log.service';
-import { debug, error, info, warn } from 'tauri-plugin-log-api';
+import { debug, error, info, warn } from '@tauri-apps/plugin-log';
 import { EventLogComponent } from './components/event-log/event-log.component';
 import { EventLogEntryComponent } from './components/event-log/event-log-entry/event-log-entry.component';
 import { LocalizedDatePipe } from './pipes/localized-date.pipe';
@@ -170,8 +168,8 @@ import { HotkeySelectorModalComponent } from './components/hotkey-selector-modal
 import { HotkeyService } from './services/hotkey.service';
 import { HotkeyHandlerService } from './services/hotkey-handler.service';
 import { SettingsStatusInfoViewComponent } from './views/dashboard-view/views/settings-status-info-view/settings-status-info-view.component';
-import { ask } from '@tauri-apps/api/dialog';
-import { exit } from '@tauri-apps/api/process';
+import { ask } from '@tauri-apps/plugin-dialog';
+import { exit } from '@tauri-apps/plugin-process';
 import { OscControlService } from './services/osc-control/osc-control.service';
 import { SnowverlayComponent } from './components/snowverlay/snowverlay.component';
 import { HmdAutomationsViewComponent } from './views/dashboard-view/views/hmd-automations-view/hmd-automations-view.component';
@@ -183,7 +181,6 @@ import { BSBFanSpeedControlModalComponent } from './components/bsb-fan-speed-con
 import { DiscordService } from './services/discord.service';
 import { trackEvent } from '@aptabase/tauri';
 import { pTimeout } from './utils/promise-utils';
-import { MdnsSidecarService } from './services/mdns-sidecar.service';
 import { PlayerListPresetModalComponent } from './components/player-list-preset-modal/player-list-preset-modal.component';
 import { PlayerCountSleepVisualizationComponent } from './components/player-count-sleep-visualization/player-count-sleep-visualization.component';
 import { SleepModeDisableOnUprightPoseAutomationService } from './services/sleep-detection-automations/sleep-mode-disable-on-upright-pose-automation.service';
@@ -234,6 +231,9 @@ import { FBTAvatarReloadWorkaroundService } from './services/workarounds/f-b-t-a
 import { AvatarContextService } from './services/avatar-context.service';
 import { LighthouseV1IdWizardModalComponent } from './components/lighthouse-v1-id-wizard-modal/lighthouse-v1-id-wizard-modal.component';
 import { EventLogFilterDialogComponent } from './components/event-log/event-log-filter-dialog/event-log-filter-dialog.component';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { UpdateService } from './services/update.service';
+import { UpdateModalComponent } from './components/update-modal/update-modal.component';
 
 [
   localeEN,
@@ -267,6 +267,7 @@ export function createTranslateLoader(http: HttpClient) {
     ImageFallbackDirective,
     AboutViewComponent,
     OverviewViewComponent,
+    UpdateModalComponent,
     SleepDetectionViewComponent,
     SleepDetectorCalibrationModalComponent,
     TimeEnableSleepModeModalComponent,
@@ -290,7 +291,6 @@ export function createTranslateLoader(http: HttpClient) {
     DropdownButtonComponent,
     OscScriptSimpleEditorComponent,
     ConfirmModalComponent,
-    UpdateModalComponent,
     LanguageSelectModalComponent,
     SettingsGeneralViewComponent,
     SettingsNotificationsViewComponent,
@@ -413,8 +413,6 @@ export class AppModule {
     private oscService: OscService,
     private oscControlService: OscControlService,
     private elevatedSidecarService: ElevatedSidecarService,
-    private mdnsSidecarService: MdnsSidecarService,
-    private updateService: UpdateService,
     private telemetryService: TelemetryService,
     private appSettingsService: AppSettingsService,
     private modalService: ModalService,
@@ -449,6 +447,7 @@ export class AppModule {
     private mqttDiscoveryService: MqttDiscoveryService,
     private mqttIntegrationService: MqttIntegrationService,
     private avatarContextService: AvatarContextService,
+    private updateService: UpdateService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -516,13 +515,13 @@ export class AppModule {
       await info(`[Init] '${action}' ran successfully`);
       return result;
     } catch (e) {
+      await error(`[Init] Running '${action}' failed: ` + e);
       await trackEvent('app_init_error', {
         action,
         error: `${e}`,
         timeout: TIMEOUT,
         metadata: `action=${action}, timeout=${TIMEOUT}, error=${e}`,
       });
-      await error(`[Init] Running '${action}' failed: ` + e);
       throw e;
     }
   }
@@ -544,13 +543,13 @@ export class AppModule {
           await Promise.all([
             this.logInit('AppSettingsService initialization', this.appSettingsService.init()),
             this.logInit('EventLogService initialization', this.eventLog.init()),
-            this.logInit('SystemTrayService initialization', this.systemTrayService.init()),
             this.logInit(
               'AutomationConfigService initialization',
               this.automationConfigService.init()
             ),
             this.logInit('DeepLinkService initialization', this.deepLinkService.init()),
           ]);
+          await this.logInit('SystemTrayService initialization', this.systemTrayService.init());
           // Initialize telemetry
           await Promise.all([
             this.logInit('TelemetryService initialization', this.telemetryService.init()),
@@ -605,8 +604,6 @@ export class AppModule {
             }),
           ]);
           await Promise.all([
-            // Initialize MDNS Sidecar
-            await this.logInit('MDNSSidecarService initialization', this.mdnsSidecarService.init()),
             // Initialize Steam support
             await this.logInit('SteamService initialization', this.steamService.init()),
             // Initialize Discord support
@@ -816,7 +813,7 @@ export class AppModule {
           ].join('\n'),
           {
             title: 'OyasumiVR failed to start',
-            type: 'error',
+            kind: 'error',
             okLabel: 'Join the Discord for support',
             cancelLabel: 'Quit OyasumiVR',
           }
@@ -829,6 +826,12 @@ export class AppModule {
     }
     // Close the splash screen after initialization
     await invoke('close_splashscreen');
+    // Show the main window
+    if (!this.appSettingsService.settingsSync.startInSystemTray) {
+      const window = getCurrentWindow();
+      await window.show();
+      await window.setFocus();
+    }
     // Show language selection modal if user hasn't picked a language yet
     const settings = await firstValueFrom(this.appSettingsService.settings);
     if (!settings.userLanguagePicked) {

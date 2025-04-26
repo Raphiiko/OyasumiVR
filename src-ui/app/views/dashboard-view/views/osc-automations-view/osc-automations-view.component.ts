@@ -13,6 +13,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-osc-automations-view',
   templateUrl: './osc-automations-view.component.html',
   styleUrls: ['./osc-automations-view.component.scss'],
+  standalone: false,
 })
 export class OscAutomationsViewComponent implements OnInit {
   protected config: OscGeneralAutomationConfig = structuredClone(

@@ -14,6 +14,7 @@ import { combineLatest, tap } from 'rxjs';
   selector: 'app-windows-power-policy-tab',
   templateUrl: './windows-power-policy-tab.component.html',
   styleUrls: ['./windows-power-policy-tab.component.scss'],
+  standalone: false,
 })
 export class WindowsPowerPolicyTabComponent implements OnInit {
   protected policyOptions: SelectBoxItem[] = [

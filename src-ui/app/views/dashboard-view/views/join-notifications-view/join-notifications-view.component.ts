@@ -18,6 +18,7 @@ import { VRChatService } from '../../../../services/vrchat.service';
   templateUrl: './join-notifications-view.component.html',
   styleUrls: ['./join-notifications-view.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class JoinNotificationsViewComponent implements OnInit {
   notificationOptions: SelectBoxItem[] = [

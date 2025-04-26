@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
   selector: 'app-sleep-detection-sleep-enable-tab',
   templateUrl: './sleep-detection-sleep-enable-tab.component.html',
   styleUrls: ['./sleep-detection-sleep-enable-tab.component.scss'],
+  standalone: false,
 })
 export class SleepDetectionSleepEnableTabComponent
   extends SleepDetectionTabComponent

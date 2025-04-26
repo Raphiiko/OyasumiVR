@@ -21,6 +21,7 @@ export type SliderStyle = 'DEFAULT' | 'AUDIO_LEVEL';
   selector: 'app-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
+  standalone: false,
 })
 export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() min = 0;

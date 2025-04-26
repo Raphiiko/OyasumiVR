@@ -26,7 +26,7 @@ import { AppSettingsService } from './app-settings.service';
 import { OpenVRService } from './openvr.service';
 import { LighthouseConsoleService } from './lighthouse-console.service';
 import { LighthouseService } from './lighthouse.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import {
   EventLogShutdownSequenceCancelled,
   EventLogShutdownSequenceStarted,
@@ -242,7 +242,7 @@ export class ShutdownAutomationsService {
               this.config.triggerWhenAloneActivationWindowEnd
             )
         ),
-        filter(() => this.config.triggerWhenAloneOnlyWhenSleepModeActive || !this.sleepMode),
+        filter(() => !this.config.triggerWhenAloneOnlyWhenSleepModeActive || this.sleepMode),
         // Only trigger once every 5 minutes at most
         throttleTime(300000, asyncScheduler, { leading: true, trailing: false })
       )

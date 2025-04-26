@@ -83,22 +83,4 @@
       <span translate>comp.device-list.noDevices</span>
     </div>
   </div>
-
-  <div class="footer-bar" *ngIf="lighthousePowerControl" @vshrink>
-    <button
-      class="btn-lighthouse-scan"
-      (click)="scanForLighthouses()"
-      [disabled]="scanningForLighthouses"
-      disabled
-    >
-      <img
-        [src]="'/assets/img/icon_lighthouse.png'"
-        class="category-icon"
-        @hshrink
-        *ngIf="!scanningForLighthouses"
-      />
-      <div class="small-spinner" *ngIf="scanningForLighthouses" @hshrink></div>
-      <span translate>comp.device-list.scanForLighthouses</span>
-    </button>
-  </div>
 </div>

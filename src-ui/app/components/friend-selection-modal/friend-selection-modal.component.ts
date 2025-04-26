@@ -13,7 +13,7 @@ import {
 } from 'rxjs';
 import Fuse from 'fuse.js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import { sortBy } from 'lodash';
 
 export type SelectedFriend = SelectedFriendGroup | SelectedFriendPlayer;
@@ -50,6 +50,7 @@ const STATUS_SORT_ORDER: Record<UserStatus, number> = {
   templateUrl: './friend-selection-modal.component.html',
   styleUrls: ['./friend-selection-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink(), fade(), noop()],
+  standalone: false,
 })
 export class FriendSelectionModalComponent
   extends BaseModalComponent<FriendSelectionInputModel, FriendSelectionOutputModel>

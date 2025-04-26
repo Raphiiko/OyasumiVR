@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { listen } from '@tauri-apps/api/event';
-import { info, warn } from 'tauri-plugin-log-api';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { PulsoidService } from './integrations/pulsoid.service';
+import { onOpenUrl } from '@tauri-apps/plugin-deep-link';
 
 @Injectable({
   providedIn: 'root',
@@ -10,19 +10,21 @@ export class DeepLinkService {
   constructor(private pulsoid: PulsoidService) {}
 
   async init() {
-    await listen<string>('onDeepLinkCall', async (event) => {
-      let url: URL | null = null;
-      info(`[DeepLinkService] Received deep link call: ${event.payload}`);
-      try {
-        url = new URL(event.payload);
-      } catch (e) {
-        await warn(`[DeepLinkService] Failed to parse deep link URL: ${event.payload}`);
-        return;
-      }
-      try {
-        await this.handleDeepLinkCall(url);
-      } catch (e) {
-        await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${event.payload}`);
+    await onOpenUrl(async (urls) => {
+      for (const strurl of urls) {
+        let url: URL | null = null;
+        info(`[DeepLinkService] Received deep link call: ${strurl}`);
+        try {
+          url = new URL(strurl);
+        } catch (e) {
+          await warn(`[DeepLinkService] Failed to parse deep link URL: ${strurl}`);
+          return;
+        }
+        try {
+          await this.handleDeepLinkCall(url);
+        } catch (e) {
+          await warn(`[DeepLinkService] Failed to handle deep link call for URL: ${strurl}`);
+        }
       }
     });
   }

@@ -26,6 +26,7 @@ export interface DeviceEditModalOutputModel {}
   templateUrl: './device-edit-modal.component.html',
   styleUrls: ['./device-edit-modal.component.scss'],
   animations: [fadeUp()],
+  standalone: false,
 })
 export class DeviceEditModalComponent
   extends BaseModalComponent<DeviceEditModalInputModel, DeviceEditModalOutputModel>
@@ -97,7 +98,10 @@ export class DeviceEditModalComponent
         return this.lighthouseDevice?.deviceName;
       }
       case 'OPENVR': {
-        if (this.ovrDevice?.handleType) {
+        if (
+          ['Controller', 'GenericTracker'].includes(this.ovrDevice?.class ?? '') &&
+          this.ovrDevice?.handleType
+        ) {
           return this.translate.instant(
             'comp.device-list.deviceRole.' + this.ovrDevice!.handleType
           );

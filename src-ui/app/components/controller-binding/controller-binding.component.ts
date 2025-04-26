@@ -12,6 +12,7 @@ import { fadeDown } from '../../utils/animations';
   templateUrl: './controller-binding.component.html',
   styleUrls: ['./controller-binding.component.scss'],
   animations: [fadeDown()],
+  standalone: false,
 })
 export class ControllerBindingComponent implements OnInit {
   @Input() actionKey?: OVRInputEventAction;

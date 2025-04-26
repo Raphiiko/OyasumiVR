@@ -55,6 +55,7 @@ export interface LighthouseV1IdWizardModalOutputModel {}
       ]),
     ]),
   ],
+  standalone: false,
 })
 export class LighthouseV1IdWizardModalComponent
   extends BaseModalComponent<

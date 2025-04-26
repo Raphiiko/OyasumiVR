@@ -12,7 +12,7 @@ import {
   switchMap,
 } from 'rxjs';
 import { listen } from '@tauri-apps/api/event';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { AutomationConfigService } from '../automation-config.service';
 import {
   AUTOMATION_CONFIGS_DEFAULT,

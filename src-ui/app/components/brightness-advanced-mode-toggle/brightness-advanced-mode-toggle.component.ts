@@ -15,6 +15,7 @@ import { hshrink } from '../../utils/animations';
   templateUrl: './brightness-advanced-mode-toggle.component.html',
   styleUrl: './brightness-advanced-mode-toggle.component.scss',
   animations: [hshrink()],
+  standalone: false,
 })
 export class BrightnessAdvancedModeToggleComponent {
   advancedMode = false;

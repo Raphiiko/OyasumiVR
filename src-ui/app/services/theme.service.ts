@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Store } from 'tauri-plugin-store-api';
-import { SETTINGS_FILE, SETTINGS_KEY_THEMING_SETTINGS } from '../globals';
+import { SETTINGS_KEY_THEMING_SETTINGS, SETTINGS_STORE } from '../globals';
 
 type ThemingMode = 'SYSTEM' | 'LIGHT' | 'DARK';
 
@@ -16,7 +15,6 @@ const THEMING_SETTINGS_DEFAULT: ThemingSettings = {
   providedIn: 'root',
 })
 export class ThemeService {
-  private store = new Store(SETTINGS_FILE);
   private _settings: ThemingSettings = { ...THEMING_SETTINGS_DEFAULT };
   public get settings(): ThemingSettings {
     return { ...this._settings };
@@ -54,7 +52,7 @@ export class ThemeService {
   }
 
   private async loadSettings() {
-    const settings: ThemingSettings | null = await this.store.get<ThemingSettings>(
+    const settings: ThemingSettings | undefined = await SETTINGS_STORE.get<ThemingSettings>(
       SETTINGS_KEY_THEMING_SETTINGS
     );
     if (settings) {
@@ -65,7 +63,7 @@ export class ThemeService {
   }
 
   private async saveSettings() {
-    await this.store.set(SETTINGS_KEY_THEMING_SETTINGS, this.settings);
-    await this.store.save();
+    await SETTINGS_STORE.set(SETTINGS_KEY_THEMING_SETTINGS, this.settings);
+    await SETTINGS_STORE.save();
   }
 }

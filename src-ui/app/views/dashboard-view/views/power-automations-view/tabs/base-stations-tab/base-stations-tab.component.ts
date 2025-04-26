@@ -16,6 +16,7 @@ import { noop, vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './base-stations-tab.component.html',
   styleUrls: ['./base-stations-tab.component.scss'],
   animations: [vshrink(), noop()],
+  standalone: false,
 })
 export class BaseStationsTabComponent implements OnInit {
   automationConfigs: AutomationConfigs = structuredClone(AUTOMATION_CONFIGS_DEFAULT);

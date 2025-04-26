@@ -1,5 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { UpdateManifest } from '@tauri-apps/api/updater';
+import { Update } from '@tauri-apps/plugin-updater';
 import { firstValueFrom } from 'rxjs';
 import { marked } from 'marked';
 import { HttpClient } from '@angular/common/http';
@@ -16,9 +16,10 @@ import { getVersion } from '../../../../utils/app-utils';
   templateUrl: './settings-updates-view.component.html',
   styleUrls: ['./settings-updates-view.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class SettingsUpdatesViewComponent implements OnInit {
-  protected updateAvailable: { checked: boolean; manifest?: UpdateManifest } = { checked: false };
+  protected updateAvailable: { checked: boolean; update?: Update } = { checked: false };
   protected version = '';
   protected changelog: SafeHtml = '';
   protected updateOrCheckInProgress = false;
@@ -66,9 +67,7 @@ export class SettingsUpdatesViewComponent implements OnInit {
     if (this.updateOrCheckInProgress) return;
     this.updateOrCheckInProgress = true;
     await Promise.allSettled([
-      this.updateAvailable.manifest
-        ? this.update.installUpdate()
-        : this.update.checkForUpdate(false),
+      this.updateAvailable.update ? this.update.installUpdate() : this.update.checkForUpdate(false),
       new Promise((resolve) => setTimeout(resolve, 1000)),
     ]);
     this.updateOrCheckInProgress = false;

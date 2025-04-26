@@ -2,6 +2,7 @@ import { Directive, ElementRef, EventEmitter, HostListener, Output } from '@angu
 
 @Directive({
   selector: '[clickOutside]',
+  standalone: false,
 })
 export class ClickOutsideDirective {
   constructor(private elementRef: ElementRef) {}

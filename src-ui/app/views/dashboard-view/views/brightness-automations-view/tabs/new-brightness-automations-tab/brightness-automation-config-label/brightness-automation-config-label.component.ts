@@ -8,6 +8,7 @@ import { hshrink, vshrink } from '../../../../../../../utils/animations';
   templateUrl: './brightness-automation-config-label.component.html',
   styleUrls: ['./brightness-automation-config-label.component.scss'],
   animations: [vshrink(), hshrink()],
+  standalone: false,
 })
 export class BrightnessAutomationConfigLabelComponent {
   @Input() public advancedMode = false;

@@ -5,7 +5,7 @@ import {
   AppSettings,
   ExecutableReferenceStatus,
 } from '../../../../../models/settings';
-import { open as openFile } from '@tauri-apps/api/dialog';
+import { open as openFile } from '@tauri-apps/plugin-dialog';
 
 import { GpuAutomationsService } from '../../../../../services/gpu-automations.service';
 import {
@@ -21,6 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './msi-afterburner-pane.component.html',
   styleUrls: ['./msi-afterburner-pane.component.scss'],
   animations: [vshrink()],
+  standalone: false,
 })
 export class MsiAfterburnerPaneComponent implements OnInit {
   msiAfterburnerStatus: ExecutableReferenceStatus = 'UNKNOWN';

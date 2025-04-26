@@ -1,7 +1,7 @@
 import { UserUpdateHandler } from './handlers/user-update-handler';
 import { VRChatService } from '../vrchat.service';
 import { NotificationHandler } from './handlers/notification-handler';
-import { info } from 'tauri-plugin-log-api';
+import { info } from '@tauri-apps/plugin-log';
 
 export interface VRChatEventHandler {
   type: string;

@@ -17,6 +17,7 @@ import { BrightnessEventViewModel } from '../brightness-automations-tab.componen
   templateUrl: './brightness-automations-list.component.html',
   styleUrls: ['./brightness-automations-list.component.scss'],
   animations: [fade()],
+  standalone: false,
 })
 export class BrightnessAutomationsListComponent implements OnInit {
   protected config: BrightnessAutomationsConfig = structuredClone(

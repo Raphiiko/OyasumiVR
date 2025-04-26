@@ -20,6 +20,7 @@ import { SliderComponent, SliderStyle } from '../slider/slider.component';
   templateUrl: './slider-setting.component.html',
   styleUrls: ['./slider-setting.component.scss'],
   animations: [fade()],
+  standalone: false,
 })
 export class SliderSettingComponent implements OnInit, OnChanges {
   @Input() min = 0;

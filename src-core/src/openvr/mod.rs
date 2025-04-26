@@ -1,13 +1,13 @@
 mod brightness_analog;
 mod brightness_overlay;
 mod chaperone;
+mod colortemp_analog;
 pub mod commands;
 mod devices;
 mod gesture_detector;
 mod models;
 mod sleep_detector;
 mod supersampling;
-mod colortemp_analog;
 
 use crate::{
     globals::STEAM_APP_KEY,

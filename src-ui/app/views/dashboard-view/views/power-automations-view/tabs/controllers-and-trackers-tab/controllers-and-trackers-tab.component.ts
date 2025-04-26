@@ -18,6 +18,7 @@ import { vshrink } from '../../../../../../utils/animations';
   templateUrl: './controllers-and-trackers-tab.component.html',
   styleUrls: ['./controllers-and-trackers-tab.component.scss'],
   animations: [vshrink()],
+  standalone: false,
 })
 export class ControllersAndTrackersTabComponent implements OnInit {
   protected onSleepModeConfig: TurnOffDevicesOnSleepModeEnableAutomationConfig = structuredClone(

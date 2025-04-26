@@ -1,8 +1,8 @@
 import { mergeWith } from 'lodash';
 import { APP_SETTINGS_DEFAULT, AppSettings } from '../models/settings';
-import { error, info } from 'tauri-plugin-log-api';
-import { BaseDirectory, writeTextFile } from '@tauri-apps/api/fs';
-import { message } from '@tauri-apps/api/dialog';
+import { error, info } from '@tauri-apps/plugin-log';
+import { BaseDirectory, writeTextFile } from '@tauri-apps/plugin-fs';
+import { message } from '@tauri-apps/plugin-dialog';
 
 const migrations: { [v: number]: (data: any) => any } = {
   1: resetToLatest,
@@ -14,6 +14,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   7: from6to7,
   8: from7to8,
   9: from8to9,
+  10: from9to10,
 };
 
 export function migrateAppSettings(data: any): AppSettings {
@@ -59,13 +60,20 @@ export function migrateAppSettings(data: any): AppSettings {
 
 async function saveBackup(oldData: any) {
   await writeTextFile('app-settings.backup.json', JSON.stringify(oldData, null, 2), {
-    dir: BaseDirectory.AppData,
+    baseDir: BaseDirectory.AppData,
   });
 }
 
 function resetToLatest(data: any): any {
   // Reset to latest
   data = structuredClone(APP_SETTINGS_DEFAULT);
+  return data;
+}
+
+function from9to10(data: any): any {
+  data.version = 10;
+  data.overlayGpuAcceleration = !(data.overlayGpuFix ?? false);
+  delete data.overlayGpuFix;
   return data;
 }
 

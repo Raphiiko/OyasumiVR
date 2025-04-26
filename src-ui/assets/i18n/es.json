@@ -401,7 +401,6 @@
         "unknown": "Estado desconocido"
       },
       "noDevices": "No se detectan dispositivos",
-      "scanForLighthouses": "Escanear",
       "title": "Dispositivos",
       "turnOffAll": "TODO"
     },
@@ -1608,77 +1607,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "Esta sección contiene algunas opciones y acciones relacionadas con la reparación de problemas y la solución de problemas.En general, no debe usarlos a menos que sepa lo que está haciendo, o si se le pide que los use al obtener apoyo.",
-        "devTools": {
-          "action": "Abrir DevTools",
-          "description": "Abre las herramientas de desarrollo Edge, con fines de depuración",
-          "title": "Abrir herramientas de desarrollo"
-        },
-        "memoryWatcher": {
-          "action": "Activado",
-          "description": "Activa el vigilante de memoria para monitorizar todos los procesos hijos. Se mostrará un cuadro de diálogo de error si algún proceso supera un gigabyte de uso de memoria, y se registrará información adicional",
-          "modal": {
-            "error": {
-              "message": "El vigilante de la memoria ya estaba activo.",
-              "title": "Ya esta activo"
-            },
-            "success": {
-              "message": "El vigilante de memoria ha sido activado!",
-              "title": "Vigilante de memoria activado"
-            }
-          },
-          "title": "Vigilante de memoria"
-        },
-        "openVrInitDelayFix": {
-          "description": "Activando esta corrección se añadirá un retraso a la inicialización de OyasumiVR con OpenVR. Esto puede ayudar si estás experimentando problemas con SteamVR estrellarse o encontrar errores al iniciarlo mientras OyasumiVR ya se está ejecutando.",
-          "title": "Activar el retardo de inicialización OpenVR"
-        },
-        "oscServerEnabled": {
-          "description": "Al desactivar esta opción, se desactivan los servidores OSC y OSCQuery integrados. Esta opción persiste entre reinicios. Tenga en cuenta que varias características de OyasumiVR dejarán de funcionar si desactiva esta opción, sin advertencias. Esta opción existe puramente para propósitos de depuración y no debe ser desactivada durante el uso general.",
-          "title": "Habilitar servidores OSC y OSCQuery"
-        },
-        "overlayGpuFix": {
-          "description": "Si tienes problemas para abrir la superposición de SteamVR, habilitar esta opción podría solucionar el problema en algunos sistemas (por ejemplo, aquellos con gráficos híbridos). Al cambiar esta opción se reiniciará la superposición.",
-          "title": "Corrección de gráficos para SteamVR Overlay"
-        },
-        "title": "Correcciones y solución de problemas",
-        "vrManifestReregister": {
-          "action": "Retregistro manifiesto",
-          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR.",
-              "title": "Aplicación Manifiestas no registradas"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "El manifiesto no pudo ser retirado.Por favor revise los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "UNKNOWN": {
-              "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros.",
-              "title": "Retregistración del manifiesto de la aplicación VR falló"
-            },
-            "success": {
-              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
-              "title": "VR Aplicación Manifiesta reregistrado"
-            }
-          },
-          "title": "Reiniciar el manifiesto de la aplicación SteamVR"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "Abrir carpeta de registro",
@@ -1754,7 +1682,6 @@
         "editor": {
           "action": "Editor de lanzamiento",
           "description": "Lanzar el editor de traducción de Oyasumivr para editar y crear traducciones",
-          "experimental": "Este módulo todavía está en una etapa experimental y está disponible solo en inglés. Si bien puede probarlo, todavía está en desarrollo. Por ahora, aún puede esperar encontrar problemas y faltar funcionalidad.",
           "title": "Editor de traducción"
         },
         "loadFile": {
@@ -1763,6 +1690,48 @@
           "title": "Cargar archivo de traducción"
         },
         "title": "Idiomas y traducción"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "Abrir DevTools",
+          "description": "Abre las herramientas de desarrollo Edge, con fines de depuración",
+          "title": "Abrir herramientas de desarrollo"
+        },
+        "vrManifestReregister": {
+          "action": "Retregistro manifiesto",
+          "description": "Reregistros de la aplicación VR de Oyasumivr manifiesto con SteamVR.",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "Como está utilizando una construcción no elegible de OyasumiVR (e.g. la versión de Steam), el manifiesto de la aplicación no ha sido registrado, pero no reregistrado. ¡Esto no es un error! Reinicie OyasumiVR.",
+              "title": "Aplicación Manifiestas no registradas"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "El manifiesto se eliminó, pero no se pudo agregar de nuevo.Reinicie Oyasumivr y consulte los registros.",
+              "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "No se pudo verificar si el manifiesto de OyasumiVR ya estaba registrado con SteamVR. Reinicie OyasumiVR y consulte los registros.",
+              "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "Oyasumivr no tenía manifiesto registrado con Steamvr.No ha sido (re)registrado. Reinicie OyasumiVR.",
+              "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "El manifiesto no pudo ser retirado.Por favor revise los registros.",
+              "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "UNKNOWN": {
+              "message": "El manifiesto de OyasumiVR no pudo volver a registrarse con SteamVR debido a un error desconocido. Reinicie OyasumiVR y consulte los registros.",
+              "title": "Retregistración del manifiesto de la aplicación VR falló"
+            },
+            "success": {
+              "message": "El manifiesto de OyasumiVR se ha vuelto a grabar con éxito con SteamVR.",
+              "title": "VR Aplicación Manifiesta reregistrado"
+            }
+          },
+          "title": "Reiniciar el manifiesto de la aplicación SteamVR"
+        }
       }
     },
     "brightnessCct": {

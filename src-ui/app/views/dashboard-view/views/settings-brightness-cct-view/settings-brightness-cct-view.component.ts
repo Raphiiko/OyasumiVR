@@ -12,6 +12,7 @@ import { clamp } from '../../../../utils/number-utils';
   selector: 'app-settings-brightness-cct-view',
   templateUrl: './settings-brightness-cct-view.component.html',
   styleUrl: './settings-brightness-cct-view.component.scss',
+  standalone: false,
 })
 export class SettingsBrightnessCctViewComponent implements OnInit {
   protected appSettings: AppSettings = structuredClone(APP_SETTINGS_DEFAULT);

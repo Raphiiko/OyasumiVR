@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { getVersion } from '../utils/app-utils';
-import { invoke } from '@tauri-apps/api';
-import * as DesktopNotifications from '@tauri-apps/api/notification';
+import { invoke } from '@tauri-apps/api/core';
+import * as DesktopNotifications from '@tauri-apps/plugin-notification';
 import { AppSettingsService } from './app-settings.service';
 import { debounceTime, distinctUntilChanged, firstValueFrom, interval, map } from 'rxjs';
 import { APP_ICON_ARR, APP_ICON_B64 } from '../globals';
 import { NotificationProvider, NotificationType } from '../models/settings';
-import { error, info, warn } from 'tauri-plugin-log-api';
+import { error, info, warn } from '@tauri-apps/plugin-log';
 import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
@@ -263,9 +263,13 @@ export class NotificationService {
         info(`[NotificationService] OVRToolkit websocket connection closed`);
         return;
       case 'ERROR':
-        error(
-          `[NotificationService] OVRToolkit websocket connection error: ${JSON.stringify(message)}`
-        );
+        if (message) {
+          error(
+            `[NotificationService] OVRToolkit websocket connection error: ${JSON.stringify(
+              message
+            )}`
+          );
+        }
         return;
       case 'MESSAGE':
         // Maybe do something with received messages in the future

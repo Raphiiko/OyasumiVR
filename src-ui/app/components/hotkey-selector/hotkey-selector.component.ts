@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './hotkey-selector.component.html',
   styleUrls: ['./hotkey-selector.component.scss'],
   animations: [hshrink(), noop()],
+  standalone: false,
 })
 export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
   @Input() action?: string;

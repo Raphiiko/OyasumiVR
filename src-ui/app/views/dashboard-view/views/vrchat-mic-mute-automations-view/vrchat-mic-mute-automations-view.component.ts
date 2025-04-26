@@ -13,6 +13,7 @@ import { hshrink } from 'src-ui/app/utils/animations';
   templateUrl: './vrchat-mic-mute-automations-view.component.html',
   styleUrls: ['./vrchat-mic-mute-automations-view.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class VRChatMicMuteAutomationsViewComponent implements OnInit {
   muteActionOptions: SelectBoxItem[] = [

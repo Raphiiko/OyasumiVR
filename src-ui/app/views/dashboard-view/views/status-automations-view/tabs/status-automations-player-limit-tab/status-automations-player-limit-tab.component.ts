@@ -26,6 +26,7 @@ import { hshrink, noop, vshrink } from '../../../../../../utils/animations';
   templateUrl: './status-automations-player-limit-tab.component.html',
   styleUrls: ['./status-automations-player-limit-tab.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
+  standalone: false,
 })
 export class StatusAutomationsPlayerLimitTabComponent implements OnInit {
   UserStatus = UserStatus;

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {
   asyncScheduler,
   BehaviorSubject,
+  combineLatest,
   debounceTime,
   delay,
   distinctUntilChanged,
@@ -81,6 +82,7 @@ export class LighthouseService {
       this.v1Identifiers = settings.v1LighthouseIdentifiers;
       this.ignoredDevices = settings.ignoredLighthouses;
     });
+    // Respond to lighthouse power control being turned on or off
     this.appSettings.settings
       .pipe(
         debounceTime(100),
@@ -92,14 +94,33 @@ export class LighthouseService {
           const status = await invoke<LighthouseStatus>('lighthouse_get_status');
           this._status.next(status);
           this._devices.next(await invoke<LighthouseDevice[]>('lighthouse_get_devices'));
-          if (status === 'ready') {
-            await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
-          }
         } else {
           this._devices.next([]);
           await invoke('lighthouse_reset');
         }
       });
+    // Continuously scan for new lighthouses
+    combineLatest([
+      this._scanning.pipe(distinctUntilChanged()),
+      this._status.pipe(distinctUntilChanged()),
+      this.appSettings.settings.pipe(
+        map((settings) => settings.lighthousePowerControl),
+        distinctUntilChanged()
+      ),
+    ])
+      .pipe(
+        map(
+          ([scanning, status, lighthousePowerControl]) =>
+            !scanning && status === 'ready' && lighthousePowerControl
+        ),
+        debounceTime(1000),
+        distinctUntilChanged(),
+        filter(Boolean)
+      )
+      .subscribe(() => {
+        invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
+      });
+    // Show warning when more than 5 lighthouses are detected
     this._devices
       .pipe(
         filter((d) => d.length >= 6),
@@ -111,12 +132,6 @@ export class LighthouseService {
       .subscribe(() =>
         this.appSettings.promptDialogForOneTimeFlag('BASESTATION_COUNT_WARNING_DIALOG')
       );
-  }
-
-  async scan() {
-    if (this._scanning.value) return;
-    this._scanning.next(true);
-    await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
   }
 
   public async setPowerState(
@@ -169,11 +184,6 @@ export class LighthouseService {
   private async handleStatusChange(event: LighthouseStatusChangedEvent) {
     if (this._status.value !== event.status) {
       this._status.next(event.status);
-      if ((await firstValueFrom(this.appSettings.settings)).lighthousePowerControl) {
-        if (event.status === 'ready') {
-          await invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
-        }
-      }
     }
   }
 

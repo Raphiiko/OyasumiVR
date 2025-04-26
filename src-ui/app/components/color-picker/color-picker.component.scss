@@ -1,4 +1,4 @@
-@import 'shadows.scss';
+@use 'shadows.scss';
 
 input {
   width: 100%;
@@ -20,7 +20,7 @@ input {
 }
 
 .color-input-wrapper {
-  @include shadow(2, false);
+  @include shadows.shadow(2, false);
   position: relative;
   background-color: var(--picked-color);
   height: 2em;

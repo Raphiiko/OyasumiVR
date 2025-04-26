@@ -10,17 +10,17 @@ import { OverlayService } from '../../../../services/overlay/overlay.service';
 import { OpenVRService } from '../../../../services/openvr.service';
 import { IPCService } from '../../../../services/ipc.service';
 import { FontLoaderService } from '../../../../services/font-loader.service';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { hshrink } from '../../../../utils/animations';
 import { TStringTranslatePipe } from '../../../../pipes/tstring-translate.pipe';
-import { writeText } from '@tauri-apps/api/clipboard';
-import { MdnsSidecarService } from 'src-ui/app/services/mdns-sidecar.service';
+import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 
 @Component({
   selector: 'app-settings-status-info-view',
   templateUrl: './settings-status-info-view.component.html',
   styleUrls: ['./settings-status-info-view.component.scss'],
   animations: [hshrink()],
+  standalone: false,
 })
 export class SettingsStatusInfoViewComponent {
   categories: Array<{
@@ -38,7 +38,6 @@ export class SettingsStatusInfoViewComponent {
     osc: OscService,
     elevatedSidecar: ElevatedSidecarService,
     overlaySidecar: OverlayService,
-    mdnsSidecar: MdnsSidecarService,
     openvr: OpenVRService,
     ipc: IPCService,
     fontLoader: FontLoaderService,
@@ -61,14 +60,6 @@ export class SettingsStatusInfoViewComponent {
           {
             key: 'Overlay Sidecar',
             value: overlaySidecar.sidecarStarted.pipe(
-              map((s) => {
-                return s ? 'Running' : 'Not running';
-              })
-            ),
-          },
-          {
-            key: 'MDNS Sidecar',
-            value: mdnsSidecar.sidecarStarted.pipe(
               map((s) => {
                 return s ? 'Running' : 'Not running';
               })

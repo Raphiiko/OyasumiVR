@@ -115,7 +115,6 @@ pub async fn clear_activity() -> bool {
         }
     };
     result
-
 }
 
 pub async fn update_activity(

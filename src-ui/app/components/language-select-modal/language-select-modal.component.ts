@@ -9,6 +9,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   templateUrl: './language-select-modal.component.html',
   styleUrls: ['./language-select-modal.component.scss'],
   animations: [fadeUp()],
+  standalone: false,
 })
 export class LanguageSelectModalComponent extends BaseModalComponent<void, void> {
   languages = LANGUAGES;

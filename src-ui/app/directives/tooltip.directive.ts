@@ -14,6 +14,7 @@ import { TStringTranslatePipe } from '../pipes/tstring-translate.pipe';
 @Directive({
   // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[tooltip]',
+  standalone: false,
 })
 export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   @Input('tooltip') text?: TString;

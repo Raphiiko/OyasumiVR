@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
   templateUrl: './brightness-control-modal.component.html',
   styleUrls: ['./brightness-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class BrightnessControlModalComponent
   extends BaseModalComponent<void, void>

@@ -26,6 +26,7 @@ import { fade, vshrink } from '../../../../../../utils/animations';
   templateUrl: './shutdown-automations-settings-tab.component.html',
   styleUrls: ['./shutdown-automations-settings-tab.component.scss'],
   animations: [fade(), vshrink()],
+  standalone: false,
 })
 export class ShutdownAutomationsSettingsTabComponent implements OnInit {
   protected config: ShutdownAutomationsConfig = structuredClone(

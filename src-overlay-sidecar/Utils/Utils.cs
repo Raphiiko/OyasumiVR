@@ -24,7 +24,7 @@ public static class Utils {
     return memoryStream.ToArray();
   }
 
-  public static (byte[], uint, uint) ConvertPngToRgba(byte[] pngData)
+  public static (byte[], uint, uint) ConvertPngToBgra(byte[] pngData)
   {
     using (var stream = new MemoryStream(pngData))
     using (var bitmap = new Bitmap(stream))
@@ -36,9 +36,9 @@ public static class Utils {
       for (var x = 0; x < bitmap.Width; x++)
       {
         var color = bitmap.GetPixel(x, y);
-        rgbaData[index++] = color.R;
-        rgbaData[index++] = color.G;
         rgbaData[index++] = color.B;
+        rgbaData[index++] = color.G;
+        rgbaData[index++] = color.R;
         rgbaData[index++] = color.A;
       }
 
@@ -46,7 +46,7 @@ public static class Utils {
     }
   }
 
-  public static async Task<Texture2D> InitTexture2D(uint resolution)
+  public static async Task<Texture2D?> InitTexture2D(uint resolution, bool cpuWritable)
   {
     var timings = new[] { 16, 100, 200, 500, 1000 };
     Texture2D? texture = null;
@@ -54,20 +54,24 @@ public static class Utils {
     {
       try
       {
+        var description = new Texture2DDescription
+        {
+          Width = (int)resolution,
+          Height = (int)resolution,
+          MipLevels = 1,
+          ArraySize = 1,
+          Format = Format.B8G8R8A8_UNorm,
+          SampleDescription = new SampleDescription(1, 0),
+          BindFlags = BindFlags.ShaderResource
+        };
+        if (cpuWritable)
+        {
+          description.Usage = ResourceUsage.Dynamic;
+          description.CpuAccessFlags = CpuAccessFlags.Write;
+        }
         texture = new Texture2D(
-          OvrManager.Instance.D3D11Device,
-          new Texture2DDescription
-          {
-            Width = (int)resolution,
-            Height = (int)resolution,
-            MipLevels = 1,
-            ArraySize = 1,
-            Format = Format.R8G8B8A8_UNorm,
-            SampleDescription = new SampleDescription(1, 0),
-            Usage = ResourceUsage.Dynamic,
-            BindFlags = BindFlags.ShaderResource,
-            CpuAccessFlags = CpuAccessFlags.Write
-          }
+          OvrManager.Instance.DxDeviceHander.D3D11Device,
+          description
         );
       }
       catch (SharpDXException err)

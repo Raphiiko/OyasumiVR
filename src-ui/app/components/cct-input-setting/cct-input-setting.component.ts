@@ -8,6 +8,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
   templateUrl: './cct-input-setting.component.html',
   styleUrl: './cct-input-setting.component.scss',
   animations: [fade()],
+  standalone: false,
 })
 export class CCTInputSettingComponent {
   protected inputOpen = true;

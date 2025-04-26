@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './chaperone-automations-view.component.html',
   styleUrls: ['./chaperone-automations-view.component.scss'],
   animations: [],
+  standalone: false,
 })
 export class ChaperoneAutomationsViewComponent implements OnInit {
   protected onSleepModeEnableConfig: ChaperoneFadeDistanceOnSleepModeAutomationConfig =

@@ -12,6 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './gpu-powerlimiting-pane.component.html',
   styleUrls: ['./gpu-powerlimiting-pane.component.scss'],
   animations: [vshrink(), noop()],
+  standalone: false,
 })
 export class GpuPowerlimitingPaneComponent implements OnInit {
   protected panel: 'PREINIT' | 'INITIALIZING' | 'ERROR' | 'ENABLED' = 'PREINIT';

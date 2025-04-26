@@ -401,7 +401,6 @@
         "unknown": "Unbekannter Status"
       },
       "noDevices": "Keine Geräte erkannt",
-      "scanForLighthouses": "Scannen",
       "title": "Geräte",
       "turnOffAll": "ALLE"
     },
@@ -1608,77 +1607,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "description": "Dieser Bereich enthält alle Optionen und Aktionen, die sich mit der Fehlerbehebung beschäftigen. Du solltes diese nicht verwenden, außer wenn du weißt was du tust oder von uns angewiesen wirst diese zu verwenden.",
-        "devTools": {
-          "action": "Öffne Devtools",
-          "description": "Öffne Edge Entwicklertools zum Debuggen",
-          "title": "Öffne Entwicklertools"
-        },
-        "memoryWatcher": {
-          "action": "Einschalten",
-          "description": "Aktiviere den Speicherüberwacher um alle Unterprozesse zu kontrollieren. Eine Fehleranzeige wird angezeigt, wenn ein Przess einen GB an Arbeitsspeicher überschreitet (zusätzliche Informationen werden im Verlauf verfügbar sein)",
-          "modal": {
-            "error": {
-              "message": "Der Speicherüberwacher war bereits aktiv",
-              "title": "Bereits aktiv"
-            },
-            "success": {
-              "message": "Der Speicherüberwacher wurde aktiviert",
-              "title": "Speicherüberwacher aktiviert"
-            }
-          },
-          "title": "Speicherüberwachung"
-        },
-        "openVrInitDelayFix": {
-          "description": "Die Aktivierung dieser Funktion fügt eine Verzögerung zu dem Start von OyasumiVR in OpenVR hinzu. Dies kann helfen, wenn du Fehler in SteamVR hast (Abstürzen andere diverse Fehler) während OyasumiVR bereits läuft.",
-          "title": "OpenVR Öffnungsverzögerung aktivieren"
-        },
-        "oscServerEnabled": {
-          "description": "Wenn du dies deaktiviest werden die standardgemäßen OSC und OSCQuery Server deaktiviert. Diese Option wird nach dem Neustarten weiter verwendet. Beachte, dass einige Funktionen von OyasumiVR nicht mehr funktionieren, wenn du dies aktivierst. Diese Option sollte nur für die Fehlerbehebung und Debugging verwendet werden und nie generell.",
-          "title": "OSC und OSCQuery Server aktivieren"
-        },
-        "overlayGpuFix": {
-          "description": "Wenn du Fehler mit dem SteamVR Overlay hast kannst du diese Option aktivieren um diese zu beheben (Besonders bei Systemen mit hybriden Grafiken). Änderung dieser Einstellung starten das Overlay neu.",
-          "title": "Grafikfix für SteamVR Oberfläche"
-        },
-        "title": "Problemlösungen",
-        "vrManifestReregister": {
-          "action": "Neuangelegtes Manifest",
-          "description": "Neuangelegte OyasumiVR Anwendungs Manifest mit SteamVR",
-          "modal": {
-            "FLAVOUR_NOT_ELIGIBLE": {
-              "message": "Da du eine nicht berechtigte Version von OyasumiVR verwendest (Zum Beispiel die Steam Version) konnte das Anwendungsmanifest zwar unregistriert, aber nicht neu registriert werden. Dies ist ein Fehler! Bitte starte OyasumiVR neu.",
-              "title": "Anwendungsmanifest unregistriert"
-            },
-            "MANIFEST_ADD_FAILED": {
-              "message": "Das Manifest wurde entfernt, aber konnte nicht mehr erstellt werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_CHECK_FAILED": {
-              "message": "Es konnte nicht geprüft werden, ob das OyasumiVR Manifst bereits mit SteamVR registriert wurde. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_NOT_REGISTERED": {
-              "message": "OyasumiVR hat kein registriertes Manifest mit SteamVR. Es wurde nich neuregistriert. Bitte starte OyasumiVR neu.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "MANIFEST_REMOVE_FAILED": {
-              "message": "Das Manifest konnte nicht entfert werden. Bitte checke den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "UNKNOWN": {
-              "message": "OyasumiVRs Manifest konnte wegen eines unbekannten Fehlers nicht neuregistriert werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
-            },
-            "success": {
-              "message": "OyasumiVRs Manifest wurde erfolgreich neuregistriert mit SteamVR.",
-              "title": "Neuanlegung des VR Anwendungsmanifestes durchgeführt"
-            }
-          },
-          "title": "Neuregistrierung des SteamVR Anwendungsmanifest"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "Öffne den Log Ordner",
@@ -1754,7 +1682,6 @@
         "editor": {
           "action": "Editor starten",
           "description": "Starte OyasumVR's Übersetzungseditor und starte zu übersetzen.",
-          "experimental": "Diese Funktion ist immernoch experimentel und nur in Englisch verfügbar. Du kannst es zwar ausprobieren, beachte jedoch, dass sich die Funktion noch in Entwicklung befindet. Derzeit musst du bei der Verwendung Probleme und fehlende Funktionen erwarten.",
           "title": "Übersetzungseditor"
         },
         "loadFile": {
@@ -1763,6 +1690,48 @@
           "title": "Sprachdatei laden"
         },
         "title": "Sprache & Übersetzung"
+      },
+      "troubleshooting": {
+        "devTools": {
+          "action": "Öffne Devtools",
+          "description": "Öffne Edge Entwicklertools zum Debuggen",
+          "title": "Öffne Entwicklertools"
+        },
+        "vrManifestReregister": {
+          "action": "Neuangelegtes Manifest",
+          "description": "Neuangelegte OyasumiVR Anwendungs Manifest mit SteamVR",
+          "modal": {
+            "FLAVOUR_NOT_ELIGIBLE": {
+              "message": "Da du eine nicht berechtigte Version von OyasumiVR verwendest (Zum Beispiel die Steam Version) konnte das Anwendungsmanifest zwar unregistriert, aber nicht neu registriert werden. Dies ist ein Fehler! Bitte starte OyasumiVR neu.",
+              "title": "Anwendungsmanifest unregistriert"
+            },
+            "MANIFEST_ADD_FAILED": {
+              "message": "Das Manifest wurde entfernt, aber konnte nicht mehr erstellt werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+            },
+            "MANIFEST_CHECK_FAILED": {
+              "message": "Es konnte nicht geprüft werden, ob das OyasumiVR Manifst bereits mit SteamVR registriert wurde. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+            },
+            "MANIFEST_NOT_REGISTERED": {
+              "message": "OyasumiVR hat kein registriertes Manifest mit SteamVR. Es wurde nich neuregistriert. Bitte starte OyasumiVR neu.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+            },
+            "MANIFEST_REMOVE_FAILED": {
+              "message": "Das Manifest konnte nicht entfert werden. Bitte checke den Verlauf.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+            },
+            "UNKNOWN": {
+              "message": "OyasumiVRs Manifest konnte wegen eines unbekannten Fehlers nicht neuregistriert werden. Bitte starte OyasumiVR neu und prüfe den Verlauf.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes fehlgeschlagen"
+            },
+            "success": {
+              "message": "OyasumiVRs Manifest wurde erfolgreich neuregistriert mit SteamVR.",
+              "title": "Neuanlegung des VR Anwendungsmanifestes durchgeführt"
+            }
+          },
+          "title": "Neuregistrierung des SteamVR Anwendungsmanifest"
+        }
       }
     },
     "brightnessCct": {

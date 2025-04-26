@@ -1,14 +1,17 @@
 pub mod commands;
 
-use hyper::{
-    header::{CONTENT_TYPE, USER_AGENT},
-    Body, Request, Response,
-};
+use hyper::{Body, Request, Response};
 use log::{error, info};
 use mime::Mime;
 use serde_json::json;
+use std::{
+    collections::HashMap,
+    convert::Infallible,
+    ffi::OsString,
+    path::{Path, PathBuf},
+    str::FromStr,
+};
 use tokio::sync::Mutex;
-use std::{collections::HashMap, convert::Infallible, ffi::OsString, path::{Path, PathBuf}, str::FromStr};
 use urlencoding::decode;
 
 lazy_static! {
@@ -21,7 +24,6 @@ pub async fn init(cache_dir: PathBuf) {
     image_cache.clean(true);
     *INSTANCE.lock().await = Some(image_cache);
 }
-
 
 #[derive(Debug, Clone)]
 pub struct ImageCache {
@@ -281,7 +283,7 @@ impl ImageCache {
         if let Some((image_data, image_mime)) = self.get_image(String::from(url.as_ref())) {
             return Ok(Response::builder()
                 .status(200)
-                .header(CONTENT_TYPE, image_mime.to_string())
+                .header(hyper::header::CONTENT_TYPE, image_mime.to_string())
                 .body(image_data.into())
                 .unwrap());
         }
@@ -290,9 +292,9 @@ impl ImageCache {
         let (image_data, image_mime) = match client
             .get(url.as_ref())
             .header(
-                USER_AGENT,
+                reqwest::header::USER_AGENT,
                 format!(
-                    "Oyasumi/{} (https://github.com/Raphiiko/Oyasumi)",
+                    "OyasumiVR/{} (https://github.com/Raphiiko/OyasumiVR)",
                     env!("CARGO_PKG_VERSION"),
                 ),
             )
@@ -304,7 +306,7 @@ impl ImageCache {
                 let bytes = response.bytes();
                 match bytes.await {
                     Ok(bytes) => {
-                        let content_type = match headers.get(CONTENT_TYPE) {
+                        let content_type = match headers.get(reqwest::header::CONTENT_TYPE) {
                             None => {
                                 return Ok(Response::builder()
                                     .status(500)

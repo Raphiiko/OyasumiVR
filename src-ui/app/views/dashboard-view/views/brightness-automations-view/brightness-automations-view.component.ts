@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   selector: 'app-brightness-automations-view',
   templateUrl: './brightness-automations-view.component.html',
   styleUrls: ['./brightness-automations-view.component.scss'],
+  standalone: false,
 })
 export class BrightnessAutomationsViewComponent {
   advancedMode = false;

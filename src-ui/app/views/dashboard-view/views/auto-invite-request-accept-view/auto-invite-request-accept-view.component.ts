@@ -22,6 +22,7 @@ interface PresetOptions {
   templateUrl: './auto-invite-request-accept-view.component.html',
   styleUrls: ['./auto-invite-request-accept-view.component.scss'],
   animations: [vshrink(), noop(), hshrink()],
+  standalone: false,
 })
 export class AutoInviteRequestAcceptViewComponent implements OnInit {
   loggedIn = false;

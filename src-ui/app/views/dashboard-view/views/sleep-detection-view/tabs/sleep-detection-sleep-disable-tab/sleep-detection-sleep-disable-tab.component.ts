@@ -18,6 +18,7 @@ import { PlayerJoinLeaveDisableSleepModeModalComponent } from '../../modals/play
   selector: 'app-sleep-detection-sleep-disable-tab',
   templateUrl: './sleep-detection-sleep-disable-tab.component.html',
   styleUrls: ['./sleep-detection-sleep-disable-tab.component.scss'],
+  standalone: false,
 })
 export class SleepDetectionSleepDisableTabComponent
   extends SleepDetectionTabComponent

@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './sleep-detection-view.component.html',
   styleUrls: ['./sleep-detection-view.component.scss'],
   animations: [],
+  standalone: false,
 })
 export class SleepDetectionViewComponent {
   activeTab: 'DETECTION' | 'ENABLE' | 'DISABLE' = 'DETECTION';

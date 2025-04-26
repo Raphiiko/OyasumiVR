@@ -22,6 +22,7 @@ import { noop, vshrink } from '../../utils/animations';
   templateUrl: './player-list.component.html',
   styleUrls: ['./player-list.component.scss'],
   animations: [vshrink(), noop()],
+  standalone: false,
 })
 export class PlayerListComponent implements OnInit {
   @Input() title: TString = 'comp.player-list.title';

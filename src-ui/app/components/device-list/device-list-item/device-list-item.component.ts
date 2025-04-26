@@ -2,7 +2,7 @@ import { Component, DestroyRef, Input, OnInit } from '@angular/core';
 import { OVRDevice } from 'src-ui/app/models/ovr-device';
 import { fade, hshrink, vshrink } from 'src-ui/app/utils/animations';
 import { LighthouseConsoleService } from '../../../services/lighthouse-console.service';
-import { error } from 'tauri-plugin-log-api';
+import { error } from '@tauri-apps/plugin-log';
 import {
   EventLogLighthouseSetPowerState,
   EventLogTurnedOffOpenVRDevices,
@@ -37,6 +37,7 @@ import { isEqual } from 'lodash';
   templateUrl: './device-list-item.component.html',
   styleUrls: ['./device-list-item.component.scss'],
   animations: [fade(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class DeviceListItemComponent implements OnInit {
   @Input() icon: string | undefined;
@@ -47,9 +48,6 @@ export class DeviceListItemComponent implements OnInit {
     this._lighthouseDevice = undefined;
     this._ovrDevice = device;
     this.deviceName = device.modelNumber;
-    this.deviceIdentifier = device.serialNumber;
-    this.deviceRole = device.handleType;
-    this.deviceNickname = this.openvr.getDeviceNickname(device);
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
     this.isCharging = this.showBattery && device.isCharging;
     this.batteryPercentage = this.showBattery ? device.battery * 100 : 0;
@@ -64,6 +62,13 @@ export class DeviceListItemComponent implements OnInit {
     this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber);
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
     this.showLHStatePopover = false;
+
+    const nickname = this.openvr.getDeviceNickname(device);
+    this.deviceHasNickname = Boolean(nickname);
+    if (nickname) this.deviceSubtitle = nickname;
+    else if (device.handleType && ['Controller', 'GenericTracker'].includes(device.class))
+      this.deviceSubtitle = 'comp.device-list.deviceRole.' + device.handleType;
+    else this.deviceSubtitle = device.serialNumber;
   }
 
   @Input() set lighthouseDevice(device: LighthouseDevice | undefined) {
@@ -72,9 +77,9 @@ export class DeviceListItemComponent implements OnInit {
     this._lighthouseDevice = device;
     this._ovrDevice = undefined;
     this.deviceName = 'comp.device-list.deviceName.' + device.deviceType;
-    this.deviceIdentifier = device.deviceName;
-    this.deviceRole = undefined;
-    this.deviceNickname = this.lighthouse.getDeviceNickname(device);
+    const nickname = this.lighthouse.getDeviceNickname(device);
+    this.deviceSubtitle = nickname ?? device.deviceName;
+    this.deviceHasNickname = Boolean(nickname);
     this.showBattery = false;
     this.isCharging = false;
     this.batteryPercentage = 100;
@@ -126,9 +131,8 @@ export class DeviceListItemComponent implements OnInit {
 
   mode?: 'lighthouse' | 'openvr';
   deviceName = '';
-  deviceIdentifier = '';
-  deviceRole: string | undefined = undefined;
-  deviceNickname: string | null = null;
+  deviceSubtitle: string | null = null;
+  deviceHasNickname = false;
   showBattery = false;
   isCharging = false;
   batteryPercentage = 100;

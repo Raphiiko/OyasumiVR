@@ -27,7 +27,6 @@ lazy_static! {
     static ref PLAY_SOUND_TX: Mutex<Option<Sender<(String, f32)>>> = Mutex::default();
     static ref AUDIO_DEVICE_MANAGER: Mutex<Option<AudioDeviceManager>> = Mutex::default();
     static ref VRCHAT_ACTIVE: Mutex<bool> = Mutex::new(false);
-    static ref MEMORY_WATCHER_ACTIVE: Mutex<bool> = Mutex::new(false);
 }
 
 pub async fn init_audio_device_manager() {
@@ -63,12 +62,6 @@ async fn watch_processes() {
                     info!("[Core] Detected VRChat process has stopped");
                 }
             }
-        }
-        if {
-            let watcher_active = MEMORY_WATCHER_ACTIVE.lock().await;
-            *watcher_active
-        } {
-            crate::utils::monitor_memory_usage(false).await;
         }
         tokio::time::sleep(Duration::from_secs(1)).await;
     }

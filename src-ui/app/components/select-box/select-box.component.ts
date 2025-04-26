@@ -16,6 +16,7 @@ export interface SelectBoxItem<T = string> {
   templateUrl: './select-box.component.html',
   styleUrls: ['./select-box.component.scss'],
   animations: [fadeDown(), fadeUp()],
+  standalone: false,
 })
 export class SelectBoxComponent implements OnInit {
   @Input() type: 'SMALL' | 'NORMAL' = 'NORMAL';

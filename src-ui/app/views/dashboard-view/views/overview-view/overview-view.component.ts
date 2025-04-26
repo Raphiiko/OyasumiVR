@@ -11,6 +11,7 @@ import { SleepPreparationService } from '../../../../services/sleep-preparation.
   templateUrl: './overview-view.component.html',
   styleUrls: ['./overview-view.component.scss'],
   animations: [noop(), fade(), hshrink()],
+  standalone: false,
 })
 export class OverviewViewComponent implements OnInit {
   sleepModeActive = false;

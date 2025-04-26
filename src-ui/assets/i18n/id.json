@@ -166,7 +166,6 @@
         "unknown": "Status tidak diketahui"
       },
       "noDevices": "Tidak ada perangkat ditemukan",
-      "scanForLighthouses": "Pindai",
       "title": "Perangkat",
       "turnOffAll": "SEMUA"
     },
@@ -914,12 +913,6 @@
   },
   "settings": {
     "advanced": {
-      "fixes": {
-        "overlayGpuFix": {
-          "description": "Jika Anda mengalami masalah saat membuka overlay SteamVR, mengaktifkan opsi ini dapat memperbaiki masalah pada beberapa sistem (misalnya sistem dengan grafis hibrid). Mengubah opsi ini akan memulai ulang overlay.",
-          "title": "Perbaikan grafis untuk SteamVR Overlay"
-        }
-      },
       "logs": {
         "openFolder": {
           "action": "Buka folder log",
@@ -994,7 +987,6 @@
         "editor": {
           "action": "Editor Luncuran",
           "description": "Luncurkan editor terjemahan OyasumiVR untuk mengedit dan membuat terjemahan",
-          "experimental": "Modul ini masih dalam tahap percobaan dan hanya tersedia dalam bahasa Inggris. Meskipun Anda dapat mencobanya, ini masih dalam pengembangan. Untuk saat ini, Anda masih dapat menemukan masalah dan fungsionalitas yang hilang.",
           "title": "Editor Terjemahan"
         },
         "loadFile": {

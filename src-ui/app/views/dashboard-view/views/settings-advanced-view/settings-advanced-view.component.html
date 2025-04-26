@@ -3,6 +3,61 @@
   <div class="pane-content">
     <div class="setting-view-container">
       <div class="setting-category">
+        <h2 translate>settings.advanced.application.title</h2>
+        <div class="settings">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.application.overlayGpuAcceleration.title</span>
+              <span translate
+                >settings.advanced.application.overlayGpuAcceleration.description</span
+              >
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="overlayGpuAcceleration"
+                  (change)="setOverlayGpuAcceleration(!overlayGpuAcceleration)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.application.oscServerEnabled.title</span>
+              <span translate>settings.advanced.application.oscServerEnabled.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="oscServerEnabled"
+                  (change)="setOscServerEnabled(!oscServerEnabled)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>settings.advanced.application.openVrInitDelayFix.title</span>
+              <span translate>settings.advanced.application.openVrInitDelayFix.description</span>
+            </div>
+            <div class="setting-row-action">
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="openVrInitDelayFix"
+                  (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="setting-category">
         <h2 translate>settings.advanced.translation.title</h2>
         <div class="settings">
           <div class="setting-row">
@@ -34,16 +89,9 @@
           </div>
           <div class="setting-row">
             <div class="setting-row-label" translate>
-            <span>
-              <span translate>settings.advanced.translation.editor.title</span>
-              <span
-                class="experimental-flag"
-                [tooltip]="'settings.advanced.translation.editor.experimental'"
-                [tooltipMode]="'right'"
-              >
-                <i class="material-icons">warning</i>
+              <span>
+                <span translate>settings.advanced.translation.editor.title</span>
               </span>
-            </span>
               <span translate>settings.advanced.translation.editor.description</span>
             </div>
             <div class="setting-row-action">
@@ -104,12 +152,13 @@
           <div class="setting-row-group">
             <div class="setting-row compact" *ngFor="let item of persistentStorageItems">
               <div class="setting-row-label" translate>
-              <span translate>{{
+                <span translate>{{
                   'settings.advanced.persistentData.dataType.' + item.key + '.title' | translate
                 }}</span>
                 <span translate>{{
-                    'settings.advanced.persistentData.dataType.' + item.key + '.description' | translate
-                  }}</span>
+                  'settings.advanced.persistentData.dataType.' + item.key + '.description'
+                    | translate
+                }}</span>
               </div>
               <div class="setting-row-action">
                 <label class="check-toggle">
@@ -126,45 +175,15 @@
         </div>
       </div>
       <div class="setting-category">
-        <h2 translate>settings.advanced.fixes.title</h2>
-        <p translate>settings.advanced.fixes.description</p>
+        <h2 translate>settings.advanced.troubleshooting.title</h2>
+        <p translate>settings.advanced.troubleshooting.description</p>
         <div class="settings">
           <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>settings.advanced.fixes.overlayGpuFix.title</span>
-              <span translate>settings.advanced.fixes.overlayGpuFix.description</span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="overlayGpuFix"
-                  (change)="setOverlayGpuFix(!overlayGpuFix)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>settings.advanced.fixes.openVrInitDelayFix.title</span>
-              <span translate>settings.advanced.fixes.openVrInitDelayFix.description</span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="openVrInitDelayFix"
-                  (change)="setOpenVrInitDelayFix(!openVrInitDelayFix)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>settings.advanced.fixes.vrManifestReregister.title</span>
-              <span translate>settings.advanced.fixes.vrManifestReregister.description</span>
+              <span translate>settings.advanced.troubleshooting.vrManifestReregister.title</span>
+              <span translate
+                >settings.advanced.troubleshooting.vrManifestReregister.description</span
+              >
             </div>
             <div class="setting-row-action">
               <button
@@ -172,50 +191,19 @@
                 (click)="reregisterVRManifest()"
                 [disabled]="(openvr.status | async) !== 'INITIALIZED'"
               >
-                <span translate>settings.advanced.fixes.vrManifestReregister.action</span>
+                <span translate>settings.advanced.troubleshooting.vrManifestReregister.action</span>
               </button>
             </div>
           </div>
-          <!--        <div class="setting-row">-->
-          <!--          <div class="setting-row-label" translate>-->
-          <!--            <span translate>settings.advanced.fixes.memoryWatcher.title</span>-->
-          <!--            <span translate>settings.advanced.fixes.memoryWatcher.description</span>-->
-          <!--          </div>-->
-          <!--          <div class="setting-row-action">-->
-          <!--            <button-->
-          <!--              class="btn btn-primary"-->
-          <!--              [disabled]="memoryWatcherActive"-->
-          <!--              (click)="activateMemoryWatcher()"-->
-          <!--            >-->
-          <!--              <span translate>settings.advanced.fixes.memoryWatcher.action</span>-->
-          <!--            </button>-->
-          <!--          </div>-->
-          <!--        </div>-->
           <div class="setting-row">
             <div class="setting-row-label" translate>
-              <span translate>settings.advanced.fixes.devTools.title</span>
-              <span translate>settings.advanced.fixes.devTools.description</span>
+              <span translate>settings.advanced.troubleshooting.devTools.title</span>
+              <span translate>settings.advanced.troubleshooting.devTools.description</span>
             </div>
             <div class="setting-row-action">
               <button class="btn btn-primary" (click)="openDevTools()">
-                <span translate>settings.advanced.fixes.devTools.action</span>
+                <span translate>settings.advanced.troubleshooting.devTools.action</span>
               </button>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate>settings.advanced.fixes.oscServerEnabled.title</span>
-              <span translate>settings.advanced.fixes.oscServerEnabled.description</span>
-            </div>
-            <div class="setting-row-action">
-              <label class="switch-toggle">
-                <input
-                  type="checkbox"
-                  [checked]="oscServerEnabled"
-                  (change)="setOscServerEnabled(!oscServerEnabled)"
-                />
-                <span class="switch-toggle-slider"></span>
-              </label>
             </div>
           </div>
         </div>

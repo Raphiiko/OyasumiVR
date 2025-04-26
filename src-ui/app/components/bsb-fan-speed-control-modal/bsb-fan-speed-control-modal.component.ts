@@ -13,6 +13,7 @@ import { BigscreenBeyondFanAutomationService } from '../../services/hmd-specific
   templateUrl: './bsb-fan-speed-control-modal.component.html',
   styleUrls: ['./bsb-fan-speed-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class BSBFanSpeedControlModalComponent
   extends BaseModalComponent<void, void>

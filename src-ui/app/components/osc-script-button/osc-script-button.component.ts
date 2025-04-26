@@ -8,6 +8,7 @@ import { OscScriptModalComponent } from '../osc-script-modal/osc-script-modal.co
   selector: 'app-osc-script-button',
   templateUrl: './osc-script-button.component.html',
   styleUrls: ['./osc-script-button.component.scss'],
+  standalone: false,
 })
 export class OscScriptButtonComponent implements OnInit {
   @Input() label = '';

@@ -37,6 +37,7 @@ import { EventLogEntry } from '../../../models/event-log-entry';
   selector: 'app-event-log-entry',
   templateUrl: './event-log-entry.component.html',
   styleUrls: ['./event-log-entry.component.scss'],
+  standalone: false,
 })
 export class EventLogEntryComponent implements OnInit, OnChanges {
   parser?: EventLogEntryParser<any>;

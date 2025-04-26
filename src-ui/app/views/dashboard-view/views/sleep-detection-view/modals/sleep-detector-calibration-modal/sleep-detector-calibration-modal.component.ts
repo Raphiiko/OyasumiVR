@@ -17,6 +17,7 @@ export interface SleepDetectorCalibrationModalOutputModel {
   templateUrl: './sleep-detector-calibration-modal.component.html',
   styleUrls: ['./sleep-detector-calibration-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren(), vshrink()],
+  standalone: false,
 })
 export class SleepDetectorCalibrationModalComponent
   extends BaseModalComponent<

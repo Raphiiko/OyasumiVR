@@ -1,4 +1,4 @@
-@import 'shadows';
+@use 'shadows';
 
 :host {
   position: relative;
@@ -77,7 +77,7 @@
   position: absolute;
   padding: 2em;
   border-left: 1px solid var(--color-surface-4);
-  @include shadow(2, true);
+  @include shadows.shadow(2, true);
   border-radius: 0;
   overflow-y: overlay;
 }
@@ -127,7 +127,7 @@
 
   .warning-icon {
     cursor: pointer;
-    transition: all .15s ease;
+    transition: all 0.15s ease;
     color: var(--color-warning);
     margin-right: 0.5em;
 

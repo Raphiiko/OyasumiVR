@@ -35,7 +35,7 @@ async fn process_voice_parameter(value: Option<f32>) {
             let mut voice_active = VOICE_ACTIVE.lock().await;
             let voice_last_active = VOICE_LAST_ACTIVE.lock().await;
             let timed_out = (Utc::now() - *voice_last_active).num_milliseconds()
-                >= VOICE_ACTIVITY_TIMEOUT.try_into().unwrap();
+                >= (VOICE_ACTIVITY_TIMEOUT as i64);
             if *voice_active && timed_out {
                 on_voice_activity_changed(false).await;
                 *voice_active = false;

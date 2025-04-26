@@ -1,50 +1,83 @@
 [package]
 name = "oyasumivr"
-version = "1.14.7"
+version = "1.15.0"
 description = ""
 authors = ["Raphiiko"]
 license = "MIT"
 repository = "https://github.com/Raphiiko/Oyasumi"
 default-run = "oyasumivr"
 edition = "2021"
-rust-version = "1.77.2"
 
 [build-dependencies]
-tauri-build = { version = "1.5.1", features = [] }
-tonic-build = { version = "0.11.0", features = [] }
+reqwest = { version = "0.12.15", features = ["blocking"] }
+tauri-build = { version = "2.2", features = [] }
+toml = "0.8.20"
+tonic-build = { version = "0.13.0", features = [] }
 
 [dependencies]
-oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
-serde_json = "1.0.108"
-serde = { version = "1.0.193", features = ["derive"] }
-lazy_static = "1.4.0"
-cronjob = "0.4.17"
-webview2-com = "0.19"
-rosc = "0.10.1"
-futures = "0.3"
-reqwest = "0.11.17"
-sysinfo = "0.26.9"
+async-recursion = "1.0.5"
+bluest = { version = "0.6.7", features = ["serde"] }
+byteorder = "1.4.3"
+bytes = "1.4.0"
 chrono = "0.4.24"
+config = "0.15.11"
+cronjob = "0.4.17"
+discord-sdk = "0.4.0"
+enumset = "1.1.3"
+futures = "0.3"
+futures-util = "0.3.28"
+hidapi = "2.6.0"
+hyper = { version = "0.14.26", features = ["full"] }
+lazy_static = "1.4.0"
 log = "^0.4"
+md5 = "0.7.0"
+mime = "0.3.17"
+mime_guess = "2.0.4"
+nalgebra = "0.33.2"
+oyasumivr-shared = { path = "../src-shared-rust", version = '*' }
+oyasumivr_macros = { path = "./macros" }
+prost = "0.13.5"
+public-ip = "0.2.2"
+readonly = "0.2"
+regex = "1.10.2"
+reqwest = "0.12.15"
+rodio = "0.20.1"
+rosc = "0.11.4"
+serde = { version = "1.0.193", features = ["derive"] }
+serde_json = "1.0.108"
+steamlocate = "2.0.1"
+steamworks = { version = "0.11.0" }
+strum = "0.27.1"
+strum_macros = "0.27.1"
+substring = "1.4.5"
+suncalc = "0.4.0"
+sysinfo = "0.26.9"
+system_shutdown = "4.0.1"
+tauri-plugin-cli = "2.2"
+tauri-plugin-clipboard-manager = "2.2"
+tauri-plugin-deep-link = "2.2"
+tauri-plugin-dialog = "2.2"
+tauri-plugin-fs = "2.2"
+tauri-plugin-http = { version = "2.4", features = ["unsafe-headers"] }
+tauri-plugin-log = { version = "2.4" }
+tauri-plugin-notification = "2.2"
+tauri-plugin-process = "2.2"
+tauri-plugin-shell = "2.2"
+tauri-plugin-single-instance = { version = "2.2", features = ["deep-link"] }
+tauri-plugin-store = "2.2"
+tauri-plugin-aptabase = { git = "https://github.com/aptabase/tauri-plugin-aptabase", rev = "f9f199fe007f95ceace5403c065e9ff99cb08a21" }
+tempfile = "3.6.0"
+time = "0.3.41"
+tokio = { version = "1.41.0", features = ["full"] }
+tokio-stream = { version = "0.1.14", features = ["full"] }
+tokio-util = "0.7.12"
+tonic = "0.13.0"
+tonic-web = "0.13.0"
 url = "2.3.1"
 urlencoding = "2.1.2"
-mime = "0.3.17"
-md5 = "0.7.0"
-mime_guess = "2.0.4"
-substring = "1.4.5"
-bytes = "1.4.0"
-nalgebra = "0.32.2"
-rodio = "0.19.0"
-time = "0.3.15"
-tauri-plugin-fs-extra = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-single-instance = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
-tauri-plugin-deep-link = "0.1.2"
-windows-sys = { version = "0.36.1", features = [
-  "Win32_UI_Shell",
-  "Win32_Foundation",
-] }
+uuid = "1.3.3"
+webview2-com = "0.37.0"
+widestring = "1.0.2"
 winapi = { version = "0.3.9", features = [
   "handleapi",
   "processthreadsapi",
@@ -63,85 +96,33 @@ windows = { version = "0.51.1", features = [
   "Win32_UI_Shell_PropertiesSystem",
   "Win32_System_Variant",
 ], default-features = false }
-widestring = "1.0.2"
-tokio = { version = "1.28.0", features = ["full"] }
-hyper = { version = "0.14.26", features = ["full"] }
-uuid = "1.3.3"
-tokio-util = "0.7.8"
-bluest = { version = "0.5.3", features = ["serde"] }
-futures-util = "0.3.28"
-byteorder = "1.4.3"
-winreg = "0.50.0"
-tonic = "0.11.0"
-tonic-web = "0.11.0"
-prost = "0.12.3"
-tokio-stream = { version = "0.1.14", features = ["full"] }
-readonly = "0.2"
-tempfile = "3.6.0"
-strum = "0.26.2"
-strum_macros = "0.26.2"
-steamworks = { version = "0.10.0" }
-human_bytes = { version = "0.4.3" }
-system_shutdown = "4.0.1"
-async-recursion = "1.0.5"
-enumset = "1.1.3"
-tauri-plugin-aptabase = "0.5"
-config = "0.14.0"
-oyasumivr_macros = { path = "./macros" }
-regex = "1.10.2"
-hidapi = "2.6.0"
-steamlocate = "1.2.1"
-discord-sdk = "0.3.6"
-public-ip = "0.2.2"
-suncalc = "0.4.0"
+windows-sys = { version = "0.36.1", features = [
+  "Win32_UI_Shell",
+  "Win32_Foundation",
+] }
+winreg = "0.55.0"
+dirs = "6.0.0"
 
 [dependencies.ipgeolocate]
 git = "https://github.com/Raphiiko/ipgeolocate_oyasumi.git"
 rev = "5f24925"
-
-[dependencies.oyasumivr_oscquery]
-git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
-rev = "2949a3f"
-# path = "../../oyasumivr-oscquery"
-
-[dependencies.tauri]
-version = "1.6.1"
-features = [
-  "window-unminimize",
-  "window-start-dragging",
-  "window-show",
-  "window-hide",
-  "window-close",
-  "window-unmaximize",
-  "window-minimize",
-  "window-maximize",
-  "global-shortcut-all",
-  "clipboard-write-text",
-  "cli",
-  "fs-write-file",
-  "dialog-save",
-  "path-all",
-  "process-relaunch",
-  "system-tray",
-  "dialog-message",
-  "dialog-open",
-  "fs-exists",
-  "fs-read-dir",
-  "fs-read-file",
-  "http-request",
-  "notification-all",
-  "process-exit",
-  "shell-execute",
-  "shell-open",
-  "updater",
-  "devtools",
-]
+# path = "../../oyasumivr_oscquery"
 
 [dependencies.ovr_overlay]
 git = "https://github.com/Raphiiko/ovr_overlay_oyasumi"
-rev = "5d3f832d6c4e9e669af96f282ff4698d62541790"
+rev = "a2afdea5fa9171b0151f8da271fcdd7cdc2beb41"
 # path = "../../ovr_overlay_oyasumi"
 features = ["ovr_system", "ovr_settings"]
+
+[dependencies.oyasumivr_oscquery]
+git = "https://github.com/Raphiiko/oyasumivr_oscquery.git"
+rev = "47c00b5fab8d7a45ba3254873ca7886f84483560"
+
+[dependencies.tauri]
+version = "2.5"
+features = [
+  "devtools", "tray-icon",
+]
 
 [features]
 # by default Tauri runs in production mode
@@ -157,3 +138,7 @@ codegen-units = 1 # Compile crates one after another so the compiler can optimiz
 lto = true        # Enables link to optimizations
 opt-level = "s"   # Optimize for binary size
 strip = true      # Remove debug symbols
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-updater = "2"

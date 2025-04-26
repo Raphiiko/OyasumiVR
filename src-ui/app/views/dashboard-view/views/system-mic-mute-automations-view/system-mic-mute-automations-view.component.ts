@@ -24,6 +24,7 @@ import { listen, UnlistenFn } from '@tauri-apps/api/event';
   templateUrl: './system-mic-mute-automations-view.component.html',
   styleUrls: ['./system-mic-mute-automations-view.component.scss'],
   animations: [vshrink(), fade()],
+  standalone: false,
 })
 export class SystemMicMuteAutomationsViewComponent implements OnInit, OnDestroy {
   config: SystemMicMuteAutomationsConfig = structuredClone(

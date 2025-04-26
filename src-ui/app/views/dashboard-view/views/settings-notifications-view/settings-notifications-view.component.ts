@@ -17,6 +17,7 @@ import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
   templateUrl: './settings-notifications-view.component.html',
   styleUrls: ['./settings-notifications-view.component.scss'],
   animations: [vshrink(), hshrink()],
+  standalone: false,
 })
 export class SettingsNotificationsViewComponent implements OnInit {
   protected notificationTypes: NotificationType[] = [...NotificationTypes] as NotificationType[];

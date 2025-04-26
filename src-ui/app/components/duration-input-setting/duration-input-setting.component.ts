@@ -7,6 +7,7 @@ import { fade } from '../../utils/animations';
   templateUrl: './duration-input-setting.component.html',
   styleUrl: './duration-input-setting.component.scss',
   animations: [fade()],
+  standalone: false,
 })
 export class DurationInputSettingComponent {
   value = model<number>(0);

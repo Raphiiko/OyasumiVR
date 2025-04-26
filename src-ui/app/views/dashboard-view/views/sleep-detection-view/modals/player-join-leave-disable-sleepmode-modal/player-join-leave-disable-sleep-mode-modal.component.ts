@@ -23,6 +23,7 @@ export interface PlayerJoinLeaveDisableSleepModeModalOutputModel {
   templateUrl: './player-join-leave-disable-sleep-mode-modal.component.html',
   styleUrls: ['./player-join-leave-disable-sleep-mode-modal.component.scss'],
   animations: [vshrink(), fadeUp(), fade(), triggerChildren()],
+  standalone: false,
 })
 export class PlayerJoinLeaveDisableSleepModeModalComponent
   extends BaseModalComponent<

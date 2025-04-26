@@ -13,6 +13,7 @@ import { PersistedAvatar } from '../../models/vrchat';
   templateUrl: './vrc-avatar-select-button.component.html',
   styleUrls: ['./vrc-avatar-select-button.component.scss'],
   animations: [noop(), hshrink()],
+  standalone: false,
 })
 export class VrcAvatarSelectButtonComponent {
   @Input() avatar: PersistedAvatar | null = null;

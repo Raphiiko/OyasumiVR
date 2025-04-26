@@ -14,6 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './gpu-automations-view.component.html',
   styleUrls: ['./gpu-automations-view.component.scss'],
   animations: [vshrink(), fade(), noop(), hshrink()],
+  standalone: false,
 })
 export class GpuAutomationsViewComponent implements OnInit {
   activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';

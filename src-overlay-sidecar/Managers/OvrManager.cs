@@ -1,59 +1,49 @@
 using System.Runtime.InteropServices;
 using Serilog;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
 using Valve.VR;
-using Device = SharpDX.Direct3D11.Device;
-using Device1 = SharpDX.Direct3D11.Device1;
-using Device2 = SharpDX.Direct3D11.Device2;
-using Device3 = SharpDX.Direct3D11.Device3;
-using Device4 = SharpDX.Direct3D11.Device4;
-using Device5 = SharpDX.Direct3D11.Device5;
+
 
 namespace overlay_sidecar;
 
-public class OvrManager {
+public class OvrManager
+{
   public static OvrManager Instance { get; } = new();
 
   private bool _initialized;
-  private readonly List<RenderableOverlay> _overlays = new();
   private Thread? _mainThread;
   private Thread? _renderThread;
-  private NotificationOverlay? _notificationOverlay;
-  private DashboardOverlay? _dashboardOverlay;
-  private CVRSystem? _system;
-  private CVRInput? _input;
+  private OvrDXDeviceHander _dxDeviceHander;
+
+  private readonly List<RenderableOverlay> _overlays = new();
   private OverlayPointer? _overlayPointer;
   private MicMuteIndicatorOverlay? _micMuteIndicatorOverlay;
+  private NotificationOverlay? _notificationOverlay;
+  private DashboardOverlay? _dashboardOverlay;
+
   private bool _active;
-  private Device? _device;
-  private Device1? _device1;
-  private DeviceMultithread? _deviceMultithread;
-  private Query? _query;
+  private CVRSystem? _system;
+  private CVRInput? _input;
   private Dictionary<string, List<OvrInputDevice>> inputActions = new();
   public event EventHandler<Dictionary<string, List<OvrInputDevice>>> OnInputActionsChanged;
 
   public bool Active => _active;
 
-  // ReSharper disable once MemberCanBePrivate.Global
   public bool Enabled { get; set; } = true;
   public NotificationOverlay? NotificationOverlay => _notificationOverlay;
   public OverlayPointer? OverlayPointer => _overlayPointer;
 
-  public Device D3D11Device => _device!;
-  public Device1? D3D11Device1 => _device1;
-  public Query D3D11Query => _query!;
+  public OvrDXDeviceHander DxDeviceHander => _dxDeviceHander;
 
   private OvrManager()
   {
+    _dxDeviceHander = Program.GpuAccelerated
+      ? new AcceleratedOvrDXDeviceHander()
+      : new NonAcceleratedOvrDXDeviceHander();
   }
 
   public async void Init()
   {
     if (_initialized) return;
-    await InitializeDevice();
     _initialized = true;
     // Start main loop
     _mainThread = new Thread(MainLoop);
@@ -61,86 +51,6 @@ public class OvrManager {
     // Start frame updates for web overlays
     _renderThread = new Thread(OverlayRenderLoop);
     _renderThread.Start();
-  }
-
-  private async Task InitializeDevice()
-  {
-    var timings = new[] { 16, 100, 200, 500, 1000 };
-    for (var attempt = 0;; attempt++)
-    {
-      try
-      {
-        _device = Program.GpuFix
-          ? new Device(new Factory1().GetAdapter(1),
-            DeviceCreationFlags.BgraSupport)
-          : new Device(DriverType.Hardware,
-            DeviceCreationFlags.BgraSupport);
-        UpgradeDevice();
-
-        _device1 = _device.QueryInterface<Device1>();
-
-        _deviceMultithread = _device.QueryInterfaceOrNull<DeviceMultithread>();
-        _deviceMultithread?.SetMultithreadProtected(true);
-
-        _query = new Query(_device, new QueryDescription
-        {
-          Type = QueryType.Event,
-          Flags = QueryFlags.None
-        });
-      }
-      catch (SharpDXException err)
-      {
-        if (attempt >= timings.Length)
-        {
-          Log.Error("Could not initialize D3D device" + err);
-          throw;
-        }
-
-        await Task.Delay(timings[attempt]);
-        continue;
-      }
-
-      break;
-    }
-  }
-
-  // Upgrades the device to the newest supported interface.
-  private void UpgradeDevice()
-  {
-    Device5 device5 = _device!.QueryInterfaceOrNull<Device5>();
-    if (device5 != null)
-    {
-      _device.Dispose();
-      _device = device5;
-      return;
-    }
-    Device4 device4 = _device.QueryInterfaceOrNull<Device4>();
-    if (device4 != null)
-    {
-      _device.Dispose();
-      _device = device4;
-      return;
-    }
-    Device3 device3 = _device.QueryInterfaceOrNull<Device3>();
-    if (device3 != null)
-    {
-      _device.Dispose();
-      _device = device3;
-      return;
-    }
-    Device2 device2 = _device.QueryInterfaceOrNull<Device2>();
-    if (device2 != null)
-    {
-      _device.Dispose();
-      _device = device2;
-      return;
-    }
-    Device1 device1 = _device.QueryInterfaceOrNull<Device1>();
-    if (device1 != null)
-    {
-      _device.Dispose();
-      _device = device1;
-    }
   }
 
   private void OverlayRenderLoop()
@@ -246,6 +156,7 @@ public class OvrManager {
 
           _active = true;
           Log.Information("OpenVR Manager Started");
+          _dxDeviceHander.Initialize();
           _overlayPointer = new OverlayPointer();
           _micMuteIndicatorOverlay = new MicMuteIndicatorOverlay();
           _notificationOverlay = new NotificationOverlay();
@@ -297,6 +208,7 @@ public class OvrManager {
     _input = null;
     _system = null;
     OpenVR.Shutdown();
+    _dxDeviceHander.Uninitialize();
     Log.Information("Stopped OpenVR Manager");
   }
 
@@ -304,7 +216,6 @@ public class OvrManager {
   {
     if (_dashboardOverlay != null)
     {
-
       CloseDashboard();
     }
 
@@ -335,6 +246,7 @@ public class OvrManager {
     {
       OpenVR.System.TriggerHapticPulse(index, 0, 65535);
     }
+
     if (_dashboardOverlay == null)
     {
       OpenDashboard(role);
@@ -461,7 +373,8 @@ public class OvrManager {
     }
   }
 
-  public class OvrInputDevice {
+  public class OvrInputDevice
+  {
     public readonly uint Id;
     public readonly ETrackedControllerRole Role;
 

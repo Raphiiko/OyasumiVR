@@ -15,6 +15,7 @@ export interface TimeEnableSleepModeModalOutputModel {
   templateUrl: './time-enable-sleep-mode-modal.component.html',
   styleUrls: ['./time-enable-sleep-mode-modal.component.scss'],
   animations: [fadeUp(), fade(), triggerChildren()],
+  standalone: false,
 })
 export class TimeEnableSleepModeModalComponent
   extends BaseModalComponent<

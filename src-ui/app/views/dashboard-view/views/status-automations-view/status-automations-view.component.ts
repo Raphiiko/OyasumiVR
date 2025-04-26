@@ -6,6 +6,7 @@ import { noop } from '../../../../utils/animations';
   templateUrl: './status-automations-view.component.html',
   styleUrls: ['./status-automations-view.component.scss'],
   animations: [noop()],
+  standalone: false,
 })
 export class StatusAutomationsViewComponent {
   activeTab: 'GENERAL' | 'PLAYER_LIMIT' = 'GENERAL';

@@ -14,6 +14,7 @@ import { AppSettingsService } from '../../services/app-settings.service';
   templateUrl: './cct-control-modal.component.html',
   styleUrls: ['./cct-control-modal.component.scss'],
   animations: [fadeUp(), vshrink(), hshrink()],
+  standalone: false,
 })
 export class CCTControlModalComponent extends BaseModalComponent<void, void> implements OnInit {
   protected readonly setCCT = new Subject<number>();
