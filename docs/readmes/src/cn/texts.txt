@@ -29,26 +29,11 @@ OyasumiVR可以**检测你何时入睡**，并以各种方式帮助你，例如�
 - 🔅 调暗你头显的亮度
 - ✨ 根据你的睡姿触发模型的不同动画
 - 📩 自动处理加入请求
-- 🔵 自动设置 VRChat 状态
+- 🔵 Automating your VRChat status
 - 🎤 当你睡着时关闭你的麦克风
 - 🛠️ 自动化各种各样的操作，例如关闭你的设备，或者调整你的GPU功耗限制
 
-还有更多！请参阅接下来的“功能”部分，了解 OyasumiVR 还提供的其他功能。
-
-
-{{SUPPORT_OYASUMIVR_HEADER}}
-支持 OyasumiVR
-
-{{SUPPORT_OYASUMIVR_BODY}}
-OyasumiVR 本身是完全免费的，并且将始终保持免费。但是，如果你想支持我和 OyasumiVR 的开发，可以通过以下方式：
-
-<a href="https://ko-fi.com/raphii"><img alt="Ko-fi 页面" src="https://ko-fi.com/img/githubbutton_sm.svg"/></a>
-<a href="https://patreon.com/Raphii"><img alt="Patreon 页面" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/7d3d83a5-0900-4ccc-a514-ed1d616cb2ce"/></a>
-
-通过支持我，你将帮助我投入更多时间开发新功能，改善现有功能，抵消开发过程中的一些成本，并满足我对咖啡的上瘾 ☕。
-
-我现在不会停下对 OyasumiVR 的开发：**还有很多我想要开发的功能！**
-
+除此之外，还可以看看"功能"部分，了解更多由OyasumiVR提供的功能。
 
 {{FEATURES}}
 功能
@@ -66,9 +51,9 @@ OyasumiVR可以根据你的动作自动检测你何时入睡！只需一次校�
   <li>根据控制器和追踪器的电量启用/禁用睡眠模式</li>
   <li>根据控制器和追踪器的开关状态来启用/禁用睡眠模式</li>
   <li>根据SteamVR的状态来进行模式切换</li>
-  <li>心率</li>
-  <li>坐直姿势</li>
-  <li>VRChat 玩家加入或离开</li>
+  <li>Heart Rate</li>
+  <li>Sitting Upright</li>
+  <li>VRChat players joining or leaving</li>
 </ul>
 
 {{STEAMVR_OVERLAY_HEADER}}
@@ -98,7 +83,7 @@ OyasumiVR拥有自己的SteamVR叠加层界面，可以让你在VR里玩游戏�
 {{POWER_AUTOMATIONS_BODY_BASE_STATIONS}}
 <b>基站</b>
 <br>
-
+让OyasumiVR与SteamVR一起打开和关闭你的基站。有点像SteamVR自己的基站电源管理，但是<b>它与任何HMD兼容！</b>只要你的PC支持蓝牙并且在基站的信号范围内，这个功能就可以正常使用。
 
 {{GPU_AUTOMATIONS_HEADER}}
 🔌 GPU自动化
@@ -297,32 +282,13 @@ Oyasumi VR 支持多种方式来控制你的 VRChat 状态以及在线签名，�
 
 {{VRCHAT_AUTOMATIONS_JOIN_NOTIFICATIONS}}
 🔔 <b>加入通知</b>
-
-OyasumiVR 可以在有人加入或离开你的 VRChat 世界时通知你。如果你希望在特定情况下被唤醒，这个功能非常有用。
-
-它可以配置为仅在特定情况下通知你，例如仅在以下情况下：
 <br>
-<ul>
-  <li>你的朋友</li>
-  <li>特定玩家</li>
-  <li>一个人的时候</li>
-  <li>不再一个人的时候</li>
-</ul>
+Oyasumi VR 可以在他人加入或者退出时通知你。当你需要在特定情境醒来时可以使用。
 
 {{VRCHAT_AUTOMATIONS_AVATAR_AUTOMATIONS}}
 🏃 <b>模型自动化</b>
 <br>
-你可以让 OyasumiVR 在准备睡觉时、入睡时或醒来时自动切换模型！如果你有专门用来睡觉的模型，这个功能非常实用。
-
-{{VRCHAT_AUTOMATIONS_OSC_AUTOMATIONS}}
-🔧 <b>OSC 自动化</b>
-<br>
-当启用或禁用睡眠模式时，你可以向 VRChat 发送某些 OSC 消息。你可以使用内置的 OSC 脚本编辑器来编写你想要发送的精确消息。
-<br><br>
-这是一个更高级的功能，可以用来触发你模型上的某些功能。例如：在睡眠模式启用时，展示困困的表情！
-
-{{SHUTDOWN_SEQUENCE_HEADER}}
-⛔ 关闭序列
+Oyasumi VR 支持在你准备睡觉时，或者检测到你睡着、睡醒时自动切换模型！如果你有专门睡觉用的模型，这应该很方便。
 
 {{SHUTDOWN_SEQUENCE_BODY}}
 想在VR里睡着，但是又不想整夜开着VR？我们支持自动关机序列！
@@ -343,25 +309,7 @@ OyasumiVR 可以在有人加入或离开你的 VRChat 世界时通知你。如�
   <li>关闭Windows</li>
 </ul>
 <br>
-配置好关闭序列后，你可以在 VR 中安然入睡，你就可以在VR里安心睡着而不需要担心你的电费了！
-
-{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
-🔅 显示亮度与色温自动化
-
-{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
-🌆 <b>亮度</b>
-<br>
-自动化你的亮度调节，适用于你睡觉和醒来的时候。OyasumiVR 可以平滑过渡你 VR 头显的亮度，在你睡觉时逐渐降低，而不会把你弄醒。
-<br><br>
-它允许你控制软件亮度，同时如果你的头显支持，也可以控制硬件亮度（例如 Valve Index 或 Bigscreen Beyond）。除了提供几个自动化选项外，你还可以直接从 SteamVR 的叠加菜单轻松控制亮度！
-<br><br>
-🌡️ <b>色温</b>
-<br>
-OyasumiVR 还可以控制你 VR 头显显示器的色温。通过减少蓝光，它可以帮助减少夜间的眼睛疲劳，让你更容易入睡。
-<br><br>
-通过日落和日出检测，你可以让 OyasumiVR 自动调整显示器的色温，以匹配一天中的时间。
-<br><br>
-<i>请注意，此功能仅在某些原生 SteamVR 头显上受支持，例如 Valve Index、Bigscreen Beyond 和 HTC Vive（Pro）。</i>
+当设置好关机序列后，你就可以在VR里安心睡着而不需要担心你的电费了！
 
 {{MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 🎤 麦克风自动化
@@ -382,25 +330,7 @@ OyasumiVR 也可以做到在系统级别静音你的麦克风。
 🔉 音量自动化
 
 {{AUDIO_VOLUME_AUTOMATIONS_BODY}}
-当你入睡或醒来时，自动调整音频设备的音量！这可以防止你被其他玩家或者应用程序吵醒。
-
-{{HEART_RATE_AUTOMATIONS_HEADER}}
-♥️ 心率自动化（Pulsoid 集成）
-
-{{HEART_RATE_AUTOMATIONS_INTRO}}
-为了支持基于心率的自动化，OyasumiVR 集成了在线心率服务 <a href="https://pulsoid.net/pricing?promo_campaign_id=86680152-707d-4771-8a12-740bad1b4545">Pulsoid</a>。你可以使用 Pulsoid 支持的任何硬件，如蓝牙心率监测器、WearOS 智能手表或 Apple Watch。
-<br><br>
-<i>请注意，这个集成需要一次性购买 Pulsoid 的 OyasumiVR 集成功能，或者拥有有效的 Pulsoid "BRO" 订阅。在购买前，请确保你有兼容的设备。</i>
-
-{{HEART_RATE_AUTOMATIONS_BODY_SLEEP_DETECTION}}
-<b>睡眠检测</b>
-<br>
-你可以设置 OyasumiVR 在你的心率足够低并持续一定时间时自动启用睡眠模式。只需设置 BPM 阈值以及心率需要保持在该值以下的时间，设置完成！如果不确定，可以获取一些简单的建议来确定适合你的身体的数值。
-
-{{HEART_RATE_AUTOMATIONS_BODY_NIGHTMARE_DETECTION}}
-<b>噩梦检测</b>
-<br>
-OyasumiVR 可以检测到你心率持续升高的情况，这可能表明你正在做噩梦。通过这个功能，你可以尝试通过自动关闭睡眠模式（例如，增加亮度）或播放声音来尝试唤醒自己，从而缩短噩梦的时间。
+在你睡着或醒来时自动调节系统音量！这可以防止你被其他玩家或者应用程序吵醒。
 
 {{HMD_SPECIFIC_AUTOMATIONS_HEADER}}
 🚨 头显自动化
@@ -413,18 +343,6 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
 <li>RGB灯控制</li>
 <li>风扇速度控制</li>
 </ul>
-
-{{RESOLUTION_AUTOMATIONS_HEADER}}
-👓 分辨率自动化
-
-{{RESOLUTION_AUTOMATIONS_BODY}}
-在你入睡和醒来时，自动调整 SteamVR 渲染分辨率！让 OyasumiVR 在不需要时降低渲染分辨率，可以帮助减少硬件负担。
-
-{{CHAPERONE_AUTOMATIONS_HEADER}}
-🔳 安全区自动化
-
-{{CHAPERONE_AUTOMATIONS_BODY}}
-在你入睡时自动调整 SteamVR 的安全区淡出距离。如果你有一个较小的活动区域，可以使用此功能确保在你睡觉时安全区保持隐藏，并在你醒来时重新启用！
 
 {{MQTT_CONTROL_HEADER}}
 🏠 智能家庭控制
@@ -439,10 +357,12 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
 
 
 {{MQTT_CONTROL_BODY}}
-OyasumiVR 可以通过 MQTT 向 Home Assistant 实现许多自己的功能以及 SteamVR 的功能！这使得你可以将 OyasumiVR 与家中的各种智能设备集成，并使你能够在 Home Assistant 中构建自己的强大自动化。
-例如，你可以使用这个功能在你入睡时自动关闭智能灯光，或在需要时重新开启它们！
+OyasumiVR 可以通过 MQTT 向 Home Assistant 联动自身的许多功能，也可以联动 SteamVR 的功能！
+这让你可以将 OyasumiVR 与家中各种智能设备联动，还可以在 Home Assistant 中构建出强大的自动化流程。
+例如，当你入睡时自动关闭智能灯，或在需要时重新开启它们！
+
 <br><br>
-以下是你可以通过 Home Assistant 读取或控制的功能列表：
+以下是你可以通过 Home Assistant 来读取或控制的功能列表：
 
 {{MQTT_CONTROL_FEATURES}}
 <tr>
@@ -450,7 +370,7 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 实现许多自己的功能以及
     <b>OyasumiVR 功能</b>
     <ul>
       <li>睡眠模式（开关）</li>
-      <li>关机序列（按钮）</li>
+      <li>关机流程（按钮）</li>
       <li>睡前准备（按钮）</li>
       <li>心率（传感器）</li>
       <li>睡姿（传感器）</li>
@@ -475,9 +395,9 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 实现许多自己的功能以及
   <td colspan="2">
     <b>VRChat 功能</b>
     <ul>
-      <li>VRChat 正在运行（传感器）</li>
+      <li>VRChat 是否运行中（传感器）</li>
       <li>玩家名称（传感器）</li>
-      <li>世界中的玩家数量（传感器）</li>
+      <li>世界内玩家数量（传感器）</li>
       <li>状态可见性（传感器）</li>
       <li>世界实例 ID（传感器）</li>
     </ul>
@@ -488,11 +408,11 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 实现许多自己的功能以及
     <b>SteamVR 功能</b>
     <ul>
       <li>VR 头显型号（传感器）</li>
-      <li>SteamVR 正在运行（传感器）</li>
+      <li>SteamVR 是否运行中（传感器）</li>
       <li>
-        控制器与追踪器
+        控制器和追踪器
         <ul>
-          <li>电源（开关）（仅限关闭）</li>
+          <li>电源（开关，仅支持关闭）</li>
           <li>充电状态（传感器）</li>
           <li>电池电量（传感器）</li>
           <li>设备角色（传感器）</li>
@@ -504,70 +424,35 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 实现许多自己的功能以及
   <td colspan="2">
     <b>Bigscreen Beyond 功能</b>
     <ul>
-      <li>风扇速度（数字）</li>
-      <li>RGB LED（灯光）</li>
+      <li>风扇转速（数字）</li>
+      <li>RGB 灯效（灯光）</li>
       <li>亮度（数字）</li>
     </ul>
   </td>
 </tr>
 
-
 {{TRANSLATION_AND_LOCALIZATION_HEADER}}
 翻译与本地化
 
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
-OyasumiVR 当前支持以下语言：
+OyasumiVR 目前支持以下语言：
 
 {{TRANSLATION_HELP_HEADER}}
-帮助翻译
+协助翻译
 
 {{TRANSLATION_HELP_BODY}}
-没有我们出色的志愿者帮助，OyasumiVR 不可能支持如此多的语言。我个人认为，正是因为他们的努力，更多的人能够使用 OyasumiVR，这是不可能单靠我们完成的。
+若没有出色的志愿者们协助翻译，OyasumiVR 无法支持如此多的语言。
+我个人非常感谢他们的努力，也觉得十分惊艳——因为他们的贡献，让更多用户能够使用 OyasumiVR。
 
-如果你想支持我们，不论是通过贡献缺失的翻译，还是添加一种全新的语言，请查看[添加翻译的 wiki 页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，获取开始的说明！如果你有任何问题，欢迎加入我们的[Discord](https://discord.gg/7MqdPJhYxC)并咨询！
-
-{{SUPPORTED_HARDWARE_HEADER}}
-支持的硬件
-
-{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_HEADER}}
-电池自动化
-
-{{SUPPORTED_HARDWARE_BATTERY_AUTOMATIONS_BODY}}
-目前，OyasumiVR 支持通过电池自动化关闭所有支持报告电池电量和充电状态的 SteamVR 设备，并支持通过 SteamVR 关闭的设备。
-
-这包括但不限于以下设备：
-
-- HTC Vive 控制器/魔杖
-- Index 控制器/手套
-- Vive 追踪器（1.0/2.0/3.0）
-- Tundra 追踪器\*、
-
-这意味着任何 Oculus 控制器可能无法正常工作，SlimeVR 追踪器不支持，除非它们在[OpenVR 驱动](https://github.com/SlimeVR/SlimeVR-OpenVR-Driver)中实现此功能。
-
-_(\*) Tundra 追踪器的电池电量和充电状态报告非常延迟，这意味着尽管电池自动化仍然有效，但会有很长的延迟（数分钟），除非 Tundra 在其追踪器固件中修复这一问题。_
-
-{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_HEADER}}
-GPU 自动化
-
-{{SUPPORTED_HARDWARE_GPU_AUTOMATIONS_BODY}}
-任何支持 MSI Afterburner 的 NVIDIA 或 AMD 显卡都可以通过 OyasumiVR 自动激活你在 MSI Afterburner 中设置的配置文件。
-
-直接控制显卡的功率限制只有 NVIDIA 显卡支持。AMD 用户需要使用 MSI Afterburner 配置文件自动化才能通过 OyasumiVR 控制他们的功率限制。
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_HEADER}}
-亮度自动化
-
-{{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
-目前，VR 头显显示器硬件亮度的控制仅支持 Valve Index 和 Bigscreen Beyond。
-
-图像亮度控制适用于所有头显。
+如果你希望为我们提供支持，无论是补充缺失的翻译，还是添加全新的语言，请参阅 [添加翻译的 Wiki 页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 获取开始的指导！
+如果你想了解更多信息，也欢迎加入我们的 [Discord 社区](https://discord.gg/7MqdPJhYxC) 进行提问！
 
 {{SUPPORTED_HARDWARE_CCT_HEADER}}
 色温自动化
 
 {{SUPPORTED_HARDWARE_CCT_BODY}}
-目前，VR 头显显示器的色温控制仅支持一些原生 SteamVR 头显，如 Valve Index、Bigscreen Beyond 和 HTC Vive（Pro）。
-它可能适用于其他头显，但效果可能有所不同。
+控制 VR 头显屏幕的色温功能，目前仅支持部分原生 SteamVR 头显，例如 Valve Index、Bigscreen Beyond 以及 HTC Vive（Pro）。
+在其他头显上可能也能使用，但效果无法保证。
 
 {{SUPPORTED_HARDWARE_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
 
@@ -575,52 +460,59 @@ GPU 自动化
 构建技术
 
 {{BUILT_WITH_BODY}}
-OyasumiVR 使用以下技术构建：
+OyasumiVR 使用了以下技术构建：
 
-- [Angular](https://angular.io/)（TypeScript，主界面）
+- [Angular](https://angular.io/)（TypeScript，用于主界面）
 - [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript，叠加界面）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，叠加界面）
+- [SvelteKit](https://kit.svelte.dev/)（TypeScript，用于叠加界面）
+- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
 
 {{DEVELOPMENT_HEADER}}
-开发
+开发相关
 
 {{DEVELOPMENT_BODY}}
-请查看我们的 wiki 页面，了解[如何开始开发](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
+请参阅我们的 Wiki 页面：[开始开发](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
 
 {{VRCHAT_HEADER}}
 VRChat
 
 {{VRCHAT_BODY}}
-OyasumiVR 的某些功能需要你使用 VRChat 账户登录才能生效。（例如，状态自动化）
+OyasumiVR 的某些功能需要你登录 VRChat 账户才能使用（例如状态自动化功能）。
+仅当使用相关功能时才需要登录。
+不依赖该功能的部分，你可以在不提供账户信息的情况下照常使用。
 
-只有依赖此功能的部分需要登录。你可以使用不依赖此功能的其他功能，无需提供凭据。
-你的登录凭据只会存储在你自己的机器上，且只会发送到 VRChat 的服务器进行身份验证。
+你的登录凭据只会保存在你的本地设备中，且仅用于向 VRChat 的服务器进行身份验证。
 
-OyasumiVR 并非由 VRChat 官方支持，也不代表 VRChat 或任何正式参与 VRChat 制作或管理的人的观点或意见。VRChat 是 VRChat Inc. 的商标，VRChat © VRChat Inc。
+OyasumiVR 并未获得 VRChat 官方认可，也不代表 VRChat 或其官方人员的观点或立场。
+VRChat 是 VRChat Inc. 的注册商标，VRChat © VRChat Inc.
 
-OyasumiVR 的开发者及任何项目贡献者对因使用 OyasumiVR（包括对 VRChat 账户的影响）所导致的任何问题不承担责任。使用时请自行承担风险。
+OyasumiVR 的开发者及所有贡献者对使用 OyasumiVR 导致的任何问题（包括对 VRChat 账户的影响）不承担任何责任。
+使用需自担风险。
 
 {{TELEMETRY_HEADER}}
-Aptabase
+Aptabase 遥测
 
 {{TELEMETRY_BODY}}
-OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供，Aptabase 是一款开源的、隐私优先且简洁的移动和桌面应用分析工具。Aptabase 被选中是因为它能帮助 OyasumiVR 开发，通过提供崩溃报告和匿名使用统计数据，同时尽可能尊重用户隐私。
+OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开源、隐私优先且简洁的移动与桌面应用分析工具。
+我们选择 Aptabase，是因为它可以提供崩溃报告和匿名使用数据，从而帮助改进 OyasumiVR，同时最大程度尊重你的隐私。
 
-遥测完全匿名，不会发送任何个人身份信息。它的唯一目的是提供上述崩溃报告和基本的匿名使用统计数据，例如应用启动次数和语言偏好。这些数据仅用于发现并修复错误，以及对 OyasumiVR 进行一般性的改进。
+遥测信息完全匿名，不会发送任何可识别身份的信息。
+其唯一用途是报告崩溃问题，以及收集应用启动和语言偏好等基础匿名数据。
+这些信息只用于排查 bug 和改善 OyasumiVR 的整体质量。
 
-你可以在 OyasumiVR 的常规设置中选择是否参与遥测。如果你想了解更多信息，请查看（非常简短的！）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
+你可以在 OyasumiVR 的通用设置中选择关闭遥测功能。
+如需更多（技术性）信息，请查看（非常简洁的）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
 
 {{SUPPORT_HEADER}}
 支持
 
 {{SUPPORT_BODY}}
-如果你遇到任何关于 OyasumiVR 的问题，比如发现 bug 或有功能请求，可以加入我们的 [Discord 服务器](https://discord.gg/7MqdPJhYxC)。
+如果你在使用 OyasumiVR 时遇到问题，比如出现 bug 或有功能建议，欢迎加入我们的 [Discord 服务器](https://discord.gg/7MqdPJhYxC)。
 
-或者，你可以直接通过 [Twitter 联系我 @Raphiiko](https://twitter.com/Raphiiko)。我会尽快回复你！
+你也可以直接通过 [Twitter @Raphiiko](https://twitter.com/Raphiiko) 联系我，我会尽快回复！
 
 {{LICENSE_HEADER}}
-许可证
+许可协议
 
 {{LICENSE_BODY}}
-OyasumiVR 采用 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 许可证。
+OyasumiVR 遵循 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 协议开放源代码。
