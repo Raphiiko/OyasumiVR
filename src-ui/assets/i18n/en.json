@@ -1,9 +1,4 @@
 {
-  "systemTray": {
-    "sleepMode": "Sleep Mode",
-    "quit": "Quit OyasumiVR",
-    "prepareForSleep": "Prepare for sleep"
-  },
   "about": {
     "author": {
       "role": "Developer"
@@ -356,9 +351,9 @@
     },
     "device-list": {
       "category": {
-        "HMD": "Headset",
         "Controller": "Controllers",
         "GenericTracker": "Trackers",
+        "HMD": "Headset",
         "Lighthouse": "Base Stations",
         "other": "Others"
       },
@@ -2553,6 +2548,11 @@
         "title": "World Join Behaviour"
       }
     }
+  },
+  "systemTray": {
+    "prepareForSleep": "Prepare for sleep",
+    "quit": "Quit OyasumiVR",
+    "sleepMode": "Sleep Mode"
   },
   "updater": {
     "modals": {

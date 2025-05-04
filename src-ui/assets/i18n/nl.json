@@ -1,8 +1,4 @@
 {
-  "systemTray": {
-    "sleepMode": "Slaap Modus",
-    "quit": "Stop OyasumiVR"
-  },
   "about": {
     "author": {
       "role": "Ontwikkelaar"
@@ -2534,6 +2530,10 @@
         "title": "Wereld Join Gedrag"
       }
     }
+  },
+  "systemTray": {
+    "quit": "Stop OyasumiVR",
+    "sleepMode": "Slaap Modus"
   },
   "updater": {
     "modals": {
