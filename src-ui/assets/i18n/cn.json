@@ -1,9 +1,4 @@
 {
-  "systemTray": {
-    "sleepMode": "睡眠模式",
-    "quit": "退出 OyasumiVR",
-    "prepareForSleep": "为睡眠做好准备"
-  },
   "about": {
     "author": {
       "role": "开发者"
@@ -356,9 +351,9 @@
     },
     "device-list": {
       "category": {
-        "HMD": "头戴设备",
         "Controller": "控制器",
         "GenericTracker": "追踪器",
+        "HMD": "头戴设备",
         "Lighthouse": "基站",
         "other": "其他"
       },
@@ -2553,6 +2548,11 @@
         "title": "加入房间时的麦克风状态"
       }
     }
+  },
+  "systemTray": {
+    "prepareForSleep": "为睡眠做好准备",
+    "quit": "退出 OyasumiVR",
+    "sleepMode": "睡眠模式"
   },
   "updater": {
     "modals": {

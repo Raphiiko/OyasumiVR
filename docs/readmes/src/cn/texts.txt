@@ -170,18 +170,22 @@ OyasumiVR可以检测你的心率，如果你的心率持续升高，这可能�
 当你睡觉时，自动调整SteamVR保护墙的淡出距离。如果你的游戏区域很小，你可以使用这个功能。然后在睡着时隐藏保护墙。等你醒来的时候再重新显示出来。
 
 {{TRANSLATION_AND_LOCALIZATION_HEADER}}
-翻译和本地化
+翻译和本地化翻译与本地化
 
 {{TRANSLATION_AND_LOCALIZATION_BODY}}
-OyasumiVR目前支持以下语言：
+OyasumiVR目前支持以下语言：OyasumiVR 目前支持以下语言：
 
 {{TRANSLATION_HELP_HEADER}}
-帮助翻译
+帮助翻译协助翻译
 
 {{TRANSLATION_HELP_BODY}}
 如果没有我们出色的社区的帮助，OyasumiVR不可能支持如此多的语言。我（作者）个人认为，由于他们的努力，更多的人开始使用OyasumiVR，这真是太棒了。
 
-如果你想帮忙翻译这个项目，无论是贡献缺失的翻译，还是添加全新的语言，请查看[Adding Translation页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，了解如何开始翻译！如果你需要更多的信息，请随时加入我们的[Discord](https://discord.gg/7MqdPJhYxC)进行提问！
+如果你想帮忙翻译这个项目，无论是贡献缺失的翻译，还是添加全新的语言，请查看[Adding Translation页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，了解如何开始翻译！如果你需要更多的信息，请随时加入我们的[Discord](https://discord.gg/7MqdPJhYxC)进行提问！若没有出色的志愿者们协助翻译，OyasumiVR 无法支持如此多的语言。
+我个人非常感谢他们的努力，也觉得十分惊艳——因为他们的贡献，让更多用户能够使用 OyasumiVR。
+
+如果你希望为我们提供支持，无论是补充缺失的翻译，还是添加全新的语言，请参阅 [添加翻译的 Wiki 页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 获取开始的指导！
+如果你想了解更多信息，也欢迎加入我们的 [Discord 社区](https://discord.gg/7MqdPJhYxC) 进行提问！
 
 {{SUPPORTED_HARDWARE_HEADER}}
 支持的硬件相关功能
@@ -213,7 +217,7 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 亮度自动化
 
 {{BUILT_WITH_HEADER}}
-使用的技术和工具
+使用的技术和工具构建技术
 
 {{BUILT_WITH_BODY}}
 OyasumiVR的使用技术与工具包括：
@@ -221,16 +225,21 @@ OyasumiVR的使用技术与工具包括：
 - [Angular](https://angular.io/) (TypeScript, 界面主要组成部分)
 - [Tauri](https://tauri.app/) (Rust, 桌面框架)
 - [SvelteKit](https://kit.svelte.dev/) (TypeScript, 叠加层界面)
-- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)OyasumiVR 使用了以下技术构建：
+
+- [Angular](https://angular.io/)（TypeScript，用于主界面）
+- [Tauri](https://tauri.app/)（Rust，桌面框架）
+- [SvelteKit](https://kit.svelte.dev/)（TypeScript，用于叠加界面）
+- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
 
 {{DEVELOPMENT_HEADER}}
-开发
+开发开发相关
 
 {{DEVELOPMENT_BODY}}
-请查看wiki页面 [Start Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)了解更多信息。
+请查看wiki页面 [Start Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)了解更多信息。请参阅我们的 Wiki 页面：[开始开发](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
 
 {{VRCHAT_HEADER}}
-VRChat
+VRChatVRChat
 
 {{VRCHAT_BODY}}
 OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。（例如状态自动化）
@@ -240,21 +249,33 @@ OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。�
 
 OyasumiVR并未得到VRChat的认可，也不反映VRChat官方或任何参与制作或管理VRChat的人的观点或意见。VRChat是VRChat inc的商标。VRChat © VRChat Inc。
 
-OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。
+OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。OyasumiVR 的某些功能需要你登录 VRChat 账户才能使用（例如状态自动化功能）。
+仅当使用相关功能时才需要登录。
+不依赖该功能的部分，你可以在不提供账户信息的情况下照常使用。
+
+你的登录凭据只会保存在你的本地设备中，且仅用于向 VRChat 的服务器进行身份验证。
+
+OyasumiVR 并未获得 VRChat 官方认可，也不代表 VRChat 或其官方人员的观点或立场。
+VRChat 是 VRChat Inc. 的注册商标，VRChat © VRChat Inc.
+
+OyasumiVR 的开发者及所有贡献者对使用 OyasumiVR 导致的任何问题（包括对 VRChat 账户的影响）不承担任何责任。
+使用需自担风险。
 
 {{SUPPORT_HEADER}}
-支持
+支持支持
 
 {{SUPPORT_BODY}}
 如果你在使用OyasumiVR时遇到问题，比如遇到了bug，或者想要一个新的功能，你可以加入我们的[Discord服务器](https://discord.gg/7MqdPJhYxC)直接反馈。
 
-或者，你可以直接在[Twitter上联系我 （@Raphiiko）](https://twitter.com/Raphiiko)。我会尽快回复你！
+或者，你可以直接在[Twitter上联系我 （@Raphiiko）](https://twitter.com/Raphiiko)。我会尽快回复你！如果你在使用 OyasumiVR 时遇到问题，比如出现 bug 或有功能建议，欢迎加入我们的 [Discord 服务器](https://discord.gg/7MqdPJhYxC)。
+
+你也可以直接通过 [Twitter @Raphiiko](https://twitter.com/Raphiiko) 联系我，我会尽快回复！
 
 {{LICENSE_HEADER}}
-许可证
+许可证许可协议
 
 {{LICENSE_BODY}}
-OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。
+OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。OyasumiVR 遵循 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 协议开放源代码。
 
 {{SUPPORT_OYASUMIVR_HEADER}}
 赞助Oyasumi VR
@@ -350,12 +371,6 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
 {{SUPPORTED_HARDWARE_BRIGHTNESS_AUTOMATIONS_BODY}}
 头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
-{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
-
-
-{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
-
-
 {{MQTT_CONTROL_BODY}}
 OyasumiVR 可以通过 MQTT 向 Home Assistant 联动自身的许多功能，也可以联动 SteamVR 的功能！
 这让你可以将 OyasumiVR 与家中各种智能设备联动，还可以在 Home Assistant 中构建出强大的自动化流程。
@@ -431,63 +446,12 @@ OyasumiVR 可以通过 MQTT 向 Home Assistant 联动自身的许多功能，也
   </td>
 </tr>
 
-{{TRANSLATION_AND_LOCALIZATION_HEADER}}
-翻译与本地化
-
-{{TRANSLATION_AND_LOCALIZATION_BODY}}
-OyasumiVR 目前支持以下语言：
-
-{{TRANSLATION_HELP_HEADER}}
-协助翻译
-
-{{TRANSLATION_HELP_BODY}}
-若没有出色的志愿者们协助翻译，OyasumiVR 无法支持如此多的语言。
-我个人非常感谢他们的努力，也觉得十分惊艳——因为他们的贡献，让更多用户能够使用 OyasumiVR。
-
-如果你希望为我们提供支持，无论是补充缺失的翻译，还是添加全新的语言，请参阅 [添加翻译的 Wiki 页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 获取开始的指导！
-如果你想了解更多信息，也欢迎加入我们的 [Discord 社区](https://discord.gg/7MqdPJhYxC) 进行提问！
-
 {{SUPPORTED_HARDWARE_CCT_HEADER}}
 色温自动化
 
 {{SUPPORTED_HARDWARE_CCT_BODY}}
 控制 VR 头显屏幕的色温功能，目前仅支持部分原生 SteamVR 头显，例如 Valve Index、Bigscreen Beyond 以及 HTC Vive（Pro）。
 在其他头显上可能也能使用，但效果无法保证。
-
-{{SUPPORTED_HARDWARE_MICROPHONE_MUTE_AUTOMATIONS_HEADER}}
-
-{{BUILT_WITH_HEADER}}
-构建技术
-
-{{BUILT_WITH_BODY}}
-OyasumiVR 使用了以下技术构建：
-
-- [Angular](https://angular.io/)（TypeScript，用于主界面）
-- [Tauri](https://tauri.app/)（Rust，桌面框架）
-- [SvelteKit](https://kit.svelte.dev/)（TypeScript，用于叠加界面）
-- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
-
-{{DEVELOPMENT_HEADER}}
-开发相关
-
-{{DEVELOPMENT_BODY}}
-请参阅我们的 Wiki 页面：[开始开发](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
-
-{{VRCHAT_HEADER}}
-VRChat
-
-{{VRCHAT_BODY}}
-OyasumiVR 的某些功能需要你登录 VRChat 账户才能使用（例如状态自动化功能）。
-仅当使用相关功能时才需要登录。
-不依赖该功能的部分，你可以在不提供账户信息的情况下照常使用。
-
-你的登录凭据只会保存在你的本地设备中，且仅用于向 VRChat 的服务器进行身份验证。
-
-OyasumiVR 并未获得 VRChat 官方认可，也不代表 VRChat 或其官方人员的观点或立场。
-VRChat 是 VRChat Inc. 的注册商标，VRChat © VRChat Inc.
-
-OyasumiVR 的开发者及所有贡献者对使用 OyasumiVR 导致的任何问题（包括对 VRChat 账户的影响）不承担任何责任。
-使用需自担风险。
 
 {{TELEMETRY_HEADER}}
 Aptabase 遥测
@@ -503,16 +467,7 @@ OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开
 你可以在 OyasumiVR 的通用设置中选择关闭遥测功能。
 如需更多（技术性）信息，请查看（非常简洁的）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
 
-{{SUPPORT_HEADER}}
-支持
+{{BRIGHTNESS_CCT_AUTOMATIONS_HEADER}}
 
-{{SUPPORT_BODY}}
-如果你在使用 OyasumiVR 时遇到问题，比如出现 bug 或有功能建议，欢迎加入我们的 [Discord 服务器](https://discord.gg/7MqdPJhYxC)。
 
-你也可以直接通过 [Twitter @Raphiiko](https://twitter.com/Raphiiko) 联系我，我会尽快回复！
-
-{{LICENSE_HEADER}}
-许可协议
-
-{{LICENSE_BODY}}
-OyasumiVR 遵循 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 协议开放源代码。
+{{BRIGHTNESS_CCT_AUTOMATIONS_BODY}}
