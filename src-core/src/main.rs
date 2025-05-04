@@ -40,8 +40,9 @@ use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
-fn main() {
-    // Construct Oyasumi Tauri application
+#[tokio::main]
+async fn main() {
+    // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(configure_tauri_plugin_single_instance())
         .plugin(tauri_plugin_deep_link::init())
@@ -61,10 +62,10 @@ fn main() {
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             let matches = app.cli().matches().unwrap();
-            tauri::async_runtime::block_on(async {
+            futures::executor::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
-            match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
+            match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
             ))) {
                 Ok(_) => {}
@@ -287,7 +288,7 @@ async fn load_configs() {
 }
 
 fn on_cron_minute_start(_: &str) {
-    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
