@@ -307,7 +307,7 @@
       "joinNotifications": "加入通知",
       "miscAutomations": "其他自动化",
       "nightmareDetection": "噩梦检测",
-      "oscAutomations": "OSC",
+      "oscAutomations": "OSC 自动化",
       "overview": "首页",
       "powerAutomations": "电源",
       "resolutionAutomations": "分辨率",
@@ -353,6 +353,7 @@
       "category": {
         "Controller": "控制器",
         "GenericTracker": "追踪器",
+        "HMD": "头戴设备",
         "Lighthouse": "基站",
         "other": "其他"
       },
@@ -1610,6 +1611,21 @@
   },
   "settings": {
     "advanced": {
+      "application": {
+        "openVrInitDelayFix": {
+          "description": "启用此选项后，OyasumiVR将在检测到SteamVR后稍作等待再进行交互，从而给予SteamVR额外的启动时间。如果你在OyasumiVR运行时启动SteamVR遇到问题，开启此选项可能有所帮助。",
+          "title": "延迟初始化 OpenVR"
+        },
+        "oscServerEnabled": {
+          "description": "关闭此选项将禁用内置的OSC和OSCQuery服务器。请注意，关闭后OyasumiVR的部分功能将无法使用，且不会有任何警告。此选项仅用于调试目的，一般使用时不应关闭。",
+          "title": "OSC 与 OSCQuery 服务器"
+        },
+        "overlayGpuAcceleration": {
+          "description": "如果你遇到叠加层渲染异常的问题，禁用此选项可能能在某些系统（如混合显卡设备）上解决问题。",
+          "title": "VR叠加层GPU加速"
+        },
+        "title": "应用程序"
+      },
       "logs": {
         "openFolder": {
           "action": "打开日志文件夹",
@@ -1695,11 +1711,13 @@
         "title": "语言和翻译"
       },
       "troubleshooting": {
+        "description": "本部分包含与故障排查相关的选项。通常情况下你无需使用，除非在寻求支持时被特别要求。",
         "devTools": {
           "action": "打开界面调试工具",
           "description": "打开界面调试工具",
           "title": "打开界面调试工具"
         },
+        "title": "故障排查",
         "vrManifestReregister": {
           "action": "重新注册",
           "description": "在 SteamVR 上重新注册程序的清单数据",
@@ -2533,6 +2551,11 @@
         "title": "加入房间时的麦克风状态"
       }
     }
+  },
+  "systemTray": {
+    "prepareForSleep": "为睡眠做好准备",
+    "quit": "退出 OyasumiVR",
+    "sleepMode": "睡眠模式"
   },
   "updater": {
     "modals": {

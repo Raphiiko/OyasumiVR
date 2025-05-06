@@ -75,11 +75,11 @@ async function handleClean() {
         Object.keys(flattenObj(langFileContent)).length -
         Object.keys(langFileContentFlattened).length;
       langFileContent = unflattenObj(langFileContentFlattened);
-      fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2));
+      fs.writeFileSync(langFile, JSON.stringify(langFileContent, null, 2) + '\n');
       console.log('Cleaned ' + keysCleaned + ' key(s) in ' + langFile);
     });
   // Clean en.json last
-  fs.writeFileSync(enFile, JSON.stringify(unflattenObj(enFileContentFlattened), null, 2));
+  fs.writeFileSync(enFile, JSON.stringify(unflattenObj(enFileContentFlattened), null, 2) + '\n');
 }
 
 async function printTranslationCoverage() {
