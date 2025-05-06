@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 - VR Headset device & battery level to the device list
 - Sleep mode toggle and sleep preparation to system tray menu
+- Message center for automatically diagnosing common issues
 
 ### Changed
 
