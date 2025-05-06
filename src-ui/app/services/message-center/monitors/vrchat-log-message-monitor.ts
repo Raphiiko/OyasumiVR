@@ -3,6 +3,7 @@ import { VRChatService } from '../../vrchat.service';
 import { MessageMonitor } from './message-monitor';
 import { VRChatLogService } from '../../vrchat-log.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge } from 'rxjs';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 export class VRChatLogMessageMonitor extends MessageMonitor {
   private vrchat = inject(VRChatService);
@@ -13,7 +14,7 @@ export class VRChatLogMessageMonitor extends MessageMonitor {
       merge(
         this.vrchat.vrchatProcessActive.pipe(
           distinctUntilChanged(),
-          debounceTime(180000),
+          debounceTime(60000),
           filter(Boolean),
           map(() => true)
         ),
@@ -28,17 +29,24 @@ export class VRChatLogMessageMonitor extends MessageMonitor {
       .pipe(
         map(([vrcRunning, logPath]) => vrcRunning && !logPath),
         debounceTime(2000),
-        distinctUntilChanged(),
+        distinctUntilChanged()
       )
       .subscribe((issueFound) => {
-        issueFound = true; // TODO: REMOVE THIS LINE AFTER TESTING
         if (issueFound) {
           this.messageCenter.addMessage({
             id: 'vrcLogMissing',
             title: 'message-center.messages.vrcLogMissing.title',
             message: 'message-center.messages.vrcLogMissing.message',
             hideable: true,
-            actions: [],
+            actions: [
+              {
+                label: 'message-center.actions.moreInfo',
+                action: () =>
+                  openUrl(
+                    'https://raphii.co/oyasumivr/hidden/troubleshooting/vrchat-logs-required/'
+                  ),
+              },
+            ],
             type: 'warning',
           });
         } else {

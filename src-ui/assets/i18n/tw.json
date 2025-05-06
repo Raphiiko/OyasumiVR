@@ -1241,14 +1241,17 @@
     },
     "title": "加入通知"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "看起來您有很多基站！\n\n請注意，大多數藍牙適配器只能處理 7 個同時連接，包括耳機和其他外圍設備等其他藍牙設備。\n\n請記住，如果您同時插入了太多基站，或者有太多其他藍牙設備連接，OyasumiVR 可能無法控制所有基站。"
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "此預設檔使用的解決方法存在一些問題。 如果你不能使用較新的 GoGo Loco 預設，請僅使用此預設檔。 如果你的角色仍然使用舊版本的 GoGo Loco，建議你將你的角色更新使用最新的 GoGo Loco 版本",
     "GORONE_LEGACY_PRESET_WARNING": "v4.0 及以上版本的此預製件已包含轉向功能，與此預設不兼容。如果您的模型使用的是較舊版本的預製件，該預設仍然可用。",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "看起來您有很多基站！\n\n請注意，大多數藍牙適配器只能處理 7 個同時連接，包括耳機和其他外圍設備等其他藍牙設備。\n\n請記住，如果您同時插入了太多基站，或者有太多其他藍牙設備連接，OyasumiVR 可能無法控制所有基站。",
-        "title": "警告"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "請注意，顯示器色溫控制僅適用於某些原生 SteamVR 頭戴裝置，例如 Valve Index、大螢幕 Beyond 或 HTC Vive（Pro）。\n\n如果您未使用這些頭戴裝置，該功能可能對您無效。\n\n如果需要，您可以在設定中禁用顯示器色溫控制。",
         "title": "功能可用性"

@@ -22,7 +22,7 @@
     [tooltipMode]="'bottom'"
     (click)="messageCenter.toggle()"
   >
-    <i class="material-symbols-outlined icon-filled">mode_comment</i>
+    <i class="material-symbols-outlined icon-filled" [class.wiggle]="(messageCenter.messages | async)?.length">mode_comment</i>
     <div class="message-center-badge-bg" *ngIf="(messageCenter.messages | async)?.length" @fade>
       <div class="message-center-badge"></div>
     </div>

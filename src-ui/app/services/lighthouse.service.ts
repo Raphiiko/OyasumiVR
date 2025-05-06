@@ -120,18 +120,6 @@ export class LighthouseService {
       .subscribe(() => {
         invoke('lighthouse_start_scan', { duration: DEFAULT_SCAN_DURATION });
       });
-    // Show warning when more than 5 lighthouses are detected
-    this._devices
-      .pipe(
-        filter((d) => d.length >= 6),
-        throttleTime(60000, asyncScheduler, {
-          leading: true,
-          trailing: true,
-        })
-      )
-      .subscribe(() =>
-        this.appSettings.promptDialogForOneTimeFlag('BASESTATION_COUNT_WARNING_DIALOG')
-      );
   }
 
   public async setPowerState(

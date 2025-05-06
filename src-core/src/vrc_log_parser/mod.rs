@@ -46,6 +46,31 @@ fn get_latest_log_path() -> Option<String> {
             let name = entry.file_name().to_string_lossy().to_string();
             name.starts_with("output_log_") && name.ends_with(".txt")
         })
+        // Only get files that are created in the last 24 hours
+        .filter(|entry| {
+            entry
+                .path()
+                .metadata()
+                .ok()
+                .and_then(|metadata| {
+                    metadata.created().ok().and_then(|created_time| {
+                        SystemTime::now()
+                            .duration_since(created_time)
+                            .ok()
+                            .map(|duration| duration <= Duration::from_secs(24 * 60 * 60))
+                    })
+                })
+                .unwrap_or(false)
+        })
+        // Ignore files that are 0 bytes
+        .filter(|entry| {
+            entry
+                .path()
+                .metadata()
+                .ok()
+                .and_then(|metadata| Some(metadata.len() > 0))
+                .unwrap_or(false)
+        })
         // Find most recent log file
         .max_by_key(|entry| {
             entry
@@ -248,6 +273,17 @@ pub fn start_log_locator_task() -> CancellationToken {
             // Check the current log file path
             let log_path_option = get_latest_log_path();
             if log_path_option.is_none() {
+                // If we are currently reading a log file, stop the reader task
+                if ctx.current_log_path.is_some() {
+                    if let Some(token) = &ctx.reader_task_cancellation_token {
+                        send_event("VRC_LOG_CURRENT_FILE", None::<String>).await;
+                        token.cancel();
+                    }
+                    *ctx = LoopContext {
+                        current_log_path: None,
+                        reader_task_cancellation_token: None,
+                    };
+                }
                 continue;
             }
             let log_path = log_path_option.unwrap();

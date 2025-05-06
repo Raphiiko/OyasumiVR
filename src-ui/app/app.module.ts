@@ -237,6 +237,7 @@ import { UpdateModalComponent } from './components/update-modal/update-modal.com
 import { MessageCenterService } from './services/message-center/message-center.service';
 import { MessageCenterModalComponent } from './components/message-center-modal/message-center-modal.component';
 import { MessageCenterItemComponent } from './components/message-center-modal/message-center-item/message-center-item.component';
+import { ProgressiveScrollBlurComponent } from './components/progressive-scroll-blur/progressive-scroll-blur.component';
 
 [
   localeEN,
@@ -384,6 +385,7 @@ export function createTranslateLoader(http: HttpClient) {
     EventLogFilterDialogComponent,
     MessageCenterModalComponent,
     MessageCenterItemComponent,
+    ProgressiveScrollBlurComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -826,7 +828,7 @@ export class AppModule {
           }
         )
       ) {
-        await open('https://discord.gg/7MqdPJhYxC');
+        await open('https://discord.gg/7MqdPJhYxC', '_blank');
       }
       await exit(1);
       throw e;

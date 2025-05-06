@@ -43,6 +43,7 @@ use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 fn main() {
     // Construct Oyasumi Tauri application
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .plugin(configure_tauri_plugin_single_instance())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(configure_tauri_plugin_log())

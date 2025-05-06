@@ -6,10 +6,12 @@ import { VRChatLogMessageMonitor } from './monitors/vrchat-log-message-monitor';
 import { MessageMonitor } from './monitors/message-monitor';
 import { ModalService } from '../modal.service';
 import { MessageCenterModalComponent } from 'src-ui/app/components/message-center-modal/message-center-modal.component';
+import { SleepCalibrationMessageMonitor } from './monitors/sleep-calibration-message-monitor';
+import { ManyLighthousesDetectedMessageMonitor } from './monitors/many-lighthouses-detected-message-monitor';
 
 export interface MessageAction {
   label: string;
-  action: () => void | Promise<void>;
+  action: () => any;
 }
 
 export interface MessageItem {
@@ -26,7 +28,7 @@ export interface MessageItem {
 })
 export class MessageCenterService {
   private monitors: MessageMonitor[];
-  private readonly hiddenMessageIds = this.appSettingsService.settings.pipe(
+  public readonly hiddenMessageIds = this.appSettingsService.settings.pipe(
     map((settings) => [...settings.hiddenMessageIds]),
     distinctUntilChanged((a, b) => isEqual(a, b))
   );
@@ -40,7 +42,11 @@ export class MessageCenterService {
   );
 
   constructor(private appSettingsService: AppSettingsService, private modalService: ModalService) {
-    this.monitors = [new VRChatLogMessageMonitor(this)];
+    this.monitors = [
+      new VRChatLogMessageMonitor(this),
+      new SleepCalibrationMessageMonitor(this),
+      new ManyLighthousesDetectedMessageMonitor(this),
+    ];
   }
 
   public async init() {
@@ -52,7 +58,17 @@ export class MessageCenterService {
     if (this.modalService.isModalOpen('message-center')) {
       this.modalService.closeModal('message-center');
     } else {
-      this.modalService.addModal(MessageCenterModalComponent, {}, { id: 'message-center' }).subscribe();
+      this.modalService
+        .addModal(
+          MessageCenterModalComponent,
+          {},
+          {
+            id: 'message-center',
+            wrapperDefaultClass: 'modal-wrapper-message-center',
+            closeOnEscape: true,
+          }
+        )
+        .subscribe();
     }
   }
 

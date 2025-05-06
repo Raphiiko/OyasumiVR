@@ -1,5 +1,88 @@
+@use 'node_modules/material-colors/dist/colors.scss' as materialColors;
+
+:host {
+  width: min(40em, 100%);
+}
+
 .item-container {
-  padding: 2em;
   border-radius: var(--surface-border-radius);
-  background-color: black; 
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+}
+
+.item-content {
+  padding: 2em 2em 0 2em;
+  display: flex;
+  align-items: flex-start;
+  gap: 2em;
+
+  &:last-child {
+    padding-bottom: 2em;
+  }
+}
+
+.icon {
+  font-size: 2.5em;
+  &.icon-info {
+    color: var(--color-info);
+  }
+  &.icon-warning {
+    color: var(--color-warning);
+  }
+  &.icon-error {
+    color: var(--color-caution);
+  }
+}
+
+.text-content {
+  display: flex;
+  flex-direction: column;
+  white-space: pre-wrap;
+
+  span {
+    &:first-child {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+    &:last-child {
+      margin-top: 0.5em;
+      color: white;
+      opacity: 0.8;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 1em;
+  padding: 0 1em 1em 1em;
+  width: 100%;
+
+  button {
+    padding: 0.5em 1em;
+    border-radius: var(--surface-border-radius);
+    background: transparent;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: all .15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
+  }
 }

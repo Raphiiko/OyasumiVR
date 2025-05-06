@@ -1,8 +1,4 @@
 {
-  "systemTray": {
-    "sleepMode": "Slaap Modus",
-    "quit": "Stop OyasumiVR"
-  },
   "about": {
     "author": {
       "role": "Ontwikkelaar"
@@ -1245,14 +1241,17 @@
     },
     "title": "Join Notificaties"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt."
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Deze preset gebruikt een workaround die niet helemaal goed werkt. Gebruik deze preset alleen als je de nieuwere GoGo Loco preset niet kunt gebruiken. Als je avatar nog een oudere versie van GoGo Loco gebruikt, is het aan te raden om je avatar te updaten naar de nieuwste versie van GoGo Loco.",
     "GORONE_LEGACY_PRESET_WARNING": "Versies v4.0 van deze prefab bevatten al functionaliteit om automatisch om te rollen, en zijn niet compatible met deze preset. Deze preset is alleen nog beschikbaar als je avatar oudere versies van deze prefab gebruikt.",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "Het lijkt er op dat je een hoop base stations hebt!\n\nLet op dat de meeste Bluetooth adapters maar tot 7 gelijktijdige connecties kunnen hebben, inclusief met andere Bluetooth apparaten zoals hoofdtelefoons en andere randapparatuur.\n\nHet kan zijn dat OyasumiVR moeite heeft met het besturen van al je base stations als je er te veel tegelijk ingeplugt hebt, of te veel andere Bluetooth apparaten verbonden hebt.",
-        "title": "Waarschuwing"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Let op dat het aanpassen van de kleur temperatuur alleen beschikbaar is op sommige native SteamVR headsets, zoals de Valve Index, Bigscreen Beyond, of HTC Vive (Pro).\n\nAls een andere headset gebruikt, is de kans groot dat deze feature geen effect zal hebben.\n\nJe kan kleur temperatuur besturing uitschakelen in de instellingen als je dat wilt.",
         "title": "Feature Beschikbaarheid"
@@ -2534,6 +2533,10 @@
         "title": "Wereld Join Gedrag"
       }
     }
+  },
+  "systemTray": {
+    "quit": "Stop OyasumiVR",
+    "sleepMode": "Slaap Modus"
   },
   "updater": {
     "modals": {
