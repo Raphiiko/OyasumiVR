@@ -51,7 +51,6 @@ export class MessageCenterService {
 
   public async init() {
     await Promise.all(this.monitors.map((monitor) => monitor.init()));
-    this.toggle();
   }
 
   public async toggle() {
