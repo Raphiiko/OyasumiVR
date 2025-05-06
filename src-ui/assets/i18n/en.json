@@ -1242,14 +1242,35 @@
     },
     "title": "Join Notifications"
   },
+  "message-center": {
+    "actions": {
+      "hide": "Hide",
+      "moreInfo": "More info",
+      "showHidden": "Show Hidden",
+      "unhide": "Unhide"
+    },
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
+        "title": "Many base stations detected"
+      },
+      "sleepCalibrationRequired": {
+        "calibrate": "Calibrate Now",
+        "message": "Sleep detection is enabled, but still uncalibrated. Before using it, you should calibrate at least once to improve its accuracy.",
+        "title": "Sleep Calibration Pending"
+      },
+      "vrcLogMissing": {
+        "message": "Although VRChat seems to be running, its log files could not be detected. Without these log files, certain OyasumiVR features like automatically accepting invite requests will not work.\n\nPlease make sure you've got logging enabled within VRChat to ensure OyasumiVR can work properly.",
+        "title": "VRChat log files not found"
+      }
+    },
+    "title": "Message Center",
+    "tooltip": "Message Center"
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "This preset uses a workaround that has some issues. Please only use this preset if you can't use the newer GoGo Loco preset. If your avatar still uses an older version of GoGo Loco, it is recommended that you update your avatar to use the latest GoGo Loco version.",
     "GORONE_LEGACY_PRESET_WARNING": "Versions v4.0 and up of this prefab already contain turning functionality, and are not compatible with this preset. This preset is still available if your avatar uses older versions of this prefab.",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
-        "title": "Warning"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Please note that display color temperature control is only available with certain native SteamVR headsets, e.g. the Valve Index, Bigscreen Beyond, or HTC Vive (Pro).\n\nIf you do not use one of these headsets, this feature likely will have no effect for you.\n\nYou can disable display color temperature control in the settings if you want to.",
         "title": "Feature Availability"

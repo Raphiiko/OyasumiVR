@@ -1241,14 +1241,17 @@
     },
     "title": "Beitrittsbenachrichtigung"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind."
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "Die Voreinstellung verwendet einen Workaround, der derzeit ein paar Fehler hat. Bitte nutze diese Voreinstellungen nur, wenn du die neueren GoGo Loco Voreinstellungen nicht verwenden kannst. Solltest du einen Avatar mit einer älteren Version verwenden, solltest du diesen auf die aktuellste GoGo Loco Version updaten",
     "GORONE_LEGACY_PRESET_WARNING": "Version v4.0 und höher dieser Voreinstellung beinhalten bereits Drehfunktionen und sind nicht kompatibel mit dieser Voreinstellung. Die Voreinstellung ist immernoch verfühbar wenn dein Avatar eine ältere Version dieser Voreinstellung verwendet",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "Es scheint, als ob du viele Basisstationen hast\n\nBeachte, dass die meisten Bluetooth-Adapter nur 7 gleichzeitige Verbindungen verarbeiten können, einschließlich anderer Bluetooth-Geräte wie Kopfhörer und andere Peripheriegeräte.Denken Sie daran, dass OyasumiVR möglicherweise Probleme hat, alle Ihre Basisstationen zu steuern, wenn Sie zu viele von ihnen gleichzeitig angeschlossen haben oder zu viele andere Bluetooth-Geräte angeschlossen sind.",
-        "title": "Warnung"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Bitte beachten , dass die Steuerung der Farbtemperatur der Anzeige nur mit bestimmten nativen SteamVR-Headsets verfügbar ist, z. B. dem Valve Index, Bigscreen Beyond oder HTC Vive (Pro).\n\nWenn keines dieser Headsets verwenden, wird diese Funktion wahrscheinlich keine Auswirkungen für Sie haben.\n\nSie können die Steuerung der Farbtemperatur in den Einstellungen deaktivieren, wenn Sie dies wünschen.",
         "title": "Feature Verfügbarkeit"

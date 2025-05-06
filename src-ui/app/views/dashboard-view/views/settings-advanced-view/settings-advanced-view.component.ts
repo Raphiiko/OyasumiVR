@@ -294,8 +294,6 @@ export class SettingsAdvancedViewComponent {
       .subscribe();
   }
 
-  protected readonly open = open;
-
   async openDevTools() {
     await invoke('open_dev_tools');
   }
