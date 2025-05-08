@@ -187,8 +187,13 @@ $header-height: 10em;
     background: radial-gradient(
       circle at center,
       rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0.15) 30%,
-      transparent 50%
+      rgba(0, 0, 0, 0.25) 15%,
+      rgba(0, 0, 0, 0.2) 25%,
+      rgba(0, 0, 0, 0.15) 35%,
+      rgba(0, 0, 0, 0.1) 45%,
+      rgba(0, 0, 0, 0.05) 55%,
+      rgba(0, 0, 0, 0.02) 65%,
+      transparent 75%
     );
 
     img {

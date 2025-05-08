@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NvmlService } from '../../../../services/nvml.service';
+import { NvmlService, NvmlStatus } from '../../../../services/nvml.service';
 import { asyncScheduler, combineLatest, firstValueFrom, map, Observable, throttleTime } from 'rxjs';
 import { GpuAutomationsService } from '../../../../services/gpu-automations.service';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
@@ -8,6 +8,10 @@ import { AppSettingsService } from '../../../../services/app-settings.service';
 import { ElevatedSidecarService } from '../../../../services/elevated-sidecar.service';
 import { ConfirmModalComponent } from '../../../../components/confirm-modal/confirm-modal.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ExecutableReferenceStatus } from 'src-ui/app/models/settings';
+import { ActivatedRoute } from '@angular/router';
+
+export type GpuAutomationsTab = 'POWER_LIMITS' | 'MSI_AFTERBURNER';
 
 @Component({
   selector: 'app-gpu-automations-view',
@@ -17,7 +21,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: false,
 })
 export class GpuAutomationsViewComponent implements OnInit {
-  activeTab: 'POWER_LIMITS' | 'MSI_AFTERBURNER' = 'POWER_LIMITS';
+  protected activeTab: GpuAutomationsTab = 'POWER_LIMITS';
   panel: 'DISABLED' | 'NO_SIDECAR' | 'ENABLED' = 'DISABLED';
   disabledMessage = '';
   nvmlErrors?: Observable<boolean>;
@@ -28,7 +32,8 @@ export class GpuAutomationsViewComponent implements OnInit {
     protected gpuAutomations: GpuAutomationsService,
     private sidecar: ElevatedSidecarService,
     private modalService: ModalService,
-    private settingsService: AppSettingsService
+    private settingsService: AppSettingsService,
+    private activatedRoute: ActivatedRoute
   ) {
     combineLatest([sidecar.sidecarStarted, this.gpuAutomations.isEnabled()])
       .pipe(takeUntilDestroyed())
@@ -49,12 +54,16 @@ export class GpuAutomationsViewComponent implements OnInit {
         if (!gpuAutomationsEnabled) return false;
         // Nvml
         if (
-          [
-            'ELEVATION_SIDECAR_INACTIVE',
-            'NO_PERMISSION',
-            'Nvml_UNKNOWN_ERROR',
-            'UNKNOWN_ERROR',
-          ].includes(nvmlStatus)
+          (
+            [
+              'DriverNotLoaded',
+              'LibLoadingError',
+              'SidecarUnavailable',
+              'NoPermission',
+              'NvmlUnknownError',
+              'UnknownError',
+            ] as NvmlStatus[]
+          ).includes(nvmlStatus)
         )
           return true;
         // No errors
@@ -76,14 +85,16 @@ export class GpuAutomationsViewComponent implements OnInit {
         if (
           (msiAfterburnerConfig.onSleepDisableProfile > 0 ||
             msiAfterburnerConfig.onSleepEnableProfile > 0) &&
-          [
-            'NOT_FOUND',
-            'INVALID_EXECUTABLE',
-            'PERMISSION_DENIED',
-            'INVALID_FILENAME',
-            'INVALID_SIGNATURE',
-            'UNKNOWN_ERROR',
-          ].includes(msiAfterburnerStatus)
+          (
+            [
+              'NOT_FOUND',
+              'INVALID_EXECUTABLE',
+              'PERMISSION_DENIED',
+              'INVALID_FILENAME',
+              'INVALID_SIGNATURE',
+              'UNKNOWN_ERROR',
+            ] as ExecutableReferenceStatus[]
+          ).includes(msiAfterburnerStatus)
         )
           return true;
         // No errors found
@@ -92,7 +103,10 @@ export class GpuAutomationsViewComponent implements OnInit {
     );
   }
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    const fragment = await firstValueFrom(this.activatedRoute.fragment);
+    if (fragment) this.activeTab = fragment as GpuAutomationsTab;
+  }
 
   async startSidecar() {
     if (!(await firstValueFrom(this.settingsService.settings)).askForAdminOnStart) {

@@ -1,14 +1,10 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { asyncScheduler, combineLatest, map, Observable, startWith, throttleTime } from 'rxjs';
+import { combineLatest, map, Observable, startWith } from 'rxjs';
 import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
-import { GpuAutomationsService } from '../../services/gpu-automations.service';
 import { fade } from '../../utils/animations';
-import { NvmlService } from '../../services/nvml.service';
-import { ElevatedSidecarService } from '../../services/elevated-sidecar.service';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { BackgroundService } from '../../services/background.service';
-import { OscService } from '../../services/osc.service';
 import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
@@ -132,17 +128,12 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
 })
 export class DashboardNavbarComponent implements OnInit {
   settingErrors: Observable<boolean>;
-  gpuAutomationsErrors: Observable<boolean>;
   lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
   updateAvailable: Observable<boolean>;
 
   constructor(
     private lighthouse: LighthouseConsoleService,
-    private gpuAutomations: GpuAutomationsService,
-    private nvml: NvmlService,
-    private sidecar: ElevatedSidecarService,
-    private osc: OscService,
     private updateService: UpdateService,
     protected router: Router,
     protected background: BackgroundService,
@@ -158,55 +149,6 @@ export class DashboardNavbarComponent implements OnInit {
     );
     this.settingErrors = combineLatest([this.lighthouseConsoleErrors]).pipe(
       map((errorAreas: boolean[]) => !!errorAreas.find((a) => a))
-    );
-
-    this.gpuAutomationsErrors = combineLatest([
-      this.gpuAutomations.isEnabled(),
-      this.nvml.status,
-      this.sidecar.sidecarStarted,
-      this.gpuAutomations.msiAfterburnerStatus,
-      this.gpuAutomations.msiAfterburnerConfig,
-    ]).pipe(
-      throttleTime(300, asyncScheduler, { trailing: true, leading: true }),
-      map(
-        ([
-          gpuAutomationsEnabled,
-          nvmlStatus,
-          sidecarRunning,
-          msiAfterburnerStatus,
-          msiAfterburnerConfig,
-        ]) => {
-          // Global
-          if (!gpuAutomationsEnabled) return false;
-          if (!sidecarRunning) return true;
-          // Nvml
-          if (
-            [
-              'ELEVATION_SIDECAR_INACTIVE',
-              'NO_PERMISSION',
-              'Nvml_UNKNOWN_ERROR',
-              'UNKNOWN_ERROR',
-            ].includes(nvmlStatus)
-          )
-            return true;
-          // Afterburner
-          if (
-            (msiAfterburnerConfig.onSleepDisableProfile > 0 ||
-              msiAfterburnerConfig.onSleepEnableProfile > 0) &&
-            [
-              'NOT_FOUND',
-              'INVALID_EXECUTABLE',
-              'PERMISSION_DENIED',
-              'INVALID_FILENAME',
-              'INVALID_SIGNATURE',
-              'UNKNOWN_ERROR',
-            ].includes(msiAfterburnerStatus)
-          )
-            return true;
-          // No errors found
-          return false;
-        }
-      )
     );
   }
 

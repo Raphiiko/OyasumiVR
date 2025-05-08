@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { MessageMonitor } from './message-monitor';
-import { filter, take } from 'rxjs';
+import { filter, startWith, take } from 'rxjs';
 import { LighthouseService } from '../../lighthouse.service';
 
 export class ManyLighthousesDetectedMessageMonitor extends MessageMonitor {
@@ -11,7 +11,7 @@ export class ManyLighthousesDetectedMessageMonitor extends MessageMonitor {
     this.lighthouse.devices
       .pipe(
         filter((d) => d.length > 4),
-        take(1)
+        take(1),
       )
       .subscribe(() => {
         this.messageCenter.addMessage({

@@ -4,8 +4,8 @@
       {{ getIcon() }}
     </span>
     <div class="text-content">
-      <span>{{ message().title | translate }}</span>
-      <span *ngIf="message().message">{{ message().message | translate }}</span>
+      <span>{{ message().title | tsTranslate }}</span>
+      <span *ngIf="message().message">{{ message().message | tsTranslate }}</span>
     </div>
   </div>
   <div class="actions" *ngIf="actions().length > 0">

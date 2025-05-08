@@ -1250,6 +1250,33 @@
       "unhide": "Unhide"
     },
     "messages": {
+      "gpuAutomationsSidecarNotRunning": {
+        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
+        "title": "GPU Automations Unavailable",
+        "actions": {
+          "elevate": "Give Administrator Privileges",
+          "disable": "Disable GPU Automations"
+        }
+      },
+      "gpuAutomationsNvmlError": {
+        "title": "GPU Power Limit Automations Unavailable",
+        "actions": {
+          "disable": "Disable Automations"
+        }
+      },
+      "gpuAutomationsAfterburnerError": {
+        "title": "MSI Afterburner Automations Unavailable",
+        "message": {
+          "NOT_FOUND": "MSI Afterburner could not be found at the provided location. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
+          "INVALID_EXECUTABLE": "Your MSI Afterburner installation could not be verified as working. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
+          "INVALID_SIGNATURE": "Your MSI Afterburner installation could not be verified to come from MSI. For security reasons it cannot be used. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
+          "UNKNOWN_ERROR": "An unknown error occurred while trying to use your MSI Afterburner installation. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working."
+        },
+        "actions": {
+          "configure": "Configure",
+          "disable": "Disable Automations"
+        }
+      },
       "manyLighthousesDetected": {
         "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
         "title": "Many base stations detected"

@@ -1,5 +1,9 @@
 <div @fade class="mc-container">
-  <div class="mc-items" (scroll)="onScroll($event)">
+  <div
+    class="mc-items"
+    (scroll)="onScroll($event)"
+    (click)="$event.target === $event.currentTarget && close()"
+  >
     @for (item of messages | async; track item.id) {
     <app-message-center-item [message]="item" @vshrink></app-message-center-item>
     }
@@ -9,7 +13,7 @@
     <span translate>No messages</span>
     <span translate>Everything is ok!</span>
   </div>
-  <div class="mc-header">
+  <div class="mc-header" (click)="$event.target === $event.currentTarget && close()">
     <div class="mc-header-bar" [class.scrolled]="scrolled()">
       <span class="mc-header-title" translate>message-center.title</span>
       <div class="mc-header-actions">

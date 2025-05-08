@@ -8,6 +8,8 @@ import { ModalService } from '../modal.service';
 import { MessageCenterModalComponent } from 'src-ui/app/components/message-center-modal/message-center-modal.component';
 import { SleepCalibrationMessageMonitor } from './monitors/sleep-calibration-message-monitor';
 import { ManyLighthousesDetectedMessageMonitor } from './monitors/many-lighthouses-detected-message-monitor';
+import { GpuAutomationMessageMonitor } from './monitors/gpu-automation-message-monitor';
+import { TString } from 'src-ui/app/models/translatable-string';
 
 export interface MessageAction {
   label: string;
@@ -16,8 +18,8 @@ export interface MessageAction {
 
 export interface MessageItem {
   id: string;
-  title: string;
-  message: string;
+  title: TString;
+  message: TString;
   actions: MessageAction[];
   hideable: boolean;
   type: 'info' | 'warning' | 'error';
@@ -46,6 +48,7 @@ export class MessageCenterService {
       new VRChatLogMessageMonitor(this),
       new SleepCalibrationMessageMonitor(this),
       new ManyLighthousesDetectedMessageMonitor(this),
+      new GpuAutomationMessageMonitor(this),
     ];
   }
 
@@ -72,7 +75,8 @@ export class MessageCenterService {
   }
 
   public addMessage(message: MessageItem) {
-    const messages = [...this._messages.value, message];
+    let messages = this._messages.value.filter((m) => m.id !== message.id);
+    messages = [...messages, message];
     this._messages.next(messages);
   }
 
