@@ -9,6 +9,7 @@ import { MessageCenterModalComponent } from 'src-ui/app/components/message-cente
 import { SleepCalibrationMessageMonitor } from './monitors/sleep-calibration-message-monitor';
 import { ManyLighthousesDetectedMessageMonitor } from './monitors/many-lighthouses-detected-message-monitor';
 import { GpuAutomationMessageMonitor } from './monitors/gpu-automation-message-monitor';
+import { LighthouseConsoleMonitor } from './monitors/lighthouse-console-monitor';
 import { TString } from 'src-ui/app/models/translatable-string';
 
 export interface MessageAction {
@@ -43,12 +44,16 @@ export class MessageCenterService {
     map(([messages, hiddenIds]) => messages.filter((message) => hiddenIds.includes(message.id)))
   );
 
-  constructor(private appSettingsService: AppSettingsService, private modalService: ModalService) {
+  constructor(
+    private appSettingsService: AppSettingsService,
+    private modalService: ModalService
+  ) {
     this.monitors = [
       new VRChatLogMessageMonitor(this),
       new SleepCalibrationMessageMonitor(this),
       new ManyLighthousesDetectedMessageMonitor(this),
       new GpuAutomationMessageMonitor(this),
+      new LighthouseConsoleMonitor(this),
     ];
   }
 

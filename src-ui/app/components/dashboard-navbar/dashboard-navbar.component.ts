@@ -1,6 +1,5 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
-import { combineLatest, map, Observable, startWith } from 'rxjs';
-import { LighthouseConsoleService } from 'src-ui/app/services/lighthouse-console.service';
+import { map, Observable } from 'rxjs';
 import { fade } from '../../utils/animations';
 import { Router } from '@angular/router';
 import { animate, state, style, transition, trigger } from '@angular/animations';
@@ -8,7 +7,6 @@ import { BackgroundService } from '../../services/background.service';
 import { BrightnessCctAutomationService } from '../../services/brightness-cct-automation.service';
 import { ModalService } from 'src-ui/app/services/modal.service';
 import { DeveloperDebugModalComponent } from '../developer-debug-modal/developer-debug-modal.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UpdateService } from 'src-ui/app/services/update.service';
 
 function slideMenu(name = 'slideMenu', length = '.2s ease', root = true) {
@@ -127,13 +125,10 @@ type SubMenu = 'GENERAL' | 'VRCHAT' | 'HARDWARE' | 'MISCELLANEOUS' | 'SETTINGS';
   standalone: false,
 })
 export class DashboardNavbarComponent implements OnInit {
-  settingErrors: Observable<boolean>;
-  lighthouseConsoleErrors: Observable<boolean>;
   subMenu: SubMenu = 'GENERAL';
   updateAvailable: Observable<boolean>;
 
   constructor(
-    private lighthouse: LighthouseConsoleService,
     private updateService: UpdateService,
     protected router: Router,
     protected background: BackgroundService,
@@ -142,14 +137,6 @@ export class DashboardNavbarComponent implements OnInit {
     private destroyRef: DestroyRef
   ) {
     this.updateAvailable = this.updateService.updateAvailable.pipe(map((a) => !!a.update));
-    this.lighthouseConsoleErrors = this.lighthouse.consoleStatus.pipe(
-      takeUntilDestroyed(this.destroyRef),
-      map((status) => !['UNKNOWN', 'SUCCESS', 'CHECKING'].includes(status)),
-      startWith(false)
-    );
-    this.settingErrors = combineLatest([this.lighthouseConsoleErrors]).pipe(
-      map((errorAreas: boolean[]) => !!errorAreas.find((a) => a))
-    );
   }
 
   async ngOnInit(): Promise<void> {}

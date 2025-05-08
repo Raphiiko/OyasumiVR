@@ -162,7 +162,7 @@ export class GpuAutomationMessageMonitor extends MessageMonitor {
                 },
               },
               {
-                label: 'message-center.messages.gpuAutomationsAfterburnerError.actions.configure',
+                label: 'message-center.actions.configure',
                 action: async () => {
                   this.router.navigate(['/dashboard/gpuAutomations'], {
                     fragment: 'MSI_AFTERBURNER',

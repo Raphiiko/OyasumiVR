@@ -1247,7 +1247,8 @@
       "hide": "Hide",
       "moreInfo": "More info",
       "showHidden": "Show Hidden",
-      "unhide": "Unhide"
+      "unhide": "Unhide",
+      "configure": "Configure"
     },
     "messages": {
       "gpuAutomationsSidecarNotRunning": {
@@ -1273,7 +1274,6 @@
           "UNKNOWN_ERROR": "An unknown error occurred while trying to use your MSI Afterburner installation. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working."
         },
         "actions": {
-          "configure": "Configure",
           "disable": "Disable Automations"
         }
       },
@@ -1289,6 +1289,10 @@
       "vrcLogMissing": {
         "message": "Although VRChat seems to be running, its log files could not be detected. Without these log files, certain OyasumiVR features like automatically accepting invite requests will not work.\n\nPlease make sure you've got logging enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat log files not found"
+      },
+      "lighthouseConsoleError": {
+        "title": "Lighthouse Console Unavailable",
+        "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration."
       }
     },
     "title": "Message Center",

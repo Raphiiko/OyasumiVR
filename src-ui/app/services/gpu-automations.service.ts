@@ -65,9 +65,6 @@ export class GpuAutomationsService {
     private sidecar: ElevatedSidecarService,
     private eventLog: EventLogService
   ) {
-    this._msiAfterburnerStatus.subscribe((status) => {
-      console.warn('[GpuAutomations] MSI Afterburner status changed: ' + status);
-    });
     this.powerLimitsConfig.subscribe((config) => (this.currentPowerLimitsConfig = config));
     this.msiAfterburnerConfig.subscribe((config) => (this.currentMSIAfterburnerConfig = config));
     this.nvmlDevices = combineLatest([
@@ -417,7 +414,6 @@ export class GpuAutomationsService {
   }
 
   async handleMSIAfterburnerError(e: string) {
-    console.warn('[GpuAutomations] MSI Afterburner error: ' + e);
     switch (e) {
       case 'ExeNotFound':
         this._msiAfterburnerStatus.next('NOT_FOUND');
