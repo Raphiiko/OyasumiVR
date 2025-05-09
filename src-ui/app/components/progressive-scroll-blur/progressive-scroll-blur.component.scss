@@ -1,0 +1,98 @@
+@use 'sass:math';
+
+$resolution: 5;
+$maskFrac: math.div(100%, $resolution);
+
+:host {
+  display: contents;
+}
+
+.top-blur-container,
+.bottom-blur-container {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.top-blur-container {
+  top: 0;
+}
+
+.bottom-blur-container {
+  bottom: 0;
+}
+
+.top-blur,
+.bottom-blur {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+}
+
+.top-blur {
+  top: 0;
+  height: var(--top-size);
+  @for $i from 1 through ($resolution) {
+    &:nth-child(#{$i}) {
+      z-index: #{1 + $i};
+      backdrop-filter: blur(#{0.08em * math.pow(2, $i - 1)});
+      @if $i == $resolution {
+        mask: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)}
+        );
+      } @else if $i == $resolution - 1 {
+        mask: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i + 1)}
+        );
+      } @else {
+        mask: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i + 1)},
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i + 2)}
+        );
+      }
+    }
+  }
+}
+
+.bottom-blur {
+  bottom: 0;
+  height: var(--bottom-size);
+  @for $i from 1 through ($resolution) {
+    &:nth-child(#{$i}) {
+      z-index: #{1 + $i};
+      backdrop-filter: blur(#{0.08em * math.pow(2, $i - 1)});
+      @if $i == $resolution {
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)}
+        );
+      } @else if $i == $resolution - 1 {
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i + 1)}
+        );
+      } @else {
+        mask: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i - 1)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i)},
+          rgba(0, 0, 0, 1) #{$maskFrac * ($i + 1)},
+          rgba(0, 0, 0, 0) #{$maskFrac * ($i + 2)}
+        );
+      }
+    }
+  }
+}

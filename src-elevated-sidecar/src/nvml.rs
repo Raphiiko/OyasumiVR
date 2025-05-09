@@ -30,11 +30,8 @@ pub fn init() -> bool {
                 nvml_wrapper::error::NvmlError::NoPermission => {
                     *NVML_STATUS.lock().unwrap() = NvmlStatus::NoPermission;
                 }
-                nvml_wrapper::error::NvmlError::Unknown => {
-                    *NVML_STATUS.lock().unwrap() = NvmlStatus::NvmlUnknownError;
-                }
                 _ => {
-                    *NVML_STATUS.lock().unwrap() = NvmlStatus::UnknownError;
+                    *NVML_STATUS.lock().unwrap() = NvmlStatus::NvmlUnknownError;
                 }
             };
             false

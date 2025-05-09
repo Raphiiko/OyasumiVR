@@ -456,83 +456,85 @@ OyasumiVR 支持控制多种头显的功能，目前包括：
   <tr>
     <td colspan="2">
 <img width="100" align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/88eff4c6-a251-43f8-9759-baecedf94a32"><br>
-OyasumiVR can expose many of its own features, as well as SteamVR's, to Home Assistant over MQTT! This allows you to integrate OyasumiVR with various smart devices you might have in your home, as well as enable you to build your own powerful automations within Home Assistant.
-For example, you can use this to automatically turn off your smart lights when you fall asleep, or turn them back on when needed!
+OyasumiVR 可以通过 MQTT 向 Home Assistant 联动自身的许多功能，也可以联动 SteamVR 的功能！
+这让你可以将 OyasumiVR 与家中各种智能设备联动，还可以在 Home Assistant 中构建出强大的自动化流程。
+例如，当你入睡时自动关闭智能灯，或在需要时重新开启它们！
+
 <br><br>
-Here is a list of features exposed that you'll be able to read, or control, through Home Assistant:
+以下是你可以通过 Home Assistant 来读取或控制的功能列表：
     </td>
     <td width="380"><img src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/0476e18c-5509-4b08-932f-f49b943d9965"></td>
   </tr>
 <tr>
   <td>
-    <b>OyasumiVR Features</b>
+    <b>OyasumiVR 功能</b>
     <ul>
-      <li>Sleep Mode (Switch)</li>
-      <li>Shutdown Sequence (Button)</li>
-      <li>Sleep Preparation (Button)</li>
-      <li>Heart Rate (Sensor)</li>
-      <li>Sleeping Position (Sensor)</li>
+      <li>睡眠模式（开关）</li>
+      <li>关机流程（按钮）</li>
+      <li>睡前准备（按钮）</li>
+      <li>心率（传感器）</li>
+      <li>睡姿（传感器）</li>
       <li>
-        Base Station
+        基站
         <ul>
-          <li>Power (Switch)</li>
-          <li>Power State (Sensor)</li>
+          <li>电源（开关）</li>
+          <li>电源状态（传感器）</li>
         </ul>
       </li>
       <li>
-        HMD Brightness
+        HMD 亮度
         <ul>
-          <li>Advanced Mode (Switch)</li>
-          <li>Simple Brightness (Number)</li>
-          <li>Software Brightness (Number)</li>
-          <li>Hardware Brightness (Number)</li>
+          <li>高级模式（开关）</li>
+          <li>简单亮度（数字）</li>
+          <li>软件亮度（数字）</li>
+          <li>硬件亮度（数字）</li>
         </ul>
       </li>
     </ul>
   </td>
   <td colspan="2">
-    <b>VRChat Features</b>
+    <b>VRChat 功能</b>
     <ul>
-      <li>VRChat Running (Sensor)</li>
-      <li>Player Name (Sensor)</li>
-      <li># Players In World (Sensor)</li>
-      <li>Status Visibility (Sensor)</li>
-      <li>World Instance ID (Sensor)</li>
+      <li>VRChat 是否运行中（传感器）</li>
+      <li>玩家名称（传感器）</li>
+      <li>世界内玩家数量（传感器）</li>
+      <li>状态可见性（传感器）</li>
+      <li>世界实例 ID（传感器）</li>
     </ul>
   </td>
 </tr>
 <tr>
   <td>
-    <b>SteamVR Features</b>
+    <b>SteamVR 功能</b>
     <ul>
-      <li>VR Headset Model (Sensor)</li>
-      <li>SteamVR Running (Sensor)</li>
+      <li>VR 头显型号（传感器）</li>
+      <li>SteamVR 是否运行中（传感器）</li>
       <li>
-        Controller & Tracker
+        控制器和追踪器
         <ul>
-          <li>Power (Switch) (Only Powering Off)</li>
-          <li>Charging State (Sensor)</li>
-          <li>Battery Level (Sensor)</li>
-          <li>Device Roles (Sensor)</li>
+          <li>电源（开关，仅支持关闭）</li>
+          <li>充电状态（传感器）</li>
+          <li>电池电量（传感器）</li>
+          <li>设备角色（传感器）</li>
         </ul>
       </li>
     </ul>
     <br />
   </td>
   <td colspan="2">
-    <b>Bigscreen Beyond Features</b>
+    <b>Bigscreen Beyond 功能</b>
     <ul>
-      <li>Fan Speed (Number)</li>
-      <li>RGB LED (Light)</li>
-      <li>Brightness (Number)</li>
+      <li>风扇转速（数字）</li>
+      <li>RGB 灯效（灯光）</li>
+      <li>亮度（数字）</li>
     </ul>
   </td>
 </tr>
 </table>
 
-## 翻译和本地化
+## 翻译和本地化翻译与本地化
 
-OyasumiVR目前支持以下语言：
+OyasumiVR目前支持以下语言：OyasumiVR 目前支持以下语言：
 
 - 日本語 (Japanese): Community contributions by [なき](https://twitter.com/NoYu_idea) and [Milix-M](https://github.com/Milix-M).
 - 한국어 (Korean): Community contribution by [Soumt](https://github.com/soumt-r).
@@ -547,11 +549,15 @@ OyasumiVR目前支持以下语言：
 - Nederlands (Dutch): by [Raphiiko](https://linktr.ee/raphii).
 - English: by [Raphiiko](https://linktr.ee/raphii).
 
-### 帮助翻译
+### 帮助翻译协助翻译
 
 如果没有我们出色的社区的帮助，OyasumiVR不可能支持如此多的语言。我（作者）个人认为，由于他们的努力，更多的人开始使用OyasumiVR，这真是太棒了。
 
-如果你想帮忙翻译这个项目，无论是贡献缺失的翻译，还是添加全新的语言，请查看[Adding Translation页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，了解如何开始翻译！如果你需要更多的信息，请随时加入我们的[Discord](https://discord.gg/7MqdPJhYxC)进行提问！
+如果你想帮忙翻译这个项目，无论是贡献缺失的翻译，还是添加全新的语言，请查看[Adding Translation页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations)，了解如何开始翻译！如果你需要更多的信息，请随时加入我们的[Discord](https://discord.gg/7MqdPJhYxC)进行提问！若没有出色的志愿者们协助翻译，OyasumiVR 无法支持如此多的语言。
+我个人非常感谢他们的努力，也觉得十分惊艳——因为他们的贡献，让更多用户能够使用 OyasumiVR。
+
+如果你希望为我们提供支持，无论是补充缺失的翻译，还是添加全新的语言，请参阅 [添加翻译的 Wiki 页面](https://github.com/Raphiiko/Oyasumi/wiki/Adding-Translations) 获取开始的指导！
+如果你想了解更多信息，也欢迎加入我们的 [Discord 社区](https://discord.gg/7MqdPJhYxC) 进行提问！
 
 ## 支持的硬件相关功能
 
@@ -578,25 +584,30 @@ OyasumiVR针对显卡的功耗限制功能只支持NVIDIA显卡。AMD用户必�
 
 头显亮度控制功能目前只支持 Valve Index 和 Bigscreen Beyond。
 
-### Color Temperature Automations
+### 色温自动化
 
-Controlling the color temperature of the VR headset's display is currently only supported on some native SteamVR headsets, such as the Valve Index, Bigscreen Beyond, and HTC Vive (Pro).
-It might work on other headsets, but your mileage may vary.
+控制 VR 头显屏幕的色温功能，目前仅支持部分原生 SteamVR 头显，例如 Valve Index、Bigscreen Beyond 以及 HTC Vive（Pro）。
+在其他头显上可能也能使用，但效果无法保证。
 
-## 使用的技术和工具
+## 使用的技术和工具构建技术
 
 OyasumiVR的使用技术与工具包括：
 
 - [Angular](https://angular.io/) (TypeScript, 界面主要组成部分)
 - [Tauri](https://tauri.app/) (Rust, 桌面框架)
 - [SvelteKit](https://kit.svelte.dev/) (TypeScript, 叠加层界面)
-- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)
+- [.NET](https://dotnet.microsoft.com/en-us/) (C#, 叠加层界面)OyasumiVR 使用了以下技术构建：
 
-## 开发
+- [Angular](https://angular.io/)（TypeScript，用于主界面）
+- [Tauri](https://tauri.app/)（Rust，桌面框架）
+- [SvelteKit](https://kit.svelte.dev/)（TypeScript，用于叠加界面）
+- [.NET](https://dotnet.microsoft.com/en-us/)（C#，用于叠加界面）
 
-请查看wiki页面 [Start Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)了解更多信息。
+## 开发开发相关
 
-## VRChat
+请查看wiki页面 [Start Development](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)了解更多信息。请参阅我们的 Wiki 页面：[开始开发](https://github.com/Raphiiko/OyasumiVR/wiki/Starting-Development)。
+
+## VRChatVRChat
 
 OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。（例如状态自动化）
 
@@ -605,25 +616,41 @@ OyasumiVR的某些功能需要你使用你的VRChat账户登录才能工作。�
 
 OyasumiVR并未得到VRChat的认可，也不反映VRChat官方或任何参与制作或管理VRChat的人的观点或意见。VRChat是VRChat inc的商标。VRChat © VRChat Inc。
 
-OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。
+OyasumiVR的开发者和此项目的所有贡献者对OyasumiVR造成的任何问题（无论是对你的VRChat账户还是其他）不承担任何责任。使用风险自负。OyasumiVR 的某些功能需要你登录 VRChat 账户才能使用（例如状态自动化功能）。
+仅当使用相关功能时才需要登录。
+不依赖该功能的部分，你可以在不提供账户信息的情况下照常使用。
 
-## Aptabase
+你的登录凭据只会保存在你的本地设备中，且仅用于向 VRChat 的服务器进行身份验证。
+
+OyasumiVR 并未获得 VRChat 官方认可，也不代表 VRChat 或其官方人员的观点或立场。
+VRChat 是 VRChat Inc. 的注册商标，VRChat © VRChat Inc.
+
+OyasumiVR 的开发者及所有贡献者对使用 OyasumiVR 导致的任何问题（包括对 VRChat 账户的影响）不承担任何责任。
+使用需自担风险。
+
+## Aptabase 遥测
 
 <img align="right" src="https://github.com/Raphiiko/OyasumiVR/assets/111654848/dfdab6c8-c952-4e0d-be12-017d14262a49" width="180">
 
-OyasumiVR's telemetry is provided by [Aptabase](https://aptabase.com), which provides open source, privacy first and simple analytics for mobile and desktop apps. Aptabase was picked because it aids OyasumiVR's development by providing crash reports and anonymous usage statistics, while still respecting your privacy as best as possible.
+OyasumiVR 的遥测由 [Aptabase](https://aptabase.com) 提供。它是一种开源、隐私优先且简洁的移动与桌面应用分析工具。
+我们选择 Aptabase，是因为它可以提供崩溃报告和匿名使用数据，从而帮助改进 OyasumiVR，同时最大程度尊重你的隐私。
 
-The telemetry is completely anonymous and sends no personally identifiable information. Its only purpose is to provide the aformentioned crash reporting, and basic anonymous usage statistics such as application starts and language preferences. This data is only used for finding and fixing bugs, and other general improvements to OyasumiVR.
+遥测信息完全匿名，不会发送任何可识别身份的信息。
+其唯一用途是报告崩溃问题，以及收集应用启动和语言偏好等基础匿名数据。
+这些信息只用于排查 bug 和改善 OyasumiVR 的整体质量。
 
-You are able to opt out of telemetry within OyasumiVR's general settings. For more (technical) information, please check out the (very short!) [Aptabase Privacy Policy](https://aptabase.com/legal/privacy).
+你可以在 OyasumiVR 的通用设置中选择关闭遥测功能。
+如需更多（技术性）信息，请查看（非常简洁的）[Aptabase 隐私政策](https://aptabase.com/legal/privacy)。
 
-## 支持
+## 支持支持
 
 如果你在使用OyasumiVR时遇到问题，比如遇到了bug，或者想要一个新的功能，你可以加入我们的[Discord服务器](https://discord.gg/7MqdPJhYxC)直接反馈。
 
-或者，你可以直接在[Twitter上联系我 （@Raphiiko）](https://twitter.com/Raphiiko)。我会尽快回复你！
+或者，你可以直接在[Twitter上联系我 （@Raphiiko）](https://twitter.com/Raphiiko)。我会尽快回复你！如果你在使用 OyasumiVR 时遇到问题，比如出现 bug 或有功能建议，欢迎加入我们的 [Discord 服务器](https://discord.gg/7MqdPJhYxC)。
 
-## 许可证
+你也可以直接通过 [Twitter @Raphiiko](https://twitter.com/Raphiiko) 联系我，我会尽快回复！
 
-OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。
+## 许可证许可协议
+
+OyasumiVR在[MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md)许可证下发布。你可以在许可证许可范围内自由使用、修改和分发它。OyasumiVR 遵循 [MIT](https://github.com/Raphiiko/OyasumiVR/blob/develop/LICENSE.md) 协议开放源代码。
 

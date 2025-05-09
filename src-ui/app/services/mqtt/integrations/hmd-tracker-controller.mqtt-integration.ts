@@ -23,7 +23,7 @@ const ROLE_SUFFIX = 'role';
 @Injectable({
   providedIn: 'root',
 })
-export class TrackerControllerMqttIntegrationService {
+export class HmdTrackerControllerMqttIntegrationService {
   private deviceRemoved = new Subject<OVRDevice>();
 
   constructor(
@@ -37,7 +37,9 @@ export class TrackerControllerMqttIntegrationService {
       .pipe(
         startWith([] as OVRDevice[]),
         map((devices) =>
-          devices.filter((d) => d.class === 'GenericTracker' || d.class === 'Controller')
+          devices.filter(
+            (d) => d.class === 'GenericTracker' || d.class === 'Controller' || d.class === 'HMD'
+          )
         ),
         throttleTime(1000, asyncScheduler, { leading: true, trailing: true }),
         pairwise(),
@@ -82,6 +84,9 @@ export class TrackerControllerMqttIntegrationService {
       case 'GenericTracker':
         name = `Tracker`;
         break;
+      case 'HMD':
+        name = 'Headset';
+        break;
       default:
         return;
     }
@@ -93,15 +98,17 @@ export class TrackerControllerMqttIntegrationService {
     };
 
     const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
-    await this.mqtt.initProperty({
-      type: 'SENSOR',
-      id: roleId,
-      topicPath: `device/${roleId}`,
-      displayName: 'Role',
-      device: deviceDesc,
-      available: !!device.handleType,
-      value: device.handleType ?? 'null',
-    });
+    if (device.class !== 'HMD') {
+      await this.mqtt.initProperty({
+        type: 'SENSOR',
+        id: roleId,
+        topicPath: `device/${roleId}`,
+        displayName: 'Role',
+        device: deviceDesc,
+        available: !!device.handleType,
+        value: device.handleType ?? 'null',
+      });
+    }
 
     const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
     await this.mqtt.initProperty({
@@ -109,7 +116,7 @@ export class TrackerControllerMqttIntegrationService {
       id: chargingId,
       topicPath: `device/${chargingId}`,
       displayName: 'Charging',
-      available: device.canPowerOff,
+      available: device.providesBatteryStatus,
       device: deviceDesc,
       value: device.isCharging ? 'on' : 'off',
     });
@@ -120,7 +127,7 @@ export class TrackerControllerMqttIntegrationService {
       id: batteryId,
       topicPath: `device/${batteryId}`,
       displayName: 'Battery Level',
-      available: device.canPowerOff,
+      available: device.providesBatteryStatus,
       device: deviceDesc,
       unitOfMeasurement: '%',
       value: device.providesBatteryStatus ? `${device.battery * 100}` : 'null',
@@ -169,8 +176,8 @@ export class TrackerControllerMqttIntegrationService {
     const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
 
     await this.mqtt.setPropertyAvailability(id, device.canPowerOff && !device.isTurningOff);
-    await this.mqtt.setPropertyAvailability(batteryId, device.canPowerOff);
-    await this.mqtt.setPropertyAvailability(chargingId, device.canPowerOff);
+    await this.mqtt.setPropertyAvailability(batteryId, device.providesBatteryStatus);
+    await this.mqtt.setPropertyAvailability(chargingId, device.providesBatteryStatus);
     await this.mqtt.setPropertyAvailability(roleId, !!device.handleType);
 
     await this.mqtt.setTogglePropertyValue(id, device.canPowerOff);

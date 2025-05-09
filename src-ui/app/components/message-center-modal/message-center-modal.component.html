@@ -1,0 +1,44 @@
+<div @fade class="mc-container">
+  <div
+    class="mc-items"
+    (scroll)="onScroll($event)"
+    (click)="$event.target === $event.currentTarget && close()"
+  >
+    @for (item of messages | async; track item.id) {
+    <app-message-center-item [message]="item" @vshrink></app-message-center-item>
+    }
+  </div>
+  <div *ngIf="((messages | async)?.length ?? 0) === 0" class="mc-items-none" @fade>
+    <img src="/assets/img/illustration_sleep.png" />
+    <span translate>No messages</span>
+    <span translate>Everything is ok!</span>
+  </div>
+  <div class="mc-header" (click)="$event.target === $event.currentTarget && close()">
+    <div class="mc-header-bar" [class.scrolled]="scrolled()">
+      <span class="mc-header-title" translate>message-center.title</span>
+      <div class="mc-header-actions">
+        <button class="mc-header-toggle" (click)="toggleHidden()">
+          <i class="material-symbols-outlined" [style.opacity]="hiddenShown() ? 1.0 : 0.25"
+            >check</i
+          >
+          <span translate>message-center.actions.showHidden</span>
+          <ng-container
+            *ngIf="{
+              hiddenMessageCount: (messageCenter.hiddenMessages | async)?.length ?? 0
+            } as data"
+          >
+            <span
+              class="mc-hidden-count-indicator"
+              [style.opacity]="data.hiddenMessageCount > 0 ? 1.0 : 0.0"
+              >{{ data.hiddenMessageCount }}</span
+            >
+          </ng-container>
+        </button>
+        <button class="mc-header-close" (click)="close()">
+          <i class="material-symbols-outlined">clear</i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <app-progressive-scroll-blur [bottomSize]="10" [topSize]="12"></app-progressive-scroll-blur>
+</div>

@@ -71,16 +71,14 @@ export class MsiAfterburnerPaneComponent implements OnInit {
     const statusToAlertType: {
       [s: string]: 'INFO' | 'SUCCESS' | 'ERROR';
     } = { CHECKING: 'INFO', SUCCESS: 'SUCCESS' };
-    this.msiAfterburnerPathAlert = [
+    this.msiAfterburnerPathAlert = ([
       'NOT_FOUND',
       'INVALID_EXECUTABLE',
       'INVALID_SIGNATURE',
-      'PERMISSION_DENIED',
-      'INVALID_FILENAME',
       'UNKNOWN_ERROR',
       'CHECKING',
       'SUCCESS',
-    ].includes(status)
+    ] as ExecutableReferenceStatus[]).includes(status)
       ? {
           type: statusToAlertType[status] || 'ERROR',
           text: 'gpu-automations.msiAfterburner.executable.status.' + status,

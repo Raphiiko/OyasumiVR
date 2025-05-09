@@ -118,10 +118,6 @@
         <i class="material-icons-round">settings</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.subMenu</div>
-      <!-- TODO: SET SETTING ERROR ICON ON SPECIFIC SUB MENU ITEM-->
-      <div class="menu-item-icon-suffix" @fade *ngIf="settingErrors | async">
-        <i class="material-icons-round">error_outline</i>
-      </div>
       <div class="menu-item-icon-suffix update" @fade *ngIf="updateAvailable | async">
         <i class="material-icons-round">notification_important</i>
       </div>
@@ -216,9 +212,6 @@
         <i class="material-icons-round">energy_savings_leaf</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.gpuAutomations</div>
-      <div class="menu-item-icon-suffix" @fade *ngIf="gpuAutomationsErrors | async">
-        <i class="material-icons-round">error_outline</i>
-      </div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'brightnessAutomations'">
@@ -300,9 +293,6 @@
         <i class="material-icons-round">settings</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.settings.general</div>
-      <div class="menu-item-icon-suffix" @fade *ngIf="lighthouseConsoleErrors | async">
-        <i class="material-icons-round">error_outline</i>
-      </div>
     </div>
 
     <div

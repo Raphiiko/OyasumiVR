@@ -9,12 +9,16 @@ use log::error;
 #[oyasumivr_macros::command_profiling]
 pub async fn nvml_status() -> NvmlStatus {
     let mut client_guard = SIDECAR_GRPC_CLIENT.lock().await;
-    let client = client_guard.as_mut().unwrap();
+    let client = client_guard.as_mut();
+    if client.is_none() {
+        return NvmlStatus::SidecarUnavailable;
+    }
+    let client = client.unwrap();
     let response = match client.get_nvml_status(tonic::Request::new(Empty {})).await {
         Ok(response) => response.into_inner(),
         Err(e) => {
             error!("[Core] Could not get the current NVML status: {}", e);
-            return NvmlStatus::UnknownError;
+            return NvmlStatus::SidecarUnavailable;
         }
     };
     return NvmlStatus::try_from(response.status).unwrap();

@@ -17,12 +17,14 @@ import {
   ConfirmModalOutputModel,
 } from '../../../../../../components/confirm-modal/confirm-modal.component';
 import { ModalService } from '../../../../../../services/modal.service';
+import { vshrink } from 'src-ui/app/utils/animations';
 
 @Component({
   selector: 'app-status-automations-general-tab',
   templateUrl: './status-automations-general-tab.component.html',
   styleUrls: ['./status-automations-general-tab.component.scss'],
   standalone: false,
+  animations: [vshrink()]
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
   UserStatus = UserStatus;

@@ -118,7 +118,7 @@
       },
       "onlyBelowPlayerCount": {
         "description": "これにはあなた自身も含まれます",
-        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人以下の場合にのみ"
+        "title": "ワールド内のプレイヤーが<strong>{count}</strong>人未満の場合にのみ"
       },
       "onlyIfSleepModeEnabled": {
         "title": "睡眠モード有効時のみ"
@@ -695,7 +695,7 @@
         "statusChangedOnPlayerCountChange": {
           "reason": {
             "AT_LIMIT_OR_ABOVE": "ワールド人数が{threshold}人に達した",
-            "BELOW_LIMIT": "ワールド人数が{threshold}人以下になった"
+            "BELOW_LIMIT": "ワールド人数が{threshold}人未満になった"
           },
           "title": "VRChatステータスを{oldStatus}から{newStatus}に変更"
         },
@@ -1241,14 +1241,17 @@
     },
     "title": "Join通知"
   },
+  "message-center": {
+    "messages": {
+      "manyLighthousesDetected": {
+        "message": "ベースステーションの数が多いようです！\n\nほとんどのBluetoothアダプターは、ヘッドフォンや他の周辺機器などのBluetoothデバイスを含め、同時に7つの接続しか処理できません。\n\n多くのベースステーションを接続している、または他のBluetoothデバイスを接続している場合、OyasumiVRがすべてのベースステーションを正しく制御できない可能性があります。"
+      }
+    }
+  },
   "misc": {
     "GOGO_LOCO_LEGACY_PRESET_WARNING": "このプリセットは応急対応のため、複数の問題を抱えています。新しいGoGo Locoプリセットを使用できない場合にのみ、このプリセットを使用してください。また、まだ古いバージョンのGoGo Locoを使用している場合は、最新のGoGo Locoを使用し、更新することをお勧めします。",
     "GORONE_LEGACY_PRESET_WARNING": "このプリセットのv4.0以降ではすでに回転機能が含まれており、この機能と互換性がありません。古いバージョンを使用している場合に限りこのプリセットを使用してください。",
     "oneTimeFlagDialogs": {
-      "BASESTATION_COUNT_WARNING_DIALOG": {
-        "message": "ベースステーションの数が多いようです！\n\nほとんどのBluetoothアダプターは、ヘッドフォンや他の周辺機器などのBluetoothデバイスを含め、同時に7つの接続しか処理できません。\n\n多くのベースステーションを接続している、または他のBluetoothデバイスを接続している場合、OyasumiVRがすべてのベースステーションを正しく制御できない可能性があります。",
-        "title": "警告"
-      },
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "ディスプレイの色温度制御は、一部のHMD（例: Valve Index, Bigscreen Beyond, HTC Vive Pro）でのみ利用可能です。\n\nこれらのHMDを使用していない場合は効果がありません。\n\n必要ない場合は、設定からディスプレイの色温度制御を無効にできます。",
         "title": "アナウンス"

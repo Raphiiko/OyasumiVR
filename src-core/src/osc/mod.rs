@@ -42,15 +42,21 @@ pub async fn init() {
 async fn spawn_oscquery_client_task() {
     tokio::spawn(async {
         loop {
-            tokio::time::sleep(tokio::time::Duration::from_secs(2)).await;
-            if let Some((host, port)) = oyasumivr_oscquery::client::get_vrchat_osc_address().await {
-                set_vr_chat_osc_address(host, port).await;
+            tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+            let mut oscquery_addr = oyasumivr_oscquery::client::get_vrchat_oscquery_address().await;
+            if let Some((host, port)) = oscquery_addr.clone() {
+                let response = reqwest::get(format!("http://{}:{}/?HOST_INFO", host, port)).await;
+                if response.is_err() || response.as_ref().unwrap().status() != 200 {
+                    oscquery_addr = None;
+                }
             }
-            if let Some((host, port)) =
-                oyasumivr_oscquery::client::get_vrchat_oscquery_address().await
-            {
-                set_vr_chat_osc_query_address(host, port).await;
-            }
+            let osc_addr = if oscquery_addr.is_some() {
+                oyasumivr_oscquery::client::get_vrchat_osc_address().await
+            } else {
+                None
+            };
+            set_vr_chat_osc_query_address(oscquery_addr).await;
+            set_vr_chat_osc_address(osc_addr).await;
         }
     });
 }
@@ -141,27 +147,28 @@ async fn spawn_receiver_task() -> CancellationToken {
     cancellation_token
 }
 
-pub async fn set_vr_chat_osc_query_address(host: String, port: u16) {
-    let address = format!("{}:{}", host, port);
+pub async fn set_vr_chat_osc_query_address(addr: Option<(String, u16)>) {
+    let address = addr.map(|(host, port)| format!("{}:{}", host, port));
     let current_address = VRC_OSCQUERY_ADDRESS.lock().await.clone();
-    if current_address.is_some() && current_address.as_ref().unwrap() == &address {
-        return;
+
+    if current_address != address {
+        if let Some(ref addr) = address.clone() {
+            info!("[Core] Found VRChat OSCQuery address on {}", addr);
+        }
+        *VRC_OSCQUERY_ADDRESS.lock().await = address.clone();
+        send_event("VRC_OSCQUERY_ADDRESS_CHANGED", address.clone()).await;
     }
-    info!(
-        "[Core] Found VRChat OSCQuery address on {}",
-        address.clone()
-    );
-    *VRC_OSCQUERY_ADDRESS.lock().await = Some(address.clone());
-    send_event("VRC_OSCQUERY_ADDRESS_CHANGED", address).await;
 }
 
-pub async fn set_vr_chat_osc_address(host: String, port: u16) {
-    let address = format!("{}:{}", host, port);
+pub async fn set_vr_chat_osc_address(addr: Option<(String, u16)>) {
+    let address = addr.map(|(host, port)| format!("{}:{}", host, port));
     let current_address = VRC_OSC_ADDRESS.lock().await.clone();
-    if current_address.is_some() && current_address.as_ref().unwrap() == &address {
-        return;
+
+    if current_address != address {
+        if let Some(ref addr) = address {
+            info!("[Core] Found VRChat OSC address on {}", addr);
+        }
+        *VRC_OSC_ADDRESS.lock().await = address.clone();
+        send_event("VRC_OSC_ADDRESS_CHANGED", address).await;
     }
-    info!("[Core] Found VRChat OSC address on {}", address.clone());
-    *VRC_OSC_ADDRESS.lock().await = Some(address.clone());
-    send_event("VRC_OSC_ADDRESS_CHANGED", address).await;
 }

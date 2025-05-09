@@ -40,9 +40,11 @@ use tauri_plugin_cli::CliExt;
 use tauri_plugin_log::RotationStrategy;
 use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
-fn main() {
-    // Construct Oyasumi Tauri application
+#[tokio::main]
+async fn main() {
+    // Construct OyasumiVR Tauri application
     tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init())
         .plugin(configure_tauri_plugin_single_instance())
         .plugin(tauri_plugin_deep_link::init())
         .plugin(configure_tauri_plugin_log())
@@ -61,10 +63,10 @@ fn main() {
         .plugin(configure_tauri_plugin_aptabase())
         .setup(|app| {
             let matches = app.cli().matches().unwrap();
-            tauri::async_runtime::block_on(async {
+            futures::executor::block_on(async {
                 *globals::TAURI_CLI_MATCHES.lock().await = Some(matches);
             });
-            match tauri::async_runtime::block_on(tauri::async_runtime::spawn(app_setup(
+            match futures::executor::block_on(tauri::async_runtime::spawn(app_setup(
                 app.handle().clone(),
             ))) {
                 Ok(_) => {}
@@ -127,7 +129,8 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    let mut builder = tauri_plugin_log::Builder::default()
+    let mut builder = tauri_plugin_log::Builder::new()
+        .clear_targets()
         .format(move |out, message, record| {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -142,20 +145,21 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         })
         .rotation_strategy(RotationStrategy::KeepAll);
 
-    // #[cfg(debug_assertions)]
-    // {
     builder = builder
         .level(LevelFilter::Info)
-        .target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::Webview,
-        ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::LogDir { file_name: None },
         ));
-    // }
+
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Webview,
+        ));
+    }
 
     builder.build()
 }
@@ -287,7 +291,7 @@ async fn load_configs() {
 }
 
 fn on_cron_minute_start(_: &str) {
-    tauri::async_runtime::block_on(utils::send_event("CRON_MINUTE_START", ()));
+    futures::executor::block_on(utils::send_event("CRON_MINUTE_START", ()));
 }
 
 fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {

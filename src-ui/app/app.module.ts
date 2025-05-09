@@ -234,6 +234,10 @@ import { EventLogFilterDialogComponent } from './components/event-log/event-log-
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { UpdateService } from './services/update.service';
 import { UpdateModalComponent } from './components/update-modal/update-modal.component';
+import { MessageCenterService } from './services/message-center/message-center.service';
+import { MessageCenterModalComponent } from './components/message-center-modal/message-center-modal.component';
+import { MessageCenterItemComponent } from './components/message-center-modal/message-center-item/message-center-item.component';
+import { ProgressiveScrollBlurComponent } from './components/progressive-scroll-blur/progressive-scroll-blur.component';
 
 [
   localeEN,
@@ -379,6 +383,9 @@ export function createTranslateLoader(http: HttpClient) {
     BrightnessAdvancedModeToggleComponent,
     LighthouseV1IdWizardModalComponent,
     EventLogFilterDialogComponent,
+    MessageCenterModalComponent,
+    MessageCenterItemComponent,
+    ProgressiveScrollBlurComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -448,6 +455,7 @@ export class AppModule {
     private mqttIntegrationService: MqttIntegrationService,
     private avatarContextService: AvatarContextService,
     private updateService: UpdateService,
+    private messageCenterService: MessageCenterService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -588,6 +596,7 @@ export class AppModule {
             this.logInit('WindowsService initialization', this.windowsService.init()),
             this.logInit('HotkeyService initialization', this.hotkeyService.init()),
             this.logInit('HotkeyHandlerService initialization', this.hotkeyHandlerService.init()),
+            this.logInit('MessageCenterService initialization', this.messageCenterService.init()),
             this.logInit(
               'MqttService initialization',
               this.mqttService
@@ -819,7 +828,7 @@ export class AppModule {
           }
         )
       ) {
-        await open('https://discord.gg/7MqdPJhYxC');
+        await open('https://discord.gg/7MqdPJhYxC', '_blank');
       }
       await exit(1);
       throw e;
