@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { VRChatService } from '../../vrchat.service';
 import { MessageMonitor } from './message-monitor';
 import { OscService } from '../../osc.service';
-import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge, tap } from 'rxjs';
+import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge } from 'rxjs';
 import { openUrl } from '@tauri-apps/plugin-opener';
 
 export class VRChatOSCMessageMonitor extends MessageMonitor {

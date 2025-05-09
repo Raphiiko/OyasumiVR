@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { invoke } from '@tauri-apps/api/core';
 import { listen } from '@tauri-apps/api/event';
 import {
-  asyncScheduler,
   BehaviorSubject,
   combineLatest,
   debounceTime,
@@ -17,7 +16,6 @@ import {
   of,
   shareReplay,
   take,
-  throttleTime,
 } from 'rxjs';
 import { LighthouseDevice, LighthouseDevicePowerState } from '../models/lighthouse-device';
 import { AppSettingsService } from './app-settings.service';
