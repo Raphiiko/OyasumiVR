@@ -37,6 +37,7 @@ jobs:
         with:
           toolchain: 1.85.0
           default: true
+          components: clippy
       - name: Install Protoc
         uses: arduino/setup-protoc@v2
         with:
