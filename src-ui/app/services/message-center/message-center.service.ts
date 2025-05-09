@@ -11,6 +11,7 @@ import { ManyLighthousesDetectedMessageMonitor } from './monitors/many-lighthous
 import { GpuAutomationMessageMonitor } from './monitors/gpu-automation-message-monitor';
 import { LighthouseConsoleMonitor } from './monitors/lighthouse-console-monitor';
 import { TString } from 'src-ui/app/models/translatable-string';
+import { VRChatOSCMessageMonitor } from './monitors/vrchat-osc-message-monitor';
 
 export interface MessageAction {
   label: string;
@@ -44,16 +45,14 @@ export class MessageCenterService {
     map(([messages, hiddenIds]) => messages.filter((message) => hiddenIds.includes(message.id)))
   );
 
-  constructor(
-    private appSettingsService: AppSettingsService,
-    private modalService: ModalService
-  ) {
+  constructor(private appSettingsService: AppSettingsService, private modalService: ModalService) {
     this.monitors = [
       new VRChatLogMessageMonitor(this),
       new SleepCalibrationMessageMonitor(this),
       new ManyLighthousesDetectedMessageMonitor(this),
       new GpuAutomationMessageMonitor(this),
       new LighthouseConsoleMonitor(this),
+      new VRChatOSCMessageMonitor(this),
     ];
   }
 

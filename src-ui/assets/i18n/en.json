@@ -1290,6 +1290,10 @@
         "message": "Although VRChat seems to be running, its log files could not be detected. Without these log files, certain OyasumiVR features like automatically accepting invite requests will not work.\n\nPlease make sure you've got logging enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat log files not found"
       },
+      "vrcOscMissing": {
+        "message": "Although VRChat seems to be running, its OSC and/or OSCQuery services could not be detected. Without these services, certain OyasumiVR features will not work.\n\nPlease make sure you've got OSC enabled within VRChat to ensure OyasumiVR can work properly.",
+        "title": "VRChat OSC(Query) services unavailable"
+      },
       "lighthouseConsoleError": {
         "title": "Lighthouse Console Unavailable",
         "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration."
