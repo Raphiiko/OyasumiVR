@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - VR Headset device & battery level to the device list
 - Sleep mode toggle and sleep preparation to system tray menu
 - Message center for automatically diagnosing common issues
+- Exposed headset battery level and charging indicator over MQTT
 
 ### Changed
 
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly.  
+- Battery and charging levels exposed over MQTT becoming unavailable randomly
 
 ## [1.14.7]
 
