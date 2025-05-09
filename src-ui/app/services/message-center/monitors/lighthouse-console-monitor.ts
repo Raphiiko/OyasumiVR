@@ -20,7 +20,6 @@ export class LighthouseConsoleMonitor extends MessageMonitor {
     this.lighthouseConsole.consoleStatus
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((status) => {
-        console.warn('lighthouseConsoleStatus', status);
         if (
           (
             [

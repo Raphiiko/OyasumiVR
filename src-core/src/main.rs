@@ -129,7 +129,8 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
 }
 
 fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
-    let mut builder = tauri_plugin_log::Builder::default()
+    let mut builder = tauri_plugin_log::Builder::new()
+        .clear_targets()
         .format(move |out, message, record| {
             let format = time::format_description::parse(
                 "[[[year]-[month]-[day]][[[hour]:[minute]:[second]]",
@@ -144,20 +145,21 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
         })
         .rotation_strategy(RotationStrategy::KeepAll);
 
-    // #[cfg(debug_assertions)]
-    // {
     builder = builder
         .level(LevelFilter::Info)
-        .target(tauri_plugin_log::Target::new(
-            tauri_plugin_log::TargetKind::Webview,
-        ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::Stdout,
         ))
         .target(tauri_plugin_log::Target::new(
             tauri_plugin_log::TargetKind::LogDir { file_name: None },
         ));
-    // }
+
+    #[cfg(debug_assertions)]
+    {
+        builder = builder.target(tauri_plugin_log::Target::new(
+            tauri_plugin_log::TargetKind::Webview,
+        ));
+    }
 
     builder.build()
 }
