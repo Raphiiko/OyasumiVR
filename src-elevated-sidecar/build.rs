@@ -20,6 +20,8 @@ fn main() {
             "SetMsiAfterburnerProfileError",
             "#[derive(serde::Serialize)]",
         )
+        // Add clippy allow for enum variant names to all generated files
+        .type_attribute(".", "#[allow(clippy::enum_variant_names)]")
         // Compile protobuf files
         .compile_protos(
             &[

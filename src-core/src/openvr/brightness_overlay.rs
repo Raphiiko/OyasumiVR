@@ -13,7 +13,7 @@ pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
     // Dispose of any existing overlay
     *OVERLAY_HANDLE.lock().await = None;
     // Create the overlay
-    let overlay_handle = match create_overlay(&context).await {
+    let overlay_handle = match create_overlay(context).await {
         Ok(handle) => handle,
         Err(_) => return Err("Failed to create overlay".to_string()),
     };
@@ -28,7 +28,7 @@ pub async fn on_ovr_quit() {
 
 pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gamma: Option<f64>) {
     // Clamp brightness between 0.0 and 1.0
-    let mut brightness = brightness.max(0.0).min(1.0);
+    let mut brightness = brightness.clamp(0.0, 1.0);
     // Adjust the brightness value for perceived brightness
     if let Some(gamma) = perceived_brightness_adjustment_gamma {
         brightness = adjust_for_perceived_brightness(brightness, gamma);

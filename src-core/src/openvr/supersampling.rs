@@ -12,7 +12,7 @@ pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
     let settings = &mut context.settings_mngr();
     let supersample_manual_override = settings.get_bool(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+        c"supersampleManualOverride",
     );
     let supersample_manual_override = match supersample_manual_override {
         Ok(supersample_manual_override) => supersample_manual_override,
@@ -25,7 +25,7 @@ pub async fn get_supersample_scale() -> Result<Option<f32>, String> {
     // Supersampling is set to custom
     let supersample_scale = settings.get_float(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
+        c"supersampleScale",
     );
     match supersample_scale {
         Ok(supersample_scale) => Ok(Some(supersample_scale)),
@@ -42,14 +42,14 @@ pub async fn set_supersample_scale(supersample_scale: Option<f32>) -> Result<(),
     let settings = &mut context.settings_mngr();
     let _ = settings.set_bool(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-        CStr::from_bytes_with_nul(b"supersampleManualOverride\0").unwrap(),
+        c"supersampleManualOverride",
         supersample_scale.is_some(),
     );
-    if supersample_scale.is_some() {
+    if let Some(scale) = supersample_scale {
         let _ = settings.set_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-            CStr::from_bytes_with_nul(b"supersampleScale\0").unwrap(),
-            supersample_scale.unwrap(),
+            c"supersampleScale",
+            scale,
         );
     }
     Ok(())

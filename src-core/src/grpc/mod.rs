@@ -36,7 +36,7 @@ pub async fn init_server() -> u16 {
         CoreMode::Release => 0,
     };
     let addr: SocketAddr = format!("127.0.0.1:{}", port).parse().unwrap();
-    info!("[Core] Starting gRPC server on {}", addr.to_string());
+    info!("[Core] Starting gRPC server on {}", addr);
     let listener = match tokio::net::TcpListener::bind(addr).await {
         Ok(listener) => listener,
         Err(e) => {

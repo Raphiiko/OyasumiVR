@@ -40,7 +40,7 @@ pub fn init() -> bool {
 }
 
 pub async fn nvml_status() -> NvmlStatus {
-    NVML_STATUS.lock().unwrap().clone()
+    *NVML_STATUS.lock().unwrap()
 }
 
 pub fn nvml_get_devices() -> Vec<NvmlDevice> {

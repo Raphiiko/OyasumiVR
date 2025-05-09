@@ -104,7 +104,7 @@ fn configure_tauri_plugin_aptabase() -> TauriPlugin<Wry> {
             let location = info
                 .location()
                 .map(|loc| format!("{}:{}:{}", loc.file(), loc.line(), loc.column()))
-                .unwrap_or_else(|| "".to_string());
+                .unwrap_or_default();
 
             // Upload crash report if telemetry is enabled
             if telemetry::TELEMETRY_ENABLED.load(Ordering::Relaxed) {

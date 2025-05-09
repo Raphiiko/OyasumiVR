@@ -67,8 +67,7 @@ fn get_latest_log_path() -> Option<String> {
             entry
                 .path()
                 .metadata()
-                .ok()
-                .and_then(|metadata| Some(metadata.len() > 0))
+                .ok().map(|metadata| metadata.len() > 0)
                 .unwrap_or(false)
         })
         // Find most recent log file
@@ -76,8 +75,7 @@ fn get_latest_log_path() -> Option<String> {
             entry
                 .path()
                 .metadata()
-                .ok()
-                .and_then(|m| Some(m.creation_time()))
+                .ok().map(|m| m.creation_time())
         })
         // Get the path for it
         .and_then(|entry| entry.path().to_str().map(String::from))
@@ -88,10 +86,7 @@ fn parse_datetime_from_line(line: String) -> Option<u64> {
     // In the case of a DST rollback, we pick the latest possible time
     // During this hour, the logs will still be parsed in order, but their timestamps will be out of order.
     let time = Local.from_local_datetime(&localtime).latest();
-    match time {
-        Some(v) => Some(v.timestamp_millis() as u64),
-        None => return None,
-    }
+    time.map(|v| v.timestamp_millis() as u64)
 }
 
 async fn process_log_line(line: String, initial_load: bool) {
@@ -116,7 +111,7 @@ async fn parse_on_player_joined(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnPlayerJoined"),
             data: display_name,
             initial_load,
@@ -151,7 +146,7 @@ async fn parse_on_player_left(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnPlayerLeft"),
             data: display_name,
             initial_load,
@@ -186,7 +181,7 @@ async fn parse_on_location_change(line: String, initial_load: bool) -> bool {
             None => return true,
         };
         let event = VRCLogEvent {
-            time: time,
+            time,
             event: String::from("OnLocationChange"),
             data: instance_id,
             initial_load,

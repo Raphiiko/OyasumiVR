@@ -87,47 +87,47 @@ async fn spawn_receiver_task() -> CancellationToken {
                                 None
                             }
                         };
-                        if let Some(packet) = result {
-                            if let OscPacket::Message(msg) = packet {
-                                vrchat::process_event(msg.clone()).await;
-                                // check if address is whitelisted
-                                let address_whitelist_guard =
-                                    OSC_RECEIVE_ADDRESS_WHITELIST.lock().await;
-                                if address_whitelist_guard.contains(&msg.addr) {
-                                    send_event(
-                                        "OSC_MESSAGE",
-                                        OSCMessage {
-                                            address: msg.addr,
-                                            values: msg
-                                                .args
-                                                .iter()
-                                                .map(|value| match value {
-                                                    OscType::Int(v) => OSCValue {
-                                                        kind: "int".into(),
-                                                        value: Some(v.to_string()),
-                                                    },
-                                                    OscType::Float(v) => OSCValue {
-                                                        kind: "float".into(),
-                                                        value: Some(v.to_string()),
-                                                    },
-                                                    OscType::String(v) => OSCValue {
-                                                        kind: "string".into(),
-                                                        value: Some(v.clone()),
-                                                    },
-                                                    OscType::Bool(v) => OSCValue {
-                                                        kind: "bool".into(),
-                                                        value: Some(v.to_string()),
-                                                    },
-                                                    _ => OSCValue {
-                                                        kind: "unsupported".into(),
-                                                        value: None,
-                                                    },
-                                                })
-                                                .collect(),
-                                        },
-                                    )
-                                    .await;
-                                }
+                        if let Some(OscPacket::Message(msg)) = result {
+                            vrchat::process_event(msg.clone()).await;
+                            // check if address is whitelisted
+                            let address_whitelist_guard =
+                                OSC_RECEIVE_ADDRESS_WHITELIST.lock().await;
+                            let address_whitelist = address_whitelist_guard.clone();
+                            drop(address_whitelist_guard);
+                            if address_whitelist.contains(&msg.addr) {
+                                send_event(
+                                    "OSC_MESSAGE",
+                                    OSCMessage {
+                                        address: msg.addr,
+                                        values: msg
+                                            .args
+                                            .iter()
+                                            .map(|value| match value {
+                                                OscType::Int(v) => OSCValue {
+                                                    kind: "int".into(),
+                                                    value: Some(v.to_string()),
+                                                },
+                                                OscType::Float(v) => OSCValue {
+                                                    kind: "float".into(),
+                                                    value: Some(v.to_string()),
+                                                },
+                                                OscType::String(v) => OSCValue {
+                                                    kind: "string".into(),
+                                                    value: Some(v.clone()),
+                                                },
+                                                OscType::Bool(v) => OSCValue {
+                                                    kind: "bool".into(),
+                                                    value: Some(v.to_string()),
+                                                },
+                                                _ => OSCValue {
+                                                    kind: "unsupported".into(),
+                                                    value: None,
+                                                },
+                                            })
+                                            .collect(),
+                                    },
+                                )
+                                .await;
                             }
                         }
                     }

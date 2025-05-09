@@ -14,10 +14,10 @@ const MDNS_SIDECAR_PATH: &str = "resources/oyasumivr-mdns-sidecar.exe";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub enum SupportedOscType {
-    INT,
-    FLOAT,
-    BOOLEAN,
-    STRING,
+    Int,
+    Float,
+    Boolean,
+    String,
 }
 
 lazy_static! {
@@ -48,14 +48,12 @@ pub async fn stop_osc_server() {
         token.cancel();
         *cancellation_token = None;
         // Terminate OSCQuery server
-        match oyasumivr_oscquery::server::deinit().await {
-            Err(err) => error!("[Core] Could not terminate OSCQuery server: {:#?}", err),
-            _ => {}
+        if let Err(err) = oyasumivr_oscquery::server::deinit().await {
+            error!("[Core] Could not terminate OSCQuery server: {:#?}", err)
         };
         // Terminate OSCQuery client
-        match oyasumivr_oscquery::client::deinit().await {
-            Err(err) => error!("[Core] Could not terminate OSCQuery client: {:#?}", err),
-            _ => {}
+        if let Err(err) = oyasumivr_oscquery::client::deinit().await {
+            error!("[Core] Could not terminate OSCQuery client: {:#?}", err)
         };
     }
     let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().await;
@@ -163,19 +161,19 @@ pub async fn osc_send_command(
 
     for (osc_type, value) in types.into_iter().zip(values.into_iter()) {
         let osc_value = match osc_type {
-            SupportedOscType::INT => value
+            SupportedOscType::Int => value
                 .parse::<i32>()
                 .map(OscType::Int)
                 .map_err(|_| String::from("INVALID_INT_VALUE"))?,
-            SupportedOscType::FLOAT => value
+            SupportedOscType::Float => value
                 .parse::<f32>()
                 .map(OscType::Float)
                 .map_err(|_| String::from("INVALID_FLOAT_VALUE"))?,
-            SupportedOscType::BOOLEAN => value
+            SupportedOscType::Boolean => value
                 .parse::<bool>()
                 .map(OscType::Bool)
                 .map_err(|_| String::from("INVALID_BOOL_VALUE"))?,
-            SupportedOscType::STRING => OscType::String(value),
+            SupportedOscType::String => OscType::String(value),
         };
         data.push(osc_value);
     }

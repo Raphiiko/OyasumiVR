@@ -58,10 +58,10 @@ impl AudioDeviceDto {
             id: value.id.clone(),
             name: value.name.clone(),
             device_type: value.device_type,
-            volume: value.volume.lock().await.clone(),
-            mute: value.mute.lock().await.clone(),
-            default: value.default.lock().await.clone(),
-            default_communications: value.default_communications.lock().await.clone(),
+            volume: *value.volume.lock().await,
+            mute: *value.mute.lock().await,
+            default: *value.default.lock().await,
+            default_communications: *value.default_communications.lock().await,
         }
     }
 }
@@ -104,9 +104,9 @@ impl From<EDataFlow> for AudioDeviceType {
     }
 }
 
-impl Into<EDataFlow> for AudioDeviceType {
-    fn into(self) -> EDataFlow {
-        match self {
+impl From<AudioDeviceType> for EDataFlow {
+    fn from(val: AudioDeviceType) -> Self {
+        match val {
             AudioDeviceType::Capture => eCapture,
             AudioDeviceType::Render => eRender,
         }
@@ -128,7 +128,8 @@ impl AudioDevice {
             // Reference endpoint volume and listen for volume notifications
             let endpoint_volume = mmdevice.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)?;
             let (on_notify_tx, on_notify_rx) = channel::<()>(10);
-            let notification_client = AudioDeviceVolumeNotificationClient::new(on_notify_tx);
+            let notification_client = AudioDeviceVolumeNotificationClient::new(on_notify_tx)?;
+            let notification_client: IAudioEndpointVolumeCallback = notification_client.into();
             endpoint_volume.RegisterControlChangeNotify(&notification_client)?;
             // Get endpoint specific info
             let endpoint = mmdevice
@@ -168,7 +169,7 @@ impl AudioDevice {
     fn process_notifications(&self, mut rx: Receiver<()>) {
         let state = self.state.clone();
         tokio::task::spawn(async move {
-            while let Some(_) = rx.recv().await {
+            while (rx.recv().await).is_some() {
                 _ = AudioDevice::fetch_state(state.clone()).await
             }
         });
@@ -203,11 +204,11 @@ impl AudioDevice {
     }
 
     pub async fn get_volume(&self) -> f32 {
-        self.state.volume.lock().await.clone()
+        *self.state.volume.lock().await
     }
 
     pub async fn get_mute(&self) -> bool {
-        self.state.mute.lock().await.clone()
+        *self.state.mute.lock().await
     }
 
     pub async fn update_state(&self) -> windows::core::Result<()> {
@@ -270,7 +271,7 @@ impl AudioDevice {
         unsafe {
             let endpoint_volume = state.endpoint_volume.lock().await;
             let value: bool = match endpoint_volume.0.GetMute() {
-                Ok(mute) => mute.clone().into(),
+                Ok(mute) => mute.into(),
                 Err(e) => return Err(e),
             };
             *state.mute.lock().await = value;
@@ -410,12 +411,11 @@ struct AudioDeviceVolumeNotificationClient {
 }
 
 impl AudioDeviceVolumeNotificationClient {
-    fn new(channel: Sender<()>) -> IAudioEndpointVolumeCallback {
-        let val = Self {
+    fn new(channel: Sender<()>) -> windows::core::Result<Self> {
+        Ok(Self {
             handle: Handle::current(),
             channel,
-        };
-        val.into()
+        })
     }
 }
 

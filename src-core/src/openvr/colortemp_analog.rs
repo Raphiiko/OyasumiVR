@@ -21,23 +21,23 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
     }
     // Color temperature to RGB conversion based on algorithm by Tanner Helland
     // https://tannerhelland.com/2012/09/18/convert-temperature-rgb-algorithm-code.html
-    let temperature = temperature.unwrap().max(1000).min(10000);
+    let temperature = temperature.unwrap().clamp(1000, 10000);
     let temperature = (temperature as f64) / 100.0;
     let red = if temperature <= 66.0 {
         255.0
     } else {
         let red = temperature - 60.0;
         let red = 329.698727446 * red.powf(-0.1332047592);
-        red.max(0.0).min(255.0)
+        red.clamp(0.0, 255.0)
     } / 255.0;
     let green = if temperature <= 66.0 {
         let green = temperature;
         let green = 99.4708025861 * green.ln() - 161.1195681661;
-        green.max(0.0).min(255.0)
+        green.clamp(0.0, 255.0)
     } else {
         let green = temperature - 60.0;
         let green = 288.1221695283 * green.powf(-0.0755148492);
-        green.max(0.0).min(255.0)
+        green.clamp(0.0, 255.0)
     } / 255.0;
     let blue = if temperature >= 66.0 {
         255.0
@@ -46,7 +46,7 @@ pub async fn set_color_temp(mut temperature: Option<u32>) -> Result<(f64, f64, f
     } else {
         let blue = temperature - 10.0;
         let blue = 138.5177312231 * blue.ln() - 305.0447927307;
-        blue.max(0.0).min(255.0)
+        blue.clamp(0.0, 255.0)
     } / 255.0;
     let settings = &mut context.settings_mngr();
     let _ = settings.set_float(

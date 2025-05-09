@@ -170,9 +170,7 @@ pub async fn set_windows_power_policy(guid: String) {
 #[oyasumivr_macros::command_profiling]
 pub async fn active_windows_power_policy() -> Option<WindowsPowerPolicy> {
     let guid = super::active_windows_power_policy();
-    if guid.is_none() {
-        return None;
-    }
+    guid?;
     let guid = guid.unwrap();
     let name = get_friendly_name_for_windows_power_policy(&guid);
     Some(WindowsPowerPolicy {

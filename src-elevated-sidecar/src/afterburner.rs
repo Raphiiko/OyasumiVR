@@ -83,16 +83,14 @@ fn verify_afterburner_signature(exe_path: String) -> Result<(), SetMsiAfterburne
         }
     };
     let issuer_and_subject = (issuer_name.as_str(), subject_name.as_str());
-    let allowed_issuers_and_subjects = vec![
-        (
+    let allowed_issuers_and_subjects = [(
             "GlobalSign Extended Validation CodeSigning CA - SHA256 - G3, GlobalSign nv-sa, BE",
             "MICRO-STAR INTERNATIONAL CO., LTD.",
         ),
         (
             "GlobalSign GCC R45 EV CodeSigning CA 2020, GlobalSign nv-sa, BE",
             "MICRO-STAR INTERNATIONAL CO., LTD.",
-        ),
-    ];
+        )];
     if !allowed_issuers_and_subjects.contains(&issuer_and_subject) {
         warn!("[Afterburner] Signature found for the executable at the path provided ({}) is not permitted (issuer_name:[{}], subject_name:[{}])", exe_path, issuer_name, subject_name);
         return Err(SetMsiAfterburnerProfileError::ExeSignatureDisallowedNoMatch);

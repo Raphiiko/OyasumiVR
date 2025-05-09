@@ -78,6 +78,7 @@ impl From<ovr_overlay::sys::ETrackedControllerRole> for TrackedControllerRole {
 }
 
 #[derive(Clone, Serialize, Deserialize, PartialEq)]
+#[allow(clippy::upper_case_acronyms)]
 pub enum TrackedDeviceClass {
     Invalid,
     HMD,

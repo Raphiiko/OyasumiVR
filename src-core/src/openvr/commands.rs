@@ -129,10 +129,8 @@ pub async fn openvr_reregister_manifest() -> Result<(), String> {
             } else {
                 match applications.remove_application_manifest(manifest_path) {
                     Ok(_) => {
-                        let install_for_flavours = vec![
-                            crate::flavour::BuildFlavour::Standalone,
-                            crate::flavour::BuildFlavour::Dev,
-                        ];
+                        let install_for_flavours = [crate::flavour::BuildFlavour::Standalone,
+                            crate::flavour::BuildFlavour::Dev];
                         let should_install_for_flavour =
                             install_for_flavours.contains(&crate::flavour::BUILD_FLAVOUR);
                         if should_install_for_flavour {
@@ -268,7 +266,7 @@ pub async fn openvr_get_binding_origins(
         .collect();
 
     // Get extra information about each binding
-    let binding_infos = match {
+    let result = {
         let result: Vec<ovr::sys::InputBindingInfo_t> = match input.get_action_binding_info(action)
         {
             Ok(result) => result,
@@ -278,7 +276,8 @@ pub async fn openvr_get_binding_origins(
             }
         };
         Some(result)
-    } {
+    };
+    let binding_infos = match result {
         Some(infos) => infos,
         None => return None,
     };

@@ -32,11 +32,6 @@ jobs:
         run: npm run set-flavour STANDALONE
       - name: Set build id
         run: npm run set-build-id
-#      - name: Setup LLVM
-#        uses: ZhongRuoyu/setup-llvm@v0
-#        with:
-#          llvm-version: 18
-#          github-token: ${{ github.token }}
       - name: Install Rust stable toolchain
         uses: actions-rs/toolchain@v1
         with:
@@ -53,6 +48,11 @@ jobs:
             src-shared-rust
             src-elevated-sidecar
             src-core
+      - name: Run Clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings
       - name: Get Changelog Entry
         id: changelog_reader
         uses: mindsers/changelog-reader-action@v2
@@ -72,7 +72,7 @@ jobs:
           releaseBody: ${{ steps.changelog_reader.outputs.changes }}
           releaseDraft: false
           includeUpdaterJson: true
-#          tauriScript: cargo-tauri
+      #          tauriScript: cargo-tauri
       - name: Update the update manifest
         uses: Raphiiko/actions-deploy-gist@main
         with:

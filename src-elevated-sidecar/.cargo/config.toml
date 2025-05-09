@@ -1,0 +1,2 @@
+[build]
+rustflags = ["-A", "clippy::enum_variant_names"]
