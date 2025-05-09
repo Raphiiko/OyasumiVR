@@ -42,20 +42,8 @@ jobs:
             src-elevated-sidecar
             src-core
       - name: Run Clippy (shared)
-        working-directory: ./src-shared-rust
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+        run: cd src-shared-rust && cargo clippy -- -D warnings
       - name: Run Clippy (elevated-sidecar)
-        working-directory: ./src-elevated-sidecar
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+        run: cd src-elevated-sidecar && cargo clippy -- -D warnings
       - name: Run Clippy (core)
-        working-directory: ./src-core
-        uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: -- -D warnings
+        run: cd src-core && cargo clippy -- -D warnings
