@@ -52,10 +52,8 @@ pub async fn stop_process(process_name: &str, kill: bool) {
     for process in processes {
         if kill {
             let _ = process.kill_with(Signal::Kill);
-        } else if process.kill_with(Signal::Term).is_none() {
-            if process.kill_with(Signal::Quit).is_none() {
-                let _ = process.kill_with(Signal::Kill);
-            }
+        } else if process.kill_with(Signal::Term).is_none() && process.kill_with(Signal::Quit).is_none() {
+            let _ = process.kill_with(Signal::Kill);
         }
     }
 }

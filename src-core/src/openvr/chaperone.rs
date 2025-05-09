@@ -12,7 +12,7 @@ pub async fn get_fade_distance() -> Result<f32, String> {
     let settings = &mut context.settings_mngr();
     let fade_distance = settings.get_float(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
-        CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
+        c"CollisionBoundsFadeDistance",
     );
     match fade_distance {
         Ok(fade_distance) => Ok(fade_distance),
@@ -29,7 +29,7 @@ pub async fn set_fade_distance(fade_distance: f32) -> Result<(), String> {
     let settings = &mut context.settings_mngr();
     let _ = settings.set_float(
         CStr::from_bytes_with_nul(ovr::sys::k_pch_CollisionBounds_Section).unwrap(),
-        CStr::from_bytes_with_nul(b"CollisionBoundsFadeDistance\0").unwrap(),
+        c"CollisionBoundsFadeDistance",
         fade_distance,
     );
     Ok(())

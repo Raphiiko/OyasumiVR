@@ -13,7 +13,7 @@ pub async fn on_ovr_init(context: &ovr::Context) -> Result<(), String> {
     // Dispose of any existing overlay
     *OVERLAY_HANDLE.lock().await = None;
     // Create the overlay
-    let overlay_handle = match create_overlay(&context).await {
+    let overlay_handle = match create_overlay(context).await {
         Ok(handle) => handle,
         Err(_) => return Err("Failed to create overlay".to_string()),
     };

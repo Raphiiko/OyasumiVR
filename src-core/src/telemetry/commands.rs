@@ -5,7 +5,7 @@ use log::info;
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
 pub async fn set_telemetry_enabled(app_handle: tauri::AppHandle, enable: bool) {
-    let initialized = { super::TELEMETRY_INITIALIZED.lock().await.clone() };
+    let initialized = { *super::TELEMETRY_INITIALIZED.lock().await };
     let is_enabled = super::TELEMETRY_ENABLED.load(Ordering::Relaxed);
     if !initialized || is_enabled != enable {
         if enable {

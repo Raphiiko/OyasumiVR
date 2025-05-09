@@ -37,10 +37,7 @@ pub async fn overlay_sidecar_get_grpc_web_port() -> Option<u32> {
     match manager {
         Some(manager) => {
             let grpc_web_port = manager.grpc_web_port.lock().await;
-            match grpc_web_port.as_ref() {
-                Some(grpc_web_port) => Some(*grpc_web_port),
-                None => None,
-            }
+            grpc_web_port.as_ref().map(|grpc_web_port| *grpc_web_port)
         }
         None => None,
     }
@@ -54,10 +51,7 @@ pub async fn overlay_sidecar_get_grpc_port() -> Option<u32> {
     match manager {
         Some(manager) => {
             let grpc_port = manager.grpc_port.lock().await;
-            match grpc_port.as_ref() {
-                Some(grpc_port) => Some(*grpc_port),
-                None => None,
-            }
+            grpc_port.as_ref().map(|grpc_port| *grpc_port)
         }
         None => None,
     }

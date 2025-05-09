@@ -93,7 +93,7 @@ async fn update_handle_type(handle_type: OVRHandleType) {
         None => return,
     };
 
-    let action_handle = match input.get_input_source_handle(&handle_type.as_action_handle()) {
+    let action_handle = match input.get_input_source_handle(handle_type.as_action_handle()) {
         Ok(handle) => handle,
         Err(err) => {
             error!(
@@ -151,8 +151,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     drop(device_class_cache);
 
     let handle_type: Option<OVRHandleType> = device_handle_cache
-        .get(&device_index.0)
-        .map(|it| it.clone());
+        .get(&device_index.0).cloned();
     drop(device_handle_cache);
     // Get device properties
     let battery: Option<f32> = system

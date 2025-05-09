@@ -70,10 +70,7 @@ impl OyasumiCore for OyasumiCoreServerImpl {
         _: Request<Empty>,
     ) -> Result<Response<HttpServerPort>, Status> {
         let port = crate::http::PORT.lock().await;
-        let port = match port.as_ref() {
-            Some(p) => p,
-            None => &0,
-        };
+        let port = port.as_ref().unwrap_or(&0);
         Ok(Response::new(HttpServerPort { port: *port }))
     }
 

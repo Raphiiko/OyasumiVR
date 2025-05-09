@@ -54,7 +54,7 @@ impl SidecarManager {
             sidecar_child: Arc::new(Mutex::new(None)),
             on_stop_tx,
             auto_restart,
-            args: Arc::new(Mutex::new(Vec::from(args))),
+            args: Arc::new(Mutex::new(args)),
         }
     }
 
@@ -65,10 +65,8 @@ impl SidecarManager {
             if !unique || !args_guard.contains(&arg) {
                 args_guard.push(arg);
             }
-        } else {
-            if let Some(index) = args_guard.iter().position(|x| *x == arg) {
-                args_guard.remove(index);
-            }
+        } else if let Some(index) = args_guard.iter().position(|x| *x == arg) {
+            args_guard.remove(index);
         }
     }
 
@@ -78,7 +76,7 @@ impl SidecarManager {
     }
 
     pub async fn start_or_restart(&mut self) {
-        let active = self.active.lock().await.clone();
+        let active = *self.active.lock().await;
         // Kill process if it is already active
         if active {
             info!(
@@ -200,7 +198,7 @@ impl SidecarManager {
             "[Core] Detected start of {} sidecar (pid={}, grpc_port={:?}, grpc_web_port={:?})",
             self.sidecar_id, pid, grpc_port, grpc_web_port
         );
-        return true;
+        true
     }
 
     fn watch_process(&mut self) {
@@ -212,7 +210,7 @@ impl SidecarManager {
             let mut pid = {
                 let self_guard = self_arc.lock().await;
                 let value = match self_guard.sidecar_pid.lock().await.as_ref() {
-                    Some(pid) => pid.clone(),
+                    Some(pid) => *pid,
                     None => {
                         error!("[Core] Tried watching non-existant sidecar process");
                         return;
@@ -228,10 +226,7 @@ impl SidecarManager {
                     // Check if the child process is no longer found
                     if s.process(Pid::from_u32(pid)).is_none() {
                         let current_sidecar_pid = {
-                            match self_guard.sidecar_pid.lock().await.as_ref() {
-                                Some(pid) => Some(*pid),
-                                None => None,
-                            }
+                            self_guard.sidecar_pid.lock().await.as_ref().map(|pid| *pid)
                         };
                         // Check if the sidecar pid is still the same.
                         // If it is, then we can assume the sidecar stopped.

@@ -48,15 +48,9 @@ pub async fn stop_osc_server() {
         token.cancel();
         *cancellation_token = None;
         // Terminate OSCQuery server
-        match oyasumivr_oscquery::server::deinit().await {
-            Err(err) => error!("[Core] Could not terminate OSCQuery server: {:#?}", err),
-            _ => {}
-        };
+        if let Err(err) = oyasumivr_oscquery::server::deinit().await { error!("[Core] Could not terminate OSCQuery server: {:#?}", err) };
         // Terminate OSCQuery client
-        match oyasumivr_oscquery::client::deinit().await {
-            Err(err) => error!("[Core] Could not terminate OSCQuery client: {:#?}", err),
-            _ => {}
-        };
+        if let Err(err) = oyasumivr_oscquery::client::deinit().await { error!("[Core] Could not terminate OSCQuery client: {:#?}", err) };
     }
     let mut receive_socket_guard = OSC_RECEIVE_SOCKET.lock().await;
     *receive_socket_guard = None;

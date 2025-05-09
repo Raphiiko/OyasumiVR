@@ -183,7 +183,7 @@ pub async fn get_device_power_state(
             }
         }
         LighthouseDeviceType::LighthouseV2 => {
-            if value.len() < 1 {
+            if value.is_empty() {
                 return Err(LighthouseError::InvalidCharacteristicValue);
             }
             (
@@ -204,10 +204,7 @@ pub async fn get_device_power_state(
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
-    let current_v1_timeout = match LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await.get(&device_id) {
-        Some(timeout) => Some(timeout.clone()),
-        None => None,
-    };
+    let current_v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await.get(&device_id).copied();
     // Set the new state and send an event if the state or timeout has changed
     if current_state != state || current_v1_timeout != v1_timeout {
         LIGHTHOUSE_DEVICE_POWER_STATES
@@ -501,14 +498,10 @@ async fn map_discovered_device_to_lighthouse_device(d: LighthouseDevice) -> Ligh
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
-    let v1_timeout = match LIGHTHOUSE_DEVICE_V1_TIMEOUTS
+    let v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS
         .lock()
         .await
-        .get(&d.bt_device.id().to_string())
-    {
-        Some(timeout) => Some(timeout.clone()),
-        None => None,
-    };
+        .get(&d.bt_device.id().to_string()).copied();
     let ld = LighthouseDeviceModel {
         id: d.id.to_string(),
         device_name: d.device_name,

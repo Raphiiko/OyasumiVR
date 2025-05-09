@@ -92,7 +92,8 @@ pub async fn clear_activity() -> bool {
         Some(client) => client,
         None => return false,
     };
-    let result = match timeout(Duration::from_secs(4), client.discord.clear_activity()).await {
+    
+    match timeout(Duration::from_secs(4), client.discord.clear_activity()).await {
         Ok(res) => {
             if let Err(err) = res {
                 drop(client_guard);
@@ -113,8 +114,7 @@ pub async fn clear_activity() -> bool {
             on_discord_stopped().await;
             false
         }
-    };
-    result
+    }
 }
 
 pub async fn update_activity(
@@ -147,7 +147,8 @@ pub async fn update_activity(
                 .to_owned(),
         })
         .start_timestamp(SystemTime::now());
-    let result = match timeout(Duration::from_secs(4), client.discord.update_activity(rp)).await {
+    
+    match timeout(Duration::from_secs(4), client.discord.update_activity(rp)).await {
         Ok(res) => {
             if let Err(err) = res {
                 drop(client_guard);
@@ -168,8 +169,7 @@ pub async fn update_activity(
             on_discord_stopped().await;
             false
         }
-    };
-    result
+    }
 }
 
 struct Client {

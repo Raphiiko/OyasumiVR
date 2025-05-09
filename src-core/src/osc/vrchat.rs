@@ -45,12 +45,9 @@ async fn process_voice_parameter(value: Option<f32>) {
 }
 
 pub async fn process_event(msg: rosc::OscMessage) {
-    match msg.addr.as_str() {
-        "/avatar/parameters/Voice" => {
-            let value = msg.args[0].clone();
-            process_voice_parameter(value.float()).await;
-        }
-        _ => {}
+    if msg.addr.as_str() == "/avatar/parameters/Voice" {
+        let value = msg.args[0].clone();
+        process_voice_parameter(value.float()).await;
     };
 }
 

@@ -58,10 +58,10 @@ impl AudioDeviceDto {
             id: value.id.clone(),
             name: value.name.clone(),
             device_type: value.device_type,
-            volume: value.volume.lock().await.clone(),
-            mute: value.mute.lock().await.clone(),
-            default: value.default.lock().await.clone(),
-            default_communications: value.default_communications.lock().await.clone(),
+            volume: *value.volume.lock().await,
+            mute: *value.mute.lock().await,
+            default: *value.default.lock().await,
+            default_communications: *value.default_communications.lock().await,
         }
     }
 }
@@ -104,9 +104,9 @@ impl From<EDataFlow> for AudioDeviceType {
     }
 }
 
-impl Into<EDataFlow> for AudioDeviceType {
-    fn into(self) -> EDataFlow {
-        match self {
+impl From<AudioDeviceType> for EDataFlow {
+    fn from(val: AudioDeviceType) -> Self {
+        match val {
             AudioDeviceType::Capture => eCapture,
             AudioDeviceType::Render => eRender,
         }
@@ -203,11 +203,11 @@ impl AudioDevice {
     }
 
     pub async fn get_volume(&self) -> f32 {
-        self.state.volume.lock().await.clone()
+        *self.state.volume.lock().await
     }
 
     pub async fn get_mute(&self) -> bool {
-        self.state.mute.lock().await.clone()
+        *self.state.mute.lock().await
     }
 
     pub async fn update_state(&self) -> windows::core::Result<()> {
@@ -270,7 +270,7 @@ impl AudioDevice {
         unsafe {
             let endpoint_volume = state.endpoint_volume.lock().await;
             let value: bool = match endpoint_volume.0.GetMute() {
-                Ok(mute) => mute.clone().into(),
+                Ok(mute) => mute.into(),
                 Err(e) => return Err(e),
             };
             *state.mute.lock().await = value;

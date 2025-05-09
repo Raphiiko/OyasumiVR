@@ -19,14 +19,14 @@ pub async fn get_analog_gain() -> Result<f32, String> {
         let mut settings = context.settings_mngr();
         let analog_gain = settings.get_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-            CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+            c"analogGain",
         );
-        return match analog_gain {
+        match analog_gain {
             Ok(analog_gain) => Ok(analog_gain),
             Err(_) => Err("ANALOG_GAIN_NOT_FOUND".to_string()),
-        };
+        }
     } else {
-        return Err("NO_HMD_FOUND".to_string());
+        Err("NO_HMD_FOUND".to_string())
     }
 }
 
@@ -44,7 +44,7 @@ pub async fn set_analog_gain(analog_gain: f32) -> Result<(), String> {
         let settings = &mut context.settings_mngr();
         let _ = settings.set_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
-            CStr::from_bytes_with_nul(b"analogGain\0").unwrap(),
+            c"analogGain",
             analog_gain,
         );
         Ok(())
