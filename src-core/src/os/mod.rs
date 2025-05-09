@@ -201,8 +201,7 @@ fn get_friendly_name_for_windows_power_policy(scheme_guid: &GUID) -> Option<Stri
         return None;
     }
 
-    let mut buffer: Vec<UCHAR> = Vec::with_capacity(buffer_size as usize);
-    buffer.resize(buffer_size as usize, 0);
+    let mut buffer: Vec<UCHAR> = vec![0; buffer_size as usize];
 
     // Second call to actually get the friendly name
     let result = unsafe {

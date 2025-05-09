@@ -28,7 +28,7 @@ pub async fn on_ovr_quit() {
 
 pub async fn set_brightness(brightness: f64, perceived_brightness_adjustment_gamma: Option<f64>) {
     // Clamp brightness between 0.0 and 1.0
-    let mut brightness = brightness.max(0.0).min(1.0);
+    let mut brightness = brightness.clamp(0.0, 1.0);
     // Adjust the brightness value for perceived brightness
     if let Some(gamma) = perceived_brightness_adjustment_gamma {
         brightness = adjust_for_perceived_brightness(brightness, gamma);

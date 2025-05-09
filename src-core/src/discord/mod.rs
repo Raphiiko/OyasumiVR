@@ -69,7 +69,7 @@ pub async fn on_discord_started() {
 pub async fn on_discord_stopped() {
     let client = DISCORD_CLIENT.lock().await.take();
     if let Some(c) = client {
-        let _ = c.discord.disconnect();
+        std::mem::drop(c.discord.disconnect());
     }
     *DISCORD_ACTIVE.lock().await = false;
 }
@@ -92,7 +92,7 @@ pub async fn clear_activity() -> bool {
         Some(client) => client,
         None => return false,
     };
-    
+
     match timeout(Duration::from_secs(4), client.discord.clear_activity()).await {
         Ok(res) => {
             if let Err(err) = res {
@@ -147,7 +147,7 @@ pub async fn update_activity(
                 .to_owned(),
         })
         .start_timestamp(SystemTime::now());
-    
+
     match timeout(Duration::from_secs(4), client.discord.update_activity(rp)).await {
         Ok(res) => {
             if let Err(err) = res {

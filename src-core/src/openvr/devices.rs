@@ -123,13 +123,13 @@ async fn update_handle_type(handle_type: OVRHandleType) {
     device_handle_cache.insert(device_info.0.trackedDeviceIndex, handle_type);
 }
 
-async fn update_all_devices<'a>(emit: bool) {
+async fn update_all_devices(emit: bool) {
     for n in 0..(ovr::sys::k_unMaxTrackedDeviceCount as usize) {
         update_device(ovr::TrackedDeviceIndex(n.try_into().unwrap()), emit).await;
     }
 }
 
-async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
+async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     let context = OVR_CONTEXT.lock().await;
     let mut system = match context.as_ref() {
         Some(context) => context.system_mngr(),
@@ -150,8 +150,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     }
     drop(device_class_cache);
 
-    let handle_type: Option<OVRHandleType> = device_handle_cache
-        .get(&device_index.0).cloned();
+    let handle_type: Option<OVRHandleType> = device_handle_cache.get(&device_index.0).cloned();
     drop(device_handle_cache);
     // Get device properties
     let battery: Option<f32> = system
@@ -273,7 +272,7 @@ async fn update_device<'a>(device_index: ovr::TrackedDeviceIndex, emit: bool) {
     }
 }
 
-async fn refresh_device_poses<'a>() {
+async fn refresh_device_poses() {
     let poses = {
         let context = OVR_CONTEXT.lock().await;
         let mut system = match context.as_ref() {
@@ -349,7 +348,7 @@ async fn refresh_device_poses<'a>() {
     }
 }
 
-async fn detect_inputs<'a>() {
+async fn detect_inputs() {
     // Get known devices, and input
     let devices = OVR_DEVICES.lock().await;
     let mut input_ctx = super::OVR_INPUT_CONTEXT.lock().await;

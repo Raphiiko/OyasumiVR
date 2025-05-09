@@ -204,7 +204,11 @@ pub async fn get_device_power_state(
         Some(state) => state.clone(),
         None => LighthousePowerState::Unknown,
     };
-    let current_v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await.get(&device_id).copied();
+    let current_v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS
+        .lock()
+        .await
+        .get(&device_id)
+        .copied();
     // Set the new state and send an event if the state or timeout has changed
     if current_state != state || current_v1_timeout != v1_timeout {
         LIGHTHOUSE_DEVICE_POWER_STATES
@@ -213,8 +217,8 @@ pub async fn get_device_power_state(
             .insert(device_id.clone(), state.clone());
         {
             let mut guard = LIGHTHOUSE_DEVICE_V1_TIMEOUTS.lock().await;
-            if v1_timeout.is_some() {
-                guard.insert(device_id.clone(), v1_timeout.unwrap());
+            if let Some(timeout) = v1_timeout {
+                guard.insert(device_id.clone(), timeout);
             } else if guard.contains_key(&device_id) {
                 guard.remove(&device_id);
             }
@@ -501,7 +505,8 @@ async fn map_discovered_device_to_lighthouse_device(d: LighthouseDevice) -> Ligh
     let v1_timeout = LIGHTHOUSE_DEVICE_V1_TIMEOUTS
         .lock()
         .await
-        .get(&d.bt_device.id().to_string()).copied();
+        .get(&d.bt_device.id().to_string())
+        .copied();
     let ld = LighthouseDeviceModel {
         id: d.id.to_string(),
         device_name: d.device_name,

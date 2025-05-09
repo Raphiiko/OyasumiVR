@@ -50,9 +50,10 @@ pub async fn stop_process(process_name: &str, kill: bool) {
     sysinfo.refresh_processes();
     let processes = sysinfo.processes_by_exact_name(process_name);
     for process in processes {
-        if kill {
-            let _ = process.kill_with(Signal::Kill);
-        } else if process.kill_with(Signal::Term).is_none() && process.kill_with(Signal::Quit).is_none() {
+        if kill
+            || (process.kill_with(Signal::Term).is_none()
+                && process.kill_with(Signal::Quit).is_none())
+        {
             let _ = process.kill_with(Signal::Kill);
         }
     }

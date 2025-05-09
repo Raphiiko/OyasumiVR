@@ -102,7 +102,8 @@ impl AudioDeviceManager {
                 CoCreateInstance(&MMDeviceEnumerator, None, CLSCTX_ALL)?;
             // Setup refresh channel for notification callbacks
             let (refresh_tx, refresh_rx) = channel::<DeviceNotification>(10);
-            let notification_client = AudioDeviceManagerNotificationClient::new(refresh_tx);
+            let notification_client = AudioDeviceManagerNotificationClient::new(refresh_tx)?;
+            let notification_client: IMMNotificationClient = notification_client.into();
             enumerator.RegisterEndpointNotificationCallback(&notification_client)?;
             // Construct AudioDeviceManager
             let manager = Self {
@@ -441,12 +442,11 @@ struct AudioDeviceManagerNotificationClient {
 }
 
 impl AudioDeviceManagerNotificationClient {
-    fn new(refresh_tx: Sender<DeviceNotification>) -> IMMNotificationClient {
-        let val = Self {
+    fn new(refresh_tx: Sender<DeviceNotification>) -> windows::core::Result<Self> {
+        Ok(Self {
             refresh_tx,
             handle: Handle::current(),
-        };
-        val.into()
+        })
     }
 }
 

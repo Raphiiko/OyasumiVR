@@ -128,7 +128,8 @@ impl AudioDevice {
             // Reference endpoint volume and listen for volume notifications
             let endpoint_volume = mmdevice.Activate::<IAudioEndpointVolume>(CLSCTX_ALL, None)?;
             let (on_notify_tx, on_notify_rx) = channel::<()>(10);
-            let notification_client = AudioDeviceVolumeNotificationClient::new(on_notify_tx);
+            let notification_client = AudioDeviceVolumeNotificationClient::new(on_notify_tx)?;
+            let notification_client: IAudioEndpointVolumeCallback = notification_client.into();
             endpoint_volume.RegisterControlChangeNotify(&notification_client)?;
             // Get endpoint specific info
             let endpoint = mmdevice
@@ -168,7 +169,7 @@ impl AudioDevice {
     fn process_notifications(&self, mut rx: Receiver<()>) {
         let state = self.state.clone();
         tokio::task::spawn(async move {
-            while let Some(_) = rx.recv().await {
+            while (rx.recv().await).is_some() {
                 _ = AudioDevice::fetch_state(state.clone()).await
             }
         });
@@ -410,12 +411,11 @@ struct AudioDeviceVolumeNotificationClient {
 }
 
 impl AudioDeviceVolumeNotificationClient {
-    fn new(channel: Sender<()>) -> IAudioEndpointVolumeCallback {
-        let val = Self {
+    fn new(channel: Sender<()>) -> windows::core::Result<Self> {
+        Ok(Self {
             handle: Handle::current(),
             channel,
-        };
-        val.into()
+        })
     }
 }
 

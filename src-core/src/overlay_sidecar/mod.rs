@@ -28,7 +28,7 @@ pub async fn init() {
     ));
     // Listen for sidecar stop signals
     tokio::spawn(async move {
-        while let Some(_) = rx.recv().await {
+        while (rx.recv().await).is_some() {
             *SIDECAR_GRPC_CLIENT.lock().await = None;
             send_event("OVERLAY_SIDECAR_STOPPED", ()).await;
         }

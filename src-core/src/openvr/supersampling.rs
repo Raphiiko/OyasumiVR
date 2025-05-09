@@ -45,11 +45,11 @@ pub async fn set_supersample_scale(supersample_scale: Option<f32>) -> Result<(),
         c"supersampleManualOverride",
         supersample_scale.is_some(),
     );
-    if supersample_scale.is_some() {
+    if let Some(scale) = supersample_scale {
         let _ = settings.set_float(
             CStr::from_bytes_with_nul(ovr::sys::k_pch_SteamVR_Section).unwrap(),
             c"supersampleScale",
-            supersample_scale.unwrap(),
+            scale,
         );
     }
     Ok(())
