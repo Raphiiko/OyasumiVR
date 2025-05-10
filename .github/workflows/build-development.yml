@@ -49,6 +49,8 @@ jobs:
             src-shared-rust
             src-elevated-sidecar
             src-core
+      - name: Ensure dist directory exists
+        run: mkdir -p dist/oyasumivr
       - name: Run Clippy (shared)
         run: cd src-shared-rust && cargo clippy -- -D warnings
       - name: Run Clippy (elevated-sidecar)
