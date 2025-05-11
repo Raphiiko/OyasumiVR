@@ -1,6 +1,12 @@
+// Define a consistent background color for off states at the top of the file
 //
 // SWITCH TOGGLE
 //
+
+// Common variables for form controls
+$form-control-off-bg: rgba(255, 255, 255, 0.12);
+$form-control-off-border: rgba(255, 255, 255, 0.25);
+$form-control-hover-bg: rgba(255, 255, 255, 0.17);
 
 .switch-toggle {
   position: relative;
@@ -8,7 +14,6 @@
   width: 2.5em;
   height: 1.5em;
   border-radius: 1.5em;
-  overflow: hidden;
   transition: all 0.15s ease;
 
   input {
@@ -30,9 +35,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: $form-control-off-bg;
   -webkit-transition: 0.4s;
-  transition: 0.4s;
+  transition: transform 0.4s ease, background-color 0.4s ease, opacity 0.15s ease;
+  border-radius: 1.5em;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px $form-control-off-border;
 
   &:before {
     position: absolute;
@@ -48,12 +56,17 @@
   }
 }
 
+input:active + .switch-toggle-slider {
+  opacity: 0.75;
+}
+
 input:checked + .switch-toggle-slider {
   background-color: var(--color-primary);
+  box-shadow: none;
 }
 
 input:focus + .switch-toggle-slider {
-  box-shadow: 0 0 1px var(--color-primary);
+  box-shadow: 0 0 0 1px $form-control-off-border;
 }
 
 input:checked + .switch-toggle-slider:before {
@@ -93,10 +106,10 @@ input:checked + .switch-toggle-slider:before {
     position: relative;
     height: 1.25em;
     width: 1.25em;
-    background-color: var(--color-surface-1);
+    background-color: $form-control-off-bg;
     border-radius: 0.25em;
     transition: all 0.1s ease;
-    border: 1px solid var(--color-surface-3);
+    box-shadow: 0 0 0 1px $form-control-off-border;
 
     &:after {
       content: '';
@@ -116,16 +129,28 @@ input:checked + .switch-toggle-slider:before {
   }
 
   &:hover input:not(:disabled) ~ &-checkmark {
-    border-color: var(--color-surface-4);
+    background-color: $form-control-hover-bg;
+  }
+
+  input:active ~ .check-toggle-checkmark {
+    opacity: 0.75;
   }
 
   &:hover input:checked:not(:disabled) ~ &-checkmark {
-    border-color: var(--color-text-0);
+    opacity: 0.9;
   }
 
   input:checked ~ .check-toggle-checkmark {
     background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    box-shadow: none;
+  }
+
+  input:focus ~ .check-toggle-checkmark {
+    box-shadow: 0 0 0 1px $form-control-off-border;
+  }
+
+  input:checked:focus ~ .check-toggle-checkmark {
+    box-shadow: 0 0 0 1px var(--color-primary);
   }
 
   input:checked:disabled ~ .check-toggle-checkmark {
@@ -174,10 +199,10 @@ input:checked + .switch-toggle-slider:before {
     position: relative;
     height: 1.3em;
     width: 1.3em;
-    background-color: var(--color-surface-1);
+    background-color: $form-control-off-bg;
     border-radius: 9999999px;
     transition: all 0.1s ease;
-    border: 1px solid var(--color-surface-3);
+    box-shadow: 0 0 0 1px $form-control-off-border;
 
     &:after {
       overflow: hidden;
@@ -196,16 +221,28 @@ input:checked + .switch-toggle-slider:before {
   }
 
   &:hover input:not(:disabled) ~ &-dot {
-    border-color: var(--color-surface-4);
+    background-color: $form-control-hover-bg;
+  }
+
+  input:active ~ .radio-button-dot {
+    opacity: 0.75;
   }
 
   &:hover input:checked:not(:disabled) ~ &-dot {
-    border-color: var(--color-text-0);
+    opacity: 0.9;
   }
 
   input:checked ~ .radio-button-dot {
     background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    box-shadow: none;
+  }
+
+  input:focus ~ .radio-button-dot {
+    box-shadow: 0 0 0 1px $form-control-off-border;
+  }
+
+  input:checked:focus ~ .radio-button-dot {
+    box-shadow: 0 0 0 1px var(--color-primary);
   }
 
   input:checked:disabled ~ .radio-button-dot {
@@ -245,9 +282,10 @@ input[type='time'] {
   border: none;
   border-radius: 0.5em;
   padding: 0.5em;
-  background: var(--color-surface-3);
+  background: $form-control-off-bg;
   color: var(--color-text-1);
   transition: all 0.15s ease;
+  box-shadow: none;
 
   &.small {
     height: 2.5em;
@@ -256,6 +294,19 @@ input[type='time'] {
   &:disabled {
     opacity: 0.5;
     pointer-events: none;
+  }
+
+  &:focus {
+    outline: none;
+    background: $form-control-hover-bg;
+  }
+
+  &:hover:not(:disabled) {
+    background: $form-control-hover-bg;
+  }
+
+  &:active:not(:disabled) {
+    opacity: 0.9;
   }
 }
 
@@ -328,9 +379,10 @@ input[type='time']::-webkit-calendar-picker-indicator {
 
   &-path {
     flex: 1;
-    background: var(--color-surface-1);
+    background: $form-control-off-bg;
     padding: 1em 1.5em;
     border-radius: 0.5em 0 0 0.5em;
+    box-shadow: none;
 
     input {
       width: 100%;
@@ -341,6 +393,10 @@ input[type='time']::-webkit-calendar-picker-indicator {
       &:focus {
         outline: none;
       }
+    }
+
+    &:hover {
+      background: $form-control-hover-bg;
     }
   }
 

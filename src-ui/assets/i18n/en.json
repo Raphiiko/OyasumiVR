@@ -4,7 +4,7 @@
       "role": "Developer"
     },
     "contributionType": {
-      "feature": "Feature",
+      "programming": "Programming",
       "soundFx": "Sound FX"
     },
     "contributions": "Contributions",
@@ -1244,38 +1244,42 @@
   },
   "message-center": {
     "actions": {
+      "configure": "Configure",
       "hide": "Hide",
       "moreInfo": "More info",
       "showHidden": "Show Hidden",
-      "unhide": "Unhide",
-      "configure": "Configure"
+      "unhide": "Unhide"
     },
     "messages": {
-      "gpuAutomationsSidecarNotRunning": {
-        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
-        "title": "GPU Automations Unavailable",
-        "actions": {
-          "elevate": "Give Administrator Privileges",
-          "disable": "Disable GPU Automations"
-        }
-      },
-      "gpuAutomationsNvmlError": {
-        "title": "GPU Power Limit Automations Unavailable",
+      "gpuAutomationsAfterburnerError": {
         "actions": {
           "disable": "Disable Automations"
-        }
-      },
-      "gpuAutomationsAfterburnerError": {
-        "title": "MSI Afterburner Automations Unavailable",
+        },
         "message": {
-          "NOT_FOUND": "MSI Afterburner could not be found at the provided location. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
           "INVALID_EXECUTABLE": "Your MSI Afterburner installation could not be verified as working. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
           "INVALID_SIGNATURE": "Your MSI Afterburner installation could not be verified to come from MSI. For security reasons it cannot be used. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
+          "NOT_FOUND": "MSI Afterburner could not be found at the provided location. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working.",
           "UNKNOWN_ERROR": "An unknown error occurred while trying to use your MSI Afterburner installation. Please reconfigure the path to your MSI Afterburner installation to ensure your automations keep working."
         },
+        "title": "MSI Afterburner Automations Unavailable"
+      },
+      "gpuAutomationsNvmlError": {
         "actions": {
           "disable": "Disable Automations"
-        }
+        },
+        "title": "GPU Power Limit Automations Unavailable"
+      },
+      "gpuAutomationsSidecarNotRunning": {
+        "actions": {
+          "disable": "Disable GPU Automations",
+          "elevate": "Give Administrator Privileges"
+        },
+        "message": "Although you have GPU automations enabled, OyasumiVR currently does not have the administrative privileges to be able to run these.\n\nPlease give OyasumiVR administrative privileges, or disable GPU automations.",
+        "title": "GPU Automations Unavailable"
+      },
+      "lighthouseConsoleError": {
+        "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration.",
+        "title": "Lighthouse Console Unavailable"
       },
       "manyLighthousesDetected": {
         "message": "It looks like you have a lot of base stations!\n\nBe warned that most Bluetooth adapters can only handle 7 simultaneous connections, including other Bluetooth devices like headphones and other peripherals.\n\nKeep in mind that OyasumiVR might have trouble controlling all of your base stations if you have too many of them plugged in at the same time, or have too many other Bluetooth devices connected.",
@@ -1293,10 +1297,6 @@
       "vrcOscMissing": {
         "message": "Although VRChat seems to be running, its OSC and/or OSCQuery services could not be detected. Without these services, certain OyasumiVR features will not work.\n\nPlease make sure you've got OSC enabled within VRChat to ensure OyasumiVR can work properly.",
         "title": "VRChat OSC(Query) services unavailable"
-      },
-      "lighthouseConsoleError": {
-        "title": "Lighthouse Console Unavailable",
-        "message": "The lighthouse console could not be found or is not working properly. Without access to the lighthouse console, OyasumiVR will likely not be able to turn off your controllers and trackers. Please check your configuration."
       }
     },
     "title": "Message Center",
