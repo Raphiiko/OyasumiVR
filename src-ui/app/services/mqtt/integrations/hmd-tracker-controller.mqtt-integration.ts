@@ -91,13 +91,13 @@ export class HmdTrackerControllerMqttIntegrationService {
         return;
     }
     const deviceDesc: MqttDiscoveryConfigDevice = {
-      identifiers: [device.serialNumber],
+      identifiers: [device.serialNumber ?? ''],
       manufacturer: device.manufacturerName,
       model: device.modelNumber,
       name: `${name} (${device.serialNumber})`,
     };
 
-    const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
+    const roleId = this.sanitizedId(device.class, device.serialNumber ?? '', ROLE_SUFFIX);
     if (device.class !== 'HMD') {
       await this.mqtt.initProperty({
         type: 'SENSOR',
@@ -110,7 +110,7 @@ export class HmdTrackerControllerMqttIntegrationService {
       });
     }
 
-    const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
+    const chargingId = this.sanitizedId(device.class, device.serialNumber ?? '', CHARGING_SUFFIX);
     await this.mqtt.initProperty({
       type: 'SENSOR',
       id: chargingId,
@@ -121,7 +121,7 @@ export class HmdTrackerControllerMqttIntegrationService {
       value: device.isCharging ? 'on' : 'off',
     });
 
-    const batteryId = this.sanitizedId(device.class, device.serialNumber, BATTERY_SUFFIX);
+    const batteryId = this.sanitizedId(device.class, device.serialNumber ?? '', BATTERY_SUFFIX);
     await this.mqtt.initProperty({
       type: 'SENSOR',
       id: batteryId,
@@ -134,14 +134,14 @@ export class HmdTrackerControllerMqttIntegrationService {
       stateClass: 'measurement',
     });
 
-    const id = this.sanitizedId(device.class, device.serialNumber);
+    const id = this.sanitizedId(device.class, device.serialNumber ?? '');
     await this.mqtt.initProperty({
       type: 'TOGGLE',
       id,
       topicPath: `device/${id}`,
       displayName: 'Power',
-      value: device.canPowerOff && !device.isTurningOff,
-      available: device.canPowerOff && !device.isTurningOff,
+      value: (device.canPowerOff ?? false) && !device.isTurningOff,
+      available: (device.canPowerOff ?? false) && !device.isTurningOff,
       device: deviceDesc,
     });
 
@@ -158,10 +158,10 @@ export class HmdTrackerControllerMqttIntegrationService {
   }
 
   private async removeDevice(device: OVRDevice) {
-    const id = this.sanitizedId(device.class, device.serialNumber);
-    const batteryId = this.sanitizedId(device.class, device.serialNumber, BATTERY_SUFFIX);
-    const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
-    const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
+    const id = this.sanitizedId(device.class, device.serialNumber ?? '');
+    const batteryId = this.sanitizedId(device.class, device.serialNumber ?? '', BATTERY_SUFFIX);
+    const chargingId = this.sanitizedId(device.class, device.serialNumber ?? '', CHARGING_SUFFIX);
+    const roleId = this.sanitizedId(device.class, device.serialNumber ?? '', ROLE_SUFFIX);
     await this.mqtt.disposeProperty(id);
     await this.mqtt.disposeProperty(batteryId);
     await this.mqtt.disposeProperty(chargingId);
@@ -170,17 +170,20 @@ export class HmdTrackerControllerMqttIntegrationService {
   }
 
   private async updateDevice(device: OVRDevice) {
-    const id = this.sanitizedId(device.class, device.serialNumber);
-    const batteryId = this.sanitizedId(device.class, device.serialNumber, BATTERY_SUFFIX);
-    const chargingId = this.sanitizedId(device.class, device.serialNumber, CHARGING_SUFFIX);
-    const roleId = this.sanitizedId(device.class, device.serialNumber, ROLE_SUFFIX);
+    const id = this.sanitizedId(device.class, device.serialNumber ?? '');
+    const batteryId = this.sanitizedId(device.class, device.serialNumber ?? '', BATTERY_SUFFIX);
+    const chargingId = this.sanitizedId(device.class, device.serialNumber ?? '', CHARGING_SUFFIX);
+    const roleId = this.sanitizedId(device.class, device.serialNumber ?? '', ROLE_SUFFIX);
 
-    await this.mqtt.setPropertyAvailability(id, device.canPowerOff && !device.isTurningOff);
-    await this.mqtt.setPropertyAvailability(batteryId, device.providesBatteryStatus);
-    await this.mqtt.setPropertyAvailability(chargingId, device.providesBatteryStatus);
+    await this.mqtt.setPropertyAvailability(
+      id,
+      (device.canPowerOff ?? false) && !device.isTurningOff
+    );
+    await this.mqtt.setPropertyAvailability(batteryId, device.providesBatteryStatus ?? false);
+    await this.mqtt.setPropertyAvailability(chargingId, device.providesBatteryStatus ?? false);
     await this.mqtt.setPropertyAvailability(roleId, !!device.handleType);
 
-    await this.mqtt.setTogglePropertyValue(id, device.canPowerOff);
+    await this.mqtt.setTogglePropertyValue(id, device.canPowerOff ?? false);
     await this.mqtt.setSensorPropertyValue(
       batteryId,
       device.providesBatteryStatus ? `${device.battery * 100}` : 'null'

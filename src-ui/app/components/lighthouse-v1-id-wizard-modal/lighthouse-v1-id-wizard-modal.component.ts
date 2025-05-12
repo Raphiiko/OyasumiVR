@@ -243,7 +243,7 @@ export class LighthouseV1IdWizardModalComponent
     const devices = await firstValueFrom(this.openvr.devices);
     const baseStationSerialNumbers = devices
       .filter((d) => d.class === 'TrackingReference')
-      .map((d) => d.serialNumber)
+      .map((d) => d.serialNumber ?? '')
       .filter((s) => s.startsWith('LHB-'))
       .map((d) => d.slice(4))
       .filter((s) => /^[0-9A-F]{8}$/.test(s));

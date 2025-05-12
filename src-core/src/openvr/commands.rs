@@ -1,7 +1,7 @@
 use crate::globals::STEAM_APP_KEY;
 
 use super::{
-    models::{BindingOriginData, OVRDevice},
+    models::{BindingOriginData, OVRDevice, OVRFrameLimits},
     OVR_CONTEXT,
 };
 use enumset::EnumSet;
@@ -9,6 +9,21 @@ use log::error;
 use ovr::input::{InputString, InputValueHandle};
 use ovr_overlay as ovr;
 use substring::Substring;
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
+pub async fn openvr_set_app_framelimit(
+    app_id: u32,
+    limits: Option<OVRFrameLimits>,
+) -> Result<(), String> {
+    super::framelimiter::set_app_framelimits(app_id, limits).await
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
+pub async fn openvr_get_app_framelimit(app_id: u32) -> Result<Option<OVRFrameLimits>, String> {
+    super::framelimiter::get_app_framelimits(app_id).await
+}
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]

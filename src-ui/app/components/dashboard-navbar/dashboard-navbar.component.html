@@ -35,6 +35,7 @@
       [class.active]="
         pathIsActive([
           'brightnessAutomations',
+          'frameLimitAutomations',
           'powerAutomations',
           'gpuAutomations',
           'resolutionAutomations',
@@ -224,6 +225,13 @@
         @fade
         *ngIf="brightnessAutomation.anyBrightnessTransitionActive | async"
       ></div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'frameLimitAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-symbols-outlined">speed</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.frameLimiter</div>
     </div>
 
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'hmdAutomations'">

@@ -238,6 +238,11 @@ import { MessageCenterService } from './services/message-center/message-center.s
 import { MessageCenterModalComponent } from './components/message-center-modal/message-center-modal.component';
 import { MessageCenterItemComponent } from './components/message-center-modal/message-center-item/message-center-item.component';
 import { ProgressiveScrollBlurComponent } from './components/progressive-scroll-blur/progressive-scroll-blur.component';
+import { FrameLimiterViewComponent } from './views/dashboard-view/views/frame-limiter-view/frame-limiter-view.component';
+import { FrameLimiterSelectorComponent } from './components/frame-limiter-selector/frame-limiter-selector.component';
+import { FrameLimiterService } from './services/frame-limiter.service';
+import { FrameLimitAutomationsService } from './services/frame-limit-automations.service';
+import { FrameLimiterAddApplicationModalComponent } from './views/dashboard-view/views/frame-limiter-view/modals/frame-limiter-add-application-modal/frame-limiter-add-application-modal.component';
 
 [
   localeEN,
@@ -386,6 +391,9 @@ export function createTranslateLoader(http: HttpClient) {
     MessageCenterModalComponent,
     MessageCenterItemComponent,
     ProgressiveScrollBlurComponent,
+    FrameLimiterViewComponent,
+    FrameLimiterSelectorComponent,
+    FrameLimiterAddApplicationModalComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -456,6 +464,7 @@ export class AppModule {
     private avatarContextService: AvatarContextService,
     private updateService: UpdateService,
     private messageCenterService: MessageCenterService,
+    private frameLimiterService: FrameLimiterService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -498,6 +507,7 @@ export class AppModule {
     // Windows power policy automations
     private setWindowsPowerPolicyOnSleepModeAutomationService: SetWindowsPowerPolicyOnSleepModeAutomationService,
     // Miscellaneous automations
+    private frameLimitAutomationsService: FrameLimitAutomationsService,
     private joinNotificationsService: JoinNotificationsService,
     private audioDeviceAutomationsService: AudioDeviceAutomationsService,
     private systemMicMuteAutomationsService: SystemMicMuteAutomationService,
@@ -582,6 +592,7 @@ export class AppModule {
             this.logInit('FontLoaderService initialization', this.fontLoaderService.init()),
             this.logInit('LighthouseService initialization', this.lighthouseService.init()),
             this.logInit('NotificationService initialization', this.notificationService.init()),
+            this.logInit('FrameLimiterService initialization', this.frameLimiterService.init()),
             this.logInit(
               'SleepPreparationService initialization',
               this.sleepPreparationService.init()
@@ -804,6 +815,10 @@ export class AppModule {
             this.logInit(
               'FBTAvatarReloadHotfixService initialization',
               this.fbtAvatarReloadWorkaroundService.init()
+            ),
+            this.logInit(
+              'FrameLimitAutomationsService initialization',
+              this.frameLimitAutomationsService.init()
             ),
           ]);
           await info(`[Init] Initialization complete! (took ${Date.now() - initStartTime}ms)`);

@@ -4,6 +4,7 @@ import { SleepingPose } from './sleeping-pose';
 import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
+import { FrameLimiterPresets } from '../services/frame-limiter.service';
 
 export type AutomationType =
   // GPU AUTOMATIONS (Global enable flag)
@@ -44,6 +45,7 @@ export type AutomationType =
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE'
   | 'WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE'
   // MISCELLANEOUS
+  | 'FRAME_LIMIT_AUTOMATIONS'
   | 'JOIN_NOTIFICATIONS'
   | 'AUDIO_DEVICE_AUTOMATIONS'
   | 'SHUTDOWN_AUTOMATIONS'
@@ -95,6 +97,7 @@ export interface AutomationConfigs {
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   // MISCELLANEOUS AUTOMATIONS
+  FRAME_LIMIT_AUTOMATIONS: FrameLimitAutomationsConfig;
   JOIN_NOTIFICATIONS: JoinNotificationsAutomationsConfig;
   AUDIO_DEVICE_AUTOMATIONS: AudioDeviceAutomationsConfig;
   SYSTEM_MIC_MUTE_AUTOMATIONS: SystemMicMuteAutomationsConfig;
@@ -337,6 +340,22 @@ export interface WindowsPowerPolicyOnSleepModeAutomationConfig extends Automatio
 }
 
 // MISCELLANEOUS AUTOMATIONS
+
+export interface FrameLimitAutomationsConfig extends AutomationConfig {
+  configs: FrameLimitAutomationsAppConfig[];
+}
+
+export interface FrameLimitAutomationsAppConfig {
+  appId: number;
+  appLabel: string;
+  onSleepEnable: FrameLimitConfigOption;
+  onSleepDisable: FrameLimitConfigOption;
+  onSleepPreparation: FrameLimitConfigOption;
+}
+
+export const FrameLimitConfigOptions = [5, 4, 3, 2, 1, 0, 'AUTO', 'DISABLED'];
+
+export type FrameLimitConfigOption = (typeof FrameLimitConfigOptions)[number];
 
 export type JoinNotificationsMode = 'EVERYONE' | 'FRIEND' | 'WHITELIST' | 'BLACKLIST' | 'DISABLED';
 
@@ -789,6 +808,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     enabled: false,
   },
   // MISCELLANEOUS AUTOMATIONS
+  FRAME_LIMIT_AUTOMATIONS: {
+    enabled: true,
+    configs: [
+      {
+        appId: FrameLimiterPresets[0].appId,
+        appLabel: FrameLimiterPresets[0].appLabel,
+        onSleepEnable: 'DISABLED',
+        onSleepDisable: 'DISABLED',
+        onSleepPreparation: 'DISABLED',
+      },
+    ],
+  },
   AUDIO_DEVICE_AUTOMATIONS: {
     enabled: false,
     onSleepEnableAutomations: [],

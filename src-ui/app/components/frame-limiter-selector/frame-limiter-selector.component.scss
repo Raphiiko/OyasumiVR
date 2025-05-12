@@ -1,0 +1,74 @@
+.selector {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 0.25em;
+
+  .vertical-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+
+    .selector-option.stacked {
+      flex: 1;
+      height: calc(50% - 0.125em); // Account for the gap
+    }
+  }
+
+  &-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 0.75em;
+    border-radius: 0.5em;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-surface-1);
+    transition: all 0.15s ease;
+    cursor: pointer;
+    // min-width: 4em;
+
+    &-label-top {
+      font-weight: 600;
+      color: var(--color-text-1);
+    }
+
+    &-label-bottom {
+      font-size: 0.85em;
+      color: var(--color-text-3);
+      margin-top: 0.2em;
+    }
+
+    &:hover {
+      background: var(--color-surface-3);
+    }
+
+    &:active {
+      background: var(--color-surface-1);
+      transform: translateY(1px);
+    }
+
+    &.selected {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+
+      span {
+        color: var(--color-on-primary);
+      }
+
+      &:hover {
+        background: var(--color-primary-hover);
+      }
+    }
+
+    &.active {
+      background: var(--color-surface-4);
+      border: 1px solid var(--color-text-3);
+
+      &.selected {
+        background: var(--color-primary);
+        border-color: var(--color-primary-hover);
+      }
+    }
+  }
+}
