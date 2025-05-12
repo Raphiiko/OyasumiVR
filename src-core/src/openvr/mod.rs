@@ -8,6 +8,7 @@ mod gesture_detector;
 mod models;
 mod sleep_detector;
 mod supersampling;
+mod framelimiter;
 
 use crate::{
     globals::STEAM_APP_KEY,

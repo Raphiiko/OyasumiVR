@@ -101,7 +101,7 @@ export class SettingsStatusInfoViewComponent {
             key: 'HMD Activity (Debug)',
             value: openvr.devices.pipe(
               map(
-                (devices) => devices.find((d) => d.class === 'HMD')?.debugHmdActivity ?? 'No Value'
+                (devices) => devices.find((d) => d.class === 'HMD')?.hmdActivity ?? 'No Value'
               )
             ),
           },

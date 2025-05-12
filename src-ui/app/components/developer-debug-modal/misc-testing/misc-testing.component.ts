@@ -4,6 +4,8 @@ import { OpenVRService } from '../../../services/openvr.service';
 import { firstValueFrom, take } from 'rxjs';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { AppSettingsService } from '../../../services/app-settings.service';
+import { sleep } from '../../../utils/promise-utils';
+import { invoke } from '@tauri-apps/api/core';
 
 @Component({
   selector: 'app-misc-testing',
@@ -14,11 +16,13 @@ import { AppSettingsService } from '../../../services/app-settings.service';
 export class MiscTestingComponent implements OnInit {
   @Input() modal?: BaseModalComponent<any, any>;
 
-  constructor(private openvr: OpenVRService, protected appSettings: AppSettingsService) {}
+  constructor(private openvr: OpenVRService, protected appSettings: AppSettingsService) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
-  result: any;
+  result: any = null;
   ovrData: any = {};
 
   async pullOvrData() {
@@ -29,5 +33,30 @@ export class MiscTestingComponent implements OnInit {
 
   clearV1Ids() {
     this.appSettings.updateSettings({ v1LighthouseIdentifiers: {} });
+  }
+
+  async setAppFrameLimit(limits: number | null) {
+    await invoke('openvr_set_app_framelimit', {
+      appId: 438100,
+      limits: {
+        additionalFramesToPredict: limits ?? 0,
+        framesToThrottle: limits ?? 0,
+      },
+    });
+
+    if (limits === null) {
+      await sleep(300);
+      await invoke('openvr_set_app_framelimit', {
+        appId: 438100,
+        limits: null,
+      });
+    }
+  }
+
+  async getAppFrameLimit(): Promise<void> {
+    this.result = await invoke('openvr_get_app_framelimit', {
+      appId: 438100,
+    });
+    console.warn('APP FRAME LIMIT RESULT', structuredClone(this.result));
   }
 }

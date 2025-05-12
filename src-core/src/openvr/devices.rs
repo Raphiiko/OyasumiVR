@@ -208,12 +208,13 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         )
         .ok();
     let mut hmd_on_head = None;
-    let mut debug_hmd_activity = None;
+    let mut hmd_activity = None;
+    let mut display_frequency = None;
     if class == TrackedDeviceClass::HMD {
         let activity_level = system.get_tracked_device_activity_level(device_index);
         hmd_on_head = Some(activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction || activity_level == ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_UserInteraction_Timeout);
         // Serialize activity level
-        debug_hmd_activity = Some(
+        hmd_activity = Some(
             match activity_level {
                 ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Unknown => "Unknown",
                 ovr::sys::EDeviceActivityLevel::k_EDeviceActivityLevel_Idle => "Idle",
@@ -230,6 +231,12 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
             }
             .to_string(),
         );
+        display_frequency = system
+            .get_tracked_device_property(
+                device_index,
+                ovr::sys::ETrackedDeviceProperty::Prop_DisplayFrequency_Float,
+            )
+            .ok();
     }
 
     let device = OVRDevice {
@@ -249,7 +256,8 @@ async fn update_device(device_index: ovr::TrackedDeviceIndex, emit: bool) {
         model_number,
         handle_type,
         hmd_on_head,
-        debug_hmd_activity,
+        hmd_activity,
+        display_frequency
     };
 
     // Add or update device in list

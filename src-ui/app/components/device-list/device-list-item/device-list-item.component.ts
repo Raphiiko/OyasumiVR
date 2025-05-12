@@ -47,9 +47,9 @@ export class DeviceListItemComponent implements OnInit {
     this.mode = 'openvr';
     this._lighthouseDevice = undefined;
     this._ovrDevice = device;
-    this.deviceName = device.modelNumber;
+    this.deviceName = device.modelNumber ?? '';
     this.showBattery = Boolean(device.providesBatteryStatus || device.isCharging);
-    this.isCharging = this.showBattery && device.isCharging;
+    this.isCharging = this.showBattery && (device.isCharging ?? false);
     this.batteryPercentage = this.showBattery ? device.battery * 100 : 0;
     this.batteryPercentageString = this.showBattery
       ? Math.floor(device.battery * 1000) / 10 + '%'
@@ -59,7 +59,7 @@ export class DeviceListItemComponent implements OnInit {
     else if (device.canPowerOff && device.dongleId) this.powerButtonState = 'turn_off';
     else this.powerButtonState = 'hide';
     this.isDeviceIgnored = false;
-    this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber);
+    this.cssId = this.sanitizeIdentifierForCSS(device.serialNumber ?? '');
     this.powerButtonAnchorId = '--anchor-device-pwr-btn-' + this.cssId;
     this.showLHStatePopover = false;
 
@@ -68,7 +68,7 @@ export class DeviceListItemComponent implements OnInit {
     if (nickname) this.deviceSubtitle = nickname;
     else if (device.handleType && ['Controller', 'GenericTracker'].includes(device.class))
       this.deviceSubtitle = 'comp.device-list.deviceRole.' + device.handleType;
-    else this.deviceSubtitle = device.serialNumber;
+    else this.deviceSubtitle = device.serialNumber ?? '';
   }
 
   @Input() set lighthouseDevice(device: LighthouseDevice | undefined) {

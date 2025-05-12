@@ -1,0 +1,33 @@
+<div class="selector">
+  <!-- First 5 options in a row -->
+  <button
+    *ngFor="let option of frameLimitConfigOptions.slice(0, 5)"
+    class="selector-option"
+    [class.active]="activeValue === option"
+    [class.selected]="configuredValue === option"
+    (click)="selectOption(option)"
+  >
+    <span translate class="selector-option-label-top">{{ getLabelForOption(option) }}</span>
+    <span *ngIf="getFpsForOption(option).trim()" class="selector-option-label-bottom" @vshrink>{{
+      getFpsForOption(option)
+    }}</span>
+  </button>
+
+  <!-- 6th and 7th options stacked vertically -->
+  <div class="vertical-stack" *ngIf="frameLimitConfigOptions.length > 5">
+    <button
+      *ngFor="let option of frameLimitConfigOptions.slice(5, 7)"
+      class="selector-option stacked"
+      [class.active]="activeValue === option"
+      [class.selected]="configuredValue === option"
+      (click)="selectOption(option)"
+      [tooltip]="getTooltipForOption(option)"
+      [tooltipMode]="'left'"
+    >
+      <span translate class="selector-option-label-top">{{ getLabelForOption(option) }}</span>
+      <span *ngIf="getFpsForOption(option).trim()" @vshrink class="selector-option-label-bottom">{{
+        getFpsForOption(option)
+      }}</span>
+    </button>
+  </div>
+</div>

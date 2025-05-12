@@ -232,6 +232,30 @@
       "title": "Transition time"
     }
   },
+  "frame-limiter": {
+    "title": "Frame Limit Automations",
+    "description": "OyasumiVR can automatically limit the framerate of various games. You can use this to reduce the power draw of your system when you don't need high performance, like when you are asleep.",
+    "frameLimits": "Frame Limits",
+    "noLimits": "You have not yet configured any applications to limit!",
+    "addLimiter": "Add Application",
+    "removeLimiter": "Remove",
+    "onSleepDisable": "When I wake up",
+    "onSleepEnable": "When I go to sleep",
+    "onSleepPreparation": "When I prepare to go to sleep",
+    "steamvrRequired": "Changing frame limits directly and viewing estimated frame rates is only available while SteamVR is running. You can still configure the automation settings below.",
+    "selector": {
+      "auto": "Auto",
+      "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
+      "noLimit": "Unlimited",
+      "disabled": "Do not change"
+    },
+    "add-application-modal": {
+      "title": "Choose Application",
+      "instruction": "Select an application for which to configure frame limiting",
+      "add": "Add",
+      "notListedHelp": "Is your application not listed? Please request it in our <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>."
+    }
+  },
   "chaperone-automations": {
     "description": "OyasumiVR can automatically adjust the fade distance of SteamVR's chaperone when sleep mode is enabled or disabled.",
     "fadeDistance": {
@@ -300,6 +324,7 @@
       "audioVolumeAutomations": "Audio Volume Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "brightnessAutomations": "Brightness Automations",
+      "frameLimiter": "Frame Limit Automations",
       "chaperoneAutomations": "Chaperone Automations",
       "gpuAutomations": "GPU Automations",
       "hardwareAutomations": "Hardware Automations",
