@@ -1,7 +1,7 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
 import { distinctUntilChanged, map, skip, tap } from 'rxjs';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { isEqual } from 'lodash';
 import {

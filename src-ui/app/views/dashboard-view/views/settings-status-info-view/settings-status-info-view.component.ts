@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TString } from '../../../../models/translatable-string';
 import { firstValueFrom, from, interval, map, Observable, of, startWith, switchMap } from 'rxjs';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { getVersion } from '../../../../utils/app-utils';
 import { BUILD_ID, FLAVOUR } from 'src-ui/build';
 import { OscService } from '../../../../services/osc.service';
@@ -100,9 +100,7 @@ export class SettingsStatusInfoViewComponent {
           {
             key: 'HMD Activity (Debug)',
             value: openvr.devices.pipe(
-              map(
-                (devices) => devices.find((d) => d.class === 'HMD')?.hmdActivity ?? 'No Value'
-              )
+              map((devices) => devices.find((d) => d.class === 'HMD')?.hmdActivity ?? 'No Value')
             ),
           },
         ],

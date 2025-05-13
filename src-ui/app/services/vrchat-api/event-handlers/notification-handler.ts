@@ -1,16 +1,15 @@
-import { VRChatEventHandler } from '../vrchat-event-handler';
-import { VRChatService } from '../../vrchat.service';
+import { VRChatEventHandler } from '../vrchat-socket';
 import type { Notification } from 'vrchat/dist';
 
 export class NotificationHandler implements VRChatEventHandler {
   type = 'notification';
 
-  constructor(private vrchat: VRChatService) {}
+  constructor(private onVRChatNotification: (notification: Notification) => Promise<void>) {}
 
   async handle(contentString: string) {
     // Parse the message content
     const notification: Notification = JSON.parse(contentString);
     // Pass it on to the VRChat service for further handling
-    await this.vrchat.handleNotification(notification);
+    await this.onVRChatNotification(notification);
   }
 }

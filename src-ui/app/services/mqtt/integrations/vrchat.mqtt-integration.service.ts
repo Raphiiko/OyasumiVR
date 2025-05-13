@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MqttDiscoveryService } from '../mqtt-discovery.service';
-import { VRChatService } from '../../vrchat.service';
+import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { combineLatest, firstValueFrom } from 'rxjs';
 
 @Injectable({

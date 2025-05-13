@@ -35,7 +35,7 @@ import {
 } from '../models/event-log-entry';
 import { EventLogService } from './event-log.service';
 import { invoke } from '@tauri-apps/api/core';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 
 @Injectable({
   providedIn: 'root',

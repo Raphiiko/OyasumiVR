@@ -11,7 +11,7 @@ import { filter, firstValueFrom, map, switchMap, tap } from 'rxjs';
 import { LimitedUser } from 'vrchat';
 import { VRChatLogService } from '../vrchat-log.service';
 import { VRChatLogEvent } from '../../models/vrchat-log-event';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 
 @Injectable({
   providedIn: 'root',

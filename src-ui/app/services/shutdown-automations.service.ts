@@ -35,7 +35,7 @@ import {
 import { EventLogService } from './event-log.service';
 import { listen } from '@tauri-apps/api/event';
 import { TranslateService } from '@ngx-translate/core';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 
 export type ShutdownSequenceStage = (typeof ShutdownSequenceStageOrder)[number];
 export const ShutdownSequenceStageOrder = [

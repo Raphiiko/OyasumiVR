@@ -22,7 +22,7 @@ import { SleepingPose } from '../../models/sleeping-pose';
 import { OscService } from '../osc.service';
 import { OscScript } from '../../models/osc-script';
 import { getOscScriptDuration } from '../../utils/osc-script-utils';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 import { AvatarContextService } from '../avatar-context.service';
 
 @Injectable({

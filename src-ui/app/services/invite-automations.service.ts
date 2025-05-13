@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
 import { Notification, NotificationType, UserStatus } from 'vrchat';
