@@ -33,6 +33,7 @@ import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-change
 import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
 import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
 import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
+import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
 @Component({
@@ -77,6 +78,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogBSBLedChangedEntryParser(),
     new EventLogVRChatAvatarChangedEntryParser(),
     new EventLogCCTChangedEntryParser(),
+    new EventLogFrameLimitChangedEntryParser(),
   ];
 
   constructor(

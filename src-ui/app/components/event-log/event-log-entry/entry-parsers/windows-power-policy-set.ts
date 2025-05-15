@@ -1,11 +1,7 @@
 import { EventLogEntryParser } from '../event-log-entry-parser';
 import { EventLogType, EventLogWindowsPowerPolicySet } from '../../../../models/event-log-entry';
-import { TranslateService } from '@ngx-translate/core';
-import { inject } from '@angular/core';
 
 export class EventLogWindowsPowerPolicySetEntryParser extends EventLogEntryParser<EventLogWindowsPowerPolicySet> {
-  private translate = inject(TranslateService);
-
   entryType(): EventLogType {
     return 'windowsPowerPolicySet';
   }

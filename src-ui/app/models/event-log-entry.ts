@@ -44,6 +44,7 @@ export type EventLogEntry =
   | EventLogBSBFanSpeedChanged
   | EventLogBSBLedChanged
   | EventLogVRChatAvatarChanged
+  | EventLogFrameLimitChanged
   | EventLogCCTChanged;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
@@ -78,6 +79,7 @@ export type EventLogType =
   | 'bsbFanSpeedChanged'
   | 'bsbLedChanged'
   | 'cctChanged'
+  | 'frameLimitChanged'
   | 'vrchatAvatarChanged';
 
 export interface EventLogBase {
@@ -315,4 +317,11 @@ export interface EventLogVRChatAvatarChanged extends EventLogBase {
   type: 'vrchatAvatarChanged';
   avatarName: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogFrameLimitChanged extends EventLogBase {
+  type: 'frameLimitChanged';
+  appName: string;
+  limit: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'HMD_CONNECT';
 }
