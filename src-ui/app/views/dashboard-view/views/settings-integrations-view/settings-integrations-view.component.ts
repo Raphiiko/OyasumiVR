@@ -3,7 +3,7 @@ import { warn } from '@tauri-apps/plugin-log';
 import { writeText } from '@tauri-apps/plugin-clipboard-manager';
 import { hshrink } from 'src-ui/app/utils/animations';
 import { PulsoidService } from '../../../../services/integrations/pulsoid.service';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { PULSOID_REFERRAL_ID } from 'src-ui/app/globals';
 import { ModalService } from '../../../../services/modal.service';
 import { MqttConfigModalComponent } from '../../../../components/mqtt-config-modal/mqtt-config-modal.component';

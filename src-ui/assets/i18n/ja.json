@@ -142,7 +142,6 @@
     },
     "savePreset": "プリセットとして保存",
     "title": "Req Inviteの自動承認",
-    "userOnBusyStatus": "自分のステータスが赤(Do Not Disturb)になっている間は、ユーザーからのReq Inviteを受け入れることができません。",
     "userOnJoinMeStatus": "VRChatは、自分のステータスが青(Join Me)になっている場合、設定に関わらず、すべてのReq Inviteを自動的に受け入れます。",
     "whitelist": "ホワイトリスト"
   },

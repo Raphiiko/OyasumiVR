@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
-import { VRChatService } from '../../services/vrchat.service';
+import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom } from 'rxjs';
 import { fadeUp, vshrink } from '../../utils/animations';
 import { AvatarEx } from '../../models/vrchat';

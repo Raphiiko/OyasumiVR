@@ -98,6 +98,28 @@
         "description": "Automatically accept invite requests from friends.",
         "title": "Enable"
       },
+      "acceptMessage": {
+        "title": "Accept with message",
+        "description": "Include a message when you accept an invite request",
+        "customMessage": {
+          "title": "Invite message",
+          "placeholder": "Request accepted by OyasumiVR"
+        }
+      },
+      "declineOnRequest": {
+        "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
+        "title": "Decline invite requests",
+        "options": {
+          "DISABLED": "Never",
+          "WHEN_SLEEPING": "Only while I'm sleeping",
+          "ALWAYS": "Yes"
+        },
+        "customMessage": {
+          "title": "Custom message",
+          "description": "Enter the message to send when a request is declined",
+          "placeholder": "Request declined by OyasumiVR"
+        }
+      },
       "listMode": {
         "description": "How the player list operates",
         "options": {
@@ -114,7 +136,7 @@
             "subLabel": "Accept from friends on the list"
           }
         },
-        "title": "List Mode"
+        "title": "List mode"
       },
       "onlyBelowPlayerCount": {
         "description": "This includes yourself",
@@ -126,6 +148,15 @@
       "presetOptions": {
         "options": {
           "NONE": "Don't change"
+        }
+      },
+      "declineOnInviteWhileAsleep": {
+        "title": "Decline invites while asleep",
+        "description": "Automatically decline invites while the sleep mode is enabled",
+        "customMessage": {
+          "title": "Custom message",
+          "description": "Enter the message to send when an invite is declined",
+          "placeholder": "I'm currently asleep! (Declined by OyasumiVR)"
         }
       }
     },
@@ -143,7 +174,7 @@
     },
     "savePreset": "Save As Preset",
     "title": "Auto Accept Invite Requests",
-    "userOnBusyStatus": "You cannot accept invite requests from users while your status is on busy (red).",
+    "userOnBusyStatus": "Friends won't be able to request to join you normally while your status is on busy (red). OyasumiVR will still accept invite requests sent through 3rd party tools like VRCX.",
     "userOnJoinMeStatus": "VRChat will automatically accept all invite requests regardless of your settings, because your status is on join me (blue).",
     "whitelist": "Player Whitelist"
   },
@@ -438,6 +469,21 @@
             "whitelist": "As this player was whitelisted"
           },
           "title": "Auto-accepted invite request from ''{displayName}''"
+        },
+        "declinedInviteRequest": {
+          "reason": {
+            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "As the sleep mode was inactive",
+            "PLAYER_COUNT_CONDITION_FAILED": "As there were too many players in the instance",
+            "NOT_ON_WHITELIST": "As this player was not on the whitelist",
+            "ON_BLACKLIST": "As this player was on the blacklist"
+          },
+          "title": "Auto-declined invite request from ''{displayName}''"
+        },
+        "declinedInvite": {
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As the sleep mode was active"
+          },
+          "title": "Auto-declined invite from ''{displayName}''"
         },
         "bsbFanSpeedChanged": {
           "reason": {

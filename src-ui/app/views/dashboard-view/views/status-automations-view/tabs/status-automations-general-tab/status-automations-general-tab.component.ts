@@ -10,7 +10,7 @@ import { UserStatus } from 'vrchat';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AutomationConfigService } from '../../../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { VRChatService } from '../../../../../../services/vrchat.service';
+import { VRChatService } from '../../../../../../services/vrchat-api/vrchat.service';
 import {
   ConfirmModalComponent,
   ConfirmModalInputModel,
@@ -24,7 +24,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
   templateUrl: './status-automations-general-tab.component.html',
   styleUrls: ['./status-automations-general-tab.component.scss'],
   standalone: false,
-  animations: [vshrink()]
+  animations: [vshrink()],
 })
 export class StatusAutomationsGeneralTabComponent implements OnInit {
   UserStatus = UserStatus;

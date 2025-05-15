@@ -7,7 +7,7 @@ import {
 
 import { AutomationConfigService } from './automation-config.service';
 import { SleepService } from './sleep.service';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 import { NotificationService } from './notification.service';
 import {
   concatMap,

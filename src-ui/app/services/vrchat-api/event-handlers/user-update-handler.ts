@@ -1,14 +1,13 @@
-import { VRChatEventHandler } from '../vrchat-event-handler';
 import type { LimitedUser } from 'vrchat/dist';
-import { VRChatService } from '../../vrchat.service';
+import { VRChatAuth } from '../vrchat-auth';
+import { VRChatEventHandler } from '../vrchat-socket';
 
 export class UserUpdateHandler implements VRChatEventHandler {
   type = 'user-update';
 
-  constructor(private vrchat: VRChatService) {}
+  constructor(private vrchatAuth: VRChatAuth) {}
 
   handle(contentString: string) {
-    // Parse the message content
     const content: {
       userId: string;
       user: Omit<
@@ -17,7 +16,6 @@ export class UserUpdateHandler implements VRChatEventHandler {
       > & { currentAvatar: string; currentAvatarAssetUrl: string };
     } = JSON.parse(contentString);
     // Update the current user
-    this.vrchat.patchCurrentUser(content.user);
-    this.vrchat.receivedUserUpdate();
+    this.vrchatAuth.receivedUserUpdate(content.user);
   }
 }

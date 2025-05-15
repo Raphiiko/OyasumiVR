@@ -142,7 +142,6 @@
     },
     "savePreset": "Guardar como preajuste",
     "title": "Aceptar automáticamente solicitudes de invitación",
-    "userOnBusyStatus": "No puedes aceptar solicitudes de invitación de usuarios mientras tu estado sea ocupado. (red).",
     "userOnJoinMeStatus": "VRChat aceptará automáticamente todas las solicitudes de invitación, independientemente de su configuración, porque su estado es en unirse a mí (blue).",
     "whitelist": "Jugador Whitelist"
   },

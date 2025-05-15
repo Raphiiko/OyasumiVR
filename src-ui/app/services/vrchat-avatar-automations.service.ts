@@ -4,7 +4,7 @@ import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
 import { VRChatAvatarAutomationsConfig } from '../models/automations';
-import { VRChatService } from './vrchat.service';
+import { VRChatService } from './vrchat-api/vrchat.service';
 import { EventLogService } from './event-log.service';
 import { EventLogVRChatAvatarChanged } from '../models/event-log-entry';
 

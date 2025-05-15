@@ -142,7 +142,6 @@
     },
     "savePreset": "프리셋으로 저장하기",
     "title": "인바이트 리퀘스트 자동 수락",
-    "userOnBusyStatus": "스테이터스가 busy(빨간색)이므로 다른 친구의 초대 요청을 수락할 수 없어요.",
     "userOnJoinMeStatus": "스테이터스가 join me(파란색)이므로 VRChat이 설정과 관계없이 모든 초대 요청을 수락해요.",
     "whitelist": "플레이어 화이트리스트"
   },

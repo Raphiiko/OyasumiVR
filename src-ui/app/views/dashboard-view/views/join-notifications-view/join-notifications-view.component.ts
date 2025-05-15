@@ -11,7 +11,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { NotificationService } from '../../../../services/notification.service';
 import { hshrink } from 'src-ui/app/utils/animations';
-import { VRChatService } from '../../../../services/vrchat.service';
+import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 
 @Component({
   selector: 'app-join-notifications-view',

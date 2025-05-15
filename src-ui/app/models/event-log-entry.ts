@@ -24,6 +24,8 @@ export type EventLogEntry =
   | EventLogHardwareBrightnessChanged
   | EventLogSoftwareBrightnessChanged
   | EventLogAcceptedInviteRequest
+  | EventLogDeclinedInviteRequest
+  | EventLogDeclinedInvite
   | EventLogStatusChangedOnPlayerCountChange
   | EventLogStatusChangedOnGeneralEvent
   | EventLogSleepDetectorEnableCancelled
@@ -56,6 +58,8 @@ export type EventLogType =
   | 'hardwareBrightnessChanged'
   | 'softwareBrightnessChanged'
   | 'acceptedInviteRequest'
+  | 'declinedInviteRequest'
+  | 'declinedInvite'
   | 'statusChangedOnPlayerCountChange'
   | 'statusChangedOnGeneralEvent'
   | 'sleepDetectorEnableCancelled'
@@ -188,6 +192,22 @@ export interface EventLogAcceptedInviteRequest extends EventLogBase {
   type: 'acceptedInviteRequest';
   displayName: string;
   mode: 'DISABLED' | 'WHITELIST' | 'BLACKLIST';
+}
+
+export interface EventLogDeclinedInviteRequest extends EventLogBase {
+  type: 'declinedInviteRequest';
+  displayName: string;
+  reason:
+    | 'SLEEP_MODE_ENABLED_CONDITION_FAILED'
+    | 'PLAYER_COUNT_CONDITION_FAILED'
+    | 'NOT_ON_WHITELIST'
+    | 'ON_BLACKLIST';
+}
+
+export interface EventLogDeclinedInvite extends EventLogBase {
+  type: 'declinedInvite';
+  displayName: string;
+  reason: 'SLEEP_MODE_ENABLED';
 }
 
 export interface EventLogStatusChangedOnPlayerCountChange extends EventLogBase {

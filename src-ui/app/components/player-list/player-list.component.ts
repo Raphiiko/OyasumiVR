@@ -1,6 +1,6 @@
 import { Component, DestroyRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TString } from '../../models/translatable-string';
-import { VRChatService } from '../../services/vrchat.service';
+import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { LimitedUser } from 'vrchat';
 import {
   FriendSelectionModalComponent,

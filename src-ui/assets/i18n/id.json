@@ -53,7 +53,6 @@
       "title": "Konfirmasi penghapusan"
     },
     "title": "Terima Otomatis Permintaan Undangan",
-    "userOnBusyStatus": "Anda tidak dapat menerima permintaan undangan dari pengguna saat status Anda sedang sibuk (merah).",
     "userOnJoinMeStatus": "VRChat akan secara otomatis menerima semua permintaan undangan terlepas dari pengaturan Anda, karena status Anda dalam keadaan join me (biru).",
     "whitelist": "Whitelist Player"
   },

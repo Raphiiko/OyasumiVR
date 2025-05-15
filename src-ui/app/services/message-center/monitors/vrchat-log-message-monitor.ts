@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { VRChatService } from '../../vrchat.service';
+import { VRChatService } from '../../vrchat-api/vrchat.service';
 import { MessageMonitor } from './message-monitor';
 import { VRChatLogService } from '../../vrchat-log.service';
 import { combineLatest, debounceTime, distinctUntilChanged, filter, map, merge } from 'rxjs';

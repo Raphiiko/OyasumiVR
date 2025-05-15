@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { VRChatService } from '../vrchat.service';
+import { VRChatService } from '../vrchat-api/vrchat.service';
 import {
   asyncScheduler,
   combineLatest,

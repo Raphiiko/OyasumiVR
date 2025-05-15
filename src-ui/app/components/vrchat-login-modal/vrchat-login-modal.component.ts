@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { fadeUp, hshrink, vshrink } from '../../utils/animations';
-import { VRChatService } from '../../services/vrchat.service';
+import { VRChatService } from '../../services/vrchat-api/vrchat.service';
 import { firstValueFrom, map, take } from 'rxjs';
 import { VRChatLoginTFAModalComponent } from '../vrchat-login-tfa-modal/vrchat-login-tfa-modal.component';
 import { BaseModalComponent } from '../base-modal/base-modal.component';
