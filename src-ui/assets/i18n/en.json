@@ -95,12 +95,12 @@
         }
       },
       "enable": {
-        "description": "Automatically accept invite requests from friends.",
+        "description": "Automatically accept invite requests from friends",
         "title": "Enable"
       },
       "acceptMessage": {
         "title": "Accept with message",
-        "description": "Include a message when you accept an invite request",
+        "description": "Include a message when OyasumiVR accepts an invite request",
         "customMessage": {
           "title": "Invite message",
           "placeholder": "Request accepted by OyasumiVR"
@@ -484,6 +484,15 @@
             "SLEEP_MODE_ENABLED": "As the sleep mode was active"
           },
           "title": "Auto-declined invite from ''{displayName}''"
+        },
+        "frameLimitChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep",
+            "HMD_CONNECT": "As your headset connected"
+          },
+          "title": "Frame limit for ''{appName}'' set to {limit}"
         },
         "bsbFanSpeedChanged": {
           "reason": {

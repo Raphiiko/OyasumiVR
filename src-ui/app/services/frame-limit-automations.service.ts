@@ -15,6 +15,7 @@ import {
 import { OpenVRService } from './openvr.service';
 import { FrameLimitConfigOption } from '../models/automations';
 import { SleepPreparationService } from './sleep-preparation.service';
+import { EventLogFrameLimitChanged } from '../models/event-log-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -58,7 +59,12 @@ export class FrameLimitAutomationsService {
     // Apply frame limits for each configured app
     for (const appConfig of frameLimitConfig.configs) {
       const frameLimitValue = sleepMode ? appConfig.onSleepEnable : appConfig.onSleepDisable;
-      await this.applyFrameLimit(appConfig.appId, frameLimitValue);
+      await this.applyFrameLimit(
+        appConfig.appId,
+        appConfig.appLabel,
+        frameLimitValue,
+        sleepMode ? 'SLEEP_MODE_ENABLED' : 'SLEEP_MODE_DISABLED'
+      );
     }
   }
 
@@ -70,23 +76,65 @@ export class FrameLimitAutomationsService {
 
     // Apply frame limits for preparation state
     for (const appConfig of frameLimitConfig.configs) {
-      await this.applyFrameLimit(appConfig.appId, appConfig.onSleepPreparation);
+      await this.applyFrameLimit(
+        appConfig.appId,
+        appConfig.appLabel,
+        appConfig.onSleepPreparation,
+        'SLEEP_PREPARATION'
+      );
     }
   }
 
   private async onHmdConnect() {
     // Apply current state when HMD connects
     const sleepMode = await firstValueFrom(this.sleepService.mode);
+    const configs = await firstValueFrom(this.automationConfigService.configs);
+    const frameLimitConfig = configs.FRAME_LIMIT_AUTOMATIONS;
 
-    if (sleepMode) {
-      await this.onSleepModeChange(true);
-    } else {
-      await this.onSleepModeChange(false);
+    // Apply frame limits for HMD connection
+    for (const appConfig of frameLimitConfig.configs) {
+      const frameLimitValue = sleepMode ? appConfig.onSleepEnable : appConfig.onSleepDisable;
+      await this.applyFrameLimit(
+        appConfig.appId,
+        appConfig.appLabel,
+        frameLimitValue,
+        'HMD_CONNECT'
+      );
     }
   }
 
-  private async applyFrameLimit(appId: number, value: FrameLimitConfigOption) {
+  private async applyFrameLimit(
+    appId: number,
+    appName: string,
+    value: FrameLimitConfigOption,
+    reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'HMD_CONNECT'
+  ) {
     if (value === 'DISABLED') return;
     await this.frameLimiterService.setFrameLimitForAppId(appId, value);
+
+    // Log the event - store either translation keys or percentage values
+    let limitValue: string;
+    switch (value) {
+      case 'AUTO':
+        limitValue = 'frame-limiter.selector.auto';
+        break;
+      case 0:
+        limitValue = 'frame-limiter.selector.noLimit';
+        break;
+      default:
+        // For numeric values, we use the percentage directly
+        if (typeof value === 'number') {
+          limitValue = Math.round((1 / (value + 1)) * 100) + '%';
+        } else {
+          limitValue = '';
+        }
+    }
+
+    this.eventLog.logEvent({
+      type: 'frameLimitChanged',
+      appName,
+      limit: limitValue,
+      reason,
+    } as EventLogFrameLimitChanged);
   }
 }
