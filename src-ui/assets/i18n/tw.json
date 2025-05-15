@@ -142,7 +142,6 @@
     },
     "savePreset": "儲存為預設值",
     "title": "自動接受加入請求",
-    "userOnBusyStatus": "當你的狀態為忙碌（紅色）時，你不能接受玩家的加入請求",
     "userOnJoinMeStatus": "無論你的設定如何，VRChat 都會自動接受所有邀請請求，因為你的狀態是加入我（藍色）",
     "whitelist": "玩家白名單"
   },

@@ -142,7 +142,6 @@
     },
     "savePreset": "Opslaan Als Preset",
     "title": "Invite Requests Automatisch Accepteren",
-    "userOnBusyStatus": "Je kan geen invite requests accepteren als je status op busy (rood) staat.",
     "userOnJoinMeStatus": "VRChat za onafhankelijk van je instellingen automatisch alle invite requests accepteren, omdat je status op join me (blauw) staat.",
     "whitelist": "Speler Whitelist"
   },

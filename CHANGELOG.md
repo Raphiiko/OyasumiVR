@@ -9,23 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
-- VR Headset device & battery level to the device list
 - Frame limiting automations for VRChat, Resonite and ChilloutVR
-- Sleep mode toggle and sleep preparation to system tray menu
+- Options for automatically declining invites and invite requests
+- GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 - Message center for automatically diagnosing common issues
+- VR Headset device & battery level to the device list
+- Sleep mode toggle and sleep preparation to system tray menu
 - Exposed headset battery level and charging indicator over MQTT
 
 ### Changed
 
-- Added continuous scanning for lighthouses to replace manual scanning. 
-- Migrated to Tauri v2, and upgraded various dependencies.
+- Replaced manual scanning for lighthouses with continuous scanning
+- Migrated to Tauri v2, and upgraded various dependencies
 - Localized system tray menu
 - Updated theming
 
 ### Fixed
 
-- "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly.  
+- "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly
 - Battery and charging levels exposed over MQTT becoming unavailable randomly
 
 ## [1.14.7]

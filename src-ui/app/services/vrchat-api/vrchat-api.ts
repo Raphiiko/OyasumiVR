@@ -4,9 +4,10 @@ import { getVersion } from 'src-ui/app/utils/app-utils';
 import { TaskQueue } from 'src-ui/app/utils/task-queue';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { serialize as serializeCookie } from 'cookie';
-import type { CurrentUser, LimitedUser, UserStatus } from 'vrchat/dist';
+import { InviteMessageType } from 'vrchat/dist';
+import type { CurrentUser, InviteMessage, LimitedUser, UserStatus } from 'vrchat/dist';
 import { CachedValue } from 'src-ui/app/utils/cached-value';
-import { AvatarEx } from 'src-ui/app/models/vrchat';
+import { AvatarEx, InviteMessageEx } from 'src-ui/app/models/vrchat';
 import { uniqBy } from 'lodash';
 import { BehaviorSubject, firstValueFrom, map, Observable, Subject } from 'rxjs';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
@@ -18,7 +19,9 @@ async function fetch(
 ): Promise<Response> {
   info(`[VRChat] API Request: ${input}`);
   try {
-    const response = await tauriFetch(input, init);
+    const response = await tauriFetch(input, {
+      ...init,
+    });
     return response;
   } catch (e) {
     error(`[VRChat] HTTP Request Error: ${e}`);
@@ -39,12 +42,15 @@ export class VRChatAPI {
       typePerMinute: {
         STATUS_CHANGE: 6,
         DELETE_NOTIFICATION: 3,
-        INVITE: 6,
+        INVITE: 12,
         LIST_FRIENDS: 15,
         POLL_USER: 1,
         LIST_AVATARS_FAVOURITE: 10,
         LIST_AVATARS_UPLOADED: 15,
         SELECT_AVATAR: 6,
+        LIST_INVITE_MESSAGES: 8,
+        UPDATE_INVITE_MESSAGE: 12,
+        DECLINE_INVITE_OR_INVITE_REQUEST: 12,
       },
     },
   });
@@ -65,6 +71,28 @@ export class VRChatAPI {
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_AVATARS'
   );
+  private _inviteMessageCaches: Record<InviteMessageType, CachedValue<InviteMessageEx[]>> = {
+    [InviteMessageType.Message]: new CachedValue<InviteMessageEx[]>(
+      undefined,
+      60 * 60 * 1000, // Cache for 1 hour
+      'VRCHAT_INVITE_MESSAGE'
+    ),
+    [InviteMessageType.Response]: new CachedValue<InviteMessageEx[]>(
+      undefined,
+      60 * 60 * 1000, // Cache for 1 hour
+      'VRCHAT_INVITE_MESSAGE_RESPONSE'
+    ),
+    [InviteMessageType.Request]: new CachedValue<InviteMessageEx[]>(
+      undefined,
+      60 * 60 * 1000, // Cache for 1 hour
+      'VRCHAT_INVITE_MESSAGE_REQUEST'
+    ),
+    [InviteMessageType.RequestResponse]: new CachedValue<InviteMessageEx[]>(
+      undefined,
+      60 * 60 * 1000, // Cache for 1 hour
+      'VRCHAT_INVITE_MESSAGE_REQUEST_RESPONSE'
+    ),
+  };
 
   public isFetchingFriends = this._friendFetcher.asObservable().pipe(map(Boolean));
 
@@ -279,24 +307,164 @@ export class VRChatAPI {
     }
   }
 
-  public async inviteUser(inviteeId: string, instanceId: string) {
+  public async declineInviteOrInviteRequest(
+    notificationId: string,
+    notificationType: 'invite' | 'requestInvite',
+    message: string
+  ) {
+    // Throw if we don't have a current user
+    const userId = (await firstValueFrom(this.user))?.id;
+    if (!userId) {
+      error('[VRChat] Tried declining an invite or invite request while not logged in');
+      throw new Error('Tried declining an invite or invite request while not logged in');
+    }
+    // Get the message slot if provided
+    let messageSlot: number | undefined;
+    if (message) {
+      const messageEx = await this.ensureInviteMessage(
+        notificationType === 'invite' ? 'response' : 'requestResponse',
+        message
+      ).catch((e) => {
+        error(`[VRChat] Sending invite without message, failed to allocate message slot: ${e}`);
+        return null;
+      });
+      if (messageEx) messageSlot = messageEx.slot;
+      else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
+    }
+    // Send the message
+    try {
+      const result = await this.apiCallQueue.queueTask<Response>({
+        typeId: 'DECLINE_INVITE_OR_INVITE_REQUEST',
+        runnable: async () => {
+          return await fetch(`${BASE_URL}/invite/${notificationId}/response`, {
+            method: 'POST',
+            headers: await this.getDefaultHeaders(),
+            body: JSON.stringify({ responseSlot: messageSlot }),
+          });
+        },
+      });
+      if (result.error) throw result.error;
+      if (!result.result?.ok) throw result.result;
+    } catch (e) {
+      error(`[VRChat] Failed to delete notification: ${JSON.stringify(e)}`);
+    }
+  }
+
+  public async inviteUser(inviteeId: string, instanceId: string, message?: string) {
     // Throw if we don't have a current user
     const userId = (await firstValueFrom(this.user))?.id;
     if (!userId) {
       error('[VRChat] Tried inviting a user while not logged in');
       throw new Error('Tried inviting a user while not logged in');
     }
+    // Get the message slot if provided
+    let messageSlot: number | undefined;
+    if (message) {
+      const messageEx = await this.ensureInviteMessage('message', message).catch((e) => {
+        error(`[VRChat] Sending invite without message, failed to allocate message slot: ${e}`);
+        return null;
+      });
+      if (messageEx) messageSlot = messageEx.slot;
+      else error(`[VRChat] Sending invite without message, failed to allocate message slot.`);
+    }
     // Send
-    await this.apiCallQueue.queueTask<Response>({
-      typeId: 'INVITE',
+    try {
+      await this.apiCallQueue.queueTask<Response>({
+        typeId: 'INVITE',
+        runnable: async () => {
+          return fetch(`${BASE_URL}/invite/${inviteeId}`, {
+            body: JSON.stringify({ instanceId, messageSlot }),
+            method: 'POST',
+            headers: await this.getDefaultHeaders(),
+          });
+        },
+      });
+    } catch (e) {
+      error(`[VRChat] Failed to invite user: ${JSON.stringify(e)}`);
+      throw e;
+    }
+  }
+
+  public async ensureInviteMessage(
+    type: InviteMessageType,
+    message: string
+  ): Promise<InviteMessageEx | null> {
+    // Throw if we don't have a current user
+    const userId = (await firstValueFrom(this.user))?.id;
+    if (!userId) {
+      error('[VRChat] Tried ensuring an invite message while not logged in');
+      throw new Error('Tried ensuring an invite message while not logged in');
+    }
+    // Sanitize message
+    message = message.trim().replace(/\s+/g, ' ').slice(0, 64);
+    // Get known messages (cached or fetched)
+    const cache = this._inviteMessageCaches[type];
+    let messages: InviteMessageEx[] | undefined = cache.get();
+    if (!messages) {
+      const result = await this.apiCallQueue.queueTask<Response>({
+        typeId: 'LIST_INVITE_MESSAGES',
+        runnable: async () => {
+          return await fetch(`${BASE_URL}/message/${userId}/${type}`, {
+            headers: await this.getDefaultHeaders(),
+          });
+        },
+      });
+      if (result.error) throw result.error;
+      if (!result.result?.ok) throw result.result;
+      const data = await result.result.json();
+      messages = data.map(
+        (message: InviteMessage) =>
+          ({
+            type: message.messageType,
+            slot: message.slot,
+            message: message.message,
+            canUpdateAtTimeStamp:
+              Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
+          } as InviteMessageEx)
+      );
+      // Cache the retrieved messages
+      cache.set(messages!);
+      console.warn('RETRIEVED MESSAGES', { collection: type, messages });
+    } else {
+      console.warn('CACHED MESSAGES', { collection: type, messages });
+    }
+    // If we have a message that exactly matches the one we want, return that
+    let slot = messages!.find((m) => m.message === message);
+    if (slot) return slot;
+    // If we don't have a message that exactly matches the one we want, find the highest slot we can overwrite
+    messages!.sort((a, b) => b.slot - a.slot);
+    slot = messages!.find((m) => Date.now() >= m.canUpdateAtTimeStamp);
+    // If we don't have a slot, we can't overwrite any existing messages, so we will return null
+    if (!slot) return null;
+    // Update the messaage in the slot
+    const result = await this.apiCallQueue.queueTask<Response>({
+      typeId: 'UPDATE_INVITE_MESSAGE',
       runnable: async () => {
-        return fetch(`${BASE_URL}/invite/${inviteeId}`, {
-          body: JSON.stringify({ instanceId }),
-          method: 'POST',
+        return await fetch(`${BASE_URL}/message/${userId}/${type}/${slot.slot}`, {
+          method: 'PUT',
           headers: await this.getDefaultHeaders(),
+          body: JSON.stringify({ message }),
         });
       },
     });
+    if (result.error) throw result.error;
+    if (!result.result?.ok) throw result.result;
+    const data = await result.result.json();
+    messages = data.map(
+      (message: InviteMessage) =>
+        ({
+          type: message.messageType,
+          slot: message.slot,
+          message: message.message,
+          canUpdateAtTimeStamp:
+            Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
+        } as InviteMessageEx)
+    );
+    // Cache the new messages
+    cache.set(messages!);
+    console.warn('UPDATED MESSAGES', { collection: type, messages });
+
+    return messages?.find((m) => m.slot === slot.slot) ?? null;
   }
 
   public async listFriends(force = false): Promise<LimitedUser[]> {
@@ -528,7 +696,9 @@ export class VRChatAPI {
     return entries;
   }
 
-  private async getDefaultHeaders(): Promise<Record<string, string>> {
+  private async getDefaultHeaders(
+    contentType: string = 'application/json'
+  ): Promise<Record<string, string>> {
     const settings = await firstValueFrom(this.settings);
     const cookies = [];
     if (settings.authCookie) cookies.push(serializeCookie('auth', settings.authCookie));
@@ -537,7 +707,7 @@ export class VRChatAPI {
     return {
       Cookie: cookies.join('; '),
       'User-Agent': this.userAgent,
-      'Content-Type': 'application/json',
+      'Content-Type': contentType,
     };
   }
 

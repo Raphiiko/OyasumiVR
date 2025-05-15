@@ -1,6 +1,6 @@
 import { Component, DestroyRef, OnInit } from '@angular/core';
 import { SelectBoxItem } from '../../../../components/select-box/select-box.component';
-import { distinctUntilChanged, map, skip, tap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip, Subject, tap } from 'rxjs';
 import { VRChatService } from '../../../../services/vrchat-api/vrchat.service';
 import { hshrink, noop, vshrink } from '../../../../utils/animations';
 import { isEqual } from 'lodash';
@@ -17,6 +17,7 @@ interface PresetOptions {
   onSleepDisable: SelectBoxItem;
   onSleepPreparation: SelectBoxItem;
 }
+
 @Component({
   selector: 'app-auto-invite-request-accept-view',
   templateUrl: './auto-invite-request-accept-view.component.html',
@@ -61,6 +62,27 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
     onSleepPreparation: this.presetOptions[0],
   };
   playerIds: string[] = [];
+  protected declineOnRequestOptions: SelectBoxItem[] = [
+    {
+      id: 'ALWAYS',
+      label: 'auto-invite-request-accept.options.declineOnRequest.options.ALWAYS',
+      subLabel: '',
+    },
+    {
+      id: 'WHEN_SLEEPING',
+      label: 'auto-invite-request-accept.options.declineOnRequest.options.WHEN_SLEEPING',
+      subLabel: '',
+    },
+    {
+      id: 'DISABLED',
+      label: 'auto-invite-request-accept.options.declineOnRequest.options.DISABLED',
+      subLabel: '',
+    },
+  ];
+  protected declineOnRequestOption: SelectBoxItem | undefined;
+  protected updateAcceptInviteRequestCustomMessage = new Subject<string>();
+  protected updateDeclineInviteRequestCustomMessage = new Subject<string>();
+  protected updateDeclineInviteWhileAsleepCustomMessage = new Subject<string>();
 
   constructor(
     protected vrchat: VRChatService,
@@ -129,6 +151,39 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
         if (playersChanged) {
           this.playerIds = [...this.config.playerIds];
         }
+        this.declineOnRequestOption = this.declineOnRequestOptions.find(
+          (o) => o.id === this.config.declineOnRequest
+        );
+      });
+    this.updateAcceptInviteRequestCustomMessage
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(500),
+        map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
+        distinctUntilChanged()
+      )
+      .subscribe((message) => {
+        this.updateConfig({ acceptInviteRequestMessage: message });
+      });
+    this.updateDeclineInviteRequestCustomMessage
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(500),
+        map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
+        distinctUntilChanged()
+      )
+      .subscribe((message) => {
+        this.updateConfig({ declineInviteRequestMessage: message });
+      });
+    this.updateDeclineInviteWhileAsleepCustomMessage
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        debounceTime(500),
+        map((message) => message.trim().replace(/\s+/g, ' ').slice(0, 64)),
+        distinctUntilChanged()
+      )
+      .subscribe((message) => {
+        this.updateConfig({ declineInviteMessage: message });
       });
   }
 
@@ -171,5 +226,12 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
   async updatePlayerIds(playerIds: string[]) {
     this.playerIds = playerIds;
     await this.updateConfig({ playerIds });
+  }
+
+  public async setDeclineOnRequestOption(optionId?: string) {
+    if (!optionId || !this.declineOnRequestOptions.map((o) => o.id).includes(optionId)) return;
+    await this.updateConfig({
+      declineOnRequest: optionId as 'DISABLED' | 'WHEN_SLEEPING' | 'ALWAYS',
+    });
   }
 }

@@ -142,7 +142,6 @@
     },
     "savePreset": "Als Voreinstellung speichern",
     "title": "Automatisch Einladungsanfragen annehmen",
-    "userOnBusyStatus": "Du kannst keine Einladungsanfragen von Spielern annehmen, während dein Status beschäftigt (rot) ist.",
     "userOnJoinMeStatus": "VRChat nimmt automatisch alle Einladungsanfragen an, unabhängig von deinen Einstellung, da dein Status auf Tritt mir bei (blau) gesetzt ist.",
     "whitelist": "Spieler Whitelist"
   },

@@ -150,14 +150,22 @@ export class VRChatService {
     await this.api.selectAvatar(avatarId);
   }
 
-  public async inviteUser(inviteeId: string, instanceId?: string) {
+  public async inviteUser(inviteeId: string, options?: { instanceId?: string; message?: string }) {
     // Throw if instance id was not provided and we don't know the current world id.
-    if (!instanceId) instanceId = this._world.value?.instanceId;
+    const instanceId = options?.instanceId ?? this._world.value?.instanceId;
     if (!instanceId) {
       error('[VRChat] Tried inviting a user when the current world instance is unknown');
       throw new Error('Cannot invite a user when the current world instance is unknown');
     }
-    await this.api.inviteUser(inviteeId, instanceId);
+    await this.api.inviteUser(inviteeId, instanceId, options?.message);
+  }
+
+  public async declineInviteOrInviteRequest(
+    notificationId: string,
+    notificationType: 'invite' | 'requestInvite',
+    message: string
+  ) {
+    await this.api.declineInviteOrInviteRequest(notificationId, notificationType, message);
   }
 
   public async listFriends(): Promise<LimitedUser[]> {

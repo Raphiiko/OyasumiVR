@@ -49,7 +49,6 @@
       "title": "Confirmer la suppression"
     },
     "title": "Accepter les demandes d'invitation automatiquement",
-    "userOnBusyStatus": "Vous ne pouvez pas accepter que les demandes d'invitation quand votre statut est busy (rouge).",
     "userOnJoinMeStatus": "VRChat acceptera automatiquement toute demande d'invitation, peu importe vos paramètres OyasumiVR, car votre statut est 'join me' (bleu).",
     "whitelist": "Liste blanche"
   },

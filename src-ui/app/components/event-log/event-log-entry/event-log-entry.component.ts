@@ -5,6 +5,8 @@ import { EventLogSleepModeDisabledEntryParser } from './entry-parsers/sleep-mode
 import { EventLogTurnedOffOpenVRDevicesEntryParser } from './entry-parsers/openvr-device-turned-off';
 import { EventLogGpuPowerLimitChangedEntryParser } from './entry-parsers/gpu-power-limit-changed';
 import { EventLogAcceptedInviteRequestEntryParser } from './entry-parsers/accepted-invite-request';
+import { EventLogDeclinedInviteRequestEntryParser } from './entry-parsers/declined-invite-request';
+import { EventLogDeclinedInviteEntryParser } from './entry-parsers/declined-invite';
 import { EventLogStatusChangedOnPlayerCountChangeEntryParser } from './entry-parsers/status-changed-on-player-count-change';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
@@ -54,6 +56,8 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogHardwareBrightnessChangedEntryParser(),
     new EventLogSoftwareBrightnessChangedEntryParser(),
     new EventLogAcceptedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteRequestEntryParser(),
+    new EventLogDeclinedInviteEntryParser(),
     new EventLogStatusChangedOnPlayerCountChangeEntryParser(),
     new EventLogStatusChangedOnGeneralEventEntryParser(),
     new EventLogSleepDetectorEnableCancelledEntryParser(),
