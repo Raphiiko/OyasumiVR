@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - VR Headset device & battery level to the device list
 - Sleep mode toggle and sleep preparation to system tray menu
 - Exposed headset battery level and charging indicator over MQTT
+- Brightness automation that runs when your VR headset connects to SteamVR
+- Brightness automations will now indicate if they (could) run when your HMD connects
 
 ### Changed
 
