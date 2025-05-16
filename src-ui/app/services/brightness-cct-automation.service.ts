@@ -27,7 +27,6 @@ import {
   BrightnessAutomationsConfig,
   BrightnessEvent,
   BrightnessEventAutomationConfig,
-  BrightnessEvents,
 } from '../models/automations';
 import {
   EventLogCCTChanged,
