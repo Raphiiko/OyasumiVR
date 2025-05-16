@@ -370,8 +370,6 @@ export class BrightnessCctAutomationService {
       if (potentials.length === tier.length) break;
     }
 
-    console.log({ potentialAutomations });
-
     return { brightnessAutomation, cctAutomation, potentialAutomations };
   }
 
