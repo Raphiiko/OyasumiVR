@@ -27,7 +27,6 @@ import {
   BrightnessAutomationsConfig,
   BrightnessEvent,
   BrightnessEventAutomationConfig,
-  BrightnessEvents,
 } from '../models/automations';
 import {
   EventLogCCTChanged,
@@ -370,8 +369,6 @@ export class BrightnessCctAutomationService {
       }
       if (potentials.length === tier.length) break;
     }
-
-    console.log({ potentialAutomations });
 
     return { brightnessAutomation, cctAutomation, potentialAutomations };
   }
