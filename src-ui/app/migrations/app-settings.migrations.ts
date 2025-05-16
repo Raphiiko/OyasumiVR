@@ -74,6 +74,16 @@ function from9to10(data: any): any {
   data.version = 10;
   data.overlayGpuAcceleration = !(data.overlayGpuFix ?? false);
   delete data.overlayGpuFix;
+  
+  // Remove unused one-time flags
+  if (data.oneTimeFlags) {
+    data.oneTimeFlags = data.oneTimeFlags.filter(
+      (flag: string) => 
+        flag !== 'BRIGHTNESS_AUTOMATION_ON_HMD_CONNECT_EVENT_FEATURE' && 
+        flag !== 'BASESTATION_COUNT_WARNING_DIALOG'
+    );
+  }
+  
   return data;
 }
 

@@ -8,3 +8,13 @@
 .alert {
   margin-top: 1em;
 }
+
+.hmd-connect-indicator {
+  margin-left: 0.5em;
+  margin-top: 0.4em;
+  transition: opacity 0.15s ease;
+
+  &.potential {
+    opacity: 0.5;
+  }
+}

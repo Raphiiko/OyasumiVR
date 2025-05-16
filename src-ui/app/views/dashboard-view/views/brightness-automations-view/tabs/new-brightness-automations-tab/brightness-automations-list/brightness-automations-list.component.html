@@ -14,6 +14,20 @@
       </div>
       <div class="setting-row-action">
         <div class="small-spinner" @fade *ngIf="event.inProgress"></div>
+        <div
+          class="hmd-connect-indicator"
+          @fade
+          *ngIf="hmdConnectAutomations[event.name]"
+          [ngClass]="{ potential: hmdConnectAutomations[event.name] === 'potential' }"
+          [tooltip]="
+            hmdConnectAutomations[event.name] === 'potential'
+              ? 'brightness-automations.hmdConnectPotentialEventTooltip'
+              : 'brightness-automations.hmdConnectEventTooltip'
+          "
+          [tooltipMode]="'left'"
+        >
+          <i class="material-symbols-outlined">head_mounted_device</i>
+        </div>
         <app-brightness-automation-config-label
           [advancedMode]="config.advancedMode"
           [cctControlEnabled]="cctControlEnabled"
@@ -30,14 +44,5 @@
         </label>
       </div>
     </div>
-  </div>
-</div>
-<div class="alert">
-  <div class="alert-bg"></div>
-  <div class="alert-icon">
-    <i class="material-symbols-outlined">info</i>
-  </div>
-  <div class="alert-content">
-    <span translate>brightness-automations.onHmdConnectInfo</span>
   </div>
 </div>
