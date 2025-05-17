@@ -24,8 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced manual scanning for lighthouses with continuous scanning
 - Migrated to Tauri v2, and upgraded various dependencies
 - Localized system tray menu
-- Updated theming
 - Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
+- Updated theming & some component styling
 
 ### Fixed
 
