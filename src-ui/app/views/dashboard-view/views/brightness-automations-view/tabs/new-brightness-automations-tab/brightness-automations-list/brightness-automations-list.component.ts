@@ -12,6 +12,7 @@ import { fade } from '../../../../../../../utils/animations';
 import { AppSettingsService } from '../../../../../../../services/app-settings.service';
 import { BrightnessEventViewModel } from '../brightness-automations-tab.component';
 import { SleepService } from '../../../../../../../services/sleep.service';
+import { uniq } from 'lodash';
 
 @Component({
   selector: 'app-brightness-automations-list',
@@ -91,27 +92,36 @@ export class BrightnessAutomationsListComponent implements OnInit {
   private updateHmdConnectIndicators() {
     return this.brightnessCctAutomations
       .determineHmdConnectAutomations()
-      .then(({ brightnessAutomation, cctAutomation, potentialAutomations }) => {
-        // Reset all indicators
-        Object.keys(this.hmdConnectAutomations).forEach((key) => {
-          this.hmdConnectAutomations[key as BrightnessEvent] = false;
-        });
+      .then(
+        ({
+          brightnessAutomation,
+          cctAutomation,
+          potentialBrightnessAutomations,
+          potentialCctAutomations,
+        }) => {
+          // Reset all indicators
+          Object.keys(this.hmdConnectAutomations).forEach((key) => {
+            this.hmdConnectAutomations[key as BrightnessEvent] = false;
+          });
 
-        // Set indicators for the automations that would be triggered
-        if (brightnessAutomation) {
-          this.hmdConnectAutomations[brightnessAutomation] = 'active';
-        }
-        if (cctAutomation && cctAutomation !== brightnessAutomation) {
-          this.hmdConnectAutomations[cctAutomation] = 'active';
-        }
-
-        // Set indicators for potential automations with higher transparency
-        potentialAutomations?.forEach((automation) => {
-          if (!this.hmdConnectAutomations[automation]) {
-            this.hmdConnectAutomations[automation] = 'potential';
+          // Set indicators for the automations that would be triggered
+          if (brightnessAutomation) {
+            this.hmdConnectAutomations[brightnessAutomation] = 'active';
           }
-        });
-      });
+          if (cctAutomation) {
+            this.hmdConnectAutomations[cctAutomation] = 'active';
+          }
+
+          // Set indicators for potential automations with higher transparency
+          uniq([...potentialBrightnessAutomations, ...potentialCctAutomations])?.forEach(
+            (automation) => {
+              if (!this.hmdConnectAutomations[automation]) {
+                this.hmdConnectAutomations[automation] = 'potential';
+              }
+            }
+          );
+        }
+      );
   }
 
   toggleEvent(name: BrightnessEvent) {

@@ -224,7 +224,29 @@ export class BrightnessCctAutomationService {
   public async determineHmdConnectAutomations(): Promise<{
     brightnessAutomation?: BrightnessEvent;
     cctAutomation?: BrightnessEvent;
-    potentialAutomations: BrightnessEvent[];
+    potentialBrightnessAutomations: BrightnessEvent[];
+    potentialCctAutomations: BrightnessEvent[];
+  }> {
+    const date = new Date();
+    const currentHour = date.getHours();
+    const currentMinute = date.getMinutes();
+    const currentTime = currentHour * 3600 + currentMinute * 60;
+    return this.determineHmdConnectAutomationsInternal({
+      determinePotentialAutomations: true,
+      sleepMode: await firstValueFrom(this.sleepService.mode),
+      currentTime,
+    });
+  }
+
+  private async determineHmdConnectAutomationsInternal(options: {
+    determinePotentialAutomations: boolean;
+    sleepMode: boolean;
+    currentTime: number; // Elapsed seconds in day
+  }): Promise<{
+    brightnessAutomation?: BrightnessEvent;
+    cctAutomation?: BrightnessEvent;
+    potentialBrightnessAutomations: BrightnessEvent[];
+    potentialCctAutomations: BrightnessEvent[];
   }> {
     const config = await firstValueFrom(this.automationConfigService.configs).then(
       (c) => c.BRIGHTNESS_AUTOMATIONS
@@ -243,90 +265,83 @@ export class BrightnessCctAutomationService {
       | 'SLEEP_MODE_DISABLE'
       | 'HMD_CONNECT'
       | undefined;
+    const sunriseEnabled = config.AT_SUNRISE.enabled;
+    const sunsetEnabled = config.AT_SUNSET.enabled;
+    // Get sunset/sunrise times
+    // When enabled, use the configured times, otherwise use the auto times
+    const sunriseTimeStr = sunriseEnabled
+      ? config.AT_SUNRISE.activationTime ?? this.autoSunriseTime ?? '07:00'
+      : this.autoSunriseTime ?? '07:00';
+    const sunsetTimeStr = sunsetEnabled
+      ? config.AT_SUNSET.activationTime ?? this.autoSunsetTime ?? '19:00'
+      : this.autoSunsetTime ?? '19:00';
+    // Calculate the seconds-of-day for sunrise and sunset
+    const sunriseTime = this.timeToSeconds(sunriseTimeStr);
+    const sunsetTime = this.timeToSeconds(sunsetTimeStr);
     // If HMD connect is enabled, use its settings for brightness and CCT, if configured.
     if (config.HMD_CONNECT.enabled) {
       if (config.HMD_CONNECT.changeBrightness) brightnessAutomation = 'HMD_CONNECT';
       if (config.HMD_CONNECT.changeColorTemperature) cctAutomation = 'HMD_CONNECT';
     }
-    // Check if either or both sunrise/sunset automations are enabled and have valid times
-    const sunriseEnabled = config.AT_SUNRISE.enabled && config.AT_SUNRISE.activationTime;
-    const sunsetEnabled = config.AT_SUNSET.enabled && config.AT_SUNSET.activationTime;
+    // Check if either or both sunrise/sunset automations are enabled
     if (sunriseEnabled || sunsetEnabled) {
-      const d = new Date();
-      const currentHour = d.getHours();
-      const currentMinute = d.getMinutes();
-      const currentTime = currentHour * 3600 + currentMinute * 60;
+      // Determine if the sunrise and sunset times are inverted (sunset time is earlier than sunrise time)
+      // and which automation to use based on the current time
+      let activeAutomation: BrightnessEvent | null = null;
 
-      // Get times, using nullish for disabled automations
-      const sunriseTimeStr = sunriseEnabled
-        ? config.AT_SUNRISE.activationTime!
-        : this.autoSunriseTime;
-      const sunsetTimeStr = sunsetEnabled ? config.AT_SUNSET.activationTime! : this.autoSunsetTime;
+      if (sunriseTime !== null && sunsetTime !== null) {
+        // Both times available - similar to original logic
+        const timesInverted = sunriseTime >= sunsetTime;
+        const firstTime = timesInverted ? sunsetTime : sunriseTime;
+        const secondTime = timesInverted ? sunriseTime : sunsetTime;
 
-      // Only proceed if we have at least one valid time
-      if (sunriseTimeStr || sunsetTimeStr) {
-        // Calculate the seconds-of-day for sunrise and sunset
-        const sunriseTime = sunriseTimeStr ? this.timeToSeconds(sunriseTimeStr) : null;
-        const sunsetTime = sunsetTimeStr ? this.timeToSeconds(sunsetTimeStr) : null;
-
-        // Determine if the sunrise and sunset times are inverted (sunset time is earlier than sunrise time)
-        // and which automation to use based on the current time
-        let activeAutomation: BrightnessEvent | null = null;
-
-        if (sunriseTime !== null && sunsetTime !== null) {
-          // Both times available - similar to original logic
-          const timesInverted = sunriseTime >= sunsetTime;
-          const firstTime = timesInverted ? sunsetTime : sunriseTime;
-          const secondTime = timesInverted ? sunriseTime : sunsetTime;
-
-          if (currentTime < firstTime || currentTime >= secondTime) {
-            activeAutomation =
-              timesInverted && sunriseEnabled
-                ? 'AT_SUNRISE'
-                : !timesInverted && sunsetEnabled
-                ? 'AT_SUNSET'
-                : null;
-          } else {
-            activeAutomation =
-              timesInverted && sunsetEnabled
-                ? 'AT_SUNSET'
-                : !timesInverted && sunriseEnabled
-                ? 'AT_SUNRISE'
-                : null;
-          }
-        } else if (sunriseTime !== null) {
-          // Only sunrise time available
-          // Use sunrise automation after sunrise time (until midnight)
-          activeAutomation = sunriseEnabled && currentTime >= sunriseTime ? 'AT_SUNRISE' : null;
-        } else if (sunsetTime !== null) {
-          // Only sunset time available
-          // Use sunset automation after sunset time (until midnight)
-          activeAutomation = sunsetEnabled && currentTime >= sunsetTime ? 'AT_SUNSET' : null;
+        if (options.currentTime < firstTime || options.currentTime >= secondTime) {
+          activeAutomation =
+            timesInverted && sunriseEnabled
+              ? 'AT_SUNRISE'
+              : !timesInverted && sunsetEnabled
+              ? 'AT_SUNSET'
+              : null;
+        } else {
+          activeAutomation =
+            timesInverted && sunsetEnabled
+              ? 'AT_SUNSET'
+              : !timesInverted && sunriseEnabled
+              ? 'AT_SUNRISE'
+              : null;
         }
+      } else if (sunriseTime !== null) {
+        // Only sunrise time available
+        // Use sunrise automation after sunrise time (until midnight)
+        activeAutomation =
+          sunriseEnabled && options.currentTime >= sunriseTime ? 'AT_SUNRISE' : null;
+      } else if (sunsetTime !== null) {
+        // Only sunset time available
+        // Use sunset automation after sunset time (until midnight)
+        activeAutomation = sunsetEnabled && options.currentTime >= sunsetTime ? 'AT_SUNSET' : null;
+      }
 
-        // Apply the active automation if any
-        if (activeAutomation) {
-          if (!brightnessAutomation && config[activeAutomation].changeBrightness)
-            brightnessAutomation = activeAutomation;
-          if (!cctAutomation && config[activeAutomation].changeColorTemperature)
-            cctAutomation = activeAutomation;
-        }
+      // Apply the active automation if any
+      if (activeAutomation) {
+        if (!brightnessAutomation && config[activeAutomation].changeBrightness)
+          brightnessAutomation = activeAutomation;
+        if (!cctAutomation && config[activeAutomation].changeColorTemperature)
+          cctAutomation = activeAutomation;
       }
     }
 
     // Otherwise, use the values configured for the sleep mode automations (if they're enabled)
-    const sleepMode = await firstValueFrom(this.sleepService.mode);
     // Brightness
     if (
       !brightnessAutomation &&
-      sleepMode &&
+      options.sleepMode &&
       config.SLEEP_MODE_ENABLE.enabled &&
       config.SLEEP_MODE_ENABLE.changeBrightness
     )
       brightnessAutomation = 'SLEEP_MODE_ENABLE';
     else if (
       !brightnessAutomation &&
-      !sleepMode &&
+      !options.sleepMode &&
       config.SLEEP_MODE_DISABLE.enabled &&
       config.SLEEP_MODE_DISABLE.changeBrightness
     )
@@ -334,43 +349,59 @@ export class BrightnessCctAutomationService {
     // CCT
     if (
       !cctAutomation &&
-      sleepMode &&
+      options.sleepMode &&
       config.SLEEP_MODE_ENABLE.enabled &&
       config.SLEEP_MODE_ENABLE.changeColorTemperature
     )
       cctAutomation = 'SLEEP_MODE_ENABLE';
     else if (
       !cctAutomation &&
-      !sleepMode &&
+      !options.sleepMode &&
       config.SLEEP_MODE_DISABLE.enabled &&
       config.SLEEP_MODE_DISABLE.changeColorTemperature
     )
       cctAutomation = 'SLEEP_MODE_DISABLE';
 
-    const potentialAutomations: BrightnessEvent[] = [];
+    const potentialBrightnessAutomations: BrightnessEvent[] = [];
+    const potentialCctAutomations: BrightnessEvent[] = [];
 
-    const potentialPriorityTiers: BrightnessEvent[][] = [
-      ['HMD_CONNECT'],
-      ['AT_SUNRISE', 'AT_SUNSET'],
-      ['SLEEP_MODE_ENABLE', 'SLEEP_MODE_DISABLE'],
-    ];
+    if (options.determinePotentialAutomations) {
+      // const potentialPriorityTiers: BrightnessEvent[][] = [
+      //   ['HMD_CONNECT'],
+      //   ['AT_SUNRISE', 'AT_SUNSET'],
+      //   ['SLEEP_MODE_ENABLE', 'SLEEP_MODE_DISABLE'],
+      // ];
 
-    for (const tier of potentialPriorityTiers) {
-      const potentials: BrightnessEvent[] = [];
-      for (const automation of tier) {
-        const potential =
-          config[automation].enabled &&
-          (config[automation].changeBrightness || config[automation].changeColorTemperature);
-        if (potential) {
-          potentials.push(automation);
-          if (automation !== brightnessAutomation && automation !== cctAutomation)
-            potentialAutomations.push(automation);
+      for (const sleepMode of [true, false]) {
+        for (const currentTime of [sunriseTime + 1, sunsetTime + 1]) {
+          const { brightnessAutomation: _brightnessAutomation, cctAutomation: _cctAutomation } =
+            await this.determineHmdConnectAutomationsInternal({
+              determinePotentialAutomations: false,
+              sleepMode,
+              currentTime,
+            });
+          if (
+            _brightnessAutomation &&
+            _brightnessAutomation !== brightnessAutomation &&
+            !potentialBrightnessAutomations.includes(_brightnessAutomation)
+          )
+            potentialBrightnessAutomations.push(_brightnessAutomation);
+          if (
+            _cctAutomation &&
+            _cctAutomation !== cctAutomation &&
+            !potentialCctAutomations.includes(_cctAutomation)
+          )
+            potentialCctAutomations.push(_cctAutomation);
         }
       }
-      if (potentials.length === tier.length) break;
     }
 
-    return { brightnessAutomation, cctAutomation, potentialAutomations };
+    return {
+      brightnessAutomation,
+      cctAutomation,
+      potentialBrightnessAutomations,
+      potentialCctAutomations,
+    };
   }
 
   private timeToSeconds(timeStr: string): number {
