@@ -177,7 +177,6 @@
         "title": "Zonsondergang"
       }
     },
-    "autoDetermineSunsetSunrise": "Automatisch de tijd bepalen",
     "brightness": {
       "title": "Zet de helderheid naar"
     },
@@ -208,7 +207,6 @@
       "message": "OyasumiVR kan op twee manieren de helderheid van je VR headset aansturen: Software besturing en Hardware besturing:\n\nSoftware besturing is beschikbaar voor elke headset. Het past de helderheid aan door de helderheid van het getoonde beeld aan te passen.\n\nHardware besturing is alleen beschikbaar voor ondersteunde headsets (Valve Index, Bigscreen Beyond). Het past de helderheid aan door direct het scherm in je headset aan te sturen, binnen de mogelijke waarden.\n\nIn de simpele modus, OyasumiVR zal vloeiend schakelen tussen software- en hardware besturing, of alleen software besturing als hardware besturing niet word ondersteund.\n\nAls je liever directe controle hebt, kun je met de geavanceerde modus software en hardware helderheid los van elkaar instellen, met de mogelijkheid om exacte waarden te gebruiken.",
       "title": "Modus voor Helderheidsbesturing"
     },
-    "onHmdConnectInfo": "Wanneer je beide de \"Bij zonsondergang\" en \"Bij zonsopkomst\" automatiseringen aan zet, zullen ze automatisch worden toegepast wanneer je je VR headset aan sluit, afhankelijk van de tijd. Doe je dit niet, dan zullen de waardes van de \"Wanneer ik ga slapen\" en \"Wanneer ik wakker word\" automatiseringen gebruikt worden.",
     "onlyWhenSleepModeDisabled": {
       "description": "Draai deze automatiswering alleen wanneer de slaap modus is uitgeschakeld",
       "title": "Alleen wanneer de slaap modus is uitgeschakeld"

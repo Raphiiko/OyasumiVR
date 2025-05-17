@@ -177,7 +177,6 @@
         "title": "日落時間"
       }
     },
-    "autoDetermineSunsetSunrise": "自動估計時間",
     "brightness": {
       "title": "將亮度改為"
     },
@@ -208,7 +207,6 @@
       "message": "當使用 OyasumiVR 來控制 VR 頭戴式顯示器的亮度時，可以選擇兩種不同的控制方法：軟體控制與硬體控制。\n\n軟體控制適用於所有類型的頭戴式顯示器，它透過調整影像的亮度來改變顯示器的亮度。\n\n硬體控制則只適用於特定支援的顯示器（如 Valve Index、Bigscreen Beyond），此方法會直接在支援的範圍內調整顯示器顯示的亮度。\n\n在簡易模式下，OyasumiVR 會平滑地在軟體和硬體亮度控制之間進行切換，或者在不支援硬體亮度的情況下只控制軟體亮度。\n\n如果你偏好直接控制，進階模式允許你分別獨立控制軟體和硬體亮度，讓你可以為每一種設置確切的亮度值。",
       "title": "亮度控制模式"
     },
-    "onHmdConnectInfo": "當你同時啟用 \"At sunset「（日落時）和 」At sunrise\"（日出時）自動化功能時，它們會根據一天中的時間，在你連接耳機時自動執行。如果沒有，則會使用 \"When I go to sleep「（我睡覺時）和 」When I wake up\"（我起床時）自動化的值！",
     "onlyWhenSleepModeDisabled": {
       "description": "僅在睡眠模式停用時執行此自動化",
       "title": "僅當睡眠模式停用時"

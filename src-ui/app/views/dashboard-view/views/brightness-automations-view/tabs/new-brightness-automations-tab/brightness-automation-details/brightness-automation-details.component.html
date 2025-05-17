@@ -33,20 +33,28 @@
             }}</span>
           </div>
           <div class="setting-row-action">
-            <button
-              class="btn btn-copy btn-secondary"
-              tooltip="brightness-automations.autoDetermineSunsetSunrise"
+            <div
+              class="auto-toggle-container"
+              tooltip="brightness-automations.autoUpdateTimeTooltip"
               tooltipMode="left"
-              (click)="autoDetermineActivationTime()"
             >
-              <i class="material-symbols-outlined">brightness_auto</i>
-            </button>
+              <span class="auto-label">Auto</span>
+              <label class="switch-toggle">
+                <input
+                  type="checkbox"
+                  [checked]="asSunConfig(config()).autoUpdateTime"
+                  (change)="toggleAutoUpdateTime()"
+                />
+                <span class="switch-toggle-slider"></span>
+              </label>
+            </div>
             <input
               type="time"
               [value]="asSunConfig(config()).activationTime"
               (input)="updateActivationTime(timeInput.value)"
               #timeInput
               [class.anim-vshake]="vshakeElements.includes('ACTIVATION_TIME')"
+              [disabled]="asSunConfig(config()).autoUpdateTime"
             />
           </div>
         </div>

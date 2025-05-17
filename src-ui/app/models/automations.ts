@@ -157,6 +157,7 @@ export interface SunBrightnessEventAutomationConfig
   type: 'SUN';
   onlyWhenSleepDisabled: boolean;
   activationTime: string | null;
+  autoUpdateTime: boolean;
 }
 
 // RESOLUTION AUTOMATIONS
@@ -619,6 +620,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       colorTemperature: 1800,
       onlyWhenSleepDisabled: true,
       activationTime: null,
+      autoUpdateTime: true,
     },
     AT_SUNRISE: {
       type: 'SUN',
@@ -633,6 +635,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       colorTemperature: 6600,
       onlyWhenSleepDisabled: true,
       activationTime: null,
+      autoUpdateTime: true,
     },
     SLEEP_PREPARATION: {
       enabled: false,

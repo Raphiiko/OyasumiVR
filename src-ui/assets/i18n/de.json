@@ -177,7 +177,6 @@
         "title": "Zeit des Sonnenuntergangs"
       }
     },
-    "autoDetermineSunsetSunrise": "Automatische Zeiterkennung",
     "brightness": {
       "title": "Helligkeit ändern auf"
     },
@@ -208,7 +207,6 @@
       "message": "OyasumiVR hat zwei Methoden um die Helligkeit deines VR Headsets anzupassen: Softwaresteuerung und Hardwaresteuerung:\n\nSoftwaresteuerung ist für jedes Headset verfügbar. Sie beeinflusst die Helligkeit deines Headsets indem sie die Helligkeit des Bildes anpasst.\n\nHardwaresteuerung ist nur für kompatible Headset verfügbar (Valve Index, Bigscreen Beyond). Sie beeinflusst die Helligkeit deines Headsets indem sie direkt die Helligkeit des Displays in deinem Headset innerhalb der unterstützten Reichweite anpasst.\n\nIm einfachen Modus wechselt OyasumiVR flüssig zwischen Hardware- und Softwaresteuerung, oder benutzt nur Softwaresteuerung falls Hardwaresteuerung nicht unterstützt ist.\n\nWenn du direkte Kontrolle bevorzugsts, kannst du im erweiterten Modus sowohl Hardware- als auch Softwaresteuerung seperat auf die exakt von dir gewünschten Werte einstellen.",
       "title": "Helligkeitssteuerungsmodus"
     },
-    "onHmdConnectInfo": "Wenn du die 'bei Sonnenuntergang' und 'bei Sonnenaufgang' Automationen beide aktivierst werden beide automatisch laufen, wenn du dein Headset verbindest (abhängig von der derzeitigen Tageszeit). Wenn nicht werden die Werte von \"Wenn ich schlafen gehe\" und \"Wenn ich aufwache\" stattdessen verwendet.",
     "onlyWhenSleepModeDisabled": {
       "description": "Nur aktivieren, wenn der Schlafmodus deaktiviert ist",
       "title": "Nur wenn der Schlafmodus aktiviert ist ausführen"
