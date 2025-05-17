@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, distinctUntilChanged, firstValueFrom } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
+  firstValueFrom,
+  interval,
+  startWith,
+} from 'rxjs';
 import {
   AvatarContext,
   AvatarContextType,
@@ -21,7 +28,10 @@ export class AvatarContextService {
   constructor(private osc: OscService) {}
 
   public async init() {
-    this.osc.vrchatOscQueryAddress.pipe(distinctUntilChanged()).subscribe((oscqAddr) => {
+    combineLatest([
+      this.osc.vrchatOscQueryAddress.pipe(distinctUntilChanged()),
+      interval(10000).pipe(startWith(null)),
+    ]).subscribe(([oscqAddr]) => {
       this.buildAvatarContext('VRCHAT', oscqAddr);
     });
     this._avatarContext.subscribe((context) => {

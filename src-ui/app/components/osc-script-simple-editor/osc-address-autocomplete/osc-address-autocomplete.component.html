@@ -13,8 +13,11 @@
   <div
     class="autocomplete-preview"
     *ngIf="
-      (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults) ||
-      (autocompleteState.previewValue && value && autocompleteState.focusedIndex === -1)
+      (autocompleteState.focusedIndex >= 0 && autocompleteState.showResults && isFocused) ||
+      (autocompleteState.previewValue &&
+        value &&
+        autocompleteState.focusedIndex === -1 &&
+        isFocused)
     "
   >
     <ng-container
@@ -34,8 +37,13 @@
       }}</span>
     </ng-template>
   </div>
-  <div class="autocomplete-dropdown-container" *ngIf="autocompleteState.showResults">
-    <div class="autocomplete-dropdown" @vshrink>
+  <div class="autocomplete-dropdown-container" *ngIf="autocompleteState.showResults && isFocused">
+    <div
+      class="autocomplete-dropdown"
+      @vshrink
+      #resultsContainer
+      (mouseleave)="autocompleteState.focusedIndex = -1; autocompleteState.previewValue = null"
+    >
       <div
         class="autocomplete-item"
         *ngFor="let address of autocompleteState.results; let idx = index"

@@ -41,6 +41,10 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   @Output() valueChange = new EventEmitter<string>();
   @Output() addressSelected = new EventEmitter<OscAddressSelection>();
   @ViewChild('addressInput') addressInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('resultsContainer') resultsContainer?: ElementRef<HTMLDivElement>;
+
+  private isInitialLoad = true;
+  isFocused = false;
 
   autocompleteState: AutocompleteState = {
     showResults: false,
@@ -72,9 +76,10 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
 
     if (changes['value']) {
       this.autocompleteState.inputValue = this.value;
-      if (!this.autocompleteState.justSelected) {
+      if (!this.autocompleteState.justSelected && !this.isInitialLoad) {
         this.addressQuery.next(this.value);
       }
+      this.isInitialLoad = false;
     }
   }
 
@@ -82,7 +87,15 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
     // Initialize Fuse for address suggestions
     const fuseOptions = {
       findAllMatches: true,
-      threshold: 0.3,
+      threshold: 0.4,
+      minMatchCharLength: 1,
+      includeScore: true,
+      keys: [
+        {
+          name: 'item',
+          weight: 1,
+        },
+      ],
     };
     const fuseIndex = Fuse.createIndex([], this.addresses);
     this.fuseSuggestions = new Fuse(this.addresses, fuseOptions, fuseIndex);
@@ -94,7 +107,12 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   }
 
   searchAddresses(query: string): void {
-    if (!this.fuseSuggestions || !query.trim() || this.autocompleteState.justSelected) {
+    if (
+      !this.fuseSuggestions ||
+      !query.trim() ||
+      this.autocompleteState.justSelected ||
+      !this.isFocused
+    ) {
       this.autocompleteState.results = [];
       this.autocompleteState.showResults = false;
       this.autocompleteState.previewValue = null;
@@ -103,7 +121,15 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
     }
 
     const results = this.fuseSuggestions.search(query.trim());
-    this.autocompleteState.results = results.map((result) => result.item);
+    // Sort results by score and then by length
+    this.autocompleteState.results = results
+      .sort((a, b) => {
+        if (a.score === b.score) {
+          return a.item.length - b.item.length;
+        }
+        return (a.score || 0) - (b.score || 0);
+      })
+      .map((result) => result.item);
     this.autocompleteState.showResults = this.autocompleteState.results.length > 0;
 
     // Don't highlight any result by default, let the user explicitly select
@@ -133,6 +159,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   }
 
   onBlur(): void {
+    this.isFocused = false;
     // Hide suggestions after a small delay to allow for clicking on a suggestion
     setTimeout(() => {
       this.autocompleteState.showResults = false;
@@ -142,6 +169,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
   }
 
   onFocus(): void {
+    this.isFocused = true;
     // Only show results if the user hasn't just selected an item
     if (!this.autocompleteState.justSelected) {
       this.autocompleteState.inputValue = this.value;
@@ -192,6 +220,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
         if (this.autocompleteState.focusedIndex >= 0) {
           this.autocompleteState.previewValue =
             this.autocompleteState.results[this.autocompleteState.focusedIndex];
+          this.scrollToFocusedItem();
         }
         break;
       case 'ArrowUp':
@@ -201,6 +230,7 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
         if (this.autocompleteState.focusedIndex >= 0) {
           this.autocompleteState.previewValue =
             this.autocompleteState.results[this.autocompleteState.focusedIndex];
+          this.scrollToFocusedItem();
         }
         break;
       case 'Enter':
@@ -215,6 +245,26 @@ export class OscAddressAutocompleteComponent implements OnInit, OnChanges {
         this.autocompleteState.previewValue = null;
         this.autocompleteState.focusedIndex = -1;
         break;
+    }
+  }
+
+  private scrollToFocusedItem(): void {
+    if (!this.resultsContainer?.nativeElement) return;
+
+    const container = this.resultsContainer.nativeElement;
+    const focusedElement = container.children[this.autocompleteState.focusedIndex] as HTMLElement;
+    if (!focusedElement) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = focusedElement.getBoundingClientRect();
+
+    // Check if the element is outside the visible area
+    if (elementRect.top < containerRect.top) {
+      // Element is above the visible area
+      container.scrollTop -= containerRect.top - elementRect.top;
+    } else if (elementRect.bottom > containerRect.bottom) {
+      // Element is below the visible area
+      container.scrollTop += elementRect.bottom - containerRect.bottom;
     }
   }
 }
