@@ -38,14 +38,6 @@
 <div class="simple-commands" @noop>
   <div class="simple-command" *ngFor="let command of _script.commands; let i = index" @vshrink>
     <ng-container *ngIf="command.type === 'COMMAND'">
-      <div
-        class="simple-command-error-icon"
-        @hshrink
-        *ngIf="getErrorsForAction(i).length"
-        (mouseenter)="hoverOnAction(i, $event)"
-      >
-        <i class="material-icons-round">error</i>
-      </div>
       <div class="simple-command-index">{{ i + 1 }}.</div>
       <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.osc</div>
       <div class="simple-command-parameters-container">
@@ -137,11 +129,6 @@
           (addressSelected)="onAddressSelected($event, command)"
         ></app-osc-address-autocomplete>
       </div>
-      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
-        <i class="material-icons">clear</i>
-      </button>
-    </ng-container>
-    <ng-container *ngIf="command.type === 'SLEEP'">
       <div
         class="simple-command-error-icon"
         @hshrink
@@ -150,6 +137,11 @@
       >
         <i class="material-icons-round">error</i>
       </div>
+      <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
+        <i class="material-icons">clear</i>
+      </button>
+    </ng-container>
+    <ng-container *ngIf="command.type === 'SLEEP'">
       <div class="simple-command-index">{{ i + 1 }}.</div>
       <div class="simple-command-action" translate>comp.osc-script-simple-editor.action.sleep</div>
       <div style="flex: 1"></div>
@@ -161,6 +153,14 @@
           (change)="setSleepDuration(command, $event)"
         />
         <span>ms</span>
+      </div>
+      <div
+        class="simple-command-error-icon"
+        @hshrink
+        *ngIf="getErrorsForAction(i).length"
+        (mouseenter)="hoverOnAction(i, $event)"
+      >
+        <i class="material-icons-round">error</i>
       </div>
       <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
         <i class="material-icons">clear</i>

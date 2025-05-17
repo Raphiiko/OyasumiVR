@@ -58,6 +58,8 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   errors: ValidationError[] = [];
   tooltipErrors: ValidationError[] = [];
   tooltipPosition: { x: number; y: number } = { x: 0, y: 0 };
+  tooltipVisible = false;
+  private tooltipUpdateId = 0;
   testing = false;
   addCommandItems: DropdownItem[] = [
     {
@@ -414,7 +416,7 @@ export class OscScriptSimpleEditorComponent implements OnInit {
           if (command.duration > 5000) {
             this.errors.push({
               actionIndex: actionIndex,
-              message: 'misc.oscScriptEditorErrors.durationTooHigh',
+              message: 'misc.oscScriptEditorErrors.durationTooLong',
             });
           }
           totalSleepDuration += command.duration;
@@ -446,11 +448,20 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   }
 
   hoverOnAction(lineNumber: number, event?: MouseEvent) {
+    if (!event) {
+      this.tooltipErrors = [];
+      return;
+    }
+
     this.tooltipErrors = this.getErrorsForAction(lineNumber);
-    if (!event) return;
     const el: HTMLElement = event.target as HTMLElement;
-    const x = el.offsetLeft + el.offsetWidth + 6;
-    const y = el.offsetTop;
-    this.tooltipPosition = { x, y };
+
+    // Position the tooltip to the left of the icon
+    // We'll use a fixed width that's large enough for our error messages
+    const estimatedTooltipWidth = 300;
+    this.tooltipPosition = {
+      x: el.offsetLeft - estimatedTooltipWidth - 6,
+      y: el.offsetTop,
+    };
   }
 }
