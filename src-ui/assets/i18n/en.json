@@ -80,6 +80,14 @@
     "loadingFriends": "Loading friends...",
     "noPlayersAdded": "No players are currently added to the list.",
     "options": {
+      "acceptMessage": {
+        "customMessage": {
+          "placeholder": "Request accepted by OyasumiVR",
+          "title": "Invite message"
+        },
+        "description": "Include a message when OyasumiVR accepts an invite request",
+        "title": "Accept with message"
+      },
       "changeListPreset": {
         "onSleepDisable": {
           "description": "Load a saved preset for the player list when the sleep mode disables",
@@ -94,31 +102,32 @@
           "title": "Load preset when I prepare to go to sleep"
         }
       },
+      "declineOnInviteWhileAsleep": {
+        "customMessage": {
+          "description": "Enter the message to send when an invite is declined",
+          "placeholder": "I'm currently asleep! (Declined by OyasumiVR)",
+          "title": "Custom message"
+        },
+        "description": "Automatically decline invites while the sleep mode is enabled",
+        "title": "Decline invites while asleep"
+      },
+      "declineOnRequest": {
+        "customMessage": {
+          "description": "Enter the message to send when a request is declined",
+          "placeholder": "Request declined by OyasumiVR",
+          "title": "Custom message"
+        },
+        "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
+        "options": {
+          "ALWAYS": "Yes",
+          "DISABLED": "Never",
+          "WHEN_SLEEPING": "Only while I'm sleeping"
+        },
+        "title": "Decline invite requests"
+      },
       "enable": {
         "description": "Automatically accept invite requests from friends",
         "title": "Enable"
-      },
-      "acceptMessage": {
-        "title": "Accept with message",
-        "description": "Include a message when OyasumiVR accepts an invite request",
-        "customMessage": {
-          "title": "Invite message",
-          "placeholder": "Request accepted by OyasumiVR"
-        }
-      },
-      "declineOnRequest": {
-        "description": "Automatically send a decline message if OyasumiVR does not automatically accept an invite request",
-        "title": "Decline invite requests",
-        "options": {
-          "DISABLED": "Never",
-          "WHEN_SLEEPING": "Only while I'm sleeping",
-          "ALWAYS": "Yes"
-        },
-        "customMessage": {
-          "title": "Custom message",
-          "description": "Enter the message to send when a request is declined",
-          "placeholder": "Request declined by OyasumiVR"
-        }
       },
       "listMode": {
         "description": "How the player list operates",
@@ -148,15 +157,6 @@
       "presetOptions": {
         "options": {
           "NONE": "Don't change"
-        }
-      },
-      "declineOnInviteWhileAsleep": {
-        "title": "Decline invites while asleep",
-        "description": "Automatically decline invites while the sleep mode is enabled",
-        "customMessage": {
-          "title": "Custom message",
-          "description": "Enter the message to send when an invite is declined",
-          "placeholder": "I'm currently asleep! (Declined by OyasumiVR)"
         }
       }
     },
@@ -210,9 +210,7 @@
         "title": "Time of sunset"
       }
     },
-    "hmdConnectEventTooltip": "These settings will be applied when your headset connects to SteamVR",
-    "hmdConnectPotentialEventTooltip": "These settings may be applied when your headset connects to SteamVR, if the conditions are met",
-    "autoDetermineSunsetSunrise": "Automatically estimate time",
+    "autoUpdateTimeTooltip": "Automatically update the time based on your location's sunrise/sunset times",
     "brightness": {
       "title": "Change the brightness to"
     },
@@ -234,6 +232,8 @@
       "description": "Adjusts the brightness of the display itself",
       "title": "Change the hardware brightness to"
     },
+    "hmdConnectEventTooltip": "These settings will be applied when your headset connects to SteamVR",
+    "hmdConnectPotentialEventTooltip": "These settings may be applied when your headset connects to SteamVR, if the conditions are met",
     "miscConfig": "Other options",
     "mode": {
       "advanced": "Advanced Mode",
@@ -262,30 +262,6 @@
     "transitionTime": {
       "description": "How long it should take for the changes to complete",
       "title": "Transition time"
-    }
-  },
-  "frame-limiter": {
-    "title": "Frame Limit Automations",
-    "description": "OyasumiVR can automatically limit the framerate of various games. You can use this to reduce the power draw of your system when you don't need high performance, like when you are asleep.",
-    "frameLimits": "Frame Limits",
-    "noLimits": "You have not yet configured any applications to limit!",
-    "addLimiter": "Add Application",
-    "removeLimiter": "Remove",
-    "onSleepDisable": "When I wake up",
-    "onSleepEnable": "When I go to sleep",
-    "onSleepPreparation": "When I prepare to go to sleep",
-    "steamvrRequired": "Changing frame limits directly and viewing estimated frame rates is only available while SteamVR is running. You can still configure the automation settings below.",
-    "selector": {
-      "auto": "Auto",
-      "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
-      "noLimit": "Unlimited",
-      "disabled": "Do not change"
-    },
-    "add-application-modal": {
-      "title": "Choose Application",
-      "instruction": "Select an application for which to configure frame limiting",
-      "add": "Add",
-      "notListedHelp": "Is your application not listed? Please request it in our <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>."
     }
   },
   "chaperone-automations": {
@@ -356,8 +332,8 @@
       "audioVolumeAutomations": "Audio Volume Automations",
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "brightnessAutomations": "Brightness Automations",
-      "frameLimiter": "Frame Limit Automations",
       "chaperoneAutomations": "Chaperone Automations",
+      "frameLimiter": "Frame Limit Automations",
       "gpuAutomations": "GPU Automations",
       "hardwareAutomations": "Hardware Automations",
       "hmdAutomations": "HMD Specific Automations",
@@ -471,30 +447,6 @@
           },
           "title": "Auto-accepted invite request from ''{displayName}''"
         },
-        "declinedInviteRequest": {
-          "reason": {
-            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "As the sleep mode was inactive",
-            "PLAYER_COUNT_CONDITION_FAILED": "As there were too many players in the instance",
-            "NOT_ON_WHITELIST": "As this player was not on the whitelist",
-            "ON_BLACKLIST": "As this player was on the blacklist"
-          },
-          "title": "Auto-declined invite request from ''{displayName}''"
-        },
-        "declinedInvite": {
-          "reason": {
-            "SLEEP_MODE_ENABLED": "As the sleep mode was active"
-          },
-          "title": "Auto-declined invite from ''{displayName}''"
-        },
-        "frameLimitChanged": {
-          "reason": {
-            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
-            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep",
-            "HMD_CONNECT": "As your headset connected"
-          },
-          "title": "Frame limit for ''{appName}'' set to {limit}"
-        },
         "bsbFanSpeedChanged": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -572,6 +524,30 @@
             "SLEEP_MODE_ENABLED": "As sleep mode was enabled"
           },
           "title": "Chaperone fade distance set to {value}"
+        },
+        "declinedInvite": {
+          "reason": {
+            "SLEEP_MODE_ENABLED": "As the sleep mode was active"
+          },
+          "title": "Auto-declined invite from ''{displayName}''"
+        },
+        "declinedInviteRequest": {
+          "reason": {
+            "NOT_ON_WHITELIST": "As this player was not on the whitelist",
+            "ON_BLACKLIST": "As this player was on the blacklist",
+            "PLAYER_COUNT_CONDITION_FAILED": "As there were too many players in the instance",
+            "SLEEP_MODE_ENABLED_CONDITION_FAILED": "As the sleep mode was inactive"
+          },
+          "title": "Auto-declined invite request from ''{displayName}''"
+        },
+        "frameLimitChanged": {
+          "reason": {
+            "HMD_CONNECT": "As your headset connected",
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": "Frame limit for ''{appName}'' set to {limit}"
         },
         "gpuPowerLimitChanged": {
           "reason": {
@@ -1153,6 +1129,30 @@
       "awake": "Awake",
       "sleeping": "Sleeping"
     }
+  },
+  "frame-limiter": {
+    "add-application-modal": {
+      "add": "Add",
+      "instruction": "Select an application for which to configure frame limiting",
+      "notListedHelp": "Is your application not listed? Please request it in our <a href='https://discord.gg/7MqdPJhYxC' target='_blank' rel='noopener noreferrer'>Discord</a>.",
+      "title": "Choose Application"
+    },
+    "addLimiter": "Add Application",
+    "description": "OyasumiVR can automatically limit the framerate of various games. You can use this to reduce the power draw of your system when you don't need high performance, like when you are asleep.",
+    "frameLimits": "Frame Limits",
+    "noLimits": "You have not yet configured any applications to limit!",
+    "onSleepDisable": "When I wake up",
+    "onSleepEnable": "When I go to sleep",
+    "onSleepPreparation": "When I prepare to go to sleep",
+    "removeLimiter": "Remove",
+    "selector": {
+      "auto": "Auto",
+      "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
+      "disabled": "Do not change",
+      "noLimit": "Unlimited"
+    },
+    "steamvrRequired": "Changing frame limits directly and viewing estimated frame rates is only available while SteamVR is running. You can still configure the automation settings below.",
+    "title": "Frame Limit Automations"
   },
   "gpu-automations": {
     "automations": "Sleep Automations",

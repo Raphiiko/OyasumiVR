@@ -145,3 +145,16 @@
     }
   }
 }
+
+.auto-toggle-container {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5em;
+  cursor: pointer;
+
+  .auto-label {
+    margin-right: 0.5em;
+    font-size: 0.9em;
+    color: var(--color-text-1);
+  }
+}

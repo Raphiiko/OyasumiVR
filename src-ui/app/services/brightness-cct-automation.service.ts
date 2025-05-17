@@ -147,6 +147,13 @@ export class BrightnessCctAutomationService {
       .subscribe();
     // Listen for minute starts
     await listen<void>('CRON_MINUTE_START', () => this.onMinuteTick());
+
+    // Update sunrise/sunset times on startup and every 12 hours
+    this.updateSunriseSunsetTimes();
+    interval(1000 * 60 * 60 * 12) // Every 12 hours
+      .pipe(startWith(0))
+      .subscribe(() => this.updateSunriseSunsetTimes());
+
     // Automatically fetch sunset/sunrise times when none are configured
     interval(1000 * 60 * 5)
       .pipe(
@@ -595,6 +602,50 @@ export class BrightnessCctAutomationService {
       (!config.AT_SUNRISE.onlyWhenSleepDisabled || !this.sleepMode)
     ) {
       await this.onAutomationTrigger('AT_SUNRISE', config.AT_SUNRISE);
+    }
+  }
+
+  private async updateSunriseSunsetTimes() {
+    try {
+      // Get the latest sunrise/sunset times
+      const [sunrise, sunset] = await invoke<[string, string]>('get_sunrise_sunset_time');
+      this.autoSunriseTime = sunrise;
+      this.autoSunsetTime = sunset;
+
+      // Update configurations with auto update enabled
+      const configs = await firstValueFrom(this.automationConfigService.configs);
+      const config = configs.BRIGHTNESS_AUTOMATIONS;
+
+      const patch: Partial<BrightnessAutomationsConfig> = {};
+      let needsUpdate = false;
+
+      // Update sunrise time if auto update is enabled
+      if (config.AT_SUNRISE.autoUpdateTime) {
+        patch.AT_SUNRISE = {
+          ...config.AT_SUNRISE,
+          activationTime: sunrise,
+        };
+        needsUpdate = true;
+      }
+
+      // Update sunset time if auto update is enabled
+      if (config.AT_SUNSET.autoUpdateTime) {
+        patch.AT_SUNSET = {
+          ...config.AT_SUNSET,
+          activationTime: sunset,
+        };
+        needsUpdate = true;
+      }
+
+      // Apply the updates if needed
+      if (needsUpdate) {
+        await this.automationConfigService.updateAutomationConfig<BrightnessAutomationsConfig>(
+          'BRIGHTNESS_AUTOMATIONS',
+          patch
+        );
+      }
+    } catch (e) {
+      error('[BrightnessCctAutomationService] Failed to update sunrise/sunset times: ' + e);
     }
   }
 }

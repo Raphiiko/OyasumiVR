@@ -177,7 +177,6 @@
         "title": "Hora del atardecer"
       }
     },
-    "autoDetermineSunsetSunrise": "Estimación automática del tiempo",
     "brightness": {
       "title": "Cambia el brillo a"
     },
@@ -208,7 +207,6 @@
       "message": "OyasumiVR dispone de dos métodos para controlar el brillo de tu casco de RV: Control por software y control por hardware:\n\nEl control por software está disponible para todos los cascos. Ajusta el brillo de tu casco de RV ajustando el brillo de la imagen.\n\nEl control por hardware sólo está disponible para los cascos compatibles (Valve Index, Bigscreen Beyond). Ajusta el brillo de la pantalla de tus cascos directamente dentro del rango soportado.\n\nEn el modo simple, OyasumiVR hará una transición suave entre el control del brillo por software y por hardware, o sólo el brillo por software si el brillo por hardware no está soportado.\n\nSi prefieres el control directo, el modo avanzado te permite controlar tanto el brillo del software como el del hardware por separado, permitiéndote establecer los valores exactos de brillo para cada uno.",
       "title": "Modo de control de brillo"
     },
-    "onHmdConnectInfo": "Si activas las automatizaciones «Al atardecer» y «Al amanecer», se ejecutarán automáticamente cuando conectes los auriculares, en función de la hora del día. En caso contrario, se utilizarán los valores de las automatizaciones «Al acostarme» y «Al levantarme».",
     "onlyWhenSleepModeDisabled": {
       "description": "Ejecute esta automatización sólo cuando el modo de dormir esté desactivado.",
       "title": "Sólo mientras el modo dormir está desactivado"
