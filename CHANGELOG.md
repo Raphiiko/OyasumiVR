@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed headset battery level and charging indicator over MQTT
 - Brightness automation that runs when your VR headset connects to SteamVR
 - Brightness automations will now indicate if they (could) run when your HMD connects
+- Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
 
 ### Changed
 

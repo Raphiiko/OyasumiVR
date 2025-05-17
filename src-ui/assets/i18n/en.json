@@ -1038,7 +1038,8 @@
         }
       },
       "errorCounter": "{count, plural, one {1 Validation Error} other {# Validation Errors}}",
-      "test": "Test"
+      "test": "Test",
+      "vrchatAutofillInfo": "Launch VRChat to get auto completion for your avatar's parameters."
     },
     "player-list-preset-modal": {
       "confirmDelete": {
@@ -1390,6 +1391,10 @@
       "CCT_CONTROL_WARNING_DIALOG": {
         "message": "Please note that display color temperature control is only available with certain native SteamVR headsets, e.g. the Valve Index, Bigscreen Beyond, or HTC Vive (Pro).\n\nIf you do not use one of these headsets, this feature likely will have no effect for you.\n\nYou can disable display color temperature control in the settings if you want to.",
         "title": "Feature Availability"
+      },
+      "OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO": {
+        "message": "To get auto-completions for your VRChat avatar's parameters, you need to have VRChat running and be wearing your desired avatar.\n\nIf you don't have VRChat running, you can still use the simple editor, but you won't get auto-completions.",
+        "title": "Auto-completions"
       },
       "acknowledge": "I understand"
     },

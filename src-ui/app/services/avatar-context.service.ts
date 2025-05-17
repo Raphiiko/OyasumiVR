@@ -82,8 +82,10 @@ export class AvatarContextService {
         const type = leaf.TYPE;
         if (!type || !['f', 'i', 's', 'T', 'F'].includes(type)) continue;
         const name = address.substring('/avatar/parameters/'.length);
+        const mappedType = this.mapOscTypeToVRChatType(type);
+        if (!mappedType) continue;
         const parameter = this.sanitizeModularParameter({
-          type: type.toUpperCase() as VRChatAvatarParameter['type'],
+          type: mappedType,
           name,
           address,
         });
@@ -136,5 +138,21 @@ export class AvatarContextService {
       };
     }
     return undefined;
+  }
+
+  private mapOscTypeToVRChatType(oscType: string): VRChatAvatarParameter['type'] | null {
+    switch (oscType) {
+      case 'f':
+        return 'Float';
+      case 'i':
+        return 'Int';
+      case 's':
+        return 'String';
+      case 'T':
+      case 'F':
+        return 'Bool';
+      default:
+        return null;
+    }
   }
 }
