@@ -59,13 +59,13 @@
       (click)="openSubMenu('VRCHAT')"
       [class.active]="
         pathIsActive([
-          'sleepAnimations',
           'oscAutomations',
           'statusAutomations',
           'autoInviteRequestAccept',
           'vrchatMicMuteAutomations',
           'vrchatAvatarAutomations',
-          'joinNotifications'
+          'joinNotifications',
+          'sleepAnimations'
         ])
       "
     >
@@ -143,13 +143,6 @@
       </button>
     </div>
 
-    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
-      <div class="menu-item-icon-prefix">
-        <i class="material-icons-round">settings_accessibility</i>
-      </div>
-      <div class="menu-item-label" translate>comp.dashboard-navbar.sleepAnimations</div>
-    </div>
-
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'statusAutomations'">
       <div class="menu-item-icon-prefix">
         <i class="material-icons-round">brightness_1</i>
@@ -190,6 +183,13 @@
         <i class="material-icons-round">terminal</i>
       </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.oscAutomations</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'sleepAnimations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">settings_accessibility</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.sleepAnimations</div>
     </div>
   </div>
   <!-- Hardware Automations Submenu -->

@@ -18,14 +18,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Exposed headset battery level and charging indicator over MQTT
 - Brightness automation that runs when your VR headset connects to SteamVR
 - Brightness automations will now indicate if they (could) run when your HMD connects
+- Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
 
 ### Changed
 
 - Replaced manual scanning for lighthouses with continuous scanning
 - Migrated to Tauri v2, and upgraded various dependencies
 - Localized system tray menu
-- Updated theming
 - Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
+- Updated theming & some component styling
 
 ### Fixed
 

@@ -14,9 +14,6 @@
   flex-direction: row;
   align-items: center;
 
-  span {
-  }
-
   &-buttons {
     display: flex;
     flex-direction: row;
@@ -27,6 +24,21 @@
       &:not(:last-child) {
         margin-right: 0.5em;
       }
+    }
+  }
+
+  .info-icon {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-3);
+    padding: 0.5em 1em;
+    height: 0;
+
+    i.material-icons {
+      font-size: 1.25em;
     }
   }
 }
@@ -134,10 +146,15 @@
 
   &-address-input {
     flex: 1;
+    position: relative;
+    display: flex;
+    width: 100%;
+    min-width: 0;
 
-    input {
-      padding: 0.25em 1em;
+    app-osc-address-autocomplete {
+      flex: 1;
       width: 100%;
+      min-width: 0;
     }
   }
 

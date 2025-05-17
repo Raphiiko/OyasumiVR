@@ -10,6 +10,19 @@
     [translateParams]="{ count: errors.length }"
   ></span>
   <span style="flex: 1"></span>
+  <span
+    *ngIf="
+      !currentAvatarContext ||
+      currentAvatarContext.type !== 'VRCHAT' ||
+      (vrchat.vrchatProcessActive | async) !== true
+    "
+    class="info-icon"
+    [tooltip]="'comp.osc-script-simple-editor.vrchatAutofillInfo'"
+    [tooltipMode]="'bottom'"
+    [tooltipTextAlign]="'center'"
+  >
+    <i class="material-symbols-outlined">info</i>
+  </span>
   <div class="header-row-buttons">
     <app-dropdown-button [items]="addCommandItems" (itemSelect)="onAdd($event)">
       <i class="material-icons">add</i>
@@ -117,12 +130,12 @@
         </div>
       </div>
       <div class="input-wrapper simple-command-address-input">
-        <input
-          type="text"
-          placeholder="OSC Address"
+        <app-osc-address-autocomplete
+          [addresses]="knownOscAddresses"
           [value]="command.address"
-          (change)="setAddress(command, $event)"
-        />
+          (valueChange)="onAddressChange($event, command)"
+          (addressSelected)="onAddressSelected($event, command)"
+        ></app-osc-address-autocomplete>
       </div>
       <button class="btn simple-command-remove-button" (click)="removeCommand(command)">
         <i class="material-icons">clear</i>

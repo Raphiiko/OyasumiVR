@@ -1,0 +1,95 @@
+@use 'shadows';
+
+.osc-address-autocomplete {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex: 1;
+
+  input {
+    padding: 0.5em 1em;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    min-width: 0;
+    transition: color 0.15s ease;
+
+    &.showing-preview {
+      color: transparent;
+    }
+  }
+
+  .autocomplete-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.5em 1em;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+
+    .typed-part {
+      color: var(--color-text-0);
+    }
+
+    .suggested-part {
+      color: var(--color-text-3);
+    }
+  }
+
+  .autocomplete-dropdown-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+  }
+
+  .autocomplete-dropdown {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-surface-4);
+    border-radius: 0.25em;
+    margin-top: 4px;
+    @include shadows.shadow(3);
+
+    .autocomplete-item {
+      padding: 0.5em 1em;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--color-surface-3);
+      }
+
+      &.focused {
+        background: var(--color-surface-3);
+        // color: var(--color-text-0);
+      }
+
+      .source-label {
+        display: inline-block;
+        font-weight: 600;
+        margin-right: 0.75em;
+        padding: 0.125em 0.25em;
+        border-radius: 0.25em;
+
+        &.vrchat {
+          background: var(--color-vrchat-status-blue);
+          color: var(--color-text-0);
+
+          &.in-focus {
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}

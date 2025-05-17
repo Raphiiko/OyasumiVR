@@ -98,8 +98,8 @@ export class AppSettingsService {
     this.updateSettings({ oneTimeFlags: uniq(oneTimeFlags) });
   }
 
-  public async promptDialogForOneTimeFlag(flag: OneTimeFlag): Promise<boolean> {
-    if (this.oneTimeFlagSet(flag)) return false;
+  public async promptDialogForOneTimeFlag(flag: OneTimeFlag, force = false): Promise<boolean> {
+    if (this.oneTimeFlagSet(flag) && !force) return false;
     const result: ConfirmModalOutputModel | undefined = await firstValueFrom(
       this.modalService.addModal<ConfirmModalInputModel, ConfirmModalOutputModel>(
         ConfirmModalComponent,

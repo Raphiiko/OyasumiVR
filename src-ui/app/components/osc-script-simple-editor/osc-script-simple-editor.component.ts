@@ -11,10 +11,15 @@ import { SelectBoxItem } from '../select-box/select-box.component';
 import { fade, hshrink, noop, vshrink } from 'src-ui/app/utils/animations';
 import { TString } from '../../models/translatable-string';
 import { floatPrecision } from '../../utils/number-utils';
-import { debounceTime, startWith, Subject, tap } from 'rxjs';
+import { combineLatest, debounceTime, firstValueFrom, startWith, Subject, tap } from 'rxjs';
 import { OscService } from '../../services/osc.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MAX_PARAMETERS_PER_COMMAND, MAX_STRING_VALUE_LENGTH } from '../../utils/osc-script-utils';
+import { AvatarContextService } from 'src-ui/app/services/avatar-context.service';
+import { OscAddressSelection } from './osc-address-autocomplete/osc-address-autocomplete.component';
+import { AvatarContext, VRChatAvatarParameter } from '../../models/avatar-context';
+import { VRChatService } from 'src-ui/app/services/vrchat-api/vrchat.service';
+import { AppSettingsService } from '../../services/app-settings.service';
 
 interface ValidationError {
   actionIndex: number;
@@ -84,11 +89,19 @@ export class OscScriptSimpleEditorComponent implements OnInit {
       label: 'String',
     },
   ];
+  knownOscAddresses: string[] = [];
+  currentAvatarContext: AvatarContext | null = null;
 
   protected readonly MAX_PARAMETERS_PER_COMMAND = MAX_PARAMETERS_PER_COMMAND;
   protected readonly MAX_STRING_VALUE_LENGTH = MAX_STRING_VALUE_LENGTH;
 
-  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
+  constructor(
+    private osc: OscService,
+    private destroyRef: DestroyRef,
+    private avatarContextService: AvatarContextService,
+    protected vrchat: VRChatService,
+    private appSettings: AppSettingsService
+  ) {}
 
   ngOnInit(): void {
     this.validationTrigger
@@ -104,6 +117,27 @@ export class OscScriptSimpleEditorComponent implements OnInit {
         this.errorCount.emit(this.errors.length);
         this.scriptChange.emit(this._script);
       });
+
+    combineLatest([this.avatarContextService.avatarContext]).subscribe(([avatarContext]) => {
+      this.currentAvatarContext = avatarContext;
+      this.knownOscAddresses = [...(avatarContext?.parameters ?? []).map((p) => p.address)].sort();
+
+      // Check if we should show the VRChat autocomplete info dialog
+    });
+
+    setTimeout(() => {
+      this.checkShowVRChatAutocompleteInfo();
+    }, 1000);
+  }
+
+  private async checkShowVRChatAutocompleteInfo() {
+    // Only show if VRChat is not running and avatar context is unavailable
+    const isVRChatRunning = await firstValueFrom(this.vrchat.vrchatProcessActive);
+    if (!this.currentAvatarContext && !isVRChatRunning) {
+      await this.appSettings.promptDialogForOneTimeFlag(
+        'OSC_SCRIPT_SIMPLE_EDITOR_VRCHAT_AUTOCOMPLETE_INFO'
+      );
+    }
   }
 
   onAdd(item: DropdownItem) {
@@ -161,6 +195,87 @@ export class OscScriptSimpleEditorComponent implements OnInit {
   setAddress(command: OscScriptCommandAction, event: Event) {
     command.address = (event.target as HTMLInputElement).value;
     this.validationTrigger.next();
+  }
+
+  onAddressChange(address: string, command: OscScriptCommandAction) {
+    command.address = address;
+    this.validationTrigger.next();
+  }
+
+  onAddressSelected(selection: OscAddressSelection, command: OscScriptCommandAction) {
+    const isVRChatParameter = selection.address.startsWith('/avatar/parameters/');
+
+    // If this is a VRChat parameter, try to find its type in the avatarContext
+    if (
+      isVRChatParameter &&
+      this.currentAvatarContext &&
+      this.currentAvatarContext.type === 'VRCHAT'
+    ) {
+      // Find the parameter by address
+      const param = this.currentAvatarContext.parameters.find(
+        (p: VRChatAvatarParameter) => p.address === selection.address
+      );
+
+      if (param) {
+        // Map VRChat parameter type to OSC parameter type
+        let oscType: OscParameterType;
+        switch (param.type) {
+          case 'Bool':
+            oscType = 'BOOLEAN';
+            break;
+          case 'Float':
+            oscType = 'FLOAT';
+            break;
+          case 'Int':
+            oscType = 'INT';
+            break;
+          case 'String':
+            oscType = 'STRING';
+            break;
+          default:
+            // Default to INT if unknown type (shouldn't happen)
+            oscType = 'INT';
+            break;
+        }
+
+        console.warn({ selection, command, param, isVRChatParameter, oscType });
+
+        // Update the parameter type
+        this.updateParameterType(command, 0, oscType);
+      }
+    }
+
+    this.validationTrigger.next();
+  }
+
+  updateParameterType(
+    command: OscScriptCommandAction,
+    parameterIndex: number,
+    newType: OscParameterType
+  ) {
+    if (parameterIndex >= command.parameters.length) return;
+
+    const currentType = command.parameters[parameterIndex].type;
+    // Only change if the type is different
+    if (currentType !== newType) {
+      command.parameters[parameterIndex].type = newType;
+
+      // Set appropriate default value based on type
+      switch (newType) {
+        case 'INT':
+          command.parameters[parameterIndex].value = '1';
+          break;
+        case 'FLOAT':
+          command.parameters[parameterIndex].value = '1.0';
+          break;
+        case 'BOOLEAN':
+          command.parameters[parameterIndex].value = 'true';
+          break;
+        case 'STRING':
+          command.parameters[parameterIndex].value = '';
+          break;
+      }
+    }
   }
 
   setBoolValue(
