@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
 - Device list: VR Headset device & battery level
 - MQTT: Headset battery level and charging status
+- More configuration options for notification sounds
 
 ### Changed
 
@@ -33,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - "Activate when you've been left alone" trigger for the shutdown sequence not triggering correctly
 - Battery and charging levels exposed over MQTT becoming unavailable randomly
+- Notification sounds queueing up instead of being played immediately
 
 ## [1.14.7]
 

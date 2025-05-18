@@ -227,7 +227,7 @@ export class SystemMicMuteAutomationService {
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
           if (pressed) {
-            await this.notificationService.playSound(
+            await this.notificationService.playSoundLegacy(
               isMuted ? 'mic_unmute' : 'mic_mute',
               this.config.muteSoundVolume / 100
             );
@@ -236,7 +236,7 @@ export class SystemMicMuteAutomationService {
           break;
         }
         case 'PUSH_TO_TALK':
-          await this.notificationService.playSound(
+          await this.notificationService.playSoundLegacy(
             pressed ? 'mic_unmute' : 'mic_mute',
             this.config.muteSoundVolume / 100
           );

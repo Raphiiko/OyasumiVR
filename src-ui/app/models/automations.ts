@@ -5,6 +5,7 @@ import { UserStatus } from 'vrchat/dist';
 import { AudioDeviceParsedName, AudioDeviceType } from './audio-device';
 import { PersistedAvatar } from './vrchat';
 import { FrameLimiterPresets } from '../services/frame-limiter.service';
+import { getBuiltInNotificationSound, NotificationSound } from './notification-sounds';
 
 export type AutomationType =
   | 'GPU_POWER_LIMITS'
@@ -363,9 +364,10 @@ export interface JoinNotificationsAutomationsConfig extends AutomationConfig {
   onlyWhenLeftAlone: boolean;
   joinNotification: JoinNotificationsMode;
   leaveNotification: JoinNotificationsMode;
-  joinSound: JoinNotificationsMode;
-  leaveSound: JoinNotificationsMode;
-  joinSoundVolume: number;
+  joinSoundMode: JoinNotificationsMode;
+  leaveSoundMode: JoinNotificationsMode;
+  joinSound: SoundEffectConfig;
+  leaveSound: SoundEffectConfig;
 }
 
 export type AudioVolumeAutomationType = 'SET_VOLUME' | 'MUTE' | 'UNMUTE';
@@ -506,6 +508,12 @@ export interface VRChatAvatarAutomationsConfig extends AutomationConfig {
   onSleepEnable: PersistedAvatar | null;
   onSleepDisable: PersistedAvatar | null;
   onSleepPreparation: PersistedAvatar | null;
+}
+
+export interface SoundEffectConfig {
+  sound: NotificationSound;
+  volume: number;
+  enabled: boolean;
 }
 
 //
@@ -740,11 +748,19 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     onlyWhenLeftAlone: false,
     joinNotification: 'WHITELIST',
     leaveNotification: 'DISABLED',
-    joinSound: 'WHITELIST',
-    leaveSound: 'DISABLED',
-    joinSoundVolume: 100,
+    joinSoundMode: 'WHITELIST',
+    leaveSoundMode: 'DISABLED',
+    joinSound: {
+      sound: getBuiltInNotificationSound('ripple'),
+      volume: 100,
+      enabled: true,
+    },
+    leaveSound: {
+      sound: getBuiltInNotificationSound('pulse'),
+      volume: 100,
+      enabled: true,
+    },
   },
-
   // VR APPLICATION INTEGRATION
   OSC_GENERAL: {
     enabled: true,

@@ -241,7 +241,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
 
   protected async testInviteRequestSound() {
     if (this.playingTestInviteRequestSound) return;
-    await this.notifications.playSound(
+    await this.notifications.playSoundLegacy(
       'material_alarm_gentle_short_1',
       this.config.playSoundOnInviteRequest_volume / 100
     );
@@ -253,7 +253,7 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
 
   protected async testInviteSound() {
     if (this.playingTestInviteSound) return;
-    await this.notifications.playSound(
+    await this.notifications.playSoundLegacy(
       'material_alarm_gentle_short_1',
       this.config.playSoundOnInvite_volume / 100
     );

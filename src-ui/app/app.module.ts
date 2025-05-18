@@ -244,6 +244,8 @@ import { FrameLimiterService } from './services/frame-limiter.service';
 import { FrameLimitAutomationsService } from './services/frame-limit-automations.service';
 import { FrameLimiterAddApplicationModalComponent } from './views/dashboard-view/views/frame-limiter-view/modals/frame-limiter-add-application-modal/frame-limiter-add-application-modal.component';
 import { OscAddressAutocompleteComponent } from './components/osc-script-simple-editor/osc-address-autocomplete/osc-address-autocomplete.component';
+import { NotificationSoundButtonComponent } from './components/notification-sound-button/notification-sound-button.component';
+import { NotificationSoundModalComponent } from './components/notification-sound-modal/notification-sound-modal.component';
 
 [
   localeEN,
@@ -396,6 +398,8 @@ export function createTranslateLoader(http: HttpClient) {
     FrameLimiterSelectorComponent,
     FrameLimiterAddApplicationModalComponent,
     OscAddressAutocompleteComponent,
+    NotificationSoundButtonComponent,
+    NotificationSoundModalComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [

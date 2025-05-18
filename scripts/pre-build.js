@@ -3,6 +3,7 @@ import { blurhashToCss } from 'blurhash-to-css';
 import sharp from 'sharp';
 import { encode } from 'blurhash';
 import Css from 'json-to-css';
+import { parseFile } from 'music-metadata';
 
 //
 // BUILD PRELOAD ASSETS JSON
@@ -61,19 +62,48 @@ fs.copyFileSync('src-core/icons/Square150x150Logo.png', 'src-ui/assets/img/icon_
 //
 // Generate notification sound types
 //
-const sounds = fs
-  .readdirSync('src-core/resources/sounds')
-  .filter((f) => f.endsWith('.ogg'))
-  .map((f) => f.substring(0, f.length - 4));
-// TS (UI)
-let typeFile = 'src-ui/app/models/notification-sounds.generated.ts';
-let typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\nexport type NotificationSound = \n${sounds
-  .map((s) => `  | '${s}'`)
-  .join('\n')};\n`;
-fs.writeFileSync(typeFile, typeContent);
-// Rust (Core)
-typeFile = 'src-core/src/os/sounds_gen.rs';
-typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\npub static SOUND_FILES: &[&str] = &[\n${sounds
-  .map((s) => `    "${s}",`)
-  .join('\n')}\n];\n`;
-fs.writeFileSync(typeFile, typeContent);
+async function getDurationInSeconds(path) {
+  const metadata = await parseFile(path);
+  console.log('Getting duration for', path, metadata.format.duration);
+  return metadata.format.duration;
+}
+
+(async () => {
+  const sounds = fs
+    .readdirSync('src-core/resources/sounds')
+    .filter((f) => f.endsWith('.ogg'))
+    .map((f) => f.substring(0, f.length - 4));
+  // Get the duration for each of these sounds
+  const NotificationSoundDurations = (
+    await Promise.all(
+      sounds.map(async (s) => {
+        const path = `src-core/resources/sounds/${s}.ogg`;
+        const duration = await getDurationInSeconds(path);
+        return {
+          ref: s,
+          duration,
+        };
+      })
+    )
+  ).reduce((acc, curr) => {
+    acc[curr.ref] = curr.duration.toFixed(1);
+    return acc;
+  }, {});
+  // TS (UI)
+  let typeFile = 'src-ui/app/models/notification-sounds.generated.ts';
+  let typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\nexport type NotificationSoundRef = \n${sounds
+    .map((s) => `  | '${s}'`)
+    .join('\n')};\n\n`;
+  typeContent += `export const NotificationSoundDurations: Record<NotificationSoundRef, number> = {\n${sounds
+    .map(
+      (s, i) => `  '${s}': ${NotificationSoundDurations[s]}${i === sounds.length - 1 ? '' : ','}`
+    )
+    .join('\n')}\n};`;
+  fs.writeFileSync(typeFile, typeContent);
+  // Rust (Core)
+  typeFile = 'src-core/src/os/sounds_gen.rs';
+  typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\npub static SOUND_FILES: &[&str] = &[\n${sounds
+    .map((s) => `    "${s}",`)
+    .join('\n')}\n];\n`;
+  fs.writeFileSync(typeFile, typeContent);
+})();

@@ -4,6 +4,7 @@ import {
   AUTOMATION_CONFIGS_DEFAULT,
   JoinNotificationsAutomationsConfig,
   JoinNotificationsMode,
+  SoundEffectConfig,
 } from '../../../../models/automations';
 
 import { AutomationConfigService } from '../../../../services/automation-config.service';
@@ -50,8 +51,6 @@ export class JoinNotificationsViewComponent implements OnInit {
   config: JoinNotificationsAutomationsConfig = structuredClone(
     AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS
   );
-  protected playingTestSound = false;
-  private playingTestSoundTimeout: any;
 
   constructor(
     private automationConfigService: AutomationConfigService,
@@ -72,13 +71,13 @@ export class JoinNotificationsViewComponent implements OnInit {
           (option) => option.id === config.joinNotification
         );
         this.joinSoundOption = this.notificationOptions.find(
-          (option) => option.id === config.joinSound
+          (option) => option.id === config.joinSoundMode
         );
         this.leaveNotificationOption = this.notificationOptions.find(
           (option) => option.id === config.leaveNotification
         );
         this.leaveSoundOption = this.notificationOptions.find(
-          (option) => option.id === config.leaveSound
+          (option) => option.id === config.leaveSoundMode
         );
       });
   }
@@ -107,14 +106,14 @@ export class JoinNotificationsViewComponent implements OnInit {
   async setJoinSoundModeOption(mode?: JoinNotificationsMode) {
     if (!mode) return;
     await this.updateConfig({
-      joinSound: mode,
+      joinSoundMode: mode,
     });
   }
 
   async setLeaveSoundModeOption(mode?: JoinNotificationsMode) {
     if (!mode) return;
     await this.updateConfig({
-      leaveSound: mode,
+      leaveSoundMode: mode,
     });
   }
 
@@ -135,34 +134,30 @@ export class JoinNotificationsViewComponent implements OnInit {
     });
   }
 
-  async setJoinSoundVolume(volume: number) {
-    await this.updateConfig({
-      joinSoundVolume: volume,
-    });
-  }
-
   async updatePlayerIds(playerIds: string[]) {
     await this.updateConfig({
       playerIds,
     });
   }
 
-  async testSound() {
-    if (this.playingTestSound) return;
-    await this.notifications.playSound(
-      'material_alarm_gentle_short_1',
-      this.config.joinSoundVolume / 100
-    );
-    this.playingTestSound = true;
-    if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
-    this.playingTestSoundTimeout = setTimeout(() => {
-      this.playingTestSound = false;
-      this.playingTestSoundTimeout = undefined;
-    }, 3000);
-  }
-
   asJoinNotificationsMode(id: string | undefined) {
     if (!id) return undefined;
     return id as JoinNotificationsMode;
+  }
+
+  updateJoinSound(soundConfig: SoundEffectConfig): void {
+    this.config.joinSound = soundConfig;
+    this.automationConfigService.updateAutomationConfig<JoinNotificationsAutomationsConfig>(
+      'JOIN_NOTIFICATIONS',
+      this.config
+    );
+  }
+
+  updateLeaveSound(soundConfig: SoundEffectConfig): void {
+    this.config.leaveSound = soundConfig;
+    this.automationConfigService.updateAutomationConfig<JoinNotificationsAutomationsConfig>(
+      'JOIN_NOTIFICATIONS',
+      this.config
+    );
   }
 }
