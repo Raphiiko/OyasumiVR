@@ -87,11 +87,11 @@ function from17to18(data: any): any {
   if (data.JOIN_NOTIFICATIONS) {
     if (data.JOIN_NOTIFICATIONS.joinSound) {
       data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
-      data.joinSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.joinSound;
+      data.JOIN_NOTIFICATIONS.joinSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.joinSound;
     }
     if (data.JOIN_NOTIFICATIONS.leaveSound) {
       data.JOIN_NOTIFICATIONS.leaveSoundMode = data.JOIN_NOTIFICATIONS.leaveSound;
-      data.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
+      data.JOIN_NOTIFICATIONS.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
     }
   }
   if (data.NIGHTMARE_DETECTION.playSound) {
