@@ -154,6 +154,34 @@
       "onlyIfSleepModeEnabled": {
         "title": "Only when sleep mode is enabled"
       },
+      "playSoundOnInviteRequest": {
+        "description": "Play a sound when you receive an invite request",
+        "title": "Play sound on invite request",
+        "onlyWhenAsleep": {
+          "description": "Only play the sound when sleep mode is enabled",
+          "title": "Only when asleep"
+        },
+        "onlyWhenUnhandled": {
+          "description": "Only play the sound when the invite request is not automatically accepted or declined",
+          "title": "Only when not automatically handled"
+        },
+        "volume": {
+          "description": "Adjust the volume of the invite request sound",
+          "title": "Sound volume"
+        }
+      },
+      "playSoundOnInvite": {
+        "description": "Play a sound when you receive an invite",
+        "title": "Play sound on invite",
+        "onlyWhenAsleep": {
+          "description": "Only play the sound when sleep mode is enabled",
+          "title": "Only when asleep"
+        },
+        "volume": {
+          "description": "Adjust the volume of the invite sound",
+          "title": "Sound volume"
+        }
+      },
       "presetOptions": {
         "options": {
           "NONE": "Don't change"
@@ -338,7 +366,7 @@
       "hardwareAutomations": "Hardware Automations",
       "hmdAutomations": "HMD Specific Automations",
       "joinNotifications": "Join Notifications",
-      "miscAutomations": "Miscellaneous Automations",
+      "miscAutomations": "General Automations",
       "nightmareDetection": "Nightmare Detection",
       "oscAutomations": "OSC Automations",
       "overview": "Overview",
@@ -468,6 +496,8 @@
         },
         "cctChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
@@ -561,6 +591,8 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
@@ -733,6 +765,8 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
             "SLEEP_PREPARATION": "As you prepared to go to sleep"
@@ -1146,6 +1180,7 @@
     "onSleepEnable": "When I go to sleep",
     "onSleepPreparation": "When I prepare to go to sleep",
     "removeLimiter": "Remove",
+    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
     "selector": {
       "auto": "Auto",
       "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
@@ -2156,13 +2191,11 @@
   },
   "shared": {
     "common": {
-      "none": "None"
+      "none": "None",
+      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "logo": {
       "tagline": "VR Sleeping Utilities"
-    },
-    "misc": {
-      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
       "back": "Back",

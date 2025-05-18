@@ -301,7 +301,6 @@
       "hardwareAutomations": "硬體自動化",
       "hmdAutomations": "頭顯專用自動化",
       "joinNotifications": "加入通知",
-      "miscAutomations": "其他自動化",
       "nightmareDetection": "惡夢偵測",
       "oscAutomations": "OSC 自動化",
       "overview": "首頁",
@@ -1995,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "無"
+      "none": "無",
+      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "logo": {
       "tagline": "VR 睡眠輔助功能"
-    },
-    "misc": {
-      "vrcLoginRequired": "這個功能需要你登入你的 VRChat 帳號"
     },
     "modals": {
       "back": "返回",

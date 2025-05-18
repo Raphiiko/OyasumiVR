@@ -323,5 +323,5 @@ export interface EventLogFrameLimitChanged extends EventLogBase {
   type: 'frameLimitChanged';
   appName: string;
   limit: string;
-  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'HMD_CONNECT';
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
 }

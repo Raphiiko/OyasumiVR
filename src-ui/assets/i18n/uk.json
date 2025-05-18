@@ -298,7 +298,6 @@
       "hardwareAutomations": "Апаратна автоматизація",
       "hmdAutomations": "Автоматизація для VR гарнітур",
       "joinNotifications": "Сповіщення про приєднання",
-      "miscAutomations": "Інша автоматизація",
       "nightmareDetection": "Виявлення кошмарів",
       "oscAutomations": "Автоматизація OSC",
       "overview": "Огляд",
@@ -1992,13 +1991,11 @@
   },
   "shared": {
     "common": {
-      "none": "Нічого"
+      "none": "Нічого",
+      "vrcLoginRequired": "Ця функція вимагає, щоб ви увійшли у свій акаунт VRChat."
     },
     "logo": {
       "tagline": "Утиліта для сну у VR"
-    },
-    "misc": {
-      "vrcLoginRequired": "Ця функція вимагає, щоб ви увійшли у свій акаунт VRChat."
     },
     "modals": {
       "back": "Назад",

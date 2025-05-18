@@ -443,6 +443,13 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   acceptInviteRequestMessage: string;
   declineInviteRequestMessage: string;
   declineInviteMessage: string;
+  playSoundOnInviteRequest: boolean;
+  playSoundOnInviteRequest_volume: number;
+  playSoundOnInviteRequest_onlyWhenAsleep: boolean;
+  playSoundOnInviteRequest_onlyWhenUnhandled: boolean;
+  playSoundOnInvite: boolean;
+  playSoundOnInvite_volume: number;
+  playSoundOnInvite_onlyWhenAsleep: boolean;
 }
 
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
@@ -810,6 +817,13 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     acceptInviteRequestMessage: '',
     declineInviteRequestMessage: '',
     declineInviteMessage: '',
+    playSoundOnInviteRequest: false,
+    playSoundOnInviteRequest_volume: 100,
+    playSoundOnInviteRequest_onlyWhenAsleep: false,
+    playSoundOnInviteRequest_onlyWhenUnhandled: false,
+    playSoundOnInvite: false,
+    playSoundOnInvite_volume: 100,
+    playSoundOnInvite_onlyWhenAsleep: false,
   },
 
   // SYSTEM CONTROL

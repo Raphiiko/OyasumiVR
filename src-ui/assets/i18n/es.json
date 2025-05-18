@@ -301,7 +301,6 @@
       "hardwareAutomations": "Automatizaciones de hardware",
       "hmdAutomations": "Automatizaciones específicas HMD",
       "joinNotifications": "Notificaciones de ingreso",
-      "miscAutomations": "Automacaciones misceláneas",
       "nightmareDetection": "Detección de pesadilla",
       "oscAutomations": "Automatizaciones OSC",
       "overview": "Visión general",
@@ -1995,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "None"
+      "none": "None",
+      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat."
     },
     "logo": {
       "tagline": "Utiles VR para dormir"
-    },
-    "misc": {
-      "vrcLoginRequired": "Esta función requiere que hayas iniciado sesión con una cuenta de VRChat."
     },
     "modals": {
       "back": "Volver",

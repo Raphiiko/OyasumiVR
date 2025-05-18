@@ -301,7 +301,6 @@
       "hardwareAutomations": "하드웨어 자동화",
       "hmdAutomations": "HMD별 자동화",
       "joinNotifications": "참여 알림",
-      "miscAutomations": "기타 자동화",
       "nightmareDetection": "악몽 감지",
       "oscAutomations": "OSC 자동화",
       "overview": "개요",
@@ -1995,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "없음"
+      "none": "없음",
+      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "logo": {
       "tagline": "VR수면 유틸리티"
-    },
-    "misc": {
-      "vrcLoginRequired": "이 기능을 사용하려면 VRChat 계정으로 로그인해야 해요."
     },
     "modals": {
       "back": "뒤로",

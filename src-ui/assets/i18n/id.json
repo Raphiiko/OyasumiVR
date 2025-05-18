@@ -132,7 +132,6 @@
       "chaperoneAutomations": "Otomatisasi Chaperone",
       "gpuAutomations": "Otomatisasi GPU",
       "hardwareAutomations": "Otomatisasi Hardware",
-      "miscAutomations": "Otomatisasi Lain-Lain",
       "nightmareDetection": "Deteksi Mimpi Buruk",
       "oscAutomations": "Otomatisasi OSC",
       "overview": "Ikhtisar",
@@ -1161,13 +1160,11 @@
   },
   "shared": {
     "common": {
-      "none": "Kosong"
+      "none": "Kosong",
+      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "logo": {
       "tagline": "Utilitas VR Sleeping"
-    },
-    "misc": {
-      "vrcLoginRequired": "Fitur ini memerlukan kamu untuk masuk dengan akun VRChat."
     },
     "modals": {
       "cancel": "Batalkan",

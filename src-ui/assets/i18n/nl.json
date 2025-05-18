@@ -301,7 +301,6 @@
       "hardwareAutomations": "Hardware Automatiseringen",
       "hmdAutomations": "HMD Specifieke Automatiseringen",
       "joinNotifications": "Join Notificaties",
-      "miscAutomations": "Overige Automatiseringen",
       "nightmareDetection": "Nachtmerrie Detectie",
       "oscAutomations": "OSC Automatiseringen",
       "overview": "Overzicht",
@@ -1995,13 +1994,11 @@
   },
   "shared": {
     "common": {
-      "none": "Geen"
+      "none": "Geen",
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "logo": {
       "tagline": "VR Slaap Tools"
-    },
-    "misc": {
-      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "modals": {
       "back": "Terug",
