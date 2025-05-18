@@ -34,7 +34,6 @@ export class InviteAutomationsService {
 
   async init() {
     this.vrchat.notifications.subscribe(async (notification) => {
-      console.warn('NOTIFICATION', notification);
       switch (notification.type) {
         case NotificationType.RequestInvite:
           await this.handleRequestInviteNotification(notification);
@@ -66,18 +65,54 @@ export class InviteAutomationsService {
         reason: 'SLEEP_MODE_ENABLED',
       } as EventLogDeclinedInvite);
     }
+    // Play a sound if configured
+    if (config.playSoundOnInvite) {
+      if (config.playSoundOnInvite_onlyWhenAsleep && !(await firstValueFrom(this.sleep.mode)))
+        return;
+      await this.notifications.playSound(
+        'material_alarm_gentle_short_1',
+        config.playSoundOnInvite_volume / 100
+      );
+    }
+  }
+
+  private async playInviteRequestSound(
+    config: AutoAcceptInviteRequestsAutomationConfig,
+    handled: boolean,
+    sleepMode: boolean
+  ) {
+    console.warn({config, handled, sleepMode});
+    if (!config.playSoundOnInviteRequest) return;
+    if (handled && config.playSoundOnInviteRequest_onlyWhenUnhandled) return;
+    if (!sleepMode && config.playSoundOnInviteRequest_onlyWhenAsleep) return;
+    await this.notifications.playSound(
+      'material_alarm_gentle_short_1',
+      config.playSoundOnInviteRequest_volume / 100
+    );
   }
 
   private async handleRequestInviteNotification(notification: Notification) {
     // Get the current user
     const user = await firstValueFrom(this.vrchat.user);
     if (!user) return;
+    // Get the sleep mode
+    const sleepMode = await firstValueFrom(this.sleep.mode);
     // Get the automation config
     const config = await firstValueFrom(this.automationConfig.configs).then(
       (c) => c.AUTO_ACCEPT_INVITE_REQUESTS
     );
     // Stop if the automation is disabled
     if (!config.enabled) {
+      this.playInviteRequestSound(config, false, sleepMode);
+      return;
+    }
+    // Stop here if the user's current world is not known
+    const world = await firstValueFrom(this.vrchat.world);
+    if (!world?.instanceId) {
+      warn(
+        `Ignoring invite request from ${notification.senderUsername}, as the user's current world is not currently known.`
+      );
+      this.playInviteRequestSound(config, false, sleepMode);
       return;
     }
     // Automatically accept invite requests when on blue, in case the VRChat client does not.
@@ -87,10 +122,11 @@ export class InviteAutomationsService {
       );
       await this.vrchat.deleteNotification(notification.id);
       await this.vrchat.inviteUser(notification.senderUserId);
+      this.playInviteRequestSound(config, false, sleepMode);
       return;
     }
     // Stop if sleep mode is disabled and it's required to be enabled
-    if (config.onlyIfSleepModeEnabled && !(await firstValueFrom(this.sleep.mode))) {
+    if (config.onlyIfSleepModeEnabled && !sleepMode) {
       warn('Ignoring invite because sleep mode is disabled');
       const message = await this.getDeclineMessage(config);
       if (message) {
@@ -102,6 +138,7 @@ export class InviteAutomationsService {
           reason: 'SLEEP_MODE_ENABLED_CONDITION_FAILED',
         } as EventLogDeclinedInviteRequest);
       }
+      this.playInviteRequestSound(config, !!message, sleepMode);
       return;
     }
     // Stop if there is a player count limit set, and there are more people in the instance than the limit
@@ -121,6 +158,7 @@ export class InviteAutomationsService {
             reason: 'PLAYER_COUNT_CONDITION_FAILED',
           } as EventLogDeclinedInviteRequest);
         }
+        this.playInviteRequestSound(config, !!message, sleepMode);
         return;
       }
     }
@@ -146,6 +184,7 @@ export class InviteAutomationsService {
               reason: 'NOT_ON_WHITELIST',
             } as EventLogDeclinedInviteRequest);
           }
+          this.playInviteRequestSound(config, !!message, sleepMode);
           return;
         }
         break;
@@ -167,6 +206,7 @@ export class InviteAutomationsService {
               reason: 'ON_BLACKLIST',
             } as EventLogDeclinedInviteRequest);
           }
+          this.playInviteRequestSound(config, !!message, sleepMode);
           return;
         }
         break;
@@ -177,6 +217,7 @@ export class InviteAutomationsService {
     await this.vrchat.inviteUser(notification.senderUserId, {
       message: this.getAcceptMessage(config),
     });
+    this.playInviteRequestSound(config, true, sleepMode);
     if (await this.notifications.notificationTypeEnabled('AUTO_ACCEPTED_INVITE_REQUEST')) {
       await this.notifications.send(
         this.translate.instant('notifications.autoAcceptedInviteRequest.content', {

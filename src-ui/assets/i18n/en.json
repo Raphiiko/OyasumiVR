@@ -154,6 +154,34 @@
       "onlyIfSleepModeEnabled": {
         "title": "Only when sleep mode is enabled"
       },
+      "playSoundOnInviteRequest": {
+        "description": "Play a sound when you receive an invite request",
+        "title": "Play sound on invite request",
+        "onlyWhenAsleep": {
+          "description": "Only play the sound when sleep mode is enabled",
+          "title": "Only when asleep"
+        },
+        "onlyWhenUnhandled": {
+          "description": "Only play the sound when the invite request is not automatically handled",
+          "title": "Only when not automatically handled"
+        },
+        "volume": {
+          "description": "Adjust the volume of the invite request sound",
+          "title": "Sound volume"
+        }
+      },
+      "playSoundOnInvite": {
+        "description": "Play a sound when you receive an invite",
+        "title": "Play sound on invite",
+        "onlyWhenAsleep": {
+          "description": "Only play the sound when sleep mode is enabled",
+          "title": "Only when asleep"
+        },
+        "volume": {
+          "description": "Adjust the volume of the invite sound",
+          "title": "Sound volume"
+        }
+      },
       "presetOptions": {
         "options": {
           "NONE": "Don't change"

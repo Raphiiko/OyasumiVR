@@ -14,11 +14,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 - Message center for automatically diagnosing common issues
 - Sleep mode toggle and sleep preparation to system tray menu
-- Exposed headset battery level and charging indicator over MQTT
+- Notification sounds for invites and invite requests
 - Brightness automation that runs when your VR headset connects to SteamVR
 - Brightness automations will now indicate if they (could) run when your HMD connects
 - Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
-- VR Headset device & battery level to the device list
+- Device list: VR Headset device & battery level
+- MQTT: Headset battery level and charging status
 
 ### Changed
 
