@@ -122,7 +122,7 @@ export class InviteAutomationsService {
       );
       await this.vrchat.deleteNotification(notification.id);
       await this.vrchat.inviteUser(notification.senderUserId);
-      this.playInviteRequestSound(config, false, sleepMode);
+      this.playInviteRequestSound(config, true, sleepMode);
       return;
     }
     // Stop if sleep mode is disabled and it's required to be enabled
