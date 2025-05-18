@@ -164,10 +164,6 @@
         "onlyWhenUnhandled": {
           "description": "Only play the sound when the invite request is not automatically accepted or declined",
           "title": "Only when not automatically handled"
-        },
-        "volume": {
-          "description": "Adjust the volume of the invite request sound",
-          "title": "Sound volume"
         }
       },
       "playSoundOnInvite": {
@@ -176,10 +172,6 @@
         "onlyWhenAsleep": {
           "description": "Only play the sound when sleep mode is enabled",
           "title": "Only when asleep"
-        },
-        "volume": {
-          "description": "Adjust the volume of the invite sound",
-          "title": "Sound volume"
         }
       },
       "presetOptions": {
@@ -1477,12 +1469,7 @@
     "notification": "Detecting a possible nightmare, as you've had a prolonged elevated heart rate.",
     "playSound": {
       "description": "Have OyasumiVR wake you up with a sound when you're possibly having a nightmare",
-      "title": "Play a sound",
-      "volume": {
-        "description": "Configure the volume at which the sound effect plays",
-        "test": "Test",
-        "title": "Sound volume"
-      }
+      "title": "Play a sound"
     },
     "title": "Nightmare Detection"
   },

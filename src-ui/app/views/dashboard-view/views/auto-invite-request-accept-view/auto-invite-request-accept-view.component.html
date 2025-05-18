@@ -232,16 +232,10 @@
             >
           </div>
           <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.playSoundOnInviteRequest"
-                (change)="
-                  updateConfig({ playSoundOnInviteRequest: !config.playSoundOnInviteRequest })
-                "
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
+            <app-notification-sound-button
+              [soundConfig]="config.playSoundOnInviteRequest"
+              (soundConfigChange)="updateConfig({ playSoundOnInviteRequest: $event })"
+            ></app-notification-sound-button>
           </div>
         </div>
         <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInviteRequest">
@@ -295,33 +289,6 @@
               </label>
             </div>
           </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >auto-invite-request-accept.options.playSoundOnInviteRequest.volume.title</span
-              >
-              <span translate
-                >auto-invite-request-accept.options.playSoundOnInviteRequest.volume.description</span
-              >
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-secondary" (click)="testInviteRequestSound()">
-                <span translate @hshrink *ngIf="!playingTestInviteRequestSound"
-                  >nightmare-detection.playSound.volume.test</span
-                >
-                <i class="material-icons" @hshrink *ngIf="playingTestInviteRequestSound"
-                  >volume_up</i
-                >
-              </button>
-              <app-slider-setting
-                [unit]="'%'"
-                [max]="200"
-                [snapValues]="[50, 100, 150]"
-                [value]="config.playSoundOnInviteRequest_volume"
-                (valueChange)="updateConfig({ playSoundOnInviteRequest_volume: $event })"
-              ></app-slider-setting>
-            </div>
-          </div>
         </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
@@ -329,14 +296,10 @@
             <span translate>auto-invite-request-accept.options.playSoundOnInvite.description</span>
           </div>
           <div class="setting-row-action">
-            <label class="switch-toggle">
-              <input
-                type="checkbox"
-                [checked]="config.playSoundOnInvite"
-                (change)="updateConfig({ playSoundOnInvite: !config.playSoundOnInvite })"
-              />
-              <span class="switch-toggle-slider"></span>
-            </label>
+            <app-notification-sound-button
+              [soundConfig]="config.playSoundOnInvite"
+              (soundConfigChange)="updateConfig({ playSoundOnInvite: $event })"
+            ></app-notification-sound-button>
           </div>
         </div>
         <div class="setting-row-group" @vshrink *ngIf="config.playSoundOnInvite">
@@ -362,31 +325,6 @@
                 />
                 <span class="switch-toggle-slider"></span>
               </label>
-            </div>
-          </div>
-          <div class="setting-row">
-            <div class="setting-row-label" translate>
-              <span translate
-                >auto-invite-request-accept.options.playSoundOnInvite.volume.title</span
-              >
-              <span translate
-                >auto-invite-request-accept.options.playSoundOnInvite.volume.description</span
-              >
-            </div>
-            <div class="setting-row-action">
-              <button class="btn btn-secondary" (click)="testInviteSound()">
-                <span translate @hshrink *ngIf="!playingTestInviteSound"
-                  >nightmare-detection.playSound.volume.test</span
-                >
-                <i class="material-icons" @hshrink *ngIf="playingTestInviteSound">volume_up</i>
-              </button>
-              <app-slider-setting
-                [unit]="'%'"
-                [max]="200"
-                [snapValues]="[50, 100, 150]"
-                [value]="config.playSoundOnInvite_volume"
-                (valueChange)="updateConfig({ playSoundOnInvite_volume: $event })"
-              ></app-slider-setting>
             </div>
           </div>
         </div>

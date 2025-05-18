@@ -51,7 +51,7 @@ export type AutomationType =
   | 'BIGSCREEN_BEYOND_RGB_CONTROL';
 
 export interface AutomationConfigs {
-  version: 17;
+  version: 18;
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: SleepModeEnableForSleepDetectorAutomationConfig;
   SLEEP_MODE_ENABLE_AT_TIME: SleepModeEnableAtTimeAutomationConfig;
@@ -445,12 +445,10 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   acceptInviteRequestMessage: string;
   declineInviteRequestMessage: string;
   declineInviteMessage: string;
-  playSoundOnInviteRequest: boolean;
-  playSoundOnInviteRequest_volume: number;
+  playSoundOnInviteRequest: SoundEffectConfig;
   playSoundOnInviteRequest_onlyWhenAsleep: boolean;
   playSoundOnInviteRequest_onlyWhenUnhandled: boolean;
-  playSoundOnInvite: boolean;
-  playSoundOnInvite_volume: number;
+  playSoundOnInvite: SoundEffectConfig;
   playSoundOnInvite_onlyWhenAsleep: boolean;
 }
 
@@ -481,8 +479,7 @@ export interface NightmareDetectionAutomationsConfig extends AutomationConfig {
   heartRateThreshold: number;
   periodDuration: number;
   disableSleepMode: boolean;
-  playSound: boolean;
-  soundVolume: number;
+  sound: SoundEffectConfig;
 }
 
 export interface BigscreenBeyondFanControlAutomationsConfig extends AutomationConfig {
@@ -521,8 +518,7 @@ export interface SoundEffectConfig {
 //
 
 export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
-  version: 17,
-
+  version: 18,
   // CORE SLEEP FUNCTIONALITY
   SLEEP_MODE_ENABLE_FOR_SLEEP_DETECTOR: {
     enabled: false,
@@ -586,8 +582,11 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     heartRateThreshold: 130,
     periodDuration: 60 * 1000,
     disableSleepMode: false,
-    playSound: false,
-    soundVolume: 100,
+    sound: {
+      sound: getBuiltInNotificationSound('ripple'),
+      volume: 100,
+      enabled: true,
+    },
   },
 
   // DEVICE MANAGEMENT
@@ -833,12 +832,18 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     acceptInviteRequestMessage: '',
     declineInviteRequestMessage: '',
     declineInviteMessage: '',
-    playSoundOnInviteRequest: false,
-    playSoundOnInviteRequest_volume: 100,
+    playSoundOnInviteRequest: {
+      sound: getBuiltInNotificationSound('ripple'),
+      volume: 100,
+      enabled: false,
+    },
     playSoundOnInviteRequest_onlyWhenAsleep: false,
     playSoundOnInviteRequest_onlyWhenUnhandled: false,
-    playSoundOnInvite: false,
-    playSoundOnInvite_volume: 100,
+    playSoundOnInvite: {
+      sound: getBuiltInNotificationSound('ripple'),
+      volume: 100,
+      enabled: false,
+    },
     playSoundOnInvite_onlyWhenAsleep: false,
   },
 

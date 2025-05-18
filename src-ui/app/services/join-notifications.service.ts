@@ -135,16 +135,10 @@ export class JoinNotificationsService {
             // TODO: Play the sound
             switch (val.type) {
               case 'join':
-                await this.notification.playSound(
-                  this.config.joinSound.sound,
-                  this.config.joinSound.volume / 100
-                );
+                await this.notification.playSoundConfig(this.config.joinSound);
                 break;
               case 'leave':
-                await this.notification.playSound(
-                  this.config.leaveSound.sound,
-                  this.config.leaveSound.volume / 100
-                );
+                await this.notification.playSoundConfig(this.config.leaveSound);
                 break;
             }
           }

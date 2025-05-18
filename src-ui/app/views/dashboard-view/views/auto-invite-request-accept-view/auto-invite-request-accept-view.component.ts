@@ -11,7 +11,6 @@ import {
 import { AutomationConfigService } from '../../../../services/automation-config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AppSettingsService } from '../../../../services/app-settings.service';
-import { NotificationService } from '../../../../services/notification.service';
 
 interface PresetOptions {
   onSleepEnable: SelectBoxItem;
@@ -84,15 +83,12 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
   protected updateAcceptInviteRequestCustomMessage = new Subject<string>();
   protected updateDeclineInviteRequestCustomMessage = new Subject<string>();
   protected updateDeclineInviteWhileAsleepCustomMessage = new Subject<string>();
-  protected playingTestInviteRequestSound = false;
-  protected playingTestInviteSound = false;
 
   constructor(
     protected vrchat: VRChatService,
     private automationConfig: AutomationConfigService,
     private appSettings: AppSettingsService,
-    private destroyRef: DestroyRef,
-    private notifications: NotificationService
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
@@ -237,29 +233,5 @@ export class AutoInviteRequestAcceptViewComponent implements OnInit {
     await this.updateConfig({
       declineOnRequest: optionId as 'DISABLED' | 'WHEN_SLEEPING' | 'ALWAYS',
     });
-  }
-
-  protected async testInviteRequestSound() {
-    if (this.playingTestInviteRequestSound) return;
-    await this.notifications.playSoundLegacy(
-      'material_alarm_gentle_short_1',
-      this.config.playSoundOnInviteRequest_volume / 100
-    );
-    this.playingTestInviteRequestSound = true;
-    setTimeout(() => {
-      this.playingTestInviteRequestSound = false;
-    }, 3000);
-  }
-
-  protected async testInviteSound() {
-    if (this.playingTestInviteSound) return;
-    await this.notifications.playSoundLegacy(
-      'material_alarm_gentle_short_1',
-      this.config.playSoundOnInvite_volume / 100
-    );
-    this.playingTestInviteSound = true;
-    setTimeout(() => {
-      this.playingTestInviteSound = false;
-    }, 3000);
   }
 }

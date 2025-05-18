@@ -54,6 +54,7 @@
             </div>
             <div class="setting-row-action">
               <app-notification-sound-button
+                [toggleable]="false"
                 [soundConfig]="config.joinSound"
                 (soundConfigChange)="updateJoinSound($event)"
               ></app-notification-sound-button>
@@ -116,6 +117,7 @@
             </div>
             <div class="setting-row-action">
               <app-notification-sound-button
+                [toggleable]="false"
                 [soundConfig]="config.leaveSound"
                 (soundConfigChange)="updateLeaveSound($event)"
               ></app-notification-sound-button>

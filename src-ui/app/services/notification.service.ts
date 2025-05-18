@@ -12,6 +12,7 @@ import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-cor
 import { listen } from '@tauri-apps/api/event';
 import { NotificationSound } from '../models/notification-sounds';
 import { NotificationSoundRef } from '../models/notification-sounds.generated';
+import { SoundEffectConfig } from '../models/automations';
 
 interface XSOMessage {
   messageType: number;
@@ -43,6 +44,12 @@ export class NotificationService {
       // TODO: SEND BACK NOTIFICATION ID TO CORE
     });
     await this.manageOVRTSocketConnection();
+  }
+
+  public async playSoundConfig(config: SoundEffectConfig) {
+    if (config.enabled) {
+      await this.playSound(config.sound, config.volume / 100.0);
+    }
   }
 
   public async playSound(sound: NotificationSound, volume: number | null = null) {
