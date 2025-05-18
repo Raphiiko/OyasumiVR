@@ -651,13 +651,11 @@
   },
   "shared": {
     "common": {
-      "none": "Aucun"
+      "none": "Aucun",
+      "vrcLoginRequired": "Cette fonctionnalité nécessite d'être connecté(e) à VRChat."
     },
     "logo": {
       "tagline": "Outils de sommeil VR"
-    },
-    "misc": {
-      "vrcLoginRequired": "Cette fonctionnalité nécessite d'être connecté(e) à VRChat."
     },
     "modals": {
       "cancel": "Annuler",

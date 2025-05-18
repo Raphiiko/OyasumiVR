@@ -1995,13 +1995,11 @@
   },
   "shared": {
     "common": {
-      "none": "Keine"
+      "none": "Keine",
+      "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
     },
     "logo": {
       "tagline": "VR Sleeping Utilities"
-    },
-    "misc": {
-      "vrcLoginRequired": "Diese Funktion benötigt Zugriff auf deinen VRChat Account"
     },
     "modals": {
       "back": "Zurück",

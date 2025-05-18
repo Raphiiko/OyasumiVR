@@ -1992,13 +1992,11 @@
   },
   "shared": {
     "common": {
-      "none": "Нічого"
+      "none": "Нічого",
+      "vrcLoginRequired": "Ця функція вимагає, щоб ви увійшли у свій акаунт VRChat."
     },
     "logo": {
       "tagline": "Утиліта для сну у VR"
-    },
-    "misc": {
-      "vrcLoginRequired": "Ця функція вимагає, щоб ви увійшли у свій акаунт VRChat."
     },
     "modals": {
       "back": "Назад",

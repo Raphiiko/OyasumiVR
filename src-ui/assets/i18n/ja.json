@@ -1995,13 +1995,11 @@
   },
   "shared": {
     "common": {
-      "none": "変更しない"
+      "none": "変更しない",
+      "vrcLoginRequired": "VRChatアカウントでログインする必要があります。"
     },
     "logo": {
       "tagline": "VR睡眠ソフトウェア"
-    },
-    "misc": {
-      "vrcLoginRequired": "VRChatアカウントでログインする必要があります。"
     },
     "modals": {
       "back": "戻る",

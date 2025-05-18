@@ -1995,13 +1995,11 @@
   },
   "shared": {
     "common": {
-      "none": "Geen"
+      "none": "Geen",
+      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "logo": {
       "tagline": "VR Slaap Tools"
-    },
-    "misc": {
-      "vrcLoginRequired": "Deze feature vereist dat je bent ingelogd bent met je VRChat account."
     },
     "modals": {
       "back": "Terug",

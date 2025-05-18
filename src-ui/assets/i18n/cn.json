@@ -2013,13 +2013,11 @@
   },
   "shared": {
     "common": {
-      "none": "无"
+      "none": "无",
+      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号"
     },
     "logo": {
       "tagline": "帮助 VR 睡眠的小工具"
-    },
-    "misc": {
-      "vrcLoginRequired": "这个功能需要你登录你的 VRChat 账号"
     },
     "modals": {
       "back": "返回",

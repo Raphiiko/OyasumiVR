@@ -1995,13 +1995,11 @@
   },
   "shared": {
     "common": {
-      "none": "Ничего"
+      "none": "Ничего",
+      "vrcLoginRequired": "Эта функция требует, чтобы вы вошли в свой аккаунт VRChat."
     },
     "logo": {
       "tagline": "Утилита для сна в VR"
-    },
-    "misc": {
-      "vrcLoginRequired": "Эта функция требует, чтобы вы вошли в свой аккаунт VRChat."
     },
     "modals": {
       "back": "Назад",

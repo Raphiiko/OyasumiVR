@@ -468,11 +468,11 @@
         },
         "cctChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep",
-            "AT_SUNRISE": "As sunrise occurred",
-            "AT_SUNSET": "As sunset occurred"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
             "set": "Headset color temperature set to {icon} {temperature}K",
@@ -563,11 +563,11 @@
         },
         "hardwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep",
-            "AT_SUNRISE": "As sunrise occurred",
-            "AT_SUNSET": "As sunset occurred"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
             "set": "Headset hardware brightness set to {value}",
@@ -737,11 +737,11 @@
         },
         "softwareBrightnessChanged": {
           "reason": {
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred",
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep",
-            "AT_SUNRISE": "As sunrise occurred",
-            "AT_SUNSET": "As sunset occurred"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
           },
           "title": {
             "set": "Headset software brightness set to {value}",
@@ -2162,13 +2162,11 @@
   },
   "shared": {
     "common": {
-      "none": "None"
+      "none": "None",
+      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "logo": {
       "tagline": "VR Sleeping Utilities"
-    },
-    "misc": {
-      "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
     "modals": {
       "back": "Back",
