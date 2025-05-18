@@ -9,16 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Frame limiting automations for VRChat, Resonite and ChilloutVR
+- Frame limiting automations on native SteamVR headsets, for VRChat, Resonite and ChilloutVR
 - Options for automatically declining invites and invite requests
 - GPU acceleration for SteamVR overlays (Community contribution by [BenjaminZehowlt](https://github.com/BenjaminZehowlt))
 - Message center for automatically diagnosing common issues
-- VR Headset device & battery level to the device list
 - Sleep mode toggle and sleep preparation to system tray menu
 - Exposed headset battery level and charging indicator over MQTT
 - Brightness automation that runs when your VR headset connects to SteamVR
 - Brightness automations will now indicate if they (could) run when your HMD connects
 - Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor
+- VR Headset device & battery level to the device list
 
 ### Changed
 

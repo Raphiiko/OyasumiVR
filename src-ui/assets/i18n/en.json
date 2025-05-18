@@ -1152,6 +1152,7 @@
     "onSleepEnable": "When I go to sleep",
     "onSleepPreparation": "When I prepare to go to sleep",
     "removeLimiter": "Remove",
+    "supportedHardwareWarning": "Note that SteamVR only supports frame limiting on native SteamVR headsets, like the Valve Index, Vive (Pro), or Bigscreen Beyond. Non-native headsets, like Quest devices, are unsupported.",
     "selector": {
       "auto": "Auto",
       "autoDescription": "In auto mode, SteamVR will determine the optimal frame limit.",
