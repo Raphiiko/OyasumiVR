@@ -162,7 +162,7 @@
           "title": "Only when asleep"
         },
         "onlyWhenUnhandled": {
-          "description": "Only play the sound when the invite request is not automatically handled",
+          "description": "Only play the sound when the invite request is not automatically accepted or declined",
           "title": "Only when not automatically handled"
         },
         "volume": {
