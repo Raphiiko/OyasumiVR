@@ -94,12 +94,7 @@ export class FrameLimitAutomationsService {
     // Apply frame limits for HMD connection
     for (const appConfig of frameLimitConfig.configs) {
       const frameLimitValue = sleepMode ? appConfig.onSleepEnable : appConfig.onSleepDisable;
-      await this.applyFrameLimit(
-        appConfig.appId,
-        appConfig.appLabel,
-        frameLimitValue,
-        'HMD_CONNECT'
-      );
+      await this.applyFrameLimit(appConfig.appId, appConfig.appLabel, frameLimitValue);
     }
   }
 
@@ -107,7 +102,7 @@ export class FrameLimitAutomationsService {
     appId: number,
     appName: string,
     value: FrameLimitConfigOption,
-    reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION' | 'HMD_CONNECT'
+    reason?: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION'
   ) {
     if (value === 'DISABLED') return;
     await this.frameLimiterService.setFrameLimitForAppId(appId, value);
@@ -129,12 +124,14 @@ export class FrameLimitAutomationsService {
           limitValue = '';
         }
     }
-
-    this.eventLog.logEvent({
-      type: 'frameLimitChanged',
-      appName,
-      limit: limitValue,
-      reason,
-    } as EventLogFrameLimitChanged);
+    
+    if (reason) {
+      this.eventLog.logEvent({
+        type: 'frameLimitChanged',
+        appName,
+        limit: limitValue,
+        reason,
+      } as EventLogFrameLimitChanged);
+    }
   }
 }

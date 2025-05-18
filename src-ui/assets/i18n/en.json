@@ -470,7 +470,9 @@
           "reason": {
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep",
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred"
           },
           "title": {
             "set": "Headset color temperature set to {icon} {temperature}K",
@@ -563,7 +565,9 @@
           "reason": {
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep",
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred"
           },
           "title": {
             "set": "Headset hardware brightness set to {value}",
@@ -735,7 +739,9 @@
           "reason": {
             "SLEEP_MODE_DISABLE": "As sleep mode was disabled",
             "SLEEP_MODE_ENABLE": "As sleep mode was enabled",
-            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+            "SLEEP_PREPARATION": "As you prepared to go to sleep",
+            "AT_SUNRISE": "As sunrise occurred",
+            "AT_SUNSET": "As sunset occurred"
           },
           "title": {
             "set": "Headset software brightness set to {value}",
