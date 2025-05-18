@@ -69,7 +69,7 @@ export class InviteAutomationsService {
     if (config.playSoundOnInvite) {
       if (config.playSoundOnInvite_onlyWhenAsleep && !(await firstValueFrom(this.sleep.mode)))
         return;
-      await this.notifications.playSound(
+      await this.notifications.playSoundLegacy(
         'material_alarm_gentle_short_1',
         config.playSoundOnInvite_volume / 100
       );
@@ -81,11 +81,11 @@ export class InviteAutomationsService {
     handled: boolean,
     sleepMode: boolean
   ) {
-    console.warn({config, handled, sleepMode});
+    console.warn({ config, handled, sleepMode });
     if (!config.playSoundOnInviteRequest) return;
     if (handled && config.playSoundOnInviteRequest_onlyWhenUnhandled) return;
     if (!sleepMode && config.playSoundOnInviteRequest_onlyWhenAsleep) return;
-    await this.notifications.playSound(
+    await this.notifications.playSoundLegacy(
       'material_alarm_gentle_short_1',
       config.playSoundOnInviteRequest_volume / 100
     );

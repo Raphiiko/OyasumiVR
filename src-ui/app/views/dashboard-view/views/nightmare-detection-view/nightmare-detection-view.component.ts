@@ -70,7 +70,7 @@ export class NightmareDetectionViewComponent implements OnInit {
   }
 
   async testSound() {
-    await this.notifications.playSound(
+    await this.notifications.playSoundLegacy(
       NIGHTMARE_DETECTION_NOTIFICATION_SOUND,
       this.config.soundVolume / 100
     );

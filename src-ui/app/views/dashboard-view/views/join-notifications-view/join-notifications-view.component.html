@@ -46,6 +46,20 @@
             ></app-select-box>
           </div>
         </div>
+        <div class="setting-row-group" @vshrink *ngIf="joinSoundOption?.id !== 'DISABLED'">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>join-notifications.joinSound.title</span>
+              <span translate>join-notifications.joinSound.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-notification-sound-button
+                [soundConfig]="config.joinSound"
+                (soundConfigChange)="updateJoinSound($event)"
+              ></app-notification-sound-button>
+            </div>
+          </div>
+        </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>join-notifications.onlyWhenPreviouslyAlone.title</span>
@@ -94,6 +108,20 @@
             ></app-select-box>
           </div>
         </div>
+        <div class="setting-row-group" @vshrink *ngIf="leaveSoundOption?.id !== 'DISABLED'">
+          <div class="setting-row">
+            <div class="setting-row-label" translate>
+              <span translate>join-notifications.leaveSound.title</span>
+              <span translate>join-notifications.leaveSound.description</span>
+            </div>
+            <div class="setting-row-action">
+              <app-notification-sound-button
+                [soundConfig]="config.leaveSound"
+                (soundConfigChange)="updateLeaveSound($event)"
+              ></app-notification-sound-button>
+            </div>
+          </div>
+        </div>
         <div class="setting-row">
           <div class="setting-row-label" translate>
             <span translate>join-notifications.onlyWhenLeftAlone.title</span>
@@ -126,27 +154,6 @@
               />
               <span class="switch-toggle-slider"></span>
             </label>
-          </div>
-        </div>
-        <div class="setting-row">
-          <div class="setting-row-label" translate>
-            <span translate>join-notifications.joinSoundVolume.title</span>
-            <span translate>join-notifications.joinSoundVolume.description</span>
-          </div>
-          <div class="setting-row-action">
-            <button class="btn btn-secondary" (click)="testSound()">
-              <span translate @hshrink *ngIf="!playingTestSound"
-                >nightmare-detection.playSound.volume.test</span
-              >
-              <i class="material-icons" @hshrink *ngIf="playingTestSound">volume_up</i>
-            </button>
-            <app-slider-setting
-              [unit]="'%'"
-              [max]="200"
-              [snapValues]="[50, 100, 150]"
-              [value]="config.joinSoundVolume"
-              (valueChange)="setJoinSoundVolume($event)"
-            ></app-slider-setting>
           </div>
         </div>
       </div>

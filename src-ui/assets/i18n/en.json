@@ -1319,13 +1319,17 @@
       "description": "Show a notification when a player joins your world",
       "title": "Join Notifications"
     },
-    "joinSoundVolume": {
-      "description": "The volume of the sound effect that plays when a player enters or leaves your world",
-      "title": "Sound Volume"
-    },
     "joinSounds": {
       "description": "Play a sound when a player joins your world",
       "title": "Join Sounds"
+    },
+    "joinSound": {
+      "title": "Join sound effect",
+      "description": "The sound to play when a player joins your world"
+    },
+    "leaveSound": {
+      "title": "Leave sound effect",
+      "description": "The sound to play when a player leaves your world"
     },
     "leaveNotifications": {
       "description": "Show a notification when a player leaves your world",
@@ -1481,6 +1485,10 @@
       }
     },
     "title": "Nightmare Detection"
+  },
+  "notification-sound": {
+    "title": "Select a sound",
+    "volume": "Volume"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {
@@ -2194,9 +2202,7 @@
       "none": "None",
       "vrcLoginRequired": "This feature requires you to be logged in with a VRChat account."
     },
-    "logo": {
-      "tagline": "VR Sleeping Utilities"
-    },
+    "logo": { "tagline": "VR Sleeping Utilities" },
     "modals": {
       "back": "Back",
       "cancel": "Cancel",
