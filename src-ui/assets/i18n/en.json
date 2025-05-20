@@ -856,6 +856,10 @@
           "description": "Events related to turning on and off devices such as trackers, controllers and base stations",
           "title": "Device Power"
         },
+        "FRAME_LIMITING": {
+          "description": "Events related to frame rate limiting for applications",
+          "title": "Frame Limiting"
+        },
         "GPU_CONTROL": {
           "description": "Events related to controlling aspects of your graphics card",
           "title": "GPU Control"
