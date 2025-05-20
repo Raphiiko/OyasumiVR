@@ -63,7 +63,6 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
-  console.log('BEFORE: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   data = mergeWith(structuredClone(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
     // Delete irrelevant keys
     if (objValue === undefined) {
@@ -74,7 +73,6 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       return srcValue;
     }
   });
-  console.log('AFTER: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   return data as AutomationConfigs;
 }
 

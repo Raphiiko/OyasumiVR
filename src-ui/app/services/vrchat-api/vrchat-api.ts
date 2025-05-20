@@ -533,7 +533,7 @@ export class VRChatAPI {
       error('[VRChat] Tried representing a group while not logged in');
       throw new Error('Tried representing a group while not logged in');
     }
-    const result = await this.apiCallQueue.queueTask({
+    await this.apiCallQueue.queueTask({
       typeId: 'REPRESENT_GROUP',
       runnable: async () => {
         return fetch(`${BASE_URL}/groups/${groupId}/representation`, {
@@ -545,8 +545,6 @@ export class VRChatAPI {
         });
       },
     });
-
-    console.log('REPRESENT_GROUP result', result);
   }
 
   public async getUserGroups(force = false): Promise<LimitedUserGroups[]> {
