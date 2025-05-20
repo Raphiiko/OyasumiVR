@@ -767,6 +767,10 @@
           "description": "Events gerelateerd aan het aan en uit zetten van apparaten zoals trackers, controllers, en base stations",
           "title": "Apparaat Besturing"
         },
+        "FRAME_LIMITING": {
+          "description": "Events gerelateerd aan het limiteren van de framerate van applicaties",
+          "title": "Framerate Limiet"
+        },
         "GPU_CONTROL": {
           "description": "Events gerelateerd aan de besturing van je grafische kaart",
           "title": "GPU Besturing"
