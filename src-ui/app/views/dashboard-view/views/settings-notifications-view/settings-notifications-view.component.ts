@@ -11,6 +11,7 @@ import { vshrink } from 'src-ui/app/utils/animations';
 import { hshrink } from '../../../../utils/animations';
 import { NotificationService } from 'src-ui/app/services/notification.service';
 import { AppSettingsService } from 'src-ui/app/services/app-settings.service';
+import { getBuiltInNotificationSound } from 'src-ui/app/models/notification-sounds';
 
 @Component({
   selector: 'app-settings-notifications-view',
@@ -91,12 +92,13 @@ export class SettingsNotificationsViewComponent implements OnInit {
   }
 
   protected async testSound() {
-    await this.notifications.playSoundLegacy('material_hero_simple-celebration-01');
+    const sound = getBuiltInNotificationSound('pebbles');
+    await this.notifications.playSound(sound);
     this.playingTestSound = true;
     if (this.playingTestSoundTimeout) clearTimeout(this.playingTestSoundTimeout);
     this.playingTestSoundTimeout = setTimeout(() => {
       this.playingTestSound = false;
       this.playingTestSoundTimeout = undefined;
-    }, 1000);
+    }, sound.duration);
   }
 }

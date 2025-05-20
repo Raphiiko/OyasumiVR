@@ -10,8 +10,11 @@ import { error, info, warn } from '@tauri-apps/plugin-log';
 import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
-import { NotificationSound } from '../models/notification-sounds';
-import { NotificationSoundRef } from '../models/notification-sounds.generated';
+import {
+  BuiltInNotificationSoundId,
+  getBuiltInNotificationSound,
+  NotificationSound,
+} from '../models/notification-sounds';
 import { SoundEffectConfig } from '../models/automations';
 
 interface XSOMessage {
@@ -71,18 +74,6 @@ export class NotificationService {
     }
   }
 
-  public async playSoundLegacy(sound: NotificationSoundRef, volume: number | null = null) {
-    if (volume === null) {
-      const settings = await firstValueFrom(this.appSettingsService.settings);
-      volume = settings.generalNotificationVolume / 100.0;
-    }
-    if (volume > 0) {
-      await invoke('play_sound', {
-        name: sound,
-        volume,
-      });
-    }
-  }
 
   public async send(content: string, duration = 3000): Promise<string | null> {
     try {

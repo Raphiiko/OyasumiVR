@@ -47,6 +47,11 @@ export function migrateVRChatApiSettings(data: any): VRChatApiSettings {
     );
   }
   data = mergeWith(structuredClone(VRCHAT_API_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }

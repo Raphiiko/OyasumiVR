@@ -48,6 +48,11 @@ export function migrateTelemetrySettings(data: any): TelemetrySettings {
     );
   }
   data = mergeWith(structuredClone(TELEMETRY_SETTINGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }

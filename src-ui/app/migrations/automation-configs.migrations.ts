@@ -38,6 +38,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     try {
+      console.log('Migrating to version', currentVersion + 1);
       data = migrations[++currentVersion](structuredClone(data));
     } catch (e) {
       error(
@@ -62,11 +63,18 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
+  console.log('BEFORE: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   data = mergeWith(structuredClone(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }
   });
+  console.log('AFTER: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   return data as AutomationConfigs;
 }
 
@@ -94,14 +102,13 @@ function from17to18(data: any): any {
       data.JOIN_NOTIFICATIONS.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
     }
   }
-  if (data.NIGHTMARE_DETECTION.playSound) {
-    data.NIGHTMARE_DETECTION.sound = {
-      ...AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION.sound,
-      volume: data.NIGHTMARE_DETECTION.soundVolume,
-    };
-    delete data.NIGHTMARE_DETECTION.playSound;
-    delete data.NIGHTMARE_DETECTION.soundVolume;
-  }
+  data.NIGHTMARE_DETECTION.sound = {
+    ...AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION.sound,
+    volume: data.NIGHTMARE_DETECTION.soundVolume,
+    enabled: !!data.NIGHTMARE_DETECTION.playSound,
+  };
+  delete data.NIGHTMARE_DETECTION.playSound;
+  delete data.NIGHTMARE_DETECTION.soundVolume;
   return data;
 }
 

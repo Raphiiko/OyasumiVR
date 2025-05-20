@@ -583,7 +583,7 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     periodDuration: 60 * 1000,
     disableSleepMode: false,
     sound: {
-      sound: getBuiltInNotificationSound('ripple'),
+      sound: getBuiltInNotificationSound('gentle-chime-long'),
       volume: 100,
       enabled: true,
     },
@@ -833,14 +833,14 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     declineInviteRequestMessage: '',
     declineInviteMessage: '',
     playSoundOnInviteRequest: {
-      sound: getBuiltInNotificationSound('ripple'),
+      sound: getBuiltInNotificationSound('gentle-chime'),
       volume: 100,
       enabled: false,
     },
     playSoundOnInviteRequest_onlyWhenAsleep: false,
     playSoundOnInviteRequest_onlyWhenUnhandled: false,
     playSoundOnInvite: {
-      sound: getBuiltInNotificationSound('ripple'),
+      sound: getBuiltInNotificationSound('gentle-chime'),
       volume: 100,
       enabled: false,
     },
