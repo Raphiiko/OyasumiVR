@@ -383,7 +383,8 @@
       "systemMicMuteAutomations": "System Microphone Mute Automations",
       "vrcAutomations": "VRChat Automations",
       "vrchatAvatarAutomations": "Avatar Automations",
-      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations"
+      "vrchatMicMuteAutomations": "VRChat Microphone Mute Automations",
+      "vrchatGroupAutomations": "Group Automations"
     },
     "device-edit-modal": {
       "deviceNickname": {
@@ -817,6 +818,17 @@
           },
           "title": "Changed your VRChat avatar to ''{avatarName}''"
         },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": {
+            "set": "Changed the VRChat group you represent to ''{groupName}''",
+            "clear": "Stopped representing VRChat group ''{groupName}''"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
@@ -863,6 +875,10 @@
         "VRCHAT_AVATAR": {
           "description": "Events related to OyasumiVR changing your VRChat avatar",
           "title": "VRChat Avatar"
+        },
+        "VRCHAT_GROUP": {
+          "description": "Events related to OyasumiVR changing the VRChat group you represent",
+          "title": "VRChat Group"
         },
         "VRCHAT_INVITES": {
           "description": "Events related to VRChat invites and invite requests",
@@ -2748,6 +2764,26 @@
       "title": "When I prepare to go to sleep"
     },
     "title": "Avatar Automations"
+  },
+  "vrchatGroupAutomations": {
+    "description": "Here you can have OyasumiVR automatically change the VRChat group you represent, for example when you fall asleep or wake up.",
+    "onSleepDisable": {
+      "description": "Change the group I represent to",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Change the group I represent to",
+      "title": "When I go to sleep"
+    },
+    "onSleepPreparation": {
+      "description": "Change the group I represent to",
+      "title": "When I prepare to go to sleep"
+    },
+    "title": "Group Automations",
+    "options": {
+      "dontChange": "Do not change",
+      "clearGroup": "Clear Group"
+    }
   },
   "vrchatMicMuteAutomations": {
     "automations": {

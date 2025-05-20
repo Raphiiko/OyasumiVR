@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Message center for automatically diagnosing common issues
 - Sleep mode toggle and sleep preparation to system tray menu
 - Notification sounds for invites and invite requests
+- Automations for automatically changing your represented VRChat group
 - Brightness automation that runs when your VR headset connects to SteamVR
 - Brightness automations will now indicate if they (could) run when your HMD connects
 - Auto completion for the OSC addresses of VRChat avatar parameters in the simple osc script editor

@@ -14,6 +14,8 @@ import { NotificationHandler } from './event-handlers/notification-handler';
 import type { Notification } from 'vrchat/dist';
 import { VRChatAuth } from './vrchat-auth';
 import { VRChatApiSettings } from 'src-ui/app/models/vrchat-api-settings';
+import { GroupMemberUpdatedHandler } from './event-handlers/group-member-updated-handler';
+import { VRChatAPI } from './vrchat-api';
 
 export interface VRChatEventHandler {
   type: string;
@@ -26,10 +28,11 @@ export class VRChatSocket {
   private _notifications: Subject<Notification> = new Subject<Notification>();
   public readonly notifications = this._notifications.asObservable();
 
-  constructor(private vrchatAuth: VRChatAuth, private settings: Observable<VRChatApiSettings>) {
+  constructor(private vrchatAuth: VRChatAuth, private vrchatApi: VRChatAPI, private settings: Observable<VRChatApiSettings>) {
     this.handlers = [
       new UserUpdateHandler(this.vrchatAuth),
       new NotificationHandler(this.onVRChatNotification.bind(this)),
+      new GroupMemberUpdatedHandler(this.vrchatApi),
     ];
   }
 
@@ -114,6 +117,7 @@ export class VRChatSocket {
     const handler = this.handlers.find((handler) => handler.type === data.type);
     if (!handler) return;
     info(`[VRChat] Received event: ${data.type}`);
+    // info(`[VRChat] Received event: ${data.type}`);
     handler.handle(data.content);
   }
 
