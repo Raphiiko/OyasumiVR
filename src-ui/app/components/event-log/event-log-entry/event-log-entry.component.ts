@@ -32,6 +32,7 @@ import { EventLogBSBFanSpeedChangedEntryParser } from './entry-parsers/bsb-fan-s
 import { EventLogBSBLedChangedEntryParser } from './entry-parsers/bsb-led-changed';
 import { EventLogStatusChangedOnGeneralEventEntryParser } from './entry-parsers/status-changed-on-general-event';
 import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-avatar-changed';
+import { EventLogVRChatGroupChangedEntryParser } from './entry-parsers/vrchat-group-changed';
 import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
 import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
 import { EventLogEntry } from '../../../models/event-log-entry';
@@ -77,6 +78,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogBSBFanSpeedChangedEntryParser(),
     new EventLogBSBLedChangedEntryParser(),
     new EventLogVRChatAvatarChangedEntryParser(),
+    new EventLogVRChatGroupChangedEntryParser(),
     new EventLogCCTChangedEntryParser(),
     new EventLogFrameLimitChangedEntryParser(),
   ];

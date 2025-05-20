@@ -48,7 +48,8 @@ export type AutomationType =
   | 'NIGHTMARE_DETECTION'
   | 'VRCHAT_AVATAR_AUTOMATIONS'
   | 'BIGSCREEN_BEYOND_FAN_CONTROL'
-  | 'BIGSCREEN_BEYOND_RGB_CONTROL';
+  | 'BIGSCREEN_BEYOND_RGB_CONTROL'
+  | 'VRCHAT_GROUP_AUTOMATIONS';
 
 export interface AutomationConfigs {
   version: 18;
@@ -94,6 +95,7 @@ export interface AutomationConfigs {
   CHANGE_STATUS_BASED_ON_PLAYER_COUNT: ChangeStatusBasedOnPlayerCountAutomationConfig;
   CHANGE_STATUS_GENERAL_EVENTS: ChangeStatusGeneralEventsAutomationConfig;
   AUTO_ACCEPT_INVITE_REQUESTS: AutoAcceptInviteRequestsAutomationConfig;
+  VRCHAT_GROUP_AUTOMATIONS: VRChatGroupAutomationsConfig;
 
   // SYSTEM CONTROL
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_ENABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
@@ -450,6 +452,12 @@ export interface AutoAcceptInviteRequestsAutomationConfig extends AutomationConf
   playSoundOnInviteRequest_onlyWhenUnhandled: boolean;
   playSoundOnInvite: SoundEffectConfig;
   playSoundOnInvite_onlyWhenAsleep: boolean;
+}
+
+export interface VRChatGroupAutomationsConfig extends AutomationConfig {
+  representGroupIdOnSleepModeEnable: string | 'DONT_CHANGE' | 'CLEAR_GROUP';
+  representGroupIdOnSleepModeDisable: string | 'DONT_CHANGE' | 'CLEAR_GROUP';
+  representGroupIdOnSleepPreparation: string | 'DONT_CHANGE' | 'CLEAR_GROUP';
 }
 
 export type PowerDownWindowsMode = 'SHUTDOWN' | 'REBOOT' | 'SLEEP' | 'HIBERNATE' | 'LOGOUT';
@@ -845,6 +853,12 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
       enabled: false,
     },
     playSoundOnInvite_onlyWhenAsleep: false,
+  },
+  VRCHAT_GROUP_AUTOMATIONS: {
+    enabled: true,
+    representGroupIdOnSleepModeEnable: 'DONT_CHANGE',
+    representGroupIdOnSleepModeDisable: 'DONT_CHANGE',
+    representGroupIdOnSleepPreparation: 'DONT_CHANGE',
   },
 
   // SYSTEM CONTROL

@@ -5,7 +5,13 @@ import { TaskQueue } from 'src-ui/app/utils/task-queue';
 import { parse as parseSetCookieHeader } from 'set-cookie-parser';
 import { serialize as serializeCookie } from 'cookie';
 import { InviteMessageType } from 'vrchat/dist';
-import type { CurrentUser, InviteMessage, LimitedUser, UserStatus } from 'vrchat/dist';
+import type {
+  CurrentUser,
+  InviteMessage,
+  LimitedUser,
+  LimitedUserGroups,
+  UserStatus,
+} from 'vrchat/dist';
 import { CachedValue } from 'src-ui/app/utils/cached-value';
 import { AvatarEx, InviteMessageEx } from 'src-ui/app/models/vrchat';
 import { uniqBy } from 'lodash';
@@ -51,6 +57,8 @@ export class VRChatAPI {
         LIST_INVITE_MESSAGES: 8,
         UPDATE_INVITE_MESSAGE: 12,
         DECLINE_INVITE_OR_INVITE_REQUEST: 12,
+        REPRESENT_GROUP: 12,
+        LIST_GROUPS: 12,
       },
     },
   });
@@ -65,6 +73,11 @@ export class VRChatAPI {
     undefined,
     60 * 60 * 1000, // Cache for 1 hour
     'VRCHAT_FRIENDS'
+  );
+  private _groupsCache: CachedValue<LimitedUserGroups[]> = new CachedValue<LimitedUserGroups[]>(
+    undefined,
+    60 * 60 * 1000, // Cache for 1 hour
+    'VRCHAT_GROUPS'
   );
   private _avatarCache: CachedValue<AvatarEx[]> = new CachedValue<AvatarEx[]>(
     undefined,
@@ -117,6 +130,7 @@ export class VRChatAPI {
     this._currentUserCache.clear();
     this._friendsCache.clear();
     this._avatarCache.clear();
+    this._groupsCache.clear();
   }
 
   async setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
@@ -513,6 +527,58 @@ export class VRChatAPI {
     return friends;
   }
 
+  public async representGroup(groupId: string, representing: boolean) {
+    const userId = (await firstValueFrom(this.user))?.id;
+    if (!userId) {
+      error('[VRChat] Tried representing a group while not logged in');
+      throw new Error('Tried representing a group while not logged in');
+    }
+    const result = await this.apiCallQueue.queueTask({
+      typeId: 'REPRESENT_GROUP',
+      runnable: async () => {
+        return fetch(`${BASE_URL}/groups/${groupId}/representation`, {
+          method: 'PUT',
+          headers: await this.getDefaultHeaders(),
+          body: JSON.stringify({
+            isRepresenting: representing,
+          }),
+        });
+      },
+    });
+
+    console.log('REPRESENT_GROUP result', result);
+  }
+
+  public async getUserGroups(force = false): Promise<LimitedUserGroups[]> {
+    if (!force) {
+      const cachedGroups = this._groupsCache.get();
+      if (cachedGroups) return cachedGroups;
+    }
+    const userId = (await firstValueFrom(this.user))?.id;
+    if (!userId) {
+      error('[VRChat] Tried getting user groups while not logged in');
+      throw new Error('Tried getting user groups while not logged in');
+    }
+    try {
+      const result = await this.apiCallQueue.queueTask<Response>({
+        typeId: 'LIST_GROUPS',
+        runnable: async () => {
+          return await fetch(`${BASE_URL}/users/${userId}/groups`, {
+            headers: await this.getDefaultHeaders(),
+          });
+        },
+      });
+      if (result.error) throw result.error;
+      if (!result.result?.ok) throw result.result;
+      const data = await result.result.json();
+      this._groupsCache.set(data);
+      return data;
+    } catch (e) {
+      error('[VRChat] Failed to list groups: ' + JSON.stringify(e));
+      throw e;
+    }
+  }
+
   public async selectAvatar(avatarId: string) {
     // Throw if we don't have a current user
     const userId = (await firstValueFrom(this.user))?.id;
@@ -602,6 +668,30 @@ export class VRChatAPI {
       typeId: 'POLL_USER',
       runnable: () => this.getCurrentUser(undefined, true),
     });
+  }
+
+  public updateCachedGroup(groupId: string, group: Partial<LimitedUserGroups>) {
+    if (group.groupId && group.groupId !== groupId) {
+      throw new Error("Called updateCachedGroup with a group that doesn't match the groupId");
+    }
+    const groups = this._groupsCache.get() ?? [];
+    const index = groups.findIndex((g) => g.groupId === groupId);
+    if (index !== -1) {
+      // Update the group
+      groups[index] = { ...groups[index], ...group };
+
+      // If the group is representing, we need to "unrepresent" any other groups
+      if (group.isRepresenting) {
+        for (const otherGroup of groups) {
+          if (otherGroup.groupId !== groupId) {
+            otherGroup.isRepresenting = false;
+          }
+        }
+      }
+
+      // Update the cache
+      this._groupsCache.set(groups);
+    }
   }
 
   private async fetchPaginatedData<T>(_options: {

@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import type { CurrentUser, LimitedUser, Notification, UserStatus } from 'vrchat/dist';
+import type {
+  CurrentUser,
+  LimitedUser,
+  Notification,
+  LimitedUserGroups,
+  UserStatus,
+} from 'vrchat/dist';
 import { SETTINGS_KEY_VRCHAT_API, SETTINGS_STORE } from '../../globals';
 import { VRCHAT_API_SETTINGS_DEFAULT, VRChatApiSettings } from '../../models/vrchat-api-settings';
 import { migrateVRChatApiSettings } from '../../migrations/vrchat-api-settings.migrations';
@@ -49,7 +55,7 @@ export class VRChatService {
       this.updateSettings.bind(this),
       this.settings
     );
-    this.socket = new VRChatSocket(this.auth, this.settings);
+    this.socket = new VRChatSocket(this.auth, this.api, this.settings);
     // Expose public state
     this.user = this.auth.user;
     this.status = this.auth.status;
@@ -178,6 +184,14 @@ export class VRChatService {
 
   public async listAvatars(force = false): Promise<AvatarEx[]> {
     return await this.api.listAvatars(force);
+  }
+
+  public async representGroup(groupId: string, representing: boolean) {
+    await this.api.representGroup(groupId, representing);
+  }
+
+  public async getUserGroups(force = false): Promise<LimitedUserGroups[]> {
+    return await this.api.getUserGroups(force);
   }
 
   //

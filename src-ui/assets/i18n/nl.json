@@ -325,6 +325,7 @@
       "systemMicMuteAutomations": "Systeem Microfoon Dempings Automatiseringen",
       "vrcAutomations": "VRChat Automatiseringen",
       "vrchatAvatarAutomations": "Avatar Automatiseringen",
+      "vrchatGroupAutomations": "Groep Automatiseringen",
       "vrchatMicMuteAutomations": "VRChat Microfoon Dempings Automatiseringen"
     },
     "device-edit-modal": {
@@ -728,6 +729,17 @@
           },
           "title": "Je VRChat avatar is veranderd naar \"{avatarName}\""
         },
+        "vrchatGroupChanged": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
+            "SLEEP_MODE_ENABLED": "Omdat de slaap modus is ingeschakeld",
+            "SLEEP_PREPARATION": "Omdat je je voorbereidde om te gaan slapen"
+          },
+          "title": {
+            "set": "Je VRChat groepsrepresentatie is veranderd naar \"{groupName}\"",
+            "clear": "Representatie van VRChat groep \"{groupName}\" is gestopt"
+          }
+        },
         "windowsPowerPolicySet": {
           "reason": {
             "SLEEP_MODE_DISABLED": "Omdat de slaap modus is uitgeschakeld",
@@ -774,6 +786,10 @@
         "VRCHAT_AVATAR": {
           "description": "Events gerelateerd aan het instellen van je VRChat avatar",
           "title": "VRChat Avatar"
+        },
+        "VRCHAT_GROUP": {
+          "description": "Events gerelateerd aan het wijzigen van je VRChat groepsrepresentatie",
+          "title": "VRChat Groep"
         },
         "VRCHAT_INVITES": {
           "description": "Events gerelateerd aan VRChat invites en invite requests",
@@ -2557,6 +2573,22 @@
       "title": "Wanneer ik me voorbereid om te gaan slapen"
     },
     "title": "Avatar Automatiseringen"
+  },
+  "vrchatGroupAutomations": {
+    "description": "Hier kan je OyasumiVR configureren om automatisch je vertegenwoordigde VRChat groep te veranderen bij verschillende gebeurtenissen. Dit kan handig zijn als je je groepsvertegenwoordiging wilt wijzigen wanneer je in slaap valt, of wakker word!",
+    "onSleepDisable": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik wakker word"
+    },
+    "onSleepEnable": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik ga slapen"
+    },
+    "onSleepPreparation": {
+      "description": "Verander mijn vertegenwoordigde groep naar",
+      "title": "Wanneer ik me voorbereid om te gaan slapen"
+    },
+    "title": "Groep Automatiseringen"
   },
   "vrchatMicMuteAutomations": {
     "automations": {

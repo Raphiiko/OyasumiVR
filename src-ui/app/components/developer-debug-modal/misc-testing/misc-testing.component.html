@@ -1,0 +1,24 @@
+<button (click)="fetchGroups()" class="btn btn-primary">FETCH GROUPS</button>
+<button (click)="fetchGroups(true)" class="btn btn-primary">FORCE FETCH GROUPS</button>
+
+<div *ngIf="groups">
+  <pre>LENGTH: {{ groups.length }}</pre>
+  <div *ngFor="let group of groups" style="display: flex; flex-direction: row; gap: 10px">
+    <div>NAME: {{ group.name }}</div>
+    <div>|</div>
+    <div>ID: {{ group.groupId }}</div>
+    <div>|</div>
+    <div>REPR: {{ group.isRepresenting }}</div>
+    <div>|</div>
+    <div>PRIV: {{ group.privacy }}</div>
+    <div>|</div>
+    <div
+      ><button
+        (click)="representGroup(group.groupId!)"
+        class="btn btn-primary"
+        [disabled]="group.isRepresenting || group.privacy !== 'default'"
+        >REPRESENT GROUP</button
+      ></div
+    >
+  </div>
+</div>

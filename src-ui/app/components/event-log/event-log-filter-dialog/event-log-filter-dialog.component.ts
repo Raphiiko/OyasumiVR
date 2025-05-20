@@ -25,6 +25,7 @@ export const EventLogFilters = [
   'VRCHAT_STATUS',
   'VRCHAT_INVITES',
   'VRCHAT_AVATAR',
+  'VRCHAT_GROUP',
   'AUDIO_CONTROL',
   'STEAMVR_SETTINGS',
   'SHUTDOWN_SEQUENCE',
@@ -81,6 +82,10 @@ export class EventLogFilterDialogComponent
     {
       id: 'VRCHAT_AVATAR',
       eventLogTypes: ['vrchatAvatarChanged'],
+    },
+    {
+      id: 'VRCHAT_GROUP',
+      eventLogTypes: ['vrchatGroupChanged'],
     },
     {
       id: 'AUDIO_CONTROL',
