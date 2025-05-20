@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
 import { BaseModalComponent } from 'src-ui/app/components/base-modal/base-modal.component';
@@ -30,9 +30,6 @@ export class MessageCenterModalComponent extends BaseModalComponent<void, void> 
 
   constructor(protected messageCenter: MessageCenterService) {
     super();
-    computed(() => {
-      const scrolled = this.scrolled();
-    });
   }
 
   ngOnInit(): void {}
