@@ -32,7 +32,6 @@ export class MessageCenterModalComponent extends BaseModalComponent<void, void> 
     super();
     computed(() => {
       const scrolled = this.scrolled();
-      console.log('scrolled', scrolled);
     });
   }
 
@@ -45,6 +44,5 @@ export class MessageCenterModalComponent extends BaseModalComponent<void, void> 
   onScroll(event: Event) {
     const scrolled = (event.target as HTMLElement).scrollTop > 0;
     this.scrolled.set(scrolled);
-    console.log('set scrolled', scrolled);
   }
 }

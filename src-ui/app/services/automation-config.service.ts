@@ -58,7 +58,6 @@ export class AutomationConfigService {
     let configs: AutomationConfigs | undefined = await SETTINGS_STORE.get<AutomationConfigs>(
       SETTINGS_KEY_AUTOMATION_CONFIGS
     );
-    console.log(JSON.stringify(configs));
     configs = configs ? migrateAutomationConfigs(configs) : this._configs.value;
     this._configs.next(configs);
     await this.saveConfigs();
