@@ -22,6 +22,7 @@ const migrations: { [v: number]: (data: any) => any } = {
   15: from14to15,
   16: from15to16,
   17: from16to17,
+  18: from17to18,
 };
 
 export function migrateAutomationConfigs(data: any): AutomationConfigs {
@@ -37,6 +38,7 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
   }
   while (currentVersion < AUTOMATION_CONFIGS_DEFAULT.version) {
     try {
+      console.log('Migrating to version', currentVersion + 1);
       data = migrations[++currentVersion](structuredClone(data));
     } catch (e) {
       error(
@@ -61,11 +63,18 @@ export function migrateAutomationConfigs(data: any): AutomationConfigs {
       }`
     );
   }
+  console.log('BEFORE: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   data = mergeWith(structuredClone(AUTOMATION_CONFIGS_DEFAULT), data, (objValue, srcValue) => {
+    // Delete irrelevant keys
+    if (objValue === undefined) {
+      return undefined;
+    }
+    // Do not merge array values
     if (Array.isArray(objValue)) {
       return srcValue;
     }
   });
+  console.log('AFTER: ', JSON.stringify(data.JOIN_NOTIFICATIONS, null, 2));
   return data as AutomationConfigs;
 }
 
@@ -78,6 +87,28 @@ async function saveBackup(oldData: any) {
 function resetToLatest(data: any): any {
   // Reset to latest
   data = structuredClone(AUTOMATION_CONFIGS_DEFAULT);
+  return data;
+}
+
+function from17to18(data: any): any {
+  data.version = 18;
+  if (data.JOIN_NOTIFICATIONS) {
+    if (data.JOIN_NOTIFICATIONS.joinSound) {
+      data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
+      data.JOIN_NOTIFICATIONS.joinSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.joinSound;
+    }
+    if (data.JOIN_NOTIFICATIONS.leaveSound) {
+      data.JOIN_NOTIFICATIONS.leaveSoundMode = data.JOIN_NOTIFICATIONS.leaveSound;
+      data.JOIN_NOTIFICATIONS.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
+    }
+  }
+  data.NIGHTMARE_DETECTION.sound = {
+    ...AUTOMATION_CONFIGS_DEFAULT.NIGHTMARE_DETECTION.sound,
+    volume: data.NIGHTMARE_DETECTION.soundVolume,
+    enabled: !!data.NIGHTMARE_DETECTION.playSound,
+  };
+  delete data.NIGHTMARE_DETECTION.playSound;
+  delete data.NIGHTMARE_DETECTION.soundVolume;
   return data;
 }
 
@@ -128,17 +159,6 @@ function from16to17(data: any): any {
     colorTemperature:
       AUTOMATION_CONFIGS_DEFAULT.BRIGHTNESS_AUTOMATIONS.SLEEP_PREPARATION.colorTemperature,
   };
-
-  if (data.JOIN_NOTIFICATIONS) {
-    if (data.JOIN_NOTIFICATIONS.joinSound) {
-      data.JOIN_NOTIFICATIONS.joinSoundMode = data.JOIN_NOTIFICATIONS.joinSound;
-      data.joinSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.joinSound;
-    }
-    if (data.JOIN_NOTIFICATIONS.leaveSound) {
-      data.JOIN_NOTIFICATIONS.leaveSoundMode = data.JOIN_NOTIFICATIONS.leaveSound;
-      data.leaveSound = AUTOMATION_CONFIGS_DEFAULT.JOIN_NOTIFICATIONS.leaveSound;
-    }
-  }
 
   delete data.BRIGHTNESS_CONTROL_ADVANCED_MODE;
   delete data.SET_BRIGHTNESS_ON_SLEEP_MODE_ENABLE;

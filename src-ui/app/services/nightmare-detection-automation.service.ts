@@ -91,7 +91,7 @@ export class NightmareDetectionAutomationService {
   }
 
   private async detectNightmare() {
-    if (this.config.disableSleepMode || this.config.playSound) {
+    if (this.config.disableSleepMode || this.config.sound.enabled) {
       await this.notification.send(this.translate.instant('nightmare-detection.notification'));
     }
     if (this.config.disableSleepMode) {
@@ -100,11 +100,6 @@ export class NightmareDetectionAutomationService {
         automation: 'NIGHTMARE_DETECTION',
       });
     }
-    if (this.config.playSound) {
-      await this.notification.playSoundLegacy(
-        NIGHTMARE_DETECTION_NOTIFICATION_SOUND,
-        this.config.soundVolume / 100
-      );
-    }
+    await this.notification.playSoundConfig(this.config.sound);
   }
 }

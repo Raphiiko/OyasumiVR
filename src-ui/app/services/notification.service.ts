@@ -11,7 +11,7 @@ import { IPCService } from './ipc.service';
 import { AddNotificationRequest } from '../../../src-grpc-web-client/oyasumi-core_pb';
 import { listen } from '@tauri-apps/api/event';
 import { NotificationSound } from '../models/notification-sounds';
-import { NotificationSoundRef } from '../models/notification-sounds.generated';
+import { SoundEffectConfig } from '../models/automations';
 
 interface XSOMessage {
   messageType: number;
@@ -45,6 +45,12 @@ export class NotificationService {
     await this.manageOVRTSocketConnection();
   }
 
+  public async playSoundConfig(config: SoundEffectConfig) {
+    if (config.enabled) {
+      await this.playSound(config.sound, config.volume / 100.0);
+    }
+  }
+
   public async playSound(sound: NotificationSound, volume: number | null = null) {
     if (volume === null) {
       const settings = await firstValueFrom(this.appSettingsService.settings);
@@ -61,19 +67,6 @@ export class NotificationService {
         default:
           error(`[Notification] Unknown sound type: ${sound.type}`);
       }
-    }
-  }
-
-  public async playSoundLegacy(sound: NotificationSoundRef, volume: number | null = null) {
-    if (volume === null) {
-      const settings = await firstValueFrom(this.appSettingsService.settings);
-      volume = settings.generalNotificationVolume / 100.0;
-    }
-    if (volume > 0) {
-      await invoke('play_sound', {
-        name: sound,
-        volume,
-      });
     }
   }
 
