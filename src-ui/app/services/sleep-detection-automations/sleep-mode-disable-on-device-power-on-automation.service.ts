@@ -9,6 +9,7 @@ import {
 import { map } from 'rxjs';
 import { SleepService } from '../sleep.service';
 import { OVRDevice } from '../../models/ovr-device';
+import { info } from '@tauri-apps/plugin-log';
 
 @Injectable({
   providedIn: 'root',
@@ -43,13 +44,21 @@ export class SleepModeDisableOnDevicePowerOnAutomationService {
       // Get current powered on devices
       const poweredOnDevices: OVRDevice[] = devices.filter((d) => d.canPowerOff && !d.isTurningOff);
       // Remove devices from cache that are no longer powered on
-      this.poweredOnDevices = this.poweredOnDevices.filter(
-        (dIndex) => !!poweredOnDevices.find((d) => d.index === dIndex)
-      );
+      this.poweredOnDevices = this.poweredOnDevices.filter((dIndex) => {
+        const result = !!poweredOnDevices.find((d) => d.index === dIndex);
+        if (!result) {
+          const device = devices.find((d) => d.index === dIndex);
+          info('[BetaDebug] OVR device powered off: ' + device?.class + ' ' + device?.serialNumber); // TODO: Remove
+        }
+        return result;
+      });
       // Get newly powered on devices
       const newPoweredOnDevices = poweredOnDevices.filter(
         (d) => !this.poweredOnDevices.includes(d.index)
       );
+      for (const d of newPoweredOnDevices) {
+        info('[BetaDebug] OVR device powered on: ' + d.class + ' ' + d.serialNumber); // TODO: Remove
+      }
       // Add them to the powered on devices list
       this.poweredOnDevices.push(...newPoweredOnDevices.map((d) => d.index));
       // If none of the newly powered on devices should trigger this automation, stop here
