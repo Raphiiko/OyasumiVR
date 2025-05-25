@@ -31,6 +31,7 @@ export const EventLogFilters = [
   'SHUTDOWN_SEQUENCE',
   'BSB_CONTROL',
   'FRAME_LIMITING',
+  'RUN_AUTOMATIONS',
 ] as const;
 
 export type EventLogFilter = (typeof EventLogFilters)[number];
@@ -44,8 +45,7 @@ export type EventLogFilter = (typeof EventLogFilters)[number];
 })
 export class EventLogFilterDialogComponent
   extends BaseModalComponent<EventLogFilterDialogInputModel, EventLogFilterDialogOutputModel>
-  implements OnInit, EventLogFilterDialogInputModel
-{
+  implements OnInit, EventLogFilterDialogInputModel {
   protected readonly filters: Filter[] = [
     {
       id: 'SLEEP_MODE',
@@ -115,6 +115,10 @@ export class EventLogFilterDialogComponent
       id: 'FRAME_LIMITING',
       eventLogTypes: ['frameLimitChanged'],
     },
+    {
+      id: 'RUN_AUTOMATIONS',
+      eventLogTypes: ['runAutomationExecuted'],
+    },
   ];
   // Type this as the id field of the Filter interface
   selectedFilters: EventLogFilter[] = [];
@@ -130,7 +134,7 @@ export class EventLogFilterDialogComponent
     this.result = { hiddenLogTypes: [] };
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async save() {
     this.result = { hiddenLogTypes: this.getHiddenTypesForFilters() };

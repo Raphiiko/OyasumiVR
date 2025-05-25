@@ -46,7 +46,8 @@ export type EventLogEntry =
   | EventLogVRChatAvatarChanged
   | EventLogVRChatGroupChanged
   | EventLogFrameLimitChanged
-  | EventLogCCTChanged;
+  | EventLogCCTChanged
+  | EventLogRunAutomationExecuted;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -82,7 +83,8 @@ export type EventLogType =
   | 'vrchatAvatarChanged'
   | 'vrchatGroupChanged'
   | 'cctChanged'
-  | 'frameLimitChanged';
+  | 'frameLimitChanged'
+  | 'runAutomationExecuted';
 
 export interface EventLogBase {
   id: string;
@@ -143,11 +145,11 @@ export interface EventLogGpuPowerLimitChanged extends EventLogBase {
 export interface EventLogHardwareBrightnessChanged extends EventLogBase {
   type: 'hardwareBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+  | 'SLEEP_MODE_ENABLED'
+  | 'SLEEP_MODE_DISABLED'
+  | 'SLEEP_PREPARATION'
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -156,11 +158,11 @@ export interface EventLogHardwareBrightnessChanged extends EventLogBase {
 export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
   type: 'softwareBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+  | 'SLEEP_MODE_ENABLED'
+  | 'SLEEP_MODE_DISABLED'
+  | 'SLEEP_PREPARATION'
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -169,11 +171,11 @@ export interface EventLogSoftwareBrightnessChanged extends EventLogBase {
 export interface EventLogSimpleBrightnessChanged extends EventLogBase {
   type: 'simpleBrightnessChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+  | 'SLEEP_MODE_ENABLED'
+  | 'SLEEP_MODE_DISABLED'
+  | 'SLEEP_PREPARATION'
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -182,11 +184,11 @@ export interface EventLogSimpleBrightnessChanged extends EventLogBase {
 export interface EventLogCCTChanged extends EventLogBase {
   type: 'cctChanged';
   reason:
-    | 'SLEEP_MODE_ENABLED'
-    | 'SLEEP_MODE_DISABLED'
-    | 'SLEEP_PREPARATION'
-    | 'AT_SUNSET'
-    | 'AT_SUNRISE';
+  | 'SLEEP_MODE_ENABLED'
+  | 'SLEEP_MODE_DISABLED'
+  | 'SLEEP_PREPARATION'
+  | 'AT_SUNSET'
+  | 'AT_SUNRISE';
   transition: boolean;
   value: number;
   transitionTime: number;
@@ -202,10 +204,10 @@ export interface EventLogDeclinedInviteRequest extends EventLogBase {
   type: 'declinedInviteRequest';
   displayName: string;
   reason:
-    | 'SLEEP_MODE_ENABLED_CONDITION_FAILED'
-    | 'PLAYER_COUNT_CONDITION_FAILED'
-    | 'NOT_ON_WHITELIST'
-    | 'ON_BLACKLIST';
+  | 'SLEEP_MODE_ENABLED_CONDITION_FAILED'
+  | 'PLAYER_COUNT_CONDITION_FAILED'
+  | 'NOT_ON_WHITELIST'
+  | 'ON_BLACKLIST';
 }
 
 export interface EventLogDeclinedInvite extends EventLogBase {
@@ -334,4 +336,11 @@ export interface EventLogFrameLimitChanged extends EventLogBase {
   appName: string;
   limit: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogRunAutomationExecuted extends EventLogBase {
+  type: 'runAutomationExecuted';
+  automationName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  commands: string;
 }

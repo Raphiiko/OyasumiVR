@@ -1,5 +1,11 @@
 <button (click)="fetchGroups()" class="btn btn-primary">FETCH GROUPS</button>
 <button (click)="fetchGroups(true)" class="btn btn-primary">FORCE FETCH GROUPS</button>
+<button (click)="representGroup('grp_6b27de2c-711d-498f-a358-205fff95001b')" class="btn btn-primary"
+  >REPRESENT NON EXISTENT GROUP A</button
+>
+<button (click)="representGroup('grp_7b27de2c-711d-498f-a358-205fff95001b')" class="btn btn-primary"
+  >REPRESENT NON EXISTENT GROUP B</button
+>
 
 <div *ngIf="groups">
   <pre>LENGTH: {{ groups.length }}</pre>

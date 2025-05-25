@@ -34,6 +34,7 @@ import { JoinNotificationsViewComponent } from './views/dashboard-view/views/joi
 import { VRChatAvatarAutomationsViewComponent } from './views/dashboard-view/views/vrchat-avatar-automations-view/vrchat-avatar-automations-view.component';
 import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/views/vrchat-group-automations-view/vrchat-group-automations-view.component';
 import { SettingsBrightnessCctViewComponent } from './views/dashboard-view/views/settings-brightness-cct-view/settings-brightness-cct-view.component';
+import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 
 const routes: Routes = [
   {
@@ -88,6 +89,10 @@ const routes: Routes = [
       {
         path: 'vrchatGroupAutomations',
         component: VRChatGroupAutomationsViewComponent,
+      },
+      {
+        path: 'runAutomations',
+        component: RunAutomationsViewComponent,
       },
       {
         path: 'brightnessAutomations',

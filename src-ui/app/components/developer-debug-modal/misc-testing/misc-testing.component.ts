@@ -15,8 +15,12 @@ export class MiscTestingComponent {
 
   constructor(private vrchatService: VRChatService) {}
 
-  representGroup(groupId: string) {
-    this.vrchatService.representGroup(groupId, true);
+  async representGroup(groupId: string) {
+    try {
+      await this.vrchatService.representGroup(groupId, true);
+    } catch (e) {
+      console.error('Error representing group', e);
+    }
   }
 
   async fetchGroups(force = false) {

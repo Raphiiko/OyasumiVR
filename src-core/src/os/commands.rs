@@ -7,7 +7,12 @@ use super::{
     VRCHAT_ACTIVE,
 };
 use log::{error, info};
+use std::process::Command;
+use std::{env, os::windows::process::CommandExt, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
+use tokio::fs::File;
+use tokio::io::AsyncWriteExt;
+use uuid::Uuid;
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
@@ -99,53 +104,50 @@ pub async fn run_command(command: String, args: Vec<String>) -> Result<Output, S
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
-pub async fn show_in_folder(path: String) {
-    #[cfg(target_os = "windows")]
-    {
-        let handle = TAURI_APP_HANDLE.lock().await;
-        handle
-            .as_ref()
-            .unwrap()
-            .shell()
-            .command("explorer")
-            .args(["/select,", &path]) // The comma after select is not a typo
-            .spawn()
-            .unwrap();
-    }
+pub async fn run_cmd_commands(commands: String) {
+    // Get the system temp directory
+    let mut batch_path: PathBuf = env::temp_dir();
+    // Generate a unique filename
+    let filename = format!("oyasumi_{}.bat", Uuid::new_v4());
+    batch_path.push(filename);
 
-    #[cfg(target_os = "linux")]
-    {
-        if path.contains(",") {
-            // see https://gitlab.freedesktop.org/dbus/dbus/-/issues/76
-            let new_path = match metadata(&path).unwrap().is_dir() {
-                true => path,
-                false => {
-                    let mut path2 = PathBuf::from(path);
-                    path2.pop();
-                    path2.into_os_string().into_string().unwrap()
-                }
-            };
-            Command::new("xdg-open").arg(&new_path).spawn().unwrap();
-        } else {
-            Command::new("dbus-send")
-                .args([
-                    "--session",
-                    "--dest=org.freedesktop.FileManager1",
-                    "--type=method_call",
-                    "/org/freedesktop/FileManager1",
-                    "org.freedesktop.FileManager1.ShowItems",
-                    format!("array:string:\"file://{path}\"").as_str(),
-                    "string:\"\"",
-                ])
-                .spawn()
-                .unwrap();
+    // Write the commands to the batch file
+    match File::create(&batch_path).await {
+        Ok(mut file) => {
+            if let Err(e) = file.write_all(commands.as_bytes()).await {
+                error!("[Core] Failed to write to batch file: {}", e);
+                return;
+            }
+        }
+        Err(e) => {
+            error!("[Core] Failed to create batch file: {}", e);
+            return;
         }
     }
 
-    #[cfg(target_os = "macos")]
-    {
-        Command::new("open").args(["-R", &path]).spawn().unwrap();
+    // Launch the batch file in a detached process
+    let mut cmd_builder = Command::new("cmd");
+    cmd_builder.args(["/C", batch_path.to_str().unwrap()]);
+    // DETACHED_PROCESS flag (0x00000008)
+    cmd_builder.creation_flags(0x00000008);
+
+    if let Err(e) = cmd_builder.spawn() {
+        error!("[Core] Failed to spawn detached cmd.exe process: {}", e);
     }
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
+pub async fn show_in_folder(path: String) {
+    let handle = TAURI_APP_HANDLE.lock().await;
+    handle
+        .as_ref()
+        .unwrap()
+        .shell()
+        .command("explorer")
+        .args(["/select,", &path]) // The comma after select is not a typo
+        .spawn()
+        .unwrap();
 }
 
 #[tauri::command]
