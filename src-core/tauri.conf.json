@@ -9,15 +9,8 @@
     "active": true,
     "category": "Utility",
     "copyright": "Copyright (c) 2022 Raphiiko",
-    "targets": [
-      "nsis"
-    ],
-    "resources": [
-      "./openvr_api.dll",
-      "./flags.toml",
-      "./steam_api64.dll",
-      "./resources/**/*"
-    ],
+    "targets": ["nsis"],
+    "resources": ["./openvr_api.dll", "./flags.toml", "./steam_api64.dll", "./resources/**/*"],
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
@@ -72,10 +65,16 @@
   "plugins": {
     "cli": {
       "description": "OyasumiVR - VR Sleep Utilities",
-      "longDescription": "",
-      "beforeHelp": "",
-      "afterHelp": "",
       "args": [
+        {
+          "name": "dont-need-security-where-im-going-uwu",
+          "description": "Permanently enables the main process to run with administrative privileges",
+          "longDescription": "WARNING: Enabling this has significant security risks!\n\nLaunching OyasumiVR with this flag will allow OyasumiVR to be ran as administrator from then on. Requires OyasumiVR.exe to be run with administrative privileges. This action can be undone by running the application again with the --reset-elevation-security flag.\n\nMore information can be found at https://raphii.co/oyasumivr/hidden/troubleshooting/launch-as-admin"
+        },
+        {
+          "name": "reset-elevation-security",
+          "description": "Restores the default elevation security settings. Requires OyasumiVR.exe to be ran with administrative privileges."
+        },
         {
           "name": "core-mode",
           "short": "c",
@@ -83,10 +82,7 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         },
         {
           "name": "overlay-sidecar-mode",
@@ -95,10 +91,7 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         },
         {
           "name": "mdns-sidecar-mode",
@@ -107,18 +100,13 @@
           "longDescription": "See developer notes for more information",
           "maxValues": 1,
           "takesValue": true,
-          "possibleValues": [
-            "release",
-            "dev"
-          ]
+          "possibleValues": ["release", "dev"]
         }
       ]
     },
     "deep-link": {
       "desktop": {
-        "schemes": [
-          "oyasumivr"
-        ]
+        "schemes": ["oyasumivr"]
       }
     },
     "updater": {
@@ -159,7 +147,7 @@
         "transparent": true,
         "skipTaskbar": true,
         "minimizable": false,
-        "alwaysOnTop": true,
+        "focus": true,
         "userAgent": "OyasumiVR/1.15.0 (https://github.com/Raphiiko/OyasumiVR)",
         "useHttpsScheme": false
       }

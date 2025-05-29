@@ -2,6 +2,7 @@ mod audio_devices;
 pub mod commands;
 mod models;
 mod sounds_gen;
+pub mod elevation;
 
 use self::audio_devices::manager::AudioDeviceManager;
 use lazy_static::lazy_static;

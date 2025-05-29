@@ -33,7 +33,6 @@ pub use grpc::models as Models;
 use cronjob::CronJob;
 use globals::{APTABASE_APP_KEY, FLAGS, TAURI_APP_HANDLE};
 use log::{info, warn, LevelFilter};
-use oyasumivr_shared::windows::is_elevated;
 use serde_json::json;
 use tauri::{plugin::TauriPlugin, Manager, Wry};
 use tauri_plugin_cli::CliExt;
@@ -42,6 +41,12 @@ use webview2_com::Microsoft::Web::WebView2::Win32::ICoreWebView2Settings6;
 
 #[tokio::main]
 async fn main() {
+    // Attach to parent console if we're running from a command line
+    #[cfg(windows)]
+    {
+        use windows::Win32::System::Console::{AttachConsole, ATTACH_PARENT_PROCESS};
+        let _ = unsafe { AttachConsole(ATTACH_PARENT_PROCESS) };
+    }
     // Construct OyasumiVR Tauri application
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
@@ -165,6 +170,9 @@ fn configure_tauri_plugin_log() -> TauriPlugin<Wry> {
 }
 
 async fn app_setup(app_handle: tauri::AppHandle) {
+    // Process elevation security args
+    os::elevation::process_elevation_cli_args().await;
+
     info!(
         "[Core] Starting OyasumiVR in {} mode",
         crate::utils::cli_core_mode().await
@@ -242,24 +250,6 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     let mut cron = CronJob::new("CRON_MINUTE_START", on_cron_minute_start);
     cron.seconds("0");
     CronJob::start_job_threaded(cron);
-    // If we have admin privileges, prelaunch the elevation sidecar
-    if is_elevated() {
-        info!("[Core] Main process is running with elevation. Pre-launching elevated sidecar...");
-        // Wait for grpc server to start so we can pass the port
-        loop {
-            let core_grpc_port = grpc::SERVER_PORT.lock().await;
-            // Once we have the port, start the sidecar
-            if core_grpc_port.is_some() {
-                drop(core_grpc_port);
-                elevated_sidecar::commands::start_elevated_sidecar().await;
-                break;
-            }
-        }
-    } else {
-        info!(
-            "[Core] Main process is running without elevation. Elevated sidecar will be launched on demand."
-        );
-    }
 
     // Start profiling if we're in debug mode
     #[cfg(debug_assertions)]
@@ -333,6 +323,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         os::commands::windows_sleep,
         os::commands::windows_logout,
         os::commands::windows_hibernate,
+        os::commands::windows_is_elevated,
         os::commands::get_audio_devices,
         os::commands::set_audio_device_volume,
         os::commands::set_audio_device_mute,
@@ -340,6 +331,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         os::commands::set_hardware_mic_activity_enabled,
         os::commands::set_hardware_mic_activivation_threshold,
         os::commands::is_vrchat_active,
+        os::commands::is_elevation_security_disabled,
         osc::commands::osc_send_command,
         osc::commands::osc_valid_addr,
         osc::commands::start_osc_server,
@@ -380,6 +372,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         commands::nvml::nvml_get_devices,
         commands::nvml::nvml_set_power_management_limit,
         commands::debug::open_dev_tools,
+        commands::debug::is_flag_set,
         commands::time::get_sunrise_sunset_time,
         grpc::commands::get_core_grpc_port,
         grpc::commands::get_core_grpc_web_port,
