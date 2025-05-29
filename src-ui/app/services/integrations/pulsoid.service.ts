@@ -115,10 +115,13 @@ export class PulsoidService {
     const state = Math.random().toString(36).substring(7);
     this.csrfCache.push(state);
     // Remove CSRF token from cache after 1 hour
-    setTimeout(() => {
-      const index = this.csrfCache.indexOf(state);
-      if (index > -1) this.csrfCache.splice(index, 1);
-    }, 1000 * 60 * 60);
+    setTimeout(
+      () => {
+        const index = this.csrfCache.indexOf(state);
+        if (index > -1) this.csrfCache.splice(index, 1);
+      },
+      1000 * 60 * 60
+    );
     // Construct a url with query parameters
     const url = new URL('https://pulsoid.net/oauth2/authorize');
     url.searchParams.append('client_id', PULSOID_CLIENT_ID);
@@ -190,8 +193,8 @@ export class PulsoidService {
               errorDetails: errorDescription
                 ? `Pulsoid: ${errorDescription} (${errorCode})`
                 : errorCode
-                ? `Pulsoid: ${errorCode}`
-                : '',
+                  ? `Pulsoid: ${errorCode}`
+                  : '',
             },
           },
           confirmButtonText: 'Ok',
@@ -243,9 +246,8 @@ export class PulsoidService {
   }
 
   private async loadSettings() {
-    let settings: PulsoidApiSettings | undefined = await SETTINGS_STORE.get<PulsoidApiSettings>(
-      SETTINGS_KEY_PULSOID_API
-    );
+    let settings: PulsoidApiSettings | undefined =
+      await SETTINGS_STORE.get<PulsoidApiSettings>(SETTINGS_KEY_PULSOID_API);
     settings = settings ? migratePulsoidApiSettings(settings) : this.settings.value;
     // Handle token expiry
     if (settings.expiresAt && settings.expiresAt < Date.now() / 1000) {

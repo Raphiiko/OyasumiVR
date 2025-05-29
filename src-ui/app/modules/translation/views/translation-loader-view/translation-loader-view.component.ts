@@ -25,7 +25,10 @@ export class TranslationLoaderViewComponent {
     return this.languageCode.trim().length === 2 && !!this.languageCode.trim().match(/[a-zA-Z]{2}/);
   }
 
-  constructor(private translationEditService: TranslationEditService, private router: Router) {
+  constructor(
+    private translationEditService: TranslationEditService,
+    private router: Router
+  ) {
     this.init();
   }
 
@@ -41,7 +44,7 @@ export class TranslationLoaderViewComponent {
             ({
               id: t.locale,
               label: t.locale,
-            } as SelectBoxItem)
+            }) as SelectBoxItem
         );
       this.state = 'INITIALIZED';
     } catch (e) {

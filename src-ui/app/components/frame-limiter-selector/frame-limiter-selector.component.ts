@@ -21,7 +21,10 @@ export class FrameLimiterSelectorComponent implements OnInit {
   hmdDisplayFrequency: number | undefined;
   frameLimitConfigOptions = FrameLimitConfigOptions.filter((o) => o !== 'DISABLED');
 
-  constructor(private readonly openvr: OpenVRService, private destroyRef: DestroyRef) {}
+  constructor(
+    private readonly openvr: OpenVRService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit(): void {
     this.openvr.devices

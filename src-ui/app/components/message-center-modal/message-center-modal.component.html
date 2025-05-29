@@ -5,7 +5,7 @@
     (click)="$event.target === $event.currentTarget && close()"
   >
     @for (item of messages | async; track item.id) {
-    <app-message-center-item [message]="item" @vshrink></app-message-center-item>
+      <app-message-center-item [message]="item" @vshrink></app-message-center-item>
     }
   </div>
   <div *ngIf="((messages | async)?.length ?? 0) === 0" class="mc-items-none" @fade>
@@ -24,7 +24,7 @@
           <span translate>message-center.actions.showHidden</span>
           <ng-container
             *ngIf="{
-              hiddenMessageCount: (messageCenter.hiddenMessages | async)?.length ?? 0
+              hiddenMessageCount: (messageCenter.hiddenMessages | async)?.length ?? 0,
             } as data"
           >
             <span

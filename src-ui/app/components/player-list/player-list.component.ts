@@ -73,7 +73,7 @@ export class PlayerListComponent implements OnInit {
               type: 'player',
               playerId: p.id,
               playerName: p.displayName,
-            } as SelectedFriendPlayer)
+            }) as SelectedFriendPlayer
         ),
       })
       .subscribe(async (result) => {

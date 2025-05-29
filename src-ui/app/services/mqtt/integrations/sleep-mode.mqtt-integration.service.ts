@@ -7,7 +7,10 @@ import { MqttToggleProperty } from '../../../models/mqtt';
   providedIn: 'root',
 })
 export class SleepModeMqttIntegrationService {
-  constructor(private mqtt: MqttDiscoveryService, private sleepService: SleepService) {}
+  constructor(
+    private mqtt: MqttDiscoveryService,
+    private sleepService: SleepService
+  ) {}
 
   async init() {
     // Init property

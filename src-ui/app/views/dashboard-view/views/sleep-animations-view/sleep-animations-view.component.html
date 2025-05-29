@@ -216,7 +216,7 @@
                   [checked]="config.unlockFeetOnSleepModeDisable"
                   (change)="
                     updateConfig({
-                      unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable
+                      unlockFeetOnSleepModeDisable: !config.unlockFeetOnSleepModeDisable,
                     })
                   "
                 />
@@ -238,7 +238,7 @@
                   [checked]="config.unlockFeetOnAutomationDisable"
                   (change)="
                     updateConfig({
-                      unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable
+                      unlockFeetOnAutomationDisable: !config.unlockFeetOnAutomationDisable,
                     })
                   "
                 />
@@ -260,7 +260,7 @@
                   [checked]="config.releaseFootLockOnPoseChange"
                   (change)="
                     updateConfig({
-                      releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange
+                      releaseFootLockOnPoseChange: !config.releaseFootLockOnPoseChange,
                     })
                   "
                 />
@@ -315,7 +315,7 @@
                   (change)="
                     updateConfig({
                       enableAvatarReloadOnFBTDisableWorkaround:
-                        !config.enableAvatarReloadOnFBTDisableWorkaround
+                        !config.enableAvatarReloadOnFBTDisableWorkaround,
                     })
                   "
                 />

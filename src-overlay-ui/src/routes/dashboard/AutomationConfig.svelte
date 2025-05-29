@@ -26,10 +26,10 @@
 				({
 					id: e[0],
 					data: e[1]
-				} as {
+				}) as {
 					id: keyof OyasumiSidecarAutomationsState;
 					data: OyasumiSidecarAutomationsState[keyof OyasumiSidecarAutomationsState];
-				})
+				}
 		)
 	);
 

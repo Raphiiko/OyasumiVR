@@ -38,7 +38,10 @@ export class AppSettingsService {
   >(undefined);
   public loadedDefaults: Observable<boolean | undefined> = this._loadedDefaults.asObservable();
 
-  constructor(private translateService: TranslateService, private modalService: ModalService) {}
+  constructor(
+    private translateService: TranslateService,
+    private modalService: ModalService
+  ) {}
 
   async init() {
     await this.loadSettings();
@@ -52,9 +55,8 @@ export class AppSettingsService {
   }
 
   async loadSettings() {
-    let settings: AppSettings | undefined = await SETTINGS_STORE.get<AppSettings>(
-      SETTINGS_KEY_APP_SETTINGS
-    );
+    let settings: AppSettings | undefined =
+      await SETTINGS_STORE.get<AppSettings>(SETTINGS_KEY_APP_SETTINGS);
     let loadedDefaults = false;
     if (settings) {
       const oldSettings = structuredClone(settings);

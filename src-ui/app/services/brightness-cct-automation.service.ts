@@ -277,11 +277,11 @@ export class BrightnessCctAutomationService {
     // Get sunset/sunrise times
     // When enabled, use the configured times, otherwise use the auto times
     const sunriseTimeStr = sunriseEnabled
-      ? config.AT_SUNRISE.activationTime ?? this.autoSunriseTime ?? '07:00'
-      : this.autoSunriseTime ?? '07:00';
+      ? (config.AT_SUNRISE.activationTime ?? this.autoSunriseTime ?? '07:00')
+      : (this.autoSunriseTime ?? '07:00');
     const sunsetTimeStr = sunsetEnabled
-      ? config.AT_SUNSET.activationTime ?? this.autoSunsetTime ?? '19:00'
-      : this.autoSunsetTime ?? '19:00';
+      ? (config.AT_SUNSET.activationTime ?? this.autoSunsetTime ?? '19:00')
+      : (this.autoSunsetTime ?? '19:00');
     // Calculate the seconds-of-day for sunrise and sunset
     const sunriseTime = this.timeToSeconds(sunriseTimeStr);
     const sunsetTime = this.timeToSeconds(sunsetTimeStr);
@@ -307,15 +307,15 @@ export class BrightnessCctAutomationService {
             timesInverted && sunriseEnabled
               ? 'AT_SUNRISE'
               : !timesInverted && sunsetEnabled
-              ? 'AT_SUNSET'
-              : null;
+                ? 'AT_SUNSET'
+                : null;
         } else {
           activeAutomation =
             timesInverted && sunsetEnabled
               ? 'AT_SUNSET'
               : !timesInverted && sunriseEnabled
-              ? 'AT_SUNRISE'
-              : null;
+                ? 'AT_SUNRISE'
+                : null;
         }
       } else if (sunriseTime !== null) {
         // Only sunrise time available

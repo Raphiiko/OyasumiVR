@@ -19,7 +19,10 @@ export class SleepModeDisableOnUprightPoseAutomationService {
   private lastPose?: { pose: SleepingPose; time: number };
   private disableTimeout?: number | NodeJS.Timeout;
 
-  constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
+  constructor(
+    private automationConfig: AutomationConfigService,
+    private sleep: SleepService
+  ) {}
 
   async init() {
     this.automationConfig.configs

@@ -35,6 +35,7 @@ import { EventLogVRChatAvatarChangedEntryParser } from './entry-parsers/vrchat-a
 import { EventLogVRChatGroupChangedEntryParser } from './entry-parsers/vrchat-group-changed';
 import { EventLogCCTChangedEntryParser } from './entry-parsers/cct-changed';
 import { EventLogFrameLimitChangedEntryParser } from './entry-parsers/frame-limit-changed';
+import { EventLogRunAutomationExecutedEntryParser } from './entry-parsers/run-automation-executed';
 import { EventLogEntry } from '../../../models/event-log-entry';
 
 @Component({
@@ -81,6 +82,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     new EventLogVRChatGroupChangedEntryParser(),
     new EventLogCCTChangedEntryParser(),
     new EventLogFrameLimitChangedEntryParser(),
+    new EventLogRunAutomationExecutedEntryParser(),
   ];
 
   constructor(

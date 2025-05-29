@@ -49,7 +49,8 @@ export type AutomationType =
   | 'VRCHAT_AVATAR_AUTOMATIONS'
   | 'BIGSCREEN_BEYOND_FAN_CONTROL'
   | 'BIGSCREEN_BEYOND_RGB_CONTROL'
-  | 'VRCHAT_GROUP_AUTOMATIONS';
+  | 'VRCHAT_GROUP_AUTOMATIONS'
+  | 'RUN_AUTOMATIONS';
 
 export interface AutomationConfigs {
   version: 18;
@@ -102,6 +103,7 @@ export interface AutomationConfigs {
   WINDOWS_POWER_POLICY_ON_SLEEP_MODE_DISABLE: WindowsPowerPolicyOnSleepModeAutomationConfig;
   FRAME_LIMIT_AUTOMATIONS: FrameLimitAutomationsConfig;
   SHUTDOWN_AUTOMATIONS: ShutdownAutomationsConfig;
+  RUN_AUTOMATIONS: RunAutomationsConfig;
 
   // HARDWARE SPECIFIC
   GPU_POWER_LIMITS: GPUPowerLimitsAutomationConfig;
@@ -521,6 +523,16 @@ export interface SoundEffectConfig {
   enabled: boolean;
 }
 
+export interface RunAutomationsConfig extends AutomationConfig {
+  onSleepModeEnable: boolean;
+  onSleepModeEnableCommands: string;
+  onSleepModeDisable: boolean;
+  onSleepModeDisableCommands: string;
+  onSleepPreparation: boolean;
+  onSleepPreparationCommands: string;
+  runAutomationsCryptoKey?: string;
+}
+
 //
 // DEFAULT
 //
@@ -901,7 +913,15 @@ export const AUTOMATION_CONFIGS_DEFAULT: AutomationConfigs = {
     powerDownWindows: true,
     powerDownWindowsMode: 'SHUTDOWN',
   },
-
+  RUN_AUTOMATIONS: {
+    enabled: true,
+    onSleepModeEnable: false,
+    onSleepModeDisable: false,
+    onSleepPreparation: false,
+    onSleepModeEnableCommands: '',
+    onSleepModeDisableCommands: '',
+    onSleepPreparationCommands: '',
+  },
   // HARDWARE SPECIFIC
   GPU_POWER_LIMITS: {
     enabled: false,

@@ -124,7 +124,7 @@ export class FrameLimitAutomationsService {
           limitValue = '';
         }
     }
-    
+
     if (reason) {
       this.eventLog.logEvent({
         type: 'frameLimitChanged',

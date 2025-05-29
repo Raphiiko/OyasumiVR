@@ -25,7 +25,10 @@ export class HotkeySelectorComponent implements OnChanges, OnDestroy, OnInit {
     return this.hotkey ?? '';
   }
 
-  constructor(private modalService: ModalService, private hotkeyService: HotkeyService) {}
+  constructor(
+    private modalService: ModalService,
+    private hotkeyService: HotkeyService
+  ) {}
 
   async ngOnInit() {
     this.refreshHotkey();

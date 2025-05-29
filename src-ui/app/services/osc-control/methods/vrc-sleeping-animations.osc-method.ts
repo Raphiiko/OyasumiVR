@@ -6,7 +6,10 @@ import { distinctUntilChanged, map, switchMap } from 'rxjs';
 import { AutomationConfigService } from '../../automation-config.service';
 
 export class VRCSleepingAnimationsOscMethod extends OscMethod<boolean> {
-  constructor(osc: OscService, private automationConfig: AutomationConfigService) {
+  constructor(
+    osc: OscService,
+    private automationConfig: AutomationConfigService
+  ) {
     super(osc, {
       description: 'Enabled status of the automation for pose-based sleeping animations in VRChat',
       address: '/OyasumiVR/Automation/VRCSleepingAnimations',

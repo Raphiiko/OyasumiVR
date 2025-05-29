@@ -1,14 +1,14 @@
 <script lang="ts">
-  import Overview from "./Overview.svelte";
-  import AutomationConfig from "./AutomationConfig.svelte";
-  import { onMount } from "svelte";
-  import Dialog from "$lib/components/Dialog.svelte";
-  import { blur, scale } from "svelte/transition";
-  import ipc from "$lib/services/ipc.service";
-  import { t } from "$lib/translations";
-  import DeviceControl from "./DeviceControl.svelte";
+	import Overview from './Overview.svelte';
+	import AutomationConfig from './AutomationConfig.svelte';
+	import { onMount } from 'svelte';
+	import Dialog from '$lib/components/Dialog.svelte';
+	import { blur, scale } from 'svelte/transition';
+	import ipc from '$lib/services/ipc.service';
+	import { t } from '$lib/translations';
+	import DeviceControl from './DeviceControl.svelte';
 
-  let { state } = ipc;
+	let { state } = ipc;
 
 	// IPC & Readiness
 	let ready: boolean = !window.CefSharp;

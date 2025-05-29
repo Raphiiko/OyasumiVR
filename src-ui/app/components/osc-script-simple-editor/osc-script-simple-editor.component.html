@@ -61,7 +61,7 @@
             [selected]="{ id: parameter.value, label: parameter.value }"
             [items]="[
               { id: 'true', label: 'true' },
-              { id: 'false', label: 'false' }
+              { id: 'false', label: 'false' },
             ]"
             (selectedChange)="setBoolValue(command, j, $event!)"
             [showPlaceholderInDropdown]="false"

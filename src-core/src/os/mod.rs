@@ -5,7 +5,7 @@ mod sounds_gen;
 
 use self::audio_devices::manager::AudioDeviceManager;
 use lazy_static::lazy_static;
-use log::{error, info};
+use log::{error, info, warn};
 use rodio::{source::Source, Decoder};
 use rodio::{OutputStream, Sink};
 use std::collections::HashMap;
@@ -15,6 +15,7 @@ use std::io::BufReader;
 use std::os::windows::ffi::OsStringExt;
 use std::ptr::null_mut;
 use std::slice;
+use std::env;
 use std::time::Duration;
 use tokio::sync::mpsc::Sender;
 use tokio::sync::Mutex;
@@ -142,6 +143,46 @@ pub async fn init_sound_playback() {
             }
         }
     });
+}
+
+/// Cleanup old batch files created by run_cmd_commands
+pub async fn cleanup_batch_files() {
+    let temp_dir = env::temp_dir();
+
+    match tokio::fs::read_dir(&temp_dir).await {
+        Ok(mut entries) => {
+            let mut cleanup_count = 0;
+            while let Ok(Some(entry)) = entries.next_entry().await {
+                if let Some(filename) = entry.file_name().to_str() {
+                    // Check if this is one of our batch files
+                    if filename.starts_with("oyasumi_") && filename.ends_with(".bat") {
+                        let file_path = entry.path();
+                        match tokio::fs::remove_file(&file_path).await {
+                            Ok(_) => {
+                                cleanup_count += 1;
+                            }
+                            Err(e) => {
+                                // Log but don't fail - file might be in use or already deleted
+                                warn!("[Core] Could not remove batch file {:?}: {}", file_path, e);
+                            }
+                        }
+                    }
+                }
+            }
+            if cleanup_count > 0 {
+                info!(
+                    "[Core] Cleaned up {} old batch files from temp directory",
+                    cleanup_count
+                );
+            }
+        }
+        Err(e) => {
+            error!(
+                "[Core] Failed to read temp directory for batch file cleanup: {}",
+                e
+            );
+        }
+    }
 }
 
 fn get_windows_power_policies() -> Vec<GUID> {

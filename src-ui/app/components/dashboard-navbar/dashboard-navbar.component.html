@@ -38,7 +38,7 @@
           'resolutionAutomations',
           'audioVolumeAutomations',
           'systemMicMuteAutomations',
-          'hmdAutomations'
+          'hmdAutomations',
         ])
       "
     >
@@ -62,7 +62,7 @@
           'vrchatMicMuteAutomations',
           'vrchatAvatarAutomations',
           'joinNotifications',
-          'sleepAnimations'
+          'sleepAnimations',
         ])
       "
     >
@@ -79,7 +79,12 @@
       class="menu-item"
       (click)="openSubMenu('MISCELLANEOUS')"
       [class.active]="
-        pathIsActive(['chaperoneAutomations', 'nightmareDetection', 'frameLimitAutomations'])
+        pathIsActive([
+          'chaperoneAutomations',
+          'nightmareDetection',
+          'frameLimitAutomations',
+          'runAutomations',
+        ])
       "
     >
       <div class="menu-item-icon-prefix">
@@ -110,7 +115,7 @@
           'settings/hotkeys',
           'settings/updates',
           'settings/integrations',
-          'settings/advanced'
+          'settings/advanced',
         ])
       "
     >
@@ -287,6 +292,13 @@
     <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'frameLimitAutomations'">
       <div class="menu-item-icon-prefix"> <i class="material-symbols-outlined">speed</i> </div>
       <div class="menu-item-label" translate>comp.dashboard-navbar.frameLimiter</div>
+    </div>
+
+    <div class="menu-item" [routerLinkActive]="'active'" [routerLink]="'runAutomations'">
+      <div class="menu-item-icon-prefix">
+        <i class="material-icons-round">terminal</i>
+      </div>
+      <div class="menu-item-label" translate>comp.dashboard-navbar.runAutomations</div>
     </div>
   </div>
 

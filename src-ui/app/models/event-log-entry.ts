@@ -46,7 +46,8 @@ export type EventLogEntry =
   | EventLogVRChatAvatarChanged
   | EventLogVRChatGroupChanged
   | EventLogFrameLimitChanged
-  | EventLogCCTChanged;
+  | EventLogCCTChanged
+  | EventLogRunAutomationExecuted;
 
 export type EventLogDraft = Omit<EventLogEntry, 'time' | 'id'>;
 
@@ -82,7 +83,8 @@ export type EventLogType =
   | 'vrchatAvatarChanged'
   | 'vrchatGroupChanged'
   | 'cctChanged'
-  | 'frameLimitChanged';
+  | 'frameLimitChanged'
+  | 'runAutomationExecuted';
 
 export interface EventLogBase {
   id: string;
@@ -334,4 +336,11 @@ export interface EventLogFrameLimitChanged extends EventLogBase {
   appName: string;
   limit: string;
   reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+}
+
+export interface EventLogRunAutomationExecuted extends EventLogBase {
+  type: 'runAutomationExecuted';
+  automationName: string;
+  reason: 'SLEEP_MODE_ENABLED' | 'SLEEP_MODE_DISABLED' | 'SLEEP_PREPARATION';
+  commands: string;
 }

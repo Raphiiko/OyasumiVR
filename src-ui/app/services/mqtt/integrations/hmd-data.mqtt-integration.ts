@@ -7,7 +7,10 @@ import { map } from 'rxjs';
   providedIn: 'root',
 })
 export class HMDDataMqttIntegrationService {
-  constructor(private mqtt: MqttDiscoveryService, private openvr: OpenVRService) {}
+  constructor(
+    private mqtt: MqttDiscoveryService,
+    private openvr: OpenVRService
+  ) {}
 
   async init() {
     // Init properties

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { t } from "$lib/translations";
-  import { onMount } from "svelte";
-  import logoIcon from "$lib/images/logo_icon.png";
-  import { blur, fade, fly } from "svelte/transition";
+	import { t } from '$lib/translations';
+	import { onMount } from 'svelte';
+	import logoIcon from '$lib/images/logo_icon.png';
+	import { blur, fade, fly } from 'svelte/transition';
 
-  let ready = false;
+	let ready = false;
 	onMount(() => {
 		ready = true;
 		window.OyasumiIPCOut.onUiReady();
@@ -26,8 +26,8 @@
 					showLogoText = false;
 					showTagLine = false;
 					setTimeout(() => {
-            window.OyasumiIPCOut.dispose();
-          }, 2000);
+						window.OyasumiIPCOut.dispose();
+					}, 2000);
 				}, 5000);
 			}, 200);
 		}, 200);
@@ -53,7 +53,11 @@
 			</div>
 		{/if}
 		{#if showIcon}
-			<div class="stack-frame" in:blur|global={{ duration: 800 }} out:blur|global={{ duration: 1500 }}>
+			<div
+				class="stack-frame"
+				in:blur|global={{ duration: 800 }}
+				out:blur|global={{ duration: 1500 }}
+			>
 				<div
 					class="w-[250px] h-[250px] overflow-hidden rounded-[50px] drop-shadow-[0_0_16px_rgba(255,255,255,100%)] translate-y-[-100px]"
 				>

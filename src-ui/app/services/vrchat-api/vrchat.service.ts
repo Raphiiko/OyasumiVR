@@ -47,7 +47,10 @@ export class VRChatService {
     this.logService.initialLoadComplete.pipe(filter((complete) => complete)),
   ]).pipe(map(([world]) => world));
 
-  constructor(modalService: ModalService, private logService: VRChatLogService) {
+  constructor(
+    modalService: ModalService,
+    private logService: VRChatLogService
+  ) {
     this.api = new VRChatAPI(this.settings, this.updateSettings.bind(this));
     this.auth = new VRChatAuth(
       this.api,
@@ -207,9 +210,8 @@ export class VRChatService {
   //
 
   private async loadSettings() {
-    let settings: VRChatApiSettings | undefined = await SETTINGS_STORE.get<VRChatApiSettings>(
-      SETTINGS_KEY_VRCHAT_API
-    );
+    let settings: VRChatApiSettings | undefined =
+      await SETTINGS_STORE.get<VRChatApiSettings>(SETTINGS_KEY_VRCHAT_API);
     settings = settings ? migrateVRChatApiSettings(settings) : this._settings.value;
     this.auth.handleSettingsLoad(settings);
     // Generate storage crypto key if needed

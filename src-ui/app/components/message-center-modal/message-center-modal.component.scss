@@ -208,7 +208,9 @@ $header-height: 10em;
       color: white;
       text-align: center;
       white-space: pre-line;
-      text-shadow: 0 0 0.5em rgba(255, 255, 255, 0.8), 0 0 2em rgba(255, 255, 255, 0.4);
+      text-shadow:
+        0 0 0.5em rgba(255, 255, 255, 0.8),
+        0 0 2em rgba(255, 255, 255, 0.4);
 
       &:first-of-type {
         font-size: 1.7em;
@@ -229,7 +231,7 @@ $header-height: 10em;
   position: absolute;
   top: 0;
   right: 0;
-  background: rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.25);
   border-radius: 1em;
   width: 1.5em;
   height: 1.5em;

@@ -17,7 +17,7 @@
     >
       <div class="brightness-slider-bar-label">
         <span *ngIf="['BRIGHTNESS', 'FAN_SPEED'].includes(mode)"
-          >{{ (dragging ? dragValue : value) | number : '1.0-0' }} %</span
+          >{{ (dragging ? dragValue : value) | number: '1.0-0' }} %</span
         >
         <div
           *ngIf="['CCT'].includes(mode)"

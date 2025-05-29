@@ -122,7 +122,7 @@
           >{{ 'comp.main-status-bar.bsbFanSpeed.label' | translate }}:&nbsp;</span
         >
         <span class="monospace"
-          >{{ bigscreenBeyondFanAutomation.fanSpeed | async | number : '1.0-0' }}%</span
+          >{{ bigscreenBeyondFanAutomation.fanSpeed | async | number: '1.0-0' }}%</span
         >
       </div>
     </ng-container>
@@ -168,7 +168,7 @@
           >{{ 'comp.main-status-bar.brightness.simple' | translate }}:&nbsp;</span
         >
         <span class="monospace"
-          >{{ simpleBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+          >{{ simpleBrightnessControl.brightnessStream | async | number: '1.0-0' }}%</span
         >
       </div>
     </ng-container>
@@ -192,11 +192,11 @@
           <span
             class="monospace"
             [class.inactive]="(hardwareBrightnessControl.driverIsAvailable | async) === false"
-            >{{ hardwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+            >{{ hardwareBrightnessControl.brightnessStream | async | number: '1.0-0' }}%</span
           >
           <span><b>&nbsp;|&nbsp;</b></span>
           <span class="monospace"
-            >{{ softwareBrightnessControl.brightnessStream | async | number : '1.0-0' }}%</span
+            >{{ softwareBrightnessControl.brightnessStream | async | number: '1.0-0' }}%</span
           >
         </span>
         <div class="pill-icon" @hshrink>

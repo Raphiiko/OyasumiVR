@@ -364,6 +364,7 @@
       "overview": "Overview",
       "powerAutomations": "Power Automations",
       "resolutionAutomations": "Resolution Automations",
+      "runAutomations": "Run Automations",
       "settings": {
         "advanced": "Advanced Settings",
         "brightnessCct": "Brightness & CCT Settings",
@@ -686,6 +687,14 @@
             "custom": "SteamVR render resolution set to {value}"
           }
         },
+        "runAutomationExecuted": {
+          "reason": {
+            "SLEEP_MODE_DISABLED": "As sleep mode was disabled",
+            "SLEEP_MODE_ENABLED": "As sleep mode was enabled",
+            "SLEEP_PREPARATION": "As you prepared to go to sleep"
+          },
+          "title": "Ran user defined commands through the Windows command prompt"
+        },
         "shutdownSequenceCancelled": {
           "reason": {
             "MANUAL": "Cancelled manually"
@@ -863,6 +872,10 @@
         "GPU_CONTROL": {
           "description": "Events related to controlling aspects of your graphics card",
           "title": "GPU Control"
+        },
+        "RUN_AUTOMATIONS": {
+          "description": "Events related to automations running commands through the Windows command prompt",
+          "title": "Run Automations"
         },
         "SHUTDOWN_SEQUENCE": {
           "description": "Events related to the shutdown sequence",
@@ -2828,5 +2841,23 @@
       "unmuted": "Unmuted"
     },
     "title": "VRChat Microphone Mute Automations"
+  },
+  "runAutomations": {
+    "description": "Here you can have OyasumiVR automatically run commands through the Windows command prompt when you fall asleep, wake up, or prepare to sleep.\n\nAny commands will be interpreted through cmd.exe.",
+    "onSleepDisable": {
+      "description": "Run commands",
+      "title": "When I wake up"
+    },
+    "onSleepEnable": {
+      "description": "Run commands",
+      "title": "When I go to sleep"
+    },
+    "onSleepPreparation": {
+      "description": "Run commands",
+      "title": "When I prepare to go to sleep"
+    },
+    "title": "Run Automations",
+    "commandsToRun": "Commands to run",
+    "testCommands": "Test"
   }
 }

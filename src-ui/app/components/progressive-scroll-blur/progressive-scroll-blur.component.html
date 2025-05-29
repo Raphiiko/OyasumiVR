@@ -1,6 +1,6 @@
 <div class="top-blur-container" [style.--top-size]="topSize() + 'em'" *ngIf="topSize() > 0">
   @for (item of [].constructor(5); track $index) {
-  <div class="top-blur"></div>
+    <div class="top-blur"></div>
   }
 </div>
 <div
@@ -9,6 +9,6 @@
   *ngIf="bottomSize() > 0"
 >
   @for (item of [].constructor(5); track $index) {
-  <div class="bottom-blur"></div>
+    <div class="bottom-blur"></div>
   }
 </div>

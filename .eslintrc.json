@@ -4,25 +4,15 @@
     "sourceType": "module",
     "ecmaVersion": 2020
   },
-  "ignorePatterns": [
-  ],
-  "plugins": [
-    "json"
-  ],
+  "ignorePatterns": [],
+  "plugins": ["json"],
   "overrides": [
     {
-      "files": [
-        "*.json"
-      ],
-      "extends": [
-        "plugin:json/recommended",
-        "prettier"
-      ]
+      "files": ["*.json"],
+      "extends": ["plugin:json/recommended", "prettier"]
     },
     {
-      "files": [
-        "*.ts"
-      ],
+      "files": ["*.ts"],
       "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
@@ -30,6 +20,7 @@
         "plugin:@angular-eslint/template/process-inline-templates",
         "prettier"
       ],
+      "plugins": ["unused-imports"],
       "rules": {
         "@angular-eslint/directive-selector": [
           "error",
@@ -54,17 +45,22 @@
         "no-prototype-builtins": "off",
         "@typescript-eslint/no-non-null-assertion": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "@angular-eslint/no-input-rename": "off"
+        "@angular-eslint/no-input-rename": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": [
+          "warn",
+          {
+            "vars": "all",
+            "varsIgnorePattern": "^_",
+            "args": "after-used",
+            "argsIgnorePattern": "^_"
+          }
+        ]
       }
     },
     {
-      "files": [
-        "*.html"
-      ],
-      "extends": [
-        "plugin:@angular-eslint/template/recommended",
-        "prettier"
-      ],
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended", "prettier"],
       "rules": {}
     }
   ]

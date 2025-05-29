@@ -29,7 +29,10 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
     return diff >= 1000 * 60 * 5; // 5 minutes worth of data required
   }
 
-  constructor(private destroyRef: DestroyRef, private pulsoid: PulsoidService) {}
+  constructor(
+    private destroyRef: DestroyRef,
+    private pulsoid: PulsoidService
+  ) {}
 
   ngOnInit(): void {
     this.pulsoid.heartbeatRecords
@@ -142,12 +145,15 @@ export class HeartRateChartComponent implements OnInit, AfterViewInit, OnDestroy
     const maxTime = data[data.length - 1][0];
     const bucketSize = Math.ceil((maxTime - minTime) / bucketCount);
     // Group records by bucket
-    const groupedRecords = data.reduce((acc, record) => {
-      const bucketStart = Math.floor((record[0] - minTime) / bucketSize) * bucketSize + minTime;
-      acc[bucketStart] ??= [];
-      acc[bucketStart].push(record[1]);
-      return acc;
-    }, {} as { [timestamp: number]: number[] });
+    const groupedRecords = data.reduce(
+      (acc, record) => {
+        const bucketStart = Math.floor((record[0] - minTime) / bucketSize) * bucketSize + minTime;
+        acc[bucketStart] ??= [];
+        acc[bucketStart].push(record[1]);
+        return acc;
+      },
+      {} as { [timestamp: number]: number[] }
+    );
     // Calculate min and max for each bucket
     Object.entries(groupedRecords).forEach(([timestamp, heartRates]) => {
       if (Number(timestamp) > 0 && heartRates.length)

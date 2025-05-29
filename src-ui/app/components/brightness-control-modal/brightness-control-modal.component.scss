@@ -15,7 +15,8 @@
   overflow: hidden;
   border: 0.15em solid var(--color-surface-3);
   background-color: color-mix(in srgb, var(--color-surface-1) 80%, transparent);
-  background-image: radial-gradient(
+  background-image:
+    radial-gradient(
       ellipse at 40% 0%,
       color-mix(in srgb, var(--a) 6%, transparent) 0,
       transparent 75%

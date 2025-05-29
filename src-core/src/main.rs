@@ -176,6 +176,8 @@ async fn app_setup(app_handle: tauri::AppHandle) {
     };
     info!("[Core] Setting working directory to: {:?}", executable_path);
     std::env::set_current_dir(&executable_path).unwrap();
+    // Clean up old batch files from previous runs
+    os::cleanup_batch_files().await;
     // Run any migrations first
     migrations::run_migrations().await;
     // Load configs
@@ -319,6 +321,7 @@ fn configure_command_handlers() -> impl Fn(tauri::ipc::Invoke) -> bool {
         hardware::beyond::commands::bigscreen_beyond_set_fan_speed,
         hardware::beyond::commands::bigscreen_beyond_get_saved_preferences,
         os::commands::run_command,
+        os::commands::run_cmd_commands,
         os::commands::play_sound,
         os::commands::show_in_folder,
         os::commands::quit_steamvr,

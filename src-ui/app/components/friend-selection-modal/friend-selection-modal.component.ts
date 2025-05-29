@@ -66,7 +66,10 @@ export class FriendSelectionModalComponent
   loadingState: 'LOADING' | 'LOADED' | 'ERROR' = 'LOADING';
   moreResults = false;
 
-  constructor(protected vrchat: VRChatService, private destroyRef: DestroyRef) {
+  constructor(
+    protected vrchat: VRChatService,
+    private destroyRef: DestroyRef
+  ) {
     super();
   }
 

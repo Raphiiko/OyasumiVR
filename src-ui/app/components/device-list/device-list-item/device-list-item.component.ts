@@ -240,11 +240,10 @@ export class DeviceListItemComponent implements OnInit {
     if (this.mode === 'lighthouse') {
       if (this.lighthouse.deviceNeedsIdentifier(this._lighthouseDevice!)) {
         this.modalService
-          .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
-            LighthouseV1IdWizardModalComponent,
-            { device: this._lighthouseDevice! },
-            { closeOnEscape: false }
-          )
+          .addModal<
+            LighthouseV1IdWizardModalInputModel,
+            LighthouseV1IdWizardModalOutputModel
+          >(LighthouseV1IdWizardModalComponent, { device: this._lighthouseDevice! }, { closeOnEscape: false })
           .subscribe();
         return;
       }
@@ -294,10 +293,10 @@ export class DeviceListItemComponent implements OnInit {
       };
     } else return;
     this.modalService
-      .addModal<DeviceEditModalInputModel, DeviceEditModalOutputModel>(
-        DeviceEditModalComponent,
-        input
-      )
+      .addModal<
+        DeviceEditModalInputModel,
+        DeviceEditModalOutputModel
+      >(DeviceEditModalComponent, input)
       .subscribe();
   }
 

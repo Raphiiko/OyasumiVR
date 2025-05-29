@@ -21,14 +21,14 @@
     border-bottom: none;
   }
 
-
   &:active {
     .selection-indicator {
       transform: scale(0.9);
     }
   }
 
-  &.selected, &:hover {
+  &.selected,
+  &:hover {
     background-color: var(--color-surface-0);
   }
 }

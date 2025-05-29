@@ -28,7 +28,10 @@ export class GpuPowerlimitingPaneComponent implements OnInit {
     limit: GPUPowerLimit;
   }> = new Subject();
 
-  constructor(private nvml: NvmlService, protected gpuAutomations: GpuAutomationsService) {
+  constructor(
+    private nvml: NvmlService,
+    protected gpuAutomations: GpuAutomationsService
+  ) {
     this.gpuAutomations.nvmlDevices.pipe(takeUntilDestroyed()).subscribe(async (devices) => {
       this.gpuDevices = devices;
       this.selectedGpu = devices.find((d) => d.selected);

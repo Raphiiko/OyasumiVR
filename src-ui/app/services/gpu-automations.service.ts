@@ -342,7 +342,7 @@ export class GpuAutomationsService {
             take(1),
             map(() => msiAfterburnerPath)
           )
-        ),
+        )
       )
       .subscribe((msiAfterburnerPath) => {
         this.setMSIAfterburnerPath(msiAfterburnerPath as string, false);

@@ -247,7 +247,9 @@ import { OscAddressAutocompleteComponent } from './components/osc-script-simple-
 import { NotificationSoundButtonComponent } from './components/notification-sound-button/notification-sound-button.component';
 import { NotificationSoundModalComponent } from './components/notification-sound-modal/notification-sound-modal.component';
 import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/views/vrchat-group-automations-view/vrchat-group-automations-view.component';
+import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 import { VRChatGroupAutomationsService } from './services/vrchat-group-automations.service';
+import { RunAutomationsService } from './services/run-automations.service';
 
 [
   localeEN,
@@ -403,6 +405,7 @@ export function createTranslateLoader(http: HttpClient) {
     NotificationSoundButtonComponent,
     NotificationSoundModalComponent,
     VRChatGroupAutomationsViewComponent,
+    RunAutomationsViewComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -525,6 +528,7 @@ export class AppModule {
     private bigscreenBeyondFanAutomationService: BigscreenBeyondFanAutomationService,
     private vrchatAvatarAutomationsService: VRChatAvatarAutomationsService,
     private vrchatGroupAutomationsService: VRChatGroupAutomationsService,
+    private runAutomationsService: RunAutomationsService,
     // Hotfixes
     private fbtAvatarReloadWorkaroundService: FBTAvatarReloadWorkaroundService
   ) {
@@ -826,6 +830,7 @@ export class AppModule {
               'VRChatGroupAutomationsService initialization',
               this.vrchatGroupAutomationsService.init()
             ),
+            this.logInit('RunAutomationsService initialization', this.runAutomationsService.init()),
             this.logInit(
               'FBTAvatarReloadHotfixService initialization',
               this.fbtAvatarReloadWorkaroundService.init()
