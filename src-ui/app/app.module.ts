@@ -250,6 +250,7 @@ import { VRChatGroupAutomationsViewComponent } from './views/dashboard-view/view
 import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-automations-view/run-automations-view.component';
 import { VRChatGroupAutomationsService } from './services/vrchat-group-automations.service';
 import { RunAutomationsService } from './services/run-automations.service';
+import { openUrl } from '@tauri-apps/plugin-opener';
 
 [
   localeEN,
@@ -562,6 +563,7 @@ export class AppModule {
     try {
       await pMinDelay(
         (async () => {
+          if (!(await this.elevationCheck())) return;
           const initStartTime = Date.now();
           await this.logInit(
             'DeveloperDebugService initialization',
@@ -951,5 +953,26 @@ export class AppModule {
       if (e === TIMEOUT_ERR) return; // Preload timeouts are acceptable
       throw e;
     }
+  }
+
+  private async elevationCheck(): Promise<boolean> {
+    if (
+      (await invoke('windows_is_elevated')) &&
+      !(await invoke('is_elevation_security_disabled'))
+    ) {
+      const result = await ask(
+        'OyasumiVR was launched with administrative permissions. For security reasons, OyasumiVR does not support running with administrative permissions.\n\nPlease restart OyasumiVR without administrative permissions in order to proceed.',
+        {
+          title: 'Administrative permissions detected',
+          kind: 'error',
+          okLabel: 'Quit',
+          cancelLabel: 'More Info',
+        }
+      );
+      if (!result) openUrl('https://raphii.co/oyasumivr/hidden/troubleshooting/launch-as-admin');
+      await exit(1);
+      return false;
+    }
+    return true;
   }
 }

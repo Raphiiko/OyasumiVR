@@ -7,6 +7,7 @@ use super::{
     VRCHAT_ACTIVE,
 };
 use log::{error, info};
+use oyasumivr_shared::windows::is_elevated;
 use std::process::Command;
 use std::{env, os::windows::process::CommandExt, path::PathBuf};
 use tauri_plugin_shell::{process::CommandEvent, Error, ShellExt};
@@ -198,6 +199,12 @@ pub async fn get_windows_power_policies() -> Vec<WindowsPowerPolicy> {
 
 #[tauri::command]
 #[oyasumivr_macros::command_profiling]
+pub async fn windows_is_elevated() -> bool {
+    is_elevated()
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
 pub async fn windows_shutdown(message: String, timeout: u32, force_close_apps: bool) {
     let _ = system_shutdown::shutdown_with_message(&message, timeout, force_close_apps);
 }
@@ -325,4 +332,10 @@ pub async fn set_mic_activity_device_id(device_id: Option<String>) {
         }
     };
     manager.set_mic_activity_device_id(device_id).await;
+}
+
+#[tauri::command]
+#[oyasumivr_macros::command_profiling]
+pub async fn is_elevation_security_disabled() -> bool {
+    crate::os::elevation::is_elevation_security_disabled()
 }
