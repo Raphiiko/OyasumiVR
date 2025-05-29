@@ -10,7 +10,7 @@ pub async fn process_elevation_cli_args() {
         matches
             .args
             .get(flag_name)
-            .map_or(false, |data| data.occurrences >= 1)
+            .is_some_and(|data| data.occurrences >= 1)
     }
     if let Some(matches) = match_guard.as_ref() {
         if is_flag_present(matches, "reset-elevation-security") {
