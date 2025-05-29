@@ -24,7 +24,7 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
     private automationConfig: AutomationConfigService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService
-  ) {}
+  ) { }
 
   async init() {
     // Get the automation config
@@ -42,12 +42,6 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
         .pipe(
           // Stop detection after 20 seconds
           takeUntil(of(null).pipe(delay(20000))),
-          distinctUntilChanged((a, b) =>
-            isEqual(
-              a.map((d) => d.id),
-              b.map((d) => d.id)
-            )
-          ),
           // Try to get most in one go
           debounceTime(500)
         )
@@ -69,11 +63,12 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
               devices: 'ALL',
               state: 'on',
             } as EventLogLighthouseSetPowerState);
+            console.warn('Turning on lighthouses on oyasumi start automation', devices);
           }
           devices.forEach((lighthouse) => this.lighthouse.setPowerState(lighthouse, 'on'));
         });
     })()
       // Ignore result
-      .then(() => {});
+      .then(() => { });
   }
 }

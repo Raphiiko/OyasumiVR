@@ -10,7 +10,7 @@ import {
   serializeStorageCryptoKey,
 } from '../utils/crypto';
 import { firstValueFrom, ReplaySubject } from 'rxjs';
-import { warn } from '@tauri-apps/plugin-log';
+import { info, warn } from '@tauri-apps/plugin-log';
 import { invoke } from '@tauri-apps/api/core';
 import { SleepService } from './sleep.service';
 import { SleepPreparationService } from './sleep-preparation.service';
@@ -129,10 +129,10 @@ export class RunAutomationsService {
 
   private async getCryptoKey(): Promise<CryptoKey> {
     if (this.config.runAutomationsCryptoKey) {
-      warn('[RunAutomationsService] Using existing crypto key');
+      info('[RunAutomationsService] Using existing crypto key');
       return await deserializeStorageCryptoKey(this.config.runAutomationsCryptoKey);
     } else {
-      warn('[RunAutomationsService] Generating new crypto key');
+      info('[RunAutomationsService] Generating new crypto key');
       const key = await generateStorageCryptoKey();
       const wrappedKey = await serializeStorageCryptoKey(key);
       await this.automationsConfigService.updateAutomationConfig<RunAutomationsConfig>(
