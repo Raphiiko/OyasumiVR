@@ -228,7 +228,9 @@ export class SystemMicMuteAutomationService {
           const isMuted = await firstValueFrom(this.isMicMuted);
           if (isMuted === null) break;
           if (pressed) {
-            const sound = getBuiltInNotificationSound(isMuted ? 'unmute-microphone' : 'mute-microphone');
+            const sound = getBuiltInNotificationSound(
+              isMuted ? 'unmute-microphone' : 'mute-microphone'
+            );
             await this.notificationService.playSound(sound, this.config.muteSoundVolume / 100);
 
             await this.setMute(!isMuted);
@@ -236,7 +238,9 @@ export class SystemMicMuteAutomationService {
           break;
         }
         case 'PUSH_TO_TALK': {
-          const sound = getBuiltInNotificationSound(pressed ? 'unmute-microphone' : 'mute-microphone');
+          const sound = getBuiltInNotificationSound(
+            pressed ? 'unmute-microphone' : 'mute-microphone'
+          );
           await this.notificationService.playSound(sound, this.config.muteSoundVolume / 100);
           await this.setMute(!pressed);
           break;

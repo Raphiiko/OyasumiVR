@@ -24,7 +24,10 @@ export class ShutdownAutomationsTriggersTabComponent implements OnInit {
   protected whenAloneActivationWindowStart = '00:00';
   protected whenAloneActivationWindowEnd = '00:00';
 
-  constructor(private automationConfigs: AutomationConfigService, private destroyRef: DestroyRef) {}
+  constructor(
+    private automationConfigs: AutomationConfigService,
+    private destroyRef: DestroyRef
+  ) {}
 
   ngOnInit() {
     this.automationConfigs.configs

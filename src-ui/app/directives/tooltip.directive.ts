@@ -24,7 +24,10 @@ export class TooltipDirective implements AfterViewInit, OnChanges, OnDestroy {
   private initialized = false;
   private tooltipElement?: HTMLElement;
 
-  constructor(private elementRef: ElementRef, private tsTranslate: TStringTranslatePipe) {}
+  constructor(
+    private elementRef: ElementRef,
+    private tsTranslate: TStringTranslatePipe
+  ) {}
 
   ngAfterViewInit() {
     this.initialized = true;

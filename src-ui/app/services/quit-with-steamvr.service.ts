@@ -12,7 +12,10 @@ import { info } from '@tauri-apps/plugin-log';
 export class QuitWithSteamVRService {
   private mode: QuitWithSteamVRMode = 'DISABLED';
 
-  constructor(private appSettings: AppSettingsService, private openvr: OpenVRService) {}
+  constructor(
+    private appSettings: AppSettingsService,
+    private openvr: OpenVRService
+  ) {}
 
   async init() {
     this.appSettings.settings.subscribe((settings) => {

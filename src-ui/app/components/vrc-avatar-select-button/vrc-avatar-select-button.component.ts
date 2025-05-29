@@ -28,9 +28,10 @@ export class VrcAvatarSelectButtonComponent {
 
   select() {
     this.modalService
-      .addModal<VrcAvatarSelectModalInput, VrcAvatarSelectModalOutput>(
-        VrcAvatarSelectModalComponent
-      )
+      .addModal<
+        VrcAvatarSelectModalInput,
+        VrcAvatarSelectModalOutput
+      >(VrcAvatarSelectModalComponent)
       .subscribe((result) => {
         if (result && result.avatar !== undefined) {
           this.avatar =

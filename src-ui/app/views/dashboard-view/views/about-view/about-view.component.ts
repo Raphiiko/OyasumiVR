@@ -55,7 +55,10 @@ export class AboutViewComponent implements OnInit, AfterViewInit, OnDestroy {
     'OYASUMIVR_SUPPORTERS'
   );
 
-  constructor(private background: BackgroundService, private destroyRef: DestroyRef) {
+  constructor(
+    private background: BackgroundService,
+    private destroyRef: DestroyRef
+  ) {
     // Change flags in translation contributors for CN compliance.
     if (FLAVOUR === 'STEAM_CN') {
       const cnComplianceFix = (author: TranslationContributor): TranslationContributor => {

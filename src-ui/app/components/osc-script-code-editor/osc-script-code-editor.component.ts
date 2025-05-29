@@ -63,7 +63,10 @@ export class OscScriptCodeEditorComponent implements OnInit, AfterViewInit {
     })
   );
 
-  constructor(private osc: OscService, private destroyRef: DestroyRef) {}
+  constructor(
+    private osc: OscService,
+    private destroyRef: DestroyRef
+  ) {}
 
   protected setScript(script: OscScript, force = false) {
     const { script: currentScript } = parseOscScriptFromCode(this._code.value);

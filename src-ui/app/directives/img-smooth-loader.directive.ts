@@ -16,7 +16,10 @@ import {
 export class ImgSmoothLoaderDirective implements OnChanges {
   @Input('imgSmoothLoader') imageUrl?: string | null;
 
-  constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
+  constructor(
+    private elementRef: ElementRef,
+    private renderer: Renderer2
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['imageUrl']?.previousValue !== changes['imageUrl']?.currentValue) {

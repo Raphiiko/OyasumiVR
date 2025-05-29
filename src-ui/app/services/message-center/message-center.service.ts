@@ -45,7 +45,10 @@ export class MessageCenterService {
     map(([messages, hiddenIds]) => messages.filter((message) => hiddenIds.includes(message.id)))
   );
 
-  constructor(private appSettingsService: AppSettingsService, private modalService: ModalService) {
+  constructor(
+    private appSettingsService: AppSettingsService,
+    private modalService: ModalService
+  ) {
     this.monitors = [
       new VRChatLogMessageMonitor(this),
       new SleepCalibrationMessageMonitor(this),

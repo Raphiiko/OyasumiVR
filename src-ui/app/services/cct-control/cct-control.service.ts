@@ -38,7 +38,10 @@ export class CCTControlService {
 
   public readonly cctStream: Observable<number> = this._cct.asObservable();
 
-  constructor(private openvr: OpenVRService, private appSettingsService: AppSettingsService) {}
+  constructor(
+    private openvr: OpenVRService,
+    private appSettingsService: AppSettingsService
+  ) {}
 
   async init() {
     this.appSettingsService.settings.subscribe((settings) => {

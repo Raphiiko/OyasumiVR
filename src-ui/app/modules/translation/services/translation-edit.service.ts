@@ -47,7 +47,7 @@ export class TranslationEditService {
             en: flatEn[key],
             [locale]: flatLang[key],
           },
-        } as TranslationEntry)
+        }) as TranslationEntry
     );
     const importCount = entries.filter((e) => e.values[locale] !== undefined).length;
     const discarded = Object.keys(flatLang).length - importCount;

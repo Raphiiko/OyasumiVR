@@ -44,8 +44,11 @@ body {
 }
 
 .splashscreen {
-  box-shadow: 0 40px 60px rgba(0, 0, 0, 0.2), 0 0 15px rgba(0, 0, 0, 0.1),
-    0 0 0 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 40px 60px rgba(0, 0, 0, 0.2),
+    0 0 15px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.5);
   margin: 100px;
   position: relative;
   border-radius: 0.5em;
@@ -106,7 +109,9 @@ img[data-src]:not(.no-fade) {
   align-items: center;
   padding-bottom: 2em;
   text-shadow: 0 0 4px #00000066;
-  transition: opacity 0.6s, transform 0.6s;
+  transition:
+    opacity 0.6s,
+    transform 0.6s;
   transform: translate(0.5em, -1em);
 }
 

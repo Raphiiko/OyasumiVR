@@ -188,7 +188,7 @@
                 'auto-invite-request-accept.options.onlyBelowPlayerCount.title'
                   | translate
                     : {
-                        count: config.onlyBelowPlayerCount
+                        count: config.onlyBelowPlayerCount,
                       }
               "
             ></span>
@@ -212,7 +212,7 @@
                 [checked]="config.onlyBelowPlayerCountEnabled"
                 (change)="
                   updateConfig({
-                    onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled
+                    onlyBelowPlayerCountEnabled: !config.onlyBelowPlayerCountEnabled,
                   })
                 "
               />
@@ -256,7 +256,7 @@
                   (change)="
                     updateConfig({
                       playSoundOnInviteRequest_onlyWhenAsleep:
-                        !config.playSoundOnInviteRequest_onlyWhenAsleep
+                        !config.playSoundOnInviteRequest_onlyWhenAsleep,
                     })
                   "
                 />
@@ -281,7 +281,7 @@
                   (change)="
                     updateConfig({
                       playSoundOnInviteRequest_onlyWhenUnhandled:
-                        !config.playSoundOnInviteRequest_onlyWhenUnhandled
+                        !config.playSoundOnInviteRequest_onlyWhenUnhandled,
                     })
                   "
                 />
@@ -319,7 +319,7 @@
                   [checked]="config.playSoundOnInvite_onlyWhenAsleep"
                   (change)="
                     updateConfig({
-                      playSoundOnInvite_onlyWhenAsleep: !config.playSoundOnInvite_onlyWhenAsleep
+                      playSoundOnInvite_onlyWhenAsleep: !config.playSoundOnInvite_onlyWhenAsleep,
                     })
                   "
                 />
@@ -446,7 +446,7 @@
   [title]="
     {
       WHITELIST: 'auto-invite-request-accept.whitelist',
-      BLACKLIST: 'auto-invite-request-accept.blacklist'
+      BLACKLIST: 'auto-invite-request-accept.blacklist',
     }[config.listMode]
   "
   [playerIds]="playerIds"

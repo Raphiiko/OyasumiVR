@@ -58,7 +58,7 @@ export class AudioDeviceAutomationsService {
           ([automations, sleepMode]) =>
             [automations.filter((a) => a.applyOnStart), sleepMode] as [
               AudioVolumeAutomation[],
-              boolean
+              boolean,
             ]
         )
       )

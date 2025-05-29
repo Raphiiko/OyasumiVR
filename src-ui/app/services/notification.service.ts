@@ -34,7 +34,10 @@ interface XSOMessage {
 export class NotificationService {
   private ovrtSocket?: WebSocket;
 
-  constructor(private appSettingsService: AppSettingsService, private ipcService: IPCService) {}
+  constructor(
+    private appSettingsService: AppSettingsService,
+    private ipcService: IPCService
+  ) {}
 
   public async init() {
     await listen<AddNotificationRequest>('addNotification', async (request) => {

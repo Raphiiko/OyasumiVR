@@ -4,7 +4,7 @@
     <div
       class="pane-content"
       *ngIf="{
-        isFetchingFriends: vrchat.isFetchingFriends | async
+        isFetchingFriends: vrchat.isFetchingFriends | async,
       } as data"
     >
       <div class="players-loading" *ngIf="data.isFetchingFriends">
@@ -58,7 +58,7 @@
                   draggable="false"
                   onerror="this.style.display='none'"
                   loading="lazy"
-                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache : 3600 * 6"
+                  [imgSmoothLoader]="vrchat.imageUrlForPlayer(player) | imageCache: 3600 * 6"
                 />
               </div>
               <div class="player-name">{{ player.displayName }}</div>

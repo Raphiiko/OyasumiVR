@@ -36,63 +36,66 @@ export class RunAutomationsViewComponent implements OnInit {
     private destroyRef: DestroyRef,
     private automationConfigService: AutomationConfigService,
     private runAutomationsService: RunAutomationsService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    const config = this.automationConfigService.configs
-      .pipe(
-        skip(1),
-        takeUntilDestroyed(this.destroyRef),
-        map((configs) => configs.RUN_AUTOMATIONS),
-        distinctUntilChanged((a, b) => isEqual(a, b)),
-        tap((config) => {
-          this.config = config;
-          // Initialize expanded states based on automation enabled state only on first load
-          if (this.isInitialLoad) {
-            this.onSleepModeEnableExpanded = config.onSleepModeEnable;
-            this.onSleepModeDisableExpanded = config.onSleepModeDisable;
-            this.onSleepPreparationExpanded = config.onSleepPreparation;
-            this.isInitialLoad = false;
-          }
-        }),
-        share(),
-      );
+    const config = this.automationConfigService.configs.pipe(
+      skip(1),
+      takeUntilDestroyed(this.destroyRef),
+      map((configs) => configs.RUN_AUTOMATIONS),
+      distinctUntilChanged((a, b) => isEqual(a, b)),
+      tap((config) => {
+        this.config = config;
+        // Initialize expanded states based on automation enabled state only on first load
+        if (this.isInitialLoad) {
+          this.onSleepModeEnableExpanded = config.onSleepModeEnable;
+          this.onSleepModeDisableExpanded = config.onSleepModeDisable;
+          this.onSleepPreparationExpanded = config.onSleepPreparation;
+          this.isInitialLoad = false;
+        }
+      }),
+      share()
+    );
 
-    const events: ('onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation')[] = ['onSleepModeEnable', 'onSleepModeDisable', 'onSleepPreparation'];
+    const events: ('onSleepModeEnable' | 'onSleepModeDisable' | 'onSleepPreparation')[] = [
+      'onSleepModeEnable',
+      'onSleepModeDisable',
+      'onSleepPreparation',
+    ];
     for (const event of events) {
-      config.pipe(
-        switchMap(() => this.runAutomationsService.getCommands(event)),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe(command => {
-        this[`${event}Commands` as keyof Pick<RunAutomationsViewComponent, 'onSleepModeEnableCommands' | 'onSleepModeDisableCommands' | 'onSleepPreparationCommands'>] = command;
-      })
+      config
+        .pipe(
+          switchMap(() => this.runAutomationsService.getCommands(event)),
+          distinctUntilChanged(),
+          takeUntilDestroyed(this.destroyRef)
+        )
+        .subscribe((command) => {
+          this[
+            `${event}Commands` as keyof Pick<
+              RunAutomationsViewComponent,
+              | 'onSleepModeEnableCommands'
+              | 'onSleepModeDisableCommands'
+              | 'onSleepPreparationCommands'
+            >
+          ] = command;
+        });
     }
 
     // Set up debounced command updates
     this.onSleepModeEnableSubject
-      .pipe(
-        debounceTime(1000),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (value) => {
         await this.runAutomationsService.updateCommands('onSleepModeEnable', value);
       });
 
     this.onSleepModeDisableSubject
-      .pipe(
-        debounceTime(1000),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (value) => {
         await this.runAutomationsService.updateCommands('onSleepModeDisable', value);
       });
 
     this.onSleepPreparationSubject
-      .pipe(
-        debounceTime(1000),
-        takeUntilDestroyed(this.destroyRef)
-      )
+      .pipe(debounceTime(1000), takeUntilDestroyed(this.destroyRef))
       .subscribe(async (value) => {
         await this.runAutomationsService.updateCommands('onSleepPreparation', value);
       });

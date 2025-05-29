@@ -19,7 +19,10 @@ export class SleepModeDisableAfterTimeAutomationService {
   sleepEnabled = false;
   threshold = -1;
 
-  constructor(private automationConfig: AutomationConfigService, private sleep: SleepService) {}
+  constructor(
+    private automationConfig: AutomationConfigService,
+    private sleep: SleepService
+  ) {}
 
   async init() {
     this.automationConfig.configs

@@ -15,7 +15,10 @@ export interface OscMethodOptions<T> {
 export abstract class OscMethod<T> {
   protected value: T;
 
-  constructor(protected osc: OscService, public readonly options: OscMethodOptions<T>) {
+  constructor(
+    protected osc: OscService,
+    public readonly options: OscMethodOptions<T>
+  ) {
     this.value = options.initialValue;
   }
 

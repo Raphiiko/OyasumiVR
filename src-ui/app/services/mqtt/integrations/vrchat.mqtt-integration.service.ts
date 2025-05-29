@@ -7,7 +7,10 @@ import { combineLatest, firstValueFrom } from 'rxjs';
   providedIn: 'root',
 })
 export class VRChatMqttIntegrationService {
-  constructor(private mqtt: MqttDiscoveryService, private vrchat: VRChatService) {}
+  constructor(
+    private mqtt: MqttDiscoveryService,
+    private vrchat: VRChatService
+  ) {}
 
   async init() {
     await this.mqtt.initProperty({

@@ -27,7 +27,10 @@ export class MqttDiscoveryService {
     }>;
   }
 
-  constructor(private mqtt: MqttService, private sleepService: SleepService) {}
+  constructor(
+    private mqtt: MqttService,
+    private sleepService: SleepService
+  ) {}
 
   async init() {
     this.baseConfig = {

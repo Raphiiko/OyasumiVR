@@ -6,7 +6,10 @@ import { info } from '@tauri-apps/plugin-log';
 import { switchMap } from 'rxjs';
 
 export class SleepModeOscMethod extends OscMethod<boolean> {
-  constructor(osc: OscService, private sleep: SleepService) {
+  constructor(
+    osc: OscService,
+    private sleep: SleepService
+  ) {
     super(osc, {
       description: 'Enabled status of the sleep mode',
       address: '/OyasumiVR/SleepMode',

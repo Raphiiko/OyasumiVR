@@ -48,7 +48,7 @@ export class EventLogComponent implements OnInit, AfterViewInit {
           [log.logs.filter((log) => !filters.includes(log.type)), showCount, filters] as [
             EventLogEntry[],
             number,
-            EventLogType[]
+            EventLogType[],
           ]
       ),
       tap(([logs]) => {

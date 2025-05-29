@@ -17,9 +17,8 @@ export class CachedValue<T> {
       await CACHE_STORE.clear();
     } else {
       // Clear expired cache entries only
-      const entries: [key: string, value: CachedValueEntry<unknown>][] = await CACHE_STORE.entries<
-        CachedValueEntry<unknown>
-      >();
+      const entries: [key: string, value: CachedValueEntry<unknown>][] =
+        await CACHE_STORE.entries<CachedValueEntry<unknown>>();
       for (const entry of entries) {
         const ttlExpired = entry[1].lastSet + entry[1].ttl < Date.now();
         if (ttlExpired) await CACHE_STORE.delete(entry[0]);
@@ -28,7 +27,11 @@ export class CachedValue<T> {
     await CACHE_STORE.save();
   }
 
-  constructor(private value: T | undefined, private ttl: number, private persistenceKey?: string) {
+  constructor(
+    private value: T | undefined,
+    private ttl: number,
+    private persistenceKey?: string
+  ) {
     if (value !== undefined) this.set(value).then(() => this.initialized.next(true));
     else if (persistenceKey) this.loadFromDisk().then(() => this.initialized.next(true));
   }

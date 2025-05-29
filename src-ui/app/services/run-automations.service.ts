@@ -30,7 +30,7 @@ export class RunAutomationsService {
     private sleepService: SleepService,
     private sleepPreparation: SleepPreparationService,
     private eventLogService: EventLogService
-  ) { }
+  ) {}
 
   async init() {
     this.config = (

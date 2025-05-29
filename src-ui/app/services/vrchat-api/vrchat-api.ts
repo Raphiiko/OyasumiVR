@@ -434,7 +434,7 @@ export class VRChatAPI {
             message: message.message,
             canUpdateAtTimeStamp:
               Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
-          } as InviteMessageEx)
+          }) as InviteMessageEx
       );
       // Cache the retrieved messages
       cache.set(messages!);
@@ -472,7 +472,7 @@ export class VRChatAPI {
           message: message.message,
           canUpdateAtTimeStamp:
             Date.now() + Math.max(0, message.remainingCooldownMinutes * 60 * 1000),
-        } as InviteMessageEx)
+        }) as InviteMessageEx
     );
     // Cache the new messages
     cache.set(messages!);

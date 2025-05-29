@@ -40,11 +40,14 @@ export class DeepLinkService {
         await this.handleDeepLinkByIntegration(
           route[1],
           '/' + route.slice(2).join('/'),
-          Array.from(url.searchParams.entries()).reduce((acc, e) => {
-            if (!acc[e[0]]) acc[e[0]] = [];
-            acc[e[0]].push(e[1]);
-            return acc;
-          }, {} as Record<string, string[]>),
+          Array.from(url.searchParams.entries()).reduce(
+            (acc, e) => {
+              if (!acc[e[0]]) acc[e[0]] = [];
+              acc[e[0]].push(e[1]);
+              return acc;
+            },
+            {} as Record<string, string[]>
+          ),
           url.hash.substring(1)
         );
         break;

@@ -89,7 +89,7 @@ export class EventLogEntryComponent implements OnInit, OnChanges {
     private sanitizer: DomSanitizer,
     private translate: TranslateService,
     private destroyRef: DestroyRef
-  ) { }
+  ) {}
 
   _entry?: EventLogEntry;
   @Input() set entry(entry: EventLogEntry | undefined) {

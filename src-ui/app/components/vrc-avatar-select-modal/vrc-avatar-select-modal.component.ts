@@ -31,7 +31,10 @@ export class VrcAvatarSelectModalComponent
   activeCategory = '';
   results: AvatarEx[] = [];
 
-  constructor(private vrchat: VRChatService, private modalService: ModalService) {
+  constructor(
+    private vrchat: VRChatService,
+    private modalService: ModalService
+  ) {
     super();
   }
 

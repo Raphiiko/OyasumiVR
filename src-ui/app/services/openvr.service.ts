@@ -34,7 +34,10 @@ export class OpenVRService {
     this._devicePoses.asObservable();
   private deviceNicknames: { [id: string]: string } = {};
 
-  constructor(private appRef: ApplicationRef, private appSettings: AppSettingsService) {}
+  constructor(
+    private appRef: ApplicationRef,
+    private appSettings: AppSettingsService
+  ) {}
 
   async init() {
     this._status.next(await invoke<OpenVRStatus>('openvr_status'));

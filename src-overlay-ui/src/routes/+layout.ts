@@ -9,9 +9,6 @@ export const trailingSlash = 'always';
 export const prerender = true;
 export const ssr = false;
 
-if (browser) {
-}
-
 export const load: Load = async ({ url }) => {
 	// Obtain query params
 	const urlParams = new URLSearchParams(window.location.search);

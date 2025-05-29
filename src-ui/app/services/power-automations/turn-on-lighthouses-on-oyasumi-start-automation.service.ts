@@ -2,17 +2,8 @@ import { Injectable } from '@angular/core';
 import { AutomationConfigService } from '../automation-config.service';
 import { LighthouseService } from '../lighthouse.service';
 import { EventLogService } from '../event-log.service';
-import {
-  debounceTime,
-  delay,
-  distinctUntilChanged,
-  firstValueFrom,
-  map,
-  of,
-  takeUntil,
-} from 'rxjs';
+import { debounceTime, delay, firstValueFrom, map, of, takeUntil } from 'rxjs';
 import { EventLogLighthouseSetPowerState } from 'src-ui/app/models/event-log-entry';
-import { isEqual } from 'lodash';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +15,7 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
     private automationConfig: AutomationConfigService,
     private lighthouse: LighthouseService,
     private eventLog: EventLogService
-  ) { }
+  ) {}
 
   async init() {
     // Get the automation config
@@ -69,6 +60,6 @@ export class TurnOnLighthousesOnOyasumiStartAutomationService {
         });
     })()
       // Ignore result
-      .then(() => { });
+      .then(() => {});
   }
 }

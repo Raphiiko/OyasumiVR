@@ -18,9 +18,7 @@ export class WindowTitlebarComponent implements OnInit {
   version = '0.0.0';
   showVersionExtras = false;
 
-  constructor(protected messageCenter: MessageCenterService) {
-
-  }
+  constructor(protected messageCenter: MessageCenterService) {}
 
   async ngOnInit() {
     this.version = await getVersion();

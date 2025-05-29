@@ -28,7 +28,11 @@ export class VRChatSocket {
   private _notifications: Subject<Notification> = new Subject<Notification>();
   public readonly notifications = this._notifications.asObservable();
 
-  constructor(private vrchatAuth: VRChatAuth, private vrchatApi: VRChatAPI, private settings: Observable<VRChatApiSettings>) {
+  constructor(
+    private vrchatAuth: VRChatAuth,
+    private vrchatApi: VRChatAPI,
+    private settings: Observable<VRChatApiSettings>
+  ) {
     this.handlers = [
       new UserUpdateHandler(this.vrchatAuth),
       new NotificationHandler(this.onVRChatNotification.bind(this)),

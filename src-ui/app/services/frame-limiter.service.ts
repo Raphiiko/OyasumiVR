@@ -48,7 +48,10 @@ export class FrameLimiterService {
   }>({});
   public readonly activeFrameLimits = this._activeFrameLimits.asObservable();
 
-  constructor(private automationConfig: AutomationConfigService, private openvr: OpenVRService) {}
+  constructor(
+    private automationConfig: AutomationConfigService,
+    private openvr: OpenVRService
+  ) {}
 
   public async init() {
     this.automationConfig.configs

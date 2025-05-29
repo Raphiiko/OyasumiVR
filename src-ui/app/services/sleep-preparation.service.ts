@@ -30,9 +30,7 @@ export class SleepPreparationService {
         configs.VRCHAT_MIC_MUTE_AUTOMATIONS.onSleepPreparation !== 'NONE',
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationState !== 'NONE',
         configs.VRCHAT_GROUP_AUTOMATIONS.representGroupIdOnSleepPreparation !== 'DONT_CHANGE',
-        configs.FRAME_LIMIT_AUTOMATIONS.configs.some(
-          (c) => c.onSleepPreparation !== 'NONE'
-        ),
+        configs.FRAME_LIMIT_AUTOMATIONS.configs.some((c) => c.onSleepPreparation !== 'NONE'),
         configs.SYSTEM_MIC_MUTE_AUTOMATIONS.controllerBinding &&
           configs.SYSTEM_MIC_MUTE_AUTOMATIONS.onSleepPreparationControllerBindingBehavior !==
             'NONE',

@@ -22,4 +22,4 @@ export type InviteMessageEx = {
   slot: number;
   message: string;
   canUpdateAtTimeStamp: number;
-}
+};

@@ -49,7 +49,10 @@ export class SliderComponent implements OnInit, OnChanges, OnDestroy, AfterViewI
   @ViewChild('thumbEl') thumbEl?: ElementRef;
   @ViewChild('audioLevelTrackFill') audioLevelTrackFillEl?: ElementRef;
 
-  constructor(private el: ElementRef, private cdr: ChangeDetectorRef) {}
+  constructor(
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnChanges(): void {
     this.recalculateStyles();

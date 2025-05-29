@@ -135,11 +135,10 @@ export class DeviceEditModalComponent
 
   openLighthouseV1IdWizard() {
     this.modal
-      .addModal<LighthouseV1IdWizardModalInputModel, LighthouseV1IdWizardModalOutputModel>(
-        LighthouseV1IdWizardModalComponent,
-        { device: this.lighthouseDevice! },
-        { closeOnEscape: false }
-      )
+      .addModal<
+        LighthouseV1IdWizardModalInputModel,
+        LighthouseV1IdWizardModalOutputModel
+      >(LighthouseV1IdWizardModalComponent, { device: this.lighthouseDevice! }, { closeOnEscape: false })
       .subscribe();
   }
 }

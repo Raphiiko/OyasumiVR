@@ -4,7 +4,7 @@ import { Component, input } from '@angular/core';
   selector: 'app-progressive-scroll-blur',
   standalone: false,
   templateUrl: './progressive-scroll-blur.component.html',
-  styleUrl: './progressive-scroll-blur.component.scss'
+  styleUrl: './progressive-scroll-blur.component.scss',
 })
 export class ProgressiveScrollBlurComponent {
   public readonly topSize = input<number>(15);

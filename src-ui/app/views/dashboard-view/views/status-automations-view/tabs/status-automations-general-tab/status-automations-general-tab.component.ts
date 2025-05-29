@@ -134,8 +134,8 @@ export class StatusAutomationsGeneralTabComponent implements OnInit {
       automation === 'ON_SLEEP_ENABLE'
         ? 'statusMessageOnSleepModeEnable'
         : automation === 'ON_SLEEP_DISABLE'
-        ? 'statusMessageOnSleepModeDisable'
-        : 'statusMessageOnSleepPreparation';
+          ? 'statusMessageOnSleepModeDisable'
+          : 'statusMessageOnSleepPreparation';
     await this.updateConfig({
       [key]: value,
     });

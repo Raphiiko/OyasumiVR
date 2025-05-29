@@ -45,7 +45,8 @@ export type EventLogFilter = (typeof EventLogFilters)[number];
 })
 export class EventLogFilterDialogComponent
   extends BaseModalComponent<EventLogFilterDialogInputModel, EventLogFilterDialogOutputModel>
-  implements OnInit, EventLogFilterDialogInputModel {
+  implements OnInit, EventLogFilterDialogInputModel
+{
   protected readonly filters: Filter[] = [
     {
       id: 'SLEEP_MODE',
@@ -134,7 +135,7 @@ export class EventLogFilterDialogComponent
     this.result = { hiddenLogTypes: [] };
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {}
 
   async save() {
     this.result = { hiddenLogTypes: this.getHiddenTypesForFilters() };
