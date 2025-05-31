@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Localized system tray menu
 - Replaced one-time location based updates of sunset/sunrise times with a toggle to update them automatically.
 - Updated theming & some component styling
+- Various illustrations (Thanks to [Jun](https://x.com/JunHakase)) 
 
 ### Fixed
 
