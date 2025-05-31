@@ -91,14 +91,12 @@ async function getDurationInSeconds(path) {
   }, {});
   // TS (UI)
   let typeFile = 'src-ui/app/models/notification-sounds.generated.ts';
-  let typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\nexport type NotificationSoundRef = \n${sounds
+  let typeContent = `/* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */\nexport type NotificationSoundRef =\n${sounds
     .map((s) => `  | '${s}'`)
     .join('\n')};\n\n`;
   typeContent += `export const NotificationSoundDurations: Record<NotificationSoundRef, number> = {\n${sounds
-    .map(
-      (s, i) => `  '${s}': ${NotificationSoundDurations[s]}${i === sounds.length - 1 ? '' : ','}`
-    )
-    .join('\n')}\n};`;
+    .map((s, i) => `  ${s}: ${NotificationSoundDurations[s]},`)
+    .join('\n')}\n};\n`;
   fs.writeFileSync(typeFile, typeContent);
   // Rust (Core)
   typeFile = 'src-core/src/os/sounds_gen.rs';

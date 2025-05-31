@@ -21,7 +21,7 @@ import { NotificationService } from './notification.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationSoundRef } from '../models/notification-sounds.generated';
 
-export const NIGHTMARE_DETECTION_NOTIFICATION_SOUND: NotificationSoundRef = 'material_alarm_gentle';
+export const NIGHTMARE_DETECTION_NOTIFICATION_SOUND: NotificationSoundRef = 'gentle_chime_long';
 
 @Injectable({
   providedIn: 'root',

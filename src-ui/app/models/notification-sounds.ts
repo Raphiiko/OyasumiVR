@@ -7,8 +7,8 @@ interface NotificationSoundBase {
 }
 
 export interface NotificationSoundBuiltIn extends NotificationSoundBase {
+  id: NotificationSoundRef;
   type: 'BUILT_IN';
-  ref: NotificationSoundRef;
   duration: number;
   name: string;
   userConfigurable: boolean;
@@ -16,41 +16,36 @@ export interface NotificationSoundBuiltIn extends NotificationSoundBase {
 
 export const BUILT_IN_NOTIFICATION_SOUNDS: NotificationSoundBuiltIn[] = [
   {
-    id: 'gentle-chime',
+    id: 'gentle_chime',
     type: 'BUILT_IN',
-    ref: 'material_alarm_gentle_short_1',
     name: 'Gentle Chime',
-    duration: NotificationSoundDurations['material_alarm_gentle_short_1'],
+    duration: NotificationSoundDurations['gentle_chime'],
     userConfigurable: true,
   },
   {
-    id: 'clear-chime',
+    id: 'clear_chime',
     type: 'BUILT_IN',
-    ref: 'material_alarm_gentle_short_2',
     name: 'Clear Chime',
-    duration: NotificationSoundDurations['material_alarm_gentle_short_2'],
+    duration: NotificationSoundDurations['clear_chime'],
     userConfigurable: true,
   },
   {
     id: 'pebbles',
     type: 'BUILT_IN',
-    ref: 'material_hero_simple-celebration-01',
     name: 'Pebbles',
-    duration: NotificationSoundDurations['material_hero_simple-celebration-01'],
+    duration: NotificationSoundDurations['pebbles'],
     userConfigurable: true,
   },
   {
-    id: 'mute-microphone',
+    id: 'mic_mute',
     type: 'BUILT_IN',
-    ref: 'mic_mute',
     name: 'Mute Microphone',
     duration: NotificationSoundDurations['mic_mute'],
     userConfigurable: false,
   },
   {
-    id: 'unmute-microphone',
+    id: 'mic_unmute',
     type: 'BUILT_IN',
-    ref: 'mic_unmute',
     name: 'Unmute Microphone',
     duration: NotificationSoundDurations['mic_unmute'],
     userConfigurable: false,
@@ -58,41 +53,33 @@ export const BUILT_IN_NOTIFICATION_SOUNDS: NotificationSoundBuiltIn[] = [
   {
     id: 'ripple',
     type: 'BUILT_IN',
-    ref: 'notification_bell',
     name: 'Ripple',
-    duration: NotificationSoundDurations['notification_bell'],
+    duration: NotificationSoundDurations['ripple'],
     userConfigurable: true,
   },
   {
     id: 'pulse',
     type: 'BUILT_IN',
-    ref: 'notification_block',
     name: 'Pulse',
-    duration: NotificationSoundDurations['notification_block'],
+    duration: NotificationSoundDurations['pulse'],
     userConfigurable: true,
   },
   {
     id: 'breeze',
     type: 'BUILT_IN',
-    ref: 'notification_reverie',
     name: 'Breeze',
-    duration: NotificationSoundDurations['notification_reverie'],
+    duration: NotificationSoundDurations['breeze'],
     userConfigurable: true,
   },
   {
-    id: 'gentle-chime-long',
+    id: 'gentle_chime_long',
     type: 'BUILT_IN',
-    ref: 'material_alarm_gentle',
-    duration: NotificationSoundDurations['material_alarm_gentle'],
+    duration: NotificationSoundDurations['gentle_chime_long'],
     name: 'Gentle Chime (Long)',
     userConfigurable: true,
   },
 ] as const;
 
-export type BuiltInNotificationSoundId = (typeof BUILT_IN_NOTIFICATION_SOUNDS)[number]['id'];
-
-export function getBuiltInNotificationSound(
-  id: BuiltInNotificationSoundId
-): NotificationSoundBuiltIn {
+export function getBuiltInNotificationSound(id: NotificationSoundRef): NotificationSoundBuiltIn {
   return BUILT_IN_NOTIFICATION_SOUNDS.find((sound) => sound.id === id)!;
 }
