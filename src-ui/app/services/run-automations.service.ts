@@ -75,7 +75,7 @@ export class RunAutomationsService {
   }
 
   private async onSleepModeChange(sleepMode: boolean) {
-    if (sleepMode && this.config.onSleepModeEnableCommands) {
+    if (sleepMode && this.config.onSleepModeEnable) {
       const commands = await this.getCommands('onSleepModeEnable');
       if (commands.trim()) {
         try {
@@ -90,7 +90,7 @@ export class RunAutomationsService {
           warn(`[RunAutomationsService] Failed to execute onSleepModeEnable commands: ${error}`);
         }
       }
-    } else if (!sleepMode && this.config.onSleepModeDisableCommands) {
+    } else if (!sleepMode && this.config.onSleepModeDisable) {
       const commands = await this.getCommands('onSleepModeDisable');
       if (commands.trim()) {
         try {
