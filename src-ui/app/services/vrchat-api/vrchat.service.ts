@@ -151,8 +151,8 @@ export class VRChatService {
   // API methods
   //
 
-  public async setStatus(status: UserStatus | null, statusMessage: string | null) {
-    await this.api.setStatus(status, statusMessage);
+  public setStatus(status: UserStatus | null, statusMessage: string | null): Promise<boolean> {
+    return this.api.setStatus(status, statusMessage);
   }
 
   public async selectAvatar(avatarId: string) {
