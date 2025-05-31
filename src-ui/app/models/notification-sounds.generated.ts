@@ -1,23 +1,23 @@
 /* THIS FILE IS GENERATED. DO NOT EDIT IT MANUALLY. */
 export type NotificationSoundRef =
-  | 'material_alarm_gentle'
-  | 'material_alarm_gentle_short_1'
-  | 'material_alarm_gentle_short_2'
-  | 'material_hero_simple-celebration-01'
+  | 'breeze'
+  | 'clear_chime'
+  | 'gentle_chime'
+  | 'gentle_chime_long'
   | 'mic_mute'
   | 'mic_unmute'
-  | 'notification_bell'
-  | 'notification_block'
-  | 'notification_reverie';
+  | 'pebbles'
+  | 'pulse'
+  | 'ripple';
 
 export const NotificationSoundDurations: Record<NotificationSoundRef, number> = {
-  material_alarm_gentle: 21.1,
-  material_alarm_gentle_short_1: 3.2,
-  material_alarm_gentle_short_2: 3.3,
-  'material_hero_simple-celebration-01': 1.5,
+  breeze: 11.2,
+  clear_chime: 3.3,
+  gentle_chime: 3.2,
+  gentle_chime_long: 21.1,
   mic_mute: 0.2,
   mic_unmute: 0.1,
-  notification_bell: 3.6,
-  notification_block: 1.1,
-  notification_reverie: 11.2,
+  pebbles: 1.5,
+  pulse: 1.1,
+  ripple: 3.6,
 };

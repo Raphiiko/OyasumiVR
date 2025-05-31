@@ -63,7 +63,7 @@ export class NotificationService {
       switch (sound.type) {
         case 'BUILT_IN':
           await invoke('play_sound', {
-            name: sound.ref,
+            name: sound.id,
             volume,
           });
           break;
