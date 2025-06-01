@@ -251,6 +251,8 @@ import { RunAutomationsViewComponent } from './views/dashboard-view/views/run-au
 import { VRChatGroupAutomationsService } from './services/vrchat-group-automations.service';
 import { RunAutomationsService } from './services/run-automations.service';
 import { openUrl } from '@tauri-apps/plugin-opener';
+import { DeviceManagerViewComponent } from './views/dashboard-view/views/device-manager-view/device-manager-view.component';
+import { DeviceManagerService } from './services/device-manager.service';
 
 [
   localeEN,
@@ -407,6 +409,7 @@ export function createTranslateLoader(http: HttpClient) {
     NotificationSoundModalComponent,
     VRChatGroupAutomationsViewComponent,
     RunAutomationsViewComponent,
+    DeviceManagerViewComponent,
   ],
   exports: [SelectBoxComponent],
   imports: [
@@ -478,6 +481,7 @@ export class AppModule {
     private updateService: UpdateService,
     private messageCenterService: MessageCenterService,
     private frameLimiterService: FrameLimiterService,
+    private deviceManagerService: DeviceManagerService,
     // GPU automations
     private gpuAutomations: GpuAutomationsService,
     // Sleep mode automations
@@ -640,6 +644,8 @@ export class AppModule {
             }),
           ]);
           await Promise.all([
+            // Initialize Device Manager
+            this.logInit('DeviceManagerService initialization', this.deviceManagerService.init()),
             // Initialize Steam support
             await this.logInit('SteamService initialization', this.steamService.init()),
             // Initialize Discord support

@@ -353,6 +353,7 @@
       "autoInviteRequestAccept": "Auto Accept \nInvite Requests",
       "brightnessAutomations": "Brightness Automations",
       "chaperoneAutomations": "Chaperone Automations",
+      "deviceManager": "Device Manager",
       "frameLimiter": "Frame Limit Automations",
       "gpuAutomations": "GPU Automations",
       "hardwareAutomations": "Hardware Automations",
@@ -1509,6 +1510,9 @@
   "notification-sound": {
     "title": "Select a sound",
     "volume": "Volume"
+  },
+  "device-manager": {
+    "title": "Device Manager"
   },
   "notifications": {
     "autoAcceptedInviteRequest": {

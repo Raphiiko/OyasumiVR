@@ -208,11 +208,8 @@
         width: 1.5em;
         height: 1.5em;
 
-        &.vrchat-icon {
-          filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
-            contrast(89%);
-        }
-
+        &.vrchat-icon,
+        &.device-manager-icon,
         &.hardware-icon {
           filter: invert(89%) sepia(3%) saturate(871%) hue-rotate(194deg) brightness(109%)
             contrast(89%);
